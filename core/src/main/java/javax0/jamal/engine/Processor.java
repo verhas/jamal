@@ -1,10 +1,13 @@
 package javax0.jamal.engine;
 
+import javax0.jamal.engine.macro.Register;
+
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class Processor {
     final static private int DOES_NOT_CONTAIN = -1;
+    final Register macros = new Register();
     private String macroOpen;
     private String macroClose;
 
@@ -88,7 +91,7 @@ public class Processor {
      * @param macro the macro text to be processed without the opening and closing string.
      * @return
      */
-    Optional<String> evalMacro(final String macro) {
+    Optional<String> evalMacro(final String macro) throws BadSyntax {
         final var input = new StringBuilder(macro);
         skipWhiteSpaces(input);
         final boolean reportUndef;
@@ -112,7 +115,15 @@ public class Processor {
                 var separator = input.substring(0, 1);
                 skip(input, 1);
                 String[] parameters = input.toString().split(Pattern.quote(separator));
-
+                var udMacro = macros.get(id);
+                if( udMacro.isEmpty() && reportUndef ){
+                    throw new BadSyntax();
+                }
+                if( udMacro.isEmpty() ){
+                    return Optional.empty();
+                }else {
+                    return Optional.of(udMacro.get().evaluate(parameters));
+                }
             }
         }
 
