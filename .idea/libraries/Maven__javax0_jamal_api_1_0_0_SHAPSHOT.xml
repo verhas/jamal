@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: javax0.jamal:api:1.0.0-SHAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/javax0/jamal/api/1.0.0-SHAPSHOT/api-1.0.0-SHAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/javax0/jamal/api/1.0.0-SHAPSHOT/api-1.0.0-SHAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/javax0/jamal/api/1.0.0-SHAPSHOT/api-1.0.0-SHAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
