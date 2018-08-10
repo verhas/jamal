@@ -16,7 +16,7 @@ public class Processor {
         this.macroClose = macroClose;
     }
 
-    public String process(final String in) {
+    public String process(final String in) throws BadSyntax {
         final var output = new StringBuilder();
         final var input = new StringBuilder(in);
         while (input.length() > 0) {
@@ -52,7 +52,7 @@ public class Processor {
      * @param output where the processed macro is appended
      * @param input  from where the macro source is read and removed
      */
-    private void processMacro(StringBuilder output, StringBuilder input) {
+    private void processMacro(StringBuilder output, StringBuilder input) throws BadSyntax {
         skip(input, macroOpen);
         var macro = getNextMacroBody(input);
         if (!firstNonSpaceIs(macro, '@')) {
@@ -94,40 +94,47 @@ public class Processor {
     Optional<String> evalMacro(final String macro) throws BadSyntax {
         final var input = new StringBuilder(macro);
         skipWhiteSpaces(input);
-        final boolean reportUndef;
         if (macroIsBuiltIn(input)) {
-            skip(input, 1);
-            skipWhiteSpaces(input);
-            reportUndef = true;
+            skipToMacroIdStart(input);
+            return null;
         } else {
-            if (reportUndef = (input.charAt(0) == '?')) {
-                skip(input, 1);
-                skipWhiteSpaces(input);
+            return evalUserDefinedMacro(input);
+        }
+    }
+
+    private Optional<String> evalUserDefinedMacro(final StringBuilder input) throws BadSyntax {
+        final boolean reportUndef  = input.charAt(0) == '?';
+        if (reportUndef) {
+            skip(input, 1);
+        }
+        skipWhiteSpaces(input);
+        var id = fetchId(input);
+        if (id.charAt(0) == '$') {
+            //TODO handle loop variables
+            return Optional.empty();
+        } else {
+            if (id.length() == 0) {
+                return Optional.empty();
             }
-            var id = fetchId(input);
-            if (id.charAt(0) == '$') {
-                // handle loop variables
+            skipWhiteSpaces(input);
+            var separator = input.substring(0, 1);
+            skip(input, 1);
+            String[] parameters = input.toString().split(Pattern.quote(separator));
+            var udMacro = macros.get(id);
+            if (udMacro.isEmpty() && reportUndef) {
+                throw new BadSyntax();
+            }
+            if (udMacro.isEmpty()) {
+                return Optional.empty();
             } else {
-                if (id.length() == 0) {
-                    return Optional.empty();
-                }
-                skipWhiteSpaces(input);
-                var separator = input.substring(0, 1);
-                skip(input, 1);
-                String[] parameters = input.toString().split(Pattern.quote(separator));
-                var udMacro = macros.get(id);
-                if( udMacro.isEmpty() && reportUndef ){
-                    throw new BadSyntax();
-                }
-                if( udMacro.isEmpty() ){
-                    return Optional.empty();
-                }else {
-                    return Optional.of(udMacro.get().evaluate(parameters));
-                }
+                return Optional.of(udMacro.get().evaluate(parameters));
             }
         }
+    }
 
-        return Optional.of(macro);
+    private void skipToMacroIdStart(StringBuilder input) {
+        skip(input, 1);
+        skipWhiteSpaces(input);
     }
 
     /**
