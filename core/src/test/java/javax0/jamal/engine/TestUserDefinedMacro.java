@@ -1,5 +1,6 @@
 package javax0.jamal.engine;
 
+import javax0.jamal.api.BadSyntax;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

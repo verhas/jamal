@@ -1,4 +1,4 @@
-package javax0.jamal.engine;
+package javax0.jamal.api;
 
 public class BadSyntax extends Exception {
 }

@@ -1,9 +1,10 @@
 package javax0.jamal.engine;
 
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
 
-public class UserDefinedMacro {
+public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     final private String[] parameters;
 
     public String getId() {
@@ -24,7 +25,7 @@ public class UserDefinedMacro {
         for (int i = 0; i < parameters.length; i++) {
             for (int j = 0; j < parameters.length; j++) {
                 if (i != j) {
-                    if (parameters[i].startsWith(parameters[j])) {
+                    if (parameters[i].contains(parameters[j])) {
                         throw new BadSyntax();
                     }
                 }

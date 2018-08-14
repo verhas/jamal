@@ -1,21 +1,27 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.engine.macro.Register;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.MacroRegister;
+import javax0.jamal.builtins.Define;
 
-import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class Processor {
-    final static private int DOES_NOT_CONTAIN = -1;
-    final Register macros = new Register();
+import static javax0.jamal.tools.InputHandler.*;
+
+public class Processor implements javax0.jamal.api.Processor {
+
+    final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
     private String macroOpen;
     private String macroClose;
 
     public Processor(String macroOpen, String macroClose) {
         this.macroOpen = macroOpen;
         this.macroClose = macroClose;
+        //TODO more general built-in macro registration mechanic should be implemented
+        macros.put(new Define());
     }
 
+    @Override
     public String process(final String in) throws BadSyntax {
         final var output = new StringBuilder();
         final var input = new StringBuilder(in);
@@ -27,6 +33,11 @@ public class Processor {
             }
         }
         return output.toString();
+    }
+
+    @Override
+    public MacroRegister getRegister() {
+        return macros;
     }
 
     /**
@@ -47,41 +58,21 @@ public class Processor {
     }
 
     /**
-     * Process that macro that starts at the first character of the input.
+     * Process the macro that starts at the first character of the input.
      *
      * @param output where the processed macro is appended
      * @param input  from where the macro source is read and removed
      */
     private void processMacro(StringBuilder output, StringBuilder input) throws BadSyntax {
         skip(input, macroOpen);
+        skipWhiteSpaces(input);
         var macro = getNextMacroBody(input);
-        if (!firstNonSpaceIs(macro, '@')) {
+        if (!firstCharIs(macro, '@')) {
+            macros.push();
             macro = process(macro);
+            macros.pop();
         }
         output.append(evalMacro(macro));
-    }
-
-    private boolean firstNonSpaceIs(String s, char c) {
-        int i = firstNonSpace(s);
-        return i != DOES_NOT_CONTAIN && s.charAt(i) == c;
-    }
-
-    private int firstNonSpace(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private void skip(StringBuilder input, int numberOfCharacters) {
-        input.delete(0, numberOfCharacters);
-    }
-
-    private void skip(StringBuilder input, String s) {
-        final var len = s.length();
-        skip(input, s.length());
     }
 
 
@@ -91,19 +82,45 @@ public class Processor {
      * @param macro the macro text to be processed without the opening and closing string.
      * @return
      */
-    Optional<String> evalMacro(final String macro) throws BadSyntax {
+    String evalMacro(final String macro) throws BadSyntax {
         final var input = new StringBuilder(macro);
-        skipWhiteSpaces(input);
-        if (macroIsBuiltIn(input)) {
-            skipToMacroIdStart(input);
-            return null;
+        var isBuiltin = macroIsBuiltIn(input);
+        final String macroId;
+        final boolean verbatim;
+        if (isBuiltin) {
+            skip(input, 1);
+            skipWhiteSpaces(input);
+            var fetched = fetchId(input);
+            verbatim = "verbatim".equals(fetched);
+            if (verbatim) {
+                skipWhiteSpaces(input);
+                isBuiltin = macroIsBuiltIn(input);
+                if (isBuiltin) {
+                    macroId = fetchId(input);
+                }else{
+                    macroId = fetched;
+                }
+            }else{
+                macroId = fetched;
+            }
         } else {
-            return evalUserDefinedMacro(input);
+            verbatim = false;
+            macroId = null;
+        }
+        if (isBuiltin) {
+            var builtin = macros.geMacro(macroId);
+            if (!builtin.isPresent()) {
+                throw new BadSyntax();
+            }
+            return builtin.get().evaluate(input, this);
+        } else {
+            var rawResult = evalUserDefinedMacro(input);
+            return verbatim ? rawResult : process(rawResult);
         }
     }
 
-    private Optional<String> evalUserDefinedMacro(final StringBuilder input) throws BadSyntax {
-        final boolean reportUndef  = input.charAt(0) == '?';
+    private String evalUserDefinedMacro(final StringBuilder input) throws BadSyntax {
+        final boolean reportUndef = input.charAt(0) == '?';
         if (reportUndef) {
             skip(input, 1);
         }
@@ -111,30 +128,30 @@ public class Processor {
         var id = fetchId(input);
         if (id.charAt(0) == '$') {
             //TODO handle loop variables
-            return Optional.empty();
+            return "";
         } else {
             if (id.length() == 0) {
-                return Optional.empty();
+                return "";
             }
             skipWhiteSpaces(input);
-            var separator = input.substring(0, 1);
-            skip(input, 1);
-            String[] parameters = input.toString().split(Pattern.quote(separator));
-            var udMacro = macros.get(id);
-            if (udMacro.isEmpty() && reportUndef) {
+            final String[] parameters;
+            if (input.length() > 0) {
+                var separator = input.substring(0, 1);
+                skip(input, 1);
+                parameters = input.toString().split(Pattern.quote(separator));
+            } else {
+                parameters = new String[0];
+            }
+            var udMacro = macros.getUserMacro(id);
+            if (udMacro.isPresent() && reportUndef) {
                 throw new BadSyntax();
             }
-            if (udMacro.isEmpty()) {
-                return Optional.empty();
+            if (udMacro.isPresent()) {
+                return udMacro.get().evaluate(parameters);
             } else {
-                return Optional.of(udMacro.get().evaluate(parameters));
+                return "";
             }
         }
-    }
-
-    private void skipToMacroIdStart(StringBuilder input) {
-        skip(input, 1);
-        skipWhiteSpaces(input);
     }
 
     /**
@@ -148,25 +165,6 @@ public class Processor {
         return input.charAt(0) == '#' || input.charAt(0) == '@';
     }
 
-
-    private String fetchId(StringBuilder input) {
-        final var output = new StringBuilder();
-        while (input.length() > 0 && vaidIdChar(input.charAt(0))) {
-            output.append(input.charAt(0));
-            skip(input, 1);
-        }
-        return output.toString();
-    }
-
-    private boolean vaidIdChar(char c) {
-        return c == '$' || c == '_' || c == ':' || Character.isAlphabetic(c) || Character.isDigit(c);
-    }
-
-    private void skipWhiteSpaces(StringBuilder input) {
-        while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
-            input.delete(0, 1);
-        }
-    }
 
     String getNextMacroBody(final StringBuilder input) {
 
@@ -191,17 +189,17 @@ public class Processor {
                     moveMacroCloseToOutput(input, output);
                 }
             } else {
-                var start = input.indexOf(macroOpen);
+                var open = input.indexOf(macroOpen);
                 var close = input.indexOf(macroClose);
-                if (close < start && close != DOES_NOT_CONTAIN || start == DOES_NOT_CONTAIN) {
-                    start = close;
+                if (contains(close) && (!contains(open) || close < open)) {
+                    open = close;
                 }
-                if (start == DOES_NOT_CONTAIN) {
+                if (!contains(open)) {
                     output.append(input);
                     input.setLength(0);
                 } else {
-                    output.append(input.substring(0, start));
-                    skip(input, start);
+                    output.append(input.substring(0, open));
+                    skip(input, open);
                 }
             }
         }
@@ -209,16 +207,11 @@ public class Processor {
     }
 
     private void moveMacroCloseToOutput(StringBuilder input, StringBuilder output) {
-        moveStringToOutput(input, output, macroClose);
+        copy(input, output, macroClose);
     }
 
     private void moveMacroOpenToOutput(StringBuilder input, StringBuilder output) {
-        moveStringToOutput(input, output, macroOpen);
-    }
-
-    private void moveStringToOutput(StringBuilder input, StringBuilder output, String s) {
-        skip(input, s);
-        output.append(s);
+        copy(input, output, macroOpen);
     }
 
 
