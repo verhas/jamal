@@ -7,9 +7,10 @@
     <packaging>pom</packaging>
     <name>multi</name>
     <modules>
-        <module>core</module>
+        <module>engine</module>
         <module>api</module>
         <module>tools</module>
+        <module>core</module>
     </modules>
     <properties>
         <jamal.version>1.0.0-SNAPSHOT</jamal.version>
