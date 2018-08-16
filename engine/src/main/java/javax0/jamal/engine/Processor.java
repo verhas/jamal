@@ -1,8 +1,7 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.MacroRegister;
+import javax0.jamal.api.*;
+import javax0.jamal.api.Input;
 import javax0.jamal.api.UserDefinedMacro;
 
 import java.util.regex.Pattern;
@@ -28,14 +27,13 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public String process(final String in) throws BadSyntax {
+    public String process(final Input in) throws BadSyntax {
         final var output = new StringBuilder();
-        final var input = new StringBuilder(in);
-        while (input.length() > 0) {
-            if (input.indexOf(macroOpen) == 0) {
-                processMacro(output, input);
+        while (in.getInput().length() > 0) {
+            if (in.getInput().indexOf(macroOpen) == 0) {
+                processMacro(output, in);
             } else {
-                processText(output, input);
+                processText(output, in.getInput());
             }
         }
         return output.toString();
@@ -67,29 +65,35 @@ public class Processor implements javax0.jamal.api.Processor {
      * Process the macro that starts at the first character of the input.
      *
      * @param output where the processed macro is appended
-     * @param input  from where the macro source is read and removed
+     * @param in     from where the macro source is read and removed
      */
-    private void processMacro(StringBuilder output, StringBuilder input) throws BadSyntax {
+    private void processMacro(StringBuilder output, Input in) throws BadSyntax {
+        var input = in.getInput();
         skip(input, macroOpen);
         skipWhiteSpaces(input);
         var macro = getNextMacroBody(input);
+        var macroInput = new javax0.jamal.engine.Input();
         if (!firstCharIs(macro, '@')) {
             macros.push();
-            macro = process(macro);
+            macroInput.setReference(in.getReference());
+            macroInput.setInput(new StringBuilder(macro));
+            macro = process(macroInput);
             macros.pop();
         }
-        output.append(evalMacro(macro));
+        macroInput.setReference(in.getReference());
+        macroInput.setInput(new StringBuilder(macro));
+        output.append(evalMacro(macroInput));
     }
 
 
     /**
      * Evaluate a macro. Either user defined macro, built in or otherwise defined.
      *
-     * @param macro the macro text to be processed without the opening and closing string.
+     * @param in the macro text to be processed without the opening and closing string.
      * @return the evaluated macro
      */
-    String evalMacro(final String macro) throws BadSyntax {
-        final var input = new StringBuilder(macro);
+    String evalMacro(final javax0.jamal.engine.Input in) throws BadSyntax {
+        final var input = in.getInput();
         var isBuiltin = macroIsBuiltIn(input);
         final String macroId;
         final boolean verbatim;
@@ -121,7 +125,9 @@ public class Processor implements javax0.jamal.api.Processor {
             return builtin.get().evaluate(input, this);
         } else {
             var rawResult = evalUserDefinedMacro(input);
-            return verbatim ? rawResult : process(rawResult);
+            return verbatim ?
+                rawResult :
+                process(new javax0.jamal.engine.Input(new StringBuilder(rawResult), in.getReference()));
         }
     }
 
@@ -132,9 +138,9 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         skipWhiteSpaces(input);
         var id = fetchId(input);
-            if (id.length() == 0) {
-                return "";
-            }
+        if (id.length() == 0) {
+            return "";
+        }
         if (id.charAt(0) == '$') {
             //TODO handle loop variables
             return "";

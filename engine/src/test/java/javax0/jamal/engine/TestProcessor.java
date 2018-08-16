@@ -41,7 +41,7 @@ public class TestProcessor {
     public void simpleDefine() throws BadSyntax {
         final var input = "{@define q=zqqz}{q}";
         final var sut = new Processor("{", "}");
-        final var result = sut.process(input);
+        final var result = sut.process(new Input(new StringBuilder(input),null));
         Assertions.assertEquals("zqqz", result);
     }
 
@@ -50,7 +50,7 @@ public class TestProcessor {
     public void testSimpleDefineWargs() throws BadSyntax {
         final var input = "{@define q(a,b)=abba}{q/z/q}";
         final var sut = new Processor("{", "}");
-        final var result = sut.process(input);
+        final var result = sut.process(new Input(new StringBuilder(input),null));
         Assertions.assertEquals("zqqz", result);
     }
 
@@ -59,7 +59,7 @@ public class TestProcessor {
     public void testNestedDefine() throws BadSyntax {
         final var input = "{#define b=b}{#define q=zqq{#define b=z}{b}}{q}{b}";
         final var sut = new Processor("{", "}");
-        final var result = sut.process(input);
+        final var result = sut.process(new Input(new StringBuilder(input),null));
         Assertions.assertEquals("zqqzb", result);
     }
     @Test
@@ -67,7 +67,7 @@ public class TestProcessor {
     public void testNestedDefineLater() throws BadSyntax {
         final var input = "{#define b=b}{@define q=zqq{#define b=z}{b}}{q}{b}";
         final var sut = new Processor("{", "}");
-        final var result = sut.process(input);
+        final var result = sut.process(new Input(new StringBuilder(input),null));
         Assertions.assertEquals("zqqzz", result);
     }
 
@@ -76,7 +76,7 @@ public class TestProcessor {
     public void testNestedDefineLateVerbatim() throws BadSyntax {
         final var input = "{#define b=b}{@define q=zqq{}{b}}{@verbatim q}{b}";
         final var sut = new Processor("{", "}");
-        final var result = sut.process(input);
+        final var result = sut.process(new Input(new StringBuilder(input),null));
         Assertions.assertEquals("zqq{}{b}b", result);
     }
 }
