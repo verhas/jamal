@@ -122,7 +122,7 @@ public class Processor implements javax0.jamal.api.Processor {
             if (!builtin.isPresent()) {
                 throw new BadSyntax();
             }
-            return builtin.get().evaluate(input, this);
+            return builtin.get().evaluate(in, this);
         } else {
             var rawResult = evalUserDefinedMacro(input);
             return verbatim ?
