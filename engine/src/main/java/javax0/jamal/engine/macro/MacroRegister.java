@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
-    private ArrayList<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
-    private ArrayList<Map<String, Macro>> macroStack = new ArrayList<>();
+    private final ArrayList<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
+    private final ArrayList<Map<String, Macro>> macroStack = new ArrayList<>();
 
 
     public MacroRegister(){

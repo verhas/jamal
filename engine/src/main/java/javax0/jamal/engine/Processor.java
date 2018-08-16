@@ -5,26 +5,21 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.UserDefinedMacro;
 
-import java.util.List;
-import java.util.ServiceLoader;
 import java.util.regex.Pattern;
 
-import static java.util.stream.Collectors.toList;
 import static javax0.jamal.tools.InputHandler.*;
 
 public class Processor implements javax0.jamal.api.Processor {
 
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
-    private String macroOpen;
-    private String macroClose;
+    private final String macroOpen;
+    private final String macroClose;
 
     public Processor(String macroOpen, String macroClose) {
         this.macroOpen = macroOpen;
         this.macroClose = macroClose;
         Macro.getInstances()
-            .forEach(m -> macros.put(m));
-        //TODO more general built-in macro registration mechanic should be implemented
-        //macros.put(new Define());
+            .forEach(macros::put);
     }
 
     @Override
@@ -91,7 +86,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * Evaluate a macro. Either user defined macro, built in or otherwise defined.
      *
      * @param macro the macro text to be processed without the opening and closing string.
-     * @return
+     * @return the evaluated macro
      */
     String evalMacro(final String macro) throws BadSyntax {
         final var input = new StringBuilder(macro);
@@ -137,13 +132,13 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         skipWhiteSpaces(input);
         var id = fetchId(input);
+            if (id.length() == 0) {
+                return "";
+            }
         if (id.charAt(0) == '$') {
             //TODO handle loop variables
             return "";
         } else {
-            if (id.length() == 0) {
-                return "";
-            }
             skipWhiteSpaces(input);
             final String[] parameters;
             if (input.length() > 0) {
