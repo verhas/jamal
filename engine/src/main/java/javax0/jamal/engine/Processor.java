@@ -3,10 +3,13 @@ package javax0.jamal.engine;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.MacroRegister;
+import javax0.jamal.api.UserDefinedMacro;
 
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.regex.Pattern;
 
+import static java.util.stream.Collectors.toList;
 import static javax0.jamal.tools.InputHandler.*;
 
 public class Processor implements javax0.jamal.api.Processor {
@@ -18,9 +21,15 @@ public class Processor implements javax0.jamal.api.Processor {
     public Processor(String macroOpen, String macroClose) {
         this.macroOpen = macroOpen;
         this.macroClose = macroClose;
-        ServiceLoader.load(Macro.class).stream().forEach(m -> macros.put(m.get()));
+        Macro.getInstances()
+            .forEach(m -> macros.put(m));
         //TODO more general built-in macro registration mechanic should be implemented
         //macros.put(new Define());
+    }
+
+    @Override
+    public UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax {
+        return new javax0.jamal.engine.UserDefinedMacro(id, input, params);
     }
 
     @Override

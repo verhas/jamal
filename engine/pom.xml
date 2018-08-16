@@ -25,6 +25,10 @@
             <artifactId>tools</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax0.jamal</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
         </dependency>
