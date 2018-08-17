@@ -1,5 +1,5 @@
-module engine {
-    requires javax0.jamal.api;
-    requires  javax0.jamal.tools;
+module jamal.engine {
+    requires jamal.api;
+    requires  jamal.tools;
     uses javax0.jamal.api.Macro;
 }

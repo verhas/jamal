@@ -1,3 +1,3 @@
-module javax0.jamal.tools {
+module jamal.tools {
     exports javax0.jamal.tools;
 }

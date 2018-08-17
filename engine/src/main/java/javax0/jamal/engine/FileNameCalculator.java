@@ -8,7 +8,7 @@ public class FileNameCalculator {
     public static String absolute(String reference, String fileName) {
         if (fileName.startsWith("/") ||
             fileName.startsWith("\\") ||
-            fileName.startsWith("~/") ||
+            fileName.startsWith("~") ||
             (fileName.length() > 1 &&
                 Character.isAlphabetic(fileName.charAt(0))
                 && fileName.charAt(1) == ':')) {
@@ -25,21 +25,22 @@ public class FileNameCalculator {
         }
 
         var absoluteFileName = (reference + fileName).replaceAll("//", "/");
-        var path = new ArrayList<String>(Arrays.asList(absoluteFileName.split("/")));
-        var normalized = new ArrayList<String>();
-        while (path.size() > 0) {
-            if (path.size() == 1) {
-                normalized.add(path.get(0));
-                break;
-            }
-            if (!"..".equals(path.get(0)) && "..".equals(path.get(1))) {
-                path.remove(0);
-                path.remove(0);
-            } else {
-                normalized.add(path.remove(0));
+        var path = new ArrayList<>(Arrays.asList(absoluteFileName.split("/")));
+        var i = 0;
+        while( i < path.size() -1 ){
+            if( ".".equals(path.get(i))){
+                path.remove(i);
+            }else if( !"..".equals(path.get(i)) && "..".equals(path.get(i+1))){
+                path.remove(i+1);
+                path.remove(i);
+                if( i > 0 ){
+                    i--;
+                }
+            }else{
+                i++;
             }
         }
-        return String.join("/",normalized);
+        return String.join("/",path);
     }
 
 }
