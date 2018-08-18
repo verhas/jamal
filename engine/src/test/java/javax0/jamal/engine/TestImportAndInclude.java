@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestImport {
+public class TestImportAndInclude {
 
 
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {
@@ -37,5 +37,17 @@ public class TestImport {
     @DisplayName("import definitions")
     public void testImportDefine() throws IOException, BadSyntax {
         assertEquals("xxx is defined already", result("import_defines.jam"));
+    }
+
+    @Test
+    @DisplayName("simple include")
+    public void testSimpleInclude() throws IOException, BadSyntax {
+        assertEquals("alma szilva korte", result("test_include.jam"));
+    }
+
+    @Test
+    @DisplayName("include definitions")
+    public void testIncludeDefine() throws IOException, BadSyntax {
+        assertEquals("** **", result("include_defines.jam"));
     }
 }

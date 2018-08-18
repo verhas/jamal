@@ -131,8 +131,8 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private String evalUserDefinedMacro(final StringBuilder input) throws BadSyntax {
-        final boolean reportUndef = input.charAt(0) == '?';
-        if (reportUndef) {
+        final boolean reportUndef = input.charAt(0) != '?';
+        if (!reportUndef) {
             skip(input, 1);
         }
         skipWhiteSpaces(input);
@@ -154,13 +154,14 @@ public class Processor implements javax0.jamal.api.Processor {
                 parameters = new String[0];
             }
             var udMacro = macros.getUserMacro(id);
-            if (udMacro.isPresent() && reportUndef) {
-                throw new BadSyntax();
-            }
             if (udMacro.isPresent()) {
                 return udMacro.get().evaluate(parameters);
             } else {
-                return "";
+                if (reportUndef) {
+                    throw new BadSyntax("Macro '" + id + "' is not defined.");
+                } else {
+                    return "";
+                }
             }
         }
     }
