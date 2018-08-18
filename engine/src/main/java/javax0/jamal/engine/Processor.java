@@ -72,7 +72,7 @@ public class Processor implements javax0.jamal.api.Processor {
         skip(input, macroOpen);
         skipWhiteSpaces(input);
         var macro = getNextMacroBody(input);
-        var macroInput = new javax0.jamal.engine.Input();
+        var macroInput = new javax0.jamal.tools.Input();
         if (!firstCharIs(macro, '@')) {
             macros.push();
             macroInput.setReference(in.getReference());
@@ -92,7 +92,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param in the macro text to be processed without the opening and closing string.
      * @return the evaluated macro
      */
-    String evalMacro(final javax0.jamal.engine.Input in) throws BadSyntax {
+    String evalMacro(final javax0.jamal.tools.Input in) throws BadSyntax {
         final var input = in.getInput();
         var isBuiltin = macroIsBuiltIn(input);
         final String macroId;
@@ -127,7 +127,7 @@ public class Processor implements javax0.jamal.api.Processor {
             var rawResult = evalUserDefinedMacro(input);
             return verbatim ?
                 rawResult :
-                process(new javax0.jamal.engine.Input(new StringBuilder(rawResult), in.getReference()));
+                process(new javax0.jamal.tools.Input(new StringBuilder(rawResult), in.getReference()));
         }
     }
 

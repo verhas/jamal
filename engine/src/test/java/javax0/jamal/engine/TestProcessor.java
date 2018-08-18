@@ -1,6 +1,7 @@
 package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,5 +79,14 @@ public class TestProcessor {
         final var sut = new Processor("{", "}");
         final var result = sut.process(new Input(new StringBuilder(input),null));
         Assertions.assertEquals("zqq{}{b}b", result);
+    }
+
+    @Test
+    @DisplayName("nested macro definitions with late eval verbatim")
+    public void testComment() throws BadSyntax {
+        final var input = "{#define b=b}{@comment {@define q=zqq{}{b}}}{b}";
+        final var sut = new Processor("{", "}");
+        final var result = sut.process(new Input(new StringBuilder(input),null));
+        Assertions.assertEquals("b", result);
     }
 }

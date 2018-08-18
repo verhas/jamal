@@ -1,12 +1,12 @@
-package javax0.jamal.engine;
+package javax0.jamal.tools;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static javax0.jamal.engine.FileNameCalculator.absolute;
+import static javax0.jamal.tools.FileTools.absolute;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestFileNameCalculator {
+public class TestFileTools {
 
     @Test
     @DisplayName("returns the file name when it is absolute starting with ~")

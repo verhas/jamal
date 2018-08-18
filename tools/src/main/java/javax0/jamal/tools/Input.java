@@ -1,4 +1,4 @@
-package javax0.jamal.engine;
+package javax0.jamal.tools;
 
 public class Input implements javax0.jamal.api.Input {
     private StringBuilder input;
@@ -34,5 +34,10 @@ public class Input implements javax0.jamal.api.Input {
     @Override
     public void setReference(String reference) {
         this.reference = reference;
+    }
+
+    @Override
+    public String toString() {
+        return reference + ":" + input.toString();
     }
 }

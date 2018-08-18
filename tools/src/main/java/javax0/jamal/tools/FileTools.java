@@ -1,9 +1,24 @@
-package javax0.jamal.engine;
+package javax0.jamal.tools;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
-public class FileNameCalculator {
+public class FileTools {
+
+    public static Input getInput(String fileName) throws BadSyntax {
+        try {
+            return new javax0.jamal.tools.Input(new StringBuilder(Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"))), fileName);
+        } catch (IOException e) {
+            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'");
+        }
+    }
 
     public static String absolute(String reference, String fileName) {
         if (fileName.startsWith("/") ||
@@ -27,20 +42,20 @@ public class FileNameCalculator {
         var absoluteFileName = (reference + fileName).replaceAll("//", "/");
         var path = new ArrayList<>(Arrays.asList(absoluteFileName.split("/")));
         var i = 0;
-        while( i < path.size() -1 ){
-            if( ".".equals(path.get(i))){
+        while (i < path.size() - 1) {
+            if (".".equals(path.get(i))) {
                 path.remove(i);
-            }else if( !"..".equals(path.get(i)) && "..".equals(path.get(i+1))){
-                path.remove(i+1);
+            } else if (!"..".equals(path.get(i)) && "..".equals(path.get(i + 1))) {
+                path.remove(i + 1);
                 path.remove(i);
-                if( i > 0 ){
+                if (i > 0) {
                     i--;
                 }
-            }else{
+            } else {
                 i++;
             }
         }
-        return String.join("/",path);
+        return String.join("/", path);
     }
 
 }
