@@ -1,7 +1,6 @@
 package javax0.jamal.engine;
 
 import javax0.jamal.api.*;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.UserDefinedMacro;
 
 import java.util.regex.Pattern;

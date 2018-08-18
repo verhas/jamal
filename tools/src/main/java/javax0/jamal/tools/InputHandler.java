@@ -9,11 +9,6 @@ public class InputHandler {
         return s.charAt(0) == c;
     }
 
-    public static boolean firstNonSpaceIs(CharSequence s, char c) {
-        int i = firstNonSpace(s);
-        return i != DOES_NOT_CONTAIN && s.charAt(i) == c;
-    }
-
     public static int firstNonSpace(CharSequence s) {
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isWhitespace(s.charAt(i))) {
@@ -22,7 +17,6 @@ public class InputHandler {
         }
         return -1;
     }
-
 
     public static void trim(String[] s) {
         convert(s, String::trim);
