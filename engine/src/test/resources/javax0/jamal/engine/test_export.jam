@@ -1,0 +1,4 @@
+{#comment
+  {@define undefined=xxx}
+  {@define defined=defined exported}
+  {@export defined}}{?undefined}{defined}

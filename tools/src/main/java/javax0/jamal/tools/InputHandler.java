@@ -1,5 +1,7 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.BadSyntax;
+
 import java.util.function.Function;
 
 public class InputHandler {
@@ -43,11 +45,22 @@ public class InputHandler {
 
     public static String fetchId(StringBuilder input) {
         final var output = new StringBuilder();
-        while (input.length() > 0 && validIdChar(input.charAt(0))) {
-            output.append(input.charAt(0));
-            skip(input, 1);
+        if (validId1stChar(input.charAt(0))) {
+            while (input.length() > 0 && validIdChar(input.charAt(0))) {
+                output.append(input.charAt(0));
+                skip(input, 1);
+            }
+        }else{
+            while( !Character.isWhitespace(input.charAt(0))){
+                output.append(input.charAt(0));
+                skip(input, 1);
+            }
         }
         return output.toString();
+    }
+
+    public static boolean isGlobalMacro(String id) {
+        return id.contains(":");
     }
 
     public static boolean validId1stChar(char c) {
@@ -67,5 +80,24 @@ public class InputHandler {
     public static void copy(StringBuilder input, StringBuilder output, String s) {
         skip(input, s);
         output.append(s);
+    }
+
+    public static String[] getParameters(StringBuilder input, String id) throws BadSyntax {
+        final String[] params;
+        if (firstCharIs(input, '(')) {
+            skip(input, 1);
+            var closingParen = input.indexOf(")");
+            if (!contains(closingParen)) {
+                throw new BadSyntax("'" + id + "' has parameters, but no ')'");
+            }
+            var param = input.substring(0, closingParen);
+            skip(input, closingParen + 1);
+            skipWhiteSpaces(input);
+            params = param.split(",");
+            trim(params);
+        } else {
+            params = new String[0];
+        }
+        return params;
     }
 }

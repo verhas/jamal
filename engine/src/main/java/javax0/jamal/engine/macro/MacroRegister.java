@@ -1,21 +1,21 @@
 package javax0.jamal.engine.macro;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Delimiters;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.UserDefinedMacro;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
-    private final ArrayList<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
-    private final ArrayList<Map<String, Macro>> macroStack = new ArrayList<>();
+    private final List<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
+    private final List<Map<String, Macro>> macroStack = new ArrayList<>();
+    private final List<Delimiters> delimiters = new ArrayList<>();
 
-
-    public MacroRegister(){
+    public MacroRegister() {
         push();
     }
+
     /**
      * Get a macro based on the id of the macro.
      * <p>
@@ -45,26 +45,77 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void put(UserDefinedMacro macro) {
+    public void global(UserDefinedMacro macro) {
+        udMacroStack.get(0).put(macro.getId(), macro);
+    }
+
+    @Override
+    public void global(Macro macro) {
+        macroStack.get(0).put(macro.getId(), macro);
+    }
+
+    @Override
+    public void define(UserDefinedMacro macro) {
         udMacroStack.get(udMacroStack.size() - 1).put(macro.getId(), macro);
     }
 
     @Override
-    public void put(Macro macro) {
+    public void define(Macro macro) {
         macroStack.get(macroStack.size() - 1).put(macro.getId(), macro);
+    }
+
+    @Override
+    public void export(String id) throws BadSyntax {
+        if (udMacroStack.size() > 1) {
+            var macro = udMacroStack.get(udMacroStack.size() - 1).get(id);
+            if (macro == null) {
+                throw new BadSyntax("Macro '" + id + "' cannot be exported");
+            }
+            udMacroStack.get(udMacroStack.size() - 2).put(id,
+                macro);
+        }
     }
 
     @Override
     public void push() {
         udMacroStack.add(new HashMap<>());
         macroStack.add(new HashMap<>());
+        delimiters.add(new javax0.jamal.engine.Delimiters());
     }
 
     @Override
     public void pop() {
         udMacroStack.remove(udMacroStack.size() - 1);
         macroStack.remove(macroStack.size() - 1);
+        delimiters.remove(delimiters.size() - 1);
     }
 
 
+    @Override
+    public String open() {
+        for (int level = delimiters.size() - 1; level > -1; level--) {
+            var delim = delimiters.get(level);
+            if (delim.open() != null ) {
+                return delim.open();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String close() {
+        for (int level = delimiters.size() - 1; level > -1; level--) {
+            var delim = delimiters.get(level);
+            if (delim.close() != null ) {
+                return delim.close();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void separators(String openDelimiter, String closeDelimiter) {
+        var delim = delimiters.get(delimiters.size() - 1);
+        delim.separators(openDelimiter,closeDelimiter);
+    }
 }

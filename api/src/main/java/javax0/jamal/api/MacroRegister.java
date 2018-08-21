@@ -2,14 +2,14 @@ package javax0.jamal.api;
 
 import java.util.Optional;
 
-public interface MacroRegister {
+public interface MacroRegister extends Delimiters{
     Optional<Macro> geMacro(String id);
     Optional<UserDefinedMacro> getUserMacro(String id);
-    void put(UserDefinedMacro macro);
-
-    void put(Macro macro);
-
+    void global(UserDefinedMacro macro);
+    void global(Macro macro);
+    void define(UserDefinedMacro macro);
+    void define(Macro macro);
+    void export(String id) throws BadSyntax;
     void push();
-
     void pop();
 }

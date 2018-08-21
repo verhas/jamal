@@ -42,6 +42,4 @@ public class TestUserDefinedMacro {
         final var result = sut.evaluate("bbb", "ccc", "ddd", "aaa");
         Assertions.assertEquals("bbb{ccc}ddd{aaa}", result);
     }
-
-
 }

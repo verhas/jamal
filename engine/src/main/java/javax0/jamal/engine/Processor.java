@@ -10,14 +10,13 @@ import static javax0.jamal.tools.InputHandler.*;
 public class Processor implements javax0.jamal.api.Processor {
 
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
-    private final String macroOpen;
-    private final String macroClose;
+    //private final String macroOpen;
+    //private final String macroClose;
 
     public Processor(String macroOpen, String macroClose) {
-        this.macroOpen = macroOpen;
-        this.macroClose = macroClose;
+        macros.separators(macroOpen, macroClose);
         Macro.getInstances()
-            .forEach(macros::put);
+            .forEach(macros::define);
     }
 
     @Override
@@ -29,7 +28,7 @@ public class Processor implements javax0.jamal.api.Processor {
     public String process(final Input in) throws BadSyntax {
         final var output = new StringBuilder();
         while (in.getInput().length() > 0) {
-            if (in.getInput().indexOf(macroOpen) == 0) {
+            if (in.getInput().indexOf(macros.open()) == 0) {
                 processMacro(output, in);
             } else {
                 processText(output, in.getInput());
@@ -50,7 +49,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param input  where the text is read from and removed after wards
      */
     private void processText(StringBuilder output, StringBuilder input) {
-        int nextMacroStart = input.indexOf(macroOpen);
+        int nextMacroStart = input.indexOf(macros.open());
         if (-1 < nextMacroStart) {
             output.append(input.substring(0, nextMacroStart));
             skip(input, nextMacroStart);
@@ -68,7 +67,7 @@ public class Processor implements javax0.jamal.api.Processor {
      */
     private void processMacro(StringBuilder output, Input in) throws BadSyntax {
         var input = in.getInput();
-        skip(input, macroOpen);
+        skip(input, macros.open());
         skipWhiteSpaces(input);
         var macro = getNextMacroBody(input);
         var macroInput = new javax0.jamal.tools.Input();
@@ -119,7 +118,7 @@ public class Processor implements javax0.jamal.api.Processor {
         if (isBuiltin) {
             var builtin = macros.geMacro(macroId);
             if (!builtin.isPresent()) {
-                throw new BadSyntax();
+                throw new BadSyntax("There is no built-in macro with the id '" + macroId + "'");
             }
             return builtin.get().evaluate(in, this);
         } else {
@@ -189,20 +188,20 @@ public class Processor implements javax0.jamal.api.Processor {
                 return output.toString();
             }
 
-            if (input.indexOf(macroOpen) == 0) {
+            if (input.indexOf(macros.open()) == 0) {
                 moveMacroOpenToOutput(input, output);
                 counter++; //count the new opening
-            } else if (input.indexOf(macroClose) == 0) {
+            } else if (input.indexOf(macros.close()) == 0) {
                 counter--; // count the closing
                 if (counter == 0) {
-                    skip(input, macroClose);
+                    skip(input, macros.close());
                     return output.toString();
                 } else {
                     moveMacroCloseToOutput(input, output);
                 }
             } else {
-                var open = input.indexOf(macroOpen);
-                var close = input.indexOf(macroClose);
+                var open = input.indexOf(macros.open());
+                var close = input.indexOf(macros.close());
                 if (contains(close) && (!contains(open) || close < open)) {
                     open = close;
                 }
@@ -219,11 +218,11 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private void moveMacroCloseToOutput(StringBuilder input, StringBuilder output) {
-        copy(input, output, macroClose);
+        copy(input, output, macros.close());
     }
 
     private void moveMacroOpenToOutput(StringBuilder input, StringBuilder output) {
-        copy(input, output, macroOpen);
+        copy(input, output, macros.open());
     }
 
 

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestImportAndInclude {
+public class TestSamples {
 
 
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {
@@ -49,5 +49,47 @@ public class TestImportAndInclude {
     @DisplayName("include definitions")
     public void testIncludeDefine() throws IOException, BadSyntax {
         assertEquals("** **", result("include_defines.jam"));
+    }
+
+    @Test
+    @DisplayName("include global definitions")
+    public void testIncludeGlobalDefine() throws IOException, BadSyntax {
+        assertEquals("* belzebub", result("include_global_defines.jam"));
+    }
+
+    @Test
+    @DisplayName("define with parameters")
+    public void testDefineWithParameters() throws IOException, BadSyntax {
+        assertEquals("ttt_ttt", result("define_with_parameters.jam"));
+    }
+
+    @Test
+    @DisplayName("test exporting")
+    public void testExport() throws IOException, BadSyntax {
+        assertEquals("defined exported", result("test_export.jam"));
+    }
+
+    @Test
+    @DisplayName("test separator setting")
+    public void testSeparator() throws IOException, BadSyntax {
+        assertEquals("121", result("test_sep.jam"));
+    }
+
+    @Test
+    @DisplayName("test script evaluation")
+    public void testScript() throws IOException, BadSyntax {
+        assertEquals("11", result("script.jam"));
+    }
+
+    @Test
+    @DisplayName("test script include")
+    public void testScriptInclude() throws IOException, BadSyntax {
+        assertEquals("11", result("test_script.jam"));
+    }
+
+    @Test
+    @DisplayName("test eval")
+    public void testEval() throws IOException, BadSyntax {
+        assertEquals("apple", result("eval.jam"));
     }
 }
