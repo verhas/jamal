@@ -8,3 +8,11 @@ END SNIPPET
 START SNIPPET comment_output
 this is some text
 END SNIPPET
+
+START SNIPPET define_output
+ macro defined
+this is a simple macro
+ macro defined
+this is A more complex macro
+this is %66h %66h zazu <- %66h is not replaced to zazu in the parameters
+END SNIPPET

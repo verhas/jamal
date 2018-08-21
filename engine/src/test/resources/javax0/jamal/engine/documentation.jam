@@ -9,3 +9,11 @@ START SNIPPET comment{output}
 this is some {@comment this text
 will not appear in the output}text
 END SNIPPET
+
+START SNIPPET define{output}
+{@define parameterless=this is a simple macro} macro defined
+{parameterless}
+{@define withparams(a,b,%66h)=this is a b %66h} macro defined
+{withparams/A/more complex/macro}
+{withparams/%66h/%66h/zazu} <- %66h is not replaced to zazu in the parameters
+END SNIPPET

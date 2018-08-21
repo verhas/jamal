@@ -12,7 +12,14 @@ public class Define implements Macro {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         var input = in.getInput();
         skipWhiteSpaces(input);
+        var optional = input.charAt(0) == '?';
+        if( optional ){
+            skip(input,1);
+        }
         var id = fetchId(input);
+        if( optional && macroIsAlreadyDefined(processor, id)){
+            return "";
+        }
         skipWhiteSpaces(input);
         final String[] params = getParameters(input, id);
         if (!firstCharIs(input, '=')) {
@@ -27,5 +34,9 @@ public class Define implements Macro {
             processor.getRegister().define(macro);
         }
         return "";
+    }
+
+    private boolean macroIsAlreadyDefined(Processor processor, String id) {
+        return processor.getRegister().getUserMacro(id).isPresent();
     }
 }
