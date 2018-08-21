@@ -17,7 +17,12 @@ public class Delimiters implements javax0.jamal.api.Delimiters {
 
     @Override
     public void separators(String openDelimiter, String closeDelimiter) {
-        this.openDelimiter=openDelimiter;
-        this.closeDelimiter=closeDelimiter;
+        this.openDelimiter = openDelimiter;
+        this.closeDelimiter = closeDelimiter;
+    }
+
+    @Override
+    public String toString() {
+        return "{@sep/" + openDelimiter + "/" + closeDelimiter + "}";
     }
 }

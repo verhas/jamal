@@ -1,0 +1,10 @@
+
+START SNIPPET started_output
+
+we have an red 20ounce of size apple
+we have an green 1kg of size melone
+END SNIPPET
+
+START SNIPPET comment_output
+this is some text
+END SNIPPET

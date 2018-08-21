@@ -6,8 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -82,6 +85,13 @@ public class TestSamples {
     }
 
     @Test
+    @DisplayName("test script evaluation")
+    public void testScriptComplex() throws IOException, BadSyntax {
+        assertEquals("1. this is the text that we will repeat two times\n" +
+            "2. this is the text that we will repeat two times\n", result("script_complex.jam"));
+    }
+
+    @Test
     @DisplayName("test script include")
     public void testScriptInclude() throws IOException, BadSyntax {
         assertEquals("11", result("test_script.jam"));
@@ -91,5 +101,13 @@ public class TestSamples {
     @DisplayName("test eval")
     public void testEval() throws IOException, BadSyntax {
         assertEquals("apple", result("eval.jam"));
+    }
+
+    @Test
+    @DisplayName("run documentation script")
+    public void testDocumentation() throws IOException, BadSyntax {
+        var fileName = this.getClass().getResource("documentation.out.jam").getFile();
+        var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
+        assertEquals(fileContent, result("documentation.jam"));
     }
 }

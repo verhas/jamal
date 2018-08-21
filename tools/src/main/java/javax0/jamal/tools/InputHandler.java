@@ -63,6 +63,14 @@ public class InputHandler {
         return id.contains(":");
     }
 
+    public static String convertGlobal(String id){
+        if( id.charAt(0) == ':'){
+            return id.substring(1);
+        }else{
+            return id;
+        }
+    }
+
     public static boolean validId1stChar(char c) {
         return c == '$' || c == '_' || c == ':' || Character.isAlphabetic(c);
     }

@@ -1,0 +1,7 @@
+{@script for(loopvar,start,end,content)=
+    c = ""
+    for( i = start ; i <= end ; i++ ){
+      c = c + content.replace(new RegExp('[' + loopvar + ']', 'g'), i)
+    }
+    c
+}

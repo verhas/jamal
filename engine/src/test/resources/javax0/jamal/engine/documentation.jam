@@ -1,0 +1,11 @@
+{@define output=_output}
+START SNIPPET started{output}
+{@define fruit(color,actualSize,name)=we have an color name of size actualSize}
+{fruit/red/apple/20ounce}
+{fruit/green/melone/1kg}
+END SNIPPET
+
+START SNIPPET comment{output}
+this is some {@comment this text
+will not appear in the output}text
+END SNIPPET

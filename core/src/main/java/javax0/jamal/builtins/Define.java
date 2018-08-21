@@ -19,10 +19,11 @@ public class Define implements Macro {
             throw new BadSyntax("define '" + id + "' has no '=' to body");
         }
         skip(input, 1);
-        var macro = processor.newUserDefinedMacro(id, input.toString(), params);
         if (isGlobalMacro(id)) {
+            var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), params);
             processor.getRegister().global(macro);
         } else {
+            var macro = processor.newUserDefinedMacro(id, input.toString(), params);
             processor.getRegister().define(macro);
         }
         return "";
