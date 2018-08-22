@@ -13,11 +13,12 @@ public class Define implements Macro {
         var input = in.getInput();
         skipWhiteSpaces(input);
         var optional = input.charAt(0) == '?';
-        if( optional ){
-            skip(input,1);
+        if (optional) {
+            skip(input, 1);
+            skipWhiteSpaces(input);
         }
         var id = fetchId(input);
-        if( optional && macroIsAlreadyDefined(processor, id)){
+        if (optional && macroIsAlreadyDefined(processor, id)) {
             return "";
         }
         skipWhiteSpaces(input);

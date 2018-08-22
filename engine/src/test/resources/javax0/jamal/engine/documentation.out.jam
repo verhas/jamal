@@ -15,4 +15,15 @@ this is a simple macro
  macro defined
 this is A more complex macro
 this is %66h %66h zazu <- %66h is not replaced to zazu in the parameters
+here 'withparams' is not redefined
+this is a b c
+
+here we are local
+here we are global
+END SNIPPET
+
+START SNIPPET eval_output
+4
+
+3
 END SNIPPET
