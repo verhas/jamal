@@ -38,6 +38,6 @@ public class Input implements javax0.jamal.api.Input {
 
     @Override
     public String toString() {
-        return reference + ":" + input.toString();
+        return reference + ":" + (input == null ? "null" : input.toString());
     }
 }

@@ -27,7 +27,7 @@ end string.
 
 As a quick sample to have a jump start what Jamal can do:
 
-[//]: ( USE SNIPPET */started)
+<!-- USE SNIPPET */started -->
 ```jam
 {@define fruit(color,actualSize,name)=we have an color name of size actualSize}
 {fruit/red/apple/20ounce}
@@ -36,7 +36,7 @@ As a quick sample to have a jump start what Jamal can do:
 
 will be converted by Jamal to the file
 
-[//]: ( USE SNIPPET */started_output)
+<!-- USE SNIPPET */started_output -->
 ```jam
 
 we have an red 20ounce of size apple
@@ -77,7 +77,7 @@ built-in macro `export`.
 definitions without side effects. For more about definition scopes and exporting read
 the section about `export`.
 
-[//]: ( USE SNIPPET */comment)
+<!-- USE SNIPPET */comment -->
 ```jam
 this is some {@comment this text
 will not appear in the output}text
@@ -85,7 +85,7 @@ will not appear in the output}text
 will generate
 
 
-[//]: ( USE SNIPPET */comment_output)
+<!-- USE SNIPPET */comment_output -->
 ```jam
 this is some text
 ```
@@ -136,7 +136,7 @@ as the formal parameters.
 
 In the following sample code you can see some examples that demonstrate these.
 
-[//]: ( USE SNIPPET */define)
+<!-- USE SNIPPET */define -->
 ```jam
 {@define parameterless=this is a simple macro} macro defined
 {parameterless}
@@ -152,7 +152,7 @@ here we are {x}
 
 will generate
 
-[//]: ( USE SNIPPET */define_output)
+<!-- USE SNIPPET */define_output -->
 ```jam
  macro defined
 this is a simple macro
@@ -174,7 +174,7 @@ here we are global
 eval/scripttype script
 ```
 
-If eval is followed by `/` character then the next identifier is the type of the script.
+If `eval` is followed by `/` character then the next identifier is the type of the script.
 If this is missing the default is `JavaScript`. You can use any scripting language that
 implements the Java scripting API and the interpreter is available on the classpath when Jamal is
 executed.
@@ -184,14 +184,14 @@ Java built-in JavaScript interpreter. Note that in the second example the macro 
 character `#` therefore the body of the macro is parsed for other macros before `eval` itself is invoked.
 That way `{a}` and `{b}` are replaced with their defined values and what eval sees is `1+2`.
 
-[//]: ( USE SNIPPET */eval)
+<!-- USE SNIPPET */eval -->
 ```jam
 {@eval/JavaScript 1+3}
 {@define a=1}{@define b=2}
 {#eval {a}+{b}}
 ```
 
-[//]: ( USE SNIPPET */eval_output)
+<!-- USE SNIPPET */eval_output -->
 ```jam
 4
 
@@ -234,5 +234,61 @@ The name of the file can be absolute or it can be relative to the file that impo
 Use `include` to get the content of a file into the main output.
 
 ### `script`
+
+The macro `script` defines a user defined macro that is interpreted as a script. The syntax
+of the command is
+
+```jam
+script/scripttype id(parameters)=body
+```
+
+If `script` is followed by `/` character then the next identifier is the type of the script.
+If this is missing the default is `JavaScript`. You can use any scripting language that
+implements the Java scripting API and the interpreter is available on the classpath when Jamal is
+executed.
+
+The parameters can be used in the script as variables, thus in this case the characters used in
+the names of the parameters should be restricted to the characters that can be used in the names
+in the scripting language. Usually: normal identifiers. When the user defined macro is used the
+global variables of the same name are set with the actual values of the parameters.
+
+The following sample shows a simple script that implements a looping construct using JavaScript.
+The source Jamal file:
+
+<!--USE SNIPPET */script -->
+```jam
+{@script for(loopvar,start,end,content)=
+    c = ""
+    for( i = start ; i <= end ; i++ ){
+      c = c + content.replace(new RegExp( loopvar , 'g'), i)
+    }
+    c
+}
+{for%xxx%1%3%xxx. iterated
+}
+```
+
+The output generalted by the Jamal preprocessor:
+
+<!--USE SNIPPET */script_output -->
+```jam
+
+1. iterated
+2. iterated
+3. iterated
+
+```
+
+Note that the JavaScript code itself contains the macro starting and ending characters. This
+does not do any harm so long as long these are in pairs, though it is a better practice to 
+change the separator characters to something that can not appear in the body of the
+user defined macro.
+
+
 ### `sep`
+
+This macro can be used to temporarily change the macro starting and ending script. In the
+examples in this documentation we use `{` as starting string and `}` as ending string, but
+Jamal itself does not impose 
+
 ### `export`

@@ -110,4 +110,10 @@ public class TestSamples {
         var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
         assertEquals(fileContent, result("documentation.jam"));
     }
+
+    @Test
+    @DisplayName("complex sep use with restore")
+    public void testSepComplex() throws IOException, BadSyntax {
+        assertEquals("apple", result("sep_complex.jam"));
+    }
 }

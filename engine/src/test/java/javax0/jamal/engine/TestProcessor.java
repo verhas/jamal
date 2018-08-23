@@ -10,7 +10,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("fetches the first macro without any inner macros")
-    public void getFirstMacro() {
+    public void getFirstMacro() throws BadSyntax {
         final var input = new StringBuilder("this is the body of the macro}");
         final var sut = new Processor("{", "}");
         final var result = sut.getNextMacroBody(input);
@@ -19,7 +19,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("fetches the first macro with inner macros")
-    public void getNestedMacro() {
+    public void getNestedMacro() throws BadSyntax{
         final var input = new StringBuilder("this is the {body} of the macro}");
         final var sut = new Processor("{", "}");
         final var result = sut.getNextMacroBody(input);
@@ -28,7 +28,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("fetches the second on the second call macro with inner macros")
-    public void getSecondMacro() {
+    public void getSecondMacro() throws BadSyntax{
         final var input = new StringBuilder("this is the {body} of the macro}{this is the second macro}");
         final var sut = new Processor("{", "}");
         sut.getNextMacroBody(input);

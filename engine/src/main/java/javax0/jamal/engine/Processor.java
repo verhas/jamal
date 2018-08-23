@@ -13,7 +13,7 @@ public class Processor implements javax0.jamal.api.Processor {
     //private final String macroOpen;
     //private final String macroClose;
 
-    public Processor(String macroOpen, String macroClose) {
+    public Processor(String macroOpen, String macroClose) throws BadSyntax {
         macros.separators(macroOpen, macroClose);
         Macro.getInstances()
             .forEach(macros::define);

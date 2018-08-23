@@ -11,6 +11,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     private final List<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
     private final List<Map<String, Macro>> macroStack = new ArrayList<>();
     private final List<Delimiters> delimiters = new ArrayList<>();
+    private final List<List<Delimiters>> savedDelimiters = new ArrayList<>();
 
     public MacroRegister() {
         push();
@@ -81,6 +82,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         udMacroStack.add(new HashMap<>());
         macroStack.add(new HashMap<>());
         delimiters.add(new javax0.jamal.engine.Delimiters());
+        savedDelimiters.add(new ArrayList<>());
     }
 
     @Override
@@ -88,6 +90,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         udMacroStack.remove(udMacroStack.size() - 1);
         macroStack.remove(macroStack.size() - 1);
         delimiters.remove(delimiters.size() - 1);
+        savedDelimiters.remove(savedDelimiters.size() - 1);
     }
 
 
@@ -95,7 +98,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     public String open() {
         for (int level = delimiters.size() - 1; level > -1; level--) {
             var delim = delimiters.get(level);
-            if (delim.open() != null ) {
+            if (delim.open() != null) {
                 return delim.open();
             }
         }
@@ -106,7 +109,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     public String close() {
         for (int level = delimiters.size() - 1; level > -1; level--) {
             var delim = delimiters.get(level);
-            if (delim.close() != null ) {
+            if (delim.close() != null) {
                 return delim.close();
             }
         }
@@ -114,8 +117,22 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void separators(String openDelimiter, String closeDelimiter) {
-        var delim = delimiters.get(delimiters.size() - 1);
-        delim.separators(openDelimiter,closeDelimiter);
+    public void separators(String openDelimiter, String closeDelimiter) throws BadSyntax {
+        if (openDelimiter == null) {
+            var delim = delimiters.get(delimiters.size() - 1);
+            var list = savedDelimiters.get(savedDelimiters.size() - 1);
+            if( list.size() == 0 ){
+                throw new BadSyntax("There was no saved macro start and end string to restore.");
+            }
+            var savedDelim = list.remove(list.size() - 1);
+            delim.separators(savedDelim.open(), savedDelim.close());
+        } else {
+            var delim = delimiters.get(delimiters.size() - 1);
+            var list = savedDelimiters.get(savedDelimiters.size() - 1);
+            var savedDelim = new javax0.jamal.engine.Delimiters();
+            savedDelim.separators(delim.open(),delim.close());
+            list.add(savedDelim);
+            delim.separators(openDelimiter, closeDelimiter);
+        }
     }
 }

@@ -27,3 +27,11 @@ START SNIPPET eval_output
 
 3
 END SNIPPET
+
+START SNIPPET script_output
+
+1. iterated
+2. iterated
+3. iterated
+
+END SNIPPET
