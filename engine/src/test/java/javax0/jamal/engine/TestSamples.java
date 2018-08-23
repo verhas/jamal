@@ -114,6 +114,15 @@ public class TestSamples {
     @Test
     @DisplayName("complex sep use with restore")
     public void testSepComplex() throws IOException, BadSyntax {
-        assertEquals("apple", result("sep_complex.jam"));
+        assertEquals("\n" +
+            "\n" +
+            "\n" +
+            "zazizazi[[?z]]", result("sep_complex.jam"));
+    }
+
+    @Test
+    @DisplayName("ident protects argument from post evaluation")
+    public void testIdent() throws IOException, BadSyntax {
+        assertEquals("\n\n\n\n{a}\n13\n{a}", result("ident.jam"));
     }
 }

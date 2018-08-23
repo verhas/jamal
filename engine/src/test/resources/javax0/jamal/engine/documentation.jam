@@ -1,5 +1,5 @@
 {@define output=_output}
-{@comment
+
 START SNIPPET started{output}
 {@define fruit(color,actualSize,name)=we have an color name of size actualSize}
 {fruit/red/apple/20ounce}
@@ -42,17 +42,27 @@ START SNIPPET script{output}
 }
 END SNIPPET
 
-}
+START SNIPPET verbatim1{output}
+{@define a=this is it}{@define b={a}}{#define c={b}}{c}
+END SNIPPET
+
+START SNIPPET verbatim2{output}
+{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}
+END SNIPPET
 
 START SNIPPET sep{output}
 {@sep/[[/]]}
 [[@define apple=fruit]]
 [[apple]]
-[[#comment {@sep/<</>>}
-<<@define z=zazi>><<@export z>>
+[[#comment [[@sep/<</>>]]
+<<@define z=zazi>>
 <<#sep>>
-[[#define a1=[[?z]]]]
+[[#define a1=[[z]]]]
 [[@define a2=[[z]]]]
+[[@define a3={z}]]
+[[@export a1,a2,a3]]
 ]]
-{z}{a1}{a2}
+[[@sep]]
+{@define z=SSS}
+{z}{a1}{a2}{a3}{@verbatim a3}
 END SNIPPET

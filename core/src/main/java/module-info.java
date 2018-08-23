@@ -8,7 +8,8 @@ module jamal.core {
         javax0.jamal.builtins.Export,
         javax0.jamal.builtins.Sep,
         javax0.jamal.builtins.Script,
-        javax0.jamal.builtins.Eval
+        javax0.jamal.builtins.Eval,
+        javax0.jamal.builtins.Ident
         ;
     requires jamal.api;
     requires jamal.tools;

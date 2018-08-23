@@ -89,4 +89,15 @@ public class TestProcessor {
         final var result = sut.process(new Input(new StringBuilder(input),null));
         Assertions.assertEquals("b", result);
     }
+
+
+
+    @Test
+    @DisplayName("test verbatim protected user defined macro")
+    public void testVerbatimUdMacroUse() throws BadSyntax {
+        final var input = "{@define b={zz}}{@verbatim b}";
+        final var sut = new Processor("{", "}");
+        final var result = sut.process(new Input(new StringBuilder(input),null));
+        Assertions.assertEquals("{zz}", result);
+    }
 }

@@ -284,11 +284,171 @@ does not do any harm so long as long these are in pairs, though it is a better p
 change the separator characters to something that can not appear in the body of the
 user defined macro.
 
+### `verbatim`
+
+The macro `verbatim` is a special one, because it is hardwired into the evaluation logic of
+Jamal and not a "real" built-in macro. In other words if there are user defined macros and
+built-in macros then `verbatim` is one level deeper built-in than the other built-in macros.
+
+To understand what it does we have to discuss first how Jama evaluates the different macros.
+
+Jamal parses the input from the start towards the end and copies the characters from the
+input to the output. Whenever it sees a macro then it evaluates the macro and the result of
+the evaluation is copied to the output. This evaluation is done in three steps, two of
+those are recursive. Let's have a simple example:
+
+<!--USE SNIPPET */verbatim1 -->
+```jam
+{@define a=this is it}{@define b={a}}{#define c={b}}{c}
+```
+
+The macro `a` is defined simple. It is `this is it`. Whenever `a` is evaluated it will result
+the string `this is it`.
+
+The macro `b` has the value `{a}`. When `b` is evaluated it results `{a}` and then before
+using this output in place of the use of the macro `b` this result is evaluated by Jamal as
+a new input. If the macro start and end strings are still `{` and `}` at this time, then
+this second recursive evaluation will result the string `this is it`.
+
+The macro `c` is defined using the `#` character at the start of the macro, therefore Jamal
+will process the body of the macro before processing the built-in macro `define` itself.
+Essentially it will evaluate `{b}`, put the resulting characters after the `=` sign
+in the definition of `c` and then evaluate the `define`.
+
+As we discussed above when this time `{b}` is evaluated it results `{a}`, which also gets evaluated
+and then it results `this is it`. Therefore the value of the macro `c` is `this is it` and
+that is what we see in the output:
+
+<!--USE SNIPPET */verbatim1_output -->
+```jam
+this is it
+```
+
+This way the evaluation of a macro is done in three steps:
+
+1. Evaluate the body of the macro unless the macro is built-in and starts with the character `@`.
+   When evaluating the macros in the body of the macro start a new scope and evaluate the macros
+   following these three steps.
+2. Evaluate the macro itself.
+3. If the macro is user defined then evaluate the output of the macro and if it contains
+   macros then evaluate those using these three steps.
+
+As you can see the first and the last steps are recursive steps. The first step can be skipped
+using the `@` character. The second step cannot be skipped, and after all there is no reason to
+skip it. In case of user defined macro the third step can be skipped using the macro `verbatim`.
+
+The syntax of the `verbatim` macro is the following:
+
+```jam
+verbatim userDefinedMacroUse
+```
+
+The `verbatim` macro has to be followed by a user defined macro usage. If we modify the previous
+example to use `verbatim` we can do it the following way:
+
+<!--USE SNIPPET */verbatim2 -->
+```jam
+{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}
+```
+
+In this example `{@verbatim b}` is the same as `{b}` in the previous example with the
+exception that after `b` is evaluated the result is not processed further for macros
+but it is used directly (verbatim) as the value of the new macro `c`. Also when we
+use `{c}` the result of `c` is scanned as a third step for further macros and indeed 
+in this case there is one, because the value of the macro `c` is `{a}` in this case, that further
+evaluates to `this is it`. On the other hand when we use `{@verbatim c}` then the
+result `{a}` is not processed any further.
+
+<!--USE SNIPPET */verbatim2_output -->
+```jam
+this is it {a}
+```
 
 ### `sep`
 
-This macro can be used to temporarily change the macro starting and ending script. In the
+This macro can be used to temporarily change the macro starting and ending string. In the
 examples in this documentation we use `{` as starting string and `}` as ending string, but
-Jamal itself does not impose 
+Jamal itself does not impose any such predefined setting.
+
+The syntax of the command is
+
+```jam
+sep /startString/endString
+```
+
+There can be whitespace characters after the macro name `sep`, but these are optional. The first
+non spac character is used as a separator character that separates the macro starting string from
+the macro ending string. It is usually the `/` character, but it can be anything that does not
+appear in the start string.
+
+Note that the macro `sep` should be terminated with the original macro ending string, but the
+macros after it already have to use the altered start and end strings.
+
+The change of the start and the end strings always happens in pairs. The change is valid only
+for the current scope and the original value is used when returning from the scope, even if the
+start and end strings were set to different values multiple times.
+
+When the start and the end strings are set the original values are stored in a list. When the
+macro `sep` is used withot any separator string, in other words it is nothing more than the
+`sep` macro name, like `{@sep}` then the last start and end string are restored.
+
+The following sample is executed with `{` and `}` as start and end string at the beginning.
+After that it sets the strings to `[[` and `]]`. This is used to define the macro `apple`. After
+this when the scope of the next macro, `comment` starts the start and end strings are still `[[`
+and `]]`.  Starting a new scope does not change the macro start and end strings.
+
+Note, however, that it would be an error to use `[[sep]]` inside the scope of the macro
+`comment` at this point. In that scope at the start there is no start and end strings to be
+restored. The start and end strings do not belong to this scope, they are simply inherited
+from the outer scope. On the other hand the sample can change the strings, as it does to
+`<<` and `>>`. Using these it defines the macro `z`. Note that z is not exported from this
+scope.
+
+After that the `<<@sep>>` restores the start and end strings to the inherited one and with these
+it defines `a1` and `a2` and also exports them. Note, that `a1` will have the actual value of
+the macro `z` evaluated inside the scope of the `comment` macro. The macro `a2` starts with `@`
+thus the body is not parsed during the macro definition and thus the value of `a2` is `[[z]]`
+unevaluated, as it is. Similarly the macro `a3` will have the value`{z}`.
+
+All these macroes are evaluated because the macro `comment` is started with the character
+`#` which means that Jamal will evaluate the body of the macro before evaluating the
+macro itself.
+
+After the `comment` macro the separators are set back to the original value `{` and `}`.
+Then we have a simple macro definition that defines `z` and then this `z` is used, and
+also the exported `a1`, `a2` and `a3`.
+
+`z` is now, as defined in the outer scope is `SSS`. `a1` has the value that came from the
+macro `z` as it was defined inside the scope of the macro `comment`. Macro `a2` has the
+value `[[z]]` that has nothing special in the current scope. The macro `a3` has the value
+`{z}` which is evaluated after the macro `a3` is replaced with its value and 
+
+<!--USE SNIPPET */sep -->
+```jam
+{@sep/[[/]]}
+[[@define apple=fruit]]
+[[apple]]
+[[#comment [[@sep/<</>>]]
+<<@define z=zazi>>
+<<#sep>>
+[[#define a1=[[z]]]]
+[[@define a2=[[z]]]]
+[[@define a3={z}]]
+[[@export a1,a2,a3]]
+]]
+[[@sep]]
+{@define z=SSS}
+{z}{a1}{a2}{a3}{@verbatim a3}
+```
+<!--USE SNIPPET */sep_output -->
+```jam
+
+
+fruit
+
+
+
+SSSzazi[[z]]SSS{z}
+```
 
 ### `export`

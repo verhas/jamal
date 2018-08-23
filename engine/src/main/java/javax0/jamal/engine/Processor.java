@@ -9,9 +9,10 @@ import static javax0.jamal.tools.InputHandler.*;
 
 public class Processor implements javax0.jamal.api.Processor {
 
-    final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
+    private static final String NOT_USED = null;
     //private final String macroOpen;
     //private final String macroClose;
+    final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
 
     public Processor(String macroOpen, String macroClose) throws BadSyntax {
         macros.separators(macroOpen, macroClose);
@@ -83,9 +84,8 @@ public class Processor implements javax0.jamal.api.Processor {
         output.append(evalMacro(macroInput));
     }
 
-
     /**
-     * Evaluate a macro. Either user defined macro, built in or otherwise defined.
+     * Evaluate a macro. Either user defined macro or built in.
      *
      * @param in the macro text to be processed without the opening and closing string.
      * @return the evaluated macro
@@ -98,22 +98,15 @@ public class Processor implements javax0.jamal.api.Processor {
         if (isBuiltin) {
             skip(input, 1);
             skipWhiteSpaces(input);
-            var fetched = fetchId(input);
-            verbatim = "verbatim".equals(fetched);
+            macroId = fetchId(input);
+            verbatim = "verbatim".equals(macroId);
             if (verbatim) {
+                isBuiltin = false;
                 skipWhiteSpaces(input);
-                isBuiltin = macroIsBuiltIn(input);
-                if (isBuiltin) {
-                    macroId = fetchId(input);
-                } else {
-                    macroId = fetched;
-                }
-            } else {
-                macroId = fetched;
             }
         } else {
             verbatim = false;
-            macroId = null;
+            macroId = NOT_USED;
         }
         if (isBuiltin) {
             var builtin = macros.geMacro(macroId);
@@ -139,30 +132,26 @@ public class Processor implements javax0.jamal.api.Processor {
         if (id.length() == 0) {
             return "";
         }
-        if (id.charAt(0) == '$') {
-            //TODO handle loop variables
-            return "";
+        skipWhiteSpaces(input);
+        final String[] parameters;
+        if (input.length() > 0) {
+            var separator = input.substring(0, 1);
+            skip(input, 1);
+            parameters = input.toString().split(Pattern.quote(separator));
         } else {
-            skipWhiteSpaces(input);
-            final String[] parameters;
-            if (input.length() > 0) {
-                var separator = input.substring(0, 1);
-                skip(input, 1);
-                parameters = input.toString().split(Pattern.quote(separator));
+            parameters = new String[0];
+        }
+        var udMacro = macros.getUserMacro(id);
+        if (udMacro.isPresent()) {
+            return udMacro.get().evaluate(parameters);
+        } else {
+            if (reportUndef) {
+                throw new BadSyntax("Macro '" + id + "' is not defined.");
             } else {
-                parameters = new String[0];
-            }
-            var udMacro = macros.getUserMacro(id);
-            if (udMacro.isPresent()) {
-                return udMacro.get().evaluate(parameters);
-            } else {
-                if (reportUndef) {
-                    throw new BadSyntax("Macro '" + id + "' is not defined.");
-                } else {
-                    return "";
-                }
+                return "";
             }
         }
+
     }
 
     /**
