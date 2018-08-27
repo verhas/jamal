@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
@@ -20,8 +21,21 @@ public class TestSamples {
 
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {
         var fileName = this.getClass().getResource(testFile).getFile();
+        fileName = fixupPath(fileName);
         var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
         return new Input(new StringBuilder(fileContent), fileName);
+    }
+
+    /**
+     * Fixup the JDK bug JDK-8197918
+     * @param fileName the file name that may contain an erroneous leading / on Windows
+     * @return the fileName without the leading / if it contains ':', so it is assumed this is Windows
+     */
+    private String fixupPath(String fileName) {
+        if (fileName.contains(":")) {
+            fileName = fileName.substring(1);
+        }
+        return fileName;
     }
 
     private String result(String testFile) throws IOException, BadSyntax {
@@ -107,6 +121,7 @@ public class TestSamples {
     @DisplayName("run documentation script")
     public void testDocumentation() throws IOException, BadSyntax {
         var fileName = this.getClass().getResource("documentation.out.jam").getFile();
+        fileName = fixupPath(fileName);
         var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
         assertEquals(fileContent, result("documentation.jam"));
     }
