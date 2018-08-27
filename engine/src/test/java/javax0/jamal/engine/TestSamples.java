@@ -99,6 +99,12 @@ public class TestSamples {
     }
 
     @Test
+    @DisplayName("import only selected macros")
+    public void testSelectedImport() throws IOException, BadSyntax {
+        assertEquals("\n2468", result("import_only_selected.jam"));
+    }
+
+    @Test
     @DisplayName("test script evaluation")
     public void testScriptComplex() throws IOException, BadSyntax {
         assertEquals("1. this is the text that we will repeat two times\n" +

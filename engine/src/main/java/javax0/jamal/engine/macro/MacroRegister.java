@@ -72,8 +72,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
             if (macro == null) {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported");
             }
-            udMacroStack.get(udMacroStack.size() - 2).put(id,
-                macro);
+            udMacroStack.get(udMacroStack.size() - 2).put(id, macro);
+        } else {
+            throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
         }
     }
 
@@ -121,7 +122,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         if (openDelimiter == null) {
             var delim = delimiters.get(delimiters.size() - 1);
             var list = savedDelimiters.get(savedDelimiters.size() - 1);
-            if( list.size() == 0 ){
+            if (list.size() == 0) {
                 throw new BadSyntax("There was no saved macro start and end string to restore.");
             }
             var savedDelim = list.remove(list.size() - 1);
@@ -130,7 +131,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
             var delim = delimiters.get(delimiters.size() - 1);
             var list = savedDelimiters.get(savedDelimiters.size() - 1);
             var savedDelim = new javax0.jamal.engine.Delimiters();
-            savedDelim.separators(delim.open(),delim.close());
+            savedDelim.separators(delim.open(), delim.close());
             list.add(savedDelim);
             delim.separators(openDelimiter, closeDelimiter);
         }

@@ -1,6 +1,6 @@
 # jamal
 
-##Just Another Macro Language
+Just Another Macro Language
 
 Jamal is a text to text processor. It can be used as a templating engine or just to maintain
 redundant text files. During development, documentation many times there are text files that
@@ -14,13 +14,13 @@ you need to maintain, which contain redundant information.
   symbolic anchors and references.
 * If you have any other use, please tell us.
 
-Generally Jamal reads a text file and generates another one. In the source file it
-processess macros and the result of the macros get in place of the macros. That way
+Generally, Jamal reads a text file and generates another one. In the source file, it
+processes macros and the result of the macros get in place of the macros. That way
 text and macro is mixed in a convenient way.
 
 Macros are delimited with special start and end strings. Jamal does not have any default
 for that. The initial setting for these strings is given by the embedding application.
-For documentation purposes in the examples we will use `{` as start string and `}` as
+For documentation purposes in the examples, we will use `{` as start string and `}` as
 end string.
 
 ## Simple Example
@@ -43,9 +43,9 @@ we have an red 20ounce of size apple
 we have an green 1kg of size melone
 ```
 
-In this sample the built-in macro `define` is used to define a so called user defined macro
-`fruit`. This macro has three arguments named `color`, `actualSize` and `name`. When the user
-defined macro is used these arguments are replaced with the actual values.
+In this sample, the built-in macro `define` is used to define a so-called user-defined macro
+`fruit`. This macro has three arguments named `color`, `actualSize` and `name`.
+When the user-defined macro is used these arguments are replaced with the actual values.
 
 ## Other macros
 
@@ -58,12 +58,13 @@ defined macro is used these arguments are replaced with the actual values.
 * `import`
 * `include`
 * `script`
-* `sep`, and
+* `sep`
+* `ident`, and
 * `verbatim`
 
 The built-in macros are used with `#` or `@` in front of the name of the macro. These characters
-signal that the macro is not user defined, but rather built in and they also have a side effect.
-The usual use is to start a macro with `@` character. In that case the macro is evaluated
+signal that the macro is not user-defined but rather built in and they also have a side effect.
+The usual use is to start a macro with `@` character. In that case, the macro is evaluated
 with the rest of the input till the closing string (`}` in the samples) as the input is.
 If the macro is started with `#` then the input is first parsed for other macros, they are
 evaluated their result replacing the occurrences and the macro is evaluated only after this
@@ -92,7 +93,7 @@ this is some text
 
 ### `define`
 
-`define` defines a user defined macro in the current scope. Scopes are explained in the section
+`define` defines a user-defined macro in the current scope. Scopes are explained in the section
 about `export`. The syntax is
 
 ```jam
@@ -108,10 +109,16 @@ do not contain a comma `,`, because the list is comma separated, and a closing p
 `)` because that is the character that terminates the list of the parameters. It is
 recommended to use normal identifiers and no spaces in the parameter names.
 
+Somebody may follow other conventions, like starting every parameter with the `$` or
+enclosing the parameter names between `|` or `/` or some other characters. These
+practices can be absolutely okay so long as long they support the readability of the
+macro body and the use of the macro. Applying such practices may help to visually
+separate the macro parameters from the textual content of the macro body.
+
 To ensure that the parameter replacing is consistent and possible to follow
-the parameter names can not contain each other as substring. If there was a parameter `a` with
-an actual value `oneA` and another `aa` with an actual value `twoAs` then the occurrences 
-of `aa` in the body could be replaced to `twoAs` or `oneAoneA`. During the replacement
+the parameter names cannot contain each other as a substring. If there was a parameter `a` with
+an actual value `oneA` and another `aa` with an actual value `twoAs` then the
+occurrences of `aa` in the body could be replaced to `twoAs` or `oneAoneA`. During the replacement
 when an actual value of a parameter contains the same or one or more other parameters these
 will not be replaced. The actual values get into the body replacing the formal parameters
 as they are provided.
@@ -120,21 +127,21 @@ It is possible to use a question mark `?` after the macro keyword `define`. If t
 macro is only defined if the macro is NOT yet defined in the current scope or any other
 larger scope.
 
-When the name of the macro contains at least one  colon charater `:` then the macro will be
+When the name of the macro contains at least one colon character `:` then the macro will be
 defined in the global scope and thus valid from that point on everywhere in the text. It is
-also possible to define a user defined macro to be global without `:` in the name. If the
+also possible to define a user-defined macro to be global without `:` in the name. If the
 very first character of the name of the macro is `:` then this character is removed and the
 macro is defined in the global scope.
 
-When a user defined macro is used the parameters are defined after the name of the macro. In
-case of user defined macros there is no `@` or `#` in front of the name of the macro. Thw
+When a user-defined macro is used the parameters are defined after the name of the macro. In
+case of user-defined macros, there is no `@` or `#` in front of the name of the macro. The
 parameters stand after the name of the macro separated by a character. The first
 non-whitespace character after the name of the macro is the separator character. It is usually
 `/` as in the examples below, but it can be any character that does not appear inside any of
 the actual values of the parameters. The number of the parameters should be exactly the same
 as the formal parameters.
 
-In the following sample code you can see some examples that demonstrate these.
+In the following sample code, you can see some examples that demonstrate these.
 
 <!-- USE SNIPPET */define -->
 ```jam
@@ -179,8 +186,8 @@ If this is missing the default is `JavaScript`. You can use any scripting langua
 implements the Java scripting API and the interpreter is available on the classpath when Jamal is
 executed.
 
-The following two examples show how eval can be used to evaluate simple arithmetic expressions using thr
-Java built-in JavaScript interpreter. Note that in the second example the macro `eval` is preceeded with the
+The following two examples show how `eval` can be used to evaluate simple arithmetic expressions using the
+Java built-in JavaScript interpreter. Note that in the second example the macro `eval` is preceded with the
 character `#` therefore the body of the macro is parsed for other macros before `eval` itself is invoked.
 That way `{a}` and `{b}` are replaced with their defined values and what eval sees is `1+2`.
 
@@ -203,10 +210,10 @@ That way `{a}` and `{b}` are replaced with their defined values and what eval se
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
 If there is anything defined in that file it will be imported into the scope of the current
 file. If the macro start and end characters are redefined using the `sep` macro it will change
-for the file that imported the other file. If there are any user defined macros defined in the
-top level scope of the file, they will be available in the  importing file.
+for the file that imported the other file. If there are any user-defined macros defined in the
+top-level scope of the file, they will be available in the importing file.
 
-On the other hand the output the processing of the file generates will be discarded.
+On the other hand, the output the processing of the file generates will be discarded.
 
 The syntax of the command is
 
@@ -218,9 +225,9 @@ Use `import` to import user defined macro definitions.
 
 ### `include`
 
-`import` reads a file similary to `import` but it starts a new scope for the processing og the
-included file. File included cannot redefine the macro starting and ending string and can define
-user defined macros for the file including only if the macro is exported from the top level
+`import` reads a file similarly to `import` but it starts a new scope for the processing of the
+included file. The file included cannot redefine the macro starting and ending string and can define
+user-defined macros for the file including only if the macro is exported from the top level
 scope of the included file.
 
 The macro itself is replaced by the output generated by the processing of the included file.
@@ -235,7 +242,7 @@ Use `include` to get the content of a file into the main output.
 
 ### `script`
 
-The macro `script` defines a user defined macro that is interpreted as a script. The syntax
+The macro `script` defines a user-defined macro that is interpreted as a script. The syntax
 of the command is
 
 ```jam
@@ -247,9 +254,9 @@ If this is missing the default is `JavaScript`. You can use any scripting langua
 implements the Java scripting API and the interpreter is available on the classpath when Jamal is
 executed.
 
-The parameters can be used in the script as variables, thus in this case the characters used in
+The parameters can be used in the script as variables, thus, in this case, the characters used in
 the names of the parameters should be restricted to the characters that can be used in the names
-in the scripting language. Usually: normal identifiers. When the user defined macro is used the
+in the scripting language. Usually: normal identifiers. When the user-defined macro is used the
 global variables of the same name are set with the actual values of the parameters.
 
 The following sample shows a simple script that implements a looping construct using JavaScript.
@@ -268,7 +275,7 @@ The source Jamal file:
 }
 ```
 
-The output generalted by the Jamal preprocessor:
+The output generated by the Jamal preprocessor:
 
 <!--USE SNIPPET */script_output -->
 ```jam
@@ -282,12 +289,38 @@ The output generalted by the Jamal preprocessor:
 Note that the JavaScript code itself contains the macro starting and ending characters. This
 does not do any harm so long as long these are in pairs, though it is a better practice to 
 change the separator characters to something that can not appear in the body of the
-user defined macro.
+user-defined macro.
+
+### `ident`
+
+`ident` is an extremely simple macro. It just returns the body of the macro. The name 
+stands for _identity_. It is useful to use
+when some macro should not be evaluated and others should during definition of a user-defined macro.
+For example:
+
+<!--USE SNIPPET */ident -->
+```jam
+{@define b=92}{#define c={@ident {a}}{b}}{@define a=14}{c}
+```
+
+When we define the macro `c` we do not want to evaluate `{a}` because at that point `a` is not defined, but
+we do want to evaluate `b`. This `c` will become `14{a}`. When later `c` is used and `a` is already defined then
+the final result will be `1492`. 
+
+<!--USE SNIPPET */ident_output -->
+```jam
+1492
+```
+
+Note that `c` is defined using the `#` character in front of `define` and we used `@` in `ident`.
+
+If we redefine later `a` to some different value then `c` will follow this change, but if we redefine only `b`
+the value of `c` will still remain `1492`.
 
 ### `verbatim`
 
-The macro `verbatim` is a special one, because it is hardwired into the evaluation logic of
-Jamal and not a "real" built-in macro. In other words if there are user defined macros and
+The macro `verbatim` is a special one because it is hardwired into the evaluation logic of
+Jamal and not a "real" built-in macro. In other words, if there are user-defined macros and
 built-in macros then `verbatim` is one level deeper built-in than the other built-in macros.
 
 To understand what it does we have to discuss first how Jama evaluates the different macros.
@@ -302,7 +335,7 @@ those are recursive. Let's have a simple example:
 {@define a=this is it}{@define b={a}}{#define c={b}}{c}
 ```
 
-The macro `a` is defined simple. It is `this is it`. Whenever `a` is evaluated it will result
+The macro `a` is defined simply. It is `this is it`. Whenever `a` is evaluated it will result
 the string `this is it`.
 
 The macro `b` has the value `{a}`. When `b` is evaluated it results `{a}` and then before
@@ -330,12 +363,12 @@ This way the evaluation of a macro is done in three steps:
    When evaluating the macros in the body of the macro start a new scope and evaluate the macros
    following these three steps.
 2. Evaluate the macro itself.
-3. If the macro is user defined then evaluate the output of the macro and if it contains
+3. If the macro is user-defined then evaluate the output of the macro and if it contains
    macros then evaluate those using these three steps.
 
 As you can see the first and the last steps are recursive steps. The first step can be skipped
-using the `@` character. The second step cannot be skipped, and after all there is no reason to
-skip it. In case of user defined macro the third step can be skipped using the macro `verbatim`.
+using the `@` character. The second step cannot be skipped, and after all, there is no reason to
+skip it. In case of user-defined macro, the third step can be skipped using the macro `verbatim`.
 
 The syntax of the `verbatim` macro is the following:
 
@@ -354,8 +387,8 @@ example to use `verbatim` we can do it the following way:
 In this example `{@verbatim b}` is the same as `{b}` in the previous example with the
 exception that after `b` is evaluated the result is not processed further for macros
 but it is used directly (verbatim) as the value of the new macro `c`. Also when we
-use `{c}` the result of `c` is scanned as a third step for further macros and indeed 
-in this case there is one, because the value of the macro `c` is `{a}` in this case, that further
+use `{c}` the result of `c` is scanned as a third step for further macros and indeed, 
+in this case, there is one, because the value of the macro `c` is `{a}` in this case, that further
 evaluates to `this is it`. On the other hand when we use `{@verbatim c}` then the
 result `{a}` is not processed any further.
 
@@ -377,7 +410,7 @@ sep /startString/endString
 ```
 
 There can be whitespace characters after the macro name `sep`, but these are optional. The first
-non spac character is used as a separator character that separates the macro starting string from
+non-space character is used as a separator character that separates the macro starting string from
 the macro ending string. It is usually the `/` character, but it can be anything that does not
 appear in the start string.
 
@@ -389,28 +422,28 @@ for the current scope and the original value is used when returning from the sco
 start and end strings were set to different values multiple times.
 
 When the start and the end strings are set the original values are stored in a list. When the
-macro `sep` is used withot any separator string, in other words it is nothing more than the
+macro `sep` is used without any separator string, in other words, it is nothing more than the
 `sep` macro name, like `{@sep}` then the last start and end string are restored.
 
 The following sample is executed with `{` and `}` as start and end string at the beginning.
-After that it sets the strings to `[[` and `]]`. This is used to define the macro `apple`. After
+After that, it sets the strings to `[[` and `]]`. This is used to define the macro `apple`. After
 this when the scope of the next macro, `comment` starts the start and end strings are still `[[`
 and `]]`.  Starting a new scope does not change the macro start and end strings.
 
 Note, however, that it would be an error to use `[[sep]]` inside the scope of the macro
-`comment` at this point. In that scope at the start there is no start and end strings to be
+`comment` at this point. In that scope at the start, there are no start and end strings to be
 restored. The start and end strings do not belong to this scope, they are simply inherited
-from the outer scope. On the other hand the sample can change the strings, as it does to
+from the outer scope. On the other hand, the sample can change the strings, as it does to
 `<<` and `>>`. Using these it defines the macro `z`. Note that z is not exported from this
 scope.
 
-After that the `<<@sep>>` restores the start and end strings to the inherited one and with these
+After that the `<<@sep>>` restores the start and end strings to the inherited one and with these,
 it defines `a1` and `a2` and also exports them. Note, that `a1` will have the actual value of
 the macro `z` evaluated inside the scope of the `comment` macro. The macro `a2` starts with `@`
 thus the body is not parsed during the macro definition and thus the value of `a2` is `[[z]]`
-unevaluated, as it is. Similarly the macro `a3` will have the value`{z}`.
+unevaluated, as it is. Similarly, the macro `a3` will have the value`{z}`.
 
-All these macroes are evaluated because the macro `comment` is started with the character
+All these macros are evaluated because the macro `comment` is started with the character
 `#` which means that Jamal will evaluate the body of the macro before evaluating the
 macro itself.
 
@@ -452,3 +485,57 @@ SSSzazi[[z]]SSS{z}
 ```
 
 ### `export`
+
+`export` moves the definition of one or more user-defined macros to a higher scope. When a macro is defined it
+is defined in the current scope.
+
+The file that Jamal is processing is one scope and if there is a macro defined
+in the file on the top level than that macro can be used anywhere inside that file. However, when Jamal includes
+a file into another it opens a new scope. The macro `include` should include some text in the output. It can
+be used, for example, to split up a long document into chapters and then use Jamal to create the final output.
+In that case, the macros defined in the included files should not interfere with the definitions in the file that
+includes the other one. To accomplish this separation when Jamal includes a file it starts a new scope. Scopes
+are embedded into each other like a call stack in programming languages. When a macro is defined in a scope
+it is available in that scope and all other scopes that are opened from that scope. When a macro is redefined in
+a scope the redefined value is used until the point the scope is closed. In case of an included file, the
+user-defined macros defined in the included file disappear as soon as the included file processing is finished.
+
+The setting and resetting of the separator characters is also limited to the scope where the setting is and you
+cannot reset the separator character to a value that was set in a lower scope or higher scope.
+
+Jamal opens a new scope in the following cases:
+
+* When a file is processed with the `include` macro.
+* When macros are evaluated inside another macro. This is the case of user-defined macros or in case of built-in
+  macros when they are started with the character `#`.
+* Other built-in macros that are not part of the core package may also start and close scopes. Note that
+  built-in macros can be provided in form of JAR files.
+
+Note that the macro `import` does NOT open a new scope to process the imported file. This is because the aim of
+`import` is to have the macros defined in the imported file available in the file that imports them.
+
+In the following example, we define the macro `Z` in the scope of the macro `comment`. The `{@define Z=13}`
+is evaluated before the `comment` macro because we use the `#` in front of the `comment` macro. When the
+`comment` is evaluated the scope is closed and `Z` is not defined anymore. In the second case the macro
+`Z` is exported using the `export` macro. The `export` macro moves the definition of the macro from the scope
+of the `comment` to the enclosing scope.
+  
+The example:  
+  
+<!--USE SNIPPET */export -->
+```jam
+A comment starts a new scope {#comment {@define Z=13}} Z {?Z} is not defined here unless...
+{#comment {@define Z=14}{@export Z}}Z is exported. In that case Z is {Z}.
+```
+
+will result:
+
+<!--USE SNIPPET */export_output -->
+```jam
+A comment starts a new scope  Z  is not defined here unless...
+Z is exported. In that case Z is 14.
+```
+
+You cannot export a macro that is defined in a higher scope. You can use those macros and you can reference them
+but you can not export them to the enclosing scope because they do not belong to the current scope. You cannot
+export macros from the top level scope, because in that case there is no enclosing scope.

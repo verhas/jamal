@@ -66,3 +66,12 @@ START SNIPPET sep{output}
 {@define z=SSS}
 {z}{a1}{a2}{a3}{@verbatim a3}
 END SNIPPET
+
+START SNIPPET ident{output}
+{@define b=92}{#define c={@ident {a}}{b}}{@define a=14}{c}
+END SNIPPET
+
+START SNIPPET export{output}
+A comment starts a new scope {#comment {@define Z=13}} Z {?Z} is not defined here unless...
+{#comment {@define Z=14}{@export Z}}Z is exported. In that case Z is {Z}.
+END SNIPPET
