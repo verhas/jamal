@@ -10,6 +10,7 @@ from pyama.lineskipperhandler import LineSkipper
 MD = Configuration().file(r".*\.md$").exclude("target").handler(MdSnippetWriter(), SnippetReader(), RegexHandler(runpass=[4]),
                                               LineNumberer(runpass=[5]), LineSkipper(runpass=[3]))
 JAM = Configuration().file(r".*\.jam$").exclude("target").handler(SnippetReader())
-configs = [MD, JAM]
+POM = Configuration().file(r".*\.xml$").exclude("target").handler(SnippetReader())
+configs = [MD, JAM, POM]
 
 Processor(configs, "**/*.*").process()
