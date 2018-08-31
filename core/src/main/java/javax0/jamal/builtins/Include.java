@@ -18,7 +18,7 @@ public class Include implements Macro {
         skipWhiteSpaces(input);
         var reference = in.getReference();
         var fileName = absolute(reference, input.toString().trim());
-        if (depth == 0) {
+        if (depth-- == 0) {
             throw new BadSyntax("Include depth is too deep");
         }
         processor.getRegister().push();
