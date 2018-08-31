@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Mojo(name = "jamal", requiresProject = false)
 public class JamalMojo extends AbstractMojo {
 
+    //<editor-fold desc="Configuration parameters" >
     @Parameter(defaultValue = "{")
     private String macroOpen;
 
@@ -54,6 +55,7 @@ public class JamalMojo extends AbstractMojo {
 
     @Parameter()
     private String transformTo;
+    //</editor-fold>
 
     private boolean processingSuccessful;
 
