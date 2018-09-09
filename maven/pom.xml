@@ -24,7 +24,7 @@
                 <configuration>
                     <transformFrom>\.jam$</transformFrom>
                     <transformTo>.jamo</transformTo>
-                    <filePattern>.*</filePattern>
+                    <filePattern>.*\.jam$</filePattern>
                     <exclude>target|\.iml$|\.java$|\.xml$</exclude>
                     <sourceDirectory>${project.basedir}/</sourceDirectory>
                     <targetDirectory>${project.build.outputDirectory}</targetDirectory>
