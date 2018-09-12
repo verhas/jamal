@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/api/api.iml" filepath="$PROJECT_DIR$/api/api.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/engine/engine.iml" filepath="$PROJECT_DIR$/engine/engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven/jamal-maven-plugin.iml" filepath="$PROJECT_DIR$/maven/jamal-maven-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/multi.iml" filepath="$PROJECT_DIR$/multi.iml" />
       <module fileurl="file://$PROJECT_DIR$/tools/tools.iml" filepath="$PROJECT_DIR$/tools/tools.iml" />
     </modules>
