@@ -18,7 +18,7 @@ public class Define implements Macro {
             skipWhiteSpaces(input);
         }
         var id = fetchId(input);
-        if (optional && macroIsAlreadyDefined(processor, id)) {
+        if (optional && processor.isDefined(id)) {
             return "";
         }
         skipWhiteSpaces(input);
@@ -29,15 +29,11 @@ public class Define implements Macro {
         skip(input, 1);
         if (isGlobalMacro(id)) {
             var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), params);
-            processor.getRegister().global(macro);
+            processor.defineGlobal(macro);
         } else {
             var macro = processor.newUserDefinedMacro(id, input.toString(), params);
-            processor.getRegister().define(macro);
+            processor.define(macro);
         }
         return "";
-    }
-
-    private boolean macroIsAlreadyDefined(Processor processor, String id) {
-        return processor.getRegister().getUserMacro(id).isPresent();
     }
 }

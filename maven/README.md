@@ -29,7 +29,7 @@ If you have an actual Maven project then you can configure the plugin in the `po
     <configuration>
         <transformFrom>\.jam$</transformFrom>
         <transformTo>.jamo</transformTo>
-        <filePattern>.*</filePattern>
+        <filePattern>.*\.jam$</filePattern>
         <exclude>target|\.iml$|\.java$|\.xml$</exclude>
         <sourceDirectory>${project.basedir}/</sourceDirectory>
         <targetDirectory>${project.build.outputDirectory}</targetDirectory>
