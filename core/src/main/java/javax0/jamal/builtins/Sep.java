@@ -24,12 +24,12 @@ public class Sep implements Macro {
             }
             var openMacro = input.substring(0, sepIndex);
             var closeMacro = input.substring(sepIndex + 1);
-            processor.getRegister().separators(openMacro, closeMacro);
+            processor.separators(openMacro, closeMacro);
         }
         return "";
     }
 
     private void restoreLastSavedDelimiters(Processor processor) throws BadSyntax {
-        processor.getRegister().separators(null, null);
+        processor.separators(null, null);
     }
 }
