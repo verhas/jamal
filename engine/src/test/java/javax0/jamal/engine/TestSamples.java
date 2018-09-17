@@ -146,4 +146,10 @@ public class TestSamples {
     public void testIdent() throws IOException, BadSyntax {
         assertEquals("\n\n\n\n{a}\n13\n{a}", result("ident.jam"));
     }
+
+    @Test
+    @DisplayName("begin and end works properly")
+    public void testBeginEnd() throws IOException, BadSyntax {
+        assertEquals("212", result("begin.jam"));
+    }
 }

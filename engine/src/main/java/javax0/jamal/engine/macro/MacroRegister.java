@@ -1,11 +1,9 @@
 package javax0.jamal.engine.macro;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Delimiters;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
     private final List<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
@@ -17,14 +15,6 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         push();
     }
 
-    /**
-     * Get a macro based on the id of the macro.
-     * <p>
-     * The
-     *
-     * @param id the identifier (name) of the macro
-     * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
-     */
     public Optional<UserDefinedMacro> getUserMacro(String id) {
         for (int level = udMacroStack.size() - 1; level > -1; level--) {
             var map = udMacroStack.get(level);
@@ -73,23 +63,32 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported");
             }
             udMacroStack.get(udMacroStack.size() - 2).put(id, macro);
+            udMacroStack.get(udMacroStack.size() - 1).remove(id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
         }
     }
 
+    private void stack(Macro macro, Consumer<Stackable> c) {
+        if (macro instanceof Stackable) {
+            c.accept((Stackable) macro);
+        }
+    }
+
     @Override
     public void push() {
-        udMacroStack.add(new HashMap<>());
+        macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::push)));
         macroStack.add(new HashMap<>());
+        udMacroStack.add(new HashMap<>());
         delimiters.add(new javax0.jamal.engine.Delimiters());
         savedDelimiters.add(new ArrayList<>());
     }
 
     @Override
     public void pop() {
-        udMacroStack.remove(udMacroStack.size() - 1);
         macroStack.remove(macroStack.size() - 1);
+        macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::pop)));
+        udMacroStack.remove(udMacroStack.size() - 1);
         delimiters.remove(delimiters.size() - 1);
         savedDelimiters.remove(savedDelimiters.size() - 1);
     }

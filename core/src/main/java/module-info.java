@@ -9,6 +9,8 @@ module jamal.core {
         javax0.jamal.builtins.Sep,
         javax0.jamal.builtins.Script,
         javax0.jamal.builtins.Eval,
+        javax0.jamal.builtins.Begin,
+        javax0.jamal.builtins.End,
         javax0.jamal.builtins.Ident
         ;
     requires jamal.api;

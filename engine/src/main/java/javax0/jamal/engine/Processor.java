@@ -10,8 +10,6 @@ import static javax0.jamal.tools.InputHandler.*;
 public class Processor implements javax0.jamal.api.Processor {
 
     private static final String NOT_USED = null;
-    //private final String macroOpen;
-    //private final String macroClose;
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
 
     public Processor(String macroOpen, String macroClose) throws BadSyntax {
