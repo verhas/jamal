@@ -10,9 +10,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     private final List<Map<String, Macro>> macroStack = new ArrayList<>();
     private final List<Delimiters> delimiters = new ArrayList<>();
     private final List<List<Delimiters>> savedDelimiters = new ArrayList<>();
+    private final Deque<Object> stackCheckObjects = new LinkedList<>();
 
     public MacroRegister() {
-        push();
+        push(null);
     }
 
     public Optional<UserDefinedMacro> getUserMacro(String id) {
@@ -25,7 +26,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         return Optional.empty();
     }
 
-    public Optional<Macro> geMacro(String id) {
+    public Optional<Macro> getMacro(String id) {
         for (int level = macroStack.size() - 1; level > -1; level--) {
             var map = macroStack.get(level);
             if (map.containsKey(id)) {
@@ -76,7 +77,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void push() {
+    public void push(Marker check) {
+        stackCheckObjects.addLast(check);
         macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::push)));
         macroStack.add(new HashMap<>());
         udMacroStack.add(new HashMap<>());
@@ -85,7 +87,14 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void pop() {
+    public void pop(Marker check) throws BadSyntax {
+        if (!Objects.equals(check, stackCheckObjects.getLast())) {
+            throw new BadSyntax("Pop was performed by " +
+                    check +
+                    " for a level pushed by " +
+                    stackCheckObjects.getLast());
+        }
+        stackCheckObjects.removeLast();
         macroStack.remove(macroStack.size() - 1);
         macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::pop)));
         udMacroStack.remove(udMacroStack.size() - 1);

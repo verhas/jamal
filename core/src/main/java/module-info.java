@@ -3,6 +3,7 @@ module jamal.core {
     provides javax0.jamal.api.Macro with
         javax0.jamal.builtins.Define,
         javax0.jamal.builtins.Comment,
+        javax0.jamal.builtins.Block,
         javax0.jamal.builtins.Import,
         javax0.jamal.builtins.Include,
         javax0.jamal.builtins.Export,

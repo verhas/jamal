@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.*;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.tools.Marker;
 
 import java.util.regex.Pattern;
 
@@ -71,11 +72,12 @@ public class Processor implements javax0.jamal.api.Processor {
         var macro = getNextMacroBody(input);
         var macroInput = new javax0.jamal.tools.Input();
         if (!firstCharIs(macro, '@')) {
-            macros.push();
+            var marker = new Marker("{@" + "");
+            macros.push(marker);
             macroInput.setReference(in.getReference());
             macroInput.setInput(new StringBuilder(macro));
             macro = process(macroInput);
-            macros.pop();
+            macros.pop(marker);
         }
         macroInput.setReference(in.getReference());
         macroInput.setInput(new StringBuilder(macro));
@@ -107,7 +109,7 @@ public class Processor implements javax0.jamal.api.Processor {
             macroId = NOT_USED;
         }
         if (isBuiltin) {
-            var builtin = macros.geMacro(macroId);
+            var builtin = macros.getMacro(macroId);
             if (!builtin.isPresent()) {
                 throw new BadSyntax("There is no built-in macro with the id '" + macroId + "'");
             }

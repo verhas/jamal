@@ -10,7 +10,7 @@ public interface MacroRegister extends Delimiters {
      * @param id the identifier (name) of the macro
      * @return the macro in an optional. Optional.empty() if the macro can not be found.
      */
-    Optional<Macro> geMacro(String id);
+    Optional<Macro> getMacro(String id);
 
     /**
      * Get a user defined macro based on the id of the macro.
@@ -22,12 +22,14 @@ public interface MacroRegister extends Delimiters {
 
     /**
      * Define a user defined macro on the global level.
+     *
      * @param macro to store in the definition structure on the top level.
      */
     void global(UserDefinedMacro macro);
 
     /**
      * Define a macro on the global level.
+     *
      * @param macro to store in the definition structure on the top level.
      */
     void global(Macro macro);
@@ -72,7 +74,7 @@ public interface MacroRegister extends Delimiters {
      * of the using file. This is a way of encapsulation. When the included file processing starts the macro level
      * evaluation is increased and any macro definition that happens on that level will remain on that level.
      * They will temporarily hide the macros of the same name in higher levels and they go out of scope as soon as the
-     * level goes one step up, when the method {@link #pop()} is called.
+     * level goes one step up, when the method {@link #pop(Marker)} is called.
      * <p>
      * Technically when the {@code push()} is called then the macro register creates a new level in the list of
      * the macros and in the list of the user defined macros. These elements are dropped by the method {@code pop()}.
@@ -89,12 +91,17 @@ public interface MacroRegister extends Delimiters {
      * of all macros that are
      * also {@link Stackable}. Note that this method of a stackable macro is called even if currently the macro is
      * shadowed by a lower layer macro of the same name. The {@link Stackable#pop()} method is not invoked for those
-     * macros that are currently wiped off by the {@link #pop()}.
+     * macros that are currently wiped off by the {@link #pop(Marker)}.
+     *
+     * @param check is used to ensure that the same code is performing the push as the pop. When {@link #pop(Marker)}
+     *              is invoked it checks that the object passed as argument is the same as the object corresponding to
+     *              the last {@link #push(Marker)}.
      */
-    void push();
+    void push(Marker check);
 
     /**
-     * See the documentation of the method {@link #push()}
+     * See the documentation of the method {@link #push(Marker)}
      */
-    void pop();
+    void pop(Marker check) throws BadSyntax;
+
 }
