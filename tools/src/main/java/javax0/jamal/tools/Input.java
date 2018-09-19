@@ -7,6 +7,9 @@ public class Input implements javax0.jamal.api.Input {
     private StringBuilder input;
     private String reference;
 
+    public Input() {
+    }
+
     public Input(StringBuilder input, String reference) {
         this.input = input;
         this.reference = reference;
