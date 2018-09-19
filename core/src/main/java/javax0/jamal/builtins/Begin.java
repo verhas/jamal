@@ -9,15 +9,11 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Begin implements Macro {
 
-    public static String decorateMarker(String s) {
-        return "{@begin " + s + "}";
-    }
-
     @Override
     public String evaluate(Input in, Processor processor) {
         var input = in.getInput();
         skipWhiteSpaces(input);
-        var marker = new NamedMarker(input.toString().trim(),Begin::decorateMarker);
+        var marker = new NamedMarker(input.toString().trim(),s -> "{@begin " + s + "}");
         processor.getRegister().push(marker);
         return "";
     }

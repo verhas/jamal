@@ -10,7 +10,15 @@ public interface Input {
 
     void setInput(StringBuilder input);
 
+    /**
+     *
+     * @return the reference file name that the input was read from
+     */
     String getReference();
 
+    /**
+     * Set the reference file name when the file is read.
+     * @param reference
+     */
     void setReference(String reference);
 }

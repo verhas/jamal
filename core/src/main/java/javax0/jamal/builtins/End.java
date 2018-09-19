@@ -10,15 +10,11 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class End implements Macro {
 
-    public static String decorateMarker(String s) {
-        return "{@end " + s + "}";
-    }
-
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         var input = in.getInput();
         skipWhiteSpaces(input);
-        var marker = new NamedMarker(input.toString().trim(), End::decorateMarker);
+        var marker = new NamedMarker(input.toString().trim(), s -> "{@end " + s + "}");
         processor.getRegister().pop(marker);
         return "";
     }

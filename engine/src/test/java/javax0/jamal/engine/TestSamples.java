@@ -77,7 +77,7 @@ public class TestSamples {
     @Test
     @DisplayName("define with parameters")
     public void testDefineWithParameters() throws IOException, BadSyntax {
-        assertEquals("ttt_ttt", result("define_with_parameters.jam"));
+        assertEquals("ttt_ttt\nttt_ttt", result("define_with_parameters.jam"));
     }
 
     @Test
