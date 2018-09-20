@@ -23,7 +23,7 @@ If you have an actual Maven project then you can configure the plugin in the `po
 <!-- USE SNIPPET */pluginConfiguration TRIM -->
 ```xml
 <plugin>
-    <groupId>javax0.jamal</groupId>
+    <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <configuration>
