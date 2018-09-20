@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Marker;
 
 import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
@@ -21,9 +22,10 @@ public class Include implements Macro {
         if (depth-- == 0) {
             throw new BadSyntax("Include depth is too deep");
         }
-        processor.getRegister().push();
+        var marker = new Marker("{@include " + fileName + "}");
+        processor.getRegister().push(marker);
         var result = processor.process(getInput(fileName));
-        processor.getRegister().pop();
+        processor.getRegister().pop(marker);
         return result;
     }
 }

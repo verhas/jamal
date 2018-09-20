@@ -51,7 +51,8 @@ When the user-defined macro is used these arguments are replaced with the actual
 
 `define` is not the only built-in macro in Jamal. The macros are
 
-* `comment`
+* `comment`, `block`
+* `begin` and `end`
 * `define`
 * `eval`
 * `export`
@@ -90,6 +91,39 @@ will generate
 ```jam
 this is some text
 ```
+
+### `block`
+
+`block` is technically exactly the same as`comment`. It is recommended to use the `comment` macro
+with the `@` starting character so that the content of the comment is not interpreted by Jama and
+to use `block` with `#` to have the content interpreted. Block should be used to enclose
+definitions to a scope level.
+
+For more about definition scopes and exporting read the section about `export`.
+
+### `begin` and `end`
+
+The macros `begin` and `end` can be used to start and to finish a local definition scope. The
+effect is practically the same as having the text between the `begin` and `end` macro inside
+a `#block` macro (note the starting `#` character).
+
+It is recommended to use `begin` and `end` when the structure is complex and it is
+more readable to use the `begin` / `end` block than a simple `block`. To ensure that
+all `begin` has an `end` you can name the blocks. You can put an arbitrary string after the
+macro name `begin` and you have to repeat the same string after the macro name `end`
+(spaces are trimmed).
+
+ ```jam
+ {@define Z=1}
+ {@begin alma}
+    {@define Z=2}{Z}
+    {@define S=2}{@export S}
+ {@end alma }{Z}{S}
+ ```
+
+You cannot and should not close a scope using `end` that was opened by something else. For
+example you can not get into the scope of the including class putting a pairless `end` macro
+into an included file. This will trigger a processing error.
 
 ### `define`
 

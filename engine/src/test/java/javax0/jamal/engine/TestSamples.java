@@ -77,7 +77,7 @@ public class TestSamples {
     @Test
     @DisplayName("define with parameters")
     public void testDefineWithParameters() throws IOException, BadSyntax {
-        assertEquals("ttt_ttt", result("define_with_parameters.jam"));
+        assertEquals("ttt_ttt\nttt_ttt", result("define_with_parameters.jam"));
     }
 
     @Test
@@ -145,5 +145,11 @@ public class TestSamples {
     @DisplayName("ident protects argument from post evaluation")
     public void testIdent() throws IOException, BadSyntax {
         assertEquals("\n\n\n\n{a}\n13\n{a}", result("ident.jam"));
+    }
+
+    @Test
+    @DisplayName("begin and end works properly")
+    public void testBeginEnd() throws IOException, BadSyntax {
+        assertEquals("212", result("begin.jam"));
     }
 }

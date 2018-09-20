@@ -1,30 +1,21 @@
 package javax0.jamal.engine.macro;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Delimiters;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
     private final List<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
     private final List<Map<String, Macro>> macroStack = new ArrayList<>();
     private final List<Delimiters> delimiters = new ArrayList<>();
     private final List<List<Delimiters>> savedDelimiters = new ArrayList<>();
+    private final Deque<Object> stackCheckObjects = new LinkedList<>();
 
     public MacroRegister() {
-        push();
+        push(null);
     }
 
-    /**
-     * Get a macro based on the id of the macro.
-     * <p>
-     * The
-     *
-     * @param id the identifier (name) of the macro
-     * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
-     */
     public Optional<UserDefinedMacro> getUserMacro(String id) {
         for (int level = udMacroStack.size() - 1; level > -1; level--) {
             var map = udMacroStack.get(level);
@@ -35,7 +26,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         return Optional.empty();
     }
 
-    public Optional<Macro> geMacro(String id) {
+    public Optional<Macro> getMacro(String id) {
         for (int level = macroStack.size() - 1; level > -1; level--) {
             var map = macroStack.get(level);
             if (map.containsKey(id)) {
@@ -73,23 +64,40 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported");
             }
             udMacroStack.get(udMacroStack.size() - 2).put(id, macro);
+            udMacroStack.get(udMacroStack.size() - 1).remove(id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
         }
     }
 
+    private void stack(Macro macro, Consumer<Stackable> c) {
+        if (macro instanceof Stackable) {
+            c.accept((Stackable) macro);
+        }
+    }
+
     @Override
-    public void push() {
-        udMacroStack.add(new HashMap<>());
+    public void push(Marker check) {
+        stackCheckObjects.addLast(check);
+        macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::push)));
         macroStack.add(new HashMap<>());
+        udMacroStack.add(new HashMap<>());
         delimiters.add(new javax0.jamal.engine.Delimiters());
         savedDelimiters.add(new ArrayList<>());
     }
 
     @Override
-    public void pop() {
-        udMacroStack.remove(udMacroStack.size() - 1);
+    public void pop(Marker check) throws BadSyntax {
+        if (!Objects.equals(check, stackCheckObjects.getLast())) {
+            throw new BadSyntax("Pop was performed by " +
+                    check +
+                    " for a level pushed by " +
+                    stackCheckObjects.getLast());
+        }
+        stackCheckObjects.removeLast();
         macroStack.remove(macroStack.size() - 1);
+        macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::pop)));
+        udMacroStack.remove(udMacroStack.size() - 1);
         delimiters.remove(delimiters.size() - 1);
         savedDelimiters.remove(savedDelimiters.size() - 1);
     }
