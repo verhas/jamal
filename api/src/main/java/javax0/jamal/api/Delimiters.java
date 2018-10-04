@@ -3,24 +3,25 @@ package javax0.jamal.api;
 /**
  * Simple macro delimiter string storage interface.
  *
- * The implementing classes store the actual macro open and macro close strings and provide a means to
+ * The implementing classes store the actual macro open and macro close strings and provide means to
  * alter the actual values.
  */
 public interface Delimiters {
     /**
      *
-     * @return the macro opening string.
+     * @return the current macro opening string.
      */
     String open();
 
     /**
      *
-     * @return the macro closing string
+     * @return the current macro closing string
      */
     String close();
 
     /**
-     * Sets the opening and closing delimiter strings.
+     * Sets the opening and closing delimiter strings, or implementation may reset some old value if the arguments
+     * are {@code null}
      *
      * @param openDelimiter the macro opening string to be set. If this parameter is {@code null} then
      *                      the implementation may treat this information as a restore process. For example

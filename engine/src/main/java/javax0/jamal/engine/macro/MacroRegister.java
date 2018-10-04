@@ -125,6 +125,20 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         return null;
     }
 
+    /**
+     * Sets the opening and closing delimiter strings. If {@code openDelimiter} is {@code null} then it resets the
+     * delimiter to the last value that was saved in the stack.
+     * If {@code openDelimiter} is {@code null} then {@code closeDelimiter} is ignored,
+     * but it is good practice to pass {@code null} in that argument as well.
+     *
+     * @param openDelimiter the macro opening string to be set. If this parameter is {@code null} then
+     *                      the method treats this information as a restore process.
+     *                      This class saves the old values of the separators in a stack
+     *                      and when {@code openDelimiter} is {@code null} it restores the delimiters from the
+     *                      top of the stack.
+     * @param closeDelimiter the macro closing string to be set. Ignored when {@code openDelimiter} is {@code null}.
+     * @throws BadSyntax when the call tries to restore an older version but there is no saved older version.
+     */
     @Override
     public void separators(String openDelimiter, String closeDelimiter) throws BadSyntax {
         if (openDelimiter == null) {
