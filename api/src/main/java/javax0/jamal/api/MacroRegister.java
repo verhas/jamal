@@ -55,7 +55,7 @@ public interface MacroRegister extends Delimiters {
      * is exported into the scope of the environment that is surrounding the macro definition.
      *
      * @param id the name/identifier of the user defined macro that is to be exported.
-     * @throws BadSyntax
+     * @throws BadSyntax when the syntax is bad
      */
     void export(String id) throws BadSyntax;
 
@@ -95,7 +95,7 @@ public interface MacroRegister extends Delimiters {
      *
      * @param check is used to ensure that the same code is performing the push as the pop. When {@link #pop(Marker)}
      *              is invoked it checks that the object passed as argument is the same as the object corresponding to
-     *              the last {@link #push(Marker)}.
+     *              the last {@code push(Marker)}.
      */
     void push(Marker check);
 

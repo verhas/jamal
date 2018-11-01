@@ -18,7 +18,7 @@ public interface Input {
     /**
      * Set the reference file name when the file is read.
      *
-     * @param reference
+     * @param reference is to be set
      */
     void setReference(String reference);
 }

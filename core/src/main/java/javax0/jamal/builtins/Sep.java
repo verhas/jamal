@@ -2,9 +2,6 @@ package javax0.jamal.builtins;
 
 import javax0.jamal.api.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 

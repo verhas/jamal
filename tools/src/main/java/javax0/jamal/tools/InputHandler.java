@@ -100,7 +100,7 @@ public class InputHandler {
      * a string that starts with some special character, which usually can not be part of an identifier and does not
      * contains space. This way you can have macros like
      * <pre>
-     *     {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}
+     *     {@code {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}
      * </pre>
      * which is an experimental feature and is deliberately not documented except a single test.
      *
