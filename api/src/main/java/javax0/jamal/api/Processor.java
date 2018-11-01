@@ -15,11 +15,11 @@ public interface Processor {
         getRegister().global(macro);
     }
 
-    default void define(UserDefinedMacro macro){
+    default void define(UserDefinedMacro macro) {
         getRegister().define(macro);
     }
 
-    default void separators(String openMacro, String closeMacro) throws BadSyntax{
+    default void separators(String openMacro, String closeMacro) throws BadSyntax {
         getRegister().separators(openMacro, closeMacro);
     }
 }

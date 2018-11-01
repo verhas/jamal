@@ -19,5 +19,6 @@ package javax0.jamal.api;
  */
 public interface Stackable extends Macro {
     void push();
+
     void pop();
 }

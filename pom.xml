@@ -13,6 +13,12 @@
         <module>core</module>
         <module>maven</module>
     </modules>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <properties>
         <jamal.version>1.0.0-SNAPSHOT</jamal.version>
     </properties>
