@@ -6,7 +6,7 @@ creates output files processing the Jamal macros.
 You can use the plugin even without any Maven project just executing the command line
 
 ```
-mvn javax0.jamal:jamal-maven-plugin:1.0.0-SNAPSHOT:jamal
+mvn javax0.jamal:jamal-maven-plugin:1.0.0:jamal
 ```
 
 (Note that `1.0.0-SNAPSHOT` should be replaced with the actual version.)
@@ -25,7 +25,7 @@ If you have an actual Maven project then you can configure the plugin in the `po
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <configuration>
         <transformFrom>\.jam$</transformFrom>
         <transformTo>.jamo</transformTo>
@@ -38,7 +38,7 @@ If you have an actual Maven project then you can configure the plugin in the `po
     </configuration>
 </plugin>
 ```
-(Note that `1.0.0-SNAPSHOT` should be replaced with the actual version.)
+(Note that `1.0.0` should be replaced with the actual version.)
 
 The configuration values are the following:
 

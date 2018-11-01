@@ -51,15 +51,15 @@
     <dependencies>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>jamal-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>tools</artifactId>
+            <artifactId>jamal-tools</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>jamal-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

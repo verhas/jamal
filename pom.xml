@@ -33,7 +33,7 @@
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jamal.version>1.0.0-SNAPSHOT</jamal.version>
+        <jamal.version>1.0.0</jamal.version>
     </properties>
     <build>
         <plugins>
@@ -80,22 +80,22 @@
         <dependencies>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>api</artifactId>
+                <artifactId>jamal-api</artifactId>
                 <version>${jamal.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>core</artifactId>
+                <artifactId>jamal-core</artifactId>
                 <version>${jamal.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>tools</artifactId>
+                <artifactId>jamal-tools</artifactId>
                 <version>${jamal.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>engine</artifactId>
+                <artifactId>jamal-engine</artifactId>
                 <version>${jamal.version}</version>
             </dependency>
             <dependency>
