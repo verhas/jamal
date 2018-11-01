@@ -10,11 +10,14 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>core</artifactId>
+    <artifactId>jamal-core</artifactId>
     <name>jamal core</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Jamal macro library built-in macros</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <licenses>
         <license>

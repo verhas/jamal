@@ -22,11 +22,14 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>engine</artifactId>
+    <artifactId>jamal-engine</artifactId>
     <name>jamal engine</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Jamal macro library engine implementation</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <licenses>
         <license>

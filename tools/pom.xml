@@ -6,10 +6,13 @@
         <artifactId>multi</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>tools</artifactId>
+    <artifactId>jamal-tools</artifactId>
     <name>jamal tools</name>
     <packaging>jar</packaging>
     <description>Jamal macro library support tools</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <dependencies>

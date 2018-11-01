@@ -10,10 +10,13 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api</artifactId>
+    <artifactId>jamal-api</artifactId>
     <name>jamal api</name>
     <packaging>jar</packaging>
     <description>Jamal macro library API interfaces</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <licenses>
         <license>

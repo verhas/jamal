@@ -93,14 +93,12 @@ public class InputHandler {
      * An identifier is a string that starts with a character accepted by {@link #validId1stChar(char)} and contain
      * only characters that are accepted {@link #validIdChar(char)}
      * <p>
-     *     <center>
      *         or
-     *     </center>
-     * <p>&nbsp;<p>
+     * <p>
      * a string that starts with some special character, which usually can not be part of an identifier and does not
      * contains space. This way you can have macros like
      * <pre>
-     *     {@code {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}
+     *     {@code {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}}
      * </pre>
      * which is an experimental feature and is deliberately not documented except a single test.
      *
