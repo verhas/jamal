@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>multi</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>jamal-maven-plugin</artifactId>
     <name>jamal maven plugin</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>maven-plugin</packaging>
     <description>Jamal macro library maven plugin</description>
     <properties>
@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <configuration>
                     <transformFrom>\.jam$</transformFrom>
                     <transformTo>.jamo</transformTo>

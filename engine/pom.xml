@@ -19,12 +19,12 @@
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>multi</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>jamal-engine</artifactId>
     <name>jamal engine</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <description>Jamal macro library engine implementation</description>
     <properties>
