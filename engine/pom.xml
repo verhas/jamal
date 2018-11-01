@@ -26,12 +26,25 @@
     <name>jamal engine</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <description>Jamal macro library engine implementation</description>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <name>Peter Verhas</name>
+            <email>peter@verhas.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/verhas/jamal.git</connection>
+        <developerConnection>scm:git:ssh://github.com/verhas/jamal.git</developerConnection>
+        <url>http:/github.com/verhas/jamal/tree/master</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

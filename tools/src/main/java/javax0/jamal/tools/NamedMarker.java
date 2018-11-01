@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * Implementation of the {@link javax0.jamal.api.Marker} interface that requires that the name passed as argument
  * is the same in the objects passed to {@link MacroRegister#pop(javax0.jamal.api.Marker)} and to
- * {@link MacroRegister#push(javax0.jamal.api.Marker)}. The objects does not need to be the same, only the string passed
+ * {@link MacroRegister#push(javax0.jamal.api.Marker)}. The objects do not need to be the same, only the string passed
  * in {@code name} to the constructor has to be the same.
  */
 public class NamedMarker implements Marker {
