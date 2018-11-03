@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.javax0.jamal</groupId>
-        <artifactId>multi</artifactId>
-        <version>1.0.0</version>
+        <artifactId>jamal-parent</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
-
-    <artifactId>jamal-api</artifactId>
-    <name>jamal api</name>
+    <artifactId>jamal-tools</artifactId>
+    <name>jamal tools</name>
     <packaging>jar</packaging>
-    <description>Jamal macro library API interfaces</description>
+    <description>Jamal macro library support tools</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <modelVersion>4.0.0</modelVersion>
+    <dependencies>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+    </dependencies>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>

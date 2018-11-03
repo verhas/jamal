@@ -6,15 +6,14 @@
 
     <parent>
         <groupId>com.javax0.jamal</groupId>
-        <artifactId>multi</artifactId>
-        <version>1.0.0</version>
+        <artifactId>jamal-parent</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jamal-core</artifactId>
-    <name>jamal core</name>
-    <version>1.0.0</version>
+    <artifactId>jamal-api</artifactId>
+    <name>jamal api</name>
     <packaging>jar</packaging>
-    <description>Jamal macro library built-in macros</description>
+    <description>Jamal macro library API interfaces</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -36,23 +35,4 @@
         <developerConnection>scm:git:ssh://github.com/verhas/jamal.git</developerConnection>
         <url>http:/github.com/verhas/jamal/tree/master</url>
     </scm>
-    <dependencies>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-tools</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-    </dependencies>
-
 </project>

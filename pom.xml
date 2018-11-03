@@ -2,18 +2,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.javax0.jamal</groupId>
-    <artifactId>multi</artifactId>
-    <version>1.0.0</version>
+    <artifactId>jamal-parent</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>multi</name>
+    <name>jamal-parent</name>
     <description>Jamal macro library to process text files</description>
     <url>http:/github.com/verhas/jamal/tree/master</url>
     <modules>
-        <module>engine</module>
-        <module>api</module>
-        <module>tools</module>
-        <module>core</module>
-        <module>maven</module>
+        <module>jamal-engine</module>
+        <module>jamal-api</module>
+        <module>jamal-tools</module>
+        <module>jamal-core</module>
+        <module>jamal-maven-plugin</module>
     </modules>
     <licenses>
         <license>
@@ -53,6 +53,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>

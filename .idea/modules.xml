@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/api/api.iml" filepath="$PROJECT_DIR$/api/api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/engine/engine.iml" filepath="$PROJECT_DIR$/engine/engine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/maven/jamal-maven-plugin.iml" filepath="$PROJECT_DIR$/maven/jamal-maven-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/multi.iml" filepath="$PROJECT_DIR$/multi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tools/tools.iml" filepath="$PROJECT_DIR$/tools/tools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jamal-api/jamal-api.iml" filepath="$PROJECT_DIR$/jamal-api/jamal-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jamal-core/jamal-core.iml" filepath="$PROJECT_DIR$/jamal-core/jamal-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jamal-engine/jamal-engine.iml" filepath="$PROJECT_DIR$/jamal-engine/jamal-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jamal-maven-plugin/jamal-maven-plugin.iml" filepath="$PROJECT_DIR$/jamal-maven-plugin/jamal-maven-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jamal-parent.iml" filepath="$PROJECT_DIR$/jamal-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jamal-tools/jamal-tools.iml" filepath="$PROJECT_DIR$/jamal-tools/jamal-tools.iml" />
     </modules>
   </component>
 </project>
