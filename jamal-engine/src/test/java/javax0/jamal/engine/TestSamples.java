@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.tools.Input;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,7 @@ public class TestSamples {
 
     /**
      * Fixup the JDK bug JDK-8197918
+     *
      * @param fileName the file name that may contain an erroneous leading / on Windows
      * @return the fileName without the leading / if it contains ':', so it is assumed this is Windows
      */
@@ -147,5 +149,17 @@ public class TestSamples {
     @DisplayName("begin and end works properly")
     public void testBeginEnd() throws IOException, BadSyntax {
         assertEquals("212", result("begin.jam"));
+    }
+
+    @Test
+    @DisplayName("sep that defines zero length macro open throws exception")
+    public void testBadSep() throws IOException, BadSyntax {
+        Assertions.assertThrows(BadSyntax.class, () -> result("badsep.jam"));
+    }
+
+    @Test
+    @DisplayName("sep that defines zero length macro close throws exception")
+    public void testBadSep2() throws IOException, BadSyntax {
+        Assertions.assertThrows(BadSyntax.class, () -> result("badsep2.jam"));
     }
 }

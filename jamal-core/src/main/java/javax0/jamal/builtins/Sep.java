@@ -21,6 +21,9 @@ public class Sep implements Macro {
             }
             var openMacro = input.substring(0, sepIndex);
             var closeMacro = input.substring(sepIndex + 1);
+            if( openMacro.length() == 0 || closeMacro.length() == 0 ){
+                throw new BadSyntax("using macro 'sep' you cannot define zero length macro open and/or macro close strings");
+            }
             processor.separators(openMacro, closeMacro);
         }
         return "";
