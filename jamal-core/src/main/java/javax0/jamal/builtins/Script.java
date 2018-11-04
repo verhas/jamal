@@ -24,7 +24,7 @@ public class Script implements Macro {
         skipWhiteSpaces(input);
         final String[] params = getParameters(input, id);
         if (!firstCharIs(input, '=')) {
-            throw new BadSyntax("define '" + id + "' has no '=' to body");
+            throw new BadSyntax("script '" + id + "' has no '=' to body");
         }
         skip(input, 1);
         var macro = processor.newUserDefinedMacro(id, input.toString(), params);

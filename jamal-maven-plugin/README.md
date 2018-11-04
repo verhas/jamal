@@ -9,7 +9,7 @@ You can use the plugin even without any Maven project just executing the command
 mvn javax0.jamal:jamal-maven-plugin:1.0.0:jamal
 ```
 
-(Note that `1.0.0-SNAPSHOT` should be replaced with the actual version.)
+(Note that `1.0.0` should be replaced with the actual version.)
 
 If there is no `pom.xml` for Maven to process then the plugin will search for all files that are in the
 current directory or in any subdirectory and have the extension `.jam`. When processing these files

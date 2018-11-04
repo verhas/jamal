@@ -28,9 +28,6 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         isScript = true;
     }
 
-    public UserDefinedMacro newUserDefinedMacro(String id, String content, String... parameters) throws BadSyntax {
-        return new UserDefinedMacro(id, content, parameters);
-    }
 
     public String getId() {
         return id;
