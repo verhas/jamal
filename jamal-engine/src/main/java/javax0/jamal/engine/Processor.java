@@ -49,8 +49,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param input  where the text is read from and removed after wards
      */
     private void processText(StringBuilder output, StringBuilder input) {
-        int nextMacroStart = input.indexOf(macros.open());
-        if (-1 < nextMacroStart) {
+        var nextMacroStart = input.indexOf(macros.open());
+        if (nextMacroStart != -1) {
             output.append(input.substring(0, nextMacroStart));
             skip(input, nextMacroStart);
         } else {
@@ -123,14 +123,14 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private String evalUserDefinedMacro(final StringBuilder input) throws BadSyntax {
-        final boolean reportUndef = input.charAt(0) != '?';
+        final boolean reportUndef = input.length() == 0 || input.charAt(0) != '?';
         if (!reportUndef) {
             skip(input, 1);
         }
         skipWhiteSpaces(input);
         var id = fetchId(input);
         if (id.length() == 0) {
-            return "";
+            throw new BadSyntax("Zero length user defined macro name was found.");
         }
         skipWhiteSpaces(input);
         final String[] parameters;
@@ -162,7 +162,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return {@code true} if the macro is a built in macro and {@code false} if the macro is user defined
      */
     private boolean macroIsBuiltIn(StringBuilder input) {
-        return input.charAt(0) == '#' || input.charAt(0) == '@';
+        return input.length() > 0 && (input.charAt(0) == '#' || input.charAt(0) == '@');
     }
 
 

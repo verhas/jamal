@@ -58,7 +58,7 @@ public class FileTools {
             return fileName;
         }
         var z = reference.lastIndexOf("/");
-        if (z > -1) {
+        if (z != -1) {
             reference = reference.substring(0, z + 1);
         } else {
             reference = "";

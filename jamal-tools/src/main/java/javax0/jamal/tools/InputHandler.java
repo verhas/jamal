@@ -16,7 +16,7 @@ public class InputHandler {
      * @return returns true if the first character of 's' is 'c'
      */
     public static boolean firstCharIs(CharSequence s, char c) {
-        return s.charAt(0) == c;
+        return s.length() > 0 && s.charAt(0) == c;
     }
 
     /**
@@ -107,7 +107,7 @@ public class InputHandler {
      */
     public static String fetchId(StringBuilder input) {
         final var output = new StringBuilder();
-        if (validId1stChar(input.charAt(0))) {
+        if (input.length() > 0 && validId1stChar(input.charAt(0))) {
             while (input.length() > 0 && validIdChar(input.charAt(0))) {
                 output.append(input.charAt(0));
                 skip(input, 1);
@@ -140,7 +140,7 @@ public class InputHandler {
      * @return the converted identifier.
      */
     public static String convertGlobal(String id) {
-        if (id.charAt(0) == ':') {
+        if (id.length() > 0 && id.charAt(0) == ':') {
             return id.substring(1);
         } else {
             return id;

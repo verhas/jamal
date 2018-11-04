@@ -162,4 +162,11 @@ public class TestSamples {
     public void testBadSep2() throws IOException, BadSyntax {
         Assertions.assertThrows(BadSyntax.class, () -> result("badsep2.jam"));
     }
+
+    @Test
+    @DisplayName("when the input has zero character after { it is handled")
+    public void zeroLengthInput() throws IOException, BadSyntax {
+        Assertions.assertThrows(BadSyntax.class, () -> result("zeroinput.jam"));
+    }
+
 }

@@ -15,7 +15,7 @@ public class Eval implements Macro {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         var input = in.getInput();
         final String scriptType;
-        if (input.charAt(0) == '/') {
+        if (input.length() > 0 && input.charAt(0) == '/') {
             skip(input, 1);
             scriptType = fetchId(input);
         } else {

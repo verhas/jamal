@@ -12,7 +12,7 @@ public class Define implements Macro {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         var input = in.getInput();
         skipWhiteSpaces(input);
-        var optional = input.charAt(0) == '?';
+        var optional = input.length() > 0 && input.charAt(0) == '?';
         if (optional) {
             skip(input, 1);
             skipWhiteSpaces(input);

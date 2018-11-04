@@ -15,7 +15,7 @@ public class Script implements Macro {
         var id = fetchId(input);
         skipWhiteSpaces(input);
         final String scriptType;
-        if( input.charAt(0) == '/'){
+        if( input.length() > 0 && input.charAt(0) == '/'){
             skip(input,1);
             scriptType = fetchId(input);
         }else{
