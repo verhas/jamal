@@ -90,7 +90,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param in the macro text to be processed without the opening and closing string.
      * @return the evaluated macro
      */
-    String evalMacro(final javax0.jamal.tools.Input in) throws BadSyntax {
+    private String evalMacro(final javax0.jamal.tools.Input in) throws BadSyntax {
         final var input = in.getInput();
         var isBuiltin = macroIsBuiltIn(input);
         final String macroId;
@@ -166,15 +166,14 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
 
-    String getNextMacroBody(final StringBuilder input) {
+    String getNextMacroBody(final StringBuilder input) throws BadSyntax {
 
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = new StringBuilder();
 
         while (counter > 0) {// while there is any opened macro
             if (input.length() == 0) {// some macro was not closed
-                //&Error('Erroneous macro nesting.',$output);
-                return output.toString();
+                throw new BadSyntax("Macro was not terminated in the file.");
             }
 
             if (input.indexOf(macros.open()) == 0) {

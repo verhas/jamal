@@ -35,6 +35,15 @@ public interface MacroRegister extends Delimiters {
     void global(Macro macro);
 
     /**
+     * Define a macro on the global level.
+     *
+     * @param macro to store in the definition structure on the top level.
+     * @param alias alias name to be used for the macro instead of the one
+     *              provided by the macro itself via {@link Macro#getId()}
+     */
+    void global(Macro macro,String alias);
+
+    /**
      * Define a user defined macro in the current evaluation level.
      *
      * @param macro to store in the definition structure.
@@ -47,6 +56,15 @@ public interface MacroRegister extends Delimiters {
      * @param macro to store in the definition structure
      */
     void define(Macro macro);
+
+    /**
+     * Define a macro on the current evaluation level.
+     *
+     * @param macro to store in the definition structure
+     * @param alias alias name to be used for the macro instead of the one
+     *              provided by the macro itself via {@link Macro#getId()}
+     */
+    void define(Macro macro, String alias);
 
     /**
      * Export the user defined macro {@code id}.

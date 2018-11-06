@@ -18,6 +18,14 @@ public class TestProcessor {
     }
 
     @Test
+    @DisplayName("throws exception when the macro is not terminated")
+    public void unterminated() throws BadSyntax {
+        final var input = new StringBuilder("this is the body of the macro unterminated");
+        final var sut = new Processor("{", "}");
+        Assertions.assertThrows(BadSyntax.class, ()-> sut.getNextMacroBody(input));
+    }
+
+    @Test
     @DisplayName("fetches the first macro with inner macros")
     public void getNestedMacro() throws BadSyntax{
         final var input = new StringBuilder("this is the {body} of the macro}");

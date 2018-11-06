@@ -1,0 +1,11 @@
+{@use
+javax0.jamal.extensions.Camel.UpperCase as CamelCase,
+javax0.jamal.extensions.Camel.LowerCase as camelCase,
+javax0.jamal.extensions.Camel.CStyle as const,
+javax0.jamal.extensions.Camel.Sentence ,
+javax0.jamal.extensions.Case.Cap,
+}{@camelCase THIS-IS-GOOD}
+{@CamelCase This_IS_Also_Good}
+{#const _{@camelCase This_IS-eXtRA.Good}}
+{#sentence {@camelCase This_IS-eXtRA.Good}}
+{#cap {#sentence {@camelCase This_IS-eXtRA.Good}}.}

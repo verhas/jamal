@@ -13,6 +13,7 @@
         <module>jamal-api</module>
         <module>jamal-tools</module>
         <module>jamal-core</module>
+        <module>jamal-extensions</module>
         <module>jamal-maven-plugin</module>
     </modules>
     <licenses>
