@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/jamal-extensions/jamal-extensions.iml" filepath="$PROJECT_DIR$/jamal-extensions/jamal-extensions.iml" />
       <module fileurl="file://$PROJECT_DIR$/jamal-maven-plugin/jamal-maven-plugin.iml" filepath="$PROJECT_DIR$/jamal-maven-plugin/jamal-maven-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/jamal-parent.iml" filepath="$PROJECT_DIR$/jamal-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jamal-testsupport/jamal-testsupport.iml" filepath="$PROJECT_DIR$/jamal-testsupport/jamal-testsupport.iml" />
       <module fileurl="file://$PROJECT_DIR$/jamal-tools/jamal-tools.iml" filepath="$PROJECT_DIR$/jamal-tools/jamal-tools.iml" />
     </modules>
   </component>

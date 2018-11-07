@@ -10,7 +10,7 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jamal-extensions</artifactId>
+    <artifactId>jamal-testsupport</artifactId>
     <name>jamal extensions</name>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -39,12 +39,6 @@
     <dependencies>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-testsupport</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-api</artifactId>
         </dependency>
         <dependency>
@@ -54,15 +48,17 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

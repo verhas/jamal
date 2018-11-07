@@ -41,22 +41,26 @@ public class Camel {
 
     private static String sentence(String s) {
         var c = new StringBuilder();
+        var first = true;
         for (var ch : s.toCharArray()) {
-            if (Character.isUpperCase(ch)) {
+            if (Character.isUpperCase(ch) && !first) {
                 c.append(" ");
             }
             c.append(Character.toLowerCase(ch));
+            first = false;
         }
         return c.toString();
     }
 
     private static String cstyle(String s, char sep) {
         var c = new StringBuilder();
+        var first = true;
         for (var ch : s.toCharArray()) {
-            if (Character.isUpperCase(ch)) {
+            if (Character.isUpperCase(ch) && !first) {
                 c.append(sep);
             }
             c.append(Character.toUpperCase(ch));
+            first = false;
         }
         return c.toString();
     }
