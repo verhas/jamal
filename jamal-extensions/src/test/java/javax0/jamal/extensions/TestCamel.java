@@ -1,50 +1,54 @@
 package javax0.jamal.extensions;
 
-import javax0.jamal.testsupport.TestMacro;
+import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Test;
 
 public class TestCamel {
 
     @Test
     public void testCamelLowerCase() throws Exception {
-        var tester = TestMacro.forMacro(Camel.LowerCase.class);
-        tester.test("INPUT", "input");
-        tester.test("INpUT", "input");
-        tester.test("INpuT", "input");
-        tester.test("INput", "input");
-        tester.test("Input", "input");
-        tester.test("input", "input");
+        var camelLowerCase = TestThat.forMacro(Camel.LowerCase.class);
+        camelLowerCase.fromInput("INPUT").results( "input");
+        camelLowerCase.fromInput("INpUT").results( "input");
+        camelLowerCase.fromInput("INpuT").results( "input");
+        camelLowerCase.fromInput("INput").results( "input");
+        camelLowerCase.fromInput("Input").results( "input");
+        camelLowerCase.fromInput("input").results( "input");
+        camelLowerCase.fromInput("IN-PUT").results( "inPut");
+        camelLowerCase.fromInput("I-N-P-U-T").results( "iNPUT");
     }
 
     @Test
     public void testCamelUpperCase() throws Exception {
-        var tester = TestMacro.forMacro(Camel.UpperCase.class);
-        tester.test("INPUT", "Input");
-        tester.test("INpUT", "Input");
-        tester.test("INpuT", "Input");
-        tester.test("INput", "Input");
-        tester.test("Input", "Input");
-        tester.test("input", "Input");
+        var camelUpperCase = TestThat.forMacro(Camel.UpperCase.class);
+        camelUpperCase.fromInput("INPUT").results( "Input");
+        camelUpperCase.fromInput("INpUT").results( "Input");
+        camelUpperCase.fromInput("INpuT").results( "Input");
+        camelUpperCase.fromInput("INput").results( "Input");
+        camelUpperCase.fromInput("Input").results( "Input");
+        camelUpperCase.fromInput("input").results( "Input");
+        camelUpperCase.fromInput("IN-PUT").results( "InPut");
+        camelUpperCase.fromInput("I-N-P-U-T").results( "INPUT");
     }
 
     @Test
     public void testCamelCStyle() throws Exception {
-        var tester = TestMacro.forMacro(Camel.CStyle.class);
-        tester.test("_Input", "INPUT");
-        tester.test("_input", "INPUT");
-        tester.test("_InPut", "IN_PUT");
-        tester.test("_inPut", "IN_PUT");
-        tester.test("_InPuT", "IN_PU_T");
-        tester.test("_inPuT", "IN_PU_T");
+        var cstyle = TestThat.forMacro(Camel.CStyle.class);
+        cstyle.fromInput("_Input").results( "INPUT");
+        cstyle.fromInput("_input").results( "INPUT");
+        cstyle.fromInput("_InPut").results( "IN_PUT");
+        cstyle.fromInput("_inPut").results( "IN_PUT");
+        cstyle.fromInput("_InPuT").results( "IN_PU_T");
+        cstyle.fromInput("_inPuT").results( "IN_PU_T");
     }
     @Test
     public void testCamelSentence() throws Exception {
-        var tester = TestMacro.forMacro(Camel.Sentence.class);
-        tester.test("Input", "input");
-        tester.test("input", "input");
-        tester.test("InPut", "in put");
-        tester.test("inPut", "in put");
-        tester.test("InPuT", "in pu t");
-        tester.test("inPuT", "in pu t");
+        var sentence = TestThat.forMacro(Camel.Sentence.class);
+        sentence.fromInput("Input").results( "input");
+        sentence.fromInput("input").results( "input");
+        sentence.fromInput("InPut").results( "in put");
+        sentence.fromInput("inPut").results( "in put");
+        sentence.fromInput("InPuT").results( "in pu t");
+        sentence.fromInput("inPuT").results( "in pu t");
     }
 }
