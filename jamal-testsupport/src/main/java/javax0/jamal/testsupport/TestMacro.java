@@ -1,4 +1,4 @@
-package javax0.jamal.test;
+package javax0.jamal.testsupport;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Macro;

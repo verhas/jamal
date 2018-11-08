@@ -79,19 +79,19 @@ public class TestSamples {
     }
 
     @Test
-    @DisplayName("test exporting")
+    @DisplayName("testsupport exporting")
     public void testExport() throws IOException, BadSyntax {
         assertEquals("defined exported", result("test_export.jam"));
     }
 
     @Test
-    @DisplayName("test separator setting")
+    @DisplayName("testsupport separator setting")
     public void testSeparator() throws IOException, BadSyntax {
         assertEquals("121", result("test_sep.jam"));
     }
 
     @Test
-    @DisplayName("test script evaluation")
+    @DisplayName("testsupport script evaluation")
     public void testScript() throws IOException, BadSyntax {
         assertEquals("11", result("script.jam"));
     }
@@ -103,20 +103,20 @@ public class TestSamples {
     }
 
     @Test
-    @DisplayName("test script evaluation")
+    @DisplayName("testsupport script evaluation")
     public void testScriptComplex() throws IOException, BadSyntax {
         assertEquals("1. this is the text that we will repeat two times\n" +
             "2. this is the text that we will repeat two times\n", result("script_complex.jam"));
     }
 
     @Test
-    @DisplayName("test script include")
+    @DisplayName("testsupport script include")
     public void testScriptInclude() throws IOException, BadSyntax {
         assertEquals("11", result("test_script.jam"));
     }
 
     @Test
-    @DisplayName("test eval")
+    @DisplayName("testsupport eval")
     public void testEval() throws IOException, BadSyntax {
         assertEquals("apple", result("eval.jam"));
     }

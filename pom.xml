@@ -43,6 +43,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -82,6 +83,11 @@
     </build>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-testsupport</artifactId>
+                <version>${jamal.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>

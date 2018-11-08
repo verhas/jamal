@@ -101,7 +101,7 @@ public class TestProcessor {
 
 
     @Test
-    @DisplayName("test verbatim protected user defined macro")
+    @DisplayName("testsupport verbatim protected user defined macro")
     public void testVerbatimUdMacroUse() throws BadSyntax {
         final var input = "{@define b={zz}}{@verbatim b}";
         final var sut = new Processor("{", "}");

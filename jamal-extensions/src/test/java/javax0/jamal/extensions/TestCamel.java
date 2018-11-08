@@ -1,6 +1,6 @@
 package javax0.jamal.extensions;
 
-import javax0.jamal.test.TestMacro;
+import javax0.jamal.testsupport.TestMacro;
 import org.junit.jupiter.api.Test;
 
 public class TestCamel {

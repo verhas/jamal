@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>jamal-testsupport</artifactId>
-    <name>jamal extensions</name>
+    <name>jamal testsupport</name>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Jamal macro library built-in macros</description>
@@ -48,7 +48,6 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

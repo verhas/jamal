@@ -100,7 +100,7 @@ public class InputHandler {
      * <pre>
      *     {@code {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}}
      * </pre>
-     * which is an experimental feature and is deliberately not documented except a single test.
+     * which is an experimental feature and is deliberately not documented except a single testsupport.
      *
      * @param input that contains the identifier at the start. The identifier will be removed at the end of the method.
      * @return the identifier string that was found and removed from the start of the input.

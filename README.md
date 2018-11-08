@@ -7,7 +7,7 @@ redundant text files. During development many times there are text files that
 you need to maintain, which contain redundant information.
 
 * Some property or other resource files in a Java project may be slightly different for
-  the different environments, test, uat, production.
+  the different environments, testsupport, uat, production.
 * A textual documentation has cross references but the format does not support automatic
   symbolic anchors and references.
 * There can be some makefile or other script or documentation file that differs only

@@ -1,5 +1,5 @@
-module jamal.core {
-    exports javax0.jamal.test;
+module jamal.testsupport {
+    exports javax0.jamal.testsupport;
     requires jamal.api;
     requires jamal.engine;
     requires jamal.tools;
