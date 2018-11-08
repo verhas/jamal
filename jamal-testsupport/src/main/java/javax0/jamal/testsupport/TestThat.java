@@ -72,4 +72,14 @@ public class TestThat {
         var actual = sut.evaluate(in, processor);
         Assertions.assertEquals(expected, actual);
     }
+
+    public void throwsUp(Class<? extends Throwable> throwable)
+        throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, BadSyntax {
+        var sut = klass.getDeclaredConstructor().newInstance();
+        var in = new javax0.jamal.tools.Input();
+        in.setInput(new StringBuilder(input));
+        var processor = new Processor("{", "}");
+        Assertions.assertThrows(throwable, ()-> sut.evaluate(in, processor));
+    }
+
 }
