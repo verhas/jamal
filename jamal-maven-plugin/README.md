@@ -25,7 +25,7 @@ If you have an actual Maven project then you can configure the plugin in the `po
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <configuration>
         <transformFrom>\.jam$</transformFrom>
         <transformTo>.jamo</transformTo>
