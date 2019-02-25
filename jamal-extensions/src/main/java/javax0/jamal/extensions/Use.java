@@ -7,6 +7,14 @@ import javax0.jamal.api.Processor;
 
 import java.util.regex.Pattern;
 
+/**
+ * This macro can be used to define a Java implemented macro class, which is not exported by the module system.
+ * <p>
+ * The macro code can contain {@code use global com.my.class as name} or {@code use com.my.class as name} to
+ * use the class {@code com.my.class} as a macro implementation. The class has to implement the {@link Macro}
+ * interface. In case it is defined as {@code global} then it will get into the global level, otherwise to the
+ * local level.
+ */
 public class Use implements Macro {
     private static final Pattern pattern = Pattern.compile("((?:global\\s+)?)((?:\\w+\\.?)+)(?:\\s+as\\s+(\\w+))?");
 
@@ -16,11 +24,11 @@ public class Use implements Macro {
         var macroImports = input.toString().split(",");
         for (final var macroImport : macroImports) {
             var stripped = macroImport
-                .trim()
-                .replace("\n", " ")
-                .replace("\r", " ")
-                .replace("\t", " ")
-                .replaceAll("\\s+", " ");
+                    .trim()
+                    .replace("\n", " ")
+                    .replace("\r", " ")
+                    .replace("\t", " ")
+                    .replaceAll("\\s+", " ");
             if (stripped.length() > 0) {
                 var matcher = pattern.matcher(stripped);
                 if (!matcher.matches()) {
