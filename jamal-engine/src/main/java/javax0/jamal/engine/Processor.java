@@ -110,7 +110,7 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         if (isBuiltin) {
             var builtin = macros.getMacro(macroId);
-            if (!builtin.isPresent()) {
+            if (builtin.isEmpty()) {
                 throw new BadSyntax("There is no built-in macro with the id '" + macroId + "'");
             }
             return builtin.get().evaluate(in, this);

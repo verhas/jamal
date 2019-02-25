@@ -60,7 +60,7 @@ public class Use implements Macro {
 
     private Macro forName(final String klassName) throws BadSyntax {
         final Macro macro;
-        final Class klass;
+        final Class<?> klass;
         try {
             klass = Class.forName(klassName);
         } catch (Exception e) {

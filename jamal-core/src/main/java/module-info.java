@@ -16,5 +16,4 @@ module jamal.core {
         ;
     requires jamal.api;
     requires jamal.tools;
-    requires java.scripting;
 }

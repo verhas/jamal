@@ -153,19 +153,19 @@ public class TestSamples {
 
     @Test
     @DisplayName("sep that defines zero length macro open throws exception")
-    public void testBadSep() throws IOException, BadSyntax {
+    public void testBadSep() {
         Assertions.assertThrows(BadSyntax.class, () -> result("badsep.jam"));
     }
 
     @Test
     @DisplayName("sep that defines zero length macro close throws exception")
-    public void testBadSep2() throws IOException, BadSyntax {
+    public void testBadSep2() {
         Assertions.assertThrows(BadSyntax.class, () -> result("badsep2.jam"));
     }
 
     @Test
     @DisplayName("when the input has zero character after { it is handled")
-    public void zeroLengthInput() throws IOException, BadSyntax {
+    public void zeroLengthInput() {
         Assertions.assertThrows(BadSyntax.class, () -> result("zeroinput.jam"));
     }
 
