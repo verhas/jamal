@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>jamal-tools</artifactId>
     <name>jamal tools</name>

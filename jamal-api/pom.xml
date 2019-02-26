@@ -7,16 +7,13 @@
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>jamal-api</artifactId>
     <name>jamal api</name>
     <packaging>jar</packaging>
     <description>Jamal macro library API interfaces</description>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <licenses>
         <license>

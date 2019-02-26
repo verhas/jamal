@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>jamal-maven-plugin</artifactId>
     <name>jamal maven plugin</name>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <description>Jamal macro library maven plugin</description>
     <properties>
@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-plugin</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2-SNAPSHOT</version>
                 <configuration>
                     <transformFrom>\.jam$</transformFrom>
                     <transformTo>.jamo</transformTo>
@@ -55,19 +55,6 @@
                 </configuration>
             </plugin>
             <!-- END SNIPPET pluginConfiguration -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>1.10</source>
-                    <target>1.10</target>
-                    <release>10</release>
-                    <jdkToolchain>
-                        <version>10</version>
-                    </jdkToolchain>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
@@ -113,5 +100,4 @@
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
     </dependencies>
-
 </project>

@@ -3,30 +3,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.javax0.jamal</groupId>
+        <artifactId>jamal-parent</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jamal-engine</artifactId>
+    <name>jamal engine</name>
+    <version>1.0.2-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>Jamal macro library engine implementation</description>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>1.11</source>
+                    <target>1.11</target>
+                    <release>11</release>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
-    <parent>
-        <groupId>com.javax0.jamal</groupId>
-        <artifactId>jamal-parent</artifactId>
-        <version>1.0.1</version>
-    </parent>
-
-    <artifactId>jamal-engine</artifactId>
-    <name>jamal engine</name>
-    <version>1.0.1</version>
-    <packaging>jar</packaging>
-    <description>Jamal macro library engine implementation</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

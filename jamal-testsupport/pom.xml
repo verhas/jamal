@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>jamal-testsupport</artifactId>
     <name>jamal testsupport</name>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Jamal macro library built-in macros</description>
     <properties>
