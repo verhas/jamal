@@ -2,6 +2,12 @@ package javax0.jamal.api;
 
 import java.util.Optional;
 
+/**
+ * General macro registry that can be used to register built-in (Java implemented) and user defined macros.
+ * API and implementation also supports hierarchical macro definitions, in the sense that the registry manages
+ * the lifetime of the macros so that they are available and are optionally shadowing other macros of the same name
+ * while the context they were defined in exists.
+ */
 public interface MacroRegister extends Delimiters {
 
     /**

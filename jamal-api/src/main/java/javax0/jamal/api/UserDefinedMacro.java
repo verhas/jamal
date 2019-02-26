@@ -1,9 +1,7 @@
 package javax0.jamal.api;
 
-public interface UserDefinedMacro {
+public interface UserDefinedMacro extends Evaluatable {
     String getId();
-
-    String evaluate(String... actualValues) throws BadSyntax;
 
     void setScriptType(String scriptType);
 }

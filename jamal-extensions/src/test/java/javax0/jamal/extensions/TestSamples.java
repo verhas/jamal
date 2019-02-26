@@ -49,4 +49,10 @@ public class TestSamples {
             "this is extra good\n" +
             "This is extra good.", result("use.jam"));
     }
+
+    @Test
+    @DisplayName("for loop iterates through the elements")
+    public void testForLoop() throws IOException, BadSyntax {
+        assertEquals("", result("for.jam"));
+    }
 }

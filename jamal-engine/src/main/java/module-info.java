@@ -3,4 +3,5 @@ module jamal.engine {
     requires  jamal.tools;
     uses javax0.jamal.api.Macro;
     exports javax0.jamal.engine;
+    exports javax0.jamal.engine.macro to jamal.extensions;
 }
