@@ -1,9 +1,8 @@
 {@import pom.jim}
-{project |
+{project |jar|
     {GAV :com.javax0.jamal:jamal-core:{VERSION}}
     {parent :jamal-parent}
     {name|jamal core}
-    {packaging|jar}
     {description|Jamal macro library built-in macros}
 
     {dependencies#
