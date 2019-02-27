@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestSamples {
+class TestSamples {
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {
         var fileName = this.getClass().getResource(testFile).getFile();
         fileName = fixupPath(fileName);
@@ -42,17 +42,24 @@ public class TestSamples {
 
     @Test
     @DisplayName("simple import")
-    public void testSimpleImport() throws IOException, BadSyntax {
+    void testSimpleImport() throws IOException, BadSyntax {
         assertEquals("thisIsGood\n" +
-            "ThisIsAlsoGood\n" +
-            "THIS_IS_EXTRA_GOOD\n" +
-            "this is extra good\n" +
-            "This is extra good.", result("use.jam"));
+                "ThisIsAlsoGood\n" +
+                "THIS_IS_EXTRA_GOOD\n" +
+                "this is extra good\n" +
+                "This is extra good.", result("use.jam"));
     }
 
     @Test
     @DisplayName("for loop iterates through the elements")
-    public void testForLoop() throws IOException, BadSyntax {
-        assertEquals("", result("for.jam"));
+    void testForLoop() throws IOException, BadSyntax {
+        assertEquals(" a is either a, b, c or d\n" +
+                " b is either a, b, c or d\n" +
+                " c is either a, b, c or d\n" +
+                " d is either a, b, c or d\n" +
+                " a is either a, b, c or d\n" +
+                " b is either a, b, c or d\n" +
+                " c is either a, b, c or d\n" +
+                " d is either a, b, c or d\n", result("for.jam"));
     }
 }

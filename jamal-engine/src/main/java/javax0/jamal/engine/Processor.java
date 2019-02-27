@@ -1,7 +1,7 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.*;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Marker;
 
 import java.util.regex.Pattern;
@@ -13,10 +13,38 @@ public class Processor implements javax0.jamal.api.Processor {
     private static final String NOT_USED = null;
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
 
-    public Processor(String macroOpen, String macroClose) throws BadSyntax {
-        macros.separators(macroOpen, macroClose);
-        Macro.getInstances()
-            .forEach(macros::define);
+    /**
+     * Create a new Processor that can be used to process macros. It sets the separators to the specified values.
+     * These separators start and end macros and the usual strings are "{" and "}".
+     * <p>
+     * The constructor also loads the macros that are defined either in the modules as implementations provided for the
+     * interface {@link Macro} or in library files listed in the META-INF directory (old way). The constructor uses the
+     * {@link java.util.ServiceLoader} to load the macros.
+     * <p>
+     * Neither {@code macroOpen} nor {@code macroClose} can be {@code null}. In case any of these parameters are
+     * {@code null} an {@link IllegalArgumentException} will be thrown.
+     *
+     * @param macroOpen  the macro opening string
+     * @param macroClose the macro closing string
+     */
+    public Processor(String macroOpen, String macroClose) {
+        try {
+            macros.separators(macroOpen, macroClose);
+        } catch (BadSyntax badSyntax) {
+            throw new IllegalArgumentException(
+                    "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
+        }
+        Macro.getInstances().forEach(macros::define);
+    }
+
+    /**
+     * Complimentary constructor that creates a processor with the conventional separators: "{" and "}".
+     * <p>
+     * Note that any string containing many characters can be used as separators. It is recommended to use different
+     * strings as opening and closing string or else it will not be possible to nest macros into each other.
+     */
+    public Processor() {
+        this("{", "}");
     }
 
     @Override
@@ -117,8 +145,8 @@ public class Processor implements javax0.jamal.api.Processor {
         } else {
             var rawResult = evalUserDefinedMacro(input);
             return verbatim ?
-                rawResult :
-                process(new javax0.jamal.tools.Input(new StringBuilder(rawResult), in.getReference()));
+                    rawResult :
+                    process(new javax0.jamal.tools.Input(new StringBuilder(rawResult), in.getReference()));
         }
     }
 

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  */
 public class For implements Macro {
 
-    private static final Pattern pattern = Pattern.compile("\\s+(\\w[\\w\\d_$]*)\\s+in\\s*\\((.*?)\\)\\s*=(.*)");
+    private static final Pattern pattern = Pattern.compile("\\s+(\\w[\\w\\d_$]*)\\s+in\\s*\\((.*?)\\)\\s*=(.*)",Pattern.DOTALL);
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
