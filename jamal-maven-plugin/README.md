@@ -6,18 +6,37 @@ creates output files processing the Jamal macros.
 You can use the plugin even without any Maven project just executing the command line
 
 ```
-mvn com.javax0.jamal:jamal-maven-plugin:1.0.1:jamal
+mvn com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
 ```
 
-(Note that `1.0.1` should be replaced with the actual version.)
+(Note that `1.0.2` should be replaced with the actual version.)
 
-The command line can be used to create the `pom.xml` files from the `pom.xml.jam` files in the root directory
-and recursively under the modules directories 
+The below command line can be used to create the `pom.xml` file(s) from the `pom.xml.jam` files in the root directory
+and recursively under the modules directories.
+```
+mvn  -DfilePattern=.*pom\.xml\.jam$ com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
+```
+
+You can download from the `null.pom` file from https://raw.githubusercontent.com/verhas/jamal/master/null.pom
+to add it to the actual project and use the `-f null.pom` so that you can run the command even when the `pom.xml`
+does not exist or even was ruined because you make some mistake editing the `pom.xml.jam`.
+
 ```
 mvn  -f null.pom -DfilePattern=.*pom\.xml\.jam$ com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
 ```
-This can be used starting with version `1.0.2`.
 
+Another possibility is to download the `genpom.xml` file from
+https://raw.githubusercontent.com/verhas/jamal/master/genpom.xml and use this in the command line:
+
+```
+mvn  -f genpom.xml clean
+```
+
+This pom file configures the Maven Jamal plugin to process the `pom.xml.jam` files and this is attached to the
+`clean` phase. The `clean` phase was selected because it is much shorter than `generate-sources` or `generate-resources`
+and it seems to be a good idea to recompile everything afterwards when the pom file has changed.
+
+This can be used starting with version `1.0.2`.
 
 If there is no `pom.xml` for Maven to process then the plugin will search for all files that are in the
 current directory or in any subdirectory and have the extension `.jam`. When processing these files
