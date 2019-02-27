@@ -35,7 +35,7 @@ public class JamalMojo extends AbstractMojo {
     @Parameter(defaultValue = "}")
     private String macroClose;
 
-    @Parameter(defaultValue = ".*\\.jam$")
+    @Parameter(defaultValue = "${filePattern}")
     private String filePattern;
 
     @Parameter()
@@ -53,7 +53,7 @@ public class JamalMojo extends AbstractMojo {
     @Parameter(defaultValue = "\\.jam$")
     private String transformFrom;
 
-    @Parameter()
+    @Parameter(defaultValue = "")
     private String transformTo;
     //</editor-fold>
 
@@ -74,7 +74,7 @@ public class JamalMojo extends AbstractMojo {
             Files.walk(Paths.get(sourceDirectory))
                     .filter(Files::isRegularFile)
                     .filter(includePredicate)
-                    .filter(excludePredicate)
+                    .filter(excludePredicate).peek( p -> log.info("path :" + p))
                     .forEach(this::executeJamal);
         } catch (IOException e) {
             if (processingSuccessful) {
@@ -89,7 +89,7 @@ public class JamalMojo extends AbstractMojo {
 
     private void executeJamal(final Path inputPath) {
         var log = getLog();
-        log.debug("Jamal processing " + qq(inputPath.toString()));
+        log.info("Jamal processing " + qq(inputPath.toString()));
         try {
             final var result = new Processor(macroOpen, macroClose).process(createInput(inputPath));
             final var output = calculateTargetFile(inputPath);
@@ -164,15 +164,17 @@ public class JamalMojo extends AbstractMojo {
         if (!new File(targetDirectory).exists()) {
             targetDirectory = Paths.get(new File(".").getAbsolutePath()).normalize().toString();
         }
+        log.info("Source directory is " + sourceDirectory);
+        log.info("Target directory is " + targetDirectory);
     }
 
     private Predicate<Path> getPathPredicate(final String pattern) {
         final Predicate<Path> includePredicate;
         if (pattern != null && pattern.length() > 0) {
             Pattern includePattern = Pattern.compile(pattern);
-            includePredicate = p -> includePattern.matcher(p.toString()).find();
+            includePredicate = p -> includePattern.matcher(p.toString()).matches();
         } else {
-            includePredicate = p -> true;
+            includePredicate = p -> false;
         }
         return includePredicate;
     }
@@ -183,15 +185,15 @@ public class JamalMojo extends AbstractMojo {
 
     private void logParameters() {
         var log = getLog();
-        log.debug("Configuration:");
-        log.debug("    macroOpen=" + macroOpen);
-        log.debug("    macroClose=" + macroClose);
-        log.debug("    filePattern=" + filePattern);
-        log.debug("    exclude=" + exclude);
-        log.debug("    sourceDirectory=" + sourceDirectory);
-        log.debug("    targetDirectory=" + targetDirectory);
-        log.debug("    transform " + qq(transformFrom) + " -> " + qq(transformTo));
-        log.debug("----");
+        log.info("Configuration:");
+        log.info("    macroOpen=" + macroOpen);
+        log.info("    macroClose=" + macroClose);
+        log.info("    filePattern=" + filePattern);
+        log.info("    exclude=" + exclude);
+        log.info("    sourceDirectory=" + sourceDirectory);
+        log.info("    targetDirectory=" + targetDirectory);
+        log.info("    transform " + qq(transformFrom) + " -> " + qq(transformTo));
+        log.info("----");
     }
 
     private void normalizeConfiguration() {
@@ -202,22 +204,22 @@ public class JamalMojo extends AbstractMojo {
             macroClose = "";
         }
         if (filePattern == null) {
-            filePattern = "";
+            filePattern = ".*\\.jam$";
         }
         if (exclude == null) {
             exclude = "";
         }
         if (sourceDirectory == null) {
-            sourceDirectory = "";
+            sourceDirectory = ".";
         }
         if (defaultSourceDirectory == null) {
-            defaultSourceDirectory = "";
+            defaultSourceDirectory = ".";
         }
         if (targetDirectory == null) {
-            targetDirectory = "";
+            targetDirectory = ".";
         }
         if (transformFrom == null) {
-            transformFrom = "";
+            transformFrom = "\\.jam$";
         }
         if (transformTo == null) {
             transformTo = "";

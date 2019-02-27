@@ -140,6 +140,12 @@ public class TestSamples {
     }
 
     @Test
+    @DisplayName("a define is defined inside define")
+    public void testDefineDefine() throws IOException, BadSyntax {
+        assertEquals("\n\n<name>Peter</name>", result("define_define.jam"));
+    }
+
+    @Test
     @DisplayName("ident protects argument from post evaluation")
     public void testIdent() throws IOException, BadSyntax {
         assertEquals("\n\n\n\n{a}\n13\n{a}", result("ident.jam"));

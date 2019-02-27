@@ -6,10 +6,18 @@ creates output files processing the Jamal macros.
 You can use the plugin even without any Maven project just executing the command line
 
 ```
-mvn javax0.jamal:jamal-maven-plugin:1.0.0:jamal
+mvn com.javax0.jamal:jamal-maven-plugin:1.0.1:jamal
 ```
 
-(Note that `1.0.0` should be replaced with the actual version.)
+(Note that `1.0.1` should be replaced with the actual version.)
+
+The command line can be used to create the `pom.xml` files from the `pom.xml.jam` files in the root directory
+and recursively under the modules directories 
+```
+mvn  -f null.pom -DfilePattern=.*pom\.xml\.jam$ com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
+```
+This can be used starting with version `1.0.2`.
+
 
 If there is no `pom.xml` for Maven to process then the plugin will search for all files that are in the
 current directory or in any subdirectory and have the extension `.jam`. When processing these files

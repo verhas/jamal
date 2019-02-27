@@ -75,6 +75,20 @@ textual environment the `{` and `}` characters are frequently used in Java code,
 double `{{` or `}}` format. In this documentation we use the `{` and `}` strings. You can change
 the macro opening and closing strings even from macros using the built-in `sep` macro (see later).
 
+When these macros are used the parameters are separated using the first non-space character that is following
+the name of the macro. Thus you can write
+
+```jam
+{fruit/red/apple/20ounce}
+{fruit|red|apple|20ounce}
+{fruit.red.apple.20ounce}
+{fruit :red:apple:20ounce}
+```
+
+Note that in the last example we used the `:` character as separator. Since this character can also be part of the
+name of the macro (in this case the macro is global) this cannot be used without a space in front of the first `:`
+character.
+
 ## Other Macros<a name="OtherMacros">
 
 `define` is not the only built-in macro in Jamal. The comprehensive list of built-in macros are
