@@ -1,6 +1,7 @@
-package javax0.jamal.extensions;
+package javax0.jamal.builtinstest;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.builtins.For;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package javax0.jamal.extensions;
+package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;

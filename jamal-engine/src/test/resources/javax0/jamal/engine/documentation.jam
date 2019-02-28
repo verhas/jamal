@@ -31,10 +31,10 @@ START SNIPPET eval{output}
 END SNIPPET
 
 START SNIPPET script{output}
-{@script for(loopvar,start,end,content)=
+{@script for(loopvar,start,end,text)=
     c = ""
     for( i = start ; i <= end ; i++ ){
-      c = c + content.replace(new RegExp( loopvar , 'g'), i)
+      c = c + text.replace(new RegExp( loopvar , 'g'), i)
     }
     c
 }

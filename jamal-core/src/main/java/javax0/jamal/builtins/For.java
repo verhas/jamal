@@ -1,12 +1,11 @@
-package javax0.jamal.extensions;
+package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.engine.macro.Segment;
-import javax0.jamal.engine.macro.TextSegment;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -22,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class For implements Macro {
 
-    private static final Pattern pattern = Pattern.compile("\\s+(\\w[\\w\\d_$]*)\\s+in\\s*\\((.*?)\\)\\s*=(.*)",Pattern.DOTALL);
+    private static final Pattern pattern = Pattern.compile("\\s+(\\w[\\w\\d_$]*)\\s+in\\s*\\((.*?)\\)\\s*=(.*)", Pattern.DOTALL);
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -38,17 +37,50 @@ public class For implements Macro {
         final var splitter = opt.isPresent() ? opt.get().evaluate() : ",";
         final var valueList = values.split(splitter);
         final var output = new StringBuilder();
-        final var root = new TextSegment(null, content);
+        final var root = new Segment(null, content);
         root.split(loopVariable);
         for (final String value : valueList) {
             for (Segment segment = root; segment != null; segment = segment.next()) {
-                if (segment instanceof TextSegment) {
-                    output.append(segment.content());
-                } else {
-                    output.append(value);
-                }
+                output.append(segment.content().orElse(value));
             }
         }
         return output.toString();
+    }
+
+    private static class Segment {
+        Segment nextSeg;
+        String text;
+        Segment(Segment nextSeg, String text) {
+            this.nextSeg = nextSeg;
+            this.text = text;
+        }
+
+        private static void split(final Segment root, final String parameter) {
+            var it = root;
+            while ((it = splitAndGetNext(it, parameter)) != null) ;
+        }
+
+        private static Segment splitAndGetNext(final Segment it, final String parameter) {
+            final var start = it.text.indexOf(parameter);
+            if (start < 0) {
+                return null;
+            }
+            final var textSeg = new Segment(it.nextSeg, it.text.substring(start + parameter.length()));
+            it.nextSeg = new Segment(textSeg, null);
+            it.text = it.text.substring(0, start);
+            return textSeg;
+        }
+
+        Optional<String> content() {
+            return Optional.ofNullable(text);
+        }
+
+        Segment next() {
+            return nextSeg;
+        }
+
+        void split(String parameter) {
+            split(this, parameter);
+        }
     }
 }

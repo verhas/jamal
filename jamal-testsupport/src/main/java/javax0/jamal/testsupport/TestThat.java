@@ -95,18 +95,16 @@ public class TestThat {
      * @throws IllegalAccessException    if the macro class can not be instantiated
      * @throws InstantiationException    if the macro class can not be instantiated
      * @throws InvocationTargetException if the macro class can not be instantiated
-     * @throws BadSyntax                 if the macro evaluation throws BadSyntax and it was not the one expected
      */
     public void throwsUp(Class<? extends Throwable> throwable) throws
             NoSuchMethodException,
             IllegalAccessException,
             InstantiationException,
-            InvocationTargetException,
-            BadSyntax {
+            InvocationTargetException {
         var sut = createSut();
         var in = new javax0.jamal.tools.Input();
         in.setInput(new StringBuilder(input));
-        var processor = new Processor("{", "}");
+        var processor = new Processor();
         Assertions.assertThrows(throwable, () -> sut.evaluate(in, processor));
     }
 
