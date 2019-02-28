@@ -1,6 +1,4 @@
 {@import version.jim}
-{@define JAVA_VERSION=1.11}
-{@define JAVA_RELEASE=11}
 {@define project(_packaging,_projectContent)=<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
                             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion>
@@ -9,23 +7,26 @@
 }
 
 {@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
-{#define _XXX={@for _tag in (name,groupId,artifactId,version,packaging,description,url,properties,build,pluginManagement,plugins,plugin,dependencyManagement,dependencies,scm,connection,developerConnection,executions,execution,id,goals,goal)=
+{#eval {@for _tag in (name,groupId,artifactId,version,packaging,description,url,properties,build,pluginManagement,plugins,plugin,dependencyManagement,dependencies,scm,connection,developerConnection,executions,execution,id,goals,goal)=
 {tag/_tag}}}
-{_XXX}{@comment this is needed to get the result of FOR evaluated and then this defines the tags}
 
 {@define GAV(_groupId,_artifactId,_version)={groupId/_groupId}{artifactId/_artifactId}{version/_version}{#define GROUPID=_groupId}{#define VERSION=_version}}
+
 {@define parent(_id)=<parent>{GAV :{GROUPID}:_id:{VERSION}}
 </parent>}
+
 {@define dependency(_groupId,_artifactId,_version)=
 <dependency>
 {groupId/_groupId}
 {artifactId/_artifactId}
 {version/_version}
 </dependency>}
+
 {@define dependencyGA(_groupId,_artifactId)=<dependency>
 {groupId/_groupId}
 {artifactId/_artifactId}
 </dependency>}
+
 {@define testDependency(_groupId,_artifactId,_version)=
 <dependency>
 {groupId/_groupId}
@@ -33,16 +34,20 @@
 {version/_version}
 <scope>test</scope>
 </dependency>}
+
 {@define modules(Z)=<modules>
 {@for MODULE in (Z)=<module>MODULE</module>
 }</modules>}
+
 {@define license(_name,_url)=<licenses>
 <license>
     <name>_name</name>
     <url>_url</url>
 </license>
 </licenses>}
+
 {@define property(_name,_value)=<_name>_value</_name>}
+
 {@define developer(_name,_email)=   <developers>
                                          <developer>
                                              <name>_name</name>
@@ -56,4 +61,3 @@
                                              {url|http:/github.com/_developer/_project/tree/master}
                                          }
                                          {url|http:/github.com/_developer/_project/tree/master}}
-{@define nl=}

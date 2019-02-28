@@ -1,0 +1,2 @@
+{#eval {@ident{@define z=zzz}}}
+{z}

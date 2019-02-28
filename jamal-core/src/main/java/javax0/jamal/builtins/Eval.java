@@ -12,14 +12,14 @@ import static javax0.jamal.tools.ScriptingTools.resultToString;
 
 public class Eval implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         var input = in.getInput();
         final String scriptType;
         if (input.length() > 0 && input.charAt(0) == '/') {
             skip(input, 1);
             scriptType = fetchId(input);
         } else {
-            scriptType = "JavaScript";
+            return processor.process(in);
         }
         var engine = getEngine(scriptType);
         try {

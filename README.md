@@ -283,14 +283,24 @@ This is a fairly complex example. To ease the understanding note the followings:
 ### `eval`<a name="eval">
 since 1.0.0 (core)
 
-`eval` can be used to execute some script. The syntax of the macro is
+`eval` interprets the content of the macro, the text written after the macro keyword `eval` using the syntax defined
+as script type after a `/` character. If there is no script type defined (or `jamal` is defined) then the content will
+be evaluated as normal Jamal macro text. Otherwise the script engine named is used.  
+
+The syntax of the macro is
+
+```jam
+eval macro text
+```
+
+or
 
 ```jam
 eval/scripttype script
 ```
 
 If `eval` is followed by `/` character then the next identifier is the type of the script.
-If this is missing the default is `JavaScript`. You can use any scripting language that
+You can use any scripting language that
 implements the Java scripting API and the interpreter is available on the classpath when Jamal is
 executed.
 
