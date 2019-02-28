@@ -15,6 +15,7 @@ public class FileTools {
 
     /**
      * Create a new input from a file.
+     *
      * @param fileName the name of the file. This is used to open and read the file as well as reference file name in the input.
      * @return the input containing the contend of the file.
      * @throws BadSyntax if the file cannot be read.
@@ -33,11 +34,11 @@ public class FileTools {
      * <p>
      * If the name of the file starts with one of the characters:
      * <ul>
-     *     <li>{@code /}</li>
-     *     <li>{@code \}</li>
-     *     <li>{@code ~}</li>
+     * <li>{@code /}</li>
+     * <li>{@code \}</li>
+     * <li>{@code ~}</li>
      * </ul>
-     *
+     * <p>
      * or starts with an alpha character and a {@code :} (DOS drive letter, like {@code C:} then the file name is
      * absolute and it is returned as it is.
      * <p>
@@ -45,29 +46,26 @@ public class FileTools {
      * exist) and {@code fileName} is treated as a relative file name and the absolute path is calculated.
      *
      * @param reference the name of the reference file
-     * @param fileName the name of the file, absolute or relative
+     * @param fileName  the name of the file, absolute or relative
      * @return the absolute file name of the file
      */
-    public static String absolute(String reference, String fileName) {
+    public static String absolute(final String reference, String fileName) {
         if (fileName.startsWith("/") ||
-            fileName.startsWith("\\") ||
-            fileName.startsWith("~") ||
-            (fileName.length() > 1 &&
-                Character.isAlphabetic(fileName.charAt(0))
-                && fileName.charAt(1) == ':')) {
+                fileName.startsWith("\\") ||
+                fileName.startsWith("~") ||
+                (fileName.length() > 1 &&
+                        Character.isAlphabetic(fileName.charAt(0))
+                        && fileName.charAt(1) == ':')) {
             return fileName;
         }
-        var z = reference.lastIndexOf("/");
-        if (z != -1) {
-            reference = reference.substring(0, z + 1);
-        } else {
-            reference = "";
-        }
-
-        return Paths.get(reference)
+        final var unixedReference = reference.replaceAll("\\\\", "/");
+        final var referencePath = unixedReference.contains("/") ?
+                reference.substring(0, unixedReference.lastIndexOf("/") + 1)
+                : "";
+        return Paths.get(referencePath)
                 .resolve(Paths.get(fileName))
                 .normalize()
                 .toString()
-                .replaceAll("\\\\","/");
+                .replaceAll("\\\\", "/");
     }
 }

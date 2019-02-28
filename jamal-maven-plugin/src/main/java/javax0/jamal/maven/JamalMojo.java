@@ -185,15 +185,15 @@ public class JamalMojo extends AbstractMojo {
 
     private void logParameters() {
         var log = getLog();
-        log.info("Configuration:");
-        log.info("    macroOpen=" + macroOpen);
-        log.info("    macroClose=" + macroClose);
-        log.info("    filePattern=" + filePattern);
-        log.info("    exclude=" + exclude);
-        log.info("    sourceDirectory=" + sourceDirectory);
-        log.info("    targetDirectory=" + targetDirectory);
-        log.info("    transform " + qq(transformFrom) + " -> " + qq(transformTo));
-        log.info("----");
+        log.debug("Configuration:");
+        log.debug("    macroOpen=" + macroOpen);
+        log.debug("    macroClose=" + macroClose);
+        log.debug("    filePattern=" + filePattern);
+        log.debug("    exclude=" + exclude);
+        log.debug("    sourceDirectory=" + sourceDirectory);
+        log.debug("    targetDirectory=" + targetDirectory);
+        log.debug("    transform " + qq(transformFrom) + " -> " + qq(transformTo));
+        log.debug("----");
     }
 
     private void normalizeConfiguration() {
