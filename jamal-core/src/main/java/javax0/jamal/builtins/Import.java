@@ -11,7 +11,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 /**
  * Imports the macros from the file.
  *
- * The file name os followed by the macro keyword {@code import}. If the file was already
+ * The file name is followed by the macro keyword {@code import}. If the file was already
  * imported on the actual level or some higher level then the file will not be imported
  * again. This is to ensure that the same macro file will not be imported uselessly more
  * than once. Also if the macro file was imported on a level that is deeper than the current

@@ -1,4 +1,4 @@
-{@import pom.jim}
+{@import ../pom.jim}
 {project |jar|
     {GAV :com.javax0.jamal:jamal-core:{VERSION}}
     {parent :jamal-parent}

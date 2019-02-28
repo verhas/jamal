@@ -15,7 +15,7 @@ package javax0.jamal.api;
  * When a macro starts with the {@code #} character then the content of the macro is processed resolving macro
  * references before processing the macro itself. This process is executed one level deeper than the current level.
  * The {@link Processor#process(Input)} calls  {@link MacroRegister#push(Marker)} before
- * starting to process the content of the macro body and calls {@link MacroRegister#pop(Marker)} when it finished.
+ * starting to process the content of the macro body and calls {@link MacroRegister#pop(Marker)} when it has finished.
  */
 public interface Stackable extends Macro {
     void push();
