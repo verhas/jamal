@@ -47,7 +47,6 @@ the plugin.) The processed files will be created in the same directory where the
 
 If you have an actual Maven project then you can configure the plugin in the `pom.xml`.
 
-<!-- USE SNIPPET */pluginConfiguration TRIM -->
 ```xml
 <plugin>
     <groupId>com.javax0.jamal</groupId>

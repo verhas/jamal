@@ -1,0 +1,7 @@
+{@import ../pom.jim}
+{project |jar|
+    {GAV :com.javax0.jamal:jamal-api:{VERSION}}
+    {parent :jamal-parent}
+    {name|jamal api}
+    {description|Jamal macro library API interfaces}
+}

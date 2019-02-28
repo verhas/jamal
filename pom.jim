@@ -35,6 +35,14 @@
 <scope>test</scope>
 </dependency>}
 
+{@define providedDependency(_groupId,_artifactId,_version)=
+<dependency>
+{groupId/_groupId}
+{artifactId/_artifactId}
+{version/_version}
+<scope>provided</scope>
+</dependency>}
+
 {@define modules(Z)=<modules>
 {@for MODULE in (Z)=<module>MODULE</module>
 }</modules>}

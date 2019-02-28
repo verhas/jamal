@@ -63,7 +63,7 @@ public class JamalMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         normalizeConfiguration();
         final var log = getLog();
-        log.info("Jamal started");
+        log.debug("Jamal started");
         logParameters();
         normalizeDirectories();
         logParameters();
@@ -74,7 +74,7 @@ public class JamalMojo extends AbstractMojo {
             Files.walk(Paths.get(sourceDirectory))
                     .filter(Files::isRegularFile)
                     .filter(includePredicate)
-                    .filter(excludePredicate).peek( p -> log.info("path :" + p))
+                    .filter(excludePredicate)
                     .forEach(this::executeJamal);
         } catch (IOException e) {
             if (processingSuccessful) {
@@ -89,7 +89,7 @@ public class JamalMojo extends AbstractMojo {
 
     private void executeJamal(final Path inputPath) {
         var log = getLog();
-        log.info("Jamal processing " + qq(inputPath.toString()));
+        log.debug("Jamal processing " + qq(inputPath.toString()));
         try {
             final var result = new Processor(macroOpen, macroClose).process(createInput(inputPath));
             final var output = calculateTargetFile(inputPath);
@@ -164,8 +164,8 @@ public class JamalMojo extends AbstractMojo {
         if (!new File(targetDirectory).exists()) {
             targetDirectory = Paths.get(new File(".").getAbsolutePath()).normalize().toString();
         }
-        log.info("Source directory is " + sourceDirectory);
-        log.info("Target directory is " + targetDirectory);
+        log.debug("Source directory is " + sourceDirectory);
+        log.debug("Target directory is " + targetDirectory);
     }
 
     private Predicate<Path> getPathPredicate(final String pattern) {

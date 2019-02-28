@@ -1,0 +1,40 @@
+{@import ../pom.jim}
+{project |maven-plugin|
+
+    {GAV :com.javax0.jamal:jamal-maven-plugin:{VERSION}}
+    {parent :jamal-parent}
+    {name :jamal testsupport}
+    {description :Jamal macro library maven plugin}
+
+    {build#
+        {plugins#
+            {plugin|
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
+                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-descriptor</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            }
+        }
+    }
+
+    {dependencies#
+        {@for MODULE in (engine,extensions)=
+            {dependencyGA|com.javax0.jamal|jamal-MODULE}}
+        {@for MODULE in (api,engine)=
+            {dependencyGA|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency :org.apache.maven:maven-plugin-api:3.5.4}
+        {providedDependency :org.apache.maven.plugin-tools:maven-plugin-annotations:3.5.2}
+    }
+}

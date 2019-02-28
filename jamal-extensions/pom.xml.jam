@@ -1,0 +1,14 @@
+{@import ../pom.jim}
+{project |jar|
+    {GAV :com.javax0.jamal:jamal-extensions:{VERSION}}
+    {parent :jamal-parent}
+    {name|jamal extensions}
+    {description|Jamal macro library extra macros}
+
+    {dependencies#
+        {@for MODULE in (api,tools,testsupport)=
+            {dependencyGA|com.javax0.jamal|jamal-MODULE}}
+        {@for MODULE in (api,engine)=
+            {dependencyGA|org.junit.jupiter|junit-jupiter-MODULE}}
+    }
+}

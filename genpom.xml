@@ -2,9 +2,9 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>null</groupId>
-    <artifactId>null</artifactId>
-    <version>1</version>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>pom.xml_files</artifactId>
+    <version>out_of_pom.xml.jam_files</version>
     <build>
         <plugins>
             <plugin>
