@@ -11,9 +11,8 @@ public class Begin implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) {
-        var input = in.getInput();
-        skipWhiteSpaces(input);
-        var marker = new NamedMarker(input.toString().trim(),s -> "{@begin " + s + "}");
+        skipWhiteSpaces(in);
+        var marker = new NamedMarker(in.toString().trim(), s -> "{@begin " + s + "}");
         processor.getRegister().push(marker);
         return "";
     }

@@ -1,6 +1,7 @@
 package javax0.jamal.testsupport;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.engine.Processor;
@@ -31,7 +32,7 @@ import java.lang.reflect.InvocationTargetException;
  *     camelLowerCase.fromInput("I-N-P-U-T").results( "iNPUT");
  * </pre>
  * <p>
- * If and when the macro may throw exception (probably BadSyntax
+ * If and when the macro may throw exception (probably BadSyntaxAt
  */
 public class TestThat {
     final private Class<? extends Macro> klass;
@@ -66,14 +67,14 @@ public class TestThat {
      * @throws IllegalAccessException    if the macro class can not be instantiated
      * @throws InstantiationException    if the macro class can not be instantiated
      * @throws InvocationTargetException if the macro class can not be instantiated
-     * @throws BadSyntax                 if the macro evaluation throws BadSyntax
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     public void results(String expected) throws
-            NoSuchMethodException,
-            IllegalAccessException,
-            InstantiationException,
-            InvocationTargetException,
-            BadSyntax {
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException,
+        BadSyntaxAt, BadSyntax {
         Macro sut = createSut();
         var in = new javax0.jamal.tools.Input();
         in.setInput(new StringBuilder(input));
@@ -97,10 +98,10 @@ public class TestThat {
      * @throws InvocationTargetException if the macro class can not be instantiated
      */
     public void throwsUp(Class<? extends Throwable> throwable) throws
-            NoSuchMethodException,
-            IllegalAccessException,
-            InstantiationException,
-            InvocationTargetException {
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException {
         var sut = createSut();
         var in = new javax0.jamal.tools.Input();
         in.setInput(new StringBuilder(input));
@@ -115,16 +116,16 @@ public class TestThat {
      * @throws IllegalAccessException    if the macro class can not be instantiated
      * @throws InstantiationException    if the macro class can not be instantiated
      * @throws InvocationTargetException if the macro class can not be instantiated
-     * @throws BadSyntax                 should not ever, because this is what we expect to be caught by the invoked
+     * @throws BadSyntaxAt               should not ever, because this is what we expect to be caught by the invoked
      *                                   {@link #throwsUp(Class)} method, but Java requires that we declre this.
      */
     public void throwsBadSyntax() throws
-            NoSuchMethodException,
-            IllegalAccessException,
-            InstantiationException,
-            InvocationTargetException,
-            BadSyntax {
-        throwsUp(BadSyntax.class);
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException,
+        BadSyntaxAt {
+        throwsUp(BadSyntaxAt.class);
     }
 
     /**

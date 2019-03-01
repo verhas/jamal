@@ -19,16 +19,15 @@ public class Use implements Macro {
     private static final Pattern pattern = Pattern.compile("((?:global\\s+)?)((?:\\w+\\.?)+)(?:\\s+as\\s+(\\w+))?");
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        var input = in.getInput();
+    public String evaluate(Input input, Processor processor) throws BadSyntax {
         var macroImports = input.toString().split(",");
         for (final var macroImport : macroImports) {
             var stripped = macroImport
-                    .trim()
-                    .replace("\n", " ")
-                    .replace("\r", " ")
-                    .replace("\t", " ")
-                    .replaceAll("\\s+", " ");
+                .trim()
+                .replace("\n", " ")
+                .replace("\r", " ")
+                .replace("\t", " ")
+                .replaceAll("\\s+", " ");
             if (stripped.length() > 0) {
                 var matcher = pattern.matcher(stripped);
                 if (!matcher.matches()) {

@@ -1,33 +1,35 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 
 import static javax0.jamal.tools.InputHandler.*;
 
 public class Script implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        var input = in.getInput();
+    public String evaluate(Input input, Processor processor) throws BadSyntaxAt {
+        var ref = input.getLineReference();
         skipWhiteSpaces(input);
         var id = fetchId(input);
         skipWhiteSpaces(input);
         final String scriptType;
-        if( input.length() > 0 && input.charAt(0) == '/'){
-            skip(input,1);
+        if (input.length() > 0 && input.charAt(0) == '/') {
+            skip(input, 1);
             scriptType = fetchId(input);
-        }else{
+        } else {
             scriptType = "JavaScript";
         }
         skipWhiteSpaces(input);
         final String[] params = getParameters(input, id);
         if (!firstCharIs(input, '=')) {
-            throw new BadSyntax("script '" + id + "' has no '=' to body");
+            throw new BadSyntaxAt("script '" + id + "' has no '=' to body", ref);
         }
         skip(input, 1);
-        var macro = processor.newUserDefinedMacro(id, input.toString(), params);
+        final UserDefinedMacro macro;
+        try {
+            macro = processor.newUserDefinedMacro(id, input.toString(), params);
+        } catch (BadSyntax bs) {
+            throw new BadSyntaxAt(bs, ref);
+        }
         macro.setScriptType(scriptType);
         if (isGlobalMacro(id)) {
             processor.getRegister().global(macro);

@@ -1,16 +1,12 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 
 import static javax0.jamal.tools.InputHandler.*;
 
 public class Define implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        var input = in.getInput();
+    public String evaluate(Input input, Processor processor) throws BadSyntax, BadSyntaxAt {
         skipWhiteSpaces(input);
         var optional = input.length() > 0 && input.charAt(0) == '?';
         if (optional) {

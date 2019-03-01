@@ -9,7 +9,6 @@ package javax0.jamal.engine.macro;
  * <p>
  * When a macro is evaluated the first time it's content is split into segments and then these segments are
  * joined together so that the parameter names are replaced with the actual values.
- *
  */
 public abstract class Segment {
     Segment nextSeg;

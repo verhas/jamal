@@ -27,7 +27,7 @@ public interface Delimiters {
      *                       and when {@code openDelimiter} is {@code null} it restores the delimiters from the
      *                       top of the stack.
      * @param closeDelimiter the macro closing string to be set
-     * @throws BadSyntax in case the separators can not be set.
+     * @throws BadSyntaxAt in case the separators can not be set.
      */
     void separators(String openDelimiter, String closeDelimiter) throws BadSyntax;
 }

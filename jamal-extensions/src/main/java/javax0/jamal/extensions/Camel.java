@@ -7,38 +7,6 @@ import javax0.jamal.tools.InputHandler;
 
 public class Camel {
 
-    public static class LowerCase implements Macro {
-        @Override
-        public String evaluate(Input in, Processor processor) {
-            return camelCase(in.getInput().toString().trim());
-        }
-    }
-
-    public static class UpperCase implements Macro {
-        @Override
-        public String evaluate(Input in, Processor processor) {
-            return Case.capitalize(camelCase(in.getInput().toString().trim()));
-        }
-    }
-
-    public static class CStyle implements Macro {
-        @Override
-        public String evaluate(Input in, Processor processor) {
-            InputHandler.skipWhiteSpaces(in.getInput());
-            char sep = in.getInput().charAt(0);
-            InputHandler.skip(in.getInput(), 1);
-            return cstyle(in.getInput().toString(), sep);
-        }
-    }
-
-    public static class Sentence implements Macro {
-        @Override
-        public String evaluate(Input in, Processor processor) {
-            InputHandler.skipWhiteSpaces(in.getInput());
-            return sentence(in.getInput().toString().trim());
-        }
-    }
-
     private static String sentence(String s) {
         var c = new StringBuilder();
         var first = true;
@@ -77,6 +45,38 @@ public class Camel {
             }
         }
         return cased.toString();
+    }
+
+    public static class LowerCase implements Macro {
+        @Override
+        public String evaluate(Input in, Processor processor) {
+            return camelCase(in.toString().trim());
+        }
+    }
+
+    public static class UpperCase implements Macro {
+        @Override
+        public String evaluate(Input in, Processor processor) {
+            return Case.capitalize(camelCase(in.toString().trim()));
+        }
+    }
+
+    public static class CStyle implements Macro {
+        @Override
+        public String evaluate(Input in, Processor processor) {
+            InputHandler.skipWhiteSpaces(in);
+            char sep = in.charAt(0);
+            InputHandler.skip(in, 1);
+            return cstyle(in.toString(), sep);
+        }
+    }
+
+    public static class Sentence implements Macro {
+        @Override
+        public String evaluate(Input in, Processor processor) {
+            InputHandler.skipWhiteSpaces(in);
+            return sentence(in.toString().trim());
+        }
     }
 
 }

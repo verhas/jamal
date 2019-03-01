@@ -9,7 +9,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 public class Ident implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) {
-        skipWhiteSpaces(input.getInput());
-        return input.getInput().toString();
+        skipWhiteSpaces(input);
+        return input.toString();
     }
 }

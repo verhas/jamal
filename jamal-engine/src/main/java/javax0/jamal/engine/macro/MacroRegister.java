@@ -149,11 +149,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
      * @param closeDelimiter the macro closing string to be set. Ignored when {@code openDelimiter} is {@code null}.
      *                       If this parameter is {@code null} the functionality will be the same as in case
      *                       {@code openDelimiter} is {@code null}.
-     * @throws BadSyntax when the call tries to restore an older version but there is no saved older version.
+     * @throws BadSyntaxAt when the call tries to restore an older version but there is no saved older version.
      */
     @Override
     public void separators(String openDelimiter, String closeDelimiter) throws BadSyntax {
-        if (openDelimiter == null || closeDelimiter == null ) {
+        if (openDelimiter == null || closeDelimiter == null) {
             var delim = delimiters.get(delimiters.size() - 1);
             var list = savedDelimiters.get(savedDelimiters.size() - 1);
             if (list.size() == 0) {

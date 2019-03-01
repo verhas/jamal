@@ -24,8 +24,7 @@ public class For implements Macro {
     private static final Pattern pattern = Pattern.compile("\\s+(\\w[\\w\\d_$]*)\\s+in\\s*\\((.*?)\\)\\s*=(.*)", Pattern.DOTALL);
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        var input = in.getInput();
+    public String evaluate(Input input, Processor processor) throws BadSyntax {
         var matcher = pattern.matcher(input);
         if (!matcher.matches()) {
             throw new BadSyntax("use macro has bad syntax '" + input + "'");
@@ -33,8 +32,8 @@ public class For implements Macro {
         final var loopVariable = matcher.group(1);
         final var values = matcher.group(2);
         final var content = matcher.group(3);
-        final var opt = processor.getRegister().getUserMacro("$forsep");
-        final var splitter = opt.isPresent() ? opt.get().evaluate() : ",";
+        final var optionalForSepMacro = processor.getRegister().getUserMacro("$forsep");
+        final var splitter = optionalForSepMacro.isPresent() ? optionalForSepMacro.get().evaluate() : ",";
         final var valueList = values.split(splitter);
         final var output = new StringBuilder();
         final var root = new Segment(null, content);
@@ -50,6 +49,7 @@ public class For implements Macro {
     private static class Segment {
         Segment nextSeg;
         String text;
+
         Segment(Segment nextSeg, String text) {
             this.nextSeg = nextSeg;
             this.text = text;

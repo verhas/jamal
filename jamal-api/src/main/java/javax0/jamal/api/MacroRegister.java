@@ -47,7 +47,7 @@ public interface MacroRegister extends Delimiters {
      * @param alias alias name to be used for the macro instead of the one
      *              provided by the macro itself via {@link Macro#getId()}
      */
-    void global(Macro macro,String alias);
+    void global(Macro macro, String alias);
 
     /**
      * Define a user defined macro in the current evaluation level.

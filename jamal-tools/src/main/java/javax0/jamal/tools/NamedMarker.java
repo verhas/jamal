@@ -18,8 +18,7 @@ public class NamedMarker implements Marker {
     final Function<String, String> decorator;
 
     /**
-     *
-     * @param name is the identifier of the marker used to check the equality
+     * @param name      is the identifier of the marker used to check the equality
      * @param decorator a decorator used to create the string representation of the marker. This string representation
      *                  is used in the error messages in the exceptions that are thrown.
      */

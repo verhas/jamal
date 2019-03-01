@@ -2,6 +2,7 @@ package javax0.jamal.api;
 
 public class BadSyntax extends Exception {
     public BadSyntax() {
+
     }
 
     public BadSyntax(String message) {

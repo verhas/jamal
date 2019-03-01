@@ -21,7 +21,7 @@ public class TextSegment extends Segment {
      * Split up the segment to three segment: a text segment with text before the parameter text, a parameter segment
      * and a text segment with the text after the parameter and after this is done return the last text segment.
      *
-     * @param it the text segment to split
+     * @param it        the text segment to split
      * @param parameter the parameter that splits the segment into two
      * @return the second text segment or null in case the segment can not be split.
      */

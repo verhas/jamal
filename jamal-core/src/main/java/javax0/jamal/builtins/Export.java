@@ -9,8 +9,8 @@ import static javax0.jamal.tools.InputHandler.trim;
 
 public class Export implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        var params = in.getInput().toString().split(",");
+    public String evaluate(Input input, Processor processor) throws BadSyntax {
+        var params = input.toString().split(",");
         trim(params);
         for (final var param : params) {
             processor.getRegister().export(param);

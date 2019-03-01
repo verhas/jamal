@@ -1,6 +1,7 @@
 package javax0.jamal.tools;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class FileTools {
      *
      * @param fileName the name of the file. This is used to open and read the file as well as reference file name in the input.
      * @return the input containing the contend of the file.
-     * @throws BadSyntax if the file cannot be read.
+     * @throws BadSyntaxAt if the file cannot be read.
      */
     public static Input getInput(String fileName) throws BadSyntax {
         try {
@@ -51,21 +52,21 @@ public class FileTools {
      */
     public static String absolute(final String reference, String fileName) {
         if (fileName.startsWith("/") ||
-                fileName.startsWith("\\") ||
-                fileName.startsWith("~") ||
-                (fileName.length() > 1 &&
-                        Character.isAlphabetic(fileName.charAt(0))
-                        && fileName.charAt(1) == ':')) {
+            fileName.startsWith("\\") ||
+            fileName.startsWith("~") ||
+            (fileName.length() > 1 &&
+                Character.isAlphabetic(fileName.charAt(0))
+                && fileName.charAt(1) == ':')) {
             return fileName;
         }
         final var unixedReference = reference.replaceAll("\\\\", "/");
         final var referencePath = unixedReference.contains("/") ?
-                reference.substring(0, unixedReference.lastIndexOf("/") + 1)
-                : "";
+            reference.substring(0, unixedReference.lastIndexOf("/") + 1)
+            : "";
         return Paths.get(referencePath)
-                .resolve(Paths.get(fileName))
-                .normalize()
-                .toString()
-                .replaceAll("\\\\", "/");
+            .resolve(Paths.get(fileName))
+            .normalize()
+            .toString()
+            .replaceAll("\\\\", "/");
     }
 }

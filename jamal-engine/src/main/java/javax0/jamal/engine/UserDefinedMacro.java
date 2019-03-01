@@ -1,6 +1,7 @@
 package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
 import javax0.jamal.tools.ScriptingTools;
@@ -73,7 +74,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {
                         throw new BadSyntax("User defined macro parameter name should not be a substring of another parameter.\n" +
-                                "\"" + parameters[i] + "\" contains \"" + parameters[j] + "\"");
+                            "\"" + parameters[i] + "\" contains \"" + parameters[j] + "\"");
                     }
                 }
             }
@@ -85,9 +86,9 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
      *
      * @param actualValues the actual string values for the parameters
      * @return the string that is the result of the evaluation
-     * @throws BadSyntax if the user defined macro is a script and the script evaluation throws exception. This
-     *                   exception is thrown if the number of the actual values is not the same as the number of the
-     *                   parameters.
+     * @throws BadSyntaxAt if the user defined macro is a script and the script evaluation throws exception. This
+     *                     exception is thrown if the number of the actual values is not the same as the number of the
+     *                     parameters.
      */
     @Override
     public String evaluate(String... actualValues) throws BadSyntax {

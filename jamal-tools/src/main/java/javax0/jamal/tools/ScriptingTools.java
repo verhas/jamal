@@ -22,9 +22,10 @@ public class ScriptingTools {
      * be {@code Boolean} {@code true}. Likewise if the value is {@code "false"} then it is converted to {@code false}.
      * <p>
      * In any other cases the string is stored and assigned to the global variable.
+     *
      * @param engine that stores the global variables for later execution
-     * @param key the name of the global variable
-     * @param value the value to be assigned to the global variable
+     * @param key    the name of the global variable
+     * @param value  the value to be assigned to the global variable
      */
     public static void populate(ScriptEngine engine, String key, String value) {
         try {
@@ -60,8 +61,8 @@ public class ScriptingTools {
      * @return the converted string
      */
     public static String resultToString(Object obj) {
-        if( obj instanceof Double){
-            return obj.toString().replaceAll(".0$","");
+        if (obj instanceof Double) {
+            return obj.toString().replaceAll(".0$", "");
         }
         return obj.toString();
     }
@@ -72,14 +73,14 @@ public class ScriptingTools {
      * @param scriptType the name of the scripting language
      * @return the engine for the specified script type
      */
-    public static ScriptEngine getEngine(String scriptType){
+    public static ScriptEngine getEngine(String scriptType) {
         return new ScriptEngineManager().getEngineByName(scriptType);
     }
 
     /**
      * Evaluate the content using the scripting engine.
      *
-     * @param engine to be used to execute the evaluation
+     * @param engine  to be used to execute the evaluation
      * @param content the program code to be evaluated
      * @return the result of the evaluation
      * @throws ScriptException when there is an error executing the script

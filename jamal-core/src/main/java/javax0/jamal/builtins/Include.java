@@ -1,9 +1,6 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Marker;
 
 import static javax0.jamal.tools.FileTools.absolute;
@@ -14,10 +11,9 @@ public class Include implements Macro {
     private int depth = 100;
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        var input = in.getInput();
+    public String evaluate(Input input, Processor processor) throws BadSyntax, BadSyntaxAt {
         skipWhiteSpaces(input);
-        var reference = in.getReference();
+        var reference = input.getReference();
         var fileName = absolute(reference, input.toString().trim());
         if (depth-- == 0) {
             throw new BadSyntax("Include depth is too deep");

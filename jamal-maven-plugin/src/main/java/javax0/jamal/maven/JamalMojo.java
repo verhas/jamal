@@ -72,10 +72,10 @@ public class JamalMojo extends AbstractMojo {
         processingSuccessful = true;
         try {
             Files.walk(Paths.get(sourceDirectory))
-                    .filter(Files::isRegularFile)
-                    .filter(includePredicate)
-                    .filter(excludePredicate)
-                    .forEach(this::executeJamal);
+                .filter(Files::isRegularFile)
+                .filter(includePredicate)
+                .filter(excludePredicate)
+                .forEach(this::executeJamal);
         } catch (IOException e) {
             if (processingSuccessful) {
                 throw new MojoExecutionException("Cannot process the files by Jamal. Something is wrong.", e);
@@ -110,9 +110,9 @@ public class JamalMojo extends AbstractMojo {
             logException(e, getLog()::debug);
         }
         Files.write(output, result.getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.WRITE,
-                StandardOpenOption.TRUNCATE_EXISTING,
-                StandardOpenOption.CREATE);
+            StandardOpenOption.WRITE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.CREATE);
     }
 
     private void logException(Exception e, Consumer<CharSequence> log) {
@@ -132,12 +132,12 @@ public class JamalMojo extends AbstractMojo {
         final var inputFileName = inputFile.toString();
         if (!inputFile.toString().startsWith(sourceDirectory)) {
             log.error("The input file " + qq(inputFileName)
-                    + " is not in the source directory " + qq(sourceDirectory));
+                + " is not in the source directory " + qq(sourceDirectory));
             processingSuccessful = false;
             return null;
         }
         return Paths.get((targetDirectory + inputFile.toString().substring(sourceDirectory.length()))
-                .replaceAll(transformFrom, transformTo));
+            .replaceAll(transformFrom, transformTo));
     }
 
     /**
