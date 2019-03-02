@@ -14,6 +14,7 @@ public class TextSegment extends Segment {
      */
     private static void split(final TextSegment root, final String parameter) {
         var it = root;
+        //noinspection StatementWithEmptyBody
         while ((it = splitAndGetNext(it, parameter)) != null) ;
     }
 

@@ -22,8 +22,7 @@ public class Case {
 
     public static class Lower implements Macro {
         @Override
-        public String evaluate(Input in, Processor processor) {
-            var input = in;
+        public String evaluate(Input input, Processor processor) {
             InputHandler.skipWhiteSpaces(input);
             return input.toString().trim().toLowerCase();
         }
@@ -31,24 +30,21 @@ public class Case {
 
     public static class Upper implements Macro {
         @Override
-        public String evaluate(Input in, Processor processor) {
-            var input = in;
+        public String evaluate(Input input, Processor processor) {
             return input.toString().trim().toUpperCase();
         }
     }
 
     public static class Cap implements Macro {
         @Override
-        public String evaluate(Input in, Processor processor) {
-            var input = in;
+        public String evaluate(Input input, Processor processor) {
             return capitalize(input.toString().trim());
         }
     }
 
     public static class Decap implements Macro {
         @Override
-        public String evaluate(Input in, Processor processor) {
-            var input = in;
+        public String evaluate(Input input, Processor processor) {
             return deCapitalize(input.toString().trim());
         }
     }

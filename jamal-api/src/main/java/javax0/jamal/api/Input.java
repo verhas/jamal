@@ -18,7 +18,7 @@ public interface Input extends CharSequence {
     /**
      * @return the line reference that contains the line number and also the filename
      */
-    LineReference getLineReference();
+    Position getPosition();
 
     /**
      * @return the reference file name that the input was read from
@@ -26,14 +26,24 @@ public interface Input extends CharSequence {
     String getReference();
 
     /**
-     * @return the current line number of in the file where the input currently is in
+     * @return the current line number of the file where the input currently is in
      */
     int getLine();
 
     /**
-     * Step the line number by one.
+     * @return the current column of the the line where the input currently is in
+     */
+    int getColumn();
+
+    /**
+     * Step the line number by one and reset the column number to 1.
      */
     void stepLine();
+
+    /**
+     * Step the column number by one.
+     */
+    void stepColumn();
 
     default int length() {
         return getSB().length();
@@ -48,6 +58,8 @@ public interface Input extends CharSequence {
         for (int i = start; i < end && i < sb.length(); i++) {
             if (sb.charAt(i) == '\n') {
                 stepLine();
+            }else{
+                stepColumn();
             }
         }
         getSB().delete(start, end);

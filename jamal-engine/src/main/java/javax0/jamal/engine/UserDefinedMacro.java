@@ -93,12 +93,11 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     @Override
     public String evaluate(String... actualValues) throws BadSyntax {
         if (actualValues.length != parameters.length) {
-            var msg = "Macro '" + id + "' needs " + parameters.length + " arguments and got " + actualValues.length;
+            var badSyntax = new BadSyntax("Macro '" + id + "' needs " + parameters.length + " arguments and got " + actualValues.length);
             for( final var actual : actualValues ){
-                msg += "\n>>>" + actual;
+                badSyntax.parameter(actual);
             }
-            msg += "\n";
-            throw new BadSyntax(msg);
+            throw badSyntax;
         }
         if (isScript) {
             var engine = getEngine(scriptType);

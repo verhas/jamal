@@ -1,47 +1,53 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.LineReference;
+import javax0.jamal.api.Position;
 
 /**
  * A simple implementation of the {@link javax0.jamal.api.Input} interface utilizing two fields.
  */
 public class Input implements javax0.jamal.api.Input {
     private StringBuilder input;
-    private String reference;
-    private int lineNumber;
+    private String file;
+    private int line;
+    private int column;
 
     public Input() {
-        input = new StringBuilder();
-        reference = null;
-        lineNumber = 1;
+        this("");
     }
 
-    public Input(StringBuilder input, String reference) {
-        this.input = input;
-        this.reference = reference;
-        lineNumber = 1;
+    public Input(String string) {
+        this(string, null);
     }
 
-    public Input(String input, String reference) {
+    public Input(String input, Position ref) {
         this.input = new StringBuilder(input);
-        this.reference = reference;
-        lineNumber = 1;
+        this.file = ref == null ? null : ref.file;
+        line = ref == null ? 1 : ref.line;
+        column = ref == null ? 1 : ref.column;
     }
 
-    public Input(String input) {
-        this.input = new StringBuilder(input);
-        reference = null;
-    }
 
     @Override
     public int getLine() {
-        return lineNumber;
+        return line;
+    }
+
+    @Override
+    public int getColumn() {
+        return column;
     }
 
     @Override
     public void stepLine() {
-        lineNumber++;
+        line++;
+        column = 1;
     }
+
+    @Override
+    public void stepColumn() {
+        column++;
+    }
+
 
     @Override
     public StringBuilder getSB() {
@@ -49,13 +55,13 @@ public class Input implements javax0.jamal.api.Input {
     }
 
     @Override
-    public LineReference getLineReference() {
-        return new LineReference(getReference(), getLine());
+    public Position getPosition() {
+        return new Position(getReference(), getLine(), getColumn());
     }
 
     @Override
     public String getReference() {
-        return reference;
+        return file;
     }
 
     @Override

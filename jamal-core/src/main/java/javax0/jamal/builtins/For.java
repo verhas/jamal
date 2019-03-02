@@ -57,6 +57,7 @@ public class For implements Macro {
 
         private static void split(final Segment root, final String parameter) {
             var it = root;
+            //noinspection StatementWithEmptyBody
             while ((it = splitAndGetNext(it, parameter)) != null) ;
         }
 

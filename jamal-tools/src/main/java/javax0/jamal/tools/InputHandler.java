@@ -211,7 +211,7 @@ public class InputHandler {
      *                     but the parameter list if any is not closed with a {@code )} character.
      */
     public static String[] getParameters(Input input, String id) throws BadSyntaxAt {
-        final var ref = input.getLineReference();
+        final var ref = input.getPosition();
         final String[] params;
         if (firstCharIs(input, '(')) {
             skip(input, 1);

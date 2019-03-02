@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Position;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -29,14 +30,14 @@ class TestSamples {
         var fileName = notNull(this.getClass().getResource(testFile), "File '" + testFile + "' does not exist").getFile();
         fileName = fixupPath(fileName);
         var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
-        return new Input(new StringBuilder(fileContent), fileName);
+        return new Input(fileContent, new Position(fileName));
     }
 
     /**
      * Fixup the JDK bug JDK-8197918
      *
      * @param fileName the file name that may contain an erroneous leading / on Windows
-     * @return the fileName without the leading / if it contains ':', so it is assumed this is Windows
+     * @return the file without the leading / if it contains ':', so it is assumed this is Windows
      */
     private String fixupPath(String fileName) {
         if (fileName.contains(":")) {
@@ -192,9 +193,10 @@ class TestSamples {
     }
 
     @Test
-    void testErrorLineReport() throws BadSyntax,BadSyntaxAt, IOException {
+    void testErrorLineReport() {
         final var thrown = assertThrows(BadSyntaxAt.class, () -> result("fail.deep.jam"));
-        thrown.getMessage();
+        Assertions.assertEquals(3,thrown.getPosition().line);
+        Assertions.assertEquals(4,thrown.getPosition().column);
     }
 
 }

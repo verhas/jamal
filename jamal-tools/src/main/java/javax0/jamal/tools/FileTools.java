@@ -3,6 +3,7 @@ package javax0.jamal.tools;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Position;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +24,9 @@ public class FileTools {
      */
     public static Input getInput(String fileName) throws BadSyntax {
         try {
-            return new javax0.jamal.tools.Input(new StringBuilder(Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"))), fileName);
+            return new javax0.jamal.tools.Input(
+                Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n")),
+                new Position(fileName));
         } catch (IOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + fileName + "'");
         }
@@ -44,7 +47,7 @@ public class FileTools {
      * absolute and it is returned as it is.
      * <p>
      * Otherwise the string in the parameter {@code reference} is used as it was a file name (the file does not need to
-     * exist) and {@code fileName} is treated as a relative file name and the absolute path is calculated.
+     * exist) and {@code file} is treated as a relative file name and the absolute path is calculated.
      *
      * @param reference the name of the reference file
      * @param fileName  the name of the file, absolute or relative

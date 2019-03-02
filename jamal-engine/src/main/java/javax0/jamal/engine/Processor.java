@@ -95,20 +95,21 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param input  from where the macro source is read and removed
      */
     private void processMacro(Input output, Input input) throws BadSyntax, BadSyntaxAt {
+        final var macroStartPosition = input.getPosition();
         skip(input, macros.open());
         skipWhiteSpaces(input);
         final var macroRaw = getNextMacroBody(input);
         final String macroProcessed;
         if (!firstCharIs(macroRaw, '@')) {
             var marker = new Marker("{@" + "");
-            final var macroInputBefore = new javax0.jamal.tools.Input(macroRaw,input.getReference());
+            final var macroInputBefore = new javax0.jamal.tools.Input(macroRaw,macroStartPosition);
             macros.push(marker);
             macroProcessed = process(macroInputBefore);
             macros.pop(marker);
         }else{
             macroProcessed = macroRaw;
         }
-        final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed,input.getReference());
+        final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed,macroStartPosition);
         output.append(evalMacro(macroInputAfter));
     }
 
@@ -119,7 +120,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return the evaluated macro
      */
     private String evalMacro(final Input input) throws BadSyntaxAt {
-        var ref = input.getLineReference();
+        var ref = input.getPosition();
         var isBuiltin = macroIsBuiltIn(input);
         final String macroId;
         final boolean verbatim;
@@ -147,12 +148,12 @@ public class Processor implements javax0.jamal.api.Processor {
                 throw new BadSyntaxAt(bs, ref);
             }
         } else {
-            String rawResult = null;
+            final String rawResult;
             try {
                 rawResult = evalUserDefinedMacro(input);
                 return verbatim ?
                     rawResult :
-                    process(new javax0.jamal.tools.Input(new StringBuilder(rawResult), input.getReference()));
+                    process(new javax0.jamal.tools.Input(rawResult, input.getPosition()));
             } catch (BadSyntax bs) {
                 throw new BadSyntaxAt(bs, ref);
             }
@@ -160,7 +161,7 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private String evalUserDefinedMacro(final Input input) throws BadSyntax, BadSyntaxAt {
-        var ref = input.getLineReference();
+        var ref = input.getPosition();
         final boolean reportUndef = input.length() == 0 || input.charAt(0) != '?';
         if (!reportUndef) {
             skip(input, 1);
@@ -209,8 +210,8 @@ public class Processor implements javax0.jamal.api.Processor {
 
 
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
-        var refStack = new LinkedList<LineReference>();
-        refStack.add(input.getLineReference());
+        var refStack = new LinkedList<Position>();
+        refStack.add(input.getPosition());
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = new javax0.jamal.tools.Input();
 
@@ -221,7 +222,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
             if (input.indexOf(macros.open()) == 0) {
                 moveMacroOpenToOutput(input, output);
-                refStack.add(input.getLineReference());
+                refStack.add(input.getPosition());
                 counter++; //count the new opening
             } else if (input.indexOf(macros.close()) == 0) {
                 counter--; // count the closing

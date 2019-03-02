@@ -1,6 +1,7 @@
 package javax0.jamal.maven;
 
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -124,7 +125,7 @@ public class JamalMojo extends AbstractMojo {
 
     private Input createInput(Path inputFile) throws IOException {
         var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-        return new javax0.jamal.tools.Input(new StringBuilder(fileContent), inputFile.toString());
+        return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
     }
 
     private Path calculateTargetFile(final Path inputFile) {

@@ -7,7 +7,7 @@ import static javax0.jamal.tools.InputHandler.*;
 public class Script implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntaxAt {
-        var ref = input.getLineReference();
+        var ref = input.getPosition();
         skipWhiteSpaces(input);
         var id = fetchId(input);
         skipWhiteSpaces(input);

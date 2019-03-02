@@ -1,29 +1,33 @@
 package javax0.jamal.api;
 
-public class BadSyntaxAt extends Exception {
-    final private LineReference ref;
+public class BadSyntaxAt extends BadSyntax {
+    final private Position pos;
+
+    public Position getPosition() {
+        return pos;
+    }
 
     public BadSyntaxAt() {
-        ref = new LineReference(null, 0);
+        pos = new Position(null, 0);
     }
 
-    public BadSyntaxAt(BadSyntax bs, LineReference ref) {
+    public BadSyntaxAt(BadSyntax bs, Position pos) {
         super(bs.getMessage(), bs.getCause());
-        this.ref = ref;
+        this.pos = pos;
     }
 
-    public BadSyntaxAt(String message, LineReference ref) {
+    public BadSyntaxAt(String message, Position pos) {
         super(message);
-        this.ref = ref;
+        this.pos = pos;
     }
 
-    public BadSyntaxAt(String message, LineReference ref, Throwable cause) {
+    public BadSyntaxAt(String message, Position pos, Throwable cause) {
         super(message, cause);
-        this.ref = ref;
+        this.pos = pos;
     }
 
     @Override
     public String getMessage() {
-        return super.getMessage() + " at " + ref.fileName + ":" + ref.lineNumber;
+        return super.getMessage() + " at " + pos.file + "/" + pos.line + ":" + pos.column;
     }
 }
