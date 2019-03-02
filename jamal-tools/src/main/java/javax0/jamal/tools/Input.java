@@ -12,16 +12,25 @@ public class Input implements javax0.jamal.api.Input {
 
     public Input() {
         input = new StringBuilder();
+        reference = null;
         lineNumber = 1;
     }
 
     public Input(StringBuilder input, String reference) {
         this.input = input;
         this.reference = reference;
+        lineNumber = 1;
+    }
+
+    public Input(String input, String reference) {
+        this.input = new StringBuilder(input);
+        this.reference = reference;
+        lineNumber = 1;
     }
 
     public Input(String input) {
         this.input = new StringBuilder(input);
+        reference = null;
     }
 
     @Override
@@ -40,11 +49,6 @@ public class Input implements javax0.jamal.api.Input {
     }
 
     @Override
-    public void setInput(StringBuilder input) {
-        this.input = input;
-    }
-
-    @Override
     public LineReference getLineReference() {
         return new LineReference(getReference(), getLine());
     }
@@ -52,11 +56,6 @@ public class Input implements javax0.jamal.api.Input {
     @Override
     public String getReference() {
         return reference;
-    }
-
-    @Override
-    public void setReference(String reference) {
-        this.reference = reference;
     }
 
     @Override

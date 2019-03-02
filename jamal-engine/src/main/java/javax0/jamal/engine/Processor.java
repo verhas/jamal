@@ -97,19 +97,19 @@ public class Processor implements javax0.jamal.api.Processor {
     private void processMacro(Input output, Input input) throws BadSyntax, BadSyntaxAt {
         skip(input, macros.open());
         skipWhiteSpaces(input);
-        var macro = getNextMacroBody(input);
-        var macroInput = new javax0.jamal.tools.Input();
-        if (!firstCharIs(macro, '@')) {
+        final var macroRaw = getNextMacroBody(input);
+        final String macroProcessed;
+        if (!firstCharIs(macroRaw, '@')) {
             var marker = new Marker("{@" + "");
+            final var macroInputBefore = new javax0.jamal.tools.Input(macroRaw,input.getReference());
             macros.push(marker);
-            macroInput.setReference(input.getReference());
-            macroInput.setInput(new StringBuilder(macro));
-            macro = process(macroInput);
+            macroProcessed = process(macroInputBefore);
             macros.pop(marker);
+        }else{
+            macroProcessed = macroRaw;
         }
-        macroInput.setReference(input.getReference());
-        macroInput.setInput(new StringBuilder(macro));
-        output.append(evalMacro(macroInput));
+        final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed,input.getReference());
+        output.append(evalMacro(macroInputAfter));
     }
 
     /**

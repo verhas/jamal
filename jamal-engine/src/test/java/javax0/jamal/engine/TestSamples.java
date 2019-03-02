@@ -191,4 +191,10 @@ class TestSamples {
         assertEquals(" \nzzz", result("eval_jamal.jam"));
     }
 
+    @Test
+    void testErrorLineReport() throws BadSyntax,BadSyntaxAt, IOException {
+        final var thrown = assertThrows(BadSyntaxAt.class, () -> result("fail.deep.jam"));
+        thrown.getMessage();
+    }
+
 }

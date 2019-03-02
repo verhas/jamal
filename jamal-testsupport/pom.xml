@@ -1,43 +1,40 @@
+
+
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <packaging>jar</packaging>
-    <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-testsupport</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
-    <parent>
-        <groupId>com.javax0.jamal</groupId>
-        <artifactId>jamal-parent</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
-    </parent>
+                            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<packaging>jar</packaging>
+    <groupId>com.javax0.jamal</groupId><artifactId>jamal-testsupport</artifactId><version>1.0.2-SNAPSHOT</version>
+    <parent><groupId>com.javax0.jamal</groupId><artifactId>jamal-parent</artifactId><version>1.0.2-SNAPSHOT</version>
+</parent>
     <name>jamal testsupport</name>
     <description>Jamal macro library macro test supporting classes</description>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-tools</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-engine</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>compile</scope>
-        </dependency>
+        
+            <dependency>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-api</artifactId>
+</dependency>
+            <dependency>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-tools</artifactId>
+</dependency>
+            <dependency>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-engine</artifactId>
+</dependency>
+        
+            <dependency>
+<groupId>org.junit.jupiter</groupId>
+<artifactId>junit-jupiter-api</artifactId>
+<scope>compile</scope>
+</dependency>
+            <dependency>
+<groupId>org.junit.jupiter</groupId>
+<artifactId>junit-jupiter-engine</artifactId>
+<scope>compile</scope>
+</dependency>
     </dependencies>
 </project>
 

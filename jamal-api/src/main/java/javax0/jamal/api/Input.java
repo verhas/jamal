@@ -16,13 +16,6 @@ public interface Input extends CharSequence {
     StringBuilder getSB();
 
     /**
-     * Set the {@link StringBuilder} that will be held by this input.
-     *
-     * @param input the new {@link StringBuilder} for this input.
-     */
-    void setInput(StringBuilder input);
-
-    /**
      * @return the line reference that contains the line number and also the filename
      */
     LineReference getLineReference();
@@ -31,13 +24,6 @@ public interface Input extends CharSequence {
      * @return the reference file name that the input was read from
      */
     String getReference();
-
-    /**
-     * Set the reference file name when the file is read.
-     *
-     * @param reference is to be set
-     */
-    void setReference(String reference);
 
     /**
      * @return the current line number of in the file where the input currently is in
