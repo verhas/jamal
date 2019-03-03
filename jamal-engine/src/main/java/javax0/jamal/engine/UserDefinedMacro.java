@@ -6,8 +6,10 @@ import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
 import javax0.jamal.tools.ScriptingTools;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.ScriptingTools.*;
 
@@ -69,15 +71,19 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     }
 
     private void ensureSafety() throws BadSyntax {
+        final var badSyntax = new BadSyntax("User defined macro parameter name should not be a substring of another parameter.");
         for (int i = 0; i < parameters.length; i++) {
             for (int j = 0; j < parameters.length; j++) {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {
-                        throw new BadSyntax("User defined macro parameter name should not be a substring of another parameter.\n" +
-                            "\"" + parameters[i] + "\" contains \"" + parameters[j] + "\"");
+                        badSyntax.parameter("" + i + ". parameter '" + parameters[i] + "' contains the "
+                            + j + ". parameter '" + parameters[j] + "'");
                     }
                 }
             }
+        }
+        if (!badSyntax.getParameters().isEmpty()) {
+            throw badSyntax;
         }
     }
 
@@ -94,7 +100,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     public String evaluate(String... actualValues) throws BadSyntax {
         if (actualValues.length != parameters.length) {
             var badSyntax = new BadSyntax("Macro '" + id + "' needs " + parameters.length + " arguments and got " + actualValues.length);
-            for( final var actual : actualValues ){
+            for (final var actual : actualValues) {
                 badSyntax.parameter(actual);
             }
             throw badSyntax;

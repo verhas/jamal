@@ -3,8 +3,14 @@ package javax0.jamal.engine;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Marker;
+import javax0.jamal.tracer.TraceDumper;
+import javax0.jamal.tracer.TraceRecord;
+import javax0.jamal.tracer.TraceRecordNull;
+import javax0.jamal.tracer.TraceRecordReal;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.InputHandler.*;
@@ -13,6 +19,28 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private static final String NOT_USED = null;
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
+    final List<TraceRecord> traces = new ArrayList<>();
+    private final String traceFile;
+
+    private void appendTraceRecord(TraceRecord tr) {
+        if (traceFile != null) {
+            traces.add(tr);
+        }
+    }
+
+    private TraceRecord getTraceRecord() {
+        if (traceFile == null) {
+            return new TraceRecordNull();
+        } else {
+            return new TraceRecordReal(level);
+        }
+    }
+
+    /**
+     * Contains the level of execution during the evaluation. Since the implementation of macro evaluation is
+     * implemented in a recursive way this counter is maintained in the method {@link #process(Input)}.
+     */
+    private int level = 0;
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values.
@@ -30,6 +58,7 @@ public class Processor implements javax0.jamal.api.Processor {
      */
     public Processor(String macroOpen, String macroClose) {
         try {
+            traceFile = System.getProperty("jamal.trace");
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {
             throw new IllegalArgumentException(
@@ -54,7 +83,8 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public String process(final Input in) throws BadSyntaxAt, BadSyntax {
+    public String process(final Input in) throws BadSyntax {
+        level++;
         final var output = new javax0.jamal.tools.Input();
         while (in.length() > 0) {
             if (in.indexOf(macros.open()) == 0) {
@@ -62,6 +92,10 @@ public class Processor implements javax0.jamal.api.Processor {
             } else {
                 processText(output, in);
             }
+        }
+        level--;
+        if (level == 0 && traceFile != null) {
+            new TraceDumper().dump(traces, traceFile);
         }
         return output.toString();
     }
@@ -78,9 +112,13 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param input  where the text is read from and removed after wards
      */
     private void processText(Input output, Input input) {
-        var nextMacroStart = input.indexOf(macros.open());
+        final var tr = getTraceRecord();
+        final var nextMacroStart = input.indexOf(macros.open());
         if (nextMacroStart != -1) {
-            output.append(input.substring(0, nextMacroStart));
+            final var text = input.substring(0, nextMacroStart);
+            tr.targetAppend(text);
+            appendTraceRecord(tr);
+            output.append(text);
             skip(input, nextMacroStart);
         } else {
             output.append(input);
@@ -94,7 +132,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param output where the processed macro is appended
      * @param input  from where the macro source is read and removed
      */
-    private void processMacro(Input output, Input input) throws BadSyntax, BadSyntaxAt {
+    private void processMacro(Input output, Input input) throws BadSyntax {
+        final var tr = getTraceRecord();
         final var macroStartPosition = input.getPosition();
         skip(input, macros.open());
         skipWhiteSpaces(input);
@@ -102,19 +141,23 @@ public class Processor implements javax0.jamal.api.Processor {
         final String macroProcessed;
         if (!firstCharIs(macroRaw, '@')) {
             var marker = new Marker("{@" + "");
-            final var macroInputBefore = new javax0.jamal.tools.Input(macroRaw,macroStartPosition);
+            final var macroInputBefore = new javax0.jamal.tools.Input(macroRaw, macroStartPosition);
             macros.push(marker);
             macroProcessed = process(macroInputBefore);
             macros.pop(marker);
-        }else{
+        } else {
             macroProcessed = macroRaw;
         }
-        final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed,macroStartPosition);
-        output.append(evalMacro(macroInputAfter));
+        tr.sourceAppend(macroProcessed);
+        final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed, macroStartPosition);
+        final var text = evalMacro(macroInputAfter);
+        tr.targetAppend(text);
+        appendTraceRecord(tr);
+        output.append(text);
     }
 
     /**
-     * Evaluate a macro. Either user defined macro or built in.
+     * Evaluate a macro as part of the processing of it. Either user defined macro or built in.
      *
      * @param input the macro text to be processed without the opening and closing string.
      * @return the evaluated macro

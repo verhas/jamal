@@ -76,7 +76,7 @@ public class TestThat {
         InvocationTargetException,
         BadSyntaxAt, BadSyntax {
         Macro sut = createSut();
-        var in = new javax0.jamal.tools.Input(input,null);
+        var in = new javax0.jamal.tools.Input(input, null);
         var actual = sut.evaluate(in, processor);
         Assertions.assertEquals(expected, actual);
     }
@@ -102,7 +102,7 @@ public class TestThat {
         InstantiationException,
         InvocationTargetException {
         var sut = createSut();
-        var in = new javax0.jamal.tools.Input(input,null);
+        var in = new javax0.jamal.tools.Input(input, null);
         var processor = new Processor();
         Assertions.assertThrows(throwable, () -> sut.evaluate(in, processor));
     }

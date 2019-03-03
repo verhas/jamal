@@ -26,6 +26,10 @@ public class BadSyntax extends Exception {
 
     final private List<String> parameters = new ArrayList<>();
 
+    public List<String > getParameters(){
+        return parameters;
+    }
+
     public BadSyntax parameter(String param) {
         parameters.add(param);
         return this;
