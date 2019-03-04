@@ -18,24 +18,9 @@ import static javax0.jamal.tools.InputHandler.*;
 public class Processor implements javax0.jamal.api.Processor {
 
     private static final String NOT_USED = null;
-    final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
     final List<TraceRecord> traces = new ArrayList<>();
+    final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
     private final String traceFile;
-
-    private void appendTraceRecord(TraceRecord tr) {
-        if (traceFile != null) {
-            traces.add(tr);
-        }
-    }
-
-    private TraceRecord getTraceRecord() {
-        if (traceFile == null) {
-            return new TraceRecordNull();
-        } else {
-            return new TraceRecordReal(level);
-        }
-    }
-
     /**
      * Contains the level of execution during the evaluation. Since the implementation of macro evaluation is
      * implemented in a recursive way this counter is maintained in the method {@link #process(Input)}.
@@ -62,7 +47,7 @@ public class Processor implements javax0.jamal.api.Processor {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {
             throw new IllegalArgumentException(
-                "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
+                    "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
         }
         Macro.getInstances().forEach(macros::define);
     }
@@ -77,6 +62,17 @@ public class Processor implements javax0.jamal.api.Processor {
         this("{", "}");
     }
 
+    private TraceRecord getTraceRecord(Position position) {
+        if (traceFile == null) {
+            return new TraceRecordNull();
+        } else {
+            final var tr = new TraceRecordReal(level);
+            tr.position(position);
+            traces.add(tr);
+            return tr;
+        }
+    }
+
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax {
         return new javax0.jamal.engine.UserDefinedMacro(id, input, params);
@@ -84,20 +80,29 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public String process(final Input in) throws BadSyntax {
-        level++;
         final var output = new javax0.jamal.tools.Input();
-        while (in.length() > 0) {
-            if (in.indexOf(macros.open()) == 0) {
-                processMacro(output, in);
-            } else {
-                processText(output, in);
+        try {
+            level++;
+            while (in.length() > 0) {
+                if (in.indexOf(macros.open()) == 0) {
+                    processMacro(output, in);
+                } else {
+                    processText(output, in);
+                }
             }
+        } catch (BadSyntaxAt bsAt) {
+            dump(bsAt);
+            throw bsAt;
         }
+        dump(null);
+        return output.toString();
+    }
+
+    private void dump(Exception ex) {
         level--;
         if (level == 0 && traceFile != null) {
-            new TraceDumper().dump(traces, traceFile);
+            new TraceDumper().dump(traces, traceFile, ex);
         }
-        return output.toString();
     }
 
     @Override
@@ -112,12 +117,12 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param input  where the text is read from and removed after wards
      */
     private void processText(Input output, Input input) {
-        final var tr = getTraceRecord();
+        final var tr = getTraceRecord(input.getPosition());
+        tr.type("text");
         final var nextMacroStart = input.indexOf(macros.open());
         if (nextMacroStart != -1) {
             final var text = input.substring(0, nextMacroStart);
             tr.targetAppend(text);
-            appendTraceRecord(tr);
             output.append(text);
             skip(input, nextMacroStart);
         } else {
@@ -133,7 +138,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param input  from where the macro source is read and removed
      */
     private void processMacro(Input output, Input input) throws BadSyntax {
-        final var tr = getTraceRecord();
+        final var tr = getTraceRecord(input.getPosition());
+        tr.type("macro");
         final var macroStartPosition = input.getPosition();
         skip(input, macros.open());
         skipWhiteSpaces(input);
@@ -152,7 +158,6 @@ public class Processor implements javax0.jamal.api.Processor {
         final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed, macroStartPosition);
         final var text = evalMacro(macroInputAfter);
         tr.targetAppend(text);
-        appendTraceRecord(tr);
         output.append(text);
     }
 
@@ -195,8 +200,8 @@ public class Processor implements javax0.jamal.api.Processor {
             try {
                 rawResult = evalUserDefinedMacro(input);
                 return verbatim ?
-                    rawResult :
-                    process(new javax0.jamal.tools.Input(rawResult, input.getPosition()));
+                        rawResult :
+                        process(new javax0.jamal.tools.Input(rawResult, input.getPosition()));
             } catch (BadSyntax bs) {
                 throw new BadSyntaxAt(bs, ref);
             }

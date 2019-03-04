@@ -6,12 +6,10 @@
     {name :jamal testsupport}
     {description :Jamal macro library maven plugin}
 
-    {build#
-        {plugins#
+    {build|
+        {plugins|
             {plugin|
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.6.0</version>
+                {GAV :org.apache.maven.plugins:maven-plugin-plugin:3.6.0}
                 <configuration>
                     <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
@@ -30,9 +28,9 @@
     }
 
     {dependencies#
-        {@for MODULE in (engine,extensions)=
+        {#for MODULE in (engine,extensions)=
             {dependencyGA|com.javax0.jamal|jamal-MODULE}}
-        {@for MODULE in (api,engine)=
+        {#for MODULE in (api,engine)=
             {dependencyGA|org.junit.jupiter|junit-jupiter-MODULE}}
         {dependency :org.apache.maven:maven-plugin-api:3.5.4}
         {providedDependency :org.apache.maven.plugin-tools:maven-plugin-annotations:3.5.2}
