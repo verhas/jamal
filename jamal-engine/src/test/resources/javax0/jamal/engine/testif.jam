@@ -1,0 +1,11 @@
+true={@if /1/true/false}
+true={@if /true/true/false}
+false={@if /0/true/false}
+false={@if ::true:false}
+false={@if :false:true:false}
+true={@if :avraka kedabra:true:false}
+False={@if false fFalse fTrue}
+={@if/0/anything can come here}
+true={@if/+1/true}
+true={@if/-1/true}
+true={@if/0.000/true}

@@ -40,6 +40,8 @@ application.
      1. [`include`](#include)
      1. [`script`](#script)
      1. [`sep`](#sep)
+     1. [`for`](#for)
+     1. [`if`](#if)
      1. [`ident`](#ident)
      1. [`verbatim`](#verbatim)
 1. [Jamal API](#JamalAPI)
@@ -115,6 +117,9 @@ character.
 * `include`
 * `script`
 * `sep`
+* `for`
+* `use`
+* `if`
 * `ident`, and
 * `verbatim`
 
@@ -152,7 +157,7 @@ this is some text
 since 1.0.0 (core)
 
 `block` is technically exactly the same as`comment`. It is recommended to use the `comment` macro
-with the `@` starting character so that the content of the comment is not interpreted by Jama and
+with the `@` starting character so that the content of the comment is not interpreted by Jamal and
 to use `block` with `#` to have the content interpreted. Block should be used to enclose
 definitions to a scope level.
 
@@ -452,6 +457,48 @@ Note that the JavaScript code itself contains the macro opening and closing char
 does not do any harm so long as long these are in pairs, though it is a better practice to 
 change the separator characters to something that can not appear in the body of the
 user-defined macro.
+
+### `for`<a name="for">
+
+The macro `for` can be used to repeat the same text many times. The syntax of the macro is
+
+```jam
+{@for variable in (a,b,c,d)= content to be repeated}
+```
+ 
+The `variable` can be used in the content and will be replaced for each iteration with the respective
+element on the comma separated list. The list can also be separated by other strings. If the macro `$forsep`
+is defined, like in
+
+```jam
+{@define $forsep=\s+}
+```
+
+then the arguments will be separated by one or more spaces. The string between the `(` and the `)` will be split
+using the string defined in `$forsep` as a regular expression.
+
+Later versions may extend the command with other, more complex syntax.
+ 
+### `if`<a name="if">
+
+The `if` macro makes it possible to evaluate the content conditionally. The syntax of the macro is:
+
+```jam
+{#if/test/then content/else content}
+```
+
+Here we use `/` as separator character, but any other character can be used that does not appear in the `test` text
+and in the `then content` text. The first non-space character following the macro keyword `if` will be used as separator
+character.
+
+The result of the evaluated macro will be the `then content` when the `test` is true and the
+`else` content otherwise. The `test` is true, if 
+
+* it is the literal `"true"` (case insensitive),
+* an integer number and the value is not zero or 
+* any other string that contains at least one non-space character, except 
+* when the `test` is the literal `"false"` (case insensitive) then the test is false.
+
 
 ### `ident`<a name="ident">
 since 1.0.0 (core)
