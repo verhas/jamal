@@ -9,9 +9,11 @@ import javax0.jamal.tracer.TraceRecordNull;
 import javax0.jamal.tracer.TraceRecordReal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.*;
 
@@ -209,6 +211,9 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private String evalUserDefinedMacro(final Input input) throws BadSyntax {
+        final var tr = getTraceRecord(input.getPosition());
+        tr.type("user def macro");
+        tr.sourceAppend(input.toString());
         var ref = input.getPosition();
         final boolean reportUndef = input.length() == 0 || input.charAt(0) != '?';
         if (!reportUndef) {
@@ -224,11 +229,14 @@ public class Processor implements javax0.jamal.api.Processor {
         if (input.length() > 0) {
             var separator = input.substring(0, 1);
             skip(input, 1);
-            parameters = input.toString().split(Pattern.quote(separator));
+            parameters = input.toString().split(Pattern.quote(separator),-1);
         } else {
             parameters = new String[0];
         }
         var udMacro = macros.getUserMacro(id);
+        tr.targetAppend("id: "+udMacro);
+        tr.targetAppend("parameters:\n");
+        tr.targetAppend(Arrays.stream(parameters).collect(Collectors.joining("\n")));
         if (udMacro.isPresent()) {
             try {
                 return udMacro.get().evaluate(parameters);

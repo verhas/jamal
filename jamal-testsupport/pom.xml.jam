@@ -10,20 +10,10 @@
     {name|jamal testsupport}
     {description|Jamal macro library macro test supporting classes}
     {build|{plugins|
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            </plugins>
-            </build>
+            {plugin|{GAV :org.apache.maven.plugins:maven-surefire-plugin:}}
+            {plugin|{GAV :org.apache.maven.plugins:maven-source-plugin:}}
+            {plugin|{GAV :org.apache.maven.plugins:maven-javadoc-plugin: }}
+    }}
     {dependencies#
         {@for MODULE in (api,tools,engine)=
             {dependencyGA|com.javax0.jamal|jamal-MODULE}}

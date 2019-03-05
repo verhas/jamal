@@ -4,8 +4,20 @@
 <modelVersion>4.0.0</modelVersion>
 <packaging>jar</packaging>
 
-    <groupId>com.javax0.jamal</groupId><artifactId>jamal-tools</artifactId><version>1.0.3-SNAPSHOT</version>
-    <parent><groupId>com.javax0.jamal</groupId><artifactId>jamal-parent</artifactId><version>1.0.3-SNAPSHOT</version>
+    
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-tools</artifactId>
+    <version>1.0.3-SNAPSHOT</version>
+    
+    
+
+    <parent>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-parent</artifactId>
+    <version>1.0.3-SNAPSHOT</version>
+    
+    
+
 </parent>
     <name>jamal tools</name>
     <description>-in Jamal macro library support tools</description>

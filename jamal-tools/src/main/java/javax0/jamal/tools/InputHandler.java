@@ -65,7 +65,7 @@ public class InputHandler {
     }
 
     /**
-     * @param i the return value from {@link #firstNonSpace(CharSequence)}
+     * @param i the result of {@link String#indexOf(int)}
      * @return {@code true} the value is a valid character code and not a signal that the string does not contain
      * the character we are looking for.
      */

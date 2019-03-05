@@ -4,8 +4,20 @@
 <modelVersion>4.0.0</modelVersion>
 <packaging>maven-plugin</packaging>
 
-    <groupId>com.javax0.jamal</groupId><artifactId>jamal-maven-plugin</artifactId><version>1.0.3-SNAPSHOT</version>
-    <parent><groupId>com.javax0.jamal</groupId><artifactId>jamal-parent</artifactId><version>1.0.3-SNAPSHOT</version>
+    
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-maven-plugin</artifactId>
+    <version>1.0.3-SNAPSHOT</version>
+    
+    
+
+    <parent>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-parent</artifactId>
+    <version>1.0.3-SNAPSHOT</version>
+    
+    
+
 </parent>
     <name>jamal testsupport</name>
     <description>Jamal macro library maven plugin</description>
@@ -13,7 +25,13 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-plugin-plugin</artifactId><version>3.6.0</version>
+                
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-plugin-plugin</artifactId>
+    <version>3.6.0</version>
+    
+    
+
                 <configuration>
                     <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>

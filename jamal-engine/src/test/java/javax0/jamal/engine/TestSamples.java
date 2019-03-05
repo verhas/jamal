@@ -162,6 +162,18 @@ class TestSamples {
     }
 
     @Test
+    @DisplayName("test that the splitting works even with empty elements")
+    void testSplitting() throws IOException,  BadSyntax {
+        assertEquals("\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>\n" +
+                "    ", result("gav.jam"));
+    }
+    @Test
     @DisplayName("begin and end works properly")
     void testBeginEnd() throws IOException,  BadSyntax {
         assertEquals("212", result("begin.jam"));
