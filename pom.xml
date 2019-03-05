@@ -6,7 +6,7 @@
     
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.2</version>
     
     
 
@@ -129,32 +129,32 @@
 <dependency>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-testsupport</artifactId>
-<version>1.0.3-SNAPSHOT</version>
+<version>1.0.2</version>
 </dependency>
 <dependency>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-api</artifactId>
-<version>1.0.3-SNAPSHOT</version>
+<version>1.0.2</version>
 </dependency>
 <dependency>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-core</artifactId>
-<version>1.0.3-SNAPSHOT</version>
+<version>1.0.2</version>
 </dependency>
 <dependency>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-tools</artifactId>
-<version>1.0.3-SNAPSHOT</version>
+<version>1.0.2</version>
 </dependency>
 <dependency>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-engine</artifactId>
-<version>1.0.3-SNAPSHOT</version>
+<version>1.0.2</version>
 </dependency>
 <dependency>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-extensions</artifactId>
-<version>1.0.3-SNAPSHOT</version>
+<version>1.0.2</version>
 </dependency>
         
 <dependency>

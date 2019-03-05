@@ -6,6 +6,8 @@
     {name|jamal tools}
     {description|-in Jamal macro library support tools}
 
+    {@include ../plugins.jim}
+
     {dependencies#
         {@for MODULE in (api)=
             {dependencyGA|com.javax0.jamal|jamal-MODULE}}

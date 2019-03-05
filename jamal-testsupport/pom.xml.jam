@@ -9,11 +9,7 @@
     {parent :jamal-parent}
     {name|jamal testsupport}
     {description|Jamal macro library macro test supporting classes}
-    {build|{plugins|
-            {plugin|{GAV :org.apache.maven.plugins:maven-surefire-plugin:}}
-            {plugin|{GAV :org.apache.maven.plugins:maven-source-plugin:}}
-            {plugin|{GAV :org.apache.maven.plugins:maven-javadoc-plugin: }}
-    }}
+    {@include ../plugins.jim}
     {dependencies#
         {@for MODULE in (api,tools,engine)=
             {dependencyGA|com.javax0.jamal|jamal-MODULE}}

@@ -64,7 +64,7 @@ public class FileTools {
         }
         final var unixedReference = reference.replaceAll("\\\\", "/");
         final var referencePath = unixedReference.contains("/") ?
-            reference.substring(0, unixedReference.lastIndexOf("/") + 1)
+            unixedReference.substring(0, unixedReference.lastIndexOf("/") + 1)
             : "";
         return Paths.get(referencePath)
             .resolve(Paths.get(fileName))

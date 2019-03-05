@@ -5,6 +5,8 @@
     {name|jamal engine}
     {description|Jamal macro library execution engine}
 
+    {@include ../plugins.jim}
+
     {dependencies#
         {@for MODULE in (api,tools,core)=
             {dependencyGA|com.javax0.jamal|jamal-MODULE}}

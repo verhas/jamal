@@ -4,4 +4,7 @@
     {parent :jamal-parent}
     {name|jamal api}
     {description|Jamal macro library API interfaces}
+
+    {@include ../plugins.jim}
+
 }
