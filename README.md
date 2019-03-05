@@ -58,6 +58,16 @@ mvn com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
 if you have a `pom.xml` file in your directory. If you do not then read the documentation of the Jamal Maven plugin
 at https://github.com/verhas/jamal/blob/master/jamal-maven-plugin/README.md It is simple and short.
 
+When something goes wrong then Jamal will give you a detailed error message with the file name, line number and
+character count where the error happened. In other cases Jamal may think it works fine, but the output is not exactly
+what you expected. Sorry, in this case the issue, most probably, is with your expectations. In cases like that you can
+specify `-Djamal.trace=tracefile.xml` on the command line that starts Jamal specifying a trace file, in this case
+`tracefile.xml`. (It does not need to be XML, it can be `.txt` or anything.) The tracefile will contain all the
+macro evaluations inputs and outputs. Since there can be many Jamal evaluations one after the other, Jamal does not
+overwrite old trace information but rather it appends the information. Before starting Jamal you can manually
+delete the trace file. Trace files grow large easily. 
+  
+
 ## Simple Example<a name="SimpleExample">
 
 As a quick sample to have a jump start what Jamal can do:
