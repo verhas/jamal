@@ -27,6 +27,7 @@ application.
 
 ## Table of contents
 
+1. [Starting Jamal](#Starting)
 1. [Simple Example](#SimpleExample)
 1. [Other Macros](#OtherMacros)
      1. [`comment`](#comment)
@@ -42,6 +43,18 @@ application.
      1. [`ident`](#ident)
      1. [`verbatim`](#verbatim)
 1. [Jamal API](#JamalAPI)
+
+## Starting Jamal<a name="Starting">
+
+The simplest way to start Jamal is to use the Maven plugin. To do that you have to have Maven installed, but
+as a Java developer you probably have. Then you can issue the command
+
+```
+mvn com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
+```
+
+if you have a `pom.xml` file in your directory. If you do not then read the documentation of the Jamal Maven plugin
+at https://github.com/verhas/jamal/blob/master/jamal-maven-plugin/README.md It is simple and short.
 
 ## Simple Example<a name="SimpleExample">
 

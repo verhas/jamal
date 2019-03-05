@@ -8,7 +8,6 @@ import java.util.List;
 public class TraceDumper {
     private static final String sep = "-".repeat(80);
     private static final long LAG = 80L;
-    private static final String START_TAG = "<traces>";
     private static final String END_TAG = "</traces>";
 
     public void dump(List<TraceRecord> traces, String fileName, Exception ex) {
@@ -51,7 +50,8 @@ public class TraceDumper {
                 }
             } else {
                 raf.seek(raf.length());
-                raf.writeBytes(START_TAG + "\n");
+                raf.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n");
+                raf.writeBytes("<traces>" + "\n");
             }
             if (ex == null) {
                 raf.writeBytes("<trace>\n");
@@ -69,14 +69,14 @@ public class TraceDumper {
                         "index=\"" + i + "\" " +
                         ">\n");
                 if (!trace.source().isEmpty()) {
-                    raf.writeBytes("<source>\n<![CDATA[");
-                    raf.writeBytes(trace.source());
-                    raf.writeBytes("]]>\n</source>\n");
+                    raf.writeBytes("<input>\n");
+                    raf.writeBytes(cData(trace.source()));
+                    raf.writeBytes("\n</input>\n");
                 }
                 if ("TEXT".equals(trace.type())) {
-                    raf.writeBytes("<text>\n<![CDATA[");
-                    raf.writeBytes(trace.target());
-                    raf.writeBytes("]]>\n</text>\n");
+                    raf.writeBytes("<text>\n");
+                    raf.writeBytes(cData(trace.target()));
+                    raf.writeBytes("\n</text>\n");
                 } else {
                     if (trace.target().length() == 0) {
                         if (trace.hasOutput()) {
@@ -85,9 +85,9 @@ public class TraceDumper {
                             raf.writeBytes("<output><error/></output>\n");
                         }
                     } else {
-                        raf.writeBytes("<output>\n<![CDATA[");
-                        raf.writeBytes(trace.target());
-                        raf.writeBytes("]]>\n</output>\n");
+                        raf.writeBytes("<output>\n");
+                        raf.writeBytes(cData(trace.target()));
+                        raf.writeBytes("\n</output>\n");
                     }
                 }
                 raf.writeBytes("</record>\n");
@@ -96,19 +96,28 @@ public class TraceDumper {
             if (ex != null) {
                 raf.writeBytes("<exception " +
                         " message=\"" + ex.getMessage().replaceAll("\n", " ") + "\"" +
-                        ">\n<![CDATA[");
+                        ">\n");
                 var sw = new StringWriter();
                 var pw = new PrintWriter(sw);
                 ex.printStackTrace(pw);
                 sw.close();
-                raf.writeBytes(sw.toString());
-                raf.writeBytes("]]>\n</exception>\n");
+                raf.writeBytes(cData(sw.toString()));
+                raf.writeBytes("\n");
+                raf.writeBytes("</exception>\n");
             }
             raf.writeBytes("</trace>\n");
             raf.writeBytes(END_TAG);
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
+    }
+
+    private static String cData(String string){
+        return "<![CDATA[" + cDataEscape(string) + "]]>";
+    }
+
+    private static String cDataEscape(String string){
+        return string.replaceAll("\\]\\]>","]]]]<![CDATA[>");
     }
 
     private void dumpText(List<TraceRecord> traces, String fileName, Exception ex) {
