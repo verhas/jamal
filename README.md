@@ -7,7 +7,7 @@ redundant text files. During development many times there are text files that
 you need to maintain, which contain redundant information.
 
 * Some property or other resource files in a Java project may be slightly different for
-  the different environments, testsupport, uat, production.
+  the different environments, test support, uat, production.
 * A textual documentation has cross references but the format does not support automatic
   symbolic anchors and references.
 * There can be some makefile or other script or documentation file that differs only
@@ -21,7 +21,7 @@ text and macro is mixed in a convenient way.
 You can use Jamal as a maven plugin, it is also embedded into the Java::Geci code generator
 or you can use it as an embeddable macro engine in your Java application.
 
-In this readme we first discuss how the macros look like and how will Jamal convert its input
+In this readme, we first discuss how the macros look like and how will Jamal convert its input
 to the output, and then we discuss the API that lets you embed the macro processing into your
 application.
 
@@ -49,7 +49,7 @@ application.
 ## Starting Jamal<a name="Starting">
 
 The simplest way to start Jamal is to use the Maven plugin. To do that you have to have Maven installed, but
-as a Java developer you probably have. Then you can issue the command
+as a Java developer, you probably have. Then you can issue the command
 
 ```
 mvn com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
@@ -87,7 +87,7 @@ This is not hardwired in Jamal and there is not even a suggested default for tha
 application has to define the opening string and the closing string. For example the embedding
 Java::Geci application uses `{{` and `}}` as macro open and macro close strings because in that
 textual environment the `{` and `}` characters are frequently used in Java code, but rarely in
-double `{{` or `}}` format. In this documentation we use the `{` and `}` strings. You can change
+double `{{` or `}}` format. In this documentation, we use the `{` and `}` strings. You can change
 the macro opening and closing strings even from macros using the built-in `sep` macro (see later).
 
 When these macros are used the parameters are separated using the first non-space character that is following
@@ -100,7 +100,7 @@ the name of the macro. Thus you can write
 {fruit :red:apple:20ounce}
 ```
 
-Note that in the last example we used the `:` character as separator. Since this character can also be part of the
+Note that in the last example we used the `:` character as the separator. Since this character can also be part of the
 name of the macro (in this case the macro is global) this cannot be used without a space in front of the first `:`
 character.
 
@@ -156,7 +156,7 @@ this is some text
 ### `block`<a name="block">
 since 1.0.0 (core)
 
-`block` is technically exactly the same as`comment`. It is recommended to use the `comment` macro
+`block` is technically exactly the same as `comment`. It is recommended to use the `comment` macro
 with the `@` starting character so that the content of the comment is not interpreted by Jamal and
 to use `block` with `#` to have the content interpreted. Block should be used to enclose
 definitions to a scope level.
@@ -185,9 +185,9 @@ macro name `begin` and if you do then you have to repeat the same string after t
  ```
 
 Scopes are opened by many things, like macro start, including a file. You can close a scope
-using the macro `end` that was opened with a mathcing `begin`. You cannot and should not
+using the macro `end` that was opened with a matching `begin`. You cannot and should not
 close a scope using `end` that was opened by something else. For
-example you can not get into the scope of the including class putting a pairless `end` macro
+example, you can not get into the scope of the including class putting a pairless `end` macro
 into an included file. This will trigger a processing error.
 
 ### `define`<a name="define">
@@ -238,11 +238,11 @@ macro is defined in the global scope.
 When a user-defined macro is used the parameters are defined after the name of the macro. In
 case of user-defined macros, there is no `@` or `#` in front of the name of the macro. Optionally
 there may be a `?` character. In that case the result of an undefined user macro will be
-empty string. Any other use of an undefined user macro results error. The
+the empty string. Any other use of an undefined user macro results error. The
 parameters stand after the name of the macro separated by a character. The first
 non-whitespace character after the name of the macro is the separator character. It is usually
 `/` as in the examples below, but it can be any character that does not appear inside any of
-the actual values of the parameters. The number of the parameters should be exactly the same
+the actual values of the parameters. The number of parameters should be exactly the same
 as the formal parameters.
 
 In the following sample code, you can see some examples that demonstrate these.
@@ -281,7 +281,7 @@ This is a fairly complex example. To ease the understanding note the followings:
 
 1. `%66h` is an absolutely valid marco parameter name
 1. When a macro parameter is replaced in the body of the macro the processing
-   of that string is finished and is not processed further repacing macro
+   of that string is finished and is not processed further replacing macro
    parameters. Macro parameters are only replaced with the actual values in the
    macro body and not in the parameter actual values. That is why parameters
    `a` and `b` are replaced with the actual string '%66h' but then this is not
@@ -291,7 +291,7 @@ This is a fairly complex example. To ease the understanding note the followings:
    no effect outside the macro `comment`. Using the name `:x` defines the macro
    `x` in the global scope, that is above the current scope. When we defined the
    macro `y` it also starts with `:` and so it gets into the global scope. However,
-   during the definition it is in the local scope of the `comment` macro where the
+   during the definition, it is in the local scope of the `comment` macro where the
    local definition of `x` overrides the global definition of `x` even though the
    global definition happened later. Therefore `y` will be `here we are local`.
    That is also because  `y` is defined using the `#` character before the
@@ -303,7 +303,7 @@ since 1.0.0 (core)
 
 `eval` interprets the content of the macro, the text written after the macro keyword `eval` using the syntax defined
 as script type after a `/` character. If there is no script type defined (or `jamal` is defined) then the content will
-be evaluated as normal Jamal macro text. Otherwise the script engine named is used.  
+be evaluated as normal Jamal macro text. Otherwise, the script engine named is used.  
 
 The syntax of the macro is
 
@@ -351,7 +351,7 @@ for the file that imported the other file. If there are any user-defined macros 
 top-level scope of the file, they will be available in the importing file.
 
 (Note that top-level scope of the file may not be the same as the global scope. If the importing
-happens from an inlcuded file, or from inside a block of from inside a macro, or in a scope that
+happens from an included file, or from inside a block of from inside a macro, or in a scope that
 was started with a `begin` macro then the "top-level-scope of the file" is the one
 that contains the `import` macro. If anything is defined into the global scope in the imported
 file then those macros will eventually be in the global scope and available to anyone later.)
@@ -402,28 +402,28 @@ If this is missing the default, `JavaScript` is assumed. You can use any scripti
 implements the Java scripting API and the interpreter is available on the classpath when Jamal is
 executed.
 
-The parameters are handled differently from the parameters of the user defined macros defined
-using the `define` built-in macro. In that case the parameter strings are replaced by the actual
-value strings during evaluation. In this case the parameters are used as global variable names and
+The parameters are handled differently from the parameters of the user-defined macros defined
+using the `define` built-in macro. In that case, the parameter strings are replaced by the actual
+value strings during evaluation. In this case, the parameters are used as global variable names and
 using these names the actual values are injected into the context of the script before evaluation.
 
-This also implies that you do not have the total freedom of parameter names that you had for user
-defined macros defined using the built-in macro `define` (note that you could use there any string
-as a parameter id so long as long it contained no comma and closing parenthese). In this case you
+This also implies that you do not have the total freedom of parameter names that you had for
+user-defined macros defined using the built-in macro `define` (note that you could use there any string
+as a parameter id so long as long it contained no comma and closing parenthesis). In this case, you
 should care about the syntax of the scripting language used. The parameter names have to be valid
 identifiers in the scripting language as they are used as such.
 
 The value injection converts the actual value of the parameter to script values. Because in this case
 the values are not injected into the macro body as string replacement but rather assigned to
-global variables in the script some conversion should take place. Without this all the scripts that
-use some integer or floating point number were supposed to convert them first from string.
+global variables in the script some conversion should take place. Without this, all the scripts that
+use some integer or floating point number were supposed to convert them first from the string.
 
-Therefore Jamal tries to convert the actual value of a parameter of a `script` defined user defined
-macro treating it as an integer. If it succeeds then the global variable having th name as the parameter
+Therefore Jamal tries to convert the actual value of a parameter of a `script` defined user-defined
+macro treating it as an integer. If it succeeds then the global variable having the name as the parameter
 will hold an integer value (or whatever the scripting language uses from the Java scripting context
-injected as `Integer`). If the conversion to integer does not work then it tries the same with double.
+injected as `Integer`). If the conversion to an integer does not work then it tries the same with double.
 If that is also not feasible then it will check is the actual value is lower case `true` or `false` in
-which case the global variable of the script will be a boolean value. In any other case the global
+which case the global variable of the script will be a boolean value. In any other case, the global
 variable will get the actual value as a string assigned to it.
 
 The following sample shows a simple script that implements a looping construct using JavaScript.
@@ -488,7 +488,7 @@ The `if` macro makes it possible to evaluate the content conditionally. The synt
 ```
 
 Here we use `/` as separator character, but any other character can be used that does not appear in the `test` text
-and in the `then content` text. The first non-space character following the macro keyword `if` will be used as separator
+and in the `then content` text. The first non-space character following the macro keyword `if` will be used as a separator
 character.
 
 The result of the evaluated macro will be the `then content` when the `test` is true and the
@@ -549,7 +549,7 @@ the string `this is it`.
 The macro `b` has the value `{a}`. When `b` is evaluated it results `{a}` and then before
 using this output in place of the use of the macro `b` this result is evaluated by Jamal as
 a new input. If the macro opening and closing strings are still `{` and `}` at this time, then
-this second recursive evaluation will result the string `this is it`.
+this second recursive evaluation will result in the string `this is it`.
 
 The macro `c` is defined using the `#` character at the start of the macro, therefore Jamal
 will process the body of the macro before processing the built-in macro `define` itself.
@@ -576,7 +576,7 @@ This way the evaluation of a macro is done in three steps:
 
 As you can see the first and the last steps are recursive steps. The first step can be skipped
 using the `@` character. The second step cannot be skipped, and after all, there is no reason to
-do so. In case of user-defined macro, however, the third step can be skipped using the macro `verbatim`.
+do so. In the case of user-defined macro, however, the third step can be skipped using the macro `verbatim`.
 
 The syntax of the `verbatim` macro is the following:
 
@@ -614,7 +614,7 @@ You cannot "redefine" `verbatim`.
 since 1.0.0 (core)
 
 This macro can be used to temporarily change the macro opening and closing string. In the
-examples in this documentation we use `{` as opening string and `}` as closing string, but
+examples in this documentation we use `{` as the opening string and `}` as the closing string, but
 Jamal itself does not impose any such predefined setting.
 
 The syntax of the command is
@@ -638,15 +638,15 @@ macros after it already have to use the altered opening and closing strings.
 The change of the opening and the closing strings always happens in pairs. You cannot change only
 the closing or only the opening string. You can, however, redefined one of them to be something
 that is different from the current value and the other one to be the same as the current value.
-Even in this case the definition should specify both strings. The change is valid only
+Even in this case, the definition should specify both strings. The change is valid only
 for the current scope and the original value is restored when returning from the scope, even if the
 opening and closing strings were set to different values multiple times.
 
-Neither the opening nor the closing string can be empty. Trying to set it to empty string
+Neither the opening nor the closing string can be empty. Trying to set it to an empty string
 will raise an error. This usually happens when you get used to the `/` separator character
 as a convention and you forget to put it in front of the opening string, like in `{@sep [/]}`.
-(Jamal v1.0.0 gets into inifinite loop in case of empty opening string. Later versions will
-signal error.)
+(Jamal v1.0.0 gets into an infinite loop in case of an empty opening string. Later versions will
+signal an error.)
 
 When the opening and the end strings are set the original values are stored in a list. When the
 macro `sep` is used without any separator character, in other words, it is nothing more than the
@@ -740,7 +740,7 @@ Jamal opens a new scope in the following cases:
 * Other built-in macros that are not part of the core package may also start and close scopes. Note that
   built-in macros can be provided in form of JAR files.
 
-Note that the macro `import` does NOT open a new scope to process the imported file. This is because the aim of
+Note that the macro `import` does NOT open a new scope to process the imported file. This is because of the aim of
 `import` is to have the macros defined in the imported file available in the file that imports them.
 
 In the following example, we define the macro `Z` in the scope of the macro `comment`. The `{@define Z=13}`
@@ -778,14 +778,14 @@ your classpath. If you use maven you can simply have
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
         </dependency>
 ```
 
 in your pom file. The library `jamal-engine` transitively depends on the other libraries that
 are needed (`jamal-core`, `jamal-api` and `jamal-tools`).
 
-You also have specify that you use these modules (Java 9 and later) and that you
+You also have to specify that you use these modules (Java 9 and later) and that you
 
 ```java
 module jamal.maven {
@@ -807,25 +807,26 @@ The `macroOpen` and `macroClose` parameters are `String` values. The parameter `
 easiest way to do that is to use the readily available class `javax0.jamal.tools.Input`
 that implements this interface.
 
-
 You can see an example to create an `Input` from an existing file in the `jamal-maven-plugin`
 module. The method `createInput()` reads a file and then using the name of the file and the
 content of the file it creates a new input:
 
 ```java
-private javax0.jamal.api.Input createInput(Path inputFile) throws IOException {
+private Input createInput(Path inputFile) throws IOException {
     var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-    return new javax0.jamal.tools.Input(new StringBuilder(fileContent), inputFile.toString());
+    return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
 }
 ```
 
 An `Input` holds the content that the processor has to process but it also has a reference file name
-used to resolve the absolute names of the included and imported files.
+used to resolve the absolute names of the included and imported files and it also keeps track of the
+line number and the column of the actual character as the macro evaluation progresses. A `new Position(s,1)`
+creates a new position that identifies the file by the name `s` and the line number 1.
 
 When a new processor is instantiated it uses the `ServiceLoader` mechanism to find all the
 built-in macros that are on the classpath. If your application has special macros
-implemented in Java then you can just put the library on the class path and in case the
-classes are defined in the `provides` directitve of the module then Jamal will find and load
+implemented in Java then you can just put the library on the modulepath and in case the
+classes are defined in the `provides` directive of the module then Jamal will find and load
 them automatically.
 
 It is also possible to define user-defined and built-in macros via API. To do that you need
@@ -837,4 +838,4 @@ var register = processor.getRegister();
 ```
 
 The register has API to define macros and user-defined macros. For further information
-see the API.
+see the API JavaDoc documentation.
