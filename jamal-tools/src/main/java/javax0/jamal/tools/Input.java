@@ -6,8 +6,8 @@ import javax0.jamal.api.Position;
  * A simple implementation of the {@link javax0.jamal.api.Input} interface utilizing two fields.
  */
 public class Input implements javax0.jamal.api.Input {
-    private StringBuilder input;
-    private String file;
+    private final StringBuilder input;
+    private final String file;
     private int line;
     private int column;
 

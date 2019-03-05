@@ -29,8 +29,6 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  */
 public class If implements Macro {
 
-    private static final Pattern pattern = Pattern.compile("\\s+(.)(\\w[\\w\\d_$]*)\\s+in\\s*\\((.*?)\\)\\s*=(.*)", Pattern.DOTALL);
-
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);

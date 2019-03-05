@@ -7,10 +7,15 @@
 }
 
 {@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
-{#eval {@for _tag in (name,groupId,artifactId,version,packaging,description,url,properties,build,pluginManagement,plugins,plugin,dependencyManagement,dependencies,scm,connection,developerConnection,executions,execution,id,goals,goal)=
+{#eval {@for _tag in (name,groupId,artifactId,version,scope,packaging,description,url,properties,build,pluginManagement,plugins,plugin,dependencyManagement,dependencies,scm,connection,developerConnection,executions,execution,id,goals,goal)=
 {tag/_tag}}}
 
-{@define GAV(_groupId,_artifactId,_version)={groupId/_groupId}{artifactId/_artifactId}{version/_version}{#define GROUPID=_groupId}{#define VERSION=_version}}
+{@define GAV(_groupId,_artifactId,_version,_scope)=
+{@if/_groupId/{groupId/_groupId}}
+{@if/_artifactId/{artifactId/_artifactId}}
+{@if/_version/{version/_version}}
+{@if/_scope/{scope/_scope}}
+{#define GROUPID=_groupId}{#define VERSION=_version}}
 
 {@define parent(_id)=<parent>{GAV :{GROUPID}:_id:{VERSION}}
 </parent>}

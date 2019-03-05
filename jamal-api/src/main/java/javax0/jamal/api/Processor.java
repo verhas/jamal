@@ -1,7 +1,7 @@
 package javax0.jamal.api;
 
 public interface Processor {
-    String process(final Input in) throws BadSyntax, BadSyntaxAt;
+    String process(final Input in) throws BadSyntax;
 
     MacroRegister getRegister();
 

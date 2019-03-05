@@ -11,7 +11,7 @@ public class Include implements Macro {
     private int depth = 100;
 
     @Override
-    public String evaluate(Input input, Processor processor) throws BadSyntax, BadSyntaxAt {
+    public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);
         var reference = input.getReference();
         var fileName = absolute(reference, input.toString().trim());

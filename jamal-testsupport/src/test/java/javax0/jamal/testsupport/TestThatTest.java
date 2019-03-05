@@ -19,11 +19,11 @@ public class TestThatTest {
     @Test
     @DisplayName("TestThat asserts the result OK")
     void testResultOK() throws
-        InvocationTargetException,
-        NoSuchMethodException,
-        InstantiationException,
-        BadSyntaxAt, BadSyntax,
-        IllegalAccessException {
+            InvocationTargetException,
+            NoSuchMethodException,
+            InstantiationException,
+            BadSyntax,
+            IllegalAccessException {
         TestThat.forMacro(TestingMacro.class).fromInput("").results(null);
     }
 
@@ -31,28 +31,27 @@ public class TestThatTest {
     @DisplayName("TestThat asserts fails when output does not match")
     void testResultFailure() {
         Assertions.assertThrows(AssertionFailedError.class,
-            () -> TestThat.forMacro(TestingMacro.class).fromInput("").results(""));
+                () -> TestThat.forMacro(TestingMacro.class).fromInput("").results(""));
     }
 
     @Test
     @DisplayName("TestThat tests macro throwing exception")
     void testThrowingMacro() throws
-        InvocationTargetException,
-        NoSuchMethodException,
-        InstantiationException,
-        BadSyntaxAt,
-        IllegalAccessException {
-        TestThat.forMacro(TestingThrowingMacro.class).fromInput("").throwsUp(BadSyntaxAt.class);
+            InvocationTargetException,
+            NoSuchMethodException,
+            InstantiationException,
+            IllegalAccessException {
+        TestThat.forMacro(TestingThrowingMacro.class).fromInput("").throwsUp(BadSyntax.class);
     }
 
     @Test
     @DisplayName("TestThat tests macro checks BadSyntaxAt properly")
     void testBadSyntaxMacro() throws
-        InvocationTargetException,
-        NoSuchMethodException,
-        InstantiationException,
-        BadSyntaxAt,
-        IllegalAccessException {
+            InvocationTargetException,
+            NoSuchMethodException,
+            InstantiationException,
+            BadSyntaxAt,
+            IllegalAccessException {
         TestThat.forMacro(TestingThrowingMacro.class).fromInput("").throwsBadSyntax();
     }
 

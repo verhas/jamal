@@ -70,11 +70,11 @@ public class TestThat {
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     public void results(String expected) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException,
-        BadSyntaxAt, BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
         Macro sut = createSut();
         var in = new javax0.jamal.tools.Input(input, null);
         var actual = sut.evaluate(in, processor);
@@ -97,10 +97,10 @@ public class TestThat {
      * @throws InvocationTargetException if the macro class can not be instantiated
      */
     public void throwsUp(Class<? extends Throwable> throwable) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException {
         var sut = createSut();
         var in = new javax0.jamal.tools.Input(input, null);
         var processor = new Processor();
@@ -114,16 +114,13 @@ public class TestThat {
      * @throws IllegalAccessException    if the macro class can not be instantiated
      * @throws InstantiationException    if the macro class can not be instantiated
      * @throws InvocationTargetException if the macro class can not be instantiated
-     * @throws BadSyntaxAt               should not ever, because this is what we expect to be caught by the invoked
-     *                                   {@link #throwsUp(Class)} method, but Java requires that we declre this.
      */
     public void throwsBadSyntax() throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException,
-        BadSyntaxAt {
-        throwsUp(BadSyntaxAt.class);
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException {
+        throwsUp(BadSyntax.class);
     }
 
     /**

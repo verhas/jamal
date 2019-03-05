@@ -1,1 +1,1 @@
-{@define a="app"}{@define b="le"}{#eval {a}+{b}}
+{@define a="app"}{@define b="le"}{#eval/JavaScript {a}+{b}}

@@ -1,7 +1,6 @@
 package javax0.jamal.extensions;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.Input;
@@ -36,7 +35,7 @@ class TestSamples {
         return fileName;
     }
 
-    private String result(String testFile) throws IOException, BadSyntaxAt, BadSyntax {
+    private String result(String testFile) throws IOException, BadSyntax {
         var in = createInput(testFile);
         final var sut = new Processor("{", "}");
         return sut.process(in);
@@ -44,24 +43,24 @@ class TestSamples {
 
     @Test
     @DisplayName("simple import")
-    void testSimpleImport() throws IOException, BadSyntaxAt, BadSyntax {
+    void testSimpleImport() throws IOException, BadSyntax {
         assertEquals("thisIsGood\n" +
-            "ThisIsAlsoGood\n" +
-            "THIS_IS_EXTRA_GOOD\n" +
-            "this is extra good\n" +
-            "This is extra good.", result("use.jam"));
+                "ThisIsAlsoGood\n" +
+                "THIS_IS_EXTRA_GOOD\n" +
+                "this is extra good\n" +
+                "This is extra good.", result("use.jam"));
     }
 
     @Test
     @DisplayName("for loop iterates through the elements")
-    void testForLoop() throws IOException, BadSyntaxAt, BadSyntax {
+    void testForLoop() throws IOException, BadSyntax {
         assertEquals(" a is either a, b, c or d\n" +
-            " b is either a, b, c or d\n" +
-            " c is either a, b, c or d\n" +
-            " d is either a, b, c or d\n" +
-            " a is either a, b, c or d\n" +
-            " b is either a, b, c or d\n" +
-            " c is either a, b, c or d\n" +
-            " d is either a, b, c or d\n", result("for.jam"));
+                " b is either a, b, c or d\n" +
+                " c is either a, b, c or d\n" +
+                " d is either a, b, c or d\n" +
+                " a is either a, b, c or d\n" +
+                " b is either a, b, c or d\n" +
+                " c is either a, b, c or d\n" +
+                " d is either a, b, c or d\n", result("for.jam"));
     }
 }

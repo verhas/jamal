@@ -193,7 +193,7 @@ public class Processor implements javax0.jamal.api.Processor {
             try {
                 return builtin.get().evaluate(input, this);
             } catch (BadSyntax bs) {
-                throw new BadSyntaxAt(bs, ref);
+                throw bs instanceof BadSyntaxAt ?  (BadSyntaxAt)bs : new BadSyntaxAt(bs, ref);
             }
         } else {
             final String rawResult;
@@ -203,12 +203,12 @@ public class Processor implements javax0.jamal.api.Processor {
                         rawResult :
                         process(new javax0.jamal.tools.Input(rawResult, input.getPosition()));
             } catch (BadSyntax bs) {
-                throw new BadSyntaxAt(bs, ref);
+                throw bs instanceof BadSyntaxAt ?  (BadSyntaxAt)bs : new BadSyntaxAt(bs, ref);
             }
         }
     }
 
-    private String evalUserDefinedMacro(final Input input) throws BadSyntax, BadSyntaxAt {
+    private String evalUserDefinedMacro(final Input input) throws BadSyntax {
         var ref = input.getPosition();
         final boolean reportUndef = input.length() == 0 || input.charAt(0) != '?';
         if (!reportUndef) {
@@ -233,7 +233,7 @@ public class Processor implements javax0.jamal.api.Processor {
             try {
                 return udMacro.get().evaluate(parameters);
             } catch (BadSyntax bs) {
-                throw new BadSyntaxAt(bs.getMessage(), ref);
+                throw bs instanceof BadSyntaxAt ?  (BadSyntaxAt)bs : new BadSyntaxAt(bs, ref);
             }
         } else {
             if (reportUndef) {

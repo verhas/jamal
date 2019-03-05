@@ -12,7 +12,7 @@ public interface Macro {
         return list;
     }
 
-    String evaluate(Input in, Processor processor) throws BadSyntax, BadSyntaxAt;
+    String evaluate(Input in, Processor processor) throws BadSyntax;
 
     default String getId() {
         return this.getClass().getSimpleName().toLowerCase();

@@ -20,7 +20,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("throws exception when the macro is not terminated")
-    public void unterminated() throws BadSyntaxAt {
+    public void unterminated() {
         final var input = new Input("this is the body of the macro unterminated");
         final var sut = new Processor("{", "}");
         Assertions.assertThrows(BadSyntaxAt.class, () -> sut.getNextMacroBody(input));
@@ -48,7 +48,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("a simple define with arguments")
-    public void simpleDefine() throws BadSyntaxAt, BadSyntax {
+    public void simpleDefine() throws BadSyntax {
         final var input = new Input("{@define q=zqqz}{q}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
@@ -57,7 +57,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("a simple define with arguments")
-    public void testSimpleDefineWargs() throws BadSyntaxAt, BadSyntax {
+    public void testSimpleDefineWargs() throws BadSyntax {
         final var input = new Input("{@define q(a,b)=abba}{q/z/q}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
@@ -66,7 +66,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("nested macro definitions")
-    public void testNestedDefine() throws BadSyntaxAt, BadSyntax {
+    public void testNestedDefine() throws BadSyntax {
         final var input = new Input("{#define b=b}{#define q=zqq{#define b=z}{b}}{q}{b}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
@@ -75,7 +75,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("nested macro definitions with late eval")
-    public void testNestedDefineLater() throws BadSyntaxAt, BadSyntax {
+    public void testNestedDefineLater() throws BadSyntax {
         final var input = new Input("{#define b=b}{@define q=zqq{#define b=z}{b}}{q}{b}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
@@ -84,7 +84,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("nested macro definitions with late eval verbatim")
-    public void testNestedDefineLateVerbatim() throws BadSyntaxAt, BadSyntax {
+    public void testNestedDefineLateVerbatim() throws BadSyntax {
         final var input = new Input("{#define b=b}{@define q=zqq{}{b}}{@verbatim q}{b}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
@@ -93,7 +93,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("nested macro definitions with late eval verbatim")
-    public void testComment() throws BadSyntaxAt, BadSyntax {
+    public void testComment() throws BadSyntax {
         final var input = new Input("{#define b=b}{@comment {@define q=zqq{}{b}}}{b}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
@@ -103,7 +103,7 @@ public class TestProcessor {
 
     @Test
     @DisplayName("testsupport verbatim protected user defined macro")
-    public void testVerbatimUdMacroUse() throws BadSyntaxAt, BadSyntax {
+    public void testVerbatimUdMacroUse() throws BadSyntax {
         final var input = new Input("{@define b={zz}}{@verbatim b}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);

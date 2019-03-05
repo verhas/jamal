@@ -28,7 +28,7 @@ public class Script implements Macro {
         try {
             macro = processor.newUserDefinedMacro(id, input.toString(), params);
         } catch (BadSyntax bs) {
-            throw new BadSyntaxAt(bs, ref);
+            throw bs instanceof BadSyntaxAt ?  (BadSyntaxAt)bs : new BadSyntaxAt(bs, ref);
         }
         macro.setScriptType(scriptType);
         if (isGlobalMacro(id)) {

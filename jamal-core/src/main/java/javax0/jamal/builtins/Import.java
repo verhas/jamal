@@ -1,6 +1,9 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.Stackable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,13 +34,13 @@ public class Import implements Stackable {
     }
 
     @Override
-    public String evaluate(Input input, Processor processor) throws BadSyntax, BadSyntaxAt {
+    public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);
         var reference = input.getReference();
         var fileName = absolute(reference, input.toString().trim());
         if (wasNotImported(fileName)) {
             importedAlready.get(importedAlready.size() - 1).add(fileName);
-            var ignored = processor.process(getInput(fileName));
+            processor.process(getInput(fileName));
         }
         return "";
     }

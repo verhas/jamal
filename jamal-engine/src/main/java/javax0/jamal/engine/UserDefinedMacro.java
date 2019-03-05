@@ -6,10 +6,8 @@ import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
 import javax0.jamal.tools.ScriptingTools;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.ScriptingTools.*;
 
@@ -77,7 +75,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {
                         badSyntax.parameter("" + i + ". parameter '" + parameters[i] + "' contains the "
-                            + j + ". parameter '" + parameters[j] + "'");
+                                + j + ". parameter '" + parameters[j] + "'");
                     }
                 }
             }

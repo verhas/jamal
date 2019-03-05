@@ -14,7 +14,7 @@ public class TestJamalMojo {
     }
 
     @Test
-    public void testNothing() throws MojoExecutionException, NoSuchFieldException, IllegalAccessException {
+    public void testNothing() {
         sut = new JamalMojo();
 //        sut.execute();
     }

@@ -21,20 +21,6 @@ public class InputHandler {
     }
 
     /**
-     * @param s characters we look at
-     * @return the first character in the sequence 's' that is not white space, or a special value
-     * if there is no such character. Use {@link #contains(int)} to check the result.
-     */
-    public static int firstNonSpace(CharSequence s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
      * Trim the strings of the array
      *
      * @param s the array of the strings to be trimmed
