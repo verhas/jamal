@@ -89,12 +89,7 @@
     
 
                     <configuration>
-                        <source>1.11</source>
-                        <target>1.11</target>
                         <release>11</release>
-                        <jdkToolchain>
-                            <version>11</version>
-                        </jdkToolchain>
                     </configuration>
                 </plugin>
 

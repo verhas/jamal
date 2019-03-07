@@ -10,7 +10,7 @@
             <plugin>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-plugin</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.2</version>
                 <executions>
                     <execution>
                         <id>execution</id>
