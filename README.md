@@ -67,6 +67,7 @@ macro evaluations inputs and outputs. Since there can be many Jamal evaluations 
 overwrite old trace information but rather it appends the information. Before starting Jamal you can manually
 delete the trace file. Trace files grow large easily. 
   
+If you Java 8, 9 or 10 you should go with the release `1.0.2.JDK8`.
 
 ## Simple Example<a name="SimpleExample">
 
