@@ -7,7 +7,7 @@ public class TestCamel {
 
     @Test
     public void testCamelLowerCase() throws Exception {
-        var camelLowerCase = TestThat.forMacro(Camel.LowerCase.class);
+        var camelLowerCase = TestThat.forMacro(Camel.LowCamel.class);
         camelLowerCase.fromInput("INPUT").results("input");
         camelLowerCase.fromInput("INpUT").results("input");
         camelLowerCase.fromInput("INpuT").results("input");
@@ -20,7 +20,7 @@ public class TestCamel {
 
     @Test
     public void testCamelUpperCase() throws Exception {
-        var camelUpperCase = TestThat.forMacro(Camel.UpperCase.class);
+        var camelUpperCase = TestThat.forMacro(Camel.UppCamel.class);
         camelUpperCase.fromInput("INPUT").results("Input");
         camelUpperCase.fromInput("INpUT").results("Input");
         camelUpperCase.fromInput("INpuT").results("Input");

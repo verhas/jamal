@@ -1,6 +1,6 @@
 {@use
-javax0.jamal.extensions.Camel.UpperCase as CamelCase,
-javax0.jamal.extensions.Camel.LowerCase as camelCase,
+javax0.jamal.extensions.Camel.UppCamel as CamelCase,
+javax0.jamal.extensions.Camel.LowCamel as camelCase,
 javax0.jamal.extensions.Camel.CStyle as const,
 javax0.jamal.extensions.Camel.Sentence ,
 javax0.jamal.extensions.Case.Cap,

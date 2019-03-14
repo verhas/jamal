@@ -5,6 +5,9 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
+/**
+ * Macros defined in static inner classes that change the casing of the input.
+ */
 public class Case {
     private static String deCapitalize(String s) {
         if (s != null && s.length() > 0) {
@@ -20,6 +23,9 @@ public class Case {
         return s;
     }
 
+    /**
+     * Converts the argument of the macro to all characters lower case.
+     */
     public static class Lower implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
@@ -28,6 +34,9 @@ public class Case {
         }
     }
 
+    /**
+     * Converts the argument of the macro to all characters upper case.
+     */
     public static class Upper implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
@@ -35,6 +44,9 @@ public class Case {
         }
     }
 
+    /**
+     * Capitalizes the input. Changes the first character to upper case.
+     */
     public static class Cap implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
@@ -42,6 +54,9 @@ public class Case {
         }
     }
 
+    /**
+     * Decapitalizes the input. Changes the first character to lower case.
+     */
     public static class Decap implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
