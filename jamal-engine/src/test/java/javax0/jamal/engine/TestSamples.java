@@ -219,6 +219,13 @@ class TestSamples {
                 "true=true\n" +
                 "true=true", result("testif.jam"));
     }
+
+    @Test
+    @DisplayName("even the name of the macro can be defined by a macro")
+    void testRecurse() throws  BadSyntax, IOException {
+        assertEquals("wilfred\n" +
+                "black white", result("recursedef.jam"));
+    }
     
     @Test
     void testErrorLineReport() {
