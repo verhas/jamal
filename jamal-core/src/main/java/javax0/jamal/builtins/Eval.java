@@ -17,7 +17,11 @@ public class Eval implements Macro {
         if (input.length() > 0 && input.charAt(0) == '/') {
             skip(input, 1);
             scriptType = fetchId(input);
+            skipWhiteSpaces(input);
         } else {
+            return processor.process(input);
+        }
+        if (scriptType.equals("jamal")) {
             return processor.process(input);
         }
         var engine = getEngine(scriptType);

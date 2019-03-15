@@ -202,7 +202,7 @@ class TestSamples {
     @DisplayName("Eval/jamal is evaluated properly")
     void testEvaluateJamal() throws BadSyntax, IOException {
         assertThrows(BadSyntaxAt.class, () -> result("ej_fail.jam"));
-        assertEquals("\nzzz", result("eval_jamal.jam"));
+        assertEquals("\nzzzsss", result("eval_jamal.jam"));
     }
 
     @Test

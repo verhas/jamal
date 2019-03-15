@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Utility class with some simple static methods that fetch characters from an input buffer.
@@ -215,4 +216,67 @@ public class InputHandler {
         }
         return params;
     }
+
+    private static String[] EMPTY_STRING_ARRAY = new String[0];
+
+    /**
+     * Parse the input and split it up into a String array. It can be used in many macros to provide a consistent
+     * syntax and structure when the macro processing needs a list of strings.
+     * <p>
+     * The possible syntaxes are:
+     * <pre>
+     * macroName / a / b / c / ... /x
+     * </pre>
+     * <p>
+     * where the separator character is the first non-whitespace character after the macro name, and it is not the
+     * back-tick (`) character. If the first non-whitespace character after the name of the macro id is a backtick
+     * then the parsing expects to be a regular expression till the next backtick. After the regular expression and
+     * after the closing backtick the rest of the input is spit up and the separator is the regular expression.
+     * <p>
+     * Backtick was selected during the design of the syntax to enclose the regular expression because this character
+     * is very rare in Java regular expression. In case you need one inside the regular expression then you have to
+     * simply double it and the parsing will single it back.
+     *
+     * <pre>
+     * macroName `regex` separator a separator b separator .... separator x
+     * </pre>
+     *
+     * @param input to be split up
+     * @return the list of the strings created from the input
+     */
+    public static String[] getParts(Input input) {
+        skipWhiteSpaces(input);
+        if (input.length() == 0) {
+            return EMPTY_STRING_ARRAY;
+        }
+        var sepchar = input.substring(0, 1);
+        skip(input, 1);
+        if ("`".equals(sepchar)) {
+            return getPartsRegex(input);
+        }
+        return input.toString().split(Pattern.quote(sepchar), -1);
+    }
+
+    private static String[] getPartsRegex(Input input) {
+        final var regex = fetchRegex(input);
+        return input.toString().split(regex, -1);
+    }
+
+    private static String fetchRegex(Input input) {
+        var sb = new StringBuilder();
+        while (input.length() > 0) {
+            while (input.charAt(0) == '`' && input.length() > 1 && input.charAt(1) == '`') {
+                sb.append('`');
+                skip(input, 2);
+            }
+            if (input.charAt(0) == '`') break;
+            sb.append(input.charAt(0));
+            skip(input, 1);
+        }
+        if (input.length() > 0) {
+            skip(input, 1);
+        }
+        return sb.toString();
+    }
+
 }

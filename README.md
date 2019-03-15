@@ -333,7 +333,8 @@ eval/scripttype script
 If `eval` is followed by `/` character then the next identifier is the type of the script.
 You can use any scripting language that
 implements the Java scripting API and the interpreter is available on the classpath when Jamal is
-executed.
+executed. If the script type is `jamal` then it is the same as there was no script type specified. This
+may be needed when the content of the macro to be evaluated starts with the `/` character.
 
 The following two examples show how `eval` can be used to evaluate simple arithmetic expressions using the
 Java built-in JavaScript interpreter. Note that in the second example the macro `eval` is preceded with the

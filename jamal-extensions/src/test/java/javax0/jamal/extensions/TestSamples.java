@@ -55,12 +55,22 @@ class TestSamples {
     @DisplayName("for loop iterates through the elements")
     void testForLoop() throws IOException, BadSyntax {
         assertEquals(" a is either a, b, c or d\n" +
-                " b is either a, b, c or d\n" +
-                " c is either a, b, c or d\n" +
-                " d is either a, b, c or d\n" +
-                " a is either a, b, c or d\n" +
-                " b is either a, b, c or d\n" +
-                " c is either a, b, c or d\n" +
-                " d is either a, b, c or d\n", result("for.jam"));
+            " b is either a, b, c or d\n" +
+            " c is either a, b, c or d\n" +
+            " d is either a, b, c or d\n" +
+            " a is either a, b, c or d\n" +
+            " b is either a, b, c or d\n" +
+            " c is either a, b, c or d\n" +
+            " d is either a, b, c or d\n", result("for.jam"));
+    }
+
+    @Test
+    @DisplayName("matcher generates the groups")
+    void testMatcherLoop() throws IOException, BadSyntax {
+        assertEquals("\n\n" +
+            "true\n" +
+            "2\n" +
+            "1. before the slash\n" +
+            "2. after the slash\n", result("matcher.jam"));
     }
 }
