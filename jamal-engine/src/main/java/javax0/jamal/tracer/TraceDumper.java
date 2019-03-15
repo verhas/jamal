@@ -4,11 +4,20 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TraceDumper {
     private static final String sep = "-".repeat(80);
     private static final long LAG = 80L;
     private static final String END_TAG = "</traces>";
+
+    private static String cData(String string) {
+        return "<![CDATA[" + cDataEscape(string) + "]]>";
+    }
+
+    private static String cDataEscape(String string) {
+        return string.replaceAll("\\]\\]>", "]]]]<![CDATA[>");
+    }
 
     public void dump(List<TraceRecord> traces, String fileName, Exception ex) {
         final String adjustedFileName;
@@ -32,92 +41,108 @@ public class TraceDumper {
         } catch (Exception fnfe) {
             fnfe.printStackTrace(System.err);
         }
-        try (var raf = new RandomAccessFile(fileName, "rw")) {
-            var lag = LAG;
-            if (raf.length() < lag) {
-                lag = raf.length();
-            }
-            if (lag > END_TAG.length()) {
-                raf.seek(raf.length() - LAG);
-                byte[] buffer = new byte[(int) lag];
-                raf.readFully(buffer);
-                var ending = new String(buffer, StandardCharsets.UTF_8);
-                var index = ending.indexOf(END_TAG);
-                if (index >= -1) {
-                    raf.seek(raf.length() - lag + index);
-                } else {
-                    raf.seek(raf.length());
-                }
-            } else {
-                raf.seek(raf.length());
-                raf.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n");
-                raf.writeBytes("<traces>" + "\n");
-            }
-            if (ex == null) {
-                raf.writeBytes("<trace>\n");
-            } else {
-                raf.writeBytes("<trace hasException=\"true\">\n");
-            }
-            int i = 1;
+        try (var outputFile = new RandomAccessFile(fileName, "rw")) {
+            amputateClosingXmlTag(outputFile);
+            openNewTrace(outputFile, ex);
+            final AtomicInteger i = new AtomicInteger(1);
             for (final var trace : traces) {
-                raf.writeBytes("<record " +
-                        "column=\"" + trace.position().column + "\" " +
-                        "line=\"" + trace.position().line + "\" " +
-                        "file=\"" + trace.position().file + "\" " +
-                        "type=\"" + trace.type() + "\" " +
-                        "level=\"" + trace.level() + "\" " +
-                        "index=\"" + i + "\" " +
-                        ">\n");
-                if (!trace.source().isEmpty()) {
-                    raf.writeBytes("<input>\n");
-                    raf.writeBytes(cData(trace.source()));
-                    raf.writeBytes("\n</input>\n");
-                }
-                if ("TEXT".equals(trace.type())) {
-                    raf.writeBytes("<text>\n");
-                    raf.writeBytes(cData(trace.target()));
-                    raf.writeBytes("\n</text>\n");
-                } else {
-                    if (trace.target().length() == 0) {
-                        if (trace.hasOutput()) {
-                            raf.writeBytes("<output></output>\n");
-                        } else {
-                            raf.writeBytes("<output><error/></output>\n");
-                        }
-                    } else {
-                        raf.writeBytes("<output>\n");
-                        raf.writeBytes(cData(trace.target()));
-                        raf.writeBytes("\n</output>\n");
-                    }
-                }
-                raf.writeBytes("</record>\n");
-                i++;
+                outputRecord(outputFile, i, trace);
             }
             if (ex != null) {
-                raf.writeBytes("<exception " +
-                        " message=\"" + ex.getMessage().replaceAll("\n", " ") + "\"" +
-                        ">\n");
-                var sw = new StringWriter();
-                var pw = new PrintWriter(sw);
-                ex.printStackTrace(pw);
-                sw.close();
-                raf.writeBytes(cData(sw.toString()));
-                raf.writeBytes("\n");
-                raf.writeBytes("</exception>\n");
+                outputException(ex, outputFile);
             }
-            raf.writeBytes("</trace>\n");
-            raf.writeBytes(END_TAG);
+            outputFile.writeBytes("</trace>\n");
+            outputFile.writeBytes(END_TAG);
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
     }
 
-    private static String cData(String string){
-        return "<![CDATA[" + cDataEscape(string) + "]]>";
+    private void outputException(Exception ex, RandomAccessFile outputFile) throws IOException {
+        outputFile.writeBytes("<exception " +
+                " message=\"" + ex.getMessage().replaceAll("\n", " ") + "\"" +
+                ">\n");
+        var sw = new StringWriter();
+        var pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        sw.close();
+        outputFile.writeBytes(cData(sw.toString()));
+        outputFile.writeBytes("\n");
+        outputFile.writeBytes("</exception>\n");
     }
 
-    private static String cDataEscape(String string){
-        return string.replaceAll("\\]\\]>","]]]]<![CDATA[>");
+    private void outputRecord(RandomAccessFile outputFile, AtomicInteger i, TraceRecord trace) throws IOException {
+        outputFile.writeBytes("<record " +
+                "id=\"" + trace.getId() + "\" " +
+                "type=\"" + trace.type() + "\" " +
+                "level=\"" + trace.level() + "\" " +
+                "index=\"" + i.get() + "\" " +
+                ">\n");
+        outputFile.writeBytes("<position " +
+                "column=\"" + trace.position().column + "\" " +
+                "line=\"" + trace.position().line + "\" " +
+                "file=\"" + trace.position().file + "\" " +
+                "/>");
+        if (!trace.source().isEmpty()) {
+            outputFile.writeBytes("<input>\n");
+            outputFile.writeBytes(cData(trace.source()));
+            outputFile.writeBytes("\n</input>\n");
+        }
+        if (TraceRecord.Type.TEXT == trace.type()) {
+            outputFile.writeBytes("<text>\n");
+            outputFile.writeBytes(cData(trace.target()));
+            outputFile.writeBytes("\n</text>\n");
+        } else {
+            if (trace.target().length() == 0) {
+                if (trace.hasOutput()) {
+                    outputFile.writeBytes("<output></output>\n");
+                } else {
+                    outputFile.writeBytes("<output><error/></output>\n");
+                }
+            } else {
+                outputFile.writeBytes("<output>\n");
+                outputFile.writeBytes(cData(trace.target()));
+                outputFile.writeBytes("\n</output>\n");
+            }
+        }
+        outputFile.writeBytes("<records>\n");
+        for (final var subTrace : trace.getSubRecords()) {
+            outputRecord(outputFile, i, subTrace);
+        }
+        outputFile.writeBytes("\n</records>\n");
+        outputFile.writeBytes("</record>\n");
+        i.incrementAndGet();
+    }
+
+    private void openNewTrace(RandomAccessFile outputFile, Exception ex) throws IOException {
+        if (ex == null) {
+            outputFile.writeBytes("<trace>\n");
+        } else {
+            outputFile.writeBytes("<trace hasException=\"true\">\n");
+        }
+    }
+
+    private void amputateClosingXmlTag(RandomAccessFile outputFile) throws IOException {
+        var lag = LAG;
+        if (outputFile.length() < lag) {
+            lag = outputFile.length();
+        }
+        if (lag > END_TAG.length()) {
+            outputFile.seek(outputFile.length() - LAG);
+            byte[] buffer = new byte[(int) lag];
+            outputFile.readFully(buffer);
+            var ending = new String(buffer, StandardCharsets.UTF_8);
+            var index = ending.indexOf(END_TAG);
+            if (index >= -1) {
+                outputFile.seek(outputFile.length() - lag + index);
+            } else {
+                outputFile.seek(outputFile.length());
+            }
+        } else {
+            outputFile.seek(outputFile.length());
+            outputFile.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n");
+            outputFile.writeBytes("<traces>" + "\n");
+        }
     }
 
     private void dumpText(List<TraceRecord> traces, String fileName, Exception ex) {

@@ -2,39 +2,83 @@ package javax0.jamal.tracer;
 
 import javax0.jamal.api.Position;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TraceRecordReal implements TraceRecord {
     private final int level;
-    private final StringBuilder source = new StringBuilder();
-    private final StringBuilder target = new StringBuilder();
+    private final StringBuilder before = new StringBuilder();
+    private final StringBuilder evaluated = new StringBuilder();
+    private final StringBuilder result = new StringBuilder();
+    private final List<TraceRecord> subRecords = new ArrayList<>();
+    private final TraceRecordFactory myFactory;
     private Position position;
-    private String type;
+    private TraceRecord.Type type;
     private boolean hasOutput = false;
+    private String id = "";
 
-    public TraceRecordReal(int level) {
+
+    public TraceRecordReal(int level, TraceRecordFactory myFactory) {
         this.level = level;
+        this.myFactory = myFactory;
     }
 
     @Override
-    public TraceRecordReal sourceAppend(String string) {
-        source.append(string);
+    public void close() {
+        myFactory.pop();
+    }
+
+    @Override
+    public TraceRecordReal appendBeforeState(String string) {
+        before.append(string);
         return this;
     }
 
     @Override
-    public TraceRecordReal targetAppend(String string) {
-        target.append(string);
+    public TraceRecord appendAfterEvaluation(String string) {
+        evaluated.append(string);
+        return this;
+    }
+
+    @Override
+    public TraceRecordReal appendResultState(String string) {
+        result.append(string);
         hasOutput = true;
         return this;
     }
 
     @Override
+    public TraceRecord subRecord(Type type) {
+        final var record = new TraceRecordReal(level + 1, myFactory);
+        subRecords.add(record);
+        return record;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        if (id != null) {
+            this.id = id;
+        }
+    }
+
+    @Override
+    public List<TraceRecord> getSubRecords() {
+        return subRecords;
+    }
+
+    @Override
     public String source() {
-        return source.toString();
+        return before.toString();
     }
 
     @Override
     public String target() {
-        return target.toString();
+        return result.toString();
     }
 
     @Override
@@ -53,12 +97,12 @@ public class TraceRecordReal implements TraceRecord {
     }
 
     @Override
-    public String type() {
+    public TraceRecord.Type type() {
         return type;
     }
 
     @Override
-    public void type(String type) {
+    public void type(TraceRecord.Type type) {
         this.type = type;
     }
 

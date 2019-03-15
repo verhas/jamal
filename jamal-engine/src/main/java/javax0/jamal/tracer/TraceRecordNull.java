@@ -2,15 +2,43 @@ package javax0.jamal.tracer;
 
 import javax0.jamal.api.Position;
 
+import java.io.Closeable;
+import java.util.List;
+
 public class TraceRecordNull implements TraceRecord {
     @Override
-    public TraceRecord sourceAppend(String string) {
+    public TraceRecord appendBeforeState(String string) {
         return this;
     }
 
     @Override
-    public TraceRecord targetAppend(String string) {
+    public TraceRecord appendAfterEvaluation(String string) {
+        return null;
+    }
+
+    @Override
+    public TraceRecord appendResultState(String string) {
         return this;
+    }
+
+    @Override
+    public TraceRecord subRecord(Type type) {
+        return this;
+    }
+
+    @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
+    public void setId(String id) {
+
+    }
+
+    @Override
+    public List<TraceRecord> getSubRecords() {
+        return null;
     }
 
     @Override
@@ -38,7 +66,7 @@ public class TraceRecordNull implements TraceRecord {
     }
 
     @Override
-    public String type() {
+    public TraceRecord.Type type() {
         return null;
     }
 
@@ -48,6 +76,11 @@ public class TraceRecordNull implements TraceRecord {
     }
 
     @Override
-    public void type(String type) {
+    public void type(TraceRecord.Type type) {
+    }
+
+    @Override
+    public void close() {
+
     }
 }
