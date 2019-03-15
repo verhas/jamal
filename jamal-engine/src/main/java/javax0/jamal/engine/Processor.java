@@ -57,7 +57,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax {
-        return new javax0.jamal.engine.UserDefinedMacro(id, input, params);
+        return new javax0.jamal.engine.UserDefinedMacro(this, id, input, params);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * Process the macro that starts at the first character of the input.
      *
      * @param output where the processed macro is appended
-     * @param input  from where the macro source is read and removed
+     * @param input  from where the macro beforeState is read and removed
      */
     private void processMacro(Input output, Input input) throws BadSyntax {
         try (final var tr = traceRecordFactory.openMacroRecord(input.getPosition())) {
@@ -117,6 +117,7 @@ public class Processor implements javax0.jamal.api.Processor {
             skip(input, macros.open());
             skipWhiteSpaces(input);
             final var macroRaw = getNextMacroBody(input);
+            tr.appendBeforeState(macroRaw);
             final String macroProcessed;
             if (!firstCharIs(macroRaw, '@')) {
                 var marker = new Marker("{@" + "");
@@ -124,12 +125,12 @@ public class Processor implements javax0.jamal.api.Processor {
                 macros.push(marker);
                 macroProcessed = process(macroInputBefore);
                 macros.pop(marker);
+                tr.appendAfterEvaluation(macroProcessed);
             } else {
                 macroProcessed = macroRaw;
             }
-            tr.appendBeforeState(macroProcessed);
             final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed, macroStartPosition);
-            final var text = evalMacro(macroInputAfter,tr);
+            final var text = evalMacro(macroInputAfter, tr);
             tr.appendResultState(text);
             output.append(text);
         }
@@ -159,7 +160,7 @@ public class Processor implements javax0.jamal.api.Processor {
             verbatim = false;
             macroId = NOT_USED;
         }
-            tr.setId(macroId);
+        tr.setId(macroId);
         if (isBuiltin) {
             var builtin = macros.getMacro(macroId);
             if (builtin.isEmpty()) {
@@ -171,55 +172,58 @@ public class Processor implements javax0.jamal.api.Processor {
                 throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
             }
         } else {
+            tr.type(TraceRecord.Type.USER_DEFINED_MACRO);
             final String rawResult;
             try {
-                rawResult = evalUserDefinedMacro(input);
-                return verbatim ?
-                        rawResult :
-                        process(new javax0.jamal.tools.Input(rawResult, input.getPosition()));
+                rawResult = evalUserDefinedMacro(input, tr);
+                if (verbatim) {
+                    tr.appendAfterEvaluation(rawResult);
+                    return rawResult;
+                } else {
+                    var result = process(new javax0.jamal.tools.Input(rawResult, input.getPosition()));
+                    tr.appendAfterEvaluation(result);
+                    return result;
+                }
             } catch (BadSyntax bs) {
                 throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
             }
         }
     }
 
-    private String evalUserDefinedMacro(final Input input) throws BadSyntax {
+    private String evalUserDefinedMacro(final Input input, final TraceRecord tr) throws BadSyntax {
         var ref = input.getPosition();
-        try (final var tr = traceRecordFactory.openUserDefinedMacroRecord(ref)) {
-            tr.appendBeforeState(input.toString());
-            final boolean reportUndef = input.length() == 0 || input.charAt(0) != '?';
-            if (!reportUndef) {
-                skip(input, 1);
+        final boolean reportUndef = input.length() == 0 || input.charAt(0) != '?';
+        if (!reportUndef) {
+            skip(input, 1);
+        }
+        skipWhiteSpaces(input);
+        var id = fetchId(input);
+        if (id.length() == 0) {
+            throw new BadSyntaxAt("Zero length user defined macro name was found.", ref);
+        }
+        skipWhiteSpaces(input);
+        final String[] parameters;
+        if (input.length() > 0) {
+            var separator = input.substring(0, 1);
+            skip(input, 1);
+            parameters = input.toString().split(Pattern.quote(separator), -1);
+        } else {
+            parameters = new String[0];
+        }
+        var udMacro = macros.getUserMacro(id);
+        tr.setId(id);
+        tr.setParameters(parameters);
+        if (udMacro.isPresent()) {
+            try {
+                return udMacro.get().evaluate(parameters);
+            } catch (BadSyntax bs) {
+                throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
             }
-            skipWhiteSpaces(input);
-            var id = fetchId(input);
-            if (id.length() == 0) {
-                throw new BadSyntaxAt("Zero length user defined macro name was found.", ref);
-            }
-            skipWhiteSpaces(input);
-            final String[] parameters;
-            if (input.length() > 0) {
-                var separator = input.substring(0, 1);
-                skip(input, 1);
-                parameters = input.toString().split(Pattern.quote(separator), -1);
+        } else {
+            if (reportUndef) {
+                throw new BadSyntaxAt("Macro '" + id + "' is not defined.", ref);
             } else {
-                parameters = new String[0];
-            }
-            var udMacro = macros.getUserMacro(id);
-            tr.appendResultState("id: " + udMacro).appendResultState("parameters:\n");
-            tr.appendResultState(Arrays.stream(parameters).collect(Collectors.joining("\n")));
-            if (udMacro.isPresent()) {
-                try {
-                    return udMacro.get().evaluate(parameters);
-                } catch (BadSyntax bs) {
-                    throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
-                }
-            } else {
-                if (reportUndef) {
-                    throw new BadSyntaxAt("Macro '" + id + "' is not defined.", ref);
-                } else {
-                    return "";
-                }
+                return "";
             }
         }
     }

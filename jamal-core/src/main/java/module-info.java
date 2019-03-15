@@ -15,6 +15,7 @@ module jamal.core {
         javax0.jamal.builtins.For,
         javax0.jamal.builtins.If,
         javax0.jamal.builtins.Use,
+        javax0.jamal.builtins.Options,
         javax0.jamal.builtins.Ident
         ;
     requires jamal.api;

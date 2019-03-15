@@ -4,8 +4,10 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
+import javax0.jamal.tools.OptionsMacro;
 import javax0.jamal.tools.ScriptingTools;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import static javax0.jamal.tools.ScriptingTools.*;
  */
 public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     final private String id;
+    final private Processor processor;
     final private String[] parameters;
     final private String content;
     private boolean isScript;
@@ -25,6 +28,8 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     /**
      * Creates a new user defined macro.
      *
+     * @param processor  is the context of the evaluation. Through this object a macro can access the evaluation
+     *                   environment.
      * @param id         the identifier of the macro. This is the string that stands after the {@code define}
      *                   keyword when the user defined macro is defined. This is a unique identified in the context
      *                   where the macro is reachable and usable.
@@ -37,8 +42,9 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
      *                   because this way the result of the macro would be dependent on the evaluation order of
      *                   the parameters.
      */
-    public UserDefinedMacro(String id, String content, String... parameters) throws BadSyntax {
+    public UserDefinedMacro(Processor processor, String id, String content, String... parameters) throws BadSyntax {
         this.isScript = false;
+        this.processor = processor;
         this.id = id;
         this.content = content;
         this.parameters = parameters;
@@ -85,6 +91,10 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         }
     }
 
+    private boolean isLenient() {
+        return OptionsMacro.getInstance(processor).is("lenient");
+    }
+
     /**
      * Evaluate the content of the user defined macro using the actual values for the parameter values.
      *
@@ -97,11 +107,21 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     @Override
     public String evaluate(String... actualValues) throws BadSyntax {
         if (actualValues.length != parameters.length) {
-            var badSyntax = new BadSyntax("Macro '" + id + "' needs " + parameters.length + " arguments and got " + actualValues.length);
-            for (final var actual : actualValues) {
-                badSyntax.parameter(actual);
+            if (isLenient()) {
+                if (actualValues.length < parameters.length) {
+                    actualValues = Arrays.copyOf(actualValues, parameters.length);
+                    for (int i = 0; i < actualValues.length; i++) {
+                        if (actualValues[i] == null)
+                            actualValues[i] = "";
+                    }
+                }
+            } else {
+                var badSyntax = new BadSyntax("Macro '" + id + "' needs " + parameters.length + " arguments and got " + actualValues.length);
+                for (final var actual : actualValues) {
+                    badSyntax.parameter(actual);
+                }
+                throw badSyntax;
             }
-            throw badSyntax;
         }
         if (isScript) {
             var engine = getEngine(scriptType);

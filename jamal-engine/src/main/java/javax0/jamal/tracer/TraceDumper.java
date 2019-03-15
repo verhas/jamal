@@ -26,11 +26,7 @@ public class TraceDumper {
         } else {
             adjustedFileName = fileName;
         }
-        if (fileName.endsWith(".xml")) {
-            dumpXml(traces, adjustedFileName, ex);
-        } else {
-            dumpText(traces, adjustedFileName, ex);
-        }
+        dumpXml(traces, adjustedFileName, ex);
     }
 
     private void dumpXml(List<TraceRecord> traces, String fileName, Exception ex) {
@@ -73,43 +69,59 @@ public class TraceDumper {
 
     private void outputRecord(RandomAccessFile outputFile, AtomicInteger i, TraceRecord trace) throws IOException {
         outputFile.writeBytes("<record " +
-                "id=\"" + trace.getId() + "\" " +
+                (trace.getId().length() > 0 ? "name=\"" + trace.getId() + "\" " : "") +
                 "type=\"" + trace.type() + "\" " +
                 "level=\"" + trace.level() + "\" " +
                 "index=\"" + i.get() + "\" " +
                 ">\n");
+        if (trace.type() == TraceRecord.Type.USER_DEFINED_MACRO && trace.getParameters().length > 0) {
+            outputFile.writeBytes("<parameters>");
+            for (final var parameter : trace.getParameters()) {
+                outputFile.writeBytes("<parameter>");
+                outputFile.writeBytes(cData(parameter));
+                outputFile.writeBytes("</parameter>");
+            }
+            outputFile.writeBytes("</parameters>");
+        }
         outputFile.writeBytes("<position " +
                 "column=\"" + trace.position().column + "\" " +
                 "line=\"" + trace.position().line + "\" " +
                 "file=\"" + trace.position().file + "\" " +
                 "/>");
-        if (!trace.source().isEmpty()) {
+        if (!trace.beforeState().isEmpty()) {
             outputFile.writeBytes("<input>\n");
-            outputFile.writeBytes(cData(trace.source()));
+            outputFile.writeBytes(cData(trace.beforeState()));
             outputFile.writeBytes("\n</input>\n");
+        }
+        if (!trace.evaluatedState().isEmpty()) {
+            outputFile.writeBytes("<evaluated>\n");
+            outputFile.writeBytes(cData(trace.evaluatedState()));
+            outputFile.writeBytes("\n</evaluated>\n");
         }
         if (TraceRecord.Type.TEXT == trace.type()) {
             outputFile.writeBytes("<text>\n");
-            outputFile.writeBytes(cData(trace.target()));
+            outputFile.writeBytes(cData(trace.resultState()));
             outputFile.writeBytes("\n</text>\n");
         } else {
-            if (trace.target().length() == 0) {
+            if (trace.resultState().length() == 0) {
                 if (trace.hasOutput()) {
-                    outputFile.writeBytes("<output></output>\n");
+                    outputFile.writeBytes("<result></result>\n");
                 } else {
-                    outputFile.writeBytes("<output><error/></output>\n");
+                    outputFile.writeBytes("<result><error/></result>\n");
                 }
             } else {
-                outputFile.writeBytes("<output>\n");
-                outputFile.writeBytes(cData(trace.target()));
-                outputFile.writeBytes("\n</output>\n");
+                outputFile.writeBytes("<result>\n");
+                outputFile.writeBytes(cData(trace.resultState()));
+                outputFile.writeBytes("\n</result>\n");
             }
         }
-        outputFile.writeBytes("<records>\n");
-        for (final var subTrace : trace.getSubRecords()) {
-            outputRecord(outputFile, i, subTrace);
+        if (trace.getSubRecords().size() > 0) {
+            outputFile.writeBytes("<records>\n");
+            for (final var subTrace : trace.getSubRecords()) {
+                outputRecord(outputFile, i, subTrace);
+            }
+            outputFile.writeBytes("\n</records>\n");
         }
-        outputFile.writeBytes("\n</records>\n");
         outputFile.writeBytes("</record>\n");
         i.incrementAndGet();
     }
@@ -142,43 +154,6 @@ public class TraceDumper {
             outputFile.seek(outputFile.length());
             outputFile.writeBytes("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n");
             outputFile.writeBytes("<traces>" + "\n");
-        }
-    }
-
-    private void dumpText(List<TraceRecord> traces, String fileName, Exception ex) {
-        try (final var fos = new FileOutputStream(fileName, true);
-             final var pw = new PrintWriter(fos)) {
-            pw.println("#".repeat(80));
-            pw.println("###" + " ".repeat(74) + "###");
-            pw.println("###" + " ".repeat(74) + "###");
-            pw.println("###" + " ".repeat(34) + " TRACE" + " ".repeat(34) + "###");
-            pw.println("###" + " ".repeat(74) + "###");
-            pw.println("###" + " ".repeat(74) + "###");
-            pw.println("#".repeat(80));
-            int i = 1;
-            for (final var trace : traces) {
-                final var tab = " ".repeat(trace.level());
-                pw.println(tab + "LEVEL:" + trace.level() + " record " + i + ".");
-                pw.println(tab + trace.position().file + "/" + trace.position().line + ":" + trace.position().column);
-                pw.println(tab + trace.type());
-                if (!trace.source().isEmpty()) {
-                    pw.println(tab + "SOURCE:");
-                    Arrays.stream(trace.source().split("\n")).map(s -> tab + s).forEach(pw::println);
-                }
-                if ("TEXT".equals(trace.type())) {
-                    pw.println(tab + "COPIED:");
-                } else {
-                    pw.println(tab + "CONVERTED:");
-                }
-                Arrays.stream(trace.target().split("\n")).map(s -> tab + s).forEach(pw::println);
-                pw.println(tab + sep);
-                i++;
-            }
-            if (ex != null) {
-                ex.printStackTrace(pw);
-            }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
         }
     }
 }

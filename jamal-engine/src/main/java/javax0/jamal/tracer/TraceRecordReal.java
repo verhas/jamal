@@ -17,6 +17,17 @@ public class TraceRecordReal implements TraceRecord {
     private boolean hasOutput = false;
     private String id = "";
 
+    @Override
+    public String[] getParameters() {
+        return parameters;
+    }
+
+    @Override
+    public void setParameters(String[] parameters) {
+        this.parameters = parameters;
+    }
+
+    private String[] parameters;
 
     public TraceRecordReal(int level, TraceRecordFactory myFactory) {
         this.level = level;
@@ -72,12 +83,17 @@ public class TraceRecordReal implements TraceRecord {
     }
 
     @Override
-    public String source() {
+    public String beforeState() {
         return before.toString();
     }
 
     @Override
-    public String target() {
+    public String evaluatedState() {
+        return evaluated.toString();
+    }
+
+    @Override
+    public String resultState() {
         return result.toString();
     }
 

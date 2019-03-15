@@ -17,11 +17,16 @@ public interface TraceRecord extends AutoCloseable {
 
     void setId(String id);
 
+    void setParameters(String[] parameters);
+    String[] getParameters();
+
     List<TraceRecord> getSubRecords();
 
-    String source();
+    String beforeState();
 
-    String target();
+    String evaluatedState();
+
+    String resultState();
 
     int level();
 

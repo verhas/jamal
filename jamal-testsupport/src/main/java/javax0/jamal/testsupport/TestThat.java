@@ -134,7 +134,7 @@ public class TestThat {
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat global(String id, String content, String... parameters) throws BadSyntax {
-        var macro = new javax0.jamal.engine.UserDefinedMacro(id, content, parameters);
+        var macro = new javax0.jamal.engine.UserDefinedMacro(processor,id, content, parameters);
         processor.getRegister().global(macro);
         return this;
     }
@@ -175,7 +175,7 @@ public class TestThat {
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat define(String id, String content, String... parameters) throws BadSyntax {
-        var macro = new UserDefinedMacro(id, content, parameters);
+        var macro = new UserDefinedMacro(processor,id, content, parameters);
         processor.getRegister().define(macro);
         return this;
     }

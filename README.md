@@ -44,6 +44,7 @@ application.
      1. [`if`](#if)
      1. [`ident`](#ident)
      1. [`verbatim`](#verbatim)
+     1. [`options`](#options)
 1. [Jamal API](#JamalAPI)
 
 ## Starting Jamal<a name="Starting">
@@ -62,7 +63,7 @@ When something goes wrong then Jamal will give you a detailed error message with
 character count where the error happened. In other cases Jamal may think it works fine, but the output is not exactly
 what you expected. Sorry, in this case the issue, most probably, is with your expectations. In cases like that you can
 specify `-Djamal.trace=tracefile.xml` on the command line that starts Jamal specifying a trace file, in this case
-`tracefile.xml`. (It does not need to be XML, it can be `.txt` or anything.) The tracefile will contain all the
+`tracefile.xml`. The tracefile will contain all the
 macro evaluations inputs and outputs. Since there can be many Jamal evaluations one after the other, Jamal does not
 overwrite old trace information but rather it appends the information. Before starting Jamal you can manually
 delete the trace file. Trace files grow large easily. 
@@ -131,8 +132,9 @@ character.
 * `for`
 * `use`
 * `if`
-* `ident`, and
-* `verbatim`
+* `ident`
+* `verbatim`, and
+* `options`
 
 The built-in macros are used with `#` or `@` in front of the name of the macro. These characters
 signal that the macro is not user-defined but rather built in and they also have a side effect.
@@ -779,6 +781,32 @@ Z is exported. In that case Z is 14.
 You cannot export a macro that is defined in a higher scope. You can use those macros and you can reference them
 but you can not export them to the enclosing scope because they do not belong to the current scope. You cannot
 export macros from the top level scope, because in that case there is no enclosing scope.
+
+### `options`<a name="options">
+since 1.0.3 (core)
+
+The options macro can be used to alter the behavior of Jamal. The options can be listed `|` separated as an argument
+to the macro. The macro does not check the options name. It stores the options and it can be queried by any other
+built-in macro. The scope of the options is local the same way as the scope of user defined macros. Technically the
+options are stored in a user defined macro that has the name <tt>`options</tt> and it is possible to export this
+macro to higher layers. (Note that the name starts with a backtick.)
+
+```jam
+{@define macro(a,b,c)=a is a, b is b{#if :c:, c is c}}{macro :apple:pie:}{@comment 
+here we need : at end, default is not lenient}
+{#ident {@options lenient}{macro :apple:pie}}
+{macro :apple:pie:}{@comment here we must have the trailing : because options is local}
+{#ident {@options lenient}{macro :apple:pie}{@export `options}}
+{macro :apple:pie}
+```
+
+The options implemented currently:
+
+#### `lenient`
+
+In lenient mode the number of the arguments to a user defined macro do not need to be exactly the same as it is
+defined. If there are less values provided then the rest of the arguments will be empty string in lenient mode.
+Similarly, if there are more arguments than needed the extra arguments will be ignored. 
 
 ## Jamal API<a name="JamalAPI">
 

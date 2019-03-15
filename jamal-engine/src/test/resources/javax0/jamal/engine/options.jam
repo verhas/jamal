@@ -1,0 +1,6 @@
+{@define macro(a,b,c)=a is a, b is b{#if :c:, c is c}}{macro :apple:pie:}{@comment here we need : at end, default is not lenient}
+{#ident {@options lenient}{macro :apple:pie}}
+{macro :apple:pie:}{@comment here we must have the trailing : because options is local}
+{#ident {@options lenient}{macro :apple:pie}{@export `options}}
+{macro :apple:pie}
+

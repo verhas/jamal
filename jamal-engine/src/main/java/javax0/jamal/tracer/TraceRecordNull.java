@@ -2,7 +2,6 @@ package javax0.jamal.tracer;
 
 import javax0.jamal.api.Position;
 
-import java.io.Closeable;
 import java.util.List;
 
 public class TraceRecordNull implements TraceRecord {
@@ -37,17 +36,32 @@ public class TraceRecordNull implements TraceRecord {
     }
 
     @Override
+    public String[] getParameters() {
+        return new String[0];
+    }
+
+    @Override
+    public void setParameters(String[] parameters) {
+
+    }
+
+    @Override
     public List<TraceRecord> getSubRecords() {
         return null;
     }
 
     @Override
-    public String source() {
+    public String beforeState() {
         return null;
     }
 
     @Override
-    public String target() {
+    public String evaluatedState() {
+        return null;
+    }
+
+    @Override
+    public String resultState() {
         return null;
     }
 
