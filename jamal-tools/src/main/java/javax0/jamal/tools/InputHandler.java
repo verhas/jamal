@@ -3,14 +3,17 @@ package javax0.jamal.tools;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 
+import java.util.Arrays;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Utility class with some simple static methods that fetch characters from an input buffer.
  */
 public class InputHandler {
     final static private int DOES_NOT_CONTAIN = -1;
+    private static String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * @param s a character sequence of which the first character is checked
@@ -19,27 +22,6 @@ public class InputHandler {
      */
     public static boolean firstCharIs(CharSequence s, char c) {
         return s.length() > 0 && s.charAt(0) == c;
-    }
-
-    /**
-     * Trim the strings of the array
-     *
-     * @param s the array of the strings to be trimmed
-     */
-    public static void trim(String[] s) {
-        convert(s, String::trim);
-    }
-
-    /**
-     * Apply the function to all elements of the array
-     *
-     * @param s the array of strings that will be converted by the function
-     * @param f the converting function
-     */
-    public static void convert(String[] s, Function<String, String> f) {
-        for (int i = 0; i < s.length; i++) {
-            s[i] = f.apply(s[i]);
-        }
     }
 
     /**
@@ -73,7 +55,6 @@ public class InputHandler {
     public static boolean contains(int i) {
         return i != DOES_NOT_CONTAIN;
     }
-
 
     /**
      * Fetch an id from the start of the {@code input}.
@@ -181,11 +162,11 @@ public class InputHandler {
      * Get the parameter list that is at the start of the input. The parameter list has to start with a
      * {@code (} character and should be closed with a {@code )} character. The parameters are separated
      * by {@code ,} characters, and starting and ending spaces from the parameters are removed.
-     * <p>
+     *
      * <pre>
      *         ( a,b, c ,d)
-     *     </pre>
-     * <p>
+     * </pre>
+     *
      * There is no restriction on what characters the parameter names can contain other than those implied by the
      * parsing algorithm: you cannot use {@code )} and {@code ,} characters in a parameter and you cannot have
      * space at the start and at the end of the parameter. It is recommended not to abuse this possibility.
@@ -209,15 +190,12 @@ public class InputHandler {
             var param = input.substring(0, closingParen);
             skip(input, closingParen + 1);
             skipWhiteSpaces(input);
-            params = param.split(",");
-            trim(params);
+            params = Arrays.stream(param.split(",")).map(String::trim).toArray(String[]::new);
         } else {
             params = new String[0];
         }
         return params;
     }
-
-    private static String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * Parse the input and split it up into a String array. It can be used in many macros to provide a consistent

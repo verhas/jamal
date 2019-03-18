@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
-    private final List<Map<String, UserDefinedMacro>> udMacroStack = new ArrayList<>();
+    private final List<Map<String, Identified>> udMacroStack = new ArrayList<>();
     private final List<Map<String, Macro>> macroStack = new ArrayList<>();
     private final List<Delimiters> delimiters = new ArrayList<>();
     private final List<List<Delimiters>> savedDelimiters = new ArrayList<>();
@@ -16,7 +16,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         push(null);
     }
 
-    public Optional<UserDefinedMacro> getUserMacro(String id) {
+    public Optional<Identified> getUserDefined(String id) {
         for (int level = udMacroStack.size() - 1; level > -1; level--) {
             var map = udMacroStack.get(level);
             if (map.containsKey(id)) {
@@ -37,7 +37,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void global(UserDefinedMacro macro) {
+    public void global(Identified macro) {
         udMacroStack.get(0).put(macro.getId(), macro);
     }
 
@@ -52,7 +52,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void define(UserDefinedMacro macro) {
+    public void define(Identified macro) {
         udMacroStack.get(udMacroStack.size() - 1).put(macro.getId(), macro);
     }
 

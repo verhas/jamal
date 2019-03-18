@@ -24,13 +24,12 @@ public class Script implements Macro {
             throw new BadSyntaxAt("script '" + id + "' has no '=' to body", ref);
         }
         skip(input, 1);
-        final UserDefinedMacro macro;
+        final ScriptMacro macro;
         try {
-            macro = processor.newUserDefinedMacro(id, input.toString(), params);
+            macro = processor.newScriptMacro(id, scriptType, input.toString(), params);
         } catch (BadSyntax bs) {
             throw bs instanceof BadSyntaxAt ?  (BadSyntaxAt)bs : new BadSyntaxAt(bs, ref);
         }
-        macro.setScriptType(scriptType);
         if (isGlobalMacro(id)) {
             processor.getRegister().global(macro);
         } else {

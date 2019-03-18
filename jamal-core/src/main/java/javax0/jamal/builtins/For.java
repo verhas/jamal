@@ -1,9 +1,6 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -32,8 +29,18 @@ public class For implements Macro {
         final var loopVariable = matcher.group(1);
         final var values = matcher.group(2);
         final var content = matcher.group(3);
-        final var optionalForSepMacro = processor.getRegister().getUserMacro("$forsep");
-        final var splitter = optionalForSepMacro.isPresent() ? optionalForSepMacro.get().evaluate() : ",";
+        final var optionalForSepMacro = processor.getRegister().getUserDefined("$forsep");
+        final var splitter = optionalForSepMacro
+                .filter(ud -> ud instanceof Evaluable)
+                .map(ud -> (Evaluable) ud)
+                .map(udm -> {
+                    try {
+                        return udm.evaluate();
+                    } catch (BadSyntax bs) {
+                        return ",";
+                    }
+                })
+                .orElse(",");
         final var valueList = values.split(splitter);
         final var output = new StringBuilder();
         final var root = new Segment(null, content);

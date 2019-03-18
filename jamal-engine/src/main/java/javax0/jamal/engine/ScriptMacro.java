@@ -2,22 +2,20 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.engine.macro.Segment;
-import javax0.jamal.engine.macro.TextSegment;
 import javax0.jamal.tools.OptionsStore;
+import javax0.jamal.tools.ScriptingTools;
 
-import java.util.Map;
+import static javax0.jamal.tools.ScriptingTools.*;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
  */
-public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
+public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
     final private String id;
     final private Processor processor;
     final private String content;
-    final private ArgumentHandler argumentHandler;
-    private Segment root = null;
-
+    final private String scriptType;
+final ArgumentHandler argumentHandler;
     /**
      * Creates a new user defined macro.
      *
@@ -31,16 +29,13 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
      * @param parameters the names of the parameters. These do not actually need to be real identifiers, alphanumeric
      *                   or something like that. The only requirement is that there is no comma in these names. It is
      *                   recommended though to use usual identifiers.
-     * @throws BadSyntax is thrown if one of the parameter names contain another parameter name. This would not be safe
-     *                   because this way the result of the macro would be dependent on the evaluation order of
-     *                   the parameters.
      */
-    public UserDefinedMacro(Processor processor, String id, String content, String... parameters) throws BadSyntax {
+    public ScriptMacro(Processor processor, String id, String scriptType, String content, String... parameters) {
         this.processor = processor;
+        this.scriptType = scriptType;
         this.id = id;
         this.content = content;
-        argumentHandler = new ArgumentHandler(this, parameters);
-        argumentHandler.ensure();
+        argumentHandler = new ArgumentHandler(this,parameters);
     }
 
     /**
@@ -52,7 +47,6 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     public String getId() {
         return id;
     }
-
 
     private boolean isLenient() {
         return OptionsStore.getInstance(processor).is("lenient");
@@ -69,36 +63,15 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
      */
     @Override
     public String evaluate(final String... actualValues) throws BadSyntax {
-        final var adjustedValues = argumentHandler.adjustActualValues(actualValues, isLenient());
-        var values = argumentHandler.buildValueMap(adjustedValues);
-        if (root == null) {
-            root = new TextSegment(null, content);
-            for (int i = 0; i < adjustedValues.length; i++) {
-                for (Segment segment = root; segment != null; segment = segment.next()) {
-                    segment.split(argumentHandler.parameters[i]);
-                }
-            }
+        final var adjustedValues = argumentHandler.adjustActualValues(actualValues,isLenient());
+        var engine = getEngine(scriptType);
+        for (int i = 0; i < argumentHandler.parameters.length; i++) {
+            populate(engine, argumentHandler.parameters[i], adjustedValues[i]);
         }
-        final var output = new StringBuilder(segmentsLengthSum(root, values));
-        for (Segment segment = root; segment != null; segment = segment.next()) {
-            if (segment instanceof TextSegment) {
-                output.append(segment.content());
-            } else {
-                output.append(values.get(segment.content()));
-            }
+        try {
+            return resultToString(ScriptingTools.evaluate(engine, content));
+        } catch (Exception e) {
+            throw new BadSyntax("Script '" + id + "' threw exception", e);
         }
-        return output.toString();
-    }
-
-    private int segmentsLengthSum(Segment root, Map<String, String> values) {
-        int size = 0;
-        for (Segment segment = root; segment != null; segment = segment.next()) {
-            if (segment instanceof TextSegment) {
-                size += segment.content().length();
-            } else {
-                size += values.get(segment.content()).length();
-            }
-        }
-        return size;
     }
 }

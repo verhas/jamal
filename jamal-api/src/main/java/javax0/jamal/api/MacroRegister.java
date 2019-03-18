@@ -24,14 +24,14 @@ public interface MacroRegister extends Delimiters {
      * @param id the identifier (name) of the macro
      * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
      */
-    Optional<UserDefinedMacro> getUserMacro(String id);
+    Optional<Identified> getUserDefined(String id);
 
     /**
      * Define a user defined macro on the global level.
      *
      * @param macro to store in the definition structure on the top level.
      */
-    void global(UserDefinedMacro macro);
+    void global(Identified macro);
 
     /**
      * Define a macro on the global level.
@@ -54,7 +54,7 @@ public interface MacroRegister extends Delimiters {
      *
      * @param macro to store in the definition structure.
      */
-    void define(UserDefinedMacro macro);
+    void define(Identified macro);
 
     /**
      * Define a macro on the current evaluation level.
@@ -125,6 +125,10 @@ public interface MacroRegister extends Delimiters {
 
     /**
      * See the documentation of the method {@link #push(Marker)}
+     *
+     * @param check see {@link #push(Marker)}
+     * @throws BadSyntax when the pop cannot be performed at the specific situation because there was no
+     *                   corresponding push
      */
     void pop(Marker check) throws BadSyntax;
 

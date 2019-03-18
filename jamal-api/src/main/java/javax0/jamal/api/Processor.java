@@ -7,15 +7,17 @@ public interface Processor {
 
     UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax;
 
+    ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params) throws BadSyntax;
+
     default boolean isDefined(String id) {
-        return getRegister().getUserMacro(id).isPresent();
+        return getRegister().getUserDefined(id).isPresent();
     }
 
-    default void defineGlobal(UserDefinedMacro macro) {
+    default void defineGlobal(Identified macro) {
         getRegister().global(macro);
     }
 
-    default void define(UserDefinedMacro macro) {
+    default void define(Identified macro) {
         getRegister().define(macro);
     }
 

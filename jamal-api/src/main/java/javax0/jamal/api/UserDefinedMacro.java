@@ -1,7 +1,7 @@
 package javax0.jamal.api;
 
-public interface UserDefinedMacro extends Evaluatable {
-    String getId();
-
-    void setScriptType(String scriptType);
+/**
+ * User defined macros. User defined macros have an identifier and are evaluable.
+ */
+public interface UserDefinedMacro extends Identified, Evaluable {
 }

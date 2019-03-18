@@ -49,12 +49,6 @@ public class Regex {
         }
 
         @Override
-        public void setScriptType(String scriptType) {
-            throw new IllegalArgumentException("setScriptType cannot be called on " +
-                this.getClass().getCanonicalName());
-        }
-
-        @Override
         public String evaluate(String... actualValues) throws BadSyntax {
             if (actualValues.length == 0) {
                 throw new BadSyntax("The generated macro " + name + " needs at least one argument");
