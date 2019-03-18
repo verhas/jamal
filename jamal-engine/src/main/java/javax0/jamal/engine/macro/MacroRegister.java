@@ -127,9 +127,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     @Override
     public String close() {
         for (int level = delimiters.size() - 1; level > -1; level--) {
-            var delim = delimiters.get(level);
-            if (delim.close() != null) {
-                return delim.close();
+            var delimiter = delimiters.get(level);
+            if (delimiter.close() != null) {
+                return delimiter.close();
             }
         }
         return null;
@@ -154,20 +154,20 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     @Override
     public void separators(String openDelimiter, String closeDelimiter) throws BadSyntax {
         if (openDelimiter == null || closeDelimiter == null) {
-            var delim = delimiters.get(delimiters.size() - 1);
+            var delimiter = delimiters.get(delimiters.size() - 1);
             var list = savedDelimiters.get(savedDelimiters.size() - 1);
             if (list.size() == 0) {
                 throw new BadSyntax("There was no saved macro start and end string to restore.");
             }
-            var savedDelim = list.remove(list.size() - 1);
-            delim.separators(savedDelim.open(), savedDelim.close());
+            var savedDelimiter = list.remove(list.size() - 1);
+            delimiter.separators(savedDelimiter.open(), savedDelimiter.close());
         } else {
-            var delim = delimiters.get(delimiters.size() - 1);
+            var delimiter = delimiters.get(delimiters.size() - 1);
             var list = savedDelimiters.get(savedDelimiters.size() - 1);
-            var savedDelim = new javax0.jamal.engine.Delimiters();
-            savedDelim.separators(delim.open(), delim.close());
-            list.add(savedDelim);
-            delim.separators(openDelimiter, closeDelimiter);
+            var savedDelimiter = new javax0.jamal.engine.Delimiters();
+            savedDelimiter.separators(delimiter.open(), delimiter.close());
+            list.add(savedDelimiter);
+            delimiter.separators(openDelimiter, closeDelimiter);
         }
     }
 }
