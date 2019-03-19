@@ -100,9 +100,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     public void pop(Marker check) throws BadSyntax {
         if (!Objects.equals(check, stackCheckObjects.getLast())) {
             throw new BadSyntax("Pop was performed by " +
-                check +
-                " for a level pushed by " +
-                stackCheckObjects.getLast());
+                    check +
+                    " for a level pushed by " +
+                    stackCheckObjects.getLast());
         }
         stackCheckObjects.removeLast();
         macroStack.remove(macroStack.size() - 1);
