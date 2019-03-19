@@ -116,9 +116,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     @Override
     public String open() {
         for (int level = delimiters.size() - 1; level > -1; level--) {
-            var delim = delimiters.get(level);
-            if (delim.open() != null) {
-                return delim.open();
+            var delimiter = delimiters.get(level);
+            if (delimiter.open() != null) {
+                return delimiter.open();
             }
         }
         return null;

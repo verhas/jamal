@@ -259,7 +259,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 counter--; // count the closing
                 if (counter == 0) {
                     skip(input, macros.close());
-                    //return output.toString(); If this line is commented out the while loop exits and we return with the same value. Why is this here?
+                    //return output.toString(); If this line is commented out the while loop exits and we return with the same value. Is this for readability?
                 } else {
                     refStack.pop();
                     moveMacroCloseToOutput(input, output);
