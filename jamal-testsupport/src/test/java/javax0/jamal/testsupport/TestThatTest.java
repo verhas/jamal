@@ -12,7 +12,7 @@ public class TestThatTest {
 
     @Test
     @DisplayName("forMacro returns a TestThat instance")
-    void testConstructrs() {
+    void testConstructors() {
         Assertions.assertEquals(TestThat.class, TestThat.forMacro(Macro.class).getClass());
     }
 
