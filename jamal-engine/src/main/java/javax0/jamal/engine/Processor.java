@@ -259,7 +259,6 @@ public class Processor implements javax0.jamal.api.Processor {
                 counter--; // count the closing
                 if (counter == 0) {
                     skip(input, macros.close());
-                    return output.toString();
                 } else {
                     refStack.pop();
                     moveMacroCloseToOutput(input, output);
