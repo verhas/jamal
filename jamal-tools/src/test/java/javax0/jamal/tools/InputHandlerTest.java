@@ -46,7 +46,7 @@ public class InputHandlerTest {
     @Test
     @DisplayName("input starts with single character regular expression between (`) characters, which is treated as separator")
     void splitsInputCorrectlyStartingWithSingleCharacterRegularExpression() {
-        assertSplit("`[0-9]`a3b4c6d7e8f9g0h", "a", "b", "c", "d", "e", "f", "g", "h"); //Inconsistent.
+        assertSplit("`[0-9]`a3b4c6d7e8f9g0h", "a", "b", "c", "d", "e", "f", "g", "h");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class InputHandlerTest {
     }
 
     @Test
-    @DisplayName("input starts with four (`) characters, indicating that the special (`) character is the separator")
+    @DisplayName("input starts with four (`) characters, indicating that the regular expression indicator (`) character is the separator")
     void splitsInputCorrectlyWhenStartingWithRegularExpressionIndicator() {
         assertSplit("```` a`b`c`d`e`f`g`h", " a", "b", "c", "d", "e", "f", "g", "h");
     }
