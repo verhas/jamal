@@ -246,7 +246,7 @@ public class Processor implements javax0.jamal.api.Processor {
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = new javax0.jamal.tools.Input();
 
-        while (counter > 0) {// while there is any opened macro
+        while (true) {// while there is any opened macro
             if (input.length() == 0) {// some macro was not closed
                 throw new BadSyntaxAt("Macro was not terminated in the file.", refStack.pop());
             }
@@ -257,7 +257,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 counter++; //count the new opening
             } else if (input.indexOf(macros.close()) == 0) {
                 counter--; // count the closing
-                if (counter == 0) {
+                if (counter == 0) { //this is the exit point
                     skip(input, macros.close());
                     return output.toString();
                 } else {
@@ -279,7 +279,6 @@ public class Processor implements javax0.jamal.api.Processor {
                 }
             }
         }
-        return output.toString();
     }
 
     private void moveMacroCloseToOutput(Input input, Input output) {

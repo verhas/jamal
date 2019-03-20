@@ -6,6 +6,7 @@ public class ParameterSegment extends Segment {
         this.text = text;
     }
 
+    @Override
     public void split(String parameter) {
         // NOT SPLITTABLE
     }
