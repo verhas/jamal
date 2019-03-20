@@ -8,12 +8,14 @@ import org.opentest4j.AssertionFailedError;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestThatTest {
 
     @Test
     @DisplayName("forMacro returns a TestThat instance")
     void testConstructors() {
-        Assertions.assertEquals(TestThat.class, TestThat.forMacro(Macro.class).getClass());
+        assertEquals(TestThat.class, TestThat.forMacro(Macro.class).getClass());
     }
 
     @Test

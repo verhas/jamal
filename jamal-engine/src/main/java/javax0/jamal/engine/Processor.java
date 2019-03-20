@@ -40,7 +40,7 @@ public class Processor implements javax0.jamal.api.Processor {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {
             throw new IllegalArgumentException(
-                    "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
+                "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
         }
         Macro.getInstances().forEach(macros::define);
     }
@@ -246,7 +246,7 @@ public class Processor implements javax0.jamal.api.Processor {
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = new javax0.jamal.tools.Input();
 
-        while (true) {// while there is any opened macro
+        while (true) { // while there is any opened macro
             if (input.length() == 0) {// some macro was not closed
                 throw new BadSyntaxAt("Macro was not terminated in the file.", refStack.pop());
             }
