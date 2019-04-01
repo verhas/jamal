@@ -7,6 +7,7 @@ import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.InputHandler.*;
@@ -54,12 +55,13 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax {
+    public UserDefinedMacro newUserDefinedMacro(String id, String input, String... params) throws BadSyntax {
         return new javax0.jamal.engine.UserDefinedMacro(this, id, input, params);
     }
+
     @Override
-    public ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params) throws BadSyntax {
-        return new javax0.jamal.engine.ScriptMacro(this, id, scriptType,input, params);
+    public ScriptMacro newScriptMacro(String id, String scriptType, String input, String... params) {
+        return new javax0.jamal.engine.ScriptMacro(this, id, scriptType, input, params);
     }
 
     @Override
@@ -213,8 +215,8 @@ public class Processor implements javax0.jamal.api.Processor {
             parameters = new String[0];
         }
         var udMacro = macros.getUserDefined(id)
-                .filter( ud -> ud instanceof Evaluable)
-                .map( ud -> (Evaluable)ud);
+                .filter(ud -> ud instanceof Evaluable)
+                .map(ud -> (Evaluable) ud);
         tr.setId(id);
         tr.setParameters(parameters);
         if (udMacro.isPresent()) {

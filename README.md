@@ -838,6 +838,8 @@ module jamal.maven {
 The code that invokes Jamal needs a processor that will process the input.
 
 ```java
+import javax0.jamal.engine.Processor;
+
 var processor = new Processor(macroOpen, macroClose);
 var result = processor.process(input);
 ```
