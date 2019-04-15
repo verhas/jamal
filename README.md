@@ -805,9 +805,11 @@ The options implemented currently:
 
 #### `lenient`
 
-In lenient mode the number of the arguments to a user defined macro do not need to be exactly the same as it is
-defined. If there are less values provided then the rest of the arguments will be empty string in lenient mode.
-Similarly, if there are more arguments than needed the extra arguments will be ignored. 
+In lenient mode the number of the arguments to a user defined macro do not
+need to be exactly the same as it is defined. If there are less values
+provided then the rest of the arguments will be empty string in lenient
+mode. Similarly, if there are more arguments than needed the extra arguments
+will be ignored.
 
 ## Jamal API<a name="JamalAPI">
 
@@ -844,14 +846,16 @@ var processor = new Processor(macroOpen, macroClose);
 var result = processor.process(input);
 ```
 
-The `macroOpen` and `macroClose` parameters are `String` values. The parameter `input` to the method
-`process()` has to be an object that implements the `javax0.jamal.api.Input` interface. The
-easiest way to do that is to use the readily available class `javax0.jamal.tools.Input`
-that implements this interface.
+The `macroOpen` and `macroClose` parameters are `String` values. The
+parameter `input` to the method `process()` has to be an object that
+implements the `javax0.jamal.api.Input` interface. The easiest way to do
+that is to use the readily available class `javax0.jamal.tools.Input` that
+implements this interface.
 
-You can see an example to create an `Input` from an existing file in the `jamal-maven-plugin`
-module. The method `createInput()` reads a file and then using the name of the file and the
-content of the file it creates a new input:
+You can see an example to create an `Input` from an existing file in the
+`jamal-maven-plugin` module. The method `createInput()` reads a file and
+then using the name of the file and the content of the file it creates a new
+input:
 
 ```java
 private Input createInput(Path inputFile) throws IOException {
@@ -860,20 +864,24 @@ private Input createInput(Path inputFile) throws IOException {
 }
 ```
 
-An `Input` holds the content that the processor has to process but it also has a reference file name
-used to resolve the absolute names of the included and imported files and it also keeps track of the
-line number and the column of the actual character as the macro evaluation progresses. A `new Position(s,1)`
-creates a new position that identifies the file by the name `s` and the line number 1.
+An `Input` holds the content that the processor has to process but it also
+has a reference file name used to resolve the absolute names of the included
+and imported files and it also keeps track of the line number and the column
+of the actual character as the macro evaluation progresses. A `new
+Position(s,1)` creates a new position that identifies the file by the name
+`s` and the line number 1.
 
-When a new processor is instantiated it uses the `ServiceLoader` mechanism to find all the
-built-in macros that are on the classpath. If your application has special macros
-implemented in Java then you can just put the library on the modulepath and in case the
-classes are defined in the `provides` directive of the module then Jamal will find and load
-them automatically.
+When a new processor is instantiated it uses the `ServiceLoader` mechanism
+to find all the built-in macros that are on the classpath. If your
+application has special macros implemented in Java then you can just put the
+library on the modulepath and in case the classes are defined in the
+`provides` directive of the module then Jamal will find and load them
+automatically.
 
-It is also possible to define user-defined and built-in macros via API. To do that you need
-access to the `MacroRegister` object that the `Processor` object has. To get that you
-can invoke the method `getRegister()` on the processor object:
+It is also possible to define user-defined and built-in macros via API. To
+do that you need access to the `MacroRegister` object that the `Processor`
+object has. To get that you can invoke the method `getRegister()` on the
+processor object:
 
 ```java
 var register = processor.getRegister();
@@ -881,3 +889,12 @@ var register = processor.getRegister();
 
 The register has API to define macros and user-defined macros. For further information
 see the API JavaDoc documentation.
+
+
+There is also a very simple API class that makes it possible to use Jamal as
+a templating engine. The utility class `javax0.jamal.Format` has the method
+`public static String format(String content, Map<String, String>
+predefinedMacros)` that can format the `content` string using the entries of
+the `predefinedMacros` as user defined macros. These macros eventually
+cannot have arguments. This is a simplified interface to access the
+functionality of Jamal.
