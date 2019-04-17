@@ -13,7 +13,8 @@ import java.util.regex.Pattern;
  *     }
  * </pre>
  * <p>
- * The default separator is {@code ,} (comma), but it can be redefined assigning a value to the user defined
+ * The default separator is {@code ,} (comma), but it can be redefined
+ * to be any regular expression assigning a value to the user defined
  * macro {@code $forsep}.
  */
 public class For implements Macro {

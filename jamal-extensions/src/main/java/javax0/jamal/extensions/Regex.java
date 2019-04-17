@@ -110,7 +110,8 @@ public class Regex {
     /**
      * Match a string against a regular expression.
      * <p>
-     * This macro splits the input into two parts using {@link InputHandler#getParts(Input)} and matches
+     * This macro splits the input into two parts using {@link
+     * InputHandler#getParts(Input)} and matches
      */
     public static class Matcher implements Macro {
         @Override

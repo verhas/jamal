@@ -198,22 +198,28 @@ public class InputHandler {
     }
 
     /**
-     * Parse the input and split it up into a String array. It can be used in many macros to provide a consistent
-     * syntax and structure when the macro processing needs a list of strings.
+     * Parse the input and split it up into a String array. It can be
+     * used in many macros to provide a consistent syntax and structure
+     * when the macro processing needs a list of strings.
      * <p>
-     * The possible syntaxes are:
+     * The possible syntax variations are:
      * <pre>
      * macroName / a / b / c / ... /x
      * </pre>
      * <p>
-     * where the separator character is the first non-whitespace character after the macro name, and it is not the
-     * back-tick (`) character. If the first non-whitespace character after the name of the macro id is a backtick
-     * then the parsing expects to be a regular expression till the next backtick. After the regular expression and
-     * after the closing backtick the rest of the input is spit up and the separator is the regular expression.
+     * where the separator character is the first non-whitespace
+     * character after the macro name, and it is not the back-tick (`)
+     * character. If the first non-whitespace character after the name
+     * of the macro id is a backtick then the parsing expects to be a
+     * regular expression till the next backtick. After the regular
+     * expression and after the closing backtick the rest of the input
+     * is spit up and the separator is the regular expression.
      * <p>
-     * Backtick was selected during the design of the syntax to enclose the regular expression because this character
-     * is very rare in Java regular expression. In case you need one inside the regular expression then you have to
-     * simply double it and the parsing will single it back.
+     * Backtick was selected during the design of the syntax to enclose
+     * the regular expression because this character is very rare in
+     * Java regular expression. In case you need one inside the regular
+     * expression then you have to simply double it and the parsing will
+     * single it back.
      *
      * <pre>
      * macroName `regex` separator a separator b separator .... separator x
