@@ -1,6 +1,6 @@
 # jamal
 
-[![Javadocs](https://javadoc.io/badge/com.javax.jamal/jamal-parent.svg)](https://javadoc.io/doc/com.javax.jamal/jamal-parent)
+[![Javadocs](https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg)](https://javadoc.io/doc/com.javax0.jamal/jamal-parent)
 
 Just Another Macro Language
 
