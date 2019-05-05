@@ -7,14 +7,14 @@
     
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     
     
 
     <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     
     
 
