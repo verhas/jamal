@@ -898,3 +898,7 @@ predefinedMacros)` that can format the `content` string using the entries of
 the `predefinedMacros` as user defined macros. These macros eventually
 cannot have arguments. This is a simplified interface to access the
 functionality of Jamal.
+
+# JavaDoc
+
+https://javadoc.io/doc/com.javax0.jamal/jamal-parent/
