@@ -3,7 +3,7 @@
 
     {GAV :com.javax0.jamal:jamal-maven-plugin:{VERSION}}
     {parent :jamal-parent}
-    {name :jamal testsupport}
+    {name :jamal maven plugin}
     {description :Jamal macro library maven plugin}
 
     {build|
