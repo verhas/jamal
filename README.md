@@ -1,5 +1,7 @@
 # jamal
 
+[![Javadocs](https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg)](https://javadoc.io/doc/com.javax0.jamal/jamal-parent)
+
 Just Another Macro Language
 
 Jamal is a text to text processor. It can be used as a templating engine or just to maintain
@@ -898,3 +900,7 @@ predefinedMacros)` that can format the `content` string using the entries of
 the `predefinedMacros` as user defined macros. These macros eventually
 cannot have arguments. This is a simplified interface to access the
 functionality of Jamal.
+
+# JavaDoc
+
+https://javadoc.io/doc/com.javax0.jamal/jamal-parent/
