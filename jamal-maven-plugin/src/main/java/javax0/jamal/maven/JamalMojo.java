@@ -48,7 +48,7 @@ public class JamalMojo extends AbstractMojo {
     @Parameter(defaultValue = "${filePattern}")
     private String filePattern;
 
-    @Parameter(defaultValue = "${project.build.format}")
+    @Parameter(defaultValue = "${project.build.formatOutput}")
     private String formatOutput;
 
     @Parameter()
@@ -134,7 +134,7 @@ public class JamalMojo extends AbstractMojo {
                 tf.setOutputProperty(OutputKeys.INDENT, "yes");
                 Writer out = new StringWriter();
                 tf.transform(new DOMSource(doc), new StreamResult(out));
-                return Arrays.stream(out.toString().split("\r\n")).filter(s -> s.trim().length() > 0).collect(Collectors.joining("\n"));
+                return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
             } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
                 getLog().debug(e);
                 return result;

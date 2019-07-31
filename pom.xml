@@ -4,7 +4,7 @@
     <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4</version>
     <name>jamal-parent</name>
     <description>Jamal macro library to process text files</description>
     <modules>
@@ -106,32 +106,32 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-testsupport</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-core</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-tools</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-engine</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
