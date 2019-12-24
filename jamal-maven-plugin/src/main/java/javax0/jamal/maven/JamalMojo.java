@@ -7,11 +7,20 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +47,9 @@ public class JamalMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${filePattern}")
     private String filePattern;
+
+    @Parameter(defaultValue = "${project.build.formatOutput}")
+    private String formatOutput;
 
     @Parameter()
     private String exclude;
@@ -92,15 +104,44 @@ public class JamalMojo extends AbstractMojo {
         var log = getLog();
         log.debug("Jamal processing " + qq(inputPath.toString()));
         try {
-            final var result = new Processor(macroOpen, macroClose).process(createInput(inputPath));
             final var output = calculateTargetFile(inputPath);
             if (output != null) {
                 log.debug("Jamal output for the file is " + qq(output.toString()));
+                final String result;
+                if ("true".equals(formatOutput)) {
+                    result = formatOutput(output, new Processor(macroOpen, macroClose).process(createInput(inputPath)));
+                } else {
+                    result = new Processor(macroOpen, macroClose).process(createInput(inputPath));
+                }
                 writeOutput(output, result);
             }
         } catch (Exception e) {
             logException(e, log::error);
             processingSuccessful = false;
+        }
+    }
+
+    private String formatOutput(Path output, String result) {
+
+        if (output.toString().endsWith(".xml")) {
+            try {
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                dbf.setValidating(false);
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                Document doc = db.parse(new InputSource(new StringReader(result)));
+                Transformer tf = TransformerFactory.newInstance().newTransformer();
+                tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                tf.setOutputProperty(OutputKeys.INDENT, "yes");
+                Writer out = new StringWriter();
+                tf.transform(new DOMSource(doc), new StreamResult(out));
+                return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
+            } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
+                getLog().debug(e);
+                return result;
+            }
+
+        } else {
+            return result;
         }
     }
 
@@ -191,6 +232,7 @@ public class JamalMojo extends AbstractMojo {
         log.debug("    macroClose=" + macroClose);
         log.debug("    filePattern=" + filePattern);
         log.debug("    exclude=" + exclude);
+        log.debug("    formatOutput=" + formatOutput);
         log.debug("    sourceDirectory=" + sourceDirectory);
         log.debug("    targetDirectory=" + targetDirectory);
         log.debug("    transform " + qq(transformFrom) + " -> " + qq(transformTo));

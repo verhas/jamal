@@ -1,44 +1,39 @@
-
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-                            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<packaging>pom</packaging>
-    
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.0.3</version>
-    
-    
-
+    <version>1.0.4</version>
     <name>jamal-parent</name>
     <description>Jamal macro library to process text files</description>
     <modules>
-<module>jamal-engine</module>
-<module>jamal-api</module>
-<module>jamal-tools</module>
-<module>jamal-core</module>
-<module>jamal-extensions</module>
-<module>jamal-maven-plugin</module>
-<module>jamal-testsupport</module>
-</modules>
+        <module>jamal-engine</module>
+        <module>jamal-api</module>
+        <module>jamal-tools</module>
+        <module>jamal-core</module>
+        <module>jamal-extensions</module>
+        <module>jamal-maven-plugin</module>
+        <module>jamal-testsupport</module>
+    </modules>
     <licenses>
-<license>
-    <name>The Apache License, Version 2.0</name>
-    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-</license>
-</licenses>
-       <developers>
-                                         <developer>
-                                             <name>Peter Verhas</name>
-                                             <email>peter@verhas.com</email>
-                                         </developer>
-                                     </developers>
-        <scm>
-                                             <connection>scm:git:git://github.com/verhas/jamal.git</connection>
-                                             <developerConnection>scm:git:ssh://github.com/verhas/jamal.git</developerConnection>
-                                             <url>http:/github.com/verhas/jamal/tree/master</url>
-                                         </scm>
-                                         <url>http:/github.com/verhas/jamal/tree/master</url>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Peter Verhas</name>
+            <email>peter@verhas.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/verhas/jamal.git</connection>
+        <developerConnection>scm:git:ssh://github.com/verhas/jamal.git</developerConnection>
+        <url>http:/github.com/verhas/jamal/tree/master</url>
+    </scm>
+    <url>http:/github.com/verhas/jamal/tree/master</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -46,13 +41,9 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-source-plugin</artifactId>
-    <version>3.0.1</version>
-    
-    
-
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -63,107 +54,97 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-javadoc-plugin</artifactId>
-    <version>3.0.1</version>
-    
-    
-
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.0.1</version>
                     <dependencies>
-<dependency>
-<groupId>org.ow2.asm</groupId>
-<artifactId>asm</artifactId>
-<version>7.0</version>
-</dependency></dependencies>
-                    <executions><execution>
+                        <dependency>
+                            <groupId>org.ow2.asm</groupId>
+                            <artifactId>asm</artifactId>
+                            <version>7.0</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
                             <id>attach-javadocs</id>
-                            <goals><goal>jar</goal></goals></execution></executions>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
-                    
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <version>3.8.0</version>
-    
-    
-
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
                     <configuration>
                         <release>11</release>
                     </configuration>
                 </plugin>
-
                 <plugin>
-                    
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>2.19.1</version>
-    
-    
-
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
                     <dependencies>
-                        
-<dependency>
-<groupId>org.junit.platform</groupId>
-<artifactId>junit-platform-surefire-provider</artifactId>
-<version>1.0.3</version>
-</dependency>
-                        
-<dependency>
-<groupId>org.junit.jupiter</groupId>
-<artifactId>junit-jupiter-engine</artifactId>
-<version>5.2.0</version>
-</dependency>
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-surefire-provider</artifactId>
+                            <version>1.0.3</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-engine</artifactId>
+                            <version>5.2.0</version>
+                        </dependency>
                     </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
-    <dependencyManagement><dependencies>
-        
-<dependency>
-<groupId>com.javax0.jamal</groupId>
-<artifactId>jamal-testsupport</artifactId>
-<version>1.0.3</version>
-</dependency>
-<dependency>
-<groupId>com.javax0.jamal</groupId>
-<artifactId>jamal-api</artifactId>
-<version>1.0.3</version>
-</dependency>
-<dependency>
-<groupId>com.javax0.jamal</groupId>
-<artifactId>jamal-core</artifactId>
-<version>1.0.3</version>
-</dependency>
-<dependency>
-<groupId>com.javax0.jamal</groupId>
-<artifactId>jamal-tools</artifactId>
-<version>1.0.3</version>
-</dependency>
-<dependency>
-<groupId>com.javax0.jamal</groupId>
-<artifactId>jamal-engine</artifactId>
-<version>1.0.3</version>
-</dependency>
-<dependency>
-<groupId>com.javax0.jamal</groupId>
-<artifactId>jamal-extensions</artifactId>
-<version>1.0.3</version>
-</dependency>
-        
-<dependency>
-<groupId>org.junit.jupiter</groupId>
-<artifactId>junit-jupiter-api</artifactId>
-<version>5.2.0</version>
-<scope>test</scope>
-</dependency>
-<dependency>
-<groupId>org.junit.jupiter</groupId>
-<artifactId>junit-jupiter-engine</artifactId>
-<version>5.2.0</version>
-<scope>test</scope>
-</dependency>
-        </dependencies></dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-testsupport</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-api</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-core</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-tools</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-engine</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-extensions</artifactId>
+                <version>1.0.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.2.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.2.0</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
-
