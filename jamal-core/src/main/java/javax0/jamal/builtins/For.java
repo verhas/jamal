@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  */
 public class For implements Macro {
 
-    private static final Pattern pattern = Pattern.compile("\\s+(\\w[\\w\\d_$]*)\\s+in\\s*\\((.*?)\\)\\s*=(.*)", Pattern.DOTALL);
+    private static final Pattern pattern = Pattern.compile("\\s+([^\\s]+)\\s+in\\s*\\((.*?)\\)\\s*=(.*)", Pattern.DOTALL);
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {

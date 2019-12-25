@@ -27,6 +27,21 @@ class TestFor {
     }
 
     @Test
+    @DisplayName("The for loop goes through the elements in the list using special loop var.")
+    void testForMacroArbitraryArgument() throws
+            InvocationTargetException,
+            NoSuchMethodException,
+            InstantiationException,
+            BadSyntax,
+            IllegalAccessException {
+        TestThat.forMacro(For.class).fromInput(" x/=(!=+// in (a,b,c,d)= x/=(!=+// is either a, b, c or d\n").results(
+                " a is either a, b, c or d\n" +
+                        " b is either a, b, c or d\n" +
+                        " c is either a, b, c or d\n" +
+                        " d is either a, b, c or d\n");
+    }
+
+    @Test
     @DisplayName("When the ( and ) are missing around the list it is bad syntax")
     void testForBadSyntax() throws
             InvocationTargetException,

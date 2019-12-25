@@ -32,7 +32,13 @@ import java.lang.reflect.InvocationTargetException;
  *     camelLowerCase.fromInput("I-N-P-U-T").results( "iNPUT");
  * </pre>
  * <p>
- * If and when the macro may throw exception (probably BadSyntaxAt
+ * If and when the macro is expected to throw exception (probably BadSyntaxAt) then you can write
+ * <pre>
+ *     TestThat.forMacro(For.class).fromInput(" x in a,b,c,d= x is either a, b, c or d\n").throwsBadSyntax();
+ * </pre>
+ *
+ * If you expect any other exception, other than {@code BadSyntaxAt} then you can also use {@code
+ * throwsUp(exception.class)} instead of {@code throwsBadSyntax()}.
  */
 public class TestThat {
     final private Class<? extends Macro> klass;
