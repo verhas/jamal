@@ -231,7 +231,12 @@ class TestSamples {
     @Test
     @DisplayName("the behaviour of Jamal can be altered with the macro options")
     void testOptions() throws BadSyntax, IOException {
-        assertEquals("apple is apple, pie is pie\n".repeat(5), result("options.jam"));
+        assertEquals("apple is apple, pie is pie\n" +
+                "apple is apple, pie is pie\n" +
+                "apple is apple, pie is pie\n" +
+                "apple is apple, pie is pie\n" +
+                "apple is apple, pie is pie\n"
+            , result("options.jam"));
     }
 
     @Test

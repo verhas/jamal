@@ -6,7 +6,6 @@
     {modules|jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport}
     {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
-    {github|verhas|jamal}
     {properties|
         {property :project.build.sourceEncoding:UTF-8}
     }
@@ -25,15 +24,16 @@
                     </executions>
                 }
                 {plugin|
-                    {GAV :org.apache.maven.plugins:maven-javadoc-plugin:3.0.1}
-                    {dependencies|{dependency :org.ow2.asm:asm:7.0}}
+                    {GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
                     {executions|{execution|
                             {id|attach-javadocs}
                             {goals|{goal|jar}}}}
                 }
                 {plugin|
-                    {GAV :org.apache.maven.plugins:maven-compiler-plugin:3.8.0}
+                    {GAV :org.apache.maven.plugins:maven-compiler-plugin:{MAVEN_COMPILER_PLUGIN_VERSION}}
                     <configuration>
+                        <source>{JAVA_SOURCE}</source>
+                        <target>{JAVA_TARGET}</target>
                         <release>{JAVA_RELEASE}</release>
                     </configuration>
                 }
@@ -58,4 +58,59 @@
         {@for MODULE in (testsupport,api,core,tools,engine,extensions)={dependency :com.javax0.jamal:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine)={testDependency :org.junit.jupiter:junit-jupiter-MODULE:5.2.0}}
         }}
+
+    <profiles>
+        <profile>
+            <id>JVM8</id>
+                {properties|
+                    {property :profile:JVM8}
+                }
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>{MAVEN_COMPILER_PLUGIN_VERSION}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>module-info.java</exclude>
+                            </excludes>
+                            <encoding>UTF-8</encoding>
+                            <release>8</release>
+                            <annotationProcessorPaths>
+                                <annotationProcessorPath>
+                                    <groupId>com.github.bsideup.jabel</groupId>
+                                    <artifactId>jabel-javac-plugin</artifactId>
+                                    <version>0.2.0</version>
+                                </annotationProcessorPath>
+                            </annotationProcessorPaths>
+                            <annotationProcessors>
+                                <annotationProcessor>com.github.bsideup.jabel.JabelJavacProcessor</annotationProcessor>
+                            </annotationProcessors>
+                            <source>13</source>
+                            <target>13</target>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>{MAVEN_JAVADOC_PLUGIN_VERSION}</version>
+                        <configuration>
+                            <sourceFileExcludes>
+                                <sourceFileExclude>module-info.java</sourceFileExclude>
+                            </sourceFileExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <repositories>
+                <repository>
+                    <id>jitpack.io</id>
+                    <url>https://jitpack.io</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
 }

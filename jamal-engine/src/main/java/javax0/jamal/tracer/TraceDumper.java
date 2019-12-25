@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TraceDumper {
-    private static final String sep = "-".repeat(80);
     private static final long LAG = 80L;
     private static final String END_TAG = "</traces>";
 

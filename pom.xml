@@ -28,12 +28,6 @@
             <email>peter@verhas.com</email>
         </developer>
     </developers>
-    <scm>
-        <connection>scm:git:git://github.com/verhas/jamal.git</connection>
-        <developerConnection>scm:git:ssh://github.com/verhas/jamal.git</developerConnection>
-        <url>http:/github.com/verhas/jamal/tree/master</url>
-    </scm>
-    <url>http:/github.com/verhas/jamal/tree/master</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -56,14 +50,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.ow2.asm</groupId>
-                            <artifactId>asm</artifactId>
-                            <version>7.0</version>
-                        </dependency>
-                    </dependencies>
+                    <version>3.1.1</version>
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
@@ -78,6 +65,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.0</version>
                     <configuration>
+                        <source>13</source>
+                        <target>11</target>
                         <release>11</release>
                     </configuration>
                 </plugin>
@@ -145,4 +134,56 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <profiles>
+        <profile>
+            <id>JVM8</id>
+            <properties>
+                <profile>JVM8</profile>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>module-info.java</exclude>
+                            </excludes>
+                            <encoding>UTF-8</encoding>
+                            <release>8</release>
+                            <annotationProcessorPaths>
+                                <annotationProcessorPath>
+                                    <groupId>com.github.bsideup.jabel</groupId>
+                                    <artifactId>jabel-javac-plugin</artifactId>
+                                    <version>0.2.0</version>
+                                </annotationProcessorPath>
+                            </annotationProcessorPaths>
+                            <annotationProcessors>
+                                <annotationProcessor>com.github.bsideup.jabel.JabelJavacProcessor</annotationProcessor>
+                            </annotationProcessors>
+                            <source>13</source>
+                            <target>13</target>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <configuration>
+                            <sourceFileExcludes>
+                                <sourceFileExclude>module-info.java</sourceFileExclude>
+                            </sourceFileExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <repositories>
+                <repository>
+                    <id>jitpack.io</id>
+                    <url>https://jitpack.io</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>

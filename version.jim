@@ -3,3 +3,7 @@ version in a maven property because that cannot be used to reference the parent.
 }
 {@define VERSION=1.0.4}
 {@define JAVA_RELEASE=11}
+{@define JAVA_SOURCE=13}
+{@define JAVA_TARGET=11}
+{@define MAVEN_COMPILER_PLUGIN_VERSION=3.8.0}
+{@define MAVEN_JAVADOC_PLUGIN_VERSION=3.1.1}

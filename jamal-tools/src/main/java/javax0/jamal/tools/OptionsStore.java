@@ -3,6 +3,7 @@ package javax0.jamal.tools;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Identified;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class OptionsStore implements Identified {
     }
 
     public void addOptions(String... options) {
-        optionSet.addAll(List.of(options));
+        optionSet.addAll(Arrays.asList(options));
     }
 
     public void addOptions(Set<String> options) {
