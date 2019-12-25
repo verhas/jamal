@@ -39,10 +39,16 @@
                 }
 
                 {plugin|
-                    {GAV :org.apache.maven.plugins:maven-surefire-plugin:2.19.1}
-                    {dependencies|
-                        {dependency :org.junit.platform:junit-platform-surefire-provider:1.0.3}
-                        {dependency :org.junit.jupiter:junit-jupiter-engine:5.2.0}
+                    {GAV :org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M4}
+                    {configuration|
+                                <argLine>
+                                    {opens/tools/javax0.jamal.tools}
+                                    {opens/engine/javax0.jamal}
+                                    {opens/engine/javax0.jamal.engine}
+                                    {opens/testsupport/javax0.jamal.builtinstest}
+                                    {opens/testsupport/javax0.jamal.testsupport}
+                                    {opens/extensions/javax0.jamal.extensions}
+                                </argLine>
                     }
                 }
             }

@@ -84,19 +84,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.junit.platform</groupId>
-                            <artifactId>junit-platform-surefire-provider</artifactId>
-                            <version>1.0.3</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.junit.jupiter</groupId>
-                            <artifactId>junit-jupiter-engine</artifactId>
-                            <version>5.2.0</version>
-                        </dependency>
-                    </dependencies>
+                    <version>3.0.0-M4</version>
+                    <configuration>
+                        <argLine>
+                                    --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
+                                    --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
+                                    --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
+                                    --add-opens jamal.testsupport/javax0.jamal.builtinstest=ALL-UNNAMED
+                                    --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
+                                    --add-opens jamal.extensions/javax0.jamal.extensions=ALL-UNNAMED
+                                </argLine>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

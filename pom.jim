@@ -75,3 +75,9 @@
                                              {url|http:/github.com/_developer/_project/tree/master}
                                          }
                                          {url|http:/github.com/_developer/_project/tree/master}}
+
+{@define opens($module,$package)=--add-opens jamal.$module/$package=ALL-UNNAMED}
+{@define configuration($data)=<configuration>
+    $data
+</configuration>
+}

@@ -17,6 +17,8 @@ public class Format {
      *
      * @param content          the text that uses the macros
      * @param predefinedMacros the Map that contains the predefined macros
+     * @return the formatted string
+     * @throws BadSyntax in case the string cannot be formatted using the provided macros
      */
     public static String format(String content, Map<String, String> predefinedMacros) throws BadSyntax {
         final var processor = new Processor("{{", "}}");

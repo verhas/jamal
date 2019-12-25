@@ -24,6 +24,8 @@ final ArgumentHandler argumentHandler;
      * @param id         the identifier of the macro. This is the string that stands after the {@code define}
      *                   keyword when the user defined macro is defined. This is a unique identified in the context
      *                   where the macro is reachable and usable.
+     * @param scriptType the type of the script. The scripting engine with this name is used to execute the content.
+     *                   The value {@code jamal} means that content has to be interpreted by Jamal itself.
      * @param content    the text of the macro that stands after the {@code =} character and before the macro closing
      *                   character.
      * @param parameters the names of the parameters. These do not actually need to be real identifiers, alphanumeric
