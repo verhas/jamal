@@ -347,7 +347,7 @@ That way `{a}` and `{b}` are replaced with their defined values and what eval se
 ```jam
 {@eval/JavaScript 1+3}
 {@define a=1}{@define b=2}
-{#eval {a}+{b}}
+{#eval/JavaScript {a}+{b}}
 ```
 
 <!-- USE SNIPPET */eval_output -->
@@ -447,10 +447,10 @@ The source Jamal file:
 
 <!--USE SNIPPET */script -->
 ```jam
-{@script for(loopvar,start,end,content)=
+{@script for(loopvar,start,end,text)=
     c = ""
     for( i = start ; i <= end ; i++ ){
-      c = c + content.replace(new RegExp( loopvar , 'g'), i)
+      c = c + text.replace(new RegExp( loopvar , 'g'), i)
     }
     c
 }
