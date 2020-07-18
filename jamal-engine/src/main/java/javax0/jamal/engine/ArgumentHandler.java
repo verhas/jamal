@@ -9,17 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A little utility class used in {@link UserDefinedMacro} and in {@link ScriptMacro} to ensure the proper use of the
- * macro arguments. In case of user defined macros none of the argument can contain any other argument.
- * This restriction is to avoid non-deterministic behavior or rather a deterministic behaviour (the code cannot really
- * be non-deterministic) that is not intuitive. In user defined macros the parameters, as they appear in the
- * text are replaced by the actual string values that are specified for those parameters based on position. If a
- * parameter name is the prefix of another parameter name, then the macro evaluation will become ambiguous. Should it
- * replace the longer parameter with its value or the shorter one included in the longer one. This type of use would
- * lead to confusion and much less readability. Jamal, honestly, gives so much possibility to create unreadable
- * and cryptic macros, so we just avoid a pitfall that we can.
+ * A little utility class used solely in {@link UserDefinedMacro} and in {@link ScriptMacro} to ensure the proper use of
+ * the macro arguments. In case of user defined macros none of the argument can contain any other argument. This
+ * restriction is to avoid non-deterministic behavior or rather a deterministic behaviour (the code cannot really be
+ * non-deterministic) that is not intuitive. In user defined macros the parameters, as they appear in the text are
+ * replaced by the actual string values that are specified for those parameters based on position. If a parameter name
+ * is the prefix of another parameter name, then the macro evaluation will become ambiguous. Should it replace the
+ * longer parameter with its value or the shorter one included in the longer one. This type of use would lead to
+ * confusion and much less readability. Jamal, honestly, gives so much possibility to create unreadable and cryptic
+ * macros, so we just avoid a pitfall that we can.
  */
-public class ArgumentHandler {
+class ArgumentHandler {
 
     final String[] parameters;
     private final Identified owner;
@@ -45,12 +45,12 @@ public class ArgumentHandler {
      *
      * @param actualValues the arguments passed to the macro.
      * @param lenient      if this parameter is {@code true} then the argument array will be adjusted if the
-     *                     number of the parameters is not matching,. If this parameter is {@code false} then the
+     *                     number of the parameters is not matching. If this parameter is {@code false} then the
      *                     method will throw {@link BadSyntax} exception for the same case.
      * @return the adjusted array, which may be the same array as the argument {@code actualValues} or a newly allocated
      * array with the values copied from {@code actualValues} and with extra empty strings to have the proper
      * length.
-     * @throws BadSyntax if the length of the array {@code actualValues} is not then same as the lenght of the required
+     * @throws BadSyntax if the length of the array {@code actualValues} is not then same as the length of the required
      *                   parameters and the operation is not lenient.
      */
     String[] adjustActualValues(String[] actualValues, boolean lenient) throws BadSyntax {
