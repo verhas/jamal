@@ -1,5 +1,7 @@
 package javax0.jamal.engine.macro;
 
+import java.util.Map;
+
 /**
  * A segment contains a small piece of text and segments are chained forward to be a linked list.
  * <p>
@@ -18,7 +20,7 @@ public abstract class Segment {
         return nextSeg;
     }
 
-    public String content() {
+    public String content(final Map<String,String> values) {
         return text;
     }
 

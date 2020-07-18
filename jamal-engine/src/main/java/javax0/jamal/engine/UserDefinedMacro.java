@@ -72,32 +72,33 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         final var adjustedValues = argumentHandler.adjustActualValues(actualValues, isLenient());
         var values = argumentHandler.buildValueMap(adjustedValues);
         if (root == null) {
-            root = new TextSegment(null, content);
-            for (int i = 0; i < adjustedValues.length; i++) {
-                for (Segment segment = root; segment != null; segment = segment.next()) {
-                    segment.split(argumentHandler.parameters[i]);
-                }
-            }
+            root = createSegmentList(adjustedValues);
         }
         final var output = new StringBuilder(segmentsLengthSum(root, values));
         for (Segment segment = root; segment != null; segment = segment.next()) {
-            if (segment instanceof TextSegment) {
-                output.append(segment.content());
-            } else {
-                output.append(values.get(segment.content()));
-            }
+            output.append(segment.content(values));
         }
         return output.toString();
+    }
+
+    private Segment createSegmentList(String[] adjustedValues) {
+        final Segment root = new TextSegment(null, content);
+        for (int i = 0; i < adjustedValues.length; i++) {
+            for (Segment segment = root; segment != null; segment = segment.next()) {
+                segment.split(argumentHandler.parameters[i]);
+            }
+        }
+        if (root.content(null).length() == 0) {
+            return root.next();
+        } else {
+            return root;
+        }
     }
 
     private int segmentsLengthSum(Segment root, Map<String, String> values) {
         int size = 0;
         for (Segment segment = root; segment != null; segment = segment.next()) {
-            if (segment instanceof TextSegment) {
-                size += segment.content().length();
-            } else {
-                size += values.get(segment.content()).length();
-            }
+            size += segment.content(values).length();
         }
         return size;
     }

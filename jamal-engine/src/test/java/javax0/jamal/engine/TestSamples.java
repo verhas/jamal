@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,16 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestSamples {
 
-
-    private <T> T notNull(T t, String message) {
-        if (t == null) {
-            throw new IllegalArgumentException(message);
-        }
-        return t;
-    }
-
-    private javax0.jamal.api.Input createInput(String testFile) throws IOException {
-        var fileName = notNull(this.getClass().getResource(testFile), "File '" + testFile + "' does not exist").getFile();
+    private javax0.jamal.api.Input createInput(String testFileName) throws IOException {
+        var fileName = Objects.requireNonNull(this.getClass().getResource(testFileName), "File '" + testFileName + "' does not exist").getFile();
         fileName = fixupPath(fileName);
         var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
         return new Input(fileContent, new Position(fileName));
@@ -46,8 +39,16 @@ class TestSamples {
         return fileName;
     }
 
-    private String result(String testFile) throws IOException, BadSyntax {
-        var in = createInput(testFile);
+    /**
+     * Processes the text file and creates the resulting file in the resources diretory so it can be examined.
+     *
+     * @param testFileName the test file name
+     * @return
+     * @throws IOException
+     * @throws BadSyntax
+     */
+    private String result(String testFileName) throws IOException, BadSyntax {
+        var in = createInput(testFileName);
         final var sut = new Processor("{", "}");
         return sut.process(in);
     }
@@ -216,16 +217,22 @@ class TestSamples {
                 "true=true\n" +
                 "False=False \n" +
                 "=\n" +
-                "true=true\n" +
-                "true=true\n" +
-                "true=true", result("testif.jam"));
+            "true=true\n" +
+            "true=true\n" +
+            "true=true", result("testif.jam"));
     }
 
     @Test
     @DisplayName("even the name of the macro can be defined by a macro")
     void testRecurse() throws BadSyntax, IOException {
         assertEquals("wilfred\n" +
-                "black white", result("recursedef.jam"));
+            "black white", result("recursedef.jam"));
+    }
+
+    @Test
+    @DisplayName("arguments are not replaced when present in the returned text of evaluated macros because of text segment splitting")
+    void deepArgRef() throws BadSyntax, IOException {
+        assertEquals("XX.. well, X is simply three aaa", result("deep_arg_ref.jam"));
     }
 
     @Test
