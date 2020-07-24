@@ -151,9 +151,9 @@ built-in macro `export`.
 ### `comment`<a name="comment">
 since 1.0.0 (core)
 
-`comment` is used to insert comments to the input, and it can also be used to enclose
-definitions without side effects. For more about definition scopes and exporting read
-the section about `export`.
+`comment` is used to insert comments to the input, and it can also be used to enclose definitions without side effects
+although it is recommended to use the [`block`](#block) macro for that purpose. For more about definition scopes and
+exporting read the section about `export`.
 
 <!-- USE SNIPPET */comment -->
 ```jam
@@ -162,34 +162,39 @@ will not appear in the output}text
 ```
 will generate
 
-
 <!-- USE SNIPPET */comment_output -->
 ```jam
 this is some text
 ```
 
+Note that this is important to zse the `@` character in front of the keyword `comment` to make is a real comment. If the
+macro character `#` is used, like `{#comment comment_text}` then the `comment_text` part will be evaluated and in case
+there is some side effect, like global macro definition then these will be in effect. It is safe to say to always use
+`{@comment ...}` and in case you need some side effect then use the [`block`](#block) macro.
+
 ### `block`<a name="block">
 since 1.0.0 (core)
 
-`block` is technically exactly the same as `comment`. It is recommended to use the `comment` macro
+`block` is technically the same as `comment`. It is recommended to use the `comment` macro
 with the `@` starting character so that the content of the comment is not interpreted by Jamal and
 to use `block` with `#` to have the content interpreted. Block should be used to enclose
 definitions to a scope level.
 
-For more about definition scopes and exporting read the section about `export`.
+For more about definition scopes and exporting read the section about [`export`](#export).
 
 ### `begin`<a name="begin"> and `end`
 since 1.0.0 (core)
 
 The macros `begin` and `end` can be used to start and to finish a local definition scope. The
 effect is practically the same as having the text between the `begin` and `end` macro inside
-a `#block` macro (note the starting `#` character).
+a `#block` macro (note the starting `#` character, which means that the text will be evaluated
+before the macro itself is executed).
 
-It is recommended to use `begin` and `end` when the structure is complex and it is
+It is recommended to use `begin` and `end` when the structure is complex, and it is
 more readable to use the `begin` / `end` macros than a simple `block`. To ensure that
 all `begin` has an `end` you can name the blocks. You can put an arbitrary string after the
 macro name `begin` and if you do then you have to repeat the same string after the macro name `end`
-(spaces are trimmed).
+(spaces from the beginning, and the end of the string are trimmed).
 
  ```jam
  {@define Z=1}
@@ -202,8 +207,8 @@ macro name `begin` and if you do then you have to repeat the same string after t
 Scopes are opened by many things, like macro start, including a file. You can close a scope
 using the macro `end` that was opened with a matching `begin`. You cannot and should not
 close a scope using `end` that was opened by something else. For
-example, you can not get into the scope of the including class putting a pairless `end` macro
-into an included file. This will trigger a processing error.
+example, you cannot get into the scope of the including file putting a pair-less `end` macro
+into the included file. This will trigger a processing error.
 
 ### `define`<a name="define">
 since 1.0.0 (core)
