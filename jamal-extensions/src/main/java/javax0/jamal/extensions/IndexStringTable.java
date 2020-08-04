@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Get an indexed element from a string table.
  *
  * <p> A string table is a string in which certain characters are
- * separators. These separators dive the string into substring. The
+ * separators. These separators divide the string into substrings. The
  * substrings can be string tables that use different separator
  * characters.
  *

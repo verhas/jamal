@@ -15,6 +15,7 @@
         <module>jamal-extensions</module>
         <module>jamal-maven-plugin</module>
         <module>jamal-testsupport</module>
+        <module>jamal-cmd</module>
     </modules>
     <licenses>
         <license>
