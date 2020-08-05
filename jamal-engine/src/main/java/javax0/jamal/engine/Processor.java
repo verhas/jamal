@@ -3,6 +3,7 @@ package javax0.jamal.engine;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.MacroRegister;
@@ -49,7 +50,7 @@ public class Processor implements javax0.jamal.api.Processor {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {
             throw new IllegalArgumentException(
-                    "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
+                "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
         }
         Macro.getInstances().forEach(macros::define);
     }
@@ -133,18 +134,26 @@ public class Processor implements javax0.jamal.api.Processor {
             final var macroRaw = getNextMacroBody(input);
             tr.appendBeforeState(macroRaw);
             final String macroProcessed;
-            if (!firstCharIs(macroRaw, '@')) {
-                var marker = new Marker("{@" + "");
-                final var macroInputBefore = new javax0.jamal.tools.Input(macroRaw, macroStartPosition);
-                macros.push(marker);
-                macroProcessed = process(macroInputBefore);
-                macros.pop(marker);
-                tr.appendAfterEvaluation(macroProcessed);
-            } else {
+            final var marker = new Marker("{@" + "");
+            macros.push(marker);
+            if (firstCharIs(macroRaw, '@')) {
                 macroProcessed = macroRaw;
+            } else {
+                final var macroInputBefore = new javax0.jamal.tools.Input(macroRaw, macroStartPosition);
+                macroProcessed = process(macroInputBefore);
+                tr.appendAfterEvaluation(macroProcessed);
             }
             final var macroInputAfter = new javax0.jamal.tools.Input(macroProcessed, macroStartPosition);
-            final var text = evalMacro(macroInputAfter, tr);
+            final var qualifiers = new MacroQualifier(macroInputAfter);
+
+            final String text;
+            if (qualifiers.macro instanceof InnerScopeDependent) {
+                text = evalMacro(tr, qualifiers);
+                macros.pop(marker);
+            } else {
+                macros.pop(marker);
+                text = evalMacro(tr, qualifiers);
+            }
             tr.appendResultState(text);
             output.append(text);
         }
@@ -153,54 +162,45 @@ public class Processor implements javax0.jamal.api.Processor {
     /**
      * Evaluate a macro as part of the processing of it. Either user defined macro or built in.
      *
-     * @param input the macro text to be processed without the opening and closing string.
-     * @return the evaluated macro
+     * @param tr        trace record where the trace is sent
+     * @param qualifier the qualifier that contains several parameters of the macro collected into a record
+     * @return the evaluated string of the macro
+     * @throws BadSyntaxAt when the syntax of the macro is bad
      */
-    private String evalMacro(final Input input, TraceRecord tr) throws BadSyntaxAt {
-        var ref = input.getPosition();
-        var isBuiltin = macroIsBuiltIn(input);
-        final String macroId;
-        final boolean verbatim;
-        if (isBuiltin) {
-            skip(input, 1);
-            skipWhiteSpaces(input);
-            macroId = fetchId(input);
-            verbatim = "verbatim".equals(macroId);
-            if (verbatim) {
-                isBuiltin = false;
-                skipWhiteSpaces(input);
-            }
-        } else {
-            verbatim = false;
-            macroId = NOT_USED;
-        }
-        tr.setId(macroId);
-        if (isBuiltin) {
-            var builtin = macros.getMacro(macroId);
-            if (!builtin.isPresent()) {
-                throw new BadSyntaxAt("There is no built-in macro with the id '" + macroId + "'", ref);
-            }
-            try {
-                return builtin.get().evaluate(input, this);
-            } catch (BadSyntax bs) {
-                throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
-            }
+    private String evalMacro(final TraceRecord tr,
+                             final MacroQualifier qualifier) throws BadSyntaxAt {
+        final var ref = qualifier.input.getPosition();
+        tr.setId(qualifier.macroId);
+        if (qualifier.isBuiltIn) {
+            return evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
         } else {
             tr.type(TraceRecord.Type.USER_DEFINED_MACRO);
             final String rawResult;
             try {
-                rawResult = evalUserDefinedMacro(input, tr);
-                if (verbatim) {
+                rawResult = evalUserDefinedMacro(qualifier.input, tr);
+                if (qualifier.isVerbatim) {
                     tr.appendAfterEvaluation(rawResult);
                     return rawResult;
                 } else {
-                    var result = process(new javax0.jamal.tools.Input(rawResult, input.getPosition()));
+                    var result = process(new javax0.jamal.tools.Input(rawResult, qualifier.input.getPosition()));
                     tr.appendAfterEvaluation(result);
                     return result;
                 }
+            } catch (BadSyntaxAt bsAt) {
+                throw bsAt;
             } catch (BadSyntax bs) {
-                throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
+                throw new BadSyntaxAt(bs, ref);
             }
+        }
+    }
+
+    private String evaluateBuiltinMacro(final Input input, final Position ref, final Macro macro) throws BadSyntaxAt {
+        try {
+            return macro.evaluate(input, this);
+        } catch (BadSyntaxAt bsAt) {
+            throw bsAt;
+        } catch (BadSyntax bs) {
+            throw new BadSyntaxAt(bs, ref);
         }
     }
 
@@ -225,8 +225,8 @@ public class Processor implements javax0.jamal.api.Processor {
             parameters = new String[0];
         }
         var udMacro = macros.getUserDefined(id)
-                .filter(ud -> ud instanceof Evaluable)
-                .map(ud -> (Evaluable) ud);
+            .filter(ud -> ud instanceof Evaluable)
+            .map(ud -> (Evaluable) ud);
         tr.setId(id);
         tr.setParameters(parameters);
         if (udMacro.isPresent()) {
@@ -243,18 +243,6 @@ public class Processor implements javax0.jamal.api.Processor {
             }
         }
     }
-
-    /**
-     * decides if a macro is user defined or build in. The decision is fairly simple
-     * because built in macros start with {@code #} or {@code @} character.
-     *
-     * @param input containing the macro starting at the position zero
-     * @return {@code true} if the macro is a built in macro and {@code false} if the macro is user defined
-     */
-    private boolean macroIsBuiltIn(Input input) {
-        return input.length() > 0 && (input.charAt(0) == '#' || input.charAt(0) == '@');
-    }
-
 
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
         var refStack = new LinkedList<Position>();
@@ -305,5 +293,69 @@ public class Processor implements javax0.jamal.api.Processor {
         copy(input, output, macros.open());
     }
 
+
+    private class MacroQualifier {
+        private final Input input;
+        private final String macroId;
+        private final boolean isVerbatim;
+        private final boolean isBuiltIn;
+        private final Macro macro;
+
+        public MacroQualifier(Input input) throws BadSyntaxAt {
+            this.input = input;
+            final var startsAsBuiltIn = macroIsBuiltIn(input);
+            if (startsAsBuiltIn) {
+                skip(input, 1);
+                skipWhiteSpaces(input);
+                macroId = fetchId(input);
+                isVerbatim = "verbatim".equals(macroId);
+                isBuiltIn = !isVerbatim;
+                if (isVerbatim) {
+                    skipWhiteSpaces(input);
+                }
+            } else {
+                isBuiltIn = false;
+                isVerbatim = false;
+                macroId = NOT_USED;
+            }
+            macro = getMacro(macroId, input.getPosition(), isBuiltIn);
+        }
+    }
+
+    /**
+     * Decides if a macro is user defined or build in. The decision is fairly simple because built in macros start with
+     * {@code #} or {@code @} character.
+     *
+     * @param input containing the macro starting at the position zero
+     * @return {@code true} if the macro is a built in macro and {@code false} if the macro is user defined
+     */
+    private boolean macroIsBuiltIn(Input input) {
+        return input.length() > 0 && (input.charAt(0) == '#' || input.charAt(0) == '@');
+    }
+
+    /**
+     * Get the macro object.
+     *
+     * @param macroId   the identifier of the macro.
+     * @param pos       used to throw exception in case the macro is not defined
+     * @param isBuiltIn signals that the macro is built-in. If the macro is not built-in the return value is {@code
+     *                  null}.
+     * @return the macro object or {@code null} if the macro is not built-in
+     * @throws BadSyntaxAt if there is no macro registered for the given name
+     */
+    private Macro getMacro(String macroId, Position pos, boolean isBuiltIn) throws BadSyntaxAt {
+        if (isBuiltIn) {
+            var optMacro = macros.getMacro(macroId);
+            if (optMacro.isEmpty()) {
+                throw new BadSyntaxAt(
+                    "There is no built-in macro with the id '"
+                        + macroId
+                        + "'", pos);
+            }
+            return optMacro.get();
+        } else {
+            return null;
+        }
+    }
 
 }

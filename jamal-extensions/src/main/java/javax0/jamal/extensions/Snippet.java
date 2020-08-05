@@ -1,6 +1,7 @@
 package javax0.jamal.extensions;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
@@ -15,15 +16,15 @@ import static javax0.jamal.extensions.UDMacro.macro;
 import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
-public class Snippet implements Macro {
+public class Snippet implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var snippetFile = macro("$snippetFile").from(processor).orElse(null);
+        final var snippetFile = macro("snippetFile").from(processor).orElse(null);
         if (snippetFile == null) {
             throw new BadSyntax("snippetFile is null");
         }
-        final var snippetStart = macro("$snippetStart").from(processor).orElse("snippet\\s+");
-        final var snippetEnd = macro("$snippetEnd").from(processor).orElse("snippet\\s+end");
+        final var snippetStart = macro("snippetStart").from(processor).orElse("snippet\\s+");
+        final var snippetEnd = macro("snippetEnd").from(processor).orElse("snippet\\s+end");
         skipWhiteSpaces(in);
         final var snippetId = in.toString().trim();
         var reference = in.getReference();

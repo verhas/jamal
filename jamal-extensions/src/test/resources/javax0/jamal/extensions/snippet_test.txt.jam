@@ -1,5 +1,5 @@
 {@use global javax0.jamal.extensions.Snippet}
 
 ```
-{#snippet {@define :$snippetFile=../../../../../src/test/java/javax0/jamal/extensions/TestSamples.java} testSnippetInclusion}
+{#snippet {@define snippetFile=../../../../../src/test/java/javax0/jamal/extensions/TestSamples.java} testSnippetInclusion}
 ```

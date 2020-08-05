@@ -1,17 +1,18 @@
 package javax0.jamal.extensions;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
-public class NumberLines implements Macro {
+public class NumberLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var format = UDMacro.macro("$format").from(processor).orElse("%d. ");
-        final var startS = UDMacro.macro("$start").from(processor).orElse("1");
-        final var stepS = UDMacro.macro("$step").from(processor).orElse("1");
+        final var format = UDMacro.macro("format").from(processor).orElse("%d. ");
+        final var startS = UDMacro.macro("start").from(processor).orElse("1");
+        final var stepS = UDMacro.macro("step").from(processor).orElse("1");
         final int start;
         try {
             start = Integer.parseInt(startS);
