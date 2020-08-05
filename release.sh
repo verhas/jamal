@@ -37,6 +37,11 @@ mkdir -p release/07testsupport
 cp jamal-testsupport/target/*.jar release/07testsupport
 cp jamal-testsupport/pom.xml release/07testsupport
 
+echo Creating directory 08cmd
+mkdir -p release/08cmd
+cp jamal-cmd/target/*.jar release/08cmd
+cp jamal-cmd/pom.xml release/08cmd
+
 cd release
 for artifact in *
 do

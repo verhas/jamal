@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  *
  * <p> A string table is a string in which certain characters are
  * separators. These separators divide the string into substrings. The
- * substrings can be string tables that use different separator
+ * substrings can also be string tables that use different separator
  * characters.
  *
  * <p> In the simplest one dimensional form a string table is a string

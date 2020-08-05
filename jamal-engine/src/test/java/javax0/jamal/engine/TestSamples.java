@@ -40,7 +40,7 @@ class TestSamples {
     }
 
     /**
-     * Processes the text file and creates the resulting file in the resources diretory so it can be examined.
+     * Processes the text file and creates the resulting file in the resources directory so it can be examined.
      *
      * @param testFileName the test file name
      * @return

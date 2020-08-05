@@ -8,6 +8,9 @@ import javax0.jamal.api.Processor;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
+/**
+ * This macro can be used to redefine the macro start and end string.
+ */
 public class Sep implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {

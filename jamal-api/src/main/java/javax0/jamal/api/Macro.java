@@ -3,7 +3,9 @@ package javax0.jamal.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.function.BiFunction;
 
+@FunctionalInterface
 public interface Macro {
     static List<Macro> getInstances() {
         ServiceLoader<Macro> services = ServiceLoader.load(Macro.class);

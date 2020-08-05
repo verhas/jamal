@@ -1,16 +1,26 @@
 package javax0.jamal.engine;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.MacroRegister;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.api.*;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import static javax0.jamal.tools.InputHandler.*;
+import static javax0.jamal.tools.InputHandler.contains;
+import static javax0.jamal.tools.InputHandler.copy;
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.firstCharIs;
+import static javax0.jamal.tools.InputHandler.skip;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Processor implements javax0.jamal.api.Processor {
 

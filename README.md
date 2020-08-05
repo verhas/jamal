@@ -676,9 +676,8 @@ You cannot "redefine" `verbatim`.
 ### `sep`<a name="sep">
 since 1.0.0 (core)
 
-This macro can be used to temporarily change the macro opening and closing string. In the
-examples in this documentation we use `{` as the opening string and `}` as the closing string, but
-Jamal itself does not impose any such predefined setting.
+This macro can be used to change the macro opening and closing string. In the examples in this documentation we use `{`
+as the opening string and `}` as the closing string, but Jamal itself does not impose any such predefined setting.
 
 The syntax of the command is
 
@@ -686,34 +685,59 @@ The syntax of the command is
 sep /startString/endString
 ```
 
-There can be whitespace characters after the macro name `sep`, but these are optional. The first
-non-space character is used as a separator character that separates the macro opening string from
-the macro closing string. It is usually the `/` character, but it can be anything that does not
-appear in the opening string. This generally the syntax of the macro is
+There can be whitespace characters after the macro name `sep`, but these are optional. The first non-space character is
+used as a separator character that separates the macro opening string from the macro closing string. It is usually the
+`/` character, but it can be anything that does not appear in the opening string. (Note that this character can appear
+in the closing string, although it is not recommended using a character that is part of the closing string for the sake
+of readability. This generally the syntax of the macro is
 
 ```jam
 sep \s* (\S) opening_string (\1) closing_string 
 ```
 
-Note that the macro `sep` should be terminated with the original macro closing string, but the
-macros after it already have to use the altered opening and closing strings.
+Note that the macro `sep` should be terminated with the original macro closing string, but the macros after it already
+have to use the altered opening and closing strings. This makes it a bit tricky when you want to use a closing string
+that happens to contain the original closing string. Assume that the current opening string is `{` and the current
+closing string is `}`. You want to have `{{` as opening string and `}}` as closing string. This is often the choice when
+using Jamal in a programming language environment that heavily uses `{` and`}` braces. In this case
+
+```
+{@sep/{{/}}}
+```
+
+will not work, because it will set the closing string empty which is not valid and will raise an error. To overcome a
+situation like that you have to change the separator strings in two steps:
+
+```
+{@sep/[/]}[@sep/{{/}}]
+```
+
+Also, do not forget that the end you should call `sep` without an argument twice:
+
+```
+{{@sep}}[@sep]
+```
+
+unless you want this change till the end of the scope.
 
 The change of the opening and the closing strings always happens in pairs. You cannot change only
 the closing or only the opening string. You can, however, redefined one of them to be something
-that is different from the current value and the other one to be the same as the current value.
+that is different from the current value, and the other one to be the same as the current value.
 Even in this case, the definition should specify both strings. The change is valid only
-for the current scope and the original value is restored when returning from the scope, even if the
+for the current scope, and the original value is restored when returning from the scope, even if the
 opening and closing strings were set to different values multiple times.
 
 Neither the opening nor the closing string can be empty. Trying to set it to an empty string
 will raise an error. This usually happens when you get used to the `/` separator character
-as a convention and you forget to put it in front of the opening string, like in `{@sep [/]}`.
+as a convention, and you forget to put it in front of the opening string, like in `{@sep [/]}`.
 (Jamal v1.0.0 gets into an infinite loop in case of an empty opening string. Later versions will
 signal an error.)
 
 When the opening and the end strings are set the original values are stored in a list. When the
 macro `sep` is used without any separator character, in other words, it is nothing more than the
-`sep` macro name, like `{@sep}` then the last opening and closing strings are restored.
+`sep` macro name, like `{@sep}` then the last opening and closing strings are restored. The
+strings are stored in a stack, so you can define new strings and return to the previous one many
+times nesting the redefinitions.
 
 The following sample is executed with `{` and `}` as opening and closing string at the beginning.
 After that, it sets the strings to `[[` and `]]`. This is used to define the macro `apple`. After
@@ -729,7 +753,7 @@ from the outer scope. On the other hand, the sample can change the strings, as i
 scope.
 
 After that the `<<@sep>>` restores the opening and closing strings to the inherited one and with these,
-it defines `a1` and `a2` and also exports them. Note, that `a1` will have the actual value of
+it defines `a1` and `a2` and exports them. Note, that `a1` will have the actual value of
 the macro `z` evaluated inside the scope of the `comment` macro. The macro `a2` starts with `@`
 thus the body is not parsed during the macro definition and thus the value of `a2` is `[[z]]`
 unevaluated, as it is. Similarly, the macro `a3` will have the value`{z}`.
@@ -740,7 +764,7 @@ macro itself.
 
 After the `comment` macro the separators are set back to the original value `{` and `}`
 automatically. Then we have a simple macro definition that defines `z` and then
-this `z` is used, and also the exported `a1`, `a2` and `a3`.
+this `z` is used, and the exported `a1`, `a2` and `a3`.
 
 `z` is now, as defined in the outer scope is `SSS`. `a1` has the value that came from the
 macro `z` as it was defined inside the scope of the macro `comment`. Macro `a2` has the

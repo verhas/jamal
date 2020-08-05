@@ -146,6 +146,20 @@ public class InputHandler {
     }
 
     /**
+     * Delete the white space characters from the start of the input but only until after the first EOL
+     *
+     * @param input from which the spaces should be deleted.
+     */
+    public static void skipWhiteSpaces2EOL(Input input) {
+        while (input.length() > 0 && Character.isWhitespace(input.charAt(0)) && input.charAt(0) != '\n') {
+            input.delete(0, 1);
+        }
+        if( input.length() > 0 && input.charAt(0) == '\n' ){
+            input.delete(0, 1);
+        }
+    }
+
+    /**
      * Copy the string from the start of the input to the end of the output.
      *
      * @param input  from which the string will be removed

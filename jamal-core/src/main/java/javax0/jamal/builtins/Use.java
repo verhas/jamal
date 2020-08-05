@@ -16,13 +16,17 @@ import java.util.regex.Pattern;
  * local level.
  */
 public class Use implements Macro {
+    // The syntax is:    [global] com.package.name.MacroClass [as Alias]
+    // $1 will be "global" or ""
+    // $2 will be the fully qualified name of the class
+    // $3 will be the alias or null if no alias
     private static final Pattern pattern = Pattern.compile("((?:global\\s+)?)((?:\\w+\\.?)+)(?:\\s+as\\s+(\\w+))?");
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        var macroImports = input.toString().split(",");
+        final var macroImports = input.toString().split(",");
         for (final var macroImport : macroImports) {
-            var stripped = macroImport
+            final var stripped = macroImport
                 .trim()
                 .replace("\n", " ")
                 .replace("\r", " ")
