@@ -7,8 +7,8 @@ public class TestNumberLines {
 
     @Test
     public void testCamelLowerCase() throws Exception {
-        var numberLines = TestThat.forMacro(NumberLines.class);
-        numberLines.fromInput("line 1\n" +
+        var numberLines = TestThat.theMacro(NumberLines.class);
+        numberLines.fromTheInput("line 1\n" +
             "line 2\n" +
             "line 3\n").results("1. line 1\n" +
             "2. line 2\n" +

@@ -19,7 +19,12 @@ public class TraceRecordFactory {
     private int level = 0;
 
     public TraceRecordFactory() {
-        traceFile = System.getProperty("jamal.trace");
+        final var sysProp = System.getProperty("jamal.trace");
+        if (sysProp != null) {
+            traceFile = sysProp;
+        } else {
+            traceFile = System.getenv("JAMAL_TRACE");
+        }
     }
 
     public TraceRecord openUserDefinedMacroRecord(Position position) {

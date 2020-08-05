@@ -220,6 +220,10 @@ public class Processor implements javax0.jamal.api.Processor {
         if (input.length() > 0) {
             var separator = input.substring(0, 1);
             skip(input, 1);
+            if (Character.isAlphabetic(separator.charAt(0))) {
+                tr.warning("separator character '" + separator + "' is probably a mistake at " +
+                    input.getPosition().file + ":" + input.getPosition().line + ":" + input.getPosition().column);
+            }
             parameters = input.toString().split(Pattern.quote(separator), -1);
         } else {
             parameters = new String[0];
@@ -232,8 +236,10 @@ public class Processor implements javax0.jamal.api.Processor {
         if (udMacro.isPresent()) {
             try {
                 return udMacro.get().evaluate(parameters);
+            } catch (BadSyntaxAt bsAt) {
+                throw bsAt;
             } catch (BadSyntax bs) {
-                throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
+                throw new BadSyntaxAt(bs, ref);
             }
         } else {
             if (reportUndef) {

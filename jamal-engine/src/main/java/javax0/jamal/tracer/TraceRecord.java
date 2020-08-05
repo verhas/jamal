@@ -41,6 +41,10 @@ public interface TraceRecord extends AutoCloseable {
 
     boolean hasOutput();
 
+    void warning(String s);
+
+    List<String> getWarnings();
+
     void close();
 
     enum Type {

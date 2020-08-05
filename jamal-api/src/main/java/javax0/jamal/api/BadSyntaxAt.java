@@ -33,6 +33,7 @@ public class BadSyntaxAt extends BadSyntax {
             addSuppressed(sup);
         }
         setStackTrace(bs.getStackTrace());
+        getParameters().addAll(bs.getParameters());
         this.pos = pos;
     }
 

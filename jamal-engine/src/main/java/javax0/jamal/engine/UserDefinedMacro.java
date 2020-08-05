@@ -83,7 +83,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
 
     private Segment createSegmentList(String[] adjustedValues) {
         final Segment root = new TextSegment(null, content);
-        for (int i = 0; i < adjustedValues.length; i++) {
+        for (int i = 0; i < argumentHandler.parameters.length; i++) {
             for (Segment segment = root; segment != null; segment = segment.next()) {
                 segment.split(argumentHandler.parameters[i]);
             }

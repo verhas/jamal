@@ -32,9 +32,9 @@
 
     {dependencies#
         {#for MODULE in (engine,extensions)=
-            {dependencyGA|com.javax0.jamal|jamal-MODULE}}
+            {dependency|com.javax0.jamal|jamal-MODULE}}
         {#for MODULE in (api,engine)=
-            {dependencyGA|org.junit.jupiter|junit-jupiter-MODULE}}
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
         {dependency :org.apache.maven:maven-plugin-api:3.5.4}
         {providedDependency :org.apache.maven.plugin-tools:maven-plugin-annotations:3.5.2}
     }

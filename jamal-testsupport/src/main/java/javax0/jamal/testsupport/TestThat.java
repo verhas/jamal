@@ -20,17 +20,17 @@ import java.lang.reflect.InvocationTargetException;
  * <p>
  * To ease this task you can put this module on the test dependencies and have a test like
  *
- * <pre>
- *     var camelLowerCase = TestThat.forMacro(Camel.LowerCase.class);
- *     camelLowerCase.fromInput("INPUT").results( "input");
- *     camelLowerCase.fromInput("INpUT").results( "input");
- *     camelLowerCase.fromInput("INpuT").results( "input");
- *     camelLowerCase.fromInput("INput").results( "input");
- *     camelLowerCase.fromInput("Input").results( "input");
- *     camelLowerCase.fromInput("input").results( "input");
- *     camelLowerCase.fromInput("IN-PUT").results( "inPut");
- *     camelLowerCase.fromInput("I-N-P-U-T").results( "iNPUT");
- * </pre>
+ * <pre>{@code
+ *     var camelLowerCase = TestThat.theMacro(Camel.LowerCase.class);
+ *     camelLowerCase.fromTheInput("INPUT").results( "input");
+ *     camelLowerCase.fromTheInput("INpUT").results( "input");
+ *     camelLowerCase.fromTheInput("INpuT").results( "input");
+ *     camelLowerCase.fromTheInput("INput").results( "input");
+ *     camelLowerCase.fromTheInput("Input").results( "input");
+ *     camelLowerCase.fromTheInput("input").results( "input");
+ *     camelLowerCase.fromTheInput("IN-PUT").results( "inPut");
+ *     camelLowerCase.fromTheInput("I-N-P-U-T").results( "iNPUT");
+ * }</pre>
  * <p>
  * If and when the macro is expected to throw exception (probably BadSyntaxAt) then you can write
  * <pre>
@@ -39,6 +39,17 @@ import java.lang.reflect.InvocationTargetException;
  *
  * If you expect any other exception, other than {@code BadSyntaxAt} then you can also use {@code
  * throwsUp(exception.class)} instead of {@code throwsBadSyntax()}.
+ *
+ * You can also define user defined and built-in macros on the outermost and also on the global level.
+ *
+ * Another possibility to use this class is to
+ *
+ * <pre>{@code
+ * TestThat.theInput("{@define a=alma}{a}").results("alma")
+ * }</pre>
+ *
+ * that invokes not only one macro but rather the whole processing engine.
+ *
  */
 public class TestThat {
     final private Class<? extends Macro> klass;
@@ -55,13 +66,25 @@ public class TestThat {
      * @param klass is the class of the tested macro.
      * @return the testing class
      */
-    public static TestThat forMacro(Class<? extends Macro> klass) {
+    public static TestThat theMacro(Class<? extends Macro> klass) {
         return new TestThat(klass);
     }
 
-    public TestThat fromInput(String input) {
+    public static TestThat theInput(String input) {
+        final var it = new TestThat(null);
+        it.input = input;
+        return it;
+    }
+
+    public TestThat fromTheInput(String input) {
         this.input = input;
         return this;
+    }
+
+    private Macro createSut() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        var constructor = klass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return constructor.newInstance();
     }
 
     /**
@@ -81,17 +104,19 @@ public class TestThat {
             InstantiationException,
             InvocationTargetException,
             BadSyntax {
-        Macro sut = createSut();
+        final String actual;
         var in = new javax0.jamal.tools.Input(input, null);
-        var actual = sut.evaluate(in, processor);
+        if (klass != null) {
+            Macro sut = createSut();
+            actual = sut.evaluate(in, processor);
+        } else {
+            actual = processor.process(in);
+        }
         Assertions.assertEquals(expected, actual);
+
     }
 
-    private Macro createSut() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        var constructor = klass.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        return constructor.newInstance();
-    }
+
 
     /**
      * Checks that the macro throws an exception for a given input.
@@ -107,10 +132,13 @@ public class TestThat {
             IllegalAccessException,
             InstantiationException,
             InvocationTargetException {
-        var sut = createSut();
-        var in = new javax0.jamal.tools.Input(input, null);
-        var processor = new Processor();
-        Assertions.assertThrows(throwable, () -> sut.evaluate(in, processor));
+        final var in = new javax0.jamal.tools.Input(input, null);
+        if( klass != null ) {
+            final var sut = createSut();
+            Assertions.assertThrows(throwable, () -> sut.evaluate(in, processor));
+        }else{
+            Assertions.assertThrows(throwable, () -> processor.process(in));
+        }
     }
 
     /**

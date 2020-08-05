@@ -10,8 +10,8 @@
 
     {dependencies#
         {@for MODULE in (api)=
-            {dependencyGA|com.javax0.jamal|jamal-MODULE}}
+            {dependency|com.javax0.jamal|jamal-MODULE}}
         {@for MODULE in (api,engine)=
-            {dependencyGA|org.junit.jupiter|junit-jupiter-MODULE}}
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
 }

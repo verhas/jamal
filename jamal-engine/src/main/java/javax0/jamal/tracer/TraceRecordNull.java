@@ -36,6 +36,11 @@ public class TraceRecordNull implements TraceRecord {
     }
 
     @Override
+    public List<String> getWarnings() {
+        return List.of();
+    }
+
+    @Override
     public String[] getParameters() {
         return new String[0];
     }
@@ -87,6 +92,10 @@ public class TraceRecordNull implements TraceRecord {
     @Override
     public boolean hasOutput() {
         return true;
+    }
+
+    @Override
+    public void warning(String s) {
     }
 
     @Override

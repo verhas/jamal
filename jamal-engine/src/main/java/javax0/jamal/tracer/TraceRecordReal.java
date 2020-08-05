@@ -11,6 +11,7 @@ public class TraceRecordReal implements TraceRecord {
     private final StringBuilder evaluated = new StringBuilder();
     private final StringBuilder result = new StringBuilder();
     private final List<TraceRecord> subRecords = new ArrayList<>();
+    private final List<String> warnings = new ArrayList<>();
     private final TraceRecordFactory myFactory;
     private Position position;
     private TraceRecord.Type type;
@@ -120,6 +121,16 @@ public class TraceRecordReal implements TraceRecord {
     @Override
     public void type(TraceRecord.Type type) {
         this.type = type;
+    }
+
+    @Override
+    public void warning(String s) {
+        warnings.add(s);
+    }
+
+    @Override
+    public List<String> getWarnings() {
+        return warnings;
     }
 
     @Override

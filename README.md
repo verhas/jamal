@@ -97,11 +97,30 @@ at https://github.com/verhas/jamal/blob/master/jamal-maven-plugin/README.md It i
 When something goes wrong then Jamal will give you a detailed error message with the file name, line number and
 character count where the error happened. In other cases Jamal may think it works fine, but the output is not exactly
 what you expected. Sorry, in this case the issue, most probably, is with your expectations. In cases like that you can
-specify `-Djamal.trace=tracefile.xml` on the command line that starts Jamal specifying a trace file, in this case
-`tracefile.xml`. The tracefile will contain all the
-macro evaluations inputs and outputs. Since there can be many Jamal evaluations one after the other, Jamal does not
-overwrite old trace information but rather it appends the information. Before starting Jamal you can manually
-delete the trace file. Trace files grow large easily. 
+specify 
+
+```
+-Djamal.trace=tracefile.xml
+```
+
+on the command line that starts Jamal specifying a trace file, in this case `tracefile.xml`. If it is more convinient
+you can also specify the tracefile using the environment variable (only if the `jamal.trace` system property is not
+defined):
+
+```
+export JAMAL_TRACE=tracefile.xml
+``` 
+
+The tracefile will contain all the macro evaluations inputs and outputs. Since there can be many Jamal evaluations one
+after the other, Jamal does not overwrite old trace information but rather it appends the information. Before starting
+Jamal you can manually delete the trace file. Trace files grow large easily. If you do not want to trace any more
+do not forget to unset the environment variable
+
+```
+unset JAMAL_TRACE
+```
+  
+to avoid an excessively large tracefile growing on your disk.
   
 If you Java 8, 9 or 10 you should go with the release `1.0.2.JDK8`.
 

@@ -19,7 +19,7 @@ class TestFor {
             InstantiationException,
             BadSyntax,
             IllegalAccessException {
-        TestThat.forMacro(For.class).fromInput(" x in (a,b,c,d)= x is either a, b, c or d\n").results(
+        TestThat.theMacro(For.class).fromTheInput(" x in (a,b,c,d)= x is either a, b, c or d\n").results(
                 " a is either a, b, c or d\n" +
                         " b is either a, b, c or d\n" +
                         " c is either a, b, c or d\n" +
@@ -34,7 +34,7 @@ class TestFor {
             InstantiationException,
             BadSyntax,
             IllegalAccessException {
-        TestThat.forMacro(For.class).fromInput(" x/=(!=+// in (a,b,c,d)= x/=(!=+// is either a, b, c or d\n").results(
+        TestThat.theMacro(For.class).fromTheInput(" x/=(!=+// in (a,b,c,d)= x/=(!=+// is either a, b, c or d\n").results(
                 " a is either a, b, c or d\n" +
                         " b is either a, b, c or d\n" +
                         " c is either a, b, c or d\n" +
@@ -49,7 +49,7 @@ class TestFor {
             InstantiationException,
             BadSyntaxAt,
             IllegalAccessException {
-        TestThat.forMacro(For.class).fromInput(" x in a,b,c,d= x is either a, b, c or d\n").throwsBadSyntax();
+        TestThat.theMacro(For.class).fromTheInput(" x in a,b,c,d= x is either a, b, c or d\n").throwsBadSyntax();
     }
 
     @Test
@@ -60,9 +60,9 @@ class TestFor {
             InstantiationException,
             BadSyntax,
             IllegalAccessException {
-        TestThat.forMacro(For.class)
+        TestThat.theMacro(For.class)
                 .define("$forsep", ";")
-                .fromInput(" x in (a;b;c;d)= x is either a, b, c or d\n").results(
+                .fromTheInput(" x in (a;b;c;d)= x is either a, b, c or d\n").results(
                 " a is either a, b, c or d\n" +
                         " b is either a, b, c or d\n" +
                         " c is either a, b, c or d\n" +

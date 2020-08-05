@@ -7,49 +7,49 @@ public class TestCamel {
 
     @Test
     public void testCamelLowerCase() throws Exception {
-        var camelLowerCase = TestThat.forMacro(Camel.LowCamel.class);
-        camelLowerCase.fromInput("INPUT").results("input");
-        camelLowerCase.fromInput("INpUT").results("input");
-        camelLowerCase.fromInput("INpuT").results("input");
-        camelLowerCase.fromInput("INput").results("input");
-        camelLowerCase.fromInput("Input").results("input");
-        camelLowerCase.fromInput("input").results("input");
-        camelLowerCase.fromInput("IN-PUT").results("inPut");
-        camelLowerCase.fromInput("I-N-P-U-T").results("iNPUT");
+        var camelLowerCase = TestThat.theMacro(Camel.LowCamel.class);
+        camelLowerCase.fromTheInput("INPUT").results("input");
+        camelLowerCase.fromTheInput("INpUT").results("input");
+        camelLowerCase.fromTheInput("INpuT").results("input");
+        camelLowerCase.fromTheInput("INput").results("input");
+        camelLowerCase.fromTheInput("Input").results("input");
+        camelLowerCase.fromTheInput("input").results("input");
+        camelLowerCase.fromTheInput("IN-PUT").results("inPut");
+        camelLowerCase.fromTheInput("I-N-P-U-T").results("iNPUT");
     }
 
     @Test
     public void testCamelUpperCase() throws Exception {
-        var camelUpperCase = TestThat.forMacro(Camel.UppCamel.class);
-        camelUpperCase.fromInput("INPUT").results("Input");
-        camelUpperCase.fromInput("INpUT").results("Input");
-        camelUpperCase.fromInput("INpuT").results("Input");
-        camelUpperCase.fromInput("INput").results("Input");
-        camelUpperCase.fromInput("Input").results("Input");
-        camelUpperCase.fromInput("input").results("Input");
-        camelUpperCase.fromInput("IN-PUT").results("InPut");
-        camelUpperCase.fromInput("I-N-P-U-T").results("INPUT");
+        var camelUpperCase = TestThat.theMacro(Camel.UppCamel.class);
+        camelUpperCase.fromTheInput("INPUT").results("Input");
+        camelUpperCase.fromTheInput("INpUT").results("Input");
+        camelUpperCase.fromTheInput("INpuT").results("Input");
+        camelUpperCase.fromTheInput("INput").results("Input");
+        camelUpperCase.fromTheInput("Input").results("Input");
+        camelUpperCase.fromTheInput("input").results("Input");
+        camelUpperCase.fromTheInput("IN-PUT").results("InPut");
+        camelUpperCase.fromTheInput("I-N-P-U-T").results("INPUT");
     }
 
     @Test
     public void testCamelCStyle() throws Exception {
-        var cstyle = TestThat.forMacro(Camel.CStyle.class);
-        cstyle.fromInput("_Input").results("INPUT");
-        cstyle.fromInput("_input").results("INPUT");
-        cstyle.fromInput("_InPut").results("IN_PUT");
-        cstyle.fromInput("_inPut").results("IN_PUT");
-        cstyle.fromInput("_InPuT").results("IN_PU_T");
-        cstyle.fromInput("_inPuT").results("IN_PU_T");
+        var cstyle = TestThat.theMacro(Camel.CStyle.class);
+        cstyle.fromTheInput("_Input").results("INPUT");
+        cstyle.fromTheInput("_input").results("INPUT");
+        cstyle.fromTheInput("_InPut").results("IN_PUT");
+        cstyle.fromTheInput("_inPut").results("IN_PUT");
+        cstyle.fromTheInput("_InPuT").results("IN_PU_T");
+        cstyle.fromTheInput("_inPuT").results("IN_PU_T");
     }
 
     @Test
     public void testCamelSentence() throws Exception {
-        var sentence = TestThat.forMacro(Camel.Sentence.class);
-        sentence.fromInput("Input").results("input");
-        sentence.fromInput("input").results("input");
-        sentence.fromInput("InPut").results("in put");
-        sentence.fromInput("inPut").results("in put");
-        sentence.fromInput("InPuT").results("in pu t");
-        sentence.fromInput("inPuT").results("in pu t");
+        var sentence = TestThat.theMacro(Camel.Sentence.class);
+        sentence.fromTheInput("Input").results("input");
+        sentence.fromTheInput("input").results("input");
+        sentence.fromTheInput("InPut").results("in put");
+        sentence.fromTheInput("inPut").results("in put");
+        sentence.fromTheInput("InPuT").results("in pu t");
+        sentence.fromTheInput("inPuT").results("in pu t");
     }
 }

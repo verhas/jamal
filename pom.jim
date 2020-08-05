@@ -1,3 +1,4 @@
+{@options lenient}
 {@import version.jim}
 {@define project(_packaging,_projectContent)=<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
                             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -25,19 +26,14 @@
 <dependency>
 {groupId/_groupId}
 {artifactId/_artifactId}
-{version/_version}
-</dependency>}
-
-{@define dependencyGA(_groupId,_artifactId)=<dependency>
-{groupId/_groupId}
-{artifactId/_artifactId}
+{@if :_version:{version/_version}:}
 </dependency>}
 
 {@define testDependency(_groupId,_artifactId,_version)=
 <dependency>
 {groupId/_groupId}
 {artifactId/_artifactId}
-{version/_version}
+{@if :_version:{version/_version}:}
 <scope>test</scope>
 </dependency>}
 

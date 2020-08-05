@@ -1,8 +1,12 @@
 package javax0.jamal.tracer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -68,11 +72,18 @@ public class TraceDumper {
 
     private void outputRecord(RandomAccessFile outputFile, AtomicInteger i, TraceRecord trace) throws IOException {
         outputFile.writeBytes("<record " +
-                (trace.getId().length() > 0 ? "name=\"" + trace.getId() + "\" " : "") +
-                "type=\"" + trace.type() + "\" " +
-                "level=\"" + trace.level() + "\" " +
-                "index=\"" + i.get() + "\" " +
-                ">\n");
+            (trace.getId().length() > 0 ? "name=\"" + trace.getId() + "\" " : "") +
+            "type=\"" + trace.type() + "\" " +
+            "level=\"" + trace.level() + "\" " +
+            "index=\"" + i.get() + "\" " +
+            ">\n");
+        if (trace.getWarnings().size() > 0) {
+            outputFile.writeBytes("<warnings>");
+            for( final var warning :trace.getWarnings() ){
+                outputFile.writeBytes("<warning>" + warning + "</warning>");
+            }
+            outputFile.writeBytes("</warnings>");
+        }
         if (trace.type() == TraceRecord.Type.USER_DEFINED_MACRO && trace.getParameters().length > 0) {
             outputFile.writeBytes("<parameters>");
             for (final var parameter : trace.getParameters()) {

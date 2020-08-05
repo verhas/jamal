@@ -1,5 +1,5 @@
 {@import ../pom.jim}
-{@define compileDependencyGA(_groupId,_artifactId)=<dependency>
+{@define compiledependency(_groupId,_artifactId)=<dependency>
 {groupId/_groupId}
 {artifactId/_artifactId}
 <scope>compile</scope>
@@ -12,8 +12,8 @@
     {@include ../plugins.jim}
     {dependencies#
         {@for MODULE in (api,tools,engine)=
-            {dependencyGA|com.javax0.jamal|jamal-MODULE}}
+            {dependency|com.javax0.jamal|jamal-MODULE}}
         {@for MODULE in (api,engine)=
-            {compileDependencyGA|org.junit.jupiter|junit-jupiter-MODULE}}
+            {compiledependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
 }

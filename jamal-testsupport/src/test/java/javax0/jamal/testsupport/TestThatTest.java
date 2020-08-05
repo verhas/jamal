@@ -13,7 +13,7 @@ public class TestThatTest {
     @Test
     @DisplayName("forMacro returns a TestThat instance")
     void testConstructrs() {
-        Assertions.assertEquals(TestThat.class, TestThat.forMacro(Macro.class).getClass());
+        Assertions.assertEquals(TestThat.class, TestThat.theMacro(Macro.class).getClass());
     }
 
     @Test
@@ -24,14 +24,14 @@ public class TestThatTest {
             InstantiationException,
             BadSyntax,
             IllegalAccessException {
-        TestThat.forMacro(TestingMacro.class).fromInput("").results(null);
+        TestThat.theMacro(TestingMacro.class).fromTheInput("").results(null);
     }
 
     @Test
     @DisplayName("TestThat asserts fails when output does not match")
     void testResultFailure() {
         Assertions.assertThrows(AssertionFailedError.class,
-                () -> TestThat.forMacro(TestingMacro.class).fromInput("").results(""));
+                () -> TestThat.theMacro(TestingMacro.class).fromTheInput("").results(""));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class TestThatTest {
             NoSuchMethodException,
             InstantiationException,
             IllegalAccessException {
-        TestThat.forMacro(TestingThrowingMacro.class).fromInput("").throwsUp(BadSyntax.class);
+        TestThat.theMacro(TestingThrowingMacro.class).fromTheInput("").throwsUp(BadSyntax.class);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TestThatTest {
             InstantiationException,
             BadSyntaxAt,
             IllegalAccessException {
-        TestThat.forMacro(TestingThrowingMacro.class).fromInput("").throwsBadSyntax();
+        TestThat.theMacro(TestingThrowingMacro.class).fromTheInput("").throwsBadSyntax();
     }
 
     private static class TestingMacro implements Macro {

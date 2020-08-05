@@ -12,8 +12,8 @@ public class RegexTest {
     @Test
     @DisplayName("replaceAll works with regular expressions")
     void simpleReplaceAll() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
-        var replaceAll = TestThat.forMacro(Regex.ReplaceAll.class);
-        replaceAll.fromInput("/this is the start/\\s*/").results("thisisthestart");
-        replaceAll.fromInput("/apple baum wolle/(\\w)\\1/$1").results("aple baum wole");
+        var replaceAll = TestThat.theMacro(Regex.ReplaceAll.class);
+        replaceAll.fromTheInput("/this is the start/\\s*/").results("thisisthestart");
+        replaceAll.fromTheInput("/apple baum wolle/(\\w)\\1/$1").results("aple baum wole");
     }
 }
