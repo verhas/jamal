@@ -1,7 +1,15 @@
-{@comment This file defines the version of the project. This is more effective than defining the project
+This file defines the version of the project. This is more effective than defining the project
 version in a maven property because that cannot be used to reference the parent.
-}
-{@define VERSION=1.0.4}
+
+-- the project groupId. It has to start with com. and a registered domain name or else it cannot get into maven central
+{@define GROUPID=com.javax0.jamal}
+
+-- module names are jamal.XXX
+{@define MODULE_PREFIX=jamal.}
+-- package names are less restrictive and it is not likely that anyone else would use javax0 as top level package
+{@define PACKAGE_PREFIX=javax0.jamal.}
+
+{@define VERSION=1.1.0}
 {@define JAVA_RELEASE=11}
 {@define JAVA_SOURCE=13}
 {@define JAVA_TARGET=11}

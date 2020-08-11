@@ -10,7 +10,7 @@
     {dependencies#
         {@for MODULE in (api,tools,engine)=
             {dependency|com.javax0.jamal|jamal-MODULE}}
-        {testDependency|com.javax0.jamal|jamal-testsupport}
+        {dependency|com.javax0.jamal|jamal-testsupport||test}
         {@for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

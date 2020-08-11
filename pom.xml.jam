@@ -1,3 +1,4 @@
+{@options lenient}
 {@import pom.jim}
 {project |pom|
     {GAV :com.javax0.jamal:jamal-parent:{VERSION}}
@@ -6,6 +7,7 @@
     {modules|jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport,jamal-cmd}
     {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
+    {github|verhas|jamal}
     {properties|
         {property :project.build.sourceEncoding:UTF-8}
     }
@@ -42,12 +44,12 @@
                     {GAV :org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M4}
                     {configuration|
                                 <argLine>
-                                    {opens/tools/javax0.jamal.tools}
-                                    {opens/engine/javax0.jamal}
-                                    {opens/engine/javax0.jamal.engine}
-                                    {opens/testsupport/javax0.jamal.builtinstest}
-                                    {opens/testsupport/javax0.jamal.testsupport}
-                                    {opens/extensions/javax0.jamal.extensions}
+                                    {opens/tools/tools}
+                                    --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
+                                    {opens/engine/engine}
+                                    {opens/testsupport/builtinstest}
+                                    {opens/testsupport/testsupport}
+                                    {opens/extensions/extensions}
                                 </argLine>
                     }
                 }
@@ -56,7 +58,7 @@
     }
     {dependencyManagement|{dependencies|
         {@for MODULE in (testsupport,api,core,tools,engine,extensions)={dependency :com.javax0.jamal:jamal-MODULE:{VERSION}}}
-        {@for MODULE in (api,engine)={testDependency :org.junit.jupiter:junit-jupiter-MODULE:5.2.0}}
+        {@for MODULE in (api,engine)={dependency :org.junit.jupiter:junit-jupiter-MODULE:5.2.0:test}}
         }}
 
     <profiles>
@@ -96,6 +98,7 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>{MAVEN_JAVADOC_PLUGIN_VERSION}</version>
                         <configuration>
+                            <source>8</source>
                             <sourceFileExcludes>
                                 <sourceFileExclude>module-info.java</sourceFileExclude>
                             </sourceFileExcludes>

@@ -4,7 +4,7 @@
     <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.0.4</version>
+    <version>1.1.0</version>
     <name>jamal-parent</name>
     <description>Jamal macro library to process text files</description>
     <modules>
@@ -29,6 +29,12 @@
             <email>peter@verhas.com</email>
         </developer>
     </developers>
+    <scm>
+        <connection>scm:git:git://github.com/verhas/jamal.git</connection>
+        <developerConnection>scm:git:ssh://github.com/verhas/jamal.git</developerConnection>
+        <url>https:/github.com/verhas/jamal/tree/master</url>
+    </scm>
+    <url>https:/github.com/verhas/jamal/tree/master</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -94,32 +100,32 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-testsupport</artifactId>
-                <version>1.0.4</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>
-                <version>1.0.4</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-core</artifactId>
-                <version>1.0.4</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-tools</artifactId>
-                <version>1.0.4</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-engine</artifactId>
-                <version>1.0.4</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
-                <version>1.0.4</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -172,6 +178,7 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>3.1.1</version>
                         <configuration>
+                            <source>8</source>
                             <sourceFileExcludes>
                                 <sourceFileExclude>module-info.java</sourceFileExclude>
                             </sourceFileExcludes>

@@ -4,11 +4,11 @@
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-testsupport</artifactId>
-    <version>1.0.4</version>
+    <version>1.1.0</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.0.4</version>
+        <version>1.1.0</version>
     </parent>
     <name>jamal testsupport</name>
     <description>Jamal macro library macro test supporting classes</description>
