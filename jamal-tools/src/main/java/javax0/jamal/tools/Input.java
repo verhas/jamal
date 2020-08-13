@@ -11,12 +11,24 @@ public class Input implements javax0.jamal.api.Input {
     private int line;
     private int column;
 
+    public static Input makeInput() {
+        return new Input();
+    }
+
     public Input() {
         this("");
     }
 
+    public static Input makeInput(String string) {
+        return new Input(string);
+    }
+
     public Input(String string) {
         this(string, null);
+    }
+
+    public static Input makeInput(String input, Position ref) {
+        return new Input(input, ref);
     }
 
     public Input(String input, Position ref) {

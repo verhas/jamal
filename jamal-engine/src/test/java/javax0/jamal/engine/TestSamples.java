@@ -8,13 +8,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestSamples {
@@ -50,7 +54,17 @@ class TestSamples {
     private String result(String testFileName) throws IOException, BadSyntax {
         var in = createInput(testFileName);
         final var sut = new Processor("{", "}");
-        return sut.process(in);
+        final var res = sut.process(in);
+        return res;
+    }
+
+    private String expected(String expectedFileName) throws IOException {
+        var fileName = Objects.requireNonNull(this.getClass().getResource(expectedFileName), "File '" + expectedFileName + "' does not exist").getFile();
+        fileName = fixupPath(fileName);
+        try (final var is = new FileInputStream(fileName)) {
+            final var bytes = is.readAllBytes();
+            return new String(bytes, StandardCharsets.UTF_8);
+        }
     }
 
     @Test
@@ -223,34 +237,63 @@ class TestSamples {
     }
 
     @Test
-    @DisplayName("even the name of the macro can be defined by a macro")
-    void testRecurse() throws BadSyntax, IOException {
-        assertEquals("wilfred\n" +
-            "black white", result("recursedef.jam"));
-    }
-
-    @Test
     @DisplayName("arguments are not replaced when present in the returned text of evaluated macros because of text segment splitting")
     void deepArgRef() throws BadSyntax, IOException {
         assertEquals("XX.. well, X is simply three aaa", result("deep_arg_ref.jam"));
     }
 
     @Test
-    @DisplayName("the behaviour of Jamal can be altered with the macro options")
-    void testOptions() throws BadSyntax, IOException {
-        assertEquals("apple is apple, pie is pie\n" +
-                "apple is apple, pie is pie\n" +
-                "apple is apple, pie is pie\n" +
-                "apple is apple, pie is pie\n" +
-                "apple is apple, pie is pie\n"
-            , result("options.jam"));
+    @DisplayName("All macro test that has .expected pair result what is expected")
+    void testAllExcpected() throws IOException, BadSyntax {
+        final var directoryName = fixupPath(this.getClass().getResource("").getFile());
+        final var directory = new File(directoryName);
+        int i = 0;
+        for (final var expectedFile : directory.list((File dir, String name) -> name.endsWith(".expected"))) {
+            final var inputFile = expectedFile.substring(0, expectedFile.length() - ".expected".length());
+            assertEquals(expected(expectedFile), result(inputFile));
+            i++;
+        }
+        // make sure all tests executed
+        final int NUMBER_OF_TESTS = 4;
+        assertFalse(NUMBER_OF_TESTS < i, "The number of tests is now different. You have new tests.");
+        assertFalse(NUMBER_OF_TESTS > i, "Some of the tests were not executed or you deleted some test but not corrected the number of tests.");
+    }
+
+    private int getInt(Processor sut, String s) throws BadSyntax {
+        return Integer.parseInt(((UserDefinedMacro) sut.getRegister().getUserDefined(s).get()).evaluate());
+    }
+    private String getString(Processor sut, String s) throws BadSyntax {
+        return ((UserDefinedMacro) sut.getRegister().getUserDefined(s).get()).evaluate();
+    }
+    @Test
+    @DisplayName("All macro test that has .expected pair result what is expected")
+    void testAllFailure() throws IOException, BadSyntax {
+        final var directoryName = fixupPath(this.getClass().getResource("").getFile());
+        final var directory = new File(directoryName);
+        int i = 0;
+        for (final var errFile : directory.list((File dir, String name) -> name.endsWith(".err"))) {
+            var in = createInput(errFile);
+            final var sut = new Processor("{", "}");
+            final var thrown = assertThrows(BadSyntaxAt.class, () -> sut.process(in));
+            final var line = getInt(sut,"line");
+            final var column = getInt(sut,"column");
+            final var msg = getString(sut,"message");
+            Assertions.assertEquals(line, thrown.getPosition().line);
+            Assertions.assertEquals(column, thrown.getPosition().column);
+            Assertions.assertTrue(thrown.getMessage().startsWith("Macro evaluated result user defined macro name contains the separator. Must not."));
+            i++;
+        }
+        // make sure all tests executed
+        final int NUMBER_OF_TESTS = 2;
+        assertFalse(NUMBER_OF_TESTS < i, "The number of tests is now different. You have new tests.");
+        assertFalse(NUMBER_OF_TESTS > i, "Some of the tests were not executed or you deleted some test but not corrected the number of tests.");
     }
 
     @Test
     void testErrorLineReport() {
         final var thrown = assertThrows(BadSyntaxAt.class, () -> result("fail.deep.jam"));
         Assertions.assertEquals(3, thrown.getPosition().line);
-        Assertions.assertEquals(4, thrown.getPosition().column);
+        Assertions.assertEquals(5, thrown.getPosition().column);
     }
 
 }

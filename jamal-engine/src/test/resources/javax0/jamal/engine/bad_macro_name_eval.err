@@ -1,0 +1,14 @@
+{@define line=4}{@define column=5}{@define message=Macro evaluated result user defined macro name contains the separator. Must not.}
+{@define z=a|}
+{@define a(k)=hkh}
+{{z}K}
+
+When the user defined macro name itself is defined as the result of a macro evaluation it is forbidden to get the
+separator character as the result of the evaluation. In this case `z` is evaluated to `a|` and that would make
+`|` to the separator character for the arguments (we have here only one). It could be
+
+{@define z=a}
+{@define a(k)=hkh}
+{{z}|K}
+
+this would be correct

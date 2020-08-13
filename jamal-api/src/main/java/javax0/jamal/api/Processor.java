@@ -3,6 +3,11 @@ package javax0.jamal.api;
 public interface Processor {
     String process(final Input in) throws BadSyntax;
 
+    /**
+     * Get the macro register of this processor. See {@link MacroRegister}
+     *
+     * @return the register
+     */
     MacroRegister getRegister();
 
     /**

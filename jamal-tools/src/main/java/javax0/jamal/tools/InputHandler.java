@@ -65,11 +65,13 @@ public class InputHandler {
      * or
      * <p>
      * a string that starts with some special character, which usually can not be part of an identifier and does not
-     * contains space. This way you can have macros like
-     * <pre>
-     *     {@code {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}}
-     * </pre>
-     * which is an experimental feature and is deliberately not documented except a single testsupport.
+     * contain space. This way you can have macros like
+     * <pre>{@code
+     *
+     *        {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}
+     *
+     * }</pre>
+     * which is an experimental feature and is deliberately not documented except here.
      *
      * @param input that contains the identifier at the start. The identifier will be removed at the end of the method.
      * @return the identifier string that was found and removed from the start of the input.

@@ -1,0 +1,4 @@
+{@define line=4}{@define column=9}{@define message=Macro evaluated result user defined macro name contains the separator. Must not.}
+{@define z=a}{@define su=/}
+{@define a(k)=hkh}
+{{z}{su}K}

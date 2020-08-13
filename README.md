@@ -611,12 +611,12 @@ in the output then you have toput those before the `ident` macro.
 ### `verbatim`<a name="verbatim">
 since 1.0.0 (core)
 
-`verbatim` is a special macro that affects macro evaluation order and is used for advanced
-macro evaluation. To understand what it does we have to discuss first how Jamal evaluates
+`verbatim` is a special macro, which affects macro evaluation order and is used for advanced
+macro evaluation. To understand what it does, we have to discuss first how Jamal evaluates
 the different macros.
 
 Jamal parses the input from the start towards the end and copies the characters from the
-input to the output. Whenever it sees a macro then it evaluates the macro and the result of
+input to the output. Whenever, when it sees a macro then it evaluates the macro, and the result of
 the evaluation is copied to the output. This evaluation is done in three steps, two of
 those are recursive. Let's have a simple example:
 
@@ -630,16 +630,15 @@ the string `this is it`.
 
 The macro `b` has the value `{a}`. When `b` is evaluated it results `{a}` and then before
 using this output in place of the use of the macro `b` this result is evaluated by Jamal as
-a new input. If the macro opening and closing strings are still `{` and `}` at this time, then
-this second recursive evaluation will result in the string `this is it`.
+a new input. This second recursive evaluation will result in the string `this is it`.
 
-The macro `c` is defined using the `#` character at the start of the macro, therefore Jamal
+The macro `c` is defined using the `#` character before the keyword `define`, therefore Jamal
 will process the body of the macro before processing the built-in macro `define` itself.
 Essentially it will evaluate `{b}`, put the resulting characters after the `=` sign
-in the definition of `c` and then evaluate the `define`.
+in the definition of `c` and then evaluate the `define` built-in macro.
 
 As we discussed above when this time `{b}` is evaluated it results `{a}`, which also gets evaluated
-and then it results `this is it`. Therefore the value of the macro `c` is `this is it` and
+and then it results `this is it`. Therefore, the value of the macro `c` is `this is it` and
 that is what we see in the output:
 
 <!--USE SNIPPET */verbatim1_output -->
@@ -656,9 +655,10 @@ This way the evaluation of a macro is done in three steps:
 3. If the macro is user-defined then evaluate the output of the macro and if it contains
    macros then evaluate those using these three steps.
 
-As you can see the first and the last steps are recursive steps. The first step can be skipped
+As you can see the first, and the last steps are recursive steps. The first step can be skipped
 using the `@` character. The second step cannot be skipped, and after all, there is no reason to
-do so. In the case of user-defined macro, however, the third step can be skipped using the macro `verbatim`.
+do so. In the case of user-defined macro, however, the third step can be skipped using the macro
+`verbatim`.
 
 The syntax of the `verbatim` macro is the following:
 
@@ -691,6 +691,65 @@ Jamal and it is not a "real" built-in macro. In other words, if there are user-d
 built-in macros then `verbatim` is one level deeper built-in than the other built-in macros. To
 understand this may be important if you want to write your own built-in macros as Java classes.
 You cannot "redefine" `verbatim`.
+
+#### Fine points of macro evaluation
+
+NOTE: This section is relevant only after 1.2.0
+
+Recall the three steps of macro evaluation:
+
+1. Evaluate the body of the macro unless the macro is built-in and starts with the character `@`.
+   When evaluating the macros in the body of the macro starts a new scope and evaluate the macros
+   following these three steps.
+2. Evaluate the macro itself.
+3. If the macro is user-defined then evaluate the output of the macro and if it contains
+   macros then evaluate those using these three steps.
+   
+In case of a user-defined macros the first step is executed in three sub steps. 
+
+1. First the start of the macro is evaluated if it is a macro. It can happen that the user defined macro name itself in
+   the text is the result of another macro. For example calling the macro named `white` can be `{white}`, but if there
+   is another macro named black with the definition `{@define black=white}` then using `{{black}}` will result the same.
+   In this case first `{black}` is evaluated to `white` and then `{white}` is evaluated to whatever the user defined
+   macro `white` is.
+
+2. The second step is that the content of the macro is split up into the macro name and the parameters. Recall that the
+   first character that is not part of the name of the macro (a non-space character that cannot be part of a macro name,
+   or the first character that follows the spaces after the macro name) is used as a parameter separator character. The
+   splitting process takes care of the macro calls that are in the arguments. For example the macro `{q/a/{b|c/g}}` will
+   get two parameters. The first parameter to `q` is `a`, the second is `{b|c/g}`. The first `/` character separates the
+   name of the macro from the parameters. The same time, it defines which character is used as separator character. The
+   second `/` character separates the first and the second parameters. The third `/` is not used as a separator
+   character because it is inside a macro use. As a matter of fact, this character is not used as a separator character,
+   even when the macro `{b|c/g}` is evaluated, because in that macro use the separator character is `|`. Similarly, if
+   we look at the macro `{q/a/{b/c}}` then the parameters are `a` and `{b/c}`. In this case the third `/` is ignored and
+   is not considered as a parameter separator when splitting up the macro content for the macro `q` even though this is
+   a parameter separator when the macro `b` is evaluated. The characters that are inside further macro calls are not
+   used as parameter separators.
+
+3. When the parameter strings are identified then they are evaluated one after the other, so that in the previous
+   examples `{b|c/g}` or `{b/c}` are evaluated and when the macro `q` is evaluated the parameters already contain the
+   result of the evaluation of these macro uses.
+
+The versions of Jamal prior 1.2.0 (so up to and including 1.1.0) evaluated user defined macros in a simpler way.  In
+those versions the body of the macro was evaluated as a whole in one simple step, and the parameter separator character
+was used in a very simple splitting operation that did not check if the separation character was inside an embedded
+macro use.
+ 
+That way it may have happened that some macro was evaluated, and the resulting string was containing the separator
+character. This is not what usually the users intended, and it is usually a bug that is hard to find. In the previous
+examples the evaluation of the macro use `{q/a/{b/c}}` would evaluate first `a/{b/c}` and then the splitting takes place
+on the resulting string. Usually this results the same as the new algorithm. However, if the definition of `b` is for
+example `{@define b(Z)=shoot/Z`, then the evaluated string will be `a/shoot/c` and the final evaluation will work (in
+version 1.1.0 of Jamal) `{q/a/shoot/c}`. It will result three parameters. This is probably an error because `q` in the
+example needs only two, and even if the option `lenient` was declared the result is not the one the author of the text
+expected.
+
+The version 1.2.0 and later version can revert to the earlier algorithm is the Jamal code defines the option
+`omasalgotm`, using the macro `options` as `{@options omasalgotm}`. The name of the option is an abbreviation and is
+hard to remember to distract from the use of it. If you really need this option then your Jamal source file does some
+shady thing that it should not. This option is obsolete from the very start of the introduction and is meant as a last
+resort to keep backward compatibility. It will be removed from Jamal versions 2.0.0 and later.
 
 ### `sep`<a name="sep">
 since 1.0.0 (core)

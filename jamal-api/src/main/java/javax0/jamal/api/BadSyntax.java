@@ -44,7 +44,7 @@ public class BadSyntax extends Exception {
 
     @Override
     public String getMessage() {
-        return super.getMessage() +
+        return super.getMessage() + "\n" +
             parameters.stream()
                 .map(BadSyntax::abbreviate)
                 .map(m -> ">>>" + m + "\n")
