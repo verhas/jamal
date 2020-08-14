@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class InputHandler {
     final static private int DOES_NOT_CONTAIN = -1;
-    private static String[] EMPTY_STRING_ARRAY = new String[0];
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * @param s a character sequence of which the first character is checked
