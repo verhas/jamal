@@ -46,7 +46,9 @@ public class JamalMain {
     //</editor-fold>
 
     private static String arg(String x) {
-        while (x.length() < 20) x += " ";
+        StringBuilder xBuilder = new StringBuilder(x);
+        while (xBuilder.length() < 20) xBuilder.append(" ");
+        x = xBuilder.toString();
         return x;
     }
 
