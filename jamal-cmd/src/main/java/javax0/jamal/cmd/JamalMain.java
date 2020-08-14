@@ -175,7 +175,7 @@ public class JamalMain {
         var sw = new StringWriter();
         var out = new PrintWriter(sw);
         e.printStackTrace(out);
-        Arrays.stream(sw.toString().split("\n")).forEach(s -> System.err.println(s));
+        Arrays.stream(sw.toString().split("\n")).forEach(System.err::println);
     }
 
     private Input createInput(Path inputFile) throws IOException {
