@@ -352,8 +352,8 @@ public class Processor implements javax0.jamal.api.Processor {
      *                  spaces
      * @param qualifier the macro qualifiers. It is used to know if the evaluation is oldStyle or not. If it is old
      *                  style then the macros here were already evaluated.
-     * @return
-     * @throws BadSyntax
+     * @return The input with the macros at the start replaced with the evaluated text of them
+     * @throws BadSyntax if some macro cannot be evaluated
      */
     private Input evaluateMacroStart(Input input, MacroQualifier qualifier) throws BadSyntax {
         final Input output = makeInput("", input.getPosition());
@@ -588,7 +588,7 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param input the input after the macro opening string
      * @return the output that contains the body of the macro
-     * @throws BadSyntaxAt
+     * @throws BadSyntaxAt if the macro opening and closing strings are not properly balanced
      */
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
         var refStack = new LinkedList<Position>();

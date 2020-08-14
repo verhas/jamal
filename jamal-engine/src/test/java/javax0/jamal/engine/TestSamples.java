@@ -47,9 +47,9 @@ class TestSamples {
      * Processes the text file and creates the resulting file in the resources directory so it can be examined.
      *
      * @param testFileName the test file name
-     * @return
-     * @throws IOException
-     * @throws BadSyntax
+     * @return the evaluated result
+     * @throws IOException when the file cannot be read
+     * @throws BadSyntax when there is syntax error in the test file
      */
     private String result(String testFileName) throws IOException, BadSyntax {
         var in = createInput(testFileName);
