@@ -41,8 +41,7 @@ public class TraceRecordFactory {
     }
 
     public TraceRecord openTextRecord(Position position) {
-        final var record = openTraceRecord(position, TraceRecord.Type.TEXT);
-        return record;
+        return openTraceRecord(position, TraceRecord.Type.TEXT);
     }
 
     private TraceRecord openTraceRecord(Position position, TraceRecord.Type t) {

@@ -54,8 +54,7 @@ class TestSamples {
     private String result(String testFileName) throws IOException, BadSyntax {
         var in = createInput(testFileName);
         final var sut = new Processor("{", "}");
-        final var res = sut.process(in);
-        return res;
+        return sut.process(in);
     }
 
     private String expected(String expectedFileName) throws IOException {
