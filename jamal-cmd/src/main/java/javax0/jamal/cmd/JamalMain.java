@@ -148,12 +148,12 @@ public class JamalMain {
 
     private void executeJamal(final Path inputPath) {
         try {
-            final var output = calculateTargetFile(inputPath);
-            System.out.println("Jamal " + inputPath.toString() + " -> " + output.toString());
-            if (output != null) {
+            final var outputPath = calculateTargetFile(inputPath);
+            System.out.println("Jamal " + inputPath.toString() + " -> " + outputPath);
+            if (outputPath != null) {
                 final String result;
                 result = new Processor(macroOpen, macroClose).process(createInput(inputPath));
-                writeOutput(output, result);
+                writeOutput(outputPath, result);
             }
         } catch (Exception e) {
             logException(e);

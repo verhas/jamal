@@ -155,7 +155,7 @@ public class TraceDumper {
             outputFile.readFully(buffer);
             var ending = new String(buffer, StandardCharsets.UTF_8);
             var index = ending.indexOf(END_TAG);
-            if (index >= -1) {
+            if (index > -1) {
                 outputFile.seek(outputFile.length() - lag + index);
             } else {
                 outputFile.seek(outputFile.length());
