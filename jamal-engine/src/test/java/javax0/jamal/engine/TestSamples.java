@@ -257,7 +257,7 @@ class TestSamples {
             i++;
         }
         // make sure all tests executed
-        final int NUMBER_OF_TESTS = 5;
+        final int NUMBER_OF_TESTS = 6;
         assertFalse(NUMBER_OF_TESTS < i, "The number of tests is now different. You have new tests.");
         assertFalse(NUMBER_OF_TESTS > i, "Some of the tests were not executed or you deleted some test but not corrected the number of tests.");
     }

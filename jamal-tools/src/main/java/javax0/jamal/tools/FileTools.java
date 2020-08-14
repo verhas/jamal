@@ -6,9 +6,15 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.net.BindException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
+
+import static javax0.jamal.tools.Input.makeInput;
 
 /**
  * Utility class containing static methods handling files.
@@ -24,11 +30,33 @@ public class FileTools {
      */
     public static Input getInput(String fileName) throws BadSyntax {
         try {
-            return new javax0.jamal.tools.Input(
-                Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n")),
-                new Position(fileName));
+            if (fileName.startsWith("res:")) {
+                return makeInput(getResourceInput(fileName.substring(4)), new Position(fileName));
+            } else {
+                return makeInput(Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n")),
+                    new Position(fileName));
+            }
         } catch (IOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + fileName + "'");
+        }
+    }
+
+    /**
+     * Read the content of the resource as a UTF-8 encoded character stream
+     *
+     * @param fileName the name of the resource (already without the {@code res:} prefix
+     * @return the content of the resource as a string
+     * @throws IOException if the resource cannot be read
+     */
+    private static String getResourceInput(String fileName) throws IOException {
+        try (final var is = FileTools.class.getClassLoader().getResourceAsStream(fileName)) {
+            if (is == null) {
+                throw new BindException("The resource file 'res:" + fileName + "' cannot be read.");
+            }
+            final var reader = new InputStreamReader(is, StandardCharsets.UTF_8);
+            final var writer = new StringWriter();
+            reader.transferTo(writer);
+            return writer.toString();
         }
     }
 
@@ -54,7 +82,8 @@ public class FileTools {
      * @return the absolute file name of the file
      */
     public static String absolute(final String reference, String fileName) {
-        if (fileName.startsWith("/") ||
+        if (fileName.startsWith("res:") ||
+            fileName.startsWith("/") ||
             fileName.startsWith("\\") ||
             fileName.startsWith("~") ||
             (fileName.length() > 1 &&

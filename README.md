@@ -11,7 +11,7 @@ featured provided by the programming language and on the twenty years of experie
 
 ![](images/text2text.svg)
 
-The basic concept of Jamal is to transform a source text to a target text enabling programmatic construct in the
+The basic concept of Jamal is to transform a UTF-8 source text to a target text enabling programmatic construct in the
 source text thus enabling the maintainer of the text to eliminate repetitions, text that can be calculated and other
 redundancies that make a text less readable and more error prone to maintain.
 
@@ -461,14 +461,14 @@ That way `{a}` and `{b}` are replaced with their defined values and what eval se
 since 1.0.0 (core)
 
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
-If there is anything defined in that file it will be imported into the scope of the current
+Anything defined in that file will be imported into the scope of the current
 file. If the macro opening and closing strings are redefined using the `sep` macro it will change
-for the file that imported the other file. If there are any user-defined macros defined in the
-top-level scope of the file, they will be available in the importing file.
+for the file that imported the other file. Any user-defined macros defined in the
+top-level scope of the file will be available in the importing file.
 
 (Note that top-level scope of the file may not be the same as the global scope. If the importing
 happens from an included file, or from inside a block of from inside a macro, or in a scope that
-was started with a `begin` macro then the "top-level-scope of the file" is the one
+was started with a `begin` macro then the "top-level-scope of the file" is the one,
 that contains the `import` macro. If anything is defined into the global scope in the imported
 file then those macros will eventually be in the global scope and available to anyone later.)
 
@@ -478,7 +478,9 @@ The syntax of the command is
 
 `import file_name`
 
-The name of the file can be absolute or it can be relative to the file that imports the other file.
+The name of the file can be absolute, or it can be relative to the file that imports the other file.
+Any file name starting with the letters `res:` are considered to be resource files in Java. This makes it
+possible to load macros that are provided with JAR libraries and are on the classpath.
 
 Use `import` to import user defined macro definitions.
 
@@ -499,7 +501,10 @@ The syntax of the command is
 
 `include file_name`
 
-The name of the file can be absolute or it can be relative to the file that imports the other file.
+The name of the file can be absolute, or it can be relative to the file that includes% the other file.
+Any file name starting with the letters `res:` are considered to be resource files in Java. This makes it
+possible to load macros that are provided with JAR libraries and are on the classpath.
+
 
 Use `include` to get the content of a file into the main output.
 
@@ -532,9 +537,9 @@ identifiers in the scripting language as they are used as such.
 The value injection converts the actual value of the parameter to script values. Because in this case
 the values are not injected into the macro body as string replacement but rather assigned to
 global variables in the script some conversion should take place. Without this, all the scripts that
-use some integer or floating point number were supposed to convert them first from the string.
+use some integer or floating-point number were supposed to convert them first from the string.
 
-Therefore Jamal tries to convert the actual value of a parameter of a `script` defined user-defined
+Therefore, Jamal tries to convert the actual value of a parameter of a `script` defined user-defined
 macro treating it as an integer. If it succeeds then the global variable having the name as the parameter
 will hold an integer value (or whatever the scripting language uses from the Java scripting context
 injected as `Integer`). If the conversion to an integer does not work then it tries the same with double.
