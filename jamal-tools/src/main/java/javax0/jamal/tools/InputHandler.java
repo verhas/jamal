@@ -4,9 +4,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 
 import java.util.Arrays;
-import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Utility class with some simple static methods that fetch characters from an input buffer.

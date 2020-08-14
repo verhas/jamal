@@ -3,7 +3,6 @@ package javax0.jamal.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.function.BiFunction;
 
 @FunctionalInterface
 public interface Macro {

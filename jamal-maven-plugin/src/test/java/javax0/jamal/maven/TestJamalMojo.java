@@ -1,6 +1,5 @@
 package javax0.jamal.maven;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.jupiter.api.Test;
 
 public class TestJamalMojo {
