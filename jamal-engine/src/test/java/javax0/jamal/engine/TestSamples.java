@@ -263,10 +263,18 @@ class TestSamples {
     }
 
     private int getInt(Processor sut, String s) throws BadSyntax {
-        return Integer.parseInt(((UserDefinedMacro) sut.getRegister().getUserDefined(s).get()).evaluate());
+        final var userDefined = sut.getRegister().getUserDefined(s);
+        if (userDefined.isEmpty()) {
+            throw new BadSyntax("The test file must contain {@define " + s + "= ... } definition with a number value.");
+        }
+        return Integer.parseInt(((UserDefinedMacro) userDefined.get()).evaluate());
     }
     private String getString(Processor sut, String s) throws BadSyntax {
-        return ((UserDefinedMacro) sut.getRegister().getUserDefined(s).get()).evaluate();
+        final var userDefined = sut.getRegister().getUserDefined(s);
+        if (userDefined.isEmpty()) {
+            throw new BadSyntax("The test file must contain {@define " + s + "= ... } definition.");
+        }
+        return ((UserDefinedMacro) userDefined.get()).evaluate();
     }
     @Test
     @DisplayName("All macro test that has .expected pair result what is expected")
