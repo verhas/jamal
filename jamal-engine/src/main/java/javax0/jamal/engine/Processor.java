@@ -264,44 +264,57 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         skipWhiteSpaces(evaluatedInput);
 
-        final String[] parameters;
-        if (evaluatedInput.length() > 0) {
-            var separator = evaluatedInput.charAt(0);
-            skip(evaluatedInput, 1);
-            if (Character.isAlphabetic(separator)) {
-                tr.warning("separator character '" + separator + "' is probably a mistake at " +
-                    evaluatedInput.getPosition().file + ":" + evaluatedInput.getPosition().line + ":" + evaluatedInput.getPosition().column);
-            }
-            if (qualifier.oldStyle) {
-                parameters = evaluatedInput.toString().split(Pattern.quote("" + separator), -1);
-            } else {
-                parameters = splitParameterString(evaluatedInput, separator);
-                for (int i = 0; i < parameters.length; i++) {
-                    parameters[i] = process(makeInput(parameters[i], ref));
-                }
-            }
-        } else {
-            parameters = ZERO_STRING_ARRAY;
-        }
-        var udMacro = macros.getUserDefined(id)
+        final var udMacroOpt = macros.getUserDefined(id)
             .filter(ud -> ud instanceof Evaluable)
             .map(ud -> (Evaluable) ud);
-        tr.setId(id);
-        tr.setParameters(parameters);
-        if (udMacro.isPresent()) {
+        if (reportUndef && udMacroOpt.isEmpty()) {
+            throw new BadSyntaxAt("Macro '" + id + "' is not defined.", ref);
+        }
+        if (udMacroOpt.isPresent()) {
+            final var udMacro = udMacroOpt.get();
+            final String[] parameters;
+            if (evaluatedInput.length() > 0) {
+                var separator = evaluatedInput.charAt(0);
+                if (!qualifier.oldStyle && udMacro.expectedNumberOfArguments() == 1) {
+                    if (!Character.isLetterOrDigit(separator)) {
+                        skip(evaluatedInput, 1);
+                    }
+                    parameters = new String[1];
+                    parameters[0] = evaluatedInput.toString();
+                } else {
+                    skip(evaluatedInput, 1);
+                    if (Character.isLetterOrDigit(separator)) {
+                        if (qualifier.oldStyle) {
+                            tr.warning("separator character '" + separator + "' is probably a mistake at " +
+                                evaluatedInput.getPosition().file + ":" + evaluatedInput.getPosition().line + ":" + evaluatedInput.getPosition().column);
+                        } else {
+                            throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", evaluatedInput.getPosition());
+                        }
+                    }
+                    if (qualifier.oldStyle) {
+                        parameters = evaluatedInput.toString().split(Pattern.quote("" + separator), -1);
+                    } else {
+                        parameters = splitParameterString(evaluatedInput, separator);
+                        for (int i = 0; i < parameters.length; i++) {
+                            parameters[i] = process(makeInput(parameters[i], ref));
+                        }
+                    }
+                }
+            } else {
+                parameters = ZERO_STRING_ARRAY;
+            }
+
+            tr.setId(id);
+            tr.setParameters(parameters);
             try {
-                return udMacro.get().evaluate(parameters);
+                return udMacro.evaluate(parameters);
             } catch (BadSyntaxAt bsAt) {
                 throw bsAt;
             } catch (BadSyntax bs) {
                 throw new BadSyntaxAt(bs, ref);
             }
         } else {
-            if (reportUndef) {
-                throw new BadSyntaxAt("Macro '" + id + "' is not defined.", ref);
-            } else {
-                return "";
-            }
+            return "";
         }
     }
 

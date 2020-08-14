@@ -311,11 +311,54 @@ When a user-defined macro is used the parameters are defined after the name of t
 case of user-defined macros, there is no `@` or `#` in front of the name of the macro. Optionally
 there may be a `?` character. In that case the result of an undefined user macro will be
 the empty string. Any other use of an undefined user macro results error. The
-parameters stand after the name of the macro separated by a character. The first
+parameters stand after the name of the macro separated by a separator character. The first
 non-whitespace character after the name of the macro is the separator character. It is usually
 `/` as in the examples below, but it can be any character that does not appear inside any of
 the actual values of the parameters. The number of parameters should be exactly the same
-as the formal parameters.
+as the formal parameters, unless the `{@options lenient}` was specified. In that case the missing
+arguments will be zero length strings, and the extra parameters will be ignored.
+
+The separator character must not be an alphanumeric character (letter or digit, unicode
+categories Lu, Ll, Lt, Lm, Lo and Nd).
+
+If the user defined macro has exactly one argument then there is no need to use a separator character. The sole
+parameter of the macro will start after the name of the macro at the first non-whitespace character. For example
+
+```
+{@define enclose(a)=<||a||>}
+{enclose this text}
+``` 
+
+will result `<||this text||>`. The parameter should start with an alphanumeric character. If it starts with something
+else then that character will be a separator character that separates the parameters. In this case, because there is
+only one parameter it will separate the macro name from the parameter.
+
+There are cases when it is necessary ro use a separator character. This is the case when parameter starts with a space,
+or a character that is not alphanumeric and which has to be included into the parameter. In that case the above macro
+should be used like the following three examples:
+
+```
+{enclose |+this text}
+{enclose ||this text}
+{enclose | this text}
+```
+
+These uses of the above macro will result
+
+```
+<||+this text||>
+<|||this text||>
+<|| this text||>
+```
+
+The second line in the examples the separator character is used in the parameter. Because the macro needs only one
+argument all the rest of the till the macro closing character is used as the single parameter and is not split up along
+the later occurrences of the separator character. Just use any non alphanumeric character in front of the parameter that
+looks good and in this case you need not worry about that the character itself presents in the content. Consider though
+the macro use, for example `{enclose/a/b/v}` is hard to read, and it is misleading since it looks like a macro use with
+three parameters. Another example of bad style use can be `{enclose a/b/c}` that may also be misread as a macro with
+three parameters. In situations like that it may be more readable to use an explicit separator character, for example
+`{enclose |a/b/c}` that should emphasize that there is only one parameter.
 
 In the following sample code, you can see some examples that demonstrate these.
 

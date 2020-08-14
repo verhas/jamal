@@ -1,0 +1,8 @@
+{@comment When the user define macro has only one argument then the separator character may be missing.}
+{@define enclose(a)=<||a||>}{enclose this text}
+{enclose|this text}
+{enclose |this text}
+{enclose |+this text}
+{enclose ||this text}
+{enclose | this text}
+{enclose | this||text}

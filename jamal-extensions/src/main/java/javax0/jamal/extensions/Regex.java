@@ -105,6 +105,11 @@ public class Regex {
                 throw new BadSyntax("The command '" + command + "' in the generated macro '" + name + "' needs a numeric argument");
             }
         }
+
+        @Override
+        public int expectedNumberOfArguments() {
+            return -1;
+        }
     }
 
     /**

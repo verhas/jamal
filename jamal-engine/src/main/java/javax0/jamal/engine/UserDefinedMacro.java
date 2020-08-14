@@ -102,4 +102,10 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         }
         return size;
     }
+
+    @Override
+    public int expectedNumberOfArguments() {
+        return argumentHandler.parameters.length;
+    }
+
 }

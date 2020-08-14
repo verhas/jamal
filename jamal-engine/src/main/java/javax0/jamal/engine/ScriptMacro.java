@@ -76,4 +76,9 @@ final ArgumentHandler argumentHandler;
             throw new BadSyntax("Script '" + id + "' threw exception", e);
         }
     }
+
+    @Override
+    public int expectedNumberOfArguments() {
+        return argumentHandler.parameters.length;
+    }
 }

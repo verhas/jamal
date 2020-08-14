@@ -241,13 +241,17 @@ public class InputHandler {
      *
      * @param input to be split up
      * @return the list of the strings created from the input
+     * @throws BadSyntaxAt if the separator character is letter or digit
      */
-    public static String[] getParts(Input input) {
+    public static String[] getParts(Input input) throws BadSyntaxAt {
         skipWhiteSpaces(input);
         if (input.length() == 0) {
             return EMPTY_STRING_ARRAY;
         }
         var sepchar = input.substring(0, 1);
+        if(Character.isLetterOrDigit(sepchar.charAt(0))){
+            throw new BadSyntaxAt("The separator character '"+sepchar+"' is invalid",input.getPosition());
+        }
         skip(input, 1);
         if ("`".equals(sepchar)) {
             return getPartsRegex(input);

@@ -257,7 +257,7 @@ class TestSamples {
             i++;
         }
         // make sure all tests executed
-        final int NUMBER_OF_TESTS = 4;
+        final int NUMBER_OF_TESTS = 5;
         assertFalse(NUMBER_OF_TESTS < i, "The number of tests is now different. You have new tests.");
         assertFalse(NUMBER_OF_TESTS > i, "Some of the tests were not executed or you deleted some test but not corrected the number of tests.");
     }
@@ -277,7 +277,7 @@ class TestSamples {
         return ((UserDefinedMacro) userDefined.get()).evaluate();
     }
     @Test
-    @DisplayName("All macro test that has .expected pair result what is expected")
+    @DisplayName("All macro test that has .err in the name")
     void testAllFailure() throws IOException, BadSyntax {
         final var directoryName = fixupPath(this.getClass().getResource("").getFile());
         final var directory = new File(directoryName);
@@ -295,11 +295,11 @@ class TestSamples {
             final var msg = getString(sut, "message");
             Assertions.assertEquals(line, thrown.getPosition().line);
             Assertions.assertEquals(column, thrown.getPosition().column);
-            Assertions.assertTrue(thrown.getMessage().startsWith("Macro evaluated result user defined macro name contains the separator. Must not."));
+            Assertions.assertTrue(thrown.getMessage().startsWith(msg), thrown.getMessage() + "\n does not start with:\n" + msg);
             i++;
         }
         // make sure all tests executed
-        final int NUMBER_OF_TESTS = 2;
+        final int NUMBER_OF_TESTS = 3;
         assertFalse(NUMBER_OF_TESTS < i, "The number of tests is now different. You have new tests.");
         assertFalse(NUMBER_OF_TESTS > i, "Some of the tests were not executed or you deleted some test but not corrected the number of tests.");
     }

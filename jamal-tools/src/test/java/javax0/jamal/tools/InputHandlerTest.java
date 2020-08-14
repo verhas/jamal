@@ -1,5 +1,6 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.BadSyntaxAt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,13 @@ public class InputHandlerTest {
 
     private void assertSplit(String input, String... expected) {
         var in = new Input(input);
-        var result = InputHandler.getParts(in);
+        final String[] result;
+        try {
+            result = InputHandler.getParts(in);
+        } catch (BadSyntaxAt badSyntaxAt) {
+            // means the test is wrong
+            throw new RuntimeException(badSyntaxAt);
+        }
         Assertions.assertArrayEquals(expected, result);
 
     }
