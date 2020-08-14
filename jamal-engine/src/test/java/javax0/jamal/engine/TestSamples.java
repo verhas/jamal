@@ -247,7 +247,11 @@ class TestSamples {
         final var directoryName = fixupPath(this.getClass().getResource("").getFile());
         final var directory = new File(directoryName);
         int i = 0;
-        for (final var expectedFile : directory.list((File dir, String name) -> name.endsWith(".expected"))) {
+        final var expectedFiles = directory.list((File dir, String name) -> name.endsWith(".expected"));
+        if (expectedFiles == null) {
+            throw new IOException("There are no .expected files in the test resources directory");
+        }
+        for (final var expectedFile : expectedFiles) {
             final var inputFile = expectedFile.substring(0, expectedFile.length() - ".expected".length());
             assertEquals(expected(expectedFile), result(inputFile));
             i++;
@@ -270,13 +274,17 @@ class TestSamples {
         final var directoryName = fixupPath(this.getClass().getResource("").getFile());
         final var directory = new File(directoryName);
         int i = 0;
-        for (final var errFile : directory.list((File dir, String name) -> name.endsWith(".err"))) {
+        final var errFiles = directory.list((File dir, String name) -> name.endsWith(".err"));
+        if (errFiles == null) {
+            throw new IOException("There are no .err files in the test resources directory");
+        }
+        for (final var errFile : errFiles) {
             var in = createInput(errFile);
             final var sut = new Processor("{", "}");
             final var thrown = assertThrows(BadSyntaxAt.class, () -> sut.process(in));
-            final var line = getInt(sut,"line");
-            final var column = getInt(sut,"column");
-            final var msg = getString(sut,"message");
+            final var line = getInt(sut, "line");
+            final var column = getInt(sut, "column");
+            final var msg = getString(sut, "message");
             Assertions.assertEquals(line, thrown.getPosition().line);
             Assertions.assertEquals(column, thrown.getPosition().column);
             Assertions.assertTrue(thrown.getMessage().startsWith("Macro evaluated result user defined macro name contains the separator. Must not."));
