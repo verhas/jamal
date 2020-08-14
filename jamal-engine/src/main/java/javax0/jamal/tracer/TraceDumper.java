@@ -19,7 +19,7 @@ public class TraceDumper {
     }
 
     private static String cDataEscape(String string) {
-        return string.replaceAll("\\]\\]>", "]]]]<![CDATA[>");
+        return string.replaceAll("]]>", "]]]]<![CDATA[>");
     }
 
     public void dump(List<TraceRecord> traces, String fileName, Exception ex) {
