@@ -1,0 +1,1 @@
+{@define a(x)=<<|x|>>}{@define b=55}{a {b}}

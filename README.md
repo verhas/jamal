@@ -322,16 +322,16 @@ The separator character must not be an alphanumeric character (letter or digit, 
 categories Lu, Ll, Lt, Lm, Lo and Nd).
 
 If the user defined macro has exactly one argument then there is no need to use a separator character. The sole
-parameter of the macro will start after the name of the macro at the first non-whitespace character. For example
+parameter of the macro can start after the name of the macro at the first non-whitespace character. For example,
 
 ```
 {@define enclose(a)=<||a||>}
 {enclose this text}
 ``` 
 
-will result `<||this text||>`. The parameter should start with an alphanumeric character. If it starts with something
-else then that character will be a separator character that separates the parameters. In this case, because there is
-only one parameter it will separate the macro name from the parameter.
+will result `<||this text||>`. The parameter should start with an alphanumeric character or with a macro start string.
+If it starts with something else then that character will be a separator character that separates the parameters. In
+this case, because there is only one parameter it will separate the macro name from the parameter.
 
 There are cases when it is necessary ro use a separator character. This is the case when parameter starts with a space,
 or a character that is not alphanumeric and which has to be included into the parameter. In that case the above macro
