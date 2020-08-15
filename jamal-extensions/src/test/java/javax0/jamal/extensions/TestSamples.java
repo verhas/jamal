@@ -3,7 +3,9 @@ package javax0.jamal.extensions;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.testsupport.TestAll;
 import javax0.jamal.tools.Input;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -92,4 +94,21 @@ class TestSamples {
     }
     // snippet end
 
+    @DisplayName("Test all files that have an '.expected' pair")
+    @Test
+    void testExpectedFiles() throws IOException, BadSyntax {
+        final TestAll tests = TestAll.in(this.getClass()).filesWithExtension(".expected");
+        if (!tests.resultAsExpected()) {
+            Assertions.assertEquals(tests.getExpected(), tests.getActual(), tests.getMessage());
+        }
+    }
+
+    @DisplayName("Test all files that have an '.err' extension")
+    @Test
+    void testErrFiles() throws IOException, BadSyntax {
+        final TestAll tests = TestAll.in(this.getClass()).filesWithExtension(".err");
+        if (!tests.failAsExpected()) {
+            Assertions.assertEquals(tests.getExpected(), tests.getActual(), tests.getMessage());
+        }
+    }
 }

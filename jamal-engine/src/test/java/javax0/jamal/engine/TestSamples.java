@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,17 +16,17 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static javax0.jamal.tools.Input.makeInput;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TestSamples {
 
-    private javax0.jamal.api.Input createInput(String testFileName) throws IOException {
+    private Input createInput(String testFileName) throws IOException {
         var fileName = Objects.requireNonNull(this.getClass().getResource(testFileName), "File '" + testFileName + "' does not exist").getFile();
         fileName = fixupPath(fileName);
         var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
-        return new Input(fileContent, new Position(fileName));
+        return makeInput(fileContent, new Position(fileName));
     }
 
     /**
@@ -55,15 +54,6 @@ class TestSamples {
         var in = createInput(testFileName);
         final var sut = new Processor("{", "}");
         return sut.process(in);
-    }
-
-    private String expected(String expectedFileName) throws IOException {
-        var fileName = Objects.requireNonNull(this.getClass().getResource(expectedFileName), "File '" + expectedFileName + "' does not exist").getFile();
-        fileName = fixupPath(fileName);
-        try (final var is = new FileInputStream(fileName)) {
-            final var bytes = is.readAllBytes();
-            return new String(bytes, StandardCharsets.UTF_8);
-        }
     }
 
     @Test
@@ -239,69 +229,6 @@ class TestSamples {
     @DisplayName("arguments are not replaced when present in the returned text of evaluated macros because of text segment splitting")
     void deepArgRef() throws BadSyntax, IOException {
         assertEquals("XX.. well, X is simply three aaa", result("deep_arg_ref.jam"));
-    }
-
-    @Test
-    @DisplayName("All macro test that has .expected pair result what is expected")
-    void testAllExcpected() throws IOException, BadSyntax {
-        final var directoryName = fixupPath(this.getClass().getResource("").getFile());
-        final var directory = new File(directoryName);
-        int i = 0;
-        final var expectedFiles = directory.list((File dir, String name) -> name.endsWith(".expected"));
-        if (expectedFiles == null) {
-            throw new IOException("There are no .expected files in the test resources directory");
-        }
-        for (final var expectedFile : expectedFiles) {
-            final var inputFile = expectedFile.substring(0, expectedFile.length() - ".expected".length());
-            assertEquals(expected(expectedFile), result(inputFile));
-            i++;
-        }
-        // make sure all tests executed
-        final int NUMBER_OF_TESTS = 6;
-        assertFalse(NUMBER_OF_TESTS < i, "The number of tests is now different. You have new tests.");
-        assertFalse(NUMBER_OF_TESTS > i, "Some of the tests were not executed or you deleted some test but not corrected the number of tests.");
-    }
-
-    private int getInt(Processor sut, String s) throws BadSyntax {
-        final var userDefined = sut.getRegister().getUserDefined(s);
-        if (userDefined.isEmpty()) {
-            throw new BadSyntax("The test file must contain {@define " + s + "= ... } definition with a number value.");
-        }
-        return Integer.parseInt(((UserDefinedMacro) userDefined.get()).evaluate());
-    }
-    private String getString(Processor sut, String s) throws BadSyntax {
-        final var userDefined = sut.getRegister().getUserDefined(s);
-        if (userDefined.isEmpty()) {
-            throw new BadSyntax("The test file must contain {@define " + s + "= ... } definition.");
-        }
-        return ((UserDefinedMacro) userDefined.get()).evaluate();
-    }
-    @Test
-    @DisplayName("All macro test that has .err in the name")
-    void testAllFailure() throws IOException, BadSyntax {
-        final var directoryName = fixupPath(this.getClass().getResource("").getFile());
-        final var directory = new File(directoryName);
-        int i = 0;
-        final var errFiles = directory.list((File dir, String name) -> name.endsWith(".err"));
-        if (errFiles == null) {
-            throw new IOException("There are no .err files in the test resources directory");
-        }
-        for (final var errFile : errFiles) {
-            var in = createInput(errFile);
-            final var sut = new Processor("{", "}");
-            final var thrown = assertThrows(BadSyntaxAt.class, () -> sut.process(in));
-            final var line = getInt(sut, "line");
-            final var column = getInt(sut, "column");
-            final var msg = getString(sut, "message");
-            Assertions.assertEquals(line, thrown.getPosition().line);
-            Assertions.assertEquals(column, thrown.getPosition().column);
-            Assertions.assertTrue(thrown.getMessage().startsWith(msg), thrown.getMessage() + "\n does not start with:\n" + msg);
-            i++;
-        }
-        // make sure all tests executed
-        final int NUMBER_OF_TESTS = 3;
-        assertFalse(NUMBER_OF_TESTS < i, "The number of tests is now different. You have new tests.");
-        assertFalse(NUMBER_OF_TESTS > i, "Some of the tests were not executed or you deleted some test but not corrected the number of tests.");
     }
 
     @Test
