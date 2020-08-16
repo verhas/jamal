@@ -221,8 +221,11 @@ public class TestAll {
         void apply(Object expected, Object actual, String message);
     }
 
-    public static void testExpected(Object testThis, AssertEquals asserter, String... extension) throws IOException, BadSyntax {
-        final var ext = extension.length > 0 ? extension[0] : ".expected";
+    public static void testExpected(Object testThis, AssertEquals asserter) throws IOException, BadSyntax {
+        testExpected(testThis,asserter,".expected");
+    }
+
+    public static void testExpected(Object testThis, AssertEquals asserter, String ext) throws IOException, BadSyntax {
         final TestAll tests = in(testThis.getClass()).filesWithExtension(ext);
         if (!tests.resultAsExpected()) {
             asserter.apply(tests.getExpected(), tests.getActual(), tests.getMessage());
