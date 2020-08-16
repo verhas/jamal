@@ -1,0 +1,10 @@
+--add-opens module/prefix=to
+--add-opens module/prefix=ALL-UNNAMED
+--add-exports module/prefix=to
+--add-exports module/prefix=ALL-UNNAMED
+
+
+--add-opens module-prefix.module/package-prefix.prefix=to
+--add-opens module-prefix.module/package-prefix.prefix=ALL-UNNAMED
+--add-exports module-prefix.module/package-prefix.prefix=to
+--add-exports module-prefix.module/package-prefix.prefix=ALL-UNNAMED

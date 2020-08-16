@@ -1,0 +1,16 @@
+<developers>
+    <developer>
+        <name>Peter Verhas</name>
+        <email>peter@verhas.com</email>
+    </developer>
+</developers>
+<developers>
+      <developer>
+        <name>Peter Verhas</name>
+        <email>peter@verhas.com</email>
+    </developer>
+      <developer>
+        <name>test developer</name>
+        <email>test_developer_email@some.domain.com</email>
+    </developer>
+</developers>

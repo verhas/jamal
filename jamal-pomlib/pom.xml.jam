@@ -1,12 +1,12 @@
-{@import ../pom.jim}
-{project |jar|
+{@import res:javax0/jamal/pomlib/pom.jim}
+{project jar}
     {GAV :com.javax0.jamal:jamal-pomlib:1.0.0-SNAPSHOT}
-    {parent :jamal-parent}
-    {name|jamal pomlib}
+    {parent ::jamal-parent:}
+    {name jamal pomlib}
     {description pom.xml support Jamal Import Resource}
-    {dependencies#
+    {dependencies
       {dependency |com.javax0.jamal|jamal-testsupport||test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
-}
+{end project}

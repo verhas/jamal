@@ -1,0 +1,7 @@
+{@import res:javax0/jamal/pomlib/pom.jim}{@comment
+
+This file tests that a tag, defined in the pom.ji using the tag macro can be used empty, in which case the content will
+be inserted as after the macro and an [end tag] should be used at the end or with content.
+
+}{packaging}jar{end packaging}
+{packaging jar}

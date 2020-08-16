@@ -79,12 +79,12 @@ public class TraceDumper {
             ">\n");
         if (trace.getWarnings().size() > 0) {
             outputFile.writeBytes("<warnings>");
-            for( final var warning :trace.getWarnings() ){
+            for (final var warning : trace.getWarnings()) {
                 outputFile.writeBytes("<warning>" + warning + "</warning>");
             }
             outputFile.writeBytes("</warnings>");
         }
-        if (trace.type() == TraceRecord.Type.USER_DEFINED_MACRO && trace.getParameters().length > 0) {
+        if (trace.type() == TraceRecord.Type.USER_DEFINED_MACRO && trace.getParameters() != null && trace.getParameters().length > 0) {
             outputFile.writeBytes("<parameters>");
             for (final var parameter : trace.getParameters()) {
                 outputFile.writeBytes("<parameter>");
