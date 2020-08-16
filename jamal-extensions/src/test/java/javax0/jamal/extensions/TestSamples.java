@@ -97,10 +97,7 @@ class TestSamples {
     @DisplayName("Test all files that have an '.expected' pair")
     @Test
     void testExpectedFiles() throws IOException, BadSyntax {
-        final TestAll tests = TestAll.in(this.getClass()).filesWithExtension(".expected");
-        if (!tests.resultAsExpected()) {
-            Assertions.assertEquals(tests.getExpected(), tests.getActual(), tests.getMessage());
-        }
+        TestAll.testExpected(this,Assertions::assertEquals);
     }
 
     @DisplayName("Test all files that have an '.err' extension")

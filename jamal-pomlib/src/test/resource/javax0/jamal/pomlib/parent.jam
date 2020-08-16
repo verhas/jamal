@@ -1,0 +1,3 @@
+{@import res:javax0/jamal/pomlib/pom.jim}
+{GAV :grp:artfct:1.0.7}
+{parent :::}

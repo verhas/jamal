@@ -13,6 +13,16 @@ you start a project definition with the name and at the end of the file there is
                  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <modelVersion>4.0.0</modelVersion>
       <name>$name</name>}
+------------------------------------------------------------------------------------------------------------------------
+Tags that contain a lot of elements inside are supported by macros that start only the tag. These tags have to be closed
+with an [end tag] element. For example
+
+[project name]
+
+  the whole content of the jamalified pom file
+
+[end project]
+
 {@define end($x)=</$x>}
 ------------------------------------------------------------------------------------------------------------------------
 This is an auxiliary macro and not used in the pom.xml.jam files. This macro, when invoked defines a simple macro that
@@ -62,10 +72,18 @@ as a subproject.
 To skip the groupId, for example, you can write [GAV ::artifa-ct:1.0.0]
 
 {@define GAV($groupId,$artifactId,$version)=
-    {#if|$groupId|{groupId $groupId}{@define GROUP_ID=$groupId}}
-    {#if|$artifactId|{artifactId $artifactId}{@define ARTIFACT_ID=$artifactId}}
-    {#if|$version|{version $version}{@define VERSION=$version}}
+    {#if|$groupId|{groupId $groupId}{@define GROUP_ID=$groupId}{@export GROUP_ID}}
+    {#if|$artifactId|{artifactId $artifactId}{@define ARTIFACT_ID=$artifactId}{@export ARTIFACT_ID}}
+    {#if|$version|{version $version}{@define VERSION=$version}{@export VERSION}}
 }
+
+------------------------------------------------------------------------------------------------------------------------
+
+{@define parent($groupId,$artifactId,$version)=<parent>
+    {#if|$groupId|{groupId :$groupId}|{groupId {GROUP_ID}}}
+    {#if|$artifactId|{artifactId :$artifactId}|{artifactId {ARTIFACT_ID}}}
+    {#if|$version|{version :$version}|{version {VERSION}}}
+</parent>}
 
 ------------------------------------------------------------------------------------------------------------------------
 Define a dependency. The arguments are the ... you see. Each of the arguments are

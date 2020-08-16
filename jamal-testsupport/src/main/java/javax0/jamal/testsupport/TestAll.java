@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.engine.Processor;
+import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -216,6 +217,17 @@ public class TestAll {
         return makeInput(fileContent, new Position(fileName));
     }
 
+    @FunctionalInterface
+    public interface AssertEquals {
+        void apply(Object expected, Object actual, String message);
+    }
+
+    public static void testExpected(Object testThis, AssertEquals asserter) throws IOException, BadSyntax {
+        final TestAll tests = in(testThis.getClass()).filesWithExtension(".expected");
+        if (!tests.resultAsExpected()) {
+            asserter.apply(tests.getExpected(), tests.getActual(), tests.getMessage());
+        }
+    }
 
     /**
      * When a test fails then the message is a user friendly text that help explain why the test failed. This method is
