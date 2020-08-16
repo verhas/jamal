@@ -72,17 +72,17 @@ as a subproject.
 To skip the groupId, for example, you can write [GAV ::artifa-ct:1.0.0]
 
 {@define GAV($groupId,$artifactId,$version)=
-    {#if|$groupId|{groupId $groupId}{@define GROUP_ID=$groupId}{@export GROUP_ID}}
-    {#if|$artifactId|{artifactId $artifactId}{@define ARTIFACT_ID=$artifactId}{@export ARTIFACT_ID}}
-    {#if|$version|{version $version}{@define VERSION=$version}{@export VERSION}}
+    {#if|$groupId|{groupId $groupId}}{@define GROUP_ID=$groupId}
+    {#if|$artifactId|{artifactId $artifactId}}{@define ARTIFACT_ID=$artifactId}
+    {#if|$version|{version $version}}{@define VERSION=$version}
 }
 
 ------------------------------------------------------------------------------------------------------------------------
 
 {@define parent($groupId,$artifactId,$version)=<parent>
-    {#if|$groupId|{groupId :$groupId}|{groupId {GROUP_ID}}}
-    {#if|$artifactId|{artifactId :$artifactId}|{artifactId {ARTIFACT_ID}}}
-    {#if|$version|{version :$version}|{version {VERSION}}}
+    {groupId {#if|$groupId|$groupId|{GROUP_ID}}}
+    {#if|$artifactId|{artifactId $artifactId}|{artifactId {ARTIFACT_ID}}}
+    {#if|$version|{version $version}|{version {VERSION}}}
 </parent>}
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -91,9 +91,9 @@ optional. If one is missing there will be no corresponding XML tag generated.
 
 {@define dependency($groupId,$artifactId,$version,$scope)=
 <dependency>
-    {#if|$groupId|{groupId :$groupId}}
-    {#if|$artifactId|{artifactId :$artifactId}}
-    {#if|$version|{version :$version}}
-    {#if|$scope|{scope :$scope}}
+    {#if|$groupId|{groupId $groupId}}
+    {#if|$artifactId|{artifactId $artifactId}}
+    {#if|$version|{version $version}}
+    {#if|$scope|{scope $scope}}
 </dependency>
 }

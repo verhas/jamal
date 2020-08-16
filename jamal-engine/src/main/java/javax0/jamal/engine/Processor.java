@@ -280,7 +280,7 @@ public class Processor implements javax0.jamal.api.Processor {
                         skip(evaluatedInput, 1);
                     }
                     parameters = new String[1];
-                    parameters[0] = evaluatedInput.toString();
+                    parameters[0] = process(evaluatedInput);
                 } else {
                     skip(evaluatedInput, 1);
                     if (Character.isLetterOrDigit(separator)) {

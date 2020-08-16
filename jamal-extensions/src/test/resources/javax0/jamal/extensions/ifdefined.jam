@@ -1,0 +1,3 @@
+{@define enclose(a)=<||a||>}{@define z=13}
+{enclose {#if || |{z}}}
+{enclose {#if |||{z}}}

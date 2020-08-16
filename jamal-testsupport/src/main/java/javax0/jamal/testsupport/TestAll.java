@@ -6,7 +6,6 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.engine.Processor;
-import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -222,8 +221,9 @@ public class TestAll {
         void apply(Object expected, Object actual, String message);
     }
 
-    public static void testExpected(Object testThis, AssertEquals asserter) throws IOException, BadSyntax {
-        final TestAll tests = in(testThis.getClass()).filesWithExtension(".expected");
+    public static void testExpected(Object testThis, AssertEquals asserter, String... extension) throws IOException, BadSyntax {
+        final var ext = extension.length > 0 ? extension[0] : ".expected";
+        final TestAll tests = in(testThis.getClass()).filesWithExtension(ext);
         if (!tests.resultAsExpected()) {
             asserter.apply(tests.getExpected(), tests.getActual(), tests.getMessage());
         }

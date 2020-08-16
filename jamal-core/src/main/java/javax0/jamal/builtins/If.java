@@ -40,7 +40,7 @@ public class If implements Macro {
         skip(input, testEnd + 1);
         var positiveEnd = input.indexOf(separator);
         final String positive;
-        if (positiveEnd > 0) {
+        if (positiveEnd > -1) {
             positive = input.substring(0, positiveEnd);
             skip(input, positiveEnd + 1);
         } else {

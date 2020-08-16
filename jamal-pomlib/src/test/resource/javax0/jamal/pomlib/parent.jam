@@ -1,3 +1,27 @@
 {@import res:javax0/jamal/pomlib/pom.jim}
+deine the group, artifact and version
 {GAV :grp:artfct:1.0.7}
+use the group, artifact and version that was defined in the GAV
 {parent :::}
+{parent } no argument to parent at all, makes not sense, but for test it is checked
+
+redefine group
+{parent :parentGroupId::}
+
+define artifact
+{parent ::parentArtifactId:}
+
+define version
+{parent :::parentVersion}
+
+define group and artifact
+{parent :parentGroupId:parentArtifactId:}
+
+define artifact and version
+{parent ::parentArtifactId:parentVersion}
+
+define group and version
+{parent :parentGroupId::parentVersion}
+
+define all
+{parent :parentGroupId:parentArtifactId:parentVersion}

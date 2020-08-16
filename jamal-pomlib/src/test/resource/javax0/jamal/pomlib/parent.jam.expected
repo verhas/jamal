@@ -1,0 +1,67 @@
+
+deine the group, artifact and version
+
+    <groupId>grp</groupId>
+    <artifactId>artfct</artifactId>
+    <version>1.0.7</version>
+
+use the group, artifact and version that was defined in the GAV
+<parent>
+    <groupId>grp</groupId>
+    <artifactId>artfct</artifactId>
+    <version>1.0.7</version>
+</parent>
+<parent>
+    <groupId>grp</groupId>
+    <artifactId>artfct</artifactId>
+    <version>1.0.7</version>
+</parent> no argument to parent at all, makes not sense, but for test it is checked
+
+redefine group
+<parent>
+    <groupId>parentGroupId</groupId>
+    <artifactId>artfct</artifactId>
+    <version>1.0.7</version>
+</parent>
+
+define artifact
+<parent>
+    <groupId>grp</groupId>
+    <artifactId>parentArtifactId</artifactId>
+    <version>1.0.7</version>
+</parent>
+
+define version
+<parent>
+    <groupId>grp</groupId>
+    <artifactId>artfct</artifactId>
+    <version>parentVersion</version>
+</parent>
+
+define group and artifact
+<parent>
+    <groupId>parentGroupId</groupId>
+    <artifactId>parentArtifactId</artifactId>
+    <version>1.0.7</version>
+</parent>
+
+define artifact and version
+<parent>
+    <groupId>grp</groupId>
+    <artifactId>parentArtifactId</artifactId>
+    <version>parentVersion</version>
+</parent>
+
+define group and version
+<parent>
+    <groupId>parentGroupId</groupId>
+    <artifactId>artfct</artifactId>
+    <version>parentVersion</version>
+</parent>
+
+define all
+<parent>
+    <groupId>parentGroupId</groupId>
+    <artifactId>parentArtifactId</artifactId>
+    <version>parentVersion</version>
+</parent>
