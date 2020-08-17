@@ -6,9 +6,27 @@
     <artifactId>jamal-pomlib</artifactId>
     <version>1.0.0</version>
     <description>pom.xml support Jamal Import Resource</description>
+    <developers>
+        <developer>
+            <name>Peter Verhas</name>
+            <email>peter@verhas.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/verhas/jamal.git</connection>
+        <developerConnection>scm:git:ssh://github.com/verhas/jamal.git</developerConnection>
+        <url>https:/github.com/verhas/jamal/tree/master</url>
+    </scm>
+    <url>https:/github.com/verhas/jamal/tree/master</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <dependencies>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

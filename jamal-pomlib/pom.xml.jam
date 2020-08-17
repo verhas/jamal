@@ -7,7 +7,10 @@
 {project jamal pomlib}
     {GAV :com.javax0.jamal:jamal-pomlib:1.0.0}
     {description pom.xml support Jamal Import Resource}
+    {developer :Peter Verhas:peter@verhas.com}
+    {github :verhas:jamal}
     {sourceEncoding UTF-8}
+    {license |The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
     {dependencies
       {dependency |com.javax0.jamal|jamal-testsupport|1.2.0-SNAPSHOT|test}
       {@for MODULE in (api,engine)=
