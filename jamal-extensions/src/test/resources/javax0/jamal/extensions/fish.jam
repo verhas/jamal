@@ -1,0 +1,2 @@
+{@define z(*a,*b,*c,*d)=When a *a can *b then *c can *d}
+{z /leopard and a *c/run/fish/fly}

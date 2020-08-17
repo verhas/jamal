@@ -24,7 +24,7 @@ public interface MacroRegister extends Delimiters {
      * @param id the identifier (name) of the macro
      * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
      */
-    Optional<Identified> getUserDefined(String id);
+    <T extends Identified> Optional<T> getUserDefined(String id);
 
     /**
      * Define a user defined macro on the global level.

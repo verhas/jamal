@@ -269,57 +269,93 @@ since 1.0.0 (core)
 about `export`. The syntax is
 
 ```jam
-define id(parameters)=body
+define id(arguments)=body
 ```
 
-The parameters part is optional in case there are no parameters for the macro. When the macro is
-used the parameters are replaced in the body by the actual values supplied at the place of use.
-The parameters are specified comma separated and are usually identifiers.
+The arguments part is optional in case there are no arguments for the macro. You can define a
+zero arguments macro as `{@define z=content}` or `{@define z()=content}`. The two definitions
+are equivalent. When the macro is  used the arguments are replaced in the body by the actual
+parameters supplied at the place of use. The arguments are specified as a comma-separated 
+list, and they are usually identifiers.
 
-Note that the parameters do not have any special syntax. The only requirement is that they
-do not contain a comma `,`, because the list is comma separated, and a closing parenthesis
-`)` because that is the character that terminates the list of the parameters. It is
-recommended, though, to use normal identifiers and no spaces in the parameter names, but
-this is only a recommendation and is not enforced by Jamal, because you may need to process some
-special text the developer could not imagine and you may need some specially named parameters.
+Note that the arguments do not have any special syntax. The only requirement is that they
+do not contain a comma `,`, because the list is comma-separated, and a closing parenthesis
+`)` because that is the character that terminates the list of the arguments. It is
+recommended, though, to use normal identifiers and no spaces in the argument names. However,
+this is only a recommendation and is not enforced by Jamal. You may need to process some
+special text the developers of Jamal could not imagine, and you may need some specially named
+arguments. Who knows? In the examples, you usually see that the arguments start with a `$`
+character.
 
-Somebody may follow other conventions, like starting every parameter with the `$` or
-enclosing the parameter names between `|` or `/` or some other characters. These
+Somebody may follow other conventions, like starting every argument with the `*` or
+enclosing the argument names between `|` or `/` or some other characters. These
 practices can be absolutely okay so long as long they support the readability of the
 macro body and the use of the macro. Applying such practices may help to visually
-separate the macro parameters from the textual content of the macro body.
+separate the macro arguments from the textual content of the macro body.
 
-To ensure that the parameter replacing is consistent and possible to follow
-the parameter names cannot contain each other as a substring. If there was a parameter `a` with
-an actual value `oneA` and another `aa` with an actual value `twoAs` then the
+From practice, we see that in case of longer macros using simple, argument names with one
+or only a few letters may lead to some error. For example:
+
+```
+{@define fox(x)=The brown fox jumps over the high x}{fox fence}
+```
+
+will result
+
+```
+The brown fofence jumps over the high fence
+```
+
+This is probably not the result that the macro creator wanted.
+
+To ensure that the argument replacing is consistent and possible to follow
+the argument names cannot contain each other as a substring. If there was an argument `a` with
+an actual parameter value `oneA` and another `aa` with an actual value `twoAs` then the
 occurrences of `aa` in the body could be replaced to `twoAs` or `oneAoneA`. During the replacement
-when an actual value of a parameter contains the same or one or more other parameters these
-will not be replaced. The actual values get into the body replacing the formal parameters
-as they are provided.
+when an actual value of an argument may be a string that contains the name of one or
+more argument names. This is absolutely legit. These will not be replaced with the parameter value(s)
+that were provided for the other argument(s) that are inside the value of the parameter.
+For example:
 
-It is possible to use a question mark `?` after the macro keyword `define`. If that is used a
-macro is only defined if the macro is NOT yet defined in the current scope or any other
-larger scope.
+```
+{@define z=(*a,*b,*c,*d)=When a *a can *b then *c can *d}
+{z /leopard and a *c/run/fish/fly}
+```
+
+will result
+
+```
+
+When a leopard and a *c can run then fish can fly
+```
+
+even though `*c` is a `fish` but the characters `*c` in the output come from the value of a parameter and
+therefore it is not replaced.
+
+It is possible to use a question mark `?` after the macro keyword `define`. In that case the
+macro is only defined if is NOT yet defined in the current scope or any other larger scope.
 
 When the name of the macro contains at least one colon character `:` then the macro will be
 defined in the global scope and thus valid from that point on everywhere in the text. It is
 also possible to define a user-defined macro to be global without `:` in the name. If the
-very first character of the name of the macro is `:` then this character is removed and the
+very first character of the name of the macro is `:` then this character is removed, and the
 macro is defined in the global scope.
 
-When a user-defined macro is used the parameters are defined after the name of the macro. In
+When a user-defined macro is used, the parameters are defined after the name of the macro. In
 case of user-defined macros, there is no `@` or `#` in front of the name of the macro. Optionally
 there may be a `?` character. In that case the result of an undefined user macro will be
-the empty string. Any other use of an undefined user macro results error. The
-parameters stand after the name of the macro separated by a separator character. The first
+the empty string. Any other use of an undefined user macro results error. 
+
+The parameters stand after the name of the macro separated by a separator character. The first
 non-whitespace character after the name of the macro is the separator character. It is usually
-`/` as in the examples below, but it can be any character that does not appear inside any of
-the actual values of the parameters. The number of parameters should be exactly the same
-as the formal parameters, unless the `{@options lenient}` was specified. In that case the missing
+`/` as in the examples below, but it can be any non-alphanumeric character. The number of 
+parameters should be exactly the same as the number of argument, 
+unless the `{@options lenient}` was specified. In that case the missing
 arguments will be zero length strings, and the extra parameters will be ignored.
 
 The separator character must not be an alphanumeric character (letter or digit, unicode
-categories Lu, Ll, Lt, Lm, Lo and Nd).
+categories Lu, Ll, Lt, Lm, Lo and Nd). Any other unicode character can be used as a parameter
+separator character.
 
 If the user defined macro has exactly one argument then there is no need to use a separator character. The sole
 parameter of the macro can start after the name of the macro at the first non-whitespace character. For example,
@@ -333,9 +369,9 @@ will result `<||this text||>`. The parameter should start with an alphanumeric c
 If it starts with something else then that character will be a separator character that separates the parameters. In
 this case, because there is only one parameter it will separate the macro name from the parameter.
 
-There are cases when it is necessary ro use a separator character. This is the case when parameter starts with a space,
-or a character that is not alphanumeric and which has to be included into the parameter. In that case the above macro
-should be used like the following three examples:
+There are cases when it is necessary ro use a separator character. This is the case when parameter starts with a
+significant space, or a character that is not alphanumeric and which has to be included into the parameter. In that case
+the above macro should be used like the following three examples:
 
 ```
 {enclose |+this text}
@@ -352,13 +388,17 @@ These uses of the above macro will result
 ```
 
 The second line in the examples the separator character is used in the parameter. Because the macro needs only one
-argument all the rest of the till the macro closing character is used as the single parameter and is not split up along
-the later occurrences of the separator character. Just use any non alphanumeric character in front of the parameter that
-looks good and in this case you need not worry about that the character itself presents in the content. Consider though
-the macro use, for example `{enclose/a/b/v}` is hard to read, and it is misleading since it looks like a macro use with
-three parameters. Another example of bad style use can be `{enclose a/b/c}` that may also be misread as a macro with
-three parameters. In situations like that it may be more readable to use an explicit separator character, for example
-`{enclose |a/b/c}` that should emphasize that there is only one parameter.
+argument all the rest of the parameter until the macro closing character is used as the single parameter and is not
+split up along the later occurrences of the separator character. Just use any non alphanumeric character in front of the
+parameter that looks good and in this case you need not worry about that the character itself presents in the content.
+
+There are situations where the use of a separator character is not a must but the use of it helps the readability.
+Consider, for example `{enclose/a/b/v}`. We know that `enclose` from the above has only one argument, but the use of it
+looks like it has three. The one argument it has is `a/b/v`.
+
+Omitting the separator character, `/` in this case, does not help the readability. The use `{enclose a/b/c}` still looks
+like macro with three parameters. In situations like that the most readable solution is to use an explicit separator
+character, as `{enclose |a/b/c}` that should emphasize that there is only one parameter.
 
 In the following sample code, you can see some examples that demonstrate these.
 
@@ -432,11 +472,11 @@ or
 eval/scripttype script
 ```
 
-If `eval` is followed by `/` character then the next identifier is the type of the script.
-You can use any scripting language that
-implements the Java scripting API and the interpreter is available on the classpath when Jamal is
-executed. If the script type is `jamal` then it is the same as there was no script type specified. This
-may be needed when the content of the macro to be evaluated starts with the `/` character.
+If `eval` is followed by `/` character then the next identifier is the type of the script. You can use any scripting
+language that implements the Java scripting API and the interpreter is available on the classpath when Jamal is
+executed. If the script type is `jamal` then it is the same as there was no script type specified. The explicit
+specification that the content is a jamal source may be necessary when the content of the macro to be evaluated starts
+with the `/` character.
 
 The following two examples show how `eval` can be used to evaluate simple arithmetic expressions using the
 Java built-in JavaScript interpreter. Note that in the second example the macro `eval` is preceded with the
@@ -985,30 +1025,50 @@ export macros from the top level scope, because in that case there is no enclosi
 ### `options`<a name="options">
 since 1.0.3 (core)
 
-The options macro can be used to alter the behavior of Jamal. The options can be listed `|` separated as an argument
-to the macro. The macro does not check the options name. It stores the options and it can be queried by any other
-built-in macro. The scope of the options is local the same way as the scope of user defined macros. Technically the
-options are stored in a user defined macro that has the name <tt>`options</tt> and it is possible to export this
-macro to higher layers. (Note that the name starts with a backtick.)
+The options macro can be used to alter the behavior of Jamal. The options can be listed `|` separated as an argument to
+the macro. The macro does not check the options name. It stores the options, and it can be queried by any other built-in
+macro. This way any extension can define and use any options it likes.
+
+The scope of the options is local the same way as the scope of user defined macros. Technically the options are stored
+in a user defined macro having the name <tt>`options</tt>, and it is possible to export this macro to higher layers.
+(Note that the name starts with a backtick.)
 
 ```jam
-{@define macro(a,b,c)=a is a, b is b{#if :c:, c is c}}{macro :apple:pie:}{@comment 
-here we need : at end, default is not lenient}
-{#ident {@options lenient}{macro :apple:pie}}
+{@define macro(a,b,c)=a is a, b is b{#if :c:, and c is c}}
+{macro :apple:pie:}{@comment here we need : at end, default is not lenient}
+{#ident {@options lenient}{macro :apple:pie}}{@comment options is local inside the ident block}
 {macro :apple:pie:}{@comment here we must have the trailing : because options is local}
-{#ident {@options lenient}{macro :apple:pie}{@export `options}}
-{macro :apple:pie}
+{#ident
+{#ident {@options lenient}{macro :apple:pie}{@export `options}}{@comment local but gets exported one level up}
+{macro :apple:pie}}
+{macro :apple:pie:}{@comment was not exported to this level, only to inside the outer ident block}
+{@options lenient}{@comment now this is on the global level}
+{macro :apple:pie}{@comment nice and easy, global}
+{@options ~lenient}{@comment and we can switch it off}
+{macro :apple:pie:}
+{@options any|option|can  | go | ~go | no go}
 ```
+
+An option can be switched off using the `~` character in front of the options name. There can be no space between the
+`~` character and the name of the option.
 
 The options implemented currently:
 
 #### `lenient`
 
-In lenient mode the number of the arguments to a user defined macro do not
-need to be exactly the same as it is defined. If there are less values
-provided then the rest of the arguments will be empty string in lenient
-mode. Similarly, if there are more arguments than needed the extra arguments
-will be ignored.
+In lenient mode the number of the arguments to a user defined macro do not need to be exactly the same as it is defined.
+If there are less values provided then the rest of the arguments will be empty string in lenient mode. Similarly, if
+there are more arguments than needed the extra arguments will be ignored.
+
+#### `omasalgotm`
+
+Jamal 1.2.0 changes a lot from 1.0.0 in the way how macros are evaluated. The version 1.2.0 is safer and more flexible
+and is compatible with the older versions in most of the cases. There may be some cases when the macros are not
+compatible with the old version. In this case it is recommended to alter the macros so that they do not rely on the
+special evaluation structure that 1.1.0 and older versions used. In the meantime it is possible to use the option
+`omasalgotm` to force Jamal to the old evaluation style.
+
+Later versions of Jamal will not implement this option.
 
 ## Jamal API<a name="JamalAPI">
 

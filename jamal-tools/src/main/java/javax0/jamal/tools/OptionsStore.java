@@ -41,12 +41,19 @@ public class OptionsStore implements Identified {
     }
 
     /**
-     * Add the options to this options store.
+     * Add the options to this options store. If an option starts with the {@code ~} character then it will be removed
+     * from the options. This way it is possible to switch off an option.
      *
      * @param options the options to add to the store
      */
     public void addOptions(String... options) {
-        optionSet.addAll(Arrays.asList(options));
+        for( final var option : options ){
+            if( option.length() >0 && option.charAt(0) == '~'){
+                optionSet.remove(option.substring(1));
+            }else{
+                optionSet.add(option);
+            }
+        }
     }
 
     /**
