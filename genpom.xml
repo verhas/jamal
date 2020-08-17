@@ -21,7 +21,7 @@
                 <executions>
                     <execution>
                         <id>execution</id>
-                        <phase>compile</phase>
+                        <phase>clean</phase>
                         <goals>
                             <goal>jamal</goal>
                         </goals>

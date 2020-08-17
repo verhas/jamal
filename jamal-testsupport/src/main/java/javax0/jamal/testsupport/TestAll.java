@@ -140,8 +140,9 @@ public class TestAll {
             var in = inputFrom(errFile);
             final var sut = new Processor("{", "}");
             try {
-                sut.process(in);
+                actual = sut.process(in);
                 message = "The test file '" + errFile + "' did not throw BadSyntax exception";
+                expected = "There is no expected output, we expected an exception that did not occur.";
                 return false;
             } catch (BadSyntaxAt thrown) {
                 final var line = getInt(sut, "line");

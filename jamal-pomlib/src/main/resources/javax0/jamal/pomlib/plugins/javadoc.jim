@@ -1,0 +1,4 @@
+{@import plugins.jim}
+{@define javadocPlugin($version,$content)=<plugin>
+{GAV :org.apache.maven.plugins:maven-javadoc-plugin:$version}
+{#if |$content|$content</plugin>}}

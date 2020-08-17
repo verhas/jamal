@@ -82,8 +82,10 @@ essentially executing the "define" macros and at this point the tags are defined
                       annotationProcessor,
                       annotationProcessors,
                       argLine,
+                      arg,
                       artifactId,
-                      build,pluginManagement,
+                      build,
+                      compilerArgs,
                       configuration,
                       connection,
                       dependencies,
@@ -94,8 +96,6 @@ essentially executing the "define" macros and at this point the tags are defined
                       encoding,
                       exclude,
                       excludes,
-                      execution,
-                      executions,
                       filtering,
                       goal,
                       goals,
@@ -103,10 +103,10 @@ essentially executing the "define" macros and at this point the tags are defined
                       id,
                       packaging,
                       plugin,
+                      pluginManagement,
                       plugins,
                       profile,
                       profiles,
-                      properties,
                       release,
                       repositories,
                       resource,
@@ -117,7 +117,7 @@ essentially executing the "define" macros and at this point the tags are defined
                       target,
                       url,
                       version)=
-{@define $tag($y)={#if |$y|<$tag>$y</$tag>|<$tag>}}}}
+{@define $tag($x)=<$tag>{#if |$x|$x</$tag>}}}}
 ------------------------------------------------------------------------------------------------------------------------
 {@define repository($id,$url)=<repository><id>$id</id><url>$url</url></repository>}
 {@define profile($id)=<profile><id>$id</id>} end a profile with an [end profile]
@@ -176,7 +176,26 @@ Define a license type with the name and the URL. There is no support in this mac
 
 ------------------------------------------------------------------------------------------------------------------------
 
-Use this macro to define properties inside the <properties> ...</properties> tags (for which you can use the
+------------------------------------------------------------------------------------------------------------------------
+
+Use this macro to define that the source encoding is whatever it is. Usually UTF8. If there is no argument to the macro
+then the encoding will be UTF-8.
+
+NOTE that this
+
+{@define sourceEncoding($x)=
+<properties>
+    <project.build.sourceEncoding>{#if |$x|$x|UTF-8}</project.build.sourceEncoding>
+</properties>}
+
+{@define properties($x)={@define sourceEncoding($y)=<project.build.sourceEncoding>{#if |$y|$y|UTF-8}</project.build.sourceEncoding>}<properties>{#if|$x|
+$x
+</properties>}}
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+Use this macro to define properties inside the <properties> ...</properties> tags (for which you should use the
 [properties] macro. Use if this macro you can write
 
          property(name,value)

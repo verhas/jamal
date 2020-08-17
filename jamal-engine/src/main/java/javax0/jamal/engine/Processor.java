@@ -275,7 +275,7 @@ public class Processor implements javax0.jamal.api.Processor {
             final String[] parameters;
             if (evaluatedInput.length() > 0) {
                 var separator = evaluatedInput.charAt(0);
-                if (!qualifier.oldStyle && udMacro.expectedNumberOfArguments() == 1) {
+                if (!qualifier.oldStyle && (udMacro.expectedNumberOfArguments() == 0 || udMacro.expectedNumberOfArguments() == 1)) {
                     if (!Character.isLetterOrDigit(separator) && evaluatedInput.indexOf(macros.open()) != 0) {
                         skip(evaluatedInput, 1);
                     }

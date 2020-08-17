@@ -204,11 +204,14 @@ public class InputHandler {
             var param = input.substring(0, closingParen);
             skip(input, closingParen + 1);
             skipWhiteSpaces(input);
-            params = Arrays.stream(param.split(",")).map(String::trim).toArray(String[]::new);
+            if (param.length() == 0) {
+                return new String[0];
+            } else {
+                return Arrays.stream(param.split(",")).map(String::trim).toArray(String[]::new);
+            }
         } else {
-            params = new String[0];
+            return new String[0];
         }
-        return params;
     }
 
     /**

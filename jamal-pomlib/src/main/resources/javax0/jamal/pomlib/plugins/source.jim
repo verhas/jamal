@@ -1,0 +1,4 @@
+{@import plugins.jim}
+{@define sourcePlugin($version,$content)=<plugin>
+{GAV :org.apache.maven.plugins:maven-source-plugin:$version}
+{#if |$content|$content</plugin>}}

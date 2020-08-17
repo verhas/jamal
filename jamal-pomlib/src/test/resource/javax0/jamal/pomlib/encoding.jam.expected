@@ -1,0 +1,58 @@
+
+------------------------------------------------------------------------------------------------------------------------
+here we have the source encoding in <properties></properties> with default encoding
+
+
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
+------------------------------------------------------------------------------------------------------------------------
+
+here we have the source encoding in <properties></properties> with given encoding
+
+
+<properties>
+    <project.build.sourceEncoding>ISO-Latin-2</project.build.sourceEncoding>
+</properties>
+
+here we start the properties and inside
+<properties>
+------------------------------------------------------------------------------------------------------------------------
+encoding is a single property with default encoding
+
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+------------------------------------------------------------------------------------------------------------------------
+encoding is a single property with given encoding
+
+<project.build.sourceEncoding>ISO-Latin-2</project.build.sourceEncoding>
+</properties>
+
+
+------------------------------------------------------------------------------------------------------------------------
+here we have the source encoding in <properties></properties> with default encoding
+as redefinition was protected by block
+
+
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
+
+------------------------------------------------------------------------------------------------------------------------
+here we have the source encoding in <properties></properties> with given encoding
+as redefinition was protected by block
+
+
+<properties>
+    <project.build.sourceEncoding>ISO-Latin-2</project.build.sourceEncoding>
+</properties>
+
+------------------------------------------------------------------------------------------------------------------------
+here we would have double properties, because define is executed only after the user defined macro but we protect it
+with ident
+
+<properties>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<project.build.sourceEncoding>ISO-Latin-2</project.build.sourceEncoding>
+
+</properties>

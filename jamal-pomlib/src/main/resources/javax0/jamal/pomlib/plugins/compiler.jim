@@ -1,0 +1,5 @@
+{@import plugins.jim}
+{@define compilerPlugin($version,$content)=<plugin>
+{GAV :org.apache.maven.plugins:maven-compiler-plugin:$version}
+{#if |$content|$content</plugin>}}
+{@define java($x)={configuration {source $x} {target $x} {release $x}}}

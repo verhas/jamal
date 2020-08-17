@@ -1,0 +1,6 @@
+{@define execution($id,$goal)=<executions>
+<execution>
+<id>$id</id>
+<goals><goal>$goal</goal></goals>
+</execution>
+</executions>}
