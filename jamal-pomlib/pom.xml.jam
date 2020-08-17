@@ -5,7 +5,7 @@
 {#import {PLUGIN}/source.jim}
 {#import {PLUGIN}/javadoc.jim}
 {project jamal pomlib}
-    {GAV :com.javax0.jamal:jamal-pomlib:1.0.0-SNAPSHOT}
+    {GAV :com.javax0.jamal:jamal-pomlib:1.0.0}
     {description pom.xml support Jamal Import Resource}
     {sourceEncoding UTF-8}
     {dependencies
