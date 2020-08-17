@@ -9,7 +9,7 @@ version in a maven property because that cannot be used to reference the parent.
 -- package names are less restrictive and it is not likely that anyone else would use javax0 as top level package
 {@define PACKAGE_PREFIX=javax0.jamal.}
 
-{@define VERSION=1.2.0-SNAPSHOT}
+{@define VERSION=1.2.0}
 {@define JAVA_RELEASE=11}
 {@define JAVA_SOURCE=13}
 {@define JAVA_TARGET=11}
