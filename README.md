@@ -1073,13 +1073,13 @@ Later versions of Jamal will not implement this option.
 ## Jamal API<a name="JamalAPI">
 
 Embedding Jamal into an application is very simple. You need the Jamal libraries on
-your classpath. If you use maven you can simply have
+your classpath. If you use maven, you can simply have
 
 ```xml
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
-            <version>1.0.2</version>
+            <version>1.2.0</version>
         </dependency>
 ```
 

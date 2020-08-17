@@ -3,7 +3,7 @@ package javax0.jamal.tools;
 import javax0.jamal.api.Position;
 
 /**
- * A simple implementation of the {@link javax0.jamal.api.Input} interface utilizing two fields.
+ * A simple implementation of the {@link javax0.jamal.api.Input} interface utilizing four fields.
  */
 public class Input implements javax0.jamal.api.Input {
     private final StringBuilder input;
