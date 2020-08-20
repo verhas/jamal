@@ -73,6 +73,7 @@ application.
      1. [`export`](#export)
      1. [`import`](#import)
      1. [`include`](#include)
+     1. [`use`](#use)
      1. [`script`](#script)
      1. [`sep`](#sep)
      1. [`for`](#for)
@@ -547,6 +548,15 @@ possible to load macros that are provided with JAR libraries and are on the clas
 
 
 Use `include` to get the content of a file into the main output.
+
+### `use` <a href="use">
+
+This macro can be used to define a Java implemented macro class, which is not exported by the module system.
+
+The macro code can contain `use global com.my.class as name` or `use com.my.class as name` to
+use the class `com.my.class` as a macro implementation. The class has to implement the `Macro`
+interface. In case it is defined as `global` then it will get into the global level, otherwise to the
+local level.
 
 ### `script`<a name="script">
 since 1.0.0 (core)
