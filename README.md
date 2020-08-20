@@ -549,7 +549,7 @@ possible to load macros that are provided with JAR libraries and are on the clas
 
 Use `include` to get the content of a file into the main output.
 
-### `use` <a href="use">
+### `use` <a name="use">
 
 This macro can be used to define a Java implemented macro class, which is not exported by the module system.
 
