@@ -60,7 +60,17 @@ public class Use implements Macro {
         return "";
     }
 
-
+    /**
+     * Get a new instance of the built-in macro. The implementation loads the class first. If the class is an static
+     * inner class then it recognizes that and loads the inner class.
+     *
+     * @param klassName the name of the class with dots as separator. Using {@code $} in case of inner classes is also
+     *                  possible, but it is not the intended use. In case of an inner class the algorithm tries to load
+     *                  the class as a top level class and in case it fails it replaces the last dot with a {@code $}
+     *                  sign and tries to load again and again until all dots are replaces.
+     * @return the instance of the macro class
+     * @throws BadSyntax if the class cannot be found or the instance cannot be created
+     */
     private Macro forName(final String klassName) throws BadSyntax {
         final Macro macro;
         final Class<?> klass;

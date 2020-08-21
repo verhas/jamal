@@ -16,7 +16,7 @@
       {dependency :com.javax0.jamal:jamal-api:1.2.0}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
-      {dependency :com.scriptbasic:jscriptbasic:2.1.0}
+      {dependency :com.scriptbasic:jscriptbasic:2.1.1}
     }
     {build
       {plugins

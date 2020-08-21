@@ -551,12 +551,49 @@ Use `include` to get the content of a file into the main output.
 
 ### `use` <a name="use">
 
-This macro can be used to define a Java implemented macro class, which is not exported by the module system.
+Built-in macros are classes that implement the `javax0.jamal.api.Macro` interface. When they are
+registered as services, they are automatically loaded when any application embedding Jamal creates
+a new processor. In other words, the classes that implement some macro are automatically discovered if they
+are in the `module-info` module descriptor `provides` directive and/or the fully qualified name of the
+class is listed in the JAR file in the  `META-INF/services/javax0.jamal.api.Macro` file.
 
-The macro code can contain `use global com.my.class as name` or `use com.my.class as name` to
-use the class `com.my.class` as a macro implementation. The class has to implement the `Macro`
-interface. In case it is defined as `global` then it will get into the global level, otherwise to the
-local level.
+Somebody creating a built-in macro library may decide to implement numerous macros, and it may be better
+not to load all of them into the Jamal processor. A class on the classpath or on the modulepath
+of the Processor instance, which implements the `Macro` interface, but not advertised through the
+service loader will not automatically be loaded and available as a built in macro. To do so the file
+that wants to use the built-in macro should declare it using the `use` built-in macro.
+
+The use of the `use` macro (sic) is the following:
+
+```
+{@use global javax0.jamal.scriptbasic.Basic as scriptbasic}
+```
+
+In this example the class `javax0.jamal.scriptbasic.Basic` implements a macro, and it will be defined and
+available as a globally available built-in macro under the alias `scriptbasic`.
+
+The keyword `global` can be missed:
+
+```
+{@use javax0.jamal.scriptbasic.Basic as scriptbasic}
+```
+
+In this case the macro will only be available in the current scope and will not be available as soon as the current
+scope is closed. Note that built-in macros cannot be exported from the current scope.
+
+Usually the alias part (the `as scriptbasic` in the example above) can also be omitted:
+
+```
+{@use javax0.jamal.scriptbasic.Basic}
+```
+
+In such a case the macro will be registered with the name that the macro provides by itself as an identifier. The
+interface `Macro` defines a method `String getId()` that should return the identifier of the macro. The interface also
+provides a default implementation that returns the lower-case version of the class name (w/o the packages). If there is 
+no defined alias following the `as` keyword then the one returned by the macro implemntation will be used.
+
+It is recommended to use the alias in the Jamal source file. That way there is no ambiguity when reading the code what
+the name of the built-in macro is.
 
 ### `script`<a name="script">
 since 1.0.0 (core)

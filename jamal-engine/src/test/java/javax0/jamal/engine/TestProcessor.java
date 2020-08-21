@@ -41,7 +41,7 @@ public class TestProcessor {
         final var input = new Input("this is the {body} of the macro}{this is the second macro}");
         final var sut = new Processor("{", "}");
         sut.getNextMacroBody(input);
-        input.delete(0, 1);
+        input.delete(1);
         final var result = sut.getNextMacroBody(input);
         Assertions.assertEquals("this is the second macro", result);
     }

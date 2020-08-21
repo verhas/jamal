@@ -49,7 +49,7 @@ public class TestAll {
      *
      * @param open  the new opening string
      * @param close the new closing string
-     * @return this
+     * @return {@code this}
      */
     public TestAll sep(final String open, final String close) {
         this.open = open;
@@ -61,7 +61,7 @@ public class TestAll {
      * Set the extension filter for selecting input or output files.
      *
      * @param extension is the ending of the files that we want to use in the test
-     * @return this
+     * @return {@code this}
      */
     public TestAll filesWithExtension(final String extension) {
         this.extension = extension;

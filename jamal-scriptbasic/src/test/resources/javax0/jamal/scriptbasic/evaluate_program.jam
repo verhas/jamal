@@ -1,1 +1,13 @@
-{@use
+{@import res:javax0/jamal/scriptbasic/scriptbasic.jim}
+{expr 13+1}{@define start=1}{@define end=13}
+
+{basic for i={start} to {end}
+if i%2 = 1 then
+  oddity = "odd"
+else
+  oddity = "even"
+endif
+print i,". is an ",oddity," number\n"
+next
+}
+{@eval/ScriptBasic PRINT 55+13}

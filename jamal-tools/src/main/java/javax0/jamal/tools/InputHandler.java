@@ -29,7 +29,7 @@ public class InputHandler {
      * @param numberOfCharacters the number of characters to be deleted from the start of {@code input}
      */
     public static void skip(Input input, int numberOfCharacters) {
-        input.delete(0, numberOfCharacters);
+        input.delete(numberOfCharacters);
     }
 
     /**
@@ -141,7 +141,7 @@ public class InputHandler {
      */
     public static void skipWhiteSpaces(Input input) {
         while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
-            input.delete(0, 1);
+            input.delete(1);
         }
     }
 
@@ -152,10 +152,10 @@ public class InputHandler {
      */
     public static void skipWhiteSpaces2EOL(Input input) {
         while (input.length() > 0 && Character.isWhitespace(input.charAt(0)) && input.charAt(0) != '\n') {
-            input.delete(0, 1);
+            input.delete(1);
         }
         if( input.length() > 0 && input.charAt(0) == '\n' ){
-            input.delete(0, 1);
+            input.delete(1);
         }
     }
 

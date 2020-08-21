@@ -1,0 +1,3 @@
+{#use javax0.jamal.scriptbasic.Basic}
+{@define expr($i)={@scriptbasic PRINT $i}}
+{@define basic($i)={@scriptbasic $i}}

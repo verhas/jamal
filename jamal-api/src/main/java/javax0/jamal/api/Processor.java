@@ -1,6 +1,16 @@
 package javax0.jamal.api;
 
+/**
+ * The processor object that can be used to process an input to generate the Jamal output.
+ */
 public interface Processor {
+    /**
+     * Process the input and result the string after processing all built-in and user defined macros.
+     *
+     * @param in the input the processor has to work on.
+     * @return the string after the processing
+     * @throws BadSyntax when the input contains something that cannot be processed.
+     */
     String process(final Input in) throws BadSyntax;
 
     /**
@@ -41,18 +51,42 @@ public interface Processor {
      */
     ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params) throws BadSyntax;
 
+    /**
+     * @param id the identifier of the user defined macro
+     * @return {@code true} if the user defined macro is defined at the current contex and {@code false} otherwise.
+     */
     default boolean isDefined(String id) {
         return getRegister().getUserDefined(id).isPresent();
     }
 
+    /**
+     * Define a new user defined macro on the global level. Technically anything can be defined that implements the
+     * {@link Identified} interface. Usually {@link UserDefinedMacro} is registered using this method.
+     *
+     * @param macro the macro to be registered
+     */
     default void defineGlobal(Identified macro) {
         getRegister().global(macro);
     }
 
+    /**
+     * Define a new user defined macro on the current scope. Technically anything can be defined that implements the
+     * {@link Identified} interface. Usually {@link UserDefinedMacro} is registered using this method.
+     *
+     * @param macro the macro to be registered
+     */
     default void define(Identified macro) {
         getRegister().define(macro);
     }
 
+    /**
+     * This is a convenience method with the default implementation calling to the {@link
+     * MacroRegister#separators(String, String)} method.
+     *
+     * @param openMacro see {@link MacroRegister#separators(String, String)}
+     * @param closeMacro see {@link MacroRegister#separators(String, String)}
+     * @throws BadSyntax see {@link MacroRegister#separators(String, String)}
+     */
     default void separators(String openMacro, String closeMacro) throws BadSyntax {
         getRegister().separators(openMacro, closeMacro);
     }

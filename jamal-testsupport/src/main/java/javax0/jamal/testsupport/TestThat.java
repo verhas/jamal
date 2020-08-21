@@ -164,7 +164,7 @@ public class TestThat {
      * @param id         the identifier / name of the macro
      * @param content    the content of the macro
      * @param parameters the list o formal parameters of the macro
-     * @return this
+     * @return {@code this}
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat global(String id, String content, String... parameters) throws BadSyntax {
@@ -178,7 +178,7 @@ public class TestThat {
      * needs the services of other macros.
      *
      * @param macro the macro that the tested macro needs for its functioning
-     * @return this
+     * @return {@code this}
      */
     public TestThat global(Macro macro) {
         processor.getRegister().global(macro);
@@ -191,7 +191,7 @@ public class TestThat {
      *
      * @param macro the macro that the tested macro needs for its functioning
      * @param alias the alias name for the macro
-     * @return this
+     * @return {@code this}
      */
     public TestThat global(Macro macro, String alias) {
         processor.getRegister().global(macro, alias);
@@ -205,7 +205,7 @@ public class TestThat {
      * @param id         the identifier / name of the macro
      * @param content    the content of the macro
      * @param parameters the list o formal parameters of the macro
-     * @return this
+     * @return {@code this}
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat define(String id, String content, String... parameters) throws BadSyntax {
@@ -219,7 +219,7 @@ public class TestThat {
      * needs the services of other macros.
      *
      * @param macro the macro that the tested macro needs for its functioning
-     * @return this
+     * @return {@code this}
      */
     public TestThat define(Macro macro) {
         processor.getRegister().define(macro);
@@ -232,7 +232,7 @@ public class TestThat {
      *
      * @param macro the macro that the tested macro needs for its functioning
      * @param alias the alias name for the macro
-     * @return this
+     * @return {@code this}
      */
     public TestThat define(Macro macro, String alias) {
         processor.getRegister().define(macro, alias);

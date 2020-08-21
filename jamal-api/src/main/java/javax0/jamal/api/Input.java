@@ -45,48 +45,93 @@ public interface Input extends CharSequence {
      */
     void stepColumn();
 
+    /**
+     * @return the length of theinput in terms of characters
+     */
+    @Override
     default int length() {
         return getSB().length();
     }
 
+    @Override
     default char charAt(int index) {
         return getSB().charAt(index);
     }
 
-    default Input delete(int start, int end) {
+    /**
+     * Delete {@code numberOfCharacters} characters from the input at the start.
+     *
+     * @param numberOfCharacters the number of characters to be deleted
+     * @return {@code this}
+     */
+    default Input delete(int numberOfCharacters) {
         var sb = getSB();
-        for (int i = start; i < end && i < sb.length(); i++) {
+        for (int i = 0; i < numberOfCharacters && i < sb.length(); i++) {
             if (sb.charAt(i) == '\n') {
                 stepLine();
-            }else{
+            } else {
                 stepColumn();
             }
         }
-        getSB().delete(start, end);
+        getSB().delete(0, numberOfCharacters);
         return this;
     }
 
+    @Override
     default CharSequence subSequence(int start, int end) {
         return getSB().subSequence(start, end);
     }
 
+    /**
+     * Appends the string representation of the {@code Object} argument.
+     * <p>
+     * The default implementation simply appends the string representation of the object to the underlying StringBuilder
+     * returned by the method {@link #getSB()}.
+     *
+     * @param obj an {@code Object}.
+     * @return {@code this}
+     */
     default Input append(Object obj) {
         getSB().append(obj);
         return this;
     }
 
+    /**
+     * Delete all character from the input. Invokes {@link StringBuilder#setLength(int) setLength(0)} on the underlying
+     * StringBuilder.
+     */
     default void reset() {
         getSB().setLength(0);
     }
 
+    /**
+     * Returns the index of the string in the input. Method delegates the call simply to {@link
+     * StringBuilder#indexOf(String)}.
+     *
+     * @param str the string we are looking for
+     * @return whetever is returned by the {@link StringBuilder#indexOf(String)} method
+     */
     default int indexOf(String str) {
         return getSB().indexOf(str);
     }
 
+    /**
+     * Proxy call to the underlying {@link StringBuilder#substring(int, int)}
+     *
+     * @param start see {@link StringBuilder#substring(int, int)}
+     * @param end   see {@link StringBuilder#substring(int, int)}
+     * @return see {@link StringBuilder#substring(int, int)}
+     */
     default String substring(int start, int end) {
         return getSB().substring(start, end);
     }
 
+    /**
+     * Proxy call to the underlying {@link StringBuilder#substring(int)}
+     *
+     * @param start see {@link StringBuilder#substring(int)}
+     * @return see {@link StringBuilder#substring(int)}
+     */
     default String substring(int start) {
         return getSB().substring(start);
     }
