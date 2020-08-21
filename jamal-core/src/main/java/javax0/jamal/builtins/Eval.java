@@ -10,6 +10,10 @@ import static javax0.jamal.tools.ScriptingTools.getEngine;
 import static javax0.jamal.tools.ScriptingTools.resultToString;
 
 public class Eval implements Macro {
+    /**
+     * {@inheritDoc}
+     *
+     */
     @Override
     public String evaluate(final Input input, final Processor processor) throws BadSyntax {
         final String scriptType;

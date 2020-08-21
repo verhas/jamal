@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 /**
- * Any class that wants to function as a macro implementation should implement this interface. The built-in macro {@code
- * use} implemented in {@code javax0.jamal.builtins.Use} in the core package also assumes that the class has a
- * zero-parameter (default) constructor.
+ * Any class that wants to function as a macro implementation should implement this interface.
+ * <p>
+ * The built-in macro {@code use} implemented in {@code javax0.jamal.builtins.Use} in the core package also assumes that
+ * the class has a zero-parameter (default) constructor.
+ * <p>
+ * Macro implementations are supposed to be state-less, but they can have state. Be careful, however, that the macros
+ * can have many instances whileprocessing a single file if they come into life via the {@code use} macro.
  */
 @FunctionalInterface
 public interface Macro {
@@ -19,16 +23,15 @@ public interface Macro {
     }
 
     /**
-     * The implementation should read the input an return the result of the macro as a String.
+     * This method reads the input an returns the result of the macro as a String.
      * <p>
      * When the macro is used, like
      * <pre>{@code
-     *       [@builtInMacro this is the input]
+     *       {@builtInMacro this is the input}
      * }</pre>
      * <p>
-     * then the input will contain {@code this is the input} without the spaces that are between the macro name and the
-     * first non-space character, which is the word '{@code this}' as in the example. The implementation should
-     * interpret the input freely and should return a string.
+     * then the input will contain '{@code this is the input}' without the spaces that are between the macro name and
+     * the first non-space character, which is the word '{@code this}' as in the example.
      *
      * @param in        the input that is the "parameter" to the built-in macro
      * @param processor the processor that executes the macro. See {@link Processor}

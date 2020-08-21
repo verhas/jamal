@@ -1018,16 +1018,16 @@ since 1.0.0 (core)
 `export` moves the definition of one or more user-defined macros to a higher scope. When a macro is defined it
 is defined in the current scope (unless the name contains or starts with `:`).
 
-The file that Jamal is processing is one scope and if there is a macro defined
-in the file on the top level than that macro can be used anywhere inside that file. However, when Jamal includes
-a file into another it opens a new scope. The macro `include` should include some text in the output. It can
-be used, for example, to split up a long document into chapters and then use Jamal to create the final output.
-In that case, the macros defined in the included files should not interfere with the definitions in the file that
-includes the other one. To accomplish this separation when Jamal includes a file it starts a new scope. Scopes
-are embedded into each other like a call stack in programming languages. When a macro is defined in a scope
-it is available in that scope and all other scopes that are opened from that scope. When a macro is redefined in
-a scope the redefined value is used until the point the scope is closed. In case of an included file, the
-user-defined macros defined in the included file disappear as soon as the included file processing is finished.
+The file that Jamal is processing is one scope and if there is a macro defined in the file on the top-level then that
+macro can be used anywhere inside the file. However, when Jamal includes a file into another it opens a new scope. The
+macro `include` should include some text in the output. It can be used, for example, to split up a long document into
+chapters and then use Jamal to create the final output. In that case, the macros defined in the included files should
+not interfere with the definitions in the file that includes the other one. To accomplish this separation when Jamal
+includes a file it starts a new scope. Scopes are embedded into each other like a call stack in programming languages.
+When a macro is defined in a scope it is available in that scope and all other scopes that are opened from that scope.
+When a macro is redefined in a scope the redefined value is used until the point the scope is closed. In case of an
+included file, the user-defined macros defined in the included file disappear as soon as the included file processing is
+finished.
 
 The setting and resetting of the separator characters is also limited to the scope where the setting is and you
 cannot reset the separator character to a value that was set in a lower scope or higher scope.

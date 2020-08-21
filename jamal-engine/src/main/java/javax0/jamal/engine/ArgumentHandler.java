@@ -69,7 +69,7 @@ class ArgumentHandler {
                 var badSyntax = new BadSyntax(String.format("Macro '%s' needs %d arguments and got %d",
                         owner.getId(),
                         parameters.length,
-                        actualValues.length));
+                    actualValues.length));
                 for (final var actual : actualValues) {
                     badSyntax.parameter(actual);
                 }
@@ -79,6 +79,11 @@ class ArgumentHandler {
         return actualValues;
     }
 
+    /**
+     * @param values the values of the parameters
+     * @return a map that contains the parameter names as keys and the given values as values paired up in the order as
+     * they are specified.
+     */
     Map<String, String> buildValueMap(String[] values) {
         final var map = new HashMap<String, String>(values.length);
         for (int i = 0; i < parameters.length; i++) {
@@ -87,6 +92,15 @@ class ArgumentHandler {
         return map;
     }
 
+    /**
+     * Checks that no parameter name contains another parameter name. If there is any parameter name that contains
+     * another parameter name then {@code BadSyntax} is thrown.
+     * <p>
+     * This restriction ensures that the parameter replacement with the actual values is definite and there are no
+     * readability issues.
+     *
+     * @throws BadSyntax is any of the parameter names contain another parameter name.
+     */
     void ensure() throws BadSyntax {
         final var badSyntax = new BadSyntax("User defined macro parameter name should not be a substring of another parameter.");
         for (int i = 0; i < parameters.length; i++) {
@@ -94,7 +108,7 @@ class ArgumentHandler {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {
                         badSyntax.parameter("" + i + ". parameter '" + parameters[i] + "' contains the "
-                                + j + ". parameter '" + parameters[j] + "'");
+                            + j + ". parameter '" + parameters[j] + "'");
                     }
                 }
             }
