@@ -16,11 +16,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         push(null);
     }
 
-    public Optional<Identified> getUserDefined(String id) {
+    public <T extends Identified> Optional<T> getUserDefined(String id) {
         for (int level = udMacroStack.size() - 1; level > -1; level--) {
             var map = udMacroStack.get(level);
             if (map.containsKey(id)) {
-                return Optional.of(map.get(id));
+                return Optional.<T>of((T)map.get(id));
             }
         }
         return Optional.empty();

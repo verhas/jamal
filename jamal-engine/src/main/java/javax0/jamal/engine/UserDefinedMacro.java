@@ -61,15 +61,15 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     /**
      * Evaluate the content of the user defined macro using the actual values for the parameter values.
      *
-     * @param actualValues the actual string values for the parameters
+     * @param parameters the actual string values for the parameters
      * @return the string that is the result of the evaluation
      * @throws BadSyntaxAt if the user defined macro is a script and the script evaluation throws exception. This
      *                     exception is thrown if the number of the actual values is not the same as the number of the
      *                     parameters.
      */
     @Override
-    public String evaluate(final String... actualValues) throws BadSyntax {
-        final var adjustedValues = argumentHandler.adjustActualValues(actualValues, isLenient());
+    public String evaluate(final String... parameters) throws BadSyntax {
+        final var adjustedValues = argumentHandler.adjustActualValues(parameters, isLenient());
         var values = argumentHandler.buildValueMap(adjustedValues);
         if (root == null) {
             root = createSegmentList(adjustedValues);
