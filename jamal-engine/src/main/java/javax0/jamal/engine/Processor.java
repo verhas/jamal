@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.contains;
 import static javax0.jamal.tools.InputHandler.copy;
+import static javax0.jamal.tools.InputHandler.eatOneNL;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
@@ -39,15 +40,15 @@ public class Processor implements javax0.jamal.api.Processor {
     final private TraceRecordFactory traceRecordFactory = new TraceRecordFactory();
 
     /**
-     * Create a new Processor that can be used to process macros. It sets the separators to the specified values.
-     * These separators start and end macros and the usual strings are "{" and "}".
+     * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
+     * separators start and end macros and the usual strings are "{" and "}".
      * <p>
      * The constructor also loads the macros that are defined either in the modules as implementations provided for the
-     * interface {@link Macro} or in library files listed in the META-INF directory (old way). The constructor uses the
-     * {@link java.util.ServiceLoader} to load the macros.
+     * interface {@code Macro} or in library files listed in the META-INF directory (old way). The constructor uses the
+     * {@code java.util.ServiceLoader} to load the macros.
      * <p>
-     * Neither {@code macroOpen} nor {@code macroClose} can be {@code null}. In case any of these parameters are
-     * {@code null} an {@link IllegalArgumentException} will be thrown.
+     * Neither {@code macroOpen} nor {@code macroClose} can be {@code null}. In case any of these parameters are {@code
+     * null} an {@code IllegalArgumentException} will be thrown.
      *
      * @param macroOpen  the macro opening string
      * @param macroClose the macro closing string
@@ -622,6 +623,9 @@ public class Processor implements javax0.jamal.api.Processor {
                 counter--; // count the closing
                 if (counter == 0) {
                     skip(input, macros.close());
+                    if (OptionsStore.getInstance(this).is("nl")) {
+                        eatOneNL(input);
+                    }
                 } else {
                     refStack.pop();
                     moveMacroCloseToOutput(input, output);

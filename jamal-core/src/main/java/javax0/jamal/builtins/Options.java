@@ -38,7 +38,7 @@ public class Options implements Macro {
      * @param options the options
      */
     private void copyOptionsFromOldStore(final Processor processor, final String[] options) {
-        final var optionsStore = new OptionsStore();
+        final OptionsStore optionsStore = new OptionsStore();
         processor
             .getRegister()
             .<OptionsStore>getUserDefined(OptionsStore.OPTIONS_MACRO_ID).

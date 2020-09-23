@@ -4,22 +4,28 @@
 
 Just Another Macro Language
 
-Jamal is a complex text processor with a wide variety of possible use. The first version of Jamal was developed 20 years
-ago in Perl and was used in many projects to simplify the maintenance of build scripts, content text, and many
-other things. This version of Jamal is a complete rewrite of the original processor in Java leveraging on the
-featured provided by the programming language and on the twenty years of experience of using the old version.
+Jamal is a complex text processor with a wide variety of possible use.
+The first version of Jamal was developed 20 years ago in Perl.
+It was used in many projects to simplify the maintenance of build scripts, content text, and many other things.
+This version of Jamal is a complete rewrite of the original processor in Java.
+Jamal leverages on the featured provided by the programming language and on the twenty years of experience of using the old version.
+In this documentatopm the term "Jamal" refers to the Java implementation of the macro language.
 
 ![](images/text2text.svg)
 
-The basic concept of Jamal is to transform a UTF-8 source text to a target text enabling programmatic construct in the
-source text thus enabling the maintainer of the text to eliminate repetitions, text that can be calculated and other
-redundancies that make a text less readable and more error prone to maintain.
+The basic concept of Jamal is to transform a UTF-8 source text to a target text enabling programmatic construct in the source text.
+That way it enables the maintainer of the text to eliminate
 
-Jamal was designed to be absolutely transparent and applicable to any type of target text file and format. Any target
-file can be created from a Jamal source file no matter of any special need to keep new lines, exact spacing or
-special characters. That way Jamal can be applied as a universal, programmable preprocessor to any type of text file
-including document formats, like Markdown, AsciiDoc, HTML, but also to textual data description formats, like json,
-yaml, XML, or even to programming languages.
+* repetitions,
+
+* text that can be calculated, and
+
+* other redundancies that make a text less readable and more error prone to maintain.
+
+Jamal was designed to be absolutely transparent and applicable to any type of target text file and format.
+Any target file can be created from a Jamal source file no matter of any special need to keep new lines, spacing or special characters.
+That way Jamal can be applied as a universal, programmable preprocessor to any type of text file.
+This includes document formats, like Markdown, AsciiDoc, HTML, but also to textual data description formats, like json, yaml, XML, or even to programming languages.
 
 The source text can 
 
@@ -31,34 +37,39 @@ The source text can
 
 * use custom-made macros.
 
-Jamal processing can be started from the command line, it is available as a Maven plugin and can be embedded into
-applications using a simple API.
+Jamal processing can be started
+
+* from the command line,
+
+* it is available as a Maven plugin, and
+
+* can be embedded into applications using a simple API.
 
 The set of built-in macros can be extended creating new macros in any JVM language and providing the
 implementation via the standard Java service loader facility.
 
-Jamal is a text to text processor. It can be used as a templating engine or just to maintain
-redundant text files. During development many times there are text files that
-you need to maintain, which contain redundant information.
+Jamal is a text to text processor.
+It can be used as a templating engine or just to maintain redundant text files.
+During development many times there are text files that you need to maintain, which contain redundant information.
 
-* Some property or other resource files in a Java project may be slightly different for
-  the different environments, test support, uat, production.
-* A textual documentation has cross references but the format does not support automatic
-  symbolic anchors and references.
-* There can be some makefile or other script or documentation file that differs only
-  slightly for the different platforms.
+* Some property or other resource files in a Java project may be slightly different for the different environments, test support, uat, production.
+
+* A textual documentation has cross references but the format does not support automatic symbolic anchors and references.
+
+* There can be some makefile or other script or documentation file that differs only slightly for the different platforms.
+
 * If you have any other use, please tell us.
 
-Generally, Jamal reads a text and generates another one. In the source file, it
-processes macros and the result of the macros get in place of the macros. That way
-text and macro is mixed in a convenient way.
+Generally, Jamal reads a text and generates another one.
+In the source file, it processes macros and the result of the macros get in place of the macros.
+That way text and macro is mixed in a convenient way.
 
-You can use Jamal as a maven plugin, it is also embedded into the Java::Geci code generator
-or you can use it as an embeddable macro engine in your Java application.
+You can use Jamal as a maven plugin.
+It is also embedded into the Java::Geci code generator.
+You can use it as an embeddable macro engine in your Java application.
 
-In this readme, we first discuss how the macros look like and how will Jamal convert its input
-to the output, and then we discuss the API that lets you embed the macro processing into your
-application.
+In this readme, we first discuss how the macros look like and how will Jamal convert its input to the output.
+Then we discuss the API that lets you embed the macro processing into your application.
 
 ## Table of contents
 
@@ -1205,6 +1216,6 @@ the `predefinedMacros` as user defined macros. These macros eventually
 cannot have arguments. This is a simplified interface to access the
 functionality of Jamal.
 
-# JavaDoc
+## JavaDoc
 
 https://javadoc.io/doc/com.javax0.jamal/jamal-parent/

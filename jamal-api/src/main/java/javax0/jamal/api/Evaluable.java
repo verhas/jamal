@@ -9,11 +9,11 @@ public interface Evaluable {
     /**
      * Evaluate the user defined macro and return the result.
      *
-     * @param actualValues the parameter values
+     * @param parameters the parameter values
      * @return the evaluated result string
      * @throws BadSyntax if there is some error during the evaluation of the macro
      */
-    String evaluate(String... actualValues) throws BadSyntax;
+    String evaluate(String... parameters) throws BadSyntax;
 
     /**
      * @return the number of parameters that the user defined macro expects or -1 if the macro can accept any number of

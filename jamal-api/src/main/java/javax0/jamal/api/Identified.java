@@ -20,5 +20,9 @@ package javax0.jamal.api;
  *
  */
 public interface Identified {
+    /**
+     * Get the string identifier of the identifiable.
+     * @return the string representation of the identifier. Usually a human readable name.
+     */
     String getId();
 }

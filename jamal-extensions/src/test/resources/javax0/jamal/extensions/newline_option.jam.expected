@@ -1,0 +1,11 @@
+By default every character is important and no new line characters are eaten up.
+Therefore the following to lines will be like: "alma \n alma \n "
+alma
+alma
+When we define the {@options nl} then the new line character after the macro closing character is skipped.
+This means that here we will have an empty line and after that the next line will be "almaalma" and then "alma"
+without an empty line between
+
+almaalma
+alma
+See... there is no empty line before this line or before the previous line.

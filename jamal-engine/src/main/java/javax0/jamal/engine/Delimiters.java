@@ -1,7 +1,7 @@
 package javax0.jamal.engine;
 
 /**
- * See {@link javax0.jamal.api.Delimiters}.
+ * See {@code javax0.jamal.api.Delimiters}.
  */
 public class Delimiters implements javax0.jamal.api.Delimiters {
 

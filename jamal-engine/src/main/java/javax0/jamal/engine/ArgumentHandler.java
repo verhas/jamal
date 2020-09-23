@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A little utility class used solely in {@link UserDefinedMacro} and in {@link ScriptMacro} to ensure the proper use of
+ * A little utility class used solely in {@code UserDefinedMacro} and in {@code ScriptMacro} to ensure the proper use of
  * the macro arguments. In case of user defined macros none of the argument can contain any other argument. This
  * restriction is to avoid non-deterministic behavior or rather a deterministic behaviour (the code cannot really be
  * non-deterministic) that is not intuitive. In user defined macros the parameters, as they appear in the text are
@@ -33,9 +33,9 @@ class ArgumentHandler {
      * Adjust the actual arguments according to the number of parameters expected so that the macro evaluation after
      * this call can safely use the argument array assuming that there are exactly enough number of arguments.
      * <p>
-     * The normal behaviour of Jamal is to throw {@link BadSyntax} exception in case the actual number of arguments are
+     * The normal behaviour of Jamal is to throw {@code BadSyntax} exception in case the actual number of arguments are
      * different from the number of arguments expected. Starting with version 1.0.3 and later this behaviour is
-     * controlled by the option {@code lenient} that can be set using the {@link OptionsStore}
+     * controlled by the option {@code lenient} that can be set using the {@code OptionsStore}
      * in the macro source code. If the option {@code lenient} is present then the actual number of arguments can be
      * different from the number expected. In this case the extra arguments are ignored and the missing arguments are
      * added with the value empty string. (At each macro use there can only be one of those cases, there cannot be more
@@ -46,7 +46,7 @@ class ArgumentHandler {
      * @param actualValues the arguments passed to the macro.
      * @param lenient      if this parameter is {@code true} then the argument array will be adjusted if the
      *                     number of the parameters is not matching. If this parameter is {@code false} then the
-     *                     method will throw {@link BadSyntax} exception for the same case.
+     *                     method will throw {@code BadSyntax} exception for the same case.
      * @return the adjusted array, which may be the same array as the argument {@code actualValues} or a newly allocated
      * array with the values copied from {@code actualValues} and with extra empty strings to have the proper
      * length.

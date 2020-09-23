@@ -49,14 +49,14 @@ public class Regex {
         }
 
         @Override
-        public String evaluate(String... actualValues) throws BadSyntax {
-            if (actualValues.length == 0) {
+        public String evaluate(String... parameters) throws BadSyntax {
+            if (parameters.length == 0) {
                 throw new BadSyntax("The generated macro " + name + " needs at least one argument");
             }
-            var command = actualValues[0].trim();
+            var command = parameters[0].trim();
             final String arg;
-            if (actualValues.length > 1) {
-                arg = actualValues[1];
+            if (parameters.length > 1) {
+                arg = parameters[1];
             } else {
                 arg = null;
             }

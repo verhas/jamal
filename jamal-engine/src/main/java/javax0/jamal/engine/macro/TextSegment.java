@@ -69,8 +69,8 @@ public class TextSegment extends Segment {
      * </pre>
      * <p>
      * seven segments. The segments will be chained to each other forward through the {@code nextSeg} field that is
-     * returned by the {@link #next()} method. The whole splitting mechanism modifies this chain while the same time
-     * iterating through it. Since the parameter segments {@link ParameterSegment} are not splittable any more this
+     * returned by the {@code #next()} method. The whole splitting mechanism modifies this chain while the same time
+     * iterating through it. Since the parameter segments {@code ParameterSegment} are not splittable any more this
      * ensures that if the value of a parameter contains the name of another (or the same) parameter, it will not be
      * replaced during the splitting mechanism. At the end the segments are simply joined.
      *

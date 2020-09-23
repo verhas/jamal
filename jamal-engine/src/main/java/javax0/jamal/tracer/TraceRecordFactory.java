@@ -14,7 +14,7 @@ public class TraceRecordFactory {
     private final String traceFile;
     /**
      * Contains the level of execution during the evaluation. Since the implementation of macro evaluation is
-     * implemented in a recursive way this counter is maintained in the method {@link javax0.jamal.api.Processor#process(Input)}.
+     * implemented in a recursive way this counter is maintained in the method {@code javax0.jamal.api.Processor#process(Input)}.
      */
     private int level = 0;
 

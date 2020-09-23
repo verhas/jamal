@@ -145,6 +145,30 @@ public class InputHandler {
         }
     }
 
+
+    /**
+     * Delete the white space characters from the start of the input up to and including the next new-line character,
+     * but only if there is a new-line character following zero or more non-new-line white space characters.
+     *
+     * This method is used when the option {@code nl} is in effect that says that any new line character that follows
+     * a macro closing string should be consumed and not put into the output. This helps writing better looking output
+     * easier and not caring too much about the new lines.
+     *
+     * If there are some spaces immediately before the new-line they will also be deleted, because they cannot easily
+     * be recognized by the person editing the file and we want to avoid mysterious errors.
+     *
+     * @param input from which the spaces and the new-line should be deleted.
+     */
+    public static void eatOneNL(Input input) {
+        int i = 0;
+        while (i < input.length() && Character.isWhitespace(input.charAt(i)) && input.charAt(i) != '\n') {
+            i++;
+        }
+        if( i < input.length() && input.charAt(i) == '\n'){
+            skip(input,i+1);
+        }
+    }
+
     /**
      * Delete the white space characters from the start of the input but only until after the first EOL
      *
@@ -154,7 +178,7 @@ public class InputHandler {
         while (input.length() > 0 && Character.isWhitespace(input.charAt(0)) && input.charAt(0) != '\n') {
             input.delete(1);
         }
-        if( input.length() > 0 && input.charAt(0) == '\n' ){
+        if (input.length() > 0 && input.charAt(0) == '\n') {
             input.delete(1);
         }
     }

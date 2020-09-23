@@ -11,20 +11,8 @@ public class NumberLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var format = UDMacro.macro("format").from(processor).orElse("%d. ");
-        final var startS = UDMacro.macro("start").from(processor).orElse("1");
-        final var stepS = UDMacro.macro("step").from(processor).orElse("1");
-        final int start;
-        try {
-            start = Integer.parseInt(startS);
-        } catch (NumberFormatException nfe) {
-            throw new BadSyntax("$start is not a number");
-        }
-        final int step;
-        try {
-            step = Integer.parseInt(stepS);
-        } catch (NumberFormatException nfe) {
-            throw new BadSyntax("$step is not a number");
-        }
+        final var start = UDMacro.macro("start").integer().from(processor).orElse(1);
+        final var step = UDMacro.macro("step").integer().from(processor).orElse(1);
         InputHandler.skipWhiteSpaces2EOL(in);
         int i = 0;
         final var sb = in.getSB();
@@ -35,13 +23,23 @@ public class NumberLines implements Macro, InnerScopeDependent {
             i += formattedNr.length();
             lineNr += step;
             i = sb.indexOf("\n", i);
-            if( i != -1 ){
+            if (i != -1) {
                 i++;
             }
-            if( i >= sb.length() ){
+            if (i >= sb.length()) {
                 break;
             }
         }
         return in.toString();
+    }
+
+    private int getInt(Processor processor, String s) throws BadSyntax {
+        int start;
+        try {
+            start = Integer.parseInt(UDMacro.macro(s).from(processor).orElse("1"));
+        } catch (NumberFormatException nfe) {
+            throw new BadSyntax(s + " is not a number");
+        }
+        return start;
     }
 }
