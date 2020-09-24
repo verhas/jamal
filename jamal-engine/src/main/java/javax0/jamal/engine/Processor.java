@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.contains;
 import static javax0.jamal.tools.InputHandler.copy;
-import static javax0.jamal.tools.InputHandler.eatOneNL;
+import static javax0.jamal.tools.InputHandler.eatEscapedNL;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
@@ -623,8 +623,8 @@ public class Processor implements javax0.jamal.api.Processor {
                 counter--; // count the closing
                 if (counter == 0) {
                     skip(input, macros.close());
-                    if (OptionsStore.getInstance(this).is("nl")) {
-                        eatOneNL(input);
+                    if (!OptionsStore.getInstance(this).is("nl")) {
+                        eatEscapedNL(input);
                     }
                 } else {
                     refStack.pop();

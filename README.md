@@ -1083,13 +1083,15 @@ export macros from the top level scope, because in that case there is no enclosi
 ### `options`<a name="options">
 since 1.0.3 (core)
 
-The options macro can be used to alter the behavior of Jamal. The options can be listed `|` separated as an argument to
-the macro. The macro does not check the options name. It stores the options, and it can be queried by any other built-in
-macro. This way any extension can define and use any options it likes.
+The options macro can be used to alter the behavior of Jamal.
+The options can be listed `|` separated as an argument to the macro.
+The macro does not check the options name.
+It stores the options, and it can be queried by any other built-in macro.
+This way any extension can define and use any options it likes.
 
-The scope of the options is local the same way as the scope of user defined macros. Technically the options are stored
-in a user defined macro having the name <tt>`options</tt>, and it is possible to export this macro to higher layers.
-(Note that the name starts with a backtick.)
+The scope of the options is local the same way as the scope of user defined macros.
+Technically the options are stored in a user defined macro having the name <tt>`options</tt>, and it is possible to export this macro to higher layers.
+(Note that the name starts with a backtick and thus cannot be redefined using the `define` macro.)
 
 ```jam
 {@define macro(a,b,c)=a is a, b is b{#if :c:, and c is c}}
@@ -1127,6 +1129,17 @@ special evaluation structure that 1.1.0 and older versions used. In the meantime
 `omasalgotm` to force Jamal to the old evaluation style.
 
 Later versions of Jamal will not implement this option.
+
+#### `nl`
+
+Jamal 1.3.0 introduces the option `nl`.
+When this option is in effect then the all new-line characters are copied into the output.
+This was the default and non-changable behavior until the version 1.3.0.
+
+In version 1.3.0 it is possible to escape a new-line character that is following a macro closing.
+If there is a macro, for example `{@define z=1}` then the new line following the macro definition can be skipped puting a \ character immediately after the macro closing string.
+Thus `{@define z=1}\` will not include either the back-slash character nor the new-line character following it in the output.
+
 
 ## Jamal API<a name="JamalAPI">
 

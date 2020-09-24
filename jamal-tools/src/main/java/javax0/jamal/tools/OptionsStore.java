@@ -57,7 +57,8 @@ public class OptionsStore implements Identified {
     }
 
     /**
-     * Add the options to this options store.
+     * Add the options to this options store. Note that the set of options in this case come from an already
+     * existing options store, and thus the strings MUST NOT and CANNOT contain the leading {@code ~} character.
      *
      * @param options the options to add to the store
      */

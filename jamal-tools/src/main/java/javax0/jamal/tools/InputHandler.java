@@ -148,7 +148,8 @@ public class InputHandler {
 
     /**
      * Delete the white space characters from the start of the input up to and including the next new-line character,
-     * but only if there is a new-line character following zero or more non-new-line white space characters.
+     * but only if there is a new-line character following zero or more non-new-line white space characters and the
+     * very first character IS a back-slash {@code \}.
      *
      * This method is used when the option {@code nl} is in effect that says that any new line character that follows
      * a macro closing string should be consumed and not put into the output. This helps writing better looking output
@@ -159,13 +160,15 @@ public class InputHandler {
      *
      * @param input from which the spaces and the new-line should be deleted.
      */
-    public static void eatOneNL(Input input) {
-        int i = 0;
-        while (i < input.length() && Character.isWhitespace(input.charAt(i)) && input.charAt(i) != '\n') {
-            i++;
-        }
-        if( i < input.length() && input.charAt(i) == '\n'){
-            skip(input,i+1);
+    public static void eatEscapedNL(Input input) {
+        if (input.length() > 0 && input.charAt(0) == '\\') {
+            int i = 1;
+            while (i < input.length() && Character.isWhitespace(input.charAt(i)) && input.charAt(i) != '\n') {
+                i++;
+            }
+            if (i < input.length() && input.charAt(i) == '\n') {
+                skip(input, i + 1);
+            }
         }
     }
 
