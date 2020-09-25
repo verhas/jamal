@@ -135,4 +135,8 @@ public interface Input extends CharSequence {
     default String substring(int start) {
         return getSB().substring(start);
     }
+
+    default void deleteCharAt(int i){
+        getSB().deleteCharAt(i);
+    }
 }

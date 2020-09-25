@@ -9,6 +9,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.engine.util.StackLimiter;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tracer.TraceRecord;
@@ -38,6 +39,8 @@ public class Processor implements javax0.jamal.api.Processor {
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
 
     final private TraceRecordFactory traceRecordFactory = new TraceRecordFactory();
+
+    final private StackLimiter limiter = new StackLimiter();
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -85,6 +88,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public String process(final Input in) throws BadSyntax {
+        limiter.up();
         final var output = makeInput();
         try {
             while (in.length() > 0) {
@@ -101,6 +105,7 @@ public class Processor implements javax0.jamal.api.Processor {
             throw bsAt;
         }
         traceRecordFactory.dump(null);
+        limiter.down();
         return output.toString();
     }
 

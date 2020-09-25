@@ -145,6 +145,28 @@ public class InputHandler {
         }
     }
 
+    /**
+     * Delete the white space character from the start and from the end of the input.
+     *
+     * @param input from which the spaces should be deleted.
+     */
+    public static void trim(Input input) {
+        skipWhiteSpaces(input);
+        rtrim(input);
+    }
+
+    /**
+     * Delete the white space character from the end of the input.
+     *
+     * @param input from which the spaces should be deleted.
+     */
+    public static void rtrim(Input input) {
+        int i = input.length()-1;
+        while (i >= 0 && Character.isWhitespace(input.charAt(i))) {
+            input.deleteCharAt(i);
+            i--;
+        }
+    }
 
     /**
      * Delete the white space characters from the start of the input up to and including the next new-line character,

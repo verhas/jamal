@@ -1,6 +1,5 @@
 package javax0.jamal.tracer;
 
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 
 import java.util.ArrayDeque;
@@ -11,6 +10,8 @@ import java.util.List;
 public class TraceRecordFactory {
     final List<TraceRecord> traces = new ArrayList<>();
     final Deque<TraceRecord> stack = new ArrayDeque<>();
+    private static final String JAMAL_TRACE_ENV = "JAMAL_TRACE";
+    private static final String JAMAL_TRACE_SYS = "jamal.trace";
     private final String traceFile;
     /**
      * Contains the level of execution during the evaluation. Since the implementation of macro evaluation is
@@ -19,11 +20,11 @@ public class TraceRecordFactory {
     private int level = 0;
 
     public TraceRecordFactory() {
-        final var sysProp = System.getProperty("jamal.trace");
+        final var sysProp = System.getProperty(JAMAL_TRACE_SYS);
         if (sysProp != null) {
             traceFile = sysProp;
         } else {
-            traceFile = System.getenv("JAMAL_TRACE");
+            traceFile = System.getenv(JAMAL_TRACE_ENV);
         }
     }
 

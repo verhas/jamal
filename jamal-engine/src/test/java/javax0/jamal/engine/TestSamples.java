@@ -5,12 +5,11 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -192,6 +191,7 @@ class TestSamples {
 
     @Test
     @DisplayName("sep that defines zero length macro close throws exception")
+    @Disabled("This is valid since 1.3.0")
     void testBadSep2() {
         Assertions.assertThrows(BadSyntaxAt.class, () -> result("badsep2.jam"));
     }
