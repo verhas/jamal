@@ -11,14 +11,14 @@ public class TestSep {
 
     @ParameterizedTest(name = "The input \"{0}\" results \"{1}\"")
     @CsvSource(value = {
-        "{@sep/[/ ]}[@define a=aaa][a],aaa",
+        "{@sep/[/ ] }/[/@define a=aaa]/[/a],aaa",
+        "{@sep/[/ ]}/[/@define a=aaa]/[/a],aaa",
         "{@sep [/]}[@define a=aaa][a],aaa",
         "{@sep [ ]}[@define a=aaa][a],aaa",
         "{@sep [ ] }[@define a=aaa][a],aaa",
         "{@sep [   ] }[@define a=aaa][a],aaa",
         "{@sep    [   ]     }[@define a=aaa][a],aaa",
         "{@sep/[/]}[@define a=aaa][a],aaa",
-        "{@sep/[/ ] }[@define a=aaa][a],aaa",
         "{@sep/[ / ] }[@define a=aaa][a],aaa",
         "{@sep/ [ / ] }[@define a=aaa][a],aaa",
         "{@sep    [[   ]]     }[[@define a=aaa]][[a]],aaa",
