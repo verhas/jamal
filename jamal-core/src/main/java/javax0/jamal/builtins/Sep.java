@@ -38,8 +38,8 @@ public class Sep implements Macro {
         } else if (input.length() == 3) {
             // format {@sep [/]}
             openMacro = input.substring(0, 1);
-            closeMacro = input.substring(2);
             final var sep = input.substring(1, 2);
+            closeMacro = input.substring(2);
             if (sep.equals(openMacro) || sep.equals(closeMacro)) {
                 final var open = processor.getRegister().open();
                 final var close = processor.getRegister().close();
@@ -50,6 +50,11 @@ public class Sep implements Macro {
             if (matcher.matches()) {
                 openMacro = matcher.group(1);
                 closeMacro = matcher.group(2);
+                if (misleadingOpenString(openMacro, closeMacro)) {
+                    final var open = processor.getRegister().open();
+                    final var close = processor.getRegister().close();
+                    throw new BadSyntax(open + "@sep " + input + close + " is ambiguous. Use a definition that does not contain spaces.");
+                }
             } else {
                 var sep = input.substring(0, 1);
                 skip(input, 1);
@@ -73,6 +78,45 @@ public class Sep implements Macro {
         }
         processor.separators(openMacro, closeMacro);
         return "";
+    }
+
+    /**
+     * There is a special case that leads to unreadable {@code {@sep }} macro. This is the case when somebody uses the
+     * {@code \S+\s+\S+} format but the definition also looks like the one using the separator character. In this case
+     * we throw an exception.
+     * <p>
+     * The unreadable situation is when the opening string starts and ends with the same character, it has more than two
+     * characters, and this character does not appear inside the opening string.
+     * <p>
+     * That way we can avoid
+     * <pre>{@code
+     * {@sep /[/ ]}
+     * }</pre>
+     * <p>
+     * but still can handle safely
+     *
+     * <pre>{@code
+     * {@sep (()) }
+     * {@sep (( ())) }
+     * }</pre>
+     * <p>
+     * For some examples you can have a look at the unit tests in {@code jamal/jamal-extensions/src/test/java/javax0/jamal/extensions/TestSep.java}
+     *
+     * @param openMacro    the macro opening string to test
+     * @param closingMacro
+     * @return true if the macro opening string suggest that the sep definitoin is misleading
+     */
+    private boolean misleadingOpenString(final String openMacro, final String closingMacro) {
+        final var sep = openMacro.charAt(0);
+        return (sep == openMacro.charAt(openMacro.length() - 1)
+            && openMacro.length() > 2
+            && !openMacro.substring(1, openMacro.length() - 1).contains("" + sep))
+            ||
+            (sep == closingMacro.charAt(0) &&
+                closingMacro.length() > 1 &&
+                !closingMacro.substring(1).contains("" + sep)
+            )
+            ;
     }
 
     private void restoreLastSavedDelimiters(Processor processor) throws BadSyntax {

@@ -1,4 +1,4 @@
-# jamal
+# Jamal
 
 [![Javadocs](https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg)](https://javadoc.io/doc/com.javax0.jamal/jamal-parent)
 
@@ -6,26 +6,26 @@ Just Another Macro Language
 
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.
-It was used in many projects to simplify the maintenance of build scripts, content text, and many other things.
+It was used in many projects to simplify build-scripts maintenance, content text, and many other things.
 This version of Jamal is a complete rewrite of the original processor in Java.
-Jamal leverages the featured provided by the programming language and on the twenty years of experience of using the old version.
-In this documentation the term "Jamal" refers to the Java implementation of the macro language.
+Jamal leverages on the programming language's features and the twenty years of experience of using the old version.
+In this documentation, the term "Jamal" refers to the Java implementation of the macro language.
 
 ![](images/text2text.svg)
 
-The basic concept of Jamal is to transform a UTF-8 source text to a target text enabling programmatic construct in the source text.
-That way it enables the maintainer of the text to eliminate
+Jamal's basic concept is to transform a UTF-8 source text to a target text enabling programmatic construct in the source text.
+That way, it enables the maintainer of the text to eliminate
 
 * repetitions,
 
-* text that can be calculated, and
+* calculable text, and
 
 * other redundancies that make a text less readable and more error-prone to maintain.
 
-Jamal was designed to be absolutely transparent and applicable to any type of target text file and format.
-Any target file can be created from a Jamal source file no matter any special need to keep new lines, spacing, or special characters.
-That way Jamal can be applied as a universal, programmable preprocessor to any type of text file.
-This includes document formats, like Markdown, AsciiDoc, HTML, but also to textual data description formats, like JSON, YAML, XML, or even programming languages.
+Jamal design is to be transparent and applicable to any target text file and format.
+Jamal can create your file from a Jamal source file no matter any particular need to keep new lines, spacing, or special characters.
+That way, Jamal can be applied as a universal, programmable preprocessor to any text file type.
+The types include document formats, like Markdown, AsciiDoc, HTML, and textual data description formats, like JSON, YAML, XML, or even programming languages.
 
 The source text can 
 
@@ -37,7 +37,7 @@ The source text can
 
 * use custom-made macros.
 
-Jamal processing can be started
+You can start Jamal processing
 
 * from the command line,
 
@@ -45,30 +45,30 @@ Jamal processing can be started
 
 * can be embedded into applications using a simple API.
 
-The set of built-in macros can be extended creating new macros in any JVM language and providing the
+You can extend the set of built-in macros creating new macros in any JVM language and providing the
 implementation via the standard Java service loader facility.
 
 Jamal is a text to text processor.
-It can be used as a templating engine or just to maintain redundant text files.
-During development many times there are text files that you need to maintain, which contain redundant information.
+It is also a templating engine to maintain redundant text files.
+During development, there are often text files that you need to maintain, which contain redundant information.
 
-* Some property or other resource files in a Java project may be slightly different for the different environments, test support, uat, production.
+* Some property or other resource files in a Java project may be slightly different for the different environments, test support, user acceptance test, production.
 
-* A textual documentation has cross-references but the format does not support automatic symbolic anchors and references.
+* A textual documentation has cross-references, but the format does not support automatic symbolic anchors and references.
 
 * There can be some makefile or other script or documentation file that differs only slightly for the different platforms.
 
 * If you have any other use, please tell us.
 
 Generally, Jamal reads a text and generates another one.
-In the source file, it processes macros and the result of the macros gets in place of the macros.
-That way text and macros are mixed in a convenient way.
+In the source file, it processes macros, and the result gets in the macros' place.
+That way, text, and macros are mixed conveniently.
 
 You can use Jamal as a maven plugin.
-It is also embedded into the Java::Geci code generator.
+Some of the Java::Geci code generators also use Jamal.
 You can use it as an embeddable macro engine in your Java application.
 
-In this readme, we first discuss how the macros look and how will Jamal convert its input to the output.
+In this readme, we first discuss how the macros look and how Jamal will convert its input to the output.
 Then we discuss the API that lets you embed the macro processing into your application.
 
 ## Table of contents
@@ -98,7 +98,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 ## Starting Jamal<a name="Starting">
 
 The simplest way to start Jamal is to use the Maven plugin.
-To do that you have to have Maven installed, but as a Java developer, you probably have.
+To do that, you have to have Maven installed, but as a Java developer, you probably have.
 Then you can issue the command
 
 ```
@@ -121,20 +121,20 @@ In cases like that, you can specify
 ```
 
 on the command line that starts Jamal.
-It will specifying a trace file, in this case, `tracefile.xml`.
-If it is more convenient you can also specify the trace file using the environment variable:
+It will specify a trace file, in this case, `tracefile.xml`.
+If it is more convenient, you can also specify the trace file using the environment variable:
 
 ```
 export JAMAL_TRACE=tracefile.xml
 ``` 
 Only if the `jamal.trace` system property is not defined.
-When the system property is defined then the environment variable will be ignored.
+When the system property is defined, then the environment variable is ignored.
 
 The trace file will contain all the macro evaluations' inputs and outputs.
-Since there can be many Jamal evaluations one after the other, Jamal does not overwrite old trace information but rather it appends the information.
+Since there can be many Jamal evaluations one after the other, Jamal does not overwrite old trace information, but rather, it appends the info.
 Before starting Jamal, you can manually delete the trace file. 
-Trace files grow large easily. 
-If you do not want to trace anymore do not forget to unset the environment variable typing
+Trace files grow large quickly. 
+If you do not want to trace anymore, do not forget to unset the environment variable typing
 
 ```
 unset JAMAL_TRACE
@@ -142,7 +142,7 @@ unset JAMAL_TRACE
   
 to avoid an excessively large trace file growing on your disk.
   
-If you use Java 8 you should use with the release `1.0.2.JDK8`.
+If you use Java 8, you should use it with the release `1.0.2.JDK8`.
 
 ## Simple Example<a name="SimpleExample">
 
@@ -166,21 +166,21 @@ we have an green 1kg of size melone
 
 In this sample, the built-in macro `define` is used to define a so-called user-defined macro `fruit`.
 This macro has three arguments named `color`, `actualSize`, and `name`.
-When the user-defined macro is used these arguments are replaced with the actual values.
+When the user-defined macro is in use, the actual values replace these arguments.
 
-Note that in this example the macros open with the `{` character and close with the `}` character.
-This is not hardwired in Jamal and there is not even a suggested default for that. 
+Note that the macros open with the `{` character and close with the `}` character in this example.
+These are not hardwired in Jamal and there is not even a suggested default for that. 
 The embedding application has to define the opening string and the closing string.
-For example the embedding Java::Geci application uses `{{` and `}}` as macro open and macro close strings.
-It does it because in the Java source code the `{` and `}` characters are frequently used.
+For example, the embedding Java::Geci application uses `{{` and `}}` as macro open and macro close strings.
+It does it because the `{` and `}` characters frequently appear in the Java source code.
 On the other hand, Java code rarely uses the double `{{` or `}}` format.
 In this documentation, we use the `{` and `}` strings.
 However, you have to be aware that this is NOT enforced.
 This is not even a recommendation or a convention.
-The macro opening and closing string can be specified as the program parameter and can also be changed inside the Jamal source.
-In the Jamal source you can change them using the built-in `sep` macro (see later).
+You can specify the macro opening and closing string as the program parameter, and the Jamal source code can also change it.
+You can change them using the built-in `sep` macro (see later) in the Jamal source.
 
-When the macros are used the parameters are separated using the first non-space character following the name of the macro.
+The parameters are separated using the first non-space character following the macro's name in the macro use.
 Thus, you can write
 
 ```jam
@@ -190,9 +190,9 @@ Thus, you can write
 {fruit :red:apple:20ounce}
 ```
 
-Note that in the last example we used the `:` character as the separator.
-Since this character can also be part of the name of the macro there must be a space before it.
-Note: When the name of a macro contains one or more  `:` characters then the macro is global.
+Note that in the last example, we used the `:` character as the separator.
+Since this character can also be part of the macro's name, there must be a space before it.
+Note: When the name of a macro contains one or more  `:` characters, then the macro is global.
 
 ## Other Macros<a name="OtherMacros">
 
@@ -214,14 +214,14 @@ Note: When the name of a macro contains one or more  `:` characters then the mac
 * `verbatim`, and
 * `options`
 
-The built-in macros are used with `#` or `@` in front of the name of the macro. 
-These characters signal that the macro is not user-defined but rather built-in and, they also have a side effect.
-The usual use is to start a macro with the `@` character. 
-In that case, the macro is evaluated with the rest of the input till the closing string (which is `}` in the samples).
-If the macro starts with the `#` character then the input is first parsed for other macros.
-These macros are evaluated, and their result replace their occurrences in the code.
-Only after this the macro we are looking at is evaluated. 
-For examples, and a more detailed explanation about this see the section about the built-in macro `export`.
+You use the built-in macros with `#` or `@` in front of the macro's name. 
+These characters signal that the macro is not user-defined but built-in, and they also have a side effect.
+The typical use is to start a macro with the `@` character. 
+In that case, the macro evaluates the rest of the input till the closing string.
+If the macro starts with the `#` character, then the input is first parsed for other macros.
+These macros are evaluated, and their results replace their occurrences in the code.
+Only after this, the macro we are looking at is evaluated. 
+For more details, see the section about the built-in macro `export`.
 
 
 ### `comment`<a name="comment">
@@ -229,8 +229,8 @@ since 1.0.0 (core)
 
 `comment` is used to insert comments to the input.
 It can also be used to enclose definitions without side effects, but this is not recommended.
-For that purpose use the [`block`](#block) macro.
-For more about definition scopes and exporting read the section about `export`.
+For that purpose, use the [`block`](#block) macro.
+For more about definition scopes and exporting, read the section about `export`.
 
 <!-- USE SNIPPET */comment -->
 ```jam
@@ -246,27 +246,27 @@ this is some text
 
 Note that this is important to use the `@` character in front of the keyword `comment` to make is a real comment.
 If the macro character `#` is used, like `{#comment comment_text}` then the `comment_text` part will be evaluated.
-If there is some macro in the `comment_text` that modifies the evaluation state then the modification will happen.
-For example if the `comment_text` defines some global macro then after the `comment` block the defined macro can be used.
+If there is some macro in the `comment_text` that modifies the evaluation state, then the modification will happen.
+For example, if the `comment_text` defines some global macro, then the defined macro can be used after the `comment` block.
 
-It is safe to say to always use `{@comment ...}`.
-When the code needs the evaluation then use the [`block`](#block) macro.
+It is safe to say always to use `{@comment ...}`.
+When the code needs the evaluation, then use the [`block`](#block) macro.
 
 ### `block`<a name="block">
 since 1.0.0 (core)
 
 `block` is technically the same as `comment`.
 It is recommended to use the `comment` macro with the `@` starting character.
-That was the content of the comment is not interpreted by Jamal.
+In that case the content of the comment is not interpreted by Jamal.
 Use the `block` with `#` to have the content interpreted.
 Block should be used to enclose definitions to a scope level.
 
-For more about definition scopes and exporting read the section about [`export`](#export).
+For more about definition scopes and exporting, read the section about [`export`](#export).
 
 ### `begin`<a name="begin"> and `end`
 since 1.0.0 (core)
 
-The macros `begin` and `end` can be used to start and to finish a local definition scope.
+The macros `begin` and `end` start and finish a local definition scope.
 The effect is practically the same as having the text inside a `#block` macro.
 Note, the starting `#` character.
 It means that the text will be evaluated before the macro itself is executed.
@@ -816,7 +816,7 @@ At the same time we used `@` in front of `ident`.
 The content of the `define` is evaluated.
 In this evaluation `{@ident {a}}` is evaluated and `{b}` is also evaluated.
 `{@ident {a}}` becomes `{a}`.
-`{b}` becomes `92`.
+`{b}` becomes '92`.
 This way `c` will become `{a}92`. 
 
 If we redefine later `a` to some different value then `c` will follow this change.
@@ -994,7 +994,7 @@ If both the start and end strings are a single character, for example `[` and `]
 {@sep []}
 ```
 
-A two-character argumentum to the macro `sep` will use the first character as macro opening string and the second as macro closing string.
+A two-character argument to the macro `sep` will use the first character as macro opening string and the second as macro closing string.
 You can also use three character. For example: 
 
 ```jam
@@ -1008,15 +1008,55 @@ It is also possible to use the format
 {@sep openingString  \s+   closingString}
 ```
 
-separating the opening and closing strings with spaces. 
+separating the opening and closing strings with spaces.
+This format is very readable and convenient in many cases.
+For example, you can specify
 
-In all other cases the "regular expression" like the syntax of the macro is
+```jam
+{@sep (( )) }
+{@sep ([ ]) }
+```
+
+and other, similar opening and closing strings.
+There are some definitions that are misleading.
+For example, the following declarations can be interpreted by humans in multiple ways.
+
+```jam
+{@sep/[/ ] }   <- is it "/[/" and "]" or "[" and "]"   
+{@sep/[ /]}    <- is it "/[" and "/]" or "[" and "]"
+``` 
+
+Many human readers would tend to think the second.
+The syntax however matches the `\S+\s+\S+` pattern.
+To avoid any such ambiguous situation Jamal does not allow the use of this form when
+
+* the opening string
+  * starts and ends with the same character
+  * is at least three characters long and
+  * it does not contain the first character inside
+ 
+or
+
+* the closing string
+  * starts with the same character as the opening string
+  * at least two character long
+  * does not contain this character after the first character.  
+
+These seem to be a bit complex rules.
+They contain a bit of heuristics.
+They were designed to let the users use the most readable format of the `sep` macro.
+The same time they help avoid unreadable declarations and errors.
+
+If in doubt then you can always use the last, definitive syntax that does not rely on any heuristics.
+This syntax is described in the followings.
+
+If the syntax does not match and of the previous cases, Jamal will use the "regular expression" like the syntax:
 
 ```jam
 sep \s* (\S) opening_string (\1) closing_string \s* 
 ```
 
-There can be whitespace characters after the macro name `sep`, and also at the end, but these are optional.
+There can be whitespace characters after the macro name `sep`, and at the end, but these are optional.
 The first non-space character is used as a separator character that separates the macro opening string from the macro closing string.
 It is usually the `/` character, but it can be anything that does not appear in the opening string.
 Prior to 1.3.0 this character could appear in the closing string, although it is not recommended.
@@ -1328,7 +1368,7 @@ The environment variables that you can set to modify the behavior of Jamal are t
 
 Embedding Jamal into an application is very simple.
 You need the Jamal libraries on your classpath.
-If you use maven, you can simply have
+If you use Maven, you can simply have
 
 ```xml
         <dependency>
@@ -1377,7 +1417,7 @@ private Input createInput(Path inputFile) throws IOException {
 An `Input` holds the content the processor has to process.
 It also has a reference file name used to resolve the absolute names of the included and imported files.
 It also keeps track of the line number, and the column of the actual character as the macro evaluation progresses.
-A `new Position(s,1)` creates a new position that identifies the file by the name `s` and the line number 1.
+A `new Position(s,1)` creates a new position that identifies the file by the name's` and the line number 1.
 
 When a new processor is instantiated it uses the `ServiceLoader` mechanism to find all the built-in macros that are on the classpath.
 If your application has special macros implemented in Java then you can just put the library on the `modulepath`. 
