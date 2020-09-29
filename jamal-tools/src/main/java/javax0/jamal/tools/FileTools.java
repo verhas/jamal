@@ -21,23 +21,33 @@ import static javax0.jamal.tools.Input.makeInput;
  */
 public class FileTools {
 
+    private static final String RESOURCE_PREFIX = "res:";
+    private static final int RESOURCE_PREFIX_LENGTH = RESOURCE_PREFIX.length();
+    private static final String HTTPS_PREFIX = "https:";
+
     /**
      * Create a new input from a file.
      *
-     * @param fileName the name of the file. This is used to open and read the file as well as reference file name in the input.
+     * @param fileName the name of the file. This is used to open and read the file as well as reference file name in
+     *                 the input. When the file name starts with the characters {@code res:} then the rest of the string
+     *                 is treated as the name of a Java resource. That way Jamal can load a Java resource from some JAR
+     *                 that is on the classpath.
      * @return the input containing the contend of the file.
      * @throws BadSyntaxAt if the file cannot be read.
      */
     public static Input getInput(String fileName) throws BadSyntax {
         try {
-            if (fileName.startsWith("res:")) {
-                return makeInput(getResourceInput(fileName.substring(4)), new Position(fileName));
+            if (fileName.startsWith(RESOURCE_PREFIX)) {
+                return makeInput(getResourceInput(fileName.substring(RESOURCE_PREFIX_LENGTH)), new Position(fileName));
+            }
+            if (fileName.startsWith(HTTPS_PREFIX)) {
+                return makeInput(CachedHttpInput.geInput(fileName), new Position(fileName));
             } else {
                 return makeInput(Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n")),
                     new Position(fileName));
             }
         } catch (IOException e) {
-            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'");
+            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'",e);
         }
     }
 
@@ -82,7 +92,8 @@ public class FileTools {
      * @return the absolute file name of the file
      */
     public static String absolute(final String reference, String fileName) {
-        if (fileName.startsWith("res:") ||
+        if (fileName.startsWith(RESOURCE_PREFIX) ||
+            fileName.startsWith(HTTPS_PREFIX) ||
             fileName.startsWith("/") ||
             fileName.startsWith("\\") ||
             fileName.startsWith("~") ||

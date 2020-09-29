@@ -27,8 +27,19 @@ public class Input implements javax0.jamal.api.Input {
         this(string, null);
     }
 
+    public static Input makeInput(StringBuilder input, Position ref) {
+        return new Input(input, ref);
+    }
+
     public static Input makeInput(String input, Position ref) {
         return new Input(input, ref);
+    }
+
+    public Input(StringBuilder input, Position ref) {
+        this.input = input;
+        this.file = ref == null ? null : ref.file;
+        line = ref == null ? 1 : ref.line;
+        column = ref == null ? 1 : ref.column;
     }
 
     public Input(String input, Position ref) {
