@@ -50,7 +50,7 @@ import java.net.URL;
     }
 
 
-    public void downloadFile(String urlString) throws IOException {
+    public void download(String urlString) throws IOException {
         final URL url = new URL(urlString);
         File jar = new File(CACHE_ROOT_DIRECTORY.getAbsolutePath() + url.getFile());
         if (jar.exists()) {
