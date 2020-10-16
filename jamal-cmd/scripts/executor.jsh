@@ -24,8 +24,7 @@ import java.util.stream.Collectors;
         }
         List<String> arguments = new ArrayList<>();
         arguments.addAll(List.of("java", "-cp", cp, "javax0.jamal.cmd.JamalMain"));
-        Map commandLineOptions;
-        commandLineOptions.entrySet().stream().map(Map.Entry < String, String > e -> "" + e.getKey() + "=" + e.getValue())
+        commandLineOptions.entrySet().stream().map(e -> "" + e.getKey() + "=" + e.getValue());
         builder.command(arguments.toArray(String[]::new))
             .directory(new File("."));
         Process process = builder.start();
