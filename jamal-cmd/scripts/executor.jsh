@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
         String sep = System.getProperty("path.separator");
         String cp = Arrays.stream(
             CACHE_ROOT_DIRECTORY.listFiles((d, n) -> n.endsWith(".jar"))).map(File::getAbsolutePath).collect(Collectors.joining(sep));
-        System.out.println("Class path is " + cp);
         builder.command("java", "-cp", cp, "javax0.jamal.cmd.JamalMain")
             .directory(new File("."));
         Process process = builder.start();
