@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-    String LOCAL_CACHE = new File(".jamal/.jar");
+    File LOCAL_CACHE = new File(".jamal/.jar");
 
     void execute() throws IOException, InterruptedException {
         ProcessBuilder builder = new ProcessBuilder();
