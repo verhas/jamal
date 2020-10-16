@@ -45,11 +45,16 @@ public class JamalMain {
     private String transformTo = "";
     //</editor-fold>
 
+    /**
+     * Appends spaces to make the string 20 characters long.
+     *
+     * @param x the string to be padded
+     * @return the string x padded with spaces
+     */
     private static String arg(String x) {
         StringBuilder xBuilder = new StringBuilder(x);
         while (xBuilder.length() < 20) xBuilder.append(" ");
-        x = xBuilder.toString();
-        return x;
+        return xBuilder.toString();
     }
 
     /**
