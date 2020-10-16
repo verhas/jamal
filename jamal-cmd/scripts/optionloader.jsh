@@ -14,8 +14,8 @@ import java.util.Map;
     String OPTION_FILE = "./jamal.options";
 
     File options = new File(OPTION_FILE);
-    Map commandLineOptions = new HashMap();
-    List extraJars = new ArrayList<>();
+    Map<String,String> commandLineOptions = new HashMap();
+    List<String> extraJars = new ArrayList<>();
 
     void loadOptions() throws IOException {
         if (!options.exists()) {
