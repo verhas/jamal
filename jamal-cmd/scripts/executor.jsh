@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
         String cp = Arrays.stream(cacheRootDirecotry.listFiles((d, n) -> n.endsWith(".jar")))
             .map(File::getAbsolutePath)
             .collect(Collectors.joining(sep));
-        File local = new File(LOCAL_CACHE);
         if (LOCAL_CACHE.exists()) {
             String localCp = Arrays.stream(LOCAL_CACHE.listFiles((d, n) -> n.endsWith(".jar")))
                 .map(File::getAbsolutePath)
