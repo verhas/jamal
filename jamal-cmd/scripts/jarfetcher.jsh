@@ -50,12 +50,26 @@ import java.net.URL;
     }
 
 
-    public void download(String urlString) throws IOException {
+    String getFile(URL url) {
+        String fn = url.getFile();
+        int index;
+        if ((index = fn.lastIndexOf('/')) != -1) {
+            fn = fn.substring(index + 1);
+        }
+        if ((index = fn.indexOf('?')) != -1) {
+            fn = fn.substring(0, index);
+        }
+        return fn;
+    }
+
+    void downloadUrl(String urlString) throws IOException {
         final URL url = new URL(urlString);
-        File jar = new File(CACHE_ROOT_DIRECTORY.getAbsolutePath() + url.getFile());
+        File jar = new File(CACHE_ROOT_DIRECTORY.getAbsolutePath() + "/" + getFile(url));
         if (jar.exists()) {
             return;
         }
+        System.out.println("downloading " + url);
+        System.out.println("saving to file " + jar.getAbsolutePath());
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setConnectTimeout(CONNECT_TIMEOUT);
@@ -73,4 +87,8 @@ import java.net.URL;
                 outStream.write(buffer, 0, bytesRead);
             }
         }
+    }
+
+    void download(String jar) throws IOException {
+        downloadUrl("https://github.com/verhas/jamal/blob/master/release-" + VERSION + "/" + jar + "-" + VERSION + ".jar?raw=true");
     }

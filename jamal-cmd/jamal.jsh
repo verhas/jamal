@@ -1,8 +1,13 @@
 
-/open version.jsh
-/open jarfetcher.jsh
+/open scripts/version.jsh
+/open scripts/jarfetcher.jsh
 
-        dowload("https://github.com/verhas/jamal/blob/master/release-"+VERSION+"/01engine/jamal-engine-"+VERSION+".jar?raw=true")
+download("01engine/jamal-engine")
+download("02api/jamal-api")
+download("03tools/jamal-tools")
+download("04core/jamal-core")
+download("05extensions/jamal-extensions")
+download("08cmd/jamal-cmd")
 
 
 /exit
