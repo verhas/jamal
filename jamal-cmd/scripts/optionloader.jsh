@@ -19,6 +19,7 @@ import java.util.Map;
 
     void loadOptions() throws IOException {
         if (!options.exists()) {
+            System.out.println("no options");
             return;
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(options)), StandardCharsets.UTF_8));

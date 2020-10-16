@@ -12,7 +12,7 @@ import java.net.URL;
     String DEFAULT_CACHE_ROOT = "~/.jamal/cache/";
     int CONNECT_TIMEOUT;
     int READ_TIMEOUT;
-    File cacheRootDirectory;
+    File CACHE_ROOT_DIRECTORY;
 
     String envCacheRoot = System.getenv(JAMAL_HTTPS_CACHE);
     String userHome = System.getProperty("user.home");
@@ -26,14 +26,14 @@ import java.net.URL;
     if (cacheRoot.charAt(0) == '~') {
         cacheRoot = userHome + cacheRoot.substring(1);
     }
-    cacheRootDirectory = new File(new File(cacheRoot).getAbsoluteFile() + "/.jar/");
-    if (cacheRootDirectory.exists() && !cacheRootDirectory.isDirectory()) {
-        throw new RuntimeException(cacheRootDirectory.getAbsolutePath() + " exists but it is not a directory.");
+    CACHE_ROOT_DIRECTORY = new File(new File(cacheRoot).getAbsoluteFile() + "/.jar/");
+    if (CACHE_ROOT_DIRECTORY.exists() && !CACHE_ROOT_DIRECTORY.isDirectory()) {
+        throw new RuntimeException(CACHE_ROOT_DIRECTORY.getAbsolutePath() + " exists but it is not a directory.");
     }
 
-    cacheRootDirectory.mkdirs();
-    if (!cacheRootDirectory.exists()) {
-        throw new RuntimeException("I cannot create " + cacheRootDirectory.getAbsolutePath() + "for some reason");
+    CACHE_ROOT_DIRECTORY.mkdirs();
+    if (!CACHE_ROOT_DIRECTORY.exists()) {
+        throw new RuntimeException("I cannot create " + CACHE_ROOT_DIRECTORY.getAbsolutePath() + "for some reason");
     }
 
     String connTimeout = System.getenv(JAMAL_CONNECT_TIMEOUT);
@@ -62,7 +62,7 @@ import java.net.URL;
         return fn;
     }
 
-    void downloadUrl(String urlString) throws IOException {
+    void downloadUrl(String urlString,File cacheRootDirectory) throws IOException {
         final URL url = new URL(urlString);
         File jar = new File(cacheRootDirectory.getAbsolutePath() + "/" + getFile(url));
         if (jar.exists()) {
@@ -90,5 +90,5 @@ import java.net.URL;
     }
 
     void download(String jar) throws IOException {
-        downloadUrl("https://github.com/verhas/jamal/blob/master/release-" + VERSION + "/" + jar + "-" + VERSION + ".jar?raw=true");
+        downloadUrl("https://github.com/verhas/jamal/blob/master/release-" + VERSION + "/" + jar + "-" + VERSION + ".jar?raw=true", CACHE_ROOT_DIRECTORY);
     }

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
     void execute() throws IOException, InterruptedException {
         ProcessBuilder builder = new ProcessBuilder();
         String sep = System.getProperty("path.separator");
-        String cp = Arrays.stream(cacheRootDirecotry.listFiles((d, n) -> n.endsWith(".jar")))
+        String cp = Arrays.stream(CACHE_ROOT_DIRECTORY.listFiles((d, n) -> n.endsWith(".jar")))
             .map(File::getAbsolutePath)
             .collect(Collectors.joining(sep));
         if (LOCAL_CACHE.exists()) {
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
         }
         List<String> arguments = new ArrayList<>();
         arguments.addAll(List.of("java", "-cp", cp, "javax0.jamal.cmd.JamalMain"));
-        commandLineOptions.entrySet().stream().map(e -> "" + e.getKey() + "=" + e.getValue());
+        arguments.addAll(commandLineOptions.entrySet().stream().map(e -> "" + e.getKey() + "=" + e.getValue()).collect( Collectors.toSet()));
         builder.command(arguments.toArray(String[]::new))
             .directory(new File("."));
         Process process = builder.start();
