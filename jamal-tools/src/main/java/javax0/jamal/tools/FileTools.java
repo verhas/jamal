@@ -6,13 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.net.BindException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.Input.makeInput;
 
@@ -27,46 +21,48 @@ public class FileTools {
 
     /**
      * Create a new input from a file.
+     * <p>
+     * Reads the file and returns an input object that has the content of the file.
+     * <p>
+     * The file can be
+     * <ul>
+     *     <li>a plain file,
+     *     </li>
+     *     <li>a Java resource (file name starts with {@code res:}, or
+     *     </li>
+     *     <li>a {@code https} downloadable content (file name starts with {@code https}.
+     *     </li>
+     * </ul>
+     * <p>
+     * If the content comes from a https URL then the local cache is checked before.
+     * <p>
+     * There is no cache eviction. All files donwloaded once are in the cache and the remote is never checked again.
+     * If the URL contains the string literal {@code SNAPSHOT} (all capital letters) it is not cached.
+     * <p>
+     * There is no way to download a resource using the {@code http} protocol.
      *
      * @param fileName the name of the file. This is used to open and read the file as well as reference file name in
      *                 the input. When the file name starts with the characters {@code res:} then the rest of the string
      *                 is treated as the name of a Java resource. That way Jamal can load a Java resource from some JAR
-     *                 that is on the classpath.
+     *                 that is on the classpath. If the file name starts with {@code https:} then the string is treated
+     *                 as an URL. In that case the UTL is fetched and if there is a cache directory configured it will
+     *                 be loaded from the cache.
      * @return the input containing the contend of the file.
      * @throws BadSyntaxAt if the file cannot be read.
      */
     public static Input getInput(String fileName) throws BadSyntax {
         try {
+            final var pos = new Position(fileName);
             if (fileName.startsWith(RESOURCE_PREFIX)) {
-                return makeInput(getResourceInput(fileName.substring(RESOURCE_PREFIX_LENGTH)), new Position(fileName));
+                return makeInput(ResourceInput.getInput(fileName.substring(RESOURCE_PREFIX_LENGTH)), pos);
             }
             if (fileName.startsWith(HTTPS_PREFIX)) {
-                return makeInput(CachedHttpInput.geInput(fileName), new Position(fileName));
+                return makeInput(CachedHttpInput.getInput(fileName), pos);
             } else {
-                return makeInput(Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n")),
-                    new Position(fileName));
+                return makeInput(FileInput.getInput(fileName),pos);
             }
         } catch (IOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + fileName + "'",e);
-        }
-    }
-
-    /**
-     * Read the content of the resource as a UTF-8 encoded character stream
-     *
-     * @param fileName the name of the resource (already without the {@code res:} prefix
-     * @return the content of the resource as a string
-     * @throws IOException if the resource cannot be read
-     */
-    private static String getResourceInput(String fileName) throws IOException {
-        try (final var is = FileTools.class.getClassLoader().getResourceAsStream(fileName)) {
-            if (is == null) {
-                throw new BindException("The resource file 'res:" + fileName + "' cannot be read.");
-            }
-            final var reader = new InputStreamReader(is, StandardCharsets.UTF_8);
-            final var writer = new StringWriter();
-            reader.transferTo(writer);
-            return writer.toString();
         }
     }
 

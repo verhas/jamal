@@ -575,6 +575,7 @@ The syntax of the command is
 The name of the file can be absolute, or it can be relative to the file that imports the other file.
 Any file name starting with the letters `res:` are considered to be resource files in Java.
 This makes it possible to load macros that are provided with JAR libraries and are on the classpath.
+Any file name starting with the letters `https:` are downloaded from the net.
 
 Use `import` to import user-defined macro definitions.
 
@@ -598,6 +599,7 @@ The syntax of the command is
 The name of the file can be absolute, or it can be relative to the file that includes the other file.
 Any file name starting with the letters `res:` are considered to be resource files in Java.
 This makes it possible to load macros that are provided with JAR libraries and are on the classpath.
+Any file name starting with the letters `https:` are downloaded from the net.
 
 Use `include` to get the content of a file, and into the main output.
 
@@ -826,6 +828,31 @@ You can also use this macro to enclose some text into a block where you can have
 For example, you may want to modify the macro start and end strings temporarily.
 In that case, you can use the `sep` macro at the start and use the `sep` macro without argument to reset the previous value.
 You can also enclose the setting of the macro start and end string into an `ident` block.
+
+A special use of `ident` is to insert a "null length separator" into the text.
+Imagine that the macro start and stor strings are set to be `((` and `))`.
+We may want to use those because the curly braces are used in the text frequently and so are the single `(` and `(` characters.
+As an example we may want to define a macro that creates a markdown image reference:
+
+```text
+((@define image($ref)=![](images/$ref.png) ))
+``` 
+
+This example needs a space after the cosing `)` character at the end of the image url.
+If we did not have this space the macro would be closed one `)` sooner than needed.
+This solution inserts an extra space after the image reference.
+Usually it is not a problem.
+In some situations, however, we do not want to have that extra space there.
+This is possible usinf `ident`.
+
+```text
+((@define image($ref)=![](images/$ref.png)((@ident))))
+```
+
+The macro `((@ident))` will prevent Jamal to interpret the `)` character after the `.png` as the first character of a macro closing string.
+The same time `((@ident))` produces no character, not even a space in the output.
+Note that `comment` or `block` can be used the same way.
+
 
 Be aware that the macro `ident` consumes the white spaces (including newlines) that follow the `ident` keyword.
 This is to avoid extra white spaces when tabulation is needed for better readability.
@@ -1363,6 +1390,63 @@ The environment variables that you can set to modify the behavior of Jamal are t
   It may also happen that you deliberately create complex recursive macros.
   In that case this limit may be too small.
   Set your value to a limit that fits your need.
+
+## Resource Files and Web Resources<a name="httpsres">
+
+When the macros `import` or `include` reference a file with a name that starts with either
+
+* `res:`, or
+* `https:`
+
+then these files are treated in a special way.
+In any other case the files are loaded from the local disk.
+The following two subsections detail the mechanism of these two cases.
+
+### Java Resource Files
+
+When the file name starts with the characters `res:` it is a Java resource file.
+It means that the file is in a JAR file among the classes.
+The JAR file has to be on the classpath.
+When Jamal is started from the command line then the JAR file has to be added to the classpath.
+The classpath is usually after the `-cp` or `-classpath` argument of the Java command line.
+If Jamal is started as a Maven plugin then the configuration in the `pom.xml` file should include the dependency.
+For example to add the pomlib library JAR to the classpath you can use the following fragment in your `pom.xml`:
+
+```xml
+<plugin>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-maven-plugin</artifactId>
+    <version>1.2.0</version>
+    <executions>
+        <execution>
+            <id>execution</id>
+            <phase>clean</phase>
+            <goals>
+                <goal>jamal</goal>
+            </goals>
+            <configuration>
+                 ... configuration tags ...
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-pomlib</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
+
+The Jamal files are in the project should be in the `/src/main/resources/` directory.
+The file name should start with the `/` character after the `res:` prefix and should contain the directories under the `/src/main/resources/`.  
+
+### Web Resources
+
+Web resources can be downloaded using the `https:` prefix.
+The only protocol supported is `https`.
+Jamal does not downloa any resource using the `HTTP` unencrypted protocol. 
 
 ## Jamal API<a name="JamalAPI">
 

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * process all the files using jamal
+ * This is a command line file that can be used to process Jamal files starting Jamal from the command line.
  */
 public class JamalMain {
 

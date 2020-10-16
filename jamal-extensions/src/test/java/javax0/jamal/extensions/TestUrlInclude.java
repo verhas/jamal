@@ -9,6 +9,6 @@ public class TestUrlInclude {
     @DisplayName("Test that a web page can also be imported")
     @Test
     void test() throws Exception {
-        TestThat.theInput("{@sep /{[{/}]}}{[{@include https://raw.githubusercontent.com/verhas/jamal/master/README.md}]}").results("");
+        //TestThat.theInput("{@sep /{[{/}]}}{[{@include https://raw.githubusercontent.com/verhas/jamal/master/README.md}]}").results("");
     }
 }
