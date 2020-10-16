@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-    String LOCAL_CACHE = ".jamal/.jar";
+    String LOCAL_CACHE = new File(".jamal/.jar");
 
     void execute() throws IOException, InterruptedException {
         ProcessBuilder builder = new ProcessBuilder();
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
             .map(File::getAbsolutePath)
             .collect(Collectors.joining(sep));
         File local = new File(LOCAL_CACHE);
-        if (local.exists()) {
-            String localCp = Arrays.stream(local.listFiles((d, n) -> n.endsWith(".jar")))
+        if (LOCAL_CACHE.exists()) {
+            String localCp = Arrays.stream(LOCAL_CACHE.listFiles((d, n) -> n.endsWith(".jar")))
                 .map(File::getAbsolutePath)
                 .collect(Collectors.joining(sep));
             if (localCp.length() > 0) {
