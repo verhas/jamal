@@ -12,7 +12,6 @@ download("05extensions/jamal-extensions")
 download("08cmd/jamal-cmd")
 loadOptions()
 
-LOCAL_CACHE.mkdirs();
 cacheRootDirectory=LOCAL_CACHE;
 for(String jarUrl:extraJars){
     downloadUrl(jarUrl);

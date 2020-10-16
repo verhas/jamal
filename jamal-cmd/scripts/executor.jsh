@@ -3,10 +3,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-    File LOCAL_CACHE = new File(".jamal/.jar");
+    File LOCAL_CACHE = new File(".jamal/cache/.jar");
+    LOCAL_CACHE.mkdirs();
 
     void execute() throws IOException, InterruptedException {
         ProcessBuilder builder = new ProcessBuilder();
