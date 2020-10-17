@@ -55,6 +55,9 @@ import java.util.Map;
                     }
                     commandLineOptions.put(key, value);
                     break;
+                case "cp":
+                    classPath.add(value);
+                    break;
                 case "jar":
                     extraJars.add(value);
                     break;

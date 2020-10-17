@@ -5,6 +5,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+    List<String> classPath = new ArrayList<>();
 
     String JAMAL_CONNECT_TIMEOUT = "JAMAL_CONNECT_TIMEOUT";
     String JAMAL_READ_TIMEOUT = "JAMAL_READ_TIMEOUT";
@@ -65,6 +74,7 @@ import java.net.URL;
     void downloadUrl(String urlString,File cacheRootDirectory) throws IOException {
         final URL url = new URL(urlString);
         File jar = new File(cacheRootDirectory.getAbsolutePath() + "/" + getFile(url));
+        classPath.add(jar.getAbsolutePath());
         if (jar.exists()) {
             return;
         }

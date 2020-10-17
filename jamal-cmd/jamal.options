@@ -18,6 +18,8 @@
 # The script will download these to the './.jamal/cache/.jar/' directory and start jamal including these files into  the classpath
 # jar https://github.com/verhas/jamal/blob/master/release-1.2.0/05extensions/jamal-extensions-1.2.0.jar?raw=true
 
+cp ./target
+
 # 'pattern' is a regular expression to select the files that are to be processed by Jamal
 # only the files that have the pattern in their name will be processed
 pattern .*\.jam$

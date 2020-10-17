@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
                 "# 3.) syntax of an option line is \"key value\"\n" +
                 "#     The key and the value are separated by one or more space\n" +
                 "#     Spaces from the start and from the end of the key and the value are chopped off (trimmed)\n" +
-                "# 4.) Option key 'jar' can appear many times\n" +
+                "# 4.) Option keys 'jar' and 'cp' can appear many times\n" +
                 "# 5.) Other option keys can appear tero or one time\n" +
                 "#\n" +
                 "# Use 'jar' to define the URL of a jar file that needs to be on the classpath\n" +
@@ -25,6 +25,9 @@ import java.nio.charset.StandardCharsets;
                 "# Note that the extensions are not loaded by default\n"+
                 "# If you want to use some extension macro then you have to uncomment this line\n"+
                 "# jar https://github.com/verhas/jamal/blob/master/release-1.2.0/05extensions/jamal-extensions-1.2.0.jar?raw=true\n" +
+                "#\n"+
+                "# Use 'cp' to add local JAR files or directories to the classpath\n"+
+                "# cp ./target/classes" +
                 "\n" +
                 "# 'pattern' is a regular expression to select the files that are to be processed by Jamal\n" +
                 "# only the files that have the pattern in their name will be processed\n" +
