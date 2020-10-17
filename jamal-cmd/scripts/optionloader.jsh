@@ -25,16 +25,20 @@ import java.util.Map;
         BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(options)), StandardCharsets.UTF_8));
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.trim().startsWith("#")) {
+            if(line.trim().startsWith("#") || line.trim().length() == 0){
                 // skip comment lines
                 continue;
             }
             int spaceIndex = line.indexOf(" ");
+            String key;
+            String value;
             if (spaceIndex == -1) {
-                throw new RuntimeException("The file 'jamal.options' contains a line without space");
+                key = line;
+                value = "";
+            }else{
+                key = line.substring(0, spaceIndex).trim();
+                value = line.substring(spaceIndex + 1).trim();
             }
-            String key = line.substring(0, spaceIndex).trim();
-            String value = line.substring(spaceIndex + 1).trim();
 
             switch (key) {
 
@@ -46,13 +50,16 @@ import java.util.Map;
                 case "exclude":
                 case "source":
                 case "target":
+                    if( commandLineOptions.get(key) != null ){
+                        throw new RuntimeException("The key '"+key+"' appears more than one time in the jamal.options file");
+                    }
                     commandLineOptions.put(key, value);
                     break;
                 case "jar":
                     extraJars.add(value);
                     break;
                 default:
-                    break;
+                    throw new RuntimeException("Jamal option '"+key+"' is not supported");
             }
 
         }
