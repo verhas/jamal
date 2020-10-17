@@ -11,15 +11,17 @@
 # 3.) syntax of an option line is "key value"
 #     The key and the value are separated by one or more space
 #     Spaces from the start and from the end of the key and the value are chopped off (trimmed)
-# 4.) Option key 'jar' can appear many times
+# 4.) Option keys 'jar' and 'cp' can appear many times
 # 5.) Other option keys can appear tero or one time
 #
 # Use 'jar' to define the URL of a jar file that needs to be on the classpath
 # The script will download these to the './.jamal/cache/.jar/' directory and start jamal including these files into  the classpath
+# Note that the extensions are not loaded by default
+# If you want to use some extension macro then you have to uncomment this line
 # jar https://github.com/verhas/jamal/blob/master/release-1.2.0/05extensions/jamal-extensions-1.2.0.jar?raw=true
-
-cp ./target
-
+#
+# Use 'cp' to add local JAR files or directories to the classpath
+# cp ./target/classes
 # 'pattern' is a regular expression to select the files that are to be processed by Jamal
 # only the files that have the pattern in their name will be processed
 pattern .*\.jam$
