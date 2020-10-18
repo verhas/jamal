@@ -97,7 +97,23 @@ Then we discuss the API that lets you embed the macro processing into your appli
 
 ## Starting Jamal<a name="Starting">
 
-The simplest way to start Jamal is to use the Maven plugin.
+### JShell
+
+The simplest way to start Jamal is to use the JShell.
+
+Executing the command
+
+```
+jshell https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/jamal.jsh
+```
+
+will start jamal to process all files with `.jam` extension in the current directory and below.
+The output files will have the same name as the processed file without the `.jam` at the end.
+For example `pom.xml.jam` will be processed to `pom.xml`.
+
+### Maven Plugin
+
+It is also very simple to startr Jamal using the Maven plugin version.
 To do that, you have to have Maven installed, but as a Java developer, you probably have.
 Then you can issue the command
 
@@ -724,7 +740,62 @@ Note that the JavaScript code itself contains the macro opening and closing stri
 This does not do any harm so long as long these are in pairs.
 It is a better practice to change the separator characters to something that cannot appear in the body of the script macro.
 
+Starting with version 1.3.0 Jamal support the JShell built-in scripting engine.
+You can define `JShell` as script type.
+In this case the content will be passed to the Java built-in JShell engine.
+When the script is invoked the result of the macro will be the string that is printed by the JShell script.
+The argument names have to be valid Java identifiers.
+When the script is invoked they will be defined as `String` variables and they will get the actual values of the parameters.
+For more information and details see the section [`JShell`](#JShell).
+
+### `JShell`<a name="JShell">
+since 1.3.0 (core)
+
+The Java built-in scripting engine JShell can be used to define macros.
+The macro [`script`](#script) and the macro `JShell` can be used to define JShell scripts.
+
+The macro `JShell` can be used to define methods, classes, variables and so on.
+The macro [`script`](#script) is to define a script macro that later can be invoked like any other used defined script macro.
+
+When the macro `JShell` or [`script`](#script) is used the result is empty string.
+When the script is invoked the output of the macro will be what the script prints out to the standard output.
+
+The following example defines a global method, a script using the method and then it invokes the script.
+
+```
+{@JShell
+    void hello(){
+        System.out.println("Hello, " + world);
+    }
+}{@script hello/JShell(world)=hello();}
+{hello My Dear}
+```
+
+The macro `JShell` defines the method.
+The macro `script` defines a script macro that has one argument.
+Note that this argument is also the name of the global variable `world`.
+When we use the line
+
+```
+{hello My Dear}
+```
+
+Jamal will invoke the JShell interpreter executing
+
+```
+String world = "My Dear";
+```
+
+and then
+
+```
+hello();
+```
+
+
+
 ### `for`<a name="for">
+since 1.0.0 (core)
 
 The macro `for` can be used to repeat the same text many times. The syntax of the macro is
 

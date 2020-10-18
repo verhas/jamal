@@ -1,8 +1,18 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.ScriptMacro;
 
-import static javax0.jamal.tools.InputHandler.*;
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.firstCharIs;
+import static javax0.jamal.tools.InputHandler.getParameters;
+import static javax0.jamal.tools.InputHandler.isGlobalMacro;
+import static javax0.jamal.tools.InputHandler.skip;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Script implements Macro {
     @Override

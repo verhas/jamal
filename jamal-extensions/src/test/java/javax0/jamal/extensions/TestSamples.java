@@ -79,16 +79,16 @@ class TestSamples {
     final static String SNIPPET = "\n" +
         "\n" +
         "```\n" +
-        "    @Test\n" +
         "    @DisplayName(\"snippets can be included from files\")\n" +
+        "    @Test\n" +
         "    void testSnippetInclusion() throws IOException, BadSyntax {\n" +
         "        assertEquals(SNIPPET, result(\"snippet_test.txt.jam\"));\n" +
         "    }\n" +
         "```";
 
     // snippet     testSnippetInclusion
-    @Test
     @DisplayName("snippets can be included from files")
+    @Test
     void testSnippetInclusion() throws IOException, BadSyntax {
         assertEquals(SNIPPET, result("snippet_test.txt.jam"));
     }

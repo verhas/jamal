@@ -157,7 +157,9 @@ public class JamalMain {
             System.out.println("Jamal " + inputPath.toString() + " -> " + outputPath);
             if (outputPath != null) {
                 final String result;
-                result = new Processor(macroOpen, macroClose).process(createInput(inputPath));
+                try( final var processor = new Processor(macroOpen,macroClose)) {
+                    result = processor.process(createInput(inputPath));
+                }
                 writeOutput(outputPath, result);
             }
         } catch (Exception e) {

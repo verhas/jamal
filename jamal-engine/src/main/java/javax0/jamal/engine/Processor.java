@@ -42,6 +42,8 @@ public class Processor implements javax0.jamal.api.Processor {
 
     final private StackLimiter limiter = new StackLimiter();
 
+    final private JShellEngine shellEngine = new JShellEngine();
+
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
      * separators start and end macros and the usual strings are "{" and "}".
@@ -112,6 +114,11 @@ public class Processor implements javax0.jamal.api.Processor {
     @Override
     public MacroRegister getRegister() {
         return macros;
+    }
+
+    @Override
+    public JShellEngine getJShellEngine() {
+        return shellEngine;
     }
 
     /**
@@ -662,6 +669,11 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private void moveMacroOpenToOutput(Input input, Input output) {
         copy(input, output, macros.open());
+    }
+
+    @Override
+    public void close() throws Exception {
+        shellEngine.close();
     }
 
 

@@ -5,7 +5,9 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tools.ScriptingTools;
 
-import static javax0.jamal.tools.ScriptingTools.*;
+import static javax0.jamal.tools.ScriptingTools.getEngine;
+import static javax0.jamal.tools.ScriptingTools.populate;
+import static javax0.jamal.tools.ScriptingTools.resultToString;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
@@ -15,7 +17,9 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
     final private Processor processor;
     final private String content;
     final private String scriptType;
-final ArgumentHandler argumentHandler;
+    final ArgumentHandler argumentHandler;
+    final private boolean isJShell;
+
     /**
      * Creates a new user defined macro.
      *
@@ -37,7 +41,8 @@ final ArgumentHandler argumentHandler;
         this.scriptType = scriptType;
         this.id = id;
         this.content = content;
-        argumentHandler = new ArgumentHandler(this,parameters);
+        argumentHandler = new ArgumentHandler(this, parameters);
+        isJShell = scriptType.equals("JShell");
     }
 
     /**
@@ -65,16 +70,31 @@ final ArgumentHandler argumentHandler;
      */
     @Override
     public String evaluate(final String... parameters) throws BadSyntax {
-        final var adjustedValues = argumentHandler.adjustActualValues(parameters,isLenient());
-        var engine = getEngine(scriptType);
-        for (int i = 0; i < argumentHandler.parameters.length; i++) {
-            populate(engine, argumentHandler.parameters[i], adjustedValues[i]);
+        final var adjustedValues = argumentHandler.adjustActualValues(parameters, isLenient());
+        if (isJShell) {
+            for (int i = 0; i < argumentHandler.parameters.length; i++) {
+                processor.getJShellEngine().define("String " + argumentHandler.parameters[i] + "= \"" + escape(adjustedValues[i]) + "\";");
+            }
+            final var output = new StringBuilder();
+            for (String s : content.split("\n")) {
+                output.append(processor.getJShellEngine().evaluate(s));
+            }
+            return output.toString();
+        } else {
+            final var engine = getEngine(scriptType);
+            for (int i = 0; i < argumentHandler.parameters.length; i++) {
+                populate(engine, argumentHandler.parameters[i], adjustedValues[i]);
+            }
+            try {
+                return resultToString(ScriptingTools.evaluate(engine, content));
+            } catch (Exception e) {
+                throw new BadSyntax("Script '" + id + "' threw exception", e);
+            }
         }
-        try {
-            return resultToString(ScriptingTools.evaluate(engine, content));
-        } catch (Exception e) {
-            throw new BadSyntax("Script '" + id + "' threw exception", e);
-        }
+    }
+
+    private static String escape(String s) {
+        return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     }
 
     @Override

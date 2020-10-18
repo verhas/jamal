@@ -3,7 +3,7 @@ package javax0.jamal.api;
 /**
  * The processor object that can be used to process an input to generate the Jamal output.
  */
-public interface Processor {
+public interface Processor extends AutoCloseable {
     /**
      * Process the input and result the string after processing all built-in and user defined macros.
      *
@@ -19,6 +19,13 @@ public interface Processor {
      * @return the register
      */
     MacroRegister getRegister();
+
+    /**
+     * Get the JShell engine that the processor has.
+     *
+     * @return the initialized JShell engine
+     */
+    JShellEngine getJShellEngine();
 
     /**
      * Create a new user defined macro. The implementation of this method calls the constructor of the matching

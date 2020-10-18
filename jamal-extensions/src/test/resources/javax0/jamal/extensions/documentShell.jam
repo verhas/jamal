@@ -1,0 +1,6 @@
+{@JShell
+    void hello(){
+        System.out.println("Hello, " + world);
+    }
+}{@script hello/JShell(world)=hello();}
+{hello My Dear}

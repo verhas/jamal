@@ -1,0 +1,17 @@
+{@sep (( )) }((@JShell
+
+void hello(){
+    System.out.println("hello " + b);
+}
+))((@JShell
+void hallo(){
+    System.out.println("hallo " + a);
+}
+))\
+((@script hello/JShell(a,b)=hallo();
+hello() ))\
+((hello/Misi/Matyi))
+((hello/"Misi
+Matyi
+Nagyi
+Anya \ Apa"/Eszti))
