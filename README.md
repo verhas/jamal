@@ -771,9 +771,10 @@ The following example defines a global method, a script using the method and the
 {hello My Dear}
 ```
 
-The macro `JShell` defines the method.
-The macro `script` defines a script macro that has one argument.
+The macro `JShell` defines the method `hello()`.
+The macro `script` is a script macro that has one argument.
 Note that this argument is also the name of the global variable `world`.
+This global variable is used in the JShell snippet defined above but this is not an argument to the method.
 When we use the line
 
 ```
@@ -786,13 +787,36 @@ Jamal will invoke the JShell interpreter executing
 String world = "My Dear";
 ```
 
-and then
+first, and then
 
 ```
 hello();
 ```
 
+Since the method `hello()` prints out to the standard output `Hello, My Dear` this is the result of this macro.
 
+If there is some error in the code of the snippet then Jamal will throw a `BadSyntax` exception.
+In this exception the causing exception is included if there is any.
+This causing exception should give some clue to find out what the issue is.
+If that does not help then using the interactive JShell program should help.
+
+Creating a JShell execution environment is expensive.
+To do that the JVM process starts a new process for the JShell.
+Many Jamal macro processing do not need the extra JShell.
+It would slow down Jamal if we created the JShell process for each and every processor even when it is not needed.
+The JShell environment is created only when it is unavoidable.
+It is when the processing uses the first time a JShell type script.
+It not when the script is defined.exampleIt is when the defined script is used.
+In the above example the JShell interpreter is created when the `{hello ...}` is evaluated.
+Only at that point all the prior definitions that were defined in any `{@JShell }` macro are fed into the JShell interpreter.
+
+The consequence is that you do not need to worry about the performance when you design a macro library.
+The processed files can bravely import the macros even if they declare JShell usage.
+It will not slow down the processing creating a JShell engine, only when the JShell engine is needed.
+
+Another important side effect of this optimization is that you will not get an error message for an erroneous `{@JShell }` macro only when the JShell interpreter is used.
+When you design a macro libraray it is not enough to import the library to discover possible errors in the JShell scrips.
+The scripts have to be used to manifest the error.
 
 ### `for`<a name="for">
 since 1.0.0 (core)

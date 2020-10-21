@@ -76,9 +76,7 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
                 processor.getJShellEngine().define("String " + argumentHandler.parameters[i] + "= \"" + escape(adjustedValues[i]) + "\";");
             }
             final var output = new StringBuilder();
-            for (String s : content.split("\n")) {
-                output.append(processor.getJShellEngine().evaluate(s));
-            }
+            output.append(processor.getJShellEngine().evaluate(content));
             return output.toString();
         } else {
             final var engine = getEngine(scriptType);

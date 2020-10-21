@@ -17,7 +17,7 @@ module jamal.core {
         javax0.jamal.builtins.Use,
         javax0.jamal.builtins.Options,
         javax0.jamal.builtins.Ident,
-        javax0.jamal.builtins.JShellMacro
+        javax0.jamal.builtins.JShell
         ;
     requires jamal.api;
     requires jamal.tools;

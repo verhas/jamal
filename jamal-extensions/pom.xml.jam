@@ -11,7 +11,7 @@
         {@for MODULE in (api,tools,engine)=
             {dependency|com.javax0.jamal|jamal-MODULE}}
         {dependency|com.javax0.jamal|jamal-testsupport||test}
-        {@for MODULE in (api,engine)=
+        {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
 }

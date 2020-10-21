@@ -4,3 +4,15 @@
     }
 }{@script hello/JShell(world)=hello();}
 {hello My Dear}
+
+{@JShell
+    void hallo(){
+        System.out.println("Hallo, " + you);
+    }
+}
+{#block
+{@options JShellScriptBlockEvaluate}
+{@script helloBlock/JShell(a,b)=hallo(
+);hello()}
+{@export helloBlock}}
+{hello/My World/You}

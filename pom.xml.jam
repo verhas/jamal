@@ -58,7 +58,7 @@
     }
     {dependencyManagement|{dependencies|
         {@for MODULE in (testsupport,api,core,tools,engine,extensions)={dependency :com.javax0.jamal:jamal-MODULE:{VERSION}}}
-        {@for MODULE in (api,engine)={dependency :org.junit.jupiter:junit-jupiter-MODULE:5.2.0:test}}
+        {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:5.2.0:test}}
         }}
 
     <profiles>

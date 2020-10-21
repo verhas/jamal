@@ -22,8 +22,11 @@ public interface Processor extends AutoCloseable {
 
     /**
      * Get the JShell engine that the processor has.
+     * <p>
+     * Note that the JShell engine may not be initialized. It initializes automatically the first time when the
+     * engine's {@link JShellEngine#evaluate(String)} is invoked.
      *
-     * @return the initialized JShell engine
+     * @return the JShell engine
      */
     JShellEngine getJShellEngine();
 
