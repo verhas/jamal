@@ -111,6 +111,15 @@ will start jamal to process all files with `.jam` extension in the current direc
 The output files will have the same name as the processed file without the `.jam` at the end.
 For example `pom.xml.jam` will be processed to `pom.xml`.
 
+You do not even need to install Jamal.
+If you have Java 9 or later installed you can execute the above command.
+JShell will download and execute the script  from the url depicted above.
+The script will check if Jamal is installed on your machine.
+If it is not installed it will automatically download the needed JAR.
+When the JAR files are downloaded it will start Jamal in the current working directory using the default settings.
+The settings can be altered using the `jamal.opotions` file.
+If this file does not exist in the current working directory then the JShell script will create one containing the default settings.
+
 ### Maven Plugin
 
 It is also very simple to startr Jamal using the Maven plugin version.
