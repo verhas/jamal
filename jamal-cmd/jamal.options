@@ -27,7 +27,7 @@
 pattern .*\.jam$
 # 'exclude' is a regular expression to exclude files from being processed
 # files that have the pattern in their name will not be processed even if the 'pattern' matches
-exclude (target)|(test)
+exclude
 
 # 'to' and 'from' control hov the name of the output is calculated from the input
 # when a file is processed the name of the file will be transformed using replaceAll(from,to)
