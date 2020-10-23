@@ -1,23 +1,36 @@
+//
+// JShell startup script downloading Jamal and starting it
+//
 
-/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/version.jsh
-/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/jarfetcher.jsh
-/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/executor.jsh
+/open https://raw.githubusercontent.com/verhas/jshboot/main/JshBoot.java
 /open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/optionloader.jsh
-/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/defaultoptions.jsh
 
-download("01engine/jamal-engine")
-download("02api/jamal-api")
-download("03tools/jamal-tools")
-download("04core/jamal-core")
-download("08cmd/jamal-cmd")
+    String VERSION = "1.2.0";
 
-loadOptions()
+    var boot=JshBoot.defaultLocalRepo().
+        maven().groupId("com.javax0.jamal").version(VERSION).
+        artifactId("jamal-engine").
+        artifactId("jamal-api").
+        artifactId("jamal-tools").
+        artifactId("jamal-core").
+        artifactId("jamal-cmd");
 
-for(String jarUrl:extraJars){
-    LOCAL_CACHE.mkdirs();
-    downloadUrl(jarUrl,LOCAL_CACHE);
+    if (!options.exists()) {
+        JshBoot.fetch(new URL("https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/jamal.options"),new File("jamal.options"));
+        }
+    loadOptions()
+    boot.withLocalRepo("./.m2/repository/");
+
+    for(String jarUrl:extraJars){
+        boot.url(jarUrl);
     }
 
-execute()
+    String[] args = new String[commandLineOptions.keySet().size()];
+    int i = 0;
+    for( final var e : commandLineOptions.entrySet() ){
+        args[i++] = e.getKey() + "=" + e.getValue();
+    }
+
+    boot.execute("javax0.jamal.cmd.JamalMain", args);
 
 /exit
