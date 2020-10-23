@@ -1,9 +1,9 @@
 
-/open scripts/version.jsh
-/open scripts/jarfetcher.jsh
-/open scripts/executor.jsh
-/open scripts/optionloader.jsh
-/open scripts/defaultoptions.jsh
+/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/version.jsh
+/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/jarfetcher.jsh
+/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/executor.jsh
+/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/optionloader.jsh
+/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/defaultoptions.jsh
 
 download("01engine/jamal-engine")
 download("02api/jamal-api")
