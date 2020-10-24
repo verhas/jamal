@@ -57,7 +57,7 @@ essentially executing the "define" macros and at this point the tags are defined
                       annotationProcessors,annotationProcessor,
                       profiles,profile,
                       resources,resource,
-                      directory,filtering,
+                      directory,filtering,show,detectJavaApiLink,quiet,
                       repositories,argLine)=
 {tag/_tag}}}
 

@@ -16,17 +16,19 @@
             {plugins|
                 {plugin|
                     {GAV :org.apache.maven.plugins:maven-source-plugin:3.0.1}
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    {executions|
+                        {execution|
+                            {id|attach-sources}
+                            {goals|{goal|jar}}
+                        }
+                    }
                 }
                 {plugin|
                     {GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
+                    {configuration|
+                        {source|8}
+                        {detectJavaApiLink|false}
+                    }
                     {executions|{execution|
                             {id|attach-javadocs}
                             {goals|{goal|jar}}}}

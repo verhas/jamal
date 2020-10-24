@@ -19,6 +19,7 @@ module jamal.core {
         javax0.jamal.builtins.Ident,
         javax0.jamal.builtins.JShell
         ;
+
     requires jamal.api;
     requires jamal.tools;
     requires java.scripting;
