@@ -110,6 +110,12 @@ class TestSamples {
     }
 
     @Test
+    @DisplayName("throws BadSyntax when there is n")
+    void testScriptWrongScriptEngine() {
+        assertThrows(BadSyntax.class, () -> result("script_wrong_script_engine.jam"));
+    }
+
+    @Test
     @DisplayName("import only selected macros")
     void testSelectedImport() throws IOException, BadSyntax {
         assertEquals("\n2468", result("import_only_selected.jam"));
@@ -128,6 +134,12 @@ class TestSamples {
     @DisplayName("testsupport script include")
     void testScriptInclude() throws IOException, BadSyntax {
         assertEquals("11", result("test_script.jam"));
+    }
+
+    @Test
+    @DisplayName("throws BadSyntax when script engine is not found")
+    void testEvalNoEngine() throws IOException, BadSyntax {
+        assertThrows(BadSyntax.class, () -> result("eval_wrong_script_engine.jam"));
     }
 
     @Test

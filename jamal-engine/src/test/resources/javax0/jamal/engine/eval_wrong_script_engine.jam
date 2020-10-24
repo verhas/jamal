@@ -1,0 +1,1 @@
+{@define a="app"}{@define b="le"}{#eval/JavaScrept {a}+{b}}

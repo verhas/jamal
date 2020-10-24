@@ -1,5 +1,7 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.BadSyntax;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -73,8 +75,12 @@ public class ScriptingTools {
      * @param scriptType the name of the scripting language
      * @return the engine for the specified script type
      */
-    public static ScriptEngine getEngine(String scriptType) {
-        return new ScriptEngineManager().getEngineByName(scriptType);
+    public static ScriptEngine getEngine(String scriptType) throws BadSyntax {
+        final var engine = new ScriptEngineManager().getEngineByName(scriptType);
+        if (engine == null) {
+            throw new BadSyntax("There is no script engine named '" + scriptType + "'");
+        }
+        return engine;
     }
 
     /**
