@@ -73,11 +73,9 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
         final var adjustedValues = argumentHandler.adjustActualValues(parameters, isLenient());
         if (isJShell) {
             for (int i = 0; i < argumentHandler.parameters.length; i++) {
-                processor.getJShellEngine().define("String " + argumentHandler.parameters[i] + "= \"" + escape(adjustedValues[i]) + "\";");
+                ScriptingTools.populateJShell(processor.getJShellEngine(), argumentHandler.parameters[i], adjustedValues[i]);
             }
-            final var output = new StringBuilder();
-            output.append(processor.getJShellEngine().evaluate(content));
-            return output.toString();
+            return processor.getJShellEngine().evaluate(content);
         } else {
             final var engine = getEngine(scriptType);
             for (int i = 0; i < argumentHandler.parameters.length; i++) {
@@ -89,10 +87,6 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
                 throw new BadSyntax("Script '" + id + "' threw exception", e);
             }
         }
-    }
-
-    private static String escape(String s) {
-        return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     }
 
     @Override

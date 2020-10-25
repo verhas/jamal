@@ -30,11 +30,15 @@ public class Eval implements Macro {
         if (scriptType.equals("jamal")) {
             return processor.process(input);
         }
-        var engine = getEngine(scriptType);
-        try {
-            return resultToString(engine.eval(input.toString()));
-        } catch (Exception e) {
-            throw new BadSyntax("Script in eval threw exception", e);
+        if ("JShell".equals(scriptType)) {
+            return processor.getJShellEngine().evaluate(input.toString());
+        } else {
+            var engine = getEngine(scriptType);
+            try {
+                return resultToString(engine.eval(input.toString()));
+            } catch (Exception e) {
+                throw new BadSyntax("Script in eval threw exception", e);
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ public class TestRecursiveMacro {
     @DisplayName("Test that recursive macros")
     void testRecursiveMacro() throws Exception {
         TestThat.theInput(
-            "{@define a($n)={#eval {#if|$n|a{#define m={#eval/JavaScript $n-1}}{@ident {a {m}}}|{@export m}}{@export m}}}{a 5}"
+            "{@define a($n)={#eval {#if|$n|a{#define m={#eval/JShell $n-1}}{@ident {a {m}}}|{@export m}}{@export m}}}{a 5}"
         ).results("aaaaa");
     }
 }

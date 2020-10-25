@@ -121,6 +121,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
      */
     private void evaluate(String input, Predicate<Snippet.Status> isError) throws BadSyntax {
         output.reset();
+        String lastValue = "";
         final var analyzer = js.sourceCodeAnalysis();
         var script = input;
         while (script.length() > 0) {
@@ -130,10 +131,14 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
             final String source = info.source() + (result == SourceCodeAnalysis.Completeness.COMPLETE_WITH_SEMI ? ";" : "");
             final List<SnippetEvent> events = evaluateAndGetEvents(source);
             for (SnippetEvent e : events) {
+                lastValue = e.value() != null ? lastValue + e.value() : lastValue;
                 if (isError.test(e.status()) || e.exception() != null) {
                     throw new BadSyntax("The JShell snippet '" + e.snippet().source() + "' produced error.", e.exception());
                 }
             }
+        }
+        if( output.toString(StandardCharsets.UTF_8).length() == 0 ){
+            output.writeBytes(lastValue.getBytes(StandardCharsets.UTF_8));
         }
     }
 

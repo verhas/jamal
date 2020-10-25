@@ -1,6 +1,7 @@
 package javax0.jamal.tools;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.JShellEngine;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -54,6 +55,33 @@ public class ScriptingTools {
         engine.put(key, value);
     }
 
+    public static void populateJShell(JShellEngine engine, String key, String value) throws BadSyntax {
+        try {
+            var intval = Integer.parseInt(value);
+            engine.define("int " + key + "= " + intval + ";");
+            return;
+        } catch (NumberFormatException ignored) {
+        }
+        try {
+            var doubleval = Double.parseDouble(value);
+            engine.define("double " + key + "= " + doubleval + ";");
+            return;
+        } catch (NumberFormatException ignored) {
+        }
+        if ("true".equalsIgnoreCase(value)) {
+            engine.define("boolean " + key + "= true;");
+            return;
+        }
+        if ("false".equalsIgnoreCase(value)) {
+            engine.define("boolean " + key + "= false;");
+            return;
+        }
+        engine.define("String " + key + "= \"" + escape(value) + "\";");
+    }
+
+    private static String escape(String s) {
+        return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
+    }
     /**
      * Return the string representation of the object. If the object is a {@code Double} then the trailing {@code .0}
      * is chopped off. This is to help the macro evaluation and use in case the scripting implementation returns a

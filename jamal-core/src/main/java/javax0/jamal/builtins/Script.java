@@ -26,7 +26,7 @@ public class Script implements Macro {
             skip(input, 1);
             scriptType = fetchId(input);
         } else {
-            scriptType = "JavaScript";
+            scriptType = "JShell";
         }
         skipWhiteSpaces(input);
         final String[] params = getParameters(input, id);
