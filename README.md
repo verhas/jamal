@@ -743,8 +743,14 @@ Starting with version 1.3.0 Jamal support the JShell built-in scripting engine.
 You can define `JShell` as script type.
 In this case the content will be passed to the Java built-in JShell engine.
 When the script is invoked the result of the macro will be the string that is printed by the JShell script.
+If this is empty then the value of the last Java shell snippet will be used.
 The argument names have to be valid Java identifiers.
-When the script is invoked they will be defined as `String` variables and they will get the actual values of the parameters.
+When the script is invoked they will be defined as `String`, `long`, `double` or `boolean` variables and they will get the actual values of the parameters.
+The type depends on the actual value.
+If the value string can be interpreted as a `long` then it will be converted to `long`.
+If the string is not a long, but can be converted to `double` then the variable will be `double`.
+If the string is either `true` or `false` case insensitive then the variable will be `boolean`.
+In any other case the variable will be declared as `String`.
 For more information and details see the section [`JShell`](#JShell).
 
 ### `JShell`<a name="JShell">
@@ -1531,7 +1537,29 @@ The file name should start with the `/` character after the `res:` prefix and sh
 
 Web resources can be downloaded using the `https:` prefix.
 The only protocol supported is `https`.
-Jamal does not downloa any resource using the `HTTP` unencrypted protocol. 
+Jamal does not download any resource using the unencrypted `HTTP` protocol.
+
+It is possible to cache the downloaded files.
+The environment variable `JAMAL_HTTPS_CACHE` can define a directory to store the web resources.
+In case the environment variable is not defined then the default value `~/.jamal/cache/` will be used.
+If the cache directory exists Jamal will store there the downloaded files.
+Jamal will create the subdirectories if needed, but Jamal will never create the cache directory itself.
+If you do not want to use the caching then do not create the cache directory.
+
+Jamal will not cache a downloaded files that has `SNAPSHOT` in the URL (all capital letters).
+There is no cache eviction or expiration.
+You can find the files in the cache directory in subdirectories.
+You can also find there corresponding property files that contain information about the caching.
+These properties files are information purpose and Jamal does not use them at the moment.
+
+The environment variables
+
+* `JAMAL_CONNECT_TIMEOUT`, and
+
+* `JAMAL_READ_TIMEOUT`
+
+can define two timeout values for the web download in millisecond as unit.
+Their default value is 5000, meaning five seconds.
 
 ## Jamal API<a name="JamalAPI">
 

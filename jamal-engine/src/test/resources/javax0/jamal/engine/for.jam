@@ -1,7 +1,7 @@
 {@script for(loopvar,start,end,text)=
-    c = ""
-    for( i = start ; i <= end ; i++ ){
-      c = c + text.replace(new RegExp( loopvar , 'g'), i)
+    var c = "";
+    for( var i = start ; i <= end ; i++ ){
+      c = c + text.replaceAll(loopvar , ""+ i);
     }
     c
 }

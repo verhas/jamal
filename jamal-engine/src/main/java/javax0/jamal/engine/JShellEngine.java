@@ -1,6 +1,7 @@
 package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.tools.ScriptingTools;
 import jdk.jshell.JShell;
 import jdk.jshell.Snippet;
 import jdk.jshell.SnippetEvent;
@@ -145,7 +146,10 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
                 }
             }
         }
-        if( output.toString(StandardCharsets.UTF_8).length() == 0 ){
+        if( output.toString(StandardCharsets.UTF_8).length() == 0 ) {
+            if (lastValue.length() > 0 && lastValue.charAt(0) == '"') {
+                lastValue = ScriptingTools.unescape(lastValue);
+            }
             output.writeBytes(lastValue.getBytes(StandardCharsets.UTF_8));
         }
     }

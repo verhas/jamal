@@ -32,14 +32,12 @@ public class ScriptingTools {
      */
     public static void populate(ScriptEngine engine, String key, String value) {
         try {
-            var intval = Integer.parseInt(value);
-            engine.put(key, intval);
+            engine.put(key, Long.parseLong(value));
             return;
         } catch (NumberFormatException ignored) {
         }
         try {
-            var doubleval = Double.parseDouble(value);
-            engine.put(key, doubleval);
+            engine.put(key, Double.parseDouble(value));
             return;
         } catch (NumberFormatException ignored) {
         }
@@ -57,14 +55,12 @@ public class ScriptingTools {
 
     public static void populateJShell(JShellEngine engine, String key, String value) throws BadSyntax {
         try {
-            var intval = Integer.parseInt(value);
-            engine.define("int " + key + "= " + intval + ";");
+            engine.define("long " + key + "= " + Long.parseLong(value) + ";");
             return;
         } catch (NumberFormatException ignored) {
         }
         try {
-            var doubleval = Double.parseDouble(value);
-            engine.define("double " + key + "= " + doubleval + ";");
+            engine.define("double " + key + "= " + Double.parseDouble(value) + ";");
             return;
         } catch (NumberFormatException ignored) {
         }
@@ -81,6 +77,10 @@ public class ScriptingTools {
 
     private static String escape(String s) {
         return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
+    }
+
+    public static String unescape(String s){
+        return s.substring(1,s.length()-1).replaceAll("\\\\\"","\"").replaceAll("\\\\n","\n").replaceAll("\\\\\\\\","\\\\");
     }
     /**
      * Return the string representation of the object. If the object is a {@code Double} then the trailing {@code .0}
