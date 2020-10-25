@@ -67,6 +67,10 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
      * After that it resets the output byte buffer, evaluates the input and returns the bytes (as a String converted
      * using UTF-8) emitted by the evaluation to the standard output.
      * <p>
+     * The output is usually the string that the snippet or snippets print to the {@code System.out} using {@code
+     * System.out.print()} or {@code System.out.println()} or some other way. If this string has zero length then the
+     * evaluation will return the value of the last evaluated snippet.
+     * <p>
      * If the JShell throws an exception or the evaluation status is some error then the method throws {@code
      * BadSyntax}.
      *
@@ -112,6 +116,10 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
      * <p>
      * During the evaluation the input is split up into snippet calling the JShell code analysis and the individual
      * snippets are evaluated.
+     * <p>
+     * If the snippet does not print out anything or prints a zero length string then the value of the last snipped will
+     * be appended to the output buffer. This makes it simple to create snippets that just do something simple thing,
+     * like evaluating an expression.
      *
      * @param input   the input that may contain many snippets
      * @param isError is a predicate that checks that the event status is either {@code REJECTED} (in case of define,
@@ -131,7 +139,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
             final String source = info.source() + (result == SourceCodeAnalysis.Completeness.COMPLETE_WITH_SEMI ? ";" : "");
             final List<SnippetEvent> events = evaluateAndGetEvents(source);
             for (SnippetEvent e : events) {
-                lastValue = e.value() != null ? lastValue + e.value() : lastValue;
+                lastValue = e.value() != null ? e.value() : lastValue;
                 if (isError.test(e.status()) || e.exception() != null) {
                     throw new BadSyntax("The JShell snippet '" + e.snippet().source() + "' produced error.", e.exception());
                 }
