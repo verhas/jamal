@@ -3,13 +3,13 @@
 //
 
 /open https://raw.githubusercontent.com/verhas/jshboot/main/JshBoot.java
-/open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/optionloader.jsh
+/open /Users/verhasp/github/jamal/jamal-cmd/scripts/optionloader.jsh
 
     String VERSION = "1.2.0";
+    var boot=JshBoot.defaultLocalRepo();
+    loadOptions();
 
-    loadOptions()
-
-    var boot=JshBoot.defaultLocalRepo().
+        boot.
         maven().groupId("com.javax0.jamal").version(VERSION).
         artifactId("jamal-engine").
         artifactId("jamal-api").

@@ -1,6 +1,6 @@
 import java.io.File;
 import java.util.Map;
-
+import java.nio.charset.StandardCharsets;
 
     String OPTION_FILE = "./jamal.options";
 
@@ -9,9 +9,9 @@ import java.util.Map;
     List<String> extraJars = new ArrayList<>();
 
     void loadOptions() throws IOException {
-        info("processing jamal.options");
+        boot.info("processing jamal.options");
         if (!options.exists()) {
-            info("no options");
+            boot.info("no options");
             return;
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(options)), StandardCharsets.UTF_8));
@@ -51,7 +51,7 @@ import java.util.Map;
                     VERSION = value;
                     break;
                 case "cp":
-                    classPath.add(value);
+                    boot.jar(value);
                     break;
                 case "jar":
                     extraJars.add(value);
