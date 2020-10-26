@@ -9,8 +9,9 @@ import java.util.Map;
     List<String> extraJars = new ArrayList<>();
 
     void loadOptions() throws IOException {
+        info("processing jamal.options");
         if (!options.exists()) {
-            System.out.println("no options");
+            info("no options");
             return;
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(options)), StandardCharsets.UTF_8));
@@ -45,6 +46,9 @@ import java.util.Map;
                         throw new RuntimeException("The key '"+key+"' appears more than one time in the jamal.options file");
                     }
                     commandLineOptions.put(key, value);
+                    break;
+                case "version":
+                    VERSION = value;
                     break;
                 case "cp":
                     classPath.add(value);

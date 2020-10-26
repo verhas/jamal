@@ -104,8 +104,11 @@ The simplest way to start Jamal is to use the JShell.
 Executing the command
 
 ```
-jshell https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/jamal.jsh
+jshell https://git.io/jamal
 ```
+
+(The url above comes from teh URL shortener of GitHub.
+It redirects to `https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/jamal.jshell`.)
 
 will start jamal to process all files with `.jam` extension in the current directory and below.
 The output files will have the same name as the processed file without the `.jam` at the end.

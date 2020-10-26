@@ -7,6 +7,8 @@
 
     String VERSION = "1.2.0";
 
+    loadOptions()
+
     var boot=JshBoot.defaultLocalRepo().
         maven().groupId("com.javax0.jamal").version(VERSION).
         artifactId("jamal-engine").
@@ -18,7 +20,6 @@
     if (!options.exists()) {
         JshBoot.fetch(new URL("https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/jamal.options"),new File("jamal.options"));
         }
-    loadOptions()
     boot.withLocalRepo("./.m2/repository/");
 
     for(String jarUrl:extraJars){
