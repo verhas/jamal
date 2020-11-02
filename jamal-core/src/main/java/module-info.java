@@ -6,6 +6,7 @@ module jamal.core {
         javax0.jamal.builtins.Block,
         javax0.jamal.builtins.Import,
         javax0.jamal.builtins.Include,
+        javax0.jamal.builtins.Env,
         javax0.jamal.builtins.Export,
         javax0.jamal.builtins.Sep,
         javax0.jamal.builtins.Script,

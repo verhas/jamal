@@ -117,7 +117,7 @@ public class Camel {
     }
 
     /**
-     * Converts a camel cased word into a sentence. For exmple
+     * Converts a camel cased word into a sentence. For example
      * {@code thisIsACamelCaseWord -> "this is a camel case word"}
      */
     public static class Sentence implements Macro {

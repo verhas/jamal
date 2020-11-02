@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TestSamples {
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {
@@ -74,6 +75,20 @@ class TestSamples {
             "2\n" +
             "1. before the slash\n" +
             "2. after the slash\n", result("matcher.jam"));
+    }
+
+    @Test
+    @DisplayName("test that env returns the ... whatever it returns. we assume there is a JAVA_HOME and there is no CICADA_HOME")
+    void testEnv() throws IOException, BadSyntax {
+        final var javaHome = System.getenv("JAVA_HOME");
+        final var cicaHome = System.getenv("CICA_HOME");
+        assertNull(cicaHome);
+
+        assertEquals(javaHome+"\n"+
+            "JAVA_HOME is defined\n" +
+                "\n" +
+                "CICA_HOME is not defined"
+            , result("test_env.jam"));
     }
 
     final static String SNIPPET = "\n" +

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * characters.
  *
  * <p> In the simplest one dimensional form a string table is a string
- * that is separated by {@code |} characters. Each element of the this
+ * that is separated by {@code |} characters. Each element of the
  * table can itself be a table that uses the character {@code /}. The
  * tables in this string table are separated by {@code :}, then {@code
  * -} and finally {@code .} (dot). These are the default values for the

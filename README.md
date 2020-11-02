@@ -81,6 +81,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
      1. [`begin` and `end`](#begin)
      1. [`define`](#define)
      1. [`eval`](#eval)
+     1. [`env`](#env)
      1. [`export`](#export)
      1. [`import`](#import)
      1. [`include`](#include)
@@ -567,6 +568,17 @@ That way `{a}` and `{b}` are replaced with their defined values and `eval` itsel
 
 3
 ```
+### `env`<a name="env">
+since 1.3.0
+
+`env` returns the value of an environment variable.
+The macro can also be used to test that an environment variable exists or not.
+If the argument to the macro is the name of an environment variable then the result will be the value of the variable.
+If the variable is not defined then the macro will result empty string.
+
+If there is a `?` after the name of the variable name then the macro will result either the `true` or `false`.
+This can be used to test that an environment variable exists or not.
+Testing the value of the environment variable in an `{@if ... }` macro may be misleading when the value is literal `false` or an empty string.
 
 ### `import`<a name="import">
 since 1.0.0 (core)

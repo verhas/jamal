@@ -1,0 +1,4 @@
+{@env JAVA_HOME}
+JAVA_HOME {#if /{@env JAVA_HOME ?}/is defined/is not defined}
+{@env CICA_HOME}
+CICA_HOME {#if /{@env CICA_HOME ?}/is defined/is not defined}

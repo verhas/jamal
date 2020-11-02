@@ -7,6 +7,40 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
+/**
+ * Number the lines of the input. For example:
+ *
+ * <pre>{@code
+ *   ((@numberLines
+ *   first line
+ *   second line
+ *   ))
+ * }</pre>
+ *
+ * will return
+ *
+ * <pre>{@code
+ *   1. first line
+ *   2. second line
+ * }</pre>
+ *
+ * The formatting can be altered specifying a format string
+ *
+ * <pre>{@code
+ *   ((@define format=%02d. ))
+ * }</pre>
+ *
+ * The format string will be used in {@code String.format()}.
+ * The start and step values can also be specified:
+ *
+ * <pre>{@code
+ *   ((@define start=1))
+ *   ((@define step=1))
+ * }</pre>
+ *
+ * are the default values.
+ *
+ */
 public class NumberLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
