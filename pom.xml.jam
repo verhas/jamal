@@ -11,7 +11,14 @@
     {properties|
         {property :project.build.sourceEncoding:UTF-8}
     }
+    {distributionManagement|
+        {snapshotRepository |ossrh|https://oss.sonatype.org/content/repositories/snapshots}
+        {repository |ossrh|https://oss.sonatype.org/service/local/staging/deploy/maven2/}
+    }
     {build|
+        {plugins|
+            {plugin|{GAV :org.sonatype.plugins:nexus-staging-maven-plugin: }}
+        }
         {pluginManagement|
             {plugins|
                 {plugin|
@@ -55,6 +62,15 @@
                                 </argLine>
                     }
                 }
+                {plugin|
+                      {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:1.6.7}
+                      {extensions :true}
+                      {configuration|
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                      }
+                }
             }
         }
     }
@@ -63,59 +79,20 @@
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:5.2.0:test}}
         }}
 
-    <profiles>
-        <profile>
-            <id>JVM8</id>
-                {properties|
-                    {property :profile:JVM8}
+    {profiles|
+        {profile|ossrh|
+            {build|
+                {plugins|
+                    {plugin|
+                        {GAV :org.apache.maven.plugins:maven-gpg-plugin:1.6}
+                        {executions|{execution
+                            {id :sign-artifacts}
+                            {phase :verify}
+                            {goals|{goal :sign}}
+                        }}
+                    }
                 }
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>{MAVEN_COMPILER_PLUGIN_VERSION}</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>module-info.java</exclude>
-                            </excludes>
-                            <encoding>UTF-8</encoding>
-                            <release>8</release>
-                            <annotationProcessorPaths>
-                                <annotationProcessorPath>
-                                    <groupId>com.github.bsideup.jabel</groupId>
-                                    <artifactId>jabel-javac-plugin</artifactId>
-                                    <version>0.2.0</version>
-                                </annotationProcessorPath>
-                            </annotationProcessorPaths>
-                            <annotationProcessors>
-                                <annotationProcessor>com.github.bsideup.jabel.JabelJavacProcessor</annotationProcessor>
-                            </annotationProcessors>
-                            <source>13</source>
-                            <target>13</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>{MAVEN_JAVADOC_PLUGIN_VERSION}</version>
-                        <configuration>
-                            <source>8</source>
-                            <sourceFileExcludes>
-                                <sourceFileExclude>module-info.java</sourceFileExclude>
-                            </sourceFileExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-
-            <repositories>
-                <repository>
-                    <id>jitpack.io</id>
-                    <url>https://jitpack.io</url>
-                </repository>
-            </repositories>
-        </profile>
-    </profiles>
-
+           }
+        }
+    }
 }

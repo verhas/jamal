@@ -2,4 +2,5 @@
         {plugin|{GAV :org.apache.maven.plugins:maven-surefire-plugin:}}
         {plugin|{GAV :org.apache.maven.plugins:maven-source-plugin:}}
         {plugin|{GAV :org.apache.maven.plugins:maven-javadoc-plugin: }}
+        {plugin|{GAV :org.sonatype.plugins:nexus-staging-maven-plugin: }}
 }}

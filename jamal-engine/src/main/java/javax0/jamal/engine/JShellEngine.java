@@ -177,6 +177,8 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
 
     @Override
     public void close() {
-        js.close();
+        if (js != null) {
+            js.close();
+        }
     }
 }
