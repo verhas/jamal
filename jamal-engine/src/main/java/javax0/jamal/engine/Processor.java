@@ -18,6 +18,7 @@ import javax0.jamal.tracer.TraceRecordFactory;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Input.makeInput;
@@ -195,7 +196,7 @@ public class Processor implements javax0.jamal.api.Processor {
      */
     private String processMacroContentBeforeMacroItself(String macroRaw, Input macroInputBefore)
         throws BadSyntax {
-        if (OptionsStore.getInstance(this).is("omasalgotm")) {
+        if (option("omasalgotm").isPresent()) {
             return process(macroInputBefore);
         } else {
             return macroRaw;
@@ -635,7 +636,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 counter--; // count the closing
                 if (counter == 0) {
                     skip(input, macros.close());
-                    if (!OptionsStore.getInstance(this).is("nl")) {
+                    if (!option("nl").isPresent()) {
                         eatEscapedNL(input);
                     }
                 } else {
@@ -687,7 +688,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
         public MacroQualifier(Input input) throws BadSyntaxAt {
             this.input = input;
-            this.oldStyle = OptionsStore.getInstance(Processor.this).is("omasalgotm");
+            this.oldStyle = option("omasalgotm").isPresent();
             final var startsAsBuiltIn = macroIsBuiltIn(input);
             if (startsAsBuiltIn) {
                 skip(input, 1);
@@ -741,6 +742,19 @@ public class Processor implements javax0.jamal.api.Processor {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns an optional telling if an option is present or
+     * not.
+     *
+     * @param optionName the name of the option
+     * @return an empty optional if the option is not present
+     * and a non-empty optional if the option is present. The
+     * value inside the optional is not defined.
+     */
+    public Optional<Boolean> option(String optionName) {
+        return OptionsStore.getInstance(this).is(optionName) ? Optional.of(true) : Optional.empty();
     }
 
 }

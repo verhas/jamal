@@ -55,7 +55,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
 
 
     private boolean isLenient() {
-        return OptionsStore.getInstance(processor).is("lenient");
+        return processor.option("lenient").isPresent();
     }
 
     /**

@@ -56,7 +56,7 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
     }
 
     private boolean isLenient() {
-        return OptionsStore.getInstance(processor).is("lenient");
+        return processor.option("lenient").isPresent();
     }
 
     /**
