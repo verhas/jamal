@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+echo [INFO] -------------------------------------------------------
+echo [INFO]  M A N U A L   R E L E A S E
+echo [INFO] -------------------------------------------------------
+echo [INFO] Execute this file to create the artifacts
+echo [INFO] to manually upload to https://oss.sonatype.org/
+echo [INFO]
+echo [INFO] Normal release should use
+echo [INFO]
+echo [INFO] mvn -f genpom.xml ; mvn deploy -Possrh
+echo [INFO] -------------------------------------------------------
+echo [INFO]
+
 echo Cleaning old release directory if any
 rm -rf release
 echo Creating directory 01engine
