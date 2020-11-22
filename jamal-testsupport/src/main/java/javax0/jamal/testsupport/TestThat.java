@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.engine.UserDefinedMacro;
 import org.junit.jupiter.api.Assertions;
@@ -87,6 +88,13 @@ public class TestThat {
         return constructor.newInstance();
     }
 
+    private Position pos = null;
+
+    public TestThat atPosition(String fileName, int line, int col){
+        pos = new Position(fileName,line,col);
+        return this;
+    }
+
     /**
      * Create a new macro, a new processor and test that the input creates the expected output.
      * If they are not the same then JUnit5 assertion failure will happen.
@@ -105,7 +113,7 @@ public class TestThat {
             InvocationTargetException,
             BadSyntax {
         final String actual;
-        var in = new javax0.jamal.tools.Input(input, null);
+        var in = new javax0.jamal.tools.Input(input, pos);
         if (klass != null) {
             Macro sut = createSut();
             actual = sut.evaluate(in, processor);

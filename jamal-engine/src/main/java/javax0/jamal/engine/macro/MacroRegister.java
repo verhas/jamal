@@ -1,8 +1,21 @@
 package javax0.jamal.engine.macro;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Delimiters;
+import javax0.jamal.api.Identified;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Marker;
+import javax0.jamal.api.Stackable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {

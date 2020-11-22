@@ -2,7 +2,6 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
-import javax0.jamal.tools.OptionsStore;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -90,31 +89,5 @@ class ArgumentHandler {
             map.put(parameters[i], values[i]);
         }
         return map;
-    }
-
-    /**
-     * Checks that no parameter name contains another parameter name. If there is any parameter name that contains
-     * another parameter name then {@code BadSyntax} is thrown.
-     * <p>
-     * This restriction ensures that the parameter replacement with the actual values is definite and there are no
-     * readability issues.
-     *
-     * @throws BadSyntax is any of the parameter names contain another parameter name.
-     */
-    void ensure() throws BadSyntax {
-        final var badSyntax = new BadSyntax("User defined macro parameter name should not be a substring of another parameter.");
-        for (int i = 0; i < parameters.length; i++) {
-            for (int j = 0; j < parameters.length; j++) {
-                if (i != j) {
-                    if (parameters[i].contains(parameters[j])) {
-                        badSyntax.parameter("" + i + ". parameter '" + parameters[i] + "' contains the "
-                            + j + ". parameter '" + parameters[j] + "'");
-                    }
-                }
-            }
-        }
-        if (!badSyntax.getParameters().isEmpty()) {
-            throw badSyntax;
-        }
     }
 }

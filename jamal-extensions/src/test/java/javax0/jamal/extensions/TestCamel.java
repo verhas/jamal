@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class TestCamel {
 
     @Test
-    public void testCamelLowerCase() throws Exception {
+    void testCamelLowerCase() throws Exception {
         var camelLowerCase = TestThat.theMacro(Camel.LowCamel.class);
         camelLowerCase.fromTheInput("INPUT").results("input");
         camelLowerCase.fromTheInput("INpUT").results("input");
@@ -19,7 +19,7 @@ public class TestCamel {
     }
 
     @Test
-    public void testCamelUpperCase() throws Exception {
+    void testCamelUpperCase() throws Exception {
         var camelUpperCase = TestThat.theMacro(Camel.UppCamel.class);
         camelUpperCase.fromTheInput("INPUT").results("Input");
         camelUpperCase.fromTheInput("INpUT").results("Input");
@@ -32,7 +32,7 @@ public class TestCamel {
     }
 
     @Test
-    public void testCamelCStyle() throws Exception {
+    void testCamelCStyle() throws Exception {
         var cstyle = TestThat.theMacro(Camel.CStyle.class);
         cstyle.fromTheInput("_Input").results("INPUT");
         cstyle.fromTheInput("_input").results("INPUT");
@@ -43,7 +43,7 @@ public class TestCamel {
     }
 
     @Test
-    public void testCamelSentence() throws Exception {
+    void testCamelSentence() throws Exception {
         var sentence = TestThat.theMacro(Camel.Sentence.class);
         sentence.fromTheInput("Input").results("input");
         sentence.fromTheInput("input").results("input");

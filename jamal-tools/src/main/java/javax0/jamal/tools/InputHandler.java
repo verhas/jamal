@@ -2,6 +2,7 @@ package javax0.jamal.tools;
 
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Position;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -243,7 +244,6 @@ public class InputHandler {
      */
     public static String[] getParameters(Input input, String id) throws BadSyntaxAt {
         final var ref = input.getPosition();
-        final String[] params;
         if (firstCharIs(input, '(')) {
             skip(input, 1);
             var closingParen = input.indexOf(")");
@@ -256,11 +256,41 @@ public class InputHandler {
             if (param.length() == 0) {
                 return new String[0];
             } else {
-                return Arrays.stream(param.split(",")).map(String::trim).toArray(String[]::new);
+                return ensure(Arrays.stream(param.split(",")).map(String::trim).toArray(String[]::new), ref);
             }
         } else {
             return new String[0];
         }
+    }
+
+    /**
+     * Checks that no parameter name contains another parameter name. If there is any parameter name that contains
+     * another parameter name then {@code BadSyntax} is thrown.
+     * <p>
+     * This restriction ensures that the parameter replacement with the actual values is definite and there are no
+     * readability issues.
+     *
+     * @param parameters the parameters to check
+     * @param ref        the position in the input
+     * @return the parameters themselves
+     * @throws BadSyntaxAt is any of the parameter names contain another parameter name.
+     */
+    public static String[] ensure(String[] parameters, Position ref) throws BadSyntaxAt {
+        final var badSyntax = new BadSyntaxAt("User defined macro parameter name should not be a substring of another parameter.", ref);
+        for (int i = 0; i < parameters.length; i++) {
+            for (int j = 0; j < parameters.length; j++) {
+                if (i != j) {
+                    if (parameters[i].contains(parameters[j])) {
+                        badSyntax.parameter("" + i + ". parameter '" + parameters[i] + "' contains the "
+                            + j + ". parameter '" + parameters[j] + "'");
+                    }
+                }
+            }
+        }
+        if (!badSyntax.getParameters().isEmpty()) {
+            throw badSyntax;
+        }
+        return parameters;
     }
 
     /**
@@ -296,24 +326,36 @@ public class InputHandler {
      * @throws BadSyntaxAt if the separator character is letter or digit
      */
     public static String[] getParts(Input input) throws BadSyntaxAt {
+        return getParts(input, -1);
+    }
+
+    /**
+     * Same as {@link #getParts(Input)} but we want at most {@code limit} number of parts.
+     *
+     * @param input
+     * @param limit
+     * @return
+     * @throws BadSyntaxAt
+     */
+    public static String[] getParts(Input input, int limit) throws BadSyntaxAt {
         skipWhiteSpaces(input);
         if (input.length() == 0) {
             return EMPTY_STRING_ARRAY;
         }
         var sepchar = input.substring(0, 1);
-        if(Character.isLetterOrDigit(sepchar.charAt(0))){
-            throw new BadSyntaxAt("The separator character '"+sepchar+"' is invalid",input.getPosition());
+        if (Character.isLetterOrDigit(sepchar.charAt(0))) {
+            return input.toString().split("\\s+", limit);
         }
         skip(input, 1);
         if ("`".equals(sepchar)) {
-            return getPartsRegex(input);
+            return getPartsRegex(input, limit);
         }
-        return input.toString().split(Pattern.quote(sepchar), -1);
+        return input.toString().split(Pattern.quote(sepchar), limit);
     }
 
-    private static String[] getPartsRegex(Input input) {
+    private static String[] getPartsRegex(Input input, int limit) {
         final var regex = fetchRegex(input);
-        return input.toString().split(regex, -1);
+        return input.toString().split(regex, limit);
     }
 
     private static String fetchRegex(Input input) {

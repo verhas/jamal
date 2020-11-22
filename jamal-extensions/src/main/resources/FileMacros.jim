@@ -1,0 +1,3 @@
+{@comment All the use macros that are needed for the file handling}
+{#use {?global} javax0.jamal.extensions.FileMacros.Read as read}
+{#use {?global} javax0.jamal.extensions.FileMacros.Write as write}

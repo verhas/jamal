@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
+import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
 
 import java.util.Map;
@@ -40,7 +41,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         this.id = id;
         this.content = content;
         argumentHandler = new ArgumentHandler(this, parameters);
-        argumentHandler.ensure();
+        InputHandler.ensure(parameters,null);
     }
 
     /**

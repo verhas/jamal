@@ -1,11 +1,19 @@
 package javax0.jamal.extensions;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.InputHandler;
 
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.getParts;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 /**
  * Macros defined in static inner classes that some way help handling regular expressions.
@@ -13,13 +21,13 @@ import java.util.stream.IntStream;
 public class Regex {
 
     /**
-     * This macro splits the input into three parts using {@link InputHandler#getParts(Input)} and then
-     * returns {@code }part[0].replaceAll(part[2], part[3])}
+     * This macro splits the input into three parts using {@link InputHandler#getParts(Input)} and then returns {@code
+     * }part[0].replaceAll(part[2], part[3])}
      */
     public static class ReplaceAll implements Macro {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var part = InputHandler.getParts(in);
+            final var part = getParts(in);
             if (part.length != 3) {
                 throw new BadSyntax("replaceAll needs exactly 3 parts separated but the input has " +
                     part.length);
@@ -115,21 +123,36 @@ public class Regex {
     /**
      * Match a string against a regular expression.
      * <p>
-     * This macro splits the input into two parts using {@link
-     * InputHandler#getParts(Input)} and matches
+     * The sintax of the macro is
+     * <pre>{@code
+     *    {@matcher name regex string}
+     * }</pre>
+     *
+     * where the {@code name} will be the name of the matcher created. This name can later be used as a user defined
+     * macro to get the different parts of the result of the matching.
+     * <p>
+     * The {@code regex} is the patters used to patch.
+     * <p>
+     * The {@code }
+     *
+     *
+     * This macro splits the input into three parts using {@link InputHandler#getParts(Input)}. The first will be the
+     * name of the
      */
     public static class Matcher implements Macro {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var part = InputHandler.getParts(in);
-            if (part.length != 3) {
+            skipWhiteSpaces(in);
+            final var id = fetchId(in);
+            skipWhiteSpaces(in);
+            final var part = getParts(in, 2);
+            if (part.length != 2) {
                 throw new BadSyntax("matcher needs exactly 3 parts separated but the input has " +
-                    part.length);
+                    part.length + 1);
             }
-            var groupMacroName = part[0].trim();
-            var pattern = Pattern.compile(part[1]);
-            var matcher = pattern.matcher(part[2]);
-            var udm = new GroupUserDefinedMacro(groupMacroName, matcher);
+            var pattern = Pattern.compile(part[0]);
+            var matcher = pattern.matcher(part[1]);
+            var udm = new GroupUserDefinedMacro(id, matcher);
             processor.define(udm);
             return "";
         }

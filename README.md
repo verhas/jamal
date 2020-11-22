@@ -180,7 +180,7 @@ As a quick sample to have a jump start what Jamal can do:
 ```jam
 {@define fruit(color,actualSize,name)=we have an color name of size actualSize}
 {fruit/red/apple/20ounce}
-{fruit/green/melone/1kg}
+{fruit/green/melon/1kg}
 ```
 
 will be converted by Jamal to the file
@@ -188,7 +188,7 @@ will be converted by Jamal to the file
 ```jam
 
 we have an red 20ounce of size apple
-we have an green 1kg of size melone
+we have an green 1kg of size melon
 ```
 
 In this sample, the built-in macro `define` is used to define a so-called user-defined macro `fruit`.
@@ -196,7 +196,7 @@ This macro has three arguments named `color`, `actualSize`, and `name`.
 When the user-defined macro is in use, the actual values replace these arguments.
 
 Note that the macros open with the `{` character and close with the `}` character in this example.
-These are not hardwired in Jamal and there is not even a suggested default for that. 
+These are not hardwired in Jamal and there is not even a suggested default for that.
 The embedding application has to define the opening string and the closing string.
 For example, the embedding Java::Geci application uses `{{` and `}}` as macro open and macro close strings.
 It does it because the `{` and `}` characters frequently appear in the Java source code.
@@ -206,6 +206,14 @@ However, you have to be aware that this is NOT enforced.
 This is not even a recommendation or a convention.
 You can specify the macro opening and closing string as the program parameter, and the Jamal source code can also change it.
 You can change them using the built-in `sep` macro (see later) in the Jamal source.
+
+There is one exception where Jamal uses `{` and `}` as a hardwired strings for macro opening and closing.
+This exception was implemented in version 1.5.0 and later.
+When you import a file into your code and the imported file starts with the characters `{@` then the import will use `{` and `}`.
+This way you can easily import files which come from an external sources, like a JAR file or via the web.
+The package that defines an import file can use the `{` and `}` characters.
+Even if your Jamal file uses different macro opening and closing strings you do not need to chage it to `{` and `}`.
+You just write `((@import res:MyResource.jim))`, as an example and it still will be imported properly.
 
 The parameters are separated using the first non-space character following the macro's name in the macro use.
 Thus, you can write
@@ -614,6 +622,10 @@ Use `import` to import user-defined macro definitions.
 Because the textual output from the evaluation of the file is discarded feel free to use text in the file to be imported as documentation.
 There is no need to enclose such a text into a `{@comment ...}` macro.
 
+Starting with version 1.5.0 the import macro looks into the file before evaluating it.
+If the very first two characters in the file are `{@` then it evaluates the content usinf `{` as macro opening string and `}` as macro closing string.
+This way you can freely import resource files provided in JAR file or through the net even if you use different macro opening and closing strings.
+
 ### `include`<a name="include">
 since 1.0.0 (core)
 
@@ -840,22 +852,33 @@ The scripts have to be used to manifest the error.
 
 ### `for`<a name="for">
 since 1.0.0 (core)
+since 1.5.0 multi-argument `for`
 
-The macro `for` can be used to repeat the same text many times. The syntax of the macro is
+The macro `for` can be used to repeat the same text many times.
+This macro has two forms.
+The syntax of the macro is either
 
 ```jam
-{@for variable in (a,b,c,d)= content to be repeated}
+{@for variable in (a,b,c,d)= content to be repeated
+containing variable}
 ```
- 
-The `variable` can be used in the content and will be replaced for each iteration with the respective element on the comma-separated list.
-The list can also be separated by other strings.
+or
+
+```jam
+{@for (v1,v2,v3) in (a|w|1,b|q|2,c|r|5,d|t|9)= content to be repeated
+containing v1 v2 and v3}
+```
+
+The `variable` or the multiple variables can be used in the content and will be replaced for each iteration with the respective element on the comma-separated list.
+The list of the values can also be separated by other strings.
 If the macro `$forsep` is defined, like in
 
 ```jam
 {@define $forsep=\s+}
 ```
 
-then the arguments will be separated by one or more spaces. The string between the `(` and the `)` will be split using the string defined in `$forsep` as a regular expression.
+then the arguments will be separated by one or more spaces.
+The string between the `(` and the `)` will be split using the string defined in `$forsep` as a regular expression.
 
 Later versions may extend the command with other, more complex syntax.
  
@@ -1009,12 +1032,45 @@ This way the evaluation of a macro is done in three steps:
 1. Evaluate the body of the macro unless the macro is built-in and starts with the character `@`.
    When evaluating the macros in the body of the macro starts a new scope and evaluate the macros following these three steps.
 2. Evaluate the macro itself.
-3. If the macro is user-defined then evaluate the output of the macro and if it contains macros then evaluate those using these three steps.
+3. If the macro is user-defined or starts with a `!` character then evaluate the output of the macro and if it contains macros then evaluate those using these three steps.
 
 As you can see the first, and the last steps are recursive steps.
 The first step can be skipped using the `@` character.
 The second step cannot be skipped, and after all, there is no reason to do so.
-In the case of user-defined macro, however, the third step can be skipped using the macro `verbatim`.
+However, the third step can be
+
+* skipped using the macro `verbatim` if the macro is user defined, or
+* enforced using a `!` in front of the `@` or `#` character if the macro is built-in.
+
+The use of the `!` character in front of a built-in macro is similar to the use of the macro `eval`.
+For example
+
+```jam
+{@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
+{#eval {@for _tag in (groupId,artifactId,version)=
+{tag/_tag}}}
+```
+can be shortened as
+
+```jam
+{@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
+{!@for _tag in (groupId,artifactId,version)=
+{tag/_tag}}
+```
+
+The only difference is that the `eval` macro consumes the white-space characters at the start of its argument.
+In the example above the `{#eval macro ...}` before its evaluation is
+
+```jam
+{#eval
+{@define groupId(_y)=<groupId></groupId>}
+{@define artifactId(_y)=<artifactId></artifactId>}
+{@define version(_y)=<version></version>}}
+```
+
+The body starts with a new line.
+The macro `eval` deletes this new line, while using the `!` in front of the macro does not.
+
 
 The syntax of the `verbatim` macro is the following:
 

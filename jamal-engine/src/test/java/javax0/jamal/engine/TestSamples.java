@@ -192,6 +192,7 @@ class TestSamples {
                 "\n" +
                 "\n" +
                 "\n" +
+                "\n" +
                 "    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>\n" +
                 "    ", result("gav.jam"));
     }

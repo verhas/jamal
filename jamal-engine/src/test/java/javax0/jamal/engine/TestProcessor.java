@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Macro;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -100,10 +101,31 @@ public class TestProcessor {
         Assertions.assertEquals("b", result);
     }
 
-
     @Test
     @DisplayName("testsupport verbatim protected user defined macro")
     public void testVerbatimUdMacroUse() throws BadSyntax {
+        final var input = new Input("{@define b={zz}}{@verbatim b}");
+        final var sut = new Processor("{", "}");
+        final var result = sut.process(input);
+        Assertions.assertEquals("{zz}", result);
+    }
+
+    public static class AutoClosingMacro implements Macro, AutoCloseable {
+
+        @Override
+        public void close() throws Exception {
+
+        }
+
+        @Override
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+            return "AutoClosing";
+        }
+    }
+
+    @Test
+    @DisplayName("Macro implementing AutoClose gets closed when gets out of scope")
+    public void testAutoClose() throws BadSyntax {
         final var input = new Input("{@define b={zz}}{@verbatim b}");
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);

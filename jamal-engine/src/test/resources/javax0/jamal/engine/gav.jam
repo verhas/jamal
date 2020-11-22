@@ -1,6 +1,6 @@
 {@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
-{#eval {@for _tag in (groupId,artifactId,version)=
-{tag/_tag}}}
+{!@for _tag in (groupId,artifactId,version)=
+{tag/_tag}}
 {@define GAV(_groupId,_artifactId,_version)=
     {#if|_groupId|{groupId :_groupId}}{#if|_artifactId|{artifactId :_artifactId}}{#if|_version|{version :_version}}
     {#define GROUPID=_groupId}{#define VERSION=_version}}

@@ -8,6 +8,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Position;
+import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.engine.util.StackLimiter;
 import javax0.jamal.tools.Marker;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static javax0.jamal.api.SpecialCharacters.IDENT;
+import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.contains;
 import static javax0.jamal.tools.InputHandler.copy;
@@ -152,14 +155,40 @@ public class Processor implements javax0.jamal.api.Processor {
     private void processMacro(Input output, Input input) throws BadSyntax {
         try (final var tr = traceRecordFactory.openMacroRecord(input.getPosition())) {
             final var macroStartPosition = input.getPosition();
+            int postEvalCount = 0;
+            int identCount = 0;
+            skipWhiteSpaces(input);
+            while (firstCharIs(input, POST_VALUATE) || firstCharIs(input, IDENT)) {
+                if (firstCharIs(input, POST_VALUATE)) {
+                    postEvalCount++;
+                } else {
+                    identCount++;
+                }
+                skip(input, 1);
+                skipWhiteSpaces(input);
+            }
             final var macroRaw = getNextMacroBody(input);
+            if( identCount > 0 ){
+                final var sb = new StringBuilder();
+                sb.append(getRegister().open());
+                for( int i = 0 ; i < identCount -1 ; i++ ){
+                    sb.append(IDENT);
+                }
+                for( int i = 0 ; i < postEvalCount ; i++ ){
+                    sb.append(POST_VALUATE);
+                }
+                sb.append(macroRaw);
+                sb.append(getRegister().close());
+                output.append(sb.toString());
+                return;
+            }
             tr.appendBeforeState(macroRaw);
             final String macroProcessed;
             final var marker = new Marker("{@" + "");
             macros.push(marker);
-            if (firstCharIs(macroRaw, '@')) {
+            if (firstCharIs(macroRaw, SpecialCharacters.NO_PRE_VALUA)) {
                 macroProcessed = macroRaw;
-            } else if (firstCharIs(macroRaw, '#')) {
+            } else if (firstCharIs(macroRaw, SpecialCharacters.PRE_VALUATED)) {
                 final var macroInputBefore = makeInput(macroRaw, macroStartPosition);
                 macroProcessed = process(macroInputBefore);
                 tr.appendAfterEvaluation(macroProcessed);
@@ -169,8 +198,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 tr.appendAfterEvaluation(macroProcessed);
             }
             final var macroInputAfter = makeInput(macroProcessed, macroStartPosition);
-            final var qualifiers = new MacroQualifier(macroInputAfter);
-
+            final var qualifiers = new MacroQualifier(macroInputAfter, postEvalCount);
             final String text;
             if (qualifiers.macro instanceof InnerScopeDependent) {
                 text = evalMacro(tr, qualifiers);
@@ -211,22 +239,31 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return the evaluated string of the macro
      * @throws BadSyntaxAt when the syntax of the macro is bad
      */
-    private String evalMacro(final TraceRecord tr,
-                             final MacroQualifier qualifier) throws BadSyntaxAt {
+    private String evalMacro(final TraceRecord tr, final MacroQualifier qualifier) throws BadSyntax {
         final var ref = qualifier.input.getPosition();
         tr.setId(qualifier.macroId);
         if (qualifier.isBuiltIn) {
-            return evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
+            var result = evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
+            for (int i = 0; i < qualifier.postEvalCount; i++) {
+                result = process(makeInput(result, ref));
+            }
+            return result;
         } else {
             tr.type(TraceRecord.Type.USER_DEFINED_MACRO);
             final String rawResult;
             try {
                 rawResult = evalUserDefinedMacro(qualifier.input, tr, qualifier);
                 if (qualifier.isVerbatim) {
+                    if( qualifier.postEvalCount > 0 ){
+                        throw new BadSyntax("Verbatim and ! cannot be used together on a user defined macro.");
+                    }
                     tr.appendAfterEvaluation(rawResult);
                     return rawResult;
                 } else {
                     var result = process(makeInput(rawResult, qualifier.input.getPosition()));
+                    for( int i = 0 ; i < qualifier.postEvalCount ; i++){
+                        result = process(makeInput(result, qualifier.input.getPosition()));
+                    }
                     tr.appendAfterEvaluation(result);
                     return result;
                 }
@@ -585,12 +622,12 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     /**
-     * Eat off a macro from the imput caring about all the macro nesting. The input is right after the macro opening
+     * Eat off a macro from the input caring about all the macro nesting. The input is right after the macro opening
      * string and at the end it will eat off from the input not only the macro body but also the last macro closing
      * strings. The output will be the string that contains the content of the macro including all the matching macro
      * opening and closing strings that are inside.
      * <p>
-     * For example the input (here {@code [[} is the macro opening string and {@code ]]} the macro closing string):
+     * For example the input (here {@code [[} is the macro opening string and {@code ]]} is the macro closing string):
      *
      * <pre>{@code
      *     @define z=[[userDef/indef/macro]] some content]]after it is
@@ -685,12 +722,13 @@ public class Processor implements javax0.jamal.api.Processor {
         private final boolean isBuiltIn;
         private final Macro macro;
         private final boolean oldStyle;
+        private final int postEvalCount;
 
-        public MacroQualifier(Input input) throws BadSyntaxAt {
+        public MacroQualifier(Input input, int postEvalCount) throws BadSyntax {
             this.input = input;
+            this.postEvalCount = postEvalCount;
             this.oldStyle = option("omasalgotm").isPresent();
-            final var startsAsBuiltIn = macroIsBuiltIn(input);
-            if (startsAsBuiltIn) {
+            if (macroIsBuiltIn(input)) {
                 skip(input, 1);
                 skipWhiteSpaces(input);
                 macroId = fetchId(input);
@@ -716,7 +754,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return {@code true} if the macro is a built in macro and {@code false} if the macro is user defined
      */
     private boolean macroIsBuiltIn(Input input) {
-        return input.length() > 0 && (input.charAt(0) == '#' || input.charAt(0) == '@');
+        return input.length() > 0 && (input.charAt(0) == SpecialCharacters.PRE_VALUATED || input.charAt(0) == SpecialCharacters.NO_PRE_VALUA);
     }
 
     /**
@@ -744,17 +782,17 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
+    private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);
+
     /**
-     * Returns an optional telling if an option is present or
-     * not.
+     * Returns an optional telling if an option is present or not.
      *
      * @param optionName the name of the option
-     * @return an empty optional if the option is not present
-     * and a non-empty optional if the option is present. The
+     * @return an empty optional if the option is not present and a non-empty optional if the option is present. The
      * value inside the optional is not defined.
      */
     public Optional<Boolean> option(String optionName) {
-        return OptionsStore.getInstance(this).is(optionName) ? Optional.of(true) : Optional.empty();
+        return OptionsStore.getInstance(this).is(optionName) ? OPTIONAL_TRUE : Optional.empty();
     }
 
 }

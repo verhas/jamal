@@ -5,7 +5,10 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
 import static javax0.jamal.tools.Input.makeInput;
@@ -51,18 +54,49 @@ public class FileTools {
      * @throws BadSyntaxAt if the file cannot be read.
      */
     public static Input getInput(String fileName) throws BadSyntax {
+        return makeInput(getFileContent(fileName), new Position(fileName));
+    }
+
+    /**
+     * Get the content of the file.
+     *
+     * @param fileName the name of the file.
+     * @return the content of the file
+     * @throws BadSyntax if the file cannot be read
+     */
+    public static String getFileContent(String fileName) throws BadSyntax {
         try {
-            final var pos = new Position(fileName);
             if (fileName.startsWith(RESOURCE_PREFIX)) {
-                return makeInput(ResourceInput.getInput(fileName.substring(RESOURCE_PREFIX_LENGTH)), pos);
+                return ResourceInput.getInput(fileName.substring(RESOURCE_PREFIX_LENGTH));
             }
             if (fileName.startsWith(HTTPS_PREFIX)) {
-                return makeInput(CachedHttpInput.getInput(fileName), pos);
+                return CachedHttpInput.getInput(fileName).toString();
             } else {
-                return makeInput(FileInput.getInput(fileName),pos);
+                return FileInput.getInput(fileName);
             }
         } catch (IOException e) {
-            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'",e);
+            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
+        }
+    }
+
+    public static void writeFileContent(String fileName, String content) throws BadSyntax {
+        try {
+            if (fileName.startsWith(RESOURCE_PREFIX)) {
+                throw new BadSyntax("Cannot write into a resource.");
+            }
+            if (fileName.startsWith(HTTPS_PREFIX)) {
+                throw new BadSyntax("Cannot write into a web resource.");
+            } else {
+                File file = new File(fileName);
+                if (file.getParentFile() != null) {
+                    file.getParentFile().mkdirs();
+                }
+                try (final var fos = new FileOutputStream(file)) {
+                    fos.write(content.getBytes(StandardCharsets.UTF_8));
+                }
+            }
+        } catch (IOException e) {
+            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
         }
     }
 
@@ -88,14 +122,7 @@ public class FileTools {
      * @return the absolute file name of the file
      */
     public static String absolute(final String reference, String fileName) {
-        if (fileName.startsWith(RESOURCE_PREFIX) ||
-            fileName.startsWith(HTTPS_PREFIX) ||
-            fileName.startsWith("/") ||
-            fileName.startsWith("\\") ||
-            fileName.startsWith("~") ||
-            (fileName.length() > 1 &&
-                Character.isAlphabetic(fileName.charAt(0))
-                && fileName.charAt(1) == ':')) {
+        if (isAbsolute(fileName)) {
             return fileName;
         }
         final var unixedReference = reference.replaceAll("\\\\", "/");
@@ -107,5 +134,25 @@ public class FileTools {
             .normalize()
             .toString()
             .replaceAll("\\\\", "/");
+    }
+
+    /**
+     * Check if the name of the file has to be interpreted as an absolute filename or not. This is not the same as any
+     * JDK provided method, because it checks the {@code res://} and {@code https://} prefix as well and also the
+     * {@code ~/} at the start, which is usually reoved by the shell, but Jamal file handling resolves it so that
+     * Jamal files can also use the {@code ~/... } file format.
+     *
+     * @param fileName the file name to check.
+     * @return {@code true} if the file name should be treated as an absolute file name and {@code false} otherwise
+     */
+    public static boolean isAbsolute(String fileName) {
+        return fileName.startsWith(RESOURCE_PREFIX) ||
+            fileName.startsWith(HTTPS_PREFIX) ||
+            fileName.startsWith("/") ||
+            fileName.startsWith("\\") ||
+            fileName.startsWith("~") ||
+            (fileName.length() > 1 &&
+                Character.isAlphabetic(fileName.charAt(0))
+                && fileName.charAt(1) == ':');
     }
 }
