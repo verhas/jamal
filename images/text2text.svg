@@ -13,7 +13,7 @@
       </font-face-src>
     </font-face>
   </defs>
-  <metadata> Produced by OmniGraffle 7.18\n2020-11-22 02:42:30 +0000</metadata>
+  <metadata> Produced by OmniGraffle 7.18\n2020-11-22 02:44:18 +0000</metadata>
   <g id="usage_structure" stroke="none" stroke-opacity="1" fill-opacity="1" fill="none" stroke-dasharray="none">
     <title>usage_structure</title>
     <rect fill="#eef3f4" x="-191" y="-195" width="410" height="271"/>
@@ -94,7 +94,7 @@
         </text>
       </g>
       <g id="Graphic_34">
-        <text transform="translate(-18.296 -156.9)" fill="black">
+        <text transform="translate(-33.552 -156.9)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">JShell</tspan>
         </text>
       </g>
