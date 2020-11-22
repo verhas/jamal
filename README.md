@@ -2,7 +2,7 @@
 
 [![Javadocs](https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg)](https://javadoc.io/doc/com.javax0.jamal/jamal-parent)
 
-Just Another Macro Language
+Jamal Macro Language
 
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.
@@ -13,7 +13,7 @@ In this documentation, the term "Jamal" refers to the Java implementation of the
 
 ![](images/text2text.svg)
 
-Jamal's basic concept is to transform a UTF-8 source text to a target text enabling programmatic construct in the source text.
+Jamal's basic concept is to transform a source text to a target text enabling programmatic constructs in the source text.
 That way, it enables the maintainer of the text to eliminate
 
 * repetitions,
@@ -966,7 +966,7 @@ In that case, you can use the `sep` macro at the start and use the `sep` macro w
 You can also enclose the setting of the macro start and end string into an `ident` block.
 
 A special use of `ident` is to insert a "null length separator" into the text.
-Imagine that the macro start and stor strings are set to be `((` and `))`.
+Imagine that the macro start and close strings are set to be `((` and `))`.
 We may want to use those because the curly braces are used in the text frequently and so are the single `(` and `(` characters.
 As an example we may want to define a macro that creates a markdown image reference:
 
@@ -979,7 +979,7 @@ If we did not have this space the macro would be closed one `)` sooner than need
 This solution inserts an extra space after the image reference.
 Usually it is not a problem.
 In some situations, however, we do not want to have that extra space there.
-This is possible usinf `ident`.
+This is possible using `ident`.
 
 ```text
 ((@define image($ref)=![](images/$ref.png)((@ident))))
@@ -989,10 +989,18 @@ The macro `((@ident))` will prevent Jamal to interpret the `)` character after t
 The same time `((@ident))` produces no character, not even a space in the output.
 Note that `comment` or `block` can be used the same way.
 
-
 Be aware that the macro `ident` consumes the white spaces (including newlines) that follow the `ident` keyword.
 This is to avoid extra white spaces when tabulation is needed for better readability.
 If you need the whitespace (e.g.: newline) in the output then you have to put those before the `ident` macro.
+
+Starting with Jama 1.5.0 there is a built-in language syntax to have the same effect as `ident`.
+If a macro is preceeded with a
+
+```
+`
+```
+
+backtick character then
 
 ### `verbatim`<a name="verbatim">
 since 1.0.0 (core)
