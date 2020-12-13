@@ -93,6 +93,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
      1. [`ident`](#ident)
      1. [`verbatim`](#verbatim)
      1. [`options`](#options)
+     1. [`try`](#try)
      1. [Jamal Environment Variables](#JamalENV)
      1. [Jamal API](#JamalAPI)
 
@@ -409,7 +410,7 @@ When a user-defined macro is used, the parameters are defined after the name of 
 In the case of user-defined macros, there is no `@` or `#` in front of the name of the macro.
 Optionally there may be a `?` character before the macro name.
 In that case, the result of an undefined user macro will be the empty string.
-Any other use of an undefined user macro results an error. 
+Any other use of an undefined user macro results an error.
 
 The parameters stand after the name of the macro separated by a separator character.
 The first non-whitespace character after the name of the macro is the separator character.
@@ -576,6 +577,27 @@ That way `{a}` and `{b}` are replaced with their defined values and `eval` itsel
 
 3
 ```
+
+Starting with version 1.5.0 Jamal introduces the `!` modification character.
+When this character is used in front of a macro, then the result of the macro will be evaluated like it was surrounded with `{@eval ... }`.
+This can be used in the case of user-defined macros as well as in the case of built-in macros.
+Note, that in the case of user-defined macros the result of the macro will be evaluated by default.
+Using the `!` in front of the macro will repeat the evaluation.
+You can use more than one `!` characters in front of a macro use.
+The macro result will be evaluated so many times as many `!` characters there are.
+In case of a user-defined macro the "so many times" should be interpreted as one, by default plus N times.
+For example:
+
+```jam
+{!!userDefined}
+```
+
+will get the value of the macro `userDefined` and evaluates it three times.
+
+You can use this character together with the back-tick macro modifying character.
+When using `!` to evaluate the result of a macro you cannot specify any scripting language.
+The evaluation will be Jamal macros evaluation.
+
 ### `env`<a name="env">
 since 1.3.0
 
@@ -994,13 +1016,37 @@ This is to avoid extra white spaces when tabulation is needed for better readabi
 If you need the whitespace (e.g.: newline) in the output then you have to put those before the `ident` macro.
 
 Starting with Jama 1.5.0 there is a built-in language syntax to have the same effect as `ident`.
-If a macro is preceeded with a
+If a macro is preceded with a
 
 ```
 `
 ```
 
-backtick character then
+backtick character then the macro will not be evaluated.
+The above example can also be written as:
+
+```jam
+{@define b=92}{#define c={`a}{b}}{@define a=14}{c}
+```
+
+This built-in "ident" can be used many times in case the evalutation of a macro has to be postponed multiple times.
+You can have
+
+```jam
+{``c}
+```
+
+or
+
+```jam
+{``````c}
+```
+
+as many times as it makes sense.
+This macro modification character can be used together with the `!` character.
+There is no restriction on the ordering on the `!` and the backtick characters in case they are used together.
+If many of them are used in an extreme case they can be mixed together.
+Note, if the macro does not get evaluated fully the order of these characters may not be preserved in the output.
 
 ### `verbatim`<a name="verbatim">
 since 1.0.0 (core)
@@ -1022,11 +1068,13 @@ It is `this is it`.
 Whenever `a` is evaluated it will result the string `this is it`.
 
 The macro `b` has the value `{a}`.
+When macro `b` is defined the content `{a}` is not evaluated before the definition because there is a `@` before the `define`.
 When `b` is evaluated it results `{a}` and then before using this output in place of the use of the macro `b` this result is evaluated by Jamal as a new input.
 This second recursive evaluation will result in the string `this is it`.
 
 The macro `c` is defined using the `#` character before the keyword `define`, therefore Jamal will process the body of the macro before processing the built-in macro `define` itself.
-Essentially it will evaluate `{b}`, it will put the resulting characters after the `=` sign in the definition of `c` and then it will evaluate the `define` built-in macro.
+Essentially, it will evaluate `{b}` first.
+It will put the resulting characters after the `=` sign in the definition of `c` and then it will evaluate the `define` built-in macro.
 
 As we discussed above when this time `{b}` is evaluated it results `{a}`, which also gets evaluated and then it results `this is it`.
 Therefore, the value of the macro `c` is `this is it` and that is what we see in the output:
@@ -1034,7 +1082,6 @@ Therefore, the value of the macro `c` is `this is it` and that is what we see in
 ```jam
 this is it
 ```
-
 This way the evaluation of a macro is done in three steps:
 
 1. Evaluate the body of the macro unless the macro is built-in and starts with the character `@`.
@@ -1043,7 +1090,7 @@ This way the evaluation of a macro is done in three steps:
 3. If the macro is user-defined or starts with a `!` character then evaluate the output of the macro and if it contains macros then evaluate those using these three steps.
 
 As you can see the first, and the last steps are recursive steps.
-The first step can be skipped using the `@` character.
+The first step can be skipped using the `@` character, but only in case of built-in macros.
 The second step cannot be skipped, and after all, there is no reason to do so.
 However, the third step can be
 
@@ -1079,11 +1126,10 @@ In the example above the `{#eval macro ...}` before its evaluation is
 The body starts with a new line.
 The macro `eval` deletes this new line, while using the `!` in front of the macro does not.
 
-
 The syntax of the `verbatim` macro is the following:
 
 ```jam
-verbatim userDefinedMacroUse
+{@verbatim userDefinedMacroUse}
 ```
 
 The `verbatim` macro has to be followed by a user defined macro usage.
@@ -1095,18 +1141,23 @@ If we modify the previous example to use `verbatim` we can do it the following w
 
 In this example `{@verbatim b}` is the same as `{b}` in the previous example.
 The only exception is that after `b` is evaluated the result is not processed further for macros.
-It is used directly as the value of the new macro `c` because of the `verbatim` keyword. 
-Also, when we use `{c}` the result of `c` is scanned as a third step for further macros and indeed.
-In this case, there is one because the value of the macro `c` is `{a}` in this case, that further evaluates to `this is it`. 
+It is used directly as the value of the new macro `c` because of the `verbatim` keyword.
+The value of `c` will be `{a}`.
+Also, when we use `{c}` the result of `c` is scanned as a third step for further macros.
+In this case, there is one because the value of the macro `c` is `{a}`, that further evaluates to `this is it`.
 On the other hand when we use `{@verbatim c}` then the result `{a}` is not processed any further.
 
 ```jam
 this is it {a}
 ```
+
 Note that the macro `verbatim` is a special one because it is hardwired into the evaluation logic of Jamal and it is not a "real" built-in macro. 
 In other words, if there are user-defined macros and built-in macros then `verbatim` is one level deeper built-in than the other built-in macros. 
 To understand this may be important if you want to write your own built-in macros as Java classes.
 You cannot "redefine" `verbatim`.
+
+You cannot use `verbatim` together with the `!` macro modifying character.
+Their meaning is exactly opposite.
 
 #### Fine points of macro evaluation
 
@@ -1529,6 +1580,24 @@ Since this is a slight behavioral change in the input processing, therefore it m
 We decided to change the default behavior because there is a little chance to have escaped new-line characters in existing `jam` files.
 On the other hand, we envision that with the introduction of this feature most of the Jamal source files will use this feature.
 We wanted to avoid starting every new Jamal source file with the `nl` option setting.
+
+## `try`
+since 1.5.0 (core)
+
+The macro try will evaluate its content and return the result.
+The evaluation does not open a new scope, just like in the case of the macro `{@eval }`.
+In case the evaluation results an error then the result will be empty string.
+For example the following macro will produce an empty string.
+
+```jam
+{@try {!@verbatim macro}}
+```
+The macro `try` can also be used to include the error message into the output.
+If we use an `!` character right after (no spaces) the `try` keyword the result will be the error message.
+If there is no error then the result is the result of the evaluated text inside the macro.
+
+If we use a `?` character right after (no spaces) the `try` keyword then the result will be the rtsing `true` if there was no error and `false` is there was an error.
+This can be used to test the "computability" of the text.
 
 ## Jamal Environment Variables<a name="JamalENV">
 

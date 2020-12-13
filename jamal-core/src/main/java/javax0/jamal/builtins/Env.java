@@ -5,6 +5,8 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
+import static javax0.jamal.api.SpecialCharacters.QUERY;
+
 /**
  * Get the value of an environment variable.
  *
@@ -26,7 +28,7 @@ public class Env implements Macro {
         if (arg.length() == 0) {
             throw new BadSyntax("Empty string as environment variable name");
         }
-        final var test = arg.charAt(arg.length() - 1) == '?';
+        final var test = arg.charAt(arg.length() - 1) == QUERY;
         final String name;
         if (test) {
             name = arg.substring(0, arg.length() - 1).trim();

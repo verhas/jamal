@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import static javax0.jamal.api.SpecialCharacters.IDENT;
 import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
+import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.contains;
 import static javax0.jamal.tools.InputHandler.copy;
@@ -158,25 +159,26 @@ public class Processor implements javax0.jamal.api.Processor {
             int postEvalCount = 0;
             int identCount = 0;
             skipWhiteSpaces(input);
-            while (firstCharIs(input, POST_VALUATE) || firstCharIs(input, IDENT)) {
+            final var prefix = new StringBuilder();
+            while (firstCharIs(input, POST_VALUATE, IDENT)) {
                 if (firstCharIs(input, POST_VALUATE)) {
                     postEvalCount++;
+                    skip(input, 1, prefix);
                 } else {
                     identCount++;
+                    if (identCount > 1) {
+                        skip(input, 1, prefix);
+                    } else {
+                        skip(input, 1);
+                    }
                 }
-                skip(input, 1);
-                skipWhiteSpaces(input);
+                skipWhiteSpaces(input, prefix);
             }
             final var macroRaw = getNextMacroBody(input);
             if( identCount > 0 ){
                 final var sb = new StringBuilder();
                 sb.append(getRegister().open());
-                for( int i = 0 ; i < identCount -1 ; i++ ){
-                    sb.append(IDENT);
-                }
-                for( int i = 0 ; i < postEvalCount ; i++ ){
-                    sb.append(POST_VALUATE);
-                }
+                sb.append(prefix);
                 sb.append(macroRaw);
                 sb.append(getRegister().close());
                 output.append(sb.toString());
@@ -377,7 +379,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return {@code true} if the first character is a '{@code ?}'.
      */
     private boolean doesStartWithQuestionMark(Input input) {
-        final boolean reportUndefBeforeEval = input.length() == 0 || input.charAt(0) != '?';
+        final boolean reportUndefBeforeEval = !firstCharIs(input, REPORT_UNDEFINED);
         if (!reportUndefBeforeEval) {
             skip(input, 1);
             skipWhiteSpaces(input);
@@ -449,7 +451,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @throws BadSyntaxAt when the result of the evaluation contains the separator character
      */
     private void checkEvalResultUDMacroName(Input output, Position pos) throws BadSyntaxAt {
-        int i = output.charAt(0) == '?' ? 1 : 0;
+        int i = firstCharIs(output, REPORT_UNDEFINED) ? 1 : 0;
         while (i < output.length() && Character.isWhitespace(output.charAt(i))) {
             i++;
         }

@@ -80,6 +80,27 @@ class TestSamples {
     }
 
     @Test
+    @DisplayName("mixing ? and  ` and ! in user defined macros")
+    void testNoReportUndefWithIdentChar() throws IOException, BadSyntax {
+        assertEquals("defined is defined\n" +
+            "defined is also defined\n" +
+            "\"\" is empty string because `undefined` is not defined\n" +
+            "\"{?undefined}\" the the literal \"{?undefined}\" string because it has a ` in front of the ?\n" +
+            "\"\" is empty string because `!undefined` is not defined\n" +
+            "\"\" is empty string because '`undefined' is not defined\n" +
+            "\"\" is empty string because 'undefined' is not defined and empty string evaluates to empty string\n" +
+            "\"{defined}\" is \"{defined}\"\n" +
+            "\"Verbatim and ! cannot be used together on a user defined macro.\" is error message\n" +
+            "\"{@verbatim macro}\" is \"{@verbatim macro}\"\n" +
+            "\"Macro '`macro' is not defined.\" is error message because `macro is not defined\n" +
+            "\"\" is empty string\n" +
+            "\"false\" is \"false\" because it failed\n" +
+            "\"true\" is \"true\" because nothing just evaluates fine\n" +
+            "\"\" is empty string, because we use ? in front of the macro name\n" +
+            "\"\" is empty string because of non-terminated macro, but here we are fine\n", result("reportUndef.jam"));
+    }
+
+    @Test
     @DisplayName("include global definitions")
     void testIncludeGlobalDefine() throws IOException, BadSyntax {
         assertEquals("* belzebub", result("include_global_defines.jam"));

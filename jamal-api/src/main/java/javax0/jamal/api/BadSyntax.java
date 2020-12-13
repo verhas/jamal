@@ -26,12 +26,17 @@ public class BadSyntax extends Exception {
 
     final private List<String> parameters = new ArrayList<>();
 
-    public List<String > getParameters(){
+    public List<String> getParameters() {
         return parameters;
     }
 
     public BadSyntax parameter(String param) {
         parameters.add(param);
+        return this;
+    }
+
+    public BadSyntax parameters(List<String> param) {
+        parameters.addAll(param);
         return this;
     }
 
@@ -42,12 +47,20 @@ public class BadSyntax extends Exception {
         return longParam;
     }
 
+    public String getShortMessage() {
+        return super.getMessage();
+    }
+
     @Override
     public String getMessage() {
-        return super.getMessage() + "\n" +
-            parameters.stream()
-                .map(BadSyntax::abbreviate)
-                .map(m -> ">>>" + m + "\n")
-                .collect(joining());
+        if (parameters.isEmpty()) {
+            return super.getMessage();
+        } else {
+            return super.getMessage() + "\n" +
+                parameters.stream()
+                    .map(BadSyntax::abbreviate)
+                    .map(m -> ">>>" + m + "\n")
+                    .collect(joining());
+        }
     }
 }

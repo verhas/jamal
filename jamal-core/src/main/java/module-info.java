@@ -18,6 +18,7 @@ module jamal.core {
         javax0.jamal.builtins.Use,
         javax0.jamal.builtins.Options,
         javax0.jamal.builtins.Ident,
+        javax0.jamal.builtins.Try,
         javax0.jamal.builtins.JShell
         ;
 

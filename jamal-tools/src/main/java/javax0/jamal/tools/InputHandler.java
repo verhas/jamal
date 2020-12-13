@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -15,16 +16,26 @@ public class InputHandler {
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
-     * @param s a character sequence of which the first character is checked
-     * @param c the character we are looking for
-     * @return returns true if the first character of 's' is 'c'
+     * @param s     a character sequence of which the first character is checked
+     * @param chars the characters we are looking for
+     * @return {@code true} if the first character of {@code s} is one of the {@code chars}. Returns {@code false} if
+     * the character sequence is empty or the first character is none of the {@code chars}.
      */
-    public static boolean firstCharIs(CharSequence s, char c) {
-        return s.length() > 0 && s.charAt(0) == c;
+    public static boolean firstCharIs(CharSequence s, char... chars) {
+        if (s.length() == 0) {
+            return false;
+        }
+        for (final var c : chars) {
+            if (s.charAt(0) == c) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * Delete the start of the input
+     * Delete the start of the input. It is an error trying to delete more character than the number of characters there
+     * are in the input.
      *
      * @param input              from which the first characters are deleted
      * @param numberOfCharacters the number of characters to be deleted from the start of {@code input}
@@ -34,13 +45,24 @@ public class InputHandler {
     }
 
     /**
-     * Delete the start of the input
+     * Same as {@link #skip(Input, int)} but it also appends the deleted characters to the sctring builder.
+     *
+     * @param input from which the first characters are deleted * @param numberOfCharacters the number of characters to
+     *              be deleted from the start of {@code input}
+     * @param sb    where the characters will be appended
+     */
+    public static void skip(Input input, int numberOfCharacters, StringBuilder sb) {
+        sb.append(input.substring(0, numberOfCharacters));
+        input.delete(numberOfCharacters);
+    }
+
+    /**
+     * Delete the start of the input.
      *
      * @param input from which the first characters are deleted
-     * @param s     is a string that is supposed to be on the start of the input and this string is going to
-     *              be deleted from the start of the {@code input}. The actual implementation does not check that the
-     *              string is really there at the start of the input, it just skips so many characters as many
-     *              the string has.
+     * @param s     is a string that is supposed to be on the start of the input and this string is going to be deleted
+     *              from the start of the {@code input}. The actual implementation does not check that the string is
+     *              really there at the start of the input, it just skips so many characters as many the string has.
      */
     public static void skip(Input input, String s) {
         skip(input, s.length());
@@ -142,6 +164,19 @@ public class InputHandler {
      */
     public static void skipWhiteSpaces(Input input) {
         while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
+            input.delete(1);
+        }
+    }
+
+    /**
+     * Same as {@link #skipWhiteSpaces(Input)} but it also appends the deleted spaces to the string builder.
+     *
+     * @param input from which the spaces should be deleted.
+     * @param sb    where the spaces will be appended
+     */
+    public static void skipWhiteSpaces(Input input, StringBuilder sb) {
+        while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
+            sb.append(input.charAt(0));
             input.delete(1);
         }
     }
@@ -276,18 +311,20 @@ public class InputHandler {
      * @throws BadSyntaxAt is any of the parameter names contain another parameter name.
      */
     public static String[] ensure(String[] parameters, Position ref) throws BadSyntaxAt {
-        final var badSyntax = new BadSyntaxAt("User defined macro parameter name should not be a substring of another parameter.", ref);
+        final var exceptionParameters = new ArrayList<String>();
         for (int i = 0; i < parameters.length; i++) {
             for (int j = 0; j < parameters.length; j++) {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {
-                        badSyntax.parameter("" + i + ". parameter '" + parameters[i] + "' contains the "
+                        exceptionParameters.add("" + i + ". parameter '" + parameters[i] + "' contains the "
                             + j + ". parameter '" + parameters[j] + "'");
                     }
                 }
             }
         }
-        if (!badSyntax.getParameters().isEmpty()) {
+        if (!exceptionParameters.isEmpty()) {
+            final var badSyntax = new BadSyntaxAt("User defined macro parameter name should not be a substring of another parameter.", ref);
+            badSyntax.parameters(exceptionParameters);
             throw badSyntax;
         }
         return parameters;
