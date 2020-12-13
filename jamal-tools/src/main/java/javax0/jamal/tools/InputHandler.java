@@ -70,8 +70,8 @@ public class InputHandler {
 
     /**
      * @param i the result of {@link String#indexOf(int)}
-     * @return {@code true} the value is a valid character code and not a signal that the string does not contain
-     * the character we are looking for.
+     * @return {@code true} the value is a valid character code and not a signal that the string does not contain the
+     * character we are looking for.
      */
     public static boolean contains(int i) {
         return i != DOES_NOT_CONTAIN;
@@ -80,8 +80,8 @@ public class InputHandler {
     /**
      * Fetch an id from the start of the {@code input}.
      * <p>
-     * An identifier is a string that starts with a character accepted by {@link #validId1stChar(char)} and contain
-     * only characters that are accepted {@link #validIdChar(char)}
+     * An identifier is a string that starts with a character accepted by {@link #validId1stChar(char)} and contain only
+     * characters that are accepted {@link #validIdChar(char)}
      * <p>
      * or
      * <p>
@@ -120,13 +120,12 @@ public class InputHandler {
     /**
      * Convert a global macro name.
      * <p>
-     * Macro names that contain the '{@code :}' character are global macros and automatically are defined on the
-     * top level. This provides a way to macro package developers to use name spacing, although Jamal does not
-     * handle name spaces, the names can be treated as 'namespace:localName' or even name space notations can be
-     * nested.
+     * Macro names that contain the '{@code :}' character are global macros and automatically are defined on the top
+     * level. This provides a way to macro package developers to use name spacing, although Jamal does not handle name
+     * spaces, the names can be treated as 'namespace:localName' or even name space notations can be nested.
      * <p>
-     * A global macro without name space starts with a '{@code :}' character when defined but this character is
-     * removed by this conversion so later the macro can be referred to with the name without the {@code :} character.
+     * A global macro without name space starts with a '{@code :}' character when defined but this character is removed
+     * by this conversion so later the macro can be referred to with the name without the {@code :} character.
      *
      * @param id the identifier of the macro.
      * @return the converted identifier.
@@ -141,8 +140,8 @@ public class InputHandler {
 
     /**
      * @param c the character to check
-     * @return {@code true} if the character can be used as the first character of a macro identifier. Currently
-     * these are {@code $}, {@code _} (underscore), {@code :} (colon) and any alphabetic character.
+     * @return {@code true} if the character can be used as the first character of a macro identifier. Currently these
+     * are {@code $}, {@code _} (underscore), {@code :} (colon) and any alphabetic character.
      */
     public static boolean validId1stChar(char c) {
         return c == '$' || c == '_' || c == ':' || Character.isAlphabetic(c);
@@ -150,8 +149,8 @@ public class InputHandler {
 
     /**
      * @param c the character to check
-     * @return {@code true} if the character can be used in a macro identifier. These are the same characters that
-     * can be used as first characters (see {@link #validId1stChar(char)}) and also digits.
+     * @return {@code true} if the character can be used in a macro identifier. These are the same characters that can
+     * be used as first characters (see {@link #validId1stChar(char)}) and also digits.
      */
     public static boolean validIdChar(char c) {
         return validId1stChar(c) || Character.isDigit(c);
@@ -197,7 +196,7 @@ public class InputHandler {
      * @param input from which the spaces should be deleted.
      */
     public static void rtrim(Input input) {
-        int i = input.length()-1;
+        int i = input.length() - 1;
         while (i >= 0 && Character.isWhitespace(input.charAt(i))) {
             input.deleteCharAt(i);
             i--;
@@ -206,15 +205,15 @@ public class InputHandler {
 
     /**
      * Delete the white space characters from the start of the input up to and including the next new-line character,
-     * but only if there is a new-line character following zero or more non-new-line white space characters and the
-     * very first character IS a back-slash {@code \}.
-     *
-     * This method is used when the option {@code nl} is in effect that says that any new line character that follows
-     * a macro closing string should be consumed and not put into the output. This helps writing better looking output
+     * but only if there is a new-line character following zero or more non-new-line white space characters and the very
+     * first character IS a back-slash {@code \}.
+     * <p>
+     * This method is used when the option {@code nl} is in effect that says that any new line character that follows a
+     * macro closing string should be consumed and not put into the output. This helps writing better looking output
      * easier and not caring too much about the new lines.
-     *
-     * If there are some spaces immediately before the new-line they will also be deleted, because they cannot easily
-     * be recognized by the person editing the file and we want to avoid mysterious errors.
+     * <p>
+     * If there are some spaces immediately before the new-line they will also be deleted, because they cannot easily be
+     * recognized by the person editing the file and we want to avoid mysterious errors.
      *
      * @param input from which the spaces and the new-line should be deleted.
      */
@@ -249,8 +248,8 @@ public class InputHandler {
      *
      * @param input  from which the string will be removed
      * @param output to which the string will be appended
-     * @param s      the string. There is no check that the input really starts with the string. The string is
-     *               {@link #skip(Input, String)}-ped in the {@code input} and is appended to the output.
+     * @param s      the string. There is no check that the input really starts with the string. The string is {@link
+     *               #skip(Input, String)}-ped in the {@code input} and is appended to the output.
      */
     public static void copy(Input input, Input output, String s) {
         skip(input, s);
@@ -258,17 +257,17 @@ public class InputHandler {
     }
 
     /**
-     * Get the parameter list that is at the start of the input. The parameter list has to start with a
-     * {@code (} character and should be closed with a {@code )} character. The parameters are separated
-     * by {@code ,} characters, and starting and ending spaces from the parameters are removed.
+     * Get the parameter list that is at the start of the input. The parameter list has to start with a {@code (}
+     * character and should be closed with a {@code )} character. The parameters are separated by {@code ,} characters,
+     * and starting and ending spaces from the parameters are removed.
      *
      * <pre>
      *         ( a,b, c ,d)
      * </pre>
-     *
+     * <p>
      * There is no restriction on what characters the parameter names can contain other than those implied by the
-     * parsing algorithm: you cannot use {@code )} and {@code ,} characters in a parameter and you cannot have
-     * space at the start and at the end of the parameter. It is recommended not to abuse this possibility.
+     * parsing algorithm: you cannot use {@code )} and {@code ,} characters in a parameter and you cannot have space at
+     * the start and at the end of the parameter. It is recommended not to abuse this possibility.
      *
      * @param input that contains the parameter list
      * @param id    the id of the macro that has this parameter list. This parameter is only used for error reporting.
@@ -331,28 +330,22 @@ public class InputHandler {
     }
 
     /**
-     * Parse the input and split it up into a String array. It can be
-     * used in many macros to provide a consistent syntax and structure
-     * when the macro processing needs a list of strings.
+     * Parse the input and split it up into a String array. It can be used in many macros to provide a consistent syntax
+     * and structure when the macro processing needs a list of strings.
      * <p>
      * The possible syntax variations are:
      * <pre>
      * macroName / a / b / c / ... /x
      * </pre>
      * <p>
-     * where the separator character is the first non-whitespace
-     * character after the macro name, and it is not the back-tick (`)
-     * character. If the first non-whitespace character after the name
-     * of the macro id is a backtick then the parsing expects to be a
-     * regular expression till the next backtick. After the regular
-     * expression and after the closing backtick the rest of the input
-     * is spit up and the separator is the regular expression.
+     * where the separator character is the first non-whitespace character after the macro name, and it is not the
+     * back-tick (`) character. If the first non-whitespace character after the name of the macro id is a backtick then
+     * the parsing expects to be a regular expression till the next backtick. After the regular expression and after the
+     * closing backtick the rest of the input is spit up and the separator is the regular expression.
      * <p>
-     * Backtick was selected during the design of the syntax to enclose
-     * the regular expression because this character is very rare in
-     * Java regular expression. In case you need one inside the regular
-     * expression then you have to simply double it and the parsing will
-     * single it back.
+     * Backtick was selected during the design of the syntax to enclose the regular expression because this character is
+     * very rare in Java regular expression. In case you need one inside the regular expression then you have to simply
+     * double it and the parsing will single it back.
      *
      * <pre>
      * macroName `regex` separator a separator b separator .... separator x
@@ -369,9 +362,9 @@ public class InputHandler {
     /**
      * Same as {@link #getParts(Input)} but we want at most {@code limit} number of parts.
      *
-     * @param input
-     * @param limit
-     * @return
+     * @param input theinput from which we want to get the parts
+     * @param limit the maximum number of parts we need
+     * @return the parts of the input in an array
      * @throws BadSyntaxAt
      */
     public static String[] getParts(Input input, int limit) throws BadSyntaxAt {

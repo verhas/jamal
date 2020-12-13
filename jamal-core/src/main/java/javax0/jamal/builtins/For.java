@@ -5,7 +5,6 @@ import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.InputHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +23,8 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  *     }
  * </pre>
  * <p>
- * The default separator is {@code ,} (comma), but it can be redefined
- * to be any regular expression assigning a value to the user defined
- * macro {@code $forsep}.
+ * The default separator is {@code ,} (comma), but it can be redefined to be any regular expression assigning a value to
+ * the user defined macro {@code $forsep}.
  */
 public class For implements Macro {
 
@@ -156,9 +154,9 @@ public class For implements Macro {
          * <p>
          * The code will return the last segment or {@code null} if the parameter is not in the segment.
          *
-         * @param it
-         * @param parameter
-         * @return
+         * @param it the segment to split
+         * @param parameter along which the segment is split
+         * @return the next segment after the splitting
          */
         private static Segment splitAndGetNext(final Segment it, final String parameter) {
             if (!it.isText) {

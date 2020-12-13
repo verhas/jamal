@@ -8,8 +8,8 @@ import static java.util.stream.Collectors.joining;
 /**
  * This exception, as the name suggest, is thrown when the processor or a macro finds something it cannot interpret.
  * This exception is always captured inside Jamal and then rethrown as a {@link BadSyntaxAt} exception adding the line
- * reference information. This exception is used at code locations where it is not possible to identify the actual
- * input location where the erroneous syntax started. See also {@link BadSyntaxAt}.
+ * reference information. This exception is used at code locations where it is not possible to identify the actual input
+ * location where the erroneous syntax started. See also {@link BadSyntaxAt}.
  */
 public class BadSyntax extends Exception {
     public BadSyntax() {

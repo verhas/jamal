@@ -85,8 +85,8 @@ public class SnippetMacros {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var format = UDMacro.macro("format").from(processor).orElse("%d. ");
-            final var start = UDMacro.macro("start").integer().from(processor).orElse(1);
-            final var step = UDMacro.macro("step").integer().from(processor).orElse(1);
+            final int start = UDMacro.macro("start").integer().from(processor).orElse(1);
+            final int step = UDMacro.macro("step").integer().from(processor).orElse(1);
             skipWhiteSpaces2EOL(in);
             int i = 0;
             final var sb = in.getSB();

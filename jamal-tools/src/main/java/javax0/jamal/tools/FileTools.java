@@ -138,9 +138,9 @@ public class FileTools {
 
     /**
      * Check if the name of the file has to be interpreted as an absolute filename or not. This is not the same as any
-     * JDK provided method, because it checks the {@code res://} and {@code https://} prefix as well and also the
-     * {@code ~/} at the start, which is usually reoved by the shell, but Jamal file handling resolves it so that
-     * Jamal files can also use the {@code ~/... } file format.
+     * JDK provided method, because it checks the {@code res://} and {@code https://} prefix as well and also the {@code
+     * ~/} at the start, which is usually reoved by the shell, but Jamal file handling resolves it so that Jamal files
+     * can also use the {@code ~/... } file format.
      *
      * @param fileName the file name to check.
      * @return {@code true} if the file name should be treated as an absolute file name and {@code false} otherwise

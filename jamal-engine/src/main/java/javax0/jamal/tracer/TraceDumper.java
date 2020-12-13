@@ -59,8 +59,8 @@ public class TraceDumper {
 
     private void outputException(Exception ex, RandomAccessFile outputFile) throws IOException {
         outputFile.writeBytes("<exception " +
-                " message=\"" + ex.getMessage().replaceAll("\n", " ") + "\"" +
-                ">\n");
+            " message=\"" + ex.getMessage().replaceAll("\n", " ") + "\"" +
+            ">\n");
         var sw = new StringWriter();
         var pw = new PrintWriter(sw);
         ex.printStackTrace(pw);
@@ -94,10 +94,10 @@ public class TraceDumper {
             outputFile.writeBytes("</parameters>");
         }
         outputFile.writeBytes("<position " +
-                "column=\"" + trace.position().column + "\" " +
-                "line=\"" + trace.position().line + "\" " +
-                "file=\"" + trace.position().file + "\" " +
-                "/>");
+            "column=\"" + trace.position().column + "\" " +
+            "line=\"" + trace.position().line + "\" " +
+            "file=\"" + trace.position().file + "\" " +
+            "/>");
         if (!trace.beforeState().isEmpty()) {
             outputFile.writeBytes("<input>\n");
             outputFile.writeBytes(cData(trace.beforeState()));

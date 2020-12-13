@@ -175,13 +175,12 @@ public class Processor implements javax0.jamal.api.Processor {
                 skipWhiteSpaces(input, prefix);
             }
             final var macroRaw = getNextMacroBody(input);
-            if( identCount > 0 ){
-                final var sb = new StringBuilder();
-                sb.append(getRegister().open());
-                sb.append(prefix);
-                sb.append(macroRaw);
-                sb.append(getRegister().close());
-                output.append(sb.toString());
+            if (identCount > 0) {
+                String s = getRegister().open() +
+                    prefix +
+                    macroRaw +
+                    getRegister().close();
+                output.append(s);
                 return;
             }
             tr.appendBeforeState(macroRaw);
@@ -256,14 +255,14 @@ public class Processor implements javax0.jamal.api.Processor {
             try {
                 rawResult = evalUserDefinedMacro(qualifier.input, tr, qualifier);
                 if (qualifier.isVerbatim) {
-                    if( qualifier.postEvalCount > 0 ){
+                    if (qualifier.postEvalCount > 0) {
                         throw new BadSyntax("Verbatim and ! cannot be used together on a user defined macro.");
                     }
                     tr.appendAfterEvaluation(rawResult);
                     return rawResult;
                 } else {
                     var result = process(makeInput(rawResult, qualifier.input.getPosition()));
-                    for( int i = 0 ; i < qualifier.postEvalCount ; i++){
+                    for (int i = 0; i < qualifier.postEvalCount; i++) {
                         result = process(makeInput(result, qualifier.input.getPosition()));
                     }
                     tr.appendAfterEvaluation(result);
@@ -447,7 +446,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * character.
      *
      * @param output the output that we check
-     * @param pos the position at the start of the input
+     * @param pos    the position at the start of the input
      * @throws BadSyntaxAt when the result of the evaluation contains the separator character
      */
     private void checkEvalResultUDMacroName(Input output, Position pos) throws BadSyntaxAt {

@@ -1,9 +1,9 @@
 package javax0.jamal.api;
 
 /**
- * An input has a string builder and also a file name from where the input is coming from. The
- * string builder is used to fetch the characters. The reference file name is used to construct the
- * name of the files in case a macro like {@code import} or {@code include} needs to open another file.
+ * An input has a string builder and also a file name from where the input is coming from. The string builder is used to
+ * fetch the characters. The reference file name is used to construct the name of the files in case a macro like {@code
+ * import} or {@code include} needs to open another file.
  */
 public interface Input extends CharSequence {
     /**
@@ -136,7 +136,7 @@ public interface Input extends CharSequence {
         return getSB().substring(start);
     }
 
-    default void deleteCharAt(int i){
+    default void deleteCharAt(int i) {
         getSB().deleteCharAt(i);
     }
 }

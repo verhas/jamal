@@ -33,7 +33,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         for (int level = udMacroStack.size() - 1; level > -1; level--) {
             var map = udMacroStack.get(level);
             if (map.containsKey(id)) {
-                return Optional.<T>of((T)map.get(id));
+                return Optional.of((T) map.get(id));
             }
         }
         return Optional.empty();
@@ -149,19 +149,18 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     /**
-     * Sets the opening and closing delimiter strings. If {@code openDelimiter} or {@code closeDelimiter} is
-     * {@code null} then it resets the delimiter to the last value that was saved in the stack.
-     * If {@code openDelimiter} is {@code null} then {@code closeDelimiter} is ignored, and also the other way around,
-     * but it is good practice to pass {@code null} in both arguments when resetting to the last saved delimiter pair.
+     * Sets the opening and closing delimiter strings. If {@code openDelimiter} or {@code closeDelimiter} is {@code
+     * null} then it resets the delimiter to the last value that was saved in the stack. If {@code openDelimiter} is
+     * {@code null} then {@code closeDelimiter} is ignored, and also the other way around, but it is good practice to
+     * pass {@code null} in both arguments when resetting to the last saved delimiter pair.
      *
-     * @param openDelimiter  the macro opening string to be set. If this parameter is {@code null} then
-     *                       the method treats this information as a restore process.
-     *                       This class saves the old values of the separators in a stack
-     *                       and when {@code openDelimiter} is {@code null} it restores the delimiters from the
-     *                       top of the stack.
-     * @param closeDelimiter the macro closing string to be set. Ignored when {@code openDelimiter} is {@code null}.
-     *                       If this parameter is {@code null} the functionality will be the same as in case
-     *                       {@code openDelimiter} is {@code null}.
+     * @param openDelimiter  the macro opening string to be set. If this parameter is {@code null} then the method
+     *                       treats this information as a restore process. This class saves the old values of the
+     *                       separators in a stack and when {@code openDelimiter} is {@code null} it restores the
+     *                       delimiters from the top of the stack.
+     * @param closeDelimiter the macro closing string to be set. Ignored when {@code openDelimiter} is {@code null}. If
+     *                       this parameter is {@code null} the functionality will be the same as in case {@code
+     *                       openDelimiter} is {@code null}.
      * @throws BadSyntaxAt when the call tries to restore an older version but there is no saved older version.
      */
     @Override

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -138,11 +139,7 @@ class Cache {
         final var userHome = System.getProperty("user.home");
 
         final String cacheRoot;
-        if (envCacheRoot != null) {
-            cacheRoot = envCacheRoot;
-        } else {
-            cacheRoot = DEFAULT_CACHE_ROOT;
-        }
+        cacheRoot = Objects.requireNonNullElse(envCacheRoot, DEFAULT_CACHE_ROOT);
         CACHE_ROOT_DIRECTORY = new File(cacheRoot.charAt(0) == '~' ? userHome + cacheRoot.substring(1) : cacheRoot);
     }
 
@@ -172,7 +169,7 @@ class Cache {
      * Convert a URL to a file name. This file name will be used in the cache as a structured directory path and file
      * name.
      *
-     * @param url
+     * @param url the url to convert to file name
      * @return a directory structure and file name with the {@code /} separator.
      */
     private static StringBuilder convertUrl2FN(URL url) {

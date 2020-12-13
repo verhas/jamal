@@ -1,21 +1,24 @@
 = Jamal Command Line
 
-The command line version of Jamal can be started from the command line. The packaging of the applicatios is a super jar,
-so there is no need for any dependencies on the command line. You can start the application using the Java command line
+The command line version of Jamal can be started from the command line.
+The packaging of the applicatios is a super jar, so there is no need for any dependencies on the command line.
+You can start the application using the Java command line
 
 [source]
 ----
 java -jar jamal-cmd-1.0.4-jar-with-dependencies.jar arguments...
 ----
 
-assuming that the JAR file is in the current directory. If it not then you have to specify the path to the JAR file on
-the command line. YOu can also use the shell script (a bit of exaggeration as it is a simple one line) `jamal.sh`.
+assuming that the JAR file is in the current directory.
+If it not then you have to specify the path to the JAR file on the command line.
+YOu can also use the shell script (a bit of exaggeration as it is a simple one line) `jamal.sh`.
 
 If you start the program without any argument then it will look for all the files that have the extension `.jam`
 extension and process them as Jamal source file and write the output to the file that has the same name but without the
-`.jam` extension. It is a good practice to use multiple extension and that way convert, for example, `README.md.jam` to
+`.jam` extension.
+It is a good practice to use multiple extension and that way convert, for example, `README.md.jam` to
 `README.md`.
 
-The behaviour can be altered with command line arguments. To get the list of the arguments and their meanings
-use the command line argument `help`.
+The behaviour can be altered with command line arguments.
+To get the list of the arguments and their meanings use the command line argument `help`.
 

@@ -33,11 +33,11 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  * #pop()}<p> when the macro context opens and closes one level. That way the macro can keep track of the level of
  * already imported files in it's own stack.<p>
  * <p>
- * If the imported file starts with the characters { and @ then the import will set the macro opening
- * and closing strings to { and } for the time of the import. This way a macro file or an application
- * can freely use any macro opening and closing string and still can import macros defined in a web resource or in a JAR
- * resource. The author of a JAR file or a macro package published on the net cannot know what macro strings the user
- * will use. It is recommended to use { and @, and then the import is seamless.<p>
+ * If the imported file starts with the characters { and @ then the import will set the macro opening and closing
+ * strings to { and } for the time of the import. This way a macro file or an application can freely use any macro
+ * opening and closing string and still can import macros defined in a web resource or in a JAR resource. The author of
+ * a JAR file or a macro package published on the net cannot know what macro strings the user will use. It is
+ * recommended to use { and @, and then the import is seamless.<p>
  * <p>
  * Prior to version 1.5.0 importing such a file needed, assuming that {@code ((} and {@code ))} are the opening and
  * closing macro strings:
@@ -90,7 +90,7 @@ public class Import implements Stackable {
      * again. A file was imported if the import macro was invoked on this level or any level higher. In these cases the
      * macros that were imported have the effect at the current level, and thus there is no reason to import the file
      * again. <p>
-     *
+     * <p>
      * If the file was imported any level deeper then the macros are already purged (import should be performed on this
      * level to have the effect, macros defined on this level) and so are the elements of the list that keeps track of
      * the files imported on each level.<p>

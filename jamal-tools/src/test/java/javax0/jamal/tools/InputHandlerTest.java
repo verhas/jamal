@@ -65,6 +65,6 @@ public class InputHandlerTest {
     @Test
     @DisplayName("separator includes backtick AND regular expression")
     void splitsInputCorrectlyWhenStartingWithComplexRegularExpression() {
-        assertSplit("```\\w{2}` a`hiba`wucontal`d0`e`f`g`h", " a", "ba", "contal","`e`f`g`h");
+        assertSplit("```\\w{2}` a`hiba`wucontal`d0`e`f`g`h", " a", "ba", "contal", "`e`f`g`h");
     }
 }

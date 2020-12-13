@@ -47,7 +47,7 @@ class TestSamples {
      * @param testFileName the test file name
      * @return the evaluated result
      * @throws IOException when the file cannot be read
-     * @throws BadSyntax when there is syntax error in the test file
+     * @throws BadSyntax   when there is syntax error in the test file
      */
     private String result(String testFileName) throws IOException, BadSyntax {
         var in = createInput(testFileName);
@@ -147,7 +147,7 @@ class TestSamples {
     @Test
     @DisplayName("testsupport script evaluation")
     void testScriptComplex() throws IOException, BadSyntax {
-        if( Runtime.version().feature() < 15 ) {
+        if (Runtime.version().feature() < 15) {
             assertEquals("1. this is the text that we will repeat two times\n" +
                 "2. this is the text that we will repeat two times\n", result("script_complex.jam"));
         }
@@ -187,9 +187,9 @@ class TestSamples {
     @DisplayName("complex sep use with restore")
     void testSepComplex() throws IOException, BadSyntax {
         assertEquals("\n" +
-                "\n" +
-                "\n" +
-                "zazizazi[[?z]]", result("sep_complex.jam"));
+            "\n" +
+            "\n" +
+            "zazizazi[[?z]]", result("sep_complex.jam"));
     }
 
     @Test
@@ -208,14 +208,14 @@ class TestSamples {
     @DisplayName("test that the splitting works even with empty elements")
     void testSplitting() throws IOException, BadSyntax {
         assertEquals("\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>\n" +
-                "    ", result("gav.jam"));
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>\n" +
+            "    ", result("gav.jam"));
     }
 
     @Test
@@ -254,13 +254,13 @@ class TestSamples {
     @DisplayName("Different 'if' statements are correctly evaluated")
     void testIf() throws BadSyntax, IOException {
         assertEquals("true=true\n" +
-                "true=true\n" +
-                "false=false\n" +
-                "false=false\n" +
-                "false=false\n" +
-                "true=true\n" +
-                "False=False \n" +
-                "=\n" +
+            "true=true\n" +
+            "false=false\n" +
+            "false=false\n" +
+            "false=false\n" +
+            "true=true\n" +
+            "False=False \n" +
+            "=\n" +
             "true=true\n" +
             "true=true\n" +
             "true=true", result("testif.jam"));

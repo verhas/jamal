@@ -146,7 +146,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
                 }
             }
         }
-        if( output.toString(StandardCharsets.UTF_8).length() == 0 ) {
+        if (output.toString(StandardCharsets.UTF_8).length() == 0) {
             if (lastValue.length() > 0 && lastValue.charAt(0) == '"') {
                 lastValue = ScriptingTools.unescape(lastValue);
             }
@@ -166,7 +166,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
             events = js.eval(source);
         } catch (Exception e) {
             throw new BadSyntax("The JShell snippet '" + source + "' produced error.", e);
-        }finally{
+        } finally {
             System.setErr(original);
         }
         if (!isOpen.get()) {

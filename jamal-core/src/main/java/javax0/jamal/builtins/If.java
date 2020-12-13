@@ -15,15 +15,14 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  *     {#if/test/then content/else content}
  * </pre>
  * <p>
- * The result of the evaluated macro will be the {@code then content} when the {@code test} is true and the
- * {@code else} content otherwise. The {@code test} is true, if it is the literal {@code "true"} (case insensitive),
- * an integer number and the value is not zero or any other string that contains at least one non-space character,
- * except when the {@code test} is the literal {@code "false"} (case insensitive) then the test is false.
+ * The result of the evaluated macro will be the {@code then content} when the {@code test} is true and the {@code else}
+ * content otherwise. The {@code test} is true, if it is the literal {@code "true"} (case insensitive), an integer
+ * number and the value is not zero or any other string that contains at least one non-space character, except when the
+ * {@code test} is the literal {@code "false"} (case insensitive) then the test is false.
  * <p>
  * The syntax depicted above using the {@code /} character as separator. It is only convention. Any non-space character
  * can be used as separator. The first non-space character following the {@code if} will be used as separator
  * character.
- *
  */
 public class If implements Macro {
 

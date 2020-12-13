@@ -9,8 +9,8 @@ import javax.script.ScriptException;
 
 /**
  * Utility class containing static methods handling scripting. Scripting is handled through the JSR223 defined interface
- * and no interpreter specific API is used, thus the scripts can be written in any scripting implementation that is
- * on the classpath runtime.
+ * and no interpreter specific API is used, thus the scripts can be written in any scripting implementation that is on
+ * the classpath runtime.
  */
 public class ScriptingTools {
 
@@ -20,9 +20,9 @@ public class ScriptingTools {
      * specified in the parameter {@code key} will have the value specified in the parameter {@code value}.
      * <p>
      * If the string given in the parameter {@code value} can be interpreted as an integer then the population converts
-     * the value to {@code Integer}. If the string can be interpreted as a floating point number then it will
-     * be converted to a {@code Double}. If the value if {@code "true"} (any case, even mixed case) then the value will
-     * be {@code Boolean} {@code true}. Likewise if the value is {@code "false"} then it is converted to {@code false}.
+     * the value to {@code Integer}. If the string can be interpreted as a floating point number then it will be
+     * converted to a {@code Double}. If the value if {@code "true"} (any case, even mixed case) then the value will be
+     * {@code Boolean} {@code true}. Likewise if the value is {@code "false"} then it is converted to {@code false}.
      * <p>
      * In any other cases the string is stored and assigned to the global variable.
      *
@@ -79,13 +79,14 @@ public class ScriptingTools {
         return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     }
 
-    public static String unescape(String s){
-        return s.substring(1,s.length()-1).replaceAll("\\\\\"","\"").replaceAll("\\\\n","\n").replaceAll("\\\\\\\\","\\\\");
+    public static String unescape(String s) {
+        return s.substring(1, s.length() - 1).replaceAll("\\\\\"", "\"").replaceAll("\\\\n", "\n").replaceAll("\\\\\\\\", "\\\\");
     }
+
     /**
-     * Return the string representation of the object. If the object is a {@code Double} then the trailing {@code .0}
-     * is chopped off. This is to help the macro evaluation and use in case the scripting implementation returns a
-     * {@code Double} even for integer values.
+     * Return the string representation of the object. If the object is a {@code Double} then the trailing {@code .0} is
+     * chopped off. This is to help the macro evaluation and use in case the scripting implementation returns a {@code
+     * Double} even for integer values.
      *
      * @param obj to convert to string
      * @return the converted string

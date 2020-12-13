@@ -76,9 +76,10 @@ class CachedHttpInput {
 
     /**
      * Get a buffered reader from a URL.
+     *
      * @param url that the reader will read.
      * @return the reader
-     * @throws IOException
+     * @throws IOException if the response is not OK
      */
     private static BufferedReader getBufferedReader(URL url) throws IOException {
         final var con = (HttpURLConnection) url.openConnection();

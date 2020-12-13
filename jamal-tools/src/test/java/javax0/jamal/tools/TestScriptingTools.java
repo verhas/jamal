@@ -21,7 +21,6 @@ public class TestScriptingTools {
     }
 
 
-
     @Test
     @DisplayName("Unescape converts unescapes new lines")
     void unescapeQuotesInside() {

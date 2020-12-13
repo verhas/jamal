@@ -14,7 +14,10 @@ class FormatTest {
     void testSimple() throws BadSyntax {
         Assertions.assertEquals("Hallo Jacob Hralovek!",
             Format.format("Hallo {{firstName}} {{familyName}}!",
-                new HashMap<>(){{put("firstName","Jacob");put("familyName","Hralovek");}}));
+                new HashMap<>() {{
+                    put("firstName", "Jacob");
+                    put("familyName", "Hralovek");
+                }}));
     }
 
 }

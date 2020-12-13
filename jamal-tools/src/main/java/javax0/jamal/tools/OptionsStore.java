@@ -3,7 +3,6 @@ package javax0.jamal.tools;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Processor;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ public class OptionsStore implements Identified {
 
     /**
      * Get the options store that belongs to this processor at this very moment.
-     *
+     * <p>
      * Note that this is not safe to store the result of this method for longer time, because the actual store may be
      * changed when the scope of the processor is going up closing a macro nesting level.
      *
@@ -47,18 +46,18 @@ public class OptionsStore implements Identified {
      * @param options the options to add to the store
      */
     public void addOptions(String... options) {
-        for( final var option : options ){
-            if( option.length() >0 && option.charAt(0) == '~'){
+        for (final var option : options) {
+            if (option.length() > 0 && option.charAt(0) == '~') {
                 optionSet.remove(option.substring(1));
-            }else{
+            } else {
                 optionSet.add(option);
             }
         }
     }
 
     /**
-     * Add the options to this options store. Note that the set of options in this case come from an already
-     * existing options store, and thus the strings MUST NOT and CANNOT contain the leading {@code ~} character.
+     * Add the options to this options store. Note that the set of options in this case come from an already existing
+     * options store, and thus the strings MUST NOT and CANNOT contain the leading {@code ~} character.
      *
      * @param options the options to add to the store
      */

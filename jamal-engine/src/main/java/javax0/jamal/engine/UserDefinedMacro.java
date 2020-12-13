@@ -5,7 +5,6 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.OptionsStore;
 
 import java.util.Map;
 
@@ -24,24 +23,24 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
      *
      * @param processor  is the context of the evaluation. Through this object a macro can access the evaluation
      *                   environment.
-     * @param id         the identifier of the macro. This is the string that stands after the {@code define}
-     *                   keyword when the user defined macro is defined. This is a unique identified in the context
-     *                   where the macro is reachable and usable.
+     * @param id         the identifier of the macro. This is the string that stands after the {@code define} keyword
+     *                   when the user defined macro is defined. This is a unique identified in the context where the
+     *                   macro is reachable and usable.
      * @param content    the text of the macro that stands after the {@code =} character and before the macro closing
      *                   character.
-     * @param parameters the names of the parameters. These do not actually need to be real identifiers, alphanumeric
-     *                   or something like that. The only requirement is that there is no comma in these names. It is
+     * @param parameters the names of the parameters. These do not actually need to be real identifiers, alphanumeric or
+     *                   something like that. The only requirement is that there is no comma in these names. It is
      *                   recommended though to use usual identifiers.
      * @throws BadSyntax is thrown if one of the parameter names contain another parameter name. This would not be safe
-     *                   because this way the result of the macro would be dependent on the evaluation order of
-     *                   the parameters.
+     *                   because this way the result of the macro would be dependent on the evaluation order of the
+     *                   parameters.
      */
     public UserDefinedMacro(Processor processor, String id, String content, String... parameters) throws BadSyntax {
         this.processor = processor;
         this.id = id;
         this.content = content;
         argumentHandler = new ArgumentHandler(this, parameters);
-        InputHandler.ensure(parameters,null);
+        InputHandler.ensure(parameters, null);
     }
 
     /**

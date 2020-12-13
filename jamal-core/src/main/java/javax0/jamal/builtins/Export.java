@@ -25,9 +25,8 @@ public class Export implements Macro {
      * <pre>{@code
      *   {@export macro1 ,macro2, macro3 , macro4   }
      * }</pre>
-     *
+     * <p>
      * The exporting will move the definition of the macro one level higher.
-     *
      */
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {

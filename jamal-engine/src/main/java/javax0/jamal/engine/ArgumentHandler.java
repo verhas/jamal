@@ -34,21 +34,20 @@ class ArgumentHandler {
      * <p>
      * The normal behaviour of Jamal is to throw {@code BadSyntax} exception in case the actual number of arguments are
      * different from the number of arguments expected. Starting with version 1.0.3 and later this behaviour is
-     * controlled by the option {@code lenient} that can be set using the {@code OptionsStore}
-     * in the macro source code. If the option {@code lenient} is present then the actual number of arguments can be
-     * different from the number expected. In this case the extra arguments are ignored and the missing arguments are
-     * added with the value empty string. (At each macro use there can only be one of those cases, there cannot be more
-     * argument than needed and the same time less.)
+     * controlled by the option {@code lenient} that can be set using the {@code OptionsStore} in the macro source code.
+     * If the option {@code lenient} is present then the actual number of arguments can be different from the number
+     * expected. In this case the extra arguments are ignored and the missing arguments are added with the value empty
+     * string. (At each macro use there can only be one of those cases, there cannot be more argument than needed and
+     * the same time less.)
      * <p>
      * This method adjusts the actual argument array or throws an exception.
      *
      * @param actualValues the arguments passed to the macro.
-     * @param lenient      if this parameter is {@code true} then the argument array will be adjusted if the
-     *                     number of the parameters is not matching. If this parameter is {@code false} then the
-     *                     method will throw {@code BadSyntax} exception for the same case.
+     * @param lenient      if this parameter is {@code true} then the argument array will be adjusted if the number of
+     *                     the parameters is not matching. If this parameter is {@code false} then the method will throw
+     *                     {@code BadSyntax} exception for the same case.
      * @return the adjusted array, which may be the same array as the argument {@code actualValues} or a newly allocated
-     * array with the values copied from {@code actualValues} and with extra empty strings to have the proper
-     * length.
+     * array with the values copied from {@code actualValues} and with extra empty strings to have the proper length.
      * @throws BadSyntax if the length of the array {@code actualValues} is not then same as the length of the required
      *                   parameters and the operation is not lenient.
      */
@@ -66,8 +65,8 @@ class ArgumentHandler {
                 }
             } else {
                 var badSyntax = new BadSyntax(String.format("Macro '%s' needs %d arguments and got %d",
-                        owner.getId(),
-                        parameters.length,
+                    owner.getId(),
+                    parameters.length,
                     actualValues.length));
                 for (final var actual : actualValues) {
                     badSyntax.parameter(actual);

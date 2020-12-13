@@ -2,7 +2,6 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tools.ScriptingTools;
 
 import static javax0.jamal.tools.ScriptingTools.getEngine;
@@ -25,15 +24,15 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
      *
      * @param processor  is the context of the evaluation. Through this object a macro can access the evaluation
      *                   environment.
-     * @param id         the identifier of the macro. This is the string that stands after the {@code define}
-     *                   keyword when the user defined macro is defined. This is a unique identified in the context
-     *                   where the macro is reachable and usable.
-     * @param scriptType the type of the script. The scripting engine with this name is used to execute the content.
-     *                   The value {@code jamal} means that content has to be interpreted by Jamal itself.
+     * @param id         the identifier of the macro. This is the string that stands after the {@code define} keyword
+     *                   when the user defined macro is defined. This is a unique identified in the context where the
+     *                   macro is reachable and usable.
+     * @param scriptType the type of the script. The scripting engine with this name is used to execute the content. The
+     *                   value {@code jamal} means that content has to be interpreted by Jamal itself.
      * @param content    the text of the macro that stands after the {@code =} character and before the macro closing
      *                   character.
-     * @param parameters the names of the parameters. These do not actually need to be real identifiers, alphanumeric
-     *                   or something like that. The only requirement is that there is no comma in these names. It is
+     * @param parameters the names of the parameters. These do not actually need to be real identifiers, alphanumeric or
+     *                   something like that. The only requirement is that there is no comma in these names. It is
      *                   recommended though to use usual identifiers.
      */
     public ScriptMacro(Processor processor, String id, String scriptType, String content, String... parameters) {

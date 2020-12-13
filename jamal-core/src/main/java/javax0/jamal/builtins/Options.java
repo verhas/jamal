@@ -30,12 +30,12 @@ public class Options implements Macro {
      * </ol>
      * <p>
      * If the existing store was defined the same level as this one, then it will be replaced.
-     *
+     * <p>
      * If the existing store was defined in a larger (upper) level, then it will be shadowed and when this context
      * closes then that one will get into effect again.
      *
-     * @param processor  the processor in which we are working
-     * @param options the options
+     * @param processor the processor in which we are working
+     * @param options   the options
      */
     private void copyOptionsFromOldStore(final Processor processor, final String[] options) {
         final OptionsStore optionsStore = new OptionsStore();

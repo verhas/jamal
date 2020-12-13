@@ -10,10 +10,9 @@ import java.util.regex.Pattern;
 /**
  * This macro can be used to define a Java implemented macro class, which is not exported by the module system.
  * <p>
- * The macro code can contain {@code use global com.my.class as name} or {@code use com.my.class as name} to
- * use the class {@code com.my.class} as a macro implementation. The class has to implement the {@link Macro}
- * interface. In case it is defined as {@code global} then it will get into the global level, otherwise to the
- * local level.
+ * The macro code can contain {@code use global com.my.class as name} or {@code use com.my.class as name} to use the
+ * class {@code com.my.class} as a macro implementation. The class has to implement the {@link Macro} interface. In case
+ * it is defined as {@code global} then it will get into the global level, otherwise to the local level.
  */
 public class Use implements Macro {
     // The syntax is:    [global] com.package.name.MacroClass [as Alias]

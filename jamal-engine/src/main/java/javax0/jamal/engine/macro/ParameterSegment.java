@@ -10,7 +10,7 @@ public class ParameterSegment extends Segment {
     }
 
     @Override
-    public String content(final Map<String,String> values) {
+    public String content(final Map<String, String> values) {
         Objects.requireNonNull(values);
         return values.get(text);
     }

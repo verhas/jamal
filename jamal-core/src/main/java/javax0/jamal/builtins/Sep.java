@@ -103,8 +103,8 @@ public class Sep implements Macro {
      * For some examples you can have a look at the unit tests in {@code jamal/jamal-extensions/src/test/java/javax0/jamal/extensions/TestSep.java}
      *
      * @param openMacro    the macro opening string to test
-     * @param closingMacro
-     * @return true if the macro opening string suggest that the sep definitoin is misleading
+     * @param closingMacro the macro closing string to test
+     * @return true if the macro opening string suggest that the sep definition is misleading
      */
     private boolean misleadingOpenString(final String openMacro, final String closingMacro) {
         final var sep = openMacro.charAt(0);

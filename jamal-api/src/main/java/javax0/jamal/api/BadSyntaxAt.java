@@ -20,11 +20,11 @@ public class BadSyntaxAt extends BadSyntax {
     /**
      * Convert a {@link BadSyntax} exception thrown from a macro that has no idea where the actual source code is to a
      * {@code BadSyntaxAt} exception using the provided reference.<p>
-     *
+     * <p>
      * The new exception will inherit the message, the cause, the suppressed throwables and the stack trace of the
      * original exception.<p>
      *
-     * @param bs the original exception that was caught and is to be transformed to this exception
+     * @param bs  the original exception that was caught and is to be transformed to this exception
      * @param pos the position object denoting where the syntax error was actually detected
      */
     public BadSyntaxAt(BadSyntax bs, Position pos) {

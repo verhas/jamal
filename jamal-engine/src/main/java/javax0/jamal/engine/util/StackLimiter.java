@@ -21,7 +21,7 @@ public class StackLimiter {
         }
     }
 
-    private AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger counter = new AtomicInteger(0);
 
 
     public void up() throws BadSyntax {
@@ -29,6 +29,7 @@ public class StackLimiter {
             throw new BadSyntax("Jamal source seems to have infinite recursion");
         }
     }
+
     public void down() {
         if (counter.addAndGet(-1) < 0) {
             throw new RuntimeException("Jamal has an internal error. Stack limiter went negative.");
