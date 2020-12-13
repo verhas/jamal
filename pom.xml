@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.5.0</version>
     <name>jamal-parent</name>
     <description>Jamal macro library to process text files</description>
     <modules>
@@ -104,13 +103,13 @@
                     <version>3.0.0-M4</version>
                     <configuration>
                         <argLine>
-                            --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
-                            --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
-                            --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
-                            --add-opens jamal.testsupport/javax0.jamal.builtinstest=ALL-UNNAMED
-                            --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
-                            --add-opens jamal.extensions/javax0.jamal.extensions=ALL-UNNAMED
-                        </argLine>
+                                    --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
+                                    --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
+                                    --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
+                                    --add-opens jamal.testsupport/javax0.jamal.builtinstest=ALL-UNNAMED
+                                    --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
+                                    --add-opens jamal.extensions/javax0.jamal.extensions=ALL-UNNAMED
+                                </argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -132,32 +131,32 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-testsupport</artifactId>
-                <version>1.4.2-SNAPSHOT</version>
+                <version>1.5.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>
-                <version>1.4.2-SNAPSHOT</version>
+                <version>1.5.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-core</artifactId>
-                <version>1.4.2-SNAPSHOT</version>
+                <version>1.5.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-tools</artifactId>
-                <version>1.4.2-SNAPSHOT</version>
+                <version>1.5.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-engine</artifactId>
-                <version>1.4.2-SNAPSHOT</version>
+                <version>1.5.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
-                <version>1.4.2-SNAPSHOT</version>
+                <version>1.5.0</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
