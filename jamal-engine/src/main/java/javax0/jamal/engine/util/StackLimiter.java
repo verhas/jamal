@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class StackLimiter {
     private static final int LIMIT = getLimit();
     private static final String JAMAL_STACK_LIMIT = "JAMAL_STACK_LIMIT";
-    private static final int DEFAULT_LIMIT = 1000;
+    private static final int DEFAULT_LIMIT = 300;
 
     private static int getLimit() {
         final String limitString = System.getenv(JAMAL_STACK_LIMIT);
