@@ -10,5 +10,6 @@ public class TestUrlInclude {
     @Test
     void test() throws Exception {
         //TestThat.theInput("{@sep /{[{/}]}}{[{@include https://raw.githubusercontent.com/verhas/jamal/master/README.md}]}").results("");
+        //TestThat.theInput("{@import https://raw.githubusercontent.com/jamalrepo/pom/main/plugins/compiler.jim}").results("");
     }
 }

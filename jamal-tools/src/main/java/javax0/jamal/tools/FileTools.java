@@ -20,7 +20,7 @@ public class FileTools {
 
     private static final String RESOURCE_PREFIX = "res:";
     private static final int RESOURCE_PREFIX_LENGTH = RESOURCE_PREFIX.length();
-    private static final String HTTPS_PREFIX = "https:";
+    private static final String HTTPS_PREFIX = "https://";
 
     /**
      * Create a new input from a file.
@@ -111,8 +111,13 @@ public class FileTools {
      * <li>{@code ~}</li>
      * </ul>
      * <p>
-     * or starts with an alpha character and a {@code :} (DOS drive letter, like {@code C:} then the file name is
-     * absolute and it is returned as it is.
+     * or starts with an alpha character and a {@code :} (DOS drive letter, like {@code C:},
+     *
+     * or starts with the resource prefix {@code res:},
+     *
+     * or starts with the HTTPS prefix {@code https:},
+     *
+     * then the file name is absolute and it is returned as it is.
      * <p>
      * Otherwise the string in the parameter {@code reference} is used as it was a file name (the file does not need to
      * exist) and {@code file} is treated as a relative file name and the absolute path is calculated.
@@ -126,10 +131,19 @@ public class FileTools {
             return fileName;
         }
         final var unixedReference = reference.replaceAll("\\\\", "/");
-        final var referencePath = unixedReference.contains("/") ?
-            unixedReference.substring(0, unixedReference.lastIndexOf("/") + 1)
+        final String prefix;
+        final String unprefixedReference;
+        if( unixedReference.startsWith(HTTPS_PREFIX)){
+            unprefixedReference = unixedReference.substring((HTTPS_PREFIX).length());
+            prefix = HTTPS_PREFIX;
+        }else{
+            prefix = "";
+            unprefixedReference = unixedReference;
+        }
+        final var referencePath = unprefixedReference.contains("/") ?
+            unprefixedReference.substring(0, unprefixedReference.lastIndexOf("/") + 1)
             : "";
-        return Paths.get(referencePath)
+        return prefix + Paths.get(referencePath)
             .resolve(Paths.get(fileName))
             .normalize()
             .toString()

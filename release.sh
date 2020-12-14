@@ -8,7 +8,12 @@ echo [INFO] to manually upload to https://oss.sonatype.org/
 echo [INFO]
 echo [INFO] Normal release should use
 echo [INFO]
-echo [INFO] mvn -f genpom.xml clean ; mvn deploy -Possrh
+echo [INFO]   mvn -f genpom.xml clean
+echo [INFO]   mvn verify
+echo [INFO]
+echo [INFO] if all compilation went well, then and only then:
+echo [INFO]
+echo [INFO]   mvn deploy -Possrh
 echo [INFO] -------------------------------------------------------
 echo [INFO]
 
