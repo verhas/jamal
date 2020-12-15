@@ -1,4 +1,0 @@
-{@import res:javax0/jamal/pomlib/pom.jim}
-{project testProject}
-
-{end project}

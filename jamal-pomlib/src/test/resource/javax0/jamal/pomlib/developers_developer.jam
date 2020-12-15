@@ -1,9 +1,0 @@
-{@import res:javax0/jamal/pomlib/pom.jim}{@comment
-
-This file tests that the developer macro is redefined if the developers macro is used.
-
-}{developer :Peter Verhas:peter@verhas.com}
-{developers}
-  {developer :Peter Verhas:peter@verhas.com}
-  {developer :test developer:test_developer_email@some.domain.com}
-{end developers}
