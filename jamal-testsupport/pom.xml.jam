@@ -1,19 +1,15 @@
-{@import ../pom.jim}
-{@define compiledependency(_groupId,_artifactId)=<dependency>
-{groupId/_groupId}
-{artifactId/_artifactId}
-<scope>compile</scope>
-</dependency>}
-{project |jar|
+{@import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+{@import ../version.jim}
+{project jamal testsupport}
+    {packaging jar}
     {GAV :com.javax0.jamal:jamal-testsupport:{VERSION}}
-    {parent :jamal-parent}
-    {name|jamal testsupport}
+    {parent ::jamal-parent}
     {description|Jamal macro library macro test supporting classes}
     {@include ../plugins.jim}
     {dependencies#
         {@for MODULE in (api,tools,engine)=
-            {dependency|com.javax0.jamal|jamal-MODULE}}
+            {dependency :com.javax0.jamal:jamal-MODULE}}
         {@for MODULE in (api,engine)=
-            {compiledependency|org.junit.jupiter|junit-jupiter-MODULE}}
+            {dependency :org.junit.jupiter:junit-jupiter-MODULE::compile}}
     }
-}
+{end project}

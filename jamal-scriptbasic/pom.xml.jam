@@ -1,4 +1,4 @@
-{@define RES=res:javax0/jamal/pomlib}
+{@define RES=https://raw.githubusercontent.com/central7/pom/main}
 {#import {RES}/pom.jim}
 {#define PLUGIN={RES}/plugins}
 {#import {PLUGIN}/compiler.jim}

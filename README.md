@@ -96,7 +96,7 @@ the API that lets you embed the macro processing into your application.
     1. [Jamal Environment Variables](#JamalENV)
     1. [Jamal API](#JamalAPI)
 
-## Starting Jamal<a name="Starting">
+## Starting Jamal<a name="Starting"/>
 
 ### JShell
 
@@ -167,7 +167,7 @@ to avoid an excessively large trace file growing on your disk.
 
 If you use Java 8, you should use it with the release `1.0.2.JDK8`.
 
-## Simple Example<a name="SimpleExample">
+## Simple Example<a name="SimpleExample"/>
 
 As a quick sample to have a jump start what Jamal can do:
 
@@ -219,7 +219,7 @@ Note that in the last example, we used the `:` character as the separator. Since
 macro's name, there must be a space before it. Note: When the name of a macro contains one or more  `:` characters, then
 the macro is global.
 
-## Other Macros<a name="OtherMacros">
+## Other Macros<a name="OtherMacros"/>
 
 `define` is not the only built-in macro in Jamal. The comprehensive list of built-in macros are
 
@@ -246,7 +246,7 @@ character, then the input is first parsed for other macros. These macros are eva
 occurrences in the code. Only after this, the macro we are looking at is evaluated. For more details, see the section
 about the built-in macro `export`.
 
-### `comment`<a name="comment">
+### `comment`<a name="comment"/>
 
 since 1.0.0 (core)
 
@@ -273,7 +273,7 @@ the `comment_text` defines some global macro, then the defined macro can be used
 It is safe to say always to use `{@comment ...}`. When the code needs the evaluation, then use the [`block`](#block)
 macro.
 
-### `block`<a name="block">
+### `block`<a name="block"/>
 
 since 1.0.0 (core)
 
@@ -283,7 +283,7 @@ content interpreted. Block should be used to enclose definitions to a scope leve
 
 For more about definition scopes and exporting, read the section about [`export`](#export).
 
-### `begin`<a name="begin"> and `end`
+### `begin`<a name="begin"/> and `end`
 
 since 1.0.0 (core)
 
@@ -309,7 +309,7 @@ that was opened with a matching `begin`. You cannot and should not close a scope
 something else. For example, you cannot get into the scope of the including file putting a pair-less `end` macro into
 the included file. This will trigger a processing error.
 
-### `define`<a name="define">
+### `define`<a name="define"/>
 
 since 1.0.0 (core)
 
@@ -508,7 +508,7 @@ This is a fairly complex example. To ease the understanding note the followings:
    the built-in macro keyword `define` and thus the content of the definition is evaluated before defining the
    global `y`.
 
-### `eval`<a name="eval">
+### `eval`<a name="eval"/>
 
 since 1.0.0 (core)
 
@@ -572,7 +572,7 @@ will get the value of the macro `userDefined` and evaluates it three times.
 You can use this character together with the back-tick macro modifying character. When using `!` to evaluate the result
 of a macro you cannot specify any scripting language. The evaluation will be Jamal macros evaluation.
 
-### `env`<a name="env">
+### `env`<a name="env"/>
 
 since 1.3.0
 
@@ -584,7 +584,7 @@ If there is a `?` after the name of the variable name then the macro will result
 be used to test that an environment variable exists or not. Testing the value of the environment variable in
 an `{@if ... }` macro may be misleading when the value is literal `false` or an empty string.
 
-### `import`<a name="import">
+### `import`<a name="import"/>
 
 since 1.0.0 (core)
 
@@ -624,7 +624,7 @@ in the file are `{@` then it evaluates the content usinf `{` as macro opening st
 This way you can freely import resource files provided in JAR file or through the net even if you use different macro
 opening and closing strings.
 
-### `include`<a name="include">
+### `include`<a name="include"/>
 
 since 1.0.0 (core)
 
@@ -647,7 +647,7 @@ downloaded from the net.
 
 Use `include` to get the content of a file, and into the main output.
 
-### `use` <a name="use">
+### `use` <a name="use"/>
 
 `use` declares a Java class as a built-in macro.
 
@@ -696,7 +696,7 @@ no defined alias following the `as` keyword then the one returned by the macro i
 It is recommended to use the alias in the Jamal source file. That way there is no ambiguity when reading the code what
 the name of the built-in macro is.
 
-### `script`<a name="script">
+### `script`<a name="script"/>
 
 since 1.0.0 (core)
 
@@ -778,7 +778,7 @@ type depends on the actual value. If the value string can be interpreted as a `l
 either `true` or `false` case insensitive then the variable will be `boolean`. In any other case the variable will be
 declared as `String`. For more information and details see the section [`JShell`](#JShell).
 
-### `JShell`<a name="JShell">
+### `JShell`<a name="JShell"/>
 
 since 1.3.0 (core)
 
@@ -844,7 +844,7 @@ erroneous `{@JShell }` macro only when the JShell interpreter is used. When you 
 to import the library to discover possible errors in the JShell scrips. The scripts have to be used to manifest the
 error.
 
-### `for`<a name="for">
+### `for`<a name="for"/>
 
 since 1.0.0 (core)
 since 1.5.0 multi-argument `for`
@@ -877,7 +877,7 @@ the string defined in `$forsep` as a regular expression.
 
 Later versions may extend the command with other, more complex syntax.
 
-### `if`<a name="if">
+### `if`<a name="if"/>
 
 The `if` macro makes it possible to evaluate the content conditionally. The syntax of the macro is:
 
@@ -917,7 +917,7 @@ true={@if/-1/true}                     <- non-zero integer
 true={@if/0.000/true}                  <- non-epmty string, floating points dont work
 ```
 
-### `ident`<a name="ident">
+### `ident`<a name="ident"/>
 
 since 1.0.0 (core)
 
@@ -990,7 +990,7 @@ backtick character then the macro will not be evaluated. The above example can a
 {@define b=92}{#define c={`a}{b}}{@define a=14}{c}
 ```
 
-This built-in "ident" can be used many times in case the evalutation of a macro has to be postponed multiple times. You
+This built-in "ident" can be used many times in case the evaluation of a macro has to be postponed multiple times. You
 can have
 
 ```jam
@@ -1008,7 +1008,7 @@ no restriction on the ordering on the `!` and the backtick characters in case th
 are used in an extreme case they can be mixed together. Note, if the macro does not get evaluated fully the order of
 these characters may not be preserved in the output.
 
-### `verbatim`<a name="verbatim">
+### `verbatim`<a name="verbatim"/>
 
 since 1.0.0 (core)
 
@@ -1176,7 +1176,7 @@ your Jamal source file does some shady thing that it should not. This option is 
 introduction and is meant as a last resort to keep backward compatibility. It will be removed from Jamal versions 2.0.0
 and later.
 
-### `sep`<a name="sep">
+### `sep`<a name="sep"/>
 
 since 1.0.0 (core)
 
@@ -1370,7 +1370,7 @@ fruit
 SSSzazi[[z]]SSS{z}
 ```
 
-### `export`<a name="export">
+### `export`<a name="export"/>
 
 since 1.0.0 (core)
 
@@ -1426,7 +1426,7 @@ that you cannot export them to the enclosing scope because they do not belong to
 macro that was defined in a lower scope and was exported to the current scope. You cannot export macros from the
 top-level scope, because there is no enclosing scope above that.
 
-### `options`<a name="options">
+### `options`<a name="options"/>
 
 since 1.0.3 (core)
 
@@ -1528,7 +1528,7 @@ the evaluated text inside the macro.
 If we use a `?` character right after (no spaces) the `try` keyword then the result will be the rtsing `true` if there
 was no error and `false` is there was an error. This can be used to test the "computability" of the text.
 
-## Jamal Environment Variables<a name="JamalENV">
+## Jamal Environment Variables<a name="JamalENV"/>
 
 You do not need to configure Jamal. The environment variables that you can set to modify the behavior of Jamal are the
 followings.
@@ -1552,7 +1552,7 @@ followings.
   set this to a smaller value. It may also happen that you deliberately create complex recursive macros. In that case
   this limit may be too small. Set your value to a limit that fits your need.
 
-## Resource Files and Web Resources<a name="httpsres">
+## Resource Files and Web Resources<a name="httpsres"/>
 
 When the macros `import` or `include` reference a file with a name that starts with either
 
@@ -1627,7 +1627,7 @@ The environment variables
 can define two timeout values for the web download in millisecond as unit. Their default value is 5000, meaning five
 seconds.
 
-## Jamal API<a name="JamalAPI">
+## Jamal API<a name="JamalAPI"/>
 
 Embedding Jamal into an application is very simple. You need the Jamal libraries on your classpath. If you use Maven,
 you can simply have

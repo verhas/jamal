@@ -1,10 +1,10 @@
-{@options lenient}
-{@import pom.jim}
-{project |pom|
+{@import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+{@import version.jim}
+{project jamal-parent}
+    {packaging pom}
     {GAV :com.javax0.jamal:jamal-parent:{VERSION}}
-    {name/jamal-parent}
-    {description/Jamal macro library to process text files}
-    {modules|jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport,jamal-cmd}
+    {description Jamal macro library to process text files}
+    {modules jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport,jamal-cmd}
     {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
     {github|verhas|jamal}
@@ -80,7 +80,7 @@
         }}
 
     {profiles|
-        {profile|ossrh|
+        {profile ossrh}
             {build|
                 {plugins|
                     {plugin|
@@ -93,6 +93,6 @@
                     }
                 }
            }
-        }
+        {end profile}
     }
-}
+{end project}
