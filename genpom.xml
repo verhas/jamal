@@ -11,13 +11,6 @@
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-plugin</artifactId>
                 <version>1.5.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.javax0.jamal</groupId>
-                        <artifactId>jamal-pomlib</artifactId>
-                        <version>1.0.0</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
                         <id>execution</id>
