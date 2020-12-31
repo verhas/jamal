@@ -202,11 +202,10 @@ public class Processor implements javax0.jamal.api.Processor {
             final var qualifiers = new MacroQualifier(macroInputAfter, postEvalCount);
             final String text;
             if (qualifiers.macro instanceof InnerScopeDependent) {
-                text = evalMacro(tr, qualifiers);
-                macros.pop(marker);
+                text = evalMacro(tr, qualifiers, () -> macros.pop(marker));
             } else {
                 macros.pop(marker);
-                text = evalMacro(tr, qualifiers);
+                text = evalMacro(tr, qualifiers, () -> {});
             }
             tr.appendResultState(text);
             output.append(text);
@@ -232,6 +231,10 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
+    private interface Runnable {
+        void run() throws BadSyntax;
+    }
+
     /**
      * Evaluate a macro as part of the processing of it. Either user defined macro or built in.
      *
@@ -240,14 +243,13 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return the evaluated string of the macro
      * @throws BadSyntaxAt when the syntax of the macro is bad
      */
-    private String evalMacro(final TraceRecord tr, final MacroQualifier qualifier) throws BadSyntax {
+    private String evalMacro(final TraceRecord tr, final MacroQualifier qualifier, Runnable popper) throws BadSyntax {
         final var ref = qualifier.input.getPosition();
         tr.setId(qualifier.macroId);
         if (qualifier.isBuiltIn) {
             var result = evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
-            for (int i = 0; i < qualifier.postEvalCount; i++) {
-                result = process(makeInput(result, ref));
-            }
+            popper.run();
+            result = postEvaluate(qualifier, ref, result);
             return result;
         } else {
             tr.type(TraceRecord.Type.USER_DEFINED_MACRO);
@@ -262,9 +264,8 @@ public class Processor implements javax0.jamal.api.Processor {
                     return rawResult;
                 } else {
                     var result = process(makeInput(rawResult, qualifier.input.getPosition()));
-                    for (int i = 0; i < qualifier.postEvalCount; i++) {
-                        result = process(makeInput(result, qualifier.input.getPosition()));
-                    }
+                    popper.run();
+                    result = postEvaluate(qualifier, qualifier.input.getPosition(), result);
                     tr.appendAfterEvaluation(result);
                     return result;
                 }
@@ -274,6 +275,13 @@ public class Processor implements javax0.jamal.api.Processor {
                 throw new BadSyntaxAt(bs, ref);
             }
         }
+    }
+
+    private String postEvaluate(MacroQualifier qualifier, Position ref, String result) throws BadSyntax {
+        for (int i = 0; i < qualifier.postEvalCount; i++) {
+            result = process(makeInput(result, ref));
+        }
+        return result;
     }
 
     private String evaluateBuiltinMacro(final Input input, final Position ref, final Macro macro) throws BadSyntaxAt {

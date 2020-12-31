@@ -2,9 +2,11 @@ package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.OptionsStore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +28,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  * The default separator is {@code ,} (comma), but it can be redefined to be any regular expression assigning a value to
  * the user defined macro {@code $forsep}.
  */
-public class For implements Macro {
+public class For implements Macro, InnerScopeDependent {
 
     private static final Pattern PATTERN = Pattern.compile("in\\s*\\((.*?)\\)\\s*=(.*)", Pattern.DOTALL);
 
@@ -60,13 +62,15 @@ public class For implements Macro {
             }
             final var parameterMap = new HashMap<String, String>();
             for (final String value : valueList) {
-                final var values = value.split(subsplitter);
-                if (values.length != variables.length) {
-                    throw new BadSyntax("number of the values does not match the number of the parameters\n" +
-                        String.join(",", variables) + "\n" + value);
+                final var values = value.split(subsplitter, -1);
+                if (!OptionsStore.getInstance(processor).is("lenient")) {
+                    if (values.length != variables.length) {
+                        throw new BadSyntax("number of the values does not match the number of the parameters\n" +
+                            String.join(",", variables) + "\n" + value);
+                    }
                 }
                 for (int i = 0; i < variables.length; i++) {
-                    parameterMap.put(variables[i], values[i]);
+                    parameterMap.put(variables[i], i < values.length ? values[i] : "");
                 }
                 for (Segment segment = root; segment != null; segment = segment.next()) {
                     output.append(segment.content(parameterMap));
@@ -154,7 +158,7 @@ public class For implements Macro {
          * <p>
          * The code will return the last segment or {@code null} if the parameter is not in the segment.
          *
-         * @param it the segment to split
+         * @param it        the segment to split
          * @param parameter along which the segment is split
          * @return the next segment after the splitting
          */

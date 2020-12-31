@@ -865,8 +865,11 @@ containing v1 v2 and v3}
 ```
 
 The `variable` or the multiple variables can be used in the content and will be replaced for each iteration with the
-respective element on the comma-separated list. The list of the values can also be separated by other strings. If the
-macro `$forsep` is defined, like in
+respective element on the comma-separated list. When there are multiple variables then the sub-list is separated using
+the `|` character. Both the command and the `|` character can be modified to use something else instead of these
+characters.
+
+The list of the values can also be separated by other strings. If the macro `$forsep` is defined, like in
 
 ```jam
 {@define $forsep=\s+}
@@ -875,7 +878,39 @@ macro `$forsep` is defined, like in
 then the arguments will be separated by one or more spaces. The string between the `(` and the `)` will be split using
 the string defined in `$forsep` as a regular expression.
 
-Later versions may extend the command with other, more complex syntax.
+Similarly, if the macro `$forsubsep` is defined, like in
+
+```jam
+{@define $forsubsep=:}
+```
+
+then the values for the different variables will be separated by a semicolon.
+
+Note that the macros `$forsep` and `$forsubsep` can also be defined inside the `for` macro body in case the macro
+is used with the `#` character at the start. In this case the definition of these macros is limited to the evaluation
+of this very `for` macro.
+
+For example the macros:
+
+```
+{#for $a in (a:b:c)={@define $forsep=:}a is $a
+}{?$forsep}
+```
+
+will result
+
+```
+a is a
+a is b
+a is c
+```
+
+The value of the macro `$forsep` is effective inside the `for` but it is undefined outside.
+
+If the number of the actual values separated by `|` character is not the same as the number of the variables in
+the for loop then the macro evaluation will throw a bad syntax exception. This can be suppressed with the
+option `lenient`. If the option lenient is used then extra values are ignored and missing values are presented
+as empty strings.
 
 ### `if`<a name="if"/>
 
@@ -1659,8 +1694,8 @@ The code invoking Jamal needs a processor that will process the input.
 ```java
 import javax0.jamal.engine.Processor;
 
-var processor = new Processor(macroOpen, macroClose);
-var result = processor.process(input);
+var processor=new Processor(macroOpen,macroClose);
+    var result=processor.process(input);
 ```
 
 The `macroOpen` and `macroClose` parameters are `String` values. The parameter `input` to the method `process()` has to
@@ -1671,10 +1706,10 @@ You can see an example to create an `Input` from an existing file in the `jamal-
 method `createInput()` reads a file and then it creates a new input:
 
 ```java
-private Input createInput(Path inputFile) throws IOException {
-    var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-    return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
-}
+private Input createInput(Path inputFile)throws IOException{
+    var fileContent=Files.lines(inputFile).collect(Collectors.joining("\n"));
+    return new javax0.jamal.tools.Input(fileContent,new Position(inputFile.toString(),1));
+    }
 ```
 
 An `Input` holds the content the processor has to process. It also has a reference file name used to resolve the
@@ -1692,7 +1727,7 @@ the `MacroRegister` object that the `Processor` object has. To get that you can 
 processor object:
 
 ```java
-var register = processor.getRegister();
+var register=processor.getRegister();
 ```
 
 The register has API to define macros and user-defined macros. For further information see the API JavaDoc
