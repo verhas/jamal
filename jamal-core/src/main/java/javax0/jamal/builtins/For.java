@@ -95,10 +95,6 @@ public class For implements Macro, InnerScopeDependent {
                 }
             })
             .orElse(defautl);
-
-        if (splitter == null) {
-            throw new BadSyntax("Macro $sep cannot be evaluated");
-        }
         return splitter;
     }
 
