@@ -78,7 +78,7 @@ public class For implements Macro, InnerScopeDependent {
             }
             return output.toString();
         } else {
-            throw new BadSyntax("use macro has bad syntax '" + input + "'");
+            throw new BadSyntax("for macro has bad syntax '" + input + "'");
         }
     }
 
