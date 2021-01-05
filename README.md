@@ -620,7 +620,7 @@ Because the textual output from the evaluation of the file is discarded feel fre
 as documentation. There is no need to enclose such a text into a `{@comment ...}` macro.
 
 Starting with version 1.5.0 the import macro looks into the file before evaluating it. If the very first two characters
-in the file are `{@` then it evaluates the content usinf `{` as macro opening string and `}` as macro closing string.
+in the file are `{@` then it evaluates the content using `{` as macro opening string and `}` as macro closing string.
 This way you can freely import resource files provided in JAR file or through the net even if you use different macro
 opening and closing strings.
 
@@ -886,9 +886,9 @@ Similarly, if the macro `$forsubsep` is defined, like in
 
 then the values for the different variables will be separated by a semicolon.
 
-Note that the macros `$forsep` and `$forsubsep` can also be defined inside the `for` macro body in case the macro
-is used with the `#` character at the start. In this case the definition of these macros is limited to the evaluation
-of this very `for` macro.
+Note that the macros `$forsep` and `$forsubsep` can also be defined inside the `for` macro body in case the macro is
+used with the `#` character at the start. In this case the definition of these macros is limited to the evaluation of
+this very `for` macro.
 
 For example the macros:
 
@@ -907,10 +907,64 @@ a is c
 
 The value of the macro `$forsep` is effective inside the `for` but it is undefined outside.
 
-If the number of the actual values separated by `|` character is not the same as the number of the variables in
-the for loop then the macro evaluation will throw a bad syntax exception. This can be suppressed with the
-option `lenient`. If the option lenient is used then extra values are ignored and missing values are presented
-as empty strings.
+If the number of the actual values separated by `|` character is not the same as the number of the variables in the for
+loop then the macro evaluation will throw a bad syntax exception. This can be suppressed with the option `lenient`. If
+the option lenient is used then extra values are ignored and missing values are presented as empty strings.
+
+Starting with version 1.5.3 you can fine tune how a `for` loop treats the empty elements. By default, the empty elements
+in a foor loop value list represent empty strings. The loop body will be rendered with these values replacing the loop
+variable with an empty string. In a situation like that the use of the option `lenient` is also a must if the loop has
+multiple variables. In that case the empty value will be split into a one, empty string value for the empty value in the
+loop and this has to be assigned to the multipled loop variables. For example
+
+```jamal
+{#for (k,z) in ()=wukz}
+```
+
+will not work, because the empty string cannot be split into two strings (it results one empty string when it is split).
+On the other hand the following code will work
+
+```jamal
+{#for (k,z) in ()=wukz{@options lenient}}
+```
+
+and it will result
+
+```text
+wu
+```
+
+as both `k` and `z` are empty strings.
+
+This default behaviour can be altered using the option `skipForEmpty`. If this option is used the `for` loop will skip
+the empty values. The previous example with this option:
+
+```jamal
+{#for (k,z) in ()=wukz{@options skipForEmpty}}
+```
+
+will evaluate to an empty string. Also note that in this case there is no need to use the option `lenient` because the
+empty value is skipped and there is no issue splitting it up.
+
+The example above contains one loop value and that loop value is an empty string. There can be more than one empty
+values in a for loop and empty and non-empty values can be mixed. The option `skipForEmpty` works in any of those cases.
+For example:
+
+```jamal
+{#for k in (,)=wuk{@options skipForEmpty}}
+```
+
+will result an empty string and
+
+```jamal
+{#for k in (,k)=wuk{@options skipForEmpty}}
+```
+
+will result
+
+```text
+wuk
+```
 
 ### `if`<a name="if"/>
 

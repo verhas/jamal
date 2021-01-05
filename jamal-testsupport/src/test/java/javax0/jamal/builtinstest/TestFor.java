@@ -94,6 +94,60 @@ class TestFor {
     }
 
     @Test
+    @DisplayName("Test that the simple for loop does not run when the list is empty when skipForEmpty option")
+    void testForSimpleEmpty() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+        TestThat.theInput("{#for k in ()=wuk{@options skipForEmpty}}")
+            .results("");
+        TestThat.theInput("{#for k in ()=wuk}")
+            .results("wu");
+    }
+
+    @Test
+    @DisplayName("Test that the simple for loop does not run when the list is made of multiple empty elements when skipForEmpty option")
+    void testForSimpleMultipleEmpty() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+        TestThat.theInput("{#for k in (,)=wuk{@options skipForEmpty}}")
+            .results("");
+        TestThat.theInput("{#for k in (,)=wuk}")
+            .results("wuwu");
+    }
+
+    @Test
+    @DisplayName("Test that the simple for loop skips elements that are empty when skipForEmpty option")
+    void testForSimpleSomeEmpty() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+        TestThat.theInput("{#for k in (,k)=wuk{@options skipForEmpty}}")
+            .results("wuk");
+        TestThat.theInput("{#for k in (,k)=wuk}")
+            .results("wuwuk");
+    }
+
+    @Test
+    @DisplayName("Test that the complex for loop does not run when the list is empty")
+    void testForComplexEmpty() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+        TestThat.theInput("{#for (k,z) in ()=wukz{@options skipForEmpty}}")
+            .results("");
+        TestThat.theInput("{#for (k,z) in ()=wukz{@options lenient}}")
+            .results("wu");
+    }
+
+    @Test
+    @DisplayName("Test that the complex for loop does not run when the list is multiple empty elements when skipForEmpty option")
+    void testForComplexMultipleEmpty() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+        TestThat.theInput("{#for (k,z) in (,)=wukz{@options skipForEmpty}}")
+            .results("");
+        TestThat.theInput("{#for (k,z) in (,)=wukz{@options lenient}}")
+            .results("wuwu");
+    }
+
+    @Test
+    @DisplayName("Test that the complex for loop skips the empty elements when skipForEmpty option")
+    void testForComplexSomeEmpty() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+        TestThat.theInput("{#for (k,z) in (,k|z)=wukz{@options skipForEmpty}}")
+            .results("wukz");
+        TestThat.theInput("{#for (k,z) in (,k|z)=wukz{@options lenient}}")
+            .results("wuwukz");
+    }
+
+    @Test
     @DisplayName("The for loop multiple variables some containing the other")
     void testForParametersContainingOtherThrows() {
         Assertions.assertThrows(BadSyntaxAt.class, () ->

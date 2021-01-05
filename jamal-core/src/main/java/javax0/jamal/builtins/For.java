@@ -47,9 +47,8 @@ public class For implements Macro, InnerScopeDependent {
         if (matcher.matches()) {
             final var valuesString = matcher.group(1);
             final var content = matcher.group(2);
-            final String splitter = getSplitter(processor, "$forsep", ",");
-            final String subsplitter = getSplitter(processor, "$forsubsep", "\\|");
-            final var valueList = valuesString.split(splitter);
+            final var subsplitter = getMacroValue(processor, "$forsubsep", "\\|");
+            final var valueArray = splitLoopValueString(processor, valuesString);
             final var output = new StringBuilder();
             final var root = new Segment(null, content);
             for (final var variable : variables) {
@@ -61,19 +60,22 @@ public class For implements Macro, InnerScopeDependent {
                 }
             }
             final var parameterMap = new HashMap<String, String>();
-            for (final String value : valueList) {
-                final var values = value.split(subsplitter, -1);
-                if (!OptionsStore.getInstance(processor).is("lenient")) {
-                    if (values.length != variables.length) {
-                        throw new BadSyntax("number of the values does not match the number of the parameters\n" +
-                            String.join(",", variables) + "\n" + value);
+            final var skipEmpty = OptionsStore.getInstance(processor).is("skipForEmpty");
+            for (final String value : valueArray) {
+                if (value.length() > 0 || !skipEmpty) {
+                    final var values = value.split(subsplitter, -1);
+                    if (!OptionsStore.getInstance(processor).is("lenient")) {
+                        if (values.length != variables.length) {
+                            throw new BadSyntax("number of the values does not match the number of the parameters\n" +
+                                String.join(",", variables) + "\n" + value);
+                        }
                     }
-                }
-                for (int i = 0; i < variables.length; i++) {
-                    parameterMap.put(variables[i], i < values.length ? values[i] : "");
-                }
-                for (Segment segment = root; segment != null; segment = segment.next()) {
-                    output.append(segment.content(parameterMap));
+                    for (int i = 0; i < variables.length; i++) {
+                        parameterMap.put(variables[i], i < values.length ? values[i] : "");
+                    }
+                    for (Segment segment = root; segment != null; segment = segment.next()) {
+                        output.append(segment.content(parameterMap));
+                    }
                 }
             }
             return output.toString();
@@ -82,9 +84,14 @@ public class For implements Macro, InnerScopeDependent {
         }
     }
 
-    private String getSplitter(Processor processor, String macro, String defautl) throws BadSyntax {
-        final var optionalForSepMacro = processor.getRegister().getUserDefined(macro);
-        final var splitter = optionalForSepMacro
+    private static String[] splitLoopValueString(final Processor processor, final String loopValueString) {
+        final var splitter = getMacroValue(processor, "$forsep", ",");
+        return loopValueString.split(splitter, -1);
+    }
+
+    private static String getMacroValue(Processor processor, String macro, String defautl) {
+        final var optional = processor.getRegister().getUserDefined(macro);
+        final var value = optional
             .filter(ud -> ud instanceof Evaluable)
             .map(ud -> (Evaluable) ud)
             .map(udm -> {
@@ -95,7 +102,7 @@ public class For implements Macro, InnerScopeDependent {
                 }
             })
             .orElse(defautl);
-        return splitter;
+        return value;
     }
 
     /**

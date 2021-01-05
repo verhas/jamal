@@ -336,6 +336,8 @@ public class InputHandler {
      * The possible syntax variations are:
      * <pre>
      * macroName / a / b / c / ... /x
+     * macroName   a   b   c   ...  x
+     * macroName `regex` separator a separator b separator .... separator x
      * </pre>
      * <p>
      * where the separator character is the first non-whitespace character after the macro name, and it is not the
@@ -346,10 +348,9 @@ public class InputHandler {
      * Backtick was selected during the design of the syntax to enclose the regular expression because this character is
      * very rare in Java regular expression. In case you need one inside the regular expression then you have to simply
      * double it and the parsing will single it back.
-     *
-     * <pre>
-     * macroName `regex` separator a separator b separator .... separator x
-     * </pre>
+     * <p>
+     * If the first character after the white spaces is a digit or alpha character then the input will be split along
+     * the spaces.
      *
      * @param input to be split up
      * @return the list of the strings created from the input
