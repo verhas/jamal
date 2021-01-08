@@ -11,6 +11,10 @@ import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Include implements Macro {
+    /**
+     * Count the depth of the includes. In case this is more than 100 stop the processing. Most likely this is a wrong
+     * recursive include that would cause stack overflow.
+     */
     private int depth = 100;
 
     @Override
@@ -25,6 +29,7 @@ public class Include implements Macro {
         processor.getRegister().push(marker);
         var result = processor.process(getInput(fileName));
         processor.getRegister().pop(marker);
+        depth++;
         return result;
     }
 }

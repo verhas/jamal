@@ -121,7 +121,6 @@ public class TestThat {
             actual = processor.process(in);
         }
         Assertions.assertEquals(expected, actual);
-
     }
 
 
