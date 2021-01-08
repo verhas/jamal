@@ -16,6 +16,7 @@
         <module>jamal-maven-plugin</module>
         <module>jamal-testsupport</module>
         <module>jamal-cmd</module>
+        <module>jamal-snippet</module>
     </modules>
     <licenses>
         <license>
@@ -109,6 +110,7 @@
                                     --add-opens jamal.testsupport/javax0.jamal.builtinstest=ALL-UNNAMED
                                     --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
                                     --add-opens jamal.extensions/javax0.jamal.extensions=ALL-UNNAMED
+                                    --add-opens jamal.snippet/javax0.jamal.snippet=ALL-UNNAMED
                                 </argLine>
                     </configuration>
                 </plugin>

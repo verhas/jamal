@@ -130,7 +130,7 @@ public class FileTools {
         if (isAbsolute(fileName)) {
             return fileName;
         }
-        final var unixedReference = reference.replaceAll("\\\\", "/");
+        final var unixedReference = reference == null ? "." : reference.replaceAll("\\\\", "/");
         final String prefix;
         final String unprefixedReference;
         if( unixedReference.startsWith(HTTPS_PREFIX)){

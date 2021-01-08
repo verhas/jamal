@@ -1,0 +1,10 @@
+{@collect .}
+First snippet {@snippet first_snippet}
+2. snippet {@snippet second_snippet}
+
+Next file
+
+First snippet {@snippet second_file_first$snippet}
+Second snippet {@snippet seconda_snippet_uniconde}
+
+and this is the end

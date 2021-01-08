@@ -1,0 +1,11 @@
+This is a file that contains some snippets
+
+snippet second_file_first$snippet
+This is a one line snippet
+//end snippet
+
+<!-- snippet seconda_snippet_uniconde can be a comment in XML and there can be any text after the snippet ID-->
+This is a multi line snippet,
+the second
+  snippet, still from SnippetSource-1.txt
+//end snippet
