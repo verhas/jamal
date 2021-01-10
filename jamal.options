@@ -8,7 +8,7 @@
 # cp ./target/classes
 # 'pattern' is a regular expression to select the files that are to be processed by Jamal
 # only the files that have the pattern in their name will be processed
-pattern ^README\.adoc\.jam$
+pattern README\.adoc\.jam$
 exclude
 to
 from \.jam$

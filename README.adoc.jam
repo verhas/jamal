@@ -1,4 +1,4 @@
-{%comment This is the ASCIIDOC version of the readme.
+{%@comment This is the ASCIIDOC version of the readme.
 It replaces the older Markdown version.
 The source of the file is the README.adoc.jam.
 This file has to be processed with the command line
@@ -80,7 +80,7 @@ In this readme, we first discuss how the macros look and how Jamal will convert 
 Then we discuss the API that lets you embed the macro processing into your application.
 
 == Table of contents
-https://xxx[]
+
 
 1. <<Starting Jamal>>
 1. <<Simple Example>>
