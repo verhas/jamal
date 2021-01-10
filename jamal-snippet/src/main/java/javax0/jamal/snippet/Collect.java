@@ -31,16 +31,21 @@ public class Collect implements Macro, InnerScopeDependent {
     private static final String EVERYTHING_MATCHES = ".*";
 
     @Override
+    public String getId() {
+        return "snip:collect";
+    }
+
+    @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         InputHandler.skipWhiteSpaces(in);
         final var reference = in.getReference();
         var from = FileTools.absolute(reference, in.toString().trim());
 
         final var reader = MacroReader.macro(processor);
-        final var include = Pattern.compile(reader.readValue("includePattern").orElse(EVERYTHING_MATCHES)).asMatchPredicate();
-        final var exclude = Pattern.compile(reader.readValue("excludePattern").orElse(IMPOSSIBLE_TO_MATCH)).asMatchPredicate().negate();
-        final var start = Pattern.compile(reader.readValue("startPattern").orElse("snippet\\s+([a-zA-Z0-9_$]+)"));
-        final var stop = Pattern.compile(reader.readValue("stopPattern").orElse("end\\s+snippet"));
+        final var include = Pattern.compile(reader.readValue("include").orElse(EVERYTHING_MATCHES)).asPredicate();
+        final var exclude = Pattern.compile(reader.readValue("exclude").orElse(IMPOSSIBLE_TO_MATCH)).asPredicate().negate();
+        final var start = Pattern.compile(reader.readValue("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)"));
+        final var stop = Pattern.compile(reader.readValue("stop").orElse("end\\s+snippet"));
 
         final var store = SnippetStore.getInstance(processor);
         if (new File(from).isFile()) {

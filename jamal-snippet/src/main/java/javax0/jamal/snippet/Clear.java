@@ -7,6 +7,11 @@ import javax0.jamal.api.Processor;
 
 public class Clear implements Macro {
     @Override
+    public String getId() {
+        return "snip:clear";
+    }
+
+    @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         SnippetStore.getInstance(processor).clear();
         return "";

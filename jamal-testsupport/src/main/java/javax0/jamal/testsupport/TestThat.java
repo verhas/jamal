@@ -14,10 +14,10 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * A simple class that helps the testing of built-in macros.
  * <p>
- * A built-in macro most of the time converts the content to another string. To test that you need an
- * instance of the macro class, a processor, an input object that contains the {@link StringBuilder} and a null
- * reference file name. Then the test just invokes the macro {@link Macro#evaluate(Input, javax0.jamal.api.Processor)}
- * method and checks the returned string with what was expected.
+ * A built-in macro most of the time converts the content to another string. To test that you need an instance of the
+ * macro class, a processor, an input object that contains the {@link StringBuilder} and a null reference file name.
+ * Then the test just invokes the macro {@link Macro#evaluate(Input, javax0.jamal.api.Processor)} method and checks the
+ * returned string with what was expected.
  * <p>
  * To ease this task you can put this module on the test dependencies and have a test like
  *
@@ -37,20 +37,19 @@ import java.lang.reflect.InvocationTargetException;
  * <pre>
  *     TestThat.forMacro(For.class).fromInput(" x in a,b,c,d= x is either a, b, c or d\n").throwsBadSyntax();
  * </pre>
- *
+ * <p>
  * If you expect any other exception, other than {@code BadSyntaxAt} then you can also use {@code
  * throwsUp(exception.class)} instead of {@code throwsBadSyntax()}.
- *
+ * <p>
  * You can also define user defined and built-in macros on the outermost and also on the global level.
- *
+ * <p>
  * Another possibility to use this class is to
  *
  * <pre>{@code
  * TestThat.theInput("{@define a=alma}{a}").results("alma")
  * }</pre>
- *
+ * <p>
  * that invokes not only one macro but rather the whole processing engine.
- *
  */
 public class TestThat {
     final private Class<? extends Macro> klass;
@@ -90,14 +89,14 @@ public class TestThat {
 
     private Position pos = null;
 
-    public TestThat atPosition(String fileName, int line, int col){
-        pos = new Position(fileName,line,col);
+    public TestThat atPosition(String fileName, int line, int col) {
+        pos = new Position(fileName, line, col);
         return this;
     }
 
     /**
-     * Create a new macro, a new processor and test that the input creates the expected output.
-     * If they are not the same then JUnit5 assertion failure will happen.
+     * Create a new macro, a new processor and test that the input creates the expected output. If they are not the same
+     * then JUnit5 assertion failure will happen.
      *
      * @param expected the expected output of the macro
      * @throws NoSuchMethodException     if the macro class can not be instantiated
@@ -124,7 +123,6 @@ public class TestThat {
     }
 
 
-
     /**
      * Checks that the macro throws an exception for a given input.
      *
@@ -135,15 +133,15 @@ public class TestThat {
      * @throws InvocationTargetException if the macro class can not be instantiated
      */
     public void throwsUp(Class<? extends Throwable> throwable) throws
-            NoSuchMethodException,
-            IllegalAccessException,
-            InstantiationException,
-            InvocationTargetException {
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException {
         final var in = new javax0.jamal.tools.Input(input, null);
-        if( klass != null ) {
+        if (klass != null) {
             final var sut = createSut();
             Assertions.assertThrows(throwable, () -> sut.evaluate(in, processor));
-        }else{
+        } else {
             Assertions.assertThrows(throwable, () -> processor.process(in));
         }
     }
@@ -157,10 +155,10 @@ public class TestThat {
      * @throws InvocationTargetException if the macro class can not be instantiated
      */
     public void throwsBadSyntax() throws
-            NoSuchMethodException,
-            IllegalAccessException,
-            InstantiationException,
-            InvocationTargetException {
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException {
         throwsUp(BadSyntax.class);
     }
 
@@ -175,14 +173,14 @@ public class TestThat {
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat global(String id, String content, String... parameters) throws BadSyntax {
-        var macro = new javax0.jamal.engine.UserDefinedMacro(processor,id, content, parameters);
+        var macro = new javax0.jamal.engine.UserDefinedMacro(processor, id, content, parameters);
         processor.getRegister().global(macro);
         return this;
     }
 
     /**
-     * You can use this method to define a global built-in macro. This may be needed when the macro tested
-     * needs the services of other macros.
+     * You can use this method to define a global built-in macro. This may be needed when the macro tested needs the
+     * services of other macros.
      *
      * @param macro the macro that the tested macro needs for its functioning
      * @return {@code this}
@@ -216,14 +214,14 @@ public class TestThat {
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat define(String id, String content, String... parameters) throws BadSyntax {
-        var macro = new UserDefinedMacro(processor,id, content, parameters);
+        var macro = new UserDefinedMacro(processor, id, content, parameters);
         processor.getRegister().define(macro);
         return this;
     }
 
     /**
-     * You can use this method to define a local built-in macro. This may be needed when the macro tested
-     * needs the services of other macros.
+     * You can use this method to define a local built-in macro. This may be needed when the macro tested needs the
+     * services of other macros.
      *
      * @param macro the macro that the tested macro needs for its functioning
      * @return {@code this}

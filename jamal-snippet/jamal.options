@@ -24,12 +24,12 @@
 # cp ./target/classes
 # 'pattern' is a regular expression to select the files that are to be processed by Jamal
 # only the files that have the pattern in their name will be processed
-pattern .*\.jam$
+pattern ^README\.adoc\.jam$
 # 'exclude' is a regular expression to exclude files from being processed
 # files that have the pattern in their name will not be processed even if the 'pattern' matches
 exclude
 
-# 'to' and 'from' control how the name of the output is calculated from the input
+# 'to' and 'from' control hov the name of the output is calculated from the input
 # when a file is processed the name of the file will be transformed using replaceAll(from,to)
 # 'from' is a regular expression, 'to' is a string
 # the default is to chop off the '.jam' extension from the end of the file name, so for example
@@ -38,8 +38,8 @@ to
 from \.jam$
 
 # 'open' and 'close' define the macro opening and closing strings
-open {
-close }
+open {%
+close %}
 
 # 'source' defines the source directory
 # the files in this directory and in the directories below it recursively will be processed

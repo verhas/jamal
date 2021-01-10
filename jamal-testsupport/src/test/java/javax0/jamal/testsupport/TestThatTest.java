@@ -18,12 +18,7 @@ public class TestThatTest {
 
     @Test
     @DisplayName("TestThat asserts the result OK")
-    void testResultOK() throws
-            InvocationTargetException,
-            NoSuchMethodException,
-            InstantiationException,
-            BadSyntax,
-            IllegalAccessException {
+    void testResultOK() throws Exception {
         TestThat.theMacro(TestingMacro.class).fromTheInput("").results(null);
     }
 
@@ -50,7 +45,6 @@ public class TestThatTest {
             InvocationTargetException,
             NoSuchMethodException,
             InstantiationException,
-            BadSyntaxAt,
             IllegalAccessException {
         TestThat.theMacro(TestingThrowingMacro.class).fromTheInput("").throwsBadSyntax();
     }

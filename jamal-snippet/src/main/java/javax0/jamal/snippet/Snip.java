@@ -6,7 +6,8 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
-public class Snippet implements Macro {
+public class Snip implements Macro {
+
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         InputHandler.skipWhiteSpaces(in);

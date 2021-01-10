@@ -1,10 +1,10 @@
-{@snip:collect .}
+{#snip:collect . {@define include=1}}
 First snippet {@snip first_snippet}
 2. snippet {@snip second_snippet}
 
 Next file
-
+{@try!
 First snippet {@snip second_file_first$snippet}
 Second snippet {@snip seconda_snippet_uniconde}
-
+}
 and this is the end

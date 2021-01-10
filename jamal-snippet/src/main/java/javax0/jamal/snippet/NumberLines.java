@@ -7,6 +7,8 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
 
+import java.util.UnknownFormatConversionException;
+
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 
 /**
@@ -41,7 +43,12 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
  * <p>
  * are the default values.
  */
-public class Number implements Macro, InnerScopeDependent {
+public class NumberLines implements Macro, InnerScopeDependent {
+    @Override
+    public String getId() {
+        return "numberLines";
+    }
+
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var reader = MacroReader.macro(processor);
@@ -53,7 +60,12 @@ public class Number implements Macro, InnerScopeDependent {
         final var sb = in.getSB();
         int lineNr = start;
         while (i > -1) {
-            final var formattedNr = String.format(format, lineNr);
+            final String formattedNr;
+            try {
+                formattedNr = String.format(format, lineNr);
+            }catch (UnknownFormatConversionException e){
+                throw new BadSyntax("The format string in macro '"+getId()+"' is incorrect.",e);
+            }
             sb.insert(i, formattedNr);
             i += formattedNr.length();
             lineNr += step;

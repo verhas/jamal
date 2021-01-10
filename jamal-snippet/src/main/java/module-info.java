@@ -1,9 +1,12 @@
 import javax0.jamal.api.Macro;
 import javax0.jamal.snippet.Clear;
 import javax0.jamal.snippet.Collect;
-import javax0.jamal.snippet.Number;
-import javax0.jamal.snippet.Snippet;
-import javax0.jamal.snippet.Trim;
+import javax0.jamal.snippet.NumberLines;
+import javax0.jamal.snippet.SnipProperties;
+import javax0.jamal.snippet.Snip;
+import javax0.jamal.snippet.SnipXPath;
+import javax0.jamal.snippet.SnipXml;
+import javax0.jamal.snippet.TrimLines;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;
@@ -11,10 +14,14 @@ module jamal.snippet {
     requires jamal.tools;
     requires jamal.engine;
     requires java.scripting;
+    requires java.xml;
     provides Macro with Clear,
         Collect,
-        Number,
-        Snippet,
-        Trim
+        NumberLines,
+        Snip,
+        TrimLines,
+        SnipProperties,
+        SnipXml,
+        SnipXPath
         ;
 }

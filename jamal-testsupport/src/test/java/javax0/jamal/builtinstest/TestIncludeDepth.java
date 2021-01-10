@@ -15,11 +15,7 @@ public class TestIncludeDepth {
     }
 
     @Test
-    void testIncludeDepthDoesNotFailsForMultipleIncludesOnSameLevel() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
-        final var sb = new StringBuilder();
-        for( int i = 0 ; i < 200 ; i++ ){
-            sb.append("{@include res:null.jim}");
-        }
-        TestThat.theInput(sb.toString()).results("");
+    void testIncludeDepthDoesNotFailsForMultipleIncludesOnSameLevel() throws Exception {
+        TestThat.theInput("{@include res:null.jim}".repeat(200)).results("");
     }
 }

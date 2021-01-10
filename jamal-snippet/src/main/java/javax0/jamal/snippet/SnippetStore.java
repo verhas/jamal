@@ -30,10 +30,10 @@ public class SnippetStore implements Identified {
      * @param processor the processor of which we need the options store
      * @return the snippet store.
      */
-    public static SnippetStore getInstance(Processor processor) throws BadSyntax {
-        final var optionsMacro = processor.getRegister().getUserDefined(SNIPPETS_MACRO_ID);
-        if (optionsMacro.isPresent()) {
-            return (SnippetStore) optionsMacro.get();
+    public static SnippetStore getInstance(Processor processor) {
+        final var snippetsMacro = processor.getRegister().getUserDefined(SNIPPETS_MACRO_ID);
+        if (snippetsMacro.isPresent()) {
+            return (SnippetStore) snippetsMacro.get();
         } else {
             final var newSnippetStore = new SnippetStore();
             processor.defineGlobal(newSnippetStore);
