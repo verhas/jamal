@@ -5,7 +5,7 @@
 /open https://raw.githubusercontent.com/verhas/jshboot/main/JshBoot.java
 /open https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/scripts/optionloader.jsh
 
-    String VERSION = "1.5.1";
+    String VERSION = "1.5.3";
     var boot=JshBoot.defaultLocalRepo();
     loadOptions();
 

@@ -29,7 +29,7 @@ pattern ^README\.adoc\.jam$
 # files that have the pattern in their name will not be processed even if the 'pattern' matches
 exclude
 
-# 'to' and 'from' control hov the name of the output is calculated from the input
+# 'to' and 'from' control how the name of the output is calculated from the input
 # when a file is processed the name of the file will be transformed using replaceAll(from,to)
 # 'from' is a regular expression, 'to' is a string
 # the default is to chop off the '.jam' extension from the end of the file name, so for example
