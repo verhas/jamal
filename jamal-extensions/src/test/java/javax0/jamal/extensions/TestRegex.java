@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class RegexTest {
+public class TestRegex {
 
     @Test
     @DisplayName("replaceAll works with regular expressions")
