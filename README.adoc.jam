@@ -215,7 +215,7 @@ These are not hardwired in Jamal and there is not even a suggested default for t
 The embedding application has to define the opening string and the closing string.
 For example, the embedding Java::Geci application uses `{{%@ident%}%` and `%{%@ident%}}` as macro open and macro close strings.
 It does it because the `{` and `}` characters frequently appear in the Java source code.
-On the other hand, Java code rarely uses the ``{{%@ident%}%` or `%{%@ident%}}` format.
+On the other hand, Java code rarely uses the `{{%@ident%}%` or `%{%@ident%}}` format.
 In this documentation, we use the `{` and `}` strings.
 
 However, you have to be aware that this is NOT enforced.
@@ -786,16 +786,8 @@ For example:
 %}
 
 and the output is
-{@comment the 'sample' macro evaluation does not make it possible to demonstrate this here
-would be too complex. It is demonstrated in the javax0/jamal/extensions/TestUserDefinedPostEval.java
-}
-[source]
-----
-{c}
-{b}
-{a}
-this is it
-----
+
+{%output%}
 
 In this example the macro `userDefined` is `{`c}`.
 User defined macros values are evaluated after the evaluation of the macro itself, therefore when we use `{userDefined}` we get `{c}`.
@@ -2175,3 +2167,10 @@ This is a simplified interface to access the functionality of Jamal.
 The current and past versions of the JavaDoc can be read online at the address:
 
 https://javadoc.io/doc/com.javax0.jamal/jamal-parent/
+
+=== Maintenance of this document
+
+The source of this document is `README:adoc.jam`.
+The Jamal conversion uses the snippet macros and some aux built-in macros.
+The conversion is part of the execution of the tests.
+The code samples are automatically executed using this process and the sample output is automatically inserted into the document.
