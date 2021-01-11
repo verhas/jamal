@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.OptionsStore;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 
@@ -26,6 +27,7 @@ public class TrimLines implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var reader = MacroReader.macro(processor).integer();
         final var margin = reader.readValue("margin").orElse(0);
+        final var trimVertical = OptionsStore.getInstance(processor).is("trimVertical");
         skipWhiteSpaces2EOL(in);
         final var sb = in.getSB();
         int minSpaces = Integer.MAX_VALUE;
@@ -43,13 +45,21 @@ public class TrimLines implements Macro, InnerScopeDependent {
         minSpaces -= margin;
         for (int i = 0; i < sb.length(); ) {
             if (minSpaces < 0) {
-                sb.insert(i," ".repeat(-minSpaces));
+                sb.insert(i, " ".repeat(-minSpaces));
             } else {
                 sb.delete(i, i + minSpaces);
             }
             int index = sb.indexOf("\n", i);
             if (index == -1) break;
             i = index + 1;
+        }
+        if (trimVertical) {
+            while (sb.length() > 0 && sb.charAt(0) == '\n') {
+                sb.delete(0, 1);
+            }
+            while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
+                sb.delete(sb.length() - 1, sb.length());
+            }
         }
         return sb.toString();
     }

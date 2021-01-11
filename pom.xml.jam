@@ -60,6 +60,7 @@
                                     {opens/testsupport/testsupport}
                                     {opens/extensions/extensions}
                                     {opens/snippet/snippet}
+                                    {opens/snippet/documentation}
                                 </argLine>
                     }
                 }

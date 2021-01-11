@@ -1,35 +1,18 @@
 This file contains macros, which are used in readme files.
 These macros help embedding Jamal macro samples and run them.
 
+{%@use javax0.jamal.documentation.Sample%}
+{%@use javax0.jamal.documentation.Output%}
+{%@options trimVertical%}
 
-
-// convert a sample that uses the default { and } characters as start and stop string so that it will
-// be executable using the current start and stop string that each also contains an extra %
-{%@script exe/JShell(sample)=
-    System.out.print(sample.replaceAll("\\{","{"+"%").replaceAll("\\}","%"+"}").replaceAll("(\\{"+"%){4}","{").replaceAll("(%\\}){4}","}"));
-%}
-
-// trim the starting and trailing new line characters
-{%@script trim/JShell(sample)=
-    System.out.print(sample.replaceAll("^\\n+","").replaceAll("\\n$",""));
-%}
-
-{%@script untrim/JShell(sample)=
-    System.out.print(sample.replaceAll("\\{"+"%","{").replaceAll("%\\}","}"));
-%}
-
-// save the sample code into the user defined macro `lastCode` and also display it as code
-{%@define sample(code)={%@define lastCode=code%}[source]
+{%@define sample(code)={%@define :lastCode=code%}[source]
 ----
-{%trim/code%}
+{%#trimLines {%@sample code%}%}
 ----%}
 
-// ouput the code. exe will replace the characters so that they become macros in this environment, trim will
-// cut off the startzing and trailing new lines and when the macro is post evaluated then the sample macros will be
-// finally evaluated and so displayed as sample output
 {%@define output=[source]
 ----
-{%trim/{%exe/{%lastCode%}%}%}
+{%#trimLines {%#output {%lastCode%}%}%}
 ----
 %}
 

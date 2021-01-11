@@ -111,6 +111,7 @@
                                     --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
                                     --add-opens jamal.extensions/javax0.jamal.extensions=ALL-UNNAMED
                                     --add-opens jamal.snippet/javax0.jamal.snippet=ALL-UNNAMED
+                                    --add-opens jamal.snippet/javax0.jamal.documentation=ALL-UNNAMED
                                 </argLine>
                     </configuration>
                 </plugin>

@@ -1,10 +1,8 @@
-package javax0.jamal.extensions;
+package javax0.jamal.documentation;
 
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.FileTools;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 public class TestConvertReadme {
     @Test
