@@ -366,7 +366,7 @@ To ensure that all `begin` has an `end` you can name the blocks.
 You can put an arbitrary string after the macro name `begin` and if you do then you have to repeat the same string after the macro name `end`.
 The spaces from the beginning, and the end of the parameter are trimmed.
 
- [source]
+[source]
 ----
 {@define Z=1}
 {@begin alma}
@@ -379,12 +379,9 @@ will result
 
 [source]
 ----
- 
- 
-    2
-    
- 12
- 
+   2
+   
+12
 ----
 
 

@@ -350,13 +350,13 @@ To ensure that all `begin` has an `end` you can name the blocks.
 You can put an arbitrary string after the macro name `begin` and if you do then you have to repeat the same string after the macro name `end`.
 The spaces from the beginning, and the end of the parameter are trimmed.
 
- {%sample/
- {@define Z=1}
- {@begin alma}
-    {@define Z=2}{Z}
-    {@define S=2}{@export S}
- {@end alma }{Z}{S}
- %}
+{%sample/
+{@define Z=1}
+{@begin alma}
+   {@define Z=2}{Z}
+   {@define S=2}{@export S}
+{@end alma }{Z}{S}
+%}
 
 will result
 
