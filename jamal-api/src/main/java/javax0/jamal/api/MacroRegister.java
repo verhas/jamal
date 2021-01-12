@@ -120,7 +120,7 @@ public interface MacroRegister extends Delimiters {
      *              invoked it checks that the object passed as argument is the same as the object corresponding to the
      *              last {@code push(Marker)}.
      */
-    void push(Marker check);
+    void push(Marker check) throws BadSyntax;
 
     /**
      * See the documentation of the method {@link #push(Marker)}
@@ -131,4 +131,15 @@ public interface MacroRegister extends Delimiters {
      */
     void pop(Marker check) throws BadSyntax;
 
+    /**
+     * See the documentation of the method {@link #push(Marker)}
+     * <p>
+     * Closes most inner scope of the macros for update. The macros are still in scope, but any new macro defined will
+     * be defined one level higher.
+     *
+     * @param check see {@link #push(Marker)}
+     * @throws BadSyntax when the pop cannot be performed at the specific situation because there was no corresponding
+     *                   push
+     */
+    void lock(Marker check) throws BadSyntax;
 }
