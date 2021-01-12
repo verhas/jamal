@@ -120,7 +120,7 @@ public interface MacroRegister extends Delimiters {
      *              invoked it checks that the object passed as argument is the same as the object corresponding to the
      *              last {@code push(Marker)}.
      */
-    void push(Marker check) throws BadSyntax;
+    void push(Marker check);
 
     /**
      * See the documentation of the method {@link #push(Marker)}

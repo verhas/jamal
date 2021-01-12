@@ -11,7 +11,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 public class Begin implements Macro {
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         skipWhiteSpaces(in);
         var marker = new NamedMarker(in.toString().trim(), s -> "{@begin " + s + "}");
         processor.getRegister().push(marker);

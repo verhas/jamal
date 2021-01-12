@@ -212,18 +212,22 @@ public class Processor implements javax0.jamal.api.Processor {
             final var qualifiers = new MacroQualifier(macroInputAfter, postEvalCount);
             final String text;
             if (qualifiers.macro instanceof InnerScopeDependent) {
-                text = evalMacro(tr, qualifiers, () -> macros.pop(marker));
+                text = evalMacro(tr, qualifiers, () -> macros.pop(marker), this::noop);
             } else if (qualifiers.macro instanceof Macro) {
-                macros.pop(marker);
-                text = evalMacro(tr, qualifiers, () -> {});
+                BadSyntaxAt.addPosition(qualifiers.input, () -> macros.pop(marker));
+                text = evalMacro(tr, qualifiers, this::noop, this::noop);
             } else {
-                //TODO: later version will close the scope after evaluating the inner part
-                macros.pop(marker);
-                text = evalMacro(tr, qualifiers, () -> {});
+                text = evalMacro(tr, qualifiers, () -> macros.pop(marker), () -> macros.lock(marker));
             }
             tr.appendResultState(text);
             output.append(text);
         }
+    }
+
+    /**
+     * No operation.
+     */
+    private void noop() {
     }
 
     /**
@@ -257,7 +261,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return the evaluated string of the macro
      * @throws BadSyntaxAt when the syntax of the macro is bad
      */
-    private String evalMacro(final TraceRecord tr, final MacroQualifier qualifier, Runnable popper) throws BadSyntax {
+    private String evalMacro(final TraceRecord tr, final MacroQualifier qualifier, Runnable popper, Runnable locker) throws BadSyntax {
         final var ref = qualifier.input.getPosition();
         tr.setId(qualifier.macroId);
         if (qualifier.isBuiltIn) {
@@ -274,11 +278,13 @@ public class Processor implements javax0.jamal.api.Processor {
             final String rawResult;
             try {
                 rawResult = evalUserDefinedMacro(qualifier.input, tr, qualifier);
+                locker.run();
                 if (qualifier.isVerbatim) {
                     if (qualifier.postEvalCount > 0) {
                         throw new BadSyntax("Verbatim and ! cannot be used together on a user defined macro.");
                     }
                     tr.appendAfterEvaluation(rawResult);
+                    popper.run();
                     return rawResult;
                 } else {
                     String result;
@@ -454,7 +460,6 @@ public class Processor implements javax0.jamal.api.Processor {
         final Input output = makeInput("", input.getPosition());
         if (input.indexOf(macros.open()) == 0 && !qualifier.oldStyle) {
             while (input.length() > 0 && input.indexOf(macros.open()) == 0) {
-                final var pos = input.getPosition();
                 skip(input, macros.open());
                 final var macroStart = getNextMacroBody(input);
                 final var macroStartInput = makeInput(macroStart, input.getPosition())

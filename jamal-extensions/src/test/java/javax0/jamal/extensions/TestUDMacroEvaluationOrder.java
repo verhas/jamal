@@ -12,11 +12,14 @@ public class TestUDMacroEvaluationOrder {
             "{k /Bond}\n"+
             "{son}"
             ).results("Bond, James Bond\n" +
-            // TODO: later versions should make the definition of 'firstName' to 'James' local and
-            //  result here
-            // "Bond, Julia Bond\n"+
-            "Bond, James Bond\n"+
-            // while keeping this output safe
+             "Bond, Julia Bond\n"+
             "Junior Bond");
     }
+
+    @Test
+    void testBug()throws Exception{
+        TestThat.theInput("{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}")
+            .results("this is it {a}");
+    }
+
 }

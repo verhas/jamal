@@ -50,4 +50,18 @@ public class BadSyntaxAt extends BadSyntax {
     public String getMessage() {
         return super.getMessage() + " at " + pos.file + "/" + pos.line + ":" + pos.column;
     }
+
+    public interface Runnable {
+        void run() throws BadSyntax;
+    }
+
+    public static void addPosition(Input in, Runnable r) throws BadSyntax {
+        try {
+            r.run();
+        } catch (BadSyntaxAt e) {
+            throw e;
+        } catch (BadSyntax e) {
+            throw new BadSyntaxAt(e, in.getPosition());
+        }
+    }
 }

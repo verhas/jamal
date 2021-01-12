@@ -24,14 +24,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     private final List<Delimiters> delimiters = new ArrayList<>();
     private final List<List<Delimiters>> savedDelimiters = new ArrayList<>();
     private final Deque<Object> stackCheckObjects = new LinkedList<>();
-    private boolean registerLocked = false;
+    private final List<Boolean> locked = new ArrayList<>();
 
     public MacroRegister() {
-        try {
-            push(null);
-        } catch (BadSyntax badSyntax) {
-            throw new RuntimeException("It must not happen. We just initialized registerLocked to false.");
-        }
+        push(null);
     }
 
     /**
@@ -39,10 +35,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
      * from the length of the stack, and the indexing starts with zero, therefore the last element is length-1, but when
      * that locked then the last writable element is length-2
      *
-     * @return
+     * @return 1 or 2
      */
     private int writableOffset() {
-        return registerLocked ? 2 : 1;
+        return locked.get(locked.size() - 1) ? 2 : 1;
     }
 
     public <T extends Identified> Optional<T> getUserDefined(String id) {
@@ -116,11 +112,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void push(Marker check) throws BadSyntax {
-        if (registerLocked) {
-            throw new BadSyntax("The register is locked when trying to open a new layer.");
-        }
-        registerLocked = false;
+    public void push(Marker check) {
+        locked.add(false);
         stackCheckObjects.addLast(check);
         macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::push)));
         macroStack.add(new HashMap<>());
@@ -138,6 +131,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
                 stackCheckObjects.getLast());
         }
         if (udMacroStack.size() > 1) {
+            locked.remove(locked.size() - 1);
             stackCheckObjects.removeLast();
             macroStack.remove(macroStack.size() - 1);
             macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::pop)));
@@ -159,7 +153,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         }
 
         if (udMacroStack.size() > 1) {
-            registerLocked = true;
+            locked.remove(locked.size() - 1);
+            locked.add(true);
         } else {
             throw new BadSyntax("Cannot lock the top level scope.");
         }
