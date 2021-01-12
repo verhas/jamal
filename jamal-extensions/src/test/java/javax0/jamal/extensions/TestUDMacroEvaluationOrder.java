@@ -17,7 +17,7 @@ public class TestUDMacroEvaluationOrder {
     }
 
     @Test
-    void testBug()throws Exception{
+    void testVerbatimAlsoClosesTheScope()throws Exception{
         TestThat.theInput("{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}")
             .results("this is it {a}");
     }

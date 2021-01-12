@@ -717,7 +717,7 @@ Therefore `y` will be `here we are local`.
 That is also because  `y` is defined using the `#` character before the built-in macro keyword `define` and thus the content of the definition is evaluated before defining the global `y`.
 
 [[eval]]
-=== `eval`
+==== `eval`
 
 since 1.0.0 (core)
 
@@ -802,7 +802,7 @@ When using `!` to evaluate the result of a macro you cannot specify any scriptin
 The evaluation will be Jamal macros evaluation.
 
 [[env]]
-=== `env`
+==== `env`
 
 since 1.3.0
 
@@ -826,7 +826,7 @@ This can be used to test that an environment variable exists or not.
 Testing the value of the environment variable in an `{@if ... }` macro may be misleading when the value is literal `false` or an empty string.
 
 [[import]]
-=== `import`
+==== `import`
 
 since 1.0.0 (core)
 
@@ -869,7 +869,7 @@ This way you can freely import resource files provided in JAR file or through th
 Such import files cannot redefine the macro opening and closing string unless file importing also uses `{` and `}`.
 
 [[include]]
-=== `include`
+==== `include`
 
 since 1.0.0 (core)
 
@@ -900,7 +900,7 @@ This limit prevents this to happen.
 The limit can be modified setting the environment variable `JAMAL_INCLUDE_DEPTH`.
 
 [[use]]
-=== `use`
+==== `use`
 
 `use` declares a Java class as a built-in macro.
 
@@ -951,7 +951,7 @@ It is recommended to use the alias in the Jamal source file.
 That way there is no ambiguity when reading the code what the name of the built-in macro is.
 
 [[script]]
-=== `script`
+==== `script`
 
 since 1.0.0 (core)
 
@@ -1043,7 +1043,7 @@ In short, the arguments to a `script` macro will be converted to the following t
 For more information and details see the section <<JShell>>
 
 [[JShell]]
-=== `JShell`
+==== `JShell`
 
 since 1.3.0 (core)
 
@@ -1120,7 +1120,7 @@ When you design a macro library it is not enough to import the library to discov
 The scripts have to be used to manifest the error.
 
 [[for]]
-=== `for`
+==== `for`
 
 since 1.0.0 (core) since 1.5.0 multi-argument `for`
 
@@ -1259,7 +1259,7 @@ will result
 
 
 [[if]]
-=== `if`
+==== `if`
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -1306,7 +1306,7 @@ The output automatically generated int this document:
 {%output%}
 
 [[ident]]
-=== `ident`
+==== `ident`
 
 since 1.0.0 (core)
 
@@ -1411,7 +1411,7 @@ If many of them are used in an extreme case they can be mixed together.
 Note, if the macro does not get evaluated fully the order of these characters may not be preserved in the output.
 
 [[verbatim]]
-=== `verbatim`
+==== `verbatim`
 
 since 1.0.0 (core)
 
@@ -1593,7 +1593,7 @@ This option is obsolete from the very start of the introduction and is meant as 
 It will be removed from Jamal versions 2.0.0 and later.
 
 [[sep]]
-=== `sep`
+==== `sep`
 
 since 1.0.0 (core)
 
@@ -1806,7 +1806,7 @@ The macro `a3` has the value `{z}` which is evaluated after the macro `a3` is re
 {%output%}
 
 [[export]]
-=== `export`
+==== `export`
 
 since 1.0.0 (core)
 
@@ -1873,7 +1873,7 @@ You can export a macro that was defined in a lower scope and was exported to the
 You cannot export macros from the top-level scope, because there is no enclosing scope above that.
 
 [[options]]
-=== `options`
+==== `options`
 
 since 1.0.3 (core)
 
@@ -1965,7 +1965,7 @@ On the other hand, we envision that with the introduction of this feature most o
 We wanted to avoid starting every new Jamal source file with the `nl` option setting.
 
 [[try]]
-=== `try`
+==== `try`
 
 since 1.5.0 (core)
 
