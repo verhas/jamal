@@ -191,11 +191,21 @@ public class Processor implements javax0.jamal.api.Processor {
                 macroProcessed = macroRaw;
             } else if (firstCharIs(macroRaw, SpecialCharacters.PRE_VALUATED)) {
                 final var macroInputBefore = makeInput(macroRaw, macroStartPosition);
-                macroProcessed = process(macroInputBefore);
+                try {
+                    macroProcessed = process(macroInputBefore);
+                }catch(Exception e){
+                    macros.pop(marker);
+                    throw e;
+                }
                 tr.appendAfterEvaluation(macroProcessed);
             } else {
                 final var macroInputBefore = makeInput(macroRaw, macroStartPosition);
-                macroProcessed = processMacroContentBeforeMacroItself(macroRaw, macroInputBefore);
+                try {
+                    macroProcessed = processMacroContentBeforeMacroItself(macroRaw, macroInputBefore);
+                }catch(Exception e){
+                    macros.pop(marker);
+                    throw e;
+                }
                 tr.appendAfterEvaluation(macroProcessed);
             }
             final var macroInputAfter = makeInput(macroProcessed, macroStartPosition);
@@ -247,8 +257,12 @@ public class Processor implements javax0.jamal.api.Processor {
         final var ref = qualifier.input.getPosition();
         tr.setId(qualifier.macroId);
         if (qualifier.isBuiltIn) {
-            var result = evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
-            popper.run();
+            String result;
+            try {
+                result = evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
+            } finally {
+                popper.run();
+            }
             result = postEvaluate(qualifier, ref, result);
             return result;
         } else {
@@ -263,8 +277,12 @@ public class Processor implements javax0.jamal.api.Processor {
                     tr.appendAfterEvaluation(rawResult);
                     return rawResult;
                 } else {
-                    var result = process(makeInput(rawResult, qualifier.input.getPosition()));
-                    popper.run();
+                    String result;
+                    try {
+                        result = process(makeInput(rawResult, qualifier.input.getPosition()));
+                    } finally {
+                        popper.run();
+                    }
                     result = postEvaluate(qualifier, qualifier.input.getPosition(), result);
                     tr.appendAfterEvaluation(result);
                     return result;
@@ -664,6 +682,9 @@ public class Processor implements javax0.jamal.api.Processor {
      * @throws BadSyntaxAt if the macro opening and closing strings are not properly balanced
      */
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
+        // keep track of all the opened and not yet closed macro start string
+        // use it to report error when a macro is not terminated before EOF
+        // knowing where the last opening string was that had no closing pair
         var refStack = new LinkedList<Position>();
         refStack.add(input.getPosition());
         var counter = 1; // we are after one macro opening, so that counts as one opening
