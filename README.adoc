@@ -1040,6 +1040,8 @@ It is possible to implement recursion including of files.
 If the recursion does not end the include macros would drive the macro resolution into an infinite loop.
 This limit prevents this to happen.
 
+The limit can be modified setting the environment variable `JAMAL_INCLUDE_DEPTH`.
+
 [[use]]
 === `use`
 
@@ -1347,6 +1349,25 @@ a is c
 
 
 In this case the value of the macro `$forsep` is effective inside the `for` but it is undefined outside.
+
+[NOTE]
+====
+When a built-in macro is used with the `#` character in front of it the content of the use is evaluated before the macro.
+This evaluation is executed in a freshly opened scope, which is usually closed before the evaluation of the built-in macro starts.
+It means that any local definitions inside the use of the macro go out of scope when the built-in macro evaluates.
+
+Some built-in macros, like `for`, however, rely on the value of the macros that may be defined inside.
+These buil-in macros are called "inner scope dependent" macros, because they depend on the inner scope.
+If you look at the Java implementation of such macros, you can see that they implement the interface `InnerScopeDependent`.
+If a built-in macro is inner scope dependent then it is evaluated while the inner scope is still open.
+In this case the scope is closed after the built-in macro was evaluated.
+
+If the built-in macro is surrounded with an `{@eval ...}` macro, that is already evaluated in the outer scope.
+Using the `{#!macro ...}` way, where the `!` character directs Jamal to execute the result of the macro is the same as using the `{@eval...}` surrounding the macro.
+The "post evaluation" runs in the outer scope.
+
+The macro `for` is inner scope dependent.
+====
 
 If the number of the actual values separated by `|` character is not the same as the number of the variables in the for loop then the macro evaluation will throw a bad syntax exception.
 This can be suppressed with the option `lenient`.
@@ -2243,6 +2264,7 @@ When an error happens, and the `try` macro catches the exception thrown the scop
 
 You do not need to configure Jamal.
 The environment variables that you can set to modify the behavior of Jamal are the followings.
+All environment variables start with the prefix "`JAMAL_`".
 
 * `JAMAL_TRACE` defines the name of the trace file.
 This environment variable is used only when the Java system property `-Djamal.trace=tracefile.xml` is not set.
@@ -2265,6 +2287,8 @@ In this case set this to a smaller value.
 It may also happen that you deliberately create complex recursive macros.
 In that case this limit may be too small.
 Set your value to a limit that fits your need.
+
+* `JAMAL_INCLUDE_DEPTH` can set the maximum number of file include nesting. The default value is 100.
 
 [[httpsres]]
 === Resource Files and Web Resources

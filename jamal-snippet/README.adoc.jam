@@ -1,0 +1,78 @@
+== Jamal Snippet Handling Macros
+
+Snippet handling macros help you to automatically include information from program source code into the documentation.
+
+When you document an application there is a lot of information that changes by the change of the source code.
+These changes have to be followed in the documentation.
+Some changes need manual editing, some change can be automated.
+When the functionality of the program changes, then the new documentation has to describe the new functionality.
+This change of the documentation can hardly be automated.
+When some literal parameter also used in the document changes then the documentation can automatically be updated.
+A typical example is the version number of the application.
+The documentation many times may refer to the latest version.
+
+For example, if you want to use the latest version of Jamal Snippet macro as a dependency in a `pom.xml` file then you have to have the lines:
+
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%@snip:xpath pom /project/version/text()%}%}\
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+What you see in the `README.adoc` file converted from the `README.adoc.jam` is the actual version number.
+The original file however, contains
+
+[source,xml]
+----
+{@snip:xml pom=pom.xml}\
+{#define VERSION={@snip:xpath pom /project/version/text()}}\
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>{{%@ident%}%VERSION%{%@ident%}}</version>
+</dependency>
+----
+
+The Jamal Snippet macros help you automate to insert actual values and code fragments from
+
+* any source code
+* XML file
+* properties files.
+
+These small text pieces are called snippets.
+
+When the `.jam` file gets processed the snippets will automatically contain the actual text from the source code.
+This way it is easier to keep your documentation up to date.
+
+=== Usage
+
+If you are using Jamal programmatically or from Maven then the dependency you have add to your project is:
+
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+The macro classes are listed in the `provides` directive in the `module-info.java` therefore they are available for the Jama source code.
+There is no need to invoke the `use` command to get access to these macros.
+
+=== Macros
+
+
+
+==== `snip:collect`
+==== `snip:clear`
+==== `snip`
+==== `snip:properties`
+==== `snip:xml`
+==== `snip:xpath`
+==== `trimLines`
+==== `numberLines`

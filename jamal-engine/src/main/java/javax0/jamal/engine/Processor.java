@@ -193,7 +193,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 final var macroInputBefore = makeInput(macroRaw, macroStartPosition);
                 try {
                     macroProcessed = process(macroInputBefore);
-                }catch(Exception e){
+                } catch (Exception e) {
                     macros.pop(marker);
                     throw e;
                 }
@@ -202,7 +202,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 final var macroInputBefore = makeInput(macroRaw, macroStartPosition);
                 try {
                     macroProcessed = processMacroContentBeforeMacroItself(macroRaw, macroInputBefore);
-                }catch(Exception e){
+                } catch (Exception e) {
                     macros.pop(marker);
                     throw e;
                 }
@@ -213,7 +213,11 @@ public class Processor implements javax0.jamal.api.Processor {
             final String text;
             if (qualifiers.macro instanceof InnerScopeDependent) {
                 text = evalMacro(tr, qualifiers, () -> macros.pop(marker));
+            } else if (qualifiers.macro instanceof Macro) {
+                macros.pop(marker);
+                text = evalMacro(tr, qualifiers, () -> {});
             } else {
+                //TODO: later version will close the scope after evaluating the inner part
                 macros.pop(marker);
                 text = evalMacro(tr, qualifiers, () -> {});
             }
@@ -821,7 +825,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return an empty optional if the option is not present and a non-empty optional if the option is present. The
      * value inside the optional is not defined.
      */
-    public Optional<Boolean> option(String optionName) {
+    Optional<Boolean> option(String optionName) {
         return OptionsStore.getInstance(this).is(optionName) ? OPTIONAL_TRUE : Optional.empty();
     }
 
