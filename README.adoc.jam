@@ -104,8 +104,8 @@ Then we discuss the API that lets you embed the macro processing into your appli
     xvi)   <<verbatim,`verbatim`>>
     xvii)  <<options,`options`>>
     xviii) <<try,`try`>>
-    xix)   <<JamalENV,Jamal Environment Variables>>
-    xx)    <<JamalAPI,Jamal API>>
+4. <<JamalENV,Jamal Environment Variables>>
+5.    <<JamalAPI,Jamal API>>
 
 === Starting Jamal
 
