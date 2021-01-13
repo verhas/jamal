@@ -10,6 +10,8 @@ import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.engine.util.MacroQualifier;
+import javax0.jamal.engine.util.PrefixComposer;
 import javax0.jamal.engine.util.StackLimiter;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.OptionsStore;
@@ -22,22 +24,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static javax0.jamal.api.SpecialCharacters.IDENT;
-import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.contains;
-import static javax0.jamal.tools.InputHandler.copy;
 import static javax0.jamal.tools.InputHandler.eatEscapedNL;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
+import static javax0.jamal.tools.InputHandler.move;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.validIdChar;
 
 public class Processor implements javax0.jamal.api.Processor {
-
-    private static final String NOT_USED = null;
 
     private static final String[] ZERO_STRING_ARRAY = new String[0];
 
@@ -94,17 +92,17 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public String process(final Input in) throws BadSyntax {
+    public String process(final Input input) throws BadSyntax {
         limiter.up();
         final var output = makeInput();
         try {
-            while (in.length() > 0) {
-                if (in.indexOf(macros.open()) == 0) {
-                    skip(in, macros.open());
-                    skipWhiteSpaces(in);
-                    processMacro(output, in);
+            while (input.length() > 0) {
+                if (input.indexOf(macros.open()) == 0) {
+                    skip(input, macros.open());
+                    skipWhiteSpaces(input);
+                    processMacro(input, output);
                 } else {
-                    processText(output, in);
+                    processText(output, input);
                 }
             }
         } catch (BadSyntaxAt bsAt) {
@@ -130,7 +128,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * Process the text at the start of input till the first macro start.
      *
      * @param output where the text is appended
-     * @param input  where the text is read from and removed after wards
+     * @param input  where the text is read from and removed afterwards
      */
     private void processText(Input output, Input input) {
         try (final var tr = traceRecordFactory.openTextRecord(input.getPosition())) {
@@ -140,7 +138,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 tr.appendResultState(text);
                 output.append(text);
                 skip(input, nextMacroStart);
-            } else {
+            } else {// there are no more macros on the input
                 output.append(input);
                 input.reset();
             }
@@ -148,68 +146,29 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     /**
-     * Process the macro that starts at the first character of the input.
+     * Process the macro that starts at the first character of the input. This is already over the macro opening
+     * string.
      *
-     * @param output where the processed macro is appended
      * @param input  from where the macro beforeState is read and removed
+     * @param output where the processed macro is appended
      */
-    private void processMacro(Input output, Input input) throws BadSyntax {
+    private void processMacro(Input input, Input output) throws BadSyntax {
         try (final var tr = traceRecordFactory.openMacroRecord(input.getPosition())) {
-            final var macroStartPosition = input.getPosition();
-            int postEvalCount = 0;
-            int identCount = 0;
-            skipWhiteSpaces(input);
-            final var prefix = new StringBuilder();
-            while (firstCharIs(input, POST_VALUATE, IDENT)) {
-                if (firstCharIs(input, POST_VALUATE)) {
-                    postEvalCount++;
-                    skip(input, 1, prefix);
-                } else {
-                    identCount++;
-                    if (identCount > 1) {
-                        skip(input, 1, prefix);
-                    } else {
-                        skip(input, 1);
-                    }
-                }
-                skipWhiteSpaces(input, prefix);
-            }
-            final var macroRaw = getNextMacroBody(input);
-            if (identCount > 0) {
-                String s = getRegister().open() +
-                    prefix +
-                    macroRaw +
-                    getRegister().close();
-                output.append(s);
+            final var pos = input.getPosition();
+            final var prefix = PrefixComposer.compose(input);
+
+            if (prefix.identCount > 0) {
+                outputUnevaluated(input, output, prefix);
                 return;
             }
-            tr.appendBeforeState(macroRaw);
-            final String macroProcessed;
+
             final var marker = new Marker("{@" + "");
+            final var macroRaw = getNextMacroBody(input);
             macros.push(marker);
-            if (firstCharIs(macroRaw, SpecialCharacters.NO_PRE_VALUA)) {
-                macroProcessed = macroRaw;
-            } else if (firstCharIs(macroRaw, SpecialCharacters.PRE_VALUATED)) {
-                final var macroInputBefore = makeInput(macroRaw, macroStartPosition);
-                try {
-                    macroProcessed = process(macroInputBefore);
-                } catch (Exception e) {
-                    macros.pop(marker);
-                    throw e;
-                }
-                tr.appendAfterEvaluation(macroProcessed);
-            } else {
-                final var macroInputBefore = makeInput(macroRaw, macroStartPosition);
-                try {
-                    macroProcessed = processMacroContentBeforeMacroItself(macroRaw, macroInputBefore);
-                } catch (Exception e) {
-                    macros.pop(marker);
-                    throw e;
-                }
-                tr.appendAfterEvaluation(macroProcessed);
-            }
-            final var macroInputAfter = makeInput(macroProcessed, macroStartPosition);
-            final var qualifiers = new MacroQualifier(macroInputAfter, postEvalCount);
+            final String macroProcessed = getMacroProcessed(input, tr, pos, marker, macroRaw);
+
+            final var macroInputProcessed = makeInput(macroProcessed, pos);
+            final var qualifiers = new MacroQualifier(this, macroInputProcessed, prefix.postEvalCount);
             final String text;
             if (qualifiers.macro instanceof InnerScopeDependent) {
                 text = evalMacro(tr, qualifiers, () -> macros.pop(marker), this::noop);
@@ -222,6 +181,58 @@ public class Processor implements javax0.jamal.api.Processor {
             tr.appendResultState(text);
             output.append(text);
         }
+    }
+
+    private String getMacroProcessed(Input input, TraceRecord tr, Position pos, Marker marker, String macroRaw) throws BadSyntax {
+        tr.appendBeforeState(macroRaw);
+        final String macroProcessed;
+        if (firstCharIs(macroRaw, SpecialCharacters.NO_PRE_VALUA)) {
+            macroProcessed = macroRaw;
+        } else if (firstCharIs(macroRaw, SpecialCharacters.PRE_VALUATED)) {
+            final var macroInputBefore = makeInput(macroRaw, pos);
+            try {
+                macroProcessed = process(macroInputBefore);
+            } catch (Exception e) {
+                macros.pop(marker);
+                throw e;
+            }
+            tr.appendAfterEvaluation(macroProcessed);
+        } else {
+            final var macroInputBefore = makeInput(macroRaw, pos);
+            try {
+                macroProcessed = processMacroContentBeforeMacroItself(macroRaw, macroInputBefore);
+            } catch (Exception e) {
+                macros.pop(marker);
+                throw e;
+            }
+            tr.appendAfterEvaluation(macroProcessed);
+        }
+        return macroProcessed;
+    }
+
+    /**
+     * Output the macro that starts at the input unevaluated. The input starts after the pre-, post-evaluate prefixes.
+     * At this point the input may contain some spaces and the {@code #} or {@code @} character in case of a built-in
+     * macro and then the name of the macro and so on.
+     * <p>
+     * output will contain the whole macro, including
+     * <p>
+     * <ul>
+     *     <li> macro opening string
+     *     <li> the prefix
+     *     <li> the macro content
+     *     <li> the closing string
+     * </ul>
+     *
+     * @param input  the input following the pre-, and post-evaluate prefixes
+     * @param output where the macro is to output unevaluated
+     * @param prefix the pre- and post-evaluate prefixes with one ident prefix less than it was in the input (when this
+     *               method is called these are already consumed, the PrefixComposer consumes one ident char is there is
+     *               any).
+     * @throws BadSyntaxAt if the macro is not terminated before the end of the file
+     */
+    private void outputUnevaluated(Input input, Input output, PrefixComposer.Prefix prefix) throws BadSyntaxAt {
+        output.append(getRegister().open() + prefix.string + getNextMacroBody(input) + getRegister().close());
     }
 
     /**
@@ -258,8 +269,8 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param tr        trace record where the trace is sent
      * @param qualifier the qualifier that contains several parameters of the macro collected into a record
-     * @param popper the runnable that will pop the macro stack
-     * @param locker the runnable that will lock the current level of the macro stack
+     * @param popper    the runnable that will pop the macro stack
+     * @param locker    the runnable that will lock the current level of the macro stack
      * @return the evaluated string of the macro
      * @throws BadSyntaxAt when the syntax of the macro is bad
      */
@@ -467,7 +478,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 final var macroStartInput = makeInput(macroStart, input.getPosition())
                     .append(macros.close());
                 final var macroStartOutput = makeInput();
-                processMacro(macroStartOutput, macroStartInput);
+                processMacro(macroStartInput, macroStartOutput);
                 output.append(macroStartOutput);
             }
             skipWhiteSpaces(output);
@@ -714,7 +725,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 counter--; // count the closing
                 if (counter == 0) {
                     skip(input, macros.close());
-                    if (!option("nl").isPresent()) {
+                    if (option("nl").isEmpty()) {
                         eatEscapedNL(input);
                     }
                 } else {
@@ -743,11 +754,11 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private void moveMacroCloseToOutput(Input input, Input output) {
-        copy(input, output, macros.close());
+        move(input, macros.close(), output);
     }
 
     private void moveMacroOpenToOutput(Input input, Input output) {
-        copy(input, output, macros.open());
+        move(input, macros.open(), output);
     }
 
     @Override
@@ -755,73 +766,6 @@ public class Processor implements javax0.jamal.api.Processor {
         shellEngine.close();
     }
 
-
-    private class MacroQualifier {
-        private final Input input;
-        private final String macroId;
-        private final boolean isVerbatim;
-        private final boolean isBuiltIn;
-        private final Macro macro;
-        private final boolean oldStyle;
-        private final int postEvalCount;
-
-        public MacroQualifier(Input input, int postEvalCount) throws BadSyntax {
-            this.input = input;
-            this.postEvalCount = postEvalCount;
-            this.oldStyle = option("omasalgotm").isPresent();
-            if (macroIsBuiltIn(input)) {
-                skip(input, 1);
-                skipWhiteSpaces(input);
-                macroId = fetchId(input);
-                isVerbatim = "verbatim".equals(macroId);
-                isBuiltIn = !isVerbatim;
-                if (isVerbatim) {
-                    skipWhiteSpaces(input);
-                }
-            } else {
-                isBuiltIn = false;
-                isVerbatim = false;
-                macroId = NOT_USED;
-            }
-            macro = getMacro(macroId, input.getPosition(), isBuiltIn);
-        }
-    }
-
-    /**
-     * Decides if a macro is user defined or build in. The decision is fairly simple because built in macros start with
-     * {@code #} or {@code @} character.
-     *
-     * @param input containing the macro starting at the position zero
-     * @return {@code true} if the macro is a built in macro and {@code false} if the macro is user defined
-     */
-    private boolean macroIsBuiltIn(Input input) {
-        return input.length() > 0 && (input.charAt(0) == SpecialCharacters.PRE_VALUATED || input.charAt(0) == SpecialCharacters.NO_PRE_VALUA);
-    }
-
-    /**
-     * Get the macro object.
-     *
-     * @param macroId   the identifier of the macro.
-     * @param pos       used to throw exception in case the macro is not defined
-     * @param isBuiltIn signals that the macro is built-in. If the macro is not built-in the return value is {@code
-     *                  null}.
-     * @return the macro object or {@code null} if the macro is not built-in
-     * @throws BadSyntaxAt if there is no macro registered for the given name
-     */
-    private Macro getMacro(String macroId, Position pos, boolean isBuiltIn) throws BadSyntaxAt {
-        if (isBuiltIn) {
-            var optMacro = macros.getMacro(macroId);
-            if (optMacro.isEmpty()) {
-                throw new BadSyntaxAt(
-                    "There is no built-in macro with the id '"
-                        + macroId
-                        + "'", pos);
-            }
-            return optMacro.get();
-        } else {
-            return null;
-        }
-    }
 
     private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);
 

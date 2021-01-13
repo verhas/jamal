@@ -45,15 +45,28 @@ public class InputHandler {
     }
 
     /**
-     * Same as {@link #skip(Input, int)} but it also appends the deleted characters to the sctring builder.
+     * Same as {@link #skip(Input, int)} but it also appends the deleted characters to the string builder.
      *
-     * @param input from which the first characters are deleted * @param numberOfCharacters the number of characters to
-     *              be deleted from the start of {@code input}
-     * @param sb    where the characters will be appended
+     * @param input              from which the first characters are deleted
+     * @param numberOfCharacters the number of characters to be deleted from the start of {@code input}
+     * @param sb                 where the characters will be appended
      */
-    public static void skip(Input input, int numberOfCharacters, StringBuilder sb) {
+    public static void move(Input input, int numberOfCharacters, StringBuilder sb) {
         sb.append(input.substring(0, numberOfCharacters));
         input.delete(numberOfCharacters);
+    }
+
+    /**
+     * Copy the string from the start of the input to the end of the output.
+     *
+     * @param input  from which the string will be removed
+     * @param s      the string. There is no check that the input really starts with the string. The string is {@link
+     *               #skip(Input, String)}-ped in the {@code input} and is appended to the output.
+     * @param output to which the string will be appended
+     */
+    public static void move(Input input, String s, Input output) {
+        skip(input, s);
+        output.append(s);
     }
 
     /**
@@ -241,19 +254,6 @@ public class InputHandler {
         if (input.length() > 0 && input.charAt(0) == '\n') {
             input.delete(1);
         }
-    }
-
-    /**
-     * Copy the string from the start of the input to the end of the output.
-     *
-     * @param input  from which the string will be removed
-     * @param output to which the string will be appended
-     * @param s      the string. There is no check that the input really starts with the string. The string is {@link
-     *               #skip(Input, String)}-ped in the {@code input} and is appended to the output.
-     */
-    public static void copy(Input input, Input output, String s) {
-        skip(input, s);
-        output.append(s);
     }
 
     /**
