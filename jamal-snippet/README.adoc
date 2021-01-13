@@ -13,14 +13,12 @@ The documentation many times may refer to the latest version.
 
 For example, if you want to use the latest version of Jamal Snippet macro as a dependency in a `pom.xml` file then you have to have the lines:
 
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%@snip:xpath pom /project/version/text()%}%}\
 [source,xml]
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>{%VERSION%}</version>
+    <version>1.5.4-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -34,7 +32,7 @@ The original file however, contains
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>{{%@ident%}%VERSION%{%@ident%}}</version>
+    <version>{%VERSION%}</version>
 </dependency>
 ----
 
@@ -57,7 +55,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>{%VERSION%}</version>
+    <version>1.5.4-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -102,12 +100,21 @@ The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)`
 The regular expression contains a collection group, which will be used as the name of the snippet.
 For example the code
 
-{%@snip:collect src/test/java/javax0/jamal/documentation/Sample.java%}
+
 
 [source]
 ----
 // snippet sample
-{%@snip sample%}\
+public class Sample implements Macro {
+
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        String result = in.toString()
+            .replaceAll("^\\n+","")
+            .replaceAll("\\n+$","");
+        return result;
+    }
+}
 // snippet end
 ----
 
