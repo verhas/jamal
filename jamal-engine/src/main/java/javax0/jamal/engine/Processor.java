@@ -162,8 +162,9 @@ public class Processor implements javax0.jamal.api.Processor {
                 return;
             }
 
-            final var marker = new Marker("{@" + "");
             final var macroRaw = getNextMacroBody(input);
+
+            final var marker = new Marker("{@" + "");
             macros.push(marker);
             final String macroProcessed = getMacroProcessed(input, tr, pos, marker, macroRaw);
 
@@ -704,6 +705,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * @throws BadSyntaxAt if the macro opening and closing strings are not properly balanced
      */
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
+        final var openStr = macros.open();
+        final var closeStr = macros.close();
         // keep track of all the opened and not yet closed macro start string
         // use it to report error when a macro is not terminated before EOF
         // knowing where the last opening string was that had no closing pair
@@ -717,14 +720,14 @@ public class Processor implements javax0.jamal.api.Processor {
                 throw new BadSyntaxAt("Macro was not terminated in the file.", refStack.pop());
             }
 
-            if (input.indexOf(macros.open()) == 0) {
+            if (input.indexOf(openStr) == 0) {
                 moveMacroOpenToOutput(input, output);
                 refStack.add(input.getPosition());
                 counter++; //count the new opening
-            } else if (input.indexOf(macros.close()) == 0) {
+            } else if (input.indexOf(closeStr) == 0) {
                 counter--; // count the closing
                 if (counter == 0) {
-                    skip(input, macros.close());
+                    skip(input, closeStr);
                     if (option("nl").isEmpty()) {
                         eatEscapedNL(input);
                     }
@@ -733,8 +736,8 @@ public class Processor implements javax0.jamal.api.Processor {
                     moveMacroCloseToOutput(input, output);
                 }
             } else {
-                final var open = input.indexOf(macros.open());
-                final var close = input.indexOf(macros.close());
+                final var open = input.indexOf(openStr);
+                final var close = input.indexOf(closeStr);
                 final int limit;
                 if (contains(close) && (!contains(open) || close < open)) {
                     limit = close;
