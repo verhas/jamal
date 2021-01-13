@@ -41,8 +41,8 @@ public class Options implements Macro {
         final OptionsStore optionsStore = new OptionsStore();
         processor
             .getRegister()
-            .<OptionsStore>getUserDefined(OptionsStore.OPTIONS_MACRO_ID).
-            ifPresent(store -> optionsStore.addOptions(store.getOptions()));
+            .<OptionsStore>getUserDefined(OptionsStore.OPTIONS_MACRO_ID)
+            .ifPresent(store -> optionsStore.addOptions(store.getOptions()));
         optionsStore.addOptions(options);
         processor.define(optionsStore);
     }

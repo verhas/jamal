@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
@@ -49,7 +48,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
          */
         final Marker checkObject;
         /**
-         * When a scope is locked then the definitions will go up higher to the next non-locked scope.
+         * When a scope is locked then the definitions will go up higher to the next scope. Even if that scope is
+         * locked.
          */
         boolean locked = false;
 
@@ -79,14 +79,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         return currentScope().locked ? 2 : 1;
     }
 
-    private Stream<Scope> stackStream() {
-        final int end = scopeStack.size() - 1;
-        return IntStream.range(0, scopeStack.size())
-            .sequential()
-            .mapToObj(i -> scopeStack.get(end - i));
-    }
-
-    private <T> Optional<T> stackStream(Function<Scope,Map<String,T>> field, String id) {
+    private <T> Optional<T> stackGet(Function<Scope, Map<String, T>> field, String id) {
         final int end = scopeStack.size() - 1;
         return IntStream.range(0, scopeStack.size())
             .sequential()
@@ -99,20 +92,12 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public <T extends Identified> Optional<T> getUserDefined(String id) {
-        return (Optional<T>) stackStream()
-            .map(scope -> scope.udMacros)
-            .filter(map -> map.containsKey(id))
-            .map(map -> map.get(id))
-            .findFirst();
+        return (Optional<T>) stackGet(scope -> scope.udMacros, id);
     }
 
     @Override
     public Optional<Macro> getMacro(String id) {
-        return stackStream()
-            .map(scope -> scope.macros)
-            .filter(map -> map.containsKey(id))
-            .map(map -> map.get(id))
-            .findFirst();
+        return stackGet(scope -> scope.macros, id);
     }
 
     @Override
@@ -175,13 +160,13 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public void pop(Marker check) throws BadSyntax {
-        if (!Objects.equals(check, currentScope().checkObject)) {
-            throw new BadSyntax("Pop was performed by " +
-                check +
-                " for a level pushed by " +
-                currentScope().checkObject);
-        }
         if (scopeStack.size() > 1) {
+            if (!Objects.equals(check, currentScope().checkObject)) {
+                throw new BadSyntax("Pop was performed by " +
+                    check +
+                    " for a level pushed by " +
+                    currentScope().checkObject);
+            }
             scopeStack.remove(scopeStack.size() - 1);
             scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
         } else {
@@ -191,14 +176,13 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public void lock(Marker check) throws BadSyntax {
-        if (!Objects.equals(check, currentScope().checkObject)) {
-            throw new BadSyntax("Lock was performed by " +
-                check +
-                " for a level pushed by " +
-                currentScope().checkObject);
-        }
-
         if (scopeStack.size() > 1) {
+            if (!Objects.equals(check, currentScope().checkObject)) {
+                throw new BadSyntax("Lock was performed by " +
+                    check +
+                    " for a level pushed by " +
+                    currentScope().checkObject);
+            }
             currentScope().locked = true;
         } else {
             throw new BadSyntax("Cannot lock the top level scope.");
