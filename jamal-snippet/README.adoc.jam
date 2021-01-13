@@ -66,10 +66,61 @@ There is no need to invoke the `use` command to get access to these macros.
 
 === Macros
 
-
-
 ==== `snip:collect`
+
+This macro collects text snippets from files.
+The syntax of the macro is
+
+[source]
+----
+{@snip:collect fileName}
+----
+
+`fileName` can be the name of a text file or it can be a directory.
+If the `fileName` is a text file then the macro will collect the snippets from that single file.
+If the `fileName` is a directory then the macro will collect the snippets from the files that are in that directory and from directories beneath recursively.
+
+A snippet in a file is aseries of lines that happen between
+
+[source]
+----
+snippet name
+----
+
+and
+
+[source]
+----
+end snippet
+----
+
+lines.
+
+There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
+The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the endling line.
+
+The regular expression contains a collection group, which will be used as the name of the snippet.
+For example the code
+
+{%@snip:collect src/test/java/javax0/jamal/documentation/Sample.java%}
+
+[source]
+----
+// snippet sample
+{%@snip sample%}\
+// snippet end
+----
+
+defines a snippet that is named `sample`.
+The snippets can be used later using the <<snip,`snip`>> macro.
+
+The output of the snippet is an empty string.
+
+
+
 ==== `snip:clear`
+
+[[snip]]
 ==== `snip`
 ==== `snip:properties`
 ==== `snip:xml`

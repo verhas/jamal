@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
@@ -66,9 +69,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     /**
-     * When defining a new macro then this offset is used from the end. It is 1 or 2 because we subtract this value
-     * from the length of the stack, and the indexing starts with zero, therefore the last element is length-1, but when
-     * that locked then the last writable element is length-2
+     * When defining a new macro then this offset is used from the end. It is 1 or 2 because we subtract this value from
+     * the length of the stack, and the indexing starts with zero, therefore the last element is length-1, but when that
+     * locked then the last writable element is length-2
      *
      * @return 1 or 2
      */
@@ -76,24 +79,40 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         return currentScope().locked ? 2 : 1;
     }
 
-    public <T extends Identified> Optional<T> getUserDefined(String id) {
-        for (int level = scopeStack.size() - 1; level > -1; level--) {
-            var map = scopeStack.get(level).udMacros;
-            if (map.containsKey(id)) {
-                return Optional.of((T) map.get(id));
-            }
-        }
-        return Optional.empty();
+    private Stream<Scope> stackStream() {
+        final int end = scopeStack.size() - 1;
+        return IntStream.range(0, scopeStack.size())
+            .sequential()
+            .mapToObj(i -> scopeStack.get(end - i));
     }
 
+    private <T> Optional<T> stackStream(Function<Scope,Map<String,T>> field, String id) {
+        final int end = scopeStack.size() - 1;
+        return IntStream.range(0, scopeStack.size())
+            .sequential()
+            .mapToObj(i -> scopeStack.get(end - i))
+            .map(field)
+            .filter(map -> map.containsKey(id))
+            .map(map -> map.get(id))
+            .findFirst();
+    }
+
+    @Override
+    public <T extends Identified> Optional<T> getUserDefined(String id) {
+        return (Optional<T>) stackStream()
+            .map(scope -> scope.udMacros)
+            .filter(map -> map.containsKey(id))
+            .map(map -> map.get(id))
+            .findFirst();
+    }
+
+    @Override
     public Optional<Macro> getMacro(String id) {
-        for (int level = scopeStack.size() - 1; level > -1; level--) {
-            var map = scopeStack.get(level).macros;
-            if (map.containsKey(id)) {
-                return Optional.of(map.get(id));
-            }
-        }
-        return Optional.empty();
+        return stackStream()
+            .map(scope -> scope.macros)
+            .filter(map -> map.containsKey(id))
+            .map(map -> map.get(id))
+            .findFirst();
     }
 
     @Override

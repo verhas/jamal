@@ -258,6 +258,8 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param tr        trace record where the trace is sent
      * @param qualifier the qualifier that contains several parameters of the macro collected into a record
+     * @param popper the runnable that will pop the macro stack
+     * @param locker the runnable that will lock the current level of the macro stack
      * @return the evaluated string of the macro
      * @throws BadSyntaxAt when the syntax of the macro is bad
      */
