@@ -2,6 +2,7 @@ package javax0.jamal.engine.util;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
@@ -55,7 +56,7 @@ public class MacroQualifier {
      * @return {@code true} if the macro is a built in macro and {@code false} if the macro is user defined
      */
     private boolean macroIsBuiltIn(Input input) {
-        return input.length() > 0 && (input.charAt(0) == SpecialCharacters.PRE_VALUATED || input.charAt(0) == SpecialCharacters.NO_PRE_VALUA);
+        return input.length() > 0 && (input.charAt(0) == SpecialCharacters.PRE_EVALUATE || input.charAt(0) == SpecialCharacters.NO_PRE_EVALUATE);
     }
 
     /**
@@ -81,6 +82,10 @@ public class MacroQualifier {
         } else {
             return null;
         }
+    }
+
+    public boolean isInnerScopeDependent() {
+        return macro instanceof InnerScopeDependent;
     }
 
 }

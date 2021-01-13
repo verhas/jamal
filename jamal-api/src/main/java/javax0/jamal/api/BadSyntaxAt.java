@@ -55,13 +55,37 @@ public class BadSyntaxAt extends BadSyntax {
         void run() throws BadSyntax;
     }
 
-    public static void addPosition(Input in, Runnable r) throws BadSyntax {
+    public static class ThrowMayBe {
+        private final BadSyntax e;
+
+        public ThrowMayBe(BadSyntax e) {
+            this.e = e;
+        }
+
+        public void orThrowWith(Position pos) throws BadSyntax {
+            if (e != null) {
+                throw new BadSyntaxAt(e, pos);
+            }
+        }
+    }
+
+    /**
+     * Run a "runnable" that may throw a BadSyntax exception. In case it throws a {@link BadSyntax} exception but not a
+     * {@link BadSyntaxAt}, which has the position information then return a {@link ThrowMayBe} instance that can be
+     * used to enhance the exception with the position information.
+     *
+     * @param r the runnable
+     * @return an object on which the {@link ThrowMayBe#orThrowWith(Position) orThrowWith()}  can be invoked.
+     * @throws BadSyntax
+     */
+    public static ThrowMayBe run(Runnable r) throws BadSyntax {
         try {
             r.run();
         } catch (BadSyntaxAt e) {
             throw e;
         } catch (BadSyntax e) {
-            throw new BadSyntaxAt(e, in.getPosition());
+            return new ThrowMayBe(e);
         }
+        return new ThrowMayBe(null);
     }
 }

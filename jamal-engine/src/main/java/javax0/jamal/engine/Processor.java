@@ -3,7 +3,6 @@ package javax0.jamal.engine;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Evaluable;
-import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.MacroRegister;
@@ -166,15 +165,20 @@ public class Processor implements javax0.jamal.api.Processor {
 
             final var marker = new Marker("{@" + "");
             macros.push(marker);
-            final String macroProcessed = getMacroProcessed(input, tr, pos, marker, macroRaw);
+            final String macroProcessed;
+            try {
+                macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
+            } catch (Exception e) {
+                macros.pop(marker);
+                throw e;
+            }
 
-            final var macroInputProcessed = makeInput(macroProcessed, pos);
-            final var qualifiers = new MacroQualifier(this, macroInputProcessed, prefix.postEvalCount);
+            final var qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
             final String text;
-            if (qualifiers.macro instanceof InnerScopeDependent) {
+            if (qualifiers.isInnerScopeDependent()) {
                 text = evalMacro(tr, qualifiers, () -> macros.pop(marker), this::noop);
-            } else if (qualifiers.macro instanceof Macro) {
-                BadSyntaxAt.addPosition(qualifiers.input, () -> macros.pop(marker));
+            } else if (qualifiers.isBuiltIn) {
+                BadSyntaxAt.run(() -> macros.pop(marker)).orThrowWith(qualifiers.input.getPosition());
                 text = evalMacro(tr, qualifiers, this::noop, this::noop);
             } else {
                 text = evalMacro(tr, qualifiers, () -> macros.pop(marker), () -> macros.lock(marker));
@@ -184,30 +188,38 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
-    private String getMacroProcessed(Input input, TraceRecord tr, Position pos, Marker marker, String macroRaw) throws BadSyntax {
+    /**
+     * Processes the macro use. There are four cases:
+     *
+     * <ul>
+     *     <li>Built-in macro starts with {@code @} character: returned as it is
+     *     <li>Built-in macro starts with {@code #} character: evaluated resolving macros
+     *     <li>User defined macro old style option is in effect: evaluated resolving macros
+     *     <li>User defined macro no old style: returned as it is
+     * </ul>
+     *
+     * Note that the processing of the macro itself comes only after this
+     *
+     * @param macroRaw the raw macro that may optionally be processed
+     * @param pos the position in the input
+     * @param tr trace output
+     * @return the macro use processed (or not)
+     * @throws BadSyntax when there is some problem
+     */
+    private String getMacroPreProcessed(String macroRaw, Position pos, TraceRecord tr) throws BadSyntax {
         tr.appendBeforeState(macroRaw);
         final String macroProcessed;
-        if (firstCharIs(macroRaw, SpecialCharacters.NO_PRE_VALUA)) {
-            macroProcessed = macroRaw;
-        } else if (firstCharIs(macroRaw, SpecialCharacters.PRE_VALUATED)) {
-            final var macroInputBefore = makeInput(macroRaw, pos);
-            try {
-                macroProcessed = process(macroInputBefore);
-            } catch (Exception e) {
-                macros.pop(marker);
-                throw e;
-            }
-            tr.appendAfterEvaluation(macroProcessed);
-        } else {
-            final var macroInputBefore = makeInput(macroRaw, pos);
-            try {
-                macroProcessed = processMacroContentBeforeMacroItself(macroRaw, macroInputBefore);
-            } catch (Exception e) {
-                macros.pop(marker);
-                throw e;
-            }
-            tr.appendAfterEvaluation(macroProcessed);
+        if (firstCharIs(macroRaw, SpecialCharacters.NO_PRE_EVALUATE)) {
+            return macroRaw;
         }
+        final var macroInputBefore = makeInput(macroRaw, pos);
+        if (firstCharIs(macroRaw, SpecialCharacters.PRE_EVALUATE)) {
+            macroProcessed = process(macroInputBefore);
+            tr.appendAfterEvaluation(macroProcessed);
+            return macroProcessed;
+        }
+        macroProcessed = processUdMacroOldStyleOrNone(macroRaw, macroInputBefore);
+        tr.appendAfterEvaluation(macroProcessed);
         return macroProcessed;
     }
 
@@ -252,7 +264,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @return the result after the macro body was (or was not) evaluated.
      * @throws BadSyntax if the content of the macro cannot be evaluated
      */
-    private String processMacroContentBeforeMacroItself(String macroRaw, Input macroInputBefore)
+    private String processUdMacroOldStyleOrNone(String macroRaw, Input macroInputBefore)
         throws BadSyntax {
         if (option("omasalgotm").isPresent()) {
             return process(macroInputBefore);
@@ -279,14 +291,7 @@ public class Processor implements javax0.jamal.api.Processor {
         final var ref = qualifier.input.getPosition();
         tr.setId(qualifier.macroId);
         if (qualifier.isBuiltIn) {
-            String result;
-            try {
-                result = evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
-            } finally {
-                popper.run();
-            }
-            result = postEvaluate(qualifier, ref, result);
-            return result;
+            return evaluateBuiltInMacro(tr, qualifier, popper);
         } else {
             tr.type(TraceRecord.Type.USER_DEFINED_MACRO);
             final String rawResult;
@@ -301,15 +306,7 @@ public class Processor implements javax0.jamal.api.Processor {
                     popper.run();
                     return rawResult;
                 } else {
-                    String result;
-                    try {
-                        result = process(makeInput(rawResult, qualifier.input.getPosition()));
-                    } finally {
-                        popper.run();
-                    }
-                    result = postEvaluate(qualifier, qualifier.input.getPosition(), result);
-                    tr.appendAfterEvaluation(result);
-                    return result;
+                    return evaluateUserDefinedMacro(rawResult, qualifier, popper, tr);
                 }
             } catch (BadSyntaxAt bsAt) {
                 throw bsAt;
@@ -319,11 +316,46 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
-    private String postEvaluate(MacroQualifier qualifier, Position ref, String result) throws BadSyntax {
-        for (int i = 0; i < qualifier.postEvalCount; i++) {
-            result = process(makeInput(result, ref));
+    private String evaluateUserDefinedMacro(String rawResult, MacroQualifier qualifier, Runnable popper, TraceRecord tr) throws BadSyntax {
+        final String result;
+        try {
+            result = process(makeInput(rawResult, qualifier.input.getPosition()));
+        } finally {
+            popper.run();
         }
-        return result;
+        final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, qualifier.input.getPosition());
+        tr.appendAfterEvaluation(postEvaluated);
+        return postEvaluated;
+    }
+
+    private String evaluateBuiltInMacro(TraceRecord tr, MacroQualifier qualifier, Runnable popper) throws BadSyntax {
+        final var ref = qualifier.input.getPosition();
+        tr.type(TraceRecord.Type.MACRO);
+        final String result;
+        try {
+            result = evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
+        } finally {
+            popper.run();
+        }
+        final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, ref);
+        tr.appendAfterEvaluation(postEvaluated);
+        return postEvaluated;
+    }
+
+    /**
+     * Post evaluate built-in or user defined macro if there are {@code !} characters in the prefix.
+     *
+     * @param input the macroText
+     * @param count the number of times the evaluation has to run
+     * @param ref the reference in case there is an error
+     * @return the input evaluated postEvalCountTimes
+     * @throws BadSyntax when there is some problem
+     */
+    private String postEvaluate(String input, int count, Position ref) throws BadSyntax {
+        for (int i = 0; i < count; i++) {
+            input = process(makeInput(input, ref));
+        }
+        return input;
     }
 
     private String evaluateBuiltinMacro(final Input input, final Position ref, final Macro macro) throws BadSyntaxAt {
