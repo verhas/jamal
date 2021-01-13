@@ -9,9 +9,7 @@ import javax0.jamal.api.Marker;
 import javax0.jamal.api.Stackable;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,31 +17,68 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MacroRegister implements javax0.jamal.api.MacroRegister {
-    private final List<Map<String, Identified>> udMacroStack = new ArrayList<>();
-    private final List<Map<String, Macro>> macroStack = new ArrayList<>();
-    private final List<Delimiters> delimiters = new ArrayList<>();
-    private final List<List<Delimiters>> savedDelimiters = new ArrayList<>();
-    private final Deque<Object> stackCheckObjects = new LinkedList<>();
-    private final List<Boolean> locked = new ArrayList<>();
+
+    /**
+     * Stores the data that describes the scopes that are stacked.
+     */
+    private static class Scope {
+        /**
+         * Stores the user defined macros that were defined on the level.
+         */
+        final Map<String, Identified> udMacros = new HashMap<>();
+        /**
+         * Stores the built-in macros that were defined on the level. Note that built-in macros usually are loaded on
+         * the global level, especially when the service loader loads the macro instances. The built-in macro {@code
+         * use} however defined the built-in macro scoped level unless the {@code global} keyword is used in it.
+         */
+        final Map<String, Macro> macros = new HashMap<>();
+        /**
+         * The delimiters that were saved on this level.
+         */
+        final List<Delimiters> savedDelimiterPairs = new ArrayList<>();
+        /**
+         * The last delimiter pair that was defined on this scope level. Null if there was none defined in this scope.
+         */
+        Delimiters delimiterPair = null;
+        /**
+         * The marker object that was used to open the scope. When the scope gets locked or closed (pop) then a marker
+         * object that equals this has to be provided. This is to ensure that the last scope is closed.
+         */
+        final Marker checkObject;
+        /**
+         * When a scope is locked then the definitions will go up higher to the next non-locked scope.
+         */
+        boolean locked = false;
+
+        private Scope(Marker checkObject) {
+            this.checkObject = checkObject;
+        }
+    }
+
+    private final List<Scope> scopeStack = new ArrayList<>();
 
     public MacroRegister() {
         push(null);
     }
 
+    private Scope currentScope() {
+        return scopeStack.get(scopeStack.size() - 1);
+    }
+
     /**
-     * When defining a new macro then this offset is used from the end. It is 1 or 2 because we substract this value
+     * When defining a new macro then this offset is used from the end. It is 1 or 2 because we subtract this value
      * from the length of the stack, and the indexing starts with zero, therefore the last element is length-1, but when
      * that locked then the last writable element is length-2
      *
      * @return 1 or 2
      */
     private int writableOffset() {
-        return locked.get(locked.size() - 1) ? 2 : 1;
+        return currentScope().locked ? 2 : 1;
     }
 
     public <T extends Identified> Optional<T> getUserDefined(String id) {
-        for (int level = udMacroStack.size() - 1; level > -1; level--) {
-            var map = udMacroStack.get(level);
+        for (int level = scopeStack.size() - 1; level > -1; level--) {
+            var map = scopeStack.get(level).udMacros;
             if (map.containsKey(id)) {
                 return Optional.of((T) map.get(id));
             }
@@ -52,8 +87,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     public Optional<Macro> getMacro(String id) {
-        for (int level = macroStack.size() - 1; level > -1; level--) {
-            var map = macroStack.get(level);
+        for (int level = scopeStack.size() - 1; level > -1; level--) {
+            var map = scopeStack.get(level).macros;
             if (map.containsKey(id)) {
                 return Optional.of(map.get(id));
             }
@@ -63,22 +98,22 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public void global(Identified macro) {
-        udMacroStack.get(0).put(macro.getId(), macro);
+        scopeStack.get(0).udMacros.put(macro.getId(), macro);
     }
 
     @Override
     public void global(Macro macro) {
-        macroStack.get(0).put(macro.getId(), macro);
+        scopeStack.get(0).macros.put(macro.getId(), macro);
     }
 
     @Override
     public void global(Macro macro, String alias) {
-        macroStack.get(0).put(alias, macro);
+        scopeStack.get(0).macros.put(alias, macro);
     }
 
     @Override
     public void define(Identified macro) {
-        udMacroStack.get(udMacroStack.size() - writableOffset()).put(macro.getId(), macro);
+        scopeStack.get(scopeStack.size() - writableOffset()).udMacros.put(macro.getId(), macro);
     }
 
     @Override
@@ -88,18 +123,18 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public void define(Macro macro, String alias) {
-        macroStack.get(macroStack.size() - writableOffset()).put(alias, macro);
+        scopeStack.get(scopeStack.size() - writableOffset()).macros.put(alias, macro);
     }
 
     @Override
     public void export(String id) throws BadSyntax {
-        if (udMacroStack.size() > writableOffset()) {
-            var macro = udMacroStack.get(udMacroStack.size() - writableOffset()).get(id);
+        if (scopeStack.size() > writableOffset()) {
+            var macro = scopeStack.get(scopeStack.size() - writableOffset()).udMacros.get(id);
             if (macro == null) {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported");
             }
-            udMacroStack.get(udMacroStack.size() - writableOffset() - 1).put(id, macro);
-            udMacroStack.get(udMacroStack.size() - writableOffset()).remove(id);
+            scopeStack.get(scopeStack.size() - writableOffset() - 1).udMacros.put(id, macro);
+            scopeStack.get(scopeStack.size() - writableOffset()).udMacros.remove(id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
         }
@@ -113,31 +148,23 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public void push(Marker check) {
-        locked.add(false);
-        stackCheckObjects.addLast(check);
-        macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::push)));
-        macroStack.add(new HashMap<>());
-        udMacroStack.add(new HashMap<>());
-        delimiters.add(new javax0.jamal.engine.Delimiters());
-        savedDelimiters.add(new ArrayList<>());
+        final var scope = new Scope(check);
+        scopeStack.add(scope);
+        scopeStack.forEach(scp -> scp.macros.values().forEach(macro -> stack(macro, Stackable::push)));
+        scope.delimiterPair = new javax0.jamal.engine.Delimiters();
     }
 
     @Override
     public void pop(Marker check) throws BadSyntax {
-        if (!Objects.equals(check, stackCheckObjects.getLast())) {
+        if (!Objects.equals(check, currentScope().checkObject)) {
             throw new BadSyntax("Pop was performed by " +
                 check +
                 " for a level pushed by " +
-                stackCheckObjects.getLast());
+                currentScope().checkObject);
         }
-        if (udMacroStack.size() > 1) {
-            locked.remove(locked.size() - 1);
-            stackCheckObjects.removeLast();
-            macroStack.remove(macroStack.size() - 1);
-            macroStack.forEach(macros -> macros.values().forEach(macro -> stack(macro, Stackable::pop)));
-            udMacroStack.remove(udMacroStack.size() - 1);
-            delimiters.remove(delimiters.size() - 1);
-            savedDelimiters.remove(savedDelimiters.size() - 1);
+        if (scopeStack.size() > 1) {
+            scopeStack.remove(scopeStack.size() - 1);
+            scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
         } else {
             throw new BadSyntax("Cannot close the top level scope.");
         }
@@ -145,16 +172,15 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public void lock(Marker check) throws BadSyntax {
-        if (!Objects.equals(check, stackCheckObjects.getLast())) {
+        if (!Objects.equals(check, currentScope().checkObject)) {
             throw new BadSyntax("Lock was performed by " +
                 check +
                 " for a level pushed by " +
-                stackCheckObjects.getLast());
+                currentScope().checkObject);
         }
 
-        if (udMacroStack.size() > 1) {
-            locked.remove(locked.size() - 1);
-            locked.add(true);
+        if (scopeStack.size() > 1) {
+            currentScope().locked = true;
         } else {
             throw new BadSyntax("Cannot lock the top level scope.");
         }
@@ -162,10 +188,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public String open() {
-        for (int level = delimiters.size() - 1; level > -1; level--) {
-            var delim = delimiters.get(level);
-            if (delim.open() != null) {
-                return delim.open();
+        for (int level = scopeStack.size() - 1; level > -1; level--) {
+            var delimiter = scopeStack.get(level).delimiterPair.open();
+            if (delimiter != null) {
+                return delimiter;
             }
         }
         return null;
@@ -173,10 +199,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public String close() {
-        for (int level = delimiters.size() - 1; level > -1; level--) {
-            var delim = delimiters.get(level);
-            if (delim.close() != null) {
-                return delim.close();
+        for (int level = scopeStack.size() - 1; level > -1; level--) {
+            var delimiter = scopeStack.get(level).delimiterPair.close();
+            if (delimiter != null) {
+                return delimiter;
             }
         }
         return null;
@@ -199,21 +225,19 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
      */
     @Override
     public void separators(String openDelimiter, String closeDelimiter) throws BadSyntax {
+        var delimiterPair = currentScope().delimiterPair;
+        var savedList = currentScope().savedDelimiterPairs;
         if (openDelimiter == null || closeDelimiter == null) {
-            var delim = delimiters.get(delimiters.size() - 1);
-            var list = savedDelimiters.get(savedDelimiters.size() - 1);
-            if (list.size() == 0) {
+            if (savedList.size() == 0) {
                 throw new BadSyntax("There was no saved macro start and end string to restore.");
             }
-            var savedDelim = list.remove(list.size() - 1);
-            delim.separators(savedDelim.open(), savedDelim.close());
+            var savedDelim = savedList.remove(savedList.size() - 1);
+            delimiterPair.separators(savedDelim.open(), savedDelim.close());
         } else {
-            var delim = delimiters.get(delimiters.size() - 1);
-            var list = savedDelimiters.get(savedDelimiters.size() - 1);
-            var savedDelim = new javax0.jamal.engine.Delimiters();
-            savedDelim.separators(delim.open(), delim.close());
-            list.add(savedDelim);
-            delim.separators(openDelimiter, closeDelimiter);
+            var savedDelimiterPair = new javax0.jamal.engine.Delimiters();
+            savedDelimiterPair.separators(delimiterPair.open(), delimiterPair.close());
+            savedList.add(savedDelimiterPair);
+            delimiterPair.separators(openDelimiter, closeDelimiter);
         }
     }
 }

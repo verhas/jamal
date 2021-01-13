@@ -1,0 +1,136 @@
+== Jamal Snippet Handling Macros
+
+Snippet handling macros help you to automatically include information from program source code into the documentation.
+
+When you document an application there is a lot of information that changes by the change of the source code.
+These changes have to be followed in the documentation.
+Some changes need manual editing, some change can be automated.
+When the functionality of the program changes, then the new documentation has to describe the new functionality.
+This change of the documentation can hardly be automated.
+When some literal parameter also used in the document changes then the documentation can automatically be updated.
+A typical example is the version number of the application.
+The documentation many times may refer to the latest version.
+
+For example, if you want to use the latest version of Jamal Snippet macro as a dependency in a `pom.xml` file then you have to have the lines:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>1.5.4-SNAPSHOT</version>
+</dependency>
+----
+
+What you see in the `README.adoc` file converted from the `README.adoc.jam` is the actual version number.
+The original file however, contains
+
+[source,xml]
+----
+{@snip:xml pom=pom.xml}\
+{#define VERSION={@snip:xpath pom /project/version/text()}}\
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+The Jamal Snippet macros help you automate to insert actual values and code fragments from
+
+* any source code
+* XML file
+* properties files.
+
+These small text pieces are called snippets.
+
+When the `.jam` file gets processed the snippets will automatically contain the actual text from the source code.
+This way it is easier to keep your documentation up to date.
+
+=== Usage
+
+If you are using Jamal programmatically or from Maven then the dependency you have add to your project is:
+
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>1.5.4-SNAPSHOT</version>
+</dependency>
+----
+
+The macro classes are listed in the `provides` directive in the `module-info.java` therefore they are available for the Jama source code.
+There is no need to invoke the `use` command to get access to these macros.
+
+=== Macros
+
+==== `snip:collect`
+
+This macro collects text snippets from files.
+The syntax of the macro is
+
+[source]
+----
+{@snip:collect fileName}
+----
+
+`fileName` can be the name of a text file or it can be a directory.
+If the `fileName` is a text file then the macro will collect the snippets from that single file.
+If the `fileName` is a directory then the macro will collect the snippets from the files that are in that directory and from directories beneath recursively.
+
+A snippet in a file is aseries of lines that happen between
+
+[source]
+----
+snippet name
+----
+
+and
+
+[source]
+----
+end snippet
+----
+
+lines.
+
+There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
+The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the endling line.
+
+The regular expression contains a collection group, which will be used as the name of the snippet.
+For example the code
+
+
+
+[source]
+----
+// snippet sample
+public class Sample implements Macro {
+
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        String result = in.toString()
+            .replaceAll("^\\n+","")
+            .replaceAll("\\n+$","");
+        return result;
+    }
+}
+// snippet end
+----
+
+defines a snippet that is named `sample`.
+The snippets can be used later using the <<snip,`snip`>> macro.
+
+The output of the snippet is an empty string.
+
+
+
+==== `snip:clear`
+
+[[snip]]
+==== `snip`
+==== `snip:properties`
+==== `snip:xml`
+==== `snip:xpath`
+==== `trimLines`
+==== `numberLines`
