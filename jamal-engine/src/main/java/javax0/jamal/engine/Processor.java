@@ -9,6 +9,7 @@ import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.engine.util.MacroBodyFetcher;
 import javax0.jamal.engine.util.MacroQualifier;
 import javax0.jamal.engine.util.PrefixComposer;
 import javax0.jamal.engine.util.StackLimiter;
@@ -703,104 +704,14 @@ public class Processor implements javax0.jamal.api.Processor {
         return searchFrom;
     }
 
-    /**
-     * Eat off a macro from the input caring about all the macro nesting. The input is right after the macro opening
-     * string and at the end it will eat off from the input not only the macro body but also the last macro closing
-     * strings. The output will be the string that contains the content of the macro including all the matching macro
-     * opening and closing strings that are inside.
-     * <p>
-     * For example the input (here {@code [[} is the macro opening string and {@code ]]} is the macro closing string):
-     *
-     * <pre>{@code
-     *     @define z=[[userDef/indef/macro]] some content]]after it is
-     *     ^---------------------------------------------------------^
-     * }</pre>
-     * <p>
-     * (see that there is no {@code [[} at the start) will return
-     *
-     * <pre>{@code
-     *     @define z=[[userDef/indef/macro]] some content
-     *     ^--------------------------------------------^
-     * }</pre>
-     * <p>
-     * and the input will contain the remaining
-     *
-     * <pre>{@code
-     *     after it is
-     *     ^---------^
-     * }</pre>
-     * <p>
-     * (The {@code ^---^} shows where the strings start and end.)
-     *
-     * @param input the input after the macro opening string
-     * @return the output that contains the body of the macro
-     * @throws BadSyntaxAt if the macro opening and closing strings are not properly balanced
-     */
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
-        final var openStr = macros.open();
-        final var closeStr = macros.close();
-        // keep track of all the opened and not yet closed macro start string
-        // use it to report error when a macro is not terminated before EOF
-        // knowing where the last opening string was that had no closing pair
-        var refStack = new LinkedList<Position>();
-        refStack.add(input.getPosition());
-        var counter = 1; // we are after one macro opening, so that counts as one opening
-        final var output = makeInput();
-
-        while (counter > 0) {// while there is any opened macro
-            if (input.length() == 0) {// some macro was not closed
-                throw new BadSyntaxAt("Macro was not terminated in the file.", refStack.pop());
-            }
-
-            if (input.indexOf(openStr) == 0) {
-                moveMacroOpenToOutput(input, output);
-                refStack.add(input.getPosition());
-                counter++; //count the new opening
-            } else if (input.indexOf(closeStr) == 0) {
-                counter--; // count the closing
-                if (counter == 0) {
-                    skip(input, closeStr);
-                    if (option("nl").isEmpty()) {
-                        eatEscapedNL(input);
-                    }
-                } else {
-                    refStack.pop();
-                    moveMacroCloseToOutput(input, output);
-                }
-            } else {
-                final var open = input.indexOf(openStr);
-                final var close = input.indexOf(closeStr);
-                final int limit;
-                if (contains(close) && (!contains(open) || close < open)) {
-                    limit = close;
-                } else {
-                    limit = open;
-                }
-                if (!contains(limit)) {
-                    output.append(input);
-                    input.reset();
-                } else {
-                    output.append(input.substring(0, limit));
-                    skip(input, limit);
-                }
-            }
-        }
-        return output.toString();
-    }
-
-    private void moveMacroCloseToOutput(Input input, Input output) {
-        move(input, macros.close(), output);
-    }
-
-    private void moveMacroOpenToOutput(Input input, Input output) {
-        move(input, macros.open(), output);
+        return MacroBodyFetcher.getNextMacroBody(input, this);
     }
 
     @Override
     public void close() throws Exception {
         shellEngine.close();
     }
-
 
     private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);
 
