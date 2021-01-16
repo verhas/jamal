@@ -35,6 +35,10 @@ public class Input implements javax0.jamal.api.Input {
         return new Input(input, ref);
     }
 
+    public static Input makeInput(javax0.jamal.api.Input input){
+        return new Input(input.toString(),input.getPosition());
+    }
+
     public Input(StringBuilder input, Position ref) {
         this.input = input;
         this.file = ref == null ? null : ref.file;

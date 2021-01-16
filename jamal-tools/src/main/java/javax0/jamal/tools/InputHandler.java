@@ -57,6 +57,18 @@ public class InputHandler {
     }
 
     /**
+     * Same as {@link #skip(Input, int)} but it also appends the deleted characters to the output.
+     *
+     * @param input              from which the first characters are deleted
+     * @param numberOfCharacters the number of characters to be deleted from the start of {@code input}
+     * @param output                 where the characters will be appended
+     */
+    public static void move(Input input, int numberOfCharacters, Input output) {
+        output.append(input.substring(0, numberOfCharacters));
+        input.delete(numberOfCharacters);
+    }
+
+    /**
      * Copy the string from the start of the input to the end of the output.
      *
      * @param input  from which the string will be removed
@@ -186,9 +198,22 @@ public class InputHandler {
      * @param input from which the spaces should be deleted.
      * @param sb    where the spaces will be appended
      */
-    public static void skipWhiteSpaces(Input input, StringBuilder sb) {
+    public static void moveWhiteSpaces(Input input, StringBuilder sb) {
         while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
             sb.append(input.charAt(0));
+            input.delete(1);
+        }
+    }
+
+    /**
+     * Same as {@link #skipWhiteSpaces(Input)} but it also appends the deleted spaces to the output.
+     *
+     * @param input from which the spaces should be deleted.
+     * @param output    where the spaces will be appended
+     */
+    public static void moveWhiteSpaces(Input input, Input output) {
+        while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
+            output.append(input.charAt(0));
             input.delete(1);
         }
     }

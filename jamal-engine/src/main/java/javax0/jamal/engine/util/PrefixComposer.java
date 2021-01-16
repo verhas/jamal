@@ -60,7 +60,7 @@ public class PrefixComposer {
                     skip(input, 1);
                 }
             }
-            skipWhiteSpaces(input, prefix);
+            InputHandler.moveWhiteSpaces(input, prefix);
         }
         return new Prefix(postEvalCount, identCount, prefix.toString());
     }
