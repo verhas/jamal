@@ -52,7 +52,7 @@ fruit
 
 
 
-SSSzazi[[z]]SSS{z}
+SSSzaziSSS{z}{@escape `a`{`a`}z{@escape `a`}`a`}
 END SNIPPET
 
 START SNIPPET ident_output

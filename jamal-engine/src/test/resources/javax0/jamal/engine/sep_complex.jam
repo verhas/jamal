@@ -1,4 +1,4 @@
-{@sep/[[/]]}
+{@options omasalgotm}{@sep/[[/]]}
 [[#comment [[@sep/<</>>]]
 <<@define z=zazi>><<@export z>>
 <<#sep>>

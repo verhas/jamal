@@ -4,9 +4,12 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
+import javax0.jamal.engine.util.SeparatorCalculator;
 import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.OptionsStore;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
@@ -16,6 +19,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     final private Processor processor;
     final private String content;
     final private ArgumentHandler argumentHandler;
+    final private String openStr, closeStr, pattern;
     private Segment root = null;
 
     /**
@@ -37,6 +41,9 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
      */
     public UserDefinedMacro(Processor processor, String id, String content, String... parameters) throws BadSyntax {
         this.processor = processor;
+        this.openStr = processor.getRegister().open();
+        this.closeStr = processor.getRegister().close();
+        pattern = "(" + Pattern.quote(openStr) + "|" + Pattern.quote(closeStr) + ")";
         this.id = id;
         this.content = content;
         argumentHandler = new ArgumentHandler(this, parameters);
@@ -72,16 +79,22 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         final var adjustedValues = argumentHandler.adjustActualValues(parameters, isLenient());
         var values = argumentHandler.buildValueMap(adjustedValues);
         if (root == null) {
-            root = createSegmentList(adjustedValues);
+            root = createSegmentList();
         }
         final var output = new StringBuilder(segmentsLengthSum(root, values));
+        final String sep = OptionsStore.getInstance(processor).is("omasalgotm") ||
+            (openStr.equals(processor.getRegister().open()) && closeStr.equals(processor.getRegister().close()))
+            ? null :
+            "`" + new SeparatorCalculator("abcdefghijklmnopqsrtxvyz")
+                .calculate(processor.getRegister().open() + processor.getRegister().close())
+                + "`";
         for (Segment segment = root; segment != null; segment = segment.next()) {
-            output.append(segment.content(values));
+            output.append(protect(segment.content(values), sep));
         }
         return output.toString();
     }
 
-    private Segment createSegmentList(String[] adjustedValues) {
+    private Segment createSegmentList() {
         final Segment root = new TextSegment(null, content);
         for (int i = 0; i < argumentHandler.parameters.length; i++) {
             for (Segment segment = root; segment != null; segment = segment.next()) {
@@ -101,6 +114,49 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
             size += segment.content(values).length();
         }
         return size;
+    }
+
+    private String protect(String in, String sep) {
+        if (sep != null) {
+            final String currOpen = processor.getRegister().open();
+            final String currClose = processor.getRegister().close();
+
+            final var sb = new StringBuilder(in);
+            int i = 0;
+            while (i < sb.length()) {
+                final int oIndex = sb.indexOf(currOpen, i);
+                final int cIndex = sb.indexOf(currClose, i);
+                if (oIndex == -1 && cIndex == -1) {
+                    break;
+                }
+                if (oIndex > -1 && (oIndex < cIndex || cIndex == -1)) {
+                    sb.replace(oIndex, oIndex + currOpen.length(), currOpen + "@escape " + sep + currOpen + sep + currClose);
+                    i = oIndex + 2 * currOpen.length() + currClose.length() + 2 * sep.length() + "@escape ".length();
+                } else {
+                    sb.replace(cIndex, cIndex + currClose.length(), currOpen + "@escape " + sep + currClose + sep + currClose);
+                    i = cIndex + currOpen.length() + 2 * currClose.length() + 2 * sep.length() + "@escape ".length();
+                }
+            }
+
+            i = 0;
+            while (i < sb.length()) {
+                final int oIndex = sb.indexOf(openStr, i);
+                final int cIndex = sb.indexOf(closeStr, i);
+                if (oIndex == -1 && cIndex == -1) {
+                    break;
+                }
+                if (oIndex > -1 && (oIndex < cIndex || cIndex == -1)) {
+                    sb.replace(oIndex, oIndex + openStr.length(), currOpen);
+                    i = oIndex + currOpen.length();
+                } else {
+                    sb.replace(cIndex, cIndex + closeStr.length(), currClose);
+                    i = cIndex + currClose.length();
+                }
+            }
+            return sb.toString();
+        } else {
+            return in;
+        }
     }
 
     @Override
