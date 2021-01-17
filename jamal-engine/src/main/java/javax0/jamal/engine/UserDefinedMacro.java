@@ -5,6 +5,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
+import javax0.jamal.engine.util.Replacer;
 import javax0.jamal.engine.util.SeparatorCalculator;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
@@ -122,47 +123,27 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         return size;
     }
 
-    private String protect(String in, String sep) {
+    /**
+     * Protect the input string escaping all macro start and macro end string. The same time the definition time macro
+     * start and end strings are replaced to the current one.
+     *
+     * @param input the input string to protect
+     * @param sep   the separator character to be used in the escape macro.
+     * @return
+     */
+    private String protect(String input, String sep) {
         if (sep != null) {
             final String currOpen = processor.getRegister().open();
             final String currClose = processor.getRegister().close();
-            final int oOffset = 2 * currOpen.length() + currClose.length() + 2 * sep.length() + ESCAPE.length();
-            final int cOffset = currOpen.length() + 2 * currClose.length() + 2 * sep.length() + ESCAPE.length();
-            final var sb = new StringBuilder(in);
-            int i = 0;
-            while (i < sb.length()) {
-                final int oIndex = sb.indexOf(currOpen, i);
-                final int cIndex = sb.indexOf(currClose, i);
-                if (oIndex == -1 && cIndex == -1) {
-                    break;
-                }
-                if (oIndex > -1 && (oIndex < cIndex || cIndex == -1)) {
-                    sb.replace(oIndex, oIndex + currOpen.length(), currOpen + ESCAPE + sep + currOpen + sep + currClose);
-                    i = oIndex + oOffset;
-                } else {
-                    sb.replace(cIndex, cIndex + currClose.length(), currOpen + ESCAPE + sep + currClose + sep + currClose);
-                    i = cIndex + cOffset;
-                }
-            }
-
-            i = 0;
-            while (i < sb.length()) {
-                final int oIndex = sb.indexOf(openStr, i);
-                final int cIndex = sb.indexOf(closeStr, i);
-                if (oIndex == -1 && cIndex == -1) {
-                    break;
-                }
-                if (oIndex > -1 && (oIndex < cIndex || cIndex == -1)) {
-                    sb.replace(oIndex, oIndex + openStr.length(), currOpen);
-                    i = oIndex + currOpen.length();
-                } else {
-                    sb.replace(cIndex, cIndex + closeStr.length(), currClose);
-                    i = cIndex + currClose.length();
-                }
-            }
-            return sb.toString();
+            final var replacer = new Replacer(Map.of(
+                currOpen, currOpen + ESCAPE + sep + currOpen + sep + currClose,
+                currClose, currOpen + ESCAPE + sep + currClose + sep + currClose,
+                openStr, currOpen,
+                closeStr, currClose
+            ),openStr);
+            return replacer.replace(input);
         } else {
-            return in;
+            return input;
         }
     }
 
