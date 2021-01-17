@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Configurable;
 import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
  */
-public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
+public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable {
     private static final String ESCAPE = "@escape ";
     final private String id;
     final private Processor processor;
@@ -24,6 +25,14 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
     final private ArgumentHandler argumentHandler;
     final private String openStr, closeStr, pattern;
     private Segment root = null;
+    private boolean pure = false;
+
+    @Override
+    public void configure(String key, Object object) {
+        if( "pure".equals(key) ){
+            pure = true;
+        }
+    }
 
     /**
      * Creates a new user defined macro.
@@ -85,7 +94,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
             root = createSegmentList();
         }
         final var output = new StringBuilder(segmentsLengthSum(root, values));
-        final String sep = OptionsStore.getInstance(processor).is("omasalgotm") ||
+        final String sep = pure || OptionsStore.getInstance(processor).is("omasalgotm") ||
             (openStr.equals(processor.getRegister().open()) && closeStr.equals(processor.getRegister().close()))
             ? null :
             "`" + new SeparatorCalculator("abcdefghijklmnopqsrtxvyz")
@@ -140,7 +149,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
                 currClose, currOpen + ESCAPE + sep + currClose + sep + currClose,
                 openStr, currOpen,
                 closeStr, currClose
-            ),openStr);
+            ), openStr);
             return replacer.replace(input);
         } else {
             return input;

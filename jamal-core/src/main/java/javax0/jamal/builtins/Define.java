@@ -1,9 +1,11 @@
 package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Configurable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.InputHandler;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
@@ -28,18 +30,31 @@ public class Define implements Macro {
         if (optional && processor.isDefined(id)) {
             return "";
         }
+        boolean pure=false;
         skipWhiteSpaces(input);
+        if (id.endsWith(":") && !firstCharIs(input, '(')) {
+            pure = true;
+            id = id.substring(0, id.length() - 1);
+        }
         final String[] params = getParameters(input, id);
+        if (firstCharIs(input, ':')) {
+            pure = true;
+            skip(input, 1);
+        }
         if (!firstCharIs(input, '=')) {
             throw new BadSyntax("define '" + id + "' has no '=' to body");
         }
         skip(input, 1);
+        final UserDefinedMacro macro;
         if (isGlobalMacro(id)) {
-            var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), params);
+            macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), params);
             processor.defineGlobal(macro);
         } else {
-            var macro = processor.newUserDefinedMacro(id, input.toString(), params);
+            macro = processor.newUserDefinedMacro(id, input.toString(), params);
             processor.define(macro);
+        }
+        if (pure && macro instanceof Configurable) {
+            ((Configurable) macro).configure("pure", true);
         }
         return "";
     }

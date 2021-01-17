@@ -104,6 +104,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
     xvi)   <<verbatim,`verbatim`>>
     xvii)  <<options,`options`>>
     xviii) <<try,`try`>>
+    xix) <<escape,`escape`>>
 4. <<JamalENV,Jamal Environment Variables>>
 5. <<JamalAPI,Jamal API>>
 
@@ -432,7 +433,7 @@ or
 {#define id()=body}
 ----
 
-Using the `()` after the identifier of the macro is optional and the result is exactly the same as if it omitted.
+Using the `()` characters after the identifier of the macro is optional, and the result is exactly the same as if it omitted.
 The two definitions are equivalent.
 When the macro is used, the arguments are replaced in the body by the actual parameters supplied at the place of use.
 The arguments are specified as a comma-separated list.
@@ -617,7 +618,7 @@ because `-` is not alphanumeric and therefore it is treated as a separator chara
 {enclose {dash}}
 %}
 
-will work and the result will be
+will work, and the result will be
 
 {%output%}
 
@@ -715,6 +716,14 @@ and so it gets into the global scope.
 However, during the definition, it is in the local scope of the `comment` macro where the local definition of `x` overrides the global definition of `x` even though the global definition happened later.
 Therefore `y` will be `here we are local`.
 That is also because  `y` is defined using the `#` character before the built-in macro keyword `define` and thus the content of the definition is evaluated before defining the global `y`.
+
+It may happen that the macro opening and closing strins are different when the macro is defined and when used.
+In a situation like that the macro evaluation replaces the macro opening and closing strings in the macro definition to the actual macro opening and closing strings.
+It can be prevented using `:=` instead of a `=` between the name, parameter list and the body of the macro.
+
+Note that when there are no paramneters and the macro definition does not use the optional `()` after the name of the macro the `:=` may be ambiguous.
+The macro definition `{@define a:=b}` may mean, `a` should be `b` with simple evaluation or `a:` global macro shoudl be `b`.
+In a situation like this the `:` character belongs to the `:=` assignment symbol.
 
 [[eval]]
 ==== `eval`
@@ -1990,6 +1999,49 @@ This can be used to test the "computability" of the text.
 
 The macro `try` should only be used to debug certain macro files.
 When an error happens, and the `try` macro catches the exception thrown the scopes may not be properly closed.
+
+[[escape]]
+==== `escape`
+
+since 1.5.4 (core)
+
+The built-in macro escape is a special one, like `verbatim`.
+It is implemented as Java a macro class, but the macro evaluation process takes the presence of an `escape` macro into account.
+The syntax of the macro is the following:
+
+[source,jamal]
+----
+    {@escape `SEP`escaped string`SEP`}
+----
+
+The part `SEP` between the back-tick characters can be any string, which does not appear inside the escaped string.
+This string has to be repeated at the end of the macro before the macro end string.
+
+The result of the macro is the escaped string without any modification.
+The macro itself is very simple.
+The speciality of macro is that Jamal takes care of this macro when searching for macros in the text.
+When Jamal sees a macro opening string, then it checks way before the evaluation of the macro if the actual macro is an `escape` macro or not.
+It the macro is an escape macro, then it finds the `SEP` strings, and the macro end string after that.
+If there is any macro opening or macro closing string inside the `escape` macro they are ignored.
+
+{%sample/
+{@escape `a`{`a`}
+%}
+
+will result
+
+{%output%}
+
+It is recommended not to use this macro in your Jamal source.
+This macro is intended to be used by Jamal itself when evaluating a user defined macro, which was defined using different macro opening and closing strings than the actual one.
+In this case the macro opening and closing strings, which were in effect at the time of the macro definition are replaced with the current one.
+That way the macros defined inside the macros will be evaluated even though the macro opening and closing strings have changed.
+
+At the same time the current macro opening and closing strings had no special effect by the time of the macro definition.
+If there is any current macro opening and closing string in the definition of the macro then they should not play a special role.
+They get protected using the `escape` macro automatically.
+This way it may happen that you see in the error output
+The macro
 
 [[JamalENV]]
 === Jamal Environment Variables

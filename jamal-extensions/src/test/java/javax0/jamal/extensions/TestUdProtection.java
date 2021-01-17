@@ -22,11 +22,17 @@ public class TestUdProtection {
     }
 
     @Test
+    void escapeDoesNotWorkWithParametersInside() throws Exception {
+        TestThat.theInput("{@sep [ ]}[#define a(x)=[`@define b=[@escape`.`[x]`.`]]]" +
+            "[@sep]{@sep [[ ]]}[[a/z]][[b]]").throwsBadSyntax();
+    }
+
+    @Test
     void escapeSaves() throws Exception {
-        TestThat.theInput("{@sep [ ]}[#define a(x)=[`@define b=[@escape`.`[x]`.`]]]" +            "[@sep]{@sep [[ ]]}[[a/z]][[b]]").throwsBadSyntax();
         TestThat.theInput("{@sep [ ]}[#define a(x)=[`@define b=[@escape`.`[`.`]x[@escape`.`]`.`] ] ]" +
             "[@sep]{@sep [[ ]]}[[a/z]][[b]]").results(" [z] ");
     }
+
     @Test
     void worksWhenSeparatorContainsOtherVerbatim() throws Exception {
         TestThat.theInput("{@sep [ ]}[#define a(x)=[`@define b=[@sep { }][x]{@sep}]]" +
