@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
 import javax0.jamal.engine.util.SeparatorCalculator;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
  */
 public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
+    private static final String ESCAPE = "@escape ";
     final private String id;
     final private Processor processor;
     final private String content;
@@ -89,7 +91,11 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
                 .calculate(processor.getRegister().open() + processor.getRegister().close())
                 + "`";
         for (Segment segment = root; segment != null; segment = segment.next()) {
-            output.append(protect(segment.content(values), sep));
+            if (segment instanceof ParameterSegment) {
+                output.append(segment.content(values));
+            } else {
+                output.append(protect(segment.content(values), sep));
+            }
         }
         return output.toString();
     }
@@ -120,7 +126,8 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
         if (sep != null) {
             final String currOpen = processor.getRegister().open();
             final String currClose = processor.getRegister().close();
-
+            final int oOffset = 2 * currOpen.length() + currClose.length() + 2 * sep.length() + ESCAPE.length();
+            final int cOffset = currOpen.length() + 2 * currClose.length() + 2 * sep.length() + ESCAPE.length();
             final var sb = new StringBuilder(in);
             int i = 0;
             while (i < sb.length()) {
@@ -130,11 +137,11 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro {
                     break;
                 }
                 if (oIndex > -1 && (oIndex < cIndex || cIndex == -1)) {
-                    sb.replace(oIndex, oIndex + currOpen.length(), currOpen + "@escape " + sep + currOpen + sep + currClose);
-                    i = oIndex + 2 * currOpen.length() + currClose.length() + 2 * sep.length() + "@escape ".length();
+                    sb.replace(oIndex, oIndex + currOpen.length(), currOpen + ESCAPE + sep + currOpen + sep + currClose);
+                    i = oIndex + oOffset;
                 } else {
-                    sb.replace(cIndex, cIndex + currClose.length(), currOpen + "@escape " + sep + currClose + sep + currClose);
-                    i = cIndex + currOpen.length() + 2 * currClose.length() + 2 * sep.length() + "@escape ".length();
+                    sb.replace(cIndex, cIndex + currClose.length(), currOpen + ESCAPE + sep + currClose + sep + currClose);
+                    i = cIndex + cOffset;
                 }
             }
 
