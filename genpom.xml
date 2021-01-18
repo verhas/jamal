@@ -6,6 +6,7 @@
     <artifactId>pom-xml-file-builder</artifactId>
     <version>1.0.0</version>
     <build>
+        <defaultGoal>clean</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>com.javax0.jamal</groupId>
