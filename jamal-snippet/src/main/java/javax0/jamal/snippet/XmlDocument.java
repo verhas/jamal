@@ -1,6 +1,7 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import org.w3c.dom.Document;
 
@@ -11,7 +12,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-public class XmlDocument implements Identified {
+public class XmlDocument implements Identified, Evaluable {
     final String fileName;
     final String id;
     final Document doc;
@@ -45,5 +46,21 @@ public class XmlDocument implements Identified {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String evaluate(String... parameters) throws BadSyntax {
+        try {
+            return get(parameters[0]);
+        } catch (XPathExpressionException e) {
+            throw new BadSyntax("The XPath expression '" + parameters[0]
+                + "' on the xml document identified by '" + getId()
+                + "' is erroneous", e);
+        }
+    }
+
+    @Override
+    public int expectedNumberOfArguments() {
+        return 1;
     }
 }

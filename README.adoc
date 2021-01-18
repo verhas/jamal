@@ -380,8 +380,7 @@ will result
 
 [source]
 ----
-   2
-   
+ 2
 12
 ----
 
@@ -2066,9 +2065,7 @@ The macro `a3` has the value `{z}` which is evaluated after the macro `a3` is re
 ----
 fruit
 
-
-
-SSSzaziSSS{z}{@escape `a`{`a`}z{@escape `a`}`a`}
+SzaziSSS{z}{@escape `a`{`a`}z{@escape `a`}`a`}
 ----
 
 

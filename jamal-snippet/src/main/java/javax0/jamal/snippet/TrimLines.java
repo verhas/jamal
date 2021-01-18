@@ -33,11 +33,13 @@ public class TrimLines implements Macro, InnerScopeDependent {
         int minSpaces = Integer.MAX_VALUE;
         for (int i = 0; i < sb.length(); ) {
             int spaceCount = 0;
-            while (i < sb.length() && Character.isWhitespace(sb.charAt(i)) && sb.charAt(1) != '\n') {
+            while (i < sb.length() && Character.isWhitespace(sb.charAt(i))) {
                 i++;
                 spaceCount++;
             }
-            minSpaces = Math.min(minSpaces, spaceCount);
+            if (i < sb.length() && sb.charAt(i) != '\n') {
+                minSpaces = Math.min(minSpaces, spaceCount);
+            }
             int index = sb.indexOf("\n", i);
             if (index == -1) break;
             i = index + 1;

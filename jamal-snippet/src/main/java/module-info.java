@@ -5,7 +5,6 @@ import javax0.jamal.snippet.NumberLines;
 import javax0.jamal.snippet.Replace;
 import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.Snip;
-import javax0.jamal.snippet.SnipXPath;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.TrimLines;
 
@@ -23,7 +22,6 @@ module jamal.snippet {
         TrimLines,
         SnipProperties,
         SnipXml,
-        SnipXPath,
         Replace
         ;
 }

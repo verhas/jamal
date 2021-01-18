@@ -6,7 +6,7 @@ jamal-snippet.
 
 %}{%@import readmemacros.jim%}\
 {%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%@snip:xpath pom /project/version/text()%}%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
 == Jamal Macro Language
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]

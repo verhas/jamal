@@ -28,7 +28,7 @@ The original file however, contains
 [source,xml]
 ----
 {@snip:xml pom=pom.xml}\
-{#define VERSION={@snip:xpath pom /project/version/text()}}\
+{#define VERSION={pom /project/version/text()}}\
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
@@ -74,7 +74,7 @@ The syntax of the macro is
 {@snip:collect fileName}
 ----
 
-`fileName` can be the name of a text file or it can be a directory.
+`fileName` can be the name of a text file, or it can be a directory.
 If the `fileName` is a text file then the macro will collect the snippets from that single file.
 If the `fileName` is a directory then the macro will collect the snippets from the files that are in that directory and from directories beneath recursively.
 
@@ -121,16 +121,152 @@ public class Sample implements Macro {
 defines a snippet that is named `sample`.
 The snippets can be used later using the <<snip,`snip`>> macro.
 
-The output of the snippet is an empty string.
+The output of the `collect` macro is an empty string.
 
+The snippet start and end matching regular expression can be redefined.
+If the user defined macro `start` is defined, then the value of it will be used as snippet start matching regular expression.
+If the user defined macro `stop` is defined, then the value of it will be used as snippet end matching regular expression.
 
+The collection of the files can also be controlled using user defined macros.
+The macro `include` may define a regular expression as well as `exclude`.
+When they are defined only the files that match the regular expression defined by `include` and do not match by `exclude` are collected.
 
+It is enough if the regular expressions match a part of the lines or file name.
+
+The user defined macros may be defined inside the `collect` macro.
+This is the recommended practice.
+For example, the test file
+
+[source]
+----
+{#snip:collect . {@define exclude=2}}
+First snippet {@snip first_snippet}
+2. snippet {@snip second_snippet}
+
+Next file
+{@try!
+First snippet {@snip second_file_first$snippet}
+Second snippet {@snip seconda_snippet_uniconde}
+}
+and this is the end
+----
+
+excludes any file that contains the character `2` in its name.
+
+[[clear]]
 ==== `snip:clear`
+
+Calling ths macro deletes all collected snippets from the memory.
+The result of the macro is an empty string.
 
 [[snip]]
 ==== `snip`
+
+The `snip` macro should have one argument, which should be the name of the snippet previously collected.
+The result of the macro is the content of the snippet.
+
+For example
+
+[source]
+----
+{@snip sample}
+----
+
+is replaced by the content of the snippet named `sample`.
+
+[[properties]]
 ==== `snip:properties`
+
+This macro will load properties from a "properties" file or from an "xml" file.
+The names of the properties will become the names of the snippets and the values the values of the snippets.
+
+For example the samepl
+
+[source]
+----
+{@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.properties}
+----
+
+
+will load the content of the file `javax0/jamal/snippet/testproperties.properties`, which is
+
+[source]
+----
+a=letter a
+b=    letter b
+c = letter c
+----
+
+and thus using the `snip` macro, like
+
+[source]
+----
+{@snip a}
+----
+
+will result
+
+[source]
+----
+letter a
+----
+
+
+If the extension of the file is `.xml` then the properties will be loaded as XML format properties.
+For example the same properties file in xml format looks like the following:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>Application Configuration</comment>
+    <entry key="a">letter a</entry>
+    <entry key="b">letter b</entry>
+    <entry key="c">letter c</entry>
+</properties>
+----
+
+[[xml]]
 ==== `snip:xml`
-==== `snip:xpath`
+
+This macro loads an XML file and assigns it to a "user defined" macro.
+The syntax of the command is
+
+[source]
+----
+{@sni:xml macroName=xml_file.xml}
+----
+
+The defined `macroName` macro can be used as an ordinary user defined macro that accepts one argument.
+This user defined macro evaluates in a special way.
+It uses the argument as an XPath expression and returns the value from the XML document that matches the argument.
+
+For example this document contains the following macros at the start:
+
+[source]
+----
+{@snip:xml pom=pom.xml}\
+{#define VERSION={pom /project/version/text()}}\
+...
+         <version>{VERSION}</version>
+...
+----
+
+The result is:
+
+[source]
+----
+...
+         <version>1.5.4-SNAPSHOT</version>
+...
+----
+
+
+which is the current version of the project as read from the `pom.xml` file.
+
+[[trimLines]]
 ==== `trimLines`
+
+[[numberLines]]
 ==== `numberLines`
