@@ -1,6 +1,7 @@
 import javax0.jamal.api.Macro;
 import javax0.jamal.snippet.Clear;
 import javax0.jamal.snippet.Collect;
+import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.NumberLines;
 import javax0.jamal.snippet.Replace;
 import javax0.jamal.snippet.SnipProperties;
@@ -22,6 +23,7 @@ module jamal.snippet {
         TrimLines,
         SnipProperties,
         SnipXml,
-        Replace
+        Replace,
+        KillLines
         ;
 }
