@@ -462,4 +462,4 @@ int j = 15;
 ==== `replace`
 
 The macro `replace` replaces strings to other strings in its input.
-The macro scans the input using the <<../README:adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
