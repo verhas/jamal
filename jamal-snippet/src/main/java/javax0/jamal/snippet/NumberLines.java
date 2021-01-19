@@ -7,7 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
 
-import java.util.UnknownFormatConversionException;
+import java.util.IllegalFormatException;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 
@@ -63,8 +63,8 @@ public class NumberLines implements Macro, InnerScopeDependent {
             final String formattedNr;
             try {
                 formattedNr = String.format(format, lineNr);
-            }catch (UnknownFormatConversionException e){
-                throw new BadSyntax("The format string in macro '"+getId()+"' is incorrect.",e);
+            } catch (IllegalFormatException e) {
+                throw new BadSyntax("The format string in macro '" + getId() + "' is incorrect.", e);
             }
             sb.insert(i, formattedNr);
             i += formattedNr.length();

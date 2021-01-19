@@ -16,3 +16,14 @@ These macros help embedding Jamal macro samples and run them.
 ----
 %}
 
+{%@define untrimmedSample(code)={%@define :lastCode=code%}[source]
+----
+{%@sample code%}
+----%}
+
+{%@define untrimmedOutput=[source]
+----
+{%#output {%lastCode%}%}
+----
+%}
+

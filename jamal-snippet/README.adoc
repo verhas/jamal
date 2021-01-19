@@ -209,6 +209,7 @@ will result
 [source]
 ----
 letter a
+
 ----
 
 
@@ -235,7 +236,7 @@ The syntax of the command is
 
 [source]
 ----
-{@sni:xml macroName=xml_file.xml}
+{@snip:xml macroName=xml_file.xml}
 ----
 
 The defined `macroName` macro can be used as an ordinary user defined macro that accepts one argument.
@@ -260,6 +261,7 @@ The result is:
 ...
          <version>1.5.4-SNAPSHOT</version>
 ...
+
 ----
 
 
@@ -268,5 +270,141 @@ which is the current version of the project as read from the `pom.xml` file.
 [[trimLines]]
 ==== `trimLines`
 
+This macro can cut off the unneeded spaces from the start and end of the lines.
+When a code fragment is included into the documentation as a snippet the lines may have extra spaces at the start.
+That is when the fragment comes from a code part that is somewhere in the middle of a tabulated structure.
+This macro can remove the extra spaces from the start of the line keeping the relative tabulation of the lines.
+This way the code formatting remains the same as in the source code but the code sample will be aligned to the left.
+
+The syntax of the macro is:
+
+[source]
+----
+{@trimLines ...
+
+  possible
+    multiple lines
+}
+----
+
+For example:
+
+[source]
+----
+ 
+{@trimLines
+   k
+      a
+     b
+    c
+}
+----
+
+will result
+
+[source]
+----
+ 
+k
+   a
+  b
+ c
+
+
+----
+
+
+The macro can also delete the empty lines from the start and from the end of its input in case the option `trimVertical` is set.
+For example
+
+[source]
+----
+ 
+{#trimLines
+{@options trimVertical}
+
+
+
+  k
+   a
+   b
+  c
+
+
+}
+----
+
+will result
+
+[source]
+----
+ 
+k
+ a
+ b
+c
+
+
+----
+
+
 [[numberLines]]
 ==== `numberLines`
+
+This macro can put numbers in front of the lines, sequetially numbering them.
+The syntax of the macro is
+
+[source]
+----
+{@numberLines
+     ..
+     ..
+     ..
+}
+----
+
+By default the numbering of the lines start with one and every line gets the next number.
+For example
+
+[source]
+----
+{@numberLines this is the first line
+this is the second line
+  this is the third line
+}
+----
+
+will result
+
+[source]
+----
+1. this is the first line
+2. this is the second line
+3.   this is the third line
+
+----
+
+
+The number will be inserted with a `.` (dot) after the number and a space.
+
+The user defined macros `start`, `step` and `format` can define different start value, step value and format for the numbers.
+For example
+
+[source]
+----
+{#numberLines {@define start=3}{@define step=2}{@define format= %03d:: }
+this is the first line
+this is the second line
+this is the third line
+}
+----
+
+will result
+
+[source]
+----
+003:: this is the first line
+005:: this is the second line
+007:: this is the third line
+
+----

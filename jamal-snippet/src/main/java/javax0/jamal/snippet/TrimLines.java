@@ -33,7 +33,7 @@ public class TrimLines implements Macro, InnerScopeDependent {
         int minSpaces = Integer.MAX_VALUE;
         for (int i = 0; i < sb.length(); ) {
             int spaceCount = 0;
-            while (i < sb.length() && Character.isWhitespace(sb.charAt(i))) {
+            while (i < sb.length() && Character.isWhitespace(sb.charAt(i)) && sb.charAt(i) != '\n') {
                 i++;
                 spaceCount++;
             }
@@ -49,17 +49,25 @@ public class TrimLines implements Macro, InnerScopeDependent {
             if (minSpaces < 0) {
                 sb.insert(i, " ".repeat(-minSpaces));
             } else {
-                sb.delete(i, i + minSpaces);
+                int nlIndex = sb.indexOf("\n", i);
+                if ((nlIndex >= i + minSpaces) || nlIndex == -1) {
+                    sb.delete(i, i + minSpaces);
+                }
             }
             int index = sb.indexOf("\n", i);
             if (index == -1) break;
-            i = index + 1;
+            int j = index - 1;
+            while (i <= j && Character.isWhitespace(sb.charAt(j))) {
+                j--;
+            }
+            sb.delete(j + 1, index);
+            i = j + 2;
         }
         if (trimVertical) {
             while (sb.length() > 0 && sb.charAt(0) == '\n') {
                 sb.delete(0, 1);
             }
-            while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
+            while (sb.length() > 1 && sb.charAt(sb.length() - 1) == '\n'&& sb.charAt(sb.length() - 2) == '\n') {
                 sb.delete(sb.length() - 1, sb.length());
             }
         }
