@@ -24,8 +24,7 @@ public class TestUpdate {
                     "{#snip:update\n" +
                     "{@define head=[source]\n" +
                     "----\n" +
-                    "}{@define tail=\n" +
-                    "----\n" +
+                    "}{@define tail=----\n" +
                     "}}").getBytes(StandardCharsets.UTF_8));
         }
         TestThat.theInput("{@include " + file + "}").results("\n" +
@@ -43,8 +42,7 @@ public class TestUpdate {
             "{#snip:update\n" +
             "{@define head=[source]\n" +
             "----\n" +
-            "}{@define tail=\n" +
-            "----\n" +
+            "}{@define tail=----\n" +
             "}}", result);
     }
 
@@ -62,8 +60,7 @@ public class TestUpdate {
                     "{#snip:update\n" +
                     "{@define head=[source]\n" +
                     "----\n" +
-                    "}{@define tail=\n" +
-                    "----\n" +
+                    "}{@define tail=----\n" +
                     "}}").getBytes(StandardCharsets.UTF_8));
         }
         TestThat.theInput("{@include " + file + "}").results("\n" +
@@ -81,8 +78,7 @@ public class TestUpdate {
             "{#snip:update\n" +
             "{@define head=[source]\n" +
             "----\n" +
-            "}{@define tail=\n" +
-            "----\n" +
+            "}{@define tail=----\n" +
             "}}", result);
     }
 
@@ -92,13 +88,12 @@ public class TestUpdate {
         try (final var output = new FileOutputStream(new File(file))) {
             output.write(
                 ("{@snip:define a=this is the snippet a}\n" +
-                    "{@snip a}\n" +
+                    "{@snip a\n}wups\n" +
                     "\n" +
                     "{#snip:update\n" +
                     "{@define head=[source]\n" +
                     "----\n" +
-                    "}{@define tail=\n" +
-                    "----\n" +
+                    "}{@define tail=----\n" +
                     "}}").getBytes(StandardCharsets.UTF_8));
         }
         TestThat.theInput("{@include " + file + "}").throwsBadSyntax();

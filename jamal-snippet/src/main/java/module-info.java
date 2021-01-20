@@ -1,6 +1,7 @@
 import javax0.jamal.api.Macro;
 import javax0.jamal.snippet.Clear;
 import javax0.jamal.snippet.Collect;
+import javax0.jamal.snippet.DateMacro;
 import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.NumberLines;
 import javax0.jamal.snippet.Replace;
@@ -34,6 +35,7 @@ module jamal.snippet {
         Snippet,
         ReplaceLines,
         Update,
-        XmlFormat
+        XmlFormat,
+        DateMacro
         ;
 }

@@ -1,4 +1,5 @@
 == Jamal Snippet Handling Macros
+Last updated: 2021-01-20 16:43:45
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
 
@@ -171,6 +172,8 @@ is used here and then the rest of the text is ignored}
 
 will result
 
+
+
 [source]
 ----
 This is the snippet, which is defined inside the file and not collected from an external file
@@ -209,7 +212,7 @@ The output fetched the content from the actual value of the snippet.
 This macro will load properties from a "properties" file or from an "xml" file.
 The names of the properties will become the names of the snippets and the values the values of the snippets.
 
-For example the samepl
+For example, the sample
 
 [source]
 ----
@@ -234,6 +237,8 @@ and thus using the `snip` macro, like
 ----
 
 will result
+
+
 
 [source]
 ----
@@ -590,7 +595,6 @@ the pear has fallen off the bush
 
 ----
 
-
 but this time the replace used regular expression substitution.
 
 [[replaceLines]]
@@ -754,3 +758,32 @@ will result
 </project>
 
 ----
+
+
+As you can see there is no tabulation in this case.
+
+[[date]]
+==== `date`
+
+This macro will return the current date formatted using Java `SimpleDateFormat`.
+The format string is the input of the macro.
+
+Example
+
+[source]
+----
+{@date yyyy-MM-dd HH:mm:ss}
+----
+
+wll result the output
+
+[source]
+----
+2021-01-20 16:43:45
+
+----
+
+
+
+
+

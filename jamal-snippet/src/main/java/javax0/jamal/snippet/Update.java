@@ -77,7 +77,11 @@ public class Update implements Macro, InnerScopeDependent {
             if (matcher.matches()) {
                 state.skipping = true;
                 state.lastOpen = state.lineNr;
-                return line + "\n" + state.head + state.snippets.snippet(matcher.group(1)) + state.tail;
+                var snipText = state.snippets.snippet(matcher.group(1));
+                if( !snipText.endsWith("\n")){
+                    snipText += "\n";
+                }
+                return line + "\n" + state.head + snipText + state.tail;
             }
             return line + "\n";
         }

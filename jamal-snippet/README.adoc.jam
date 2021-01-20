@@ -1,5 +1,14 @@
 == Jamal Snippet Handling Macros
-{%@import ../readmemacros.jim%}
+{%@import ../readmemacros.jim%}\
+{%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
+{%#snip:define lastUpdated={%lastUpdated%}%}\
+Last updated: {%lastUpdated%}\
+{%#comment
+{%@snip lastUpdated
+2021-01-20 16:43:45
+%}
+%}
+
 Snippet handling macros help you to automatically include information from program source code into the documentation.
 
 When you document an application there is a lot of information that changes by the change of the source code.
@@ -154,7 +163,15 @@ is used here and then the rest of the text is ignored}
 
 will result
 
-{%output%}
+{%#snip:define mySnippet={%output%}%}
+
+{%@snip mySnippet
+[source]
+----
+This is the snippet, which is defined inside the file and not collected from an external file
+
+----
+%}
 
 [[clear]]
 ==== `snip:clear`
@@ -187,14 +204,15 @@ The output fetched the content from the actual value of the snippet.
 This macro will load properties from a "properties" file or from an "xml" file.
 The names of the properties will become the names of the snippets and the values the values of the snippets.
 
-For example the samepl
+For example, the sample
 
 {%sample/
 {@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.properties}
 %}
 
-{%#comment
-{%output%}
+{%#comment this output is evaluated because this is when themacro in the sample is evaluated
+{%output%} but there is no output. The laster samples use the snippets that this macro evaluation
+was reading from the properties file
 %}\
 
 will load the content of the file `javax0/jamal/snippet/testproperties.properties`, which is
@@ -212,7 +230,15 @@ and thus using the `snip` macro, like
 
 will result
 
-{%output%}
+{%#snip:define snipa={%output%}%}
+
+{%@snip snipa
+[source]
+----
+letter a
+
+----
+%}
 
 If the extension of the file is `.xml` then the properties will be loaded as XML format properties.
 For example the same properties file in xml format looks like the following:
@@ -248,8 +274,17 @@ For example this document contains the following macros at the start:
 %}
 
 The result is:
+{%#snip:define versionSnippet={%output%}%}\
 
-{%output%}
+{%@snip versionSnippet
+[source]
+----
+...
+         <version>1.5.4-SNAPSHOT</version>
+...
+
+----
+%}
 
 which is the current version of the project as read from the `pom.xml` file.
 
@@ -336,8 +371,17 @@ this is the second line
 %}
 
 will result
+{%#snip:define numberedLines1={%output%}%}\
 
-{%output%}
+{%@snip numberedLines1
+[source]
+----
+1. this is the first line
+2. this is the second line
+3.   this is the third line
+
+----
+%}
 
 The number will be inserted with a `.` (dot) after the number and a space.
 
@@ -353,8 +397,17 @@ this is the third line
 %}
 
 will result
+{%#snip:define numberedLines2={%output%}%}\
 
-{%output%}
+{%@snip numberedLines2
+[source]
+----
+003:: this is the first line
+005:: this is the second line
+007:: this is the third line
+
+----
+%}
 
 The formatting will be used in the method `String::format`.
 Any illegal formatting will result an error.
@@ -392,8 +445,18 @@ int j = 15;
 %}
 
 creates the output
+{%#snip:define killLines1={%output%}%}\
 
-{%output%}
+{%@snip killLines1
+[source]
+----
+/* this stays */
+
+#define VERSION 1.0 //this line also stays put
+int j = 15;
+
+----
+%}
 
 [[skipLines]]
 ==== `skipLines`
@@ -418,8 +481,16 @@ there can be more lines
 %}
 
 will result
+{%#snip:define skipLines1={%output%}%}\
 
-{%output%}
+{%@snip skipLines1
+[source]
+----
+this line is there
+there can be more lines
+
+----
+%}
 
 You can also define the regular expressions defining the user defined macros `skip` and `endSkip`.
 For example,
@@ -435,8 +506,16 @@ there can be more lines
 }%}
 
 will result
+{%#snip:define skipLines2={%output%}%}\
 
-{%output%}
+{%@snip skipLines2
+[source]
+----
+this line is there
+there can be more lines
+
+----
+%}
 
 It is not an error if there is no line matching the `endSkip`.
 In that case all lines starting with the line matching the `skip` will be removed from the output.
@@ -458,8 +537,15 @@ For example:
 %}
 
 will result:
+{%#snip:define replace1={%output%}%}\
 
-{%output%}
+{%@snip replace1
+[source]
+----
+the pear has fallen off the bush
+
+----
+%}
 
 If the option `regex` is active then the search string are treated as regular expressions and the replace strings may also contain replacement parts.
 For example,
@@ -469,9 +555,15 @@ For example,
 %}
 
 will result the same output
+{%#snip:define replace2={%output%}%}\
 
-{%output%}
+{%@snip replace2
+[source]
+----
+the pear has fallen off the bush
 
+----
+%}
 but this time the replace used regular expression substitution.
 
 [[replaceLines]]
@@ -498,8 +590,17 @@ For example,
 %}
 
 will result
+{%#snip:define replaceLines1={%output%}%}\
 
-{%output%}
+{%@snip replaceLines1
+[source]
+----
+this can be a snippet content
+which was collected
+from a Java or C program comment
+
+----
+%}
 
 The search regular expressions, and the replacement strings have to be defined in the user defined macro `replace`.
 This maco can be defined inside the `replaceLines` macro.
@@ -580,8 +681,24 @@ For example,
 %}
 
 will result
+{%#snip:define tabulatedXmlFormat=
+{%output%}%}\
 
-{%output%}
+{%@snip tabulatedXmlFormat
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>jamal snippet</name>
+    <packaging>jar</packaging>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>1.5.4-SNAPSHOT</version>
+</project>
+
+----
+%}
 
 The default tabulation size is four.
 You can alter it defining the user defined macro `tabsize`.
@@ -598,7 +715,51 @@ For example,
 %}
 
 will result
+{%#snip:define zeroTabulatedXmlFormat=
+{%output%}%}\
 
-{%output%}
+{%#snip zeroTabulatedXmlFormat
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<name>jamal snippet</name>
+<packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-snippet</artifactId>
+<version>1.5.4-SNAPSHOT</version>
+</project>
+
+----
+%}
 
 As you can see there is no tabulation in this case.
+
+[[date]]
+==== `date`
+
+This macro will return the current date formatted using Java `SimpleDateFormat`.
+The format string is the input of the macro.
+
+Example
+
+{%sample/
+{@date yyyy-MM-dd HH:mm:ss}
+%}
+
+wll result the output
+
+{%#snip:define dateOutput={%output%}%}\
+{%@snip dateOutput
+[source]
+----
+2021-01-20 16:43:45
+
+----
+%}
+
+
+
+
+{%@snip:update%}
