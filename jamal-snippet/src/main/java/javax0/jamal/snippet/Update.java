@@ -5,6 +5,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
 
@@ -27,18 +28,22 @@ public class Update implements Macro, InnerScopeDependent {
             while ((line = br.readLine()) != null) {
                 sb.append(replace(state,line));
             }
+            if( state.skipping ){
+                throw new BadSyntaxAt("The snip macro is not terminated for 'update'.", new Position(in.getPosition().file,state.lastOpen,1));
+            }
             try( final var output = new FileOutputStream(new File(in.getPosition().file))){
                 output.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }
         } catch (IOException e) {
             throw new BadSyntaxAt("File " + in.getPosition().file + " cannot be read.", in.getPosition());
         }
-        System.out.println(sb.toString());
         return "";
     }
 
     private static class State {
         boolean skipping = false;
+        int lineNr = 0;
+        int lastOpen = 0;
         final SnippetStore snippets;
         final String head;
         final String tail;
@@ -53,13 +58,14 @@ public class Update implements Macro, InnerScopeDependent {
             start = Pattern.compile(reader.readValue("start").orElse(
                 "^\\s*" +
                     Pattern.quote(processor.getRegister().open()) +
-                    "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*.*$"));
-            stop = Pattern.compile(reader.readValue("start").orElse(
+                    "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$"));
+            stop = Pattern.compile(reader.readValue("stop").orElse(
                 "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\s*$"));
         }
     }
 
-    private String replace(State state, String line) throws BadSyntax {
+    private static String replace(State state, String line) throws BadSyntax {
+        state.lineNr++;
         if (state.skipping) {
             if (state.stop.matcher(line).matches()) {
                 state.skipping = false;
@@ -70,6 +76,7 @@ public class Update implements Macro, InnerScopeDependent {
             final var matcher = state.start.matcher(line);
             if (matcher.matches()) {
                 state.skipping = true;
+                state.lastOpen = state.lineNr;
                 return line + "\n" + state.head + state.snippets.snippet(matcher.group(1)) + state.tail;
             }
             return line + "\n";

@@ -504,3 +504,61 @@ will result
 The search regular expressions, and the replacement strings have to be defined in the user defined macro `replace`.
 This maco can be defined inside the `replaceLines` macro.
 The macro scans the value of the user defined macro `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+
+[[snip:update]]
+==== `snip:update`
+
+This macro can be used to automatically copy the content of the snippets into the `snip` macros.
+That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
+
+The result of the macro is empty string, and it has no side effect inside the macro processor.
+Whe it does, however is that it alters the file it was used in inserting the snippets into the comment part of the `snip` macro.
+Its operation is done in three steps:
+
+1. Reads the file into the memory.
+2. It goes through all the lines and inserts the content of the snippet into the comment part of the `snip` macros.
+   If there is already a comment there then it gets deleted and replaced.
+3. Writes the altered content into the original file updating it.
+
+This macro alters the original file, therefore the use of it has to performed with great care.
+Ensure that before executing Jamal you save the original file, making a copy of it or committing into the git repository.
+
+The `snip:update` macro does not perfom Jamal syntax analysis.
+To use this macro successfully you have to follow the extra rules:
+
+* The `{@snip id...` macro should start on a new line.
+  There may be spaces before the macro.
+  There must not be a comment on the same line following the snipped identifier.
+  You can put a few non-space character after the snippet identifier in case you want to exclude a snippet use from the update.
+
+* The `snip` macro matching macro closing string has to be on a separate line.
+  There may be spaces before and after the closing string, but nothing else.
+
+The update macro can be customized.
+If the macros `start` and/or `stop` are defined then their value will be used as regular expression to find the start and the end of the snippet content insertion points.
+The default value for `start` is
+
+    ^\s*\Q{\E\s*(?:#|@)\s*snip\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\s*$
+
+When this pattern is calculated the current macro opening string is used instead of `{`.
+The `stop` string is
+
+    ^\s*\Q}\E\s*$
+
+When this pattern is calculated the current macro closing string is used instead of `}`.
+
+(The `\Q` and `\E` escape sequences in Java regular expressions denote escaping, so that the characters between are matched literally.)
+
+It is also possible to define a `head` and `tail` macro.
+The content of the `head` macro will be copied in front of the inserted snippet.
+The content of the `tail` macro will be copied after the inserted snippet.
+It can be used to insert, for example asciidoc
+
+   [source]
+   ----
+
+header and
+
+   ----
+
+footer when the snippets are code samples in an asciidoc file.
