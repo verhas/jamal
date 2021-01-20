@@ -9,8 +9,11 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 public class Update implements Macro, InnerScopeDependent {
@@ -23,6 +26,9 @@ public class Update implements Macro, InnerScopeDependent {
             String line;
             while ((line = br.readLine()) != null) {
                 sb.append(replace(state,line));
+            }
+            try( final var output = new FileOutputStream(new File(in.getPosition().file))){
+                output.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }
         } catch (IOException e) {
             throw new BadSyntaxAt("File " + in.getPosition().file + " cannot be read.", in.getPosition());
@@ -47,7 +53,7 @@ public class Update implements Macro, InnerScopeDependent {
             start = Pattern.compile(reader.readValue("start").orElse(
                 "^\\s*" +
                     Pattern.quote(processor.getRegister().open()) +
-                    "\\s+(?:#|@)\\s+snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s+.*$"));
+                    "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*.*$"));
             stop = Pattern.compile(reader.readValue("start").orElse(
                 "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\s*$"));
         }
@@ -57,6 +63,7 @@ public class Update implements Macro, InnerScopeDependent {
         if (state.skipping) {
             if (state.stop.matcher(line).matches()) {
                 state.skipping = false;
+                return line + "\n";
             }
             return "";
         } else {

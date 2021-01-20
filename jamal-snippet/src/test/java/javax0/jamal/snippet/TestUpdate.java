@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 public class TestUpdate {
     @Test
     void testUpdate() throws Exception {
-        TestThat.theInput("{@include src/test/resources/javax0/jamal/snippet/document_update_test.jam}").results("");
+        TestThat.theInput("{@include src/test/resources/javax0/jamal/snippet/document_update_test.jam}").results("\n" +
+            "this is the snippet a\n" +
+            "\n");
     }
 }
