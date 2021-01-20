@@ -4,9 +4,12 @@ import javax0.jamal.snippet.Collect;
 import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.NumberLines;
 import javax0.jamal.snippet.Replace;
+import javax0.jamal.snippet.ReplaceLines;
+import javax0.jamal.snippet.SkipLines;
 import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.Snip;
 import javax0.jamal.snippet.SnipXml;
+import javax0.jamal.snippet.Snippet;
 import javax0.jamal.snippet.TrimLines;
 
 module jamal.snippet {
@@ -24,6 +27,9 @@ module jamal.snippet {
         SnipProperties,
         SnipXml,
         Replace,
-        KillLines
+        KillLines,
+        SkipLines,
+        Snippet,
+        ReplaceLines
         ;
 }

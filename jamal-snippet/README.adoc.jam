@@ -372,8 +372,112 @@ creates the output
 
 {%output%}
 
+[[skipLines]]
+==== `skipLines`
+
+This macro can be used to skip lines from the snippet.
+It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
+The macro uses two regular expressions, named `skip` and `endSkip`.
+When a line matches the line `skip` then the line, and the following lines are deleted from the output until a line matching `endSkip` is matched.
+The lines that match the regular expressions are also deleted.
+
+For example,
+
+{%sample/
+{@skipLines
+this line is there
+skip this line and all other lines until a line contains 'end skip' <- this one does not count
+this line is skipped
+this line is skipped again
+there can be anything before 'end     skip' as the regular expression uses find() and not match()
+there can be more lines
+}
+%}
+
+will result
+
+{%output%}
+
+You can also define the regular expressions defining the user defined macros `skip` and `endSkip`.
+For example,
+
+{%sample/
+{#skipLines {@define skip=jump\s+starts?\s+here}{@define endSkip=land\s+here}
+this line is there
+jump start here
+this line is skipped
+this line is skipped again
+land                 here
+there can be more lines
+}%}
+
+will result
+
+{%output%}
+
+It is not an error if there is no line matching the `endSkip`.
+In that case all lines starting with the line matching the `skip` will be removed from the output.
+There can be multiple `skip` and `endSkip` lines.
+The `skip` and `endSkip` lines cannot be nested.
+When there is a match for a `skip` then any further `skip` is ignored until an `endSkip` is found.
+
 [[replace]]
 ==== `replace`
 
 The macro `replace` replaces strings to other strings in its input.
 The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+
+It uses the first argument as the input and then every following argument pairs as search and replace strings.
+For example:
+
+{%sample/
+{@replace /the apple has fallen off the tree/apple/pear/tree/bush}
+%}
+
+will result:
+
+{%output%}
+
+If the option `regex` is active then the search string are treated as regular expressions and the replace strings may also contain replacement parts.
+For example,
+
+{%sample/
+{#replace {@options regex}/the apple has fallen off the tree/appl(.)/p$1ar/tree/bush}
+%}
+
+will result the same output
+
+{%output%}
+
+but this time the replace used regular expression substitution.
+
+[[replaceLines]]
+==== `replaceLines`
+
+This macro replaces strings in the input.
+It works similarly to the macro <<replace,`replace`>>.
+The difference is that the replace
+
+* is always based on regular expressions, and
+
+* it works on the individual lines of the input in a loop.
+
+The difference is significant when you want to match something line by line at the end or at the end of the line.
+For example,
+
+{%sample/
+{@define replace=/^\s+\*\s+//}
+{@replaceLines
+ * this can be a snippet content
+ * which was collected
+ * from a Java or C program comment
+}
+%}
+
+will result
+
+{%output%}
+
+The search regular expressions, and the replacement strings have to be defined in the user defined macro `replace`.
+This maco can be defined inside the `replaceLines` macro.
+The macro scans the value of the user defined macro `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.

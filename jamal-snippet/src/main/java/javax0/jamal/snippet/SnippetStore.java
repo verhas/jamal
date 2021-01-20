@@ -60,7 +60,7 @@ public class SnippetStore implements Identified {
      *
      * @param id      the identifier (name) of the snippet
      * @param snippet the snippet
-     * @param pos     is the position of the snippet
+     * @param pos     is the position of the snippet, used for error reporting in case a snippet is defined twice
      * @throws BadSyntax when a snippet is redefined
      */
     public void snippet(String id, String snippet, Position pos) throws BadSyntax {
