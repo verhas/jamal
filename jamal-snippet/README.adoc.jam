@@ -137,6 +137,25 @@ For example, the test file
 
 excludes any file that contains the character `2` in its name.
 
+[[snip:define]]
+==== `snip:define`
+
+This macro can be used to define a snippet.
+Snippets are usually collected from project files but it is also possible to defined them via the macro `snip:define`.
+For example,
+
+{%sample/
+{@snip:define mySnippet=
+This is the snippet, which is defined inside the file and not collected from an external file
+}
+{@snip mySnippet
+is used here and then the rest of the text is ignored}
+%}
+
+will result
+
+{%output%}
+
 [[clear]]
 ==== `snip:clear`
 
@@ -153,10 +172,14 @@ For example
 
 [source]
 ----
-{@snip sample}
+{@snip snipped_id comment}
 ----
 
-is replaced by the content of the snippet named `sample`.
+is replaced by the content of the snippet named `snipped_id`.
+The macro reads the ID from the input and it purposefully ignores the rest of the input.
+The reason to have the rest of the input as comment is to allow the Jamal file users to insert a description of the snippet.
+You can manually copy the content of the snippet there, which helps the navigation in the source code but the same time it is not a problem if the copy gets outdated.
+The output fetched the content from the actual value of the snippet.
 
 [[properties]]
 ==== `snip:properties`

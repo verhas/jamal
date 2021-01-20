@@ -7,7 +7,7 @@ public class TestSnippet {
 
     @Test
     void testSnippetDefinition() throws Exception {
-        TestThat.theInput("{@snippet snippet1=    \n" +
+        TestThat.theInput("{@snip:define snippet1=    \n" +
             "this is the content of the snippet\n" +
             "this is the content of the snippet\n" +
             "this is the content of the snippet\n" +
@@ -22,6 +22,6 @@ public class TestSnippet {
 
     @Test
     void testSnippetReDefinition() throws Exception {
-        TestThat.theInput("{@snippet snippet1=.}{@snippet snippet1=.}").throwsBadSyntax();
+        TestThat.theInput("{@snip:define snippet1=.}{@snip:define snippet1=.}").throwsBadSyntax();
     }
 }

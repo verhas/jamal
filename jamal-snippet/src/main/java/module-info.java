@@ -11,6 +11,7 @@ import javax0.jamal.snippet.Snip;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
 import javax0.jamal.snippet.TrimLines;
+import javax0.jamal.snippet.Update;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;
@@ -30,6 +31,7 @@ module jamal.snippet {
         KillLines,
         SkipLines,
         Snippet,
-        ReplaceLines
+        ReplaceLines,
+        Update
         ;
 }

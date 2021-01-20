@@ -153,6 +153,31 @@ and this is the end
 
 excludes any file that contains the character `2` in its name.
 
+[[snip:define]]
+==== `snip:define`
+
+This macro can be used to define a snippet.
+Snippets are usually collected from project files but it is also possible to defined them via the macro `snip:define`.
+For example,
+
+[source]
+----
+{@snip:define mySnippet=
+This is the snippet, which is defined inside the file and not collected from an external file
+}
+{@snip mySnippet
+is used here and then the rest of the text is ignored}
+----
+
+will result
+
+[source]
+----
+This is the snippet, which is defined inside the file and not collected from an external file
+
+----
+
+
 [[clear]]
 ==== `snip:clear`
 
@@ -597,3 +622,8 @@ which was collected
 from a Java or C program comment
 
 ----
+
+
+The search regular expressions, and the replacement strings have to be defined in the user defined macro `replace`.
+This maco can be defined inside the `replaceLines` macro.
+The macro scans the value of the user defined macro `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.

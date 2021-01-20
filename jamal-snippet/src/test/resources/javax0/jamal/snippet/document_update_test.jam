@@ -1,0 +1,11 @@
+{@snip:define a=this is the snippet a}
+{@snip a
+}
+
+{#snip:update
+{@define hear=
+[source]
+----
+}{@define tail=
+----
+}}
