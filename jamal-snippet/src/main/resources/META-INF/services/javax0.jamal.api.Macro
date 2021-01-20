@@ -11,3 +11,4 @@ javax0.jamal.snippet.SkipLines
 javax0.jamal.snippet.Snippet
 javax0.jamal.snippet.ReplaceLines
 javax0.jamal.snippet.Update
+javax0.jamal.snippet.XmlFormat

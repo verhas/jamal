@@ -12,6 +12,7 @@ import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
 import javax0.jamal.snippet.TrimLines;
 import javax0.jamal.snippet.Update;
+import javax0.jamal.snippet.XmlFormat;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;
@@ -32,6 +33,7 @@ module jamal.snippet {
         SkipLines,
         Snippet,
         ReplaceLines,
-        Update
+        Update,
+        XmlFormat
         ;
 }

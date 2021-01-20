@@ -194,10 +194,14 @@ For example
 
 [source]
 ----
-{@snip sample}
+{@snip snipped_id comment}
 ----
 
-is replaced by the content of the snippet named `sample`.
+is replaced by the content of the snippet named `snipped_id`.
+The macro reads the ID from the input and it purposefully ignores the rest of the input.
+The reason to have the rest of the input as comment is to allow the Jamal file users to insert a description of the snippet.
+You can manually copy the content of the snippet there, which helps the navigation in the source code but the same time it is not a problem if the copy gets outdated.
+The output fetched the content from the actual value of the snippet.
 
 [[properties]]
 ==== `snip:properties`
@@ -627,3 +631,126 @@ from a Java or C program comment
 The search regular expressions, and the replacement strings have to be defined in the user defined macro `replace`.
 This maco can be defined inside the `replaceLines` macro.
 The macro scans the value of the user defined macro `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+
+[[snip:update]]
+==== `snip:update`
+
+This macro can be used to automatically copy the content of the snippets into the `snip` macros.
+That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
+
+The result of the macro is empty string, and it has no side effect inside the macro processor.
+Whe it does, however is that it alters the file it was used in inserting the snippets into the comment part of the `snip` macro.
+Its operation is done in three steps:
+
+1. Reads the file into the memory.
+2. It goes through all the lines and inserts the content of the snippet into the comment part of the `snip` macros.
+   If there is already a comment there then it gets deleted and replaced.
+3. Writes the altered content into the original file updating it.
+
+This macro alters the original file, therefore the use of it has to performed with great care.
+Ensure that before executing Jamal you save the original file, making a copy of it or committing into the git repository.
+
+The `snip:update` macro does not perfom Jamal syntax analysis.
+To use this macro successfully you have to follow the extra rules:
+
+* The `{@snip id...` macro should start on a new line.
+  There may be spaces before the macro.
+  There must not be a comment on the same line following the snipped identifier.
+  You can put a few non-space character after the snippet identifier in case you want to exclude a snippet use from the update.
+
+* The `snip` macro matching macro closing string has to be on a separate line.
+  There may be spaces before and after the closing string, but nothing else.
+
+The update macro can be customized.
+If the macros `start` and/or `stop` are defined then their value will be used as regular expression to find the start and the end of the snippet content insertion points.
+The default value for `start` is
+
+    ^\s*\Q{\E\s*(?:#|@)\s*snip\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\s*$
+
+When this pattern is calculated the current macro opening string is used instead of `{`.
+The `stop` string is
+
+    ^\s*\Q}\E\s*$
+
+When this pattern is calculated the current macro closing string is used instead of `}`.
+
+(The `\Q` and `\E` escape sequences in Java regular expressions denote escaping, so that the characters between are matched literally.)
+
+It is also possible to define a `head` and `tail` macro.
+The content of the `head` macro will be copied in front of the inserted snippet.
+The content of the `tail` macro will be copied after the inserted snippet.
+It can be used to insert, for example asciidoc
+
+   [source]
+   ----
+
+header and
+
+   ----
+
+footer when the snippets are code samples in an asciidoc file.
+
+[[xmlFormat]]
+==== `xmlFormat`
+
+The macro `xmlFormat` interprets the input as an XML document and the result is the document formatted.
+For example,
+
+[source]
+----
+{#xmlFormat
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.5.4-SNAPSHOT</version>
+</project>
+}
+----
+
+will result
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>jamal snippet</name>
+    <packaging>jar</packaging>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>1.5.4-SNAPSHOT</version>
+</project>
+
+----
+
+
+The default tabulation size is four.
+You can alter it defining the user defined macro `tabsize`.
+For example,
+
+[source]
+----
+{#xmlFormat
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.5.4-SNAPSHOT</version>
+</project>
+}
+----
+
+will result
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<name>jamal snippet</name>
+<packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-snippet</artifactId>
+<version>1.5.4-SNAPSHOT</version>
+</project>
+
+----

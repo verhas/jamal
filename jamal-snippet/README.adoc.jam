@@ -562,3 +562,43 @@ header and
    ----
 
 footer when the snippets are code samples in an asciidoc file.
+
+[[xmlFormat]]
+==== `xmlFormat`
+
+The macro `xmlFormat` interprets the input as an XML document and the result is the document formatted.
+For example,
+
+{%sample/
+{#xmlFormat
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>{%VERSION%}</version>
+</project>
+}
+%}
+
+will result
+
+{%output%}
+
+The default tabulation size is four.
+You can alter it defining the user defined macro `tabsize`.
+For example,
+
+{%sample/
+{#xmlFormat
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>{%VERSION%}</version>
+</project>
+}
+%}
+
+will result
+
+{%output%}
+
+As you can see there is no tabulation in this case.
