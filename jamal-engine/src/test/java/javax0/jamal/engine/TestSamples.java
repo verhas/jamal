@@ -92,7 +92,7 @@ class TestSamples {
             "\"{defined}\" is \"{defined}\"\n" +
             "\"Verbatim and ! cannot be used together on a user defined macro.\" is error message\n" +
             "\"{@verbatim macro}\" is \"{@verbatim macro}\"\n" +
-            "\"Macro '`macro' is not defined.\" is error message because `macro is not defined\n" +
+            "\"User defined macro '{`macro ...' is not defined.\" is error message because `macro is not defined\n" +
             "\"\" is empty string\n" +
             "\"false\" is \"false\" because it failed\n" +
             "\"true\" is \"true\" because nothing just evaluates fine\n" +

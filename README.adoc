@@ -636,7 +636,7 @@ which will result:
 
 [source]
 ----
-Macro 'undefinedMacro' is not defined.
+User defined macro '{undefinedMacro ...' is not defined.
 this is empty string >><<
 
 ----
