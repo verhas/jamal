@@ -27,7 +27,6 @@ import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.move;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.validIdChar;
@@ -164,14 +163,15 @@ public class Processor implements javax0.jamal.api.Processor {
             final var marker = new Marker("{@" + "");
             macros.push(marker);
             final String macroProcessed;
+            final MacroQualifier qualifiers;
             try {
                 macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
+                qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
             } catch (Exception e) {
                 macros.pop(marker);
                 throw e;
             }
 
-            final var qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
             final String text;
             if (qualifiers.isInnerScopeDependent()) {
                 text = evalMacro(tr, qualifiers, () -> macros.pop(marker), this::noop);
@@ -195,12 +195,12 @@ public class Processor implements javax0.jamal.api.Processor {
      *     <li>User defined macro old style option is in effect: evaluated resolving macros
      *     <li>User defined macro no old style: returned as it is
      * </ul>
-     *
+     * <p>
      * Note that the processing of the macro itself comes only after this
      *
      * @param macroRaw the raw macro that may optionally be processed
-     * @param pos the position in the input
-     * @param tr trace output
+     * @param pos      the position in the input
+     * @param tr       trace output
      * @return the macro use processed (or not)
      * @throws BadSyntax when there is some problem
      */
@@ -345,7 +345,7 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param input the macroText
      * @param count the number of times the evaluation has to run
-     * @param ref the reference in case there is an error
+     * @param ref   the reference in case there is an error
      * @return the input evaluated postEvalCountTimes
      * @throws BadSyntax when there is some problem
      */
@@ -400,7 +400,13 @@ public class Processor implements javax0.jamal.api.Processor {
             .filter(ud -> ud instanceof Evaluable)
             .map(ud -> (Evaluable) ud);
         if (reportUndef && udMacroOpt.isEmpty()) {
-            throw new BadSyntaxAt("Macro '" + id + "' is not defined.", ref);
+            final var optMacro = macros.getMacro(id);
+            if (optMacro.isPresent()) {
+                throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id +
+                    "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?", ref);
+            } else {
+                throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id + " ...' is not defined.", ref);
+            }
         }
         if (udMacroOpt.isPresent()) {
             final var udMacro = udMacroOpt.get();

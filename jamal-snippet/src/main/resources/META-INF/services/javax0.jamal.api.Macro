@@ -13,3 +13,10 @@ javax0.jamal.snippet.ReplaceLines
 javax0.jamal.snippet.Update
 javax0.jamal.snippet.XmlFormat
 javax0.jamal.snippet.DateMacro
+javax0.jamal.snippet.ListDir
+javax0.jamal.snippet.CounterMacro
+javax0.jamal.snippet.Case$Cap
+javax0.jamal.snippet.Case$Decap
+javax0.jamal.snippet.Case$Upper
+javax0.jamal.snippet.Case$Lower
+javax0.jamal.snippet.Format

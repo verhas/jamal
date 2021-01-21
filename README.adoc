@@ -71,36 +71,41 @@ Then we discuss the API that lets you embed the macro processing into your appli
 
 == Table of contents
 
-1. <<Starting,Starting Jamal>>
+. <<Starting,Starting Jamal>>
+. <<SimpleExample,Simple Example>>
+. <<OtherMacros,Other Macros>>
+[lowerroman, start=1]
+.. <<comment,`comment`>>
+.. <<block,`block`>>
+.. <<begin,`begin` and `end`>>
+.. <<define,`define`>>
+.. <<eval,`eval`>>
+.. <<env,`env`>>
+.. <<import,`import`>>
+.. <<include,`include`>>
+.. <<use,`use`>>
+.. <<script,`script`>>
+.. <<JShell,`JShell`>>
+.. <<sep,`sep`>>
+.. <<for,`for`>>
+.. <<if,`if`>>
+.. <<ident,`ident`>>
+.. <<verbatim,`verbatim`>>
+.. <<export,`export`>>
+.. <<options,`options`>>
+.. <<try,`try`>>
+.. <<escape,`escape`>>
+. <<argsplit,Macro Argument Splitting>>
+. <<JamalENV,Jamal Environment Variables>>
+. <<httpsres,Resource Files and Web Resources>>
+. <<JamalAPI,Jamal API>>
+. <<javadoc,JavaDoc>>
+. <<documentmaintenance,Maintenance of this document>>
 
-2. <<SimpleExample,Simple Example>>
 
-3. <<#OtherMacros,Other Macros>>
 
-    i)     <<comment,`comment`>>
-    ii)    <<block,`block`>>
-    iii)   <<begin,`begin` and `end`>>
-    iv)    <<define,`define`>>
-    v)     <<eval,`eval`>>
-    vi)    <<env,`env`>>
-    vii)   <<export,`export`>>
-    viii)  <<import,`import`>>
-    ix)    <<include,`include`>>
-    x)     <<use,`use`>>
-    xi)    <<script,`script`>>
-    xii)   <<sep,`sep`>>
-    xiii)  <<for,`for`>>
-    xiv)   <<if,`if`>>
-    xv)    <<ident,`ident`>>
-    xvi)   <<verbatim,`verbatim`>>
-    xvii)  <<options,`options`>>
-    xviii) <<try,`try`>>
-    xix) <<escape,`escape`>>
-4. <<argsplit,Macro Argument Splitting>>
-5. <<JamalENV,Jamal Environment Variables>>
-6. <<JamalAPI,Jamal API>>
 
-=== Starting Jamal
+=== 1. Starting Jamal
 
 [[Starting]]
 ==== JShell
@@ -185,7 +190,7 @@ to avoid an excessively large trace file growing on your disk.
 If you use Java 8, you should use it with the release `1.0.2.JDK8`.
 
 [[SimpleExample]]
-=== Simple Example
+=== 2. Simple Example
 
 As a quick sample to have a jump start what Jamal can do:
 
@@ -264,7 +269,7 @@ It is also possible to invoke a macro with more or less number of arguments than
 These are advanced topics and are detailed later.
 
 [[OtherMacros]]
-=== Other Macros
+=== 3. Other Macros
 
 `define` is not the only built-in macro in Jamal.
 The comprehensive list of built-in macros are
@@ -303,7 +308,7 @@ In that section we discuss the evaluation order of the macros in great detail.
 
 
 [[comment]]
-==== `comment`
+==== i. `comment`
 
 since 1.0.0 (core)
 
@@ -340,7 +345,7 @@ It is safe to say always to use `{@comment ...}`.
 When the code needs the evaluation, then use the [`block`](#block) macro.
 
 [[block]]
-==== `block`
+==== ii. `block`
 
 since 1.0.0 (core)
 
@@ -356,7 +361,7 @@ In that section we discuss the evaluation order of the macros in great detail.
 
 
 [[begin]]
-==== `begin` and `end`
+==== iii. `begin` and `end`
 
 since 1.0.0 (core)
 
@@ -414,7 +419,7 @@ For example, you cannot get into the scope of the including file putting a pair-
 This will trigger a processing error.
 
 [[define]]
-==== `define`
+==== iv. `define`
 
 since 1.0.0 (core)
 
@@ -863,7 +868,7 @@ The macro definition `{@define a:=b}` may mean, `a` should be `b` with simple ev
 In a situation like this the `:` character belongs to the `:=` assignment symbol.
 
 [[eval]]
-==== `eval`
+==== v. `eval`
 
 since 1.0.0 (core)
 
@@ -966,7 +971,7 @@ When using `!` to evaluate the result of a macro you cannot specify any scriptin
 The evaluation will be Jamal macros evaluation.
 
 [[env]]
-==== `env`
+==== vi. `env`
 
 since 1.3.0
 
@@ -996,7 +1001,7 @@ This can be used to test that an environment variable exists or not.
 Testing the value of the environment variable in an `{@if ... }` macro may be misleading when the value is literal `false` or an empty string.
 
 [[import]]
-==== `import`
+==== vii. `import`
 
 since 1.0.0 (core)
 
@@ -1038,7 +1043,7 @@ This way you can freely import resource files provided in JAR file or through th
 Such import files cannot redefine the macro opening and closing string unless file importing also uses `{` and `}`.
 
 [[include]]
-==== `include`
+==== viii. `include`
 
 since 1.0.0 (core)
 
@@ -1073,7 +1078,7 @@ This limit prevents this to happen.
 The limit can be modified setting the environment variable `JAMAL_INCLUDE_DEPTH`.
 
 [[use]]
-==== `use`
+==== ix. `use`
 
 `use` declares a Java class as a built-in macro.
 
@@ -1127,7 +1132,7 @@ It is recommended to use the alias in the Jamal source file.
 That way there is no ambiguity when reading the code what the name of the built-in macro is.
 
 [[script]]
-==== `script`
+==== x. `script`
 
 since 1.0.0 (core)
 
@@ -1227,7 +1232,7 @@ In short, the arguments to a `script` macro will be converted to the following t
 For more information and details see the section <<JShell>>
 
 [[JShell]]
-==== `JShell`
+==== xi. `JShell`
 
 since 1.3.0 (core)
 
@@ -1313,7 +1318,7 @@ When you design a macro library it is not enough to import the library to discov
 The scripts have to be used to manifest the error.
 
 [[for]]
-==== `for`
+==== xii. `for`
 
 since 1.0.0 (core) since 1.5.0 multi-argument `for`
 
@@ -1479,7 +1484,7 @@ wuk
 
 
 [[if]]
-==== `if`
+==== xiii. `if`
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -1544,7 +1549,7 @@ true=true                  <- non-epmty string, floating points dont work
 
 
 [[ident]]
-==== `ident`
+==== xiv. `ident`
 
 since 1.0.0 (core)
 
@@ -1660,7 +1665,7 @@ If many of them are used in an extreme case they can be mixed together.
 Note, if the macro does not get evaluated fully the order of these characters may not be preserved in the output.
 
 [[verbatim]]
-==== `verbatim`
+==== xv. `verbatim`
 
 since 1.0.0 (core)
 
@@ -1869,7 +1874,7 @@ This option is obsolete from the very start of the introduction and is meant as 
 It will be removed from Jamal versions 2.0.0 and later.
 
 [[sep]]
-==== `sep`
+==== xvi. `sep`
 
 since 1.0.0 (core)
 
@@ -2104,7 +2109,7 @@ SSSzaziSSS{z}{@escape `a`{`a`}z{@escape `a`}`a`}
 
 
 [[export]]
-==== `export`
+==== xvii. `export`
 
 since 1.0.0 (core)
 
@@ -2179,7 +2184,7 @@ You can export a macro that was defined in a lower scope and was exported to the
 You cannot export macros from the top-level scope, because there is no enclosing scope above that.
 
 [[options]]
-==== `options`
+==== xviii. `options`
 
 since 1.0.3 (core)
 
@@ -2273,7 +2278,7 @@ On the other hand, we envision that with the introduction of this feature most o
 We wanted to avoid starting every new Jamal source file with the `nl` option setting.
 
 [[try]]
-==== `try`
+==== xix. `try`
 
 since 1.5.0 (core)
 
@@ -2301,7 +2306,7 @@ The macro `try` should only be used to debug certain macro files.
 When an error happens, and the `try` macro catches the exception thrown the scopes may not be properly closed.
 
 [[escape]]
-==== `escape`
+==== xx. `escape`
 
 since 1.5.4 (core)
 
@@ -2350,7 +2355,7 @@ This way it may happen that you see in the error output
 The macro
 
 [[argsplit]]
-=== Standard Built-In Macro Argument Splitting
+=== 4. Standard Built-In Macro Argument Splitting
 
 The built-in macros access their input as one single string.
 Technically the input parameter of the method `evaluate()` is not a string but for now we can assume it is something like a string.
@@ -2396,7 +2401,7 @@ Backtick was selected during the design of the syntax to enclose the regular exp
 In case you need one inside the regular expression then you have to simply double it, and the parsing will single it back.
 
 [[JamalENV]]
-=== Jamal Environment Variables
+=== 5. Jamal Environment Variables
 
 You do not need to configure Jamal.
 The environment variables that you can set to modify the behavior of Jamal are the followings.
@@ -2427,7 +2432,7 @@ Set your value to a limit that fits your need.
 * `JAMAL_INCLUDE_DEPTH` can set the maximum number of file include nesting. The default value is 100.
 
 [[httpsres]]
-=== Resource Files and Web Resources
+=== 6. Resource Files and Web Resources
 
 When the macros `import` or `include` reference a file with a name that starts with either
 
@@ -2505,7 +2510,7 @@ can define two timeout values for the web download in millisecond as unit.
 Their default value is 5000, meaning five seconds.
 
 [[JamalAPI]]
-=== Jamal API
+=== 7. Jamal API
 
 Embedding Jamal into an application is very simple.
 You need the Jamal libraries on your classpath.
@@ -2590,15 +2595,17 @@ that can format the `content` string using the entries of the `predefinedMacros`
 These macros eventually cannot have arguments.
 This is a simplified interface to access the functionality of Jamal.
 
-=== JavaDoc
+[[javadoc]]
+=== 8. JavaDoc
 
 The current and past versions of the JavaDoc can be read online at the address:
 
 https://javadoc.io/doc/com.javax0.jamal/jamal-parent/
 
-=== Maintenance of this document
+[[documentmaintenance]]
+=== 9. Maintenance of this document
 
 The source of this document is `README:adoc.jam`.
 The Jamal conversion uses the snippet macros and some aux built-in macros.
 The conversion is part of the execution of the tests.
-The code samples are automatically executed using this process and the sample output is automatically inserted into the document.
+The code samples are automatically executed using this process, and the sample output is automatically inserted into the document.
