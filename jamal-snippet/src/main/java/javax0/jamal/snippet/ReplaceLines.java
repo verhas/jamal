@@ -38,7 +38,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
                 }
                 try {
                     lines[k] = lines[k].replaceAll(from, to);
-                } catch (IllegalArgumentException e) {
+                } catch (Exception e) {
                     throw new BadSyntax("There is a problem with the regular expression in macro 'replaceLines' : "
                         + from + "\n" + to + "\n", e);
                 }

@@ -164,13 +164,8 @@ public class Processor implements javax0.jamal.api.Processor {
             macros.push(marker);
             final String macroProcessed;
             final MacroQualifier qualifiers;
-            try {
-                macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
-                qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
-            } catch (Exception e) {
-                macros.pop(marker);
-                throw e;
-            }
+            macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
+            qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
 
             final String text;
             if (qualifiers.isInnerScopeDependent()) {
@@ -315,29 +310,45 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private String evaluateUserDefinedMacro(String rawResult, MacroQualifier qualifier, Runnable popper, TraceRecord tr) throws BadSyntax {
-        final String result;
-        try {
-            result = process(makeInput(rawResult, qualifier.input.getPosition()));
-        } finally {
-            popper.run();
-        }
+        String result = safeEvaluate(() -> process(makeInput(rawResult, qualifier.input.getPosition())), popper);
         final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, qualifier.input.getPosition());
         tr.appendAfterEvaluation(postEvaluated);
         return postEvaluated;
     }
 
+
     private String evaluateBuiltInMacro(TraceRecord tr, MacroQualifier qualifier, Runnable popper) throws BadSyntax {
         final var ref = qualifier.input.getPosition();
         tr.type(TraceRecord.Type.MACRO);
-        final String result;
-        try {
-            result = evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro);
-        } finally {
-            popper.run();
-        }
+        final String result = safeEvaluate(() -> evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro), popper);
         final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, ref);
         tr.appendAfterEvaluation(postEvaluated);
         return postEvaluated;
+    }
+
+    private static interface ThrowingStringSupplier {
+        String get() throws BadSyntax;
+    }
+
+    private String safeEvaluate(ThrowingStringSupplier supplier, Runnable finalizer) throws BadSyntax {
+        BadSyntax savedEx = null;
+        try {
+            return supplier.get();
+        } catch (BadSyntax e) {
+            savedEx = e;
+            throw e;
+        } finally {
+            try {
+                finalizer.run();
+            } catch (BadSyntax unbalancedMarkers) {
+                if (savedEx != null) {
+                    savedEx.addSuppressed(unbalancedMarkers);
+                    throw savedEx;
+                } else {
+                    throw unbalancedMarkers;
+                }
+            }
+        }
     }
 
     /**

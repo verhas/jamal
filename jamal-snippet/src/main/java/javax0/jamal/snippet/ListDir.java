@@ -9,6 +9,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.OptionsStore;
+import javax0.jamal.tools.PlaceHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +17,10 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Map.entry;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class ListDir implements Macro, InnerScopeDependent {
@@ -57,27 +60,38 @@ public class ListDir implements Macro, InnerScopeDependent {
     }
 
     private static String format(Path p, String format) {
-        var s = format
-            .replace("$absolutePath", p.toAbsolutePath().toString())
-            .replace("$name", p.toString())
-            .replace("$simpleName", p.toFile().getName())
-            .replace("$isDirectory", "" + p.toFile().isDirectory())
-            .replace("$isFile", "" + p.toFile().isFile())
-            .replace("$isHidden", "" + p.toFile().isHidden())
-            .replace("$canExecute", "" + p.toFile().canExecute())
-            .replace("$canRead", "" + p.toFile().canRead())
-            .replace("$canWrite", "" + p.toFile().canWrite());
+        String size;
         try {
-            s = s.replace("$size", "" + Files.size(p));
+            size = "" + Files.size(p);
         } catch (IOException e) {
-            s = s.replace("$size", "0");
+            size = "0";
         }
+        String time;
         try {
-            s = s.replace("$time", "" + Files.getLastModifiedTime(p));
+            time = "" + Files.getLastModifiedTime(p);
         } catch (IOException e) {
-            s = s.replace("$time", "1970-01-01T00:00:00Z");
+            // snippet defaultTimeForListDir
+            time = "1970-01-01T00:00:00Z";
+            //end snippet
         }
-        return s;
+        return PlaceHolder.replace(format, Map.ofEntries(
+            // OTF will be replaced by "of the file"
+            // TITF will be replaced by "`true` if the file"
+            // FO will be replaced by "``false` otherwise"
+            // snippet listDirFormats
+            entry("$size", size), // size OTF
+            entry("$time", time), // modification time OTF
+            entry("$absolutePath", p.toAbsolutePath().toString()), // absolute path OTF
+            entry("$name", p.toString()), // name OTF
+            entry("$simpleName", p.toFile().getName()), // simple name OTF
+            entry("$isDirectory", "" + p.toFile().isDirectory()), // TITF is a directory, FO
+            entry("$isFile", "" + p.toFile().isFile()), // TITF is a plain file, FO
+            entry("$isHidden", "" + p.toFile().isHidden()), // TITF is hidden, FO
+            entry("$canExecute", "" + p.toFile().canExecute()), // TITF can be executed, FO
+            entry("$canRead", "" + p.toFile().canRead()), // TIFT can be read, FO
+            entry("$canWrite", "" + p.toFile().canWrite()) //TITF can be written, FO
+            // end snippet
+        ));
 
     }
 

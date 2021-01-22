@@ -61,7 +61,7 @@ public class InputHandler {
      *
      * @param input              from which the first characters are deleted
      * @param numberOfCharacters the number of characters to be deleted from the start of {@code input}
-     * @param output                 where the characters will be appended
+     * @param output             where the characters will be appended
      */
     public static void move(Input input, int numberOfCharacters, Input output) {
         output.append(input.substring(0, numberOfCharacters));
@@ -208,8 +208,8 @@ public class InputHandler {
     /**
      * Same as {@link #skipWhiteSpaces(Input)} but it also appends the deleted spaces to the output.
      *
-     * @param input from which the spaces should be deleted.
-     * @param output    where the spaces will be appended
+     * @param input  from which the spaces should be deleted.
+     * @param output where the spaces will be appended
      */
     public static void moveWhiteSpaces(Input input, Input output) {
         while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
@@ -411,7 +411,15 @@ public class InputHandler {
 
     private static String[] getPartsRegex(Input input, int limit) {
         final var regex = fetchRegex(input);
-        return input.toString().split(regex, limit);
+        return skipEmptyFirst(input.toString().split(regex, limit));
+    }
+
+    private static String[] skipEmptyFirst(String[] values) {
+        if (values.length > 0 && values[0].length() == 0) {
+            return Arrays.copyOfRange(values,1,values.length);
+        } else {
+            return values;
+        }
     }
 
     private static String fetchRegex(Input input) {

@@ -20,3 +20,5 @@ javax0.jamal.snippet.Case$Decap
 javax0.jamal.snippet.Case$Upper
 javax0.jamal.snippet.Case$Lower
 javax0.jamal.snippet.Format
+javax0.jamal.snippet.Java$ClassMacro
+javax0.jamal.snippet.Java$MethodMacro

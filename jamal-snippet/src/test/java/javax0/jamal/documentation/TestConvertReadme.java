@@ -5,18 +5,26 @@ import javax0.jamal.tools.FileTools;
 import org.junit.jupiter.api.Test;
 
 public class TestConvertReadme {
+
+    private static void generateReadmeAdoc(String directory) throws Exception{
+        final var in = FileTools.getInput(directory+"/README.adoc.jam");
+        final var processor = new Processor("{%", "%}");
+        final var result = processor.process(in);
+        FileTools.writeFileContent(directory+"/README.adoc", result);
+    }
+
     @Test
     void convertTopReadme() throws Exception {
-        final var in = FileTools.getInput("../README.adoc.jam");
-        final var processor = new Processor("{%", "%}");
-        final var result = processor.process(in);
-        FileTools.writeFileContent("../README.adoc", result);
+        generateReadmeAdoc("..");
     }
+
+    @Test
+    void convertExtensionReadme() throws Exception {
+        generateReadmeAdoc("../jamal-extensions");
+    }
+
     @Test
     void convertSnippetReadme() throws Exception {
-        final var in = FileTools.getInput("./README.adoc.jam");
-        final var processor = new Processor("{%", "%}");
-        final var result = processor.process(in);
-        FileTools.writeFileContent("./README.adoc", result);
+        generateReadmeAdoc(".");
     }
 }

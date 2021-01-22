@@ -5,14 +5,17 @@ import javax0.jamal.snippet.Collect;
 import javax0.jamal.snippet.CounterMacro;
 import javax0.jamal.snippet.DateMacro;
 import javax0.jamal.snippet.Format;
+import javax0.jamal.snippet.Java;
+import javax0.jamal.snippet.Java.ClassMacro;
+import javax0.jamal.snippet.Java.MethodMacro;
 import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.ListDir;
 import javax0.jamal.snippet.NumberLines;
 import javax0.jamal.snippet.Replace;
 import javax0.jamal.snippet.ReplaceLines;
 import javax0.jamal.snippet.SkipLines;
-import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.Snip;
+import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
 import javax0.jamal.snippet.TrimLines;
@@ -47,6 +50,8 @@ module jamal.snippet {
         Case.Decap,
         Case.Upper,
         Case.Lower,
-        Format
+        Format,
+        ClassMacro,
+        MethodMacro
         ;
 }

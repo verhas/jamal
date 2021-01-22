@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-01-21 14:41:49
+Last updated: 2021-01-22 18:22:58
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -664,7 +664,7 @@ from a Java or C program comment
 
 
 The search regular expressions, and the replacement strings have to be defined in the user defined macro `replace`.
-This maco can be defined inside the `replaceLines` macro.
+This macro can be defined inside the `replaceLines` macro.
 The macro scans the value of the user defined macro `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
 
 [[counter:define]]
@@ -797,6 +797,7 @@ will result
 - src/main/java/javax0/jamal/snippet/SnipProperties.java
 - src/main/java/javax0/jamal/snippet/CounterMacro.java
 - src/main/java/javax0/jamal/snippet/XmlDocument.java
+- src/main/java/javax0/jamal/snippet/Java.java
 - src/main/java/javax0/jamal/snippet/ReplaceLines.java
 - src/main/java/javax0/jamal/snippet/SkipLines.java
 - src/main/java/javax0/jamal/snippet/Snippet.java
@@ -839,18 +840,21 @@ This is because the `|` character is the default separator for the different val
 
 The possible placeholders:
 
+%}
 
-* `$absolutePath` will be replaced by the absolute path of the file.
-* `$name` will be replaced by the name  of the file.
-* `$simpleName` will be replaced by the simple name of the file.
-* `$isDirectory` will be replaced by the string literal `true` if the file is a directory otherwise by `false`.
-* `$isFile` will be replaced by the string literal `true` if the file is a plain file otherwise by `false`.
-* `$isHidden` will be replaced by the string literal `true` if the file is hidden otherwise by `false`.
-* `$canExecute` will be replaced by the string literal `true` if the file can be executed or can be listed if it is a directory otherwise by `false`.
-* `$canRead` will be replaced by the string literal `true` if the file is readable otherwise by `false`.
-* `$canWrite` will be replaced by the string literal `true` if the file is writeable otherwise by `false`.
+
 * `$size` will be replaced by the size of the file.
-* `$time` will be replaced by the last modification time of the file.
+* `$time` will be replaced by the modification time of the file.
+* `$absolutePath` will be replaced by the absolute path of the file.
+* `$name` will be replaced by the name of the file.
+* `$simpleName` will be replaced by the simple name of the file.
+* `$isDirectory` will be replaced by the string literal `true` if the file is a directory, `false` otherwise.
+* `$isFile` will be replaced by the string literal `true` if the file is a plain file, `false` otherwise.
+* `$isHidden` will be replaced by the string literal `true` if the file is hidden, `false` otherwise.
+* `$canExecute` will be replaced by the string literal `true` if the file can be executed, `false` otherwise.
+* `$canRead` will be replaced by the TIFT can be read, `false` otherwise.
+* `$canWrite` will be replaced by the string literal `true` if the file can be written, `false` otherwise.
+
 
 For example,
 
@@ -867,7 +871,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 768 bytes
+- snippet: 800 bytes
 - Snip.java: 606 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
@@ -882,12 +886,13 @@ will result
 - Clear.java: 451 bytes
 - KillLines.java: 1,525 bytes
 - SnippetStore.java: 3,045 bytes
-- ListDir.java: 3,217 bytes
+- ListDir.java: 3,917 bytes
 - XmlFormat.java: 2,458 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,870 bytes
 - XmlDocument.java: 2,038 bytes
-- ReplaceLines.java: 2,270 bytes
+- Java.java: 4,691 bytes
+- ReplaceLines.java: 2,255 bytes
 - SkipLines.java: 2,100 bytes
 - Snippet.java: 1,059 bytes
 
@@ -989,7 +994,7 @@ wll result the output
 
 [source]
 ----
-2021-01-21 14:41:50
+2021-01-22 18:22:58
 
 ----
 
@@ -1046,8 +1051,164 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 ----
 
 
+[[Java]]
+==== xviii. Java Macros
+
+[[java:class]]
+===== `java:class`
+
+
+The macro `java:class` checks that the parameter is a valid Java class and can be found on the classpath.
+It is an error if the class cannot be found on the classpath.
+This macro can be useful when you document Java source code, and you run the Jamal conversion from a unit test.
+In this case the macro will see the test and main classes.
+It can check that the class mentioned in the documentation is still there, it was not deleted or renamed.
+
+The output of the macro is the class formatted.
+The formatting is the simple name of the class by default.
+The formatting can be defined by the user defined macro `classFormat`.
+For example:
+
+[source]
+----
+The class that implements the macro `java:class` is
+{@java:class javax0.jamal.snippet.Java$ClassMacro}.
+----
+
+wll result the output
+
+[source]
+----
+The class that implements the macro `java:class` is
+ClassMacro.
+
+----
+
+
+The format string can be any string with `$` prefixed placeholders.
+The placeholders that the macro handles are:
+
+
+* `$simpleName` will be replaced by the result of calling `getSimpleName()`
+* `$name` will be replaced by the result of calling `getName()`
+* `$canonicalName` will be replaced by the result of calling `getCanonicalName()`
+* `$packageName` will be replaced by the result of calling `getPackageName()`
+* `$typeName` will be replaced by the result of calling `getTypeName()`
+
+
+For example
+
+[source]
+----
+The class that implements the macro `java:class` is
+{@define classFormat=$canonicalName}\
+{@java:class javax0.jamal.snippet.Java$ClassMacro} with the canonical name, and
+{@define classFormat=$name}\
+{@java:class javax0.jamal.snippet.Java$ClassMacro} with the "normal" name.
+It is in the package {#java:class javax0.jamal.snippet.Java$ClassMacro {@define classFormat=$packageName}}
+{@java:class javax0.jamal.snippet.Java$ClassMacro} is still the "normal" name,
+format defined inside the macro is local.
+----
+
+wll result the output
+
+[source]
+----
+The class that implements the macro `java:class` is
+javax0.jamal.snippet.Java.ClassMacro with the canonical name, and
+javax0.jamal.snippet.Java$ClassMacro with the "normal" name.
+It is in the package javax0.jamal.snippet
+javax0.jamal.snippet.Java$ClassMacro is still the "normal" name,
+format defined inside the macro is local.
+
+----
+
+
+It is not recommended to overuse the format string.
+Do not include verbatim text into the format string.
+Choose a format string how you want to refer to the classes and use it globally in the document.
+
+[[java:method]]
+===== `java:method`
+
+
+The macro `java:method` checks that the parameter is a valid Java method and can be found on the classpath.
+It is an error if the class cannot be found on the classpath.
+This macro can be useful when you document Java source code, and you run the Jamal conversion from a unit test.
+In this case the macro will see the test and main classes.
+It can check that the method mentioned in the documentation is still there, it was not deleted or renamed.
+
+The output of the macro is the method formatted.
+The formatting is the name of the method by default.
+The formatting can be defined by the user defined macro `methodFormat`.
+For example:
+
+[source]
+----
+{@define method=/javax0.jamal.snippet.Java$MethodMacro/evaluate}\
+{#java:method {method}}
+----
+
+wll result the output
+
+[source]
+----
+evaluate
+
+----
+
+
+The format string can be any string with `$` prefixed placeholders.
+The placeholders that the macro handles are:
+
+
+* `$classSimpleName` will be replaced by the simple name of the method's defining class
+* `$className` will be replaced by the name of the of the method's defining class
+* `$classCanonicalName` will be replaced by the canonical name of the method's defining class
+* `$classTypeName` will be replaced by the type name of the methodC
+* `$packageName` will be replaced by the package where the method is
+* `$name` will be replaced by the name of the method
+* `$typeClass` will be replaced by the return type of the method
+* `$exceptions` will be replaced by the comma separated values of the exception types the method throws
+* `$parameterTypes` will be replaced by the comma separated parameter types
+* `$parameterCount` will be replaced by the number of the parameters in decimal format
+* `$modifiers` will be replaced by the modifiers list of the method
+
+
+These formats can be used in your macros directly or using the macros defined in the jim file `res:snippet.jim`.
+For example,
+
+[source]
+----
+The class that implements the macro `java:method` is '{#java:method {method}{@define methodFormat=$name}}()',
+but it is simpler to import the jim file included in the snippet library
+
+            {@import res:snippet.jim}\
+
+and use the user defined macros, like the following:
+
+{java:method:modifiers |{method}}\
+ {java:method:classSimpleName |{method}}\
+::{java:method:name |{method}}({java:method:parameterTypes:simpleName |{method}})
+----
+
+wll result the output
+
+[source]
+----
+The class that implements the macro `java:method` is 'evaluate()',
+but it is simpler to import the jim file included in the snippet library
+
+
+and use the user defined macros, like the following:
+
+public MethodMacro::evaluate(Input,Processor)
+
+----
+
+
 [[snip:update]]
-==== xviii. `snip:update`
+==== xix. `snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

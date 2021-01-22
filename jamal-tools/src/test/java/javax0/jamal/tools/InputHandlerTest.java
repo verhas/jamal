@@ -25,7 +25,11 @@ public class InputHandlerTest {
     void splitsInputCorrectlyWhenStartingWithSeparator() {
         assertSplit("/a/b/c/d/e/f/g/h", "a", "b", "c", "d", "e", "f", "g", "h");
     }
-
+    @Test
+    @DisplayName("input starts with regex separator, split correctly")
+    void splitsInputCorrectlyWhenStartingWithRegexSeparator() {
+        assertSplit("`\\n`\na\nb\nc\nd\ne\nf\ng\nh", "a", "b", "c", "d", "e", "f", "g", "h");
+    }
     @Test
     @DisplayName("first character treated as separator with leading whitespaces ignored")
     void splitsInputCorrectlyIgnoringStartingWhitespaces() {
@@ -59,7 +63,7 @@ public class InputHandlerTest {
     @Test
     @DisplayName("separator is regular expression containing special (backslash-escaped) character")
     void splitsInputCorrectlyWithRegularExpressionContainingSpecialCharacter() {
-        assertSplit("`\\s*` abcdefgh", "", "", "a", "b", "c", "d", "e", "f", "g", "h", "");
+        assertSplit("`\\s*`  abcdefgh", "", "a", "b", "c", "d", "e", "f", "g", "h", "");
     }
 
     @Test

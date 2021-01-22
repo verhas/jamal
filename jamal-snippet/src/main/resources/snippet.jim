@@ -1,0 +1,24 @@
+{@comment this file defined user defined macros that help the use of the}
+
+{@define java:class:simpleName($x)={#java:class {@define classFormat=$simpleName}$x}}
+{@define java:class:canonicalName($x)={#java:class {@define classFormat=$canonicalName}$x}}
+{@define java:class:name($x)={#java:class {@define classFormat=$name}$x}}
+{@define java:class:packageName($x)={#java:class {@define classFormat=$packageName}$x}}
+{@define java:class:typeName($x)={#java:class {@define classFormat=$typeName}$x}}
+
+{@define java:method:name($x)={#java:method {@define methodFormat=$name}$x}}
+{@define java:method:classSimpleName($x)={#java:method {@define methodFormat=$classSimpleName}$x}}
+{@define java:method:className($x)={#java:class {@define methodFormat=$className}$x}}
+{@define java:method:classCanonicalName($x)={#java:method {@define methodFormat=$classCanonicalName}$x}}
+{@define java:method:classTypeName($x)={#java:method {@define methodFormat=$classTypeName}$x}}
+{@define java:method:packageName($x)={#java:method {@define methodFormat=$packageName}$x}}
+{@define java:method:typeClass($x)={#java:method {@define methodFormat=$typeClass}$x}}
+{@define java:method:exceptions($x)={#java:method {@define methodFormat=$exceptions}$x}}
+{@define java:method:parameterTypes($x)={#java:method {@define methodFormat=$parameterTypes}$x}}
+{@define java:method:parameterCount($x)={#java:method {@define methodFormat=$parameterCount}$x}}
+{@define java:method:modifiers($x)={#java:method {@define methodFormat=$modifiers}$x}}
+
+{@define chop($x)={@options regex}{@replace /$x/.$//}}
+
+{@define java:method:parameterTypes:simpleName($x)={chop /{!#for $z in ({java:method:parameterTypes /$x})={`java:class:simpleName $z},}}}
+{@define java:method:exceptions:simpleName($x)={chop /{!#for $z in ({java:method:exceptions /$x})={`java:class:simpleName $z},}}}
