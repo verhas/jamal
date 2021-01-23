@@ -241,10 +241,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
 
     @Override
     public void push(Marker check) throws BadSyntax {
-        for (final var scopeWalker : scopeStack) {
-            if (Objects.equals(check, scopeWalker.checkObject)) {
-                throw new BadSyntax("Push was performed using the marker " + check + " which happens to be already in the stack.");
-            }
+        if (markerIsInTheStack(check)) {
+            throw new BadSyntax("Push was performed using the marker " + check + " which happens to be already in the stack.");
         }
         final var scope = new Scope(check);
         scopeStack.add(scope);
@@ -257,7 +255,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         if (scopeStack.size() > 1) {
             final var current = currentScope();
             if (!Objects.equals(check, current.checkObject)) {
-                tryCleanUpStack(check);
+                if (markerIsInTheStack(check)) {
+                    tryCleanUpStack(check);
+                }
                 throw new BadSyntax("Pop was performed by " +
                     check + " for a level pushed by " + current.checkObject);
             }
@@ -265,6 +265,15 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         } else {
             throw new BadSyntax("Cannot close the top level scope.");
         }
+    }
+
+    private boolean markerIsInTheStack(Marker check) throws BadSyntax {
+        for (final var scopeWalker : scopeStack) {
+            if (Objects.equals(check, scopeWalker.checkObject)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void tryCleanUpStack(Marker check) {
