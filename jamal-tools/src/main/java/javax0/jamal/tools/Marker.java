@@ -27,9 +27,14 @@ public class Marker implements javax0.jamal.api.Marker {
         this.name = name;
     }
 
+    /**
+     * Get the objects hash code and the marker name.
+     *
+     * @return the string display of the object.
+     */
     @Override
     public String toString() {
-        return name;
+        return super.toString() + name;
     }
 
 }

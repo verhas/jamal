@@ -78,7 +78,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     private final List<Scope> scopeStack = new ArrayList<>();
 
     public MacroRegister() {
-        push(null);
+        try {
+            push(null);
+        } catch (BadSyntax badSyntax) {
+            throw new RuntimeException("SNAFU: should not happen");
+        }
     }
 
     private Scope currentScope() {
@@ -236,7 +240,12 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public void push(Marker check) {
+    public void push(Marker check) throws BadSyntax {
+        for (final var scopeWalker : scopeStack) {
+            if (Objects.equals(check, scopeWalker.checkObject)) {
+                throw new BadSyntax("Push was performed using the marker " + check + " which happens to be already in the stack.");
+            }
+        }
         final var scope = new Scope(check);
         scopeStack.add(scope);
         scopeStack.forEach(scp -> scp.macros.values().forEach(macro -> stack(macro, Stackable::push)));
@@ -246,17 +255,27 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     @Override
     public void pop(Marker check) throws BadSyntax {
         if (scopeStack.size() > 1) {
-            if (!Objects.equals(check, currentScope().checkObject)) {
+            final var current = currentScope();
+            if (!Objects.equals(check, current.checkObject)) {
+                tryCleanUpStack(check);
                 throw new BadSyntax("Pop was performed by " +
-                    check +
-                    " for a level pushed by " +
-                    currentScope().checkObject);
+                    check + " for a level pushed by " + current.checkObject);
             }
-            scopeStack.remove(scopeStack.size() - 1);
-            scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
+            popStackOneLevel();
         } else {
             throw new BadSyntax("Cannot close the top level scope.");
         }
+    }
+
+    private void tryCleanUpStack(Marker check) {
+        while (scopeStack.size() > 0 && !Objects.equals(check, currentScope().checkObject)) {
+            popStackOneLevel();
+        }
+    }
+
+    private void popStackOneLevel() {
+        scopeStack.remove(scopeStack.size() - 1);
+        scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
     }
 
     @Override

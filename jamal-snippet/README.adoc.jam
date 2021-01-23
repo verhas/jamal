@@ -6,7 +6,7 @@
 Last updated: {%lastUpdated%}\
 {%#comment
 {%@snip lastUpdated
-2021-01-22 18:22:58
+2021-01-23 13:50:49
 %}
 %}
 {%@define standardInput= The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.%}
@@ -998,7 +998,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-01-22 18:22:58
+2021-01-23 13:50:49
 
 ----
 %}
