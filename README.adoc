@@ -836,7 +836,7 @@ here 'withparams' is not redefined
 this is a b c
 
 here we are local
-here we are  | |
+here we are global
 
 ----
 
