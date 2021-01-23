@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-01-23 13:50:49
+Last updated: 2021-01-23 14:02:17
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -994,7 +994,7 @@ wll result the output
 
 [source]
 ----
-2021-01-23 13:50:49
+2021-01-23 14:02:18
 
 ----
 
