@@ -280,6 +280,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         while (scopeStack.size() > 0 && !Objects.equals(check, currentScope().checkObject)) {
             popStackOneLevel();
         }
+        if (scopeStack.size() > 0) {
+            popStackOneLevel();
+        }
     }
 
     private void popStackOneLevel() {
