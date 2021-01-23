@@ -3,7 +3,10 @@ package javax0.jamal.builtins;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Marker;
 import javax0.jamal.api.Processor;
+
+import java.util.Objects;
 
 import static javax0.jamal.api.SpecialCharacters.QUERY;
 import static javax0.jamal.api.SpecialCharacters.REPORT_ERRMES;
@@ -13,7 +16,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Try implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) {
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
         final boolean query = firstCharIs(in, QUERY);
         final boolean report;
         if (query) {
@@ -23,6 +26,7 @@ public class Try implements Macro {
             report = firstCharIs(in, REPORT_ERRMES);
         }
         skipWhiteSpaces(in);
+        final var markerStart = processor.getRegister().test();
         try {
             final var result = processor.process(in);
             if (query) {
@@ -31,6 +35,10 @@ public class Try implements Macro {
                 return result;
             }
         } catch (BadSyntax bs) {
+            Marker markerEnd;
+            while( (markerEnd = processor.getRegister().test()) != null && !Objects.equals(markerStart,markerEnd)){
+                processor.getRegister().pop(markerEnd);
+            }
             if (query) {
                 return "false";
             }

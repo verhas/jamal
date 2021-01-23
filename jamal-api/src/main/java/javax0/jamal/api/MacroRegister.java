@@ -134,6 +134,24 @@ public interface MacroRegister extends Delimiters {
     /**
      * See the documentation of the method {@link #push(Marker)}
      * <p>
+     * This method does all the checks that {@link #pop(Marker)} but does not perform a pop.
+     *
+     * @param check see {@link #push(Marker)}
+     * @throws BadSyntax when the pop cannot be performed at the specific situation because there was no corresponding
+     *                   push
+     */
+    void test(Marker check) throws BadSyntax;
+
+    /**
+     * @return the current {@link Marker} object
+     * @throws BadSyntax if the current marker object cannot be returned. It does not happen in the current
+     *                   impementation.
+     */
+    Marker test() throws BadSyntax;
+
+    /**
+     * See the documentation of the method {@link #push(Marker)}
+     * <p>
      * Closes most inner scope of the macros for update. The macros are still in scope, but any new macro defined will
      * be defined one level higher.
      *

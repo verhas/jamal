@@ -2,6 +2,7 @@ package javax0.jamal.tools;
 
 import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Marker;
+import javax0.jamal.api.Position;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -13,7 +14,7 @@ import java.util.function.Function;
  * passed in {@code name} to the constructor has to be the same.
  */
 public class NamedMarker implements Marker {
-
+    final Position position;
     final String name;
     final Function<String, String> decorator;
 
@@ -21,10 +22,12 @@ public class NamedMarker implements Marker {
      * @param name      is the identifier of the marker used to check the equality
      * @param decorator a decorator used to create the string representation of the marker. This string representation
      *                  is used in the error messages in the exceptions that are thrown.
+     * @param position  is used in error messages and should point to the input position where the scope was opened
      */
-    public NamedMarker(String name, Function<String, String> decorator) {
+    public NamedMarker(String name, Function<String, String> decorator, Position position) {
         this.name = name;
         this.decorator = decorator;
+        this.position = position;
     }
 
     @Override
@@ -43,5 +46,10 @@ public class NamedMarker implements Marker {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public Position getPosition() {
+        return position;
     }
 }

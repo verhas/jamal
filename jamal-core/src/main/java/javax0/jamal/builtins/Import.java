@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
+import javax0.jamal.tools.Marker;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,13 +76,15 @@ public class Import implements Stackable {
             final var in = getInput(fileName);
             final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
             final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
+            final var marker = processor.getRegister().test();
             if (useDefaultSeparators) {
                 processor.separators(IMPORT_OPEN, IMPORT_CLOSE);
-            }
-            processor.process(in);
-            if (useDefaultSeparators) {
+                processor.process(in);
                 processor.separators(null, null);
+            } else {
+                processor.process(in);
             }
+            processor.getRegister().test(marker);
         }
         return "";
     }

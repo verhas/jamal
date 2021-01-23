@@ -12,8 +12,9 @@ public class Begin implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var position = in.getPosition();
         skipWhiteSpaces(in);
-        var marker = new NamedMarker(in.toString().trim(), s -> "{@begin " + s + "}");
+        var marker = new NamedMarker(in.toString().trim(), s -> "{@begin " + s + "}", position);
         processor.getRegister().push(marker);
         return "";
     }

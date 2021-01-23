@@ -76,6 +76,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     private final List<Scope> scopeStack = new ArrayList<>();
+    private final List<Marker> poppedMarkers = new ArrayList<>();
 
     public MacroRegister() {
         try {
@@ -248,6 +249,31 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         scopeStack.add(scope);
         scopeStack.forEach(scp -> scp.macros.values().forEach(macro -> stack(macro, Stackable::push)));
         scope.delimiterPair = new javax0.jamal.engine.Delimiters();
+        poppedMarkers.clear();
+    }
+
+    @Override
+    public Marker test() throws BadSyntax {
+        return currentScope().checkObject;
+    }
+
+    @Override
+    public void test(Marker check) throws BadSyntax {
+        if (scopeStack.size() > 1) {
+            final var current = currentScope();
+            if (!Objects.equals(check, current.checkObject)) {
+                if (markerIsInTheStack(check)) {
+                    tryCleanUpStack(check);
+                }
+                throw new BadSyntaxAt("Scope was changed from " +
+                    check + " to " + current.checkObject + " and it was not closed before the end.",
+                    current.checkObject.getPosition());
+            }
+        } else {
+            if (check != null) {
+                throw new BadSyntax("Scope opened with " + check + " was closed immature.");
+            }
+        }
     }
 
     @Override
@@ -257,6 +283,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
             if (!Objects.equals(check, current.checkObject)) {
                 if (markerIsInTheStack(check)) {
                     tryCleanUpStack(check);
+                    popStackOneLevel();
                 }
                 throw new BadSyntax("Pop was performed by " +
                     check + " for a level pushed by " + current.checkObject);
@@ -280,14 +307,13 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         while (scopeStack.size() > 0 && !Objects.equals(check, currentScope().checkObject)) {
             popStackOneLevel();
         }
-        if (scopeStack.size() > 0) {
-            popStackOneLevel();
-        }
     }
 
     private void popStackOneLevel() {
-        scopeStack.remove(scopeStack.size() - 1);
-        scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
+        if (scopeStack.size() > 0) {
+            poppedMarkers.add(scopeStack.remove(scopeStack.size() - 1).checkObject);
+            scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
+        }
     }
 
     @Override

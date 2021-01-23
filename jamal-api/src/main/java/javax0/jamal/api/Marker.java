@@ -10,4 +10,9 @@ package javax0.jamal.api;
  * interface provided in the tools module.
  */
 public interface Marker {
+    /**
+     * Should return the position wher the input was when the marker was created to start a new scope.
+     * @return
+     */
+    Position getPosition();
 }

@@ -90,6 +90,7 @@ public class Processor implements javax0.jamal.api.Processor {
     @Override
     public String process(final Input input) throws BadSyntax {
         limiter.up();
+        final var marker = macros.test();
         final var output = makeInput();
         try {
             while (input.length() > 0) {
@@ -106,6 +107,7 @@ public class Processor implements javax0.jamal.api.Processor {
             throw bsAt;
         }
         traceRecordFactory.dump(null);
+        macros.test(marker);
         limiter.down();
         return output.toString();
     }
@@ -157,10 +159,10 @@ public class Processor implements javax0.jamal.api.Processor {
                 outputUnevaluated(input, output, prefix);
                 return;
             }
-
+            final var position = input.getPosition();
             final var macroRaw = getNextMacroBody(input);
 
-            final var marker = new Marker("{@" + "");
+            final var marker = new Marker(macroRaw, position);
             macros.push(marker);
             final String macroProcessed;
             final MacroQualifier qualifiers;

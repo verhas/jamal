@@ -34,6 +34,7 @@ public class Include implements Macro {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
+        final var position = input.getPosition();
         skipWhiteSpaces(input);
         var reference = input.getReference();
         if (reference == null) {
@@ -44,7 +45,7 @@ public class Include implements Macro {
             depth = getDepth(); // try macro may recover
             throw new BadSyntax("Include depth is too deep");
         }
-        var marker = new Marker("{@include " + fileName + "}");
+        var marker = new Marker("{@include " + fileName + "}", position);
         final String result;
         try {
             processor.getRegister().push(marker);

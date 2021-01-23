@@ -2,6 +2,7 @@ package javax0.jamal.tools;
 
 
 import javax0.jamal.api.MacroRegister;
+import javax0.jamal.api.Position;
 
 /**
  * Implementation of the {@link javax0.jamal.api.Marker} interface that requires that exactly the same objects is passed
@@ -22,9 +23,11 @@ import javax0.jamal.api.MacroRegister;
  */
 public class Marker implements javax0.jamal.api.Marker {
     final String name;
+    final Position position;
 
-    public Marker(String name) {
+    public Marker(String name, Position position) {
         this.name = name;
+        this.position = position;
     }
 
     /**
@@ -34,7 +37,11 @@ public class Marker implements javax0.jamal.api.Marker {
      */
     @Override
     public String toString() {
-        return super.toString() + name;
+        return Integer.toHexString(super.hashCode()) + "::" + name;
     }
 
+    @Override
+    public Position getPosition() {
+        return position;
+    }
 }
