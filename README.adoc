@@ -2458,7 +2458,7 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.5.4-SNAPSHOT</version>
+    <version>1.6.0</version>
     <executions>
         <execution>
             <id>execution</id>
@@ -2521,7 +2521,7 @@ If you use Maven, you can simply have
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
-    <version>1.5.4-SNAPSHOT</version>
+    <version>1.6.0</version>
 </dependency>
 ----
 
