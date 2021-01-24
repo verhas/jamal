@@ -1,0 +1,2 @@
+{@define hello(x)=Hello, x!}
+{@import resource_included_by_resource.jim}

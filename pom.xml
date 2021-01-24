@@ -17,6 +17,7 @@
         <module>jamal-testsupport</module>
         <module>jamal-cmd</module>
         <module>jamal-snippet</module>
+        <module>jamal-test</module>
     </modules>
     <licenses>
         <license>

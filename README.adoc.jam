@@ -346,11 +346,10 @@ Block should be used to enclose definitions to a scope level.
 
 since 1.0.0 (core)
 
-The macros `begin` and `end` start and finish a local definition scope.
-The effect is practically the same as having the text inside a `#block` macro.
-Note, the starting `#` character.
-It means that the text will be evaluated before the macro itself is executed.
-The same way the text between the `{@begin}` and `{@end}` will be evaluated.
+The macros `begin` and `end` start and close a local definition scope.
+This is similar as using a `{#block ... }` macro to create a new scope for the evaluation of the macros inside it.
+The text between the `{@begin}` and `{@end}` will be evaluated in a new scope.
+Any user defined macro in this scope is going to be local, unless exported or has a `:` in the name.
 
 It is recommended to use `begin` and `end` when the structure is complex, and it is more readable to use the `begin`, `end` macros than a simple `block`.
 To ensure that all `begin` has an `end` you can name the blocks.
@@ -387,6 +386,7 @@ You can close a scope using the macro `end` that was opened with a matching `beg
 You cannot not close a scope using `end` that was opened by something else.
 For example, you cannot get into the scope of the including file putting a pair-less `end` macro into an included file.
 This will trigger a processing error.
+It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the main file or in any included or imported file.
 
 [[define]]
 ==== {%macroChapter%}`define`

@@ -35,10 +35,7 @@ public class Try implements Macro {
                 return result;
             }
         } catch (BadSyntax bs) {
-            Marker markerEnd;
-            while( (markerEnd = processor.getRegister().test()) != null && !Objects.equals(markerStart,markerEnd)){
-                processor.getRegister().pop(markerEnd);
-            }
+            cleanUpTheMarkerStack(processor, markerStart);
             if (query) {
                 return "false";
             }
@@ -47,6 +44,13 @@ public class Try implements Macro {
             } else {
                 return "";
             }
+        }
+    }
+
+    private void cleanUpTheMarkerStack(Processor processor, Marker markerStart) throws BadSyntax {
+        Marker markerEnd;
+        while( (markerEnd = processor.getRegister().test()) != null && !Objects.equals(markerStart,markerEnd)){
+            processor.getRegister().pop(markerEnd);
         }
     }
 }
