@@ -9,12 +9,12 @@
     
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-cmd</artifactId>
-    <version>1.5.4-SNAPSHOT</version>
+    <version>1.6.0</version>
 
     <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.5.4-SNAPSHOT</version>
+    <version>1.6.0</version>
 </parent>
     <description>Jamal macro library command line interface</description>
     <build>
