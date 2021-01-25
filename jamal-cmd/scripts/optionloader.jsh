@@ -37,7 +37,7 @@ import java.nio.charset.StandardCharsets;
 
             switch(key){
 
-                case "to"
+                case "to":
                 case "from":
                 case "open":
                 case "close":
