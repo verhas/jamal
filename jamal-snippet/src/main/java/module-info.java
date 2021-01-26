@@ -27,7 +27,6 @@ module jamal.snippet {
     requires jamal.api;
     requires jamal.tools;
     requires jamal.engine;
-    requires java.scripting;
     requires java.xml;
     provides Macro with Clear,
         Collect,

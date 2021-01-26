@@ -52,7 +52,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
         if( noChange ){
             throw new BadSyntaxAt("{@replaceLines did not change any of the lines.",in.getPosition());
         }
-        final var joined = Arrays.stream(lines).collect(Collectors.joining("\n"));
+        final var joined = String.join("\n", lines);
         if (needsNoExtraNl(in, true, joined)) {
             return joined;
         } else {

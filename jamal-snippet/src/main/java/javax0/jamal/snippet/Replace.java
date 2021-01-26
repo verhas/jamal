@@ -19,7 +19,7 @@ public class Replace implements Macro, InnerScopeDependent {
         if (parts.length < 2) {
             throw new BadSyntax("Marco 'replace' needs at least two arguments, gon only "
                 + parts.length
-                + ":\n" + Arrays.stream(parts).collect(Collectors.joining("\n"))
+                + ":\n" + String.join("\n", parts)
                 + "\n----------");
         }
         final var isRegex = OptionsStore.getInstance(processor).is("regex");
