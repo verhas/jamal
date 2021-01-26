@@ -6,7 +6,7 @@
 Last updated: {%lastUpdated%}\
 {%#comment
 {%@snip lastUpdated
-2021-01-24 19:38:21
+2021-01-26 11:45:26
 %}
 %}
 {%@define standardInput= The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.%}
@@ -260,7 +260,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.6.0</version>
+<version>1.6.1-SNAPSHOT</version>
 ...
 
 ----
@@ -766,6 +766,7 @@ will result
 - src/main/java/javax0/jamal/snippet/DateMacro.java
 - src/main/java/javax0/jamal/snippet/Format.java
 - src/main/java/javax0/jamal/snippet/Update.java
+- src/main/java/javax0/jamal/snippet/FilesMacro.java
 - src/main/java/javax0/jamal/snippet/Collect.java
 - src/main/java/javax0/jamal/snippet/TrimLines.java
 - src/main/java/javax0/jamal/snippet/Replace.java
@@ -827,7 +828,7 @@ The possible placeholders:
 {%#snip:define listDirFormats$formatted=
 {%#replaceLines
 {%@define replace =`\n`
-^\s*entry\("(.*?)".*//\s*(.*)$
+^\s*"(.*?)".*//\s*(.*)$
 * `$1` will be replaced by the $2
 OTF
 of the file.
@@ -870,13 +871,14 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 800 bytes
+- snippet: 832 bytes
 - Snip.java: 606 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
 - DateMacro.java: 659 bytes
 - Format.java: 2,557 bytes
 - Update.java: 3,509 bytes
+- FilesMacro.java: 2,158 bytes
 - Collect.java: 4,587 bytes
 - TrimLines.java: 2,811 bytes
 - Replace.java: 1,716 bytes
@@ -885,13 +887,13 @@ will result
 - Clear.java: 451 bytes
 - KillLines.java: 1,525 bytes
 - SnippetStore.java: 3,045 bytes
-- ListDir.java: 3,917 bytes
+- ListDir.java: 3,772 bytes
 - XmlFormat.java: 2,458 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,870 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 4,691 bytes
-- ReplaceLines.java: 2,255 bytes
+- Java.java: 4,561 bytes
+- ReplaceLines.java: 2,605 bytes
 - SkipLines.java: 2,100 bytes
 - Snippet.java: 1,059 bytes
 
@@ -938,7 +940,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
 </project>
 
 ----
@@ -972,7 +974,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.6.0</version>
+<version>1.6.1-SNAPSHOT</version>
 </project>
 
 ----
@@ -998,7 +1000,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-01-24 19:38:21
+2021-01-26 11:45:26
 
 ----
 %}

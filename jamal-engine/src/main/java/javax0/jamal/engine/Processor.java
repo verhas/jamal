@@ -328,7 +328,7 @@ public class Processor implements javax0.jamal.api.Processor {
         return postEvaluated;
     }
 
-    private static interface ThrowingStringSupplier {
+    private interface ThrowingStringSupplier {
         String get() throws BadSyntax;
     }
 

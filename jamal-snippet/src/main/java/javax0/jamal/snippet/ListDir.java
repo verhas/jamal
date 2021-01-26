@@ -9,7 +9,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.OptionsStore;
-import javax0.jamal.tools.PlaceHolder;
+import javax0.jamal.tools.PlaceHolders;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,10 +17,8 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.Map.entry;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class ListDir implements Macro, InnerScopeDependent {
@@ -74,24 +72,24 @@ public class ListDir implements Macro, InnerScopeDependent {
             time = "1970-01-01T00:00:00Z";
             //end snippet
         }
-        return PlaceHolder.replace(format, Map.ofEntries(
+        return PlaceHolders.of(
             // OTF will be replaced by "of the file"
             // TITF will be replaced by "`true` if the file"
             // FO will be replaced by "``false` otherwise"
             // snippet listDirFormats
-            entry("$size", size), // size OTF
-            entry("$time", time), // modification time OTF
-            entry("$absolutePath", p.toAbsolutePath().toString()), // absolute path OTF
-            entry("$name", p.toString()), // name OTF
-            entry("$simpleName", p.toFile().getName()), // simple name OTF
-            entry("$isDirectory", "" + p.toFile().isDirectory()), // TITF is a directory, FO
-            entry("$isFile", "" + p.toFile().isFile()), // TITF is a plain file, FO
-            entry("$isHidden", "" + p.toFile().isHidden()), // TITF is hidden, FO
-            entry("$canExecute", "" + p.toFile().canExecute()), // TITF can be executed, FO
-            entry("$canRead", "" + p.toFile().canRead()), // TIFT can be read, FO
-            entry("$canWrite", "" + p.toFile().canWrite()) //TITF can be written, FO
+            "$size", size, // size OTF
+            "$time", time, // modification time OTF
+            "$absolutePath", p.toAbsolutePath().toString(), // absolute path OTF
+            "$name", p.toString(), // name OTF
+            "$simpleName", p.toFile().getName(), // simple name OTF
+            "$isDirectory", "" + p.toFile().isDirectory(), // TITF is a directory, FO
+            "$isFile", "" + p.toFile().isFile(), // TITF is a plain file, FO
+            "$isHidden", "" + p.toFile().isHidden(), // TITF is hidden, FO
+            "$canExecute", "" + p.toFile().canExecute(), // TITF can be executed, FO
+            "$canRead", "" + p.toFile().canRead(), // TIFT can be read, FO
+            "$canWrite", "" + p.toFile().canWrite() //TITF can be written, FO
             // end snippet
-        ));
+        ).format(format);
 
     }
 

@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-01-24 19:38:21
+Last updated: 2021-01-26 11:45:26
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -20,7 +20,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -85,7 +85,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -272,7 +272,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.6.0</version>
+<version>1.6.1-SNAPSHOT</version>
 ...
 
 ----
@@ -784,6 +784,7 @@ will result
 - src/main/java/javax0/jamal/snippet/DateMacro.java
 - src/main/java/javax0/jamal/snippet/Format.java
 - src/main/java/javax0/jamal/snippet/Update.java
+- src/main/java/javax0/jamal/snippet/FilesMacro.java
 - src/main/java/javax0/jamal/snippet/Collect.java
 - src/main/java/javax0/jamal/snippet/TrimLines.java
 - src/main/java/javax0/jamal/snippet/Replace.java
@@ -871,13 +872,14 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 800 bytes
+- snippet: 832 bytes
 - Snip.java: 606 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
 - DateMacro.java: 659 bytes
 - Format.java: 2,557 bytes
 - Update.java: 3,509 bytes
+- FilesMacro.java: 2,158 bytes
 - Collect.java: 4,587 bytes
 - TrimLines.java: 2,811 bytes
 - Replace.java: 1,716 bytes
@@ -886,13 +888,13 @@ will result
 - Clear.java: 451 bytes
 - KillLines.java: 1,525 bytes
 - SnippetStore.java: 3,045 bytes
-- ListDir.java: 3,917 bytes
+- ListDir.java: 3,772 bytes
 - XmlFormat.java: 2,458 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,870 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 4,691 bytes
-- ReplaceLines.java: 2,255 bytes
+- Java.java: 4,561 bytes
+- ReplaceLines.java: 2,605 bytes
 - SkipLines.java: 2,100 bytes
 - Snippet.java: 1,059 bytes
 
@@ -921,7 +923,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.1-SNAPSHOT</version>
 </project>
 }
 ----
@@ -937,7 +939,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
 </project>
 
 ----
@@ -953,7 +955,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.1-SNAPSHOT</version>
 </project>
 }
 ----
@@ -969,7 +971,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.6.0</version>
+<version>1.6.1-SNAPSHOT</version>
 </project>
 
 ----
@@ -994,7 +996,7 @@ wll result the output
 
 [source]
 ----
-2021-01-24 19:38:21
+2021-01-26 11:45:26
 
 ----
 

@@ -18,6 +18,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 public class ReplaceLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        boolean noChange = true;
         final var reader = MacroReader.macro(processor);
         final var replace = reader.readValue("replace").orElseThrow(
             () -> new BadSyntaxAt("The macro replaceLines needs a defined 'replace' user defined macro.", in.getPosition()));
@@ -37,12 +38,19 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
                     to = "";
                 }
                 try {
-                    lines[k] = lines[k].replaceAll(from, to);
+                    final var modified = lines[k].replaceAll(from, to);
+                    if( noChange && !modified.equals(lines[k])){
+                        noChange = false;
+                    }
+                    lines[k] = modified;
                 } catch (Exception e) {
                     throw new BadSyntax("There is a problem with the regular expression in macro 'replaceLines' : "
                         + from + "\n" + to + "\n", e);
                 }
             }
+        }
+        if( noChange ){
+            throw new BadSyntaxAt("{@replaceLines did not change any of the lines.",in.getPosition());
         }
         final var joined = Arrays.stream(lines).collect(Collectors.joining("\n"));
         if (needsNoExtraNl(in, true, joined)) {

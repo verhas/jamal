@@ -8,14 +8,11 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.PlaceHolder;
+import javax0.jamal.tools.PlaceHolders;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.Map.entry;
 
 public class Java {
 
@@ -29,7 +26,7 @@ public class Java {
             final var className = in.toString().trim();
             try {
                 final var klass = Class.forName(className);
-                return PlaceHolder.replace(format, Map.of(
+                return PlaceHolders.of(
                     // snippet classFormats
                     "$simpleName", klass.getSimpleName(),
                     "$name", klass.getName(),
@@ -37,7 +34,7 @@ public class Java {
                     "$packageName", klass.getPackageName(),
                     "$typeName", klass.getTypeName()
                     // end snippet
-                ));
+                ).format(format);
             } catch (ClassNotFoundException e) {
                 throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition());
             }
@@ -71,23 +68,24 @@ public class Java {
             final var method = Arrays.stream(klass.getDeclaredMethods()).filter(m -> m.getName().equals(methodName)).findAny().orElseThrow(
                 () -> new BadSyntaxAt("The method '" + methodName + "' cannot be found in the class '" + className + "' in the macro '" + getId() + "'.", in.getPosition())
             );
-            return PlaceHolder.replace(format, Map.ofEntries(
+            return PlaceHolders.of(
                 // OTMDC -> of the method's defining class
                 // OTM -> of the method
                 // snippet methodFormats
-                entry("$classSimpleName", klass.getSimpleName()), // simple name OTMDC
-                entry("$className", klass.getName()), // name of the OTMDC
-                entry("$classCanonicalName", klass.getCanonicalName()),// canonical name OTMDC
-                entry("$classTypeName", klass.getTypeName()), // type name OTMC
-                entry("$packageName", klass.getPackageName()), // package where the method is
-                entry("$name", method.getName()), // name OTM
-                entry("$typeClass", method.getReturnType().getName()), // return type OTM
-                entry("$exceptions", Arrays.stream(method.getExceptionTypes()).map(Class::getName).collect(Collectors.joining(","))), // comma separated values of the exception types the method throws
-                entry("$parameterTypes", Arrays.stream(method.getParameterTypes()).map(Class::getName).collect(Collectors.joining(","))),// comma separated parameter types
-                entry("$parameterCount", "" + method.getParameterCount()), // number of the parameters in decimal format
-                entry("$modifiers", Modifier.toString(method.getModifiers())) // modifiers list of the method
-                // end snippet
-            ));
+                "$classSimpleName", klass.getSimpleName(), // simple name OTMDC
+                "$className", klass.getName(), // name of the OTMDC
+                "$classCanonicalName", klass.getCanonicalName(),// canonical name OTMDC
+                "$classTypeName", klass.getTypeName(), // type name OTMC
+                "$packageName", klass.getPackageName(), // package where the method is
+                "$name", method.getName(), // name OTM
+                "$typeClass", method.getReturnType().getName(), // return type OTM
+                "$exceptions", Arrays.stream(method.getExceptionTypes()).map(Class::getName).collect(Collectors.joining(",")), // comma separated values of the exception types the method throws
+                "$parameterTypes", Arrays.stream(method.getParameterTypes()).map(Class::getName).collect(Collectors.joining(",")),// comma separated parameter types
+                "$parameterCount", "" + method.getParameterCount(), // number of the parameters in decimal format
+                "$modifiers", Modifier.toString(method.getModifiers() // modifiers list of the method
+                    // end snippet
+                )
+            ).format(format);
         }
 
         @Override
