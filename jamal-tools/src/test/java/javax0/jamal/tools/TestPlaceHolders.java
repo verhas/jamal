@@ -77,7 +77,7 @@ public class TestPlaceHolders {
 
     @Test
     @DisplayName("Throws exception when the placeholder is used")
-    void testThrowing() throws Exception {
+    void testThrowing() {
         Assertions.assertThrows(Exception.class, () ->
             PlaceHolders.with("$a", "$b").and("$b", () -> {
                 throw new Exception();
