@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-01-26 11:45:26
+Last updated: 2021-01-26 17:51:39
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -879,7 +879,7 @@ will result
 - DateMacro.java: 659 bytes
 - Format.java: 2,557 bytes
 - Update.java: 3,509 bytes
-- FilesMacro.java: 2,158 bytes
+- FilesMacro.java: 2,160 bytes
 - Collect.java: 4,587 bytes
 - TrimLines.java: 2,811 bytes
 - Replace.java: 1,716 bytes
@@ -888,12 +888,12 @@ will result
 - Clear.java: 451 bytes
 - KillLines.java: 1,525 bytes
 - SnippetStore.java: 3,045 bytes
-- ListDir.java: 3,772 bytes
+- ListDir.java: 3,943 bytes
 - XmlFormat.java: 2,458 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,870 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 4,561 bytes
+- Java.java: 4,854 bytes
 - ReplaceLines.java: 2,605 bytes
 - SkipLines.java: 2,100 bytes
 - Snippet.java: 1,059 bytes
@@ -996,7 +996,7 @@ wll result the output
 
 [source]
 ----
-2021-01-26 11:45:26
+2021-01-26 17:51:39
 
 ----
 

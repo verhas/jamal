@@ -37,7 +37,7 @@ public class FilesMacro {
             }
 
             try {
-                return PlaceHolders.of(
+                return PlaceHolders.with(
                     "$name", dirName,
                     "$absolutePath", dir.getAbsolutePath(),
                     "$parent", dir.getParent()
