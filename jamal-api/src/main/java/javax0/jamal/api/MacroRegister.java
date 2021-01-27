@@ -119,6 +119,7 @@ public interface MacroRegister extends Delimiters {
      * @param check is used to ensure that the same code is performing the push as the pop. When {@link #pop(Marker)} is
      *              invoked it checks that the object passed as argument is the same as the object corresponding to the
      *              last {@code push(Marker)}.
+     * @throws BadSyntax when the marker is already on the stack
      */
     void push(Marker check) throws BadSyntax;
 

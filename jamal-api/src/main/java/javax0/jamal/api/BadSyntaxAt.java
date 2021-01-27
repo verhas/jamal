@@ -19,7 +19,7 @@ public class BadSyntaxAt extends BadSyntax {
 
     /**
      * Convert a {@link BadSyntax} exception thrown from a macro that has no idea where the actual source code is to a
-     * {@code BadSyntaxAt} exception using the provided reference.<p>
+     * {@code BadSyntaxAt} exception using the provided reference.
      * <p>
      * The new exception will inherit the message, the cause, the suppressed throwables and the stack trace of the
      * original exception.<p>
@@ -76,7 +76,7 @@ public class BadSyntaxAt extends BadSyntax {
      *
      * @param r the runnable
      * @return an object on which the {@link ThrowMayBe#orThrowWith(Position) orThrowWith()}  can be invoked.
-     * @throws BadSyntax
+     * @throws BadSyntax in case there was an exception thrown by the execution of the {@link Runnable}.
      */
     public static ThrowMayBe run(Runnable r) throws BadSyntax {
         try {

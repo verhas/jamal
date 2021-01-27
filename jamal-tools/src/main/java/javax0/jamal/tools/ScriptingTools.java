@@ -103,6 +103,7 @@ public class ScriptingTools {
      *
      * @param scriptType the name of the scripting language
      * @return the engine for the specified script type
+     * @throws BadSyntax when there is no scripting engine with the given name
      */
     public static ScriptEngine getEngine(String scriptType) throws BadSyntax {
         final var engine = new ScriptEngineManager().getEngineByName(scriptType);

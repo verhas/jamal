@@ -267,6 +267,21 @@ public class InputHandler {
         }
     }
 
+
+    /**
+     * Delete the characters from the start of the input until after the first EOL
+     *
+     * @param input from which the spaces should be deleted.
+     */
+    public static void skip2EOL(Input input) {
+        while (input.length() > 0 && input.charAt(0) != '\n') {
+            input.delete(1);
+        }
+        if (input.length() > 0 && input.charAt(0) == '\n') {
+            input.delete(1);
+        }
+    }
+
     /**
      * Delete the white space characters from the start of the input but only until after the first EOL
      *
@@ -388,25 +403,25 @@ public class InputHandler {
     /**
      * Same as {@link #getParts(Input)} but we want at most {@code limit} number of parts.
      *
-     * @param input theinput from which we want to get the parts
+     * @param input the input from which we want to get the parts
      * @param limit the maximum number of parts we need
      * @return the parts of the input in an array
-     * @throws BadSyntaxAt
+     * @throws BadSyntaxAt the input cannot be split up into parts
      */
     public static String[] getParts(Input input, int limit) throws BadSyntaxAt {
         skipWhiteSpaces(input);
         if (input.length() == 0) {
             return EMPTY_STRING_ARRAY;
         }
-        var sepchar = input.substring(0, 1);
-        if (Character.isLetterOrDigit(sepchar.charAt(0))) {
+        final var separator = input.substring(0, 1);
+        if (Character.isLetterOrDigit(separator.charAt(0))) {
             return input.toString().split("\\s+", limit);
         }
         skip(input, 1);
-        if ("`".equals(sepchar)) {
+        if ("`".equals(separator)) {
             return getPartsRegex(input, limit);
         }
-        return input.toString().split(Pattern.quote(sepchar), limit);
+        return input.toString().split(Pattern.quote(separator), limit);
     }
 
     private static String[] getPartsRegex(Input input, int limit) {

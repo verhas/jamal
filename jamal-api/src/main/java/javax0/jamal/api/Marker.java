@@ -11,8 +11,7 @@ package javax0.jamal.api;
  */
 public interface Marker {
     /**
-     * Should return the position wher the input was when the marker was created to start a new scope.
-     * @return
+     * @return the position where the input was when the marker was created to start a new scope.
      */
     Position getPosition();
 }

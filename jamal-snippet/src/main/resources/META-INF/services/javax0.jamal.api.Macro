@@ -24,3 +24,4 @@ javax0.jamal.snippet.Java$ClassMacro
 javax0.jamal.snippet.Java$MethodMacro
 javax0.jamal.snippet.FilesMacro$Directory
 javax0.jamal.snippet.FilesMacro$FileMacro
+javax0.jamal.snippet.Reflow

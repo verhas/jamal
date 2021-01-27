@@ -4,7 +4,6 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
-import javax0.jamal.tools.Marker;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,25 +19,26 @@ import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 /**
- * Imports the macros from the file. <p>
+ * Imports the macros from the file.
  * <p>
  * The file name is following the macro keyword {@code import}. If the file was already imported on the actual level or
  * some higher level then the file will not be imported again. This is to ensure that the same macro file will not be
  * imported uselessly more than once. Also if the macro file was imported on a level only that is deeper than the
  * current level then the macros are not available at the current position (except those that were exported) and
- * therefore will be imported again. <p>
+ * therefore will be imported again.
  * <p>
- * The output generated from the file is ignored and is thrown away. <p>
+ * The output generated from the file is ignored and is thrown away.
  * <p>
- * The class implements {@link Stackable}. This will signal the processor to invoke {@link #push()} and {@link
- * #pop()}<p> when the macro context opens and closes one level. That way the macro can keep track of the level of
- * already imported files in it's own stack.<p>
+ * The class implements {@link Stackable}. This will signal the processor to invoke {@link #push()} and {@link #pop()}
+ * <p>
+ * when the macro context opens and closes one level. That way the macro can keep track of the level of already imported
+ * files in it's own stack.
  * <p>
  * If the imported file starts with the characters { and @ then the import will set the macro opening and closing
  * strings to { and } for the time of the import. This way a macro file or an application can freely use any macro
  * opening and closing string and still can import macros defined in a web resource or in a JAR resource. The author of
  * a JAR file or a macro package published on the net cannot know what macro strings the user will use. It is
- * recommended to use { and @, and then the import is seamless.<p>
+ * recommended to use { and @, and then the import is seamless.
  * <p>
  * Prior to version 1.5.0 importing such a file needed, assuming that {@code ((} and {@code ))} are the opening and
  * closing macro strings:

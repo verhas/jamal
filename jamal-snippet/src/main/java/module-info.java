@@ -12,6 +12,7 @@ import javax0.jamal.snippet.Java.MethodMacro;
 import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.ListDir;
 import javax0.jamal.snippet.NumberLines;
+import javax0.jamal.snippet.Reflow;
 import javax0.jamal.snippet.Replace;
 import javax0.jamal.snippet.ReplaceLines;
 import javax0.jamal.snippet.SkipLines;
@@ -54,6 +55,7 @@ module jamal.snippet {
         ClassMacro,
         MethodMacro,
         FilesMacro.Directory,
-        FilesMacro.FileMacro
+        FilesMacro.FileMacro,
+        Reflow
         ;
 }

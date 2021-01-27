@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-01-27 13:39:36
+Last updated: 2021-01-27 17:01:20
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -67,10 +67,14 @@ This way it is easier to keep your documentation up to date.
 .. <<replace,`replace`>>
 .. <<replaceLines,`replaceLines`>>
 .. <<counter:define,`counter:define`>>
+.. <<reflow,`reflow`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
 .. <<date,`date`>>
 .. <<format,`format`>>
+.. <<file,`file`>>
+.. <<directory,`directory`>>
+.. <<Java,Java Macros>>
 .. <<snip:update,`snip:update`>>
 
 
@@ -752,8 +756,89 @@ MMMCCXIII. MMMCCXIV. MMMCCXV.
 ----
 
 
+[[reflow]]
+==== xiv. `reflow`
+
+This macro reflows the content of it.
+The default behaviour is that the lines will be any long and the paragraph will be separated by double new-lines.
+
+For example:
+
+[source]
+----
+{@reflow the first line is comment, ignored
+The
+short
+lines
+will
+be put into a single line.
+
+Empty lines are paragraph limiters.
+
+
+
+
+Multiple empty lines are
+converted to one.}
+----
+
+The output will be
+
+
+[source]
+----
+The short lines will be put into a single line.
+
+Empty lines are paragraph limiters.
+
+Multiple empty lines are converted to one.
+
+----
+
+
+If the user defined macro `width` specifies a positive integer number then it wil be used to limit the length of the lines.
+For example
+
+[source]
+----
+{@define width=1}
+{@reflow the first line is comment, ignored
+The
+long
+lines
+will
+be broken into words.
+
+Empty lines are paragraph limiters.}
+----
+
+The output will be
+
+
+[source]
+----
+The
+long
+lines
+will
+be
+broken
+into
+words.
+
+Empty
+lines
+are
+paragraph
+limiters.
+
+----
+
+
+Setting the `width` to any non-positive value will remove the limit from the line length.
+
 [[listDir]]
-==== xiv. `listDir`
+==== xv. `listDir`
 
 This macro list the files in a directory and then returns the comma separated list of the formatted files.
 The format of the macro is:
@@ -801,6 +886,7 @@ will result
 - src/main/java/javax0/jamal/snippet/Java.java
 - src/main/java/javax0/jamal/snippet/ReplaceLines.java
 - src/main/java/javax0/jamal/snippet/SkipLines.java
+- src/main/java/javax0/jamal/snippet/Reflow.java
 - src/main/java/javax0/jamal/snippet/Snippet.java
 
 ----
@@ -872,7 +958,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 832 bytes
+- snippet: 864 bytes
 - Snip.java: 606 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
@@ -896,6 +982,7 @@ will result
 - Java.java: 4,854 bytes
 - ReplaceLines.java: 2,575 bytes
 - SkipLines.java: 2,100 bytes
+- Reflow.java: 1,742 bytes
 - Snippet.java: 1,059 bytes
 
 ----
@@ -912,7 +999,7 @@ If the option `followSymlinks` is used, like in
 then the recursive collection process for colelction the files will follow symlinks.
 
 [[xmlFormat]]
-==== xv. `xmlFormat`
+==== xvi. `xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document and the result is the document formatted.
 For example,
@@ -980,7 +1067,7 @@ will result
 As you can see there is no tabulation in this case.
 
 [[date]]
-==== xvi. `date`
+==== xvii. `date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -996,13 +1083,13 @@ wll result the output
 
 [source]
 ----
-2021-01-27 13:39:37
+2021-01-27 17:01:21
 
 ----
 
 
 [[format]]
-==== xvii. `format`
+==== xviii. `format`
 
 The macro `format` can be used to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -1054,7 +1141,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[file]]
-==== xviii. `file`
+==== xix. `file`
 
 You can use this macro to include the name of a file in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1094,7 +1181,7 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xix. `directory`
+==== xx. `directory`
 
 You can use this macro to include the name of a directory in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1135,7 +1222,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xx. Java Macros
+==== xxi. Java Macros
 
 [[java:class]]
 ===== `java:class`
@@ -1291,7 +1378,7 @@ public MethodMacro::evaluate(Input,Processor)
 
 
 [[snip:update]]
-==== xxi. `snip:update`
+==== xxii. `snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

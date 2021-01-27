@@ -641,8 +641,8 @@ public class PlaceHolders {
      * }</pre>
      *
      * @param original
-     * @return
-     * @throws Exception
+     * @return the formatted string
+     * @throws Exception if one of the evaluated supplier throws exception
      */
     public String format(final String original) throws Exception {
         StringBuilder sb = new StringBuilder(original);
