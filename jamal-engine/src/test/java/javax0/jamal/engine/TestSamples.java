@@ -231,13 +231,6 @@ class TestSamples {
     }
 
     @Test
-    @DisplayName("sep that defines zero length macro close throws exception")
-    @Disabled("This is valid since 1.3.0")
-    void testBadSep2() {
-        Assertions.assertThrows(BadSyntaxAt.class, () -> result("badsep2.jam"));
-    }
-
-    @Test
     @DisplayName("when the input has zero character after { it is handled")
     void zeroLengthInput() {
         Assertions.assertThrows(BadSyntaxAt.class, () -> result("zeroinput.jam"));

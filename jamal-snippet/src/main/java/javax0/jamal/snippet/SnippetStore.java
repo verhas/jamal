@@ -74,6 +74,7 @@ public class SnippetStore implements Identified {
     /**
      * Get the identified snippet
      *
+     * @param id the identifier of the snippet needed
      * @return the snippet
      * @throws BadSyntax when a snippet is not defined
      */

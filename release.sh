@@ -14,7 +14,7 @@ echo [INFO]
 echo [INFO] if all compilation went well, then and only then:
 echo [INFO]
 echo [INFO]   git commit -m "new release <VERSION>"
-echo [INFO]   mvn deploy -Possrh
+echo [INFO]   mvn deploy -Prelease
 echo [INFO] -------------------------------------------------------
 echo [INFO]
 

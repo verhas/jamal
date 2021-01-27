@@ -640,7 +640,7 @@ public class PlaceHolders {
      * "$b $a"
      * }</pre>
      *
-     * @param original
+     * @param original the format string with the placeholders
      * @return the formatted string
      * @throws Exception if one of the evaluated supplier throws exception
      */

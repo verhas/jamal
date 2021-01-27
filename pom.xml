@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>1.6.1</version>
     <description>Jamal macro library to process text files</description>
     <modules>
         <module>jamal-engine</module>
@@ -77,8 +77,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.2.0</version>
                     <configuration>
-                        <source>8</source>
-                        <detectJavaApiLink>false</detectJavaApiLink>
+                        <detectOfflineLinks>false</detectOfflineLinks>
                     </configuration>
                     <executions>
                         <execution>
@@ -136,32 +135,32 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-testsupport</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.6.1</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.6.1</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-core</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.6.1</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-tools</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.6.1</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-engine</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.6.1</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>1.6.1</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -185,7 +184,7 @@
     </dependencyManagement>
     <profiles>
         <profile>
-            <id>ossrh</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>

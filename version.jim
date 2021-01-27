@@ -2,7 +2,7 @@
 
 
 
-{@define VERSION=1.6.1-SNAPSHOT}
+{@define VERSION=1.6.1}
 
 
 
@@ -23,3 +23,4 @@
 {@define JAVA_TARGET=11}
 {@define MAVEN_COMPILER_PLUGIN_VERSION=3.8.1}
 {@define MAVEN_JAVADOC_PLUGIN_VERSION=3.2.0}
+{@define MAVEN_GPG_PLUGIN_VERSION=1.6}

@@ -260,7 +260,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.6.1-SNAPSHOT</version>
+<version>1.6.1</version>
 ...
 
 ----
@@ -972,7 +972,7 @@ will result
 - Counter.java: 3,323 bytes
 - Clear.java: 451 bytes
 - KillLines.java: 1,525 bytes
-- SnippetStore.java: 3,045 bytes
+- SnippetStore.java: 3,099 bytes
 - ListDir.java: 3,943 bytes
 - XmlFormat.java: 2,458 bytes
 - SnipProperties.java: 1,485 bytes
@@ -1027,7 +1027,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>1.6.1</version>
 </project>
 
 ----
@@ -1061,7 +1061,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.6.1-SNAPSHOT</version>
+<version>1.6.1</version>
 </project>
 
 ----
@@ -1087,7 +1087,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-01-27 17:01:21
+2021-01-27 18:36:16
 
 ----
 %}

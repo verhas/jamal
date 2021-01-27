@@ -33,8 +33,7 @@
                 {plugin|
                     {GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
                     {configuration|
-                        {source|8}
-                        {detectJavaApiLink|false}
+                        {detectOfflineLinks|false}
                     }
                     {executions|{execution|
                             {id|attach-javadocs}
@@ -83,11 +82,11 @@
         }}
 
     {profiles|
-        {profile ossrh}
+        {profile release}
             {build|
                 {plugins|
                     {plugin|
-                        {GAV :org.apache.maven.plugins:maven-gpg-plugin:1.6}
+                        {GAV :org.apache.maven.plugins:maven-gpg-plugin:{MAVEN_GPG_PLUGIN_VERSION}}
                         {executions|{execution
                             {id :sign-artifacts}
                             {phase :verify}
