@@ -15,6 +15,13 @@ public class TestTrie {
     }
 
     @Test
+    @DisplayName("Null values can also be inserted")
+    void testNull() throws Exception {
+        final var sut = new Trie();
+        sut.put("a", (String)null);
+        Assertions.assertNull(sut.get("a"));
+    }
+    @Test
     @DisplayName("Finds a single element put in as string supplier")
     void testGetFromSUpplier() throws Exception {
         final var sut = new Trie();
@@ -68,6 +75,15 @@ public class TestTrie {
         sut.put("bca", "bca");
         Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bcad", "bcad"));
         Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bc", "bc"));
+    }
+
+    @Test
+    @DisplayName("Throws exception when key prefix each other even when the values are null")
+    void testThrowsForPrefixForNullValues() {
+        final var sut = new Trie();
+        sut.put("bca", (String)null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bcad", (String)null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bc", (String)null));
     }
 
     @Test

@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-01-26 18:23:27
+Last updated: 2021-01-27 13:39:36
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -879,7 +879,7 @@ will result
 - DateMacro.java: 659 bytes
 - Format.java: 2,557 bytes
 - Update.java: 3,509 bytes
-- FilesMacro.java: 2,160 bytes
+- FilesMacro.java: 4,372 bytes
 - Collect.java: 4,587 bytes
 - TrimLines.java: 2,811 bytes
 - Replace.java: 1,686 bytes
@@ -996,7 +996,7 @@ wll result the output
 
 [source]
 ----
-2021-01-26 18:23:28
+2021-01-27 13:39:37
 
 ----
 
@@ -1053,8 +1053,89 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 ----
 
 
+[[file]]
+==== xviii. `file`
+
+You can use this macro to include the name of a file in the documentation.
+First, it seems counterintuitive to have a macro for that.
+You can type in the name of the file, and it will appear in the output.
+
+The real added value of the macro is that it checks that the file exists.
+If the file does not exist or is not a file, then the macro will error.
+It helps the maintenance of the application.
+If the file gets renamed, moved, or deleted, the document will not compile until you follow the change.
+
+The macro can also format the name of the file.
+It uses the value of the user-defined macro `fileFormat` for the purpose.
+If this macro is defined outside the `file` macro, then the file names will be formatted using the same format.
+For example, you can write
+
+[source]
+----
+When Jamal processes this file it will generate {@define fileFormat=`$name`}{@file README.adoc}.
+----
+
+will result
+
+[source]
+----
+When Jamal processes this file it will generate `README.adoc`.
+
+----
+
+
+In the format you can use the following placeholders:
+
+
+* `$name` gives the name of the file as was specified on the macro
+* `$absolutePath` the absolute path to the file
+* `$parent` the parent directory where the file is
+* `$canonicalPath` the canonical path
+
+
+[[directory]]
+==== xix. `directory`
+
+You can use this macro to include the name of a directory in the documentation.
+First, it seems counterintuitive to have a macro for that.
+You can type in the name of the directory, and it will appear in the output.
+
+The real added value of the macro is that it checks that the directory exists.
+If the directory does not exist or is not a directory, then the macro will error.
+It helps the maintenance of the application.
+If the directory gets renamed, moved, or deleted, the document will not compile until you follow the change.
+
+The macro can also format the name of the directory.
+It uses the value of the user-defined macro `directoryFormat` for the purpose.
+If this macro is defined outside the `directory` macro, then the directory names will be formatted using the same format.
+For example, you can write
+
+[source]
+----
+This file is in the directory {@define directoryFormat=`$name`}{@directory ../jamal-snippet}.
+----
+
+will result
+
+[source]
+----
+This file is in the directory `../jamal-snippet`.
+
+----
+
+
+In the format you can use the following placeholders:
+
+
+* `$name` gives the name of the directory as was specified on the macro
+* `$absolutePath` gives the name of the directory as was specified on the macro
+* `$parent` the parent directory
+* `$canonicalPath` the canonical path
+
+
+
 [[Java]]
-==== xviii. Java Macros
+==== xx. Java Macros
 
 [[java:class]]
 ===== `java:class`
@@ -1210,7 +1291,7 @@ public MethodMacro::evaluate(Input,Processor)
 
 
 [[snip:update]]
-==== xix. `snip:update`
+==== xxi. `snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

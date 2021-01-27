@@ -13,6 +13,7 @@ public class Trie {
     private static class Node {
         String value;
         ThrowingStringSupplier supplier;
+        boolean leaf = false;
         final private Node[] letters = new Node['~' - OFFSET + 1];
     }
 
@@ -24,7 +25,7 @@ public class Trie {
         private Result(int start, int end, Node node) throws Exception {
             this.start = start;
             this.end = end;
-            if (node.value == null) {
+            if (node.value == null && node.supplier != null) {
                 node.value = node.supplier.get();
             }
             this.value = node.value;
@@ -41,8 +42,8 @@ public class Trie {
             int end = start;
             Node node = root;
             while (node != null) {
-                if (end >= chars.length || node.value != null || node.supplier != null) {
-                    if (node.value == null && node.supplier == null) {
+                if (end >= chars.length || node.leaf) {
+                    if (!node.leaf) {
                         return Optional.empty();
                     } else {
                         return Optional.of(new Result(start, end, node));
@@ -92,7 +93,7 @@ public class Trie {
                 i++;
             }
         }
-        if (parent.value != null || parent.supplier != null) {
+        if (parent.leaf) {
             throw new IllegalArgumentException("The key '" + key + "' has a prefix '" + key.substring(0, i) + "' in the trie.");
         }
         while (i < chars.length) {
@@ -106,5 +107,6 @@ public class Trie {
         }
         parent.value = value;
         parent.supplier = supplier;
+        parent.leaf = true;
     }
 }

@@ -4,6 +4,7 @@ import javax0.jamal.snippet.Clear;
 import javax0.jamal.snippet.Collect;
 import javax0.jamal.snippet.CounterMacro;
 import javax0.jamal.snippet.DateMacro;
+import javax0.jamal.snippet.FilesMacro;
 import javax0.jamal.snippet.Format;
 import javax0.jamal.snippet.Java;
 import javax0.jamal.snippet.Java.ClassMacro;
@@ -51,6 +52,8 @@ module jamal.snippet {
         Case.Lower,
         Format,
         ClassMacro,
-        MethodMacro
+        MethodMacro,
+        FilesMacro.Directory,
+        FilesMacro.FileMacro
         ;
 }

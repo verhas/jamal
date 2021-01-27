@@ -1,11 +1,13 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestSnippet {
 
     @Test
+    @DisplayName("Snippets can be defined and then used in snip macro")
     void testSnippetDefinition() throws Exception {
         TestThat.theInput("{@snip:define snippet1=    \n" +
             "this is the content of the snippet\n" +

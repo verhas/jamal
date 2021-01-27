@@ -18,7 +18,7 @@ import java.io.File;
 public class FilesMacro {
 
     /**
-     * Check that the directory exists and that it is a directory.
+     * Check that the directory exists, and it is a directory.
      */
     public static class Directory implements Macro, InnerScopeDependent {
 
@@ -27,8 +27,9 @@ public class FilesMacro {
             final var reader = MacroReader.macro(processor);
             final var format = reader.readValue("directoryFormat").orElse("$name");
             final var root = reader.readValue("root").orElse("");
-            final var dirName = FileTools.absolute(in.getReference(), root + in.toString().trim());
-            final var dir = new File(dirName);
+            final var name = in.toString().trim();
+            final var dirName = FileTools.absolute(in.getReference(), root + name);
+            final var dir = new File(dirName.length() > 0 ? dirName : ".");
             if (!dir.exists()) {
                 throw new BadSyntaxAt("The directory '" + dirName + "' does not exist.", in.getPosition());
             }
@@ -38,15 +39,17 @@ public class FilesMacro {
 
             try {
                 return PlaceHolders.with(
-                    "$name", dirName,
-                    "$absolutePath", dir.getAbsolutePath(),
-                    "$parent", dir.getParent()
+                    // snippet dirMacroFormatPlaceholders
+                    "$name", name, // gives the name of the directory as was specified on the macro
+                    "$absolutePath", dir.getAbsolutePath(), // gives the name of the directory as was specified on the macro
+                    "$parent", dir.getParent() // the parent directory
                 ).and(
-                    "$canonicalPath", () -> dir.getCanonicalPath()
+                    "$canonicalPath", dir::getCanonicalPath // the canonical path
+                    //end snippet
                 ).format(format);
             } catch (Exception e) {
                 throw new BadSyntaxAt("Directory name '" + dirName
-                    + "'cannot be formatted using the given format '"
+                    + "' cannot be formatted using the given format '"
                     + format + "'", in.getPosition(), e);
             }
         }
@@ -56,5 +59,49 @@ public class FilesMacro {
             return "directory";
         }
     }
+
+    /**
+     * Check that the directory exists, and it is a directory.
+     */
+    public static class FileMacro implements Macro, InnerScopeDependent {
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            final var reader = MacroReader.macro(processor);
+            final var format = reader.readValue("fileFormat").orElse("$name");
+            final var root = reader.readValue("root").orElse("");
+            final var name = in.toString().trim();
+            final var fileName = FileTools.absolute(in.getReference(), root + name);
+            final var file = new File(fileName);
+            if (!file.exists()) {
+                throw new BadSyntaxAt("The file '" + fileName + "' does not exist.", in.getPosition());
+            }
+            if (!file.isFile()) {
+                throw new BadSyntaxAt("The file '" + fileName + "' exists but it is not a plain file.", in.getPosition());
+            }
+
+            try {
+                return PlaceHolders.with(
+                    // snippet fileMacroFormatPlaceholders
+                    "$name", name, // gives the name of the file as was specified on the macro
+                    "$absolutePath", file.getAbsolutePath(), // the absolute path to the file
+                    "$parent", file.getParent() // the parent directory where the file is
+                ).and(
+                    "$canonicalPath", file::getCanonicalPath // the canonical path
+                    // end snippet
+                ).format(format);
+            } catch (Exception e) {
+                throw new BadSyntaxAt("Directory name '" + fileName
+                    + "'cannot be formatted using the given format '"
+                    + format + "'", in.getPosition(), e);
+            }
+        }
+
+        @Override
+        public String getId() {
+            return "file";
+        }
+    }
+
 
 }

@@ -31,19 +31,19 @@ public class PlaceHolders {
         String k1,
         String v1
     ) {
-        return new PlaceHolders(List.of(k1, v1));
+        return new PlaceHolders(k1, v1);
     }
 
-    private PlaceHolders(List<String> values) {
-        for (int i = 0; i < values.size() - 1; i += 2) {
-            this.values.put(values.get(i), values.get(i + 1));
+    private PlaceHolders(String... values) {
+        for (int i = 0; i < values.length - 1; i += 2) {
+            this.values.put(values[i], values[i + 1]);
         }
     }
 
     //<editor-fold desc="multi argument versions">
 
     public static PlaceHolders with() {
-        return new PlaceHolders(List.of());
+        return new PlaceHolders();
     }
 
     public static PlaceHolders with(
@@ -52,7 +52,7 @@ public class PlaceHolders {
         String k2,
         String v2
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2));
+        return new PlaceHolders(k1, v1, k2, v2);
     }
 
     public static PlaceHolders with(
@@ -63,7 +63,7 @@ public class PlaceHolders {
         String k3,
         String v3
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3);
     }
 
     public static PlaceHolders with(
@@ -76,7 +76,7 @@ public class PlaceHolders {
         String k4,
         String v4
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4);
     }
 
     public static PlaceHolders with(
@@ -91,7 +91,7 @@ public class PlaceHolders {
         String k5,
         String v5
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
     }
 
     public static PlaceHolders with(
@@ -108,7 +108,7 @@ public class PlaceHolders {
         String k6,
         String v6
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
     }
 
     public static PlaceHolders with(
@@ -127,7 +127,7 @@ public class PlaceHolders {
         String k7,
         String v7
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
     }
 
     public static PlaceHolders with(
@@ -148,7 +148,7 @@ public class PlaceHolders {
         String k8,
         String v8
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
     }
 
     public static PlaceHolders with(
@@ -171,7 +171,7 @@ public class PlaceHolders {
         String k9,
         String v9
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
     }
 
     public static PlaceHolders with(
@@ -196,7 +196,7 @@ public class PlaceHolders {
         String k10,
         String v10
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
     }
 
     public static PlaceHolders with(
@@ -223,7 +223,7 @@ public class PlaceHolders {
         String k11,
         String v11
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10, k11, v11));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10, k11, v11);
     }
     //</editor-fold>
 
@@ -232,7 +232,7 @@ public class PlaceHolders {
         String k1,
         String v1
     ) {
-        return new PlaceHolders(List.of(k1, v1));
+        return new PlaceHolders(k1, v1);
     }
 
     public PlaceHolders and(
@@ -241,7 +241,7 @@ public class PlaceHolders {
         String k2,
         String v2
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2));
+        return new PlaceHolders(k1, v1, k2, v2);
     }
 
     public PlaceHolders and(
@@ -252,7 +252,7 @@ public class PlaceHolders {
         String k3,
         String v3
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3);
     }
 
     public PlaceHolders and(
@@ -265,7 +265,7 @@ public class PlaceHolders {
         String k4,
         String v4
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4);
     }
 
     public PlaceHolders and(
@@ -280,7 +280,7 @@ public class PlaceHolders {
         String k5,
         String v5
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
     }
 
     public PlaceHolders and(
@@ -297,7 +297,7 @@ public class PlaceHolders {
         String k6,
         String v6
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
     }
 
     public PlaceHolders and(
@@ -316,7 +316,7 @@ public class PlaceHolders {
         String k7,
         String v7
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
     }
 
     public PlaceHolders and(
@@ -337,7 +337,7 @@ public class PlaceHolders {
         String k8,
         String v8
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
     }
 
     public PlaceHolders and(
@@ -360,7 +360,7 @@ public class PlaceHolders {
         String k9,
         String v9
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
     }
 
     public PlaceHolders and(
@@ -385,7 +385,7 @@ public class PlaceHolders {
         String k10,
         String v10
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
     }
 
     public PlaceHolders and(
@@ -412,7 +412,7 @@ public class PlaceHolders {
         String k11,
         String v11
     ) {
-        return new PlaceHolders(List.of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10, k11, v11));
+        return new PlaceHolders(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10, k11, v11);
     }
     //</editor-fold>
 

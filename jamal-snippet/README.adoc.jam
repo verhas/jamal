@@ -4,11 +4,7 @@
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
 {%#snip:define lastUpdated={%lastUpdated%}%}\
 Last updated: {%lastUpdated%}\
-{%#comment
-{%@snip lastUpdated
-2021-01-26 18:23:27
-%}
-%}
+
 {%@define standardInput= The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.%}
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -878,7 +874,7 @@ will result
 - DateMacro.java: 659 bytes
 - Format.java: 2,557 bytes
 - Update.java: 3,509 bytes
-- FilesMacro.java: 2,160 bytes
+- FilesMacro.java: 4,372 bytes
 - Collect.java: 4,587 bytes
 - TrimLines.java: 2,811 bytes
 - Replace.java: 1,686 bytes
@@ -1000,7 +996,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-01-26 18:23:28
+2021-01-27 13:39:37
 
 ----
 %}
@@ -1051,6 +1047,83 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 ----
 %}
+
+[[file]]
+==== {%macroChapter%}`file`
+{%@define fileDirectory($what)=
+You can use this macro to include the name of a $what in the documentation.
+First, it seems counterintuitive to have a macro for that.
+You can type in the name of the $what, and it will appear in the output.
+
+The real added value of the macro is that it checks that the $what exists.
+If the $what does not exist or is not a $what, then the macro will error.
+It helps the maintenance of the application.
+If the $what gets renamed, moved, or deleted, the document will not compile until you follow the change.
+
+The macro can also format the name of the $what.
+It uses the value of the user-defined macro `$whatFormat` for the purpose.
+If this macro is defined outside the `$what` macro, then the $what names will be formatted using the same format.
+For example, you can write%}\
+{%fileDirectory file%}
+
+{%sample/
+When Jamal processes this file it will generate {@define fileFormat=`$name`}{@file README.adoc}.
+%}
+
+will result
+
+{%#snip:define fileOutput={%output%}%}\
+{%@snip fileOutput
+[source]
+----
+When Jamal processes this file it will generate `README.adoc`.
+
+----
+%}
+
+{%@define replace=|^.*?"(.*?)"|* `$1`!|!.*?//||%}\
+{%@define pattern=\)\.and\(%}\
+In the format you can use the following placeholders:
+{%#snip:define fileMacroFormatPlaceholdersFormatted=
+{%#replaceLines{%#killLines{%@snip fileMacroFormatPlaceholders %}%}%}%}
+
+{%@snip fileMacroFormatPlaceholdersFormatted
+* `$name` gives the name of the file as was specified on the macro
+* `$absolutePath` the absolute path to the file
+* `$parent` the parent directory where the file is
+* `$canonicalPath` the canonical path
+%}
+
+[[directory]]
+==== {%macroChapter%}`directory`
+{%fileDirectory directory%}
+
+{%sample/
+This file is in the directory {@define directoryFormat=`$name`}{@directory ../jamal-snippet}.
+%}
+
+will result
+
+{%#snip:define dirOutput={%output%}%}\
+{%@snip dirOutput
+[source]
+----
+This file is in the directory `../jamal-snippet`.
+
+----
+%}
+
+In the format you can use the following placeholders:
+{%#snip:define dirMacroFormatPlaceholdersFormatted=
+{%#replaceLines{%#killLines{%@snip dirMacroFormatPlaceholders %}%}%}%}
+
+{%@snip dirMacroFormatPlaceholdersFormatted
+* `$name` gives the name of the directory as was specified on the macro
+* `$absolutePath` gives the name of the directory as was specified on the macro
+* `$parent` the parent directory
+* `$canonicalPath` the canonical path
+%}
+
 
 [[Java]]
 ==== {%macroChapter%}Java Macros
