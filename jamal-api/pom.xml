@@ -5,11 +5,11 @@
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-api</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.6.1</version>
+        <version>1.6.2</version>
     </parent>
     <description>Jamal macro library API interfaces</description>
     <build>
