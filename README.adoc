@@ -989,7 +989,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
 
 ----
 

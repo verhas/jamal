@@ -2,7 +2,6 @@ package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
@@ -12,7 +11,6 @@ import javax0.jamal.tools.OptionsStore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
@@ -21,92 +19,40 @@ import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 /**
- * Define the {@code for} looping macro. The syntax of the macro is
- *
- * <pre>
- *     {#for var in (a,b,c,d)= var is either a, b, c or d
- *     }
- * </pre>
- * <p>
- * The default separator is {@code ,} (comma), but it can be redefined to be any regular expression assigning a value to
- * the user defined macro {@code $forsep}.
+ * See the documentation of the "for" loop in the README.doc in the project root.
  */
 public class For implements Macro, InnerScopeDependent {
-
-    private static final Pattern PATTERN = Pattern.compile("in\\s*\\((.*?)\\)\\s*=(.*)", Pattern.DOTALL);
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);
 
-        final String[] variables;
-        if (firstCharIs(input, '(')) {
-            variables = getParameters(input, "for loop");
-        } else {
-            variables = new String[]{fetchId(input)};
-        }
+        final String[] variables = getVariables(input);
         skipWhiteSpaces(input);
-        if (input.length() > 1 && input.charAt(0) == 'i' && input.charAt(1) == 'n') {
-            skip(input, 2);
-            skipWhiteSpaces(input);
-        } else {
-            throw new BadSyntaxAt("The keyword 'in' is missing in the 'for' macro '" + input + "'", input.getPosition());
-        }
-        final String valuesString;
-        if (firstCharIs(input, '(')) {
-            skip(input, 1);
-            int closing = input.indexOf(")");
-            if (closing == -1) {
-                throw new BadSyntaxAt("There is no closing ')' for the values in the for macro.", input.getPosition());
-            }
-            valuesString = input.substring(0, closing);
-            skip(input, closing + 1);
-        } else if (firstCharIs(input, '`')) {
-            skip(input, 1);
-            int closingTick = input.indexOf("`");
-            if (closingTick == -1) {
-                throw new BadSyntaxAt("There is no closing '`' before the values in the for macro.", input.getPosition());
-            }
-            final var stopString = "`" + input.substring(0, closingTick + 1);
-            skip(input, closingTick + 1);
-            int closing = input.indexOf(stopString);
-            if (closing == -1) {
-                throw new BadSyntaxAt("There is no closing " + stopString + " for the values in the for macro.", input.getPosition());
-            }
-            valuesString = input.substring(0, closing);
-            skip(input, closing + stopString.length());
-        } else {
-            throw new BadSyntaxAt("for macro has bad syntax '" + input + "'", input.getPosition());
-        }
+        checkKeyword(input);
+        final String valuesString = getValuesString(input);
         skipWhiteSpaces(input);
-        if (!firstCharIs(input, '=')) {
-            throw new BadSyntaxAt("for macro has bad syntax, missing '=' at '" + input + "'", input.getPosition());
-        }
-        skip(input, 1);
-        MacroReader reader = MacroReader.macro(processor);
+        checkEqualSign(input);
         final var content = input.toString();
-        final var subsplitter = reader.readValue("$forsubsep").orElse("\\|");
+
+        MacroReader reader = MacroReader.macro(processor);
+        final var splitter = reader.readValue("$forsubsep").orElse("\\|");
         final var valueArray = valuesString.split(reader.readValue("$forsep").orElse(","), -1);
+
         final var output = new StringBuilder();
-        final var root = new Segment(null, content);
-        for (final var variable : variables) {
-            var it = root;
-            while (it != null) {
-                final var next = it.nextSeg;
-                it.split(variable);
-                it = next;
-            }
-        }
+        final Segment root = splitContentToSegments(variables, content);
+
         final var parameterMap = new HashMap<String, String>();
-        final var skipEmpty = OptionsStore.getInstance(processor).is("skipForEmpty");
+        final var optionsStore = OptionsStore.getInstance(processor);
+        final var skipEmpty = optionsStore.is("skipForEmpty");
+        final var lenient = optionsStore.is("lenient");
+
         for (final String value : valueArray) {
             if (value.length() > 0 || !skipEmpty) {
-                final var values = value.split(subsplitter, -1);
-                if (!OptionsStore.getInstance(processor).is("lenient")) {
-                    if (values.length != variables.length) {
-                        throw new BadSyntax("number of the values does not match the number of the parameters\n" +
-                            String.join(",", variables) + "\n" + value);
-                    }
+                final var values = value.split(splitter, -1);
+                if (!lenient && values.length != variables.length) {
+                    throw new BadSyntax("number of the values does not match the number of the parameters\n" +
+                        String.join(",", variables) + "\n" + value);
                 }
                 for (int i = 0; i < variables.length; i++) {
                     parameterMap.put(variables[i], i < values.length ? values[i] : "");
@@ -120,26 +66,86 @@ public class For implements Macro, InnerScopeDependent {
 
     }
 
-    private static String[] splitLoopValueString(final Processor processor, final String loopValueString) throws BadSyntax {
-        final var reader = MacroReader.macro(processor);
-        final var splitter = reader.readValue("$forsep").orElse(",");
-        return loopValueString.split(splitter, -1);
+    private Segment splitContentToSegments(String[] variables, String content) {
+        final var root = new Segment(null, content);
+        for (final var variable : variables) {
+            var it = root;
+            while (it != null) {
+                final var next = it.nextSeg;
+                it.split(variable);
+                it = next;
+            }
+        }
+        return root;
     }
 
-    private static String getMacroValue(Processor processor, String macro, String defautl) {
-        final var optional = processor.getRegister().getUserDefined(macro);
-        final var value = optional
-            .filter(ud -> ud instanceof Evaluable)
-            .map(ud -> (Evaluable) ud)
-            .map(udm -> {
-                try {
-                    return udm.evaluate();
-                } catch (BadSyntax bs) {
-                    return null;
-                }
-            })
-            .orElse(defautl);
-        return value;
+    private void checkEqualSign(Input input) throws BadSyntaxAt {
+        if (firstCharIs(input, '=')) {
+            skip(input, 1);
+        } else {
+            throw new BadSyntaxAt("for macro has bad syntax, missing '=' at '" + input + "'", input.getPosition());
+        }
+    }
+
+    private String getValuesString(Input input) throws BadSyntaxAt {
+        final String valuesString;
+        if (firstCharIs(input, '(')) {
+            valuesString = getValuesStringFromSimpleList(input);
+        } else if (firstCharIs(input, '`')) {
+            valuesString = getValuesStringFromStringTerminatedList(input);
+        } else {
+            throw new BadSyntaxAt("for macro has bad syntax '" + input + "'", input.getPosition());
+        }
+        return valuesString;
+    }
+
+    private String getValuesStringFromStringTerminatedList(Input input) throws BadSyntaxAt {
+        final String valuesString;
+        skip(input, 1);
+        int closingTick = input.indexOf("`");
+        if (closingTick == -1) {
+            throw new BadSyntaxAt("There is no closing '`' before the values in the for macro.", input.getPosition());
+        }
+        final var stopString = "`" + input.substring(0, closingTick + 1);
+        skip(input, closingTick + 1);
+        int closing = input.indexOf(stopString);
+        if (closing == -1) {
+            throw new BadSyntaxAt("There is no closing " + stopString + " for the values in the for macro.", input.getPosition());
+        }
+        valuesString = input.substring(0, closing);
+        skip(input, closing + stopString.length());
+        return valuesString;
+    }
+
+    private String getValuesStringFromSimpleList(Input input) throws BadSyntaxAt {
+        final String valuesString;
+        skip(input, 1);
+        int closing = input.indexOf(")");
+        if (closing == -1) {
+            throw new BadSyntaxAt("There is no closing ')' for the values in the for macro.", input.getPosition());
+        }
+        valuesString = input.substring(0, closing);
+        skip(input, closing + 1);
+        return valuesString;
+    }
+
+    private void checkKeyword(Input input) throws BadSyntaxAt {
+        if (input.length() > 1 && input.charAt(0) == 'i' && input.charAt(1) == 'n') {
+            skip(input, 2);
+            skipWhiteSpaces(input);
+        } else {
+            throw new BadSyntaxAt("The keyword 'in' is missing in the 'for' macro '" + input + "'", input.getPosition());
+        }
+    }
+
+    private String[] getVariables(Input input) throws BadSyntaxAt {
+        final String[] variables;
+        if (firstCharIs(input, '(')) {
+            variables = getParameters(input, "for loop");
+        } else {
+            variables = new String[]{fetchId(input)};
+        }
+        return variables;
     }
 
     /**
