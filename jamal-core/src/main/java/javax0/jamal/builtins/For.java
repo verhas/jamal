@@ -1,11 +1,13 @@
 package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.OptionsStore;
 
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.regex.Pattern;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.getParameters;
+import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 /**
@@ -43,49 +46,83 @@ public class For implements Macro, InnerScopeDependent {
             variables = new String[]{fetchId(input)};
         }
         skipWhiteSpaces(input);
-        var matcher = PATTERN.matcher(input);
-        if (matcher.matches()) {
-            final var valuesString = matcher.group(1);
-            final var content = matcher.group(2);
-            final var subsplitter = getMacroValue(processor, "$forsubsep", "\\|");
-            final var valueArray = splitLoopValueString(processor, valuesString);
-            final var output = new StringBuilder();
-            final var root = new Segment(null, content);
-            for (final var variable : variables) {
-                var it = root;
-                while (it != null) {
-                    final var next = it.nextSeg;
-                    it.split(variable);
-                    it = next;
-                }
-            }
-            final var parameterMap = new HashMap<String, String>();
-            final var skipEmpty = OptionsStore.getInstance(processor).is("skipForEmpty");
-            for (final String value : valueArray) {
-                if (value.length() > 0 || !skipEmpty) {
-                    final var values = value.split(subsplitter, -1);
-                    if (!OptionsStore.getInstance(processor).is("lenient")) {
-                        if (values.length != variables.length) {
-                            throw new BadSyntax("number of the values does not match the number of the parameters\n" +
-                                String.join(",", variables) + "\n" + value);
-                        }
-                    }
-                    for (int i = 0; i < variables.length; i++) {
-                        parameterMap.put(variables[i], i < values.length ? values[i] : "");
-                    }
-                    for (Segment segment = root; segment != null; segment = segment.next()) {
-                        output.append(segment.content(parameterMap));
-                    }
-                }
-            }
-            return output.toString();
+        if (input.length() > 1 && input.charAt(0) == 'i' && input.charAt(1) == 'n') {
+            skip(input, 2);
+            skipWhiteSpaces(input);
         } else {
-            throw new BadSyntax("for macro has bad syntax '" + input + "'");
+            throw new BadSyntaxAt("The keyword 'in' is missing in the 'for' macro '" + input + "'", input.getPosition());
         }
+        final String valuesString;
+        if (firstCharIs(input, '(')) {
+            skip(input, 1);
+            int closing = input.indexOf(")");
+            if (closing == -1) {
+                throw new BadSyntaxAt("There is no closing ')' for the values in the for macro.", input.getPosition());
+            }
+            valuesString = input.substring(0, closing);
+            skip(input, closing + 1);
+        } else if (firstCharIs(input, '`')) {
+            skip(input, 1);
+            int closingTick = input.indexOf("`");
+            if (closingTick == -1) {
+                throw new BadSyntaxAt("There is no closing '`' before the values in the for macro.", input.getPosition());
+            }
+            final var stopString = "`" + input.substring(0, closingTick + 1);
+            skip(input, closingTick + 1);
+            int closing = input.indexOf(stopString);
+            if (closing == -1) {
+                throw new BadSyntaxAt("There is no closing " + stopString + " for the values in the for macro.", input.getPosition());
+            }
+            valuesString = input.substring(0, closing);
+            skip(input, closing + stopString.length());
+        } else {
+            throw new BadSyntaxAt("for macro has bad syntax '" + input + "'", input.getPosition());
+        }
+        skipWhiteSpaces(input);
+        if (!firstCharIs(input, '=')) {
+            throw new BadSyntaxAt("for macro has bad syntax, missing '=' at '" + input + "'", input.getPosition());
+        }
+        skip(input, 1);
+        MacroReader reader = MacroReader.macro(processor);
+        final var content = input.toString();
+        final var subsplitter = reader.readValue("$forsubsep").orElse("\\|");
+        final var valueArray = valuesString.split(reader.readValue("$forsep").orElse(","), -1);
+        final var output = new StringBuilder();
+        final var root = new Segment(null, content);
+        for (final var variable : variables) {
+            var it = root;
+            while (it != null) {
+                final var next = it.nextSeg;
+                it.split(variable);
+                it = next;
+            }
+        }
+        final var parameterMap = new HashMap<String, String>();
+        final var skipEmpty = OptionsStore.getInstance(processor).is("skipForEmpty");
+        for (final String value : valueArray) {
+            if (value.length() > 0 || !skipEmpty) {
+                final var values = value.split(subsplitter, -1);
+                if (!OptionsStore.getInstance(processor).is("lenient")) {
+                    if (values.length != variables.length) {
+                        throw new BadSyntax("number of the values does not match the number of the parameters\n" +
+                            String.join(",", variables) + "\n" + value);
+                    }
+                }
+                for (int i = 0; i < variables.length; i++) {
+                    parameterMap.put(variables[i], i < values.length ? values[i] : "");
+                }
+                for (Segment segment = root; segment != null; segment = segment.next()) {
+                    output.append(segment.content(parameterMap));
+                }
+            }
+        }
+        return output.toString();
+
     }
 
-    private static String[] splitLoopValueString(final Processor processor, final String loopValueString) {
-        final var splitter = getMacroValue(processor, "$forsep", ",");
+    private static String[] splitLoopValueString(final Processor processor, final String loopValueString) throws BadSyntax {
+        final var reader = MacroReader.macro(processor);
+        final var splitter = reader.readValue("$forsep").orElse(",");
         return loopValueString.split(splitter, -1);
     }
 

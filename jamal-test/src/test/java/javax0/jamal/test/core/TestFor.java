@@ -30,4 +30,19 @@ public class TestFor {
                 " d is either a, b, c or d\n"
         );
     }
+
+
+    @Test
+    void testSimpleForWithBacktickedSeparator() throws Exception {
+
+        TestThat.theInput(
+            "{@define $forsep=;}{@for x in `)))`a);b);c);d)`)))`= x is either a, b, c or d\n}"
+
+        ).results(
+            " a) is either a, b, c or d\n" +
+                " b) is either a, b, c or d\n" +
+                " c) is either a, b, c or d\n" +
+                " d) is either a, b, c or d\n"
+        );
+    }
 }

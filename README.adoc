@@ -989,7 +989,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
 
 ----
 
@@ -1320,7 +1320,9 @@ The scripts have to be used to manifest the error.
 [[for]]
 ==== xii. `for`
 
-since 1.0.0 (core) since 1.5.0 multi-argument `for`
+since 1.0.0 (core)
+since 1.5.0 multi-argument `for`
+since 1.6.3 backtick string separator value list
 
 The macro `for` can be used to repeat the same text many times.
 This macro has two forms.
@@ -1341,7 +1343,7 @@ containing v1 v2 and v3}
 ----
 
 The `variable` or the multiple variables can be used in the content and will be replaced for each iteration with the respective element on the comma-separated list.
-When there are multiple variables then the sub-list is separated using the `|` character.
+When there are multiple variables then the sub-list of the values is separated using the `|` character.
 Both the command and the `|` character can be modified to use something else instead of these characters.
 
 The list of the values can also be separated by other strings.
@@ -1482,6 +1484,32 @@ wuk
 ----
 
 
+Sometimes you may need to do a for loop over values that contain the `)` character.
+With the conventional form of the `for` macro it was not possible, because the first `)` character terminates the list of the values.
+Jamal 1.6.3 introduced a new, backward compatible format for the `for` macro.
+
+Instead of the `(` and `)` characters it is possible to use an arbitrary string to denote the end of the values.
+When the first character after the keyword `in` (after optional spaces) is the backtick character then the string till the next backtick character will be used to denote the end of the values.
+The starting and ending backtick should also be part of the string closing the values.
+
+For example the following
+
+[source]
+----
+{@for x in `END`a),b),c),d)`END`=x }
+----
+
+will result
+
+[source]
+----
+a) b) c) d)
+
+----
+
+
+Note that this alternative format can only be used for the values list and not for the variables.
+The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
 ==== xiii. `if`
@@ -2458,7 +2486,7 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.6.2</version>
+    <version>1.6.3-SNAPSHOT</version>
     <executions>
         <execution>
             <id>execution</id>
@@ -2521,7 +2549,7 @@ If you use Maven, you can simply have
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
-    <version>1.6.2</version>
+    <version>1.6.3-SNAPSHOT</version>
 </dependency>
 ----
 
