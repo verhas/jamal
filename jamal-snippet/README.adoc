@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-01-30 20:27:25
+Last updated: 2021-02-01 11:05:07
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -20,7 +20,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.3</version>
+    <version>1.6.4-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -89,7 +89,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.3</version>
+    <version>1.6.4-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -276,7 +276,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.6.3</version>
+<version>1.6.4-SNAPSHOT</version>
 ...
 
 ----
@@ -1010,7 +1010,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.3</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.4-SNAPSHOT</version>
 </project>
 }
 ----
@@ -1026,7 +1026,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.6.3</version>
+    <version>1.6.4-SNAPSHOT</version>
 </project>
 
 ----
@@ -1042,7 +1042,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.3</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.6.4-SNAPSHOT</version>
 </project>
 }
 ----
@@ -1058,7 +1058,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.6.3</version>
+<version>1.6.4-SNAPSHOT</version>
 </project>
 
 ----
@@ -1083,7 +1083,7 @@ wll result the output
 
 [source]
 ----
-2021-01-30 20:27:26
+2021-02-01 11:05:08
 
 ----
 

@@ -22,4 +22,18 @@ public interface Evaluable {
      * macros differently that accept one single parameter.
      */
     int expectedNumberOfArguments();
+
+    /**
+     * Set the identifier that was used to identify the macro. If may not be the same as the one the macro thinks about
+     * itself. The built-in {@code javax0.jamal.engine.UserDefinedMacro} does not use this feature, but other
+     * implementations can rely on the actual id, when the same {@link Evaluable} instance is registered with different
+     * names, or when the the user defined macro {@code default} is defined by some Java code and not the built-in
+     * {@code UserDefinedMacro}.
+     *
+     * @param id the actual identifier that was used in the source
+     */
+    default void setCurrentId(String id) {
+    }
+
+    ;
 }

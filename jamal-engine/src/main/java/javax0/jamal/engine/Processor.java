@@ -384,8 +384,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * then the user defined macro may not be defined. In this case the result will be an empty string. Otherwise an
      * undefined macro results a syntax error.<p>
      *
-     * @param input     starts at the pstart of the user defined macro but after the macro opening character and
-     *                  possibly after the optional {@code @verbatim} start.
+     * @param input     starts at the start of the user defined macro but after the macro opening character and possibly
+     *                  after the optional {@code @verbatim} start as well as ! and ` characters.
      * @param tr        is the tracker where the tracking information and warnings are sent
      * @param qualifier is the macro qualifying parameters
      * @return the string that is the result of the macro evaluation. If the macro is not defined and it is preceded by
@@ -403,13 +403,13 @@ public class Processor implements javax0.jamal.api.Processor {
         final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval;
         skipWhiteSpaces(evaluatedInput);
 
-        var id = fetchId(evaluatedInput);
+        final String id = fetchId(evaluatedInput);
         if (id.length() == 0) {
             throw new BadSyntaxAt("Zero length user defined macro name was found.", ref);
         }
         skipWhiteSpaces(evaluatedInput);
 
-        final var udMacroOpt = macros.getUserDefined(id)
+        final var udMacroOpt = macros.getUserDefined(id, "default")
             .filter(ud -> ud instanceof Evaluable)
             .map(ud -> (Evaluable) ud);
         if (reportUndef && udMacroOpt.isEmpty()) {
@@ -458,6 +458,7 @@ public class Processor implements javax0.jamal.api.Processor {
             tr.setId(id);
             tr.setParameters(parameters);
             try {
+                udMacro.setCurrentId(id);
                 return udMacro.evaluate(parameters);
             } catch (BadSyntaxAt bsAt) {
                 throw bsAt;

@@ -252,7 +252,7 @@ class TestSamples {
             "false=false\n" +
             "false=false\n" +
             "true=true\n" +
-            "False=False \n" +
+            "False=False\n" +
             "=\n" +
             "true=true\n" +
             "true=true\n" +

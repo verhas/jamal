@@ -27,6 +27,10 @@ public interface MacroRegister extends Delimiters {
      */
     <T extends Identified> Optional<T> getUserDefined(String id);
 
+    default <T extends Identified> Optional<T> getUserDefined(String id, String def){
+        return (Optional<T>)getUserDefined(id).or( () -> getUserDefined(def));
+    }
+
     /**
      * Define a user defined macro on the global level.
      *

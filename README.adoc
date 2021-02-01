@@ -422,6 +422,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 ==== iv. `define`
 
 since 1.0.0 (core)
+since 1.6.4 `default` as special macro
 
 `define` defines a user-defined macro in the current scope.
 
@@ -643,6 +644,29 @@ this is empty string >><<
 
 
 NOTE: The <<try,`try`>> built-in macro is mainly for debugging purposes and returns the error message itself.
+
+In addition to having a `?` character or using the `try` macro, there is another possibility to avoid the error in case of an undefined macro.
+If the macro `default` is defined then it will be used instead of any undefined macro, even when the `?` character is used in front of the macro name.
+
+Example:
+
+[source]
+----
+>>{?hoppala}<<
+{@define default=wupppss}{hoppala}
+>>{?hoppala}<<
+----
+
+Result:
+
+[source]
+----
+>><<
+wupppss
+>>wupppss<<
+
+----
+
 
 The parameters stand after the name of the macro separated by a separator character.
 The first non-whitespace character after the name of the macro is the separator character.
@@ -1384,6 +1408,7 @@ will result
 a is a
 a is b
 a is c
+wupppss
 
 ----
 
@@ -1566,7 +1591,7 @@ false=false              <- zero integer
 false=false               <- condition is empty string
 false=false          <- literal false
 true=true  <- condition is non-empty string
-False=False          <- separator character is 'f'
+False=fTrue         <- separator character is 'f'
                                           condition is 'alse ', non-empty string
 =        <- "else" part is missing, output is empty
 true=true                     <- non-zero integer
@@ -2486,7 +2511,7 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.6.3</version>
+    <version>1.6.4-SNAPSHOT</version>
     <executions>
         <execution>
             <id>execution</id>
@@ -2549,7 +2574,7 @@ If you use Maven, you can simply have
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
-    <version>1.6.3</version>
+    <version>1.6.4-SNAPSHOT</version>
 </dependency>
 ----
 

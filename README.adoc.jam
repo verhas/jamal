@@ -392,6 +392,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 ==== {%macroChapter%}`define`
 
 since 1.0.0 (core)
+since 1.6.4 `default` as special macro
 
 `define` defines a user-defined macro in the current scope.
 {%forMoreAboutEvaluationOrder%}
@@ -569,6 +570,21 @@ which will result:
 {%output%}
 
 NOTE: The <<try,`try`>> built-in macro is mainly for debugging purposes and returns the error message itself.
+
+In addition to having a `?` character or using the `try` macro, there is another possibility to avoid the error in case of an undefined macro.
+If the macro `default` is defined then it will be used instead of any undefined macro, even when the `?` character is used in front of the macro name.
+
+Example:
+
+{%sample/
+>>{?hoppala}<<
+{@define default=wupppss}{hoppala}
+>>{?hoppala}<<
+%}
+
+Result:
+
+{%output%}
 
 The parameters stand after the name of the macro separated by a separator character.
 The first non-whitespace character after the name of the macro is the separator character.
