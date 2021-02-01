@@ -1,0 +1,2 @@
+This is placeholder file that some test uses to locate the root folder of the project, so that the tests run on the
+CI server properly.
