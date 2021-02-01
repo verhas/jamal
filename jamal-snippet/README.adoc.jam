@@ -3,7 +3,6 @@
 {%@snip:collect src/main/java/%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
 {%#snip:define lastUpdated={%lastUpdated%}%}\
-Last updated: {%lastUpdated%}\
 
 {%@define standardInput= The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.%}
 
@@ -982,7 +981,7 @@ will result
 - ReplaceLines.java: 2,575 bytes
 - SkipLines.java: 2,100 bytes
 - Reflow.java: 1,742 bytes
-- Snippet.java: 1,059 bytes
+- Snippet.java: 1,088 bytes
 
 ----
 %}
@@ -1087,7 +1086,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-02-01 11:05:08
+2021-02-01 17:23:55
 
 ----
 %}

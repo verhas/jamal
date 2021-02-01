@@ -2,7 +2,7 @@
 {@import ../version.jim}
 {project jamal command line}
     {packaging jar}
-    {GAV :com.javax0.jamal:jamal-cmd:{VERSION}}
+    {GAV :{GROUPID}:jamal-cmd:{VERSION}}
     {parent ::jamal-parent}
     {description :Jamal macro library command line interface}
     {build|
@@ -53,7 +53,7 @@
 
     {dependencies#
         {#for MODULE in (engine,extensions)=
-            {dependency|com.javax0.jamal|jamal-MODULE}}
+            {dependency|{GROUPID}|jamal-MODULE}}
         {#for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

@@ -18,6 +18,7 @@
         <module>jamal-cmd</module>
         <module>jamal-snippet</module>
         <module>jamal-test</module>
+        <module>jamal-scriptbasic</module>
     </modules>
     <licenses>
         <license>
@@ -113,6 +114,7 @@
                                     --add-opens jamal.extensions/javax0.jamal.extensions=ALL-UNNAMED
                                     --add-opens jamal.snippet/javax0.jamal.snippet=ALL-UNNAMED
                                     --add-opens jamal.snippet/javax0.jamal.documentation=ALL-UNNAMED
+                                    --add-opens jamal.scriptbasic/javax0.jamal.scriptbasic=ALL-UNNAMED
                                 </argLine>
                     </configuration>
                 </plugin>
@@ -160,6 +162,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
+                <version>1.6.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-scriptbasic</artifactId>
                 <version>1.6.4-SNAPSHOT</version>
             </dependency>
             <dependency>

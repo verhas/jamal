@@ -1,28 +1,20 @@
-{@define RES=https://raw.githubusercontent.com/central7/pom/main}
-{#import {RES}/pom.jim}
-{#define PLUGIN={RES}/plugins}
-{#import {PLUGIN}/compiler.jim}
-{#import {PLUGIN}/source.jim}
-{#import {PLUGIN}/javadoc.jim}
+{#import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
 {project jamal scriptbasic}
-    {GAV :com.javax0.jamal:jamal-scriptbasic:1.0.0}
+    {GAV ::jamal-scriptbasic:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
     {description pom.xml support Jamal Import Resource}
-    {developer :Peter Verhas:peter@verhas.com}
-    {github :verhas:jamal}
-    {sourceEncoding UTF-8}
-    {license |The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
+
+    {build|{plugins| {@include ../plugins.jim}}}
+
     {dependencies
-      {dependency |com.javax0.jamal|jamal-testsupport|1.2.0|test}
-      {dependency :com.javax0.jamal:jamal-api:1.2.0}
+      {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
+      {dependency :{GROUPID}:jamal-api:{VERSION}}
+      {dependency :{GROUPID}:jamal-engine:{VERSION}:test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
       {dependency :com.scriptbasic:jscriptbasic:2.1.1}
     }
-    {build
-      {plugins
-        {compilerPlugin :3.8.1:{java 14}}
-        {sourcePlugin :3.0.1:{execution :attach-sources:jar}}
-        {javadocPlugin :3.1.1:{execution :attach-javadoc:jar}}
-      }
-    }
+
 {end project}

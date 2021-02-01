@@ -2,13 +2,13 @@
 {@import ../version.jim}
 {project jamal testsupport}
     {packaging jar}
-    {GAV :com.javax0.jamal:jamal-testsupport:{VERSION}}
+    {GAV :{GROUPID}:jamal-testsupport:{VERSION}}
     {parent ::jamal-parent}
     {description|Jamal macro library macro test supporting classes}
-    {@include ../plugins.jim}
+    {build|{plugins| {@include ../plugins.jim}}}
     {dependencies#
         {@for MODULE in (api,tools,engine)=
-            {dependency :com.javax0.jamal:jamal-MODULE}}
+            {dependency :{GROUPID}:jamal-MODULE}}
         {@for MODULE in (api,engine)=
             {dependency :org.junit.jupiter:junit-jupiter-MODULE::compile}}
     }

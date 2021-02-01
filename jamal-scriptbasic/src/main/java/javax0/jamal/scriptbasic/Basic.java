@@ -21,8 +21,4 @@ public class Basic implements Macro {
             throw new BadSyntax("Syntax exception in the BASIC code",e);
         }
     }
-
-    public String getId() {
-        return "scriptbasic";
-    }
 }

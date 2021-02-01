@@ -2,15 +2,15 @@
 {@import ../version.jim}
 {project jamal engine}
     {packaging jar}
-    {GAV :com.javax0.jamal:jamal-engine:{VERSION}}
+    {GAV :{GROUPID}:jamal-engine:{VERSION}}
     {parent ::jamal-parent}
     {description|Jamal macro library execution engine}
 
-    {@include ../plugins.jim}
+    {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies#
         {@for MODULE in (api,tools,core)=
-            {dependency|com.javax0.jamal|jamal-MODULE}}
+            {dependency|{GROUPID}|jamal-MODULE}}
         {@for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

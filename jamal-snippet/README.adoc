@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-Last updated: 2021-02-01 11:05:07
+
 
 
 Snippet handling macros help you to automatically include information from program source code into the documentation.
@@ -983,7 +983,7 @@ will result
 - ReplaceLines.java: 2,575 bytes
 - SkipLines.java: 2,100 bytes
 - Reflow.java: 1,742 bytes
-- Snippet.java: 1,059 bytes
+- Snippet.java: 1,088 bytes
 
 ----
 
@@ -1083,7 +1083,7 @@ wll result the output
 
 [source]
 ----
-2021-02-01 11:05:08
+2021-02-01 17:23:55
 
 ----
 

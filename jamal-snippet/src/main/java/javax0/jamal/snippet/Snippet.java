@@ -17,6 +17,7 @@ public class Snippet implements Macro {
         final var pos = in.getPosition();
         skipWhiteSpaces(in);
         final var id = fetchId(in);
+        skipWhiteSpaces(in);
         if (!firstCharIs(in, '=')) {
             throw new BadSyntax("snippet '" + id + "' has no '=' to body");
         }

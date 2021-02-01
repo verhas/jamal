@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 
 public class TestConvertReadme {
 
-    private static void generateReadmeAdoc(String directory) throws Exception{
-        final var in = FileTools.getInput(directory+"/README.adoc.jam");
+    private static void generateReadmeAdoc(String directory) throws Exception {
+        final var in = FileTools.getInput(directory + "/README.adoc.jam");
         final var processor = new Processor("{%", "%}");
         final var result = processor.process(in);
-        FileTools.writeFileContent(directory+"/README.adoc", result);
+        FileTools.writeFileContent(directory + "/README.adoc", result);
     }
 
     @Test
@@ -21,6 +21,11 @@ public class TestConvertReadme {
     @Test
     void convertExtensionReadme() throws Exception {
         generateReadmeAdoc("../jamal-extensions");
+    }
+
+    @Test
+    void convertScriptBasicReadme() throws Exception {
+        generateReadmeAdoc("../jamal-scriptbasic");
     }
 
     @Test

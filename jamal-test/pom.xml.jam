@@ -2,16 +2,16 @@
 {@import ../version.jim}
 {project jamal test}
     {packaging jar}
-    {GAV :com.javax0.jamal:jamal-test:{VERSION}}
+    {GAV :{GROUPID}:jamal-test:{VERSION}}
     {parent ::jamal-parent}
     {description|Jamal macro library integration tests}
 
-    {@include ../plugins.jim}
+    {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies#
         {@for MODULE in (api,tools,engine)=
-            {dependency|com.javax0.jamal|jamal-MODULE}}
-        {dependency|com.javax0.jamal|jamal-testsupport||test}
+            {dependency|{GROUPID}|jamal-MODULE}}
+        {dependency|{GROUPID}|jamal-testsupport||test}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

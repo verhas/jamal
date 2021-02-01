@@ -2,8 +2,8 @@
 {@import ../version.jim}
 {project jamal maven plugin}
     {packaging maven-plugin}
-    {GAV :com.javax0.jamal:jamal-maven-plugin:{VERSION}}
-    {parent ::jamal-parent}
+    {GAV ::jamal-maven-plugin:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
     {description :Jamal macro library maven plugin}
 
     {build|
@@ -24,15 +24,13 @@
                     </execution>
                 </executions>
             }
-            {plugin|{GAV :org.apache.maven.plugins:maven-surefire-plugin:}}
-            {plugin|{GAV :org.apache.maven.plugins:maven-source-plugin:}}
-            {plugin|{GAV :org.apache.maven.plugins:maven-javadoc-plugin:}}
+            {@import ../plugins.jim}
         }
     }
 
     {dependencies#
         {#for MODULE in (engine,extensions)=
-            {dependency|com.javax0.jamal|jamal-MODULE}}
+            {dependency|{GROUPID}|jamal-MODULE}}
         {#for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
         {dependency :org.apache.maven:maven-plugin-api:3.5.4}
