@@ -107,6 +107,7 @@
                         <argLine>
                                     --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
                                     --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
+                                    --add-opens jamal.api/javax0.jamal.api=ALL-UNNAMED
                                     --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
                                     --add-opens jamal.engine/javax0.jamal.engine.util=ALL-UNNAMED
                                     --add-opens jamal.testsupport/javax0.jamal.builtinstest=ALL-UNNAMED

@@ -5,5 +5,17 @@
     {GAV :{GROUPID}:jamal-api:{VERSION}}
     {parent ::jamal-parent:}
     {description|Jamal macro library API interfaces}
-    {build|{plugins| {@include ../plugins.jim}}}
+    {build|
+
+      <resources>
+        <resource>
+          <directory>src/main/resources</directory>
+          <filtering>true</filtering>
+        </resource>
+      </resources>
+        {plugins| {@include ../plugins.jim}}
+    }
+    {dependencies
+        {@for MODULE in (api,engine)=
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}}
 {end project}

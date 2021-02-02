@@ -95,6 +95,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<options,`options`>>
 .. <<try,`try`>>
 .. <<escape,`escape`>>
+.. <<require,`require`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<JamalENV,Jamal Environment Variables>>
 . <<httpsres,Resource Files and Web Resources>>
@@ -1013,7 +1014,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
 
 ----
 
@@ -2407,6 +2408,59 @@ They get protected using the `escape` macro automatically.
 This way it may happen that you see in the error output
 The macro
 
+[[require]]
+==== xxi. `require`
+since 1.6.4
+
+Since Jamal has many different versions, there may be a need to stick to a specific version.
+To do that, the built-in macro introduced in version 1.6.4 `require` can be used.
+The syntax of the macro is
+
+[source]
+----
+{@require [<|>|<=|>=|=] version }
+----
+
+The evaluation of this built-in macro will check that the currently running version of Jamal is
+
+* less-than
+
+* greater-than
+
+* lees-then or equal
+
+* greater than or equal, or
+
+* equal
+
+to/than the version specified after the comparison sign.
+The use of the comparison sign is optional.
+The default comparison is greater than or equal.
+
+If the comparison fails, the evaluation of the macro will result in an error.
+If the current version matches the requirement, then the result of the macro is an empty string.
+
+For example:
+
+[source]
+----
+{@try!{@require 6666.5.3}}
+----
+
+will result
+
+[source]
+----
+The current version 1.6.4-SNAPSHOT is older than the required version. It has to be newer.
+
+----
+
+
+You can specify only one version in a `require` macro.
+If you want to specify a minimum and a maximum version, you should use two `require` macros.
+
+Using a version before `1.6.4` in the `require` argument is an error.
+
 [[argsplit]]
 === 4. Standard Built-In Macro Argument Splitting
 
@@ -2419,7 +2473,7 @@ To manage the input and to easy the format analysis and interpretation of the in
 This class defines a method named `getParts()` which does a simple analysis.
 It splits up the input into an array of strings in a "standard" way.
 
-This method is not used currently by any of the core built-in macros, but it is available to use for extension.
+This method is used, for example, by the implementation of the `if` built-in macro.
 When there is no special requirement for a macro it is recommended to use this method.
 Using this method provides a concise way for macro argument separation.
 The way it splits the arguments is defined here so that the extension documentations can refer to this section.

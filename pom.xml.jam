@@ -54,6 +54,7 @@
                                 <argLine>
                                     {opens/tools/tools}
                                     --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
+                                    {opens/api/api}
                                     {opens/engine/engine}
                                     {opens/engine/engine.util}
                                     {opens/testsupport/builtinstest}

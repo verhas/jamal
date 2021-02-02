@@ -34,6 +34,23 @@ public class InputHandler {
     }
 
     /**
+     * @param s       a character sequence of which the start is checked
+     * @param strings the possible strings to check that the sequence starts with
+     * @return the index of the string that the sequence starts with or -1 if the sequence does not start with any of
+     * the strings
+     */
+    public static int startsWith(CharSequence s, String... strings) {
+        int i = 0;
+        for( final var string : strings){
+            if( s.length() >= string.length() && s.subSequence(0,string.length()).equals(string)){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    /**
      * Delete the start of the input. It is an error trying to delete more character than the number of characters there
      * are in the input.
      *
@@ -431,7 +448,7 @@ public class InputHandler {
 
     private static String[] skipEmptyFirst(String[] values) {
         if (values.length > 0 && values[0].length() == 0) {
-            return Arrays.copyOfRange(values,1,values.length);
+            return Arrays.copyOfRange(values, 1, values.length);
         } else {
             return values;
         }

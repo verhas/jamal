@@ -20,7 +20,9 @@ module jamal.core {
         javax0.jamal.builtins.Ident,
         javax0.jamal.builtins.Try,
         javax0.jamal.builtins.JShell,
-        javax0.jamal.builtins.Escape
+        javax0.jamal.builtins.Escape,
+        javax0.jamal.builtins.Require
+
         ;
 
     requires jamal.api;

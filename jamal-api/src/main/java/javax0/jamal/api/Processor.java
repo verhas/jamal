@@ -1,5 +1,8 @@
 package javax0.jamal.api;
 
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * The processor object that can be used to process an input to generate the Jamal output.
  */
@@ -99,5 +102,31 @@ public interface Processor extends AutoCloseable {
      */
     default void separators(String openMacro, String closeMacro) throws BadSyntax {
         getRegister().separators(openMacro, closeMacro);
+    }
+
+    /**
+     * Convert a Jamal version string to a {@link Runtime.Version}.
+     * <p>
+     * The method removes the trailing zero versions, because those are not allowed by the parsing of {@link
+     * Runtime.Version}.
+     *
+     * @param version the version string, probably from the macro argument {@code require}
+     * @return the parsed version, which can be compared to the current version
+     */
+    static Runtime.Version jamalVersion(final String version) {
+        return Runtime.Version.parse(version.replaceAll("(?:\\.0+){0,2}\\.0+(-|$)", "$1"));
+    }
+
+    /**
+     * @return the current Jamal version in the form of a {@link Runtime.Version}
+     */
+    static Runtime.Version jamalVersion() {
+        final var version = new Properties();
+        try {
+            version.load(Processor.class.getClassLoader().getResourceAsStream("version.properties"));
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Version information of Jamal cannot be identified.");
+        }
+        return jamalVersion(version.getProperty("version"));
     }
 }
