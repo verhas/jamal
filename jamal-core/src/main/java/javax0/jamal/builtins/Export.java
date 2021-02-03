@@ -3,14 +3,7 @@ package javax0.jamal.builtins;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * This macro exports one or more user defined macro to the scope that is one level higher. The names of the user
@@ -23,7 +16,7 @@ public class Export implements Macro {
     /**
      * {@inheritDoc}
      *
-     * <p> The input is treated as comman delimited list of the user defined names with optional spaces around the
+     * <p> The input is treated as comma delimited list of the user defined names with optional spaces around the
      * commas, for example:
      *
      * <pre>{@code
@@ -34,12 +27,7 @@ public class Export implements Macro {
      */
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        var params = Arrays.stream(input.toString()
-            .split(","))
-            .map(String::trim).collect(Collectors.toSet());
-        for (final var param : params) {
-            processor.getRegister().export(param);
-        }
+        processor.getRegister().export(input.toString().split(","));
         return "";
     }
 }

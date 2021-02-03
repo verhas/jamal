@@ -355,6 +355,7 @@ It is recommended to use the `comment` macro with the `@` starting character.
 In that case the content of the comment is not interpreted by Jamal.
 Use the `block` with `#` to have the content interpreted.
 Block should be used to enclose definitions to a scope level.
+Note that the result of the macro `{#block ... }` is an empty string.
 
 
 For more about definition scopes and exporting, read the section about <<export,`export`>>.
@@ -367,7 +368,7 @@ In that section we discuss the evaluation order of the macros in great detail.
 since 1.0.0 (core)
 
 The macros `begin` and `end` start and close a local definition scope.
-This is similar as using a `{#block ... }` macro to create a new scope for the evaluation of the macros inside it.
+This is similar as using a `{#ident ... }` macro to create a new scope for the evaluation of the macros inside it.
 The text between the `{@begin}` and `{@end}` will be evaluated in a new scope.
 Any user defined macro in this scope is going to be local, unless exported or has a `:` in the name.
 

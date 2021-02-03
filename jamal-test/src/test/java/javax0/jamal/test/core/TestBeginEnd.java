@@ -6,7 +6,15 @@ import org.junit.jupiter.api.Test;
 public class TestBeginEnd {
     @Test
     void testGoodOne() throws Exception {
-        TestThat.theInput("{@define a=1}{a}{@begin azaza}{a}{@define a=2}{a}{@end azaza}{a}").results("1121");
+        TestThat.theInput("{@define a=1}" +
+            "{a}" + // this is 1 as defined
+            "{@begin azaza}" +
+            "{a}" + // a new scope started but the definition was not yet overwritten, it is still 1
+            "{@define a=2}" +
+            "{a}" + // value overwritten inside the scope, it is 2
+            "{@end azaza}" +
+            "{a}" // scope ended, orignal value was restored, it is 1
+        ).results("1121");
     }
 
     @Test

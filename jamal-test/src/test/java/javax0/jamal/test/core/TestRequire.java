@@ -8,6 +8,28 @@ import org.junit.jupiter.api.Test;
 public class TestRequire {
 
     @Test
+    @DisplayName("Test that the 'require' macro throws an exception if there are no arguments")
+    void testRequireEmptyStringThrowsException() throws Exception {
+        TestThat.theInput("{@require}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("Test that the 'require' macro throws an exception if there is a unusable comparison")
+    void testRequireEmptyBadComparisonThrowsException() throws Exception {
+        TestThat.theInput("{@require != 1.6.7}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("Test that the 'require' macro throws an exception if there is no version after the comparison sign")
+    void testRequireWoVersionThrowsException() throws Exception {
+        TestThat.theInput("{@require <}").throwsBadSyntax();
+        TestThat.theInput("{@require <=}").throwsBadSyntax();
+        TestThat.theInput("{@require >=}").throwsBadSyntax();
+        TestThat.theInput("{@require >}").throwsBadSyntax();
+        TestThat.theInput("{@require =}").throwsBadSyntax();
+    }
+
+    @Test
     @DisplayName("Test that requiring an old version throws BadSyntax")
     void testOldVersion() throws Exception {
         TestThat.theInput("{@require 1.5.3}").throwsBadSyntax();

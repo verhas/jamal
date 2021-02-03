@@ -27,8 +27,8 @@ public interface MacroRegister extends Delimiters {
      */
     <T extends Identified> Optional<T> getUserDefined(String id);
 
-    default <T extends Identified> Optional<T> getUserDefined(String id, String def){
-        return (Optional<T>)getUserDefined(id).or( () -> getUserDefined(def));
+    default <T extends Identified> Optional<T> getUserDefined(String id, String def) {
+        return (Optional<T>) getUserDefined(id).or(() -> getUserDefined(def));
     }
 
     /**
@@ -84,9 +84,22 @@ public interface MacroRegister extends Delimiters {
      * exported into the scope of the environment that is surrounding the macro definition.
      *
      * @param id the name/identifier of the user defined macro that is to be exported.
-     * @throws BadSyntax when the syntax is bad
+     * @throws BadSyntax when there is some error exporting
      */
     void export(String id) throws BadSyntax;
+
+    /**
+     * Export all the user defined macros defined by the array {@code ids}
+     *
+     * @param ids the array of the identifiers of the user defined macros to export. Also allow leading and trailing
+     *            spaces.
+     * @throws BadSyntax when there is some error exporting
+     */
+    default void export(String... ids) throws BadSyntax {
+        for (final var id : ids) {
+            export(id.trim());
+        }
+    }
 
     /**
      * Start a new macro evaluation level.

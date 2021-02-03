@@ -44,8 +44,12 @@ public class Require implements Macro {
         } else {
             comparing = Prefix.GREATER_OR_EQUAL;
         }
-
-        final var requiredVersion = Processor.jamalVersion(in.toString().trim());
+        final Runtime.Version requiredVersion;
+        try {
+            requiredVersion = Processor.jamalVersion(in.toString().trim());
+        } catch (Exception e) {
+            throw new BadSyntaxAt("The string '" + in.toString().trim() + "' cannot be used as a version.", in.getPosition(), e);
+        }
         if (requiredVersion.compareTo(Processor.jamalVersion("1.6.3")) <= 0) {
             throw new BadSyntaxAt("Required version is older than 1.6.3, which is invalid.", in.getPosition());
         }
