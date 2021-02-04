@@ -1,4 +1,13 @@
+{%@comment
+
+This is the source fiel for the README.adoc in the jamal-test module.
+This file is processed during unit test by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
+
+%}
 == Jamal Test Project
 
-This module contains integration tests for Jamal
+This module contains integration tests for Jamal core built-in macros and also tests that serve documentation purposes.
+{%@define root=..%}{%@define directoryFormat=`$name`%}
+The directory {%@directory jamal-test/src/test/java/javax0/jamal/test/core%} contain the tests.
+The directory {%@directory jamal-test/src/test/java/javax0/jamal/test/extra%} contain extra tests for the core built-in macros.
 

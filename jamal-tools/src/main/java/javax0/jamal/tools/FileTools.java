@@ -112,11 +112,11 @@ public class FileTools {
      * </ul>
      * <p>
      * or starts with an alpha character and a {@code :} (DOS drive letter, like {@code C:},
-     *
+     * <p>
      * or starts with the resource prefix {@code res:},
-     *
+     * <p>
      * or starts with the HTTPS prefix {@code https:},
-     *
+     * <p>
      * then the file name is absolute and it is returned as it is.
      * <p>
      * Otherwise the string in the parameter {@code reference} is used as it was a file name (the file does not need to
@@ -133,10 +133,10 @@ public class FileTools {
         final var unixedReference = reference == null ? "." : reference.replaceAll("\\\\", "/");
         final String prefix;
         final String unprefixedReference;
-        if( unixedReference.startsWith(HTTPS_PREFIX)){
+        if (unixedReference.startsWith(HTTPS_PREFIX)) {
             unprefixedReference = unixedReference.substring((HTTPS_PREFIX).length());
             prefix = HTTPS_PREFIX;
-        }else{
+        } else {
             prefix = "";
             unprefixedReference = unixedReference;
         }
@@ -169,4 +169,15 @@ public class FileTools {
                 Character.isAlphabetic(fileName.charAt(0))
                 && fileName.charAt(1) == ':');
     }
+
+    /**
+     * Add a trailing {@code /} at the end of the directory name if it is not there yet.
+     *
+     * @param dir the directory name
+     * @return the name of the directory guaranteed having a tailing {@code /} at the end
+     */
+    public static String trailDirectory(final String dir) {
+        return dir.endsWith("/") ? dir : dir + "/";
+    }
+
 }

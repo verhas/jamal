@@ -11,6 +11,7 @@ import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.PlaceHolders;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * Inner classes implement macros that ease the handling of document references to files and directories.
@@ -26,9 +27,9 @@ public class FilesMacro {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var reader = MacroReader.macro(processor);
             final var format = reader.readValue("directoryFormat").orElse("$name");
-            final var root = reader.readValue("root").orElse("");
+            final var root = reader.readValue("root").map(FileTools::trailDirectory).orElse("");
             final var name = in.toString().trim();
-            final var dirName = FileTools.absolute(in.getReference(), root + name);
+            final var dirName = Paths.get(FileTools.absolute(in.getReference(), root + name)).normalize().toString();
             final var dir = new File(dirName.length() > 0 ? dirName : ".");
             if (!dir.exists()) {
                 throw new BadSyntaxAt("The directory '" + dirName + "' does not exist.", in.getPosition());

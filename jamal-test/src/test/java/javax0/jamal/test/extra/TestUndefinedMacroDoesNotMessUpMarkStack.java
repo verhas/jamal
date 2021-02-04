@@ -1,9 +1,13 @@
-package javax0.jamal.test.core;
+package javax0.jamal.test.extra;
 
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * These tests check that when a user defined macro is not defined and this error happens inside an `try` macro then the
+ * push/pop stack of the scopes do not get messed up.
+ */
 public class TestUndefinedMacroDoesNotMessUpMarkStack {
 
     @Test

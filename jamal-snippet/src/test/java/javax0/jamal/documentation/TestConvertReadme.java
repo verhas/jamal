@@ -6,30 +6,49 @@ import org.junit.jupiter.api.Test;
 
 public class TestConvertReadme {
 
-    private static void generateReadmeAdoc(String directory) throws Exception {
-        final var in = FileTools.getInput(directory + "/README.adoc.jam");
+    private static void generateAdoc(String directory) throws Exception {
+        generateAdoc(directory, "README");
+    }
+
+    private static void generateAdoc(final String directory, final String fileName) throws Exception {
+        final var in = FileTools.getInput(directory + "/" + fileName + ".adoc.jam");
         final var processor = new Processor("{%", "%}");
         final var result = processor.process(in);
-        FileTools.writeFileContent(directory + "/README.adoc", result);
+        FileTools.writeFileContent(directory + "/" + fileName + ".adoc", result);
+    }
+
+    @Test
+    void convertWritingBuiltIn() throws Exception {
+        generateAdoc("..", "BUILTIN");
+    }
+
+    @Test
+    void convertGlossary() throws Exception {
+        generateAdoc("..", "GLOSSARY");
     }
 
     @Test
     void convertTopReadme() throws Exception {
-        generateReadmeAdoc("..");
+        generateAdoc("..");
     }
 
     @Test
     void convertExtensionReadme() throws Exception {
-        generateReadmeAdoc("../jamal-extensions");
+        generateAdoc("../jamal-extensions");
     }
 
     @Test
     void convertScriptBasicReadme() throws Exception {
-        generateReadmeAdoc("../jamal-scriptbasic");
+        generateAdoc("../jamal-scriptbasic");
+    }
+
+    @Test
+    void convertTestReadme() throws Exception {
+        generateAdoc("../jamal-test");
     }
 
     @Test
     void convertSnippetReadme() throws Exception {
-        generateReadmeAdoc(".");
+        generateAdoc(".");
     }
 }

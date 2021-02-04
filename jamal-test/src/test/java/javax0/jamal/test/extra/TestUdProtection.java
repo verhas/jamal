@@ -1,4 +1,4 @@
-package javax0.jamal.test.core;
+package javax0.jamal.test.extra;
 
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Test;

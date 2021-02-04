@@ -963,7 +963,7 @@ will result
 - DateMacro.java: 659 bytes
 - Format.java: 2,557 bytes
 - Update.java: 3,509 bytes
-- FilesMacro.java: 4,372 bytes
+- FilesMacro.java: 4,465 bytes
 - Collect.java: 4,587 bytes
 - TrimLines.java: 2,811 bytes
 - Replace.java: 1,686 bytes
@@ -977,7 +977,7 @@ will result
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,870 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 4,854 bytes
+- Java.java: 5,806 bytes
 - ReplaceLines.java: 2,575 bytes
 - SkipLines.java: 2,100 bytes
 - Reflow.java: 1,742 bytes
@@ -1086,7 +1086,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-02-03 18:34:50
+2021-02-04 15:27:05
 
 ----
 %}
@@ -1322,6 +1322,9 @@ evaluate
 
 ----
 %}
+
+The macro can have two argument, using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>> or one specifying the full name of the method.
+The full name of the method is the full name of the class and the same of the method separated by either a `#` character or by `::` characters.
 
 The format string can be any string with `$` prefixed placeholders.
 The placeholders that the macro handles are:

@@ -64,17 +64,49 @@ class ArgumentHandler {
                     return adjustedValues;
                 }
             } else {
-                var badSyntax = new BadSyntax(String.format("Macro '%s' needs %d arguments and got %d",
-                    owner.getId(),
-                    parameters.length,
-                    actualValues.length));
-                for (final var actual : actualValues) {
-                    badSyntax.parameter(actual);
+                if (isFantomParameter(actualValues)) {
+                    return new String[0];
+                } else {
+                    var badSyntax = new BadSyntax(String.format("Macro '%s' needs %d arguments and got %d",
+                        owner.getId(),
+                        parameters.length,
+                        actualValues.length));
+                    for (final var actual : actualValues) {
+                        badSyntax.parameter(actual);
+                    }
+                    throw badSyntax;
                 }
-                throw badSyntax;
             }
         }
         return actualValues;
+    }
+
+    /**
+     * When a macro is invoked and there are macros in the parameters of the macro that all valuate to zero string, then
+     * it is parsed as a single space only parameter, but it is not a real parameter. For example
+     *
+     * <pre>{@code
+     *      [@define a=[b]]
+     *      [a [@define b=this is b]]
+     * }</pre>
+     * <p>
+     * Sees that there is one parameter, {@code [@define b=this is b]} but this evaluates to an empty string so it is
+     * not really a parameter. It is a phantom parameter. When the user defined macro does not expect any parameter, and
+     * it gets one empty string, or space only parameter then this will be treated as okay: no parameter.
+     *
+     * @param actualValues the actual parameter values
+     * @return {@code true} if the one parameter is not a fantom parameter
+     */
+    private boolean isFantomParameter(String[] actualValues) {
+        if (parameters.length != 0 || actualValues.length != 1) {
+            return false;
+        }
+        for (final var ch : actualValues[0].toCharArray()) {
+            if (!Character.isWhitespace(ch)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

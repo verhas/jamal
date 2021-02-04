@@ -1,0 +1,58 @@
+\ == Jamal Glossary
+
+This glossary collects the terminologies that we use in Jamal.
+
+Macro Start String:: The string that starts a macro.
+It is a single character `{` usually, but it can be any character length.
+When Jamal is embedded it has to be defined when the Jamal processor is created.
+Theis string, along with the __Macro Closing String__ can dynamically be redefined using the __core__ __built-in__ macro `sep`.
+
+Macro End String:: The string that ends a macro.
+It is a single character `}` usually, but it can be any character length.
+When Jamal is embedded it has to be defined when the Jamal processor is created.
+Theis string, along with the __Macro Start String__ can dynamically be redefined using the __core__ __built-in__ macro `sep`.
+
+Built-in:: A built-in macro is a macro, which is implemented in Java.
+The built-in macro is the opposite of a __user-defined__ macro.
+Built-in macros are defined in the __core__ package of Jamal and in other packages.
+
+Core:: The core package defines __built-in__ macros, which are essential for the use of Jamal.
+Some of these macros are directly tied to the source parsing process.
+For example the macro `escape` and `verbatim` cannot be redefined.
+`escape` relies on a special parsing implemented into the execution __engine__ of Jamal.
+`verbatim` is implemented in the __engine__ itself, and that way it only looks like as a macro.
+
+Engine:: Engine is the Java module and program code that executes the Jamal processor.
+
+Scope:: When Jamal executes macros have a certain scope of validity.
+For example including a file into a Jamal macro source will process that file in a new scope.
+This new scope is inside the scope of the file that includes the other.
+The Jamal code can use the macro definitions that are in the current scope or in any upper scope.
+When a scope ends the definitions that belong to the scope became stale and not usable any more.
+It is not possible to reopen a closed scope.
+When a scope ends the next scope above it will become the actual scope.
+Scopes are stacked into each other.
+A scope can be
+
+* *active* the scope that is currently active.
+All macro definitions are created in this scope.
+
+* *locked* when the macros in the scope are available, but new macros are already defined in the scope above.
+A scope gets into the locked state when the scope was created to evaluate the parameters of a user defined macro.
+The macros defined here are also available for the evaluation of the macro itself, but any new macr definition will go to the scope above.
+
+* *ended* when the scope has ended, the references to any macro are deleted and will be GC-ed.
+
+* *export* scope is the scope one level above the current scope.
+When a macro defined in the _active_ scope is exported, the macro is moved to this scope.
+
+* *global* is the top level scope.
+It is opened automatically when the processor starts.
+Global macros are defined in this scope.
+
+
+Inner Scope Dependent:: A built-in macro is inner scope dependent if it has to execute in the scope that was opened when the evaluation of the parameter of the macro started.
+Inner scope dependent built-in macros have to implement the interface `javax0.jamal.api.InnerScopeDependent`.
+Inner scope dependent macros can define user defined macros, but the scope of these macros ends when the method `evaluate()` returns.
+If an inner scope dependent built-in macro wants to define a macro, which is usable in the scope where the macro is used, it has to export the user defined macro.
+

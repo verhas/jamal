@@ -53,12 +53,33 @@ public class Java {
             final var pos = in.getPosition();
             final var reader = MacroReader.macro(processor);
             final var format = reader.readValue("methodFormat").orElse("$name");
-            final var parts = InputHandler.getParts(in, 2);
-            if (parts.length < 2) {
-                throw new BadSyntaxAt("Macro '" + getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in.toString() + "'", in.getPosition());
+            final var trimmed = in.toString().trim();
+            final int methodStart, classEnd;
+            final String className, methodName;
+            if (trimmed.length() > 0 && Character.isAlphabetic(trimmed.charAt(0))) {
+                int j = trimmed.indexOf('#');
+                if (j != -1) {
+                    methodStart = j + 1;
+                    classEnd = j;
+                } else {
+                    j = trimmed.indexOf("::");
+                    if (j != -1) {
+                        methodStart = j + 2;
+                        classEnd = j;
+                    } else {
+                        throw new BadSyntaxAt("Macro '" + getId() + "' needs a class and a method name separated by '#' or '::'", in.getPosition());
+                    }
+                }
+                className = trimmed.substring(0, classEnd);
+                methodName = trimmed.substring(methodStart);
+            } else {
+                final var parts = InputHandler.getParts(in, 2);
+                if (parts.length < 2) {
+                    throw new BadSyntaxAt("Macro '" + getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in.toString() + "'", in.getPosition());
+                }
+                className = parts[0];
+                methodName = parts[1];
             }
-            final var className = parts[0];
-            final var methodName = parts[1];
             final Class klass;
             try {
                 klass = Class.forName(className);
