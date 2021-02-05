@@ -1,8 +1,301 @@
+== Writing Built-In Macros for Jamal
 {%@comment This is the ASCIIDOC version of the BUILTIN document.
 The source of the file is the BUILTIN.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
 
 %}{%@import readmemacros.jim%}\
+{%@snip:collect jamal-test/src/test/java/javax0/jamal/test/examples%}\
+{%@snip:collect jamal-test/src/main/java/%}\
+{%@snip:collect jamal-api/src/main/java/%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-== Writing Built-In Macros for Jamal
+
+
+Built-in macros in Jamal are the macros, which are implemented using Java code.
+In this document we will describe how you can write built-in macros for your specific application.
+The document assumes that you are familiar with Jamal macro structure and you know
+
+* the difference between built-in and user defined macros in the Jamal file,
+
+* how to define user defined macros
+
+* what it means when a built-in macro uses the `@` character or the `#` in front of the macro name
+
+* what is verbatim
+
+* the macro evaluation order and how it can be modified using
+
+* the `ident` and `eval` macros, and also the `!` and the backtick characters in front of the macros
+
+* what are the different macro scopes
+
+* how to export user defined macros to a higher scope
+
+* how user defined macros arguments are separated and parsed
+
+* generally, how to use Jamal.
+
+[[helloworld]]
+=== Creating a "Hello World" Macro
+
+A "Hello, World!" example built-in macro is extremely simple.
+You need the following dependency in your project:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-api</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+
+In later versions, when we will do a bit more in our macros we will also need the dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-tools</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+This library has a transitive dependency to the library `jamal.api` so there is no need to specify both.
+If you plan to use Java Platform Module System (JPMS) then you also have to add the
+
+[source,java]
+----
+    requires jamal.api;
+    requires jamal.tools;
+----
+
+directoves to your `module-info.java` file.
+Having the project set up that way we can create our first nuilt-in macro.
+The whole class is included in this document:
+
+[source,java]
+----
+{%@snip HelloWorld
+package javax0.jamal.test.examples;
+
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
+
+public class HelloWorld implements Macro {
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        return "Hello, World!";
+    }
+}
+%}
+----
+
+{%#define MACRO_INTERFACE={%#java:class {%#define classFormat=`$simpleName`%}javax0.jamal.api.Macro%}%}
+{%@define classFormat=`$simpleName`%}{%@define methodFormat=`$name()`%}
+The class has to implement the interface {%MACRO_INTERFACE%}.
+This interface, as well as the other interfaces and classes imported are defined in the package {%#java:class {%@define classFormat=`$packageName`%}javax0.jamal.api.Macro%}.
+This interface requires us to create one method {%@java:method javax0.jamal.api.Macro#evaluate%}.
+This method gets the input text of the macro, a reference to the processor executing Jamal and it has to return a `String` that will be the content of the macro after evaluation.
+In the example case we do not read the input and we do not use any service the processor can provide.
+We will see in later chapters how to read and parse the input and also how to use the processor to access the executing environment.
+
+The last step to use this macro is to create a text file and process it using Jamal.
+
+The simplest way is creating a unit test to use the classes from the `jamal-testsupport` library.
+It is recommended to use this package and to create unit tests for your macros.
+
+To do that you have to add the dependency to your `pom.xml` file:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-testsupport</artifactId>
+    <version>{%VERSION%}</version>
+    <scope>test</scope>
+</dependency>
+----
+
+Note that the scope of this dependency is `test` because these tools are needed only during unit test running.
+You may also need to add a JVM command line parameter via the surefire plugin configuration, like the followings:
+
+[source,xml]
+----
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version> ... actual version of the surefire plugin ... </version>
+    <configuration>
+        <argLine>
+            --add-opens yourModuleName/packageName=ALL-UNNAMED
+        </argLine>
+    </configuration>
+</plugin>
+----
+
+This is needed if your library uses JPMS.
+When the tests are running they need access to your code using reflection and therefore you need to "opens" the package.
+When you run the tests in the IDE it may ignore the JPMS settings and run your code as a plain library.
+In that case the fact that the package is not open for the reflective access is not important.
+
+[NOTE]
+====
+JPMS is complex and needs much more explanation than what can fit here.
+Here I describe a few hints only, but it does not intend to teach you JPMS.
+If you do not understand how JPMS works and how to use it you can get into trouble using it.
+In that case you have two choices.
+
+. Ignore the possibility to use JPMS, and create your macros as plan old classes in a plain old library, which will be available for Jamal from the `classpath`.
+
+. Learn JPMS from excellent book of Nicolai: https://www.manning.com/books/the-java-module-system
+
+I recommend the second.
+====
+
+Our test will be the following:
+
+[source,java]
+----
+{%@snip TestHelloWorld_1
+    @Test
+    @DisplayName("Test that the HelloWorld built-in macro works")
+    void macroWorks() throws Exception {
+        TestThat.theInput(
+            "{@use javax0.jamal.test.examples.HelloWorld}" +
+                "{@helloworld}"
+        ).results("Hello, World!");
+    }
+%}
+----
+
+The first line declares the class as a macro.
+The second line uses the macro, and the output will be the `Hello, World!`.
+
+With this we are essentially ready with the hello world macro application.
+There is one more topic, though, which is worth discussing here.
+
+In the sample code we had to declare the class in the Jamal file as a macro to be used.
+This is one of the three possibilities to make a Java class available for the Jamal code.
+The second is to register the class for the standard Java service loader.
+
+When a Jamal processor object is created it calls the Java service loader to find all the classes, which implement the {%MACRO_INTERFACE%} interface.
+The returned list of instances are registered into the Jamal global macro registry and are available to be used for the Jamal processing.
+
+The Java service loader can find a class if it is
+
+* declared in the `module-info.java` module descriptor file as one providing the {%#java:class {%@define classFormat=`$name`%}javax0.jamal.api.Macro%} interface, and/or
+
+{%@define METAINFSERVICEFILE=
+{%#file {%@define fileFormat=`$name`%}{%@define root=jamal-snippet%}/src/main/resources/META-INF/services/javax0.jamal.api.Macro%}%}
+* the full class name is listed in the file {%METAINFSERVICEFILE%}
+
+I recommend that you do both in case you use JPMS, because it will help test running inside the IDE, which may not use JPMS.
+Having the class names listed in the {%METAINFSERVICEFILE%} file may also help applications that use your library as a normal JAR file and not as a module.
+
+The module file will look something like this:
+
+[source,java]
+----
+{%@snip module_declaration
+module jamal.test {
+    requires jamal.api;
+    provides javax0.jamal.api.Macro with HelloWorld, Hello;
+}
+%}
+----
+
+Our module needs the `jamal.api` module, so we `require` it and we provide the {%MACRO_INTERFACE%} implementation.
+After this out unit test will be the following:
+
+[source,java]
+----
+{%@snip TestHelloWorld_2
+    @Test
+    @DisplayName("Test that the HelloWorld built-in macro is registered")
+    void macroRegisteredGLobal() throws Exception {
+        TestThat.theInput(
+            "{@helloworld}"
+        ).results("Hello, World!");
+    }
+
+%}
+----
+
+Now we do not need to declare the class in the Jamal file, it is available in the global scope.
+
+There is a third option to register a macro in the Jama processor.
+The processor has an API and it is possible to register a user defined or a built-in macro programmatically.
+
+=== Name of a Built-In Macro
+
+In the <<helloworld,Creating a "Hello World" Macro>> chapter we did not discuss how the name of the macro is created.
+We just created a class implementing an interface and then magically it was usable in the Jama source in the unit test with a reasonable name.
+There is no magic.
+
+The name of the macro can be defined in the macro `use` when a macro class is explicitly declared for use.
+The syntax of the `use` macro is
+
+    use [global] fully_class_name [ as macroname]
+
+The parts between `[` and `]` are optional.
+
+When the macro is registered via the service loader this option is not available.
+In this case the name of the macro will be the string, which is returned by the method {%@java:method javax0.jamal.api.Macro#getId%}.
+This method is also part of the {%MACRO_INTERFACE%} interface, and it has a `default` implementations.
+
+[source,java]
+----
+{%#trimLines
+{%@snip getId
+    default String getId() {
+        return this.getClass().getSimpleName().toLowerCase();
+    }
+%}
+%}
+----
+
+In out case the name of the class was `HelloWorld` which converts to `helloworld` all lower case as a macro name.
+You are free to override the implementation of the default method, and there are real examples for that.
+For example the `jamal-snippet` library macros `trimLines`, or `killLines` override the method {%@java:method javax0.jamal.api.Macro#getId%}.
+
+=== Handling the Input of the Macro
+
+In the `HelloWorld` macro we totally ignored the input of the macro.
+There are some built-in macros, like `comment` or `block` which deliberately do this.
+It is not a good practice unless it has a purpose.
+
+If we write another test
+
+[source,java]
+____
+{%#trimLines
+{%@snip TestHelloWorld_3
+    @Test
+    @DisplayName("Test that the HelloWorld built-in macro works")
+    void macroIgnoresInput() throws Exception {
+        TestThat.theInput(
+            "{@helloworld the input is totally ignored}"
+        ).results("Hello, World!");
+    }
+%}
+%}
+____
+
+=== General Structure of the {%@define methodFormat=`$name()`%}{%@java:method javax0.jamal.api.Macro::evaluate%} Method
+
+=== Creating User Defined Macros
+
+=== Creating Your Own User Defined Macro Implementation
+
+=== Strategies to Register Built-In Macros
+
+In this chapter I will explain the advantages, and the disadvantages of the two strategies that you can follow to register your built-in macros.
+It is a more theoretical chapter with less example code.
+You can skip this section and return to it later.
+
+{%@snip:update%}
+

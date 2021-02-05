@@ -741,7 +741,7 @@ However, during the definition, it is in the local scope of the `comment` macro 
 Therefore `y` will be `here we are local`.
 That is also because  `y` is defined using the `#` character before the built-in macro keyword `define` and thus the content of the definition is evaluated before defining the global `y`.
 
-It may happen that the macro opening and closing strins are different when the macro is defined and when used.
+It may happen that the macro opening and closing strings are different when the macro is defined and when used.
 In a situation like that the macro evaluation replaces the macro opening and closing strings in the macro definition to the actual macro opening and closing strings.
 It can be prevented using `:=` instead of a `=` between the name, parameter list and the body of the macro.
 

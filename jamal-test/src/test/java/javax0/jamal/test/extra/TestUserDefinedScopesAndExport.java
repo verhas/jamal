@@ -12,15 +12,31 @@ public class TestUserDefinedScopesAndExport {
 
     @Test
     @DisplayName("Macro defined in a user defined macro parameter can be used in the macro content")
-    void testUserDefinedScopeLocking() throws Exception{
+    void testUserDefinedScopeLocking() throws Exception {
         TestThat.theInput(
             "{@define a={b}}{a {@define b=this is b}}"
         ).results("this is b");
     }
 
     @Test
+    @DisplayName("Macro defined in a user defined macro parameter can be used in the macro content for macro with one argument")
+    void testUserDefinedScopeLockingOneArgument() throws Exception {
+        TestThat.theInput(
+            "{@define a($x)={$x}}{a {@define b=this is b}b}"
+        ).results("this is b");
+    }
+
+    @Test
+    @DisplayName("Macro defined in a user defined macro parameter can be used in the macro content for macro with two arguments")
+    void testUserDefinedScopeLockingTwoArgumentas() throws Exception {
+        TestThat.theInput(
+            "{@define a($x,$y)={$x$y}}{a /{@define bd=this is b}b/d}"
+        ).results("this is b");
+    }
+
+    @Test
     @DisplayName("Macro defined in a user defined macro parameter is not visible outside")
-    void testUserDefinedScopeLockingNonExport() throws Exception{
+    void testUserDefinedScopeLockingNonExport() throws Exception {
         TestThat.theInput(
             "{@define a={b}}{a {@define b=this is b}}{b}"
         ).throwsBadSyntax();
@@ -28,7 +44,7 @@ public class TestUserDefinedScopesAndExport {
 
     @Test
     @DisplayName("Macro defined in a user defined macro parameter is visible outside when exported")
-    void testUserDefinedScopeLockingExport() throws Exception{
+    void testUserDefinedScopeLockingExport() throws Exception {
         TestThat.theInput(
             "{@define a={b}}{a {@define b=this is b}{@export b}} {b}"
         ).results("this is b this is b");

@@ -49,7 +49,9 @@ public interface Macro {
      *
      * @return the id/name of the macro
      */
+    // snippet getId
     default String getId() {
         return this.getClass().getSimpleName().toLowerCase();
     }
+    // end snippet
 }
