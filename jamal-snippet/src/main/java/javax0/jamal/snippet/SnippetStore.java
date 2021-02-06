@@ -16,10 +16,12 @@ public class SnippetStore implements Identified {
     private static class Snippet {
         final String text;
         final Position pos;
+        final BadSyntaxAt exception;
 
-        private Snippet(String text, Position pos) {
+        private Snippet(String text, Position pos, BadSyntaxAt exception) {
             this.text = text;
             this.pos = pos;
+            this.exception = exception;
         }
     }
 
@@ -64,11 +66,57 @@ public class SnippetStore implements Identified {
      * @throws BadSyntax when a snippet is redefined
      */
     public void snippet(String id, String snippet, Position pos) throws BadSyntax {
-        if (snippets.containsKey(id)) {
-            final var snip = snippets.get(id);
-            throw new BadSyntaxAt("Snippet '" + id + "' is already defined in " + snip.pos.file + ":" + snip.pos.line, pos);
+        snippet(id, snippet, pos, null);
+    }
+
+    /**
+     * Add a new snippet to the snippet store.
+     * <p>
+     * The snippet store takes into account the fact that ill-formed snippets can be found in some source files. The
+     * identification of the snippet start and snippet end is very liberal in order to let different source files to
+     * have a snippet start and end lines with different type of comment lines. Java has one liner comments, XML has
+     * other tye of comments. The collection process thinks that a snippet starts if there is a line that contains the
+     * word {@code snippet} literally and there is an identifier after it. The end of the snippet is recognized by any
+     * line that contains the words {@code end} and {@code snippet} with one or more spaces between them.
+     * <p>
+     * Because of this liberal approach it may happen, as it happens even in this very JavaDoc comment that the
+     * collection process finds a snippet start, but does not find the end of a snippet. This should not be a problem.
+     * Jamal snippet handler should handle this case, and it does it.
+     * <p>
+     * When a snippet if found but there is some error during the collection (a.k.a. there was no 'end snippet' till the
+     * end of the file) then the collection process also stores the snippet along with an exception. Using such snippet
+     * will throw an exception using the exception from the collection as a cause.
+     * <p>
+     * If there was a collected snippet, but it had an error, and the snippet we want to define now does not have an
+     * exception attached to it, then just replace the old erroneous.
+     * <p>
+     * If there was a collected snippet, but it had an error, and the snippet we want to define now is also erroneous,
+     * then we replace the old one with the new adding the exception of the old one to the current one as suppressed
+     * exception.
+     * <p>
+     * If there was a correct snippet with the given id already defined and the actual snippet is also okay, then a
+     * snippet is double defined. In this case the method throws an exception.
+     *
+     * @param id                  the identifier (name) of the snippet
+     * @param snippet             the snippet
+     * @param pos                 is the position of the snippet, used for error reporting in case a snippet is defined
+     *                            twice
+     * @param collectionException is either {@code null} or an exception that was created during the collection of the
+     *                            snippet. This exception will only be used as a "cause" if the snippet is to be used.
+     * @throws BadSyntax when a snippet is redefined
+     */
+    public void snippet(String id, String snippet, Position pos, BadSyntaxAt collectionException) throws BadSyntax {
+        if (snippets.containsKey(id) && snippets.get(id).exception == null) {
+            if (collectionException == null) {
+                final var snip = snippets.get(id);
+                throw new BadSyntaxAt("Snippet '" + id + "' is already defined in " + snip.pos.file + ":" + snip.pos.line, pos);
+            } else {
+                collectionException.addSuppressed(snippets.get(id).exception);
+                snippets.put(id, new Snippet(snippet, pos, collectionException));
+            }
+        } else {
+            snippets.put(id, new Snippet(snippet, pos, collectionException));
         }
-        snippets.put(id, new Snippet(snippet, pos));
     }
 
     /**
@@ -82,14 +130,17 @@ public class SnippetStore implements Identified {
         if (!snippets.containsKey(id)) {
             throw new BadSyntax("Snippet '" + id + "' is not defined");
         }
-        return snippets.get(id).text;
+        final var snippet = snippets.get(id);
+        if (snippet.exception != null) {
+            throw new BadSyntax("There was an exception during the collection of the snippet '" + id + "'", snippet.exception);
+        }
+        return snippet.text;
     }
 
     /**
      * Clear the snippet store deleting all snippets that were collected.
      */
-    public void clear(){
+    public void clear() {
         snippets.clear();
     }
 }
-//end snippet

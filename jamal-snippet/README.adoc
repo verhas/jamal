@@ -966,14 +966,14 @@ will result
 - Format.java: 2,557 bytes
 - Update.java: 3,509 bytes
 - FilesMacro.java: 4,465 bytes
-- Collect.java: 4,956 bytes
-- TrimLines.java: 2,824 bytes
+- Collect.java: 5,030 bytes
+- TrimLines.java: 2,810 bytes
 - Replace.java: 1,686 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
 - Clear.java: 451 bytes
 - KillLines.java: 1,525 bytes
-- SnippetStore.java: 3,112 bytes
+- SnippetStore.java: 6,571 bytes
 - ListDir.java: 3,943 bytes
 - XmlFormat.java: 2,458 bytes
 - SnipProperties.java: 1,485 bytes
@@ -1083,7 +1083,7 @@ wll result the output
 
 [source]
 ----
-2021-02-06 09:51:07
+2021-02-06 10:41:24
 
 ----
 

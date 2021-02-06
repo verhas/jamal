@@ -74,4 +74,3 @@ public class TrimLines implements Macro, InnerScopeDependent {
         return sb.toString();
     }
 }
-//end snippet

@@ -97,8 +97,9 @@ public class Collect implements Macro, InnerScopeDependent {
                         break;
                 }
             }
-            if( state == State.IN ){
-                throw new BadSyntaxAt("Snippet '"+id+"' was not terminated in the file with \"end snippet\" ", new Position(file,startLine,0));
+            if (state == State.IN) {
+                store.snippet(id, "", new Position(file, startLine),
+                    new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
             }
         } catch (IOException e) {
             throw new BadSyntax("Cannot read the file '" + file + "'");
