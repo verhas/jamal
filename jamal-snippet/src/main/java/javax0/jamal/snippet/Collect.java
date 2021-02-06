@@ -1,6 +1,7 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
@@ -48,13 +49,14 @@ public class Collect implements Macro, InnerScopeDependent {
         final var stop = Pattern.compile(reader.readValue("stop").orElse("end\\s+snippet"));
 
         final var store = SnippetStore.getInstance(processor);
-        if (new File(from).isFile()) {
-            harvestSnippets(from, store, start, stop);
+        final var fromFile = new File(from);
+        if (fromFile.isFile()) {
+            harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start, stop);
         } else {
             try {
                 for (final var file : files(from).map(p -> p.toAbsolutePath().toString())
                     .filter(include).filter(exclude).collect(Collectors.toSet())) {
-                    harvestSnippets(file, store, start, stop);
+                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start, stop);
                 }
             } catch (IOException e) {
                 throw new BadSyntax("There is some problem collecting snippets from files under '" + from + "'", e);
@@ -94,6 +96,9 @@ public class Collect implements Macro, InnerScopeDependent {
                         text.append(line).append("\n");
                         break;
                 }
+            }
+            if( state == State.IN ){
+                throw new BadSyntaxAt("Snippet '"+id+"' was not terminated in the file with \"end snippet\" ", new Position(file,startLine,0));
             }
         } catch (IOException e) {
             throw new BadSyntax("Cannot read the file '" + file + "'");

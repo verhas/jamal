@@ -41,8 +41,8 @@ public class InputHandler {
      */
     public static int startsWith(CharSequence s, String... strings) {
         int i = 0;
-        for( final var string : strings){
-            if( s.length() >= string.length() && s.subSequence(0,string.length()).equals(string)){
+        for (final var string : strings) {
+            if (s.length() >= string.length() && s.subSequence(0, string.length()).equals(string)) {
                 return i;
             }
             i++;
@@ -155,6 +155,13 @@ public class InputHandler {
         return output.toString();
     }
 
+    /**
+     * Checks that the identifier is global or not. The check simply looks for embedded '{@code :}' character in the
+     * identifier.
+     *
+     * @param id the identifier to check
+     * @return {@code true} if the identifier is a global identifier.
+     */
     public static boolean isGlobalMacro(String id) {
         return id.contains(":");
     }

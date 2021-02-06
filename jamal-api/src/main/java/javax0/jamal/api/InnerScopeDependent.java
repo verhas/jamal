@@ -26,5 +26,7 @@ package javax0.jamal.api;
  * The non {@code InnerScopeDependent} may freely define global macros as well as defined macros and export them to the
  * parent scope.
  */
+
+// end snippet
 public interface InnerScopeDependent {
 }

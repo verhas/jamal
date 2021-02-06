@@ -15,7 +15,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
  * that does not start with a space character.
  * <p>
  * This can be used, when a snippet is included into the macro file and some program code is tabulated. In that case
- * this snippet will be moves to the left as much as possible.
+ * this snippet will be moved to the left as much as possible.
  */
 public class TrimLines implements Macro, InnerScopeDependent {
     @Override
@@ -74,3 +74,4 @@ public class TrimLines implements Macro, InnerScopeDependent {
         return sb.toString();
     }
 }
+//end snippet

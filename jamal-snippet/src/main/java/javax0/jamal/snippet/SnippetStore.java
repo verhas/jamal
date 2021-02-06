@@ -92,3 +92,4 @@ public class SnippetStore implements Identified {
         snippets.clear();
     }
 }
+//end snippet

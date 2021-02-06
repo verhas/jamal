@@ -46,7 +46,7 @@ public interface Input extends CharSequence {
     void stepColumn();
 
     /**
-     * @return the length of theinput in terms of characters
+     * @return the length of the input in terms of characters
      */
     @Override
     default int length() {

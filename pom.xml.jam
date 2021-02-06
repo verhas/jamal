@@ -55,6 +55,9 @@
                                     {opens/tools/tools}
                                     --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
                                     {opens/api/api}
+                                    {opens/test/test.extra}
+                                    {opens/test/test.core}
+                                    {opens/test/test.examples}
                                     {opens/engine/engine}
                                     {opens/engine/engine.util}
                                     {opens/testsupport/builtinstest}
