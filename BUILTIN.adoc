@@ -196,7 +196,8 @@ module jamal.test {
     provides javax0.jamal.api.Macro with
         HelloWorld,
         Hello,
-        Spacer
+        Spacer,
+        Array
         ;
 }
 
@@ -375,22 +376,92 @@ Finally, the `result` is converted to `String` and is returned.
 
 This macro interpreted the input as an array of characters.
 Many times macros want to work with individual parameters.
-In the next chapter we will look at an example how we shoudl do that.
+In the next chapter we will look at an example how we should do that.
 
 ==== Splitting the Input
 
 If you look at the core built-in macro `if` then you can see that it does not have a special syntax.
-It just has three parameters and in case the first parameter is true, then it returns the second parameter, otherwise the third if that exists.
+It just has three parameters and in case the first parameter is true, then it returns the second parameter, otherwise the third.
+In case there are just two parameters then it results empty string in case the first parameter is false.
 The syntax of the macro is:
 
 [source]
 ----
-{@if /condition/then result/else result}
+{@if 'sep' condition 'sep' then result [ 'sep'else result] }
 ----
 
-Looking at the syntax we should interpret the separator a bit abstract.
-It can be literally the `/` character, but it can be something else as well.
+Here the `'sep'` is some kind of separator.
+It can be a space, some non-alphanumeric character or some complex separator.
+These three cases are handled by the method `getParts()`.
 
+This method skips the white spaces at the start of the input and then looks at the first character.
+If it is a back-tick, then it fetches more characters until it finds a pairing back-tick character.
+The string it fetches is used as a regular expression to spit up the rest of the input.
+
+If the first non-space character on the input is not a back-tick, but still a non-alphanumeric character then this character will be used as separator to split up the input.
+
+Last, but not least if the first non-space character is alphanumeric then the input will be split up along the spaces.
+
+The following example uses this method to implement a macro that can fetch one string from many based on an index.
+For example
+
+
+
+[source]
+----
+        {@array /1/x/aaa/z}
+
+
+----
+
+will select the second element, that is `aaa` from the array of `[ "x", "aaa", "z"]`.
+The code of the macro is the following:
+
+[source,java]
+----
+public class Array implements Macro {
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var pos = in.getPosition();
+        final String[] parts = InputHandler.getParts(in);
+        if (parts.length < 2) {
+            throw new BadSyntaxAt("Macro Array needs an index and at least one element", pos);
+        }
+        final int size = parts.length - 1;
+        final int index;
+        try {
+            index = Integer.parseInt(parts[0]);
+        } catch (NumberFormatException nfe) {
+            throw new BadSyntaxAt("The index in Macro array '"
+                + parts[0]
+                + "' cannot be interpreted as an integer.", pos, nfe);
+        }
+        if (index < 0 || index >= parts.length - 1) {
+            throw new BadSyntaxAt("The index in Macro array is '"
+                + parts[0]
+                + "' but it should be between "
+                + (-size) + " and " + (size - 1) + ".", pos);
+        }
+        return parts[index + 1];
+    }
+}
+
+----
+
+The macro calls the method `getParts()` passing only the input as one argument.
+There is another version of the method that limits the number of the arguments.
+Calling that the last element of the returned array will contain the rest of the string even if it could be split up more.
+The macro implementation checks that there are enough number of parts and then converts the first part to integer.
+This will be the index, the rest of the parts array are the values to choose from.
+The code also checks the array bounds and throws exception in case there is an error.
+
+When implementing a macro and there is an error the code has to detect it and it can throw a `BadSyntax` exception.
+It is also declared in the interface.
+The exception `BadSyntaxAt` is an extension of `BadSyntax`.
+This second exception also contains the reference to the input location.
+
+If the location of the error is not interesting inside the macro then it is good enough to throw a simple `BadSyntax` exception.
+The processor catches that exception and converts it to a `BadSyntaxAt` exception that will reference the character at the very start of the macro.
 
 
 

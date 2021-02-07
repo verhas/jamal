@@ -53,7 +53,7 @@ public class TestFilesMacro {
     @Test
     @DisplayName("Directory is found and formatted using defined root")
     void testDirectoryWithRoot() throws Exception {
-        TestThat.theInput("{@define root=../../../}{@directory github/jamal}").results("github/jamal");
+        TestThat.theInput("{@define root=../}{@directory jamal-snippet/src}").results("jamal-snippet/src");
     }
 
     @Test

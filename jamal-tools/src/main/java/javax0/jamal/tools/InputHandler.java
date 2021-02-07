@@ -461,6 +461,16 @@ public class InputHandler {
         }
     }
 
+    /**
+     * Fetch a regular expression from the input. The regular expression starts at the start of the input and it is
+     * terminated by a {@code `} (backtick) character or by the end of the input. If there are backtick characters in
+     * the regular expression they have to be doubled. After the fetching the first character on the input is the
+     * character that follows the terminating backtick character.
+     *
+     * @param input that starts with the regular expression. It is also modified so that the regular expression at the
+     *              start and the terminating back-tick is removed.
+     * @return the regular expression. The return string may contain single back-ticks, which are doubled in the input.
+     */
     private static String fetchRegex(Input input) {
         var sb = new StringBuilder();
         while (input.length() > 0) {

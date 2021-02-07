@@ -59,7 +59,7 @@ public class MacroBodyFetcher {
         // use it to report error when a macro is not terminated before EOF
         // knowing where the last opening string was that had no closing pair
         var refStack = new LinkedList<Position>();
-        refStack.add(input.getPosition());
+        refStack.push(input.getPosition());
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = makeInput();
 
@@ -80,7 +80,7 @@ public class MacroBodyFetcher {
                     moveEscapeMacroBody(input, output, closeStr);
                     move(input, closeStr, output);
                 } else {
-                    refStack.add(input.getPosition());
+                    refStack.push(input.getPosition());
                     move(input, openStr,output);
                     counter++; //count the new opening
                 }

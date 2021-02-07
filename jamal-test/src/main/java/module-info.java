@@ -1,3 +1,4 @@
+import javax0.jamal.test.examples.Array;
 import javax0.jamal.test.examples.Hello;
 import javax0.jamal.test.examples.HelloWorld;
 import javax0.jamal.test.examples.Spacer;
@@ -9,7 +10,8 @@ module jamal.test {
     provides javax0.jamal.api.Macro with
         HelloWorld,
         Hello,
-        Spacer
+        Spacer,
+        Array
         ;
 }
 //end snippet
