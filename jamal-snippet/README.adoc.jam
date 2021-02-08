@@ -632,7 +632,7 @@ The difference is that the replace
 
 * it works on the individual lines of the input in a loop.
 
-The difference is significant when you want to match something line by line at the end or at the end of the line.
+The difference is significant when you want to match something line by line at the start or at the end of the line.
 For example,
 
 {%sample/
@@ -1110,7 +1110,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-02-07 10:35:51
+2021-02-07 11:12:22
 
 ----
 %}
