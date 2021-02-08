@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.6.4</version>
+    <version>1.6.5-SNAPSHOT</version>
     <description>Jamal macro library to process text files</description>
     <modules>
         <module>jamal-engine</module>
@@ -141,37 +141,37 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-testsupport</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-core</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-tools</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-engine</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-scriptbasic</artifactId>
-                <version>1.6.4</version>
+                <version>1.6.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
