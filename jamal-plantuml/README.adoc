@@ -31,7 +31,8 @@ For example, the following sample:
 ----
 {@define pu$folder=images/}
 {@plantuml first_image1.svg
-@startuml Bob -> Alice : hello
+@startuml
+Bob -> Alice : hello
 @enduml
 }
 ----
