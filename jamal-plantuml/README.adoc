@@ -2,12 +2,12 @@
 :imagesdir: images
 
 PlantUML's integration supports PlantUML descriptions to be embedded into any Jamal file.
-The macro `plantuml` can convert the content passed to it to an image file and can return the reference to the file.
-This way the PlantUML description in the processed output will be replaced with the image reference to the file that was generated on the file.
+The macro `plantuml` can convert the content passed to it to an image file and return the file's reference.
+This way, Jamal will replace the PlantUML description in the processed output with the image reference to the file generated on the file.
 
 Information about the diagram generation is also saved in the Jamal cache directory structure.
-The images are only generated when there is a need for it.
-If the image did not change since the last time the image was created then PlantUML will not run to save CPU.
+The images are only generated when there is a need for them.
+If the picture did not change since PlantUml created the image, then PlantUML will not run to save CPU.
 
 === Use of the `plantuml` macro
 
@@ -22,10 +22,10 @@ content of the diagram
 }
 ----
 
-The characters after the name of the macro are interpreted as the name of the output file till the end of the line.
-The rest of the lines inside the macro are treated as the content of the plant uml diagram descriptions.
+After the name of the macro, the characters are interpreted as the name of the output file till the end of the line.
+The rest of the macro lines are treated as the content of the plant UML diagram descriptions.
 
-For example the following sample
+For example, the following sample:
 
 [source]
 ----
@@ -46,11 +46,11 @@ first_image1.svg
 
 
 Having the name of the output file, however, does not help much.
-With some macros it can be converted to an image reference, but the macro itself also helps to do that.
-The user defined macro `pu$template` can be used to define the returned string.
+With some macros, you can convert it to an image reference, but the macro itself also helps.
+The user-defined macro `pu$template` defines the returned string.
 The placeholder `$file` will be replaced by the name of the actual file.
 
-The same example modified a bit
+The same example modified a bit is the following:
 
 [source]
 ----
@@ -61,7 +61,7 @@ Bob -> Alice : hello
 }
 ----
 
-will result an image reference, as in
+will result in an image reference, as in
 
 [source]
 ----
@@ -77,39 +77,69 @@ and if we use it in an Asciidoc file it will look like the following:
 image::first_image3.svg[]
 
 The PlantUml texts usually start with a `@umlstart` and finish with an `@enduml` line.
-Because this is almost always there the macro `plantuml` inserts these lines if they are missing.
-To be precise, it checks if the very fist line of the digram description starts with the `@` character.
-If it does then it assumes that the lines are already there.
+Because this is almost always there, the macro `plantuml` inserts these lines if they are missing.
+To be precise, it checks if the first line of the diagram description starts with the `@` character.
+If it does, then it assumes that the lines are already there.
 
 Some diagrams start with slightly different directives.
-For example YAML diagrams start with the `@startyaml` and end with the `@endyaml` lines.
-In that case you have to include these lines into the body of the macro.
+For example, YAML diagrams start with the `@startyaml` and end with the `@endyaml` lines.
+In that case, you have to include these lines in the body of the macro.
 
 === Formatting, Folder and Template
 
-The behavior of the macro `plantuml` can be controlled by user defined macros.
-These macros all start with the prefix `pu$` that stands for `p` plant and `u` as uml.
+User-defined macros can control the behavior of the macro `plantuml`.
+These macros all start with the prefix `pu$` that stands for `p` plant and `u` as UML.
 The macros are:
 
 * `pu$folder` can define the directory where the graphical file is to be saved.
 The default value is the directory where the document itself is.
-It is recommended to specify a special folder for the purpose and in case of Asciidoctor files to use the `imagesdir` attribute.
-Note that the folder specification can be absolute or relative of the current Jamal file.
-In case the current Jamal file is included by another Jamal file, which is not in the same directory then it may cause a problem.
-In such a case it is recommended to use the absolute file name via the `directory` macro from the Jamal Snippet library.
+It is recommended to specify a particular folder for the purpose, and in the case of Asciidoctor files, to use the `imagesdir` attribute.
+Note that the folder specification can be absolute or relative to the current Jamal file.
+In case the current Jamal file is included by another Jamal file, which is not in the same directory, it may cause a problem.
+In such a case, it is recommended to use the absolute file name via the `directory` macro from the Jamal Snippet library.
 
 * `pu$format` should specify the format of the output file.
 It is the file format like `SVG` or `PNG`.
-The code consults the PlantUML enumeration `FileFormat` therefore any format supported by the used version of PlantUml can be used.
+The code consults the PlantUML enumeration `FileFormat` therefore, Jamal can use any format supported by the used version of PlantUml.
 
 * `pu$template` can be used to format the result of the macro.
-In this template the placeholder `$file` can be used and will be replaced by the name of the file as it was specified in the macro.
+In this template, the placeholder `$file` can be used and replaced by the name of the file as specified in the macro.
 The default value is to return the file name itself.
+
+[NOTE]
+====
+You can decide to write into your Jamal file the reference to the picture generated.
+For example, you want to write:
+
+    {@plantuml myimage.svg
+         ... my diagram ...
+    }
+    image::myimage.svg[]
+
+in the source code.
+This approach's advantage is that once Jamal transformed the source through Jamal, you can already see in a WYSIWYG editor the diagram while editing.
+In this case, you should
+
+    {@define pu$template=}
+
+so that the value of the macro `plantuml` is an empty string.
+====
+
+=== Error Handling
+
+If there is an error during the diagram's conversion, the macro will throw a `BadSyntax` exception.
+That means that unless you enclose the `plantuml` macro into a `try` macro, the processing of the file will stop with an error.
+An error can be the wrong use of the macro, like specifying an invalid format.
+In this case, Jamal does not generate the output file.
+Another type of error is when the generation of the diagram is erroneous.
+In this case, PlantUml creates a diagram; it just shows an error.
+In this second case, the macro `plantuml` first saves the generated diagram to the output file and only after that signals the error.
+
 
 === Library Dependency
 
 Jamal PlantUml integration comes in a separate library.
-To use the macro you need the JAR file on your classpath and all dependencies transitively.
+To use the macro, you need the JAR file on your classpath and all dependencies transitively.
 The maven coordinates for the Jamal module are:
 
 [source,xml]
@@ -121,7 +151,7 @@ The maven coordinates for the Jamal module are:
 </dependency>
 ----
 
-The modulde has a dependency on the PlantUml binaries and the currently used version of PlantUml is 1.2021.1:
+The module has a dependency on the PlantUml binaries, and the currently used version of PlantUml is 1.2021.1:
 
 [source,xml]
 ----
@@ -132,9 +162,61 @@ The modulde has a dependency on the PlantUml binaries and the currently used ver
 </dependency>
 ----
 
-If you want to use a different version of PlantUml then you can specify the version in your `pom.xml` file directly.
+If you want to use a different version of PlantUml, you can specify the version in your `pom.xml` file directly.
 
 
 === Caching
 
-Converting a diagram to graphical representation
+Converting a diagram to graphical representation is resource-intensive.
+It is typical to convert a Jamal file during document development many times.
+Most of these times, most of the diagrams do not change.
+To avoid the conversion of the already converted source text, the `plantuml` macro uses caching.
+
+There is no need to understand how caching works.
+It is automatic.
+In this chapter, we describe the algorithms and behavior of the macro related to caching.
+You may need this information in case you need to troubleshoot the diagram generation.
+
+The most important rule `plantuml` follows is the following:
+If the desired output file does not exist, it will be created, no matter what is in the cache.
+If you have a problem with the caching behavior of the `planuml` macro, delete the generated diagrams.
+
+The Jamal cache is by default in the directory `~/.jamal/cache`.
+The location can be configured using environment variables.
+The cache directory has to be created manually, or else no caching will occur.
+Jamal creates any subdirectories needed under the cache directory.
+
+When the diagram conversion is executed, the macro saves the source text into the Jamal cache.
+The directory will reflect the full path of the output file.
+For example on a MacOS the directory will be something like `~/.jamal/cache/https/Users/verhas/projects/jamal/images/`.
+
+Note that the file will have the name of the generated diagram file, for example, `mydiagram.svg`, but the content will be the UML text source.
+
+When the macro sees a generated output file and a cached file, it checks the cached file's content.
+If it is precisely the same as the one currently converting one, then the generation step is skipped.
+
+Every cached file has a `properties` file paired with it.
+This properties file will contain a boolean property called `error`.
+If this property is `true`, then the macro will throw an exception.
+This way, an error will not go undetected just because the cache signals no reason to rerun the conversion.
+
+=== Other Similar Solutions
+
+When you are using Asciidoc or Markdown, you may raise the question, why use Jamal and this module instead of using the document native integration.
+There is no final and ultimate answer to that.
+You have to decide the advantages and disadvantages of the different approaches and select the one that fits you the best.
+
+First and foremost, you can use the full power of Jamal.
+You can use macros, modules that help you make a document maintainable.
+
+If you use Jamal, you get an output file that does not require any plugin to handle PlantUml.
+The plugin to render PlantUml may not be available on the system where the rendering executes.
+As far as I know, PlantUML is not supported on public GitHub and GitLab servers.
+
+Using the Jamal macro, you get the image files, and the generated Jamal output is free of the UML source code.
+You do not run into problems, like how to hide the UML Text in Markdown to not appear in the output.
+
+Some converters require that a PlantUml server is running in the background.
+Jamal's `plantuml` macro uses the PlantUml library and does not need a running server.
+It does the conversion in JVM without starting a new process.
+Therefore, the conversion is relatively economical.
