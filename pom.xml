@@ -19,6 +19,7 @@
         <module>jamal-snippet</module>
         <module>jamal-test</module>
         <module>jamal-scriptbasic</module>
+        <module>jamal-plantuml</module>
     </modules>
     <licenses>
         <license>
@@ -108,6 +109,8 @@
                                     --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
                                     --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
                                     --add-opens jamal.api/javax0.jamal.api=ALL-UNNAMED
+                                    --add-opens jamal.plantuml/javax0.jamal.plantuml=ALL-UNNAMED
+                                    --add-opens jamal.plantuml/javax0.jamal.documentation=ALL-UNNAMED
                                     --add-opens jamal.test/javax0.jamal.test.extra=ALL-UNNAMED
                                     --add-opens jamal.test/javax0.jamal.test.core=ALL-UNNAMED
                                     --add-opens jamal.test/javax0.jamal.test.examples=ALL-UNNAMED

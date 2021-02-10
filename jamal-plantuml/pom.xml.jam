@@ -1,8 +1,8 @@
 {@import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
 {@import ../version.jim}
-{project jamal snippet}
+{project jamal plantuml}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-snippet:{VERSION}}
+    {GAV :{GROUPID}:jamal-plantuml:{VERSION}}
     {parent ::jamal-parent}
     {description|Jamal macro library snippet macros}
 
@@ -13,7 +13,9 @@
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency|{GROUPID}|jamal-testsupport||test}
         {dependency|{GROUPID}|jamal-core||test}
+        {dependency|{GROUPID}|jamal-snippet|{VERSION}|test}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency|net.sourceforge.plantuml|plantuml|{PLANTUML_VERSION}|}
     }
 {end project}

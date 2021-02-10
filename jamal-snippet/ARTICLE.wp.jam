@@ -1,0 +1,67 @@
+{%@comment
+
+It is an article published on javax0.wordpress.com
+
+Writing Technical Documentation
+
+%}
+{%@import https://raw.githubusercontent.com/central7/wordpress/main/wp.jim%}
+
+{%#reflow
+# Introduction
+
+Writing good technical documentation is an art.
+
+An art is the expression or application of human creative skill and imagination, ... to be appreciated primarily for their beauty or emotional power.
+
+Every art, like sculpting has a craft part.
+You need chisels, hammers to form the sculpture out of the blob of marble.
+You need to learn the craft to master the art.
+Technical documentation writing is similar.
+
+Writing sentences that are easy to read, entertaining for the reader is the art part.
+Fixing typos, grammatical errors is more like a craft.
+Making the documentation precise, to the point and well structured is also the craft part.
+Crafts can be learned and aided with the right tool.
+
+In case of technical documentation writing these tools help to address those tasks that are many times performed manually but could be automated.
+In this article I will write about one tool that helps in that manner and which I used successfully to write documentation, many articles, also this one, and books.
+
+# What can be automated
+
+There are many things that can be automated for technical document writing.
+I tried to gather a list from my experience, but it may not be complete.
+The list is the following:
+
+* Eliminate text repetition
+
+* Transclude information from the documented system
+
+* Checks internal consistency of the documentation
+
+* Check consistency of the documentation with the documented system
+
+In the following I will talk shortly about these tasks, and then I will explain the tool that I use to address these.
+
+## DRY in Documentation
+
+The DRY (Don't Repeat Yourself) is a very basic and old principle in programming.
+If there are codes that are the same in the source then they should be singled out moving the common code into a separate method, class or some other coding structure.
+Copy/Paste programming is evil and must not be done.
+
+The same rule should apply when you create documentation.
+Except, you do not have methods or classes in the documents.
+You can reorganise your document into smaller sections and then you can refer to the sections, but that may have an impact on the readability.
+If the reader has to turn the pages all the time instead of linear reading the task of comprehending the document becomes very difficult.
+Using non-printed, non-linear documentation, a.k.a. hyper text eases a bit the page turning, but the reader still can get mentally lost in the maze of the non-linear documentation.
+The ideal solution would be to have a documentation, which is linear and contains all the text that is interesting for the very specific user, who is reading it in the order as they want to read it.
+
+## Information Transclusion
+
+## Internal Consistency
+
+## External Consistency
+
+# The Tool: Java Macro Language
+
+%}

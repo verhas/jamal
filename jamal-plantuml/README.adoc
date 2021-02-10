@@ -1,0 +1,140 @@
+== Jamal PlantUML Diagrams
+:imagesdir: images
+
+PlantUML's integration supports PlantUML descriptions to be embedded into any Jamal file.
+The macro `plantuml` can convert the content passed to it to an image file and can return the reference to the file.
+This way the PlantUML description in the processed output will be replaced with the image reference to the file that was generated on the file.
+
+Information about the diagram generation is also saved in the Jamal cache directory structure.
+The images are only generated when there is a need for it.
+If the image did not change since the last time the image was created then PlantUML will not run to save CPU.
+
+=== Use of the `plantuml` macro
+
+The package contains one macro named `plantuml`.
+The syntax of the macro is
+
+[source]
+----
+{@plantuml image_file_name
+
+content of the diagram
+}
+----
+
+The characters after the name of the macro are interpreted as the name of the output file till the end of the line.
+The rest of the lines inside the macro are treated as the content of the plant uml diagram descriptions.
+
+For example the following sample
+
+[source]
+----
+{@define pu$folder=images/}
+{@plantuml first_image1.svg
+@startuml Bob -> Alice : hello
+@enduml
+}
+----
+
+will create the file `first_image.svg` in the folder `images` and will result in the output as
+
+[source]
+----
+first_image1.svg
+
+----
+
+
+Having the name of the output file, however, does not help much.
+With some macros it can be converted to an image reference, but the macro itself also helps to do that.
+The user defined macro `pu$template` can be used to define the returned string.
+The placeholder `$file` will be replaced by the name of the actual file.
+
+The same example modified a bit
+
+[source]
+----
+{@define pu$template=image::$file[]}
+{@define pu$folder=images/}
+{@plantuml first_image2.svg
+Bob -> Alice : hello
+}
+----
+
+will result an image reference, as in
+
+[source]
+----
+image::first_image2.svg[]
+
+----
+
+
+and if we use it in an Asciidoc file it will look like the following:
+
+
+
+image::first_image3.svg[]
+
+The PlantUml texts usually start with a `@umlstart` and finish with an `@enduml` line.
+Because this is almost always there the macro `plantuml` inserts these lines if they are missing.
+To be precise, it checks if the very fist line of the digram description starts with the `@` character.
+If it does then it assumes that the lines are already there.
+
+Some diagrams start with slightly different directives.
+For example YAML diagrams start with the `@startyaml` and end with the `@endyaml` lines.
+In that case you have to include these lines into the body of the macro.
+
+=== Formatting, Folder and Template
+
+The behavior of the macro `plantuml` can be controlled by user defined macros.
+These macros all start with the prefix `pu$` that stands for `p` plant and `u` as uml.
+The macros are:
+
+* `pu$folder` can define the directory where the graphical file is to be saved.
+The default value is the directory where the document itself is.
+It is recommended to specify a special folder for the purpose and in case of Asciidoctor files to use the `imagesdir` attribute.
+Note that the folder specification can be absolute or relative of the current Jamal file.
+In case the current Jamal file is included by another Jamal file, which is not in the same directory then it may cause a problem.
+In such a case it is recommended to use the absolute file name via the `directory` macro from the Jamal Snippet library.
+
+* `pu$format` should specify the format of the output file.
+It is the file format like `SVG` or `PNG`.
+The code consults the PlantUML enumeration `FileFormat` therefore any format supported by the used version of PlantUml can be used.
+
+* `pu$template` can be used to format the result of the macro.
+In this template the placeholder `$file` can be used and will be replaced by the name of the file as it was specified in the macro.
+The default value is to return the file name itself.
+
+=== Library Dependency
+
+Jamal PlantUml integration comes in a separate library.
+To use the macro you need the JAR file on your classpath and all dependencies transitively.
+The maven coordinates for the Jamal module are:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-plantuml</artifactId>
+    <version>1.6.5-SNAPSHOT</version>
+</dependency>
+----
+
+The modulde has a dependency on the PlantUml binaries and the currently used version of PlantUml is 1.2021.1:
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.sourceforge.plantuml</groupId>
+    <artifactId>plantuml</artifactId>
+    <version>1.2021.1</version>
+</dependency>
+----
+
+If you want to use a different version of PlantUml then you can specify the version in your `pom.xml` file directly.
+
+
+=== Caching
+
+Converting a diagram to graphical representation

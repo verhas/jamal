@@ -22,42 +22,7 @@ public class TestConvertReadme {
     }
 
     @Test
-    void convertSnippetArticle() throws Exception {
-        generateAdoc(".", "ARTICLE", "wp");
-    }
-
-    @Test
-    void convertWritingBuiltIn() throws Exception {
-        generateAdoc("..", "BUILTIN");
-    }
-
-    @Test
-    void convertGlossary() throws Exception {
-        generateAdoc("..", "GLOSSARY");
-    }
-
-    @Test
-    void convertTopReadme() throws Exception {
-        generateAdoc("..");
-    }
-
-    @Test
-    void convertExtensionReadme() throws Exception {
-        generateAdoc("../jamal-extensions");
-    }
-
-    @Test
-    void convertScriptBasicReadme() throws Exception {
-        generateAdoc("../jamal-scriptbasic");
-    }
-
-    @Test
-    void convertTestReadme() throws Exception {
-        generateAdoc("../jamal-test");
-    }
-
-    @Test
-    void convertSnippetReadme() throws Exception {
+    void convertPlantUMLReadme() throws Exception {
         generateAdoc(".");
     }
 }

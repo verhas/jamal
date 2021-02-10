@@ -4,7 +4,7 @@
     {packaging pom}
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
     {description Jamal macro library to process text files}
-    {modules jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport,jamal-cmd,jamal-snippet,jamal-test,jamal-scriptbasic}
+    {modules jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport,jamal-cmd,jamal-snippet,jamal-test,jamal-scriptbasic,jamal-plantuml}
     {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
     {github|verhas|jamal}
@@ -55,6 +55,8 @@
                                     {opens/tools/tools}
                                     --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
                                     {opens/api/api}
+                                    {opens/plantuml/plantuml}
+                                    {opens/plantuml/documentation}
                                     {opens/test/test.extra}
                                     {opens/test/test.core}
                                     {opens/test/test.examples}

@@ -298,12 +298,25 @@ public class InputHandler {
      * @param input from which the spaces should be deleted.
      */
     public static void skip2EOL(Input input) {
+        fetch2EOL(input);
+    }
+
+    /**
+     * Delete the characters from the start of the input until after the first EOL and return the deleted start as a
+     * String.
+     *
+     * @param input from which the spaces should be deleted.
+     */
+    public static String fetch2EOL(Input input) {
+        final var sb = new StringBuilder();
         while (input.length() > 0 && input.charAt(0) != '\n') {
+            sb.append(input.charAt(0));
             input.delete(1);
         }
         if (input.length() > 0 && input.charAt(0) == '\n') {
             input.delete(1);
         }
+        return sb.toString();
     }
 
     /**
