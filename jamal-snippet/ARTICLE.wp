@@ -1,0 +1,66 @@
+
+
+
+# Introduction
+
+Writing good technical documentation is an art.
+
+An art is the expression or application of human creative skill and imagination, ... to be appreciated primarily for their beauty or emotional power.
+
+But every art, like sculpting, has a craft part. You need chisels, hammers to form the sculpture out of the blob of marble. You need to learn the craft to master the art. Technical documentation writing is similar.
+
+Writing sentences that are easy to read, entertaining for the reader is the art part. Fixing typos, grammatical errors is more like a craft. Making the documentation precise, to the point and well structured is also the craft part. Crafts can be learned and aided with the right tool.
+
+In case of technical documentation writing these tools help to address those tasks that are many times performed manually though could be automated. In this article I will write about a tool that helps in that manner and which I used successfully to write documentation, many articles -- also this one --, and books.
+
+# What can be automated
+
+There are many things that can be automated for technical document writing. I tried to gather a list from my experience, but it may not be complete. The list is the following:
+
+* Eliminate manual text repetition.
+
+* Transclude information from the documented system.
+
+* Checks internal consistency of the documentation.
+
+* Check consistency of the documentation with the documented system.
+
+In the following I will talk shortly about these tasks, and then I will explain the tool that I use to address these.
+
+## DRY in Documentation
+
+The DRY (Don't Repeat Yourself) is a very basic and old principle in programming. If there are lines that are the same in the source then they should be singled out moving the common code into a separate method, class or some other coding structure. Copy/Paste programming is evil and must not be done. This does not mean that there are no repeated code in the compiled binary code. Code generators are fre to repeat code if they think that is better than in some way eliminating. One famous example is, when a short loop is extended and the code is repeated instead of creating a binary looping construct. It may consume more memory but the same time optimization may find it faster.
+
+The same should happen when you write the documentation. Except, you do not have methods or classes in the documents. You can reorganise your document into smaller sections and then you can refer to the sections. This may have an impact on the readability. If the reader has to turn the pages all the time instead of linear reading the task of comprehending the document becomes very difficult. Using non-printed, non-linear documentation, a.k.a. hyper text eases a bit the page turning, but the reader still can get mentally lost in the maze of the non-linear documentation. The ideal solution would be to have a documentation, which is linear and contains all the text that is interesting for the very specific user, who is reading it in the order as they want to read it.
+
+Eventually it is impossible. With today's technology you cannot create a document that contais exactly what the reader wants to read at the very moment and changes for each reader and even for each reading. The best approach we have is repeating some of the text in the documentation. Some reader may find it boring, while others will just get what they need. Your document "source" however should be DRY and the repeating of the text, the copy paste operation has to be automated. The advantage is: any change in the text is consistently propagated to every occurrence of the text.
+
+## Information Transclusion
+
+A living document has to follow the change of the change of the system it documents. In case of software this can partially be automated. A lot of data that may need to be included in the document is available in the source code. For example the current version of the application, which is a numeric value, may be included in the documentation at differnt locations. Updating it to the latest version manually is almost always some error. Sooner or later one or more references may skip update and become stale. The solution is partial when we use the technique that eliminates DRY. With that we define the version in the document at one place and it will be referred to in other places. It still needs that one place to be updated. Fetching the version number from the source code automatically is one level more automation.
+
+Usage samples are also a good example for transclusion. When the usage samples are fetched from the unit tests automatically then they are guaranteed to run at least during the test execution.
+
+## Internal Consistency
+
+Ensuring internal consistency of the document can also be automated to some level. This is such an important factor that many documentation systems support it related to cross-references. The examples can be various.
+
+You may create a document with use cases. In the use cases you use actors in the description. A document management system can ensure that all the actors used in the document are also defined. A similar check can be done for abbreviations and other things. Consistency, if can be formally defined, can be checked by automated tools.
+
+## External Consistency
+
+Just as well as the different parts of the document should be consistent and without contradiction the documentation should also be consistent with the system it documents. This is similar to transcluding information from the source. The difference is that the information in this case is mainly existence only. For example you reference a file, a directory, a method in a Java class. A tool can check that the directory, file or method exists, it was not renamed nor deleted. Similarly other consistency checks can be programmed.
+
+# Document Writing is Programming
+
+There may be some other cases where some automation may come into picture. The general approach, however, should be to manage the document similar to program source. Documents are maintained. Documents have a source and the source should be structured. One change in the documented system should be followed by a single change in the document. Every other occurrence in the output shoudl be created automatically.
+
+# The Tool: Java Macro Language
+
+In the rest of this article I will describe a tool that can help to automate the document management tasks. The tool is the Java version of the text processor Jamal. Originally the name was standing for Just Another Macro Language, and it was created in the late 1990-ies in Perl. A few years ago I rewrote the implementation in Java and the original functionality was enhanced. Since the application is based on Java it is now named Java Macro Language, abbreviated as Jamal.
+
+The basic concept of Jamal is that the an input text containing free text and macros mixed is processed. The output is a text with all the macros executed and evaluated. The syntax of the macros is free. The only requirement is that each of them start and end with a specific string. The start and end string can be defined when the macro processor is initialized. It can also be changed on the fly in the input text. When I document Java programs then I usually use `{%` as start string and `%}` as end string. That way a simple macro definition will be 
+
+[sourcecode language="text"]
+{%#define lastUpdated=2021-02-17 16:00%}
+[/sourcecode]

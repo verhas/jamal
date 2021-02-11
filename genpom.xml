@@ -11,7 +11,7 @@
             <plugin>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-plugin</artifactId>
-                <version>1.5.1</version>
+                <version>1.6.5</version>
                 <executions>
                     <execution>
                         <id>execution</id>
@@ -22,7 +22,7 @@
                         <configuration>
                             <formatOutput>true</formatOutput>
                             <transformFrom>\.jam$</transformFrom>
-                            <transformTo></transformTo>
+                            <transformTo/>
                             <filePattern>.*pom\.xml\.jam$</filePattern>
                             <exclude>target|\.iml$|\.java$|\.xml$</exclude>
                             <sourceDirectory>.</sourceDirectory>
