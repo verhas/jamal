@@ -11,10 +11,10 @@ public class TestConvertReadme {
     }
 
     private static void generateAdoc(final String directory, final String fileName) throws Exception {
-        generateAdoc(directory, fileName, "adoc");
+        generateDoc(directory, fileName, "adoc");
     }
 
-    private static void generateAdoc(final String directory, final String fileName, final String ext) throws Exception {
+    private static void generateDoc(final String directory, final String fileName, final String ext) throws Exception {
         final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam");
         final var processor = new Processor("{%", "%}");
         final var result = processor.process(in);
@@ -23,7 +23,7 @@ public class TestConvertReadme {
 
     @Test
     void convertSnippetArticle() throws Exception {
-        generateAdoc(".", "ARTICLE", "wp");
+        generateDoc(".", "ARTICLE", "wp");
     }
 
     @Test

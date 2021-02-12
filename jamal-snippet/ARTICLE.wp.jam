@@ -157,7 +157,7 @@ These macros are not task specific, they are needed generally.
 Other libraries, like the `jamal-snippet` library contain macros that support some specific task.
 The mentioned `jamal-snippet` library supports document management.
 
-## Snippet Handling
+## Snippet Handling, Transclude
 
 The original idea of the snippets is not new.
 The basic approach to use the source code as part of the documentation originates from D. Knuth with Web and Tangle as early as 1984.
@@ -221,7 +221,138 @@ For example the implementation of the macro `directory` contains the following l
 {%#reflow
 
 These lines list the different placeholders and their values that the built-in template handler knows.
-The documentation that includes this snippet has the following lines:
+The documentation includes this snippet with the following lines:
+%}
+
+{%@sep [[ ]]%}[sourcecode language="java"]
+{%@define replace=|^.*?"(.*?)"|* `$1`!|!.*?//||%}
+{%@define pattern=\)\.and\(%}
+{%#replaceLines{%#killLines{%@snip dirMacroFormatPlaceholders %}%}%}
+[/sourcecode][[@sep {% %}]]
+
+{%#reflow
+(Note: the actual version is a bit more complex, as you will see later.)
+It inserts the content of the snippet evaluating the `snip` macro.
+The content of the sippet is then passed to the macro `killLines`.
+This macro will delete all the lines that match the regular expression defined in the macro `pattern`.
+The result is still further modified by the `replaceLines` macro.
+It executes the Java String `replaceAll()` method on each line with the arguments defined in the macro `replace`.
+The final result, inserted into the output is:
+%}
+
+{%@sep [[ ]]%}[sourcecode language="java"]
+* `$name` gives the name of the file as was specified on the macro
+* `$absolutePath` the absolute path to the file
+* `$parent` the parent directory where the file is
+* `$canonicalPath` the canonical path
+[/sourcecode][[@sep {% %}]]
+
+{%#reflow
+This way the document is much easier to maintain.
+The documentation of the parameters is along the code and that way it is harder to forget to update the documentation.
+Also, the name of the placeholder is taken directly from the source code.
+Even if the developer makes a typo naming the placeholder in the example above the documentation will contain the name as it is in the code and thus exactly the characters it has to be used.
+
+Snippets can come from other sources, not only from file snippet fragments.
+The built-in macro `snip:xml` reads a while XML file and assignes it to a macro name.
+This macro is similar to the core built-in macro `define`.
+It also defines a user defined macro.
+In this case, however, the macro is not a constant string with argument placeholders as in the case of those defined calling the macro `define`.
+In this case the content is a whole parsed XML file and the one argument the macro can and should have when invoked must be an XPath.
+The result of the macro call, as you can guess, the value in the XML found by the XPath.
+
+As an example the module documentation `README.adoc.jam` for `jamal-plantuml` contains the following lines close to the start of the file:
+
+%}
+
+{%@sep [[ ]]%}[sourcecode language="java"]
+{%@snip:xml pom=pom.xml%}\
+{%#define PLANTUML_VERSION={%pom /project/dependencies/dependency/artifactId[text()="plantuml"]/following-sibling::version/text()%}%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+[/sourcecode][[@sep {% %}]]
+
+{%#reflow
+This reads the `pom.xml` file of the macro and defines the `PLANTUML_VERSION` and `VERSION` macros to hold the current version of the used PlantUml library and the version of the project respoctively.
+Later in the documentation both {%@sep [[ ]]%}`{%PLANTUML_VERSION%}` and `{%VERSION%}` [[@sep {% %}]]can be used and will be replaced in the output with the up-to-date version.
+
+We have seen that snippet texts can be fetched from arbitrary source files, and from an XML file.
+In addition to that snippets can also be defined in `.properties` files (also XML format properties file) and can also be defined as a macro.
+The definition of the snippet as a macro using the `snip:define` built-in has a special use that we will discuss later with the `snip:update` macro.
+
+## File, Directory, Class, Method => Consistency
+
+The macros `file`, `directory`, `java:class` and `java:method` are macros that can help keeping the code consistent with the system.
+These macros add barely any formatting to the output, therefore their use needs discipline.
+They check that the argument file, directory, class or method really exists.
+If the entity does not exist then the macro throws an exception.
+This way if the entity was renamed, moved or deleted the documentation has to be updated or else it does not compile.
+
+The use of the macros `file` and `directory` is straightforward.
+They check the existence of the file and directory specified as argument.
+The name can either be absolute or relative to the input document.
+
+Checking the existence of a class or method is not that straightforward.
+It needs a Java environment that has the class on the classpath.
+It is a recommended practice to invoke Jamal from a unit test to convert the document from the input to output.
+This article is also written using Jamal as a preprocessor and it is converted from a unit test of the module `jamal-snippet` using the following code:
+
+%}
+
+{%@sep [[ ]]%}[sourcecode language="java"]
+private static void generateDoc(final String directory, final String fileName, final String ext) throws Exception {
+    final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam");
+    final var processor = new Processor("{%", "%}");
+    final var result = processor.process(in);
+    FileTools.writeFileContent(directory + "/" + fileName + "." + ext, result);
+}
+
+@Test
+void convertSnippetArticle() throws Exception {
+    generateDoc(".", "ARTICLE", "wp");
+}
+[/sourcecode][[@sep {% %}]]
+
+{%#reflow
+
+During the execution of the unit test the classes of the documented system are on the classpath or on the module path and that way these macros, `java:class` and `java:method` work.
+
+## Updating the Input
+
+The `jamal-snippet` library has a special macro `snip:update`, which does something very special thing.
+
+Built-in macro implementations get the part of the input, which is between the opening and closing string.
+This is the part of the input that they are supposed to work on.
+What they actually get is the an input object containing not only the character but also a position coordinate.
+This coordinate contains the file name and the line/column position of the input in the file.
+This coordinate is used by some macros to report the position of some error.
+Other macros, like `include` or `import` use the file name to calculate the path of the imported or included file relaive to the one that contains the macro.
+
+The macro `snip:update` uses the file name to physically access the file and to modify it.
+The macro scans the file and looks for lines that look like
+%}
+
+{%@sep [[ ]]%}[sourcecode language="java"]
+{%@snip id
+   ...
+%}
+[/sourcecode][[@sep {% %}]]
+
+{%#reflow
+
+When the lines with that pattern are found then the lines between the first and the last line, essentially the lines denoted with `...` above are replaced with the actual content of the snippet.
+This will help the maintenance of the input document.
+When a you write the document it is easier if you can see the actual snippet and not only the reference to the snippet.
+It is also easier to debug the line killing, character replacement and other transformations of the snippet formatting.
+
+The macro `snip` is not disturbed with these lines.
+The syntax of the `snip` macro is like `snip id ... anything treated as comment...` to allow this special use case.
+
+The invocation of the macro updating of the input should take place at the end of the document when all snippets are already defined.
+It is also important to save the input to the version control before converting.
+The use of this possibility makes it possible to include into the document the formatted snippets.
+This is done, for example, in the documentation of the macro `directory`.
+The sample presented before was a simplified one.
+Here you can see the real one making use of update.
 %}
 
 {%@sep [[ ]]%}[sourcecode language="java"]
@@ -238,6 +369,21 @@ The documentation that includes this snippet has the following lines:
 
 {%#reflow
 
+This structure includes the snippet  `dirMacroFormatPlaceholders` and converts enclosing it into macros `killLines` and `replaceLines`.
+The final formatted result, however, does not get directly into the output.
+It is assigned to a new snippet using the macro `snip:define`.
+The name of the new snippet is `dirMacroFormatPlaceholdersFormatted`.
 
+After this, when this new, already formatted snippet is defined it is referenced using the `snip` macro to be included into the output.
+When the macro `snip:update` is used at the end of the file this second use of the `snip` macro is updated and the formatted lines are inserted there as you can see.
+
+The first use of the macro `snip` is not updated because there are extra characters before the use of the macro and also there are extra charaters after the snippet identifier.
+
+## Creating Diagrams
+
+Using diagrams are very important in documentation.
+As the saying goes a picture is worth a thousand words, especially if your readers are non-native and do not even know thousand words.
+A fairly good tool to create diagrams is PlantUml.
+The source for the diagrams in this tools is a text that describes the UML diagram structurally.
 
 %}
