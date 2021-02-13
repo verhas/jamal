@@ -9,13 +9,13 @@ Writing good technical documentation is an art.
 
 But every art, like sculpting, has a craft part. You need chisels, hammers to form the sculpture out of the blob of marble. You need to learn the craft to master the art. Technical documentation writing is similar.
 
-Writing sentences that are easy to read, entertaining for the reader is the art part. Fixing typos, grammatical errors is more like a craft. Making the documentation precise, to the point and well structured is also the craft part. Crafts can be learned and aided with the right tool.
+Writing sentences that are easy to read, entertaining for the reader is the art part. Fixing typos and grammatical errors is more like a craft. Making the documentation precise, to the point, and well structured is also the craft part. Crafts can be learned and aided with the right tool.
 
-In case of technical documentation writing, the tools help to address those tasks that are many times performed manually though could be automated. In this article I will write about a tool that helps in that manner and which I used successfully to write documentation, many articles -- also this one --, and books.
+In technical documentation writing, the tools help address those tasks that are often performed manually though they could be automated. In this article, I will write about a tool that helps in that manner and which I used successfully to write documentation, many articles -- also this one --and books.
 
 # What can be automated
 
-There are many things that can be automated for technical document writing. I tried to gather a list from my experience, but it may not be complete. The list is the following:
+Many things can be automated for technical document writing. I tried to gather a list from my experience, but it may not be complete. The list is the following:
 
 <img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/articleimages/tasks.svg"/>
 
@@ -25,53 +25,53 @@ There are many things that can be automated for technical document writing. I tr
 
 * Checks internal consistency of the documentation.
 
-* Check consistency of the documentation with the documented system.
+* Check the consistency of the documentation with the documented system.
 
-In the following I will talk shortly about these tasks, and then I will explain the tool that I use to address these.
+In the following, I will talk shortly about these tasks, and then I will explain the tool that I use to address these.
 
 ## DRY in Documentation
 
-The DRY (Don't Repeat Yourself) is a very basic and old principle in programming. If there are lines that are the same in the source then they should be singled out moving the common code into a separate method, class or some other coding structure. Copy/Paste programming is evil and must not be done. This does not mean that there are no repeated code in the compiled binary code. Code generators are fre to repeat code if they think that is better than in some way eliminating. One famous example is, when a short loop is extended and the code is repeated instead of creating a binary looping construct. It may consume more memory but the same time optimization may find it faster.
+The DRY (Don't Repeat Yourself) is a fundamental and old principle in programming. If there are the same lines in the source, they should be singled out, moving the common code into a separate method, class, or other coding structure. Copy/Paste programming is evil and must not be done. It does not mean that there is no repeated code in the compiled binary code. Code generators are free to repeat code if they think that is better than in some way eliminating it. One famous example is when a short loop is extended, and the code is repeated instead of creating a binary looping construct. It may consume more memory, but at the same time, optimization may find it faster.
 
-The same should happen when you write the documentation. Except, you do not have methods or classes in the documents. You can reorganise your document into smaller sections and then you can refer to the sections. This may have an impact on the readability. If the reader has to turn the pages all the time instead of linear reading the task of comprehending the document becomes very difficult. Using non-printed, non-linear documentation, a.k.a. hyper text eases a bit the page turning, but the reader still can get mentally lost in the maze of the non-linear documentation. The ideal solution would be to have a documentation, which is linear and contains all the text that is interesting for the very specific user, who is reading it in the order as they want to read it.
+The same should happen when you write the documentation. Except, you do not have methods or classes in the documents. You can reorganize your document into smaller sections, and then you can refer to the areas. It may have an impact on the readability. If the reader has to turn the pages instead of linear reading, comprehending the document becomes challenging. Using non-printed, non-linear documentation, a.k.a. hypertext eases a bit the page-turning, but the reader still can get mentally lost in the maze of the non-linear documentation. The ideal solution would be to have documentation, which is linear and contains all the interesting text for the particular user, reading it in the order as they want to read it.
 
-Eventually it is impossible. With today's technology you cannot create a document that contais exactly what the reader wants to read at the very moment and changes for each reader and even for each reading. The best approach we have is repeating some of the text in the documentation. Some reader may find it boring, while others will just get what they need. Your document "source" however should be DRY and the repeating of the text, the copy paste operation has to be automated. The advantage is: any change in the text is consistently propagated to every occurrence of the text.
+Eventually, it is impossible. With today's technology, you cannot create a document that contains precisely what the reader wants to read at the very moment and changes for each reader and even for each reading. The best approach we have is repeating some of the text in the documentation. Some readers may find it boring, while others will just get what they need. Your document "source" should be DRY, and the repeating of the text, the copy-paste operation has to be automated. The advantage is: any change in the text is consistently propagated to every occurrence of the text.
 
 ## Information Transclusion
 
-A living document has to follow the change of the change of the system it documents. In case of software this can partially be automated. A lot of data that may need to be included in the document is available in the source code. For example the current version of the application, which is a numeric value, may be included in the documentation at differnt locations. Updating it to the latest version manually is almost always some error. Sooner or later one or more references may skip update and become stale. The solution is partial when we use the technique that eliminates DRY. With that we define the version in the document at one place and it will be referred to in other places. It still needs that one place to be updated. Fetching the version number from the source code automatically is one level more automation.
+A living document has to follow the change of the system it documents. In the case of software, this can partially be automated. A lot of data that may need to be included in the document is available in the source code. For example, the current version of the application, a numeric value, may be included in the documentation at different locations. Updating it to the latest version manually is almost always some error. Sooner or later, one or more references may skip the update and become stale. The solution is partial when we use the technique that eliminates DRY. We define the version in the document in one place, and it will be referred to in other places. It still needs that one place to be updated. Fetching the version number from the source code automatically is one level more automation.
 
-Usage samples are also a good example for transclusion. When the usage samples are fetched from the unit tests automatically then they are guaranteed to run at least during the test execution.
+Usage samples are also an excellent example for transclusion. When the usage samples are automatically fetched from the unit tests, they are guaranteed to run during the test execution.
 
 ## Internal Consistency
 
-Ensuring internal consistency of the document can also be automated to some level. This is such an important factor that many documentation systems support it related to cross-references. The examples can be various.
+Ensuring internal consistency of the document can also be automated to some level. It is such an essential factor that many documentation systems support it related to cross-references. The examples can be various.
 
-You may create a document with use cases. In the use cases you use actors in the description. A document management system can ensure that all the actors used in the document are also defined. A similar check can be done for abbreviations and other things. Consistency, if can be formally defined, can be checked by automated tools.
+You may create a document with use cases. In the use cases, you use actors in the description. A document management system can ensure that all the actors used in the document are also defined. A similar check can be done for abbreviations and other things. Consistency, if it can be formally defined, can be checked by automated tools.
 
 ## External Consistency
 
-Just as well as the different parts of the document should be consistent and without contradiction the documentation should also be consistent with the system it documents. This is similar to transcluding information from the source. The difference is that the information in this case is mainly existence only. For example you reference a file, a directory, a method in a Java class. A tool can check that the directory, file or method exists, it was not renamed nor deleted. Similarly other consistency checks can be programmed.
+Just as well as the different parts of the document should be consistent and without contradiction, the documentation should also be consistent with the system it documents. It is similar to transcluding information from the source. The difference is that the information, in this case, is mainly existence only. For example, you reference a file, a directory, a method in a Java class. A tool can check that the directory, file, or method exists; it was not renamed nor deleted. Similarly, other consistency checks can be programmed.
 
 # Document Writing is Programming
 
-There may be some other cases where some automation may come into picture. The general approach, however, should be to manage the document similar to program source. Technical documents need maintenance. Documents have a source and it should be structured. One change in the documented system should be followed by a single change in the document. Every other occurrence in the output should be created automatically.
+There may be some other cases where some automation may come into the picture. The general approach, however, should be to manage the document similar to the program source. Technical documents need maintenance. Documents have a source, and they should be structured. One change in the documented system should be followed by a single change in the document. Every other occurrence in the output should be created automatically.
 
-It is very much similar to programming. The programmers write source code in a high level programming language and the compiler generates the machine code. Sometime the compilation process is a long chain involving many tools. Programming in machine code is an art of the past. The advantages of using a high level language fairly compensate for the extra effort using the compiler chain.
+It is very much similar to programming. The programmers write source code in a high-level programming language, and the compiler generates the machine code. Sometimes the compilation process is a long chain involving many tools. Programming in machine code is an art of the past. The advantages of using a high-level language fairly compensate for the extra effort using the compiler chain.
 
-In case of technical documentation the advantages, at least in the sort run are not so appealing. Creating a document using some WYSIWYG editor is easy as opposed to programming in assembly. It is easy to lure the technical writer to avoid some extra work at the start and avoid the document source code creation.
+In technical documentation, the advantages, at least in the short run, are not so appealing. Creating a document using some WYSIWYG editor is easy as opposed to programming in assembly. It is easy to lure the technical writer to avoid some extra work at the start and avoid the document source code creation.
 
 A work to be done tomorrow is always cheaper today than the avoidable work of now.
 
-The same will not be true tomorrow. Creating the more complex but less redundant documentation source almost always pay back, especially if we take into account document quality coming from consistency and up-to-date-ness.
+The same will not be true tomorrow. Creating the more complex but less redundant documentation source almost always payback, especially if we consider document quality coming from consistency and up-to-date-ness.
 
 <img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/articleimages/cost.svg"/>
 
 # The Tool: Java Macro Language
 
-In the rest of this article I will describe a tool that can help to automate the document management tasks. The tool is the Java version of the text processor Jamal. Originally the name was standing for Just Another Macro Language, and it was created in the late 1990-ies in Perl. A few years ago I rewrote the implementation in Java and the original functionality was enhanced. Since the application is based on Java it is now named Java Macro Language, abbreviated as Jamal.
+In the rest of this article, I will describe a tool that can automate document management tasks. The tool is the Java version of the text processor Jamal. Originally the name was standing for Just Another Macro Language, and it was created in the late 1990-ies in Perl. A few years ago, I rewrote the implementation in Java, with the original functionality enhanced. Since the application is based on Java, it is now named Java Macro Language, abbreviated as Jamal.
 
-The basic concept of Jamal is that the an input text containing free text and macros mixed is processed. The output is a text with all the macros executed and evaluated. The syntax of the macros is free. The only requirement is that each of them start and end with a specific string. The start and end string can be defined when the macro processor is initialized. It can also be changed on the fly in the input text. When I document Java programs then I usually use `{%` as start string and `%}` as end string. That way a simple macro definition will be 
+The basic concept of Jamal is that the input text containing free text and macros mixed is processed. The output is a text with all the macros executed and evaluated. The syntax of the macros is free. The only requirement is that each of them starts and ends with a specific string. The start and end string can be defined when the macro processor is initialized. It can also be changed on the fly in the input text. When I document Java programs, then I usually use `{%` as start string and `%}` as end string. That way, a simple macro definition will be 
 
 [sourcecode language="text"]
 {%@define lastUpdated=2021-02-17 16:00%}
@@ -85,19 +85,19 @@ Later you can refer to this macro as
 
  and it will be replaced by the value `2021-02-17 16:00` for each use.
 
-Jamal distinguishes user defined and built-in macros. The example above, named `lastUpdated` is a user defined macro, as it is defined in the input text. The macro defining it, named `define` is built-in. It is implemented as a Java class implementing the Jamal `Macro` interface. The built-in, Java implemented macros are provided in JAR files, in libraries. The core package contains the essential macros, like `define`, `import`, `begin`, `end`, `options`, `comment` and a few others. These macros are not task specific, they are needed generally.
+Jamal distinguishes user-defined and built-in macros. The example above, named `lastUpdated` is a user-defined macro, as it is defined in the input text. The macro defining it, named `define` is built-in. It is implemented as a Java class implementing the Jamal `Macro` interface. The built-in, Java implemented macros are provided in JAR files, in libraries. The core package contains the essential macros, like `define`, `import`, `begin`, `end`, `options`, `comment`, and a few others. These macros are not task-specific. They are needed generally.
 
-Other libraries, like the `jamal-snippet` library contain macros that support some specific task. The mentioned `jamal-snippet` library supports document management.
+Other libraries, like the `jamal-snippet` library, contain macros that support some specific task. The mentioned `jamal-snippet` library supports document management.
 
 ## Snippet Handling, Transclude
 
-The original idea of the snippets is not new. The basic approach to use the source code as part of the documentation originates from D. Knuth with Web and Tangle as early as 1984. https://en.wikipedia.org/wiki/CWEB The idea to create a program that contains the documentation as well as the execution code did not become popular as it needed a lot of extra work from the developers and an extra compilation step. Current trend includes the documentation into the source code as comment. In case of Java programs this is JavaDoc. It is also a trend to use unit tests as a form of documentation.
+The original idea of the snippets is not new. The basic approach to use the source code as part of the documentation originates from D. Knuth with Web and Tangle as early as 1984. https://en.wikipedia.org/wiki/CWEB Creating a program that contains the documentation and the execution code did not become popular as it needed a lot of extra work from the developers and an additional compilation step. The current trend includes the documentation into the source code as a comment. In the case of Java programs, this is JavaDoc. It is also a trend to use unit tests as a form of documentation.
 
-The two are separate and both lacks the aspect that the other provides. JavaDoc does not show sample use, unless someone copies some sample code into it manually. Unit test does not contain proper explanation, unless someone copies fragments or the whole from the JavaDoc to the unit test comments. JavaDoc is converted to navigable HTML pages. Unit tests is source code. Although the best documentation is the source code it would be nice to have some better, more document like format.
+The two are separate, and both lack the aspect that the other provides. JavaDoc does not show sample use unless someone copies some sample code into it manually. The unit test does not contain a proper explanation unless someone copies fragments or the whole from the JavaDoc to the unit test comments. JavaDoc is converted to navigable HTML pages. Unit tests are source code. Although the best documentation is the source code, it would be nice to have a better, more document-like format.
 
-When we talk about snippets then we copy automatically code fragments into the documentation. In practice the used documentation format is Asciidoc or MarkDown these days. Both formats allows code samples in the document.
+When we talk about snippets, then we copy code fragments automatically into the documentation. In practice, the documentation format is Asciidoc or MarkDown these days. Both formats allow code samples in the document.
 
-using Jamal the snippets can be marked in the Java source code, or in any other source code with
+using Jamal, the snippets can be marked in the Java source code or any other source code with
 
 
 
@@ -107,13 +107,13 @@ using Jamal the snippets can be marked in the Java source code, or in any other 
     end snippet
 [/sourcecode]
 
- lines. The `snippetName` should be replaced by a unique name that identifies the snippet and all the lines between the `snippet` and `end snippet` lines will be the snippet itself. The snippets are gathered using the `{%@snip:collect directory%}` macro. Here `directory` is either a directory or a single file. The collection process reads each file and collects the snippets. After this the snippets can be referenced using the `{%@snip snippetName%}` macro. When Jamal runs the macro is replaced with the actual value of the snippet. It ensures that the code sample in the documentation is up-to-date.
+ lines. The `snippetName` should be replaced by a unique name that identifies the snippet, and all the lines between the `snippet` and `end snippet` lines will be the snippet itself. The snippets are gathered using the `{%@snip:collect directory%}` macro. Here `directory` is either a directory or a single file. The collection process reads each file and collects the snippets. After this the snippets can be referenced using the `{%@snip snippetName%}` macro. When Jamal runs, the macro is replaced with the actual value of the snippet. It ensures that the code sample in the documentation is up-to-date.
 
-There are other macros that can trim the content, replace some strings in the samples, number the lines, skip some lines and so on. With these you can include any code sample.
+Other macros can trim the content, replace some strings in the samples, number the lines, skip some lines, and so on. With these, you can include any code sample.
 
-Snippets are good for code samples, but not only for code samples. As JavaDoc is included in the source code, some part of the documentation can also be inlcuded in the code as comments.
+Snippets are suitable for code samples, but not only for code samples. As JavaDoc is included in the source code, some parts of the documentation can also be included in the code as comments.
 
-For example the implementation of the macro `directory` contains the following lines: 
+For example, the implementation of the macro `directory` contains the following lines: 
 
 [sourcecode language="java"]
     // snippet dirMacroFormatPlaceholders
@@ -133,7 +133,7 @@ For example the implementation of the macro `directory` contains the following l
 {%#replaceLines{%#killLines{%@snip dirMacroFormatPlaceholders %}%}%}
 [/sourcecode]
 
-(Note: the actual version is a bit more complex, as you will see later.) It inserts the content of the snippet evaluating the `snip` macro. The content of the sippet is then passed to the macro `killLines`. This macro will delete all the lines that match the regular expression defined in the macro `pattern`. The result is still further modified by the `replaceLines` macro. It executes the Java String `replaceAll()` method on each line with the arguments defined in the macro `replace`. The final result, inserted into the output is: 
+(Note: the actual version is a bit more complicated, as you will see later.) It inserts the content of the snippet evaluating the `snip` macro. The content of the sippet is then passed to the macro `killLines`. This macro will delete all the lines that match the regular expression defined in the macro `pattern`. The result is still further modified by the `replaceLines` macro. It executes the Java String `replaceAll()` method on each line with the arguments defined in the macro `replace`. The final result, inserted into the output is: 
 
 [sourcecode language="java"]
 * `$name` gives the name of the file as was specified on the macro
@@ -142,11 +142,11 @@ For example the implementation of the macro `directory` contains the following l
 * `$canonicalPath` the canonical path
 [/sourcecode]
 
-This way the document is much easier to maintain. The documentation of the parameters is along the code and that way it is harder to forget to update the documentation. Also, the name of the placeholder is taken directly from the source code. Even if the developer makes a typo naming the placeholder in the example above the documentation will contain the name as it is in the code and thus exactly the characters it has to be used.
+This way, the document is much easier to maintain. The documentation of the parameters is along with the code, and that way, it is harder to forget to update the documentation. Also, the name of the placeholder is taken directly from the source code. Even if the developer makes a typo naming the placeholder in the example above, the documentation will contain the name as it is in the code and the characters it has to be used.
 
-Snippets can come from other sources, not only from file snippet fragments. The built-in macro `snip:xml` reads a while XML file and assignes it to a macro name. This macro is similar to the core built-in macro `define`. It also defines a user defined macro. In this case, however, the macro is not a constant string with argument placeholders as in the case of those defined calling the macro `define`. In this case the content is a whole parsed XML file and the one argument the macro can and should have when invoked must be an XPath. The result of the macro call, as you can guess, the value in the XML found by the XPath.
+Snippets can come from other sources, not only from file snippet fragments. The built-in macro `snip:xml` reads a while XML file and assigns it to a macro name. This macro is similar to the built-in core macro `define`. It also defines a user-defined macro. In this case, however, the macro is not a constant string with argument placeholders as those defined, calling the macro `define`. In this case, the content is a whole parsed XML file, and the one argument the macro can and should have when invoked must be an XPath. As you can guess, the result of the macro call is the value in the XML found by the XPath.
 
-As an example the module documentation `README.adoc.jam` for `jamal-plantuml` contains the following lines close to the start of the file:
+As an example, the module documentation `README.adoc.jam` for `jamal-plantuml` contains the following lines close to the start of the file:
 
 
 
@@ -156,17 +156,17 @@ As an example the module documentation `README.adoc.jam` for `jamal-plantuml` co
 {%#define VERSION={%pom /project/version/text()%}%}\
 [/sourcecode]
 
-This reads the `pom.xml` file of the macro and defines the `PLANTUML_VERSION` and `VERSION` macros to hold the current version of the used PlantUml library and the version of the project respoctively. Later in the documentation both `{%PLANTUML_VERSION%}` and `{%VERSION%}` can be used and will be replaced in the output with the up-to-date version.
+It reads the `pom.xml` file of the macro and defines the `PLANTUML_VERSION` and `VERSION` macros to hold the current version of the used PlantUml library and the version of the project, respectively. Later in the documentation, both `{%PLANTUML_VERSION%}` and `{%VERSION%}` can be used and will be replaced in the output with the up-to-date version.
 
-We have seen that snippet texts can be fetched from arbitrary source files, and from an XML file. In addition to that snippets can also be defined in `.properties` files (also XML format properties file) and can also be defined as a macro. The definition of the snippet as a macro using the `snip:define` built-in has a special use that we will discuss later with the `snip:update` macro.
+We have seen that snippet texts can be fetched from arbitrary source files and XML files. In addition to that, snippets can also be defined in `.properties` files (even XML format properties file) and can also be defined as a macro. The snippet definition as a macro using the `snip:define` built-in has a particular use that we will discuss later with the `snip:update` macro.
 
 ## File, Directory, Class, Method => Consistency
 
-The macros `file`, `directory`, `java:class` and `java:method` are macros that can help keeping the code consistent with the system. These macros add barely any formatting to the output, therefore their use needs discipline. They check that the argument file, directory, class or method really exists. If the entity does not exist then the macro throws an exception. This way if the entity was renamed, moved or deleted the documentation has to be updated or else it does not compile.
+The macros `file`, `directory`, `java:class`, and `java:method` are macros that can keep the code consistent with the system. These macros add barely any formatting to the output; therefore, their use needs discipline. They check that the argument file, directory, class, or method exists. If the entity does not exist, then the macro throws an exception. If the entity was renamed, moved, or deleted, the documentation has to be updated, or else it does not compile.
 
-The use of the macros `file` and `directory` is straightforward. They check the existence of the file and directory specified as argument. The name can either be absolute or relative to the input document.
+The use of the macros `file` and `directory` is straightforward. They check the existence of the file and directory specified as the argument. The name can either be absolute or relative to the input document.
 
-Checking the existence of a class or method is not that straightforward. It needs a Java environment that has the class on the classpath. It is a recommended practice to invoke Jamal from a unit test to convert the document from the input to output. This article is also written using Jamal as a preprocessor and it is converted from a unit test of the module `jamal-snippet` using the following code:
+Checking the existence of a class or method is not that straightforward. It needs a Java environment that has the class on the classpath. It is recommended to invoke Jamal from a unit test to convert the document from the input to output. This article is also written using Jamal as a preprocessor, and it is converted from a unit test of the module `jamal-snippet` using the following code:
 
 
 
@@ -184,15 +184,15 @@ void convertSnippetArticle() throws Exception {
 }
 [/sourcecode]
 
- During the execution of the unit test the classes of the documented system are on the classpath or on the module path and that way these macros, `java:class` and `java:method` work.
+ During the unit test's execution, the classes of the documented system are on the classpath or on the module path, and that way, these macros, `java:class` and `java:method` work.
 
 ## Updating the Input
 
-The `jamal-snippet` library has a special macro `snip:update`, which does something very special thing.
+The `jamal-snippet` library has a particular macro, `snip:update`, which does something exceptional.
 
-Built-in macro implementations get the part of the input, which is between the opening and closing string. This is the part of the input that they are supposed to work on. What they actually get is the an input object containing not only the character but also a position coordinate. This coordinate contains the file name and the line/column position of the input in the file. This coordinate is used by some macros to report the position of some error. Other macros, like `include` or `import` use the file name to calculate the path of the imported or included file relaive to the one that contains the macro.
+Built-in macro implementations get the part of the input, which is between the opening and closing string. It is the part of the input that they are supposed to work on. What they get is the input object containing not only the character but also a position coordinate. This coordinate contains the file name and the line/column position of the input in the file. Some macros use this coordinate to report the position of some error. Other macros, like `include` or `import`, use the file name to calculate the imported or included file path relative to the one that contains the macro.
 
-The macro `snip:update` uses the file name to physically access the file and to modify it. The macro scans the file and looks for lines that look like 
+The macro `snip:update` uses the file name to access the file and modify it physically. The macro scans the file and looks for lines that look like 
 
 [sourcecode language="java"]
 {%@snip id
@@ -200,11 +200,11 @@ The macro `snip:update` uses the file name to physically access the file and to 
 %}
 [/sourcecode]
 
- When the lines with that pattern are found then the lines between the first and the last line, essentially the lines denoted with `...` above are replaced with the actual content of the snippet. This will help the maintenance of the input document. When a you write the document it is easier if you can see the actual snippet and not only the reference to the snippet. It is also easier to debug the line killing, character replacement and other transformations of the snippet formatting.
+ When the lines with that pattern are found, then the lines between the first and last line, practically the lines denoted with `...` above, are replaced with the snippet's actual content. It will help the maintenance of the input document. When you write the document, it is easier to see the actual snippet and not only the reference to the snippet. It is also easier to debug the line killing, character replacement, and other snippet formatting transformations.
 
-The macro `snip` is not disturbed with these lines. The syntax of the `snip` macro is like `snip id ... anything treated as comment...` to allow this special use case.
+The macro `snip` is not disturbed by these lines. The syntax of the `snip` macro is like `snip id ... anything treated as a comment...` to allow this particular use case.
 
-The invocation of the macro updating of the input should take place at the end of the document when all snippets are already defined. It is also important to save the input to the version control before converting. The use of this possibility makes it possible to include into the document the formatted snippets. This is done, for example, in the documentation of the macro `directory`. The sample presented before was a simplified one. Here you can see the real one making use of update. 
+The invocation of the macro updating of the input should occur at the end of the document when all snippets are already defined. It is also essential to save the input to the version control before converting. The use of this possibility makes it possible to include into the document the formatted snippets. It is done, for example, in the documentation of the macro `directory`. The sample presented before was a simplified one. Here you can see the real one making use of updates. 
 
 [sourcecode language="java"]
 {%#snip:define dirMacroFormatPlaceholdersFormatted=
@@ -220,13 +220,13 @@ The invocation of the macro updating of the input should take place at the end o
 
  This structure includes the snippet  `dirMacroFormatPlaceholders` and converts enclosing it into macros `killLines` and `replaceLines`. The final formatted result, however, does not get directly into the output. It is assigned to a new snippet using the macro `snip:define`. The name of the new snippet is `dirMacroFormatPlaceholdersFormatted`.
 
-After this, when this new, already formatted snippet is defined it is referenced using the `snip` macro to be included into the output. When the macro `snip:update` is used at the end of the file this second use of the `snip` macro is updated and the formatted lines are inserted there as you can see.
+After this, when this new, already formatted snippet is defined, it is referenced using the `snip` macro to be included in the output. When the macro `snip:update` is used at the end of the file, this second use of the `snip` macro is updated, and the formatted lines are inserted there, as you can see.
 
-The first use of the macro `snip` is not updated because there are extra characters before the use of the macro and also there are extra charaters after the snippet identifier.
+The first use of the macro `snip` is not updated because there are extra characters before using the macro. Also, there are extra characters after the snippet identifier.
 
 ## Creating Diagrams
 
-Using diagrams are very important in documentation. As the saying goes a picture is worth a thousand words, especially if your readers are non-native and do not even know thousand words. A very good tool to create diagrams is PlantUml. The source for the diagrams in this tools is a text that describes the UML diagram structurally. A simple sequence diagram can look like the following: 
+Using diagrams are very important in the documentation. As the saying goes, a picture is worth a thousand words, especially if your readers are non-native and do not even know a thousand words. An excellent tool to create diagrams is PlantUml. The source for the diagrams in this tool is a text that describes the UML diagram structurally. A simple sequence diagram can look like the following: 
 
 
 [sourcecode language="java"]
@@ -250,21 +250,24 @@ Rajah --> Aladdin : wtf buddy?
 %}
 [/sourcecode]
 
-will create the image and it can then be referenced in the document to get 
+will create the image, and it can then be referenced in the document to get 
 
 <img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/articleimages/sample.svg"/>
 
-PlantUml is a widely used tool and it has integration with many document processors. That way it is integrated with Markdown and Asciidoc as well. Using Jamal as a preprocessor instead of the PlantUml direct integration has a few advantages, however.
+PlantUml is a widely used tool, and it has integration with many document processors. That way, it is integrated with Markdown and Asciidoc as well. Using Jamal as a preprocessor instead of the PlantUml direct integration has a few advantages, however.
 
-You do not need to have the integration for PlantUml installed on the environment where the document rendering executes. You do not have it, for example on GiHub or on GitLab. Using Jamal the PlantUml processing is done in your local environment and after that you just have a standard Markdown, Asciidoc or whatever format you use. For example, this document uses Wordpress markup, which does not have PlantUml integration, but it does not matter. The source named `ARTICLE.wp.jam` is processed by Jamal generating `ARTICLE.wp` and it has everything it needs. Pictures are generated.
+You do not need to have the integration for PlantUml installed on the environment where the document rendering executes. You do not have it, for example, on GitHub or GitLab. Using Jamal, the PlantUml processing is done in your local environment, and after that, you just have a standard Markdown, Asciidoc, or whatever format you use. For example, this document uses WordPress markup, which does not have PlantUml integration, but it does not matter. The source named `ARTICLE.wp.jam` is processed by Jamal generating `ARTICLE.wp`, and it has everything it needs. Pictures are generated.
 
-The Jamal preprocessing has other advantages. In this article, as an example, the text of the UML diagram appears three times. Once when I display for the example of how an UML digram is defined in PlantUml. The second time when I show how it is integrated using a Jamal macro. The third time it appears as an image.
+The Jamal preprocessing has other advantages. In this article, as an example, the text of the UML diagram appears three times. Once when I display for the example of how a UML digram is defined in PlantUml. The second time when I show how it is integrated using a Jamal macro. The third time it appears as an image.
 
-The source input contains it only once before the first use. The user defined macro, named `alilove` contains the actual UML and the later uses only reference this macro to get the same text. If there is a need to update the structure, it has to be done only at one place.
+The source input contains it only once before the first use. The user-defined macro, named `alilove`, contains the actual UML, and the latter only references this macro to get the same text. If there is a need to update the structure, it must be done only in one place.
 
-Another advantage is that the macros can access the running Java environment. This is already used when we check the existence and the naming of certain classes and methods. I also plan to extend the PlantUml integration with macros that can leverage from the Java environment when we document out code. Running the conversion of the Jamal input during the unit tests reflection can get access to the classes. Using those I plan to develop macros that need only the listing of the classes you want to be shown on a class diagram. The macro will discover all the relations between the classes and create a UML source to be converted to a diagram using PlantUml. Should your class structure change the diagrams will also change automatically.
+Another advantage is that the macros can access the running Java environment. It is already used when we check the existence and the naming of specific classes and methods. I also plan to extend the PlantUml integration with macros that can leverage the Java environment when we document our code. Running the conversion of the Jamal input during the unit tests reflection can get access to the classes. Using those, I plan to develop macros that need only the listing of the classes you want to be shown on a class diagram. The macro will discover all the relations between the classes and create a UML source to be converted to a diagram using PlantUml. Should your class structure change, the diagrams will also change automatically.
 
 # Summary and Takeaway
 
-Technical documentation should be approached like programming. Document writers should maintain document source code and compile the document from the source code. This is different from other types of writing.
+You should approach technical documentation like programming. Document writers should maintain document source code and compile the document from the source code.
 
+You should automate document content management as much as possible. Use automated tools to transclude information from the documented system. Use automated tools to check the consistency of the documentation. Document everything close to the system documented. Use automated tools to integrate your document source.
+
+Give it a try and use Jamal. 
