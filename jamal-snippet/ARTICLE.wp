@@ -17,6 +17,8 @@ In case of technical documentation writing, the tools help to address those task
 
 There are many things that can be automated for technical document writing. I tried to gather a list from my experience, but it may not be complete. The list is the following:
 
+<img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/articleimages/tasks.svg"/>
+
 * Eliminate manual text repetition.
 
 * Transclude information from the documented system.

@@ -35,6 +35,8 @@ There are many things that can be automated for technical document writing.
 I tried to gather a list from my experience, but it may not be complete.
 The list is the following:
 
+{%svg tasks%}
+
 * Eliminate manual text repetition.
 
 * Transclude information from the documented system.
