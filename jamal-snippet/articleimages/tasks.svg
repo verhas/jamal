@@ -18,7 +18,7 @@
       </g>
     </marker>
   </defs>
-  <metadata> Produced by OmniGraffle 7.18.2\n2021-02-13 12:50:43 +0000</metadata>
+  <metadata> Produced by OmniGraffle 7.18.2\n2021-02-13 12:54:16 +0000</metadata>
   <g id="Document_Automation" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none" fill="none">
     <title>Document Automation</title>
     <g id="Document_Automation_Layer_1">
@@ -32,30 +32,28 @@
         <rect x="144" y="-639" width="477" height="810" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_2">
-        <rect x="297" y="-459" width="252" height="126"/>
+        <rect x="297" y="-459" width="252" height="126" fill="#ccc"/>
         <rect x="297" y="-459" width="252" height="126" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_3">
-        <rect x="297" y="-315" width="252" height="126"/>
+        <rect x="297" y="-315" width="252" height="126" fill="#ccc"/>
         <rect x="297" y="-315" width="252" height="126" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_4">
-        <rect x="297" y="-90" width="252" height="126"/>
+        <rect x="297" y="-90" width="252" height="126" fill="#ccc"/>
         <rect x="297" y="-90" width="252" height="126" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
-      <g id="Group_7">
-        <g id="Graphic_6">
-          <title>Rectangle</title>
-          <rect x="-396" y="-585" width="297" height="171" fill="white"/>
-          <rect x="-396" y="-585" width="297" height="171" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-          <text transform="translate(-391 -580)" fill="black">
-            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">@define stars=</tspan>
-          </text>
-        </g>
-        <g id="Graphic_5">
-          <rect x="-360" y="-549" width="252" height="126"/>
-          <rect x="-360" y="-549" width="252" height="126" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        </g>
+      <g id="Graphic_6">
+        <title>Rectangle</title>
+        <rect x="-396" y="-585" width="297" height="171" fill="white"/>
+        <rect x="-396" y="-585" width="297" height="171" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(-391 -580)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">@define stars=</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <rect x="-360" y="-549" width="252" height="126" fill="#ccc"/>
+        <rect x="-360" y="-549" width="252" height="126" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
       </g>
       <g id="Graphic_8">
         <rect x="-396" y="-387" width="198" height="54" fill="white"/>
@@ -82,7 +80,7 @@
         <line x1="-198" y1="-364.95" x2="287.81148" y2="-389.24057" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
       </g>
       <g id="Line_12">
-        <path d="M -198 -220.95 L -86.49235 -226.52538 L 413.8115 -251.54057" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        <path d="M -198 -222 L -88.61243 -228.62955 L 287.81685 -251.44345" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
       </g>
       <g id="Line_13">
         <line x1="-198" y1="4.05" x2="287.81148" y2="-20.240574" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
