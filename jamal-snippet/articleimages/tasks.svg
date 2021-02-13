@@ -17,8 +17,13 @@
         <path d="M 16 0 L 0 -6 L 0 6 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
       </g>
     </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
   </defs>
-  <metadata> Produced by OmniGraffle 7.18.2\n2021-02-13 12:54:16 +0000</metadata>
+  <metadata> Produced by OmniGraffle 7.18.2\n2021-02-13 12:57:39 +0000</metadata>
   <g id="Document_Automation" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none" fill="none">
     <title>Document Automation</title>
     <g id="Document_Automation_Layer_1">
@@ -121,6 +126,24 @@
         <text transform="translate(-490 32)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31974423e-20" y="15">?</tspan>
         </text>
+      </g>
+      <g id="Graphic_26">
+        <circle cx="-544.5" cy="-166.5" r="22.5000359527927" fill="white"/>
+        <circle cx="-544.5" cy="-166.5" r="22.5000359527927" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_27">
+        <circle cx="-121.5" cy="-49.5" r="22.5000359527927" fill="white"/>
+        <circle cx="-121.5" cy="-49.5" r="22.5000359527927" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_28">
+        <circle cx="400.5" cy="-130.5" r="22.5000359527927" fill="white"/>
+        <circle cx="400.5" cy="-130.5" r="22.5000359527927" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_29">
+        <path d="M -528.93434 -150.25304 C -506.6258 -129.7371 -459.0484 -94.41764 -378 -72 C -291.02592 -47.94334 -195.19011 -46.95409 -149.16772 -48.220707" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_30">
+        <path d="M -100.74939 -58.21371 C -69.61829 -70.20798 -3.328424 -92.12145 99 -108 C 208.90383 -125.05404 321.9721 -129.18677 372.80136 -130.18467" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
       </g>
     </g>
   </g>
