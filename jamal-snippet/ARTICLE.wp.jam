@@ -473,7 +473,12 @@ Should your class structure change the diagrams will also change automatically.
 
 Technical documentation should be approached like programming.
 Document writers should maintain document source code and compile the document from the source code.
-This is different from other types of writing.
 
+Document content management should be automated as much as possible.
+Use automated tools to transclude information from the documented system.
+Use automated tools to check the consistency of the documentation.
+Document everything close to the system documented.
+Use automated tools to integrate your document source.
 
+Give it a try and use Jamal.
 %}
