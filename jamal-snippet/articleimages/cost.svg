@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-837 -865 1072 840" width="1072" height="840">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -10 26 20" markerWidth="26" markerHeight="20" color="black">
+      <g>
+        <path d="M 24 0 L 0 0 M 0 -9 L 24 0 L 0 9" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="10" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.18.2\n2021-02-13 12:31:17 +0000</metadata>
+  <g id="Document_Maintenance_Cost" stroke="none" stroke-opacity="1" fill-opacity="1" stroke-dasharray="none" fill="none">
+    <title>Document Maintenance Cost</title>
+    <g id="Document_Maintenance_Cost_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_4">
+        <line x1="-792" y1="-54" x2="-792" y2="-850.8" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Line_5">
+        <line x1="-819" y1="-81" x2="220.8" y2="-81" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_6">
+        <text transform="translate(86 -67)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">number of releases</tspan>
+        </text>
+      </g>
+      <g id="Graphic_7">
+        <text transform="translate(-832 -627.696) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="42632564e-21" y="15">cost of document maintenance</tspan>
+        </text>
+      </g>
+      <g id="Line_8">
+        <line x1="-711" y1="-288" x2="153" y2="-486" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_9">
+        <text transform="translate(-642.0034 -324.20024) rotate(-13)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">source edited, compiled</tspan>
+        </text>
+      </g>
+      <g id="Line_16">
+        <line x1="-711" y1="-162" x2="162" y2="-729" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+      </g>
+      <g id="Graphic_17">
+        <text transform="translate(-236.05885 -499.6003) rotate(-34)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">source edited, compiled</tspan>
+        </text>
+      </g>
+      <g id="Line_18">
+        <path d="M -722.9909 -288.14173 L -722.9909 -288.14173 C -727.9615 -288.14173 -731.9909 -284.1123 -731.9909 -279.14173 L -731.9909 -235.53792 C -731.9909 -232.31078 -733.7042 -229.32624 -736.4909 -227.69882 L -736.4909 -227.69882 C -737.9423 -226.85123 -738.4318 -224.98754 -737.5842 -223.53617 C -737.32 -223.0837 -736.9434 -222.70714 -736.4909 -222.4429 L -736.4909 -222.4429 C -733.7042 -220.81548 -731.9909 -217.83095 -731.9909 -214.6038 L -731.9909 -171 C -731.9909 -166.02944 -727.9615 -162 -722.9909 -162 L -722.9909 -162" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_19">
+        <text transform="translate(-760 -167) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="10" font-weight="400" fill="black" x="0" y="10">extra cost of source creation</tspan>
+        </text>
+      </g>
+      <g id="Line_20">
+        <path d="M 171 -729 L 171 -729 C 175.97056 -729 180 -724.9706 180 -720 L 180 -625.3084 C 180 -620.9675 181.60243 -616.77945 184.5 -613.54724 L 184.5 -613.54724 C 187.06082 -610.6907 187.06082 -606.3644 184.5 -603.5079 L 184.5 -603.5079 C 181.60243 -600.2757 180 -596.0876 180 -591.7467 L 180 -497.0551 C 180 -492.08456 175.97056 -488.0551 171 -488.0551 L 171 -488.0551" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_21">
+        <text transform="translate(194 -518.98) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="10" font-weight="400" fill="black" x="4.16" y="10">extra cost of manual changes and</tspan>
+          <tspan font-family="Helvetica Neue" font-size="10" font-weight="400" fill="black" x="21316282e-20" y="22.28">cost of lower documentation quality</tspan>
+        </text>
+      </g>
+      <g id="Group_24">
+        <g id="Line_22">
+          <line x1="-412.155" y1="-108" x2="-412.155" y2="-63" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        </g>
+        <g id="Graphic_23">
+          <text transform="translate(-416.155 -58)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31974423e-20" y="15">2</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Group_25">
+        <g id="Line_27">
+          <line x1="-702" y1="-99" x2="-702" y2="-54" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+        </g>
+        <g id="Graphic_26">
+          <text transform="translate(-706 -49)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31974423e-20" y="15">1</tspan>
+          </text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

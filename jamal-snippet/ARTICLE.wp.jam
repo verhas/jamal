@@ -6,13 +6,15 @@ Writing Technical Documentation
 
 %}
 {%@import https://raw.githubusercontent.com/central7/wordpress/main/wp.jim%}
-
+{%@define svg($x)=<img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/articleimages/$x.svg"/>%}
 {%#reflow
 # Introduction
 
 Writing good technical documentation is an art.
 
+<blockquote>
 An art is the expression or application of human creative skill and imagination, ... to be appreciated primarily for their beauty or emotional power.
+</blockquote>
 
 But every art, like sculpting, has a craft part.
 You need chisels, hammers to form the sculpture out of the blob of marble.
@@ -24,7 +26,7 @@ Fixing typos, grammatical errors is more like a craft.
 Making the documentation precise, to the point and well structured is also the craft part.
 Crafts can be learned and aided with the right tool.
 
-In case of technical documentation writing these tools help to address those tasks that are many times performed manually though could be automated.
+In case of technical documentation writing, the tools help to address those tasks that are many times performed manually though could be automated.
 In this article I will write about a tool that helps in that manner and which I used successfully to write documentation, many articles -- also this one --, and books.
 
 # What can be automated
@@ -109,10 +111,27 @@ Similarly other consistency checks can be programmed.
 
 There may be some other cases where some automation may come into picture.
 The general approach, however, should be to manage the document similar to program source.
-Documents are maintained.
-Documents have a source and the source should be structured.
+Technical documents need maintenance.
+Documents have a source and it should be structured.
 One change in the documented system should be followed by a single change in the document.
-Every other occurrence in the output shoudl be created automatically.
+Every other occurrence in the output should be created automatically.
+
+It is very much similar to programming.
+The programmers write source code in a high level programming language and the compiler generates the machine code.
+Sometime the compilation process is a long chain involving many tools.
+Programming in machine code is an art of the past.
+The advantages of using a high level language fairly compensate for the extra effort using the compiler chain.
+
+In case of technical documentation the advantages, at least in the sort run are not so appealing.
+Creating a document using some WYSIWYG editor is easy as opposed to programming in assembly.
+It is easy to lure the technical writer to avoid some extra work at the start and avoid the document source code creation.
+
+A work to be done tomorrow is always cheaper today than the avoidable work of now.
+
+The same will not be true tomorrow.
+Creating the more complex but less redundant documentation source almost always pay back, especially if we take into account document quality coming from consistency and up-to-date-ness.
+
+{%svg cost%}
 
 # The Tool: Java Macro Language
 
@@ -386,12 +405,10 @@ As the saying goes a picture is worth a thousand words, especially if your reade
 A very good tool to create diagrams is PlantUml.
 The source for the diagrams in this tools is a text that describes the UML diagram structurally.
 A simple sequence diagram can look like the following:
-{%@define aliloves=
-Aladdin -> Jasmine : I love you
+%}
+{%@define alilove=Aladdin -> Jasmine : I love you
 Jasmine -> Rajah : Aladdin loves me
-Rajah --> Aladdin : wtf buddy?
-%}
-%}
+Rajah --> Aladdin : wtf buddy?%}
 
 [sourcecode language="java"]
 @startuml
@@ -416,4 +433,45 @@ Putting this text into the macro
 
 {%#reflow
 will create the image and it can then be referenced in the document to get
+%}
+
+{%svg sample%}
+
+{%#reflow
+PlantUml is a widely used tool and it has integration with many document processors.
+That way it is integrated with Markdown and Asciidoc as well.
+Using Jamal as a preprocessor instead of the PlantUml direct integration has a few advantages, however.
+
+You do not need to have the integration for PlantUml installed on the environment where the document rendering executes.
+You do not have it, for example on GiHub or on GitLab.
+Using Jamal the PlantUml processing is done in your local environment and after that you just have a standard Markdown, Asciidoc or whatever format you use.
+For example, this document uses Wordpress markup, which does not have PlantUml integration, but it does not matter.
+The source named `ARTICLE.wp.jam` is processed by Jamal generating `ARTICLE.wp` and it has everything it needs.
+Pictures are generated.
+
+The Jamal preprocessing has other advantages.
+In this article, as an example, the text of the UML diagram appears three times.
+Once when I display for the example of how an UML digram is defined in PlantUml.
+The second time when I show how it is integrated using a Jamal macro.
+The third time it appears as an image.
+
+The source input contains it only once before the first use.
+The user defined macro, named `alilove` contains the actual UML and the later uses only reference this macro to get the same text.
+If there is a need to update the structure, it has to be done only at one place.
+
+Another advantage is that the macros can access the running Java environment.
+This is already used when we check the existence and the naming of certain classes and methods.
+I also plan to extend the PlantUml integration with macros that can leverage from the Java environment when we document out code.
+Running the conversion of the Jamal input during the unit tests reflection can get access to the classes.
+Using those I plan to develop macros that need only the listing of the classes you want to be shown on a class diagram.
+The macro will discover all the relations between the classes and create a UML source to be converted to a diagram using PlantUml.
+Should your class structure change the diagrams will also change automatically.
+
+# Summary and Takeaway
+
+Technical documentation should be approached like programming.
+Document writers should maintain document source code and compile the document from the source code.
+This is different from other types of writing.
+
+
 %}
