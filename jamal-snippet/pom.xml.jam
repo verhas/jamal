@@ -13,6 +13,7 @@
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency|{GROUPID}|jamal-testsupport||test}
         {dependency|{GROUPID}|jamal-core||test}
+        {dependency|{GROUPID}|jamal-plantuml|1.6.5|test}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

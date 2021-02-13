@@ -84,7 +84,7 @@
         }
     }
     {dependencyManagement|{dependencies|
-        {@for MODULE in (testsupport,api,core,tools,engine,extensions,scriptbasic)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
+        {@for MODULE in (testsupport,api,core,tools,engine,extensions,scriptbasic,snippet,plantuml)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:5.2.0:test}}
         }}
 

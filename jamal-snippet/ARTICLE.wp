@@ -210,5 +210,12 @@ The invocation of the macro updating of the input should take place at the end o
 
 After this, when this new, already formatted snippet is defined it is referenced using the `snip` macro to be included into the output. When the macro `snip:update` is used at the end of the file this second use of the `snip` macro is updated and the formatted lines are inserted there as you can see.
 
-The first use of the macro `snip` is not updted because there are extra characters before the use of the macro and also there are extra chacaters after the snippet identifier.
+The first use of the macro `snip` is not updated because there are extra characters before the use of the macro and also there are extra charaters after the snippet identifier.
 
+## Creating Diagrams
+
+Using diagrams are very important in documentation. As the saying goes a picture is worth a thousand words, especially if your readers are non-native and do not even know thousand words. A very good tool to create diagrams is PlantUml. The source for the diagrams in this tools is a text that describes the UML diagram structurally.
+
+
+
+sample.svg

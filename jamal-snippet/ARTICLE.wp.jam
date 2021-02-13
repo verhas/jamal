@@ -383,7 +383,37 @@ The first use of the macro `snip` is not updated because there are extra charact
 
 Using diagrams are very important in documentation.
 As the saying goes a picture is worth a thousand words, especially if your readers are non-native and do not even know thousand words.
-A fairly good tool to create diagrams is PlantUml.
+A very good tool to create diagrams is PlantUml.
 The source for the diagrams in this tools is a text that describes the UML diagram structurally.
+A simple sequence diagram can look like the following:
+{%@define aliloves=
+Aladdin -> Jasmine : I love you
+Jasmine -> Rajah : Aladdin loves me
+Rajah --> Aladdin : wtf buddy?
+%}
+%}
 
+[sourcecode language="java"]
+@startuml
+{%alilove%}
+@enduml
+[/sourcecode]
+
+{%@define pu$folder=articleimages%}
+{%#plantuml sample.svg
+{%alilove%}
+%}
+
+{%#reflow
+Putting this text into the macro
+%}
+
+{%@sep [[ ]]%}[sourcecode language="text"]
+{%@plantuml sample.svg
+[[alilove]]
+%}
+[/sourcecode][[@sep {% %}]]
+
+{%#reflow
+will create the image and it can then be referenced in the document to get
 %}
