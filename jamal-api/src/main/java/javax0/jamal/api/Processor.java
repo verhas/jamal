@@ -65,6 +65,27 @@ public interface Processor extends AutoCloseable {
     ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params) throws BadSyntax;
 
     /**
+     * Register an AutoClosable resource that has to be closed when the execution is finished.
+     * <p>
+     * Some user defined (Java implemented) or built-in macro may create resources that perform some actions
+     * asynchronous. The typical example is when a macro that creates some external resource starts a separate thread to
+     * execute the task. This task has to be joined at the end of the processing. The general model is that there is a
+     * resource that has to be closed. If it is a thread, then an object has to be created that joins the thread upon
+     * closing. If it is a task in a thread pool then it has to wait for the task to be finished. It is up to the
+     * implementation of the macro.
+     * <p>
+     * Calling this method the macro may register the object as something autocloseable. The processor itself is also
+     * autocloseable, so when the processor is closed then the resources are closed one by one.
+     * <p>
+     * Note that this method, or any other method of the processor MUST NOT be invoked from other than the main thread
+     * of the Jamal processing. Even if a macro spawns a new thread the new thread must not do anything with the
+     * processor.
+     *
+     * @param resource the autocloseable object to be closed at the end of the processing.
+     */
+    void deferredClose(AutoCloseable resource);
+
+    /**
      * @param id the identifier of the user defined macro
      * @return {@code true} if the user defined macro is defined at the current contex and {@code false} otherwise.
      */

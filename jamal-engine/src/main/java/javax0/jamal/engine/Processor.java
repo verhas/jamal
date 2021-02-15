@@ -19,8 +19,10 @@ import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
@@ -42,6 +44,8 @@ public class Processor implements javax0.jamal.api.Processor {
     final private StackLimiter limiter = new StackLimiter();
 
     final private JShellEngine shellEngine = new JShellEngine();
+
+    final private Set<AutoCloseable> resources = new HashSet<>();
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -728,6 +732,26 @@ public class Processor implements javax0.jamal.api.Processor {
     @Override
     public void close() throws Exception {
         shellEngine.close();
+        final var exceptionsAccumulator = new HashSet<Throwable>();
+        for (final var resource : resources) {
+            try {
+                resource.close();
+            } catch (Exception e) {
+                exceptionsAccumulator.add(e);
+            }
+        }
+        if (!exceptionsAccumulator.isEmpty()) {
+            final var exception = new Exception("There were " + exceptionsAccumulator.size() + " exceptions closing the registered resources.");
+            for (final var accumulated : exceptionsAccumulator) {
+                exception.addSuppressed(accumulated);
+            }
+            throw exception;
+        }
+    }
+
+    @Override
+    public void deferredClose(AutoCloseable resource){
+        resources.add(resource);
     }
 
     private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);

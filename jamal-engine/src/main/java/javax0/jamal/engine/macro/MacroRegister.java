@@ -303,15 +303,34 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         return false;
     }
 
-    private void tryCleanUpStack(Marker check) {
+    private void tryCleanUpStack(Marker check) throws BadSyntax {
         while (scopeStack.size() > 0 && !Objects.equals(check, currentScope().checkObject)) {
             popStackOneLevel();
         }
     }
 
-    private void popStackOneLevel() {
+    private void popStackOneLevel() throws BadSyntax {
         if (scopeStack.size() > 0) {
-            poppedMarkers.add(scopeStack.remove(scopeStack.size() - 1).checkObject);
+            final var removedScope = scopeStack.remove(scopeStack.size() - 1);
+            for (final var macro : removedScope.getMacros().values()) {
+                if (macro instanceof AutoCloseable) {
+                    try {
+                        ((AutoCloseable) macro).close();
+                    } catch (Exception e) {
+                        throw new BadSyntax("Closing AutoCloseable macro '" + macro.getId() + "' caused exception.", e);
+                    }
+                }
+            }
+            for (final var macro : removedScope.getUdMacros().values()) {
+                if (macro instanceof AutoCloseable) {
+                    try {
+                        ((AutoCloseable) macro).close();
+                    } catch (Exception e) {
+                        throw new BadSyntax("Closing AutoCloseable macro '" + macro.getId() + "' caused exception.", e);
+                    }
+                }
+            }
+            poppedMarkers.add(removedScope.checkObject);
             scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
         }
     }

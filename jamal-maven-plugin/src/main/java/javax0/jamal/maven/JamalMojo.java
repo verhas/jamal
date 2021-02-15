@@ -108,10 +108,12 @@ public class JamalMojo extends AbstractMojo {
             if (output != null) {
                 log.debug("Jamal output for the file is " + qq(output.toString()));
                 final String result;
-                if ("true".equals(formatOutput)) {
-                    result = formatOutput(output, new Processor(macroOpen, macroClose).process(createInput(inputPath)));
-                } else {
-                    result = new Processor(macroOpen, macroClose).process(createInput(inputPath));
+                try( final var processor = new Processor(macroOpen, macroClose)) {
+                    if ("true".equals(formatOutput)) {
+                        result = formatOutput(output, processor.process(createInput(inputPath)));
+                    } else {
+                        result = processor.process(createInput(inputPath));
+                    }
                 }
                 writeOutput(output, result);
             }

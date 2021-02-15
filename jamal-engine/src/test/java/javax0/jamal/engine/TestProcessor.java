@@ -110,15 +110,28 @@ public class TestProcessor {
         Assertions.assertEquals("{zz}", result);
     }
 
+    public static class SignalMacro implements Macro {
+        String closed = "not closed";
+
+        @Override
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+            return closed;
+        }
+    }
+
     public static class AutoClosingMacro implements Macro, AutoCloseable {
+
+        javax0.jamal.api.Processor p = null;
 
         @Override
         public void close() throws Exception {
-
+            SignalMacro sm = (SignalMacro)p.getRegister().getMacro("signalmacro").get();
+            sm.closed = "closed";
         }
 
         @Override
         public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+            p = processor;
             return "AutoClosing";
         }
     }
@@ -126,9 +139,22 @@ public class TestProcessor {
     @Test
     @DisplayName("Macro implementing AutoClose gets closed when gets out of scope")
     public void testAutoClose() throws BadSyntax {
-        final var input = new Input("{@define b={zz}}{@verbatim b}");
+        final var input = new Input(
+            "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
+                "{@signalmacro}\n" +
+                "{#ident" +
+                "  {@use javax0.jamal.engine.TestProcessor.AutoClosingMacro}" +
+                "{@autoclosingmacro}\n" +
+                "{@signalmacro}" +
+                "}\n" +
+                "{@signalmacro}\n"
+        );
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
-        Assertions.assertEquals("{zz}", result);
+        Assertions.assertEquals(
+            "not closed\n" +
+            "AutoClosing\n" +
+            "not closed\n" +
+            "closed\n", result);
     }
 }
