@@ -2,6 +2,8 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
@@ -156,5 +158,55 @@ public class TestProcessor {
             "AutoClosing\n" +
             "not closed\n" +
             "closed\n", result);
+    }
+
+
+    public static class AutoClosingUdMacro implements Identified, AutoCloseable {
+
+        final javax0.jamal.api.Processor processor;
+        AutoClosingUdMacro(javax0.jamal.api.Processor processor){
+            this.processor = processor;
+        }
+
+        @Override
+        public void close() throws Exception {
+            SignalMacro sm = (SignalMacro) processor.getRegister().getMacro("signalmacro").get();
+            sm.closed = "closed";
+        }
+
+        @Override
+        public String getId() {
+            return "wtf";
+        }
+    }
+
+    public static class UdReg implements Macro {
+
+        @Override
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+            processor.getRegister().define( new AutoClosingUdMacro(processor));
+            return "";
+        }
+    }
+
+    @Test
+    @DisplayName("User Defined Macro implementing AutoClose gets closed when gets out of scope")
+    public void testAutoCloseUdm() throws BadSyntax {
+        final var input = new Input(
+            "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
+                "{@signalmacro}\n" +
+                "{#ident" +
+                "  {@use javax0.jamal.engine.TestProcessor.UdReg}" +
+                "{@udreg}\n" +
+                "{@signalmacro}" +
+                "}\n" +
+                "{@signalmacro}\n"
+        );
+        final var sut = new Processor("{", "}");
+        final var result = sut.process(input);
+        Assertions.assertEquals(
+            "not closed\n" +
+                "not closed\n" +
+                "closed\n", result);
     }
 }

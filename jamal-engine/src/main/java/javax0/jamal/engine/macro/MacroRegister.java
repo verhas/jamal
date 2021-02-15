@@ -326,7 +326,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
                     try {
                         ((AutoCloseable) macro).close();
                     } catch (Exception e) {
-                        throw new BadSyntax("Closing AutoCloseable macro '" + macro.getId() + "' caused exception.", e);
+                        throw new BadSyntax("Closing AutoCloseable user defined macro '" + macro.getId() + "' caused exception.", e);
                     }
                 }
             }
