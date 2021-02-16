@@ -2,7 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.Context;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
 import javax0.jamal.tools.Input;
@@ -127,7 +127,7 @@ public class TestProcessor {
 
         @Override
         public void close() throws Exception {
-            SignalMacro sm = (SignalMacro)p.getRegister().getMacro("signalmacro").get();
+            SignalMacro sm = (SignalMacro) p.getRegister().getMacro("signalmacro").get();
             sm.closed = "closed";
         }
 
@@ -155,16 +155,17 @@ public class TestProcessor {
         final var result = sut.process(input);
         Assertions.assertEquals(
             "not closed\n" +
-            "AutoClosing\n" +
-            "not closed\n" +
-            "closed\n", result);
+                "AutoClosing\n" +
+                "not closed\n" +
+                "closed\n", result);
     }
 
 
     public static class AutoClosingUdMacro implements Identified, AutoCloseable {
 
         final javax0.jamal.api.Processor processor;
-        AutoClosingUdMacro(javax0.jamal.api.Processor processor){
+
+        AutoClosingUdMacro(javax0.jamal.api.Processor processor) {
             this.processor = processor;
         }
 
@@ -184,7 +185,7 @@ public class TestProcessor {
 
         @Override
         public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
-            processor.getRegister().define( new AutoClosingUdMacro(processor));
+            processor.getRegister().define(new AutoClosingUdMacro(processor));
             return "";
         }
     }
@@ -209,4 +210,66 @@ public class TestProcessor {
                 "not closed\n" +
                 "closed\n", result);
     }
+
+
+    public static class Deferred implements AutoCloseable {
+
+        private final javax0.jamal.api.Processor processor;
+
+        public Deferred(javax0.jamal.api.Processor processor) {
+            this.processor = processor;
+        }
+
+        public boolean isClosed = false;
+
+        @Override
+        public void close() throws Exception {
+            SignalMacro sm = (SignalMacro) processor.getRegister().getMacro("signalmacro").get();
+            sm.closed = "closed";
+            isClosed = true;
+        }
+    }
+
+    public static class DeferredClosingMacro implements Macro {
+
+
+        @Override
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+            MyContext ctx = (MyContext) processor.getContext();
+            ctx.deferred = new Deferred(processor);
+            processor.deferredClose(ctx.deferred);
+            return "AutoClosing";
+        }
+    }
+
+    public static class MyContext implements Context {
+        Deferred deferred;
+    }
+
+    @Test
+    @DisplayName("Macro implementing AutoClose gets closed when gets out of scope")
+    public void testDeferredClose() throws Exception {
+        final var input = new Input(
+            "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
+                "{@signalmacro}\n" +
+                "{#ident" +
+                "  {@use javax0.jamal.engine.TestProcessor.DeferredClosingMacro}" +
+                "{@deferredclosingmacro}\n" +
+                "{@signalmacro}" +
+                "}\n" +
+                "{@signalmacro}\n"
+        );
+        MyContext ctx = new MyContext();
+        try (final var sut = new Processor("{", "}", ctx)) {
+            final var result = sut.process(input);
+            Assertions.assertEquals(
+                "not closed\n" +
+                    "AutoClosing\n" +
+                    "not closed\n" +
+                    "not closed\n", result);
+            Assertions.assertFalse(ctx.deferred.isClosed);
+        }
+        Assertions.assertTrue(ctx.deferred.isClosed);
+    }
+
 }

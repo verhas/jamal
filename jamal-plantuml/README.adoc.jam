@@ -46,7 +46,7 @@ will create the file `first_image.svg` in the folder `images` and will result in
 
 {%output%}
 
-Having the name of the output file, however, does not help much.
+Having the name of the output file, however, does not help much unless we use it.
 With some macros, you can convert it to an image reference, but the macro itself also helps.
 The user-defined macro `pu$template` defines the returned string.
 The placeholder `$file` will be replaced by the name of the actual file.

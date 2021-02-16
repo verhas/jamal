@@ -86,6 +86,17 @@ public interface Processor extends AutoCloseable {
     void deferredClose(AutoCloseable resource);
 
     /**
+     * Get the context object that the embedding application was setting. The context object is a general object and the
+     * processor does not do anything with it, except that it provides this method for all macros to get access to the
+     * object.
+     * <p>
+     * The implementation of the processor must return the same object during its lifetime.
+     *
+     * @return the context object the embedding application set or {@code null} in case the context object was not set.
+     */
+    Context getContext();
+
+    /**
      * @param id the identifier of the user defined macro
      * @return {@code true} if the user defined macro is defined at the current contex and {@code false} otherwise.
      */

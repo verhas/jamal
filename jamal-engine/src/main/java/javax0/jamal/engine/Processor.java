@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Context;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
@@ -45,7 +46,9 @@ public class Processor implements javax0.jamal.api.Processor {
 
     final private JShellEngine shellEngine = new JShellEngine();
 
-    final private Set<AutoCloseable> resources = new HashSet<>();
+    final private Set<AutoCloseable> openResources = new HashSet<>();
+
+    private final Context context;
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -60,8 +63,10 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param macroOpen  the macro opening string
      * @param macroClose the macro closing string
+     * @param context    is the embedding context
      */
-    public Processor(String macroOpen, String macroClose) {
+    public Processor(String macroOpen, String macroClose, Context context) {
+        this.context = context;
         try {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {
@@ -69,6 +74,10 @@ public class Processor implements javax0.jamal.api.Processor {
                 "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
         }
         Macro.getInstances().forEach(macros::define);
+    }
+
+    public Processor(String macroOpen, String macroClose) {
+        this(macroOpen, macroClose, null);
     }
 
     /**
@@ -733,7 +742,7 @@ public class Processor implements javax0.jamal.api.Processor {
     public void close() throws Exception {
         shellEngine.close();
         final var exceptionsAccumulator = new HashSet<Throwable>();
-        for (final var resource : resources) {
+        for (final var resource : openResources) {
             try {
                 resource.close();
             } catch (Exception e) {
@@ -750,8 +759,13 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public void deferredClose(AutoCloseable resource){
-        resources.add(resource);
+    public Context getContext() {
+        return context;
+    }
+
+    @Override
+    public void deferredClose(AutoCloseable resource) {
+        openResources.add(resource);
     }
 
     private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);
