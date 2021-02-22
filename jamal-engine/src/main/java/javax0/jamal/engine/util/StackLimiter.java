@@ -30,10 +30,12 @@ public class StackLimiter {
         }
     }
 
-    public void down() {
-        if (counter.addAndGet(-1) < 0) {
+    public int down() {
+        final int downValue = counter.addAndGet(-1);
+        if (downValue < 0) {
             throw new RuntimeException("Jamal has an internal error. Stack limiter went negative.");
         }
+        return downValue;
     }
 
 }

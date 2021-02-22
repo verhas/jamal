@@ -2,6 +2,8 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Closer.OutputAware;
+import javax0.jamal.api.Closer.ProcessorAware;
 import javax0.jamal.api.Context;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
@@ -9,6 +11,9 @@ import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 public class TestProcessor {
 
@@ -267,9 +272,52 @@ public class TestProcessor {
                     "AutoClosing\n" +
                     "not closed\n" +
                     "not closed\n", result);
-            Assertions.assertFalse(ctx.deferred.isClosed);
+            Assertions.assertTrue(ctx.deferred.isClosed);
         }
         Assertions.assertTrue(ctx.deferred.isClosed);
     }
 
+    public static class Postprocessor implements Macro, AutoCloseable, ProcessorAware, OutputAware {
+
+        private javax0.jamal.api.Input output;
+        private javax0.jamal.api.Processor processor;
+
+        @Override
+        public void close() {
+            final var sb = output.getSB();
+            final var text = sb.toString().toUpperCase(Locale.ENGLISH);
+            sb.delete(0,sb.length());
+            sb.append(text);
+        }
+
+        @Override
+        public void set(javax0.jamal.api.Input input) {
+            this.output = input;
+        }
+
+        @Override
+        public void set(javax0.jamal.api.Processor input) {
+            this.processor = processor;
+        }
+
+        @Override
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+            processor.deferredClose(this);
+            return "";
+        }
+    }
+
+    @Test
+    @DisplayName("Macro implementing postprocessor")
+    public void testPostProcessor() throws Exception {
+        final var input = new Input(
+            "{@use javax0.jamal.engine.TestProcessor.Postprocessor}" +
+                "{@postprocessor}" +
+                "I think that this is something that needs capitalized."
+        );
+        try (final var sut = new Processor("{", "}")) {
+            final var result = sut.process(input);
+            Assertions.assertEquals("I THINK THAT THIS IS SOMETHING THAT NEEDS CAPITALIZED.", result);
+        }
+    }
 }

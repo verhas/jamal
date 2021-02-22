@@ -23,7 +23,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     final private Processor processor;
     final private String content;
     final private ArgumentHandler argumentHandler;
-    final private String openStr, closeStr, pattern;
+    final private String openStr, closeStr;
     private Segment root = null;
     private boolean pure = false;
 
@@ -55,7 +55,6 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         this.processor = processor;
         this.openStr = processor.getRegister().open();
         this.closeStr = processor.getRegister().close();
-        pattern = "(" + Pattern.quote(openStr) + "|" + Pattern.quote(closeStr) + ")";
         this.id = id;
         this.content = content;
         argumentHandler = new ArgumentHandler(this, parameters);

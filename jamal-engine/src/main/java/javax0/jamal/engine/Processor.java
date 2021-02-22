@@ -2,6 +2,7 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Closer;
 import javax0.jamal.api.Context;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Input;
@@ -118,10 +119,13 @@ public class Processor implements javax0.jamal.api.Processor {
         } catch (BadSyntaxAt bsAt) {
             traceRecordFactory.dump(bsAt);
             throw bsAt;
+        } finally {
+            if (limiter.down() == 0) {
+                closeProcess(output);
+            }
         }
         traceRecordFactory.dump(null);
         macros.test(marker);
-        limiter.down();
         return output.toString();
     }
 
@@ -739,22 +743,42 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         shellEngine.close();
+    }
+
+    private void closeProcess(final Input result) throws BadSyntax {
         final var exceptionsAccumulator = new HashSet<Throwable>();
         for (final var resource : openResources) {
             try {
+                setAwares(resource, result);
                 resource.close();
             } catch (Exception e) {
                 exceptionsAccumulator.add(e);
             }
         }
         if (!exceptionsAccumulator.isEmpty()) {
-            final var exception = new Exception("There were " + exceptionsAccumulator.size() + " exceptions closing the registered resources.");
+            final var exception = new BadSyntax("There were " + exceptionsAccumulator.size() + " exceptions closing the registered resources.");
             for (final var accumulated : exceptionsAccumulator) {
                 exception.addSuppressed(accumulated);
             }
             throw exception;
+        }
+    }
+
+    /**
+     * If the resource is aware if {@code Processor} or the output the inject these using the implemented {@link
+     * javax0.jamal.api.Closer.Aware#set(Object)} injecting the output or even the whole processor into the resource.
+     *
+     * @param resource that may need the processor or the output to be injected into
+     * @param result the output {@link Input} structure.
+     */
+    private void setAwares(AutoCloseable resource, Input result) {
+        if (resource instanceof Closer.ProcessorAware) {
+            ((Closer.ProcessorAware) resource).set(this);
+        }
+        if (resource instanceof Closer.OutputAware) {
+            ((Closer.OutputAware) resource).set(result);
         }
     }
 

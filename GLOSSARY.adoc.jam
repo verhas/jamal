@@ -56,7 +56,8 @@ When a macro defined in the _active_ scope is exported, the macro is moved to th
 It is opened automatically when the processor starts.
 Global macros are defined in this scope.
 
-{%@define classFormat=`$name`%}{%@define methodFormat=`$name()`%}
+{%@define classFormat=`$name`%}{%@define methodFormat=`$name()`%}\
+
 Inner Scope Dependent:: A built-in macro is inner scope dependent if it has to execute in the scope that was opened when the evaluation of the parameter of the macro started.
 Inner scope dependent built-in macros have to implement the interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
 Inner scope dependent macros can define user defined macros, but the scope of these macros ends when the method {%@java:method javax0.jamal.api.Macro::evaluate%} returns.

@@ -74,8 +74,23 @@ public interface Processor extends AutoCloseable {
      * closing. If it is a task in a thread pool then it has to wait for the task to be finished. It is up to the
      * implementation of the macro.
      * <p>
-     * Calling this method the macro may register the object as something autocloseable. The processor itself is also
-     * autocloseable, so when the processor is closed then the resources are closed one by one.
+     * The {@code resource} may also implement the interfaces {@link javax0.jamal.api.Closer.ProcessorAware} or {@link
+     * javax0.jamal.api.Closer.OutputAware} or both. In that case the {@link javax0.jamal.api.Closer.ProcessorAware#set(Processor)
+     * set()} method will be called before calling {@link AutoCloseable#close() close()} passing the {@link Processor}
+     * instance or the {@link Input} instance holding the final processed output as argument.
+     * <p>
+     * Since the call to {@link AutoCloseable#close() close()} comes before {@link Processor#process(Input)} returns the
+     * output may be defined by the implemented {@link AutoCloseable#close() close()} method. That way a built-in macro
+     * may implement post-processing logic that works on the whole output.
+     * <p>
+     * The sample test {@code javax0.jamal.engine.TestProcessor#testPostProcessor()} in the file {@code
+     * src/test/java/javax0/jamal/engine/TestProcessor.java} shows an example that converts the whole result to
+     * uppercase.
+     * <p>
+     * Calling this method the macro may register the object as something {@link AutoCloseable}. The method {@link
+     * AutoCloseable#close() close()} will be invoked when the method {@link Processor#process(Input)} finishes its top
+     * level execution. When the method is called in recursive calls from a macro or from any other place the deferred
+     * resources will not be closed upn return only when the top level call is to be returned.
      * <p>
      * Note that this method, or any other method of the processor MUST NOT be invoked from other than the main thread
      * of the Jamal processing. Even if a macro spawns a new thread the new thread must not do anything with the

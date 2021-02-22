@@ -1,3 +1,6 @@
+== Jamal Macro Language
+:imagesdir: images
+
 {%@comment This is the ASCIIDOC version of the readme.
 It replaces the older Markdown version.
 The source of the file is the README.adoc.jam.
@@ -7,7 +10,8 @@ jamal-snippet.
 %}{%@import readmemacros.jim%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-== Jamal Macro Language
+{%@define pu$folder=images%}\
+{%@define pu$template=%}
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]
 https://javadoc.io/doc/com.javax0.jamal/jamal-parent[JavaDoc]
@@ -19,7 +23,7 @@ This version of Jamal is a complete rewrite of the original processor in Java.
 Jamal leverages on the programming language's features and the twenty years of experience of using the old version.
 In this documentation, the term "Jamal" refers to the Java implementation of the macro language.
 
-image::images/text2text.svg[]
+image::text2text.svg[]
 
 Jamal's basic concept is to transform a source text to a target text enabling programmatic constructs in the source text.
 That way, it enables the maintainer of the text to eliminate
@@ -122,33 +126,33 @@ Then we discuss the API that lets you embed the macro processing into your appli
 
 The simplest way to start Jamal is to use the JShell.
 
-Executing the command
+All you need to do is execute the following command:
 
 [source]
 ----
 jshell https://git.io/jamal
 ----
 
-(The url above comes from teh URL shortener of GitHub.
-It redirects to `https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/jamal.jshell`.)
+NOTE: The URL is a shortened URL of GitHub.
+It redirects to `https://raw.githubusercontent.com/verhas/jamal/master/jamal-cmd/jamal.jshell`
 
-will start jamal to process all files with `.jam` extension in the current directory and below.
+It will start Jamal to process all files with `.jam` extension in the current directory and below.
 The output files will have the same name as the processed file without the `.jam` at the end.
-For example `pom.xml.jam` will be processed to `pom.xml`.
+For example, `pom.xml.jam` will be processed to `pom.xml`.
 
 You do not even need to install Jamal.
-If you have Java 9 or later installed you can execute the above command.
-JShell will download and execute the script from the url depicted above.
+If you have Java 11 or later installed, you can execute the above command.
+JShell will download and execute the script from the URL depicted above.
 The script will check if Jamal is installed on your machine.
-If it is not installed it will automatically download the needed JAR. When the JAR files are downloaded it will start Jamal in the current working directory using the default settings.
-The settings can be altered using the `jamal.opotions` file.
-If this file does not exist in the current working directory then the JShell script will create one containing the default settings.
+If it is not installed, it will automatically download the needed JAR. When the JAR files are downloaded, it will start Jamal in the current working directory using the default settings.
+You can alter the settings using the `jamal.options` file.
+If this file does not exist in the current working directory, then the JShell script will create one containing the default settings.
 
 ==== Maven Plugin
 
-It is also very simple to startr Jamal using the Maven plugin version.
+It is also straightforward to start Jamal using the Maven plugin version.
 To do that, you have to have Maven installed, but as a Java developer, you probably have.
-Then you can issue the command
+Then you can issue the command:
 
 [source]
 ----
@@ -159,12 +163,16 @@ if you have a `pom.xml` file in your directory.
 
 If you do not have, then read the documentation of the Jamal Maven plugin at
 `https://github.com/verhas/jamal/blob/master/jamal-maven-plugin/README.md`
-It is simple and short.
+It is short and straightforward.
 
-When something goes wrong then Jamal will give you a detailed error message.
+When something goes wrong, then Jamal will give you a detailed error message.
 The message will include the file name, line number, and character count where the error happened.
-In other cases, Jamal may think it works fine, but the output is not exactly what you expected.
+Jamal may think it works fine in other cases, but the output is not exactly what you expected.
 Sorry, in this case, the issue, most probably, is with your expectations.
+Jamal very much converts the text following the rules defined in this document.
+
+==== Debugging Macro Conversions
+
 In cases like that, you can specify
 
 [source]
@@ -219,7 +227,7 @@ This macro has three arguments named `color`, `name`, and `actualSize`.
 When the user-defined macro is in use, the actual values replace these arguments.
 
 Note that the macros open with the `{` character and close with the `}` character in this example.
-These are not hardwired in Jamal and there is not even a suggested default for that.
+These are not hardwired in Jamal, and there is not even a suggested default for that.
 The embedding application has to define the opening string and the closing string.
 For example, the embedding Java::Geci application uses `{{%@ident%}%` and `%{%@ident%}}` as macro open and macro close strings.
 It does it because the `{` and `}` characters frequently appear in the Java source code.
@@ -227,19 +235,20 @@ On the other hand, Java code rarely uses the `{{%@ident%}%` or `%{%@ident%}}` fo
 In this documentation, we use the `{` and `}` strings.
 
 However, you have to be aware that this is NOT enforced.
-This is not even a recommendation or a convention.
+It is not even a recommendation or a convention.
 You can specify the macro opening and closing string as the program parameter, and the Jamal source code can also change it.
 You can change them using the built-in <<sep,`sep`>> macro (<<sep,see later>>) in the Jamal source.
 
-There is one exception where Jamal uses `{` and `}` as a hardwired strings for macro opening and closing.
+There is one exception where Jamal uses `{` and `}` as hardwired strings for macro opening and closing.
 This exception is implemented in version 1.5.0 and later.
-When you import a file into your code, and the imported file starts with the characters `{@` then the import will use `{` and `}`.
-This way you can easily import files which come from an external sources, like a JAR file or via the web.
+When you import a file into your code, and the imported file starts with the characters `{@`, the import will use `{` and `}`.
+This way, you can easily import files from external sources, like a JAR file or via the web.
 The package that defines an import file can use the `{` and `}` characters.
-Even if your Jamal file uses different macro opening and closing strings you do not need to change it to `{` and `}` in this special case.
-You just write `((@import res:MyResource.jim))`, as an example and it still will be imported properly.
+Even if your Jamal file uses different macro opening and closing strings, you do not need to change it to `{` and `}` in this particular case.
+You may have `[[` and `]]` as opening and closing strings.
+In this case, you write `[[@import res:MyResource.jim]]` as an example, and it still will be imported correctly.
 
-The parameters are separated using the first non-space character following the macro's name in the macro use.
+The parameters are separated using the first non-space, non-alphanumeric character following the macro's name in the macro use.
 Thus, you can write
 
 {%sample/
@@ -253,7 +262,7 @@ the output will be the same for each line:
 
 {%output%}
 
-Note that in the last example, we used the `:` character as the separator.
+NOTE: In the last example, we used the `:` character as the separator.
 When the name of a macro contains one or more  `:` characters, then the macro is global.
 Since this character can also be part of the macro's name, there must be a space before it.
 
@@ -279,6 +288,7 @@ The comprehensive list of built-in macros are
  * <<include,`include`>>
  * <<use,`use`>>
  * <<script,`script`>>
+ * <<JShell,`JSheel`>>
  * <<sep,`sep`>>
  * <<for,`for`>>
  * <<if,`if`>>
@@ -286,11 +296,35 @@ The comprehensive list of built-in macros are
  * <<verbatim,`verbatim`>>
  * <<options,`options`>>
  * <<try,`try`>>
+ * <<escape,`escape`>>
+ * <<require,`require`>>
 
 You use the built-in macros with `#` or `@` in front of the macro's name.
 These characters signal that the macro is built-in (as opposed to user defined).
 The typical use is to start a macro with the `@` character.
-In that case, the macro evaluates the rest of the input till the closing string.
+In that case, the macro evaluates the rest of the input till the matching closing string.
+
+{%@plantuml evaluationorder.svg
+@startuml
+
+skinparam monochrome true
+
+title Macro Evaluation
+
+(*) --> "Macro Start String"
+
+if " # or @ character?" then
+-->[ #] "evaluate the\nmacro input"
+--> "evaluate built-in macro"
+else
+-->[ @] "evaluate built-in macro"
+endif
+
+@enduml
+%}
+
+image::evaluationorder.svg[]
+
 
 If the macro starts with the `#` character, then the input is first parsed for other macros.
 These macros are evaluated, and their results replace their occurrences in the code.
@@ -1586,7 +1620,7 @@ Their meaning is exactly opposite.
 
 ===== Fine points of macro evaluation
 
-NOTE: This section does not apply to versions prior to 1.2.0
+NOTE: This section does not apply to any version prior 1.2.0
 
 Recall the three steps of macro evaluation:
 
@@ -1638,10 +1672,10 @@ However, if the definition of `b` is for example `{@define b(Z)=shoot/Z}`, then 
 In this case the final evaluation will get (prior 1.2.0) `{q/a/shoot/c}`.
 It will result in three parameters.
 This is probably an error because `q` in the example needs only two.
-Even if the option `lenient` was declared the result is not the one the author of the text expected.
+Even, if the option `lenient` was declared the result is not the one the author of the text expected.
 
-The version 1.2.0 and later version can revert to the earlier algorithm if the Jamal code defines the option `omasalgotm`.
-Using the macro `options` as `{@options omasalgotm}` you can switch on the old algorithm.
+The versions 1.2.0 and later can revert to the earlier algorithm if the Jamal code defines the option `omasalgotm`.
+Using the macro `options` as `{@options omasalgotm}` you can switch to the old algorithm.
 The name of the option is an abbreviation and is hard to remember to distract from the use of it.
 If you need this option then your Jamal source file does some shady thing that it should not.
 This option is obsolete from the very start of the introduction and is meant as a last resort to keep backward compatibility.
@@ -2262,6 +2296,8 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 </plugin>
 ----
 
+NOTE: The module `jamal-pomlib` was discontinued and is not part of the current Jamal library structure.
+
 ==== Web Resources
 
 Web resources can be downloaded using the `https:` prefix.
@@ -2308,8 +2344,7 @@ If you use Maven, you can simply have
 
 in your pom file.
 
-The library `jamal-engine` transitively depends on the other libraries that are needed (`jamal-core`
-, `jamal-api` and `jamal-tools`).
+The library `jamal-engine` transitively depends on the other libraries that are needed (`jamal-core`, `jamal-api` and `jamal-tools`).
 
 You also have to specify that you use these modules (Java 9 and later) if your code uses modules.
 
@@ -2353,7 +2388,7 @@ It also has a reference file name used to resolve the absolute names of the incl
 It also keeps track of the line number, and the column of the actual character as the macro evaluation progresses.
 A `new Position(s,1)` creates a new position that identifies the file by the name's` and the line number 1.
 
-When a new processor is instantiated it uses the `ServiceLoader` mechanism to find all the built-in macros that are on the classpath.
+When a new processor is instantiated, it uses the `ServiceLoader` mechanism to find all the built-in macros that are on the classpath.
 If your application has special macros implemented in Java then you can just put the library on the `modulepath`.
 If the classes are defined in the `provides` directive of the module then Jamal will find and load them automatically.
 
@@ -2381,7 +2416,10 @@ This is a simplified interface to access the functionality of Jamal.
 
 The current and past versions of the JavaDoc can be read online at the address:
 
-https://javadoc.io/doc/com.javax0.jamal/jamal-parent/
+{%@for module in (api,cmd,core,engine,extensions,maven-plugin,plantuml,pomlib,scriptbasic,snippet,test,test-support,tools)=
+* https://javadoc.io/doc/com.javax0.jamal/jamal-module/
+
+%}
 
 [[documentmaintenance]]
 === {%chapter%}Maintenance of this document

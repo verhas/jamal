@@ -26,12 +26,13 @@ public class Format {
      * @throws BadSyntax in case the string cannot be formatted using the provided macros
      */
     public static String format(String content, Map<String, String> predefinedMacros) throws BadSyntax {
-        final var processor = new Processor("{{", "}}");
-        final var register = processor.getRegister();
-        for (final var macro : predefinedMacros.entrySet()) {
-            register.global(processor.newUserDefinedMacro(macro.getKey(), macro.getValue()));
+        try (final var processor = new Processor("{{", "}}")) {
+            final var register = processor.getRegister();
+            for (final var macro : predefinedMacros.entrySet()) {
+                register.global(processor.newUserDefinedMacro(macro.getKey(), macro.getValue()));
+            }
+            final var in = new Input(content, new Position(""));
+            return processor.process(in);
         }
-        final var in = new Input(content, new Position(""));
-        return processor.process(in);
     }
 }
