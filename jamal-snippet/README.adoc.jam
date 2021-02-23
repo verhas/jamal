@@ -866,33 +866,33 @@ will result
 {%@snip listDir1
 [source]
 ----
-- src/main/java/javax0/jamal
-- src/main/java/javax0/jamal/snippet
-- src/main/java/javax0/jamal/snippet/Snip.java
-- src/main/java/javax0/jamal/snippet/Case.java
-- src/main/java/javax0/jamal/snippet/NumberLines.java
-- src/main/java/javax0/jamal/snippet/DateMacro.java
-- src/main/java/javax0/jamal/snippet/Format.java
-- src/main/java/javax0/jamal/snippet/Update.java
-- src/main/java/javax0/jamal/snippet/FilesMacro.java
-- src/main/java/javax0/jamal/snippet/Collect.java
-- src/main/java/javax0/jamal/snippet/TrimLines.java
-- src/main/java/javax0/jamal/snippet/Replace.java
-- src/main/java/javax0/jamal/snippet/SnipXml.java
-- src/main/java/javax0/jamal/snippet/Counter.java
-- src/main/java/javax0/jamal/snippet/Clear.java
-- src/main/java/javax0/jamal/snippet/KillLines.java
-- src/main/java/javax0/jamal/snippet/SnippetStore.java
-- src/main/java/javax0/jamal/snippet/ListDir.java
-- src/main/java/javax0/jamal/snippet/XmlFormat.java
-- src/main/java/javax0/jamal/snippet/SnipProperties.java
-- src/main/java/javax0/jamal/snippet/CounterMacro.java
-- src/main/java/javax0/jamal/snippet/XmlDocument.java
-- src/main/java/javax0/jamal/snippet/Java.java
-- src/main/java/javax0/jamal/snippet/ReplaceLines.java
-- src/main/java/javax0/jamal/snippet/SkipLines.java
-- src/main/java/javax0/jamal/snippet/Reflow.java
-- src/main/java/javax0/jamal/snippet/Snippet.java
+- ../jamal-snippet/src/main/java/javax0/jamal
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Snip.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Case.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/NumberLines.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/DateMacro.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Format.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Update.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/FilesMacro.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Collect.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Replace.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnipXml.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Counter.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Clear.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/KillLines.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnippetStore.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/ListDir.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/XmlFormat.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnipProperties.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/CounterMacro.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/XmlDocument.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Java.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/ReplaceLines.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SkipLines.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Reflow.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Snippet.java
 
 ----
 %}
@@ -914,8 +914,8 @@ will result
 {%@snip listDir2
 [source]
 ----
-- src/main/java/javax0/jamal
-- src/main/java/javax0/jamal/snippet
+- ../jamal-snippet/src/main/java/javax0/jamal
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet
 
 ----
 %}
@@ -997,7 +997,7 @@ will result
 - KillLines.java: 1,525 bytes
 - SnippetStore.java: 6,571 bytes
 - ListDir.java: 3,943 bytes
-- XmlFormat.java: 2,458 bytes
+- XmlFormat.java: 3,290 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,870 bytes
 - XmlDocument.java: 2,038 bytes
@@ -1023,7 +1023,8 @@ then the recursive collection process for colelction the files will follow symli
 [[xmlFormat]]
 ==== {%macroChapter%}`xmlFormat`
 
-The macro `xmlFormat` interprets the input as an XML document and the result is the document formatted.
+The macro `xmlFormat` interprets the input as an XML document if there is any, and the result is the document formatted.
+If the input is empty or contains only spaces then it registers a post processor that runs after the Jamal processing is done and formats the final output as XML.
 For example,
 
 {%sample/
@@ -1092,6 +1093,44 @@ will result
 
 As you can see there is no tabulation in this case.
 
+
+There is another use of the macro `xmlFormat`.
+If you do not include any XML, or anything else into the macro as input then the macro will treat this as a command to format the whole output.
+I registers itself into the processor and when the processing was finished this registered call-back starts and at that point it will format the output of the processing.
+That way you can easily format a whole processed file.
+
+The rpevious example that we used before can be formulated also this way.
+
+{%sample/
+{#xmlFormat}
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>{%VERSION%}</version>
+</project>
+%}
+
+Note that the macro invocation `{#xmlFormat}` in this case can be anywhere in the input.
+The formatting will take place postponed, when the processing is finished.
+It will result the same output as before:
+{%#snip:define tabulatedXmlFormat1=
+{%output%}%}\
+
+{%@snip tabulatedXmlFormat1
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>jamal snippet</name>
+    <packaging>jar</packaging>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snippet</artifactId>
+    <version>1.6.6-SNAPSHOT</version>
+</project>
+----
+%}
+
 [[date]]
 ==== {%macroChapter%}`date`
 
@@ -1110,7 +1149,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-02-22 13:58:57
+2021-02-23 13:00:58
 
 ----
 %}

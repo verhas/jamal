@@ -749,13 +749,18 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private void closeProcess(final Input result) throws BadSyntax {
         final var exceptionsAccumulator = new HashSet<Throwable>();
-        for (final var resource : openResources) {
-            try {
-                setAwares(resource, result);
-                resource.close();
-            } catch (Exception e) {
-                exceptionsAccumulator.add(e);
+        try {
+            for (final var resource : openResources) {
+                try {
+                    setAwares(resource, result);
+                    resource.close();
+                } catch (Exception e) {
+                    exceptionsAccumulator.add(e);
+                }
             }
+        } finally {
+            // they were closed, they are not open any more
+            openResources.removeAll(openResources);
         }
         if (!exceptionsAccumulator.isEmpty()) {
             final var exception = new BadSyntax("There were " + exceptionsAccumulator.size() + " exceptions closing the registered resources.");
@@ -767,11 +772,12 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     /**
-     * If the resource is aware if {@code Processor} or the output the inject these using the implemented {@link
-     * javax0.jamal.api.Closer.Aware#set(Object)} injecting the output or even the whole processor into the resource.
+     * If the resource needs the processor instance or the output then inject these using the implemented {@link
+     * javax0.jamal.api.Closer.ProcessorAware#set(javax0.jamal.api.Processor) set(T t)} injecting the output or even the
+     * processor into the resource.
      *
      * @param resource that may need the processor or the output to be injected into
-     * @param result the output {@link Input} structure.
+     * @param result   the output {@link Input} structure.
      */
     private void setAwares(AutoCloseable resource, Input result) {
         if (resource instanceof Closer.ProcessorAware) {

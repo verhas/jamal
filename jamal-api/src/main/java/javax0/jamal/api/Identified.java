@@ -18,6 +18,7 @@ package javax0.jamal.api;
  * macros with the same life cycle as those. If an option was set in a local environment it will no affect environments
  * above unless it is exported.
  */
+@FunctionalInterface
 public interface Identified {
     /**
      * Get the string identifier of the identifiable.

@@ -58,6 +58,6 @@ public class TestConvertReadme {
 
     @Test
     void convertSnippetReadme() throws Exception {
-        generateAdoc(".");
+        generateAdoc("../jamal-snippet");
     }
 }

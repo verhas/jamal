@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class TestProcessor {
@@ -286,7 +285,7 @@ public class TestProcessor {
         public void close() {
             final var sb = output.getSB();
             final var text = sb.toString().toUpperCase(Locale.ENGLISH);
-            sb.delete(0,sb.length());
+            sb.delete(0, sb.length());
             sb.append(text);
         }
 
@@ -320,4 +319,35 @@ public class TestProcessor {
             Assertions.assertEquals("I THINK THAT THIS IS SOMETHING THAT NEEDS CAPITALIZED.", result);
         }
     }
+
+    public static class CloseOnlyOneTime implements Macro, AutoCloseable {
+        boolean isClosed = false;
+
+        @Override
+        public void close() throws Exception {
+            if (isClosed) {
+                throw new RuntimeException("Should not close more than once");
+            }
+            isClosed = true;
+        }
+
+        @Override
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+            processor.deferredClose(this);
+            return "";
+        }
+    }
+
+    @Test
+    @DisplayName("Test that one closer is not invoked more than once even if the processor is restarted")
+    public void testMultipleClose() throws Exception {
+        final var input1 = new Input("{@use javax0.jamal.engine.TestProcessor.CloseOnlyOneTime}{@closeonlyonetime}");
+        final var input2 = new Input("something else");
+        try (final var sut = new Processor("{", "}")) {
+            sut.process(input1);
+            // just check that it does not throw exception
+            sut.process(input2);
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package javax0.jamal.test.core;
 
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestDefine {
@@ -134,7 +135,7 @@ public class TestDefine {
     }
 
     @Test
-    void testOneArgumentMacro()throws Exception{
+    void testOneArgumentMacro() throws Exception {
         TestThat.theInput(
             "{@comment When the user define macro has only one argument then the separator character may be missing.}\n" +
                 "{@define enclose(a)=<||a||>}{enclose this text}\n" +
@@ -155,12 +156,20 @@ public class TestDefine {
                 "<|| this||text||>"
         );
     }
+
     @Test
-    void testOneArgMacroNesting()throws Exception{
+    void testOneArgMacroNesting() throws Exception {
         TestThat.theInput(
             "{@define a(x)=<<|x|>>}{@define b=55}{a {b}}"
         ).results(
             "<<|55|>>"
         );
+    }
+
+    @Test
+    @DisplayName("Test globally defined macro optional redefinition")
+    void testGlobalOptionalRedefine() throws Exception {
+        TestThat.theInput("{@define :a=1}{#ident {@define ?a=2}{a}}").results("1");
+        TestThat.theInput("{@define :a=1}{#ident {@define ?:a=2}{a}}").results("1");
     }
 }

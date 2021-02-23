@@ -1,7 +1,7 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Closer;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
@@ -28,18 +28,29 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class XmlFormat implements Macro, InnerScopeDependent {
+public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware, AutoCloseable {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var reader = MacroReader.macro(processor);
         final var tabsize = reader.readValue("tabsize").orElse("4");
 
         InputHandler.skipWhiteSpaces(in);
+        if (in.length() > 0) {
+            final String input = in.toString();
+            return formatXml(input, tabsize);
+        } else {
+            this.tabsize = tabsize;
+            processor.deferredClose(this);
+            return "";
+        }
+    }
+
+    private static String formatXml(String input, String tabsize) throws BadSyntax {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setValidating(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(in.toString())));
+            Document doc = db.parse(new InputSource(new StringReader(input)));
             Transformer tf = TransformerFactory.newInstance().newTransformer();
             tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -48,12 +59,30 @@ public class XmlFormat implements Macro, InnerScopeDependent {
             tf.transform(new DOMSource(doc), new StreamResult(out));
             return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
-            throw new BadSyntaxAt("There was an XML exception", in.getPosition(), e);
+            throw new BadSyntax("There was an XML exception", e);
         }
     }
 
     @Override
     public String getId() {
         return "xmlFormat";
+    }
+
+    private Input output = null;
+    private String tabsize = "4";
+
+    @Override
+    public void close() throws BadSyntax {
+        if (output != null) {
+            InputHandler.skipWhiteSpaces(output);
+            final var result = formatXml(output.toString(), tabsize);
+            output.getSB().delete(0,output.getSB().length());
+            output.getSB().append(result);
+        }
+    }
+
+    @Override
+    public void set(Input output) {
+        this.output = output;
     }
 }

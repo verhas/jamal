@@ -82,6 +82,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<block,`block`>>
 .. <<begin,`begin` and `end`>>
 .. <<define,`define`>>
+.. <<undefine,`undefine`>>
 .. <<eval,`eval`>>
 .. <<env,`env`>>
 .. <<import,`import`>>
@@ -909,8 +910,147 @@ Note that when there are no paramneters and the macro definition does not use th
 The macro definition `{@define a:=b}` may mean, `a` should be `b` with simple evaluation or `a:` global macro shoudl be `b`.
 In a situation like this the `:` character belongs to the `:=` assignment symbol.
 
+[[undefine]]
+==== v. `undefine`
+since 1.6.6
+
+`undefine` can be used to undefine a macro.
+Undefining a macro works the same way as definition: in scope.
+When you undefine a macro it will be undefined only for the current scope and later for any lower newly opened scope.
+Undefining a macro does not affects the definition of the macro in any higher level.
+
+You can undefine a macro on the global level the same way as you can define a macro on the global level.
+
+===== Simple undefine on one single scope
+
+[source]
+----
+{@define fruit=apple}{fruit}{@undefine fruit} |{?fruit}|
+----
+
+Here we define the macro `fruit` to be `apple`, and we use it once.
+Following it, we undefine the macro.
+When we use it next time it is undefined.
+The use of it is not an error because we use the `?` in front of the macro name, but the result is the empty.
+
+
+
+Finally, it will generate the following output.
+[source]
+----
+apple ||
+
+----
+
+
+===== Undefine an inherited macro in a local scope
+
+[source]
+----
+{@define fruit=apple}{fruit} {#ident {@undefine fruit} |{?fruit}|}  |{?fruit}|
+----
+
+In this example we define the macro `apple` on the top level scope, but we undefine it one level deeper.
+The macro is undefined only in the local scope, where it was undefined but on higher levels it is still defined.
+
+Finally, it will generate the following output.
+[source]
+----
+apple ||  |apple|
+
+----
+
+
+===== Being undefined can be exported
+
+[source]
+----
+{@define fruit=apple} {fruit}\
+{#ident {@undefine fruit} |{?fruit}| {@export fruit}}\
+|{?fruit}|
+----
+
+In this example we undefine the macro fruit in the local scope, but then we export it from this scope.
+Being explicitly undefined can be exported the same way as the macro, which is defined.
+Because the "undefinedness" is exported the macro `fruit` becomes undefined in the enclosing scope.
+
+Finally, it will generate the following output.
+[source]
+----
+apple|| ||
+
+----
+
+
+===== Undefine, export and redefine
+
+[source]
+----
+{@define fruit=apple}\
+global scope: {fruit}
+ {@begin scope_1}\
+   scope_1: {fruit}
+   {@begin scope_2}\
+     scope_2: {fruit}
+     {@undefine fruit}{@export fruit}\
+     scope_2: {?fruit}
+     {@define fruit=pear}\
+     scope_2: {fruit}
+   {@end scope_2}\
+   scope_1: {?fruit}
+ {@end scope_1}\
+global scope: {fruit}
+----
+
+In this example we define the macro `fruit` on the top level.
+After that we open two new scopes nested.
+We undefine the macro in the most inner scope, and we export this undefinedness to the middle scope.
+After that, we define the macro again in the most inner scope.
+
+At this moment we have three "definition" of the macro `fruit`.
+In the outer scope it is defined to be `apple`.
+In the middle scope it is undefined.
+In the most inner scope it is defined to be `pear`.
+
+Finally, it will generate the following output.
+[source]
+----
+global scope: apple
+    scope_1: apple
+        scope_2: apple
+          scope_2:
+          scope_2: pear
+      scope_1:
+ global scope: apple
+
+----
+
+
+[NOTE]
+====
+For the technically savvy, the following may help to get a more comfortable grab of how the macro `undefined` works.
+
+User-defined macros are defined in maps.
+The key in the map is the id of the macro.
+The value in the map is a Java object that represents the user-defined macro.
+The maps are organized in a stack.
+The stack has one element for each scope.
+When a new scope is opened in the Jamal source, the stack grows.
+When a scope is closed, the stack shrinks.
+Searching for a macro starts in the map stored at the top of the stack (opened latest).
+If the macro is not in the map, then the search goes deeper.
+The search finally finds the macro in one of the maps or runs out of stack levels.
+
+The maps are very general in the sense that they can store any Java object that implements `Identified`.
+User-defined macros should implement the `Evaluable` interface.
+When the search finds an object in the stacked map structure that does not implement this interface, it treats the macro as undefined.
+The macro `undefine` inserts an object into the structure that does not implement any other interface but `Identified`.
+Export is possible because the macro `export` does not care about the implemented interfaces.
+It merely removes the object from the map and inserts it in the map on the next stack level.
+====
+
 [[eval]]
-==== v. `eval`
+==== vi. `eval`
 
 since 1.0.0 (core)
 
@@ -1013,7 +1153,7 @@ When using `!` to evaluate the result of a macro you cannot specify any scriptin
 The evaluation will be Jamal macros evaluation.
 
 [[env]]
-==== vi. `env`
+==== vii. `env`
 
 since 1.3.0
 
@@ -1043,7 +1183,7 @@ This can be used to test that an environment variable exists or not.
 Testing the value of the environment variable in an `{@if ... }` macro may be misleading when the value is literal `false` or an empty string.
 
 [[import]]
-==== vii. `import`
+==== viii. `import`
 
 since 1.0.0 (core)
 
@@ -1085,7 +1225,7 @@ This way you can freely import resource files provided in JAR file or through th
 Such import files cannot redefine the macro opening and closing string unless file importing also uses `{` and `}`.
 
 [[include]]
-==== viii. `include`
+==== ix. `include`
 
 since 1.0.0 (core)
 
@@ -1120,7 +1260,7 @@ This limit prevents this to happen.
 The limit can be modified setting the environment variable `JAMAL_INCLUDE_DEPTH`.
 
 [[use]]
-==== ix. `use`
+==== x. `use`
 
 `use` declares a Java class as a built-in macro.
 
@@ -1174,7 +1314,7 @@ It is recommended to use the alias in the Jamal source file.
 That way there is no ambiguity when reading the code what the name of the built-in macro is.
 
 [[script]]
-==== x. `script`
+==== xi. `script`
 
 since 1.0.0 (core)
 
@@ -1274,7 +1414,7 @@ In short, the arguments to a `script` macro will be converted to the following t
 For more information and details see the section <<JShell>>
 
 [[JShell]]
-==== xi. `JShell`
+==== xii. `JShell`
 
 since 1.3.0 (core)
 
@@ -1360,7 +1500,7 @@ When you design a macro library it is not enough to import the library to discov
 The scripts have to be used to manifest the error.
 
 [[for]]
-==== xii. `for`
+==== xiii. `for`
 
 since 1.0.0 (core)
 since 1.5.0 multi-argument `for`
@@ -1426,7 +1566,6 @@ will result
 a is a
 a is b
 a is c
-wupppss
 
 ----
 
@@ -1555,7 +1694,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== xiii. `if`
+==== xiv. `if`
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -1620,7 +1759,7 @@ true=true                  <- non-epmty string, floating points dont work
 
 
 [[ident]]
-==== xiv. `ident`
+==== xv. `ident`
 
 since 1.0.0 (core)
 
@@ -1736,7 +1875,7 @@ If many of them are used in an extreme case they can be mixed together.
 Note, if the macro does not get evaluated fully the order of these characters may not be preserved in the output.
 
 [[verbatim]]
-==== xv. `verbatim`
+==== xvi. `verbatim`
 
 since 1.0.0 (core)
 
@@ -1945,7 +2084,7 @@ This option is obsolete from the very start of the introduction and is meant as 
 It will be removed from Jamal versions 2.0.0 and later.
 
 [[sep]]
-==== xvi. `sep`
+==== xvii. `sep`
 
 since 1.0.0 (core)
 
@@ -2180,7 +2319,7 @@ SSSzaziSSS{z}{@escape `a`{`a`}z{@escape `a`}`a`}
 
 
 [[export]]
-==== xvii. `export`
+==== xviii. `export`
 
 since 1.0.0 (core)
 
@@ -2255,7 +2394,7 @@ You can export a macro that was defined in a lower scope and was exported to the
 You cannot export macros from the top-level scope, because there is no enclosing scope above that.
 
 [[options]]
-==== xviii. `options`
+==== xix. `options`
 
 since 1.0.3 (core)
 
@@ -2349,7 +2488,7 @@ On the other hand, we envision that with the introduction of this feature most o
 We wanted to avoid starting every new Jamal source file with the `nl` option setting.
 
 [[try]]
-==== xix. `try`
+==== xx. `try`
 
 since 1.5.0 (core)
 
@@ -2377,7 +2516,7 @@ The macro `try` should only be used to debug certain macro files.
 When an error happens, and the `try` macro catches the exception thrown the scopes may not be properly closed.
 
 [[escape]]
-==== xx. `escape`
+==== xxi. `escape`
 
 since 1.5.4 (core)
 
@@ -2426,7 +2565,7 @@ This way it may happen that you see in the error output
 The macro
 
 [[require]]
-==== xxi. `require`
+==== xxii. `require`
 since 1.6.4
 
 Since Jamal has many different versions, there may be a need to stick to a specific version.

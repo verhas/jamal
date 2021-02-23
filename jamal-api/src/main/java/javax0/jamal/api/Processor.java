@@ -65,7 +65,7 @@ public interface Processor extends AutoCloseable {
     ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params) throws BadSyntax;
 
     /**
-     * Register an AutoClosable resource that has to be closed when the execution is finished.
+     * Register an AutoCloseable resource that has to be closed when the execution is finished.
      * <p>
      * Some user defined (Java implemented) or built-in macro may create resources that perform some actions
      * asynchronous. The typical example is when a macro that creates some external resource starts a separate thread to

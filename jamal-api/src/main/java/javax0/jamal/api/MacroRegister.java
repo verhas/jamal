@@ -27,6 +27,14 @@ public interface MacroRegister extends Delimiters {
      */
     <T extends Identified> Optional<T> getUserDefined(String id);
 
+    /**
+     * Get a user defined macro based on the id of the macro or a default macro.
+     *
+     * @param id  the identifier (name) of the macro
+     * @param def the identifier (name) of the macro used in case the one named {@code id} is not defined
+     * @param <T> some type that implements {@link Identified}
+     * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
+     */
     default <T extends Identified> Optional<T> getUserDefined(String id, String def) {
         return (Optional<T>) getUserDefined(id).or(() -> getUserDefined(def));
     }

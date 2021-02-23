@@ -92,6 +92,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<block,`block`>>
 .. <<begin,`begin` and `end`>>
 .. <<define,`define`>>
+.. <<undefine,`undefine`>>
 .. <<eval,`eval`>>
 .. <<env,`env`>>
 .. <<import,`import`>>
@@ -782,6 +783,115 @@ It can be prevented using `:=` instead of a `=` between the name, parameter list
 Note that when there are no paramneters and the macro definition does not use the optional `()` after the name of the macro the `:=` may be ambiguous.
 The macro definition `{@define a:=b}` may mean, `a` should be `b` with simple evaluation or `a:` global macro shoudl be `b`.
 In a situation like this the `:` character belongs to the `:=` assignment symbol.
+
+[[undefine]]
+==== {%macroChapter%}`undefine`
+since 1.6.6
+{%#comment{%sample/{@undefine default}%}{%output%}%}
+`undefine` can be used to undefine a macro.
+Undefining a macro works the same way as definition: in scope.
+When you undefine a macro it will be undefined only for the current scope and later for any lower newly opened scope.
+Undefining a macro does not affects the definition of the macro in any higher level.
+
+You can undefine a macro on the global level the same way as you can define a macro on the global level.
+
+===== Simple undefine on one single scope
+
+{%sample/
+{@define fruit=apple}{fruit}{@undefine fruit} |{?fruit}|
+%}
+
+Here we define the macro `fruit` to be `apple`, and we use it once.
+Following it, we undefine the macro.
+When we use it next time it is undefined.
+The use of it is not an error because we use the `?` in front of the macro name, but the result is the empty.
+
+{%@define ecce_output=Finally, it will generate the following output.%}
+
+{%ecce_output%}
+{%output%}
+
+===== Undefine an inherited macro in a local scope
+
+{%sample/
+{@define fruit=apple}{fruit} {#ident {@undefine fruit} |{?fruit}|}  |{?fruit}|
+%}
+
+In this example we define the macro `apple` on the top level scope, but we undefine it one level deeper.
+The macro is undefined only in the local scope, where it was undefined but on higher levels it is still defined.
+
+{%ecce_output%}
+{%output%}
+
+===== Being undefined can be exported
+
+{%sample/
+{@define fruit=apple} {fruit}\
+{#ident {@undefine fruit} |{?fruit}| {@export fruit}}\
+|{?fruit}|
+%}
+
+In this example we undefine the macro fruit in the local scope, but then we export it from this scope.
+Being explicitly undefined can be exported the same way as the macro, which is defined.
+Because the "undefinedness" is exported the macro `fruit` becomes undefined in the enclosing scope.
+
+{%ecce_output%}
+{%output%}
+
+===== Undefine, export and redefine
+
+{%sample/
+{@define fruit=apple}\
+global scope: {fruit}
+ {@begin scope_1}\
+   scope_1: {fruit}
+   {@begin scope_2}\
+     scope_2: {fruit}
+     {@undefine fruit}{@export fruit}\
+     scope_2: {?fruit}
+     {@define fruit=pear}\
+     scope_2: {fruit}
+   {@end scope_2}\
+   scope_1: {?fruit}
+ {@end scope_1}\
+global scope: {fruit}
+%}
+
+In this example we define the macro `fruit` on the top level.
+After that we open two new scopes nested.
+We undefine the macro in the most inner scope, and we export this undefinedness to the middle scope.
+After that, we define the macro again in the most inner scope.
+
+At this moment we have three "definition" of the macro `fruit`.
+In the outer scope it is defined to be `apple`.
+In the middle scope it is undefined.
+In the most inner scope it is defined to be `pear`.
+
+{%ecce_output%}
+{%output%}
+
+[NOTE]
+====
+For the technically savvy, the following may help to get a more comfortable grab of how the macro `undefined` works.
+
+User-defined macros are defined in maps.
+The key in the map is the id of the macro.
+The value in the map is a Java object that represents the user-defined macro.
+The maps are organized in a stack.
+The stack has one element for each scope.
+When a new scope is opened in the Jamal source, the stack grows.
+When a scope is closed, the stack shrinks.
+Searching for a macro starts in the map stored at the top of the stack (opened latest).
+If the macro is not in the map, then the search goes deeper.
+The search finally finds the macro in one of the maps or runs out of stack levels.
+
+The maps are very general in the sense that they can store any Java object that implements `{%@java:class javax0.jamal.api.Identified%}`.
+User-defined macros should implement the `{%@java:class javax0.jamal.api.Evaluable%}` interface.
+When the search finds an object in the stacked map structure that does not implement this interface, it treats the macro as undefined.
+The macro `undefine` inserts an object into the structure that does not implement any other interface but `{%@java:class javax0.jamal.api.Identified%}`.
+Export is possible because the macro `export` does not care about the implemented interfaces.
+It merely removes the object from the map and inserts it in the map on the next stack level.
+====
 
 [[eval]]
 ==== {%macroChapter%}`eval`
