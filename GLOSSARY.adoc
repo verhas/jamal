@@ -1,16 +1,17 @@
-\ == Jamal Glossary
+== Jamal Glossary
+
 
 This glossary collects the terminologies that we use in Jamal.
 
 Macro Start String:: The string that starts a macro.
-It is a single character `{` usually, but it can be any character length.
-When Jamal is embedded it has to be defined when the Jamal processor is created.
-Theis string, along with the __Macro Closing String__ can dynamically be redefined using the __core__ __built-in__ macro `sep`.
+It is usually a single character `{`, but it can be any character length.
+When Jamal is embedded it is defined as the Jamal processor is created.
+The string, along with the __Macro Closing String__ can dynamically be redefined using the __core__ __built-in__ macro `sep`.
 
 Macro End String:: The string that ends a macro.
-It is a single character `}` usually, but it can be any character length.
+It is usually a single character `}` usually, but it can be any character length.
 When Jamal is embedded it has to be defined when the Jamal processor is created.
-Theis string, along with the __Macro Start String__ can dynamically be redefined using the __core__ __built-in__ macro `sep`.
+The string, along with the __Macro Start String__ can dynamically be redefined using the __core__ __built-in__ macro `sep`.
 
 Built-in:: A built-in macro is a macro, which is implemented in Java.
 The built-in macro is the opposite of a __user-defined__ macro.

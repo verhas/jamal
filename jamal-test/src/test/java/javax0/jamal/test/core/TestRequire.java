@@ -14,7 +14,7 @@ public class TestRequire {
     }
 
     @Test
-    @DisplayName("Test that the 'require' macro throws an exception if there is a unusable comparison")
+    @DisplayName("Test that the 'require' macro throws an exception if there is an unusable comparison")
     void testRequireEmptyBadComparisonThrowsException() throws Exception {
         TestThat.theInput("{@require != 1.6.7}").throwsBadSyntax();
     }

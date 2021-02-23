@@ -354,7 +354,25 @@ The class {%@java:class javax0.jamal.tools.InputHandler%} defined methods that a
 The definite reference is the up-to-date JavaDoc.
 In the following examples we will look at how to use some of these methods.
 
-The following macro takes the input of the macro and inserts spaces between the characters:
+The following macro takes the input of the macro and inserts spaces between the characters.
+That way it will convert
+
+[source,text]
+----
+{@spacer this is
+some text
+}
+----
+
+to
+
+[source,text]
+----
+t h i s   i s
+s o m e   t e x t
+----
+
+The implementation of the macro is the following:
 
 [source,java]
 ----
