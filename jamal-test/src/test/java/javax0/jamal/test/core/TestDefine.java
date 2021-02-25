@@ -171,5 +171,6 @@ public class TestDefine {
     void testGlobalOptionalRedefine() throws Exception {
         TestThat.theInput("{@define :a=1}{#ident {@define ?a=2}{a}}").results("1");
         TestThat.theInput("{@define :a=1}{#ident {@define ?:a=2}{a}}").results("1");
+        TestThat.theInput("{@define :a=1}{#ident {@define ?:a=2}{:a}}").results("1");
     }
 }

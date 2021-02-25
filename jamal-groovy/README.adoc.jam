@@ -1,0 +1,305 @@
+= Jamal Groovy integration module
+{%@import readmemacros.jim%}\
+{%@snip:collect src/test/java/%}\
+{%@snip:collect src/main/java/%}\
+{%#counter:define macroChapter {%@define format=$roman. %}%}
+
+Using this integration module you can mix Jamal macro text with Groovy code snippets.
+To use this module you have to add the dependency to you Maven project, as:
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-groovy</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+
+----
+ Following that you can use the macros
+{%@groovy:property chapters = 0%}{%@comment count the chapters and then we can use this in the text where we says how mny macros are there%}
+{%@define chap($x)=. <<$x,`groovy:$x`>> {%@groovy:import
+chapters++%}%}
+
+{%chap eval%}
+{%chap import%}
+{%chap shell%}
+{%chap property%}
+
+macros.
+
+== Macros implemented in the package
+
+The macros implemented in this package make it possible to embed Groovy scripts into the Jamal source code.
+Groovy is a more or less Java source-compatible JVM language with compelling features.
+Using Groovy as a scripting language may be an alternative to using the Java provided and Jamal core integrated JShell.
+In some cases, an embedded Groovy script may also serve your purpose instead of writing a Java built-in macro.
+
+In this chapter, we will discuss every macro defined in the package with examples.
+The examples are automatically generated into the Asciidoc file, similarly as the samples are generated in the other documentation files.
+The difference is that in the case of the main `README.adoc` and the other files, the conversion uses two Java-defined macros.
+In this case, these macros are not used.
+Instead, Groovy scripts perform the tasks eliminating the need for writing a separate class to implement the functionality for the user-defined macros `sample` and `output`.
+
+The next chapter, <<Sample,Sample>> describes this process as a non-trivial example for using the Groovy engine.
+
+The package defines {%@groovy:eval chapters%} macros.
+
+The macro `groovy:eval` evaluates a simple expression.
+`groovy:import` can import Groovy code.
+`groovy:property` can set or get a Groovy property.
+Finally, `groovy:shell` can execute more complex Groovy code.
+
+The different macros use GroovyShell objects to execute the Groovy scripts.
+These shell objects are automatically created and named.
+{%@define ShellObjects=ShellObjects%}{%@define ShellObjectsTitle=Using Multiple Shell Objects%}\
+Their use is detailed in the chapter <<{%ShellObjects%},{%ShellObjectsTitle%}>>
+If you do not want to use multiple, separated Groovy shells, you do not need to worry about the shell objects.
+One will be created upon the first use of one of the Groovy macros and used throughout the Jamal file.
+
+{%@define chap($x)=[[$x]]
+==== {%macroChapter%}`groovy:$x`
+%}
+
+{%chap eval%}
+
+The macro `groovy:eval` uses its whole input as a groovy expression and evaluates it.
+For example the following macro call:
+{%sample/
+{@groovy:eval 1+1}
+%}
+
+will result:
+
+{%output%}
+
+{%chap import%}
+
+This macro can import a Groovy file into the shell.
+The macro has two forms:
+
+* `{@groovy:import fileName}`, and
+
+* the format
+[source,text]
+----
+{@groovy:import
+
+}
+----
+
+In the first case the named file can be imported.
+The name of the file can be relative to the input file that contains the import macro, can be absolute, or can have the prefix `res:` or `https://`.
+The file names starting with the prefix `res:` are resource files and have to be available on the classpath.
+The files with the prefix https://` are downloaded from the net and are cached.
+
+The name resolution and file access, download and caching is done exactly the same way as in the case of the built-in macro `import`.
+For more information about that please read the link:../README.adoc[main readme] file of Jamal.
+
+In the second case, if there are no characters denoting a file name on the first line after the macro name, the content of the macro will be imported.
+
+The content will be evaluated in the shell.
+This evaluation tries to create a return value, which is ignored in the case of the `groovy:import` macro.
+However, if the content does not have an evaluable return value then the shell withh throw an exception.
+This exception is hard to ignore, because the Jamal macro implementation cannot comprehent if this is a final value evaluation error or a real Groovy error.
+If there is a real Groovy error, then the macros enclose it into a Jamal syntax error and report it that way.
+
+To avoid the final evaluation errors the macro appends a `;''` string after the Groovy script to be imported.
+This will result an empty string, which is, what the macro `groovy:import` results.
+
+Use `groovy:import` if you do not want to include the result of the script into your output or if the script is in a separate Groovy file.
+
+{%chap shell%}
+
+You can execute script using `groovy:shell` and get the result as a string into the Jamal output.
+The format of the macro is
+
+[source,text]
+----
+{@groovy:shell scriptname.groovy
+script content
+}
+----
+
+The `scriptname.groovy` part is optional.
+This name is only used in error reports.
+When you get an error message it makes simpler to find which Groovy script fragment was throwing up.
+If this part is missing then the name of the actual Groovy shell will be used with an appended `.groovy` extention.
+Again: this is not a reference to any real file name, it is only for the error messages.
+Using `something.groovy` is just a reasonable convention that you may like to follow.
+
+The `script content` will be evaluated, and the final result will be the result of the macro.
+Use this macro in case your script is longer and not just a simple one lines, in which case you can use the macro `groovy:eval`.
+
+{%chap property%}
+
+This macro sets and gets a Groovy shell property.
+Groovy shells can communicate with the embedding application, in this case this is Jamal, via so called bindings.
+A "bindings" is map that assignes values to a string.
+In the Groovy script you can access these bindings as global variables.
+For example the following sample
+
+{%sample/
+{@groovy:property myProp=(int)55}
+{@groovy:eval myProp+45}
+%}
+
+and it will result
+
+{%output%}
+
+You can also fetch the value of a property that was set before by the Groovy script or by the property macro:
+
+
+{%sample/
+{@groovy:eval yourProp=133}
+{@groovy:property yourProp}
+%}
+
+will result
+
+{%output%}
+
+once by the result of the `groovy:eval` and once as the `groovy:eval` also fetched this value.
+
+Setting the value you can specify the type of the property.
+The possible types are limited to
+
+* `int`
+
+* `long`
+
+* `double`
+
+* `float`
+
+* `boolean`
+
+* `short`
+
+* `byte`
+
+* `char`
+
+* `string`
+
+The casting type has to be enclosed between `(` and `)` characters, as casting usually is in Java.
+The default is to set the property to be a string.
+The casting `(string)` is available in case you want to emphasize that the value should be handled as a string.
+It may also happen that you want to pass a *string* that starts with the characters `(int)` or something similar.
+
+
+[[{%ShellObjects%}]]
+=== {%ShellObjectsTitle%}
+
+{%#define defaultShellName={%#replace|{%#replace{%@options regex%}/{%@snip defaultShellName%}/^.*"(.*)".*$/$1/%}|
+||%}%}\
+{%#define shellNamingMacro={%#replace|{%#replace{%@options regex%}/{%@snip shellNamingMacro%}/^.*"(.*)".*$/$1/%}|
+||%}%}\
+
+If you do not specify any shell object it will be created automatically using the name `{%defaultShellName%}`.
+
+Groovy shell objects are stored along with the user defined macros.
+This has two consequences.
+
+* If there is a user defined name with the same name as the Groovy shell name, then the one defined later will overwrite the other.
+
+* The Groovy shell objects are available only within their scopes exactly the same way as user defined objects.
+They can also be exported.
+
+Note that the default name starts with `:` therefore this is a global name, available in all scopes.
+This is a feature to ease the use of the Groovy shells when you have only one.
+It will be created and be available everywhere in the Jamal file even if the first use of Groovy was in a local scope.
+
+The name of the shell can be overwritten defining the user defined macro
+`{%shellNamingMacro%}`.
+
+It can be done using the usual built-in macro `define`, as in the example
+{%@define myLocalShell=myLocalShell%}
+{%#comment
+we need this here, to be safe
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}\
+{%sample/
+{@groovy:eval z = 13}
+{@define {%shellNamingMacro%}={%myLocalShell%}}
+{@try! {@groovy:eval z}}
+%}
+
+will result the output:
+
+{%output%}
+
+The reason for this is that the first evaluation is executed in a shell named `{%defaultShellName%}`.
+The second evaluation, however runs in a different shell, named `{%myLocalShell%}`.
+
+[NOTE]
+====
+Note that the `try` macro is used as `{@try...}` and NOT `{#try...}`.
+When we want the content of a built-in macro to be evaluated before the macro is invoked we have to use the `#` character.
+In case of the `try` macro we want the content to be evaluated, but NOT BEFORE the `try` macro is invoked.
+If we use the macro in the form `{#try...}` then the content is evaluated before starting the macro `try`.
+If there is any error the macro `try` has no possibility to catch it, because it has not started yet.
+On the other hand using `{@try...}` will pass the content unevaluated, and the macro `try` will evaluate it and catch the errors.
+
+This is not Groovy module specific, but it is a very common mistake.
+====
+
+There is a resource file named {%#file {%@define fileFormat=`$name`%}{%@define root=src/main/resources/%}groovy.jim%}.
+You can import this file and then use the macros defined in it.
+The previous example will look the following:
+
+{%#comment
+we need this here, because all samples run in the same processor, and the shell was renamed
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}
+
+{%sample/
+{@import res:groovy.jim}
+{@groovy:eval z = 13}
+{shell={%myLocalShell%}}
+{@try! {@groovy:eval z}}
+%}
+
+will result the output:
+
+{%output%}
+
+This is the same as the previous one, not surprisingly.
+
+All Groovy macros are link:../GLOSSARY.adoc[inner scope dependent], which means that you can define the macro `{%shellNamingMacro%}` inside the Groovy macro call.
+In that case the definition, following the Jamal rules will be local to the Groovy macro.
+
+For example
+{%#comment
+we need this here, because all samples run in the same processor, and the shell was renamed
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}
+
+{%sample/
+{@import res:groovy.jim}
+{@groovy:eval z = 13}
+{@try! {#groovy:eval {shell={%myLocalShell%}}z}}
+{@groovy:eval z = 13}
+%}
+
+will result the output:
+
+{%output%}
+
+The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `groovy:eval`.
+(What is more, it is local to the `try` macro.)
+
+[[Sample]]
+=== Sample Application, Converting this `README.adoc`
+
+
+{%@snip:update%}

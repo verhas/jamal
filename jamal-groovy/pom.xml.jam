@@ -1,20 +1,21 @@
 {#import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
 {#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
 {@import ../version.jim}
-{project jamal scriptbasic}
-    {GAV ::jamal-scriptbasic:{VERSION}}
+{project jamal groovy}
+    {GAV ::jamal-groovy:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
-    {description ScriptBasic support for Jamal}
+    {description Groovy module for Jamal}
 
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
       {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
-      {dependency :{GROUPID}:jamal-api:{VERSION}}
-      {dependency :{GROUPID}:jamal-engine:{VERSION}:test}
+      {dependency |{GROUPID}|jamal-snippet|{LAST_RELEASE}|test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
-      {dependency :com.scriptbasic:jscriptbasic:2.1.1}
+      {dependency :org.codehaus.groovy:groovy-jsr223:3.0.7:}
     }
 
 {end project}

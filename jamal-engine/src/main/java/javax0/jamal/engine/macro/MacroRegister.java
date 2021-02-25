@@ -7,6 +7,7 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.Stackable;
+import javax0.jamal.tools.InputHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,14 +181,32 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
             .findFirst();
     }
 
+    /**
+     * Get the user defined macro. In case the macro is a global macro (contains a `:` in the name) then look for it
+     * in the top level scope. Without this the macros cannot be used in the {@code :a} form, which is rarely a problem,
+     * but with the introduction of the macro {@code undefine} when a macro is undefined on one level then it is not
+     * possible any more to refer to the global macro from a scope that is below.
+     *
+     * @param id  the identifier (name) of the macro
+     * @param <T> the subtype of the identified macro stored
+     * @return the optional found macro
+     */
     @Override
     public <T extends Identified> Optional<T> getUserDefined(String id) {
-        return (Optional<T>) stackGet(Scope::getUdMacros, id);
+        if (InputHandler.isGlobalMacro(id)) {
+            return Optional.ofNullable((T)scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
+        } else {
+            return (Optional<T>) stackGet(Scope::getUdMacros, id);
+        }
     }
 
     @Override
     public Optional<Macro> getMacro(String id) {
-        return stackGet(Scope::getMacros, id);
+        if (InputHandler.isGlobalMacro(id)) {
+            return Optional.ofNullable(scopeStack.get(TOP_LEVEL).macros.get(InputHandler.convertGlobal(id)));
+        } else {
+            return stackGet(Scope::getMacros, id);
+        }
     }
 
     @Override

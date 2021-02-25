@@ -53,11 +53,19 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class TestThat {
     final private Class<? extends Macro> klass;
-    final private Processor processor = new Processor();
+    private Processor processor;
     private String input;
+    private String macroOpen = "{", macroClose = "}";
 
     private TestThat(Class<? extends Macro> klass) {
         this.klass = klass;
+    }
+
+    private Processor getProcessor(){
+        if( processor == null ){
+            processor = new Processor(macroOpen,macroClose);
+        }
+        return processor;
     }
 
     /**
@@ -75,7 +83,11 @@ public class TestThat {
         it.input = input;
         return it;
     }
-
+    public TestThat usingTheSeparators(final String macroOpen, final String macroClose){
+        this.macroOpen = macroOpen;
+        this.macroClose = macroClose;
+        return this;
+    }
     public TestThat fromTheInput(String input) {
         this.input = input;
         return this;
@@ -106,18 +118,18 @@ public class TestThat {
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     public void results(String expected) throws
-            NoSuchMethodException,
-            IllegalAccessException,
-            InstantiationException,
-            InvocationTargetException,
-            BadSyntax {
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException,
+        BadSyntax {
         final String actual;
         var in = new javax0.jamal.tools.Input(input, pos);
         if (klass != null) {
             Macro sut = createSut();
-            actual = sut.evaluate(in, processor);
+            actual = sut.evaluate(in, getProcessor());
         } else {
-            actual = processor.process(in);
+            actual = getProcessor().process(in);
         }
         Assertions.assertEquals(expected, actual);
     }
@@ -140,9 +152,9 @@ public class TestThat {
         final var in = new javax0.jamal.tools.Input(input, null);
         if (klass != null) {
             final var sut = createSut();
-            Assertions.assertThrows(throwable, () -> sut.evaluate(in, processor));
+            Assertions.assertThrows(throwable, () -> sut.evaluate(in, getProcessor()));
         } else {
-            Assertions.assertThrows(throwable, () -> processor.process(in));
+            Assertions.assertThrows(throwable, () -> getProcessor().process(in));
         }
     }
 
@@ -173,8 +185,8 @@ public class TestThat {
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat global(String id, String content, String... parameters) throws BadSyntax {
-        var macro = new javax0.jamal.engine.UserDefinedMacro(processor, id, content, parameters);
-        processor.getRegister().global(macro);
+        var macro = new javax0.jamal.engine.UserDefinedMacro(getProcessor(), id, content, parameters);
+        getProcessor().getRegister().global(macro);
         return this;
     }
 
@@ -186,7 +198,7 @@ public class TestThat {
      * @return {@code this}
      */
     public TestThat global(Macro macro) {
-        processor.getRegister().global(macro);
+        getProcessor().getRegister().global(macro);
         return this;
     }
 
@@ -199,7 +211,7 @@ public class TestThat {
      * @return {@code this}
      */
     public TestThat global(Macro macro, String alias) {
-        processor.getRegister().global(macro, alias);
+        getProcessor().getRegister().global(macro, alias);
         return this;
     }
 
@@ -214,8 +226,8 @@ public class TestThat {
      * @throws BadSyntax when the underlying call throws this exception
      */
     public TestThat define(String id, String content, String... parameters) throws BadSyntax {
-        var macro = new UserDefinedMacro(processor, id, content, parameters);
-        processor.getRegister().define(macro);
+        var macro = new UserDefinedMacro(getProcessor(), id, content, parameters);
+        getProcessor().getRegister().define(macro);
         return this;
     }
 
@@ -227,7 +239,7 @@ public class TestThat {
      * @return {@code this}
      */
     public TestThat define(Macro macro) {
-        processor.getRegister().define(macro);
+        getProcessor().getRegister().define(macro);
         return this;
     }
 
@@ -240,7 +252,7 @@ public class TestThat {
      * @return {@code this}
      */
     public TestThat define(Macro macro, String alias) {
-        processor.getRegister().define(macro, alias);
+        getProcessor().getRegister().define(macro, alias);
         return this;
     }
 }

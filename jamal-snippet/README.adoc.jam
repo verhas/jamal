@@ -985,7 +985,7 @@ will result
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
 - DateMacro.java: 659 bytes
-- Format.java: 2,557 bytes
+- Format.java: 993 bytes
 - Update.java: 3,509 bytes
 - FilesMacro.java: 4,465 bytes
 - Collect.java: 5,030 bytes
@@ -1149,7 +1149,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-02-23 16:53:10
+2021-02-25 16:31:56
 
 ----
 %}

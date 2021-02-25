@@ -303,9 +303,11 @@ public class InputHandler {
 
     /**
      * Delete the characters from the start of the input until after the first EOL and return the deleted start as a
-     * String.
+     * String. The returned string does not contain the closing new line, but the closing new line is removed from the
+     * input.
      *
      * @param input from which the spaces should be deleted.
+     * @return the string from the original start of the input to the end of line, not including the end of line
      */
     public static String fetch2EOL(Input input) {
         final var sb = new StringBuilder();

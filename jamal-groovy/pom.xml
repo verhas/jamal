@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>jamal scriptbasic</name>
-    <artifactId>jamal-scriptbasic</artifactId>
+    <name>jamal groovy</name>
+    <artifactId>jamal-groovy</artifactId>
     <version>1.7.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
         <version>1.7.1-SNAPSHOT</version>
     </parent>
-    <description>ScriptBasic support for Jamal</description>
+    <description>Groovy module for Jamal</description>
     <build>
         <plugins>
             <plugin>
@@ -33,19 +33,26 @@
     <dependencies>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-tools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
             <version>1.7.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-api</artifactId>
-            <version>1.7.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-engine</artifactId>
-            <version>1.7.1-SNAPSHOT</version>
+            <artifactId>jamal-snippet</artifactId>
+            <version>1.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -61,9 +68,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.scriptbasic</groupId>
-            <artifactId>jscriptbasic</artifactId>
-            <version>2.1.1</version>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>3.0.7</version>
         </dependency>
     </dependencies>
 </project>

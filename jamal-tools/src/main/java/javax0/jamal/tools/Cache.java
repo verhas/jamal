@@ -119,6 +119,7 @@ public class Cache {
          * will still work.
          *
          * @param content to be saved into the cache file
+         * @param maps contains the key value pairs that will be saved into the cache properties file
          */
         public void save(String content, Map<String, String>... maps) {
             if (cacheExists()) {
