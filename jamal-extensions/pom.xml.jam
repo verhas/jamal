@@ -3,7 +3,7 @@
 {project jamal extensions}
     {packaging jar}
     {GAV :{GROUPID}:jamal-extensions:{VERSION}}
-    {parent ::jamal-parent}
+    {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library extra macros}
 
     {build|{plugins| {@include ../plugins.jim}}}

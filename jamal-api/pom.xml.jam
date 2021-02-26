@@ -2,8 +2,8 @@
 {@import ../version.jim}
 {project jamal api}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-api:{VERSION}}
-    {parent ::jamal-parent:}
+    {GAV ::jamal-api:{VERSION}}
+    {parent :{GROUPID}:jamal-parent:}
     {description|Jamal macro library API interfaces}
     {build|
 

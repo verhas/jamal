@@ -3,7 +3,6 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal command line</name>
     <packaging>jar</packaging>
-    <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-cmd</artifactId>
     <version>1.7.2-SNAPSHOT</version>
     <parent>
@@ -36,24 +35,6 @@
                         <!-- bind to the packaging phase -->
                         <goals>
                             <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.6.0</version>
-                <configuration>
-                    <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
-                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default-descriptor</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>descriptor</goal>
                         </goals>
                     </execution>
                 </executions>

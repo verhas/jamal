@@ -3,7 +3,6 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal core</name>
     <packaging>jar</packaging>
-    <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-core</artifactId>
     <version>1.7.2-SNAPSHOT</version>
     <parent>

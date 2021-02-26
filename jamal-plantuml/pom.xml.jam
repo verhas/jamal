@@ -2,8 +2,8 @@
 {@import ../version.jim}
 {project jamal plantuml}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-plantuml:{VERSION}}
-    {parent ::jamal-parent}
+    {GAV ::jamal-plantuml:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library snippet macros}
 
     {build|{plugins| {@include ../plugins.jim}}}

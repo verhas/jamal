@@ -2,8 +2,8 @@
 {@import ../version.jim}
 {project jamal command line}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-cmd:{VERSION}}
-    {parent ::jamal-parent}
+    {GAV ::jamal-cmd:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
     {description :Jamal macro library command line interface}
     {build|
         {plugins|
@@ -28,22 +28,6 @@
                        </goals>
                      </execution>
                    </executions>
-            }
-            {plugin|
-                {GAV :org.apache.maven.plugins:maven-plugin-plugin:3.6.0}
-                <configuration>
-                    <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
-                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default-descriptor</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>descriptor</goal>
-                        </goals>
-                    </execution>
-                </executions>
             }
             {plugin|{GAV :org.apache.maven.plugins:maven-surefire-plugin:}}
             {plugin|{GAV :org.apache.maven.plugins:maven-source-plugin:}}

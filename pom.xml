@@ -20,6 +20,7 @@
         <module>jamal-test</module>
         <module>jamal-scriptbasic</module>
         <module>jamal-groovy</module>
+        <module>jamal-ruby</module>
         <module>jamal-plantuml</module>
     </modules>
     <licenses>
@@ -124,6 +125,7 @@
                                     --add-opens jamal.snippet/javax0.jamal.documentation=ALL-UNNAMED
                                     --add-opens jamal.scriptbasic/javax0.jamal.scriptbasic=ALL-UNNAMED
                                     --add-opens jamal.groovy/javax0.jamal.groovy=ALL-UNNAMED
+                                    --add-opens jamal.ruby/javax0.jamal.ruby=ALL-UNNAMED
                                 </argLine>
                     </configuration>
                 </plugin>

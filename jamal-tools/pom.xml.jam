@@ -2,8 +2,8 @@
 {@import ../version.jim}
 {project jamal tools}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-tools:{VERSION}}
-    {parent ::jamal-parent}
+    {GAV ::jamal-tools:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
     {description|-in Jamal macro library support tools}
     {build|{plugins| {@include ../plugins.jim}}}
     {dependencies#

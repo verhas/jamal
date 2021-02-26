@@ -2,8 +2,8 @@
 {@import ../version.jim}
 {project jamal snippet}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-snippet:{VERSION}}
-    {parent ::jamal-parent}
+    {GAV ::jamal-snippet:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library snippet macros}
 
     {build|{plugins| {@include ../plugins.jim}}}

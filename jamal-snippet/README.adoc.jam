@@ -283,7 +283,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.7.1</version>
+<version>1.7.2-SNAPSHOT</version>
 ...
 
 ----
@@ -338,10 +338,50 @@ For example
 ----
 
 is replaced by the content of the snippet named `snipped_id`.
-The macro reads the ID from the input and it purposefully ignores the rest of the input.
+The macro reads the ID from the input, and it purposefully ignores the rest of the input.
 The reason to have the rest of the input as comment is to allow the Jamal file users to insert a description of the snippet.
-You can manually copy the content of the snippet there, which helps the navigation in the source code but the same time it is not a problem if the copy gets outdated.
+You can manually copy the content of the snippet there, which helps the navigation in the source code, but the same time it is not a problem if the copy gets outdated.
 The output fetched the content from the actual value of the snippet.
+
+Starting with Jamal version 1.7.2 the `snippet_id` can also be followed by a regular expression.
+The regular expression can be used to extract and use a smaller part from the first line of the snippet.
+The typical use is when there is a consant defined in the code and you want to reference the value of the constant.
+In this case you can add
+
+[source,java]
+----
+// snippet snippet_id
+...
+// end snippet
+----
+
+lines before and after the line defining the constant and add a regular expression that has one capturing group.
+For example, you can have
+
+[source,java]
+----
+// snippet defaultShellName
+public static final String DEFAULT_RUBY_SHELL_NAME = ":rubyShell";
+// end snippet
+----
+
+and the Jamal code
+
+[source,java]
+----
+{#define defaultShellName={@snip defaultShellName /"(.*)"/}}\
+----
+
+to gauge out the string `:rubyShell` from the source code.
+
+If the first character after the `snippet_id` is a `/` character then the macro will treat the rest of the input as a regular expression.
+This part also has to end using a `/`.
+The characters between the first and the last `/` are interpreted as a regular expression.
+This regex has to have at least one capturing group.
+The string captured by the first group will be returned by the macro.
+The characters that follow the last `/` character are ignored, and eventually can not contain any more `/` characters.
+
+If the regular expression in not find in the first line of the snippet, or there is no capturing group then the first line itself will be the result of the macro.
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
@@ -981,7 +1021,7 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 864 bytes
-- Snip.java: 606 bytes
+- Snip.java: 2,291 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
 - DateMacro.java: 659 bytes
@@ -1051,7 +1091,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2-SNAPSHOT</version>
 </project>
 
 ----
@@ -1085,7 +1125,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.7.1</version>
+<version>1.7.2-SNAPSHOT</version>
 </project>
 
 ----
@@ -1126,7 +1166,7 @@ It will result the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2-SNAPSHOT</version>
 </project>
 ----
 %}
@@ -1149,7 +1189,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-02-26 15:05:27
+2021-02-26 18:52:47
 
 ----
 %}

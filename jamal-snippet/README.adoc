@@ -20,7 +20,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -89,7 +89,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -300,7 +300,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.7.1</version>
+<version>1.7.2-SNAPSHOT</version>
 ...
 
 ----
@@ -355,10 +355,50 @@ For example
 ----
 
 is replaced by the content of the snippet named `snipped_id`.
-The macro reads the ID from the input and it purposefully ignores the rest of the input.
+The macro reads the ID from the input, and it purposefully ignores the rest of the input.
 The reason to have the rest of the input as comment is to allow the Jamal file users to insert a description of the snippet.
-You can manually copy the content of the snippet there, which helps the navigation in the source code but the same time it is not a problem if the copy gets outdated.
+You can manually copy the content of the snippet there, which helps the navigation in the source code, but the same time it is not a problem if the copy gets outdated.
 The output fetched the content from the actual value of the snippet.
+
+Starting with Jamal version 1.7.2 the `snippet_id` can also be followed by a regular expression.
+The regular expression can be used to extract and use a smaller part from the first line of the snippet.
+The typical use is when there is a consant defined in the code and you want to reference the value of the constant.
+In this case you can add
+
+[source,java]
+----
+// snippet snippet_id
+...
+// end snippet
+----
+
+lines before and after the line defining the constant and add a regular expression that has one capturing group.
+For example, you can have
+
+[source,java]
+----
+// snippet defaultShellName
+public static final String DEFAULT_RUBY_SHELL_NAME = ":rubyShell";
+// end snippet
+----
+
+and the Jamal code
+
+[source,java]
+----
+{#define defaultShellName={@snip defaultShellName /"(.*)"/}}\
+----
+
+to gauge out the string `:rubyShell` from the source code.
+
+If the first character after the `snippet_id` is a `/` character then the macro will treat the rest of the input as a regular expression.
+This part also has to end using a `/`.
+The characters between the first and the last `/` are interpreted as a regular expression.
+This regex has to have at least one capturing group.
+The string captured by the first group will be returned by the macro.
+The characters that follow the last `/` character are ignored, and eventually can not contain any more `/` characters.
+
+If the regular expression in not find in the first line of the snippet, or there is no capturing group then the first line itself will be the result of the macro.
 
 [[trimLines]]
 ==== vii. `trimLines`
@@ -983,7 +1023,7 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 864 bytes
-- Snip.java: 606 bytes
+- Snip.java: 2,291 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
 - DateMacro.java: 659 bytes
@@ -1035,7 +1075,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.7.1</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.7.2-SNAPSHOT</version>
 </project>
 }
 ----
@@ -1051,7 +1091,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2-SNAPSHOT</version>
 </project>
 
 ----
@@ -1067,7 +1107,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.7.1</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.7.2-SNAPSHOT</version>
 </project>
 }
 ----
@@ -1083,7 +1123,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.7.1</version>
+<version>1.7.2-SNAPSHOT</version>
 </project>
 
 ----
@@ -1105,7 +1145,7 @@ The rpevious example that we used before can be formulated also this way.
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.7.1</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.7.2-SNAPSHOT</version>
 </project>
 ----
 
@@ -1122,7 +1162,7 @@ It will result the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.2-SNAPSHOT</version>
 </project>
 ----
 
@@ -1144,7 +1184,7 @@ wll result the output
 
 [source]
 ----
-2021-02-26 15:05:27
+2021-02-26 18:52:47
 
 ----
 

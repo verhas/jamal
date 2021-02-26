@@ -2,8 +2,8 @@
 {@import ../version.jim}
 {project jamal test}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-test:{VERSION}}
-    {parent ::jamal-parent}
+    {GAV ::jamal-test:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library integration tests}
 
     {build|{plugins| {@include ../plugins.jim}}}

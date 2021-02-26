@@ -3,7 +3,6 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal engine</name>
     <packaging>jar</packaging>
-    <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
     <version>1.7.2-SNAPSHOT</version>
     <parent>

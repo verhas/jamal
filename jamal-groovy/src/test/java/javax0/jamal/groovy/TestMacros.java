@@ -36,7 +36,7 @@ public class TestMacros {
         TestThat.theInput(
             "{#sep {@escape `|`{% %}`|`}}\\\n" +
                 "{%@import res:groovy.jim%}\\\n" +
-                "{%@groovy:shell {%shell=engine%}\n" +
+                "{%#groovy:shell {%shell=engine%}\n" +
                 "def z = \"\"; (0..9).each{z+=it};\n" +
                 "z\n" +
                 "%}"

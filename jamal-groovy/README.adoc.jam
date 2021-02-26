@@ -104,8 +104,8 @@ In the second case, if there are no characters denoting a file name on the first
 
 The content will be evaluated in the shell.
 This evaluation tries to create a return value, which is ignored in the case of the `groovy:import` macro.
-However, if the content does not have an evaluable return value then the shell withh throw an exception.
-This exception is hard to ignore, because the Jamal macro implementation cannot comprehent if this is a final value evaluation error or a real Groovy error.
+However, if the content does not have an evaluable return value then the shell will throw an exception.
+This exception is hard to ignore, because the Jamal macro implementation cannot comprehend if this is a final value evaluation error or a real Groovy error.
 If there is a real Groovy error, then the macros enclose it into a Jamal syntax error and report it that way.
 
 To avoid the final evaluation errors the macro appends a `;''` string after the Groovy script to be imported.
@@ -128,12 +128,12 @@ script content
 The `scriptname.groovy` part is optional.
 This name is only used in error reports.
 When you get an error message it makes simpler to find which Groovy script fragment was throwing up.
-If this part is missing then the name of the actual Groovy shell will be used with an appended `.groovy` extention.
+If this part is missing then the name of the actual Groovy shell will be used with an appended `.groovy` extension.
 Again: this is not a reference to any real file name, it is only for the error messages.
 Using `something.groovy` is just a reasonable convention that you may like to follow.
 
 The `script content` will be evaluated, and the final result will be the result of the macro.
-Use this macro in case your script is longer and not just a simple one lines, in which case you can use the macro `groovy:eval`.
+Use this macro in case your script is longer and not just a simple one liner, in which case you can use the macro `groovy:eval`.
 
 {%chap property%}
 
@@ -152,7 +152,7 @@ and it will result
 
 {%output%}
 
-You can also fetch the value of a property that was set before by the Groovy script or by the property macro:
+You can also fetch the value of a property that was set before by the Groovy script or by the `groovy:property` macro:
 
 
 {%sample/
@@ -164,7 +164,7 @@ will result
 
 {%output%}
 
-once by the result of the `groovy:eval` and once as the `groovy:eval` also fetched this value.
+once by the result of the `groovy:eval` and once as the `groovy:property` also fetched this value.
 
 Setting the value you can specify the type of the property.
 The possible types are limited to
@@ -187,7 +187,7 @@ The possible types are limited to
 
 * `string`
 
-The casting type has to be enclosed between `(` and `)` characters, as casting usually is in Java.
+The casting type has to be enclosed between `(` and `)` characters, the same way as casting usually is in Java.
 The default is to set the property to be a string.
 The casting `(string)` is available in case you want to emphasize that the value should be handled as a string.
 It may also happen that you want to pass a *string* that starts with the characters `(int)` or something similar.
