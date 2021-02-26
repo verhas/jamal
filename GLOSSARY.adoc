@@ -13,7 +13,7 @@ It is usually a single character `}` usually, but it can be any character length
 When Jamal is embedded it has to be defined when the Jamal processor is created.
 The string, along with the __Macro Start String__ can dynamically be redefined using the __core__ __built-in__ macro `sep`.
 
-Built-in:: A built-in macro is a macro, which is implemented in Java.
+Built-in Macro:: A built-in macro is a macro, which is implemented in Java.
 The built-in macro is the opposite of a __user-defined__ macro.
 Built-in macros are defined in the __core__ package of Jamal and in other packages.
 
@@ -40,7 +40,7 @@ All macro definitions are created in this scope.
 
 * *locked* when the macros in the scope are available, but new macros are already defined in the scope above.
 A scope gets into the locked state when the scope was created to evaluate the parameters of a user defined macro.
-The macros defined here are also available for the evaluation of the macro itself, but any new macr definition will go to the scope above.
+The macros defined here are also available for the evaluation of the macro itself, but any new macro definition will go to the scope above.
 
 * *ended* when the scope has ended, the references to any macro are deleted and will be GC-ed.
 
@@ -57,3 +57,10 @@ Inner scope dependent built-in macros have to implement the interface `javax0.ja
 Inner scope dependent macros can define user defined macros, but the scope of these macros ends when the method `evaluate()` returns.
 If an inner scope dependent built-in macro wants to define a macro, which is usable in the scope where the macro is used, it has to export the user defined macro.
 
+Closer:: Is an instance of a class implementing the `AutoCloseable` interface and registered in the processor calling `deferredClose()`.
+This object has to be registered into the processor object during the execution of Jamal.
+This can be done by some built-in macros.
+The processor invokes the method `close()` when the processing of the Jamal input has finished.
+The closer class may also implement `javax0.jamal.api.Closer$ProcessorAware` or `javax0.jamal.api.Closer$OutputAware` interfaces.
+This will make the processor inject the processor object or the result into the closer object before invoking `close()`.
+This way a closer can modify the final output after all the Jamal macro processing was finished.

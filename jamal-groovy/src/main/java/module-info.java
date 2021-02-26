@@ -1,4 +1,5 @@
 import javax0.jamal.api.Macro;
+import javax0.jamal.groovy.GroovyCloser;
 import javax0.jamal.groovy.GroovyEval;
 import javax0.jamal.groovy.GroovyImport;
 import javax0.jamal.groovy.GroovyProperty;
@@ -9,6 +10,6 @@ module jamal.groovy {
     requires jamal.api;
     requires org.codehaus.groovy;
     requires jamal.tools;
-    provides Macro with GroovyEval, GroovyShell, GroovyProperty, GroovyImport
+    provides Macro with GroovyEval, GroovyShell, GroovyProperty, GroovyImport, GroovyCloser
         ;
 }

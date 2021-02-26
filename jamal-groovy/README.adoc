@@ -21,6 +21,7 @@ To use this module you have to add the dependency to you Maven project, as:
 . <<import,`groovy:import`>> 
 . <<shell,`groovy:shell`>> 
 . <<property,`groovy:property`>> 
+. <<closer,`groovy:closer`>> 
 
 macros.
 
@@ -39,12 +40,13 @@ Instead, Groovy scripts perform the tasks eliminating the need for writing a sep
 
 The next chapter, <<Sample,Sample>> describes this process as a non-trivial example for using the Groovy engine.
 
-The package defines 4 macros.
+The package defines 5 macros.
 
 The macro `groovy:eval` evaluates a simple expression.
 `groovy:import` can import Groovy code.
 `groovy:property` can set or get a Groovy property.
-Finally, `groovy:shell` can execute more complex Groovy code.
+`groovy:shell` can execute more complex Groovy code.
+Finally, `groovy:closer` makes it possible to implement closer scripts.
 
 The different macros use GroovyShell objects to execute the Groovy scripts.
 These shell objects are automatically created and named.
@@ -203,11 +205,43 @@ The possible types are limited to
 
 * `string`
 
-The casting type has to enclosed between `(` and `)` characters, as casting usually is in Java.
+The casting type has to be enclosed between `(` and `)` characters, as casting usually is in Java.
 The default is to set the property to be a string.
 The casting `(string)` is available in case you want to emphasize that the value should be handled as a string.
 It may also happen that you want to pass a *string* that starts with the characters `(int)` or something similar.
 
+[[closer]]
+==== v. `groovy:closer`
+
+
+Using the macro `groovy:closer` you can create a so-called closer script.
+The script can be used to modify the whole output after the processing of Jamal has finished.
+
+The format of the macro is
+
+[source,text]
+----
+{@groovy:closer groovy script}
+----
+
+The only argument to the macro is the closer Groovy string.
+I can be multi line and it is executed after the processing of the whole Jamal file has finished.
+Before starting the script the shell will get the bindings `result`.
+It means that the global variable `result` can be used in the closer.
+The content of the global variable `result` is the `StringBuilder` object that holds the final output of Jamal.
+
+The script can either modify this `StringBuilder` object and return `null`, or the original `StringBuilder` object itself, or it should return something that can be converted to a string calling `toString()`.
+
+If the script returns `null` or the original `StringBuilder` object then the macro will tell Jamal to use the original result object.
+Returning the "original" object means that the returned object is the same as it was assigned to the global variable `result`.
+The content of the `StringBuilder` may be modified, and these modification will be used.
+This is the most effective and optimized way to modify the final result in a post processing step.
+
+If the return value is neither `null`, nor the original object then the Jamal `StringBuilder` object holding the result up to now is deleted and the returned value is put into the result.
+This approach needs more memory creating and copying the result.
+
+You can specify any number of closer scripts using the different or the same Groovy shell.
+The scripts will all be invoked one after the other in the order as they were defined in the Jamal source.
 
 [[ShellObjects]]
 === Using Multiple Shell Objects

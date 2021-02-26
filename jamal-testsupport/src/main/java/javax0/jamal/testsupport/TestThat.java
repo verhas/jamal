@@ -107,17 +107,16 @@ public class TestThat {
     }
 
     /**
-     * Create a new macro, a new processor and test that the input creates the expected output. If they are not the same
-     * then JUnit5 assertion failure will happen.
+     * Create a new macro, a new processor and test that the input creates the output.
      *
-     * @param expected the expected output of the macro
+     * @return the calculated output
      * @throws NoSuchMethodException     if the macro class can not be instantiated
      * @throws IllegalAccessException    if the macro class can not be instantiated
      * @throws InstantiationException    if the macro class can not be instantiated
      * @throws InvocationTargetException if the macro class can not be instantiated
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
-    public void results(String expected) throws
+    public String results() throws
         NoSuchMethodException,
         IllegalAccessException,
         InstantiationException,
@@ -131,7 +130,27 @@ public class TestThat {
         } else {
             actual = getProcessor().process(in);
         }
-        Assertions.assertEquals(expected, actual);
+        return actual;
+    }
+
+    /**
+     * Create a new macro, a new processor and test that the input creates the expected output. If they are not the same
+     * then JUnit5 assertion failure will happen.
+     *
+     * @param expected the expected output of the macro
+     * @throws NoSuchMethodException     if the macro class can not be instantiated
+     * @throws IllegalAccessException    if the macro class can not be instantiated
+     * @throws InstantiationException    if the macro class can not be instantiated
+     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
+     */
+    public void results(String expected) throws
+        NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
+        Assertions.assertEquals(expected, results());
     }
 
 

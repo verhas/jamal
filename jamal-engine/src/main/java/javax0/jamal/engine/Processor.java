@@ -22,6 +22,7 @@ import javax0.jamal.tracer.TraceRecordFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     final private JShellEngine shellEngine = new JShellEngine();
 
-    final private Set<AutoCloseable> openResources = new HashSet<>();
+    final private Set<AutoCloseable> openResources = new LinkedHashSet<>();
 
     private final Context context;
 

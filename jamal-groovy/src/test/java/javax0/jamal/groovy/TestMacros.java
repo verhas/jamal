@@ -106,7 +106,7 @@ public class TestMacros {
     @DisplayName("Test complex Groovy shell example with methods defined in the shell")
     void testMultipleShellMethodsImportResource() throws Exception {
         TestThat.theInput(
-                "{%@groovy:import         res:increment.groovy%}\\\n" +
+            "{%@groovy:import         res:increment.groovy%}\\\n" +
                 "{%@groovy:shell\n" +
                 "Main.increment(13)" +
                 "%}"
@@ -119,5 +119,60 @@ public class TestMacros {
         TestThat.theInput(
             "{%@try! {%@groovy:eval z%}%}"
         ).usingTheSeparators("{%", "%}").results("Error evaluating groovy script using eval");
+    }
+
+    @Test
+    @DisplayName("Test that groovy closer works returning null")
+    void testGroovyCloserNull() throws Exception {
+        TestThat.theInput(
+            "This is a simple text" +
+                "{%@groovy:closer\n" +
+                "int i=0; while( i < result.size() ){\n" +
+                "  result.insert(i,' ')\n" +
+                "  i += 2\n" +
+                "}\n" +
+                "null\n" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results(" T h i s   i s   a   s i m p l e   t e x t");
+    }
+
+    @Test
+    @DisplayName("Test that groovy closer works returning the string builder")
+    void testGroovyCloserResult() throws Exception {
+        TestThat.theInput(
+            "This is a simple text" +
+                "{%@groovy:closer\n" +
+                "int i=0; while( i < result.size() ){\n" +
+                "  result.insert(i,' ')\n" +
+                "  i += 2\n" +
+                "}\n" +
+                "result\n" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results(" T h i s   i s   a   s i m p l e   t e x t");
+    }
+
+    @Test
+    @DisplayName("Test that groovy closer works returning the string builder")
+    void testGroovyCloserString() throws Exception {
+        TestThat.theInput(
+            "This is a simple text" +
+                "{%@groovy:closer\n" +
+                "'I\\'m too old for this shit.'" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results("I'm too old for this shit.");
+    }
+
+    @Test
+    @DisplayName("Test that groovy closers works if there are multiple, but the order is guaranteed")
+    void testGroovyClosers() throws Exception {
+        TestThat.theInput(
+            "AAA" +
+                "{%@groovy:closer " +
+                "'*'+result+'*'" +
+                "%}" +
+                "{%@groovy:closer " +
+                "'+'+result+'+'" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results("+*AAA*+");
     }
 }
