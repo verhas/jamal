@@ -27,13 +27,13 @@ In this documentation, the term "Jamal" refers to the Java implementation of the
 image::text2text.svg[]
 
 Jamal's basic concept is to transform a source text to a target text enabling programmatic constructs in the source text.
-That way, it enables the maintainer of the text to eliminate
+That way, it enables the maintainer of the text to
 
-* repetitions,
+* eliminate repetitions, calculable text, and other redundancies
 
-* calculable text, and
+* ensure internal consistency, and
 
-* other redundancies that make a text less readable and more error-prone to maintain.
+* support consistency with the documented external system(s).
 
 Jamal design is to be transparent and applicable to any target text file and format.
 Jamal can create your file from a Jamal source file no matter any particular need to keep new lines, spacing, or special characters.
@@ -44,19 +44,21 @@ The source text can
 
 * use built-in macros (there is a purposefully limited number of them),
 
-* define and used previously defined user-defined macros,
+* define and use previously defined user-defined macros,
 
 * include files,
 
-* use custom-made macros.
+* use custom-made macros,
+
+* include and execute JShell, ScriptBasic, Groovy, Ruby or other scripts.
 
 You can start Jamal processing
 
-* from the command line,
+* on the command line even without installing Jamal itself automatically downloading from the net,
 
-* it is available as a Maven plugin, and
+* as a Maven plugin, and
 
-* can be embedded into applications using a simple API.
+* embedded into applications using a simple API.
 
 You can extend the set of built-in macros creating new macros in any JVM language and providing the implementation via the standard Java service loader facility.
 
@@ -77,7 +79,7 @@ In the source file, it processes macros, and the result gets in the macros' plac
 That way, text, and macros are mixed conveniently.
 
 You can use Jamal as a maven plugin.
-Some Java::Geci code generators also use Jamal.
+The Java::Geci code generators also support Jamal, where you can write your Java code template using Jamal.
 You can use it as an embeddable macro engine in your Java application.
 
 In this readme, we first discuss how the macros look and how Jamal will convert its input to the output.
@@ -114,6 +116,9 @@ Then we discuss the API that lets you embed the macro processing into your appli
 . <<argsplit,Macro Argument Splitting>>
 . <<JamalENV,Jamal Environment Variables>>
 . <<httpsres,Resource Files and Web Resources>>
+. <<snippet,Snippet Handling>>
+. <<Groovy,Groovy Integration>>
+. <<Ruby,Ruby Integration>>
 . <<JamalAPI,Jamal API>>
 . <<javadoc,JavaDoc>>
 . <<documentmaintenance,Maintenance of this document>>
@@ -2436,6 +2441,29 @@ The environment variables
 
 can define two timeout values for the web download in millisecond as unit.
 Their default value is 5000, meaning five seconds.
+[[snippet]]
+=== {%chapter%}Snippet Handling
+
+Snipetts are text fragments from the source code or from other text files that are to be included into the documentation as samples.
+Jamal Snippet handling macros can automate the copiing of such lines, but they can do more.
+These macros can trim, line number, transform the source text before inserting into the output document.
+
+The snippet handling macros are documented in the link:{%@file jamal-snippet/README.adoc%}[Snipped module readme].
+These macros include also date handling, run-time checking of existence of referenced files, directores, classes, methods and so on.
+
+[[Groovy]]
+=== {%chapter%}Groovy Integration
+{%@define GroovyRuby($x,$X)=
+The $X language integration lets you include $X code fragments into your document.
+These scripts are executed during the file processing, and can programmatically calculate the macro outputs.
+
+The integration and how to use the module macros are described in the link:{%@file jamal-$x/README.adoc%}[$X readme].
+%}
+{%GroovyRuby :groovy:Groovy%}
+
+[[Ruby]]
+=== {%chapter%}Ruby Integration
+{%GroovyRuby :ruby:Ruby%}
 
 [[JamalAPI]]
 === {%chapter%}Jamal API
