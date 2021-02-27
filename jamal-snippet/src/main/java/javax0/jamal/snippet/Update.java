@@ -31,7 +31,7 @@ public class Update implements Macro, InnerScopeDependent {
             if( state.skipping ){
                 throw new BadSyntaxAt("The snip macro is not terminated for 'update'.", new Position(in.getPosition().file,state.lastOpen,1));
             }
-            try( final var output = new FileOutputStream(new File(in.getPosition().file))){
+            try( final var output = new FileOutputStream(in.getPosition().file)){
                 output.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }
         } catch (IOException e) {
@@ -60,7 +60,7 @@ public class Update implements Macro, InnerScopeDependent {
                     Pattern.quote(processor.getRegister().open()) +
                     "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$"));
             stop = Pattern.compile(reader.readValue("stop").orElse(
-                "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\s*$"));
+                "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$"));
         }
     }
 

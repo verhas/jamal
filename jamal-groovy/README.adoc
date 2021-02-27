@@ -357,4 +357,174 @@ The second evaluation is performed in a different shell, but the definition of t
 [[Sample]]
 === Sample Application, Converting this `README.adoc`
 
+The documentation of Jamal is a series of Asccidoc files.
+The Asciidoc format was invented to be a documentation source format that is easy to read and edit.
+The same time it can also be converted to many different output formats.
+Asciidoc, however, is provides only limited possibility to eliminate redundancy, and to ensure consistency.
+This is where Jamal comes into play.
+
+The documentation of Jamal is maintained in `xxx.adoc.jam` files, and they are converted to `xxx.adoc` files.
+With this workflow the Asciidoc files are not source files, rather intermediate files along the conversion path.
+Jamal `define` macros are used to eliminate text repetition, redundancy whenever it is possible.
+The Jamal snippet library macros are used to keep the sample codes included in the document up-to-date.
+
+[NOTE]
+====
+When reading this part of the documentation, you are probably familiar with the basic functionalities of Jamal.
+If you need to refresh the memory then read the link:../README.adoc[documentation] in root folder of the project.
+The documentation of the Snippet macros are documented in the link:../jamal-snippet/README.adoc[Snippet README.adoc] file.
+It is not neccessary to know and understand how the snippet macros work in order to read this chapter, but in general, it is a recommended read.
+====
+
+The technical documentations using Jamal and the snippet macros usually generate the documentation in multiple steps.
+
+* Run the tests including the sample code and capture the sample output in one or more output file.
+
+* Process the Jamal source of the documentation and include from the source code and from the generated sample output files the samples.
+
+For example, a Java application can support the documentation with unit test samples.
+Some of the unit tests serve the purpose of testing only, while others are there to document certain part of the code.
+The output of the documentation purposed tests are captured into output files.
+The test file `src/test/java/javax0/jamal/groovy/TestGroovyMacros.java` contains
+
+[source,java]
+----
+    // snippet sample_snippet
+    @Test
+    @DisplayName("Test a simple groovy eval")
+    void testSimpleEval() throws Exception {
+        TestThat.theInput("{@groovy:eval 6+3}").results("9");
+    }
+    // end snippet
+----
+
+To get this content into the document what we have to write is the following:
+
+
+        [source,java]
+        ----
+            // snippet sample_snippet
+            {%@snip sample_snippet 
+            %}\
+            // end snippet
+        ----
+
+
+The output generated (none in this case) can also be included using the `snip` macro.
+
+This is absolutely logical to run the tests, and generate the test output in a prior test in case of Java.
+When we test and document Jamal processing, however, it is a logical idea to use the Jamal environment, which is converting the documentation.
+The external approach with a proir step is also possible, but it is not needed.
+
+The sample Jamal code can be included in the documentation as code sample.
+Using Jamal macros it can also be converted to the corresponding output, which can also be included into the resulting document without saving it into an intermediate file.
+
+To do that the Jamal Snippet package unit test file
+`../jamal-snippet/src/test/java/javax0/jamal/documentation/TestConvertReadme.java`
+uses a built-in macro, implemented in the file:
+
+* `../jamal-snippet/src/test/java/javax0/jamal/documentation/Output.java`
+
+This Java implemented macro is available on the classpath when the unit test runs.
+
+[NOTE]
+====
+Executing the Jamal processing of the documentation of a Java software package via the unit tests has other advantages.
+The macros `java:class` and `java:method` can check that the class and method names referenced in the document are valid.
+Class and method names may change during refactoring.
+The documentation many times does not follow this change and becomes stale.
+When the classes and methods are referenced using these macros then they throw an exception if the class or method does not exits.
+====
+
+This class is very simple:
+
+[source,java]
+----
+public class Output implements Macro {
+    final Processor localProc = new javax0.jamal.engine.Processor("{", "}");
+
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        return localProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
+    }
+}
+----
+
+It creates a single Jamal processor instance and uses it to evaluate the input passed to it.
+This way this macro runs a Jamal processor separate from the Jamal processor that is converting the document.
+The two Jamal processors, however, run in the same JVM and one is invoking the other through this built-in macro.
+
+To simplify the use there is a `../readmemacros.jim` macro import file that defines the user defined macro `sample` and `output`.
+(A built-in macro can have the same name as a user defined.)
+The macro `sample` results the content of it in Asciidoc code sample format adding `[source]\n----` brefore and `----` after the sample code.
+The same time it also saves the sample code in a user defined variable called `lastCode`.
+The macro `ouput` uses the `lastCode` and using the buil-in `output` from the `Output.java` displays the calculated result as a code block.
+
+This is very similar when we are using Groovy, but in this case we do not need the built-in macro `output`.
+When this very document is converted the readmemacros.jim` inside the `jamal-groovy` directory contains some Groovy scripts instead of the built-in macros.
+
+The unit test code that invokes the Jamal processor to convert this document is the following:
+
+[source]
+----
+final var processor = new Processor("{%", "%}");
+final var shell = Shell.getShell(processor,Shell.DEFAULT_GROOVY_SHELL_NAME);
+shell.property("processor",new Processor("{", "}"));
+processor.defineGlobal(shell);
+final var result = processor.process(in);
+
+----
+
+It is almost a standard invocation of the Jamal processor.
+The only difference is that it creates a Groovy shell using the default shell name and injects a Jamal processor instance into the Groovy bindings with the name `processor`.
+When Jamal runs any Groovy code running in the same shell will be able to access the processor.
+
+Using this possibility the user defined macros `sample` and `output` are simply the following:
+
+
+* `sample`
+
+[source]
+----
+    {%@define sample(code)=[source]
+    ----
+    {%#trimLines {%@groovy:property lastCode=(string)code%}{%@groovy:shell
+    lastCode.replaceAll('^\\n+','').replaceAll('\\n+$','')
+    %}%}
+    ----%}
+    
+
+----
+
+This macro displays the sample as a code block in Asciidoc format.
+At the same time it also saves the sample text into a Groovy bindings property.
+
+* `output`
+
+[source]
+----
+    {%@define output=[source]
+    ----
+    {%#trimLines {%@groovy:shell
+    processor.process(new javax0.jamal.tools.Input(lastCode))%}%}
+    ----
+    %}
+    
+
+----
+
+This macro uses the saved property `lastCode` to access to the text of the last sample.
+It converts the text to a Jamal `Input` objects and then invokes the processor.
+The result value of the macro is the output of the processor.
+
+In this chapter we discussed how documentations should be "programs" to avoid redundacy in the source and to support consistency.
+After that we made a short detour discussing the Jamal snippets, which have a full documentation in the file link:../jamal-snippet/README.adoc[Snippet README].
+We also discussed how the documentation conversion works with snippets and Jamal samples in the Snippet module.
+Finally we had a look at how simpler it is using the Groovy integration.
+
+NOTE: None of the sample codes in the source `README.adoc.jam` was manually copied.
+
+This clearly demonstrates the power and flexibility of Jamal enhanced with the Groovy integration.
+If you like the idea, but Groovy is not your favourite scripting language have a look at the link:../jamal-ruby/README.adoc[Ruby Integration] documentation and give it a try.
+
 

@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Test;
 
 public class TestGroovyMacros {
 
+    // snippet sample_snippet
     @Test
     @DisplayName("Test a simple groovy eval")
     void testSimpleEval() throws Exception {
         TestThat.theInput("{@groovy:eval 6+3}").results("9");
     }
+    // end snippet
 
     @Test
     @DisplayName("Test the multiple evals do keep variables")

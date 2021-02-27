@@ -19,8 +19,9 @@ https://javadoc.io/doc/com.javax0.jamal/jamal-parent[JavaDoc]
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.
 It was used in many projects to simplify build-scripts maintenance, content text, and many other things.
+The old Perl version is still in use for the build chain maintenance of the ScriptBasic scripting language, which is used in many industrial products.
 This version of Jamal is a complete rewrite of the original processor in Java.
-Jamal leverages on the programming language's features and the twenty years of experience of using the old version.
+Jamal leverages on the programming language's features, and the twenty years of experience of using the old version.
 In this documentation, the term "Jamal" refers to the Java implementation of the macro language.
 
 image::text2text.svg[]
