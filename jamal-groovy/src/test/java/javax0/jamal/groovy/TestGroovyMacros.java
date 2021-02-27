@@ -4,7 +4,7 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class TestMacros {
+public class TestGroovyMacros {
 
     @Test
     @DisplayName("Test a simple groovy eval")

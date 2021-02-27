@@ -4,7 +4,7 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class TestMacros {
+public class TestRubyMacros {
 
     @Test
     @DisplayName("Test a simple ruby eval")
@@ -27,9 +27,7 @@ public class TestMacros {
     void testEvalJSRIntegration() throws Exception {
         TestThat.theInput(
             "{@eval/ruby $z = \"\"\n" +
-                "for it in 0..9 do\n" +
-                "  $z+=it.to_s\n" +
-                "end\n" +
+                "(0..9).each { |it|  $z+=it.to_s }\n" +
                 "$z}"
         ).results("0123456789");
     }
@@ -86,7 +84,7 @@ public class TestMacros {
     void testMultipleShellSetGetCastedProperty() throws Exception {
         TestThat.theInput(
             "{#sep {@escape `|`{% %}`|`}}" +
-                "{%@ruby:property z=(int)55%}" +
+                "{%@ruby:property z=(to_i)55%}" +
                 "{%@ruby:shell script\n" +
                 "z *= 2\n" +
                 "for it in 0..9 do\n" +
@@ -135,39 +133,90 @@ public class TestMacros {
     }
 
     @Test
+    @DisplayName("Test that ruby conversion to symbol works")
+    void testRubyPropertySymbol() throws Exception {
+        TestThat.theInput(
+            "{%@ruby:property sym=(to_sym)symbole%}" +
+                "{%@ruby:eval sym%}"
+        ).usingTheSeparators("{%", "%}").results("symbole");
+    }
+
+    @Test
+    @DisplayName("Test that ruby conversion to rational works")
+    void testRubyPropertyRational() throws Exception {
+        TestThat.theInput(
+            "{%@ruby:property r1=(to_r)5/3%}" +
+                "{%@ruby:property r2=(to_r)1/3%}" +
+                "{%@ruby:property f1=(to_f)1.66%}" +
+                "{%@ruby:property f2=(to_f)0.33%}" +
+                "{%@ruby:shell\n" +
+                "  (r1+r2).to_s << ' ' << (f1+f2).to_s\n" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results("2/1 1.99");
+    }
+
+    @Test
+    @DisplayName("Test that ruby conversion to float works")
+    void testRubyPropertyFloat() throws Exception {
+        TestThat.theInput(
+            "{%@ruby:property f=(to_f)5%}" +
+                "{%@ruby:shell\n" +
+                "  (f*f)\n" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results("25.0");
+    }
+
+    @Test
+    @DisplayName("Test that ruby conversion to fixnum works")
+    void testRubyPropertyFixNum() throws Exception {
+        TestThat.theInput(
+            "{%@ruby:property int=(to_i)5%}" +
+                "{%@ruby:shell\n" +
+                "  (int*int)\n" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results("25");
+    }
+
+    @Test
+    @DisplayName("Test that ruby conversion to complex works")
+    void testRubyPropertyComplex() throws Exception {
+        TestThat.theInput(
+            "{%@ruby:property c=(to_c)1+1i%}{%@ruby:eval (c*c)%}"
+        ).usingTheSeparators("{%", "%}").results("0.0+2.0i");
+        TestThat.theInput(
+            "{%@ruby:property c=(to_c/i)1+1i%}{%@ruby:eval (c*c)%}"
+        ).usingTheSeparators("{%", "%}").results("0+2i");
+    }
+
+    @Test
     @DisplayName("Test that ruby closer works returning null")
     void testRubyCloserNull() throws Exception {
         TestThat.theInput(
             "This is a simple text" +
                 "{%@ruby:closer\n" +
-                "i=0\n" +
-                "while  i < result.length do\n" +
-                "  result.insert(i,' ')\n" +
-                "  i += 2\n" +
-                "end\n" +
                 "nil\n" +
                 "%}"
-        ).usingTheSeparators("{%", "%}").results(" T h i s   i s   a   s i m p l e   t e x t");
+        ).usingTheSeparators("{%", "%}").throwsBadSyntax();
     }
 
     @Test
-    @DisplayName("Test that ruby closer works returning the string builder")
+    @DisplayName("Test that ruby closer works returning the same 'result' string")
     void testRubyCloserResult() throws Exception {
         TestThat.theInput(
             "This is a simple text" +
                 "{%@ruby:closer\n" +
                 "i=0\n" +
-                "while  i < result.length do\n" +
-                "  result.insert(i,' ')\n" +
+                "while  i < $result.length do\n" +
+                "  $result[i] = \" #{$result[i]}\"\n" +
                 "  i += 2\n" +
                 "end\n" +
-                "result\n" +
+                "$result\n" +
                 "%}"
         ).usingTheSeparators("{%", "%}").results(" T h i s   i s   a   s i m p l e   t e x t");
     }
 
     @Test
-    @DisplayName("Test that ruby closer works returning the string builder")
+    @DisplayName("Test that ruby closer works returning the string")
     void testRubyCloserString() throws Exception {
         TestThat.theInput(
             "This is a simple text" +
@@ -183,10 +232,10 @@ public class TestMacros {
         TestThat.theInput(
             "AAA" +
                 "{%@ruby:closer " +
-                "'*'+result.toString()+'*'" +
+                "'*'+$result+'*'" +
                 "%}" +
                 "{%@ruby:closer " +
-                "'+'+result.toString()+'+'" +
+                "'+'+$result+'+'" +
                 "%}"
         ).usingTheSeparators("{%", "%}").results("+*AAA*+");
     }

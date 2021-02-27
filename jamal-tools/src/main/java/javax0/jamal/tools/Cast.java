@@ -24,7 +24,7 @@ import java.util.function.Function;
  * format of {@code (type)}, where the {@code type} is the primitive type of the desired type. In case of
  * {@code Integer} it is {@code int}, in the case {@code Character} it is {@code char} and in the case of {@code String}
  * it is {@code string}. In all other cases the name, as in Java, is the same as the name of the type lower cased.
- *
+ * <p>
  * If the string does not start with a {@code (tyoe)} string then it is not converted. In that case it is a string.
  * In all other cases the conversion is done and the leading {@code (type)} is removed from the start.
  */
@@ -32,15 +32,15 @@ public class Cast {
     public static Object cast(String s) throws BadSyntax {
         try {
             return
-                cast(s, "int", Integer::parseInt).orElse(
-                    cast(s, "long", Long::parseLong).orElse(
-                        cast(s, "double", Double::parseDouble).orElse(
-                            cast(s, "float", Float::parseFloat).orElse(
-                                cast(s, "boolean", Boolean::parseBoolean).orElse(
-                                    cast(s, "short", Short::parseShort).orElse(
-                                        cast(s, "byte", Byte::parseByte).orElse(
-                                            cast(s, "char", k -> k.charAt(0)).orElse(
-                                                cast(s, "string", k -> k).orElse(
+                cast(s, "int", Integer::parseInt).orElseGet(() ->
+                    cast(s, "long", Long::parseLong).orElseGet(() ->
+                        cast(s, "double", Double::parseDouble).orElseGet(() ->
+                            cast(s, "float", Float::parseFloat).orElseGet(() ->
+                                cast(s, "boolean", Boolean::parseBoolean).orElseGet(() ->
+                                    cast(s, "short", Short::parseShort).orElseGet(() ->
+                                        cast(s, "byte", Byte::parseByte).orElseGet(() ->
+                                            cast(s, "char", k -> k.charAt(0)).orElseGet(() ->
+                                                cast(s, "string", k -> k).orElseGet(() ->
                                                     s
                                                 )
                                             )

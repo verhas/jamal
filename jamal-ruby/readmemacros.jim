@@ -5,7 +5,7 @@ These macros help embedding Jamal macro samples and run them.
 
 {%@define sample(code)={%@define :lastCode=code%}[source]
 ----
-{%#trimLines {%@ruby:property $lastCode=(string)code%}{%@ruby:shell
+{%#trimLines {%@ruby:property $lastCode=(to_s)code%}{%@ruby:shell
 while $lastCode.length > 0 and $lastCode[0] == '\n'
     $lastCode = $lastCode[1..$lastCode.length-1]
 end

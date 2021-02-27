@@ -5,7 +5,7 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.ruby.Shell;
+import org.jruby.RubyString;
 
 public class RubyCloser implements Macro, InnerScopeDependent {
     private static class Closer implements AutoCloseable, javax0.jamal.api.Closer.OutputAware {
@@ -20,13 +20,14 @@ public class RubyCloser implements Macro, InnerScopeDependent {
 
         @Override
         public void close() throws Exception {
-            shell.property("result", result.getSB());
+            shell.property("$result", RubyString.newString(shell.shell.getProvider().getRuntime(), result.getSB()));
             try {
                 final var sb = shell.evaluate(closerScript, null);
-                if( sb != null && sb != result.getSB() ){// NOT EQUALS, does it return the same object or not
-                    result.getSB().delete(0,result.getSB().length());
-                    result.getSB().append(sb.toString());
+                if (sb == null) {
+                    throw new BadSyntax("Ruby closer script '" + shell.getId() + "' returned null");
                 }
+                result.getSB().delete(0, result.getSB().length());
+                result.getSB().append(sb.toString());
             } catch (Exception e) {
                 throw new BadSyntax("There was an exception '"
                     + e.getMessage()

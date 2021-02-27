@@ -1,33 +1,27 @@
 = Jamal Ruby integration module
-{%@import readmemacros.jim%}\
-{%@snip:collect src/test/java/%}\
-{%@snip:collect src/main/java/%}\
-{%#counter:define macroChapter {%@define format=$roman. %}%}
+
 
 Using this integration module you can mix Jamal macro text with Ruby code snippets.
 To use this module you have to add the dependency to you Maven project, as:
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
 
 [source,xml]
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-ruby</artifactId>
-    <version>{%VERSION%}</version>
+    <version>1.7.2-SNAPSHOT</version>
 </dependency>
 
 ----
  Following that you can use the macros
-{%@ruby:property $chapters = 0%}{%@comment count the chapters and then we can use this in the text where we says how mny macros are there%}
-{%@define chap($x)=. <<$x,`ruby:$x`>> {%@ruby:import
-$chapters++%}%}
 
-{%chap eval%}
-{%chap import%}
-{%chap shell%}
-{%chap property%}
-{%chap closer%}{%#define chapNR={%@ruby:eval $chapters%}%}
+
+
+. <<eval,`ruby:eval`>> 
+. <<import,`ruby:import`>> 
+. <<shell,`ruby:shell`>> 
+. <<property,`ruby:property`>> 
+. <<closer,`ruby:closer`>> 
 
 macros.
 
@@ -46,7 +40,7 @@ Instead, Ruby scripts perform the tasks eliminating the need for writing a separ
 
 The chapter <<Sample,Sample>> describes this process as a non-trivial example for using the Ruby engine.
 
-The package defines {%chapNR%} macros.
+The package defines 0 macros.
 
 The macro `ruby:eval` evaluates a simple expression.
 `ruby:import` can import Ruby code.
@@ -56,28 +50,36 @@ Finally, `ruby:closer` makes it possible to implement closer scripts.
 
 The different macros use Ruby `ScriptingContainer` objects to execute the Ruby scripts.
 These container objects are automatically created and named.
-{%@define ShellObjects=ShellObjects%}{%@define ShellObjectsTitle=Using Multiple Container Objects%}\
-Their use is detailed in the chapter <<{%ShellObjects%},{%ShellObjectsTitle%}>>.
+Their use is detailed in the chapter <<ShellObjects,Using Multiple Container Objects>>.
 If you do not want to use multiple, separated Ruby containers, you do not need to worry about the container objects.
 One will be created upon the first use of one of the Ruby macros and used throughout the Jamal file.
 
-{%@define chap($x)=[[$x]]
-==== {%macroChapter%}`ruby:$x`
-%}
 
-{%chap eval%}
+
+[[eval]]
+==== i. `ruby:eval`
+
 
 The macro `ruby:eval` uses its whole input as a ruby expression and evaluates it.
 For example the following macro call:
-{%sample/
+[source]
+----
 {@ruby:eval 1+1}
-%}
+
+----
 
 will result:
 
-{%output%}
+[source]
+----
+2
 
-{%chap import%}
+----
+
+
+[[import]]
+==== ii. `ruby:import`
+
 
 This macro can import a Ruby file into the shell.
 The macro has two forms:
@@ -113,7 +115,9 @@ This will result an empty string, which is, what the macro `ruby:import` results
 
 Use `ruby:import` if you do not want to include the result of the script into your output or if the script is in a separate Ruby file.
 
-{%chap shell%}
+[[shell]]
+==== iii. `ruby:shell`
+
 
 You can execute script using `ruby:shell` and get the result as a string into the Jamal output.
 The format of the macro is
@@ -135,7 +139,9 @@ Using `something.rb` is just a reasonable convention that you may like to follow
 The `script content` will be evaluated, and the final result will be the result of the macro.
 Use this macro in case your script is longer and not just a simple one liner, in which case you can use the macro `ruby:eval`.
 
-{%chap property%}
+[[property]]
+==== iv. `ruby:property`
+
 
 This macro sets and gets a Ruby variables.
 Ruby containers can communicate with the embedding application, in this case this is Jamal.
@@ -143,26 +149,41 @@ The embedding application can set and get variables of the Ruby script.
 
 For example the following sample
 
-{%sample/
+[source]
+----
 {@ruby:property $myProp=(to_i)55}
 {@ruby:eval $myProp+45}
-%}
+
+----
 
 and it will result
 
-{%output%}
+[source]
+----
+100
+
+----
+
 
 You can also fetch the value of a variable that was set before by the Ruby script or by the `ruby:property` macro:
 
 
-{%sample/
+[source]
+----
 {@ruby:eval $yourProp=133}
 {@ruby:property $yourProp}
-%}
+
+----
 
 will result
 
-{%output%}
+[source]
+----
+133
+133
+
+----
+
 
 once by the result of the `ruby:eval` and once as the `ruby:property` also fetched this value.
 
@@ -193,34 +214,57 @@ It may also happen that you want to pass a *string* that starts with the charact
 
 Some examples:
 
-{%sample/
+[source]
+----
 {@ruby:property complex=(to_c)66+13i}
 {@ruby:eval complex * complex}
-%}
+
+----
 
 will result
 
-{%output%}
+[source]
+----
+4187.0+1716.0i
 
-{%sample/
+----
+
+
+[source]
+----
 {@ruby:property complex=(to_c/i)66+13i}
 {@ruby:eval complex * complex}
-%}
+
+----
 
 will result
 
-{%output%}
+[source]
+----
+4187+1716i
 
-{%sample/
+----
+
+
+[source]
+----
 {@ruby:property ratio=(to_r)66/13}
 {@ruby:eval ratio * ratio}
-%}
+
+----
 
 will result
 
-{%output%}
+[source]
+----
+4356/169
 
-{%chap closer%}
+----
+
+
+[[closer]]
+==== v. `ruby:closer`
+
 
 Using the macro `ruby:closer` you can create a so-called closer script.
 The script can be used to modify the whole output after the processing of Jamal has finished.
@@ -243,22 +287,26 @@ The closer script should result a string that will replace the original result.
 You can specify any number of closer scripts using different, or the same Ruby shell.
 The scripts will all be invoked one after the other in the order as they were defined in the Jamal source.
 
-{%sample/
+[source]
+----
 Hi, I am the content of the Jamal file.
 {@ruby:closer "I do not care what the original text was, replace it with this one."}
 I will be killed by the closer.
-%}
+
+----
 
 will result
 
-{%output%}
+[source]
+----
+I do not care what the original text was, replace it with this one.
+----
 
-[[{%ShellObjects%}]]
-=== {%ShellObjectsTitle%}
-{%#define defaultShellName={%@snip defaultShellName /"(.*)"/%}%}\
-{%#define shellNamingMacro={%@snip shellNamingMacro /"(.*)"/%}%}\
 
-If you do not specify any shell object it will be created automatically using the name `{%defaultShellName%}`.
+[[ShellObjects]]
+=== Using Multiple Container Objects
+
+If you do not specify any shell object it will be created automatically using the name `:rubyShell`.
 
 Ruby shell objects are stored along with the user defined macros.
 This has two consequences.
@@ -273,28 +321,31 @@ This is a feature to ease the use of the Ruby shells when you have only one.
 It will be created and be available everywhere in the Jamal file even if the first use of Ruby was in a local scope.
 
 The name of the shell can be overwritten defining the user defined macro
-`{%shellNamingMacro%}`.
+`rubyShell`.
 
 It can be done using the usual built-in macro `define`, as in the example
-{%@define myLocalShell=myLocalShell%}
-{%#comment
-we need this here, to be safe
-{%sample/
-{@undefine {%shellNamingMacro%}}
-%}{%output%}
-%}\
-{%sample/
+
+[source]
+----
 {@ruby:eval $z = 13}
-{@define {%shellNamingMacro%}={%myLocalShell%}}
+{@define rubyShell=myLocalShell}
 {@try! {@ruby:eval $z}}
-%}
+
+----
 
 will result the output:
 
-{%output%}
+[source]
+----
+13
 
-The reason for this is that the first evaluation is executed in a shell named `{%defaultShellName%}`.
-The second evaluation, however runs in a different shell, named `{%myLocalShell%}`.
+! 13
+
+----
+
+
+The reason for this is that the first evaluation is executed in a shell named `:rubyShell`.
+The second evaluation, however runs in a different shell, named `myLocalShell`.
 
 [NOTE]
 ====
@@ -308,51 +359,59 @@ On the other hand using `{@try...}` will pass the content unevaluated, and the m
 This is not Ruby module specific, but it is a very common mistake.
 ====
 
-There is a resource file named {%#file {%@define fileFormat=`$name`%}{%@define root=src/main/resources/%}ruby.jim%}.
+There is a resource file named `ruby.jim`.
 You can import this file and then use the macros defined in it.
 The previous example will look the following:
 
-{%#comment
-we need this here, because all samples run in the same processor, and the shell was renamed
-{%sample/
-{@undefine {%shellNamingMacro%}}
-%}{%output%}
-%}
 
-{%sample/
+
+[source]
+----
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
-{shell={%myLocalShell%}}
+{shell=myLocalShell}
 {@try! {@ruby:eval $z}}
-%}
+
+----
 
 will result the output:
 
-{%output%}
+[source]
+----
+13
+
+! 13
+
+----
+
 
 This is the same as the previous one, not surprisingly.
 
-All Ruby macros are link:../GLOSSARY.adoc[inner scope dependent], which means that you can define the macro `{%shellNamingMacro%}` inside the Ruby macro call.
+All Ruby macros are link:../GLOSSARY.adoc[inner scope dependent], which means that you can define the macro `rubyShell` inside the Ruby macro call.
 In that case the definition, following the Jamal rules will be local to the Ruby macro.
 
 For example
-{%#comment
-we need this here, because all samples run in the same processor, and the shell was renamed
-{%sample/
-{@undefine {%shellNamingMacro%}}
-%}{%output%}
-%}
 
-{%sample/
+
+[source]
+----
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
-{@try! {#ruby:eval {shell={%myLocalShell%}}$z}}
+{@try! {#ruby:eval {shell=myLocalShell}$z}}
 {@ruby:eval $z = 13}
-%}
+
+----
 
 will result the output:
 
-{%output%}
+[source]
+----
+13
+! 13
+13
+
+----
+
 
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `ruby:eval`.
 (What is more, it is local to the `try` macro.)
