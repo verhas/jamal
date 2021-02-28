@@ -283,7 +283,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.7.2-SNAPSHOT</version>
+<version>1.7.2</version>
 ...
 
 ----
@@ -1091,7 +1091,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.2-SNAPSHOT</version>
+    <version>1.7.2</version>
 </project>
 
 ----
@@ -1125,7 +1125,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.7.2-SNAPSHOT</version>
+<version>1.7.2</version>
 </project>
 
 ----
@@ -1166,7 +1166,7 @@ It will result the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.2-SNAPSHOT</version>
+    <version>1.7.2</version>
 </project>
 ----
 %}
@@ -1189,7 +1189,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-02-27 20:56:30
+2021-02-28 17:44:26
 
 ----
 %}
