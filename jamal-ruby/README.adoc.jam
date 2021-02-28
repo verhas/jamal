@@ -2,6 +2,8 @@
 {%@import readmemacros.jim%}\
 {%@snip:collect src/test/java/%}\
 {%@snip:collect src/main/java/%}\
+{%@snip:collect ../jamal-snippet/src/test/java/javax0/jamal/documentation%}\
+
 {%#counter:define macroChapter {%@define format=$roman. %}%}
 
 Using this integration module you can mix Jamal macro text with Ruby code snippets.
@@ -359,3 +361,82 @@ The second evaluation is performed in a different shell, but the definition of t
 
 [[Sample]]
 === Sample Application, Converting this `README.adoc`
+
+{%@define $lang=ruby%}
+{%@define $Lang=Ruby%}
+{%@include ../scriptingReadme.adoc.jim%}
+
+[source,java]
+----
+{%#trimLines
+{%@snip Ruby_Jamal_Doc_Execution
+        final var processor = new Processor("{%", "%}");
+        final var shell = Shell.getShell(processor, Shell.DEFAULT_RUBY_SHELL_NAME);
+        shell.property("$processor", new MyProcessor());
+        processor.defineGlobal(shell);
+        final var result = processor.process(in);
+%}
+%}
+----
+It is almost a standard invocation of the Jamal processor.
+The only difference is that it creates a Ruby container using the default container name and injects a Jamal `MyProcessor` instance into the container with the name `$processor`.
+When Jamal runs any Ruby code running in the same container will be able to access the processor.
+
+The `MyProcessor` class is an inner class inside the test class and it reads as the following:
+
+[source,java]
+----
+{%#trimLines
+{%@snip MyProcessor
+    public static class MyProcessor {
+        final Processor processor = new Processor("{", "}");
+
+        public String process(String s) throws BadSyntax {
+            return processor.process(Input.makeInput(s));
+        }
+    }
+%}
+%}
+----
+
+This class is a wrapper, that provides the method `{%@java:method javax0.jamal.ruby.TestConvertRubyReadme$MyProcessor#process%}()` with a string argument.
+This can directly be invoked from Ruby.
+
+Using this possibility the user defined macros `sample` and `output` are simply the following:
+{%@snip:collect readmemacros.jim%}
+
+* `sample`
+
+[source]
+----
+{%#replaceLines {%@define replace=/^(.*)$/    $1/%}
+{%@snip Ruby_sample_user_defined_macro%}%}
+----
+
+This macro saves the sample code to the global Ruby variable `$lastCode calling the macro `ruby:property`.
+The script removes the leading and trailing new line character from the sample if there is any.
+Finally, the script returns the resulted string, which is placed between the Asciidoc code display.
+
+* `output`
+
+[source]
+----
+{%#replaceLines {%@define replace=/^(.*)$/    $1/%}
+{%@snip Ruby_output_user_defined_macro%}%}
+----
+
+This macro uses the saved property `lastCode` to access to the text of the last sample.
+It invokes the processor to process it.
+The result value of the macro is the output of the processor.
+
+In this chapter we discussed how documentations should be "programs" to avoid redundacy in the source and to support consistency.
+After that we made a short detour discussing the Jamal snippets, which have a full documentation in the file link:{%@file ../jamal-snippet/README.adoc%}[Snippet README].
+We also discussed how the documentation conversion works with snippets and Jamal samples in the Snippet module.
+Finally, we had a look at how simpler it is using the Ruby integration.
+
+NOTE: None of the sample codes in the source `README.adoc.jam` was manually copied.
+
+This clearly demonstrates the power and flexibility of Jamal enhanced with the Ruby integration.
+If you like the idea, but Ruby is not your favourite scripting language have a look at the link:{%@file ../jamal-groovy/README.adoc%}[Ruby Integration] documentation and give it a try.
+
+{%@snip:update%}

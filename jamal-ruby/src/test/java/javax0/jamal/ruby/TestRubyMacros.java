@@ -166,6 +166,7 @@ public class TestRubyMacros {
         ).usingTheSeparators("{%", "%}").results("25.0");
     }
 
+    // snippet sample_snippet
     @Test
     @DisplayName("Test that ruby conversion to fixnum works")
     void testRubyPropertyFixNum() throws Exception {
@@ -176,6 +177,7 @@ public class TestRubyMacros {
                 "%}"
         ).usingTheSeparators("{%", "%}").results("25");
     }
+    // end snippet
 
     @Test
     @DisplayName("Test that ruby conversion to complex works")

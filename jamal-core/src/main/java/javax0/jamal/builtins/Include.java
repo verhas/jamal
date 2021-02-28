@@ -37,9 +37,6 @@ public class Include implements Macro {
         final var position = input.getPosition();
         skipWhiteSpaces(input);
         var reference = input.getReference();
-        if (reference == null) {
-
-        }
         var fileName = absolute(reference, input.toString().trim());
         if (depth-- == 0) {
             depth = getDepth(); // try macro may recover
@@ -47,12 +44,9 @@ public class Include implements Macro {
         }
         var marker = new Marker("{@include " + fileName + "}", position);
         final String result;
-        try {
-            processor.getRegister().push(marker);
-            result = processor.process(getInput(fileName));
-        } finally {
-            processor.getRegister().pop(marker);
-        }
+        processor.getRegister().push(marker);
+        result = processor.process(getInput(fileName));
+        processor.getRegister().pop(marker);
         depth++;
         return result;
     }

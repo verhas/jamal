@@ -2,35 +2,27 @@ This file contains macros, which are used in readme files.
 These macros help embedding Jamal macro samples and run them.
 
 {%@options trimVertical%}
-
-{%@define sample(code)={%@define :lastCode=code%}[source]
+snippet Ruby_sample_user_defined_macro
+{%@define sample(code)=[source]
 ----
 {%#trimLines {%@ruby:property $lastCode=(to_s)code%}{%@ruby:shell
 while $lastCode.length > 0 and $lastCode[0] == '\n'
-    $lastCode = $lastCode[1..$lastCode.length-1]
+    $lastCode = $lastCode[1..-1]
 end
 while $lastCode.length > 0 and $lastCode[$lastCode.length-1] == '\n'
-    $lastCode = $lastCode[0..$lastCode.length-2]
+    $lastCode = $lastCode[0..-2]
 end
 $lastCode
 %}%}
 ----%}
+end snippet
 
+snippet Ruby_output_user_defined_macro
 {%@define output=[source]
 ----
 {%#trimLines {%#ruby:shell
 $processor.process($lastCode)%}%}
 ----
 %}
-
-{%@define untrimmedSample(code)={%@define :lastCode=code%}[source]
-----
-{%@sample code%}
-----%}
-
-{%@define untrimmedOutput=[source]
-----
-{%#output {%lastCode%}%}
-----
-%}
+end snippet
 

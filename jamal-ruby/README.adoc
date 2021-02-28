@@ -1,6 +1,7 @@
 = Jamal Ruby integration module
 
 
+
 Using this integration module you can mix Jamal macro text with Ruby code snippets.
 To use this module you have to add the dependency to you Maven project, as:
 
@@ -418,3 +419,209 @@ The second evaluation is performed in a different shell, but the definition of t
 
 [[Sample]]
 === Sample Application, Converting this `README.adoc`
+
+
+
+In this chapter I will tell the story, and the technology used to maintain this documentation file.
+There are several macros used during the maintenance of the documentation to ensure that the documentation is correct and up-to-date.
+The processing of this special document uses Ruby scripts, which are used instead of some built-in macros for demonstration purposes.
+
+
+The documentation of Jamal is a series of Asccidoc files.
+The Asciidoc format was invented to be a documentation source format that is easy to read and edit.
+The same time it can also be converted to many different output formats.
+Asciidoc, however, is provides only limited possibility to eliminate redundancy, and to ensure consistency.
+This is where Jamal comes into play.
+
+The documentation of Jamal is maintained in `xxx.adoc.jam` files, and they are converted to `xxx.adoc` files.
+With this workflow the Asciidoc files are not source files, rather intermediate files along the conversion path.
+Jamal `define` macros are used to eliminate text repetition, redundancy whenever it is possible.
+The Jamal snippet library macros are used to keep the sample codes included in the document up-to-date.
+
+[NOTE]
+====
+When reading this part of the documentation, you are probably familiar with the basic functionalities of Jamal.
+If you need to refresh the memory then read the link:README.adoc[documentation] in root folder of the project.
+The documentation of the Snippet macros are documented in the link:jamal-snippet/README.adoc[Snippet README.adoc] file.
+It is not necessary to know and understand how the snippet macros work in order to read this chapter, but in general, it is a recommended read.
+====
+
+The technical documentations using Jamal and the snippet macros usually generate the documentation in multiple steps.
+
+* Run the tests including the sample code and capture the sample output in one or more output file.
+
+* Process the Jamal source of the documentation and include from the source code and from the generated sample output files the samples.
+
+For example, a Java application can support the documentation with unit test samples.
+Some of the unit tests serve the purpose of testing only, while others are there to document certain part of the code.
+The output of the documentation purposed tests are captured into output files.
+The test file `jamal-ruby/src/test/java/javax0/jamal/ruby/TestRubyMacros.java` contains
+
+[source,java]
+----
+// snippet sample_snippet
+@Test
+@DisplayName("Test that ruby conversion to fixnum works")
+void testRubyPropertyFixNum() throws Exception {
+    TestThat.theInput(
+        "{%@ruby:property int=(to_i)5%}" +
+            "{%@ruby:shell\n" +
+            "  (int*int)\n" +
+            "%}"
+    ).usingTheSeparators("{%", "%}").results("25");
+}
+// end snippet
+
+----
+To get this content into the document what we have to write is the following:
+
+
+        [source,java]
+        ----
+        // snippet sample_snippet
+        {%@snip sample_snippet %}\
+        // end snippet
+        ----
+
+
+The output generated (none in this case) can also be included using the `snip` macro.
+
+This is absolutely logical to run the tests, and generate the test output in a prior test in case of Java.
+When we test and document Jamal processing, however, it is a logical idea to use the Jamal environment, which is converting the documentation.
+The external approach with a proir step is also possible, but it is not needed.
+
+The sample Jamal code can be included in the documentation as code sample.
+Using Jamal macros it can also be converted to the corresponding output, which can also be included into the resulting document without saving it into an intermediate file.
+
+To do that the Jamal Snippet package unit test file
+`jamal-snippet/src/test/java/javax0/jamal/documentation/TestConvertReadme.java`
+uses a built-in macro, implemented in the file:
+
+* `jamal-snippet/src/test/java/javax0/jamal/documentation/Output.java`
+
+This Java implemented macro is available on the classpath when the unit test runs.
+
+[NOTE]
+====
+Executing the Jamal processing of the documentation of a Java software package via the unit tests has other advantages.
+The macros `java:class` and `java:method` can check that the class and method names referenced in the document are valid.
+Class and method names may change during refactoring.
+The documentation many times does not follow this change and becomes stale.
+When the classes and methods are referenced using these macros then they throw an exception if the class or method does not exits.
+====
+
+This class is very simple:
+
+[source,java]
+----
+public class Output implements Macro {
+    final Processor localProc = new javax0.jamal.engine.Processor("{", "}");
+
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        return localProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
+    }
+}
+----
+
+It creates a single Jamal processor instance and uses it to evaluate the input passed to it.
+This way this macro runs a Jamal processor separate from the Jamal processor that is converting the document.
+The two Jamal processors, however, run in the same JVM and one is invoking the other through this built-in macro.
+
+To simplify the use there is a `readmemacros.jim` macro import file that defines the user defined macro `sample` and `output`.
+(A built-in macro can have the same name as a user defined.)
+The macro `sample` results the content of it in Asciidoc code sample format adding `[source]\n----` before and `----` after the sample code.
+The same time it also saves the sample code in a user defined variable called `lastCode`.
+The macro `output` uses the `lastCode` and using the buil-in `output` from the `Output.java` displays the calculated result as a code block.
+
+This is very similar when we are using Ruby, but in this case we do not need the built-in macro `output`.
+When this very document is converted the readmemacros.jim` inside the `jamal-ruby` directory contains some Ruby scripts instead of the built-in macros.
+
+The unit test code that invokes the Jamal processor to convert this document is the following:
+
+
+[source,java]
+----
+final var processor = new Processor("{%", "%}");
+final var shell = Shell.getShell(processor, Shell.DEFAULT_RUBY_SHELL_NAME);
+shell.property("$processor", new MyProcessor());
+processor.defineGlobal(shell);
+final var result = processor.process(in);
+
+----
+It is almost a standard invocation of the Jamal processor.
+The only difference is that it creates a Ruby container using the default container name and injects a Jamal `MyProcessor` instance into the container with the name `$processor`.
+When Jamal runs any Ruby code running in the same container will be able to access the processor.
+
+The `MyProcessor` class is an inner class inside the test class and it reads as the following:
+
+[source,java]
+----
+public static class MyProcessor {
+    final Processor processor = new Processor("{", "}");
+
+    public String process(String s) throws BadSyntax {
+        return processor.process(Input.makeInput(s));
+    }
+}
+
+----
+
+This class is a wrapper, that provides the method `process()` with a string argument.
+This can directly be invoked from Ruby.
+
+Using this possibility the user defined macros `sample` and `output` are simply the following:
+
+
+* `sample`
+
+[source]
+----
+    {%@define sample(code)=[source]
+    ----
+    {%#trimLines {%@ruby:property $lastCode=(to_s)code%}{%@ruby:shell
+    while $lastCode.length > 0 and $lastCode[0] == '\n'
+        $lastCode = $lastCode[1..-1]
+    end
+    while $lastCode.length > 0 and $lastCode[$lastCode.length-1] == '\n'
+        $lastCode = $lastCode[0..-2]
+    end
+    $lastCode
+    %}%}
+    ----%}
+    
+
+----
+
+This macro saves the sample code to the global Ruby variable `$lastCode calling the macro `ruby:property`.
+The script removes the leading and trailing new line character from the sample if there is any.
+Finally, the script returns the resulted string, which is placed between the Asciidoc code display.
+
+* `output`
+
+[source]
+----
+    {%@define output=[source]
+    ----
+    {%#trimLines {%#ruby:shell
+    $processor.process($lastCode)%}%}
+    ----
+    %}
+    
+
+----
+
+This macro uses the saved property `lastCode` to access to the text of the last sample.
+It invokes the processor to process it.
+The result value of the macro is the output of the processor.
+
+In this chapter we discussed how documentations should be "programs" to avoid redundacy in the source and to support consistency.
+After that we made a short detour discussing the Jamal snippets, which have a full documentation in the file link:../jamal-snippet/README.adoc[Snippet README].
+We also discussed how the documentation conversion works with snippets and Jamal samples in the Snippet module.
+Finally, we had a look at how simpler it is using the Ruby integration.
+
+NOTE: None of the sample codes in the source `README.adoc.jam` was manually copied.
+
+This clearly demonstrates the power and flexibility of Jamal enhanced with the Ruby integration.
+If you like the idea, but Ruby is not your favourite scripting language have a look at the link:../jamal-groovy/README.adoc[Ruby Integration] documentation and give it a try.
+
