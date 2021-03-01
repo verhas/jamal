@@ -12,9 +12,9 @@ import java.util.Optional;
  * macro {@code NumberLines} has the following lines:
  *
  * <pre>{@code
- *         final var format = UDMacro.macro("format").from(processor).orElse("%d. ");
- *         final var start = UDMacro.macro("start").integer().from(processor).orElse(1);
- *         final var step = UDMacro.macro("step").integer().from(processor).orElse(1);
+ *         final var format = UDMacro.macro(processor).readValue("format").orElse("%d. ");
+ *         final var start = UDMacro.macro(processor).integer().readValue("start").orElse(1);
+ *         final var step = UDMacro.macro(processor).integer().readValue("step").orElse(1);
  * }</pre>
  * <p>
  * to fetch the string value of the macros {@code format}, {@code start}, {@code step}. When the method {@code
@@ -32,6 +32,10 @@ public class MacroReader {
     }
 
     public Optional<String> readValue(String id) throws BadSyntax {
+        return _readValue(id);
+    }
+
+    private Optional<String> _readValue(String id) throws BadSyntax {
         final var evaluable = processor.getRegister().getUserDefined(id)
             .filter(macro -> macro instanceof Evaluable)
             .map(macro -> (Evaluable) macro);
@@ -48,7 +52,7 @@ public class MacroReader {
 
     public class IntegerMacroReader {
         public Optional<Integer> readValue(String id) throws BadSyntax {
-            final var string = MacroReader.macro(MacroReader.this.processor).readValue(id);
+            final var string = _readValue(id);
             if (string.isPresent()) {
                 try {
                     return Optional.of(Integer.parseInt(string.get()));

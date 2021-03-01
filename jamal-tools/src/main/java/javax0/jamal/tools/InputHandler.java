@@ -15,7 +15,13 @@ public class InputHandler {
     final static private int DOES_NOT_CONTAIN = -1;
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
+
+    private InputHandler() {
+    }
+
     /**
+     * Checks that the first character of the input is one of the characters listed.
+     *
      * @param s     a character sequence of which the first character is checked
      * @param chars the characters we are looking for
      * @return {@code true} if the first character of {@code s} is one of the {@code chars}. Returns {@code false} if
@@ -67,7 +73,17 @@ public class InputHandler {
      * @param input              from which the first characters are deleted
      * @param numberOfCharacters the number of characters to be deleted from the start of {@code input}
      * @param sb                 where the characters will be appended
+     * @deprecated Use the method {@link #move(Input, int, Input)} method instead. The interface `Input` extends {@link
+     * CharSequence} and can give access to an underlying {@link StringBuilder}. Instead of creating a {@link
+     * StringBuilder}, invoke {@link javax0.jamal.tools.Input#makeInput()} and use that instead of the {@link
+     * StringBuilder}.
+     * <p>
+     * The reason to deprecate this method is to avoid use when the characters are first moved to a {@link
+     * StringBuilder} and then a new {@link Input} is created from the {@link StringBuilder}. This approach may loose
+     * the position information that later implementations of {@link InputHandler#move(Input, int, Input)} may also
+     * copy.
      */
+    @Deprecated
     public static void move(Input input, int numberOfCharacters, StringBuilder sb) {
         sb.append(input.substring(0, numberOfCharacters));
         input.delete(numberOfCharacters);
@@ -87,6 +103,9 @@ public class InputHandler {
 
     /**
      * Copy the string from the start of the input to the end of the output.
+     * <p>
+     * Note that this is a convenience method for {@link #move(Input, int, Input)}. There is no check that the input
+     * really starts with the characters contained by {@code s}.
      *
      * @param input  from which the string will be removed
      * @param s      the string. There is no check that the input really starts with the string. The string is {@link
@@ -94,8 +113,7 @@ public class InputHandler {
      * @param output to which the string will be appended
      */
     public static void move(Input input, String s, Input output) {
-        skip(input, s);
-        output.append(s);
+        move(input,s.length(),output);
     }
 
     /**

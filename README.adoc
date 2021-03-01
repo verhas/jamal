@@ -2613,7 +2613,7 @@ will result
 
 [source]
 ----
-The current version 1.7.2 is older than the required version. It has to be newer.
+The current version 1.7.3-SNAPSHOT is older than the required version. It has to be newer.
 
 ----
 
@@ -2727,7 +2727,7 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.7.2</version>
+    <version>1.7.3-SNAPSHOT</version>
     <executions>
         <execution>
             <id>execution</id>
@@ -2820,7 +2820,7 @@ If you use Maven, you can simply have
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
-    <version>1.7.2</version>
+    <version>1.7.3-SNAPSHOT</version>
 </dependency>
 ----
 

@@ -81,7 +81,7 @@ public class MacroBodyFetcher {
                     move(input, closeStr, output);
                 } else {
                     refStack.push(input.getPosition());
-                    move(input, openStr,output);
+                    move(input, openStr, output);
                     counter++; //count the new opening
                 }
             } else if (input.indexOf(closeStr) == 0) {
