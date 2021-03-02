@@ -20,7 +20,9 @@ To use this module you have to add the dependency to you Maven project, as:
 This library has one single macro, `basic`.
 Using this macro you can embed BASIC programs into your Jamal file, as
 {%@define replace=/^\s*"(.*?)(?:\\n)?".*$/$1%}
-{%#snip:define sampleFormatted ={%#trimLines{%#replaceLines{%@snip sample%}%}%}%}
+{%#snip:define sampleFormatted ={%#trimLines
+{%#replaceLines
+{%@snip sample%}%}%}%}
 
 [source]
 ----
@@ -39,7 +41,9 @@ next
 %}
 ----
 resulting
-{%#snip:define sample_outputFormatted ={%#trimLines{%#replaceLines{%@snip sample_output%}%}%}%}
+{%#snip:define sample_outputFormatted ={%#trimLines
+{%#replaceLines
+{%@snip sample_output%}%}%}%}
 [source]
 ----
 {%@snip sample_outputFormatted

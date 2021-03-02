@@ -495,7 +495,8 @@ Using this possibility the user defined macros `sample` and `output` are simply 
 ----
     {%@define sample(code)=[source]
     ----
-    {%#trimLines {%@groovy:property lastCode=(string)code%}{%@groovy:shell
+    {%#trimLines
+    {%@groovy:property lastCode=(string)code%}{%@groovy:shell
     lastCode.replaceAll('^\\n+','').replaceAll('\\n+$','')
     %}%}
     ----%}
@@ -512,7 +513,8 @@ At the same time it also saves the sample text into a Groovy bindings property.
 ----
     {%@define output=[source]
     ----
-    {%#trimLines {%@groovy:shell
+    {%#trimLines
+    {%@groovy:shell
     processor.process(new javax0.jamal.tools.Input(lastCode))%}%}
     ----
     %}

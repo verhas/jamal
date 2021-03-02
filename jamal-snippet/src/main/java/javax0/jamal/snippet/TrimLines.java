@@ -5,10 +5,9 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.OptionsStore;
+import javax0.jamal.tools.Params;
 
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
+import java.util.Set;
 
 /**
  * Take the argument of the macro and removes N spaces from the start of each line so that there is at least one line
@@ -27,11 +26,10 @@ public class TrimLines implements Macro, InnerScopeDependent {
     // snippet trimLineStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reader = MacroReader.macro(processor).integer();
-        final var margin = reader.readValue("margin").orElse(0);
-        final var trimVertical = OptionsStore.getInstance(processor).is("trimVertical");
+        final var params = Params.using(processor).from(this).keys(Set.of("margin", "trimVertical")).parse(in);
+        final var margin = params.getInt("margin").orElse(0);
+        final var trimVertical = params.is("trimVertical");
         //end snippet
-        skipWhiteSpaces2EOL(in);
         final var sb = in.getSB();
         int minSpaces = Integer.MAX_VALUE;
         for (int i = 0; i < sb.length(); ) {
@@ -46,6 +44,9 @@ public class TrimLines implements Macro, InnerScopeDependent {
             int index = sb.indexOf("\n", i);
             if (index == -1) break;
             i = index + 1;
+        }
+        if (minSpaces == Integer.MAX_VALUE) {
+            minSpaces = 0;
         }
         minSpaces -= margin;
         for (int i = 0; i < sb.length(); ) {

@@ -6,7 +6,8 @@ These macros help embedding Jamal macro samples and run them.
 snippet Groovy_sample_user_defined_macro
 {%@define sample(code)=[source]
 ----
-{%#trimLines {%@groovy:property lastCode=(string)code%}{%@groovy:shell
+{%#trimLines
+{%@groovy:property lastCode=(string)code%}{%@groovy:shell
 lastCode.replaceAll('^\\n+','').replaceAll('\\n+$','')
 %}%}
 ----%}
@@ -15,7 +16,8 @@ end snippet
 snippet Groovy_output_user_defined_macro
 {%@define output=[source]
 ----
-{%#trimLines {%@groovy:shell
+{%#trimLines
+{%@groovy:shell
 processor.process(new javax0.jamal.tools.Input(lastCode))%}%}
 ----
 %}

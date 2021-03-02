@@ -8,6 +8,7 @@
 
     {@define openForTests={opens/test/test.extra}
                           {opens/test/test.core}
+                          {opens/test/test.tools.params}
                           {opens/test/test.examples}}
 
     {build|{plugins| {@include ../plugins.jim}}}

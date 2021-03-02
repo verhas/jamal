@@ -6,6 +6,7 @@ import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Processor;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * Utility class to fetch the value of a user defined macro. This is used to get parameter strings, for example the
@@ -51,16 +52,16 @@ public class MacroReader {
     }
 
     public class IntegerMacroReader {
-        public Optional<Integer> readValue(String id) throws BadSyntax {
+        public OptionalInt readValue(String id) throws BadSyntax {
             final var string = _readValue(id);
             if (string.isPresent()) {
                 try {
-                    return Optional.of(Integer.parseInt(string.get()));
+                    return OptionalInt.of(Integer.parseInt(string.get()));
                 } catch (NumberFormatException nfe) {
                     throw new BadSyntax(id + " is not a number");
                 }
             } else {
-                return Optional.empty();
+                return OptionalInt.empty();
             }
         }
     }

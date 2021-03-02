@@ -5,7 +5,8 @@ These macros help embedding Jamal macro samples and run them.
 snippet Ruby_sample_user_defined_macro
 {%@define sample(code)=[source]
 ----
-{%#trimLines {%@ruby:property $lastCode=(to_s)code%}{%@ruby:shell
+{%#trimLines
+{%@ruby:property $lastCode=(to_s)code%}{%@ruby:shell
 while $lastCode.length > 0 and $lastCode[0] == '\n'
     $lastCode = $lastCode[1..-1]
 end
@@ -20,7 +21,8 @@ end snippet
 snippet Ruby_output_user_defined_macro
 {%@define output=[source]
 ----
-{%#trimLines {%#ruby:shell
+{%#trimLines
+{%#ruby:shell
 $processor.process($lastCode)%}%}
 ----
 %}

@@ -1029,7 +1029,7 @@ will result
 - Update.java: 3,504 bytes
 - FilesMacro.java: 4,465 bytes
 - Collect.java: 5,030 bytes
-- TrimLines.java: 2,881 bytes
+- TrimLines.java: 2,854 bytes
 - Replace.java: 1,686 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
@@ -1189,7 +1189,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-03-02 10:27:20
+2021-03-02 19:37:40
 
 ----
 %}

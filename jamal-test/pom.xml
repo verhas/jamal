@@ -32,6 +32,7 @@
                     <argLine>
                 --add-opens jamal.test/javax0.jamal.test.extra=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.core=ALL-UNNAMED
+                          --add-opens jamal.test/javax0.jamal.test.tools.params=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.examples=ALL-UNNAMED
             </argLine>
                 </configuration>

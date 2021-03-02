@@ -113,7 +113,7 @@ public class InputHandler {
      * @param output to which the string will be appended
      */
     public static void move(Input input, String s, Input output) {
-        move(input,s.length(),output);
+        move(input, s.length(), output);
     }
 
     /**
@@ -235,6 +235,30 @@ public class InputHandler {
     }
 
     /**
+     * Delete the white space characters from the start of the input but do not delete {@code \n} characters. If it sees
+     * a {@code \n} character then stop with the deletion.
+     *
+     * @param input from which the spaces (but no {@code \n})should be deleted.
+     */
+    public static void skipWhiteSpacesNoNL(Input input) {
+        while (input.length() > 0 && Character.isWhitespace(input.charAt(0)) && input.charAt(0) != '\n') {
+            input.delete(1);
+        }
+    }
+
+    /**
+     * Delete the white space characters from the start of the input but only until after the first EOL
+     *
+     * @param input from which the spaces should be deleted.
+     */
+    public static void skipWhiteSpaces2EOL(Input input) {
+        skipWhiteSpacesNoNL(input);
+        if (input.length() > 0 && input.charAt(0) == '\n') {
+            input.delete(1);
+        }
+    }
+
+    /**
      * Same as {@link #skipWhiteSpaces(Input)} but it also appends the deleted spaces to the string builder.
      *
      * @param input from which the spaces should be deleted.
@@ -337,20 +361,6 @@ public class InputHandler {
             input.delete(1);
         }
         return sb.toString();
-    }
-
-    /**
-     * Delete the white space characters from the start of the input but only until after the first EOL
-     *
-     * @param input from which the spaces should be deleted.
-     */
-    public static void skipWhiteSpaces2EOL(Input input) {
-        while (input.length() > 0 && Character.isWhitespace(input.charAt(0)) && input.charAt(0) != '\n') {
-            input.delete(1);
-        }
-        if (input.length() > 0 && input.charAt(0) == '\n') {
-            input.delete(1);
-        }
     }
 
     /**

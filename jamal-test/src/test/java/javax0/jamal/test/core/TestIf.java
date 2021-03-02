@@ -22,6 +22,8 @@ public class TestIf {
     @Test
     @DisplayName("Test if with regular expression separator")
     void testRegExpSeparator() throws Exception {
-        TestThat.theInput("{#if`///`1///aa}").results("aa");
+        TestThat.theInput("{#if`///`1///a}").results("a");
+        TestThat.theInput("{#if`///`1///}").results("");
+        TestThat.theInput("{#if`///`1}").results("");
     }
 }

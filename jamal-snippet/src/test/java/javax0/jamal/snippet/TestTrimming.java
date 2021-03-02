@@ -9,7 +9,7 @@ public class TestTrimming {
     @Test
     @DisplayName("When there is no newLine after 'trimLines' nothing is trimmed")
     void trimsToLeftNothing() throws Exception {
-        TestThat.theInput("{@trimLines wupbaba\n" +
+        TestThat.theInput("{@trimLines \nwupbaba\n" +
             "        siiias das\n" +
             "sdsd sdsd ddd" +
             "}").results("wupbaba\n" +

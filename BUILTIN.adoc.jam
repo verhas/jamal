@@ -552,9 +552,9 @@ The first few lines of the method {%@java:method javax0.jamal.snippet.TrimLines#
 {%@snip trimLineStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reader = MacroReader.macro(processor).integer();
-        final var margin = reader.readValue("margin").orElse(0);
-        final var trimVertical = OptionsStore.getInstance(processor).is("trimVertical");
+        final var params = Params.using(processor).from(this).keys(Set.of("margin", "trimVertical")).parse(in);
+        final var margin = params.getInt("margin").orElse(0);
+        final var trimVertical = params.is("trimVertical");
 %}
 ----
 

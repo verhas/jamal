@@ -8,14 +8,14 @@ import static javax0.jamal.tools.param.Escape.handleEscape;
 import static javax0.jamal.tools.param.Escape.handleNormalCharacter;
 import static javax0.jamal.tools.param.Escape.handleNormalMultiLineStringCharacter;
 
-class StringFetcher {
+public class StringFetcher {
     public static final String MULTI_LINE_STRING_DELIMITER = "\"\"\"";
     private static final int MULILSD_LENGTH = MULTI_LINE_STRING_DELIMITER.length();
     private static final char ENCLOSING_CH = '"';
 
-    public String getString(Input input) throws BadSyntax {
+    public static String getString(Input input) throws BadSyntax {
         if (input.length() == 0 || input.charAt(0) != ENCLOSING_CH) {
-            return null;
+            return getUnquotedString(input);
         }
         if (input.length() < 2) {
             throw new BadSyntax("String has to be at least two characters long.");
@@ -25,6 +25,18 @@ class StringFetcher {
         } else {
             return getSimpleString(input);
         }
+    }
+
+    private static String getUnquotedString(Input input) throws BadSyntax {
+        final var output = new StringBuilder();
+        while (input.length() > 0 && !Character.isWhitespace(input.charAt(0))) {
+            if (input.charAt(0) == '=') {
+                throw new BadSyntax("Unquoted parameters must not contain '='. It is dangerous.");
+            }
+            output.append(input.charAt(0));
+            InputHandler.skip(input, 1);
+        }
+        return output.toString();
     }
 
     private static String getMultiLineString(Input input) throws BadSyntax {
