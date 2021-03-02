@@ -162,7 +162,7 @@ public class MacroBodyFetcher {
      * @param input to decide if it start with an escape macro
      * @return true if the input starts with an escape macro
      */
-    private static final boolean startWithEscapeMacro(Input input) {
+    private static boolean startWithEscapeMacro(Input input) {
         final var in = makeInput(input);
         skipWhiteSpaces(in);
         if ((in.length() == 0) ||

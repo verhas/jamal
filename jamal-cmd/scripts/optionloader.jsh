@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.Map;
-import java.nio.charset.StandardCharsets;
 
     String OPTION_FILE = "./jamal.options";
 

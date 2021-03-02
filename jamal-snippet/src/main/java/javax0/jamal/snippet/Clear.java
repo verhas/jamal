@@ -12,7 +12,7 @@ public class Clear implements Macro {
     }
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         SnippetStore.getInstance(processor).clear();
         return "";
     }

@@ -761,7 +761,7 @@ public class Processor implements javax0.jamal.api.Processor {
             }
         } finally {
             // they were closed, they are not open any more
-            openResources.removeAll(openResources);
+            openResources.clear();
         }
         if (!exceptionsAccumulator.isEmpty()) {
             final var exception = new BadSyntax("There were " + exceptionsAccumulator.size() + " exceptions closing the registered resources.");

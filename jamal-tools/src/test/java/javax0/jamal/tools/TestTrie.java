@@ -99,10 +99,12 @@ public class TestTrie {
 
         final var result1 = sut.find("abba");
 
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(0, result1.get().start);
         Assertions.assertEquals(1, result1.get().end);
         final var s = "\nkirbgobdchuppa";
         final var result2 = sut.find(s);
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("bdc", s.substring(result2.get().start, result2.get().end));
 
         final var result3 = sut.find("sssspppbc");

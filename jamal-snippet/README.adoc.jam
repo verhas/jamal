@@ -1024,25 +1024,25 @@ will result
 - Snip.java: 2,291 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,199 bytes
-- DateMacro.java: 659 bytes
-- Format.java: 993 bytes
-- Update.java: 3,504 bytes
+- DateMacro.java: 613 bytes
+- Format.java: 930 bytes
+- Update.java: 3,483 bytes
 - FilesMacro.java: 4,465 bytes
 - Collect.java: 5,030 bytes
 - TrimLines.java: 2,854 bytes
-- Replace.java: 1,686 bytes
+- Replace.java: 1,624 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
-- Clear.java: 451 bytes
+- Clear.java: 434 bytes
 - KillLines.java: 1,525 bytes
 - SnippetStore.java: 6,571 bytes
 - ListDir.java: 3,943 bytes
 - XmlFormat.java: 3,290 bytes
 - SnipProperties.java: 1,485 bytes
-- CounterMacro.java: 1,870 bytes
+- CounterMacro.java: 1,759 bytes
 - XmlDocument.java: 2,038 bytes
 - Java.java: 5,806 bytes
-- ReplaceLines.java: 2,575 bytes
+- ReplaceLines.java: 2,513 bytes
 - SkipLines.java: 2,100 bytes
 - Reflow.java: 1,742 bytes
 - Snippet.java: 1,088 bytes
@@ -1189,7 +1189,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-03-02 19:37:40
+2021-03-02 20:21:11
 
 ----
 %}

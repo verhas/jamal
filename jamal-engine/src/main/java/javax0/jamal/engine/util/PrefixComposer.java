@@ -47,7 +47,7 @@ public class PrefixComposer {
         int postEvalCount = 0;
         int identCount = 0;
         skipWhiteSpaces(input);
-        final var prefix = new StringBuilder();
+        final var prefix = javax0.jamal.tools.Input.makeInput();
         while (firstCharIs(input, POST_VALUATE, IDENT)) {
             if (firstCharIs(input, POST_VALUATE)) {
                 postEvalCount++;

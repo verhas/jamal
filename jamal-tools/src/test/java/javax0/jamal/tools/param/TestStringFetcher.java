@@ -19,60 +19,56 @@ public class TestStringFetcher {
     @Test
     @DisplayName("Test simple string literals that are syntactically correct")
     void testStringFetchers() throws BadSyntax {
-        final var sut = new StringFetcher();
-        Assertions.assertEquals("", sut.getString(makeInput(string(""))));
-        Assertions.assertEquals("a", sut.getString(makeInput(string("a"))));
-        Assertions.assertEquals("\r", sut.getString(makeInput(string("\\r"))));
-        Assertions.assertEquals("\n", sut.getString(makeInput(string("\\n"))));
-        Assertions.assertEquals("\b", sut.getString(makeInput(string("\\b"))));
-        Assertions.assertEquals("\t", sut.getString(makeInput(string("\\t"))));
-        Assertions.assertEquals("\f", sut.getString(makeInput(string("\\f"))));
-        Assertions.assertEquals("'", sut.getString(makeInput(string("\\'"))));
-        Assertions.assertEquals("\"", sut.getString(makeInput(string("\\\""))));
-        Assertions.assertEquals("\773", sut.getString(makeInput(string("\\773"))));
-        Assertions.assertEquals("\073", sut.getString(makeInput(string("\\073"))));
-        Assertions.assertEquals("\079", sut.getString(makeInput(string("\\079"))));
+        Assertions.assertEquals("", StringFetcher.getString(makeInput(string(""))));
+        Assertions.assertEquals("a", StringFetcher.getString(makeInput(string("a"))));
+        Assertions.assertEquals("\r", StringFetcher.getString(makeInput(string("\\r"))));
+        Assertions.assertEquals("\n", StringFetcher.getString(makeInput(string("\\n"))));
+        Assertions.assertEquals("\b", StringFetcher.getString(makeInput(string("\\b"))));
+        Assertions.assertEquals("\t", StringFetcher.getString(makeInput(string("\\t"))));
+        Assertions.assertEquals("\f", StringFetcher.getString(makeInput(string("\\f"))));
+        Assertions.assertEquals("'", StringFetcher.getString(makeInput(string("\\'"))));
+        Assertions.assertEquals("\"", StringFetcher.getString(makeInput(string("\\\""))));
+        Assertions.assertEquals("\773", StringFetcher.getString(makeInput(string("\\773"))));
+        Assertions.assertEquals("\073", StringFetcher.getString(makeInput(string("\\073"))));
+        Assertions.assertEquals("\079", StringFetcher.getString(makeInput(string("\\079"))));
     }
 
     @Test
     @DisplayName("Test multi line string literals that are syntactically correct")
     void testMultiLineStringFetchers() throws BadSyntax {
-        final var sut = new StringFetcher();
-        Assertions.assertEquals("\n", sut.getString(makeInput(mlstring(""))));
-        Assertions.assertEquals("\na", sut.getString(makeInput(mlstring("a"))));
-        Assertions.assertEquals("\n\r", sut.getString(makeInput(mlstring("\\r"))));
-        Assertions.assertEquals("\n\n", sut.getString(makeInput(mlstring("\\n"))));
-        Assertions.assertEquals("\n\b", sut.getString(makeInput(mlstring("\\b"))));
-        Assertions.assertEquals("\n\t", sut.getString(makeInput(mlstring("\\t"))));
-        Assertions.assertEquals("\n\f", sut.getString(makeInput(mlstring("\\f"))));
-        Assertions.assertEquals("\n'", sut.getString(makeInput(mlstring("\\'"))));
-        Assertions.assertEquals("\n\"", sut.getString(makeInput(mlstring("\\\""))));
-        Assertions.assertEquals("\n\773", sut.getString(makeInput(mlstring("\\773"))));
-        Assertions.assertEquals("\n\073", sut.getString(makeInput(mlstring("\\073"))));
-        Assertions.assertEquals("\n\079", sut.getString(makeInput(mlstring("\\079"))));
-        Assertions.assertEquals("\na\nb", sut.getString(makeInput(mlstring("a\n\rb"))));
-        Assertions.assertEquals("\na\nb", sut.getString(makeInput(mlstring("a\rb"))));
+        Assertions.assertEquals("\n", StringFetcher.getString(makeInput(mlstring(""))));
+        Assertions.assertEquals("\na", StringFetcher.getString(makeInput(mlstring("a"))));
+        Assertions.assertEquals("\n\r", StringFetcher.getString(makeInput(mlstring("\\r"))));
+        Assertions.assertEquals("\n\n", StringFetcher.getString(makeInput(mlstring("\\n"))));
+        Assertions.assertEquals("\n\b", StringFetcher.getString(makeInput(mlstring("\\b"))));
+        Assertions.assertEquals("\n\t", StringFetcher.getString(makeInput(mlstring("\\t"))));
+        Assertions.assertEquals("\n\f", StringFetcher.getString(makeInput(mlstring("\\f"))));
+        Assertions.assertEquals("\n'", StringFetcher.getString(makeInput(mlstring("\\'"))));
+        Assertions.assertEquals("\n\"", StringFetcher.getString(makeInput(mlstring("\\\""))));
+        Assertions.assertEquals("\n\773", StringFetcher.getString(makeInput(mlstring("\\773"))));
+        Assertions.assertEquals("\n\073", StringFetcher.getString(makeInput(mlstring("\\073"))));
+        Assertions.assertEquals("\n\079", StringFetcher.getString(makeInput(mlstring("\\079"))));
+        Assertions.assertEquals("\na\nb", StringFetcher.getString(makeInput(mlstring("a\n\rb"))));
+        Assertions.assertEquals("\na\nb", StringFetcher.getString(makeInput(mlstring("a\rb"))));
     }
 
     @Test
     @DisplayName("Test simple string literals that are syntactically incorrect")
     void testBadStringFetchers() {
-        final var sut = new StringFetcher();
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput(string("\n"))));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput(string("\r"))));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput(string("\\z"))));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput(string("\\"))));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput("\"")));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput("\"\\")));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput("\"bababa")));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput(string("\n"))));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput(string("\r"))));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput(string("\\z"))));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput(string("\\"))));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput("\"")));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput("\"\\")));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput("\"bababa")));
     }
 
     @Test
     @DisplayName("Test multi line string literals that are syntactically incorrect")
     void testBadMultiLineStringFetchers() {
-        final var sut = new StringFetcher();
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput("\"\"\"")));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput("\"\"\"\"")));
-        Assertions.assertThrows(BadSyntax.class, () -> sut.getString(makeInput("\"\"\"\"\"")));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput("\"\"\"")));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput("\"\"\"\"")));
+        Assertions.assertThrows(BadSyntax.class, () -> StringFetcher.getString(makeInput("\"\"\"\"\"")));
     }
 }

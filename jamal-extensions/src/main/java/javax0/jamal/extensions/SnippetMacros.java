@@ -5,7 +5,6 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.InputHandler;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 
@@ -22,7 +21,7 @@ public class SnippetMacros {
     public static class Trim implements Macro {
 
         @Override
-        public String evaluate(Input in, Processor processor) throws BadSyntax {
+        public String evaluate(Input in, Processor processor) {
             skipWhiteSpaces2EOL(in);
             final var sb = in.getSB();
             int minSpaces = Integer.MAX_VALUE;

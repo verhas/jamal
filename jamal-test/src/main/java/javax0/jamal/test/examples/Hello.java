@@ -8,7 +8,7 @@ import javax0.jamal.api.Processor;
 // snippet Hello
 public class Hello implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         return "Hello, " +in.toString().trim()+"!";
     }
 }

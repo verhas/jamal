@@ -81,8 +81,8 @@ public class SeparatorCalculator {
     /**
      * Increase the value {@code currentLevel} to {@code currentLevel+1} and ensure that
      *
-     * @param currentLevel
-     * @return
+     * @param currentLevel the current level
+     * @return the possibly changed new current level
      */
     private int safelyIncreaseCurrentLevel(int currentLevel) {
         currentLevel++;

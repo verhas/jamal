@@ -26,7 +26,7 @@ public class Shell implements Identified {
         this.id = id;
         this.shell = new ScriptingContainer();
         shell.setError(new StringWriter() {
-            public void write(char cbuf[], int off, int len) {
+            public void write(char[] cbuf, int off, int len) {
             }
         });
     }

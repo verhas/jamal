@@ -12,7 +12,6 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
@@ -137,7 +136,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      *
      * @param input the input string to protect
      * @param sep   the separator character to be used in the escape macro.
-     * @return
+     * @return the protected string
      */
     private String protect(String input, String sep) {
         if (sep != null) {

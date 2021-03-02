@@ -6,8 +6,6 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.NamedMarker;
 
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-
 public class End implements Macro {
 
     @Override

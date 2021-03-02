@@ -14,9 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 class TestSamples {
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {
         var fileName = this.getClass().getResource(testFile).getFile();

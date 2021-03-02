@@ -8,11 +8,10 @@ import javax0.jamal.api.Processor;
 public class Sample implements Macro {
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        String result = in.toString()
+    public String evaluate(Input in, Processor processor) {
+        return in.toString()
             .replaceAll("^\\n+","")
             .replaceAll("\\n+$","");
-        return result;
     }
 }
 // end snippet

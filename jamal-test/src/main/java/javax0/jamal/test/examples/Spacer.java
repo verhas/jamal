@@ -9,7 +9,7 @@ import javax0.jamal.tools.InputHandler;
 // snippet Spacer
 public class Spacer implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         InputHandler.skipWhiteSpaces(in);
         if (in.length() > 0) {
             final var result = javax0.jamal.tools.Input.makeInput("", in.getPosition());

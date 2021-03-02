@@ -15,7 +15,7 @@ public class TestUpdate {
     @Test
     void testUpdate() throws Exception {
         final var file = "target/document_update_test.jam";
-        try (final var output = new FileOutputStream(new File(file))) {
+        try (final var output = new FileOutputStream(file)) {
             output.write(
                 ("{@snip:define a=this is the snippet a}\n" +
                     "{@snip a\n" +
@@ -50,7 +50,7 @@ public class TestUpdate {
     @Test
     void testUpdateWithOldContent() throws Exception {
         final var file = "target/document_update_test.jam";
-        try (final var output = new FileOutputStream(new File(file))) {
+        try (final var output = new FileOutputStream(file)) {
             output.write(
                 ("{@snip:define a=this is the snippet a}\n" +
                     "{@snip a\n" +
@@ -85,7 +85,7 @@ public class TestUpdate {
     @Test
     void testUnterminated() throws Exception {
         final var file = "target/document_update_test.jam";
-        try (final var output = new FileOutputStream(new File(file))) {
+        try (final var output = new FileOutputStream(file)) {
             output.write(
                 ("{@snip:define a=this is the snippet a}\n" +
                     "{@snip a\n}wups\n" +

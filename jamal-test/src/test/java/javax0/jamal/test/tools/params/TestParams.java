@@ -18,8 +18,11 @@ public class TestParams {
     void testSimpleParameters() throws BadSyntax {
         final var processor = new Processor("{", "}");
         final var sut = Params.using(processor).keys(Set.of("margin", "top", "left")).parse(Input.makeInput("margin=2 top=3 left=\"aligned\""));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(2, sut.getInt("margin").getAsInt());
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(3, sut.getInt("top").getAsInt());
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("aligned", sut.get("left").get());
     }
 
@@ -28,6 +31,7 @@ public class TestParams {
     void testSimpleUnquotedParameters() throws BadSyntax {
         final var processor = new Processor("{", "}");
         final var sut = Params.using(processor).keys(Set.of("left")).parse(Input.makeInput("left=aligned"));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("aligned", sut.get("left").get());
     }
 
@@ -46,8 +50,11 @@ public class TestParams {
         final var processor = new Processor("{", "}");
         processor.process(Input.makeInput("{@define margin=2}"));
         final var sut = Params.using(processor).keys(Set.of("margin", "top", "left")).parse(Input.makeInput("top=3 left=\"aligned\""));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(2, sut.getInt("margin").getAsInt());
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(3, sut.getInt("top").getAsInt());
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("aligned", sut.get("left").get());
     }
 
@@ -57,6 +64,7 @@ public class TestParams {
         final var processor = new Processor("{", "}");
         processor.process(Input.makeInput("{@define margin=3}"));
         final var sut = Params.using(processor).keys(Set.of("margin")).parse(Input.makeInput("margin=2"));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(2, sut.getInt("margin").getAsInt());
     }
 
@@ -65,6 +73,7 @@ public class TestParams {
     void testMissingParameter() throws BadSyntax {
         final var processor = new Processor("{", "}");
         final var sut = Params.using(processor).keys(Set.of("margin", "missing")).parse(Input.makeInput("margin=2"));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(2, sut.getInt("margin").getAsInt());
     }
 
@@ -73,8 +82,11 @@ public class TestParams {
     void testContinuationLine() throws BadSyntax {
         final var processor = new Processor("{", "}");
         final var sut = Params.using(processor).keys(Set.of("margin", "top", "left")).parse(Input.makeInput("margin=2 top=3 \\\n      left=\"aligned\""));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(2, sut.getInt("margin").getAsInt());
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(3, sut.getInt("top").getAsInt());
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("aligned", sut.get("left").get());
     }
 
@@ -83,6 +95,7 @@ public class TestParams {
     void testMultiLineString() throws BadSyntax {
         final var processor = new Processor("{", "}");
         final var sut = Params.using(processor).keys(Set.of("left")).parse(Input.makeInput("left=\"\"\"aligned\"\"\""));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("aligned", sut.get("left").get());
     }
 
@@ -91,6 +104,7 @@ public class TestParams {
     void testMultiLineStringML() throws BadSyntax {
         final var processor = new Processor("{", "}");
         final var sut = Params.using(processor).keys(Set.of("left")).parse(Input.makeInput("left=\"\"\"alig\nned\"\"\""));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("alig\nned", sut.get("left").get());
     }
 
@@ -176,7 +190,7 @@ public class TestParams {
 
     @Test
     @DisplayName("Throws up on unquoted empty string")
-    void testUnquotedEmptyString() throws BadSyntax {
+    void testUnquotedEmptyString() {
         final var processor = new Processor("{", "}");
         Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).keys(Set.of("margin", "left")).parse(Input.makeInput("margin= left=5")));
     }
@@ -186,6 +200,7 @@ public class TestParams {
     void testUnquotedEmptyStringLast() throws BadSyntax {
         final var processor = new Processor("{", "}");
         final var sut = Params.using(processor).keys(Set.of("margin", "left")).parse(Input.makeInput("margin=5 left="));
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals("", sut.get("left").get());
     }
 

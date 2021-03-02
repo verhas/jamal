@@ -9,9 +9,6 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.MacroReader;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import static javax0.jamal.snippet.SkipLines.needsNoExtraNl;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 

@@ -35,5 +35,4 @@ public interface Evaluable {
     default void setCurrentId(String id) {
     }
 
-    ;
 }

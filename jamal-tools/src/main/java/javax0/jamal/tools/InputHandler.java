@@ -473,9 +473,8 @@ public class InputHandler {
      * @param input the input from which we want to get the parts
      * @param limit the maximum number of parts we need
      * @return the parts of the input in an array
-     * @throws BadSyntaxAt the input cannot be split up into parts
      */
-    public static String[] getParts(Input input, int limit) throws BadSyntaxAt {
+    public static String[] getParts(Input input, int limit) {
         skipWhiteSpaces(input);
         if (input.length() == 0) {
             return EMPTY_STRING_ARRAY;

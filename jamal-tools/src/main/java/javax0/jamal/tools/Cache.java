@@ -127,12 +127,12 @@ public class Cache {
                     properties.put("write", "" + System.currentTimeMillis());
                     properties.put("write_formatted", now());
                     for (final var map : maps) {
-                        map.forEach((k, v) -> properties.put(k, v));
+                        map.forEach(properties::put);
                     }
                     saveProperties();
                     file.getParentFile().mkdirs();
                     try (final var fos = new FileOutputStream(file)) {
-                        fos.write(content.toString().getBytes(StandardCharsets.UTF_8));
+                        fos.write(content.getBytes(StandardCharsets.UTF_8));
                     }
                 } catch (IOException ignore) {
                 }
@@ -150,7 +150,6 @@ public class Cache {
                 properties.store(new FileOutputStream(propertiesFile),
                     " cache parameters of the entry " + file.getAbsolutePath());
             } catch (IOException ignore) {
-                return;
             }
         }
     }

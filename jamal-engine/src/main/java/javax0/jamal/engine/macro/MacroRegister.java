@@ -166,9 +166,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
      * Get the macro or user defined macro from the stack.
      *
      * @param field is either 'macros' or 'udMacros'
-     * @param id
-     * @param <T>
-     * @return
+     * @param id the identifier of the macro
+     * @param <T> the type of the macro class
+     * @return the found macro class or empty
      */
     private <T> Optional<T> stackGet(Function<Scope, Map<String, T>> field, String id) {
         final int end = scopeStack.size() - 1;
@@ -272,7 +272,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     @Override
-    public Marker test() throws BadSyntax {
+    public Marker test() {
         return currentScope().checkObject;
     }
 
@@ -313,7 +313,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         }
     }
 
-    private boolean markerIsInTheStack(Marker check) throws BadSyntax {
+    private boolean markerIsInTheStack(Marker check) {
         for (final var scopeWalker : scopeStack) {
             if (Objects.equals(check, scopeWalker.checkObject)) {
                 return true;

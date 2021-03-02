@@ -8,8 +8,6 @@ import javax0.jamal.tools.Cast;
 import javax0.jamal.tools.InputHandler;
 
 import java.util.IllegalFormatException;
-import java.util.Optional;
-import java.util.function.Function;
 
 public class Format implements Macro {
     @Override

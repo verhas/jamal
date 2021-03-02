@@ -63,7 +63,7 @@ public class RubyProperty implements Macro, InnerScopeDependent {
         }
     }
 
-    private static final RubyRational toRational(Ruby ruby, final String s) {
+    private static RubyRational toRational(Ruby ruby, final String s) {
         final var parts = s.split("/", -1);
         if (parts.length != 2) {
             throw new IllegalArgumentException("Ruby rational has to be 'number / number' format and '" + s + "' is not.");
@@ -76,7 +76,7 @@ public class RubyProperty implements Macro, InnerScopeDependent {
     private static final Pattern FLOAT_PATTERN = Pattern.compile("(" + FLOAT_REGEX + ")\\s*\\+\\s*(" + FLOAT_REGEX + ")\\s*i");
     private static final Pattern INT_PATTERN = Pattern.compile("(" + INT_REGEX + ")\\s*\\+\\s*(" + INT_REGEX + ")\\s*i");
 
-    private static final RubyComplex toComplex(Ruby ruby, final String s) {
+    private static RubyComplex toComplex(Ruby ruby, final String s) {
         final var matcher = FLOAT_PATTERN.matcher(s);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Ruby complex has to be 'R+Ci' format and '" + s + "' is not.");
@@ -85,7 +85,7 @@ public class RubyProperty implements Macro, InnerScopeDependent {
             RubyFloat.newFloat(ruby, Double.parseDouble(matcher.group(2))));
     }
 
-    private static final RubyComplex toComplexInt(Ruby ruby, final String s) {
+    private static RubyComplex toComplexInt(Ruby ruby, final String s) {
         final var matcher = INT_PATTERN.matcher(s);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Ruby complex has to be 'R+Ci' format and '" + s + "' is not.");

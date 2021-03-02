@@ -2,7 +2,6 @@ package javax0.jamal.tools;
 
 import javax0.jamal.tools.Trie.ThrowingStringSupplier;
 
-import java.util.List;
 import java.util.Map;
 
 /**

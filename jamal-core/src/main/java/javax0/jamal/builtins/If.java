@@ -7,9 +7,6 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-
 /**
  * Define the {@code if} conditional macro. The syntax of the macro is
  *

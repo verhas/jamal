@@ -8,9 +8,6 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 public class Replace implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

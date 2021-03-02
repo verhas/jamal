@@ -10,9 +10,7 @@ import javax0.jamal.tools.MacroReader;
 
 import static javax0.jamal.tools.InputHandler.convertGlobal;
 import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
-import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class CounterMacro implements Macro, InnerScopeDependent {

@@ -40,8 +40,7 @@ public class Cast {
                                     cast(s, "short", Short::parseShort).orElseGet(() ->
                                         cast(s, "byte", Byte::parseByte).orElseGet(() ->
                                             cast(s, "char", k -> k.charAt(0)).orElseGet(() ->
-                                                cast(s, "string", k -> k).orElseGet(() ->
-                                                    s
+                                                cast(s, "string", k -> k).orElse(s
                                                 )
                                             )
                                         )

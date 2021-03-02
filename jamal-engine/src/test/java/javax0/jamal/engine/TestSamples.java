@@ -5,7 +5,6 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

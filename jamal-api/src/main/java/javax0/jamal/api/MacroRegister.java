@@ -170,10 +170,8 @@ public interface MacroRegister extends Delimiters {
 
     /**
      * @return the current {@link Marker} object
-     * @throws BadSyntax if the current marker object cannot be returned. It does not happen in the current
-     *                   implementation.
      */
-    Marker test() throws BadSyntax;
+    Marker test();
 
     /**
      * See the documentation of the method {@link #push(Marker)}

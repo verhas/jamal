@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class Replacer {
     private final Map<String, String> map;
     private final String openStr;
-    private static final Pattern ESCAPE_PATTERN = Pattern.compile("\\s*(\\@|\\#)\\s*escape\\s*(`.*?`).*?\\2\\s*");
+    private static final Pattern ESCAPE_PATTERN = Pattern.compile("\\s*(@|#)\\s*escape\\s*(`.*?`).*?\\2\\s*");
 
     public Replacer(Map<String, String> map, String openStr) {
         this.map = map;

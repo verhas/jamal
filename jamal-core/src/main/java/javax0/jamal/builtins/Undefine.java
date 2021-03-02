@@ -13,7 +13,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 public class Undefine implements Macro {
 
     @Override
-    public String evaluate(Input input, Processor processor) throws BadSyntax {
+    public String evaluate(Input input, Processor processor) {
         skipWhiteSpaces(input);
 
         final var id = fetchId(input);

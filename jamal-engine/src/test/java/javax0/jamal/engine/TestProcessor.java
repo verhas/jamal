@@ -120,7 +120,7 @@ public class TestProcessor {
         String closed = "not closed";
 
         @Override
-        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) {
             return closed;
         }
     }
@@ -130,13 +130,13 @@ public class TestProcessor {
         javax0.jamal.api.Processor p = null;
 
         @Override
-        public void close() throws Exception {
-            SignalMacro sm = (SignalMacro) p.getRegister().getMacro("signalmacro").get();
+        public void close() {
+            @SuppressWarnings("OptionalGetWithoutIsPresent") SignalMacro sm = (SignalMacro) p.getRegister().getMacro("signalmacro").get();
             sm.closed = "closed";
         }
 
         @Override
-        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) {
             p = processor;
             return "AutoClosing";
         }
@@ -174,8 +174,8 @@ public class TestProcessor {
         }
 
         @Override
-        public void close() throws Exception {
-            SignalMacro sm = (SignalMacro) processor.getRegister().getMacro("signalmacro").get();
+        public void close() {
+            @SuppressWarnings("OptionalGetWithoutIsPresent") SignalMacro sm = (SignalMacro) processor.getRegister().getMacro("signalmacro").get();
             sm.closed = "closed";
         }
 
@@ -188,7 +188,7 @@ public class TestProcessor {
     public static class UdReg implements Macro {
 
         @Override
-        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) {
             processor.getRegister().define(new AutoClosingUdMacro(processor));
             return "";
         }
@@ -227,8 +227,8 @@ public class TestProcessor {
         public boolean isClosed = false;
 
         @Override
-        public void close() throws Exception {
-            SignalMacro sm = (SignalMacro) processor.getRegister().getMacro("signalmacro").get();
+        public void close() {
+            @SuppressWarnings("OptionalGetWithoutIsPresent") SignalMacro sm = (SignalMacro) processor.getRegister().getMacro("signalmacro").get();
             sm.closed = "closed";
             isClosed = true;
         }
@@ -238,7 +238,7 @@ public class TestProcessor {
 
 
         @Override
-        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) {
             MyContext ctx = (MyContext) processor.getContext();
             ctx.deferred = new Deferred(processor);
             processor.deferredClose(ctx.deferred);
@@ -300,7 +300,7 @@ public class TestProcessor {
         }
 
         @Override
-        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) {
             processor.deferredClose(this);
             return "";
         }
@@ -324,7 +324,7 @@ public class TestProcessor {
         boolean isClosed = false;
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             if (isClosed) {
                 throw new RuntimeException("Should not close more than once");
             }
@@ -332,7 +332,7 @@ public class TestProcessor {
         }
 
         @Override
-        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) throws BadSyntax {
+        public String evaluate(javax0.jamal.api.Input in, javax0.jamal.api.Processor processor) {
             processor.deferredClose(this);
             return "";
         }

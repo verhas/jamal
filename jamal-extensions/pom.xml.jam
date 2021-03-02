@@ -2,7 +2,7 @@
 {@import ../version.jim}
 {project jamal extensions}
     {packaging jar}
-    {GAV :{GROUPID}:jamal-extensions:{VERSION}}
+    {GAV ::jamal-extensions:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library extra macros}
 

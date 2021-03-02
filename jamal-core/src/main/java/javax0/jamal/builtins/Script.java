@@ -35,11 +35,7 @@ public class Script implements Macro {
         }
         skip(input, 1);
         final ScriptMacro macro;
-        try {
-            macro = processor.newScriptMacro(id, scriptType, input.toString(), params);
-        } catch (BadSyntax bs) {
-            throw bs instanceof BadSyntaxAt ? (BadSyntaxAt) bs : new BadSyntaxAt(bs, ref);
-        }
+        macro = processor.newScriptMacro(id, scriptType, input.toString(), params);
         if (isGlobalMacro(id)) {
             processor.getRegister().global(macro);
         } else {

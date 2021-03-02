@@ -68,15 +68,12 @@ public class PlantUml implements Macro, InnerScopeDependent {
         final var reader = new SourceStringReader(text);
         FileFormat fileFormat = convertFileFormat(format);
         final var os = new ByteArrayOutputStream();
-        try {
+        try (os) {
             erred = "(Error)".equals(reader.outputImage(os, new FileFormatOption(fileFormat)).getDescription());
-        } finally {
-            os.close();
         }
         file.getParentFile().mkdirs();
         try (final var fos = new FileOutputStream(file)) {
             fos.write(os.toByteArray());
-
         }
         return erred;
     }

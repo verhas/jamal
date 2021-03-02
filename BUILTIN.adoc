@@ -78,7 +78,7 @@ import javax0.jamal.api.Processor;
 
 public class HelloWorld implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         return "Hello, World!";
     }
 }
@@ -282,7 +282,7 @@ The code of the macro method in the class `Hello` will be the following:
 ----
 public class Hello implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         return "Hello, " +in.toString().trim()+"!";
     }
 }
@@ -353,7 +353,7 @@ The implementation of the macro is the following:
 ----
 public class Spacer implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         InputHandler.skipWhiteSpaces(in);
         if (in.length() > 0) {
             final var result = javax0.jamal.tools.Input.makeInput("", in.getPosition());

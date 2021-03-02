@@ -5,8 +5,6 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class TestIncludeDepth {
 
     @Test
