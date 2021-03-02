@@ -1,0 +1,65 @@
+package javax0.jamal.tools.param;
+
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+import javax0.jamal.tools.InputHandler;
+
+import static javax0.jamal.tools.param.Escape.handleEscape;
+import static javax0.jamal.tools.param.Escape.handleNormalCharacter;
+import static javax0.jamal.tools.param.Escape.handleNormalMultiLineStringCharacter;
+
+class StringFetcher {
+    public static final String MULTI_LINE_STRING_DELIMITER = "\"\"\"";
+    private static final int MULILSD_LENGTH = MULTI_LINE_STRING_DELIMITER.length();
+    private static final char ENCLOSING_CH = '"';
+
+    public String getString(Input input) throws BadSyntax {
+        if (input.length() == 0 || input.charAt(0) != ENCLOSING_CH) {
+            return null;
+        }
+        if (input.length() < 2) {
+            throw new BadSyntax("String has to be at least two characters long.");
+        }
+        if (input.length() >= MULILSD_LENGTH && input.subSequence(0, MULILSD_LENGTH).equals(MULTI_LINE_STRING_DELIMITER)) {
+            return getMultiLineString(input);
+        } else {
+            return getSimpleString(input);
+        }
+    }
+
+    private static String getMultiLineString(Input input) throws BadSyntax {
+        final var output = new StringBuilder();
+        InputHandler.skip(input, MULILSD_LENGTH);
+        while (input.length() >= MULILSD_LENGTH && !input.subSequence(0, MULILSD_LENGTH).equals(MULTI_LINE_STRING_DELIMITER)) {
+            final char ch = input.charAt(0);
+            if (ch == '\\') {
+                handleEscape(input, output);
+            } else {
+                handleNormalMultiLineStringCharacter(input, output);
+            }
+        }
+        if (input.length() < MULILSD_LENGTH) {
+            throw new BadSyntax("Multi-line string is not terminated before eof");
+        }
+        InputHandler.skip(input, MULILSD_LENGTH);
+        return output.toString();
+    }
+
+    private static String getSimpleString(Input input) throws BadSyntax {
+        final var output = new StringBuilder();
+        input.deleteCharAt(0);
+        while (input.length() > 0 && input.charAt(0) != ENCLOSING_CH) {
+            final char ch = input.charAt(0);
+            if (ch == '\\') {
+                handleEscape(input, output);
+            } else {
+                handleNormalCharacter(input, output);
+            }
+        }
+        if (input.length() == 0) {
+            throw new BadSyntax("String is not terminated before eol");
+        }
+        input.deleteCharAt(0);
+        return output.toString();
+    }
+}

@@ -13,6 +13,7 @@
           <filtering>true</filtering>
         </resource>
       </resources>
+        {@define openForTests={opens/api/api}}
         {plugins| {@include ../plugins.jim}}
     }
     {dependencies

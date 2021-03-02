@@ -106,28 +106,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M4</version>
-                    <configuration>
-                        <argLine>
-                                    --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
-                                    --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
-                                    --add-opens jamal.api/javax0.jamal.api=ALL-UNNAMED
-                                    --add-opens jamal.plantuml/javax0.jamal.plantuml=ALL-UNNAMED
-                                    --add-opens jamal.plantuml/javax0.jamal.documentation=ALL-UNNAMED
-                                    --add-opens jamal.test/javax0.jamal.test.extra=ALL-UNNAMED
-                                    --add-opens jamal.test/javax0.jamal.test.core=ALL-UNNAMED
-                                    --add-opens jamal.test/javax0.jamal.test.examples=ALL-UNNAMED
-                                    --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
-                                    --add-opens jamal.engine/javax0.jamal.engine.util=ALL-UNNAMED
-                                    --add-opens jamal.testsupport/javax0.jamal.builtinstest=ALL-UNNAMED
-                                    --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
-                                    --add-opens jamal.extensions/javax0.jamal.extensions=ALL-UNNAMED
-                                    --add-opens jamal.snippet/javax0.jamal.snippet=ALL-UNNAMED
-                                    --add-opens jamal.snippet/javax0.jamal.documentation=ALL-UNNAMED
-                                    --add-opens jamal.scriptbasic/javax0.jamal.scriptbasic=ALL-UNNAMED
-                                    --add-opens jamal.groovy/javax0.jamal.groovy=ALL-UNNAMED
-                                    --add-opens jamal.ruby/javax0.jamal.ruby=ALL-UNNAMED
-                                </argLine>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>

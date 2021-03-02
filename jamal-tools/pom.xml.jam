@@ -5,6 +5,10 @@
     {GAV ::jamal-tools:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
     {description|-in Jamal macro library support tools}
+    {@define openForTests=
+        {opens/tools/tools}
+        {opens/tools/tools.param}
+    }
     {build|{plugins| {@include ../plugins.jim}}}
     {dependencies#
         {@for MODULE in (api)=

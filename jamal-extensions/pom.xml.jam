@@ -6,6 +6,8 @@
     {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library extra macros}
 
+    {@define openForTests={opens/extensions/extensions}}
+
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies

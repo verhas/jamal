@@ -36,7 +36,7 @@ public class If implements Macro {
             throw new BadSyntaxAt("Macro 'if' needs 1, 2 or 3 arguments",pos);
         }
         if (isTrue(parts[0])) {
-            return parts[1];
+            return parts.length > 1 ? parts[1] : "";
         } else {
             return parts.length > 2 ? parts[2] : "";
         }

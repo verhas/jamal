@@ -6,6 +6,9 @@
     {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library snippet macros}
 
+    {@define openForTests={opens/plantuml/plantuml}
+                          {opens/plantuml/documentation}}
+
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies#

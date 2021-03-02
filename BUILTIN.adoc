@@ -249,7 +249,7 @@ default String getId() {
 
 ----
 
-In out case the name of the class was `HelloWorld` which converts to `helloworld` all lower case as a macro name.
+In our case the name of the class was `HelloWorld` which converts to `helloworld` all lower case as a macro name.
 You are free to override the implementation of the default method, and there are real examples for that.
 For example the `jamal-snippet` library macros `trimLines`, or `killLines` override the method `getId()`.
 
@@ -309,7 +309,7 @@ We are handling the simplest possible way  in this example.
 We use it as it is, as a whole string, only cutting off the strings from the start and the end.
 In the next chapter we will look at an example that handles the input in a more complex way.
 
-=== Spacer Macro
+=== Working with the Input: Example: Spacer Macro
 
 Most of the macros use their input, and they use it in a more complex way.
 To do that macros can parse, split up the input into smaller pieces that the code can afterwards work with.
@@ -375,8 +375,8 @@ public class Spacer implements Macro {
 
 The very first thing the macro does is that it skips the white spaces.
 It is customary to skip these spaces because one or more space has to be there after the id of the macro and they usually only separate the macro name and the content.
-Some of the macros skip spaces only to the end of the line and in case there are more spaces, but on the next line then they are taken into account.
-In this case all whgite spaces including new lines are skipped at the start of the input.
+Some macros skip spaces only to the end of the line and in case there are more spaces, but on the next line then they are taken into account.
+In this case all white spaces including new lines are skipped at the start of the input.
 It is important to understand that the skipping process also takes care of the line number and the column position of the actual character.
 
 The input keeps track of the file name, the line number and the column position of the character at the start of the character sequence.
@@ -411,10 +411,11 @@ The syntax of the macro is:
 Here the `'sep'` is some kind of separator.
 It can be a space, some non-alphanumeric character or some complex separator.
 These three cases are handled by the method `getParts()`.
+This method is defined in the class `InputHandler`.
 
 This method skips the white spaces at the start of the input and then looks at the first character.
 If it is a back-tick, then it fetches more characters until it finds a pairing back-tick character.
-The string it fetches is used as a regular expression to spit up the rest of the input.
+The string it fetches is used as a regular expression to split up the rest of the input.
 
 If the first non-space character on the input is not a back-tick, but still a non-alphanumeric character then this character will be used as separator to split up the input.
 
@@ -481,9 +482,75 @@ This second exception also contains the reference to the input location.
 If the location of the error is not interesting inside the macro then it is good enough to throw a simple `BadSyntax` exception.
 The processor catches that exception and converts it to a `BadSyntaxAt` exception that will reference the character at the very start of the macro.
 
-
-
 === General Structure of the `evaluate()` Method
+
+=== Macros that are `InnerScopeDependent`
+
+The macro evaluation order is detailed in the link:README.adoc[README] of Jamal.
+When Jamal sees a built-in macro that starts with a `#` character at the start then it evaluates the content of it before invoking the macro itself.
+For example
+
+[source,text]
+----
+{#trimLines {@define margin=1}
+{@snip sampleText}
+}
+----
+
+will first evaluate the `define` macro resulting `margin` to become a user defined macro with the value `1`.
+After that the `snip` macro will be evaluated and that way replaced with the snippet named `sampleText`.
+Only when it is done starts the execution of thge macro `trimLines` that will shift the lines left or right with spaces so that there will exacly be ne space on the leftmost line.
+
+The macro `margin` is defined in a local scope.
+The scope starts with the opening `{` character of the macro `trimLines` and ends with the closing `}`.
+If the implementation of the macro `snip` would query the macro register, it could see the value of the macro `margin` as `1`.
+
+The question is whether the macro execution `trimMacro` sees `margin` as defined in itself or not.
+Is the scope already closed when the execution of `trimLines` starts?
+
+The answer is that it depends.
+
+If the `Macro` implementing class also implements the `InnerScopeDependent` interface then the scope is open.
+If it does not then Jamal closes the scope before starting the execution of the macro.
+
+The macro `trimLines` implements this interface because it uses parameters.
+The first few lines of the method `evaluate()` are the followings:
+
+[source,java]
+----
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var reader = MacroReader.macro(processor).integer();
+        final var margin = reader.readValue("margin").orElse(0);
+        final var trimVertical = OptionsStore.getInstance(processor).is("trimVertical");
+
+----
+
+It creates a `MacroReader`, which is a helper object.
+It can help to "evaluate" user defined macros that have no parameters.
+In case of those macros the evaluation simply means that the content of the macro is returned.
+`trimLines` uses the macro `margin` to get the margin parameter.
+It also queries the boolean value of the option `trimVertical`.
+
+NOTE: The options are stored in `OptionsStore` objects.
+This class implements the `Identified` interface and are stored in the same register where the user defined macros.
+The name returned by `getId()` for these objects is ``options`.
+Storing it in the registry has the advantage that this way options are scoped exactly as user defined macros.
+If you say `{@options trimVertical}` inside a `{@trimLines ...}` it will have no effect outside of the execution of that `trimLine`.
+
+Using user defined macros as parameters has several advantages and also some disadvantages.
+When implementing a macro it is always a design decision how the macro should be constructed.
+Some macro can be configured with parameters that the macro implementation parses.
+The advantage of this approach is that this is simple and short when used.
+
+Other macros can rely on user defined macro values.
+The advantage of this approach is that the user may define these parameters global for the whole processing or for a larger scope.
+For exaple `trimLine` could process and parese the first line of the macro for parameters to see if there is a `trimVertical=true` parameter,
+This parameter, however, in this case should have been provided for each and every macro.
+Defining `trimVertical` globally will instruct all use of `trimLines` to trim vertical.
+
+Macros that rely on user defined macros or options as parameters should implement the interface `InnerScopeDependent`.
+Macros that do not rely on those, should not.
 
 === Creating User Defined Macros
 

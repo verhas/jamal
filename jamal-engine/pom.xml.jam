@@ -5,7 +5,10 @@
     {GAV ::jamal-engine:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library execution engine}
-
+    {@define openForTests=
+        --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
+        {opens/engine/engine}
+        {opens/engine/engine.util}}
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies#

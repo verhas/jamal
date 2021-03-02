@@ -23,11 +23,14 @@ public class TrimLines implements Macro, InnerScopeDependent {
         return "trimLines";
     }
 
+    // end snippet
+    // snippet trimLineStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var reader = MacroReader.macro(processor).integer();
         final var margin = reader.readValue("margin").orElse(0);
         final var trimVertical = OptionsStore.getInstance(processor).is("trimVertical");
+        //end snippet
         skipWhiteSpaces2EOL(in);
         final var sb = in.getSB();
         int minSpaces = Integer.MAX_VALUE;
@@ -67,7 +70,7 @@ public class TrimLines implements Macro, InnerScopeDependent {
             while (sb.length() > 0 && sb.charAt(0) == '\n') {
                 sb.delete(0, 1);
             }
-            while (sb.length() > 1 && sb.charAt(sb.length() - 1) == '\n'&& sb.charAt(sb.length() - 2) == '\n') {
+            while (sb.length() > 1 && sb.charAt(sb.length() - 1) == '\n' && sb.charAt(sb.length() - 2) == '\n') {
                 sb.delete(sb.length() - 1, sb.length());
             }
         }

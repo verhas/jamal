@@ -6,6 +6,7 @@
     {parent :{GROUPID}:jamal-parent}
     {description ScriptBasic support for Jamal}
 
+    {@define openForTests={opens/scriptbasic/scriptbasic}}
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies

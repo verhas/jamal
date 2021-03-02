@@ -6,6 +6,7 @@
     {parent :{GROUPID}:jamal-parent}
     {description Ruby module for Jamal}
 
+    {@define openForTests={opens/ruby/ruby}}
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies

@@ -8,10 +8,11 @@ import javax0.jamal.tools.MacroReader;
 import org.jruby.embed.ScriptingContainer;
 
 import java.io.StringReader;
+import java.io.StringWriter;
 
 public class Shell implements Identified {
     private final String id;
-    final ScriptingContainer shell = new ScriptingContainer();
+    final ScriptingContainer shell;
 
     public void property(String key, Object value) {
         shell.put(key, value);
@@ -23,6 +24,11 @@ public class Shell implements Identified {
 
     public Shell(String id) {
         this.id = id;
+        this.shell = new ScriptingContainer();
+        shell.setError(new StringWriter() {
+            public void write(char cbuf[], int off, int len) {
+            }
+        });
     }
 
     public Object evaluate(String script, String fileName) {
@@ -43,6 +49,7 @@ public class Shell implements Identified {
     // end snippet
     // snippet shellNamingMacro
     public static final String RUBY_SHELL_NAMING_MACRO = "rubyShell";
+
     // end snippet
     public static Shell getShell(final Processor processor) throws BadSyntax {
         final var id = MacroReader.macro(processor).readValue(RUBY_SHELL_NAMING_MACRO).orElse(DEFAULT_RUBY_SHELL_NAME);

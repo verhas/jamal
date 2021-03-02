@@ -5,6 +5,10 @@
     {GAV ::jamal-testsupport:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
     {description|Jamal macro library macro test supporting classes}
+
+    {@define openForTests={opens/testsupport/builtinstest}
+                          {opens/testsupport/testsupport}}
+
     {build|{plugins| {@include ../plugins.jim}}}
     {dependencies#
         {@for MODULE in (api,tools,engine)=

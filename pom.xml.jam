@@ -50,28 +50,6 @@
 
                 {plugin|
                     {GAV :org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M4}
-                    {configuration|
-                                <argLine>
-                                    {opens/tools/tools}
-                                    --add-opens jamal.engine/javax0.jamal=ALL-UNNAMED
-                                    {opens/api/api}
-                                    {opens/plantuml/plantuml}
-                                    {opens/plantuml/documentation}
-                                    {opens/test/test.extra}
-                                    {opens/test/test.core}
-                                    {opens/test/test.examples}
-                                    {opens/engine/engine}
-                                    {opens/engine/engine.util}
-                                    {opens/testsupport/builtinstest}
-                                    {opens/testsupport/testsupport}
-                                    {opens/extensions/extensions}
-                                    {opens/snippet/snippet}
-                                    {opens/snippet/documentation}
-                                    {opens/scriptbasic/scriptbasic}
-                                    {opens/groovy/groovy}
-                                    {opens/ruby/ruby}
-                                </argLine>
-                    }
                 }
                 {plugin|
                       {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:1.6.7}

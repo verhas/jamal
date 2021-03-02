@@ -1,6 +1,7 @@
 package javax0.jamal.test.core;
 
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestIf {
@@ -16,5 +17,11 @@ public class TestIf {
                 "<||13||>\n" +
                 "<||13||>"
         );
+    }
+
+    @Test
+    @DisplayName("Test if with regular expression separator")
+    void testRegExpSeparator() throws Exception {
+        TestThat.theInput("{#if`///`1///aa}").results("aa");
     }
 }
