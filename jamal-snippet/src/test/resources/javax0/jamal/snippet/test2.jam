@@ -1,4 +1,4 @@
-{#snip:collect . {@define include=1}}
+{#snip:collect from="." include=1}
 First snippet {@snip first_snippet}
 2. snippet {@snip second_snippet}
 

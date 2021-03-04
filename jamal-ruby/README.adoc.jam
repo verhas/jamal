@@ -1,8 +1,8 @@
 = Jamal Ruby integration module
 {%@import readmemacros.jim%}\
-{%@snip:collect src/test/java/%}\
-{%@snip:collect src/main/java/%}\
-{%@snip:collect ../jamal-snippet/src/test/java/javax0/jamal/documentation%}\
+{%@snip:collect from="src/test/java/"%}\
+{%@snip:collect from="src/main/java/"%}\
+{%@snip:collect from="../jamal-snippet/src/test/java/javax0/jamal/documentation"%}\
 
 {%#counter:define macroChapter {%@define format=$roman. %}%}
 
@@ -403,13 +403,13 @@ This class is a wrapper, that provides the method `{%@java:method javax0.jamal.r
 This can directly be invoked from Ruby.
 
 Using this possibility the user defined macros `sample` and `output` are simply the following:
-{%@snip:collect readmemacros.jim%}
+{%@snip:collect from="readmemacros.jim"%}
 
 * `sample`
 
 [source]
 ----
-{%#replaceLines {%@define replace=/^(.*)$/    $1/%}
+{%#replaceLines replace="/^(.*)$/    $1/"
 {%@snip Ruby_sample_user_defined_macro%}%}
 ----
 
@@ -421,7 +421,7 @@ Finally, the script returns the resulted string, which is placed between the Asc
 
 [source]
 ----
-{%#replaceLines {%@define replace=/^(.*)$/    $1/%}
+{%#replaceLines replace="/^(.*)$/    $1/"
 {%@snip Ruby_output_user_defined_macro%}%}
 ----
 

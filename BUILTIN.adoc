@@ -520,9 +520,9 @@ The first few lines of the method `evaluate()` are the followings:
 ----
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var params = Params.using(processor).from(this).keys(Set.of("margin", "trimVertical")).parse(in);
-        final var margin = params.getInt("margin").orElse(0);
-        final var trimVertical = params.is("trimVertical");
+        final var margin = Params.<Integer>holder("margin").orElse(0).asInt();
+        final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
+        Params.using(processor).from(this).keys(margin, trimVertical).parse(in);
 
 ----
 

@@ -1,5 +1,5 @@
 = Jamal ScriptBasic integration module
-{%@snip:collect src/test/java/%}
+{%@snip:collect from="src/test/java/"%}
 
 Using this integration module you can mix Jamal macro text with ScriptBasic code snippets.
 To use this module you have to add the dependency to you Maven project, as:

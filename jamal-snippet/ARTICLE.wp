@@ -107,7 +107,7 @@ using Jamal, the snippets can be marked in the Java source code or any other sou
     end snippet
 [/sourcecode]
 
- lines. The `snippetName` should be replaced by a unique name that identifies the snippet, and all the lines between the `snippet` and `end snippet` lines will be the snippet itself. The snippets are gathered using the `{%@snip:collect directory%}` macro. Here `directory` is either a directory or a single file. The collection process reads each file and collects the snippets. After this the snippets can be referenced using the `{%@snip snippetName%}` macro. When Jamal runs, the macro is replaced with the actual value of the snippet. It ensures that the code sample in the documentation is up-to-date.
+ lines. The `snippetName` should be replaced by a unique name that identifies the snippet, and all the lines between the `snippet` and `end snippet` lines will be the snippet itself. The snippets are gathered using the `{%@snip:collect from="directory"%}` macro. Here `directory` is either a directory or a single file. The collection process reads each file and collects the snippets. After this the snippets can be referenced using the `{%@snip snippetName%}` macro. When Jamal runs, the macro is replaced with the actual value of the snippet. It ensures that the code sample in the documentation is up-to-date.
 
 Other macros can trim the content, replace some strings in the samples, number the lines, skip some lines, and so on. With these, you can include any code sample.
 
@@ -130,7 +130,9 @@ For example, the implementation of the macro `directory` contains the following 
 [sourcecode language="java"]
 {%@define replace=|^.*?"(.*?)"|* `$1`!|!.*?//||%}
 {%@define pattern=\)\.and\(%}
-{%#replaceLines{%#killLines{%@snip dirMacroFormatPlaceholders %}%}%}
+{%#replaceLines
+{%#killLines
+{%@snip dirMacroFormatPlaceholders %}%}%}
 [/sourcecode]
 
 (Note: the actual version is a bit more complicated, as you will see later.) It inserts the content of the snippet evaluating the `snip` macro. The content of the sippet is then passed to the macro `killLines`. This macro will delete all the lines that match the regular expression defined in the macro `pattern`. The result is still further modified by the `replaceLines` macro. It executes the Java String `replaceAll()` method on each line with the arguments defined in the macro `replace`. The final result, inserted into the output is: 
@@ -208,7 +210,9 @@ The invocation of the macro updating of the input should occur at the end of the
 
 [sourcecode language="java"]
 {%#snip:define dirMacroFormatPlaceholdersFormatted=
-{%#replaceLines{%#killLines{%@snip dirMacroFormatPlaceholders %}%}%}%}
+{%#replaceLines
+{%#killLines
+{%@snip dirMacroFormatPlaceholders %}%}%}%}
 
 {%@snip dirMacroFormatPlaceholdersFormatted
 * `$name` gives the name of the directory as was specified on the macro

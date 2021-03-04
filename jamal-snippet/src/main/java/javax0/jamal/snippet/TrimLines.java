@@ -7,8 +7,6 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
-import java.util.Set;
-
 /**
  * Take the argument of the macro and removes N spaces from the start of each line so that there is at least one line
  * that does not start with a space character.
@@ -26,9 +24,9 @@ public class TrimLines implements Macro, InnerScopeDependent {
     // snippet trimLineStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var params = Params.using(processor).from(this).keys(Set.of("margin", "trimVertical")).parse(in);
-        final var margin = params.getInt("margin").orElse(0);
-        final var trimVertical = params.is("trimVertical");
+        final var margin = Params.<Integer>holder("margin").orElse(0).asInt();
+        final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
+        Params.using(processor).from(this).keys(margin, trimVertical).parse(in);
         //end snippet
         final var sb = in.getSB();
         int minSpaces = Integer.MAX_VALUE;
@@ -48,7 +46,7 @@ public class TrimLines implements Macro, InnerScopeDependent {
         if (minSpaces == Integer.MAX_VALUE) {
             minSpaces = 0;
         }
-        minSpaces -= margin;
+        minSpaces -= margin.get();
         for (int i = 0; i < sb.length(); ) {
             if (minSpaces < 0) {
                 sb.insert(i, " ".repeat(-minSpaces));
@@ -67,7 +65,7 @@ public class TrimLines implements Macro, InnerScopeDependent {
             sb.delete(j + 1, index);
             i = j + 2;
         }
-        if (trimVertical) {
+        if (trimVertical.get()) {
             while (sb.length() > 0 && sb.charAt(0) == '\n') {
                 sb.delete(0, 1);
             }

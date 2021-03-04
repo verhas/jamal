@@ -114,6 +114,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<escape,`escape`>>
 .. <<require,`require`>>
 . <<argsplit,Macro Argument Splitting>>
+. <<parparsing,Standard Built-In Parameter Parsing>>
 . <<JamalENV,Jamal Environment Variables>>
 . <<httpsres,Resource Files and Web Resources>>
 . <<snippet,Snippet Handling>>
@@ -2293,8 +2294,8 @@ Technically the input parameter of the method `evaluate()` is not a string but f
 The Java code of the macro is free to interpret this string the way it wants.
 Different macros implement different syntax analysis and later their behaviour based on the syntax of the input.
 
-To manage the input and to easy the format analysis and interpretation of the input there is a utility class named `InputHandler`.
-This class defines a method named `getParts()` which does a simple analysis.
+To manage the input and to easy the format analysis and interpretation of the input there is a utility class named `{%@java:class javax0.jamal.tools.InputHandler%}`.
+This class defines a method named `{%@java:method javax0.jamal.tools.InputHandler#getParts%}()` which does a simple analysis.
 It splits up the input into an array of strings in a "standard" way.
 
 This method is used, for example, by the implementation of the `if` built-in macro.
@@ -2330,6 +2331,114 @@ After the regular expression and after the closing backtick the rest of the inpu
 
 Backtick was selected during the design of the syntax to enclose the regular expression because this character is very rare in Java regular expression.
 In case you need one inside the regular expression then you have to simply double it, and the parsing will single it back.
+
+[[parparsing]]
+=== {%chapter%}Standard Built-In Parameter Parsing
+
+In addition to the method `{%@java:method javax0.jamal.tools.InputHandler#getParts%}()` there is another utility that the built-in macros can use.
+It is the class `{%@java:class javax0.jamal.tools.Params%}`.
+The class is a utility to parse the first line, some particular part of the whole input of the built-in macro looking for parameters.
+This utility is not used currently by the built-in core macros, but it is heavily used, for example, in the snippet package.
+
+==== Introduction
+
+Some macros need configuration.
+For example the `trimLines` macro in the snippet package can trim also vertically and the left trimming can go all to the left but it may also leave some margin.
+For this reason this macro uses two parameters:
+
+* `trimVertical`, and
+
+* `margin`.
+
+This macro reserves the first line of the input of the macro and trims and returns only the rest of the lines.
+The first line can contain paramaters.
+
+Other macros parse the whole input for parameters.
+For example the `snip:collect` macro collects snippets from files and it does not convert anything from its input.
+In the cae of this macro the whole input till the macro closing character is parsed for parameters.
+
+Having a unified "standard" parsing has two advantages:
+
+* several macro implementations can use the same parsing class and methods, and
+
+* parsing follows the same rules, users do not need to learn different syntaxes.
+
+==== Parameter Sources
+
+When a macro needs parameters and calls the methods of the class `{%@java:class javax0.jamal.tools.Params%}`, it looks at different sources for the parameters.
+First of all it looks at the input the macro provides and tries to find the parameters there.
+The parameters are specified in the format
+
+[source,text]
+----
+name1=value1 name2=value2 ... nameN=valueN
+----
+
+The names are the parameter names that the macro may use.
+
+The macro first passes the input to the parsing method and later uses the resulting object to query the parameter values.
+When a parameter is not defined there then the query algorithm tries to look up a user defined macro that has the name as the parameter.
+If you set `{@define margin=2}` somewhere in your Jamal source, this value will be used by every `trimLine` following it unless the `margin` parameter is defined on the fist line of the input.
+If the value is not defined as a parameter and it is also not defined as a user defined macro then the macros use default values.
+
+==== Implementation Details
+
+The `value1, value2, ..., valueN` values are _numeric_, _boolean_ or _string_ values.
+The type depends on what the macro awaits for the specific parameter.
+
+The values can be represented enclosed between `"`.
+This is a typical string representation.
+Using the `"` is optional if there is no space or special escape sequence in the value.
+For example `margin=1` is just as good as `margin="1"`.
+On the other hand `name=Peter Verhas` is not valid.
+It has to be represented as `pattern="Peter Verhas"`, because it contains a space.
+
+A string starting and ending with a `"` character must not contain a new line character.
+If you need multi-line strings then you can either use the `\n` escape character or you can use a multi-line string.
+A multi line string starts and ends with `"""`, three quote characters.
+
+Some macros use the parsing to parse for parameters only the first line.
+Even in this case the new-line character, which is inside a multi-line string is part of the value and does not stop the parsing.
+The parsing stops only at the first new-line character, which is not part of any value.
+
+If there are many parameters and the first line becomes too long, then the `\` character at the end of the line make the parser skip the new line and gon on parsing on the next line.
+
+For example
+
+[source,text]
+----
+{@someMacro header="""
+This is the header
+text and it is
+multi-line
+""" paging=true skip="A" skip="DD" skip="3.145" \
+comment="this is still a parameter because of the \\ at the end of the previous line"
+this is the input the macro will use for its result, everything else till here is parameters
+}
+----
+
+When the macro asks the parser object to parse the input it also specifies the parameter names it can handle.
+If there is any parameter, which the macro does not handle an error will occurr.
+
+When the macro queries a parameter it uses type specific method.
+If the parameter cannot be converted to the type an error will occur.
+
+* Numeric parameters should be integer.
+
+* Boolean parameters are false if they are present as parameter, and the string value is either `false`, `0`, or `no`.
+They are also false if they are not present as parameter, and the name is also false as an option.
+A name is false as an option of the macro `{@options name}` was not invoked, or the option was invoked in the form `{@options ~name}`.
+
+As you can see in the example, parameters can have multiple values.
+If there are multiple parameters defined, but the macro needs only one an error will occur.
+If there are only one value defined but the macro needs a list it will get a one element list.
+You can specify only one value for such parameter using user defined macros.
+
+The globally, or locally defined user macro will not be added to the list of parameters.
+If there are parameters then those values are used, and the macro values are ignored.
+
+Single line and multi-line strings have the same syntax as Java string.
+You can use the same escape sequences.
 
 [[JamalENV]]
 === {%chapter%}Jamal Environment Variables

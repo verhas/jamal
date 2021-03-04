@@ -8,6 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 
 import static javax0.jamal.snippet.SkipLines.needsNoExtraNl;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
@@ -16,15 +17,16 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         boolean noChange = true;
-        final var reader = MacroReader.macro(processor);
-        final var replace = reader.readValue("replace").orElseThrow(
-            () -> new BadSyntaxAt("The macro replaceLines needs a defined 'replace' user defined macro.", in.getPosition()));
-        final var parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replace));
+        final var replace = Params.<String>holder("replace");
+        Params.using(processor).from(this).keys(replace).parse(in);
+
+        final var parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replace.get()));
         if (parts.length == 0) {
             throw new BadSyntaxAt("The replace macro should have at least one part: '" + replace + "'", in.getPosition());
         }
-        skipWhiteSpaces2EOL(in);
+
         final var lines = in.toString().split("\n", -1);
+
         for (int k = 0; k < lines.length; k++) {
             for (int i = 0; i < parts.length; i += 2) {
                 final var from = parts[i];

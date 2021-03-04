@@ -1,8 +1,8 @@
 = Jamal Groovy integration module
 {%@import readmemacros.jim%}\
-{%@snip:collect src/test/java/%}\
-{%@snip:collect src/main/java/%}\
-{%@snip:collect ../jamal-snippet/src/test/java/javax0/jamal/documentation%}\
+{%@snip:collect from="src/test/java/"%}\
+{%@snip:collect from="src/main/java/"%}\
+{%@snip:collect from="../jamal-snippet/src/test/java/javax0/jamal/documentation"%}\
 {%#counter:define macroChapter {%@define format=$roman. %}%}
 
 Using this integration module you can mix Jamal macro text with Groovy code snippets.
@@ -355,13 +355,13 @@ The only difference is that it creates a Groovy shell using the default shell na
 When Jamal runs any Groovy code running in the same shell will be able to access the processor.
 
 Using this possibility the user defined macros `sample` and `output` are simply the following:
-{%@snip:collect readmemacros.jim%}
+{%@snip:collect from="readmemacros.jim"%}
 
 * `sample`
 
 [source]
 ----
-{%#replaceLines {%@define replace=/^(.*)$/    $1/%}
+{%#replaceLines replace="/^(.*)$/    $1/"
 {%@snip Groovy_sample_user_defined_macro%}%}
 ----
 
@@ -372,7 +372,7 @@ At the same time it also saves the sample text into a Groovy bindings property.
 
 [source]
 ----
-{%#replaceLines {%@define replace=/^(.*)$/    $1/%}
+{%#replaceLines replace="/^(.*)$/    $1/"
 {%@snip Groovy_output_user_defined_macro%}%}
 ----
 

@@ -64,3 +64,13 @@ The processor invokes the method `close()` when the processing of the Jamal inpu
 The closer class may also implement `javax0.jamal.api.Closer$ProcessorAware` or `javax0.jamal.api.Closer$OutputAware` interfaces.
 This will make the processor inject the processor object or the result into the closer object before invoking `close()`.
 This way a closer can modify the final output after all the Jamal macro processing was finished.
+
+Accidental Snippet:: An Accidental Snippet is a snippet in some file that starts in a line containing the characters `snippet` followed by an identifier, but which was not meant to be a snippet.
+For example some comments may mention something like `a snippet is...`.
+In this case the snippet collection will recognize the snippet start and the identifier for the snippet will be `is`.
+Accidental snippets are better avoided, and it is almost always possible.
+If it cannot be avoided then you should use different snippet start and end regular expressions.
+You can define these as parameters to the `snip:collect` macro.
+
+Maco Input:: The input of a macro is the text that follows the macro name and lasts to the macro end string.
+For example the `{@trimLine this is the macro input}` has the text `this is the macro input` as macro input.

@@ -214,7 +214,7 @@ using Jamal, the snippets can be marked in the Java source code or any other sou
 
 lines.
 The `snippetName` should be replaced by a unique name that identifies the snippet, and all the lines between the `snippet` and `end snippet` lines will be the snippet itself.
-The snippets are gathered using the {%@sep [[ ]]%}`{%@snip:collect directory%}`[[@sep {% %}]] macro.
+The snippets are gathered using the {%@sep [[ ]]%}`{%@snip:collect from="directory"%}`[[@sep {% %}]] macro.
 Here `directory` is either a directory or a single file.
 The collection process reads each file and collects the snippets.
 After this the snippets can be referenced using the {%@sep [[ ]]%}`{%@snip snippetName%}`[[@sep {% %}]] macro.
@@ -249,7 +249,9 @@ The documentation includes this snippet with the following lines:
 {%@sep [[ ]]%}[sourcecode language="java"]
 {%@define replace=|^.*?"(.*?)"|* `$1`!|!.*?//||%}
 {%@define pattern=\)\.and\(%}
-{%#replaceLines{%#killLines{%@snip dirMacroFormatPlaceholders %}%}%}
+{%#replaceLines
+{%#killLines
+{%@snip dirMacroFormatPlaceholders %}%}%}
 [/sourcecode][[@sep {% %}]]
 
 {%#reflow
@@ -379,7 +381,9 @@ Here you can see the real one making use of updates.
 
 {%@sep [[ ]]%}[sourcecode language="java"]
 {%#snip:define dirMacroFormatPlaceholdersFormatted=
-{%#replaceLines{%#killLines{%@snip dirMacroFormatPlaceholders %}%}%}%}
+{%#replaceLines
+{%#killLines
+{%@snip dirMacroFormatPlaceholders %}%}%}%}
 
 {%@snip dirMacroFormatPlaceholdersFormatted
 * `$name` gives the name of the directory as was specified on the macro

@@ -8,8 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,25 +38,25 @@ public class Collect implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        InputHandler.skipWhiteSpaces(in);
         final var reference = in.getReference();
-        var from = FileTools.absolute(reference, in.toString().trim());
-
-        final var reader = MacroReader.macro(processor);
-        final var include = Pattern.compile(reader.readValue("include").orElse(EVERYTHING_MATCHES)).asPredicate();
-        final var exclude = Pattern.compile(reader.readValue("exclude").orElse(IMPOSSIBLE_TO_MATCH)).asPredicate().negate();
-        final var start = Pattern.compile(reader.readValue("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)"));
-        final var stop = Pattern.compile(reader.readValue("stop").orElse("end\\s+snippet"));
+        final var include = Params.<Predicate<String>>holder("include").orElse(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
+        final var exclude = Params.<Predicate<String>>holder("exclude").orElse(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
+        final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
+        final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").as(Pattern::compile);
+        final var scanDepth = Params.holder("scanDepth").orElse(Integer.MAX_VALUE).asInt();
+        final var from = Params.<String>holder("from").as(s -> FileTools.absolute(reference, s));
+        Params.using(processor).from(this)
+            .tillEnd().keys(include, exclude, start, stop, from, scanDepth).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
-        final var fromFile = new File(from);
+        final var fromFile = new File(from.get());
         if (fromFile.isFile()) {
-            harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start, stop);
+            harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start.get(), stop.get());
         } else {
             try {
-                for (final var file : files(from).map(p -> p.toAbsolutePath().toString())
-                    .filter(include).filter(exclude).collect(Collectors.toSet())) {
-                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start, stop);
+                for (final var file :files(from.get(),scanDepth.get()).map(p -> p.toAbsolutePath().toString())
+                    .filter(include.get()).filter(exclude.get()).collect(Collectors.toSet())) {
+                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), stop.get());
                 }
             } catch (IOException e) {
                 throw new BadSyntax("There is some problem collecting snippets from files under '" + from + "'", e);
@@ -109,13 +109,14 @@ public class Collect implements Macro, InnerScopeDependent {
     /**
      * <p>Get all files in a directory recursively visiting subdirectories.</p>
      *
-     * @param dir the root directory where the collection of the files starts
-     * @return get the stream of regular files in and under the directory with no directory depth limitation
+     * @param dir       the root directory where the collection of the files starts
+     * @param scanDepth the depth of recursion
+     * @return get the stream of regular files in and under the directory
      * @throws IOException in case there is some problem with the file system
      */
-    private static Stream<Path> files(final String dir) throws IOException {
-        return Files.find(Paths.get(dir),
-            Integer.MAX_VALUE,
+    private static Stream<Path> files(final String dir, int scanDepth) throws IOException {
+        return  Files.find(Paths.get(dir),
+            scanDepth,
             (filePath, fileAttr) -> fileAttr.isRegularFile()
         );
     }

@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.param.Param;
 import javax0.jamal.tools.param.StringFetcher;
 
 import java.util.ArrayList;
@@ -11,9 +12,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Function;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
@@ -28,7 +28,7 @@ import static javax0.jamal.tools.InputHandler.startsWith;
  * the input as well as from user defined macros. For built-in macros that need parameters this class helps with parsing
  * services. The use of the class is the following:
  * <pre>{@code
- * final var params = Params.using(processor).from(this).keys(Set.of("k1","k2","k3",...,"kn")).parse(input)
+ * Params.using(processor).from(this).keys(Set.of(n1,h2,h3,...,hN)).parse(input)
  * }</pre>
  * <p>
  * This call parses the start of the input also consuming it. The parsing starts at the end of the first line. The
@@ -52,11 +52,22 @@ import static javax0.jamal.tools.InputHandler.startsWith;
  * If a key is present on the input then the user defined macro of the same name is not used as value source.
  */
 public class Params {
-
-    private final Map<String, List<String>> map = new HashMap<>();
+public interface Param<T> {
+    String key();
+    void inject(Processor processor, String macroName);
+    void set(String value);
+    Param<T> orElse(String i);
+    Param<T> orElse(int i);
+    Param<T> as(Function<String, T> converter);
+    Param<Integer> asInt();
+    Param<Boolean> asBoolean();
+    Param<List<?>> asList();
+    T get() throws BadSyntax;
+}
     private final Processor processor;
-    private final Set<String> allowedKeys = new HashSet<>();
+    private Map<String,Param> holders = new HashMap<>();
     private String macroName = "undefined";
+    private Character terminal = '\n';
 
     private Params(Processor processor) {
         this.processor = processor;
@@ -84,89 +95,25 @@ public class Params {
         return this;
     }
 
-    /**
-     * Define the set of keys that are allowed for this macro.
-     *
-     * @param allowedKeys the allowed key, which will be added to the set defined with earlier call to this method.
-     * @return {@code this} for chaining
-     */
-    public Params keys(Set<String> allowedKeys) {
-        this.allowedKeys.addAll(allowedKeys);
+    public Params till(char terminal) {
+        this.terminal = terminal;
         return this;
     }
 
-    /**
-     * Get the value of a parameter as a string.
-     *
-     * @param key the key that we query for a single value
-     * @return the single value in an optional or empty optional if the key was not present on the input and was not
-     * defined in any user defined macro
-     * @throws BadSyntax if there are multiple values for this key or if the key is not allowed for this macro. This
-     *                   latter is most probably a coding error in the macro implementation. A caller should not query a
-     *                   parameter, which it did not allow a few lines earlier in the call to the method {@link
-     *                   #keys(Set)}
-     */
-    public Optional<String> get(String key) throws BadSyntax {
-        assertKey(key);
-        final List<String> values;
-        if (map.containsKey(key) && (values = map.get(key)).size() > 0) {
-            if (values.size() > 1) {
-                throw new BadSyntax("The key '" + key + "' must not be multi valued in the macro '" + macroName + "'");
-            }
-            return Optional.ofNullable(values.get(0));
-        }
-        final var reader = MacroReader.macro(processor);
-        return reader.readValue(key);
+    public Params tillEnd() {
+        this.terminal = null;
+        return this;
     }
 
-    /**
-     * @param key the key we are looking for
-     * @return {@code true} if the key was defined on the input or as user defined macro, or as option
-     * @throws BadSyntax when the underlying call to {@link #get(String)} throws
-     */
-    public boolean is(String key) throws BadSyntax {
-        return get(key).map( s -> true).orElseGet( () -> OptionsStore.getInstance(processor).is("trimVertical"));
+    public Params keys(Param<?>... holders) {
+        for (final var holder : holders) {
+            this.holders.put(holder.key(),holder);
+        }
+        return this;
     }
 
-    private void assertKey(String key) throws BadSyntax {
-        if (!allowedKeys.contains(key)) {
-            throw new BadSyntax("The key '" + key + "' is not allowed for the macro '"
-                + macroName + "'. Macro internal error?");
-        }
-    }
-
-    /**
-     * @param key the key we are looking for
-     * @return the possibly empty list of the values
-     * @throws BadSyntax if there was no parameter defined with the name {@code key} and evaluating the user defined
-     *                   macro of the same name throws up.
-     */
-    public List<String> getList(String key) throws BadSyntax {
-        assertKey(key);
-        if (map.containsKey(key)) {
-            return map.get(key);
-        }
-        return MacroReader.macro(processor).readValue(key).map(List::of).orElse(List.of());
-    }
-
-    /**
-     * Gets the value assigned to the {@code key} calling {@link #get(String)} and converts it to an optional int.
-     *
-     * @param key the key we are looking for
-     * @return optional int value of the parameter
-     * @throws BadSyntax if the used }{@link #get(String)} throws up, or if the value cannot be converted to int
-     */
-    public OptionalInt getInt(String key) throws BadSyntax {
-        final var string = get(key);
-        if (string.isPresent()) {
-            try {
-                return OptionalInt.of(Integer.parseInt(string.get()));
-            } catch (NumberFormatException nfe) {
-                throw new BadSyntax(key + " is not a number using the macro '" + macroName + "'.");
-            }
-        } else {
-            return OptionalInt.empty();
-        }
+    public static <T> Param<T> holder(String key) {
+        return new javax0.jamal.tools.param.Param<T>(key);
     }
 
     /**
@@ -191,8 +138,6 @@ public class Params {
      * escape sequences.
      *
      * @param input the input that starts with the parameters
-     * @return {@code this} ready to query using the {@link #is(String)}, {@link #get(String)}, {@link #getInt(String)},
-     * {@link #getList(String)} methods.
      * @throws BadSyntax in many cases.
      *                   <ul>
      *                       <li>if a string is not terminated till the end of the input</li>
@@ -200,14 +145,17 @@ public class Params {
      *                       <li>if there is a parameter, which is not listed in the keys</li>
      *                   </ul>
      */
-    public Params parse(Input input) throws BadSyntax {
-        while (!firstCharIs(input, '\n') && input.length() > 0) {
+    public void parse(Input input) throws BadSyntax {
+        for (final var holder : holders.values()) {
+            holder.inject(processor,macroName);
+        }
+        while ((terminal == null || !firstCharIs(input, terminal)) && input.length() > 0) {
             skipSpacesAndEscapedNL(input);
-            if (firstCharIs(input, '\n')) {
+            if (terminal != null && firstCharIs(input, terminal)) {
                 break;
             }
             final var id = fetchId(input);
-            if (!allowedKeys.contains(id)) {
+            if (!holders.containsKey(id)) {
                 throw new BadSyntax("The key '" + id + "' is not used by the macro '" + macroName + "'.");
             }
             final String param;
@@ -219,10 +167,9 @@ public class Params {
             } else {
                 param = "true";
             }
-            map.computeIfAbsent(id, (x) -> new ArrayList<>()).add(param);
+            holders.get(id).set(param);
         }
         skip(input, 1);
-        return this;
     }
 
     private static void skipSpacesAndEscapedNL(Input input) {

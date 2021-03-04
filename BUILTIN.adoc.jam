@@ -4,9 +4,9 @@ The source of the file is the BUILTIN.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
 
 %}{%@import readmemacros.jim%}\
-{%@snip:collect jamal-test/src/test/java/javax0/jamal/test/examples%}\
-{%@snip:collect jamal-test/src/main/java/%}\
-{%@snip:collect jamal-api/src/main/java/%}\
+{%@snip:collect from="jamal-test/src/test/java/javax0/jamal/test/examples"%}\
+{%@snip:collect from="jamal-test/src/main/java/"%}\
+{%@snip:collect from="jamal-api/src/main/java/"%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@define MACRO_INTERFACE={%#java:class {%#define classFormat=`$simpleName`%}javax0.jamal.api.Macro%}%}
@@ -545,16 +545,16 @@ If it does not then Jamal closes the scope before starting the execution of the 
 
 The macro `trimLines` implements this interface because it uses parameters.
 The first few lines of the method {%@java:method javax0.jamal.snippet.TrimLines#evaluate%} are the followings:
-{%@snip:collect jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java%}\
+{%@snip:collect from="jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java"%}\
 
 [source,java]
 ----
 {%@snip trimLineStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var params = Params.using(processor).from(this).keys(Set.of("margin", "trimVertical")).parse(in);
-        final var margin = params.getInt("margin").orElse(0);
-        final var trimVertical = params.is("trimVertical");
+        final var margin = Params.<Integer>holder("margin").orElse(0).asInt();
+        final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
+        Params.using(processor).from(this).keys(margin, trimVertical).parse(in);
 %}
 ----
 

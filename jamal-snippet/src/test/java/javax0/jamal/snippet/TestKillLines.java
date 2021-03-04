@@ -17,7 +17,7 @@ public class TestKillLines {
     @Test
     @DisplayName("kill the lines by default that contain pattern")
     void killMatchingLinesLines() throws Exception {
-        TestThat.theInput("{#killLines {@define pattern=a+}" +
+        TestThat.theInput("{#killLines pattern=a+\n" +
             "birce\n" +
             "a\n" +
             "hurca\n" +
@@ -37,7 +37,7 @@ public class TestKillLines {
     @Test
     @DisplayName("does not fail when there is nothing to kill")
     void noKill() throws Exception {
-        TestThat.theInput("{#killLines {@define pattern=abrakadabra}" +
+        TestThat.theInput("{#killLines pattern=abrakadabra\n" +
             "birce\na\nhurca\nabba\n\nnousea\naaaaaaaaa\n\n}")
             .results("birce\na\nhurca\nabba\n\nnousea\naaaaaaaaa\n\n");
     }
@@ -45,7 +45,7 @@ public class TestKillLines {
     @Test
     @DisplayName("keeps the last line when not killing any line")
     void noKillTerminatingNoNl() throws Exception {
-        TestThat.theInput("{#killLines {@define pattern=abrakadabra}" +
+        TestThat.theInput("{#killLines pattern=abrakadabra\n" +
             "birce\na\nhurca\nabba\n\nnousea\naaaaaaaaa}")
             .results("birce\na\nhurca\nabba\n\nnousea\naaaaaaaaa");
     }
