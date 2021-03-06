@@ -24,7 +24,7 @@ public class TrimLines implements Macro, InnerScopeDependent {
     // snippet trimLineStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var margin = Params.<Integer>holder("margin").orElse(0).asInt();
+        final var margin = Params.<Integer>holder("margin").orElseInt(0);
         final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
         Params.using(processor).from(this).keys(margin, trimVertical).parse(in);
         //end snippet

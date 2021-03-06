@@ -1,4 +1,4 @@
-package javax0.jamal.tools.param;
+package javax0.jamal.tools;
 
 public class TestParams {
     /*

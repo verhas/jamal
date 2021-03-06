@@ -7,7 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -19,18 +19,29 @@ import java.util.regex.Pattern;
 public class Update implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var head = Params.<String>holder("head").orElse("");
+        final var tail = Params.<String>holder("tail").orElse("");
+
+        final var start = Params.<Pattern>holder("start").orElse(
+            "^\\s*" +
+                Pattern.quote(processor.getRegister().open()) +
+                "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$").as(Pattern::compile);
+        final var stop = Params.<Pattern>holder("stop").orElse(
+            "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$").as(Pattern::compile);
+        Params.using(processor).from(this).keys(head, tail, start, stop).parse(in);
+
         final var snippets = SnippetStore.getInstance(processor);
-        final var state = new State(snippets, processor);
+        final var state = new State(snippets, processor, head.get(), tail.get(), start.get(), stop.get());
         final var sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(in.getPosition().file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(replace(state,line));
+                sb.append(replace(state, line));
             }
-            if( state.skipping ){
-                throw new BadSyntaxAt("The snip macro is not terminated for 'update'.", new Position(in.getPosition().file,state.lastOpen,1));
+            if (state.skipping) {
+                throw new BadSyntaxAt("The snip macro is not terminated for 'update'.", new Position(in.getPosition().file, state.lastOpen, 1));
             }
-            try( final var output = new FileOutputStream(in.getPosition().file)){
+            try (final var output = new FileOutputStream(in.getPosition().file)) {
                 output.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }
         } catch (IOException e) {
@@ -49,17 +60,12 @@ public class Update implements Macro, InnerScopeDependent {
         final Pattern start;
         final Pattern stop;
 
-        private State(SnippetStore snippets, Processor processor) throws BadSyntax {
+        private State(SnippetStore snippets, Processor processor, String head, String tail, Pattern start, Pattern stop) throws BadSyntax {
             this.snippets = snippets;
-            final var reader = MacroReader.macro(processor);
-            head = reader.readValue("head").orElse("");
-            tail = reader.readValue("tail").orElse("");
-            start = Pattern.compile(reader.readValue("start").orElse(
-                "^\\s*" +
-                    Pattern.quote(processor.getRegister().open()) +
-                    "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$"));
-            stop = Pattern.compile(reader.readValue("stop").orElse(
-                "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$"));
+            this.head = head;
+            this.tail = tail;
+            this.start = start;
+            this.stop = stop;
         }
     }
 
@@ -77,7 +83,7 @@ public class Update implements Macro, InnerScopeDependent {
                 state.skipping = true;
                 state.lastOpen = state.lineNr;
                 var snipText = state.snippets.snippet(matcher.group(1));
-                if( !snipText.endsWith("\n")){
+                if (!snipText.endsWith("\n")) {
                     snipText += "\n";
                 }
                 return line + "\n" + state.head + snipText + state.tail;

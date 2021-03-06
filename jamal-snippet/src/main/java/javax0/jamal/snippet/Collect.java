@@ -43,7 +43,7 @@ public class Collect implements Macro, InnerScopeDependent {
         final var exclude = Params.<Predicate<String>>holder("exclude").orElse(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
         final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
         final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").as(Pattern::compile);
-        final var scanDepth = Params.holder("scanDepth").orElse(Integer.MAX_VALUE).asInt();
+        final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
         final var from = Params.<String>holder("from").as(s -> FileTools.absolute(reference, s));
         Params.using(processor).from(this)
             .tillEnd().keys(include, exclude, start, stop, from, scanDepth).parse(in);

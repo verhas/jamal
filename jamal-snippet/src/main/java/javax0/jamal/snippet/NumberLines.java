@@ -5,11 +5,11 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 
 import java.util.IllegalFormatException;
 
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
+import static javax0.jamal.tools.Params.holder;
 
 /**
  * Number the lines of the input. For example:
@@ -51,24 +51,24 @@ public class NumberLines implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reader = MacroReader.macro(processor);
-        final var format = reader.readValue("format").orElse("%d. ");
-        final int start = reader.integer().readValue("start").orElse(1);
-        final int step = reader.integer().readValue("step").orElse(1);
-        skipWhiteSpaces2EOL(in);
+        final var format = holder("format").orElse("%d. ").asString();
+        final var start = holder("start").orElseInt(1);
+        final var step = holder("step").orElseInt(1);
+        Params.using(processor).from(this).keys(format, start, step).parse(in);
+
         int i = 0;
         final var sb = in.getSB();
-        int lineNr = start;
+        int lineNr = start.get();
         while (i > -1) {
             final String formattedNr;
             try {
-                formattedNr = String.format(format, lineNr);
+                formattedNr = String.format(format.get(), lineNr);
             } catch (IllegalFormatException e) {
                 throw new BadSyntax("The format string in macro '" + getId() + "' is incorrect.", e);
             }
             sb.insert(i, formattedNr);
             i += formattedNr.length();
-            lineNr += step;
+            lineNr += step.get();
             i = sb.indexOf("\n", i);
             if (i != -1) {
                 i++;

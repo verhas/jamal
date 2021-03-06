@@ -16,7 +16,7 @@ import static javax0.jamal.snippet.SkipLines.needsNoExtraNl;
 public class KillLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var pattern = Params.<Pattern>holder("pattern").orElse("^\\s*$").as(Pattern::compile);
+        final var pattern = Params.holder("pattern").orElse("^\\s*$").as(Pattern.class, Pattern::compile);
         Params.using(processor).from(this).keys(pattern).parse(in);
 
         final var lines = in.toString().split("\n", -1);

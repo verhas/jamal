@@ -32,6 +32,11 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertParams() throws Exception {
+        generateAdoc("..", "PARAMS");
+    }
+
+    @Test
     void convertGlossary() throws Exception {
         generateAdoc("..", "GLOSSARY");
     }

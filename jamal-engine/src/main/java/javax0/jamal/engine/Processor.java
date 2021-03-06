@@ -351,10 +351,10 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private String safeEvaluate(ThrowingStringSupplier supplier, Runnable finalizer) throws BadSyntax {
-        BadSyntax savedEx = null;
+        Exception savedEx = null;
         try {
             return supplier.get();
-        } catch (BadSyntax e) {
+        } catch (Exception e) {
             savedEx = e;
             throw e;
         } finally {
@@ -363,7 +363,9 @@ public class Processor implements javax0.jamal.api.Processor {
             } catch (BadSyntax unbalancedMarkers) {
                 if (savedEx != null) {
                     savedEx.addSuppressed(unbalancedMarkers);
-                    throw savedEx;
+                    if (savedEx instanceof BadSyntax)
+                        throw (BadSyntax) savedEx;
+                    else throw new BadSyntax("There was an exception", savedEx);
                 } else {
                     throw unbalancedMarkers;
                 }

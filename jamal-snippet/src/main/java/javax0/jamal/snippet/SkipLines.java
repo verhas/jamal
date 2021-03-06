@@ -5,21 +5,18 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
-
 public class SkipLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reader = MacroReader.macro(processor);
-        final var skipStart = Pattern.compile(reader.readValue("skip").orElse("skip"));
-        final var skipEnd = Pattern.compile(reader.readValue("endSkip").orElse("end\\s+skip"));
-        skipWhiteSpaces2EOL(in);
+        final var skipStart = Params.<Pattern>holder("skip").orElse("skip").as(Pattern::compile);
+        final var skipEnd = Params.<Pattern>holder("endSkip").orElse("end\\s+skip").as(Pattern::compile);
+        Params.using(processor).from(this).keys(skipEnd, skipStart).parse(in);
         final var lines = in.toString().split("\n", -1);
         int from = 0;
         int to = 0;
@@ -27,11 +24,11 @@ public class SkipLines implements Macro, InnerScopeDependent {
         boolean lastLineCopied = false;
         while (from < lines.length) {
             if (skipping) {
-                if (skipEnd.matcher(lines[from]).find()) {
+                if (skipEnd.get().matcher(lines[from]).find()) {
                     skipping = false;
                 }
             } else {
-                if (skipStart.matcher(lines[from]).find()) {
+                if (skipStart.get().matcher(lines[from]).find()) {
                     skipping = true;
                 } else {
                     lines[to] = lines[from];

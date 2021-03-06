@@ -7,8 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.OptionsStore;
+import javax0.jamal.tools.Params;
 import javax0.jamal.tools.PlaceHolders;
 
 import java.io.File;
@@ -20,21 +19,19 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.Params.holder;
 
 public class ListDir implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reader = MacroReader.macro(processor);
-        final var iReader = reader.integer();
+        final var format = holder("format").orElse("$name").asString();
+        final var maxDepth = holder("maxDepth").orElseInt(Integer.MAX_VALUE);
+        final var isFollowSymlinks = holder("followSymlinks").asBoolean();
+        Params.using(processor).from(this).startWith('(').endWith(')').keys(format,maxDepth,isFollowSymlinks).parse(in);
 
-        final var format = reader.readValue("format").orElse("$name");
-        final var optionsStore = OptionsStore.getInstance(processor);
-        final var isFollowSymlinks = optionsStore.is("followSymlinks");
-        final var maxDepth = iReader.readValue("maxDepth").orElse(Integer.MAX_VALUE);
         final FileVisitOption[] options;
-        if (isFollowSymlinks) {
-            options = new FileVisitOption[1];
-            options[0] = FileVisitOption.FOLLOW_LINKS;
+        if (isFollowSymlinks.get()) {
+            options = new FileVisitOption[]{FileVisitOption.FOLLOW_LINKS};
         } else {
             options = new FileVisitOption[0];
         }
@@ -49,8 +46,9 @@ public class ListDir implements Macro, InnerScopeDependent {
         }
 
         try {
-            return Files.walk(Paths.get(dirName), maxDepth, options)
-                .map(p -> format(p, format))
+            final var fmt = format.get();
+            return Files.walk(Paths.get(dirName), maxDepth.get(), options)
+                .map(p -> format(p, fmt))
                 .collect(Collectors.joining(","));
         } catch (Exception e) {
             throw new BadSyntaxAt("There was an IOException listing the files '" + in.toString() + "'", in.getPosition(), e);

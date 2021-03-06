@@ -21,6 +21,13 @@ public class TestReplace {
     }
 
     @Test
+    void testSimpleReplaceRegexFromParameter() throws Exception {
+        TestThat
+            .theInput("{@options ~regex}{@replace (regex) |alma korte barack|a.ma|apple}")
+            .results("apple korte barack");
+    }
+
+    @Test
     void testMultipleReplaceRegex() throws Exception {
         TestThat.theInput("{@options regex}{@replace `\\||=`alma korte barack|a..a=apple|k.rte=pear|b.rack=peach}").results("apple pear peach");
     }

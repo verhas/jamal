@@ -7,19 +7,19 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.Params;
 
 import static javax0.jamal.snippet.SkipLines.needsNoExtraNl;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
+import static javax0.jamal.tools.Params.holder;
 
 public class ReplaceLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        boolean noChange = true;
-        final var replace = Params.<String>holder("replace");
-        Params.using(processor).from(this).keys(replace).parse(in);
+        final var replace = holder("replace").asString();
+        final var detectNoChange = holder("detectNoChange").asBoolean();
+        Params.using(processor).from(this).keys(replace,detectNoChange).parse(in);
 
+        boolean noChange = detectNoChange.get();
         final var parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replace.get()));
         if (parts.length == 0) {
             throw new BadSyntaxAt("The replace macro should have at least one part: '" + replace + "'", in.getPosition());
@@ -38,7 +38,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
                 }
                 try {
                     final var modified = lines[k].replaceAll(from, to);
-                    if( noChange && !modified.equals(lines[k])){
+                    if (noChange && !modified.equals(lines[k])) {
                         noChange = false;
                     }
                     lines[k] = modified;
@@ -48,8 +48,8 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
                 }
             }
         }
-        if( noChange ){
-            throw new BadSyntaxAt("{@replaceLines did not change any of the lines.",in.getPosition());
+        if (noChange) {
+            throw new BadSyntaxAt("{@replaceLines did not change any of the lines.", in.getPosition());
         }
         final var joined = String.join("\n", lines);
         if (needsNoExtraNl(in, true, joined)) {

@@ -8,7 +8,7 @@ public class TestReflow {
     @Test
     void testReflow() throws Exception {
         TestThat.theInput(
-            "{@define width=10}{@reflow this is comment and does not get into the output\n" +
+            "{@define width=11}{@reflow width=10\n" +
                 //0123456789
                 "this \n" +
                 "is\n" +
@@ -48,7 +48,7 @@ public class TestReflow {
     @Test
     void testReflowUnlimited() throws Exception {
         TestThat.theInput(
-            "{@reflow this is comment and does not get into the output\n" +
+            "{@reflow \n" +
                 "this \n" +
                 "is\n" +
                 "short\n" +
@@ -72,7 +72,7 @@ public class TestReflow {
     @Test
     void testReflowMultipleLines() throws Exception {
         TestThat.theInput(
-            "{@reflow this is comment and does not get into the output\n" +
+            "{@reflow \n" +
                 "Then this is a very long line that will be split into several lines.\n" +
                 "\n" +
                 "\n" +

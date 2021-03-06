@@ -4,21 +4,17 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.param.Param;
 import javax0.jamal.tools.param.StringFetcher;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpacesNoNL;
 import static javax0.jamal.tools.InputHandler.startsWith;
 
 /**
@@ -52,22 +48,37 @@ import static javax0.jamal.tools.InputHandler.startsWith;
  * If a key is present on the input then the user defined macro of the same name is not used as value source.
  */
 public class Params {
-public interface Param<T> {
-    String key();
-    void inject(Processor processor, String macroName);
-    void set(String value);
-    Param<T> orElse(String i);
-    Param<T> orElse(int i);
-    Param<T> as(Function<String, T> converter);
-    Param<Integer> asInt();
-    Param<Boolean> asBoolean();
-    Param<List<?>> asList();
-    T get() throws BadSyntax;
-}
+    public interface Param<T> {
+        String[] keys();
+
+        void inject(Processor processor, String macroName);
+
+        void set(String value);
+
+        Param<T> orElse(String i);
+
+        Param<Integer> orElseInt(int i);
+
+        Param<T> as(Function<String, T> converter);
+
+        <T> Param<T> as(Class<T> klass, Function<String, T> converter);
+
+        Param<Integer> asInt();
+
+        Param<Boolean> asBoolean();
+
+        Param<String> asString();
+
+        Param<List<?>> asList();
+
+        T get() throws BadSyntax;
+    }
+
     private final Processor processor;
-    private Map<String,Param> holders = new HashMap<>();
+    private Map<String, Param> holders = new HashMap<>();
     private String macroName = "undefined";
     private Character terminal = '\n';
+    private Character start = null;
 
     private Params(Processor processor) {
         this.processor = processor;
@@ -95,7 +106,12 @@ public interface Param<T> {
         return this;
     }
 
-    public Params till(char terminal) {
+    public Params startWith(char start) {
+        this.start = start;
+        return this;
+    }
+
+    public Params endWith(char terminal) {
         this.terminal = terminal;
         return this;
     }
@@ -107,12 +123,17 @@ public interface Param<T> {
 
     public Params keys(Param<?>... holders) {
         for (final var holder : holders) {
-            this.holders.put(holder.key(),holder);
+            for (final var key : holder.keys()) {
+                this.holders.put(key, holder);
+            }
         }
         return this;
     }
 
-    public static <T> Param<T> holder(String key) {
+    public static <T> Param<T> holder(String... key) {
+        if (key.length == 0) {
+            throw new IllegalArgumentException("Parameter holder has to have at least one name");
+        }
         return new javax0.jamal.tools.param.Param<T>(key);
     }
 
@@ -146,11 +167,16 @@ public interface Param<T> {
      *                   </ul>
      */
     public void parse(Input input) throws BadSyntax {
-        for (final var holder : holders.values()) {
-            holder.inject(processor,macroName);
+        parse();
+        skipSpacesAndEscapedTerminal(input);
+        if (start != null) {
+            if (InputHandler.firstCharIs(input, start)) {
+                InputHandler.skip(input, 1);
+            } else {
+                return;
+            }
         }
         while ((terminal == null || !firstCharIs(input, terminal)) && input.length() > 0) {
-            skipSpacesAndEscapedNL(input);
             if (terminal != null && firstCharIs(input, terminal)) {
                 break;
             }
@@ -159,22 +185,31 @@ public interface Param<T> {
                 throw new BadSyntax("The key '" + id + "' is not used by the macro '" + macroName + "'.");
             }
             final String param;
-            skipSpacesAndEscapedNL(input);
+            skipSpacesAndEscapedTerminal(input);
             if (firstCharIs(input, '=')) {
                 skip(input, 1);
-                skipSpacesAndEscapedNL(input);
-                param = StringFetcher.getString(input);
+                skipSpacesAndEscapedTerminal(input);
+                param = StringFetcher.getString(input, terminal);
             } else {
                 param = "true";
             }
             holders.get(id).set(param);
+            skipSpacesAndEscapedTerminal(input);
         }
         skip(input, 1);
     }
 
-    private static void skipSpacesAndEscapedNL(Input input) {
+    public void parse() throws BadSyntax {
+        for (final var holder : holders.values()) {
+            holder.inject(processor, macroName);
+        }
+    }
+
+    private void skipSpacesAndEscapedTerminal(Input input) {
         while (true) {
-            skipWhiteSpacesNoNL(input);
+            while (input.length() > 0 && Character.isWhitespace(input.charAt(0)) && !Objects.equals(input.charAt(0), terminal)) {
+                input.delete(1);
+            }
             if (startsWith(input, "\\\n") != -1) {
                 skip(input, 2);
             } else {

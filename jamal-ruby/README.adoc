@@ -568,7 +568,7 @@ public static class MyProcessor {
 
 ----
 
-This class is a wrapper, that provides the method `process()` with a string argument.
+This class is a wrapper, that provides the method `$simpleName()` with a string argument.
 This can directly be invoked from Ruby.
 
 Using this possibility the user defined macros `sample` and `output` are simply the following:

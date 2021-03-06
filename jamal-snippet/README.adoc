@@ -510,7 +510,8 @@ For example
 
 [source]
 ----
-{@numberLines this is the first line
+{@numberLines
+this is the first line
 this is the second line
   this is the third line
 }
@@ -534,7 +535,7 @@ For example
 
 [source]
 ----
-{#numberLines {@define start=3}{@define step=2}{@define format= %03d:: }
+{#numberLines start=3 step=2 format=" %03d::"
 this is the first line
 this is the second line
 this is the third line
@@ -545,9 +546,9 @@ will result
 
 [source]
 ----
-003:: this is the first line
-005:: this is the second line
-007:: this is the third line
+003::this is the first line
+005::this is the second line
+007::this is the third line
 
 ----
 
@@ -758,7 +759,7 @@ The format of the macro is
 
 [source]
 ----
-{@counter:define identifier}
+{@counter:define id=identifier}
 ----
 
 The value of the counter starts with 1 by default and is increased by 1 each time the macro is used.
@@ -766,7 +767,7 @@ For example,
 
 [source]
 ----
-{@counter:define c} {c} {c} {c}
+{@counter:define id=c} {c} {c} {c}
 ----
 
 will result
@@ -783,7 +784,7 @@ For example,
 
 [source]
 ----
-{#counter:define c{@define start=2}{@define step=17}} {c} {c} {c}
+{#counter:define id=c{@define start=2}{@define step=17}} {c} {c} {c}
 ----
 
 will result
@@ -812,11 +813,11 @@ Examples:
 
 [source]
 ----
-{#counter:define cFormatted{@define format=%03d.}}{cFormatted} {cFormatted} {cFormatted}
-{#counter:define aFormatted{@define format=$alpha.}}{aFormatted} {aFormatted} {aFormatted}
-{#counter:define AFormatted{@define format=$ALPHA.}}{AFormatted} {AFormatted} {AFormatted}
-{#counter:define rFormatted{@define format=$ROMAN.}{@define start=3213}}{rFormatted} {rFormatted} {rFormatted}
-{#counter:define RFormatted{@define format=$ROMAN.}{@define start=3213}}{RFormatted} {RFormatted} {RFormatted}
+{#counter:define id=cFormatted{@define format=%03d.}}{cFormatted} {cFormatted} {cFormatted}
+{#counter:define id=aFormatted{@define format=$alpha.}}{aFormatted} {aFormatted} {aFormatted}
+{#counter:define id=AFormatted{@define format=$ALPHA.}}{AFormatted} {AFormatted} {AFormatted}
+{#counter:define id=rFormatted{@define format=$ROMAN.}{@define start=3213}}{rFormatted} {rFormatted} {rFormatted}
+{#counter:define id=RFormatted{@define format=$ROMAN.}{@define start=3213}}{RFormatted} {RFormatted} {RFormatted}
 ----
 
 The output will be
@@ -843,7 +844,7 @@ For example:
 
 [source]
 ----
-{@reflow the first line is comment, ignored
+{@reflow
 The
 short
 lines
@@ -879,7 +880,7 @@ For example
 [source]
 ----
 {@define width=1}
-{@reflow the first line is comment, ignored
+{@reflow
 The
 long
 lines
@@ -1038,28 +1039,28 @@ will result
 - snippet: 864 bytes
 - Snip.java: 2,291 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,199 bytes
+- NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
-- Update.java: 3,483 bytes
-- FilesMacro.java: 4,465 bytes
-- Collect.java: 5,333 bytes
-- TrimLines.java: 2,854 bytes
-- Replace.java: 1,624 bytes
+- Update.java: 3,772 bytes
+- FilesMacro.java: 4,721 bytes
+- Collect.java: 5,328 bytes
+- TrimLines.java: 2,849 bytes
+- Replace.java: 1,789 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 1,440 bytes
+- KillLines.java: 1,446 bytes
 - SnippetStore.java: 6,571 bytes
-- ListDir.java: 3,943 bytes
-- XmlFormat.java: 3,290 bytes
+- ListDir.java: 3,915 bytes
+- XmlFormat.java: 3,317 bytes
 - SnipProperties.java: 1,485 bytes
-- CounterMacro.java: 1,759 bytes
+- CounterMacro.java: 1,811 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 5,806 bytes
-- ReplaceLines.java: 2,401 bytes
-- SkipLines.java: 2,100 bytes
-- Reflow.java: 1,742 bytes
+- Java.java: 5,905 bytes
+- ReplaceLines.java: 2,297 bytes
+- SkipLines.java: 2,048 bytes
+- Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 
 ----
@@ -1197,7 +1198,7 @@ wll result the output
 
 [source]
 ----
-2021-03-04 12:47:48
+2021-03-05 12:25:14
 
 ----
 
@@ -1437,7 +1438,7 @@ wll result the output
 
 [source]
 ----
-evaluate
+$simpleName
 
 ----
 

@@ -7,7 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 import javax0.jamal.tools.PlaceHolders;
 
 import java.lang.reflect.Modifier;
@@ -20,8 +20,8 @@ public class Java {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var reader = MacroReader.macro(processor);
-            final var format = reader.readValue("classFormat").orElse("$simpleName");
+            final var format = Params.<String>holder("classFormat","format").orElse("$simpleName");
+            Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
             InputHandler.skipWhiteSpaces(in);
             final var className = in.toString().trim();
             try {
@@ -34,7 +34,7 @@ public class Java {
                     "$packageName", klass.getPackageName(),
                     "$typeName", klass.getTypeName()
                     // end snippet
-                ).format(format);
+                ).format(format.get());
             } catch (Exception e) {
                 throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition());
             }
@@ -51,8 +51,8 @@ public class Java {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var pos = in.getPosition();
-            final var reader = MacroReader.macro(processor);
-            final var format = reader.readValue("methodFormat").orElse("$name");
+            final var format = Params.<String>holder("methodFormat", "format").orElse("$simpleName");
+            Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
             final var trimmed = in.toString().trim();
             final int methodStart, classEnd;
             final String className, methodName;
@@ -108,7 +108,7 @@ public class Java {
                     "$modifiers", Modifier.toString(method.getModifiers() // modifiers list of the method
                         // end snippet
                     )
-                ).format(format);
+                ).format(format.get());
             } catch (Exception e) {
                 throw new BadSyntaxAt("There is an exception formatting the method '" + methodName + "' ", pos, e);
             }

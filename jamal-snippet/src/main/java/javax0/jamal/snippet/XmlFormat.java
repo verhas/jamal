@@ -7,7 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,15 +31,15 @@ import java.util.stream.Collectors;
 public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware, AutoCloseable {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reader = MacroReader.macro(processor);
-        final var tabsize = reader.readValue("tabsize").orElse("4");
+        final var tabsize = Params.holder("tabsize").orElseInt(4);
+        Params.using(processor).from(this).keys(tabsize).parse(in);
 
         InputHandler.skipWhiteSpaces(in);
         if (in.length() > 0) {
             final String input = in.toString();
-            return formatXml(input, tabsize);
+            return formatXml(input, "" + tabsize.get());
         } else {
-            this.tabsize = tabsize;
+            this.tabsize = "" + tabsize.get();
             processor.deferredClose(this);
             return "";
         }
@@ -76,7 +76,7 @@ public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware
         if (output != null) {
             InputHandler.skipWhiteSpaces(output);
             final var result = formatXml(output.toString(), tabsize);
-            output.getSB().delete(0,output.getSB().length());
+            output.getSB().delete(0, output.getSB().length());
             output.getSB().append(result);
         }
     }

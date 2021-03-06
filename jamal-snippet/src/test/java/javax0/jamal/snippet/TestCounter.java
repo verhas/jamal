@@ -9,81 +9,86 @@ public class TestCounter {
     @Test
     @DisplayName("Counter works")
     void testCounter() throws Exception {
-        TestThat.theInput("{@counter:define f}{f}. {f}. {f}. {f}. {f}. {f}."
+        TestThat.theInput("{@counter:define id=f}{f}. {f}. {f}. {f}. {f}. {f}."
         ).results("1. 2. 3. 4. 5. 6.");
     }
 
     @Test
     @DisplayName("Start and step can be defined")
     void testStartStep() throws Exception {
-        TestThat.theInput("{#counter:define {@define start=3}{@define step=2}f}{f}. {f}. {f}. {f}. {f}. {f}."
+        TestThat.theInput("{#counter:define {@define start=3}{@define step=2}id=f}{f}. {f}. {f}. {f}. {f}. {f}."
         ).results("3. 5. 7. 9. 11. 13.");
     }
-
+    @Test
+    @DisplayName("Start and step can be defined")
+    void testStartStepAsParam() throws Exception {
+        TestThat.theInput("{#counter:define start=3 step=2 id=f}{f}. {f}. {f}. {f}. {f}. {f}."
+        ).results("3. 5. 7. 9. 11. 13.");
+    }
     @Test
     @DisplayName("Text after the identifier is error")
     void testIgnoredText() throws Exception {
-        TestThat.theInput("{@counter:define f this text is ignored}{f}. {f}. {f}."
+        TestThat.theInput("{@counter:define id=f this text is not ignored}{f}. {f}. {f}."
         ).throwsBadSyntax();
     }
 
     @Test
     @DisplayName("Format can be defined as user defined macro")
     void testFormatCanBeDefined() throws Exception {
-        TestThat.theInput("{#counter:define {@define format=%03d.}f}{f} {f} {f}"
+        TestThat.theInput("{#counter:define {@define format=%03d.}id=f}{f} {f} {f}"
         ).results("001. 002. 003.");
     }
 
     @Test
     @DisplayName("Alpha format can be defined as user defined macro")
     void testAlphaFormatCanBeDefined() throws Exception {
-        TestThat.theInput("{#counter:define {@define format=$alpha.)}f}{f} {f} {f}"
+        TestThat.theInput("{#counter:define {@define format=$alpha.)}id=f}{f} {f} {f}"
         ).results("a.) b.) c.)");
     }
 
     @Test
     @DisplayName("ALPHA format can be defined as user defined macro")
     void testALPHAFormatCanBeDefined() throws Exception {
-        TestThat.theInput("{#counter:define {@define format=$ALPHA.)}f}{f} {f} {f}"
+        TestThat.theInput("{#counter:define {@define format=$ALPHA.)}id=f}{f} {f} {f}"
         ).results("A.) B.) C.)");
     }
 
     @Test
     @DisplayName("Alpha format can run out of letters")
     void testAlphaCanRunOutOfLetters() throws Exception {
-        TestThat.theInput("{#counter:define {@define start=26}{@define format=$ALPHA.)}f}{f}"
+        TestThat.theInput("{#counter:define {@define start=26}{@define format=$ALPHA.)}id=f}{f}"
         ).results("Z.)");
-        TestThat.theInput("{#counter:define {@define start=27}{@define format=$ALPHA.)}f}{f}"
+        TestThat.theInput("{#counter:define {@define start=27}{@define format=$ALPHA.)}id=f}{f}"
         ).throwsBadSyntax();
     }
 
     @Test
     @DisplayName("ROMAN format can be defined as user defined macro")
     void testROMANFormatCanBeDefined() throws Exception {
-        TestThat.theInput("{#counter:define {@define format=$ROMAN.)}f}{f} {f} {f}"
+        TestThat.theInput("{#counter:define {@define format=$ROMAN.)}id=f}{f} {f} {f}"
         ).results("I.) II.) III.)");
     }
 
     @Test
     @DisplayName("Roman format can be defined as user defined macro")
     void testRomanFormatCanBeDefined() throws Exception {
-        TestThat.theInput("{#counter:define {@define format=$roman.)}f}{f} {f} {f}"
+        TestThat.theInput("{#counter:define {@define format=$roman.)}id=f}{f} {f} {f}"
         ).results("i.) ii.) iii.)");
     }
 
     @Test
     @DisplayName("Roman format can run out of letters")
     void testRomanCanRunOutOfLetters() throws Exception {
-        TestThat.theInput("{#counter:define {@define start=3999}{@define format=$roman}f}{f}"
+        TestThat.theInput("{#counter:define {@define start=3999}{@define format=$roman}id=f}{f}"
         ).results("mmmcmxcix");
-        TestThat.theInput("{#counter:define {@define start=4000}{@define format=$roman}f}{f}"
+        TestThat.theInput("{#counter:define {@define start=4000}{@define format=$roman}id=f}{f}"
         ).throwsBadSyntax();
     }
 
     @Test
     @DisplayName("All roman format work")
     void testRomanFormatAll() throws Exception {
-        TestThat.theInput("{#counter:define {@define format=%d=$roman}f}" +
+        TestThat.theInput("{#counter:define {@define format=%d=$roman}id=f}" +
             "{f} {f} {f} {f} {f} {f} {f} {f} {f} {f} \n".repeat(399) +
             "{f} ".repeat(9)
         ).results(

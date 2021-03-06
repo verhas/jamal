@@ -3,7 +3,7 @@
 {%@snip:collect from="src/test/java/"%}\
 {%@snip:collect from="src/main/java/"%}\
 {%@snip:collect from="../jamal-snippet/src/test/java/javax0/jamal/documentation"%}\
-{%#counter:define macroChapter {%@define format=$roman. %}%}
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}
 
 Using this integration module you can mix Jamal macro text with Groovy code snippets.
 To use this module you have to add the dependency to you Maven project, as:

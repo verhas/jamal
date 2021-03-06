@@ -6,34 +6,32 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 
 import static javax0.jamal.tools.InputHandler.convertGlobal;
-import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class CounterMacro implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var reader = MacroReader.macro(processor);
-        final var format = reader.readValue("format").orElse("%d");
-        final int start = reader.integer().readValue("start").orElse(1);
-        final int step = reader.integer().readValue("step").orElse(1);
-
+        final var format = Params.<String>holder("format").orElse("%d");
+        final var id = Params.<String>holder("id");
+        final var start = Params.<Integer>holder("start").orElseInt(1);
+        final var step = Params.<Integer>holder("step").orElseInt(1);
         skipWhiteSpaces(input);
-        var id = fetchId(input);
+        Params.using(processor).from(this).keys(format, start, step, id).parse(input);
         skipWhiteSpaces(input);
-        if( input.length() > 0 ){
-            throw new BadSyntaxAt("There are extra characters after the counter definition",input.getPosition());
+        if (input.length() > 0) {
+            throw new BadSyntaxAt("There are extra characters after the counter definition", input.getPosition());
         }
 
         final Counter counter;
-        if (isGlobalMacro(id)) {
-            counter = new Counter(convertGlobal(id),start,step,format);
+        if (isGlobalMacro(id.get())) {
+            counter = new Counter(convertGlobal(id.get()), start.get(), step.get(), format.get());
             processor.defineGlobal(counter);
         } else {
-            counter = new Counter(id,start,step,format);
+            counter = new Counter(id.get(), start.get(), step.get(), format.get());
             processor.define(counter);
             // it has to be exported because it is inner scope dependent
             processor.getRegister().export(counter.getId());

@@ -87,8 +87,9 @@ public class TestSkipLines {
     }
 
     @Test
-    void testLineSdkippingHappyPathWithDefinedStartAndStop() throws Exception {
-        TestThat.theInput("{@skipLines skip\n" +
+    void testLineSkippingHappyPathWithDefinedStartAndStop() throws Exception {
+        TestThat.theInput("{@skipLines \n" +
+            "skip\n" +
             "this line is there\n" +
             "jump start here\n" +
             "this line is skipped\n" +

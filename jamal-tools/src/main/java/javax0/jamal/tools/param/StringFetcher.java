@@ -4,6 +4,8 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.tools.InputHandler;
 
+import java.util.Objects;
+
 import static javax0.jamal.tools.param.Escape.handleEscape;
 import static javax0.jamal.tools.param.Escape.handleNormalCharacter;
 import static javax0.jamal.tools.param.Escape.handleNormalMultiLineStringCharacter;
@@ -14,8 +16,12 @@ public class StringFetcher {
     private static final char ENCLOSING_CH = '"';
 
     public static String getString(Input input) throws BadSyntax {
+        return getString(input, null);
+    }
+
+    public static String getString(Input input, Character terminal) throws BadSyntax {
         if (input.length() == 0 || input.charAt(0) != ENCLOSING_CH) {
-            return getUnquotedString(input);
+            return getUnquotedString(input, terminal);
         }
         if (input.length() < 2) {
             throw new BadSyntax("String has to be at least two characters long.");
@@ -27,9 +33,9 @@ public class StringFetcher {
         }
     }
 
-    private static String getUnquotedString(Input input) throws BadSyntax {
+    private static String getUnquotedString(Input input, Character terminal) throws BadSyntax {
         final var output = new StringBuilder();
-        while (input.length() > 0 && !Character.isWhitespace(input.charAt(0))) {
+        while (input.length() > 0 && !Character.isWhitespace(input.charAt(0)) && !Objects.equals(input.charAt(0), terminal)) {
             if (input.charAt(0) == '=') {
                 throw new BadSyntax("Unquoted parameters must not contain '='. It is dangerous.");
             }

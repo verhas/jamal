@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class Param<K> implements Params.Param<K> {
-    final public String key;
+    final public String[] key;
     List<String> value = new ArrayList<>();
     private Processor processor;
     private String macroName;
@@ -21,13 +21,13 @@ public class Param<K> implements Params.Param<K> {
      * When calculating the final value the actual string value from the parameter or the user defined macro is needed.
      * When we return a list or a boolean then we do not need the string. It is okay if it is there, and may be used,
      * but it is not a problem, if neither the parameter nor a user defined macro defines the value.
-     *
+     * <p>
      * In that case the value of the option or an empty list is returned.
      */
     private boolean stringNeeded = true;
 
     @Override
-    public String key() {
+    public String[] keys() {
         return key;
     }
 
@@ -44,15 +44,22 @@ public class Param<K> implements Params.Param<K> {
     }
 
     @Override
-    public Param<K> orElse(int defaultValue) {
+    public Param<Integer> orElseInt(int defaultValue) {
         this.defaultValue = "" + defaultValue;
-        return this;
+        this.converter = s -> getInt();
+        return (Param<Integer>) this;
     }
 
     @Override
     public Param<K> as(Function<String, K> converter) {
         this.converter = converter::apply;
         return this;
+    }
+
+    @Override
+    public <K> Param<K> as(Class<K> klass, Function<String, K> converter) {
+        this.converter = converter::apply;
+        return (Param<K>)this;
     }
 
     @Override
@@ -69,6 +76,12 @@ public class Param<K> implements Params.Param<K> {
     }
 
     @Override
+    public Param<String> asString() {
+        this.converter = s -> s;
+        return (Param<String>) this;
+    }
+
+    @Override
     public Param<List<?>> asList() {
         stringNeeded = false;
         this.converter = s -> getList();
@@ -81,7 +94,7 @@ public class Param<K> implements Params.Param<K> {
         this.macroName = macroName;
     }
 
-    public Param(String key) {
+    public Param(String ...key) {
         this.key = key;
     }
 
@@ -100,22 +113,25 @@ public class Param<K> implements Params.Param<K> {
     private Optional<String> _get() throws BadSyntax {
         if (value.size() > 0) {
             if (value.size() > 1 && stringNeeded) {
-                throw new BadSyntax("The key '" + key + "' must not be multi valued in the macro '" + macroName + "'");
+                throw new BadSyntax("The key '" + key[0] + "' must not be multi valued in the macro '" + macroName + "'");
             }
             return Optional.ofNullable(value.get(0));
         }
         final var reader = MacroReader.macro(processor);
-        return reader.readValue(key);
+        return reader.readValue(key[0]);
     }
 
 
     private String getRaw() throws BadSyntax {
         final var opt = _get();
         if (opt.isEmpty() && defaultValue == null && stringNeeded) {
-            throw new BadSyntax("The key '" + key + "' for the macro '" + macroName + "' is mandatory");
+            throw new BadSyntax("The key '" + key[0] + "' for the macro '" + macroName + "' is mandatory");
         }
         return opt.orElse(defaultValue);
     }
+
+    private boolean calculated = false;
+    private K cachedValue = null;
 
     /**
      * Get the value of the parameter.
@@ -124,12 +140,19 @@ public class Param<K> implements Params.Param<K> {
      * @throws BadSyntax if the parameter evaluation is faulty
      */
     public K get() throws BadSyntax {
+        if (processor == null) {
+            throw new IllegalArgumentException("The parameter variable '" + key[0] + "' was not processed during parsing.");
+        }
         try {
-            return (K) converter.apply(getRaw());
+            if (!calculated) {
+                cachedValue = (K) converter.apply(getRaw());
+                calculated = true;
+            }
+            return cachedValue;
         } catch (BadSyntax bs) {
             throw bs;
         } catch (Exception e) {
-            throw new BadSyntax("There was an exception converting the parameter '" + key + "' for the macro '" + macroName + "'", e);
+            throw new BadSyntax("There was an exception converting the parameter '" + key[0] + "' for the macro '" + macroName + "'", e);
         }
     }
 
@@ -140,12 +163,12 @@ public class Param<K> implements Params.Param<K> {
      */
     private boolean getBoolean() throws BadSyntax {
         if (value.size() > 1) {
-            throw new BadSyntax("The key '" + key + "' must not be multi valued in the macro '" + macroName + "'");
+            throw new BadSyntax("The key '" + key[0] + "' must not be multi valued in the macro '" + macroName + "'");
         }
         if (value.size() > 0) {
             return !value.get(0).equals("false") && !value.get(0).equals("no") && !value.get(0).equals("0");
         } else {
-            return OptionsStore.getInstance(processor).is(key);
+            return OptionsStore.getInstance(processor).is(key[0]);
         }
     }
 
@@ -158,7 +181,7 @@ public class Param<K> implements Params.Param<K> {
         if (value.size() > 0) {
             return value;
         } else {
-            return MacroReader.macro(processor).readValue(key).map(List::of).orElse(List.of());
+            return MacroReader.macro(processor).readValue(key[0]).map(List::of).orElse(List.of());
         }
     }
 
@@ -173,7 +196,7 @@ public class Param<K> implements Params.Param<K> {
         try {
             return Integer.parseInt(string);
         } catch (NumberFormatException nfe) {
-            throw new BadSyntax(key + " is not a number using the macro '" + macroName + "'.");
+            throw new BadSyntax(key[0] + " is not a number using the macro '" + macroName + "'.");
         }
     }
 }

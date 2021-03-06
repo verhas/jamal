@@ -4,12 +4,13 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class TestNumber {
+public class TestNumberLines {
 
     @Test
     @DisplayName("Simple numbering the lines")
     void numberLines() throws Exception {
-        TestThat.theInput("{@numberLines line one\n" +
+        TestThat.theInput("{@numberLines \n" +
+            "line one\n" +
             "line two\n" +
             "line three}\n"
         )
@@ -21,7 +22,8 @@ public class TestNumber {
     @Test
     @DisplayName("Simple numbering the lines using formatting")
     void numberLinesFormatted() throws Exception {
-        TestThat.theInput("{#numberLines line one\n" +
+        TestThat.theInput("{#numberLines \n" +
+            "line one\n" +
             "line two\n{@define format=%03d: }" +
             "line three}"
         )
@@ -33,7 +35,8 @@ public class TestNumber {
     @Test
     @DisplayName("When the format string is wrong it throws BadSyntax and not something else")
     void throwsBadSyntaxForWrongFormatting() throws Exception {
-        TestThat.theInput("{#numberLines line one\n" +
+        TestThat.theInput("{#numberLines \n" +
+            "line one\n" +
             "line two\n{@define format=%03: }" +
             "line three}\n"
         ).throwsBadSyntax();
@@ -42,7 +45,8 @@ public class TestNumber {
     @Test
     @DisplayName("Simple numbering the lines starting at ten")
     void numberLinesStartFromTen() throws Exception {
-        TestThat.theInput("{#numberLines line one\n" +
+        TestThat.theInput("{#numberLines \n" +
+            "line one\n" +
             "line two\n{@define start=10}" +
             "line three}\n"
         )
@@ -54,7 +58,8 @@ public class TestNumber {
     @Test
     @DisplayName("Simple numbering the lines stepping by ten")
     void numberLinesSteppingTen() throws Exception {
-        TestThat.theInput("{#numberLines line one\n" +
+        TestThat.theInput("{#numberLines \n" +
+            "line one\n" +
             "line two\n{@define step=10}" +
             "line three}\n"
         )
