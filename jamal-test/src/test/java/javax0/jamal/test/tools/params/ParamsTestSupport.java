@@ -27,23 +27,23 @@ public class ParamsTestSupport {
         final String[] declarations = s.split(",", -1);
         for (final var declaration : declarations) {
             final String[] part = declaration.split(":", -1);
-            final var name = part[0].split("\\|",-1);
+            final var name = part[0].split("\\|", -1);
             final var type = part[1];
             final String defaultValue;
-            if( part.length > 2 ){
+            if (part.length > 2) {
                 defaultValue = part[2];
-            }else{
+            } else {
                 defaultValue = null;
             }
             final var holder = Params.holder(name);
             switch (type) {
                 case "I":
-                    if( defaultValue != null )
+                    if (defaultValue != null)
                         holder.orElseInt(Integer.parseInt(defaultValue));
                     holder.asInt();
                     break;
                 case "S":
-                    if( defaultValue != null )
+                    if (defaultValue != null)
                         holder.orElse(defaultValue);
                     holder.asString();
                     break;
@@ -81,14 +81,15 @@ public class ParamsTestSupport {
         this.terminal = terminal;
         return this;
     }
+
     private String result;
     private Exception exception = null;
 
     public ParamsTestSupport input(String s) {
         try {
             final var sut = Params.using(processor).from(() -> "test environment");
-            if( start != null )sut.startWith(start);
-            if( terminal != null)sut.endWith(terminal);
+            if (start != null) sut.startWith(start);
+            if (terminal != null) sut.endWith(terminal);
             sut.keys(params.values().toArray(Params.Param[]::new)).parse(Input.makeInput(s));
             final var sb = new StringBuilder();
             sb.append(keyDefinition);
@@ -98,7 +99,11 @@ public class ParamsTestSupport {
                 sb.append(e.getKey()).append('=');
                 final var value = e.getValue();
                 if (value.get() instanceof String) {
-                    sb.append('"').append(value.get()).append('"');
+                    sb.append('"').append(
+                        ((String) value.get())
+                            .replaceAll("\"", "\\\\\"")
+                            .replaceAll("\n", "\\\\n"))
+                        .append('"');
                     continue;
                 }
                 if (value.get() instanceof Integer) {
@@ -125,7 +130,7 @@ public class ParamsTestSupport {
         return this;
     }
 
-    public void throwsUp() {
+    public void throwsUp(String... s) {
         Assertions.assertNotNull(exception);
     }
 

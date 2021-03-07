@@ -31,6 +31,18 @@ public class TestSnippets {
     }
 
     @Test
+    @DisplayName("List all the snippets, all or only some of them")
+    void testListSnippets() throws Exception {
+        TestThat.theInput("{@include src/test/resources/javax0/jamal/snippet/test4.jam}")
+            .results(
+                "first_snippet,second_snippet,second_file_first$snippet,seconda_snippet_uniconde\n" +
+                    "first_snippet,second_file_first$snippet\n" +
+                    "first_snippet,second_snippet\n" +
+                    "second_snippet,seconda_snippet_uniconde"
+            );
+    }
+
+    @Test
     @DisplayName("Finds files that match the 'include' and collects all snippets and inserts them into the output")
     void testSimpleCaseWithInclude() throws Exception {
         TestThat.theInput("{@include src/test/resources/javax0/jamal/snippet/test2.jam}")
@@ -67,22 +79,23 @@ public class TestSnippets {
     @Test
     @DisplayName("Finds files that does not match the 'exclude' and collects all snippets and inserts them into the output")
     void testPropertySnippets() throws Exception {
-        TestThat.theInput("{@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.properties}\n"+
-            "{@snip a}\n"+
-            "{@snip b}\n"+
+        TestThat.theInput("{@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.properties}\n" +
+            "{@snip a}\n" +
+            "{@snip b}\n" +
             "{@snip c}"
-            )
+        )
             .results("\n" +
                 "letter a\n" +
                 "letter b\n" +
                 "letter c");
     }
+
     @Test
     @DisplayName("Finds files that does not match the 'exclude' and collects all snippets and inserts them into the output")
     void testPropertySnippetsFromXml() throws Exception {
-        TestThat.theInput("{@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.xml}\n"+
-            "{@snip a}\n"+
-            "{@snip b}\n"+
+        TestThat.theInput("{@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.xml}\n" +
+            "{@snip a}\n" +
+            "{@snip b}\n" +
             "{@snip c}"
         )
             .results("\n" +

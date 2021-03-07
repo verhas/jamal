@@ -1,0 +1,5 @@
+{@snip:collect from="."}\
+{@snip:list}
+{@snip:list id="first"}
+{@snip:list file="SnippetSource-1"}
+{@snip:list text="second"}

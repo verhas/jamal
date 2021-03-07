@@ -126,19 +126,6 @@ Single line and multi-line strings have the same syntax as Java string.
 You can use the same escape sequences.
 
 === Examples
-{%@snip:collect from="./jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java"%}
-{%@define example($XXX)=
-[source,text]
-----
-{%#replaceLines replace="/input:/----\nINPUT\n\n[source,text]\n----\n/result:/----\n\nRESULT\n\n[source,text]\n----\n/"
-{%#replaceLines replace=/^\s*"//(\\n)?"\s?\+?$//\\"/"/\\\\/\\/
-{%@snip $XXX%}%}
-----
-%}
-{%#replaceLines replace=/^\s*\*\s*
-{%@snip doc_$XXX%}%}%}
-
-
 
 In this chapter we list some examples on the syntax and use of the parameters.
 These examples are coming from the unit test file {%@file ./jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java%}.
@@ -157,29 +144,32 @@ The test parses this definition string and calls the appropriate `orElse()`, `or
 
 The RESULT part shows the parameters with the values as `key=value`.
 If the returned value is string the result is enclosed between quotes.
-If the value has some other type then the it is showed like a casting operation `(type)` in front of the value.
+If the value has some other type it is showed like a casting operation `(type)` in front of the value.
+{%@define section($X)=
+==== $X%}
 
-==== Simple Parameters
+{%@snip:collect from="./jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java"%}
+{%@define example($XXX)=
+{%#replaceLines replace=/^\s*\*\s*//
+{%@snip head_$XXX%}%}
+[source,text]
+----
+{%#replaceLines replace="/input:/----\nINPUT\n\n[source,text]\n----\n/result:/----\n\nRESULT\n\n[source,text]\n----\n/"
+{%#replaceLines replace=/^\s*"//(\\n)?"\s?\+?$//\\"/"/\\\\/\\/
+{%@snip $XXX%}%}
+----
+%}
+{%#replaceLines replace=/^\s*\*\s*
+{%@snip doc_$XXX%}%}%}
+{%@comment
+Get the snippets that are in the file `TestParams.java`.
+Get only those that co not contain a `_` character in the name.
+The snippets are named `header_testMethodName`, `testMethodName`, and `doc_testMethodName` for the three parts for each example.
 
-This example shows the simple use of two integer and a string parameter use.
-
-{%example testSimpleParameters%}
-
-==== Parameter Defined as User Defined Macro
-
-{%example testSimpleParametersOneFromUDMacro%}
-
-==== Simple Boolean Example
-
-Boolean parameters can be specified by the sheer presence.
-When a boolean parameter is not present and not defined as an option, then the value is `false`.
-
-{%example testSimpleParameterJustPresent%}
-
-==== Boolean Parameters
-
-This example shows an extensive list of all the possibilities how a boolean parameter can be defined.
-
-{%example testBooleanParameters%}
-
-{%@snip:update%}
+We use # in the 'for' loop, because we want the snip:list to be evaluated to get the snippet ids.
+After the iteration we want to evaluate the 'example' macros, which were protected by a ` back-tick.
+After they were evaluated we evaluate the result as the snippets may also use macros, like 'section'.
+%}
+{%!!#for $snippet in ({%@snip:list file="TestParams.java" name="^[^_]+$"%})=
+{%`example $snippet%}
+%}

@@ -67,6 +67,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<snip:define,`snip:define`>>
 .. <<snip:clear,`snip:clear`>>
 .. <<snip,`snip`>>
+.. <<snipList,`snip:list`>>
 .. <<trimLines,`trimLines`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
@@ -381,7 +382,7 @@ public static final String DEFAULT_RUBY_SHELL_NAME = ":rubyShell";
 
 and the Jamal code
 
-[source,java]
+[source,text]
 ----
 {#define defaultShellName={@snip defaultShellName /"(.*)"/}}\
 ----
@@ -396,6 +397,38 @@ The string captured by the first group will be returned by the macro.
 The characters that follow the last `/` character are ignored, and eventually can not contain any more `/` characters.
 
 If the regular expression is not find in the first line of the snippet, or there is no capturing group, then the first line itself will be the result of the macro.
+
+[[snipList]]
+==== {%macroChapter%}`snip:list`
+
+This macro list the defined snippets.
+The list is represented as a comma delimited list, which contains the names of the snippets.
+
+There are four parameters the macro handles, all are optional:
+
+* `name` (can be aliased as `id`) for the name of the snippet
+
+* `file` for the file name of the snippet
+
+* `text` for the contect of the snippet
+
+* `listSeparator` can redefine the list separator. The default is comma.
+
+The first three parameters are interpreted as regular expressions.
+If any of them missing or empty string then the parameter is not taken into account.
+
+The listing will filter the snippets to include only those into the list that
+
+* the name of the snippet matches the parameter `name`, and
+
+* the file name, from which the snippet was harvested matches the parameter `file`, and
+
+* at least one line of the snippet matches the parameter `text`.
+
+The matching means that the regular expression should match part of the text.
+If you want to match the whole name, file name or content line you have to use a `^ ... $` format regular expression.
+
+If all the parameters are missing then the macro will list all the snippet names.
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
@@ -488,7 +521,7 @@ will result
 ----
 1. this is the first line
 2. this is the second line
-3.   this is the third line
+3. this is the third line
 
 ----
 %}
@@ -709,9 +742,9 @@ will result
 {%@snip replaceLines1
 [source]
 ----
-this can be a snippet content
-which was collected
-from a Java or C program comment
+* this can be a snippet content
+* which was collected
+* from a Java or C program comment
 
 ----
 %}
@@ -950,6 +983,7 @@ will result
 - ../jamal-snippet/src/main/java/javax0/jamal/snippet/XmlFormat.java
 - ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnipProperties.java
 - ../jamal-snippet/src/main/java/javax0/jamal/snippet/CounterMacro.java
+- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnipList.java
 - ../jamal-snippet/src/main/java/javax0/jamal/snippet/XmlDocument.java
 - ../jamal-snippet/src/main/java/javax0/jamal/snippet/Java.java
 - ../jamal-snippet/src/main/java/javax0/jamal/snippet/ReplaceLines.java
@@ -1043,7 +1077,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 864 bytes
+- snippet: 896 bytes
 - Snip.java: 2,291 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
@@ -1058,14 +1092,15 @@ will result
 - Counter.java: 3,323 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,446 bytes
-- SnippetStore.java: 6,571 bytes
+- SnippetStore.java: 8,267 bytes
 - ListDir.java: 3,915 bytes
 - XmlFormat.java: 3,317 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
+- SnipList.java: 1,233 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 5,905 bytes
-- ReplaceLines.java: 2,297 bytes
+- Java.java: 5,924 bytes
+- ReplaceLines.java: 2,445 bytes
 - SkipLines.java: 2,048 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
@@ -1212,7 +1247,7 @@ wll result the output
 {%@snip dateOutput
 [source]
 ----
-2021-03-05 12:25:14
+2021-03-07 17:27:20
 
 ----
 %}
@@ -1476,8 +1511,8 @@ of the method
 * `$packageName` will be replaced by the package where the method is
 * `$name` will be replaced by the name of the method
 * `$typeClass` will be replaced by the return type of the method
-* `$exceptions` will be replaced by the comma-separated values of the exception types the method throws
-* `$parameterTypes` will be replaced by the comma-separated parameter types
+* `$exceptions` will be replaced by the comma separated values of the exception types the method throws
+* `$parameterTypes` will be replaced by the comma separated parameter types
 * `$parameterCount` will be replaced by the number of the parameters in decimal format
 * `$modifiers` will be replaced by the modifiers list of the method
 %}
@@ -1508,9 +1543,9 @@ The class that implements the macro `java:method` is 'evaluate()',
 but it is simpler to import the jim file included in the snippet library
 
 
-and use the user-defined macros, like the following:
+and use the user defined macros, like the following:
 
-public MethodMacro::evaluate(Input,Processor)
+publicMethodMacro::evaluate(Input,Processor)
 
 ----
 %}

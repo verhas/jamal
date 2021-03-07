@@ -31,10 +31,10 @@ public class Snip implements Macro {
             final var lines = SnippetStore.getInstance(processor).snippet(id).split("\n");
             final var regex = regexPart.substring(0, lastIndex);
             try {
-                final var pattern = Pattern.compile(regex);
                 if (lines.length == 0) {
                     return ""; // snippet is empty
                 }
+                final var pattern = Pattern.compile(regex);
                 final var matcher = pattern.matcher(lines[0]);
                 if (matcher.find()) {
                     if (matcher.groupCount() > 0) {

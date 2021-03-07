@@ -6,19 +6,27 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SnippetStore implements Identified {
     public static final String SNIPPETS_MACRO_ID = "`snippets";
-    private final Map<String, Snippet> snippets = new HashMap<>();
+    private final Map<String, Snippet> snippets = new LinkedHashMap<>();
 
-    private static class Snippet {
+    public static class Snippet {
+        final String id;
         final String text;
         final Position pos;
         final BadSyntaxAt exception;
 
-        private Snippet(String text, Position pos, BadSyntaxAt exception) {
+        private Snippet(String id, String text, Position pos, BadSyntaxAt exception) {
+            this.id = id;
             this.text = text;
             this.pos = pos;
             this.exception = exception;
@@ -44,6 +52,32 @@ public class SnippetStore implements Identified {
     }
 
     /**
+     * Get the list of all the snippets that have an id that matches the {@code idRegex} and come from a file that the
+     * name matches the {@code fnRegex} and the content matches {@code textRegex}.
+     * <p>
+     * Any of the parameters can be {@code null}. In that case no filtering will be done on that condition. For example
+     * {@code snippetList(null,null,null)} will list all snippets.
+     *
+     * @param idRegex   regular expression to match against the name
+     * @param fnRegex   regular expression to match against the name of the file
+     * @param textRegex regular expression to match against the lines of the snippet content
+     * @return the stream of the snippets, possibly an empty stream
+     */
+    public Stream<Snippet> snippetList(String idRegex, String fnRegex, String textRegex) {
+        final Predicate<String> idTest = convertRegex(idRegex);
+        final Predicate<String> fnTest = convertRegex(fnRegex);
+        final Predicate<String> textTest = convertRegex(textRegex);
+        final Predicate<Snippet> snTest = s -> idTest.test(s.id) && fnTest.test(s.pos.file) &&
+            Arrays.stream(s.text.split("\n", -1)).anyMatch(textTest);
+        return snippets.values().stream().filter(snTest);
+    }
+
+    private static Predicate<String> convertRegex(String regex) {
+        return regex == null || regex.length() == 0 ? x -> true : Pattern.compile(regex).asPredicate();
+    }
+
+
+    /**
      * The name of the macro is {@code `snippets} that starts with a backtick. This is a character that is not allowed
      * in a macro name. This way the macro instances will be stored in the macro register when it gets registered
      * programmatically, but the macro source cannot reference it and also the built-in macro {@code define} will not
@@ -52,6 +86,7 @@ public class SnippetStore implements Identified {
      * @return the constant string {@code `snippets}
      */
     @Override
+
     public String getId() {
         return SNIPPETS_MACRO_ID;
     }
@@ -112,10 +147,10 @@ public class SnippetStore implements Identified {
                 throw new BadSyntaxAt("Snippet '" + id + "' is already defined in " + snip.pos.file + ":" + snip.pos.line, pos);
             } else {
                 collectionException.addSuppressed(snippets.get(id).exception);
-                snippets.put(id, new Snippet(snippet, pos, collectionException));
+                snippets.put(id, new Snippet(id, snippet, pos, collectionException));
             }
         } else {
-            snippets.put(id, new Snippet(snippet, pos, collectionException));
+            snippets.put(id, new Snippet(id, snippet, pos, collectionException));
         }
     }
 

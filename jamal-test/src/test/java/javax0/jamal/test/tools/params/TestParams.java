@@ -12,12 +12,52 @@ import static javax0.jamal.test.tools.params.ParamsTestSupport.keys;
 
 public class TestParams {
 
+    /* NOTES ON DOCUMENTATION/s n i p p e t CONTAINED IN THIS UNIT TEST FILE
+     *
+     * Each unit test that plays documentation purpose should define three s n i p p e t s:
+     *
+     * - head_{testName} that contains the title of the section and also optionally a few words about the example
+     * - {testName} that contains the expected string. No multi-line strings. Each line starts with " character
+     *   and ends with '\n" +' characters, except the last line. These will be removed by the macros and the text will
+     *   also be trimmed.
+     * - doc_{testName} is the explanation that follows the result.
+     *
+     * {testName} is the name of the unit test method. It is only convention, it could be anything unique, but there is
+     * no reason to make it more complex.
+     *
+     * DO NOT USE '<p>' in the comments.
+     *
+     * You can use Jamal macros in the snippet. They will be evaluated as 'head_' , result, 'doc_', which is not the
+     * order as they usually appear in the file. On the other hand the s n i p p e t triplets are used in the order as they
+     * appear in the file.
+     *
+     * HINTS:
+     *
+     * Leave an empty line between the 's n i p p e t' and the content and also between
+     * `e n d s n i p p e t` and content.
+     *
+     */
+
+
     /**
-     * snippet doc_testSimpleParameters
-     * The integer parameters are not enclosed between `"` characters, although it is perfectly okay to do so.
-     * On the other hand the value `"aligned"` is specified between quotes.
-     * This value is also eligible to be specified without `"` as it contains neither space, not special escape character or the parsing closing character, which was `\n` in this case.
+     *
+     * snippet head_testSimpleParameters
+     *
+     * {%section Simple Parameters%}
+     *
+     * This example shows the simple use of two integer, and a string parameter use.
+     *
      * end snippet
+     *
+     * snippet doc_testSimpleParameters
+     *
+     * The integer parameters are not enclosed between `"` characters, although it is perfectly okay to do so. On the
+     * other hand the value `"aligned"` is specified between quotes. This value is also eligible to be specified without
+     * `"` as it contains neither space, not special escape character or the parsing closing character, which was `\n`
+     * in this case.
+     *
+     * end snippet
+     *
      * @throws Exception
      */
     @Test
@@ -37,11 +77,23 @@ public class TestParams {
     }
 
     /**
-     * snippet doc_testSimpleParameterJustPresent
-     * Boolean `true` parameters can be represented by the appearance of the parameter on the line.
-     * In this example the parameter`left` simple appears on the input without any value.
-     * The parameter `right` does not and it is also not set to `true` as an option, so the value if false.
+     * snippet head_testSimpleParameterJustPresent
+     *
+     * {%section Simple Boolean Example%}
+     *
+     * Boolean parameters can be specified by the sheer presence. When a boolean parameter is not present and not
+     * defined as an option, then the value is `false`.
+     *
      * end snippet
+     *
+     * snippet doc_testSimpleParameterJustPresent
+     *
+     * Boolean `true` parameters can be represented by the appearance of the parameter on the line. In this example the
+     * parameter`left` simple appears on the input without any value. The parameter `right` does not and it is also not
+     * set to `true` as an option, so the value if false.
+     *
+     * end snippet
+     *
      * @throws Exception
      */
     @Test
@@ -60,9 +112,19 @@ public class TestParams {
     }
 
     /**
-     * snippet doc_testSimpleParametersOneFromUDMacro
-     * In this example two values are present as parameters, but the parameter `margin` is present by a user defined macro.
+     * snippet head_testSimpleParametersOneFromUDMacro
+     *
+     * {%section Parameter Defined as User Defined Macro%}
+     *
      * end snippet
+     *
+     * snippet doc_testSimpleParametersOneFromUDMacro
+     *
+     * In this example two values are present as parameters, but the parameter
+     * `margin` is present by a user defined macro.
+     *
+     * end snippet
+     *
      * @throws Exception
      */
     @Test
@@ -82,29 +144,97 @@ public class TestParams {
         );
     }
 
+    /**
+     * snippet head_testSimpleParametersOneFromUDMacroOverride
+     *
+     * {%section Value defined in User-defined Macro is Overridden by parameter%}
+     *
+     * This example shows that a parameter defined in a user-defined macro is overridden by the definition of the
+     * parameter on the input.
+     *
+     * end snippet
+     *
+     * snippet doc_testSimpleParametersOneFromUDMacroOverride
+     *
+     * The parameter `margin` is defined as a user defined parameter, but the value `3` is ignored because it is also
+     * defined on the input to be `2` and this is stronger.
+     *
+     * end snippet
+     *
+     * @throws Exception
+     */
     @Test
     @DisplayName("Parsing parameters and one comes from user defined macro")
     void testSimpleParametersOneFromUDMacroOverride() throws Exception {
         keys("margin:I").process("{@define margin=3}").input("margin=2").results(
+            // snippet testSimpleParametersOneFromUDMacroOverride
             "margin:I\n" +
                 "input:\n" +
                 "{@define margin=3}\n" +
                 "margin=2\n" +
                 "result:\n" +
                 "margin=2"
+            // end snippet
         );
     }
 
+    /**
+     * snippet head_testMissingParameter
+     * {%section Missing Parameter%}
+     *
+     * When a parameter is used by a macro and there is no default value
+     * for the parameter then not defining the parameter will be an error.
+     *
+     * end snippet
+     *
+     * snippet doc_testMissingParameter
+     *
+     * The sample macro configuration requires two parameters: `margin` and `missing`.
+     * None of them has default value and they are also no boolean or list values.
+     * Margin is defined in the input but the parameter `missing`, aptly named, is indeed missing.
+     * This makes the parameter parsing to throw an exception.
+     *
+     * end snippet
+     */
     @Test
     @DisplayName("It is a problem when a parameter is missing")
     void testMissingParameter() {
-        keys("margin:I,missing:S").input("margin=2").throwsUp();
+        keys("margin:I,missing:S").input("margin=2").throwsUp(
+            // snippet testMissingParameter
+            "margin:I,missing:S\n" +
+                "input:\n" +
+                "margin=2\n" +
+                "result:\n" +
+                "javax0.jamal.api.BadSyntax: The key 'missing' for the macro 'test environment' is mandatory"
+            // end snippet
+        );
     }
 
+    /**
+     * snippet head_testContinuationLine
+     *
+     * {%section Continuation line%}
+     *
+     * This example shows that the first line can be extended using continuation lines, which are escaped using `\`
+     * character at the end of the line.
+     *
+     * end snippet
+     *
+     * snippet doc_testContinuationLine
+     * The parameters `margin` and `top` are defined on the first line.
+     * The parameter `left` would have been too long.
+     * It got into the next line.
+     * To do that the last character on the previous line is a `\` character.
+     *
+     * end snippet
+     *
+     * @throws Exception
+     */
     @Test
     @DisplayName("Line can be continued with trailing \\")
     void testContinuationLine() throws Exception {
         keys("margin:I,top:I,left:S").input("margin=2 top=3 \\\n      left=\"aligned\"").results(
+            // snippet testContinuationLine
             "margin:I,top:I,left:S\n" +
                 "input:\n" +
                 "margin=2 top=3 \\\n" +
@@ -113,56 +243,133 @@ public class TestParams {
                 "margin=2\n" +
                 "top=3\n" +
                 "left=\"aligned\""
+            // end snippet
         );
     }
 
+    /**
+     * snippet head_testMultiLineString
+     * {%section Multi-line String parameter, one line%}
+     *
+     * This example shows how you can use multi-line strings as parameters.
+     * Multi-line strings start and end with the `"""` characters and can span multiple lines.
+     * In this example the sample multi-line string does not span multiple line showing that this is not a must.
+     * The use also demonstrates that single `"` characters do not need to be escaped, but they may be escaped.
+     *
+     * end snippet
+     *
+     * snippet doc_testMultiLineString
+     *
+     * The value of the parameter`left` is specified as a multi-line string, and it contains two `"` characters, one escaped, the other without escaping.
+     *
+     * end snippet
+     * @throws Exception
+     */
     @Test
     @DisplayName("A multi-line can present on a single line")
     void testMultiLineString() throws Exception {
-        keys("left:S").input("left=\"\"\"aligned\"\"\"").results(
+        keys("left:S").input("left=\"\"\"ali\"gn\\\"ed\"\"\"").results(
+            // snippet testMultiLineString
             "left:S\n" +
                 "input:\n" +
-                "left=\"\"\"aligned\"\"\"\n" +
+                "left=\"\"\"ali\"gn\\\"ed\"\"\"\n" +
                 "result:\n" +
-                "left=\"aligned\""
+                "left=\"ali\\\"gn\\\"ed\""
+            //end snippet
         );
     }
 
+    /**
+     * snippet head_testMultiLineStringML
+     * {%section Multi-line String parameter, two lines%}
+     *
+     * This example shows how you can use multi-line strings as parameters.
+     * Multi-line strings start and end with the `"""` characters and can span multiple lines.
+     * In this example the sample multi-line string spans two lines.
+     *
+     * end snippet
+     *
+     * snippet doc_testMultiLineStringML
+     *
+     * This time the parameter `aligned` contains a new line in the string.
+     *
+     * end snippet
+     * @throws Exception
+     */
     @Test
     @DisplayName("A multi-line can present on a multi line")
     void testMultiLineStringML() throws Exception {
         keys("left:S").input("left=\"\"\"alig\nned\"\"\"").results(
+            // snippet testMultiLineStringML
             "left:S\n" +
                 "input:\n" +
                 "left=\"\"\"alig\n" +
                 "ned\"\"\"\n" +
                 "result:\n" +
-                "left=\"alig\n" +
-                "ned\""
+                "left=\"alig\\nned\""
+            // end snippet
         );
     }
 
+    /**
+     * snippet head_testMultiValuedParameterSingleValue
+     * {%section Multi-valued parameter can have single value%}
+     *
+     * Multi-valued parameters can apper more than once as parameter.
+     * But it is not a must.
+     * They may be missing, or specified only one time.
+     * This example shows that a multi-valued parameter can appear one time.
+     *
+     * end snippet
+     *
+     * snippet doc_testMultiValuedParameterSingleValue
+     *
+     * The parameter `left` is a `L` list as it is declared by the testing macro.
+     * Even though it is a list it appears only once as a parameter.
+     * The result for the macro is that this parameter will be a list that has a single element.
+     *
+     * end snippet
+     * @throws Exception
+     */
     @Test
     @DisplayName("single-valued parameter returns in a list")
     void testMultiValuedParameterSingleValue() throws Exception {
         keys("left:L").input("left=\"aligned\"").results(
+            // snippet testMultiValuedParameterSingleValue
             "left:L\n" +
                 "input:\n" +
                 "left=\"aligned\"\n" +
                 "result:\n" +
                 "left=[aligned]"
+            // end snippet
         );
     }
 
+    /**
+     * snippet head_testMultiValuedParameterMultiValue
+     *
+     * {%section Multi-valued Parameter with Multiple Values%}
+     *
+     * This example shows how to specify multiple values for a parameter that is declared to have multiple values.
+     *
+     * end snippet
+     *
+     * snippet doc_testMultiValuedParameterMultiValue
+     *
+     * end snippet
+     * @throws Exception
+     */
     @Test
     @DisplayName("A multi-valued parameter returns in a list")
     void testMultiValuedParameterMultiValue() throws Exception {
         keys("left:L").input("left=\"aligned\"left=\"alignad\"").results(
+            // snippet testMultiValuedParameterMultiValue
             "left:L\n" +
                 "input:\n" +
                 "left=\"aligned\"left=\"alignad\"\n" +
                 "result:\n" +
                 "left=[aligned,alignad]"
+            //end snippet
         );
     }
 
@@ -280,31 +487,40 @@ public class TestParams {
     }
 
     /**
-     * snippet doc_testBooleanParameters
-     *  The parameter `trueOption` is set globally calling the macro `options`.
-     * The `explicitFalseOption` is set to false on the same line.
-     * This is an example about how to set and reset options, even more than one at the same time.
+     * snippet head_testBooleanParameters
      *
-     * * The parameter `implicitFalseOption` is not set anywhere.
-     * It is required by the macro, it is notdefined as an option and also not as a parameter.
-     * This parameter will be `false` by default.
+     * {%section Boolean Parameters%}
      *
-     * * The parameter `falseAsNo` is set to `no` as a parameter.
-     * Similarly `falseAsFalse` is set to `false`, `falseAs0` is set to `0`.
+     * This example shows an extensive list of all the possibilities how a boolean parameter can be defined.
      *
-     * * As the false parameters are listed with all the values the `true` values are also listed with some of the possible assignment values that result a `true` value.
-     * `trueAsTrue` is set to `true`. The parameter `trueAsYes` is set to `yes`, `trueAs1` is set to `1`.
-     * Finally `trueAsAnything` is set to an arbitrary string that will be converted to a true value.
-     *
-     * * The parameter `trueStandalone` demonstrate the use of a boolean parameter when the name is simply listed as a parameter without any value.
-     * In this case the presence of the parameter signals the true value it presents.
-     *
-     * Using some arbitrary value to signal a boolean value is usually not the best choice.
-     * Other than choosing presenting the value in the form of a standalone parameter, or with value `yes`, `true`, `no`, `0`, `false` is a matter of taste.
-     * Use the one that you feel makes your code the most readable.
-     * Jamal source can get very easily really messy and complex.
-     * Strive to make it as simple as possible.
      * end snippet
+     *
+     * snippet doc_testBooleanParameters
+     *
+     * The parameter `trueOption` is set globally calling the macro `options`. The `explicitFalseOption` is set to false
+     * on the same line. This is an example about how to set and reset options, even more than one at the same time.
+     *
+     * * The parameter `implicitFalseOption` is not set anywhere. It is required by the macro, it is notdefined as an
+     * option and also not as a parameter. This parameter will be `false` by default.
+     *
+     * * The parameter `falseAsNo` is set to `no` as a parameter. Similarly `falseAsFalse` is set to `false`, `falseAs0`
+     * is set to `0`.
+     *
+     * * As the false parameters are listed with all the values the `true` values are also listed with some of the
+     * possible assignment values that result a `true` value. `trueAsTrue` is set to `true`. The parameter `trueAsYes`
+     * is set to `yes`, `trueAs1` is set to `1`. Finally `trueAsAnything` is set to an arbitrary string that will be
+     * converted to a true value.
+     *
+     * * The parameter `trueStandalone` demonstrate the use of a boolean parameter when the name is simply listed as a
+     * parameter without any value. In this case the presence of the parameter signals the true value it presents.
+     *
+     * Using some arbitrary value to signal a boolean value is usually not the best choice. Other than choosing
+     * presenting the value in the form of a standalone parameter, or with value `yes`, `true`, `no`, `0`, `false` is a
+     * matter of taste. Use the one that you feel makes your code the most readable. Jamal source can get very easily
+     * really messy and complex. Strive to make it as simple as possible.
+     *
+     * end snippet
+     *
      * @throws Exception
      */
     @Test
