@@ -2447,14 +2447,37 @@ You can find the files in the cache directory in subdirectories.
 You can also find there corresponding property files that contain information about the caching.
 These properties files are information purpose and Jamal does not use them at the moment.
 
-The environment variables
+The connection to the web can be configured if needed.
+The environment variables that can be used are the followings:
+
+* `JAMAL_PROXY`,
 
 * `JAMAL_CONNECT_TIMEOUT`, and
 
 * `JAMAL_READ_TIMEOUT`
 
-can define two timeout values for the web download in millisecond as unit.
-Their default value is 5000, meaning five seconds.
+can specify a proxy and define two timeout values for the web download in millisecond as unit.
+For the proxy the default is to use direct connection.
+
+The format of the proxy definition is
+
+[source,text]
+----
+https://host:port
+----
+
+or
+
+[source,text]
+----
+socks:host:port
+----
+
+The `:port` part is optional.
+Default port is 8080.
+
+The default value for the timeouts is 5000, meaning five seconds.
+
 [[snippet]]
 === {%chapter%}Snippet Handling
 

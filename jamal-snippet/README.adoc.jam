@@ -1244,13 +1244,7 @@ Example
 wll result the output
 
 {%#snip:define dateOutput={%output%}%}\
-{%@snip dateOutput
-[source]
-----
-2021-03-07 17:27:20
-
-----
-%}
+{%@snip dateOutput%}
 
 [[format]]
 ==== {%macroChapter%}`format`

@@ -5,15 +5,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 class CachedHttpInput {
     private static final String JAMAL_CONNECT_TIMEOUT = "JAMAL_CONNECT_TIMEOUT";
     private static final String JAMAL_READ_TIMEOUT = "JAMAL_READ_TIMEOUT";
+    private static final String JAMAL_PROXY = "JAMAL_PROXY";
     private static final int CONNECT_TIMEOUT;
     private static final int READ_TIMEOUT;
-
+    private static Proxy proxy;
+    private static IllegalArgumentException parseException;
 
     static {
         final var connTimeout = System.getenv(JAMAL_CONNECT_TIMEOUT);
@@ -30,6 +33,15 @@ class CachedHttpInput {
             READ_TIMEOUT = Integer.parseInt(readTimeout);
         } else {
             READ_TIMEOUT = 5000;
+        }
+    }
+
+    static {
+        try {
+            proxy = ProxyParser.parse(System.getenv(JAMAL_PROXY));
+        } catch (IllegalArgumentException iae) {
+            proxy = null; // not the same as Proxy.NO_PROXY, it is an error
+            parseException = iae;
         }
     }
 
@@ -82,8 +94,11 @@ class CachedHttpInput {
      * @throws IOException if the response is not OK
      */
     private static BufferedReader getBufferedReader(URL url) throws IOException {
-        final var con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        if (proxy == null) {
+            throw new IOException("Proxy in the environment variable " + JAMAL_PROXY + " is malformed.", parseException);
+        }
+        final var con = (HttpURLConnection) url.openConnection(proxy);
+        con.setRequestMethod("GET" );
         con.setConnectTimeout(CONNECT_TIMEOUT);
         con.setReadTimeout(READ_TIMEOUT);
         con.setInstanceFollowRedirects(true);
