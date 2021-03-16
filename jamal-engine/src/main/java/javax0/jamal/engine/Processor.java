@@ -11,6 +11,8 @@ import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.engine.debugger.Debugger;
+import javax0.jamal.engine.debugger.DebuggerFactory;
 import javax0.jamal.engine.util.MacroBodyFetcher;
 import javax0.jamal.engine.util.MacroQualifier;
 import javax0.jamal.engine.util.PrefixComposer;
@@ -52,6 +54,8 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private final Context context;
 
+    private final Debugger debugger;
+
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
      * separators start and end macros and the usual strings are "{" and "}".
@@ -76,6 +80,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
         }
         Macro.getInstances().forEach(macros::define);
+        debugger = DebuggerFactory.build(this);
     }
 
     public Processor(String macroOpen, String macroClose) {
@@ -109,13 +114,15 @@ public class Processor implements javax0.jamal.api.Processor {
         final var output = makeInput();
         try {
             while (input.length() > 0) {
+                debugger.setInput(limiter.get(), input);
                 if (input.indexOf(macros.open()) == 0) {
                     skip(input, macros.open());
                     skipWhiteSpaces(input);
                     processMacro(input, output);
                 } else {
-                    processText(output, input);
+                    processText(input, output);
                 }
+                debugger.setAfter(limiter.get(), input, output);
             }
         } catch (BadSyntaxAt bsAt) {
             traceRecordFactory.dump(bsAt);
@@ -143,18 +150,20 @@ public class Processor implements javax0.jamal.api.Processor {
     /**
      * Process the text at the start of input till the first macro start.
      *
-     * @param output where the text is appended
      * @param input  where the text is read from and removed afterwards
+     * @param output where the text is appended
      */
-    private void processText(Input output, Input input) {
+    private void processText(Input input, Input output) {
         try (final var tr = traceRecordFactory.openTextRecord(input.getPosition())) {
             final var nextMacroStart = input.indexOf(macros.open());
             if (nextMacroStart != -1) {
                 final var text = input.substring(0, nextMacroStart);
+                debugger.setStart(text);
                 tr.appendResultState(text);
                 output.append(text);
                 skip(input, nextMacroStart);
             } else {// there are no more macros on the input
+                debugger.setStart(input);
                 output.append(input);
                 input.reset();
             }
@@ -742,12 +751,15 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
-        return MacroBodyFetcher.getNextMacroBody(input, this);
+        final var body = MacroBodyFetcher.getNextMacroBody(input, this);
+        debugger.setStart(body);
+        return body;
     }
 
     @Override
     public void close() {
         shellEngine.close();
+        debugger.close();
     }
 
     private void closeProcess(final Input result) throws BadSyntax {

@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * General macro registry that can be used to register built-in (Java implemented) and user defined macros. API and
