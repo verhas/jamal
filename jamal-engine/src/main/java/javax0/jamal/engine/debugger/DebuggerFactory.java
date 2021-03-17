@@ -1,16 +1,37 @@
 package javax0.jamal.engine.debugger;
 
+import javax0.jamal.api.Debugger;
+import javax0.jamal.engine.DebuggerStub;
 import javax0.jamal.engine.Processor;
 
-import java.io.IOException;
+import java.util.Optional;
 
 public class DebuggerFactory {
 
-    public static Debugger build(Processor processor){
-        try {
-            return new ServerTcpDebugger(processor, 8080);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Cannot bind the debugger on the port 8080",e);
+    public static Debugger build(Processor processor) {
+        final var s = Optional.ofNullable(System.getenv(Debugger.JAMAL_DEBUG)).orElse("");
+        int min = Integer.MAX_VALUE;
+        boolean unique = true;
+        Debugger selected = null;
+        for (final var debugger : Debugger.getInstances()) {
+            final var affinity = debugger.affinity(s);
+            if (affinity >= 0 && min > affinity) {
+                unique = true;
+                selected = debugger;
+            }
+            if (min == affinity) {
+                unique = false;
+            }
         }
+        if (!unique) {
+            throw new IllegalArgumentException("There are two or more equal minimum affinity debuggers.");
+        }
+
+        try {
+            selected.init(new DebuggerStub(processor));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("There was an exception intializing the debugger.", e);
+        }
+        return selected;
     }
 }

@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Closer;
 import javax0.jamal.api.Context;
+import javax0.jamal.api.Debugger;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
@@ -11,7 +12,6 @@ import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.engine.debugger.Debugger;
 import javax0.jamal.engine.debugger.DebuggerFactory;
 import javax0.jamal.engine.util.MacroBodyFetcher;
 import javax0.jamal.engine.util.MacroQualifier;
@@ -114,7 +114,7 @@ public class Processor implements javax0.jamal.api.Processor {
         final var output = makeInput();
         try {
             while (input.length() > 0) {
-                debugger.setInput(limiter.get(), input);
+                debugger.setBefore(limiter.get(), input);
                 if (input.indexOf(macros.open()) == 0) {
                     skip(input, macros.open());
                     skipWhiteSpaces(input);

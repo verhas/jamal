@@ -11,7 +11,7 @@ import java.util.ServiceLoader;
  * the class has a zero-parameter (default) constructor.
  * <p>
  * Macro implementations are supposed to be state-less, but they can have state. Be careful, however, that the macros
- * can have many instances whileprocessing a single file if they come into life via the {@code use} macro.
+ * can have many instances while processing a single file if they come into life via the {@code use} macro.
  */
 @FunctionalInterface
 public interface Macro extends Identified{

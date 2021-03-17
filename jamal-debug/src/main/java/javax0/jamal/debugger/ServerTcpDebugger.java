@@ -1,6 +1,6 @@
-package javax0.jamal.engine.debugger;
+package javax0.jamal.debugger;
 
-import javax0.jamal.engine.Processor;
+import javax0.jamal.api.Debugger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,15 +10,17 @@ import java.net.Socket;
 
 public class ServerTcpDebugger extends TcpDebugger implements AutoCloseable {
 
-    final private ServerSocket serverSocket;
+    private ServerSocket serverSocket;
     private Socket clientSocket;
     private InputStream in;
     private OutputStream out;
-    private final Processor processor;
+    private int port;
 
+    public ServerTcpDebugger() {
+    }
 
-    ServerTcpDebugger(Processor processor, int port) throws IOException {
-        this.processor = processor;
+    public void init(Debugger.Stub stub) throws Exception {
+        super.init(stub);
         serverSocket = new ServerSocket(port);
         connect();
     }
@@ -44,10 +46,20 @@ public class ServerTcpDebugger extends TcpDebugger implements AutoCloseable {
             out.close();
             clientSocket.close();
             serverSocket.close();
-        }catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
     }
 
-    public Processor getProcessor() {
-        return processor;
+    @Override
+    public int affinity(String s) {
+        if (s.startsWith("s:")) {
+            try {
+                port = Integer.parseInt(s.substring(2));
+            } catch (NumberFormatException nfe) {
+                throw new IllegalArgumentException("The debugger connection string '" + s + "' is malformed.", nfe);
+            }
+            return 1000;
+        }
+        return -1;
     }
 }

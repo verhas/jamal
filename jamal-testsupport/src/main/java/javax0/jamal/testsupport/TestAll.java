@@ -223,7 +223,7 @@ public class TestAll {
     }
 
     public static void testExpected(Object testThis, AssertEquals asserter) throws IOException, BadSyntax {
-        testExpected(testThis,asserter,".expected");
+        testExpected(testThis, asserter, ".expected");
     }
 
     public static void testExpected(Object testThis, AssertEquals asserter, String ext) throws IOException, BadSyntax {
@@ -275,8 +275,9 @@ public class TestAll {
      */
     private String result(String testFileName) throws IOException, BadSyntax {
         var in = inputFrom(testFileName);
-        final var sut = new Processor("{", "}");
-        return sut.process(in);
+        try (final var sut = new Processor("{", "}")) {
+            return sut.process(in);
+        }
     }
 
     private String readExpectedContent(String expectedFileName) throws IOException {

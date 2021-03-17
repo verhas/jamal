@@ -22,6 +22,7 @@
         <module>jamal-groovy</module>
         <module>jamal-ruby</module>
         <module>jamal-plantuml</module>
+        <module>jamal-debug</module>
     </modules>
     <licenses>
         <license>
@@ -166,6 +167,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-plantuml</artifactId>
+                <version>1.7.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-debug</artifactId>
                 <version>1.7.3-SNAPSHOT</version>
             </dependency>
             <dependency>
