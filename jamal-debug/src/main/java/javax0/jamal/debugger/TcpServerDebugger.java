@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerTcpDebugger extends TcpDebugger implements AutoCloseable {
+public class TcpServerDebugger extends TcpDebugger implements AutoCloseable {
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
@@ -16,7 +16,7 @@ public class ServerTcpDebugger extends TcpDebugger implements AutoCloseable {
     private OutputStream out;
     private int port;
 
-    public ServerTcpDebugger() {
+    public TcpServerDebugger() {
     }
 
     public void init(Debugger.Stub stub) throws Exception {

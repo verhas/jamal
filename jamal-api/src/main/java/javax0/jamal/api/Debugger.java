@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 public interface Debugger extends AutoCloseable {
-    public static final String JAMAL_DEBUG = "JAMAL_DEBUG";
+    String JAMAL_DEBUG = "JAMAL_DEBUG";
     static List<Debugger> getInstances() {
         ServiceLoader<Debugger> services = ServiceLoader.load(Debugger.class);
         List<Debugger> list = new ArrayList<>();

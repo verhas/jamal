@@ -2,14 +2,16 @@ package javax0.jamal.engine.debugger;
 
 import javax0.jamal.api.Debugger;
 import javax0.jamal.engine.DebuggerStub;
+import javax0.jamal.engine.NullDebugger;
 import javax0.jamal.engine.Processor;
-
-import java.util.Optional;
 
 public class DebuggerFactory {
 
     public static Debugger build(Processor processor) {
-        final var s = Optional.ofNullable(System.getenv(Debugger.JAMAL_DEBUG)).orElse("");
+        final var s = System.getenv(Debugger.JAMAL_DEBUG);
+        if (s == null || s.length() == 0) {
+            return new NullDebugger();
+        }
         int min = Integer.MAX_VALUE;
         boolean unique = true;
         Debugger selected = null;

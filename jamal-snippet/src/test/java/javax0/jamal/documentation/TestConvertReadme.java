@@ -47,6 +47,11 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertDebugReadme() throws Exception {
+        generateAdoc("../jamal-debug");
+    }
+
+    @Test
     void convertExtensionReadme() throws Exception {
         generateAdoc("../jamal-extensions");
     }

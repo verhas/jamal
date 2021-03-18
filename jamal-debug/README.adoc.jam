@@ -1,0 +1,61 @@
+== Jamal Debugger
+
+Jamal debugger is an experimental feature.
+The current release does not include the debugger.
+
+The support for the debugger is implemented in the module `jamal-engine`.
+
+=== How Jamal debugger works
+
+When a Processor is created it looks at the environment variable `JAMAL_DEBUG`.
+This variable can either be missing or be empty string or may contain a debugger connection string.
+If the variable is not defined or empty then the processor will use the "null debugger" that just does nothing.
+
+If this variable is defined and not empty then the processor searches for a debugger that can handle the connection string.
+Debuggers are loaded using the service loader, and they have to implement the {%@java:class (format=`$name`) javax0.jamal.api.Debugger%} interface.
+
+The processor invokes the method {%@java:method (format=`$name(s)`) javax0.jamal.api.Debugger#affinity%} for each the available debuggers.
+The argument `s` is the connection string.
+The method returns an integer number, and the more the debugger thinks it can handle the connection string the smaller number it should return.
+
+If the returned value is -1 then the debugger cannot handle the connection string at all.
+The processor will select the debugger that returns the smallest non-negative number.
+
+The null debugger is implemented in the module engine.
+It returns `Integer.MAX_INT-1` for any connection string.
+If no other debugger think they can handle a connection then the null debugger will be used.
+
+It is an error if there are two or more debuggers who report the same minimal, non-negative affinity.
+
+Usually debuggers return `1000` if they can handle a string and `-1` if not.
+
+The connection string has the general format
+
+[source,text]
+----
+type:p1:p2: ... :pn?o1=v1&o2=v2&...&oj=vk
+----
+
+The `type` part is a string identifier and usually this is the part that a debugger looks at to decide if it can handle a connection.
+For example the TCP Server Debugger handles all connection strings that start with the `s:` characters.
+The HTTP Server Debugger handles all connection strings that start with the `http:` characters.
+
+The parameters `p1`,`p2`, ..., `pn` and the options `o1`,`o2`, ... `oj` are interpreted by the debugger.
+
+When Jamal is started with a debugger the processor is regularly invoking the debugger at certain points.
+It passes
+
+* the current state of the input before the evaluation of a text block or macro block, before evaluating a macro or text block;
+
+* the macro body or the text that is to be evaluated, before evaluating a macro or text block;
+
+* the current state of the output and the current state of the input after evaluating a macro or text block.
+
+The debugger implementations are free to stop and interact with the debugger client at these points.
+The TCP Server Debugger and the HTTP Server Debugger stop and interact with the debugger client only after the macro evaluation.
+
+=== TCP Server Debugger
+
+This debugger will handle all connection strings that start with the characters `s:`.
+
+=== HTTP Server Debugger

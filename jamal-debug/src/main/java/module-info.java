@@ -1,6 +1,6 @@
 import javax0.jamal.api.Debugger;
 import javax0.jamal.debugger.HttpServerDebugger;
-import javax0.jamal.debugger.ServerTcpDebugger;
+import javax0.jamal.debugger.TcpServerDebugger;
 
 module jamal.debug {
 
@@ -10,5 +10,5 @@ module jamal.debug {
 
     requires jdk.httpserver;
 
-    provides Debugger with ServerTcpDebugger, HttpServerDebugger;
+    provides Debugger with TcpServerDebugger, HttpServerDebugger;
 }
