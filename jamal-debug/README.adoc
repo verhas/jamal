@@ -12,9 +12,9 @@ This variable can either be missing or be empty string or may contain a debugger
 If the variable is not defined or empty then the processor will use the "null debugger" that just does nothing.
 
 If this variable is defined and not empty then the processor searches for a debugger that can handle the connection string.
-Debuggers are loaded using the service loader, and they have to implement the {%@java:class (format=`$name`) javax0.jamal.api.Debugger%} interface.
+Debuggers are loaded using the service loader, and they have to implement the `javax0.jamal.api.Debugger` interface.
 
-The processor invokes the method {%@java:method (format="`$name(s)`") javax0.jamal.api.Debugger#affinity%} for each the available debuggers.
+The processor invokes the method `affinity(s)` for each the available debuggers.
 The argument `s` is the connection string.
 The method returns an integer number, and the more the debugger thinks it can handle the connection string the smaller number it should return.
 
@@ -234,7 +234,7 @@ The output defines for each macro
   ** The parameter names of the macro. (!)
   ** The class name of the macro.
 
-The (!) parameters are not defined if the type is not {%@java:class (format="`$name`") javax0.jamal.engine.UserDefinedMacro%}.
+The (!) parameters are not defined if the type is not `javax0.jamal.engine.UserDefinedMacro`.
 
 * `/execute` `POST` *body:* Jamal macro text to be executed, *response body:* none
 

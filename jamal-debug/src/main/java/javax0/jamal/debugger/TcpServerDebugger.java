@@ -1,6 +1,7 @@
 package javax0.jamal.debugger;
 
 import javax0.jamal.api.Debugger;
+import javax0.jamal.tools.ConnectionStringParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,8 +54,9 @@ public class TcpServerDebugger extends TcpDebugger implements AutoCloseable {
     @Override
     public int affinity(String s) {
         if (s.startsWith("s:")) {
+            final var connection = new ConnectionStringParser(s);
             try {
-                port = Integer.parseInt(s.substring(2));
+                port = Integer.parseInt(connection.getParameters()[0]);
             } catch (NumberFormatException nfe) {
                 throw new IllegalArgumentException("The debugger connection string '" + s + "' is malformed.", nfe);
             }

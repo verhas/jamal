@@ -23,6 +23,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import static java.net.HttpURLConnection.HTTP_BAD_METHOD;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
+
 public class HttpServerDebugger implements Debugger, AutoCloseable {
     private static final String MIME_PLAIN = "text/plain";
     private String secret = "";
@@ -40,17 +46,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         RUN,
         STEP,
         STEP_INTO,
-        QUIT,
-        /**
-         * The ACK command is used to signal the Jamal thread that the HTTP response was served. This way it does not
-         * happen that the main thread finishes and the JVM shuts down before the client gets the response. It may
-         * happen when the "step" is the last step or the command is "run".
-         */
-        ACK
-    }
-
-    private enum AckAction {
-        BREAK, RETURN, THROW
+        QUIT
     }
 
     private static class Task {
@@ -63,11 +59,28 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             this.command = command;
         }
 
+        void waitForAck() {
+            try {
+                ack.await();
+            } catch (InterruptedException e) {
+                throw new IllegalArgumentException("Debugger was interrupted", e);
+            }
+        }
+
+        void waitForDone() throws InterruptedException {
+            waitForIt.await();
+        }
+
+        void acknowledge() {
+            ack.countDown();
+        }
+
         void done() {
             waitForIt.countDown();
         }
 
         CountDownLatch waitForIt = new CountDownLatch(1);
+        CountDownLatch ack = new CountDownLatch(1);
         final Command command;
         String messageBuffer;
         int status = 200;
@@ -116,8 +129,6 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         if (state != RunState.STEP_IN && (state != RunState.STEP || currentLevel > stepLevel)) {
             return;
         }
-        AckAction ackAction = AckAction.BREAK;
-        RuntimeException exception = null;
         while (true) {
             final Task task;
             try {
@@ -128,37 +139,27 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             Map<String, Object> response = null;
             final List<Debuggable.Scope> scopes;
             switch (task.command) {
-                case ACK:
-                    switch (ackAction) {
-                        case RETURN:
-                            return;
-                        case BREAK:
-                            break;
-                        case THROW:
-                            throw exception;
-                    }
-                    break;
                 case QUIT: // exit the debugger and abort the execution of the processor
-                    ackAction = AckAction.THROW;
-                    exception = new IllegalArgumentException("Debugger was aborted.");
+
                     task.done();
-                    break;
+                    task.waitForAck();
+                    throw new IllegalArgumentException("Debugger was aborted.");
                 case RUN: // run the processor to the end
                     state = RunState.RUN;
-                    ackAction = AckAction.RETURN;
                     task.done();
-                    break;
+                    task.waitForAck();
+                    return;
                 case STEP: // step over the macro, do not step into
                     state = RunState.STEP;
                     stepLevel = currentLevel;
-                    ackAction = AckAction.RETURN;
                     task.done();
-                    break;
+                    task.waitForAck();
+                    return;
                 case STEP_INTO: // step into the macro
                     state = RunState.STEP_IN;
-                    ackAction = AckAction.RETURN;
                     task.done();
-                    break;
+                    task.waitForAck();
+                    return;
                 case INPUT: // send the input of the required level to the client
                     task.messageBuffer = input;
                     break;
@@ -190,7 +191,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                                 "trace", baos.toString(StandardCharsets.UTF_8),
                                 "status-link", "https://http.cat/405"
                             );
-                            task.status = 405;
+                            task.status = HTTP_BAD_METHOD;
                         } catch (IOException e) {
                             throw new IllegalArgumentException("There was an exception composing the stack trace", e);
                         }
@@ -256,7 +257,6 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     }
 
-
     @Override
     public int affinity(String s) {
         if (s.startsWith("http:")) {
@@ -293,15 +293,15 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         createContext(server, "/quit", "POST", Command.QUIT);
         server.createContext("/client", e -> {
                 if (client == null || client.length() == 0) {
-                    response(e, 200, MIME_PLAIN, e.getRemoteAddress().getHostString());
+                    response(e, HTTP_OK, MIME_PLAIN, e.getRemoteAddress().getHostString());
                 } else {
-                    response(e, 404, MIME_PLAIN, "404");
+                    response(e, HTTP_NOT_FOUND, MIME_PLAIN, "404");
                 }
             }
         );
         server.createContext("/", e ->
 
-            response(e, 404, MIME_PLAIN, "404"));
+            response(e, HTTP_NOT_FOUND, MIME_PLAIN, "404"));
         server.setExecutor(Executors.newSingleThreadExecutor());
         server.start();
     }
@@ -315,15 +315,15 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         server.createContext(secret + mapping, (e) -> {
             if (!Objects.equals(e.getHttpContext().getPath(), e.getRequestURI().toString()) &&
                 !Objects.equals(e.getHttpContext().getPath() + "/", e.getRequestURI().toString())) {
-                response(e, 404, MIME_PLAIN, "");
+                response(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
                 return;
             }
             if (client != null && client.length() > 0 && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
-                response(e, 404, MIME_PLAIN, "");
+                response(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
                 return;
             }
             if (!Objects.equals(method, e.getRequestMethod())) {
-                response(e, 404, MIME_PLAIN, "");
+                response(e, HTTP_BAD_METHOD, MIME_PLAIN, "");
                 return;
             }
             final Task t;
@@ -334,13 +334,13 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             }
             request.add(t);
             try {
-                t.waitForIt.await();
+                t.waitForDone();
             } catch (InterruptedException interruptedException) {
-                response(e, 404, MIME_PLAIN, "");
+                response(e, HTTP_UNAVAILABLE, MIME_PLAIN, "");
                 return;
             }
-            response(e, 200, t.contentType, t.getMessage());
-            request.add(new Task(Command.ACK));
+            response(e, HTTP_OK, t.contentType, t.getMessage());
+            t.acknowledge();
         });
     }
 
@@ -351,6 +351,9 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             contentType = MIME_PLAIN;
         }
         exchange.getResponseHeaders().add("Content-Type", contentType);
+        if (status != 200) {
+            exchange.getResponseHeaders().add("Location", "https://http.cat/" + status);
+        }
         exchange.sendResponseHeaders(status, body.length());
         try (final var out = exchange.getResponseBody()) {
             out.write(body.getBytes(StandardCharsets.UTF_8));
