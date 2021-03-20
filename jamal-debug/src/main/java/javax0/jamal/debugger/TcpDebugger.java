@@ -29,7 +29,8 @@ public abstract class TcpDebugger implements Debugger {
     private int currentLevel;
     private int stepLevel;
     private RunState state = RunState.STEP_IN;
-    String input = "";
+    String inputBefore = "";
+    CharSequence input;
     String inputAfter = "";
     String output = "";
     String macros = "";
@@ -162,7 +163,7 @@ public abstract class TcpDebugger implements Debugger {
                             state = RunState.STEP_IN;
                             return;
                         case 'i': // send the input of the required level to the client
-                            sendBuffer(input);
+                            sendBuffer(inputBefore);
                             break;
                         case 'I': // send the input after of the required level to the client
                             sendBuffer(inputAfter);
@@ -290,14 +291,15 @@ public abstract class TcpDebugger implements Debugger {
     @Override
     public void setBefore(int level, CharSequence input) {
         currentLevel = level;
-        this.input = input.toString();
+        this.input = input;
+        this.inputBefore = input.toString();
         output = "";
         macros = "";
         inputAfter = "";
     }
 
     @Override
-    public void setAfter(int level, CharSequence input, CharSequence output) {
+    public void setAfter(int level, CharSequence output) {
         currentLevel = level;
         inputAfter = input.toString();
         this.output = output.toString();

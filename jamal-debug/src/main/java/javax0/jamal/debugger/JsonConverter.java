@@ -3,6 +3,9 @@ package javax0.jamal.debugger;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An extremely simple JSON converter for the HTTP debugger
+ */
 public class JsonConverter {
     static String object2Json(Object in) {
         final var sb = new StringBuilder();

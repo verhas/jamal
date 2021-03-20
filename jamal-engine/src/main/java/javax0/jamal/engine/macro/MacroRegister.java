@@ -2,10 +2,10 @@ package javax0.jamal.engine.macro;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Delimiters;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.InputHandler;
@@ -23,6 +23,11 @@ import java.util.stream.IntStream;
 public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable.MacroRegister {
 
     private static final int TOP_LEVEL = 0;
+
+    @Override
+    public Optional<Debuggable.MacroRegister> debuggable() {
+        return Optional.of(this);
+    }
 
     /**
      * Stores the data that describes the scopes that are stacked.
@@ -88,7 +93,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public List<Debuggable.Scope> getScopes() {
-        return (List<Debuggable.Scope>)(List)scopeStack;
+        return (List<Debuggable.Scope>) (List) scopeStack;
     }
 
     public MacroRegister() {
@@ -208,7 +213,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         if (InputHandler.isGlobalMacro(id)) {
             return Optional.ofNullable((T) scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
         } else {
-            return (Optional<T>) stackGet(MacroRegister.Scope::getUdMacros, id);
+            return (Optional<T>) stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getUdMacros, id);
         }
     }
 
@@ -217,7 +222,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         if (InputHandler.isGlobalMacro(id)) {
             return Optional.ofNullable(scopeStack.get(TOP_LEVEL).macros.get(InputHandler.convertGlobal(id)));
         } else {
-            return stackGet(MacroRegister.Scope::getMacros, id);
+            return stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getMacros, id);
         }
     }
 

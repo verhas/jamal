@@ -9,7 +9,7 @@ import java.util.stream.Stream;
  * the macros so that they are available and are optionally shadowing other macros of the same name while the context
  * they were defined in exists.
  */
-public interface MacroRegister extends Delimiters {
+public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRegister> {
 
     /**
      * Get a macro based on the id of the macro.

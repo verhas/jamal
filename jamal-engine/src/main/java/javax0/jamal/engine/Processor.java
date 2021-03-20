@@ -122,7 +122,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 } else {
                     processText(input, output);
                 }
-                debugger.setAfter(limiter.get(), input, output);
+                debugger.setAfter(limiter.get(), output);
             }
         } catch (BadSyntaxAt bsAt) {
             traceRecordFactory.dump(bsAt);

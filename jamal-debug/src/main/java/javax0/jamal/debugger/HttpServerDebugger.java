@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpServer;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Debugger;
+import javax0.jamal.api.Identified;
 import javax0.jamal.tools.ConnectionStringParser;
 
 import java.io.ByteArrayOutputStream;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -31,6 +33,7 @@ import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
 
 public class HttpServerDebugger implements Debugger, AutoCloseable {
     private static final String MIME_PLAIN = "text/plain";
+    public static final String MIME_APPLICATION_JSON = "application/json";
     private String secret = "";
     private String client = "";
 
@@ -49,7 +52,24 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         QUIT
     }
 
+    /**
+     * The thread handling an HTTP request uses this queue to send a task to the Jamal main thread. Since this is not a
+     * heavy duty server the size of the queue is limited to one. There is no reason to increase this value because
+     * there should only be one client and every request should come from a human interaction.
+     */
+    private final BlockingQueue<Task> request = new LinkedBlockingQueue<>(1);
+
+    /**
+     * Structure describing the task, what the debugger is asked to do.
+     */
     private static class Task {
+        CountDownLatch waitForIt = new CountDownLatch(1);
+        CountDownLatch ack = new CountDownLatch(1);
+        final Command command;
+        String messageBuffer;
+        int status = 200;
+        String contentType = MIME_PLAIN;
+
         Task(Command command, String message) {
             this(command);
             this.messageBuffer = message;
@@ -59,6 +79,13 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             this.command = command;
         }
 
+        /**
+         * After the debugger was done it may wait for acknowledgement. For example asking the debugger to quit or run
+         * may result the main Jamal thread to finish before the http server thread services the client sending the
+         * response. In that case the client would not get the response. To avoid that these commands call this {@link
+         * #waitForAck()} method that will wait until the other thread invokes {@link #acknowledge()}. That is called by
+         * the HTTP server when the content was sent to the client and the channel was closed.
+         */
         void waitForAck() {
             try {
                 ack.await();
@@ -67,24 +94,32 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             }
         }
 
+        /**
+         * The web service thread will call this method to wait for the debugger thread to call {@link #done()}. The
+         * method {@link #done()} is invoked when the debugger has finished the processing, put all the result into the
+         * task and the http server can serve the client with this information.
+         *
+         * @throws InterruptedException
+         */
         void waitForDone() throws InterruptedException {
             waitForIt.await();
         }
 
+        /**
+         * The HTTP server thread calls this method to acknowledge that the client was served and the debugger may even
+         * quit.
+         */
         void acknowledge() {
             ack.countDown();
         }
 
+        /**
+         * The debugger thread calls this method to signal that the task is finished and the HTTP server thread can use
+         * the task to create the response.
+         */
         void done() {
             waitForIt.countDown();
         }
-
-        CountDownLatch waitForIt = new CountDownLatch(1);
-        CountDownLatch ack = new CountDownLatch(1);
-        final Command command;
-        String messageBuffer;
-        int status = 200;
-        String contentType = MIME_PLAIN;
 
         String getMessage() {
             return messageBuffer;
@@ -93,11 +128,11 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     private Debugger.Stub stub;
 
-    private final BlockingQueue<Task> request = new LinkedBlockingQueue<>(1);
     private int currentLevel;
     private int stepLevel;
     private RunState state = RunState.STEP_IN;
-    String input = "";
+    String inputBefore = "";
+    CharSequence input;
     String inputAfter = "";
     String output = "";
     String macros = "";
@@ -111,14 +146,15 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     @Override
     public void setBefore(int level, CharSequence input) {
         currentLevel = level;
-        this.input = input.toString();
+        this.input = input;
+        this.inputBefore = input.toString();
         output = "";
         macros = "";
         inputAfter = "";
     }
 
     @Override
-    public void setAfter(int level, CharSequence input, CharSequence output) {
+    public void setAfter(int level, CharSequence output) {
         currentLevel = level;
         inputAfter = input.toString();
         this.output = output.toString();
@@ -161,7 +197,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     task.waitForAck();
                     return;
                 case INPUT: // send the input of the required level to the client
-                    task.messageBuffer = input;
+                    task.messageBuffer = inputBefore;
                     break;
                 case INPUT_BEFORE: // send the input after of the required level to the client
                     task.messageBuffer = inputAfter;
@@ -180,11 +216,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     final RunState save = state;
                     state = RunState.RUN;
                     try {
-                        stub.process(new String(buffer, StandardCharsets.UTF_8));
-                        response = Map.of("status", "OK");
+                        task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
+                        task.contentType = MIME_PLAIN;
                     } catch (BadSyntax badSyntax) {
-                        try (final var baos = new ByteArrayOutputStream();
-                             final var st = new PrintStream(baos)) {
+                        try (final var baos = new ByteArrayOutputStream(); final var st = new PrintStream(baos)) {
                             badSyntax.printStackTrace(st);
                             response = Map.of(
                                 "message", badSyntax.getMessage(),
@@ -201,15 +236,17 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 case BUILT_IN: // list built in macros
                     response = new HashMap<>();
                     scopes = stub.getScopeList();
-                    final var scopeList = new ArrayList<>(scopes.size());
+                    final var scopeList = new ArrayList<Map<String, ?>>(scopes.size());
                     response.put("macros", scopeList);
                     for (final var scope : scopes) {
                         final var macros = scope.getMacros();
+                        final var delimiters = scope.getDelimiterPair();
                         final List<String> macrosList = new ArrayList<>(macros.size());
-                        scopeList.add(macrosList);
                         for (final var macro : macros.values()) {
                             macrosList.add(macro.getId());
                         }
+                        scopeList.add(Map.of("delimiters", Map.of("open", delimiters.open(), "close", delimiters.close()),
+                            "macros", macrosList));
                     }
                     break;
                 case USER_DEFINED: // list user defined macros
@@ -222,26 +259,19 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         final List<Map<String, Object>> macrosList = new ArrayList<>(macros.size());
                         udList.add(macrosList);
                         for (final var macro : macros.values()) {
-                            if (macro instanceof Debuggable.UserDefinedMacro) {
-                                final var ud = (Debuggable.UserDefinedMacro) macro;
-                                macrosList.add(
-                                    Map.of(
-                                        "open", ud.getOpenStr(),
-                                        "close", ud.getCloseStr(),
-                                        "id", macro.getId(),
-                                        "parameters", Arrays.asList(ud.getParameters()),
-                                        "content", ud.getContent(),
-                                        "type", macro.getClass().getName()
+                            macrosList.add(
+                                getDebuggable(macro).map(ud -> Map.of(
+                                    "open", ud.getOpenStr(),
+                                    "close", ud.getCloseStr(),
+                                    "id", macro.getId(),
+                                    "parameters", Arrays.asList(ud.getParameters()),
+                                    "content", ud.getContent(),
+                                    "type", macro.getClass().getName()
                                     )
-                                );
-                            } else {
-                                macrosList.add(
-                                    Map.of(
-                                        "id", macro.getId(),
-                                        "type", macro.getClass().getName()
-                                    )
-                                );
-                            }
+                                ).orElseGet(() -> Map.of(
+                                    "id", macro.getId(),
+                                    "type", macro.getClass().getName()
+                                )));
                         }
                     }
                     break;
@@ -249,12 +279,23 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     throw new IllegalArgumentException("The enum inside the class has a not handled value: " + task.command);
             }
             if (response != null) {
-                task.contentType = "application/json";
+                task.contentType = MIME_APPLICATION_JSON;
                 task.messageBuffer = JsonConverter.object2Json(response);
             }
             task.done();
         }
 
+    }
+
+    private Optional<Debuggable.UserDefinedMacro> getDebuggable(Identified macro) {
+        final Optional<?> debuggable;
+        if (macro instanceof Debuggable
+            && (debuggable = ((Debuggable<?>) macro).debuggable()).isPresent()
+            && debuggable.get() instanceof Debuggable.UserDefinedMacro) {
+            return (Optional<Debuggable.UserDefinedMacro>) debuggable;
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -293,15 +334,15 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         createContext(server, "/quit", "POST", Command.QUIT);
         server.createContext("/client", e -> {
                 if (client == null || client.length() == 0) {
-                    response(e, HTTP_OK, MIME_PLAIN, e.getRemoteAddress().getHostString());
+                    respond(e, HTTP_OK, MIME_PLAIN, e.getRemoteAddress().getHostString());
                 } else {
-                    response(e, HTTP_NOT_FOUND, MIME_PLAIN, "404");
+                    respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "404");
                 }
             }
         );
         server.createContext("/", e ->
 
-            response(e, HTTP_NOT_FOUND, MIME_PLAIN, "404"));
+            respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "404"));
         server.setExecutor(Executors.newSingleThreadExecutor());
         server.start();
     }
@@ -315,15 +356,15 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         server.createContext(secret + mapping, (e) -> {
             if (!Objects.equals(e.getHttpContext().getPath(), e.getRequestURI().toString()) &&
                 !Objects.equals(e.getHttpContext().getPath() + "/", e.getRequestURI().toString())) {
-                response(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
+                respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
                 return;
             }
             if (client != null && client.length() > 0 && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
-                response(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
+                respond(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
                 return;
             }
             if (!Objects.equals(method, e.getRequestMethod())) {
-                response(e, HTTP_BAD_METHOD, MIME_PLAIN, "");
+                respond(e, HTTP_BAD_METHOD, MIME_PLAIN, "");
                 return;
             }
             final Task t;
@@ -336,16 +377,16 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             try {
                 t.waitForDone();
             } catch (InterruptedException interruptedException) {
-                response(e, HTTP_UNAVAILABLE, MIME_PLAIN, "");
+                respond(e, HTTP_UNAVAILABLE, MIME_PLAIN, "");
                 return;
             }
-            response(e, HTTP_OK, t.contentType, t.getMessage());
+            respond(e, HTTP_OK, t.contentType, t.getMessage());
             t.acknowledge();
         });
     }
 
 
-    private static void response(HttpExchange exchange, int status, String contentType, String body) throws IOException {
+    private static void respond(HttpExchange exchange, int status, String contentType, String body) throws IOException {
         if (body == null || body.length() == 0) {
             body = "" + status;
             contentType = MIME_PLAIN;

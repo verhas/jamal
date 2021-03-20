@@ -236,7 +236,39 @@ The output defines for each macro
 
 The (!) parameters are not defined if the type is not `javax0.jamal.engine.UserDefinedMacro`.
 
-* `/execute` `POST` *body:* Jamal macro text to be executed, *response body:* none
+* `/execute` `POST` *body:* Jamal macro text to be executed, *response body:* the result of the processing as plain text.
+In case there is an error (405) then the response is JSON format containing the error message, stack trace etc.
+
+[source,json]
+----
+{
+  "status-link": "https://http.cat/405",
+  "message": "There is no closing ')' for the values in the for macro. at null/1:13"
+  "trace": "javax0.jamal.api.BadSyntaxAt: There is no closing ')' for the values in the for macro. at null/1:13\n
+\tat javax0.jamal.builtins.For.getValuesStringFromSimpleList(For.java:125)\n
+\tat javax0.jamal.builtins.For.getValuesString(For.java:93)\n
+\tat javax0.jamal.builtins.For.evaluate(For.java:33)\n
+\tat javax0.jamal.engine.Processor.evaluateBuiltinMacro(Processor.java:403)\n
+\tat javax0.jamal.engine.Processor.lambda$evaluateBuiltInMacro$5(Processor.java:352)\n
+\tat javax0.jamal.engine.Processor.safeEvaluate(Processor.java:365)\n
+\tat javax0.jamal.engine.Processor.evaluateBuiltInMacro(Processor.java:352)\n
+\tat javax0.jamal.engine.Processor.evalMacro(Processor.java:316)\n
+
+...
+
+\tat org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:154)\n
+\tat org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:90)\n
+\tat com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:71)\n
+\tat com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33)\n
+\tat com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:220)\n
+\tat com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:53)\n
+",
+}
+----
+
+The stack trace in the sample is abbreviated and also roken into seveal lines.
+This is only for documentation purposes.
+
 
 * `/run` `POST` *body:* none, *response body:* none
 

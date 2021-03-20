@@ -7,7 +7,7 @@ import javax0.jamal.tools.Input;
 
 import java.util.List;
 
-public class DebuggerStub implements Debugger.Stub{
+public class DebuggerStub implements Debugger.Stub {
 
     private final Processor processor;
 
@@ -16,10 +16,10 @@ public class DebuggerStub implements Debugger.Stub{
     }
 
     public List<Debuggable.Scope> getScopeList() {
-        return ((Debuggable.MacroRegister) processor.getRegister()).getScopes();
+        return processor.getRegister().debuggable().map(Debuggable.MacroRegister::getScopes).orElse(List.of());
     }
 
-    public void process(String in) throws BadSyntax {
-        processor.process(Input.makeInput(in));
+    public String process(String in) throws BadSyntax {
+        return processor.process(Input.makeInput(in));
     }
 }

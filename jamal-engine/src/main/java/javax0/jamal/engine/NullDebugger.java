@@ -14,7 +14,7 @@ public class NullDebugger implements Debugger {
     }
 
     @Override
-    public void setAfter(int level, CharSequence input, CharSequence output) {
+    public void setAfter(int level, CharSequence output) {
 
     }
 
