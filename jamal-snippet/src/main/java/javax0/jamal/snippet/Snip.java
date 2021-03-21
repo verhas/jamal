@@ -31,7 +31,7 @@ public class Snip implements Macro {
             final var lines = SnippetStore.getInstance(processor).snippet(id).split("\n");
             final var regex = regexPart.substring(0, lastIndex);
             try {
-                if (lines.length == 0) {
+                if (lines.length == 0 || lines[0].length() == 0) {
                     return ""; // snippet is empty
                 }
                 final var pattern = Pattern.compile(regex);

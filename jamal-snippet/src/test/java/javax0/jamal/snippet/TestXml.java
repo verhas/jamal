@@ -13,6 +13,18 @@ public class TestXml {
     }
 
     @Test
+    @DisplayName("Throws exception when the XPath parameter is wrong")
+    void badXPath() throws Exception {
+        TestThat.theInput("{@snip:xml pom=pom.xml}{pom assd uusa d saud}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("Throws exception when the fileis not there")
+    void badFile() throws Exception {
+        TestThat.theInput("{@snip:xml pom=pirim_param-pom.xml}").throwsBadSyntax();
+    }
+
+    @Test
     @DisplayName("Wrong xPath throws BadSyntax")
     void cantUsingMacroAsXML() throws Exception {
         TestThat.theInput("{@define pom=pom.xml}{pom...uiaer..n88/ufd()}").throwsBadSyntax();

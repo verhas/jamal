@@ -63,7 +63,7 @@ public class TestFilesMacro {
     }
 
     @Test
-    @DisplayName("Directory macro throws exception if directory does not exist")
+    @DisplayName("Directory macro throws exception if file exists but not directory")
     void testDirectoryThrowsOnFile() throws Exception {
         TestThat.theInput("{@directory ./README.adoc}").throwsBadSyntax();
     }
@@ -82,8 +82,14 @@ public class TestFilesMacro {
     }
 
     @Test
-    @DisplayName("File macro throws exception if directory does not exist")
+    @DisplayName("File macro throws exception if file does not exist")
     void testFileThrowsNonExistent() throws Exception {
-        TestThat.theInput("{@directory abraka/dabra/cicadas/bite/my/donkey}").throwsBadSyntax();
+        TestThat.theInput("{@file abraka/dabra/cicadas/bite/my/donkey}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("File macro throws exception if file exists biut is a directory")
+    void testFileThrowsForDirectory() throws Exception {
+        TestThat.theInput("{@file ..}").throwsBadSyntax();
     }
 }
