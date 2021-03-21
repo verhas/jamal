@@ -56,10 +56,7 @@ public class Java {
             Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
             InputHandler.skipWhiteSpaces(in);
             final var fieldRef = in.toString().trim();
-            final var parts = fieldRef.split("#", -1);
-            if (parts.length < 2) {
-                throw new BadSyntax("Field specification '" + fieldRef + "' does not have the format class#field.");
-            }
+            final var parts = split(in, this);
             final var className = parts[0];
             final var fieldName = parts[1];
             final Class<?> klass;
@@ -70,10 +67,10 @@ public class Java {
             }
             final Field field;
             try {
-                field = klass.getField(fieldName);
+                field = klass.getDeclaredField(fieldName);
                 field.setAccessible(true);
             } catch (Exception e) {
-                throw new BadSyntaxAt("The field '" + fieldName + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition(), e);
+                throw new BadSyntaxAt("The field '" + fieldRef + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition(), e);
             }
             final Trie.ThrowingStringSupplier valueCalculator;
             if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers())) {
@@ -116,35 +113,11 @@ public class Java {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var pos = in.getPosition();
-            final var format = Params.<String>holder("methodFormat", "format").orElse("$simpleName");
+            final var format = Params.<String>holder("methodFormat", "format").orElse("$name");
             Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
-            final var trimmed = in.toString().trim();
-            final int methodStart, classEnd;
-            final String className, methodName;
-            if (trimmed.length() > 0 && Character.isAlphabetic(trimmed.charAt(0))) {
-                int j = trimmed.indexOf('#');
-                if (j != -1) {
-                    methodStart = j + 1;
-                    classEnd = j;
-                } else {
-                    j = trimmed.indexOf("::");
-                    if (j != -1) {
-                        methodStart = j + 2;
-                        classEnd = j;
-                    } else {
-                        throw new BadSyntaxAt("Macro '" + getId() + "' needs a class and a method name separated by '#' or '::'", in.getPosition());
-                    }
-                }
-                className = trimmed.substring(0, classEnd);
-                methodName = trimmed.substring(methodStart);
-            } else {
-                final var parts = InputHandler.getParts(in, 2);
-                if (parts.length < 2) {
-                    throw new BadSyntaxAt("Macro '" + getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in.toString() + "'", in.getPosition());
-                }
-                className = parts[0];
-                methodName = parts[1];
-            }
+            final var parts = split(in,this);
+            final var className = parts[0];
+            final var methodName = parts[1];
             final Class<?> klass;
             try {
                 klass = Class.forName(className);
@@ -174,7 +147,7 @@ public class Java {
                         // end snippet
                     )
                 ).format(format.get());
-            } catch (Exception e) {
+            } catch (Exception e) {//can't really happen as we only have string values for the placeholders
                 throw new BadSyntaxAt("There is an exception formatting the method '" + methodName + "' ", pos, e);
             }
         }
@@ -183,5 +156,37 @@ public class Java {
         public String getId() {
             return "java:method";
         }
+    }
+
+
+    private static String[] split(Input in, Macro macro) throws BadSyntaxAt {
+        final var trimmed = in.toString().trim();
+        final int fieldStart, classEnd;
+        final String className, fieldName;
+        if (trimmed.length() > 0 && Character.isAlphabetic(trimmed.charAt(0))) {
+            int j = trimmed.indexOf('#');
+            if (j != -1) {
+                fieldStart = j + 1;
+                classEnd = j;
+            } else {
+                j = trimmed.indexOf("::");
+                if (j != -1) {
+                    fieldStart = j + 2;
+                    classEnd = j;
+                } else {
+                    throw new BadSyntaxAt("Macro '" + macro.getId() + "' needs a class and a method/field name separated by '#' or '::'", in.getPosition());
+                }
+            }
+            className = trimmed.substring(0, classEnd);
+            fieldName = trimmed.substring(fieldStart);
+        } else {
+            final var parts = InputHandler.getParts(in, 2);
+            if (parts.length < 2) {
+                throw new BadSyntaxAt("Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in.toString() + "'", in.getPosition());
+            }
+            className = parts[0];
+            fieldName = parts[1];
+        }
+        return new String[]{className, fieldName};
     }
 }
