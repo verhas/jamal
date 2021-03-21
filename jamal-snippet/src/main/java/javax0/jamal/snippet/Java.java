@@ -9,7 +9,9 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.PlaceHolders;
+import javax0.jamal.tools.Trie;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -20,7 +22,7 @@ public class Java {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var format = Params.<String>holder("classFormat","format").orElse("$simpleName");
+            final var format = Params.<String>holder("classFormat", "format").orElse("$simpleName");
             Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
             InputHandler.skipWhiteSpaces(in);
             final var className = in.toString().trim();
@@ -36,13 +38,76 @@ public class Java {
                     // end snippet
                 ).format(format.get());
             } catch (Exception e) {
-                throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition());
+                throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition(), e);
             }
         }
 
         @Override
         public String getId() {
             return "java:class";
+        }
+    }
+
+    public static class FieldMacro implements Macro, InnerScopeDependent {
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            final var format = Params.<String>holder("fieldFormat", "format").orElse("$name");
+            Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
+            InputHandler.skipWhiteSpaces(in);
+            final var fieldRef = in.toString().trim();
+            final var parts = fieldRef.split("#", -1);
+            if (parts.length < 2) {
+                throw new BadSyntax("Field specification '" + fieldRef + "' does not have the format class#field.");
+            }
+            final var className = parts[0];
+            final var fieldName = parts[1];
+            final Class<?> klass;
+            try {
+                klass = Class.forName(className);
+            } catch (Exception e) {
+                throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition(), e);
+            }
+            final Field field;
+            try {
+                field = klass.getField(fieldName);
+                field.setAccessible(true);
+            } catch (Exception e) {
+                throw new BadSyntaxAt("The field '" + fieldName + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition(), e);
+            }
+            final Trie.ThrowingStringSupplier valueCalculator;
+            if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers())) {
+                valueCalculator = () -> "" + field.get(null);
+            } else {
+                valueCalculator = () -> {
+                    throw new BadSyntax("Field '" + fieldRef + "' value is not available as it is not 'final' or not 'static'");
+                };
+            }
+            try {
+                return PlaceHolders.with(
+                    // OTFDC -> of the field's defining class
+                    // OTF -> of the field
+                    // snippet fieldFormats
+                    "$name", field.getName(), // name OTF
+                    "$classSimpleName", klass.getSimpleName(), // simple name OTFDC
+                    "$className", klass.getName(), // name of the OTFDC
+                    "$classCanonicalName", klass.getCanonicalName(),// canonical name OTFDC
+                    "$classTypeName", klass.getTypeName(), // type name OTFDC
+                    "$packageName", klass.getPackageName(), // package where the method is
+                    "$typeClass", field.getType().getName(), // type OTF
+                    "$modifiers", Modifier.toString(field.getModifiers()) // modifiers list of the method
+                ).and(
+                    "$value", valueCalculator // value OTF in case the field is both `static` and `final`
+                    // end snippet
+                ).format(format.get());
+            } catch (Exception e) {
+                throw new BadSyntax("Cannot evaluate field formatting for '" + fieldRef + "' using '" + format.get() + "'", e);
+            }
+        }
+
+        @Override
+        public String getId() {
+            return "java:field";
         }
     }
 
@@ -80,7 +145,7 @@ public class Java {
                 className = parts[0];
                 methodName = parts[1];
             }
-            final Class klass;
+            final Class<?> klass;
             try {
                 klass = Class.forName(className);
             } catch (ClassNotFoundException e) {
@@ -98,7 +163,7 @@ public class Java {
                     "$classSimpleName", klass.getSimpleName(), // simple name OTMDC
                     "$className", klass.getName(), // name of the OTMDC
                     "$classCanonicalName", klass.getCanonicalName(),// canonical name OTMDC
-                    "$classTypeName", klass.getTypeName(), // type name OTMC
+                    "$classTypeName", klass.getTypeName(), // type name OTMDC
                     "$packageName", klass.getPackageName(), // package where the method is
                     "$name", method.getName(), // name OTM
                     "$typeClass", method.getReturnType().getName(), // return type OTM

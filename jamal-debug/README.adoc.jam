@@ -22,7 +22,7 @@ If the returned value is -1, then the debugger cannot handle the connection stri
 The processor will select the debugger that returns the smallest non-negative number.
 
 The null debugger is implemented in the engine module.
-It returns `Integer.MAX_INT-1` for any connection string.
+It returns `Integer.MAX_VALUE-1` for any connection string.
 If no other debugger thinks they can handle a connection, then Jamal will use the null-debugger.
 
 It is an error if two or more debuggers report the same minimal, non-negative affinity.

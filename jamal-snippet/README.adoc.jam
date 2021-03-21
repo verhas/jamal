@@ -1099,7 +1099,7 @@ will result
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 5,924 bytes
+- Java.java: 9,244 bytes
 - ReplaceLines.java: 2,445 bytes
 - SkipLines.java: 2,048 bytes
 - Reflow.java: 1,716 bytes
@@ -1452,9 +1452,51 @@ format defined inside the macro is local.
 ----
 %}
 
-It is not recommended to overuse the format string.
+It is not recommended overusing the format string.
 Do not include verbatim text into the format string.
 Choose a format string how you want to refer to the classes and use it globally in the document.
+
+[[java:field]]
+===== `java:field`
+
+{%classMethodMacroIntro field%}
+In addition to that the value of the value of the field can also be used in the formatting in case the field is both `static` and `final`.
+{%sample/
+{@define field=javax0.jamal.api.SpecialCharacters#PRE_EVALUATE}
+The field {#java:field (format="$name") {field}}
+defined in the class {#java:field (format="$className") {field}}
+is both `static` and `final` and has the value {#java:field (format="$value") {field}}
+%}
+
+will result the output
+
+{%output%}
+
+The format string can be any string with `$` prefixed placeholders.
+The placeholders that the macro handles are:
+{%@define replace=`\n`
+^.*?"(.*?)".*//\s*(.*)$
+* `$1` will be replaced by the $2
+OTFDC
+of the fields's defining class
+OTF
+of the field
+\).and\(
+%}
+{%#snip:define fieldFormatFormatted={%#replaceLines
+{%@snip fieldFormats%}%}%}
+{%@snip fieldFormatFormatted
+* `$name` will be replaced by the name of the field
+* `$classSimpleName` will be replaced by the simple name of the fields's defining class
+* `$className` will be replaced by the name of the of the fields's defining class
+* `$classCanonicalName` will be replaced by the canonical name of the fields's defining class
+* `$classTypeName` will be replaced by the type name of the fields's defining class
+* `$packageName` will be replaced by the package where the method is
+* `$typeClass` will be replaced by the type of the field
+* `$modifiers` will be replaced by the modifiers list of the method
+                
+* `$value` will be replaced by the value of the field in case the field is both `static` and `final`
+%}
 
 [[java:method]]
 ===== `java:method`
@@ -1501,7 +1543,7 @@ of the method
 * `$classSimpleName` will be replaced by the simple name of the method's defining class
 * `$className` will be replaced by the name of the of the method's defining class
 * `$classCanonicalName` will be replaced by the canonical name of the method's defining class
-* `$classTypeName` will be replaced by the type name of the methodC
+* `$classTypeName` will be replaced by the type name of the method's defining class
 * `$packageName` will be replaced by the package where the method is
 * `$name` will be replaced by the name of the method
 * `$typeClass` will be replaced by the return type of the method
