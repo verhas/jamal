@@ -61,7 +61,7 @@ public class TestThat {
         this.klass = klass;
     }
 
-    private Processor getProcessor(){
+    public Processor getProcessor(){
         if( processor == null ){
             processor = new Processor(macroOpen,macroClose);
         }

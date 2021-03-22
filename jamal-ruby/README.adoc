@@ -568,7 +568,7 @@ public static class MyProcessor {
 
 ----
 
-This class is a wrapper, that provides the method `$simpleName()` with a string argument.
+This class is a wrapper, that provides the method `process()` with a string argument.
 This can directly be invoked from Ruby.
 
 Using this possibility the user defined macros `sample` and `output` are simply the following:
@@ -592,7 +592,6 @@ Using this possibility the user defined macros `sample` and `output` are simply 
     %}%}
     ----%}
     
-
 ----
 
 This macro saves the sample code to the global Ruby variable `$lastCode calling the macro `ruby:property`.
@@ -611,7 +610,6 @@ Finally, the script returns the resulted string, which is placed between the Asc
     ----
     %}
     
-
 ----
 
 This macro uses the saved property `lastCode` to access to the text of the last sample.
