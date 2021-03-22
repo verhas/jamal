@@ -29,4 +29,15 @@ public class TestCase {
     void testDeCap() throws Exception {
         TestThat.theInput("{@case:decap This wiLL BE all Lover Case}").results("this wiLL BE all Lover Case");
     }
+    @Test
+    @DisplayName("case:cap capitalize zero length string")
+    void testCapZLS() throws Exception {
+        TestThat.theInput("{@case:cap }").results("");
+    }
+
+    @Test
+    @DisplayName("case:decap decapitalize zero length string")
+    void testDeCapZLC() throws Exception {
+        TestThat.theInput("{@case:decap}").results("");
+    }
 }

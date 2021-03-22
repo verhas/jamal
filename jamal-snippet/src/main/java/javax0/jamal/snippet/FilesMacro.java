@@ -96,6 +96,7 @@ public class FilesMacro {
                     // end snippet
                 ).format(format.get());
             } catch (Exception e) {
+                // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + fileName
                     + "'cannot be formatted using the given format '"
                     + format + "'", in.getPosition(), e);

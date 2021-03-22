@@ -2633,7 +2633,7 @@ The Java code of the macro is free to interpret this string the way it wants.
 Different macros implement different syntax analysis and later their behaviour based on the syntax of the input.
 
 To manage the input and to easy the format analysis and interpretation of the input there is a utility class named `InputHandler`.
-This class defines a method named `$simpleName()` which does a simple analysis.
+This class defines a method named `getParts()` which does a simple analysis.
 It splits up the input into an array of strings in a "standard" way.
 
 This method is used, for example, by the implementation of the `if` built-in macro.

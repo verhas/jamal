@@ -1078,13 +1078,13 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 896 bytes
-- Snip.java: 2,291 bytes
+- Snip.java: 2,317 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
-- FilesMacro.java: 4,721 bytes
+- FilesMacro.java: 4,791 bytes
 - Collect.java: 5,328 bytes
 - TrimLines.java: 2,849 bytes
 - Replace.java: 1,789 bytes
@@ -1092,15 +1092,15 @@ will result
 - Counter.java: 3,323 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,446 bytes
-- SnippetStore.java: 8,267 bytes
+- SnippetStore.java: 8,442 bytes
 - ListDir.java: 3,915 bytes
 - XmlFormat.java: 3,317 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 9,244 bytes
-- ReplaceLines.java: 2,445 bytes
+- Java.java: 9,317 bytes
+- ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
@@ -1519,7 +1519,7 @@ wll result the output
 {%@snip method1
 [source]
 ----
-$simpleName
+evaluate
 
 ----
 %}

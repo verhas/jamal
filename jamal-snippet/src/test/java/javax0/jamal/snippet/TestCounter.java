@@ -26,7 +26,12 @@ public class TestCounter {
         TestThat.theInput("{@counter:define id=:f format=%f}{f}. {f}. {f}. {f}. {f}. {f}."
         ).throwsBadSyntax();
     }
-
+    @Test
+    @DisplayName("Bad counter definition ")
+    void testBadCounterdef() throws Exception {
+        TestThat.theInput("{@counter:define id=:f\nsdsd}"
+        ).throwsBadSyntax();
+    }
     @Test
     @DisplayName("Start and step can be defined")
     void testStartStep() throws Exception {
