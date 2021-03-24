@@ -64,6 +64,44 @@ public class TestRubyMacros {
     }
 
     @Test
+    @DisplayName("Erroneous ruby property setting")
+    void testErroneoutRubyPropertySetting() throws Exception {
+        TestThat.theInput("{@ruby:property $z 13}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("Erroneous ruby property setting bad conversion")
+    void testErroneoutRubyPropertySettingConversionErr() throws Exception {
+        TestThat.theInput("{@ruby:property $z=(to_i)jamm}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("Erroneous ruby property setting bad rational conversion")
+    void testErroneoutRubyPropertySettingRationalConversionErr() throws Exception {
+        TestThat.theInput("{@ruby:property $z=(to_r)12}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("Erroneous ruby property setting bad complex conversion")
+    void testErroneoutRubyPropertySettingComplexConversionErr() throws Exception {
+        TestThat.theInput("{@ruby:property $z=(to_c/i)12}").throwsBadSyntax();
+        TestThat.theInput("{@ruby:property $z=(to_c)12}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("Test complex Ruby shell example with setting and getting a property")
+    void testErroneousScript() throws Exception {
+        TestThat.theInput(
+            "{#sep {@escape `|`{% %}`|`}}" +
+                "{%@ruby:property $z=%}" +
+                "{%@ruby:shell engine script\n" +
+                "asdnjasdasdsasad asdsajdsanjd"+
+                "%}" +
+                "{%@ruby:property $z%}"
+        ).throwsBadSyntax();
+    }
+
+    @Test
     @DisplayName("Test complex Ruby shell example with setting and getting a property")
     void testMultipleShellSetGetProperty() throws Exception {
         TestThat.theInput(
@@ -125,6 +163,14 @@ public class TestRubyMacros {
     }
 
     @Test
+    @DisplayName("Throws exception when there is syntax error in the imported ruby file")
+    void testSyntaxErrorImport() throws Exception {
+        TestThat.theInput(
+            "{%@ruby:import         res:syntaxError.rb%}\\\n%}"
+        ).usingTheSeparators("{%", "%}").throwsBadSyntax();
+    }
+
+    @Test
     @DisplayName("Test complex Ruby shell example with methods defined in the shell")
     void testCatchRubyErrorWithTryMacro() throws Exception {
         TestThat.theInput(
@@ -171,6 +217,7 @@ public class TestRubyMacros {
     @DisplayName("Test that ruby conversion to fixnum works")
     void testRubyPropertyFixNum() throws Exception {
         TestThat.theInput(
+            "{%@define rubyShell=wuff%}"+
             "{%@ruby:property int=(to_i)5%}" +
                 "{%@ruby:shell\n" +
                 "  (int*int)\n" +

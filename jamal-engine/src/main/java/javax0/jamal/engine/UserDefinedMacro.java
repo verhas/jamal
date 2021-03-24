@@ -3,6 +3,7 @@ package javax0.jamal.engine;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Configurable;
+import javax0.jamal.api.Debuggable;
 import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
@@ -12,11 +13,12 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
  */
-public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable {
+public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable, Debuggable.UserDefinedMacro {
     private static final String ESCAPE = "@escape ";
     final private String id;
     final private Processor processor;
@@ -27,8 +29,13 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     private boolean pure = false;
 
     @Override
+    public Optional<UserDefinedMacro> debuggable() {
+        return Optional.of(this);
+    }
+
+    @Override
     public void configure(String key, Object object) {
-        if( "pure".equals(key) ){
+        if ("pure".equals(key)) {
             pure = true;
         }
     }
@@ -159,4 +166,23 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         return argumentHandler.parameters.length;
     }
 
+    @Override
+    public String[] getParameters() {
+        return argumentHandler.parameters;
+    }
+
+    @Override
+    public String getContent() {
+        return content;
+    }
+
+    @Override
+    public String getOpenStr() {
+        return openStr;
+    }
+
+    @Override
+    public String getCloseStr() {
+        return closeStr;
+    }
 }

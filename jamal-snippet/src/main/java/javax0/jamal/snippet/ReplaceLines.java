@@ -9,15 +9,15 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
-import static javax0.jamal.snippet.SkipLines.needsNoExtraNl;
 import static javax0.jamal.tools.Params.holder;
 
 public class ReplaceLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var replace = holder("replace").asString();
+        // throw BadSyntax if there was nothing changed
         final var detectNoChange = holder("detectNoChange").asBoolean();
-        Params.using(processor).from(this).keys(replace,detectNoChange).parse(in);
+        Params.using(processor).from(this).keys(replace, detectNoChange).parse(in);
 
         boolean noChange = detectNoChange.get();
         final var parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replace.get()));
@@ -51,12 +51,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
         if (noChange) {
             throw new BadSyntaxAt("{@replaceLines did not change any of the lines.", in.getPosition());
         }
-        final var joined = String.join("\n", lines);
-        if (needsNoExtraNl(in, true, joined)) {
-            return joined;
-        } else {
-            return joined + "\n";
-        }
+        return String.join("\n", lines);
     }
 
     @Override

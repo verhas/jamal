@@ -53,7 +53,7 @@ public class TestSep {
         "{@sep [. [. },the opening and closing strings are the same",
         "{@sep /[/]/},the closing string contains the separator character",
     })
-    void test1(final String source, final String reason) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    void test1(final String source, final String reason) throws Exception {
         TestThat.theInput(source).throwsBadSyntax();
     }
 }

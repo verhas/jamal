@@ -1,12 +1,14 @@
 package javax0.jamal.extensions;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.InputHandler;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -45,6 +47,11 @@ public class Regex {
 
         final String name;
         final java.util.regex.Matcher matcher;
+
+        @Override
+        public Optional<Debuggable.UserDefinedMacro> debuggable() {
+            return Optional.empty();
+        }
 
         GroupUserDefinedMacro(String name, java.util.regex.Matcher matcher) {
             this.name = name;
@@ -127,15 +134,15 @@ public class Regex {
      * <pre>{@code
      *    {@matcher name regex string}
      * }</pre>
-     *
+     * <p>
      * where the {@code name} will be the name of the matcher created. This name can later be used as a user defined
      * macro to get the different parts of the result of the matching.
      * <p>
      * The {@code regex} is the patters used to patch.
      * <p>
      * The {@code }
-     *
-     *
+     * <p>
+     * <p>
      * This macro splits the input into three parts using {@link InputHandler#getParts(Input)}. The first will be the
      * name of the
      */

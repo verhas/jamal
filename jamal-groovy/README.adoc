@@ -501,7 +501,6 @@ Using this possibility the user defined macros `sample` and `output` are simply 
     %}%}
     ----%}
     
-
 ----
 
 This macro displays the sample as a code block in Asciidoc format.
@@ -519,7 +518,6 @@ At the same time it also saves the sample text into a Groovy bindings property.
     ----
     %}
     
-
 ----
 
 This macro uses the saved property `lastCode` to access to the text of the last sample.

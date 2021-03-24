@@ -6,6 +6,7 @@ import javax0.jamal.snippet.CounterMacro;
 import javax0.jamal.snippet.DateMacro;
 import javax0.jamal.snippet.FilesMacro;
 import javax0.jamal.snippet.Format;
+import javax0.jamal.snippet.Java.FieldMacro;
 import javax0.jamal.snippet.Java.ClassMacro;
 import javax0.jamal.snippet.Java.MethodMacro;
 import javax0.jamal.snippet.KillLines;
@@ -54,6 +55,7 @@ module jamal.snippet {
         Format,
         ClassMacro,
         MethodMacro,
+        FieldMacro,
         FilesMacro.Directory,
         FilesMacro.FileMacro,
         Reflow,

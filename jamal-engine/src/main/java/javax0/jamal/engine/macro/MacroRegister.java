@@ -2,6 +2,7 @@ package javax0.jamal.engine.macro;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Delimiters;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
@@ -19,20 +20,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class MacroRegister implements javax0.jamal.api.MacroRegister {
+public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable.MacroRegister {
 
     private static final int TOP_LEVEL = 0;
+
+    @Override
+    public Optional<Debuggable.MacroRegister> debuggable() {
+        return Optional.of(this);
+    }
 
     /**
      * Stores the data that describes the scopes that are stacked.
      */
-    private static class Scope {
+    public static class Scope implements Debuggable.Scope {
         /**
          * Stores the user defined macros that were defined on the level.
          */
         final Map<String, Identified> udMacros = new HashMap<>();
 
-        Map<String, Identified> getUdMacros() {
+        public Map<String, Identified> getUdMacros() {
             return udMacros;
         }
 
@@ -43,7 +49,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
          */
         final Map<String, Macro> macros = new HashMap<>();
 
-        Map<String, Macro> getMacros() {
+        public Map<String, Macro> getMacros() {
             return macros;
         }
 
@@ -56,7 +62,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
          */
         Delimiters delimiterPair = null;
 
-        Delimiters getDelimiterPair() {
+        public Delimiters getDelimiterPair() {
             return delimiterPair;
         }
 
@@ -77,7 +83,18 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     private final List<Scope> scopeStack = new ArrayList<>();
+
+    @Override
+    public List<Marker> getPoppedMarkers() {
+        return poppedMarkers;
+    }
+
     private final List<Marker> poppedMarkers = new ArrayList<>();
+
+    @Override
+    public List<Debuggable.Scope> getScopes() {
+        return (List<Debuggable.Scope>) (List) scopeStack;
+    }
 
     public MacroRegister() {
         try {
@@ -166,8 +183,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
      * Get the macro or user defined macro from the stack.
      *
      * @param field is either 'macros' or 'udMacros'
-     * @param id the identifier of the macro
-     * @param <T> the type of the macro class
+     * @param id    the identifier of the macro
+     * @param <T>   the type of the macro class
      * @return the found macro class or empty
      */
     private <T> Optional<T> stackGet(Function<Scope, Map<String, T>> field, String id) {
@@ -182,8 +199,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     }
 
     /**
-     * Get the user defined macro. In case the macro is a global macro (contains a `:` in the name) then look for it
-     * in the top level scope. Without this the macros cannot be used in the {@code :a} form, which is rarely a problem,
+     * Get the user defined macro. In case the macro is a global macro (contains a `:` in the name) then look for it in
+     * the top level scope. Without this the macros cannot be used in the {@code :a} form, which is rarely a problem,
      * but with the introduction of the macro {@code undefine} when a macro is undefined on one level then it is not
      * possible any more to refer to the global macro from a scope that is below.
      *
@@ -194,9 +211,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
     @Override
     public <T extends Identified> Optional<T> getUserDefined(String id) {
         if (InputHandler.isGlobalMacro(id)) {
-            return Optional.ofNullable((T)scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
+            return Optional.ofNullable((T) scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
         } else {
-            return (Optional<T>) stackGet(Scope::getUdMacros, id);
+            return (Optional<T>) stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getUdMacros, id);
         }
     }
 
@@ -205,7 +222,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister {
         if (InputHandler.isGlobalMacro(id)) {
             return Optional.ofNullable(scopeStack.get(TOP_LEVEL).macros.get(InputHandler.convertGlobal(id)));
         } else {
-            return stackGet(Scope::getMacros, id);
+            return stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getMacros, id);
         }
     }
 

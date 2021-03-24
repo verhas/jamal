@@ -8,11 +8,9 @@ import javax0.jamal.api.Processor;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SnippetStore implements Identified {
@@ -118,7 +116,7 @@ public class SnippetStore implements Identified {
      * collection process finds a snippet start, but does not find the end of a snippet. This should not be a problem.
      * Jamal snippet handler should handle this case, and it does it.
      * <p>
-     * When a snippet if found but there is some error during the collection (a.k.a. there was no 'end snippet' till the
+     * When a snippet is found but there is some error during the collection (a.k.a. there was no 'end snippet' till the
      * end of the file) then the collection process also stores the snippet along with an exception. Using such snippet
      * will throw an exception using the exception from the collection as a cause.
      * <p>
@@ -141,11 +139,13 @@ public class SnippetStore implements Identified {
      * @throws BadSyntax when a snippet is redefined
      */
     public void snippet(String id, String snippet, Position pos, BadSyntaxAt collectionException) throws BadSyntax {
-        if (snippets.containsKey(id) && snippets.get(id).exception == null) {
-            if (collectionException == null) {
+        if (snippets.containsKey(id)) {
+            if (snippets.get(id).exception == null && collectionException == null) {
                 final var snip = snippets.get(id);
                 throw new BadSyntaxAt("Snippet '" + id + "' is already defined in " + snip.pos.file + ":" + snip.pos.line, pos);
-            } else {
+            } else if (snippets.get(id).exception != null && collectionException == null) {
+                snippets.put(id, new Snippet(id, snippet, pos, null));
+            } else if (snippets.get(id).exception != null && collectionException != null) {
                 collectionException.addSuppressed(snippets.get(id).exception);
                 snippets.put(id, new Snippet(id, snippet, pos, collectionException));
             }

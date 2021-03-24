@@ -10,6 +10,8 @@ import javax0.jamal.engine.UserDefinedMacro;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * A simple class that helps the testing of built-in macros.
@@ -61,9 +63,9 @@ public class TestThat {
         this.klass = klass;
     }
 
-    private Processor getProcessor(){
-        if( processor == null ){
-            processor = new Processor(macroOpen,macroClose);
+    public Processor getProcessor() {
+        if (processor == null) {
+            processor = new Processor(macroOpen, macroClose);
         }
         return processor;
     }
@@ -83,11 +85,13 @@ public class TestThat {
         it.input = input;
         return it;
     }
-    public TestThat usingTheSeparators(final String macroOpen, final String macroClose){
+
+    public TestThat usingTheSeparators(final String macroOpen, final String macroClose) {
         this.macroOpen = macroOpen;
         this.macroClose = macroClose;
         return this;
     }
+
     public TestThat fromTheInput(String input) {
         this.input = input;
         return this;
@@ -146,51 +150,151 @@ public class TestThat {
      */
     public void results(String expected) throws
         NoSuchMethodException,
-            IllegalAccessException,
-            InstantiationException,
-            InvocationTargetException,
-            BadSyntax {
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException,
+        BadSyntax {
         Assertions.assertEquals(expected, results());
     }
 
 
     /**
-     * Checks that the macro throws an exception for a given input.
+     * Same as calling {@link #throwsUp(Class, String) throwsUp(Class,null)}
      *
-     * @param throwable the exception we expect
-     * @throws NoSuchMethodException     if the macro class can not be instantiated
-     * @throws IllegalAccessException    if the macro class can not be instantiated
-     * @throws InstantiationException    if the macro class can not be instantiated
-     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @param throwable see {@link #throwsUp(Class, String)}
+     * @throws NoSuchMethodException     see {@link #throwsUp(Class, String)}
+     * @throws IllegalAccessException    see {@link #throwsUp(Class, String)}
+     * @throws InstantiationException    see {@link #throwsUp(Class, String)}
+     * @throws InvocationTargetException see {@link #throwsUp(Class, String)}
      */
     public void throwsUp(Class<? extends Throwable> throwable) throws
         NoSuchMethodException,
         IllegalAccessException,
         InstantiationException,
-        InvocationTargetException {
-        final var in = new javax0.jamal.tools.Input(input, null);
-        if (klass != null) {
-            final var sut = createSut();
-            Assertions.assertThrows(throwable, () -> sut.evaluate(in, getProcessor()));
-        } else {
-            Assertions.assertThrows(throwable, () -> getProcessor().process(in));
-        }
+        InvocationTargetException, BadSyntax {
+        throwsUp(throwable, null);
     }
 
     /**
-     * Checks that the macro throws a bad syntax exception for the given input.
+     * Checks that the macro throws an exception for a given input. It also checks that a message in the exception
+     * matches the regular expression.
+     * <p>
+     * Notes:
+     * <p>
+     * <ul>
+     *     <li>The regular exception should match the whole message, not only a part of it. If needed put {@code .*}
+     *     before and after the pattern to match only a part.
+     *     <li>The {@code filename/Line:Column} location part is chopped off the message before trying to match. You
+     *     should use a regular expression that matches the string that you created where throwing it.
+     *     <li>The matching process tries to match the regular expression against the message of the exception as well
+     *     as against the message of the causing exception and against the suppressed exceptions. If any matches the
+     *     result is accepted.
+     *     <li>Looking for the causing exception and the suppressed exceptions is recursive. For example if the regular
+     *     expression matches the message of the causing exception of one of the suppressed exceptions it will be okay.
+     * </ul> the
      *
+     * @param throwable the exception we expect
+     * @param regex     a regular expression to match the message of the exception against. Not checked if {@code
+     *                  null}.
      * @throws NoSuchMethodException     if the macro class can not be instantiated
      * @throws IllegalAccessException    if the macro class can not be instantiated
      * @throws InstantiationException    if the macro class can not be instantiated
      * @throws InvocationTargetException if the macro class can not be instantiated
      */
+    public void throwsUp(Class<? extends Throwable> throwable, String regex) throws
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException, BadSyntax {
+        final var in = new javax0.jamal.tools.Input(input, null);
+        try {
+            if (klass != null) {
+                final var sut = createSut();
+                sut.evaluate(in, getProcessor());
+            } else {
+                getProcessor().process(in);
+            }
+        } catch (Throwable t) {
+            if (throwable.isAssignableFrom(t.getClass())) {
+                if (regex != null) {
+                    final var pattern = Pattern.compile(regex, Pattern.DOTALL);
+                    if (matches(pattern, t)) {
+                        return;
+                    }
+                    Assertions.fail("The evaluation did throw an exception but " +
+                        "the exception message did not match the pattern '" + regex + "'", t);
+                }
+            } else {
+                throw t;
+            }
+        }
+    }
+
+    /**
+     * Check that the pattern matches the message of the exception, or the causing exception or any supressed exception.
+     * It also checks that the causing or supressed exception is not the same as the original and the check is done in a
+     * recursive call.
+     * <p>
+     * This simple algorithm may run into an infinite loop if the data structure is recursive and has a loop longer than
+     * one. E.g.: cause of A is B, and cause of B is A.
+     *
+     * @param pattern the pattern to match
+     * @param t       the exception to check against the pattern
+     * @return true if the exception of any causing or supressed exception message matches the pattern
+     */
+    private static boolean matches(final Pattern pattern, final Throwable t) {
+        return t != null &&
+            (matches(pattern, t.getMessage())
+                || (t != t.getCause() && matches(pattern, t.getCause()))
+                || Arrays.stream(t.getSuppressed()).anyMatch(sup -> sup != t && matches(pattern, sup)))
+            ;
+    }
+
+    /**
+     * Checks that the string {@code s}. which is the message of an exception matches the pattern. If there is a "{@code
+     * at file/1:15}" location info at the end of the string it is chopped off before matching.
+     *
+     * @param pattern the pattern to match against
+     * @param s       the string to match
+     * @return true of the string matches
+     */
+    private static boolean matches(final Pattern pattern, final String s) {
+        return pattern.matcher(s.replaceAll("\\sat\\s.*/\\d+:\\d+$", "")).matches();
+    }
+
+    /**
+     * Same as {@link #throwsBadSyntax(String) throwsBadSyntax(null)}.
+     *
+     * @throws NoSuchMethodException     see {@link #throwsBadSyntax(String)}
+     * @throws IllegalAccessException    see {@link #throwsBadSyntax(String)}
+     * @throws InstantiationException    see {@link #throwsBadSyntax(String)}
+     * @throws InvocationTargetException see {@link #throwsBadSyntax(String)}
+     * @throws BadSyntax                 see {@link #throwsBadSyntax(String)}
+     */
     public void throwsBadSyntax() throws
         NoSuchMethodException,
         IllegalAccessException,
         InstantiationException,
-        InvocationTargetException {
-        throwsUp(BadSyntax.class);
+        InvocationTargetException, BadSyntax {
+        throwsBadSyntax(null);
+    }
+
+    /**
+     * Checks that the macro throws a bad syntax exception for the given input.
+     *
+     * @param regex the message of the exception should match the regular expression.
+     * @throws NoSuchMethodException     if the macro class can not be instantiated
+     * @throws IllegalAccessException    if the macro class can not be instantiated
+     * @throws InstantiationException    if the macro class can not be instantiated
+     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntax                 never happens
+     */
+    public void throwsBadSyntax(String regex) throws
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException, BadSyntax {
+        throwsUp(BadSyntax.class, regex);
     }
 
     /**

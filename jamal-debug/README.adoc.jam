@@ -1,0 +1,283 @@
+== Jamal Debugger
+
+Jamal debugger is an experimental feature.
+The current release does not include the debugger.
+
+The module `jamal-engine` implements the support for the debugger implementations.
+
+=== How Jamal debugger works
+
+When the application creates a Processor, it looks at the environment variable `JAMAL_DEBUG`.
+This variable can either be missing or be the empty string or may contain a debugger connection string.
+If the variable is not defined or blank, the processor will use the "null debugger" that does nothing.
+
+If this variable is defined and not empty, the processor searches for a debugger to handle the connection string.
+Debuggers are loaded using the service loader, and they have to implement the {%@java:class (format=`$name`) javax0.jamal.api.Debugger%} interface.
+
+The processor invokes the method {%@java:method (format="`$name(s)`") javax0.jamal.api.Debugger#affinity%} for each the available debuggers.
+The argument `s` is the connection string.
+The method returns an integer number, and the more the debugger thinks it can handle the connection string, the smaller number it should return.
+
+If the returned value is -1, then the debugger cannot handle the connection string at all.
+The processor will select the debugger that returns the smallest non-negative number.
+
+The null debugger is implemented in the engine module.
+It returns `Integer.MAX_VALUE-1` for any connection string.
+If no other debugger thinks they can handle a connection, then Jamal will use the null-debugger.
+
+It is an error if two or more debuggers report the same minimal, non-negative affinity.
+
+Usually, debuggers return `1000` if they can handle a string and `-1` if not.
+
+The connection string has the general format
+
+[source,text]
+----
+type:p1:p2: ... :pn?o1=v1&o2=v2&...&oj=vk
+----
+
+The `type` part is a string identifier, and usually, this is the part that a debugger looks at to decide if it can handle a connection.
+For example, the TCP Server Debugger handles all connection strings with the `s:` characters.
+The HTTP Server Debugger handles all connection strings that start with the `HTTP:` characters.
+
+The parameters `p1`, `p2`, ..., `pn` and the options `o1`, `o2`, ... `oj` are interpreted by the debugger.
+
+When Jamal is started with a debugger, the processor is regularly invoking the debugger at specific points.
+It passes
+
+* the current state of the input before the evaluation of a text block or macroblock, before evaluating a macro or text block;
+
+* the macro body or the text that is to be evaluated before evaluating a macro or text block;
+
+* the current state of the output and the input's current state after evaluating a macro or text block.
+
+The debugger implementations are free to stop and interact with the debugger client at these points.
+The TCP Server Debugger and the HTTP Server Debugger stop and interact with the debugger client only after the macro evaluation.
+
+=== TCP Server Debugger
+
+This debugger will handle all connection strings that start with the characters `s:`.
+The `p1` parameter is the port that the server will listen on.
+You can connect to `localhost:p1` using telnet.
+
+The commands are single characters.
+When there is a string in the command or the response, then it has the format
+
+[source,text]
+----
+nNtttttttt
+----
+
+Here
+
+* `n` is a single digit between `0` to `9` and denotes the number of characters in `N`
+
+* `N` is the decimal representation using ASCII characters `0` to `9` of the length of `tttttttt`.
+
+* `tttttttt` is the text.
+
+This debugger can also switch to "human" more where the length is not sent in front of the strings and are also not expected.
+In this case, the strings, which are parameters of a command, last till the end of the line.
+This way, someone can debug a code using a telnet command and issue the `x` command (execute) without counting the number of characters.
+
+The command `H` switches the operation to "human" mode.
+To switch back from human-mode to machine mode, the Jamal processor has to be restarted.
+It usually means restarting the whole application unless the application supports Jamal processor restarting.
+
+==== TCP Server Debugger Commands
+
+* `q` will quit the debugger and then terminates the Jamal processor throwing an `IllegalArgumentException`.
+
+* `r` will stop debugging and run the rest of the Jamal processing till the processor terminates.
+
+* `s` will ask the debugger to step one macro evaluation further.
+If this step includes macro evaluation inside the currently evaluated macros, the stepping will not stop there.
+
+
+* `S` will ask the debugger to step one macro evaluation, further stepping into the nested macro evaluations.
+
+* `i` will display the current content of the input.
+
+* `I` will display the content of the input right before the evaluation of the current macro
+
+* `o` will display the content of the output after the macro evaluation.
+It is the output of the last macro evaluation and not the whole output.
+
+* `m` will display the currently evaluated macro before evaluation.
+The macro after the evaluation is the output.
+
+* `l` will display the current macro nesting level.
+
+* `x` will execute Jamal input following the command
+
+* `b` will list the built-in macros for all the nesting levels
+
+* `u` will list the user-defined macros for all the nesting levels
+
+* `h` will send a help message
+
+=== HTTP Server Debugger
+
+The HTTP server debugger will handle a connection string if it starts with `HTTP:`.
+The `p1` parameter is the port, so the server listens for incoming HTTP requests on `localhost:p1`.
+The URLs have the format `http://localhost:p1/secret/command` or `http://localhost:p1/command`.
+(Explanation about `secret` comes below.)
+
+The connection string can also contain two options:
+
+. `secret` will be used in the URL as application context.
+If it is defined, then the URL will contain this string as a secret part.
+Only clients that are aware of this secret can access the URL.
+
+. `client` is the address, as a string of the accepted client.
+A connection coming from a different client will be refused.
+Usually, it is `127.0.0.1`, but it may be different if you use IPv6.
+To see the actual string that the debugger sees when you connect to it, delete this option and then GET `http://localhost:p1/client`.
+The debugger will answer with the actual string as it sees your client.
+Then stop the debugger and configure this string to be safe.
+
+==== HTTP Server Debugger Commands
+
+The commands are URL queries in this case.
+Each URL can be queried either using the method a`GET` or `POST` as documented.
+If you use any other method than the one the command handles, you will get an error.
+
+The documentation of the commands will include the URL, the usable method, either `GET` or `POST`, never both, the supposed content of the request if there is any required, the content of the response.
+
+* `/level` `GET` *body:* none, *response body:* the current macro nesting level as a decimal number.
+Content type is `text/plain`.
+
+* `/input` `GET` *body:* none, *response body:* the current content of the input.
+Content type is `text/plain`.
+
+* `/inputBefore` `GET` *body:* none, *response body:* the content of the input right before the evaluation of the current macro.
+Content type is `text/plain`.
+
+* `/output` `GET` *body:* none, *response body:* the output content after the macro evaluation.
+It is the output of the last macro evaluation and not the whole output.
+Content type is `text/plain`.
+
+* `/processing` `GET` *body:* none, *response body:* the currently evaluated macro before evaluation.
+The macro after the evaluation is the output.
+Content type is `text/plain`.
+
+* `/macros` `GET` *body:* none, *response body:* the built-in macros for all the nesting levels
+Content type is `application/json`.
+A typical response JSON is
+
+[source,json]
+----
+{
+  "macros": [
+    [
+      "import",
+      "use",
+...
+      "comment",
+      "try",
+      "hello",
+      "begin"
+    ],
+    [
+      "snip",
+      "snip:define"
+    ]
+  ]
+}
+----
+
+In the example above, the built-in core macros are listed in level 1.
+Some of the macros are deleted from the list for brevity.
+On level 2, the macros `snip` and `snip:define` are defined at the moment.
+
+* `/userDefinedMacros` `GET` *body:* none, *response body:* the user defined macros for all the nesting levels.
+Content type is `application/json`.
+A typical response JSON is
+
+[source,json]
+----
+{
+  "scopes": [
+    [
+      {
+        "open": "{",
+        "content": " x .. y .. z",
+        "close": "}",
+        "parameters": [
+          "x",
+          "y",
+          "z"
+        ],
+        "id": "a",
+        "type": "javax0.jamal.engine.UserDefinedMacro"
+      },
+      {
+        "open": "{",
+        "content": " {b-X-Y-Z} .. H .. K",
+        "close": "}",
+        "parameters": [],
+        "id": "z",
+        "type": "javax0.jamal.engine.UserDefinedMacro"
+      }
+    ]
+  ]
+}
+----
+
+This example lists two user-defined macros on the first level, the only level in the sample.
+The macros are `a` and `z`.
+The output defines for each macro
+
+** The macro opening string. (!)
+** The macro closing string. (!)
+** The content of the macro. (!)
+** The parameter names of the macro. (!)
+** The class name of the macro.
+
+The (!) parameters are not defined if the type is not {%@java:class (format="`$name`") javax0.jamal.engine.UserDefinedMacro%}.
+
+* `/execute` `POST` *body:* Jamal macro text to be executed, *response body:* the result of the processing as plain text.
+In case there is an error (405) then the response is JSON format containing the error message, stack trace etc.
+
+[source,json]
+----
+{
+  "status-link": "https://http.cat/405",
+  "message": "There is no closing ')' for the values in the for macro. at null/1:13"
+  "trace": "javax0.jamal.api.BadSyntaxAt: There is no closing ')' for the values in the for macro. at null/1:13\n
+\tat javax0.jamal.builtins.For.getValuesStringFromSimpleList(For.java:125)\n
+\tat javax0.jamal.builtins.For.getValuesString(For.java:93)\n
+\tat javax0.jamal.builtins.For.evaluate(For.java:33)\n
+\tat javax0.jamal.engine.Processor.evaluateBuiltinMacro(Processor.java:403)\n
+\tat javax0.jamal.engine.Processor.lambda$evaluateBuiltInMacro$5(Processor.java:352)\n
+\tat javax0.jamal.engine.Processor.safeEvaluate(Processor.java:365)\n
+\tat javax0.jamal.engine.Processor.evaluateBuiltInMacro(Processor.java:352)\n
+\tat javax0.jamal.engine.Processor.evalMacro(Processor.java:316)\n
+
+...
+
+\tat org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:154)\n
+\tat org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:90)\n
+\tat com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:71)\n
+\tat com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33)\n
+\tat com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:220)\n
+\tat com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:53)\n
+",
+}
+----
+
+The stack trace in the sample is abbreviated and also roken into seveal lines.
+This is only for documentation purposes.
+
+
+* `/run` `POST` *body:* none, *response body:* none
+
+* `/step` `POST` *body:* none, *response body:* none.
+This command will ask the debugger to step one macro evaluation further.
+If this step includes macro evaluation inside the currently evaluated macros, the stepping will not stop there.
+
+* `/stepInto` `POST` *body:* none, *response body:* none.
+This command will ask the debugger to step one macro evaluation, further stepping into the nested macro evaluations.
+
+* `/quit` `POST` *body:* none, *response body:* none.
+This command will quit the debugger and then terminates the Jamal processor by throwing an `IllegalArgumentException`.

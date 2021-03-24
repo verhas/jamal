@@ -16,6 +16,7 @@
     {dependencies#
         {@for MODULE in (api,tools,engine)=
             {dependency|{GROUPID}|jamal-MODULE}}
+        {dependency|{GROUPID}|jamal-debug||test}
         {dependency|{GROUPID}|jamal-testsupport||test}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}

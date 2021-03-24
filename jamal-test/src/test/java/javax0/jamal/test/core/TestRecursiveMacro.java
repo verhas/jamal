@@ -10,7 +10,7 @@ public class TestRecursiveMacro {
 
     @Test
     @DisplayName("Test that inifinit recursion throws bad syntax")
-    void testInfiniteRecursiveMacro() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    void testInfiniteRecursiveMacro() throws Exception {
         TestThat.theInput(
             "{@define a={a}}{a}"
         ).throwsBadSyntax();

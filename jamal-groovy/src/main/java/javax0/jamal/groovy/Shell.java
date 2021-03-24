@@ -21,14 +21,6 @@ public class Shell implements Identified {
         return binding.getProperty(key);
     }
 
-    public void variable(String key, Object value) {
-        binding.setVariable(key, value);
-    }
-
-    public Object variable(String key) {
-        return binding.getVariable(key);
-    }
-
     public Shell(String id) {
         this.id = id;
     }

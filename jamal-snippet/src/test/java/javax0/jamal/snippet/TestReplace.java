@@ -51,6 +51,9 @@ public class TestReplace {
     void testNotEnoughArgument() throws Exception {
         TestThat.theInput("{#replace |alma     korte     barack}").throwsBadSyntax();
     }
-
+    @Test
+    void testBadRegex() throws Exception {
+        TestThat.theInput("{#replace (regex) |alma     korte     barack|(\\s+}").throwsBadSyntax();
+    }
 
 }

@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * General macro registry that can be used to register built-in (Java implemented) and user defined macros. API and
@@ -8,7 +9,7 @@ import java.util.Optional;
  * the macros so that they are available and are optionally shadowing other macros of the same name while the context
  * they were defined in exists.
  */
-public interface MacroRegister extends Delimiters {
+public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRegister> {
 
     /**
      * Get a macro based on the id of the macro.

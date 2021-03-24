@@ -30,6 +30,10 @@ public class StackLimiter {
         }
     }
 
+    public int get() {
+        return counter.get();
+    }
+
     public int down() {
         final int downValue = counter.addAndGet(-1);
         if (downValue < 0) {

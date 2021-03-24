@@ -1082,13 +1082,13 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 896 bytes
-- Snip.java: 2,291 bytes
+- Snip.java: 2,317 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
-- FilesMacro.java: 4,721 bytes
+- FilesMacro.java: 4,791 bytes
 - Collect.java: 5,328 bytes
 - TrimLines.java: 2,849 bytes
 - Replace.java: 1,789 bytes
@@ -1096,15 +1096,15 @@ will result
 - Counter.java: 3,323 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,446 bytes
-- SnippetStore.java: 8,267 bytes
+- SnippetStore.java: 8,442 bytes
 - ListDir.java: 3,915 bytes
 - XmlFormat.java: 3,317 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes
 - XmlDocument.java: 2,038 bytes
-- Java.java: 5,924 bytes
-- ReplaceLines.java: 2,445 bytes
+- Java.java: 9,317 bytes
+- ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
@@ -1244,7 +1244,7 @@ wll result the output
 
 [source]
 ----
-2021-03-10 12:34:07
+2021-03-24 15:08:47
 
 ----
 
@@ -1455,9 +1455,54 @@ format defined inside the macro is local.
 ----
 
 
-It is not recommended to overuse the format string.
+It is not recommended overusing the format string.
 Do not include verbatim text into the format string.
 Choose a format string how you want to refer to the classes and use it globally in the document.
+
+[[java:field]]
+===== `java:field`
+
+
+The macro `java:field` checks that the parameter is a valid Java field and can be found on the classpath.
+It is an error if the class cannot be found on the classpath.
+This macro can be useful when you document Java source code, and you run the Jamal conversion from a unit test.
+In this case the macro will see the test and main classes.
+It can check that the field mentioned in the documentation is still there, it was not deleted or renamed.
+In addition to that the value of the value of the field can also be used in the formatting in case the field is both `static` and `final`.
+[source]
+----
+{@define field=javax0.jamal.api.SpecialCharacters#PRE_EVALUATE}
+The field {#java:field (format="$name") {field}}
+defined in the class {#java:field (format="$className") {field}}
+is both `static` and `final` and has the value {#java:field (format="$value") {field}}
+----
+
+will result the output
+
+[source]
+----
+The field PRE_EVALUATE
+defined in the class javax0.jamal.api.SpecialCharacters
+is both `static` and `final` and has the value #
+
+----
+
+
+The format string can be any string with `$` prefixed placeholders.
+The placeholders that the macro handles are:
+
+
+* `$name` will be replaced by the name of the field
+* `$classSimpleName` will be replaced by the simple name of the fields's defining class
+* `$className` will be replaced by the name of the of the fields's defining class
+* `$classCanonicalName` will be replaced by the canonical name of the fields's defining class
+* `$classTypeName` will be replaced by the type name of the fields's defining class
+* `$packageName` will be replaced by the package where the method is
+* `$typeClass` will be replaced by the type of the field
+* `$modifiers` will be replaced by the modifiers list of the method
+                
+* `$value` will be replaced by the value of the field in case the field is both `static` and `final`
+
 
 [[java:method]]
 ===== `java:method`
@@ -1484,7 +1529,7 @@ wll result the output
 
 [source]
 ----
-$simpleName
+evaluate
 
 ----
 
@@ -1499,7 +1544,7 @@ The placeholders that the macro handles are:
 * `$classSimpleName` will be replaced by the simple name of the method's defining class
 * `$className` will be replaced by the name of the of the method's defining class
 * `$classCanonicalName` will be replaced by the canonical name of the method's defining class
-* `$classTypeName` will be replaced by the type name of the methodC
+* `$classTypeName` will be replaced by the type name of the method's defining class
 * `$packageName` will be replaced by the package where the method is
 * `$name` will be replaced by the name of the method
 * `$typeClass` will be replaced by the return type of the method

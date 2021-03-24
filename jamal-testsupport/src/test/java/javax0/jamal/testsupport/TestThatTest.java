@@ -32,20 +32,20 @@ public class TestThatTest {
     @Test
     @DisplayName("TestThat tests macro throwing exception")
     void testThrowingMacro() throws
-            InvocationTargetException,
-            NoSuchMethodException,
-            InstantiationException,
-            IllegalAccessException {
+        InvocationTargetException,
+        NoSuchMethodException,
+        InstantiationException,
+        IllegalAccessException, BadSyntax {
         TestThat.theMacro(TestingThrowingMacro.class).fromTheInput("").throwsUp(BadSyntax.class);
     }
 
     @Test
     @DisplayName("TestThat tests macro checks BadSyntaxAt properly")
     void testBadSyntaxMacro() throws
-            InvocationTargetException,
-            NoSuchMethodException,
-            InstantiationException,
-            IllegalAccessException {
+        InvocationTargetException,
+        NoSuchMethodException,
+        InstantiationException,
+        IllegalAccessException, BadSyntax {
         TestThat.theMacro(TestingThrowingMacro.class).fromTheInput("").throwsBadSyntax();
     }
 
