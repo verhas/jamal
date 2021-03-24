@@ -465,6 +465,7 @@ The test file `jamal-ruby/src/test/java/javax0/jamal/ruby/TestRubyMacros.java` c
 @DisplayName("Test that ruby conversion to fixnum works")
 void testRubyPropertyFixNum() throws Exception {
     TestThat.theInput(
+        "{%@define rubyShell=wuff%}"+
         "{%@ruby:property int=(to_i)5%}" +
             "{%@ruby:shell\n" +
             "  (int*int)\n" +

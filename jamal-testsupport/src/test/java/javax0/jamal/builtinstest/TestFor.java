@@ -156,11 +156,7 @@ class TestFor {
 
     @Test
     @DisplayName("When the ( and ) are missing around the list it is bad syntax")
-    void testForBadSyntax() throws
-        InvocationTargetException,
-        NoSuchMethodException,
-        InstantiationException,
-        IllegalAccessException {
+    void testForBadSyntax() throws Exception {
         TestThat.theMacro(For.class).fromTheInput(" x in a,b,c,d= x is either a, b, c or d\n").throwsBadSyntax();
     }
 

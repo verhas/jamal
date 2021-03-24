@@ -15,6 +15,12 @@ public class TestGroovyMacros {
     // end snippet
 
     @Test
+    @DisplayName("Test a simple groovy eval with syntax error")
+    void testSimpleWrongEval() throws Exception {
+        TestThat.theInput("{@groovy:eval 6+}").throwsBadSyntax();
+    }
+
+    @Test
     @DisplayName("Test the multiple evals do keep variables")
     void testSimpleMultipleEval() throws Exception {
         TestThat.theInput(
@@ -46,6 +52,14 @@ public class TestGroovyMacros {
     }
 
     @Test
+    @DisplayName("Test simple Groovy shell example with syntax error")
+    void testSimpleWrongShell() throws Exception {
+        TestThat.theInput(
+            "{#groovy:shell \n6+}"
+        ).throwsBadSyntax("There was an exception '.*' executing the groovy script '.*'\\.");
+    }
+
+    @Test
     @DisplayName("Test complex Groovy shell example")
     void testMultipleShell() throws Exception {
         TestThat.theInput(
@@ -70,6 +84,15 @@ public class TestGroovyMacros {
                 "%}" +
                 "{%@groovy:property z%}"
         ).results("01234567890123456789");
+    }
+
+    @Test
+    @DisplayName("Test complex Groovy shell example with setting and getting a property")
+    void testSetPropertyErroneous() throws Exception {
+        TestThat.theInput(
+            "{#sep {@escape `|`{% %}`|`}}" +
+                "{%@groovy:property z : 13%}"
+        ).throwsBadSyntax("There must be a '=' after the name of the Groovy property to assign a value to it\\.");
     }
 
     @Test
@@ -102,6 +125,14 @@ public class TestGroovyMacros {
                 "Main.increment(13)" +
                 "%}"
         ).results("14");
+    }
+
+    @Test
+    @DisplayName("Test complex Groovy import example with syntax error")
+    void testImportWithSyntaxError() throws Exception {
+        TestThat.theInput(
+            "{@groovy:import\n6+}"
+        ).throwsBadSyntax("There was an exception '.*' executing the groovy script '.*'\\.");
     }
 
     @Test
@@ -176,5 +207,13 @@ public class TestGroovyMacros {
                 "'+'+result+'+'" +
                 "%}"
         ).usingTheSeparators("{%", "%}").results("+*AAA*+");
+    }
+
+    @Test
+    @DisplayName("Test that groovy closer throws when there is a sytax error")
+    void testGroovyCloserSyntaxError() throws Exception {
+        TestThat.theInput(
+            "{@groovy:closer\n6+}"
+        ).throwsBadSyntax("There was an exception '.*' executing the groovy closer script in the shell '.*'.");
     }
 }

@@ -778,7 +778,9 @@ public class Processor implements javax0.jamal.api.Processor {
             openResources.clear();
         }
         if (!exceptionsAccumulator.isEmpty()) {
-            final var exception = new BadSyntax("There were " + exceptionsAccumulator.size() + " exceptions closing the registered resources.");
+            final var nrofExceptions = exceptionsAccumulator.size();
+            final var exception = new BadSyntax("There " + (nrofExceptions == 1 ? "was" : "were")
+                + " " + nrofExceptions + " exception" + (nrofExceptions == 1 ? "" : "s") + " closing the registered resources.");
             for (final var accumulated : exceptionsAccumulator) {
                 exception.addSuppressed(accumulated);
             }
