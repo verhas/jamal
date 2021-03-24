@@ -164,15 +164,23 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
-     * @return the current Jamal version in the form of a {@link Runtime.Version}
+     * Load the version property from the prooperties file.
+     * @param version the properties that will hold the version property
      */
-    static Runtime.Version jamalVersion() {
-        final var version = new Properties();
+    static void jamalVersion(Properties version) {
         try {
             version.load(Processor.class.getClassLoader().getResourceAsStream("version.properties"));
         } catch (IOException e) {
             throw new IllegalArgumentException("Version information of Jamal cannot be identified.");
         }
+    }
+
+    /**
+     * @return the current Jamal version in the form of a {@link Runtime.Version}
+     */
+    static Runtime.Version jamalVersion() {
+        final var version = new Properties();
+        jamalVersion(version);
         return jamalVersion(version.getProperty("version"));
     }
 }
