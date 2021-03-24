@@ -47,6 +47,7 @@ public class TestCreateJbangStarter {
         Processor.jamalVersion(version);
         final var versionString = version.getProperty("version");
         final var content = new StringBuilder("///usr/bin/env jbang \"$0\" \"$@\" ; exit $?\n");
+        content.append("//JAVA 11+\n");
         for (final var module : List.of("engine", "api", "tools", "core", "cmd", "snippet", "scriptbasic",
             "groovy", "ruby", "plantuml", "debug")) {
             content.append("//DEPS com.javax0.jamal:jamal-").append(module).append(":").append(versionString).append("\n");

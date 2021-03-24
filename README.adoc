@@ -167,7 +167,167 @@ When something goes wrong, then Jamal will give you a detailed error message.
 The message will include the file name, line number, and character count where the error happened.
 Jamal may think it works fine in other cases, but the output is not exactly what you expected.
 Sorry, in this case, the issue, most probably, is with your expectations.
-Jamal very much converts the text following the rules defined in this document.
+Jamal converts the text following the rules defined in this document.
+
+==== Starting Command Line Version
+
+To start Jamal on the command line, you need a command:
+
+[source,bash]
+----
+java -cp $HOME/.m2/repository/com/javax0/jamal/jamal-engine/1.7.3-SNAPSHOT/jamal-engine-1.7.3-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-api/1.7.3-SNAPSHOT/jamal-api-1.7.3-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-tools/1.7.3-SNAPSHOT/jamal-tools-1.7.3-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-core/1.7.3-SNAPSHOT/jamal-core-1.7.3-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-cmd/1.7.3-SNAPSHOT/jamal-cmd-1.7.3-SNAPSHOT.jar: javax0.jamal.cmd.JamalMain options
+----
+
+It is not a user-friendly approach.
+You do not want to type all the paths and the JARs every time you want to start Jamal.
+For this reason, there is a `jamal.sh` that has the following content:
+
+[source,bash]
+----
+#!/usr/bin/env bash
+MODULES="api engine core tools cmd"
+REPO=$HOME/.m2/repository/com/javax0/jamal
+VERSION=1.7.3-SNAPSHOT
+
+for MODULE in $MODULES ; do
+  if ! test -f $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar; then
+    if command -v wget &>/dev/null; then
+      wget --no-check-certificate https://repo1.maven.org/maven2/com/javax0/jamal/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar -O $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
+    else
+      if command -v curl &>/dev/null; then
+        curl https://repo1.maven.org/maven2/com/javax0/jamal/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar -o $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
+      else
+        echo "There is no curl nor wget available"
+        exit -1
+      fi
+    fi
+  fi
+done
+
+CLASSPATH=""
+for MODULE in $MODULES ; do
+  CLASSPATH=$REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar:$CLASSPATH
+done
+
+java -cp $CLASSPATH javax0.jamal.cmd.JamalMain $*
+----
+
+The shell variable `MODULES` should list the Jamal modules you may need to use in your processing.
+The basic modules needed under every circumstance are listed in the example.
+The other modules available are `snippet`, `scriptbasic`, `groovy`, `ruby`, `plantuml`, and `debug`.
+The shell variable `REPO` must be set to point to the repository where your local JAR files are.
+`VERSION` has to be the latest version or the one you intend to use.
+
+The invocation of the shell script is `./jamal.sh options` where the `options` have the `key=value` format.
+If you use a simple option `help`, then Jamal will print out a short screen that looks something like this:
+
+[source,text]
+----
+Usage: jamal option1=value1 ... optionN=valueN
+open                is the macro opening string, defaults to '{'
+close               is the macro closing string, defaults to '}'
+pattern             include files that match this pattern (regex)
+exclude             exclude files that match this pattern (regex)
+source              the source directory, defaults to '.'
+target              where the generated files are to put, defaults to '.'
+directory           specifies the source and the target at the same time
+depth               recursion depth into directories. Default is infinite.
+from                file name transformation pattern (regex), defaults to '\.jam$'
+to                  file name transformation pattern (string), defaults to ''
+                        target_name = source_name.replaceAll(transformFrom,transformTo)
+                        defaults to chopping off '.jam' extension
+----
+
+The command line is built up from the command and key-value pairs.
+For example, to convert the single `pom.xml.jam` to `pom.xml`, you can issue the command
+
+[source,bash]
+----
+./jamal.sh depth=1 pattern=pom.xml.jam
+----
+
+It will tell Jamal to process all the files that
+
+* match the regular expression `pom.xml.jam`,
+
+* search for such files in the current directory and below directories
+
+* but not more than one level depth in the directories (essentially only in the current directory).
+
+The argument pattern is interpreted as a regular expression.
+That way, this use would also match, for example, `pomaxmlojam`.
+The proper way would be to write
+
+[source,bash]
+----
+./jamal.sh depth=1 pattern=^\./pom\.xml\.jam$
+----
+
+Note that in some cases, the regular expression characters may be interpreted by the command line bash.
+In that case, you have to use `\` in front of the character.
+
+The options you can use with the command-line version of Jamal:
+
+* `open` can define the macro opening string.
+The default value is `{`.
+The Jamal source file can later change this value any time using the <<sep,`sep`>> macro.
+
+* `close` can define the macro closing string.
+The default value is `}`.
+The Jamal source file can later change this value any time using the <<sep,`sep`>> macro.
+
+* `pattern` can define a regular expression that needs to match a file's name to process.
+Jamal's command-line version scans the directories recursively, listing all the files.
+It processes only the files where the name matches the pattern.
+
+* `exclude` can define a regular expression that must not match a file's name to process.
+It is the opposite of the option `pattern`.
+
+* `source` can define the source directory where the search for processable files starts.
+The default directory is '.'
+
+* `target` can define the target directory where Jamal will generate the output files.
+The default directory is '.'.
+When a source file is in a subdirectory under the `source` directory, then the resulting file will also be created in a subdirectory mirroring the source structure.
+
+* `directory` is a shorthand option specifying the same value for `source` and `target`. (1.7.3 and later)
+
+* `depth` can define the levels of recursion in the directories looking for source files.
+The default value is practically infinite.
+(Actual value is `Integer.MAX_VALUE`.) (1.7.3 and later)
+
+* `from` can specify a regular expression to be used to convert the file name.
+When the output file name is calculated, the input file name is converted, calling the Java `String` method `replaceAll`.
+It replaces any substring matching the regular expression as the first argument to the second argument's string.
+The default value is `\.jam$`. See also the option `to`.
+
+* `to` can specify the replacement string in the call to `replaceAll`, transforming the input file name to the output file name.
+The default value is `''` empty string. If neither `from` nor `to` is set then this will call `replaceAll("\.jam$",""")` on the input file name.
+Since `\.jam$` matches the extension `.jam` at the end of the file name, this will be replaced by an empty string.
+That way, for example, `pom.xml.jam` will be converted to `pom.xml`.
+Feel free to define other file name transformations and feel free to use regular expression capturing groups and `$i` placeholders.
+
+==== Starting with JBang
+
+JBang (https://www.jbang.dev) is a popular command line tool that eases the startup of Java applications.
+Jamal can be started using JBang.
+
+This may be the choice for you if you want to use Jamal, but you do not even have Java installed.
+Installing JBang is extremely simple.
+When running Jamal using JBang, Jbang will install everything that is needed to execute Jamal is a clean and non-intrusive way.
+
+To start Jamal when you have JBang installed on your machine the command line to start Jamal is
+
+[source,bash]
+----
+jbang jamal@verhas options
+----
+
+This command will invoke the command line version automatically caring about all the Jar files.
+The syntax and meaning of the options are the same as in case of the command line version.
+This startup also loads all the Jamal extensions, including `snippet`, `scriptbasic`, `groovy`, `ruby`, `plantuml`, and `debug` (1.7.3 and later).
+
+NOTE: The possibility to start Jamal using JBang was developed for the version 1.7.3, and it was retrofitted for the version 1.7.2 before the release of 1.7.3.
 
 ==== Debugging Macro Conversions
 

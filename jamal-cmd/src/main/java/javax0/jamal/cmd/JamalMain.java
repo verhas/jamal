@@ -32,6 +32,8 @@ public class JamalMain {
     public static final String EXCLUDE = "exclude";
     public static final String SOURCE_DIRECTORY = "source";
     public static final String TARGET_DIRECTORY = "target";
+    public static final String DIRECTORY = "directory";
+    public static final String DEPTH = "depth";
     //</editor-fold>
 
     //<editor-fold desc="Configuration parameters" >
@@ -43,6 +45,7 @@ public class JamalMain {
     private String targetDirectory = ".";
     private String transformFrom = "\\.jam$";
     private String transformTo = "";
+    private int depth= Integer.MAX_VALUE;
     //</editor-fold>
 
     /**
@@ -90,6 +93,13 @@ public class JamalMain {
                 case TARGET_DIRECTORY:
                     targetDirectory = val;
                     break;
+                case DIRECTORY:
+                    sourceDirectory = val;
+                    targetDirectory = val;
+                    break;
+                case DEPTH:
+                    depth = Integer.parseInt(val);
+                    break;
                 case TRANSFORM_FROM:
                     transformFrom = val;
                     break;
@@ -112,6 +122,8 @@ public class JamalMain {
             + arg(EXCLUDE) + "exclude files that match this pattern (regex)\n"
             + arg(SOURCE_DIRECTORY) + "the source directory, defaults to '.'\n"
             + arg(TARGET_DIRECTORY) + "where the generated files are to put, defaults to '.'\n"
+            + arg(DIRECTORY) + "specifies the source and the target at the same time\n"
+            + arg(DEPTH) + "recursion depth into directories. Default is infinite.\n"
             + arg(TRANSFORM_FROM) + "file name transformation pattern (regex), defaults to '\\.jam$'\n"
             + arg(TRANSFORM_TO) + "file name transformation pattern (string), defaults to ''\n"
             + arg(" ") + "    target_name = source_name.replaceAll(transformFrom,transformTo)\n"
@@ -135,7 +147,7 @@ public class JamalMain {
         final var excludePredicate = getPathPredicate(exclude).negate();
         processingSuccessful = true;
         try {
-            Files.walk(Paths.get(sourceDirectory))
+            Files.walk(Paths.get(sourceDirectory), depth)
                 .filter(Files::isRegularFile)
                 .filter(includePredicate)
                 .filter(excludePredicate)

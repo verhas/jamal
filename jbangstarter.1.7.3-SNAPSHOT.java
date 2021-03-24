@@ -1,4 +1,5 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
+//JAVA 11+
 //DEPS com.javax0.jamal:jamal-engine:1.7.3-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-api:1.7.3-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-tools:1.7.3-SNAPSHOT
