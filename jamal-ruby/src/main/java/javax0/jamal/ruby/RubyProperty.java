@@ -56,8 +56,6 @@ public class RubyProperty implements Macro, InnerScopeDependent {
                         )
                     )
                 );
-        } catch (IllegalArgumentException e) {
-            throw new BadSyntax(e.getMessage());
         } catch (Exception e) {
             throw new BadSyntax("There was an error during casting the value '" + s + "'", e);
         }
