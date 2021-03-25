@@ -54,7 +54,7 @@ public class Collect implements Macro, InnerScopeDependent {
             harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start.get(), stop.get());
         } else {
             try {
-                for (final var file :files(from.get(),scanDepth.get()).map(p -> p.toAbsolutePath().toString())
+                for (final var file : files(from.get(), scanDepth.get()).map(p -> p.toAbsolutePath().toString())
                     .filter(include.get()).filter(exclude.get()).collect(Collectors.toSet())) {
                     harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), stop.get());
                 }
@@ -115,7 +115,7 @@ public class Collect implements Macro, InnerScopeDependent {
      * @throws IOException in case there is some problem with the file system
      */
     private static Stream<Path> files(final String dir, int scanDepth) throws IOException {
-        return  Files.find(Paths.get(dir),
+        return Files.find(Paths.get(dir),
             scanDepth,
             (filePath, fileAttr) -> fileAttr.isRegularFile()
         );

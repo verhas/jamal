@@ -5,8 +5,10 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -67,6 +69,18 @@ public class TestCreateStarters {
         Files.write(Paths.get(root + "/" + "jamal.sh"), content.getBytes(StandardCharsets.UTF_8),
             StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         Files.write(Paths.get(root + "/" + "jamal." + versionString + ".sh"), content.getBytes(StandardCharsets.UTF_8),
+            StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+    }
+
+    @Test
+    void testCreateUsageSnippetForDocumentation() throws Exception {
+        final var root = getDirectory();
+        final var saveOut = System.out;
+        final var testOut = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(testOut));
+        JamalMain.main(new String[]{"-h"});
+        System.setOut(saveOut);
+        Files.write(Paths.get(root + "/" + "usage.txt"), testOut.toByteArray(),
             StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 }

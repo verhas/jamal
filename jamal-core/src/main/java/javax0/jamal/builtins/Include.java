@@ -4,7 +4,9 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Marker;
+import javax0.jamal.tools.Params;
 
 import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
@@ -35,6 +37,9 @@ public class Include implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var position = input.getPosition();
+        final var verbatim = Params.<Boolean>holder("includeVerbatim","verbatim").asBoolean();
+        Params.using(processor).from(this).startWith('(').endWith(')').keys(verbatim).parse(input);
+
         skipWhiteSpaces(input);
         var reference = input.getReference();
         var fileName = absolute(reference, input.toString().trim());
@@ -45,7 +50,11 @@ public class Include implements Macro {
         var marker = new Marker("{@include " + fileName + "}", position);
         final String result;
         processor.getRegister().push(marker);
-        result = processor.process(getInput(fileName));
+        if( verbatim.get() ){
+            result = getInput(fileName).toString();
+        }else {
+            result = processor.process(getInput(fileName));
+        }
         processor.getRegister().pop(marker);
         depth++;
         return result;

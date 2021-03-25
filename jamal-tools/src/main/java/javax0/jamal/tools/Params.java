@@ -130,6 +130,14 @@ public class Params {
         return this;
     }
 
+    /**
+     * Specify the keys that can be used to specify the value. There can be aliases. The first value is the one
+     * that can also be used as a macro name, the rests are alias.
+     *
+     * @param key the array of key and aliases
+     * @param <T>
+     * @return
+     */
     public static <T> Param<T> holder(String... key) {
         if (key.length == 0) {
             throw new IllegalArgumentException("Parameter holder has to have at least one name");
