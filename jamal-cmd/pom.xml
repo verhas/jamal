@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-extensions</artifactId>
+            <artifactId>jamal-testsupport</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -74,6 +74,10 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
         </dependency>
     </dependencies>
 </project>

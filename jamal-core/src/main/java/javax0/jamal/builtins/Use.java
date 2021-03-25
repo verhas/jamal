@@ -39,7 +39,7 @@ public class Use implements Macro {
                 final var isGlobal = matcher.group(1).length() > 0;
                 final var klassName = matcher.group(2);
                 final var alias = matcher.group(3);
-                final Macro macro = forName(klassName);
+                final Macro macro = forName(klassName, klassName);
                 final var register = processor.getRegister();
                 if (isGlobal) {
                     if (alias != null && alias.length() > 0) {
@@ -63,24 +63,26 @@ public class Use implements Macro {
      * Get a new instance of the built-in macro. The implementation loads the class first. If the class is an static
      * inner class then it recognizes that and loads the inner class.
      *
-     * @param klassName the name of the class with dots as separator. Using {@code $} in case of inner classes is also
-     *                  possible, but it is not the intended use. In case of an inner class the algorithm tries to load
-     *                  the class as a top level class and in case it fails it replaces the last dot with a {@code $}
-     *                  sign and tries to load again and again until all dots are replaces.
+     * @param klassName    the name of the class with dots as separator. Using {@code $} in case of inner classes is
+     *                     also possible, but it is not the intended use. In case of an inner class the algorithm tries
+     *                     to load the class as a top level class and in case it fails it replaces the last dot with a
+     *                     {@code $} sign and tries to load again and again until all dots are replaces.
+     * @param originalName is the original class name before the search process started to replace the {@code .} to
+     *                     {@code $}. Used to create the exception.
      * @return the instance of the macro class
      * @throws BadSyntax if the class cannot be found or the instance cannot be created
      */
-    private Macro forName(final String klassName) throws BadSyntax {
+    private Macro forName(final String klassName, final String originalName) throws BadSyntax {
         final Macro macro;
         final Class<?> klass;
         try {
             klass = Class.forName(klassName);
         } catch (Exception e) {
             if (!klassName.contains(".")) {
-                throw new BadSyntax("Class '" + klassName + "' cannot be used as macro", e);
+                throw new BadSyntax("Class '" + originalName + "' cannot be used as macro", e);
             }
             var lastDot = klassName.lastIndexOf('.');
-            return forName(klassName.substring(0, lastDot) + "$" + klassName.substring(lastDot + 1));
+            return forName(klassName.substring(0, lastDot) + "$" + klassName.substring(lastDot + 1),originalName);
         }
         try {
             macro = (Macro) klass.getDeclaredConstructor().newInstance();

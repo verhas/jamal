@@ -3,9 +3,15 @@ package javax0.jamal.cmd;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
+import picocli.CommandLine;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -21,158 +28,99 @@ import java.util.stream.Collectors;
 /**
  * This is a command line file that can be used to process Jamal files starting Jamal from the command line.
  */
-public class JamalMain {
-
-    //<editor-fold desc="command line parameter strings">
-    public static final String TRANSFORM_TO = "to";
-    public static final String TRANSFORM_FROM = "from";
-    public static final String MACRO_OPEN = "open";
-    public static final String MACRO_CLOSE = "close";
-    public static final String FILE_PATTERN = "pattern";
-    public static final String EXCLUDE = "exclude";
-    public static final String SOURCE_DIRECTORY = "source";
-    public static final String TARGET_DIRECTORY = "target";
-    public static final String DIRECTORY = "directory";
-    public static final String DEPTH = "depth";
-    //</editor-fold>
+public class JamalMain implements Callable<Integer> {
 
     //<editor-fold desc="Configuration parameters" >
+
+    @Option(names = {"--open", "-o"}, defaultValue = "{", description = "the macro opening string")
     private String macroOpen = "{";
+    @Option(names = {"--close", "-c"}, defaultValue = "}", description = "the macro closing string")
     private String macroClose = "}";
-    private String filePattern = ".*\\.jam$";
+    @Option(names = {"--include", "-i"}, defaultValue = ".*\\.jam$", description = "file name regex pattern to include into the processing")
+    private String include = ".*\\.jam$";
+    @Option(names = {"--exclude", "-e"}, defaultValue = "", description = "file name regex pattern to exclude from the processing")
     private String exclude = null;
+    @Option(names = {"--source", "-s"}, defaultValue = ".", description = "source directory to start the processing")
     private String sourceDirectory = ".";
+    @Option(names = {"--target", "-t"}, defaultValue = ".", description = "target directory to create the output")
     private String targetDirectory = ".";
-    private String transformFrom = "\\.jam$";
-    private String transformTo = "";
-    private int depth= Integer.MAX_VALUE;
+    @Option(names = {"--transform", "-r"}, defaultValue = Option.NULL_VALUE, arity = "1..2", description = "transformation from the input file name to the output file name")
+    private String[] transform;
+    @Option(names = {"--depth", "-d"}, description = "directory traversal depth, default is infinite")
+    private int depth = Integer.MAX_VALUE;
+    @Option(names = "--dry-dry-run", description = "run dry, do not execute Jamal")
+    private boolean drydry = false;
+    @Option(names = "--dry-run", description = "run dry, do not write result to output file")
+    private boolean dry = false;
+    @Option(names = {"--help", "-h"}, usageHelp = true, description = "help")
+    private boolean help = false;
+    @Option(names = {"--verbose", "-v"}, description = "verbose output")
+    private boolean verbose = false;
+    @Option(names = {"--regex", "-x"}, description = "interpret transform, include and exclude options as regex")
+    private boolean regex = false;
+    @Option(names = {"--file", "-f"}, description = "convert a single file, specify nput and output")
+    private boolean single = false;
+    @Parameters(index = "0", defaultValue = Parameters.NULL_VALUE)
+    private String inputFile;
+    @Parameters(index = "1", defaultValue = Parameters.NULL_VALUE)
+    private String outputFile;
     //</editor-fold>
-
-    /**
-     * Appends spaces to make the string 20 characters long.
-     *
-     * @param x the string to be padded
-     * @return the string x padded with spaces
-     */
-    private static String arg(String x) {
-        StringBuilder xBuilder = new StringBuilder(x);
-        while (xBuilder.length() < 20) xBuilder.append(" ");
-        return xBuilder.toString();
-    }
-
-    /**
-     * Read the command line arguments and fill in the configuration parameters. Each command line argument should have
-     * the {@code key=value} format.
-     *
-     * @param args the command line arguments
-     */
-    private void getCommandLineParams(String[] args) {
-        for (final String arg : args) {
-            final int eq = arg.indexOf('=');
-            if (eq == -1) {
-                displayError(arg);
-            }
-            final String key = arg.substring(0, eq);
-            final String val = arg.substring(eq + 1);
-            switch (key) {
-                case MACRO_OPEN:
-                    macroOpen = val;
-                    break;
-                case MACRO_CLOSE:
-                    macroClose = val;
-                    break;
-                case FILE_PATTERN:
-                    filePattern = val;
-                    break;
-                case EXCLUDE:
-                    exclude = val;
-                    break;
-                case SOURCE_DIRECTORY:
-                    sourceDirectory = val;
-                    break;
-                case TARGET_DIRECTORY:
-                    targetDirectory = val;
-                    break;
-                case DIRECTORY:
-                    sourceDirectory = val;
-                    targetDirectory = val;
-                    break;
-                case DEPTH:
-                    depth = Integer.parseInt(val);
-                    break;
-                case TRANSFORM_FROM:
-                    transformFrom = val;
-                    break;
-                case TRANSFORM_TO:
-                    transformTo = val;
-                    break;
-                default:
-                    displayError(arg);
-            }
-        }
-    }
-
-    private void displayError(String arg) {
-        if (!"help".equals(arg))
-            System.err.println("The argument '" + arg + "' is malformed");
-        System.err.println("Usage: jamal option1=value1 ... optionN=valueN\n"
-            + arg(MACRO_OPEN) + "is the macro opening string, defaults to '{'\n"
-            + arg(MACRO_CLOSE) + "is the macro closing string, defaults to '}'\n"
-            + arg(FILE_PATTERN) + "include files that match this pattern (regex)\n"
-            + arg(EXCLUDE) + "exclude files that match this pattern (regex)\n"
-            + arg(SOURCE_DIRECTORY) + "the source directory, defaults to '.'\n"
-            + arg(TARGET_DIRECTORY) + "where the generated files are to put, defaults to '.'\n"
-            + arg(DIRECTORY) + "specifies the source and the target at the same time\n"
-            + arg(DEPTH) + "recursion depth into directories. Default is infinite.\n"
-            + arg(TRANSFORM_FROM) + "file name transformation pattern (regex), defaults to '\\.jam$'\n"
-            + arg(TRANSFORM_TO) + "file name transformation pattern (string), defaults to ''\n"
-            + arg(" ") + "    target_name = source_name.replaceAll(transformFrom,transformTo)\n"
-            + arg(" ") + "    defaults to chopping off '.jam' extension\n"
-        );
-        System.exit(1);
-    }
-
-    public static void main(String[] args) {
-        final var me = new JamalMain();
-        me.getCommandLineParams(args);
-        me.execute();
-    }
-
+    @Spec
+    CommandSpec spec;
     private boolean processingSuccessful;
 
-    public void execute() {
-        normalizeConfiguration();
-        normalizeDirectories();
-        final var includePredicate = getPathPredicate(filePattern);
-        final var excludePredicate = getPathPredicate(exclude).negate();
-        processingSuccessful = true;
-        try {
-            Files.walk(Paths.get(sourceDirectory), depth)
-                .filter(Files::isRegularFile)
-                .filter(includePredicate)
-                .filter(excludePredicate)
-                .forEach(this::executeJamal);
-        } catch (IOException e) {
-            if (processingSuccessful) {
-                throw new RuntimeException("Cannot process the files by Jamal. Something is wrong.", e);
+    public static void main(String[] args) {
+        new CommandLine(new JamalMain()).execute(args);
+    }
+
+
+    public Integer call() {
+        normalizeCommandInput();
+        if (single) {
+            if (inputFile == null || outputFile == null) {
+                throw new IllegalArgumentException("When using the option -f/--file then you have to specify input and output file");
             }
-            throw new RuntimeException("There was an error processing Jamal files. Have a look at the logs.", e);
+            executeJamal(Paths.get(new File(inputFile).getAbsolutePath()), Paths.get(new File(outputFile).getAbsolutePath()));
+        } else {
+            final var includePredicate = getPathPredicate(include);
+            final var excludePredicate = getPathPredicate(exclude).negate();
+            processingSuccessful = true;
+            try {
+                Files.walk(Paths.get(sourceDirectory), depth)
+                    .filter(Files::isRegularFile)
+                    .filter(includePredicate)
+                    .filter(excludePredicate)
+                    .forEach(this::executeJamal);
+            } catch (IOException e) {
+                if (processingSuccessful) {
+                    throw new RuntimeException("Cannot process the files by Jamal. Something is wrong.", e);
+                }
+                throw new RuntimeException("There was an error processing Jamal files. Have a look at the logs.", e);
+            }
+            if (!processingSuccessful) {
+                throw new RuntimeException("There was an error processing Jamal files. Have a look at the logs.");
+            }
         }
-        if (!processingSuccessful) {
-            throw new RuntimeException("There was an error processing Jamal files. Have a look at the logs.");
-        }
+        return 0;
     }
 
     private void executeJamal(final Path inputPath) {
+        executeJamal(inputPath, calculateTargetFile(inputPath));
+    }
+
+    private void executeJamal(final Path inputPath, final Path outputPath) {
         try {
-            final var outputPath = calculateTargetFile(inputPath);
-            System.out.println("Jamal " + inputPath.toString() + " -> " + outputPath);
+            outlog("Jamal " + inputPath.toString() + " -> " + outputPath);
             if (outputPath != null) {
-                final String result;
-                try (final var processor = new Processor(macroOpen, macroClose)) {
-                    result = processor.process(createInput(inputPath));
+                if (!drydry) {
+                    final String result;
+                    try (final var processor = new Processor(macroOpen, macroClose)) {
+                        result = processor.process(createInput(inputPath));
+                    }
+                    if (!dry) {
+                        writeOutput(outputPath, result);
+                    }
                 }
-                writeOutput(outputPath, result);
             }
         } catch (Exception e) {
             logException(e);
@@ -182,7 +130,10 @@ public class JamalMain {
 
     private void writeOutput(Path output, String result) throws IOException {
         try {
-            Files.createDirectories(output.getParent());
+            final var parent = output.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
         } catch (Exception e) {
             logException(e);
         }
@@ -192,11 +143,25 @@ public class JamalMain {
             StandardOpenOption.CREATE);
     }
 
-    private void logException(Exception e) {
+    private static void log(final String message, final PrintStream ps) {
+        ps.println(message);
+    }
+
+    private static void errlog(final String message) {
+        log(message, System.err);
+    }
+
+    private void outlog(final String message) {
+        if (verbose) {
+            log(message, System.out);
+        }
+    }
+
+    private static void logException(Exception e) {
         var sw = new StringWriter();
         var out = new PrintWriter(sw);
         e.printStackTrace(out);
-        Arrays.stream(sw.toString().split("\n")).forEach(System.err::println);
+        Arrays.stream(sw.toString().split("\n")).forEach(JamalMain::errlog);
     }
 
     private Input createInput(Path inputFile) throws IOException {
@@ -207,19 +172,19 @@ public class JamalMain {
     private Path calculateTargetFile(final Path inputFile) {
         final var inputFileName = inputFile.toString();
         if (!inputFile.toString().startsWith(sourceDirectory)) {
-            System.err.println("The input file " + qq(inputFileName)
+            errlog("The input file " + qq(inputFileName)
                 + " is not in the source directory " + qq(sourceDirectory));
             processingSuccessful = false;
             return null;
         }
         return Paths.get((targetDirectory + inputFile.toString().substring(sourceDirectory.length()))
-            .replaceAll(transformFrom, transformTo));
+            .replaceAll(transform[0], transform[1]));
     }
 
     /**
      * Convert directory names to normalized format
      */
-    private void normalizeDirectories() throws RuntimeException {
+    private void normalizeCommandInput() throws RuntimeException {
         sourceDirectory = Paths.get(sourceDirectory).normalize().toString();
         if (sourceDirectory.length() == 0) {
             sourceDirectory = ".";
@@ -234,19 +199,33 @@ public class JamalMain {
         if (!new File(targetDirectory).exists()) {
             throw new IllegalArgumentException(targetDirectory + " does not exists.");
         }
+        if (transform == null) {
+            transform = new String[]{"\\.jam$", ""};
+        }
+        if (transform.length < 2) {
+            transform = new String[]{transform[0], ""};
+        }
     }
 
     /**
      * Convert the regular expression to a predicate. If the regular expression is null or empty string then the
      * predicate is constant false.
      *
-     * @param regex to be converted
+     * @param param regular expression or simple wild card string to be converted to match predicate
      * @return the predicate.
      */
-    private Predicate<Path> getPathPredicate(final String regex) {
+    private Predicate<Path> getPathPredicate(final String param) {
+        final String regexString;
+        if (regex) {
+            regexString = param;
+        } else {
+            regexString = param.replaceAll("\\.", "\\.")
+                .replaceAll("\\*", ".*")
+                .replaceAll("\\?", ".");
+        }
         final Predicate<Path> predicate;
-        if (regex != null && regex.length() > 0) {
-            Pattern pattern = Pattern.compile(regex);
+        if (regexString != null && regexString.length() > 0) {
+            Pattern pattern = Pattern.compile(regexString);
             predicate = p -> pattern.matcher(p.toString()).find();
         } else {
             predicate = p -> false;
@@ -258,35 +237,5 @@ public class JamalMain {
         return "'" + s + "'";
     }
 
-    private void logParameters() {
-    }
-
-    private void normalizeConfiguration() {
-        if (macroOpen == null) {
-            macroOpen = "";
-        }
-        if (macroClose == null) {
-            macroClose = "";
-        }
-        if (filePattern == null) {
-            filePattern = ".*\\.jam$";
-        }
-        if (exclude == null) {
-            exclude = "";
-        }
-        if (sourceDirectory == null) {
-            sourceDirectory = ".";
-        }
-        if (targetDirectory == null) {
-            targetDirectory = ".";
-        }
-        if (transformFrom == null) {
-            transformFrom = "\\.jam$";
-        }
-        if (transformTo == null) {
-            transformTo = "";
-        }
-
-    }
 
 }

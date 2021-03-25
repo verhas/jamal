@@ -40,9 +40,11 @@
     }
 
     {dependencies#
-        {#for MODULE in (engine,extensions)=
+        {#for MODULE in (engine)=
             {dependency|{GROUPID}|jamal-MODULE}}
+        {dependency :{GROUPID}:jamal-testsupport}
         {#for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency :info.picocli:picocli}
     }
 {end project}

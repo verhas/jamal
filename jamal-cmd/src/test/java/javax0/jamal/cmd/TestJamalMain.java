@@ -14,7 +14,7 @@ public class TestJamalMain {
     @Test
     @DisplayName("Command line works with some simple example")
     public void testCompilingEmtpyFile() throws BadSyntax {
-        JamalMain.main(new String[]{"exclude=pom.xml.jam"});
+        JamalMain.main(new String[]{"-v", "--file", "pom.xml.jam", "pom.xmla" });
         final var proc = new Processor("{","}");
         final var result = proc.process(Input.makeInput("{@include res:test}"));
         Assertions.assertEquals("1",result);

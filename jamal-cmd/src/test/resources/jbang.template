@@ -1,0 +1,16 @@
+///usr/bin/env jbang \"$0\" \"$@\" ; exit $?
+//JAVA 11+
+{@import ../version.jim}\
+//DEPS info.picocli:picocli:{PICOCLI_VERSION}
+{!@for $module in (engine,api,tools,core,cmd,snippet,scriptbasic,groovy,ruby,plantuml,debug)=//DEPS com.javax0.jamal:jamal-$module:{VERSION}
+}
+
+{@escape `|||`
+import javax0.jamal.cmd.JamalMain;
+
+class jbangstarter {
+    public static void main(String... args) {
+        JamalMain.main(args);
+    }
+}
+`|||`}
