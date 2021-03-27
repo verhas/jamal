@@ -38,7 +38,7 @@ public class Include implements Macro {
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var position = input.getPosition();
         final var verbatim = Params.<Boolean>holder("includeVerbatim","verbatim").asBoolean();
-        Params.using(processor).from(this).startWith('(').endWith(')').keys(verbatim).parse(input);
+        Params.using(processor).from(this).between("[]").keys(verbatim).parse(input);
 
         skipWhiteSpaces(input);
         var reference = input.getReference();

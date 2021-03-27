@@ -23,7 +23,7 @@ public class Java {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var format = Params.<String>holder("classFormat", "format").orElse("$simpleName");
-            Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
+            Params.using(processor).from(this).between("()").keys(format).parse(in);
             InputHandler.skipWhiteSpaces(in);
             final var className = in.toString().trim();
             try {
@@ -53,7 +53,7 @@ public class Java {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var format = Params.<String>holder("fieldFormat", "format").orElse("$name");
-            Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
+            Params.using(processor).from(this).between("()").keys(format).parse(in);
             InputHandler.skipWhiteSpaces(in);
             final var fieldRef = in.toString().trim();
             final var parts = split(in, this);
@@ -114,7 +114,7 @@ public class Java {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var pos = in.getPosition();
             final var format = Params.<String>holder("methodFormat", "format").orElse("$name");
-            Params.using(processor).from(this).startWith('(').endWith(')').keys(format).parse(in);
+            Params.using(processor).from(this).between("()").keys(format).parse(in);
             final var parts = split(in,this);
             final var className = parts[0];
             final var methodName = parts[1];

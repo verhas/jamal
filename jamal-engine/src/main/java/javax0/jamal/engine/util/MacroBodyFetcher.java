@@ -22,8 +22,8 @@ public class MacroBodyFetcher {
     /**
      * Eat off a macro from the input caring about all the macro nesting. The input is right after the macro opening
      * string and at the end it will eat off from the input not only the macro body but also the last macro closing
-     * strings. The output will be the string that contains the content of the macro including all the matching macro
-     * opening and closing strings that are inside.
+     * string characters. The output will be the string that contains the content of the macro including all the
+     * matching macro opening and closing strings that are inside if there are any.
      * <p>
      * For example the input (here {@code [[} is the macro opening string and {@code ]]} is the macro closing string):
      *
@@ -32,7 +32,8 @@ public class MacroBodyFetcher {
      *     ^---------------------------------------------------------^
      * }</pre>
      * <p>
-     * (see that there is no {@code [[} at the start) will return
+     * (see that there is no {@code [[} at the start, as that was already consumed by the processor before calling this
+     * method) will return
      *
      * <pre>{@code
      *     \@define z=[[userDef/indef/macro]] some content
@@ -115,12 +116,22 @@ public class MacroBodyFetcher {
     /**
      * Move the 'escape' macro body to the output.
      * <p>
-     * The method has to be invoked only when {@link #startWithEscapeMacro(Input)} returned  {@code true}. It assumes
-     * that the start of the input contains an  escape macro.
+     * The method is invoked only when {@link #startWithEscapeMacro(Input)} returned  {@code true}. It assumes that the
+     * start of the input contains an escape macro.
+     * <p>
+     * Note that this method will not care if there are extra non-whitespace character between the second {@code `xxx`}
+     * string and the macro closing string, like in
+     *
+     * <pre>{@code
+     *     {@escape `|||`escaped content `|||` this is erroneous}
+     * }</pre>
+     * <p>
+     * the characters "{@code this is erroneous}". This will however be an error when the macro as implemented in the
+     * module {@code jamal.core} is executed.
      *
      * @param input    has to point to the start of the macro. After the invocation the input will be stepped onto the
      *                 closing macro string and not after.
-     * @param output   where to copy the boby of the escape macro body. This means all chavaters between the opening and
+     * @param output   where to copy the body of the escape macro. This means all characters between the opening and
      *                 closing strings, including leading and trailing white spaces.
      * @param closeStr the closing string
      * @throws BadSyntaxAt if the syntax of the escape macro is violated. This is not checked by {@link

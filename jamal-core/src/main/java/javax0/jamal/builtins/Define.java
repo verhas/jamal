@@ -8,6 +8,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
+import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
 import static javax0.jamal.tools.InputHandler.convertGlobal;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
@@ -21,23 +22,28 @@ public class Define implements Macro {
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);
         var optional = InputHandler.firstCharIs(input, DEFINE_OPTIONALLY);
-        if (optional) {
+        var redefine = InputHandler.firstCharIs(input, ERROR_REDEFINE);
+        if (optional || redefine) {
             skip(input, 1);
             skipWhiteSpaces(input);
         }
         var id = fetchId(input);
-        if (optional && processor.isDefined(convertGlobal(id))) {
-            return "";
+        if (processor.isDefined(convertGlobal(id))) {
+            if (optional) {
+                return "";
+            }
+            if (redefine) {
+                throw new BadSyntax("The macro '" + id + "' was already defined.");
+            }
         }
-        boolean pure = false;
         skipWhiteSpaces(input);
-        if (id.endsWith(":") && !firstCharIs(input, '(')) {
-            pure = true;
+        final boolean pureByBeforeParams = id.endsWith(":") && !firstCharIs(input, '(');
+        if (pureByBeforeParams) {
             id = id.substring(0, id.length() - 1);
         }
         final String[] params = getParameters(input, id);
+        final boolean pure = pureByBeforeParams || firstCharIs(input, ':');
         if (firstCharIs(input, ':')) {
-            pure = true;
             skip(input, 1);
         }
         if (!firstCharIs(input, '=')) {

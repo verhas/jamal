@@ -30,7 +30,7 @@ public class FilesMacro {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var format = holder("directoryFormat","format").orElse("$name").asString();
             final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Params.using(processor).from(this).startWith('(').endWith(')').keys(format,root).parse(in);
+            Params.using(processor).from(this).between("()").keys(format,root).parse(in);
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
             final var dir = new File(dirName.length() > 0 ? dirName : ".");
@@ -74,7 +74,7 @@ public class FilesMacro {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var format = holder("fileFormat","format").orElse("$name").asString();
             final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Params.using(processor).from(this).startWith('(').endWith(')').keys(format,root).parse(in);
+            Params.using(processor).from(this).between("()").keys(format,root).parse(in);
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
             final var file = new File(fileName);

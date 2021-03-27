@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ParamsTestSupport {
 
@@ -71,6 +72,13 @@ public class ParamsTestSupport {
 
     private Character terminal = '\n';
     private Character start = null;
+
+    public ParamsTestSupport between(String seps) {
+        Objects.nonNull(seps);
+        this.start = seps.charAt(0);
+        this.terminal = seps.charAt(1);
+        return this;
+    }
 
     public ParamsTestSupport startWith(char start) {
         this.start = start;

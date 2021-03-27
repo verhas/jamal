@@ -6,8 +6,7 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.OptionsStore;
+import javax0.jamal.tools.Params;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +24,13 @@ public class For implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
+        final var separator = Params.<String>holder("$forsep", "separator").orElse(",");
+        final var subSeparator = Params.<String>holder("$forsubsep", "subseparator").orElse("\\|");
+        final var trim = Params.<Boolean>holder("trimForValues", "trim").asBoolean();
+        final var skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
+        final var lenient = Params.<Boolean>holder("lenient").asBoolean();
+        Params.using(processor).from(this).between("[]").keys(subSeparator, separator, trim, skipEmpty, lenient).parse(input);
+
         skipWhiteSpaces(input);
 
         final String[] variables = getVariables(input);
@@ -35,24 +41,23 @@ public class For implements Macro, InnerScopeDependent {
         checkEqualSign(input);
         final var content = input.toString();
 
-        MacroReader reader = MacroReader.macro(processor);
-        final var splitter = reader.readValue("$forsubsep").orElse("\\|");
-        final var valueArray = valuesString.split(reader.readValue("$forsep").orElse(","), -1);
+        final var valueArray = valuesString.split(separator.get(), -1);
 
         final var output = new StringBuilder();
         final Segment root = splitContentToSegments(variables, content);
-
         final var parameterMap = new HashMap<String, String>();
-        final var optionsStore = OptionsStore.getInstance(processor);
-        final var skipEmpty = optionsStore.is("skipForEmpty");
-        final var lenient = optionsStore.is("lenient");
 
         for (final String value : valueArray) {
-            if (value.length() > 0 || !skipEmpty) {
-                final var values = value.split(splitter, -1);
-                if (!lenient && values.length != variables.length) {
+            if (value.length() > 0 || !skipEmpty.is()) {
+                final var values = value.split(subSeparator.get(), -1);
+                if (!lenient.is() && values.length != variables.length) {
                     throw new BadSyntax("number of the values does not match the number of the parameters\n" +
                         String.join(",", variables) + "\n" + value);
+                }
+                if(trim.is()){
+                    for( int i = 0 ; i < values.length ; i++ ){
+                        values[i] = values[i].trim();
+                    }
                 }
                 for (int i = 0; i < variables.length; i++) {
                     parameterMap.put(variables[i], i < values.length ? values[i] : "");
@@ -66,6 +71,18 @@ public class For implements Macro, InnerScopeDependent {
 
     }
 
+    /**
+     * Split the content into segments. Each segment is either content text or a variable reference in the text. These
+     * segments follow each other intermixed.
+     * <p>
+     * The segments are linked one after the other and when the macro is evaluated all segments are processed one after
+     * the other only one. This ensures that a string, that is the same as the name of a loop variable is not replaced
+     * by the actual value of the variable in case the string was part of the value of another, or the same variable.
+     *
+     * @param variables we want to replace
+     * @param content   the content of the macro to be split up into segments
+     * @return the first {@link Segment}
+     */
     private Segment splitContentToSegments(String[] variables, String content) {
         final var root = new Segment(null, content);
         for (final var variable : variables) {

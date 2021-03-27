@@ -44,4 +44,11 @@ public class TestUndefine {
         TestThat.theInput("{@define :fruit=apple}{fruit} {#ident {@undefine :fruit} *{?fruit}* }{?fruit}")
             .results("apple ** ");
     }
+
+    @Test
+    @DisplayName("Test that a global macro can be undefined globally from local place")
+    void testLocalGloballyLocalUndefine() throws Exception {
+        TestThat.theInput("{#ident {@define fruit=apple}{@undefine :fruit} *{?fruit}*}{?fruit}")
+            .results("*apple*");
+    }
 }

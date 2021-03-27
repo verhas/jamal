@@ -72,6 +72,8 @@ public class Params {
         Param<List<?>> asList();
 
         T get() throws BadSyntax;
+
+        boolean is() throws BadSyntax;
     }
 
     private final Processor processor;
@@ -106,6 +108,16 @@ public class Params {
         return this;
     }
 
+    public Params between(String seps) {
+        Objects.nonNull(seps);
+        if (seps.length() != 2) {
+            throw new IllegalArgumentException("The argument to method 'between()' has to be a 2-character string. It was '" + seps + "'");
+        }
+        this.start = seps.charAt(0);
+        this.terminal = seps.charAt(1);
+        return this;
+    }
+
     public Params startWith(char start) {
         this.start = start;
         return this;
@@ -131,8 +143,8 @@ public class Params {
     }
 
     /**
-     * Specify the keys that can be used to specify the value. There can be aliases. The first value is the one
-     * that can also be used as a macro name, the rests are alias.
+     * Specify the keys that can be used to specify the value. There can be aliases. The first value is the one that can
+     * also be used as a macro name, the rests are alias.
      *
      * @param key the array of key and aliases
      * @param <T>

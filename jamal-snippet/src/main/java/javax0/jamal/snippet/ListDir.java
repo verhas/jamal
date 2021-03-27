@@ -27,7 +27,7 @@ public class ListDir implements Macro, InnerScopeDependent {
         final var format = holder("format").orElse("$name").asString();
         final var maxDepth = holder("maxDepth").orElseInt(Integer.MAX_VALUE);
         final var isFollowSymlinks = holder("followSymlinks").asBoolean();
-        Params.using(processor).from(this).startWith('(').endWith(')').keys(format,maxDepth,isFollowSymlinks).parse(in);
+        Params.using(processor).from(this).between("()").keys(format,maxDepth,isFollowSymlinks).parse(in);
 
         final FileVisitOption[] options;
         if (isFollowSymlinks.get()) {

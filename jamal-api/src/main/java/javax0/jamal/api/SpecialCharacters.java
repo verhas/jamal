@@ -13,6 +13,7 @@ public class SpecialCharacters {
     public static final char QUERY = '?';
     public static final char DEFINE_OPTIONALLY = '?';
     public static final char REPORT_UNDEFINED = '?';
+    public static final char ERROR_REDEFINE = '!';
     public static final char REPORT_ERRMES = '!';
 
 

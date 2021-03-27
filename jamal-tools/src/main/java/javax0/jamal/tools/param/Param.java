@@ -59,7 +59,7 @@ public class Param<K> implements Params.Param<K> {
     @Override
     public <K> Param<K> as(Class<K> klass, Function<String, K> converter) {
         this.converter = converter::apply;
-        return (Param<K>)this;
+        return (Param<K>) this;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Param<K> implements Params.Param<K> {
         this.macroName = macroName;
     }
 
-    public Param(String ...key) {
+    public Param(String... key) {
         this.key = key;
     }
 
@@ -154,6 +154,17 @@ public class Param<K> implements Params.Param<K> {
         } catch (Exception e) {
             throw new BadSyntax("There was an exception converting the parameter '" + key[0] + "' for the macro '" + macroName + "'", e);
         }
+    }
+
+    /**
+     * Get the value of a boolean parameter
+     */
+    public boolean is() throws BadSyntax {
+        K result = get();
+        if (!(result instanceof Boolean)) {
+            throw new IllegalArgumentException("Param.is() can only be used for boolean parameters");
+        }
+        return (boolean)result;
     }
 
     /**

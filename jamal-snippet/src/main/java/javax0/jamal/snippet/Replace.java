@@ -15,7 +15,7 @@ public class Replace implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var isRegex = holder("regex").asBoolean();
-        Params.using(processor).from(this).keys(isRegex).startWith('(').endWith(')').parse(in);
+        Params.using(processor).from(this).keys(isRegex).between("()").parse(in);
         InputHandler.skipWhiteSpaces(in);
         final var parts = InputHandler.getParts(in);
         if (parts.length < 2) {

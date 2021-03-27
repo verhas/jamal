@@ -1408,9 +1408,10 @@ Such import files cannot redefine the macro opening and closing string unless fi
 [[include]]
 ==== ix. `include`
 
-since 1.0.0 (core)
+* since 1.0.0 (core)
+* since 1.7.3 verbatim include
 
-`include` reads a file similarly to `import` but it starts a new scope for the processing of the included file, and it also results the content of the file included into the main file.
+`include` reads a file similarly to `import`, but it starts a new scope for the processing of the included file, and it also results the content of the file included into the main file.
 
 Use `include` to get the content of a file into the main output.
 
@@ -1427,15 +1428,22 @@ The syntax of the command is
 
 or (starting with 1.7.3)
 
-`{@include (verbatim) file_name}`
+`{@include [verbatim] file_name}`
 
 If the option `verbatim` is specified then the file is inserted into the output as it is without processing.
 This option can also be used in the form
 
-`{@include (includeVerbatim) file_name}`
+`{@include [includeVerbatim] file_name}`
 
-This version of this option name can also used as a global option.
+This version of this option name can also used as an option set using `{@options includeVerbatim}`.
 In that case all includes will be executed without processing the read file where and when the option `includeVerbatim` is `true`.
+
+Note that the macro `include` is NOT inner scope dependent.
+It means that `{#include {@options includeVerbatim} ...}` will not work.
+The options set inside the `include` macro have no effect when the `include` macro is executed.
+
+The option set outside, like `{@options includeVerbatim}{#include ...}` will work.
+However it will change the behaviour of all `include` macros executing later, while the option is in effect.
 
 
 The name of the file can be absolute, or it can be relative to the file that includes the other file.
@@ -1695,9 +1703,10 @@ The scripts have to be used to manifest the error.
 [[for]]
 ==== xiii. `for`
 
-since 1.0.0 (core)
-since 1.5.0 multi-argument `for`
-since 1.6.3 backtick string separator value list
+- since 1.0.0 (core)
+- since 1.5.0 multi-argument `for`
+- since 1.6.3 backtick string separator value list
+- since 1.7.3 options between `[` and `]`
 
 The macro `for` can be used to repeat the same text many times.
 This macro has two forms.
@@ -1744,6 +1753,21 @@ then the values for the different variables will be separated by a semicolon.
 Note that the macros `$forsep` and `$forsubsep` can also be defined inside the `for` macro body in case the macro is used with the `#` character at the start.
 In this case the definition of these macros is limited to the evaluation of this very `for` macro.
 
+Starting with version 1.7.3 you can also define these options locally using the format
+
+[source]
+----
+{@for [options] x in (a,b,c)=...}
+----
+
+where the options can be
+
+* `$forsep`, `separator` to specify the separator regular expression
+* `$forsubsep`, `subseparator` to specify the sub separator regular expression
+* `trimForValues`, `trim` to trim off the sapces from the values
+* `skipForEmpty`, `skipEmpty` to skip empty parameter list (see below)
+* `lenient` for lenient operation (see below)
+
 For example the macros:
 
 [source]
@@ -1763,28 +1787,47 @@ a is c
 ----
 
 
-In this case the value of the macro `$forsep` is effective inside the `for` but it is undefined outside.
+In this case the value of the macro `$forsep` is effective inside the `for`, but it is undefined outside.
+Another example:
+
+[source]
+----
+{#for [trim separator=":"] $a in ( a : b :c )=a is $a
+}
+----
+
+will result the same output:
+
+[source]
+----
+a is a
+a is b
+a is c
+
+----
+
 
 [NOTE]
 ====
-When a built-in macro is used with the `#` character in front of it the content of the use is evaluated before the macro.
-This evaluation is executed in a freshly opened scope, which is usually closed before the evaluation of the built-in macro starts.
-It means that any local definitions inside the use of the macro go out of scope when the built-in macro evaluates.
+Using the `#` character in front of a built-in macro instead of `@` will make the content evaluated before the macro.
+The content evaluates in a freshly opened scope, which is usually closed before the built-in macro evaluation.
+It means that any local definitions inside the macro use go out of scope when the built-in macro evaluates.
 
-Some built-in macros, like `for`, however, rely on the value of the macros that may be defined inside.
-These buil-in macros are called "inner scope dependent" macros, because they depend on the inner scope.
+However, some built-in macros, like `for`, rely on the macros' value defined inside.
+We call these built-in macros "inner scope dependent" macros because they depend on the inner scope.
 If you look at the Java implementation of such macros, you can see that they implement the interface `InnerScopeDependent`.
-If a built-in macro is inner scope dependent then it is evaluated while the inner scope is still open.
-In this case the scope is closed after the built-in macro was evaluated.
+If a built-in macro is inner scope dependent, it evaluates while the internal scope is still open.
+In this case, the scope closes after the built-in macro evaluation finishes.
 
 If the built-in macro is surrounded with an `{@eval ...}` macro, that is already evaluated in the outer scope.
-Using the `{#!macro ...}` way, where the `!` character directs Jamal to execute the result of the macro is the same as using the `{@eval...}` surrounding the macro.
+Using the `{#!macro ...}` way, where the `!` character directs Jamal to execute the macro's result is the same as using the `{@eval...}` surrounding the macro.
 The "post evaluation" runs in the outer scope.
 
 The macro `for` is inner scope dependent.
 ====
 
-If the number of the actual values separated by `|` character is not the same as the number of the variables in the for loop then the macro evaluation will throw a bad syntax exception.
+The number of the actual values separated by `|` character should be the same as the number of the variables in the for loop.
+If this is not the case then the macro evaluation will throw a bad syntax exception.
 This can be suppressed with the option `lenient`.
 If the option `lenient` is used then extra values are ignored and missing values are presented as empty strings.
 Note that this same option controls how user defined macro arguments are paired to the parameters.
@@ -2002,8 +2045,20 @@ You can also enclose the setting of the macro start and end string into an `iden
 
 A special use of `ident` is to insert a "null length separator" into the text.
 Imagine that the macro start and close strings are set to be `((` and `))`.
-We may want to use those because the curly braces are used in the text frequently and so are the single `(` and `(` characters.
-As an example we may want to define a macro that creates a markdown image reference:
+We may want to use those because the curly braces are used in the text frequently, and so are the single `(` and `)` characters.
+
+[NOTE]
+====
+Generally, it is not a good idea to use opening and closing strings that contain repeated characters.
+The reason for this is precisely the situation we describe in this example below.
+It isn't easy to read the closing strings when there are more than one.
+For example, how many `)))))))` double closing `))` are there in this string?
+In the example, we use these strings to demonstrate how you can deal with a situation like that in case you have to.
+The possibility shows Jamal's power, but it does not mean that you should utilize all these tricks.
+It is better to choose better opening and closing strings if the default `{` and `}` do not work.
+====
+
+As an example, we may want to define a macro that creates a markdown image reference:
 
 [source]
 ----
@@ -2012,23 +2067,23 @@ As an example we may want to define a macro that creates a markdown image refere
 
 This example needs a space after the cosing `)` character at the end of the image url.
 If we did not have this space the macro would be closed one `)` sooner than needed.
-This solution inserts an extra space after the image reference.
+To avoid that, we insert an extra space after the image reference.
 Usually it is not a problem.
 In some situations, however, we do not want to have that extra space there.
 This is possible using `ident`.
 
 [source]
 ----
-((@define image($ref)=![](images/$ref.png)((@ident}
+((@define image($ref)=![](images/$ref.png)((@ident))))
 ----
 
 The macro `((@ident))` will prevent Jamal to interpret the `)` character after the `.png` as the first character of a macro closing string.
 The same time `((@ident))` produces no character, not even a space in the output.
-Note that `comment` or `block` can be used the same way.
+The macros `comment` and `block` can be used the same way.
 
 Be aware that the macro `ident` consumes the white spaces (including newlines) that follow the `ident` keyword.
 This is to avoid extra white spaces when tabulation is needed for better readability.
-If you need the whitespace (e.g.: newline) in the output then you have to put those before the `ident` macro.
+If you need the whitespace (e.g.: newline) in the output then you can put those int the `ident` macro.
 
 Starting with Jama 1.5.0 there is a built-in language syntax to have similar effect as `ident`.
 If a macro is preceded with a
@@ -2039,7 +2094,14 @@ If a macro is preceded with a
 ----
 
 backtick character then the macro will not be evaluated.
-The above example can also be written as:
+The above example, which is
+
+[source]
+----
+{@define b=92}{#define c={@ident {a}}{b}}{@define a=14}{c}
+----
+
+can also be written as:
 
 [source]
 ----

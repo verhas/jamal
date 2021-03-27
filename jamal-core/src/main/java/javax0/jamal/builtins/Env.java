@@ -11,14 +11,14 @@ import static javax0.jamal.api.SpecialCharacters.QUERY;
  * Get the value of an environment variable.
  *
  * <pre>{@code
- * ((@env JAVA_HOME))
+ * {@env JAVA_HOME}
  * }</pre>
  * <p>
  * will result the current value of the environment variable {@code JAVA_HOME}.
  * <p>
- * If there is a {@code ?} after the name then the macro returns {@code "true"} (string without the quotes) if the
- * environment variable is defined and {@code "false"} if it is not defined. Testing just the value of the environment
- * variable in an {@code if} macro may be misleading in case the value of the environmen variable is {@code true} or
+ * If there is a {@code ?} after the name then the macro returns "{@code true}" (string without the quotes) if the
+ * environment variable is defined and "{@code false}" if it is not defined. Testing just the value of the environment
+ * variable in an {@code if} macro may be misleading in case the value of the environment variable is {@code true} or
  * {@code false} or empty string.
  */
 public class Env implements Macro {

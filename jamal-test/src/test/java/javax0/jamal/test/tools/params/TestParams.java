@@ -414,7 +414,7 @@ public class TestParams {
     @Test
     @DisplayName("Parsing simple parameters between ( and )")
     void testSimpleParametersBetweenParens() throws Exception {
-        keys("margin:I,top:I,left:S").startWith('(').endWith(')').input(" (margin=2 top=3 left=\"aligned\")").results(
+        keys("margin:I,top:I,left:S").between("()").input(" (margin=2 top=3 left=\"aligned\")").results(
             "margin:I,top:I,left:S\n" +
                 "input:\n" +
                 " (margin=2 top=3 left=\"aligned\")\n" +
@@ -428,7 +428,7 @@ public class TestParams {
     @Test
     @DisplayName("Parsing simple parameters between ( and ) on multi line")
     void testSimpleParametersBetweenParensML() throws Exception {
-        keys("margin:I,top:I,left:S").startWith('(').endWith(')').input(" (margin=2 top=3 \nleft=\"aligned\")").results(
+        keys("margin:I,top:I,left:S").between("()").input(" (margin=2 top=3 \nleft=\"aligned\")").results(
             "margin:I,top:I,left:S\n" +
                 "input:\n" +
                 " (margin=2 top=3 \n" +
