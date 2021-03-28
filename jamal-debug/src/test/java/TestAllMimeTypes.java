@@ -7,7 +7,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,7 +25,7 @@ public class TestAllMimeTypes {
      */
     @Test
     @DisplayName("There is a mime type in mime-types.properties for each extension")
-    void testMimeTypes() throws URISyntaxException, IOException {
+    void testMimeTypeMissing() throws URISyntaxException, IOException {
         Properties mimeTypes = new Properties();
         mimeTypes.load(TestAllMimeTypes.class.getClassLoader().getResourceAsStream("mime-types.properties"));
         final var uiDirectory = Paths.get(
@@ -38,4 +41,23 @@ public class TestAllMimeTypes {
             .ifPresent(s -> Assertions.fail("There is no mime type for the file extension '" + s + "'"));
     }
 
+    @Test
+    @DisplayName("There is no unused mime type in mime-types.properties for each extension")
+    void testMimeTypeSurplus() throws URISyntaxException, IOException {
+        Properties mimeTypes = new Properties();
+        mimeTypes.load(TestAllMimeTypes.class.getClassLoader().getResourceAsStream("mime-types.properties"));
+        final var extensions = new HashSet<>(mimeTypes.stringPropertyNames());
+        final var uiDirectory = Paths.get(
+            requireNonNull(TestAllMimeTypes.class.getClassLoader().getResource("ui")).toURI()
+        );
+        Files.walk(uiDirectory, Integer.MAX_VALUE)
+            .filter(Files::isRegularFile)
+            .map(Path::toString)
+            .filter(s -> s.lastIndexOf('.') != -1)
+            .map(s -> s.substring(s.lastIndexOf('.') + 1))
+            .forEach(extensions::remove);
+        if (!extensions.isEmpty()) {
+            Assertions.fail("There are extra mime types not used:\n" + String.join(",", extensions));
+        }
+    }
 }
