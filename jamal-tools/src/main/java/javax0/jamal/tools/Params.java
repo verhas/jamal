@@ -147,8 +147,8 @@ public class Params {
      * also be used as a macro name, the rests are alias.
      *
      * @param key the array of key and aliases
-     * @param <T>
-     * @return
+     * @param <T> the type of the parameter, can be {@code Integer}, {@code String} or {@code Boolean}
+     * @return a new holder
      */
     public static <T> Param<T> holder(String... key) {
         if (key.length == 0) {

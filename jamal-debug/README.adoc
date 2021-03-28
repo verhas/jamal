@@ -38,7 +38,7 @@ type:p1:p2: ... :pn?o1=v1&o2=v2&...&oj=vk
 
 The `type` part is a string identifier, and usually, this is the part that a debugger looks at to decide if it can handle a connection.
 For example, the TCP Server Debugger handles all connection strings with the `s:` characters.
-The HTTP Server Debugger handles all connection strings that start with the `HTTP:` characters.
+The HTTP Server Debugger handles all connection strings that start with the `http:` characters.
 
 The parameters `p1`, `p2`, ..., `pn` and the options `o1`, `o2`, ... `oj` are interpreted by the debugger.
 
@@ -55,7 +55,12 @@ The debugger implementations are free to stop and interact with the debugger cli
 The TCP Server Debugger and the HTTP Server Debugger stop and interact with the debugger client only after the macro evaluation.
 
 === TCP Server Debugger
+Use a connection string, like
 
+[source,text]
+----
+           s:8080
+----
 This debugger will handle all connection strings that start with the characters `s:`.
 The `p1` parameter is the port that the server will listen on.
 You can connect to `localhost:p1` using telnet.
@@ -118,7 +123,14 @@ The macro after the evaluation is the output.
 
 === HTTP Server Debugger
 
-The HTTP server debugger will handle a connection string if it starts with `HTTP:`.
+Use a connection string, like
+
+[source,text]
+----
+           http:8080?client=127.0.0.1&secret=mySecret&cors=*
+----
+
+The HTTP server debugger will handle a connection string if it starts with `http:`.
 The `p1` parameter is the port, so the server listens for incoming HTTP requests on `localhost:p1`.
 The URLs have the format `http://localhost:p1/secret/command` or `http://localhost:p1/command`.
 (Explanation about `secret` comes below.)
@@ -135,6 +147,11 @@ Usually, it is `127.0.0.1`, but it may be different if you use IPv6.
 To see the actual string that the debugger sees when you connect to it, delete this option and then GET `http://localhost:p1/client`.
 The debugger will answer with the actual string as it sees your client.
 Then stop the debugger and configure this string to be safe.
+
+. `cors` is the option to add an `Access-Control-Allow-Origin` header to the responses.
+The default is not to add this header.
+It is needed if you start the JavaScript code of the debugger from a different server.
+This is mainly during the development of the debugger application, so generally you do not need this option.
 
 ==== HTTP Server Debugger Commands
 

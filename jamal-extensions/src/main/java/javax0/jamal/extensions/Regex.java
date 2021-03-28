@@ -142,7 +142,6 @@ public class Regex {
      * <p>
      * The {@code }
      * <p>
-     * <p>
      * This macro splits the input into three parts using {@link InputHandler#getParts(Input)}. The first will be the
      * name of the
      */

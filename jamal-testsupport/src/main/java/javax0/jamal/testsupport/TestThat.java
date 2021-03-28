@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
  * <p>
  * that invokes not only one macro but rather the whole processing engine.
  */
-public class TestThat {
+public class TestThat implements AutoCloseable {
     final private Class<? extends Macro> klass;
     private Processor processor;
     private String input;
@@ -111,7 +111,7 @@ public class TestThat {
     }
 
     /**
-     * Create a new macro, a new processor and test that the input creates the output.
+     * Create a new macro, a new processor if needed run it on the input. Return the result of the processing.
      *
      * @return the calculated output
      * @throws NoSuchMethodException     if the macro class can not be instantiated
@@ -126,15 +126,35 @@ public class TestThat {
         InstantiationException,
         InvocationTargetException,
         BadSyntax {
-        final String actual;
         var in = new javax0.jamal.tools.Input(input, pos);
         if (klass != null) {
             Macro sut = createSut();
-            actual = sut.evaluate(in, getProcessor());
+            return sut.evaluate(in, getProcessor());
         } else {
-            actual = getProcessor().process(in);
+            return getProcessor().process(in);
         }
-        return actual;
+    }
+
+    /**
+     * Create a new macro, a new processor if needed run it on the input. Return the result of the processing. Close the
+     * processor
+     *
+     * @return the calculated output
+     * @throws NoSuchMethodException     if the macro class can not be instantiated
+     * @throws IllegalAccessException    if the macro class can not be instantiated
+     * @throws InstantiationException    if the macro class can not be instantiated
+     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
+     */
+    private String resultsClose() throws
+        InvocationTargetException,
+        NoSuchMethodException,
+        InstantiationException,
+        IllegalAccessException,
+        BadSyntax {
+        final var output = results();
+        close();
+        return output;
     }
 
     /**
@@ -154,7 +174,7 @@ public class TestThat {
         InstantiationException,
         InvocationTargetException,
         BadSyntax {
-        Assertions.assertEquals(expected, results());
+        Assertions.assertEquals(expected, resultsClose());
     }
 
 
@@ -166,6 +186,7 @@ public class TestThat {
      * @throws IllegalAccessException    see {@link #throwsUp(Class, String)}
      * @throws InstantiationException    see {@link #throwsUp(Class, String)}
      * @throws InvocationTargetException see {@link #throwsUp(Class, String)}
+     * @throws BadSyntax                 see {@link #throwsUp(Class, String)}
      */
     public void throwsUp(Class<? extends Throwable> throwable) throws
         NoSuchMethodException,
@@ -180,7 +201,6 @@ public class TestThat {
      * matches the regular expression.
      * <p>
      * Notes:
-     * <p>
      * <ul>
      *     <li>The regular exception should match the whole message, not only a part of it. If needed put {@code .*}
      *     before and after the pattern to match only a part.
@@ -191,7 +211,9 @@ public class TestThat {
      *     result is accepted.
      *     <li>Looking for the causing exception and the suppressed exceptions is recursive. For example if the regular
      *     expression matches the message of the causing exception of one of the suppressed exceptions it will be okay.
-     * </ul> the
+     * </ul>
+     * <p>
+     * If the regular expression does not match any of the above possibilities then an assertion fail will execute.
      *
      * @param throwable the exception we expect
      * @param regex     a regular expression to match the message of the exception against. Not checked if {@code
@@ -200,20 +222,15 @@ public class TestThat {
      * @throws IllegalAccessException    if the macro class can not be instantiated
      * @throws InstantiationException    if the macro class can not be instantiated
      * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntax                 if the evaluation throws BadSyntax but some other type is expected
      */
     public void throwsUp(Class<? extends Throwable> throwable, String regex) throws
         NoSuchMethodException,
         IllegalAccessException,
         InstantiationException,
         InvocationTargetException, BadSyntax {
-        final var in = new javax0.jamal.tools.Input(input, null);
         try {
-            if (klass != null) {
-                final var sut = createSut();
-                sut.evaluate(in, getProcessor());
-            } else {
-                getProcessor().process(in);
-            }
+            results();
         } catch (Throwable t) {
             if (throwable.isAssignableFrom(t.getClass())) {
                 if (regex != null) {
@@ -227,13 +244,15 @@ public class TestThat {
             } else {
                 throw t;
             }
+        } finally {
+            close();
         }
     }
 
     /**
      * Check that the pattern matches the message of the exception, or the causing exception or any supressed exception.
-     * It also checks that the causing or supressed exception is not the same as the original and the check is done in a
-     * recursive call.
+     * It also checks that the causing or suppressed exception is not the same as the original and the check is done in
+     * a recursive call.
      * <p>
      * This simple algorithm may run into an infinite loop if the data structure is recursive and has a loop longer than
      * one. E.g.: cause of A is B, and cause of B is A.
@@ -377,5 +396,10 @@ public class TestThat {
     public TestThat define(Macro macro, String alias) {
         getProcessor().getRegister().define(macro, alias);
         return this;
+    }
+
+    @Override
+    public void close() {
+        getProcessor().close();
     }
 }
