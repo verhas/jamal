@@ -1,7 +1,17 @@
 .red {
     color : red;
+    font-weight: 700;
 }
 
-span {
+.Input_SourceCode {
+    font-family: "Courier New",sans-serif;
+    font-size: 18px;
+    height: 300px;
+    width:1200px;
+    border: 1px solid white;
+    text-align: left;
+}
+
+.Input_SourceCode > span {
     display: inline;
 }

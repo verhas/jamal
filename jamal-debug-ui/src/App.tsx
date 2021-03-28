@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import Input from './components/Input';
 import CommandButton from './components/CommandButton';
 import './App.css';
+import axios from 'axios';
 
 function App() {
-const dummyRun = () => {
-        console.log("dummyRun executed");
-        }
+    const [inputBefore,setInputBefore] = useState<string>("");
+    const [macro,setMacro] = useState<string>("");
+    const [output,setOutput] = useState("");
+    const dummyRun = () => {
+            axios.post("http://localhost:8080/run")
+            .then( () => console.log("OK") );
+            }
+    const initDebuggerDisplay= () => {
+            axios.get("http://localhost:8080/inputBefore").then( response => setInputBefore(response.data) );
+            axios.get("http://localhost:8080/processing").then( response => setMacro(response.data));
+    }
+  useEffect(initDebuggerDisplay);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <CommandButton title="Run" onClickHandler={dummyRun}/>
           <Input
-            text="alma van a fa alatt" macro="van a"
+            text={inputBefore} macro={macro}
           />
           <p></p>
           <Input
-                      text="alma van a fa alatt" macro=""
+                      text={output}
                     />
         <a
           className="App-link"

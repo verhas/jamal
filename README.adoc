@@ -1093,7 +1093,7 @@ In a situation like this the `:` character belongs to the `:=` assignment symbol
 
 [[undefine]]
 ==== v. `undefine`
-since 1.6.6
+* since 1.6.6
 
 `undefine` can be used to undefine a macro.
 Undefining a macro works the same way as definition: in scope.
@@ -1209,23 +1209,24 @@ global scope: apple
 
 [NOTE]
 ====
-For the technically savvy, the following may help to get a more comfortable grab of how the macro `undefined` works.
+For the technically savvy, the following may help get a more comfortable grab of how the macro `undefined` works.
 
-User-defined macros are defined in maps.
+Jamal stores user-defined macros in maps.
 The key in the map is the id of the macro.
 The value in the map is a Java object that represents the user-defined macro.
 The maps are organized in a stack.
 The stack has one element for each scope.
-When a new scope is opened in the Jamal source, the stack grows.
+When a new scope opens in the Jamal source, the stack grows.
 When a scope is closed, the stack shrinks.
 Searching for a macro starts in the map stored at the top of the stack (opened latest).
 If the macro is not in the map, then the search goes deeper.
 The search finally finds the macro in one of the maps or runs out of stack levels.
 
 The maps are very general in the sense that they can store any Java object that implements `Identified`.
-User-defined macros should implement the `Evaluable` interface.
-When the search finds an object in the stacked map structure that does not implement this interface, it treats the macro as undefined.
-The macro `undefine` inserts an object into the structure that does not implement any other interface but `Identified`.
+User-defined macros implement this interface along with `UserDefinedMacro`.
+A macro is undefined when there is no object assigned to the name in any of the maps.
+However, it is also undefined when the search finds an object in the stacked map structure that does not implement `UserDefinedMacro`.
+The macro `undefine` inserts an object into the structure that is exactly like that.
 Export is possible because the macro `export` does not care about the implemented interfaces.
 It merely removes the object from the map and inserts it in the map on the next stack level.
 ====

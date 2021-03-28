@@ -20,8 +20,8 @@ public class DebuggerFactory {
             if (affinity >= 0 && min > affinity) {
                 unique = true;
                 selected = debugger;
-            }
-            if (min == affinity) {
+                min = affinity;
+            } else if (min == affinity) {
                 unique = false;
             }
         }

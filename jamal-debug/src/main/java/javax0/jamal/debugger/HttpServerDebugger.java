@@ -12,7 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -36,6 +40,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     public static final String MIME_APPLICATION_JSON = "application/json";
     private String secret = "";
     private String client = "";
+    private String cors = "";
 
     private enum Command {
         LEVEL,
@@ -197,10 +202,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     task.waitForAck();
                     return;
                 case INPUT: // send the input of the required level to the client
-                    task.messageBuffer = inputBefore;
+                    task.messageBuffer = inputAfter;
                     break;
                 case INPUT_BEFORE: // send the input after of the required level to the client
-                    task.messageBuffer = inputAfter;
+                    task.messageBuffer = inputBefore;
                     break;
                 case OUTPUT: // send the output of the required level to the client
                     task.messageBuffer = output;
@@ -309,15 +314,18 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             }
             secret = connection.getOption("secret").map(secret -> "/" + secret).orElse("");
             client = connection.getOption("client").orElse("");
+            cors = connection.getOption("cors").orElse(null);
             return 1000;
         }
         return -1;
     }
 
     private HttpServer server;
+    private Properties mimeTypes = new Properties();
 
     @Override
     public void init(Debugger.Stub stub) throws Exception {
+        mimeTypes.load(HttpServerDebugger.class.getClassLoader().getResourceAsStream("mime-types.properties"));
         this.stub = stub;
         server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
         createContext(server, "/level", "GET", Command.LEVEL);
@@ -340,9 +348,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 }
             }
         );
-        server.createContext("/", e ->
-
-            respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "404"));
+        createStaticContext(server);
         server.setExecutor(Executors.newSingleThreadExecutor());
         server.start();
     }
@@ -350,6 +356,44 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     @Override
     public void close() {
         server.stop(1);
+    }
+
+    private void createStaticContext(HttpServer server) {
+        server.createContext(secret + "/", (e) -> {
+            if (client != null && client.length() > 0 && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
+                respond(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
+                return;
+            }
+            if (!Objects.equals("GET", e.getRequestMethod())) {
+                respond(e, HTTP_BAD_METHOD, MIME_PLAIN, "");
+                return;
+            }
+            var file = e.getRequestURI().toString().substring((secret).length() + 1);
+            if (file.length() == 0) {
+                file = "index.html";
+            }
+            final var extensionStart = file.lastIndexOf('.');
+            final String contentType;
+            if (extensionStart == -1) {
+                contentType = "text/plain";
+            } else {
+                final var extension = file.substring(extensionStart + 1);
+                contentType = Optional.ofNullable(mimeTypes.getProperty(extension)).orElse("text/plain");
+            }
+            final var url = HttpServerDebugger.class.getClassLoader().getResource("ui/" + file);
+            try {
+                final var content = Files.readAllBytes(Paths.get(url.toURI()));
+                e.getResponseHeaders().add("Content-Type", contentType);
+
+                e.sendResponseHeaders(200, content.length);
+                try (final var out = e.getResponseBody()) {
+                    out.write(content);
+                    out.flush();
+                }
+            } catch (URISyntaxException | IOException ex) {
+                respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
+            }
+        });
     }
 
     private void createContext(HttpServer server, String mapping, String method, Command command) {
@@ -386,12 +430,15 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
 
-    private static void respond(HttpExchange exchange, int status, String contentType, String body) throws IOException {
+    private void respond(HttpExchange exchange, int status, String contentType, String body) throws IOException {
         if (body == null || body.length() == 0) {
             body = "" + status;
             contentType = MIME_PLAIN;
         }
         exchange.getResponseHeaders().add("Content-Type", contentType);
+        if (cors != null) {
+            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", cors);
+        }
         if (status != 200) {
             exchange.getResponseHeaders().add("Location", "https://http.cat/" + status);
         }
