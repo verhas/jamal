@@ -1,7 +1,8 @@
-.red {
-    color : red;
+.CommandButton_buttonName {
+    font-size: 10px;
+    display: block;
 }
 
-span {
-    display: inline;
+.block {
+    display: inline-block;
 }

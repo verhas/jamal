@@ -42,19 +42,31 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     private String client = "";
     private String cors = "";
 
+    private enum Method {
+        GET, POST
+    }
+
     private enum Command {
-        LEVEL,
-        INPUT,
-        INPUT_BEFORE,
-        OUTPUT,
-        PROCESSING,
-        BUILT_IN,
-        USER_DEFINED,
-        EXECUTE,
-        RUN,
-        STEP,
-        STEP_INTO,
-        QUIT
+        LEVEL("level", Method.GET),
+        STATE("state", Method.GET),
+        INPUT("input", Method.GET),
+        INPUT_BEFORE("inputBefore", Method.GET),
+        OUTPUT("output", Method.GET),
+        PROCESSING("processing", Method.GET),
+        BUILT_IN("macros", Method.GET),
+        USER_DEFINED("userDefined", Method.GET),
+        EXECUTE("execute", Method.POST),
+        RUN("run", Method.POST),
+        STEP("step", Method.POST),
+        STEP_INTO("stepInto", Method.POST),
+        QUIT("quit", Method.POST);
+        private String url;
+        private Method method;
+
+        Command(String url, Method method) {
+            this.url = "/" + url;
+            this.method = method;
+        }
     }
 
     /**
@@ -63,6 +75,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
      * there should only be one client and every request should come from a human interaction.
      */
     private final BlockingQueue<Task> request = new LinkedBlockingQueue<>(1);
+
+    private String handleState;
 
     /**
      * Structure describing the task, what the debugger is asked to do.
@@ -146,6 +160,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     @Override
     public void setStart(CharSequence macro) {
         macros = macro.toString();
+        handleState = "BEFORE";
+        handle();
     }
 
     @Override
@@ -153,7 +169,6 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         currentLevel = level;
         this.input = input;
         this.inputBefore = input.toString();
-        output = "";
         macros = "";
         inputAfter = "";
     }
@@ -163,6 +178,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         currentLevel = level;
         inputAfter = input.toString();
         this.output = output.toString();
+        handleState = "AFTER";
         handle();
     }
 
@@ -180,8 +196,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             Map<String, Object> response = null;
             final List<Debuggable.Scope> scopes;
             switch (task.command) {
+                case STATE:
+                    task.messageBuffer = handleState;
+                    break;
                 case QUIT: // exit the debugger and abort the execution of the processor
-
                     task.done();
                     task.waitForAck();
                     throw new IllegalArgumentException("Debugger was aborted.");
@@ -328,18 +346,19 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         mimeTypes.load(HttpServerDebugger.class.getClassLoader().getResourceAsStream("mime-types.properties"));
         this.stub = stub;
         server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
-        createContext(server, "/level", "GET", Command.LEVEL);
-        createContext(server, "/input", "GET", Command.INPUT);
-        createContext(server, "/inputBefore", "GET", Command.INPUT_BEFORE);
-        createContext(server, "/output", "GET", Command.OUTPUT);
-        createContext(server, "/processing", "GET", Command.PROCESSING);
-        createContext(server, "/macros", "GET", Command.BUILT_IN);
-        createContext(server, "/userDefinedMacros", "GET", Command.USER_DEFINED);
-        createContext(server, "/execute", "POST", Command.EXECUTE);
-        createContext(server, "/run", "POST", Command.RUN);
-        createContext(server, "/step", "POST", Command.STEP);
-        createContext(server, "/stepInto", "POST", Command.STEP_INTO);
-        createContext(server, "/quit", "POST", Command.QUIT);
+        createContext(server, Command.LEVEL);
+        createContext(server, Command.STATE);//TODO comment this line and debug why there is no HTTP response at all
+        createContext(server, Command.INPUT);
+        createContext(server, Command.INPUT_BEFORE);
+        createContext(server, Command.OUTPUT);
+        createContext(server, Command.PROCESSING);
+        createContext(server, Command.BUILT_IN);
+        createContext(server, Command.USER_DEFINED);
+        createContext(server, Command.EXECUTE);
+        createContext(server, Command.RUN);
+        createContext(server, Command.STEP);
+        createContext(server, Command.STEP_INTO);
+        createContext(server, Command.QUIT);
         server.createContext("/client", e -> {
                 if (client == null || client.length() == 0) {
                     respond(e, HTTP_OK, MIME_PLAIN, e.getRemoteAddress().getHostString());
@@ -396,8 +415,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         });
     }
 
-    private void createContext(HttpServer server, String mapping, String method, Command command) {
-        server.createContext(secret + mapping, (e) -> {
+    private void createContext(HttpServer server, Command command) {
+        server.createContext(secret + command.url, (e) -> {
             if (!Objects.equals(e.getHttpContext().getPath(), e.getRequestURI().toString()) &&
                 !Objects.equals(e.getHttpContext().getPath() + "/", e.getRequestURI().toString())) {
                 respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
@@ -407,7 +426,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 respond(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
                 return;
             }
-            if (!Objects.equals(method, e.getRequestMethod())) {
+            if (!Objects.equals(command.method.name(), e.getRequestMethod())) {
                 respond(e, HTTP_BAD_METHOD, MIME_PLAIN, "");
                 return;
             }
@@ -431,10 +450,6 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
 
     private void respond(HttpExchange exchange, int status, String contentType, String body) throws IOException {
-        if (body == null || body.length() == 0) {
-            body = "" + status;
-            contentType = MIME_PLAIN;
-        }
         exchange.getResponseHeaders().add("Content-Type", contentType);
         if (cors != null) {
             exchange.getResponseHeaders().add("Access-Control-Allow-Origin", cors);

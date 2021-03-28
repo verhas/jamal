@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.run::before {
+  content: url("./icons/play.svg");
+}
+
+.quit::before {
+  content: url("./icons/log-out.svg");
+}
+
+.step::before {
+  content: url("./icons/arrow-right.svg");
+}
+
+.stepInto::before {
+  content: url("./icons/arrow-down.svg");
+}

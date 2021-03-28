@@ -1,17 +1,24 @@
-import React, {FC} from 'react';
-import './CommandButton.css';
+import React, { FC } from "react";
+import "./CommandButton.css";
 
 type CommandButtonProps = {
-    title: string;
-    onClickHandler : () => void;
-}
+  title: string;
+  onClickHandler: () => void;
+  className?: string;
+};
 
-const CommandButton:FC<CommandButtonProps> = ( {title, onClickHandler} ) => {
+const CommandButton: FC<CommandButtonProps> = ({
+  title,
+  onClickHandler,
+  className,
+}) => {
   return (
-  <>
-    <button onClick={onClickHandler}>{title}</button>
-  </>
+    <div className="block">
+      <button className={className} onClick={onClickHandler}>
+      </button>
+      <span className="CommandButton_buttonName">{title}</span>
+    </div>
   );
-}
+};
 
 export default CommandButton;
