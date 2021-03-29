@@ -47,6 +47,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private enum Command {
+        ALL("all", Method.GET),
         LEVEL("level", Method.GET),
         STATE("state", Method.GET),
         INPUT("input", Method.GET),
@@ -58,10 +59,11 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         EXECUTE("execute", Method.POST),
         RUN("run", Method.POST),
         STEP("step", Method.POST),
+        STEP_OUT("stepOut", Method.POST),
         STEP_INTO("stepInto", Method.POST),
         QUIT("quit", Method.POST);
-        private String url;
-        private Method method;
+        private final String url;
+        private final Method method;
 
         Command(String url, Method method) {
             this.url = "/" + url;
@@ -74,7 +76,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
      * heavy duty server the size of the queue is limited to one. There is no reason to increase this value because
      * there should only be one client and every request should come from a human interaction.
      */
-    private final BlockingQueue<Task> request = new LinkedBlockingQueue<>(1);
+    private final BlockingQueue<Task> requestQueue = new LinkedBlockingQueue<>(1);
 
     private String handleState;
 
@@ -87,21 +89,23 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         final Command command;
         String messageBuffer;
         int status = 200;
+        final Map<String, String> params;
         String contentType = MIME_PLAIN;
 
         Task(Command command, String message) {
-            this(command);
+            this(command, (Map<String, String>) null);
             this.messageBuffer = message;
         }
 
-        Task(Command command) {
+        Task(Command command, final Map<String, String> params) {
             this.command = command;
+            this.params = params;
         }
 
         /**
          * After the debugger was done it may wait for acknowledgement. For example asking the debugger to quit or run
          * may result the main Jamal thread to finish before the http server thread services the client sending the
-         * response. In that case the client would not get the response. To avoid that these commands call this {@link
+         * response. In that case the client would not get the response. To avoid that these commands call this {@code
          * #waitForAck()} method that will wait until the other thread invokes {@link #acknowledge()}. That is called by
          * the HTTP server when the content was sent to the client and the channel was closed.
          */
@@ -118,7 +122,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
          * method {@link #done()} is invoked when the debugger has finished the processing, put all the result into the
          * task and the http server can serve the client with this information.
          *
-         * @throws InterruptedException
+         * @throws InterruptedException if the thread was interrupted
          */
         void waitForDone() throws InterruptedException {
             waitForIt.await();
@@ -182,6 +186,13 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         handle();
     }
 
+    private void addToResponse(Task task, Map<String, Object> response, Command command, Object value) {
+        final var key = command.url.substring(1);
+        if (task.params.containsKey(key)) {
+            response.put(key, value);
+        }
+    }
+
     private void handle() {
         if (state != RunState.STEP_IN && (state != RunState.STEP || currentLevel > stepLevel)) {
             return;
@@ -189,13 +200,24 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         while (true) {
             final Task task;
             try {
-                task = request.take();
+                task = requestQueue.take();
             } catch (InterruptedException e) {
                 throw new IllegalArgumentException("Debugger thread was interrupted", e);
             }
             Map<String, Object> response = null;
             final List<Debuggable.Scope> scopes;
             switch (task.command) {
+                case ALL:
+                    response = new HashMap<>();
+                    addToResponse(task, response, Command.LEVEL, "" + currentLevel);
+                    addToResponse(task, response, Command.STATE, handleState);
+                    addToResponse(task, response, Command.INPUT, inputAfter);
+                    addToResponse(task, response, Command.OUTPUT, output);
+                    addToResponse(task, response, Command.INPUT_BEFORE, inputBefore);
+                    addToResponse(task, response, Command.PROCESSING, macros);
+                    addToResponse(task, response, Command.BUILT_IN, getBuiltIns());
+                    addToResponse(task, response, Command.USER_DEFINED, getUserDefineds());
+                    break;
                 case STATE:
                     task.messageBuffer = handleState;
                     break;
@@ -205,6 +227,16 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     throw new IllegalArgumentException("Debugger was aborted.");
                 case RUN: // run the processor to the end
                     state = RunState.RUN;
+                    task.done();
+                    task.waitForAck();
+                    return;
+                case STEP_OUT:// step to one level higher
+                    state = RunState.STEP;
+                    if (currentLevel > 1) {
+                        stepLevel = currentLevel - 1;
+                    } else {
+                        stepLevel = 1;
+                    }
                     task.done();
                     task.waitForAck();
                     return;
@@ -257,46 +289,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     state = save;
                     break;
                 case BUILT_IN: // list built in macros
-                    response = new HashMap<>();
-                    scopes = stub.getScopeList();
-                    final var scopeList = new ArrayList<Map<String, ?>>(scopes.size());
-                    response.put("macros", scopeList);
-                    for (final var scope : scopes) {
-                        final var macros = scope.getMacros();
-                        final var delimiters = scope.getDelimiterPair();
-                        final List<String> macrosList = new ArrayList<>(macros.size());
-                        for (final var macro : macros.values()) {
-                            macrosList.add(macro.getId());
-                        }
-                        scopeList.add(Map.of("delimiters", Map.of("open", delimiters.open(), "close", delimiters.close()),
-                            "macros", macrosList));
-                    }
+                    response = getBuiltIns();
                     break;
                 case USER_DEFINED: // list user defined macros
-                    response = new HashMap<>();
-                    scopes = stub.getScopeList();
-                    final var udList = new ArrayList<>(scopes.size());
-                    response.put("scopes", udList);
-                    for (final var scope : scopes) {
-                        final var macros = scope.getUdMacros();
-                        final List<Map<String, Object>> macrosList = new ArrayList<>(macros.size());
-                        udList.add(macrosList);
-                        for (final var macro : macros.values()) {
-                            macrosList.add(
-                                getDebuggable(macro).map(ud -> Map.of(
-                                    "open", ud.getOpenStr(),
-                                    "close", ud.getCloseStr(),
-                                    "id", macro.getId(),
-                                    "parameters", Arrays.asList(ud.getParameters()),
-                                    "content", ud.getContent(),
-                                    "type", macro.getClass().getName()
-                                    )
-                                ).orElseGet(() -> Map.of(
-                                    "id", macro.getId(),
-                                    "type", macro.getClass().getName()
-                                )));
-                        }
-                    }
+                    response = getUserDefineds();
                     break;
                 default:
                     throw new IllegalArgumentException("The enum inside the class has a not handled value: " + task.command);
@@ -308,6 +304,52 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             task.done();
         }
 
+    }
+
+    private Map<String, Object> getUserDefineds() {
+        final Map<String, Object> response = new HashMap<>();
+        final List<Debuggable.Scope> scopes = stub.getScopeList();
+        final var udList = new ArrayList<>(scopes.size());
+        response.put("scopes", udList);
+        for (final var scope : scopes) {
+            final var macros = scope.getUdMacros();
+            final List<Map<String, Object>> macrosList = new ArrayList<>(macros.size());
+            udList.add(macrosList);
+            for (final var macro : macros.values()) {
+                macrosList.add(
+                    getDebuggable(macro).map(ud -> Map.of(
+                        "open", ud.getOpenStr(),
+                        "close", ud.getCloseStr(),
+                        "id", macro.getId(),
+                        "parameters", Arrays.asList(ud.getParameters()),
+                        "content", ud.getContent(),
+                        "type", macro.getClass().getName()
+                        )
+                    ).orElseGet(() -> Map.of(
+                        "id", macro.getId(),
+                        "type", macro.getClass().getName()
+                    )));
+            }
+        }
+        return response;
+    }
+
+    private Map<String, Object> getBuiltIns() {
+        final Map<String, Object> response = new HashMap<>();
+        final List<Debuggable.Scope> scopes = stub.getScopeList();
+        final var scopeList = new ArrayList<Map<String, ?>>(scopes.size());
+        response.put("macros", scopeList);
+        for (final var scope : scopes) {
+            final var macros = scope.getMacros();
+            final var delimiters = scope.getDelimiterPair();
+            final List<String> macrosList = new ArrayList<>(macros.size());
+            for (final var macro : macros.values()) {
+                macrosList.add(macro.getId());
+            }
+            scopeList.add(Map.of("delimiters", Map.of("open", delimiters.open(), "close", delimiters.close()),
+                "macros", macrosList));
+        }
+        return response;
     }
 
     private Optional<Debuggable.UserDefinedMacro> getDebuggable(Identified macro) {
@@ -339,15 +381,16 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private HttpServer server;
-    private Properties mimeTypes = new Properties();
+    private final Properties mimeTypes = new Properties();
 
     @Override
     public void init(Debugger.Stub stub) throws Exception {
         mimeTypes.load(HttpServerDebugger.class.getClassLoader().getResourceAsStream("mime-types.properties"));
         this.stub = stub;
         server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
+        createContext(server, Command.ALL);
         createContext(server, Command.LEVEL);
-        createContext(server, Command.STATE);//TODO comment this line and debug why there is no HTTP response at all
+        createContext(server, Command.STATE);
         createContext(server, Command.INPUT);
         createContext(server, Command.INPUT_BEFORE);
         createContext(server, Command.OUTPUT);
@@ -358,6 +401,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         createContext(server, Command.RUN);
         createContext(server, Command.STEP);
         createContext(server, Command.STEP_INTO);
+        createContext(server, Command.STEP_OUT);
         createContext(server, Command.QUIT);
         server.createContext("/client", e -> {
                 if (client == null || client.length() == 0) {
@@ -400,6 +444,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 contentType = Optional.ofNullable(mimeTypes.getProperty(extension)).orElse("text/plain");
             }
             final var url = HttpServerDebugger.class.getClassLoader().getResource("ui/" + file);
+            if (url == null) {
+                respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
+                return;
+            }
             try {
                 final var content = Files.readAllBytes(Paths.get(url.toURI()));
                 e.getResponseHeaders().add("Content-Type", contentType);
@@ -417,8 +465,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     private void createContext(HttpServer server, Command command) {
         server.createContext(secret + command.url, (e) -> {
-            if (!Objects.equals(e.getHttpContext().getPath(), e.getRequestURI().toString()) &&
-                !Objects.equals(e.getHttpContext().getPath() + "/", e.getRequestURI().toString())) {
+            final var contextPath = e.getHttpContext().getPath();
+            final var request = RequestUriParser.parse(e.getRequestURI().toString());
+            if (!Objects.equals(contextPath, request.context) &&
+                !Objects.equals(contextPath + "/", request.context)) {
                 respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
                 return;
             }
@@ -434,9 +484,9 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             if ("POST".equals(e.getRequestMethod())) {
                 t = new Task(command, new String(e.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
             } else {
-                t = new Task(command);
+                t = new Task(command, request.params);
             }
-            request.add(t);
+            requestQueue.add(t);
             try {
                 t.waitForDone();
             } catch (InterruptedException interruptedException) {
