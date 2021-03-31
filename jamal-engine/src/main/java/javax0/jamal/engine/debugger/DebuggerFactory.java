@@ -5,10 +5,14 @@ import javax0.jamal.engine.DebuggerStub;
 import javax0.jamal.engine.NullDebugger;
 import javax0.jamal.engine.Processor;
 
+import java.util.Optional;
+
 public class DebuggerFactory {
 
     public static Debugger build(Processor processor) {
-        final var s = System.getenv(Debugger.JAMAL_DEBUG);
+        final var s = Optional.ofNullable(System.getenv(Debugger.JAMAL_DEBUG)).orElseGet(
+            () -> System.getProperty(Debugger.JAMAL_DEBUG)
+        );
         if (s == null || s.length() == 0) {
             return new NullDebugger();
         }

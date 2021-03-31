@@ -1,8 +1,12 @@
 package javax0.jamal.test.examples;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Debugger;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class TestHello {
 
@@ -17,4 +21,15 @@ public class TestHello {
         ).results("Hello, Peter!\nHello, Paul!\n");
     }
     // end snippet
+
+    //@Test
+    @DisplayName("Used to debug the debugger UI")
+    void testDebuggerUI() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+        System.setProperty(Debugger.JAMAL_DEBUG,"http:8080?cors=*");
+        TestThat.theInput(
+            "{@define a=1}{@define b(x)=x2x}{b{a}}"
+        ).results("121");
+        System.clearProperty(Debugger.JAMAL_DEBUG);
+
+    }
 }

@@ -9,7 +9,7 @@ type InputProps = {
 
 const PortInput: FC<InputProps> = ({ onChangeHandler, port }) => {
   return (
-      <input type="text" value={port} onChange={onChangeHandler}/>
+      <span>http://localhost:<input type="text" value={port} onChange={onChangeHandler}/></span>
   );
 };
 

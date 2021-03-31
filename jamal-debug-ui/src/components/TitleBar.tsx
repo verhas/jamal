@@ -1,44 +1,57 @@
-import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { ArrowLeft } from '@material-ui/icons';
+import React, { FC, useMemo } from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import Grid from "@material-ui/core/Grid";
+import MenuIcon from "@material-ui/icons/Menu";
+import Disconnect from "@material-ui/icons/WifiOff";
+import Before from "@material-ui/icons/PauseCircleOutline";
+import After from "@material-ui/icons/CheckCircle";
+import Run from "@material-ui/icons/DirectionsRun";
+import UnknownStatus from "@material-ui/icons/TextRotationNone";
+import "./TitleBar.css";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      width: "1200px"
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  }),
-);
+type TitleBarProps = {
+  message: string;
+};
 
-export default function TitleBar() {
-  const classes = useStyles();
+const TitleBar: FC<TitleBarProps> = ({ message }) => {
+  const icon = useMemo(() => {
+    switch (message) {
+      case "BEFORE":
+        return <Before />;
+      case "AFTER":
+        return <After />;
+      case "DISCONNECTED":
+        return <Disconnect />;
+      case "RUN":
+        return <Run />;
+      default:
+        return <UnknownStatus />;
+    }
+  }, [message]);
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
+    <div className="root">
+      <AppBar position="fixed">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Jamal Debug
-          </Typography>
-          <IconButton color="inherit">Login</IconButton>
+          <Grid
+            container
+            direction="row"
+            alignItems="flex-start"
+            justify="space-between"
+          >
+              <MenuIcon />
+            <Typography variant="h6" className="title">
+              Jamal Debug
+            </Typography>
+            {icon}
+          </Grid>
         </Toolbar>
       </AppBar>
     </div>
   );
-}
+};
+
+export default TitleBar;

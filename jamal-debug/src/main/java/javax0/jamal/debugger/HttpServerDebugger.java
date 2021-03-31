@@ -28,6 +28,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static java.net.HttpURLConnection.HTTP_BAD_METHOD;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
@@ -84,6 +85,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
      * Structure describing the task, what the debugger is asked to do.
      */
     private static class Task {
+        boolean taskCancelled = false;
         CountDownLatch waitForIt = new CountDownLatch(1);
         CountDownLatch ack = new CountDownLatch(1);
         final Command command;
@@ -100,6 +102,15 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         Task(Command command, final Map<String, String> params) {
             this.command = command;
             this.params = params;
+        }
+
+        void cancel() {
+            taskCancelled = true;
+            waitForIt.countDown();
+        }
+
+        boolean isCancelled() {
+            return taskCancelled;
         }
 
         /**
@@ -163,7 +174,14 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     @Override
     public void setStart(CharSequence macro) {
-        macros = macro.toString();
+        final var scopes = stub.getScopeList();
+        String open = "",close = "";
+        for( int i = scopes.size()-1 ; i >= 0 ; i -- ){
+            final var delimiters = scopes.get(i).getDelimiterPair();
+            open = delimiters.open();
+            close = delimiters.close();
+        }
+        macros = open + macro.toString() + close;
         handleState = "BEFORE";
         handle();
     }
@@ -193,117 +211,131 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         }
     }
 
+    volatile boolean isWaiting;
+
     private void handle() {
         if (state != RunState.STEP_IN && (state != RunState.STEP || currentLevel > stepLevel)) {
             return;
         }
-        while (true) {
-            final Task task;
+        try {
+            isWaiting = true;
+            while (true) {
+                final Task task;
+                try {
+                    task = requestQueue.take();
+                } catch (InterruptedException e) {
+                    throw new IllegalArgumentException("Debugger thread was interrupted", e);
+                }
+                Map<String, Object> response = null;
+                final List<Debuggable.Scope> scopes;
+                switch (task.command) {
+                    case ALL:
+                        response = new HashMap<>();
+                        addToResponse(task, response, Command.LEVEL, "" + currentLevel);
+                        addToResponse(task, response, Command.STATE, handleState);
+                        addToResponse(task, response, Command.INPUT, inputAfter);
+                        addToResponse(task, response, Command.OUTPUT, output);
+                        addToResponse(task, response, Command.INPUT_BEFORE, inputBefore);
+                        addToResponse(task, response, Command.PROCESSING, macros);
+                        addToResponse(task, response, Command.BUILT_IN, getBuiltIns());
+                        addToResponse(task, response, Command.USER_DEFINED, getUserDefineds());
+                        break;
+                    case STATE:
+                        task.messageBuffer = handleState;
+                        break;
+                    case QUIT: // exit the debugger and abort the execution of the processor
+                        task.done();
+                        task.waitForAck();
+                        throw new IllegalArgumentException("Debugger was aborted.");
+                    case RUN: // run the processor to the end
+                        state = RunState.RUN;
+                        task.done();
+                        task.waitForAck();
+                        return;
+                    case STEP_OUT:// step to one level higher
+                        state = RunState.STEP;
+                        if (currentLevel > 1) {
+                            stepLevel = currentLevel - 1;
+                        } else {
+                            stepLevel = 1;
+                        }
+                        task.done();
+                        task.waitForAck();
+                        return;
+                    case STEP: // step over the macro, do not step into
+                        state = RunState.STEP;
+                        stepLevel = currentLevel;
+                        task.done();
+                        task.waitForAck();
+                        return;
+                    case STEP_INTO: // step into the macro
+                        state = RunState.STEP_IN;
+                        task.done();
+                        task.waitForAck();
+                        return;
+                    case INPUT: // send the input of the required level to the client
+                        task.messageBuffer = inputAfter;
+                        break;
+                    case INPUT_BEFORE: // send the input after of the required level to the client
+                        task.messageBuffer = inputBefore;
+                        break;
+                    case OUTPUT: // send the output of the required level to the client
+                        task.messageBuffer = output;
+                        break;
+                    case PROCESSING: // send the macro text of the required level to the client
+                        task.messageBuffer = macros;
+                        break;
+                    case LEVEL: // send the current level to the client
+                        response = Map.of("level", "" + currentLevel);
+                        break;
+                    case EXECUTE: // execute a macro in the current processor at the current level
+                        byte[] buffer = task.messageBuffer.getBytes(StandardCharsets.UTF_8);
+                        final RunState save = state;
+                        state = RunState.RUN;
+                        try {
+                            task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
+                            task.contentType = MIME_PLAIN;
+                        } catch (BadSyntax badSyntax) {
+                            try (final var baos = new ByteArrayOutputStream(); final var st = new PrintStream(baos)) {
+                                badSyntax.printStackTrace(st);
+                                response = Map.of(
+                                    "message", badSyntax.getMessage(),
+                                    "trace", baos.toString(StandardCharsets.UTF_8),
+                                    "status-link", "https://http.cat/405"
+                                );
+                                task.status = HTTP_BAD_METHOD;
+                            } catch (IOException e) {
+                                throw new IllegalArgumentException("There was an exception composing the stack trace", e);
+                            }
+                        }
+                        state = save;
+                        break;
+                    case BUILT_IN: // list built in macros
+                        response = getBuiltIns();
+                        break;
+                    case USER_DEFINED: // list user defined macros
+                        response = getUserDefineds();
+                        break;
+                    default:
+                        throw new IllegalArgumentException("The enum inside the class has a not handled value: " + task.command);
+                }
+                if (response != null) {
+                    task.contentType = MIME_APPLICATION_JSON;
+                    task.messageBuffer = JsonConverter.object2Json(response);
+                }
+                task.done();
+            }
+        } finally {
+            isWaiting = false;
             try {
-                task = requestQueue.take();
+                Task task;
+                while ((task = requestQueue.poll(0, TimeUnit.NANOSECONDS)) != null) {
+                    task.cancel();
+                }
             } catch (InterruptedException e) {
                 throw new IllegalArgumentException("Debugger thread was interrupted", e);
             }
-            Map<String, Object> response = null;
-            final List<Debuggable.Scope> scopes;
-            switch (task.command) {
-                case ALL:
-                    response = new HashMap<>();
-                    addToResponse(task, response, Command.LEVEL, "" + currentLevel);
-                    addToResponse(task, response, Command.STATE, handleState);
-                    addToResponse(task, response, Command.INPUT, inputAfter);
-                    addToResponse(task, response, Command.OUTPUT, output);
-                    addToResponse(task, response, Command.INPUT_BEFORE, inputBefore);
-                    addToResponse(task, response, Command.PROCESSING, macros);
-                    addToResponse(task, response, Command.BUILT_IN, getBuiltIns());
-                    addToResponse(task, response, Command.USER_DEFINED, getUserDefineds());
-                    break;
-                case STATE:
-                    task.messageBuffer = handleState;
-                    break;
-                case QUIT: // exit the debugger and abort the execution of the processor
-                    task.done();
-                    task.waitForAck();
-                    throw new IllegalArgumentException("Debugger was aborted.");
-                case RUN: // run the processor to the end
-                    state = RunState.RUN;
-                    task.done();
-                    task.waitForAck();
-                    return;
-                case STEP_OUT:// step to one level higher
-                    state = RunState.STEP;
-                    if (currentLevel > 1) {
-                        stepLevel = currentLevel - 1;
-                    } else {
-                        stepLevel = 1;
-                    }
-                    task.done();
-                    task.waitForAck();
-                    return;
-                case STEP: // step over the macro, do not step into
-                    state = RunState.STEP;
-                    stepLevel = currentLevel;
-                    task.done();
-                    task.waitForAck();
-                    return;
-                case STEP_INTO: // step into the macro
-                    state = RunState.STEP_IN;
-                    task.done();
-                    task.waitForAck();
-                    return;
-                case INPUT: // send the input of the required level to the client
-                    task.messageBuffer = inputAfter;
-                    break;
-                case INPUT_BEFORE: // send the input after of the required level to the client
-                    task.messageBuffer = inputBefore;
-                    break;
-                case OUTPUT: // send the output of the required level to the client
-                    task.messageBuffer = output;
-                    break;
-                case PROCESSING: // send the macro text of the required level to the client
-                    task.messageBuffer = macros;
-                    break;
-                case LEVEL: // send the current level to the client
-                    response = Map.of("level", "" + currentLevel);
-                    break;
-                case EXECUTE: // execute a macro in the current processor at the current level
-                    byte[] buffer = task.messageBuffer.getBytes(StandardCharsets.UTF_8);
-                    final RunState save = state;
-                    state = RunState.RUN;
-                    try {
-                        task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
-                        task.contentType = MIME_PLAIN;
-                    } catch (BadSyntax badSyntax) {
-                        try (final var baos = new ByteArrayOutputStream(); final var st = new PrintStream(baos)) {
-                            badSyntax.printStackTrace(st);
-                            response = Map.of(
-                                "message", badSyntax.getMessage(),
-                                "trace", baos.toString(StandardCharsets.UTF_8),
-                                "status-link", "https://http.cat/405"
-                            );
-                            task.status = HTTP_BAD_METHOD;
-                        } catch (IOException e) {
-                            throw new IllegalArgumentException("There was an exception composing the stack trace", e);
-                        }
-                    }
-                    state = save;
-                    break;
-                case BUILT_IN: // list built in macros
-                    response = getBuiltIns();
-                    break;
-                case USER_DEFINED: // list user defined macros
-                    response = getUserDefineds();
-                    break;
-                default:
-                    throw new IllegalArgumentException("The enum inside the class has a not handled value: " + task.command);
-            }
-            if (response != null) {
-                task.contentType = MIME_APPLICATION_JSON;
-                task.messageBuffer = JsonConverter.object2Json(response);
-            }
-            task.done();
         }
-
     }
 
     private Map<String, Object> getUserDefineds() {
@@ -346,8 +378,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             for (final var macro : macros.values()) {
                 macrosList.add(macro.getId());
             }
-            scopeList.add(Map.of("delimiters", Map.of("open", delimiters.open(), "close", delimiters.close()),
-                "macros", macrosList));
+            if (delimiters.open() != null && delimiters.close() != null) {
+                scopeList.add(Map.of("delimiters", Map.of("open", delimiters.open(), "close", delimiters.close()),
+                    "macros", macrosList));
+            }
         }
         return response;
     }
@@ -480,16 +514,27 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 respond(e, HTTP_BAD_METHOD, MIME_PLAIN, "");
                 return;
             }
+            if (!isWaiting) {
+                respond(e, HTTP_UNAVAILABLE, "text/plain", "");
+                return;
+            }
             final Task t;
             if ("POST".equals(e.getRequestMethod())) {
                 t = new Task(command, new String(e.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
             } else {
                 t = new Task(command, request.params);
             }
-            requestQueue.add(t);
+            if (!requestQueue.offer(t)) {
+                respond(e, HTTP_UNAVAILABLE, "text/plain", "");
+                return;
+            }
             try {
                 t.waitForDone();
             } catch (InterruptedException interruptedException) {
+                respond(e, HTTP_UNAVAILABLE, MIME_PLAIN, "");
+                return;
+            }
+            if (t.isCancelled()) {
                 respond(e, HTTP_UNAVAILABLE, MIME_PLAIN, "");
                 return;
             }

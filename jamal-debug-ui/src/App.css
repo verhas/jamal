@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  text-align: left;
 }
 
 .App-logo {
@@ -12,14 +12,15 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-.App_CommandButtons {
 
+.App_spacer {
+  width: 300px;
 }
 
-.App-ConnectionLabel{
+.App_GridContainer {
   font-size: 12px;
+  width: 100%;
 }
-
 
 .App-header {
   background-color: #20499b;
@@ -30,24 +31,4 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
-
-.run::before {
-  content: url("./icons/play.svg");
-}
-
-.quit::before {
-  content: url("./icons/log-out.svg");
-}
-
-.step::before {
-  content: url("./icons/arrow-right.svg");
-}
-
-.stepInto::before {
-  content: url("./icons/arrow-down.svg");
-}
-
-.stepOut::before {
-  content: url("./icons/arrow-up.svg");
 }

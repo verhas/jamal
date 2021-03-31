@@ -1,0 +1,14 @@
+root {
+  flexgrow: 1;
+  width: "1200px";
+}
+.menuButton {
+  marginright: 16px;
+}
+.title {
+  flexgrow: 1;
+}
+
+.TitleBar_spacer {
+    width: 300px;
+}
