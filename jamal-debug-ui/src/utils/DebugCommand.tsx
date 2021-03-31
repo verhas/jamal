@@ -1,18 +1,25 @@
 import axios from "axios";
 class DebugCommand {
   port: number = 8080;
-  connection: string = "http://localhost:" + this.port;
+  host: string = "localhost";
 
-  constructor(connection: string, port: number = 8080) {
-    this.connection = connection + port;
+  constructor(host: string, port: number = 8080) {
+    this.host = host;
+    this.port = port;
+  }
+
+  connection(): string {
+    return "http://" + this.host + ":" + this.port;
   }
 
   post(command: string, data?: string) {
-    return axios.post(this.connection + command, data);
+    console.log(this.connection());
+    return axios.post(this.connection() + command, data);
   }
-
+  
   get(command: string) {
-    return axios.get(this.connection + command);
+    console.log(this.connection());
+    return axios.get(this.connection() + command);
   }
 
   run = () => this.post("/run");

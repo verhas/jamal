@@ -18,15 +18,14 @@ function App() {
   const [inputBefore, setInputBefore] = useState<string>("");
   const [macro, setMacro] = useState<string>("");
   const [output, setOutput] = useState<string>("");
-  const [port, setPort] = useState<string>("8080");
   const [level, setLevel] = useState<string>("-");
+  const [port, setPort] = useState<string>("8080");
   const [stateMessage, setStateMessage] = useState("");
-  const [debug, setDebug] = useState<DebugCommand>(
-    new DebugCommand("http://localhost:", +port)
-  );
+  
+  const debug = () => new DebugCommand("localhost",+port);
 
   const reloadActualSource = () => {
-    debug
+    debug()
       .all(
         "level&input&output&inputBefore&processing&macros&userDefined&state&output"
       )
@@ -40,22 +39,22 @@ function App() {
       .catch((err: AxiosError) => {
         if (err?.response?.status === 503) {
           setStateMessage("RUN");
-          setTimeout(reloadActualSource, 200);
+          setTimeout(reloadActualSource, 500);
         } else {
           setStateMessage("DISCONNECTED");
           setInputBefore("");
           setMacro("");
           setOutput("");
-          setTimeout(reloadActualSource, 1000);
+          //setTimeout(reloadActualSource, 1000);
         }
       });
   };
 
-  const step = () => debug.step().then(() => reloadActualSource());
-  const stepInto = () => debug.stepInto().then(() => reloadActualSource());
-  const stepOut = () => debug.stepOut().then(() => reloadActualSource());
-  const run = () => debug.run().then(() => reloadActualSource());
-  const quit = () => debug.quit().then(() => reloadActualSource());
+  const step = () => debug().step().then(() => reloadActualSource());
+  const stepInto = () => debug().stepInto().then(() => reloadActualSource());
+  const stepOut = () => debug().stepOut().then(() => reloadActualSource());
+  const run = () => debug().run().then(() => reloadActualSource());
+  const quit = () => debug().quit().then(() => reloadActualSource());
 
   useEffect(reloadActualSource);
 
@@ -79,17 +78,15 @@ function App() {
           >
             <Grid item>
               <PortInput
-                port={port}
                 onChangeHandler={(e) => {
-                  setPort(e.target.value);
-                  setDebug(
-                    new DebugCommand("http://localhost:", +e.target.value)
-                  );
+                  setPort(""+e.target.value);
+                  reloadActualSource();
                 }}
+                port={port}
               />
             </Grid>
-            <Grid item alignContent="flex-start">
-              <Label message={"Level: "+level} />
+            <Grid item>
+              <Label message={"Level: " + level} />
             </Grid>
             <Grid item>
               <IconButton variant="contained" onClick={run}>
@@ -111,8 +108,8 @@ function App() {
                 <StepOut />
               </IconButton>
             </Grid>
-            <Grid item xs={2} alignItems="flex-end"></Grid>
-            <Grid item alignItems="flex-end">
+            <Grid item xs={2}></Grid>
+            <Grid item>
               <IconButton variant="contained" onClick={quit} color="secondary">
                 <Quit />
               </IconButton>
@@ -123,8 +120,9 @@ function App() {
             container
             direction="column"
             justify="flex-start"
-            alignItems="center"
+            alignItems="flex-start"
             spacing={0}
+            className="App_GridContainer"
           >
             {"input"}
             <Input text={inputBefore} macro={macro} />
