@@ -32,24 +32,24 @@ const TitleBar: FC<TitleBarProps> = ({ message }) => {
   }, [message]);
 
   return (
-    <div className="root">
-      <AppBar position="fixed">
-        <Toolbar>
-          <Grid
-            container
-            direction="row"
-            alignItems="flex-start"
-            justify="space-between"
-          >
-              <MenuIcon />
-            <Typography variant="h6" className="title">
-              Jamal Debug
-            </Typography>
-            {icon}
-          </Grid>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <Toolbar className="TitleBar">
+      <Grid
+        container
+        direction="row"
+        alignItems="flex-start"
+        justify="space-between"
+      >
+        <Grid item>
+          <MenuIcon />
+        </Grid>
+        <Grid item>
+          <Typography variant="h6" className="title">
+            Jamal Debug
+          </Typography>
+        </Grid>
+        <Grid item>{icon}</Grid>
+      </Grid>
+    </Toolbar>
   );
 };
 

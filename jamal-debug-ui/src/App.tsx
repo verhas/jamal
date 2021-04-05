@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Input from "./components/Input";
-import PortInput from "./components/PortInput";
-import IconButton from "@material-ui/core/Button";
+import SimpleTextInput from "./components/SimpleTextInput";
+import SimpleTextOutput from "./components/SimpleTextOutput";
+import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Run from "@material-ui/icons/TrendingFlat";
 import Step from "@material-ui/icons/TextRotationNone";
 import StepInto from "@material-ui/icons/TextRotateVertical";
@@ -10,22 +12,35 @@ import StepOut from "@material-ui/icons/TextRotationAngleup";
 import Quit from "@material-ui/icons/ExitToApp";
 import Label from "./components/Label";
 import TitleBar from "./components/TitleBar";
-import "./App.css";
+import queryString from "querystring";
 import DebugCommand from "./utils/DebugCommand";
-import { AxiosError } from "axios";
+import BuiltInMacrosDisplay from "./components/BuiltInMacrosDisplay";
+import UserDefinedMacrosDisplay from "./components/UserDefinedMacrosDisplay";
+
+import { AxiosError, AxiosResponse } from "axios";
+import "./App.css";
+
+var debug: DebugCommand = new DebugCommand("localhost", 8080);
+var qs = queryString.parse(window.location.search.substring(1));
 
 function App() {
+  const [data, setData] = useState<any>({});
   const [inputBefore, setInputBefore] = useState<string>("");
   const [macro, setMacro] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [level, setLevel] = useState<string>("-");
-  const [port, setPort] = useState<string>("8080");
+  const [evalInput, setEvalInput] = useState<string>("");
+  const [evalOutput, setEvalOutput] = useState<string>("");
   const [stateMessage, setStateMessage] = useState("");
-  
-  const debug = () => new DebugCommand("localhost",+port);
 
-  const reloadActualSource = () => {
-    debug()
+  const port: string = qs.port
+    ? "" + qs.port
+    : new URL(window.location.href).port;
+
+  debug = new DebugCommand("localhost", +port);
+
+  const reloadActualSource = useCallback(() => {
+    debug
       .all(
         "level&input&output&inputBefore&processing&macros&userDefined&state&output"
       )
@@ -35,12 +50,14 @@ function App() {
         setOutput(response.data?.output);
         setStateMessage(response.data?.state);
         setLevel(response.data?.level);
+        setData(response.data);
       })
       .catch((err: AxiosError) => {
         if (err?.response?.status === 503) {
           setStateMessage("RUN");
           setTimeout(reloadActualSource, 500);
         } else {
+          console.log(err);
           setStateMessage("DISCONNECTED");
           setInputBefore("");
           setMacro("");
@@ -48,86 +65,203 @@ function App() {
           //setTimeout(reloadActualSource, 1000);
         }
       });
+  }, []);
+
+  const postAndReload = (x: () => Promise<AxiosResponse<any>>) => {
+    x().then(() => reloadActualSource());
   };
+  const step = () => postAndReload(debug.step);
+  const stepInto = () => postAndReload(debug.stepInto);
+  const stepOut = () => postAndReload(debug.stepOut);
+  const run = () => postAndReload(debug.run);
+  const quit = () => postAndReload(debug.quit);
+  const evaluate = () =>
+    debug.execute(evalInput).then((response) => {
+      setEvalOutput(response.data);
+    });
 
-  const step = () => debug().step().then(() => reloadActualSource());
-  const stepInto = () => debug().stepInto().then(() => reloadActualSource());
-  const stepOut = () => debug().stepOut().then(() => reloadActualSource());
-  const run = () => debug().run().then(() => reloadActualSource());
-  const quit = () => debug().quit().then(() => reloadActualSource());
+  useEffect(() => {
+    reloadActualSource();
+  });
 
-  useEffect(reloadActualSource);
+  const debugButtons = (
+    <Grid container direction="column">
+      <Grid
+        container
+        direction="row"
+        justify="space-around"
+        alignContent="center"
+      >
+        <Grid item>
+          <Button variant="contained" onClick={run}>
+            <Run />
+          </Button>
+          <div style={{ marginLeft: "20px", fontSize: "8pt" }}>{"Run"}</div>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={step}>
+            <Step />
+          </Button>
+          <div style={{ marginLeft: "17px", fontSize: "8pt" }}>{"Step"} </div>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={stepInto}>
+            <StepInto />
+          </Button>
+          <div style={{ marginLeft: "15px", fontSize: "8pt" }}>{"Step In"}</div>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={stepOut}>
+            <StepOut />
+          </Button>
+          <div style={{ marginLeft: "10px", fontSize: "8pt" }}>
+            {"Step Out"}
+          </div>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={evaluate} color="primary">
+            <Run />
+          </Button>
+          <div onClick={evaluate} style={{ fontSize: "8pt" }}>
+            {"evaluate"}
+          </div>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+
+  const levelDisplay = (
+    <>
+      <Grid item>
+        <Label message={"Level: " + level} />
+      </Grid>
+    </>
+  );
+
+  const quitIconDisplay = (
+    <Grid item>
+      <Button variant="contained" onClick={quit} color="secondary">
+        <Quit />
+      </Button>
+    </Grid>
+  );
+  const commandRowDisplay = (
+    <>
+      <Grid container direction="column" xs={3}>
+        {levelDisplay}
+      </Grid>
+      <Grid container direction="column" xs={6}>
+        <Grid item>{debugButtons}</Grid>
+      </Grid>
+      <Grid
+        container
+        direction="row"
+        xs={3}
+        justify="space-around"
+        alignItems="flex-end"
+        alignContent="flex-end"
+      >
+        {quitIconDisplay}
+      </Grid>
+    </>
+  );
+  const macroLists = (
+    <Grid
+      container
+      direction="column"
+      spacing={1}
+      xl={3}
+      justify="space-around"
+    >
+      <Grid item>
+        <Paper className="App_Paper, App_MacroList">
+          <BuiltInMacrosDisplay data={data} />
+        </Paper>
+      </Grid>
+      <Grid item>
+        <Paper className="App_Paper, App_MacroList">
+          <UserDefinedMacrosDisplay data={data} />
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+
+  const runInputOutput = (
+    <Grid
+      container
+      direction="column"
+      xs={6}
+      justify="space-around"
+      spacing={3}
+    >
+      <Grid item>
+        <Paper className="App_Paper">
+          <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"input"}</div>
+          <Input text={inputBefore} macro={macro} />
+        </Paper>
+      </Grid>
+      <Grid item>
+        <Paper className="App_Paper">
+          <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"output"}</div>
+          <Input text={output} />
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+
+  const evaluateIoAndBreakpoints = (
+    <Grid container direction="column" xs={3} justify="space-around">
+      <Grid item>
+        <Paper className="App_Paper">
+          <SimpleTextInput
+            text={evalInput}
+            onChangeHandler={(e) => {
+              setEvalInput("" + e.target.value);
+            }}
+          />
+        </Paper>
+      </Grid>
+      <Grid item>
+        <Paper className="App_Paper">
+          <SimpleTextOutput text={evalOutput} />
+        </Paper>
+      </Grid>
+      <Paper className="App_Paper">
+        <Grid item>
+          <SimpleTextInput text="breakpoints" onChangeHandler={(a) => {}} />
+        </Grid>
+      </Paper>
+    </Grid>
+  );
+
+  const inputOutputDisplay = (
+    <>
+      {macroLists}
+      {runInputOutput}
+      {evaluateIoAndBreakpoints}
+    </>
+  );
 
   return (
     <div className="App">
       <header className="App-header">
-        <TitleBar message={stateMessage} />
         <Grid
           container
           direction="column"
+          className="AppTopContainer"
+          spacing={10}
           justify="space-around"
+          alignContent="flex-start"
           alignItems="flex-start"
         >
-          <Grid
-            container
-            spacing={0}
-            direction="row"
-            justify="space-around"
-            alignItems="flex-start"
-            className="App_GridContainer"
-          >
-            <Grid item>
-              <PortInput
-                onChangeHandler={(e) => {
-                  setPort(""+e.target.value);
-                  reloadActualSource();
-                }}
-                port={port}
-              />
-            </Grid>
-            <Grid item>
-              <Label message={"Level: " + level} />
-            </Grid>
-            <Grid item>
-              <IconButton variant="contained" onClick={run}>
-                <Run />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton variant="contained" onClick={step}>
-                <Step />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton variant="contained" onClick={stepInto}>
-                <StepInto />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton variant="contained" onClick={stepOut}>
-                <StepOut />
-              </IconButton>
-            </Grid>
-            <Grid item xs={2}></Grid>
-            <Grid item>
-              <IconButton variant="contained" onClick={quit} color="secondary">
-                <Quit />
-              </IconButton>
-            </Grid>
+          <Grid container direction="row">
+            <TitleBar message={stateMessage} />
           </Grid>
-
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="flex-start"
-            spacing={0}
-            className="App_GridContainer"
-          >
-            {"input"}
-            <Input text={inputBefore} macro={macro} />
-            {"output"}
-            <Input text={output} />
+          <Grid container direction="row">
+            {commandRowDisplay}
+          </Grid>
+          <Grid container direction="row" alignItems="flex-start">
+            {inputOutputDisplay}
           </Grid>
         </Grid>
       </header>

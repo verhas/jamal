@@ -55,7 +55,6 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-debug</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

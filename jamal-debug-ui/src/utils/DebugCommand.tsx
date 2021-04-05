@@ -13,12 +13,10 @@ class DebugCommand {
   }
 
   post(command: string, data?: string) {
-    console.log(this.connection());
     return axios.post(this.connection() + command, data);
   }
   
   get(command: string) {
-    console.log(this.connection());
     return axios.get(this.connection() + command);
   }
 

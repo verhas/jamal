@@ -174,34 +174,40 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     @Override
     public void setStart(CharSequence macro) {
-        final var scopes = stub.getScopeList();
-        String open = "",close = "";
-        for( int i = scopes.size()-1 ; i >= 0 ; i -- ){
-            final var delimiters = scopes.get(i).getDelimiterPair();
-            open = delimiters.open();
-            close = delimiters.close();
+        if (state != RunState.NODEBUG) {
+            final var scopes = stub.getScopeList();
+            String open = "", close = "";
+            for (int i = scopes.size() - 1; i >= 0; i--) {
+                final var delimiters = scopes.get(i).getDelimiterPair();
+                open = delimiters.open();
+                close = delimiters.close();
+            }
+            macros = open + macro.toString() + close;
+            handleState = "BEFORE";
+            handle();
         }
-        macros = open + macro.toString() + close;
-        handleState = "BEFORE";
-        handle();
     }
 
     @Override
     public void setBefore(int level, CharSequence input) {
-        currentLevel = level;
-        this.input = input;
-        this.inputBefore = input.toString();
-        macros = "";
-        inputAfter = "";
+        if (state != RunState.NODEBUG) {
+            currentLevel = level;
+            this.input = input;
+            this.inputBefore = input.toString();
+            macros = "";
+            inputAfter = "";
+        }
     }
 
     @Override
     public void setAfter(int level, CharSequence output) {
-        currentLevel = level;
-        inputAfter = input.toString();
-        this.output = output.toString();
-        handleState = "AFTER";
-        handle();
+        if (state != RunState.NODEBUG) {
+            currentLevel = level;
+            inputAfter = input.toString();
+            this.output = output.toString();
+            handleState = "AFTER";
+            handle();
+        }
     }
 
     private void addToResponse(Task task, Map<String, Object> response, Command command, Object value) {
@@ -290,9 +296,9 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         break;
                     case EXECUTE: // execute a macro in the current processor at the current level
                         byte[] buffer = task.messageBuffer.getBytes(StandardCharsets.UTF_8);
-                        final RunState save = state;
-                        state = RunState.RUN;
+                        final RunState stateSave = state;
                         try {
+                            state = RunState.NODEBUG;
                             task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
                             task.contentType = MIME_PLAIN;
                         } catch (BadSyntax badSyntax) {
@@ -307,8 +313,9 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                             } catch (IOException e) {
                                 throw new IllegalArgumentException("There was an exception composing the stack trace", e);
                             }
+                        } finally {
+                            state = stateSave;
                         }
-                        state = save;
                         break;
                     case BUILT_IN: // list built in macros
                         response = getBuiltIns();

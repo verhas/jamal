@@ -24,7 +24,7 @@ public class TestHello {
 
     @Test
     @DisplayName("Used to debug the debugger UI")
-    void testDebuggerUI() throws InvocationTargetException, NoSuchMethodException, InstantiationException, BadSyntax, IllegalAccessException {
+    void testDebugger() throws Exception {
         System.setProperty(Debugger.JAMAL_DEBUG,"http:8081?cors=*");
         TestThat.theInput(
             "{@define a=1}{@define b(x)=x2x}{b{a}}"

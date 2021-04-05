@@ -6,10 +6,14 @@
 .Input_SourceCode {
     font-family: "Courier New",sans-serif;
     font-size: 18px;
-    height: 300px;
-    width:90%;
+    height: 94%;
+    min-height: 200px;
+    width:94%;
     border: 1px solid white;
     text-align: left;
+    margin: 3%;
+    border: "solid";
+    border-color: black;
 }
 
 .Input_SourceCode > span {

@@ -16,10 +16,27 @@
 .App_spacer {
   width: 300px;
 }
-
+.App_macroList {
+  width: 130px;
+}
 .App_GridContainer {
   font-size: 12px;
   width: 100%;
+}
+
+.App_Paper {
+  margin: 1%;
+  padding : 1%;
+}
+
+.App_MacroList {
+  max-height: 300px;
+}
+
+.AppTopContainer {
+  width: 100%;
+  padding-left: 5%;
+  padding-right: 1%;
 }
 
 .App-header {
