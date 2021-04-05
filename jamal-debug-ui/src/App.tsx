@@ -212,9 +212,10 @@ function App() {
   const evaluateIoAndBreakpoints = (
     <Grid container direction="column" xs={3} justify="space-around">
       <Grid item>
-        <Paper className="App_Paper">
+        <Paper className="App_Paper, App_Eval">
           <SimpleTextInput
             text={evalInput}
+            caption={"evaluate"}
             onChangeHandler={(e) => {
               setEvalInput("" + e.target.value);
             }}
@@ -222,13 +223,13 @@ function App() {
         </Paper>
       </Grid>
       <Grid item>
-        <Paper className="App_Paper">
+        <Paper className="App_Paper, App_Eval">
           <SimpleTextOutput text={evalOutput} />
         </Paper>
       </Grid>
-      <Paper className="App_Paper">
+      <Paper className="App_Paper, App_EvalOutput">
         <Grid item>
-          <SimpleTextInput text="breakpoints" onChangeHandler={(a) => {}} />
+          <SimpleTextInput caption={"breakpoints"} text={""} onChangeHandler={(a) => {}} />
         </Grid>
       </Paper>
     </Grid>

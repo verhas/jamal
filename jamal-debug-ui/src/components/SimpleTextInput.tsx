@@ -1,19 +1,26 @@
 import React, { FC } from "react";
-import "./Input.css";
+import "./SimpleText.css";
 
 type SimpleTextInputProps = {
   text: string;
-  onChangeHandler : (e:any) => void;
+  caption: string;
+  onChangeHandler: (e: any) => void;
 };
 
 const showNewLine = (s: string) => s.replaceAll("\n", "\u00b6\n");
 
-const SimpleTextInput: FC<SimpleTextInputProps> = ({ text , onChangeHandler }) => {
-  const textConverted = showNewLine(text);
+const SimpleTextInput: FC<SimpleTextInputProps> = ({
+  text,caption,
+  onChangeHandler,
+}) => {
+  const textConverted = showNewLine("" + text);
   return (
-    <textarea className="Input_SourceCode" style={{ maxWidth: "90%", minHeight: "100px", fontSize: "10pt" }} onChange={onChangeHandler}>
-      {textConverted}
-    </textarea>
+    <div  className="SimpleTextInput_Caption" >
+      {caption}
+      <textarea className="SimpleTextInput_TextArea" onChange={onChangeHandler}>
+        {textConverted}
+      </textarea>
+    </div>
   );
 };
 

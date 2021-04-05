@@ -752,7 +752,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     String getNextMacroBody(final Input input) throws BadSyntaxAt {
         final var body = MacroBodyFetcher.getNextMacroBody(input, this);
-        debugger.setStart(body);
+        debugger.setStart(getRegister().open() + body + getRegister().close());
         return body;
     }
 

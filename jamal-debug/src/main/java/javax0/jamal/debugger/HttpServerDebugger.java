@@ -175,14 +175,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     @Override
     public void setStart(CharSequence macro) {
         if (state != RunState.NODEBUG) {
-            final var scopes = stub.getScopeList();
-            String open = "", close = "";
-            for (int i = scopes.size() - 1; i >= 0; i--) {
-                final var delimiters = scopes.get(i).getDelimiterPair();
-                open = delimiters.open();
-                close = delimiters.close();
-            }
-            macros = open + macro.toString() + close;
+            macros = macro.toString();
             handleState = "BEFORE";
             handle();
         }
@@ -551,7 +544,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
 
-    private void respond(HttpExchange exchange, int status, String contentType, String body) throws IOException {
+    private void respond(HttpExchange exchange, int status, String contentType, String bodyString) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", contentType);
         if (cors != null) {
             exchange.getResponseHeaders().add("Access-Control-Allow-Origin", cors);
@@ -559,9 +552,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         if (status != 200) {
             exchange.getResponseHeaders().add("Location", "https://http.cat/" + status);
         }
-        exchange.sendResponseHeaders(status, body.length());
+        byte[] body = bodyString.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(status, body.length);
         try (final var out = exchange.getResponseBody()) {
-            out.write(body.getBytes(StandardCharsets.UTF_8));
+            out.write(body);
             out.flush();
         }
     }

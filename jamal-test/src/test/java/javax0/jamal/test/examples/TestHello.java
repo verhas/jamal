@@ -22,12 +22,13 @@ public class TestHello {
     }
     // end snippet
 
-    @Test
+    //@Test
     @DisplayName("Used to debug the debugger UI")
     void testDebugger() throws Exception {
         System.setProperty(Debugger.JAMAL_DEBUG,"http:8081?cors=*");
         TestThat.theInput(
-            "{@define a=1}{@define b(x)=x2x}{b{a}}"
+            "hahóóó\n" +
+                "{@define a=1}{@define b(x)=x2x}{b{a}}"
         ).results("121");
         System.clearProperty(Debugger.JAMAL_DEBUG);
 

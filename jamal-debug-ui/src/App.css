@@ -30,7 +30,20 @@
 }
 
 .App_MacroList {
+  margin-top: 10px;
   max-height: 300px;
+}
+
+.App_Eval{
+  margin-top: 10px;
+  margin-bottom: 20px;
+  max-height: 150px;
+}
+
+.App_EvalOutput{
+  margin-top: 10px;
+  margin-bottom: 20px;
+  max-height: 150px;
 }
 
 .AppTopContainer {
