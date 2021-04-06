@@ -1,0 +1,15 @@
+.SimpleTextInput_Caption {
+  font-family: "Courier New", sans-serif;
+  font-size: 11px;
+}
+.SimpleTextInput_TextArea {
+  
+  font-size: 14px;
+  height: 90%;
+  width: 90%;
+  border: 0.5px solid gray;
+  text-align: left;
+  margin: 5px;
+  min-height: 250px;
+}
+
