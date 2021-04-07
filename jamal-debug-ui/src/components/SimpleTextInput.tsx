@@ -4,18 +4,18 @@ import "./SimpleText.css";
 type SimpleTextInputProps = {
   children: string;
   caption: string;
-  onBlurHandler: (e: any) => void;
+  reference: any;
 };
 
 const SimpleTextInput: FC<SimpleTextInputProps> = ({
   children,
   caption,
-  onBlurHandler,
+  reference,
 }) => {
   return (
     <div className="SimpleTextInput_Caption">
       {caption}
-      <textarea className="SimpleTextInput_TextArea" onBlur={onBlurHandler}>
+      <textarea className="SimpleTextInput_TextArea" ref={reference}>
         {children}
       </textarea>
     </div>

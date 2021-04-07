@@ -24,14 +24,12 @@ var debug: DebugCommand = new DebugCommand("localhost", 8080);
 var qs = queryString.parse(window.location.search.substring(1));
 
 function App() {
-  console.log("App");
   const [data, setData] = useState<any>({});
   const [inputBefore, setInputBefore] = useState<string>("");
   const [macro, setMacro] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [level, setLevel] = useState<string>("-");
-  const [evalInput, setEvalInput] = useState<string>("");
-  //const evalInput= useRef(null);
+  const evalInput = useRef({ value: "" });
   const [evalOutput, setEvalOutput] = useState<string>("");
   const [stateMessage, setStateMessage] = useState("");
   const [isLoading, setIsloading] = useState(true);
@@ -78,25 +76,87 @@ function App() {
   const run = () => postAndReload(debug.run);
   const quit = () => postAndReload(debug.quit);
   const evaluate = () =>
-    debug.execute(evalInput).then((response) => {
-      if (typeof response.data === "string") {
+    debug.execute("" + evalInput?.current?.value).then((response) => {
+      if (typeof response.data != "object") {
         if (response.data.length === 0) {
           setEvalOutput("OK");
         } else {
           setEvalOutput("" + response.data);
         }
+        document.title = "Jamal Debugger";
       } else {
         setEvalOutput("" + response.data.trace);
+        document.title = "Jamal Debugger (e)";
       }
-      reloadActualSource();
+      //reloadActualSource();
     });
 
   useEffect(() => {
     if (isLoading) {
+      document.title = "Jamal Debugger";
+      setIsloading(false);
       reloadActualSource();
     }
-    setIsloading(false);
   });
+
+const buttonCaption = (caption:string) =>{
+  const m = (21-caption.length)+"px";
+  return <div style={{ marginLeft: m, fontSize: "8pt" }}>{caption}</div>;
+};
+
+  const evaluateButton = (
+    <Grid item>
+      <Button variant="contained" onClick={evaluate} color="primary">
+        <Run />
+      </Button>
+      {buttonCaption("Evaluate")}
+    </Grid>
+  );
+
+  const quitButton = (
+    <Grid item>
+      <Button variant="contained" onClick={quit} color="secondary">
+        <Quit />
+      </Button>
+      {buttonCaption("Quit")}
+    </Grid>
+  );
+
+  const runButton = (
+    <Grid item>
+      <Button variant="contained" onClick={run}>
+        <Run />
+      </Button>
+      {buttonCaption("Run")}
+    </Grid>
+  );
+
+  const stepButton = (
+    <Grid item>
+      <Button variant="contained" onClick={step}>
+        <Step />
+      </Button>
+      {buttonCaption("Step")}
+    </Grid>
+  );
+
+  const stepIntoButton = (
+    <Grid item>
+      <Button variant="contained" onClick={stepInto}>
+        <StepInto />
+      </Button>
+      {buttonCaption("Step In")}
+    </Grid>
+  );
+
+  const stepOutButton = (
+    <Grid item>
+      <Button variant="contained" onClick={stepOut}>
+        <StepOut />
+      </Button>
+      {buttonCaption("Step Out")}
+    </Grid>
+  );
 
   const debugButtons = (
     <Grid container direction="column">
@@ -106,40 +166,7 @@ function App() {
         justify="space-around"
         alignContent="center"
       >
-        <Grid item>
-          <Button variant="contained" onClick={run}>
-            <Run />
-          </Button>
-          <div style={{ marginLeft: "20px", fontSize: "8pt" }}>{"Run"}</div>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={step}>
-            <Step />
-          </Button>
-          <div style={{ marginLeft: "17px", fontSize: "8pt" }}>{"Step"} </div>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={stepInto}>
-            <StepInto />
-          </Button>
-          <div style={{ marginLeft: "15px", fontSize: "8pt" }}>{"Step In"}</div>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={stepOut}>
-            <StepOut />
-          </Button>
-          <div style={{ marginLeft: "10px", fontSize: "8pt" }}>
-            {"Step Out"}
-          </div>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={evaluate} color="primary">
-            <Run />
-          </Button>
-          <div onClick={evaluate} style={{ fontSize: "8pt" }}>
-            {"evaluate"}
-          </div>
-        </Grid>
+        {runButton} {stepButton} {stepIntoButton} {stepOutButton} {quitButton}
       </Grid>
     </Grid>
   );
@@ -150,14 +177,6 @@ function App() {
         <Label message={"Level: " + level} />
       </Grid>
     </>
-  );
-
-  const quitIconDisplay = (
-    <Grid item>
-      <Button variant="contained" onClick={quit} color="secondary">
-        <Quit />
-      </Button>
-    </Grid>
   );
 
   const commandRowDisplay = (
@@ -176,7 +195,7 @@ function App() {
         alignItems="flex-end"
         alignContent="flex-end"
       >
-        {quitIconDisplay}
+        {evaluateButton}
       </Grid>
     </>
   );
@@ -228,12 +247,7 @@ function App() {
     <Grid container direction="column" xs={3} justify="space-around">
       <Grid item>
         <Paper className="App_Paper, App_Eval">
-          <SimpleTextInput
-            caption={"evaluate"}
-            onBlurHandler={(e) => {
-              setEvalInput("" + e.target.value);
-            }}
-          >
+          <SimpleTextInput caption={"evaluate"} reference={evalInput}>
             {""}
           </SimpleTextInput>
         </Paper>

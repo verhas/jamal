@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import "./BuiltInMacrosDisplay.css";
-import { RoomService } from "@material-ui/icons";
 
 type BuiltInMacrosDisplayProps = {
   data: any;
