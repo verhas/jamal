@@ -26,7 +26,7 @@
 
 .App_Paper {
   margin: 1%;
-  padding : 1%;
+  padding: 1%;
 }
 
 .App_MacroList {
@@ -34,16 +34,16 @@
   max-height: 300px;
 }
 
-.App_Eval{
+.App_Eval {
   margin-top: 10px;
   margin-bottom: 20px;
-  max-height: 150px;
+  max-height: 300px;
 }
 
-.App_EvalOutput{
+.App_EvalOutput {
   margin-top: 10px;
   margin-bottom: 20px;
-  max-height: 150px;
+  max-height: 300px;
 }
 
 .AppTopContainer {

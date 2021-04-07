@@ -2,17 +2,24 @@ import React, { FC } from "react";
 import "./SimpleText.css";
 
 type SimpleTextOutputProps = {
-  text: string;
+  children: string;
 };
 
 const showNewLine = (s: string) => s.replaceAll("\n", "\u00b6\n");
 
-const SimpleTextOutput: FC<SimpleTextOutputProps> = ({ text }) => {
-  const textConverted = showNewLine(""+text);
+const SimpleTextOutput: FC<SimpleTextOutputProps> = ({ children }) => {
+  console.log("SimpleTextOutput = " + children);
+  const textConverted = showNewLine("" + children);
+  console.log("SimpleTextOutput = " + textConverted);
   return (
-    <pre className="SimpleTextOutput_Pre">
-      <span>{textConverted}</span>
-    </pre>
+    <div className="SimpleTextInput_Caption">
+      {"result"}
+      <textarea
+        readOnly
+        className="SimpleTextInput_TextArea"
+        value={textConverted}
+      />
+    </div>
   );
 };
 

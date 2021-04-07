@@ -23,7 +23,6 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
   var j: number = 0;
   for (var macros of data?.userDefined?.scopes || []) {
     i++;
-    console.log(macros);
     for (var macro of macros || []) {
       j++;
       rows.push({
@@ -43,9 +42,9 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
         rowHeight={33}
         rows={rows}
         columns={columns}
-        pageSize={5}
         density="compact"
-        autoPageSize={true}
+        pageSize={rows.length}
+        hideFooter={true}
       />
     </div>
   );

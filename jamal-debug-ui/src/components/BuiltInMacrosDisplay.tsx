@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import "./BuiltInMacrosDisplay.css";
+import { RoomService } from "@material-ui/icons";
 
 type BuiltInMacrosDisplayProps = {
   data: any;
@@ -19,7 +20,6 @@ const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({ data }) => {
   var j: number = 0;
   for (var macros of data?.macros?.macros || []) {
     i++;
-    console.log(macros);
     for (var macro of macros?.macros || []) {
       j++;
       rows.push({ id: j, level: i, name: macro });
@@ -33,9 +33,9 @@ const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({ data }) => {
         rowHeight={33}
         rows={rows}
         columns={columns}
-        pageSize={5}
         density="compact"
-        autoPageSize={true}
+        pageSize={rows.length}
+        hideFooter={true}
       />
     </div>
   );
