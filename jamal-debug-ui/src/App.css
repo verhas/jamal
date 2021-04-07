@@ -36,13 +36,12 @@
 
 .App_Eval {
   margin-top: 10px;
-  margin-bottom: 20px;
-  max-height: 300px;
+  margin-bottom: 10px;
+  height: 275px;
+  padding-bottom: 24px;
 }
 
 .App_EvalOutput {
-  margin-top: 10px;
-  margin-bottom: 20px;
   max-height: 300px;
 }
 

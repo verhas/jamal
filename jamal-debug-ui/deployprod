@@ -1,0 +1,8 @@
+#! /bin/bash
+
+rm -rf ../jamal-debug/src/main/resources/ui/static/css
+rm -rf ../jamal-debug/src/main/resources/ui/static/js
+cp -R ./build/* ../jamal-debug/src/main/resources/ui/
+rm ../jamal-debug/src/main/resources/ui/static/css/*.map
+rm ../jamal-debug/src/main/resources/ui/static/js/*.map
+git add --all ../jamal-debug/src/main/resources

@@ -5,15 +5,15 @@
 
 .Input_SourceCode {
     font-family: "Courier New",sans-serif;
-    font-size: 18px;
-    height: 94%;
+    font-size: 16px;
+    height: 90%;
     min-height: 200px;
-    width:94%;
+    width:99%;
     border: 1px solid white;
     text-align: left;
-    margin: 3%;
+    margin: 1%;
     border: "solid";
-    border-color: black;
+    border-color: grey;
 }
 
 .Input_SourceCode > span {

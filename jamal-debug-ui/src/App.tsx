@@ -46,11 +46,11 @@ function App() {
         "level&input&output&inputBefore&processing&macros&userDefined&state&output"
       )
       .then((response) => {
-        setInputBefore(response.data?.inputBefore);
-        setMacro(response.data?.processing);
-        setOutput(response.data?.output);
-        setStateMessage(response.data?.state);
-        setLevel(response.data?.level);
+        setInputBefore(response.data?.inputBefore ?? '');
+        setMacro(response.data?.processing ?? '');
+        setOutput(response.data?.output ?? '');
+        setStateMessage(response.data?.state ?? '');
+        setLevel(response.data?.level ?? '');
         setData(response.data);
       })
       .catch((err: AxiosError) => {
@@ -228,14 +228,14 @@ const buttonCaption = (caption:string) =>{
       justify="space-around"
       spacing={3}
     >
-      <Grid item style={{ paddingBottom: "40px" }}>
-        <Paper className="App_Paper">
+      <Grid item style={{ paddingBottom: "6px" }}>
+        <Paper className="App_Paper" style={{ height:"285px"}}>
           <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"input"}</div>
           <Input text={inputBefore} macro={macro} />
         </Paper>
       </Grid>
-      <Grid item style={{ paddingTop: "40px" }}>
-        <Paper className="App_Paper">
+      <Grid item>
+        <Paper className="App_Paper" style={{height: "285px"}}>
           <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"output"}</div>
           <Input text={output} />
         </Paper>
