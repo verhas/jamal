@@ -16,14 +16,18 @@ import Label from "./components/Label";
 import TitleBar from "./components/TitleBar";
 import queryString from "querystring";
 import DebugCommand from "./utils/DebugCommand";
+import VersionFetcher from "./utils/VersionFetcher";
 import BuiltInMacrosDisplay from "./components/BuiltInMacrosDisplay";
 import UserDefinedMacrosDisplay from "./components/UserDefinedMacrosDisplay";
+import packageJson from "../package.json";
 
 import { AxiosError, AxiosResponse } from "axios";
 import "./App.css";
 
 var debug: DebugCommand = new DebugCommand("localhost", 8080);
 var qs = queryString.parse(window.location.search.substring(1));
+const versionFetcher = new VersionFetcher();
+var latestVersion = "";
 
 function App() {
   const [data, setData] = useState<any>({});
@@ -98,6 +102,10 @@ function App() {
       }
       reloadActualSource();
     });
+
+  if (latestVersion === "") {
+    latestVersion = versionFetcher.lastRelease;
+  }
 
   if (isLoading) {
     document.title = "Jamal Debugger";
@@ -190,7 +198,7 @@ function App() {
   const levelDisplay = (
     <>
       <Grid item>
-        <Label message={"Level: " + level} />
+        <Label message={"" + level} />
       </Grid>
     </>
   );
@@ -273,6 +281,22 @@ function App() {
       </Paper>
     </Grid>
   );
+  var versionMessage;
+  if (serverVersion === packageJson.version) {
+    versionMessage = "Version: " + serverVersion;
+  } else {
+    versionMessage =
+      "Server version: " +
+      serverVersion +
+      ", Client version: " +
+      packageJson.version;
+  }
+  if (
+    latestVersion != "" &&
+    (latestVersion != serverVersion || latestVersion != packageJson.version)
+  ) {
+    versionMessage += ", Latest release: " + latestVersion;
+  }
 
   return (
     <div className="App">
@@ -318,7 +342,7 @@ function App() {
               <a href="https://github.com/verhas/jamal">
                 {"https://github.com/verhas/jamal"}
               </a>
-              {", Server version: " + serverVersion}
+              {", " + versionMessage}
             </div>
           </Grid>
         </Grid>

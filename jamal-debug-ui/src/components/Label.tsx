@@ -6,7 +6,7 @@ type LabelProps = {
 };
 
 const Label: FC<LabelProps> = ({ message }) => {
-  return <div className="Label_Label"><span>{message}</span></div>;
+  return <div className="Label_Label">{message}</div>;
 };
 
 export default Label;
