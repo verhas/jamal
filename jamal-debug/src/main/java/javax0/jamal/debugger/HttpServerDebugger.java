@@ -6,6 +6,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Debugger;
 import javax0.jamal.api.Identified;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.ConnectionStringParser;
 
 import java.io.ByteArrayOutputStream;
@@ -49,6 +50,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     private enum Command {
         ALL("all", Method.GET),
+        VERSION("version", Method.GET),
         LEVEL("level", Method.GET),
         STATE("state", Method.GET),
         INPUT("input", Method.GET),
@@ -238,6 +240,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         addToResponse(task, response, Command.PROCESSING, macros);
                         addToResponse(task, response, Command.BUILT_IN, getBuiltIns());
                         addToResponse(task, response, Command.USER_DEFINED, getUserDefineds());
+                        addToResponse(task, response, Command.VERSION, getJamalVersion());
+                        break;
+                    case VERSION:
+                        response = getJamalVersion();
                         break;
                     case STATE:
                         task.messageBuffer = handleState;
@@ -338,6 +344,12 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         }
     }
 
+    private Map<String, Object> getJamalVersion() {
+        final var version = new Properties();
+        Processor.jamalVersion(version);
+        return Map.of("version", version.getProperty("version"));
+    }
+
     private Map<String, Object> getUserDefineds() {
         final Map<String, Object> response = new HashMap<>();
         final List<Debuggable.Scope> scopes = stub.getScopeList();
@@ -423,6 +435,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         this.stub = stub;
         server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
         createContext(server, Command.ALL);
+        createContext(server, Command.VERSION);
         createContext(server, Command.LEVEL);
         createContext(server, Command.STATE);
         createContext(server, Command.INPUT);

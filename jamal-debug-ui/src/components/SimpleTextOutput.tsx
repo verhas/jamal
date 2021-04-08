@@ -3,15 +3,16 @@ import "./SimpleText.css";
 
 type SimpleTextOutputProps = {
   children: string;
+  caption: string;
 };
 
 const showNewLine = (s: string) => s.replaceAll("\n", "\u00b6\n");
 
-const SimpleTextOutput: FC<SimpleTextOutputProps> = ({ children }) => {
+const SimpleTextOutput: FC<SimpleTextOutputProps> = ({ children, caption }) => {
   const textConverted = showNewLine("" + children);
   return (
     <div className="SimpleTextInput_Caption">
-      {"result"}
+      {caption}
       <textarea
         readOnly
         className="SimpleTextInput_TextArea"

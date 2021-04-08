@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useState, useRef } from "react";
 import Input from "./components/Input";
 import SimpleTextInput from "./components/SimpleTextInput";
 import SimpleTextOutput from "./components/SimpleTextOutput";
@@ -8,6 +8,7 @@ import Paper from "@material-ui/core/Paper";
 import Evaluate from "@material-ui/icons/TrendingFlat";
 import Run from "@material-ui/icons/DirectionsRun";
 import Step from "@material-ui/icons/TextRotationNone";
+import Refresh from "@material-ui/icons/Refresh";
 import StepInto from "@material-ui/icons/TextRotateVertical";
 import StepOut from "@material-ui/icons/TextRotationAngleup";
 import Quit from "@material-ui/icons/ExitToApp";
@@ -33,6 +34,8 @@ function App() {
   const evalInput = useRef({ value: "" });
   const [evalOutput, setEvalOutput] = useState<string>("");
   const [stateMessage, setStateMessage] = useState("");
+  const [resultCaption, setResultCaption] = useState("no result");
+  const [serverVersion, setServerVersion] = useState("unknown");
   const [isLoading, setIsloading] = useState(true);
 
   const port: string = qs.port
@@ -44,14 +47,15 @@ function App() {
   const reloadActualSource = useCallback(() => {
     debug
       .all(
-        "level&input&output&inputBefore&processing&macros&userDefined&state&output"
+        "level&input&output&inputBefore&processing&macros&userDefined&state&output&version"
       )
       .then((response) => {
-        setInputBefore(response.data?.inputBefore ?? '');
-        setMacro(response.data?.processing ?? '');
-        setOutput(response.data?.output ?? '');
-        setStateMessage(response.data?.state ?? '');
-        setLevel(response.data?.level ?? '');
+        setInputBefore(response.data?.inputBefore ?? "");
+        setMacro(response.data?.processing ?? "");
+        setOutput(response.data?.output ?? "");
+        setStateMessage(response.data?.state ?? "");
+        setLevel(response.data?.level ?? "");
+        setServerVersion(response.data?.version?.version ?? "unknown");
         setData(response.data);
       })
       .catch((err: AxiosError) => {
@@ -80,30 +84,40 @@ function App() {
     debug.execute("" + evalInput?.current?.value).then((response) => {
       if (typeof response.data != "object") {
         if (response.data.length === 0) {
-          setEvalOutput("OK");
+          setEvalOutput("");
+          setResultCaption("empty evaluation result");
         } else {
           setEvalOutput("" + response.data);
+          setResultCaption("result");
         }
         document.title = "Jamal Debugger";
       } else {
         setEvalOutput("" + response.data.trace);
+        setResultCaption("error result");
         document.title = "Jamal Debugger (e)";
       }
-      //reloadActualSource();
+      reloadActualSource();
     });
 
-  useEffect(() => {
-    if (isLoading) {
-      document.title = "Jamal Debugger";
-      setIsloading(false);
-      reloadActualSource();
-    }
-  });
+  if (isLoading) {
+    document.title = "Jamal Debugger";
+    setIsloading(false);
+    reloadActualSource();
+  }
 
-const buttonCaption = (caption:string) =>{
-  const m = (21-caption.length)+"px";
-  return <div style={{ marginLeft: m, fontSize: "8pt" }}>{caption}</div>;
-};
+  const buttonCaption = (caption: string) => {
+    const m = 21 - caption.length + "px";
+    return <div style={{ marginLeft: m, fontSize: "8pt" }}>{caption}</div>;
+  };
+
+  const refreshButton = (
+    <Grid item>
+      <Button variant="contained" onClick={reloadActualSource}>
+        <Refresh />
+      </Button>
+      {buttonCaption("Refresh")}
+    </Grid>
+  );
 
   const evaluateButton = (
     <Grid item>
@@ -167,7 +181,8 @@ const buttonCaption = (caption:string) =>{
         justify="space-around"
         alignContent="center"
       >
-        {runButton} {stepButton} {stepIntoButton} {stepOutButton} {quitButton}
+        {refreshButton} {runButton} {stepButton} {stepIntoButton}
+        {stepOutButton}
       </Grid>
     </Grid>
   );
@@ -182,11 +197,11 @@ const buttonCaption = (caption:string) =>{
 
   const commandRowDisplay = (
     <>
-      <Grid container direction="column" xs={3}>
-        {levelDisplay}
+      <Grid item xs={6}>
+        {debugButtons}
       </Grid>
-      <Grid container direction="column" xs={6}>
-        <Grid item>{debugButtons}</Grid>
+      <Grid item xs={3}>
+        {levelDisplay}
       </Grid>
       <Grid
         container
@@ -197,98 +212,114 @@ const buttonCaption = (caption:string) =>{
         alignContent="flex-end"
       >
         {evaluateButton}
+        {quitButton}
       </Grid>
     </>
   );
-  const macroLists = (
-    <Grid
-      container
-      direction="column"
-      spacing={1}
-      xl={3}
-      justify="space-around"
-    >
-      <Grid item>
-        <Paper className="App_Paper, App_MacroList">
-          <BuiltInMacrosDisplay data={data} />
-        </Paper>
-      </Grid>
-      <Grid item>
-        <Paper className="App_Paper, App_MacroList">
-          <UserDefinedMacrosDisplay data={data} />
-        </Paper>
-      </Grid>
+
+  const builtInMacroList = (
+    <Grid item xs={3}>
+      <Paper className="App_Paper, App_MacroList">
+        <BuiltInMacrosDisplay data={data} />
+      </Paper>
+    </Grid>
+  );
+  const userDefinedMacroList = (
+    <Grid item xs={3}>
+      <Paper className="App_Paper, App_MacroList">
+        <UserDefinedMacrosDisplay
+          data={data}
+          captionSetter={setResultCaption}
+          contentSetter={setEvalOutput}
+        />
+      </Paper>
     </Grid>
   );
 
-  const runInputOutput = (
-    <Grid
-      container
-      direction="column"
-      xs={6}
-      justify="space-around"
-      spacing={3}
-    >
-      <Grid item style={{ paddingBottom: "6px" }}>
-        <Paper className="App_Paper" style={{ height:"285px"}}>
-          <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"input"}</div>
-          <Input text={inputBefore} macro={macro} />
-        </Paper>
-      </Grid>
-      <Grid item>
-        <Paper className="App_Paper" style={{height: "285px"}}>
-          <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"output"}</div>
-          <Input text={output} />
-        </Paper>
-      </Grid>
+  const runInput = (
+    <Grid item xs={6}>
+      <Paper className="App_Paper">
+        <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"input"}</div>
+        <Input text={inputBefore} macro={macro} />
+      </Paper>
     </Grid>
   );
 
-  const evaluateIo = (
-    <Grid container direction="column" xs={3} justify="space-around">
-      <Grid item>
-        <Paper className="App_Paper, App_Eval">
-          <SimpleTextInput caption={"evaluate"} reference={evalInput}>
-            {""}
-          </SimpleTextInput>
-        </Paper>
-      </Grid>
-      <Grid item>
-        <Paper className="App_Paper, App_Eval">
-          <SimpleTextOutput>{evalOutput}</SimpleTextOutput>
-        </Paper>
-      </Grid>
+  const runOutput = (
+    <Grid item xs={6}>
+      <Paper className="App_Paper">
+        <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"output"}</div>
+        <Input text={output} />
+      </Paper>
     </Grid>
   );
 
-  const inputOutputDisplay = (
-    <>
-      {macroLists}
-      {runInputOutput}
-      {evaluateIo}
-    </>
+  const evaluateInput = (
+    <Grid item xs={3}>
+      <Paper className="App_Paper, App_Eval">
+        <SimpleTextInput caption={"evaluate"} reference={evalInput}>
+          {""}
+        </SimpleTextInput>
+      </Paper>
+    </Grid>
+  );
+
+  const evaluateOutput = (
+    <Grid item xs={3}>
+      <Paper className="App_Paper, App_Eval">
+        <SimpleTextOutput caption={resultCaption}>
+          {evalOutput}
+        </SimpleTextOutput>
+      </Paper>
+    </Grid>
   );
 
   return (
     <div className="App">
       <header className="App-header">
+        <Grid container direction="row">
+          <TitleBar message={stateMessage} />
+        </Grid>
+        <Grid container direction="row">
+          {commandRowDisplay}
+        </Grid>
         <Grid
           container
-          direction="column"
-          className="AppTopContainer"
-          spacing={10}
+          direction="row"
+          spacing={2}
+          style={{ width: "100%" }}
           justify="space-around"
-          alignContent="flex-start"
-          alignItems="flex-start"
         >
-          <Grid container direction="row">
-            <TitleBar message={stateMessage} />
-          </Grid>
-          <Grid container direction="row">
-            {commandRowDisplay}
-          </Grid>
-          <Grid container direction="row" alignItems="flex-start">
-            {inputOutputDisplay}
+          {runInput}
+          {builtInMacroList}
+          {evaluateInput}
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          spacing={2}
+          style={{ width: "100%" }}
+          justify="space-around"
+        >
+          {runOutput}
+          {userDefinedMacroList}
+          {evaluateOutput}
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          spacing={2}
+          style={{ width: "100%" }}
+          justify="space-around"
+        >
+          <Grid item xs={12}>
+            <div className="App_LicenseLine">
+              {"v1.0.0, Apache License 2.0, "}
+              <a href="https://github.com/verhas/jamal">
+                {"https://github.com/verhas/jamal"}
+              </a>
+              {", Server version: " + serverVersion}
+            </div>
           </Grid>
         </Grid>
       </header>

@@ -25,7 +25,7 @@ const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({ data }) => {
     }
   }
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: "310px", width: "100%", marginTop: "10px" }}>
       <DataGrid
         className="BuiltInMacrosDisplay"
         headerHeight={33}

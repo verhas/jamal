@@ -13,36 +13,20 @@
   }
 }
 
-.App_spacer {
-  width: 300px;
-}
-.App_macroList {
-  width: 130px;
-}
 .App_GridContainer {
   font-size: 12px;
   width: 100%;
 }
 
 .App_Paper {
-  margin: 1%;
-  padding: 1%;
-}
-
-.App_MacroList {
   margin-top: 10px;
+  height: 300px;
   max-height: 300px;
+  padding: 5px;
 }
 
 .App_Eval {
   margin-top: 10px;
-  margin-bottom: 10px;
-  height: 275px;
-  padding-bottom: 24px;
-}
-
-.App_EvalOutput {
-  max-height: 300px;
 }
 
 .AppTopContainer {
@@ -60,4 +44,11 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.App_LicenseLine, .App_LicenseLine a {
+  padding-top: 10px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: white;
+  font-size: 10pt;
 }

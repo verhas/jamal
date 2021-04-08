@@ -1,6 +1,6 @@
 {
   "name": "jamal-debug-ui",
-  "version": "1.0.0-SNAPSHOT",
+  "version": "1.7.3-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.3",

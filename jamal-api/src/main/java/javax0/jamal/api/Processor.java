@@ -164,7 +164,8 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
-     * Load the version property from the prooperties file.
+     * Load the version property from the properties file and store it into the properties variable {@code version}.
+     * The properties will contain one property named {@code "version"}.
      * @param version the properties that will hold the version property
      */
     static void jamalVersion(Properties version) {

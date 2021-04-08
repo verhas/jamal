@@ -1,13 +1,15 @@
 import React, { FC } from "react";
-import { DataGrid } from "@material-ui/data-grid";
-import "./UserDefinedMacrosDisplay.css"
+import { DataGrid, GridRowSelectedParams } from "@material-ui/data-grid";
+import "./UserDefinedMacrosDisplay.css";
 
 type UserDefinedMacrosDisplayProps = {
   data: any;
+  captionSetter: (caption: string) => void;
+  contentSetter: (caption: string) => void;
 };
 
 const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
-  data,
+  data,captionSetter,contentSetter
 }) => {
   const columns = [
     { field: "id", headerName: "n", width: 10 },
@@ -35,7 +37,7 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
     }
   }
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: "310px", width: "100%", marginTop: "10px" }}>
       <DataGrid
         className="UserDefinedMacrosDisplay"
         headerHeight={33}
@@ -45,6 +47,18 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
         density="compact"
         pageSize={rows.length}
         hideFooter={true}
+        onRowSelected={(row: GridRowSelectedParams) => {
+          const text =
+            "{@define " +
+            row.data.name +
+            "(" +
+            row.data.params +
+            ")=" +
+            row.data.content +
+            "}";
+            captionSetter("macro definition");
+            contentSetter(text);
+        }}
       />
     </div>
   );

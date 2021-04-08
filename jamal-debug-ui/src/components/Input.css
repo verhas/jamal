@@ -8,10 +8,11 @@
     font-size: 16px;
     height: 90%;
     min-height: 200px;
-    width:99%;
+    box-sizing: border-box;
+    width:100%;
     border: 1px solid white;
     text-align: left;
-    margin: 1%;
+    margin: 0px;
     border: "solid";
     border-color: grey;
 }
