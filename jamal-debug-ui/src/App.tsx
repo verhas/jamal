@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import Input from "./components/Input";
 import SimpleTextInput from "./components/SimpleTextInput";
 import SimpleTextOutput from "./components/SimpleTextOutput";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Run from "@material-ui/icons/TrendingFlat";
+import Evaluate from "@material-ui/icons/TrendingFlat";
+import Run from "@material-ui/icons/DirectionsRun";
 import Step from "@material-ui/icons/TextRotationNone";
 import StepInto from "@material-ui/icons/TextRotateVertical";
 import StepOut from "@material-ui/icons/TextRotationAngleup";
@@ -107,7 +108,7 @@ const buttonCaption = (caption:string) =>{
   const evaluateButton = (
     <Grid item>
       <Button variant="contained" onClick={evaluate} color="primary">
-        <Run />
+        <Evaluate />
       </Button>
       {buttonCaption("Evaluate")}
     </Grid>
