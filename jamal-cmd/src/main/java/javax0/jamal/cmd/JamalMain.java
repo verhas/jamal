@@ -1,5 +1,6 @@
 package javax0.jamal.cmd;
 
+import javax0.jamal.api.Debugger;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
@@ -32,6 +33,8 @@ public class JamalMain implements Callable<Integer> {
 
     //<editor-fold desc="Configuration parameters" >
 
+    @Option(names = {"--debug", "-g"}, defaultValue = "", description = "debugger port")
+    private String debug = "";
     @Option(names = {"--open", "-o"}, defaultValue = "{", description = "the macro opening string")
     private String macroOpen = "{";
     @Option(names = {"--close", "-c"}, defaultValue = "}", description = "the macro closing string")
@@ -114,6 +117,7 @@ public class JamalMain implements Callable<Integer> {
             if (outputPath != null) {
                 if (!drydry) {
                     final String result;
+                    System.setProperty(Debugger.JAMAL_DEBUG, debug);
                     try (final var processor = new Processor(macroOpen, macroClose)) {
                         result = processor.process(createInput(inputPath));
                     }
@@ -236,6 +240,5 @@ public class JamalMain implements Callable<Integer> {
     private String qq(String s) {
         return "'" + s + "'";
     }
-
 
 }

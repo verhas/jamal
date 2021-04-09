@@ -490,13 +490,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 final var extension = file.substring(extensionStart + 1);
                 contentType = Optional.ofNullable(mimeTypes.getProperty(extension)).orElse("text/plain");
             }
-            final var url = HttpServerDebugger.class.getClassLoader().getResource("ui/" + file);
-            if (url == null) {
-                respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
-                return;
-            }
-            try {
-                final var content = Files.readAllBytes(Paths.get(url.toURI()));
+            try (final var is = HttpServerDebugger.class.getClassLoader().getResourceAsStream("ui/" + file)) {
+                final var content = is.readAllBytes();
                 e.getResponseHeaders().add("Content-Type", contentType);
 
                 e.sendResponseHeaders(200, content.length);
@@ -504,7 +499,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     out.write(content);
                     out.flush();
                 }
-            } catch (URISyntaxException | IOException ex) {
+            } catch (IOException ex) {
                 respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
             }
         });

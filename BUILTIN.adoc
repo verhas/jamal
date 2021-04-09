@@ -298,7 +298,7 @@ The test is also straightforward and shows the direct use of the macro:
 @DisplayName("Test that the Hello built-in macro works")
 void macroWorks() throws Exception {
     TestThat.theInput(
-            "{@hello Peter }\n" +
+        "{@hello Peter }\n" +
             "{@hello Paul}\n"
     ).results("Hello, Peter!\nHello, Paul!\n");
 }
