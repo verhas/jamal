@@ -11,8 +11,8 @@ public class TestEnvironmentNoDebug {
     @DisplayName("The environment variable JAMAL_DEBUG is not set")
     void test() {
         Assertions.assertNull(
-            Optional.ofNullable(System.getenv(Debugger.JAMAL_DEBUG)).orElseGet(
-                () -> System.getProperty(Debugger.JAMAL_DEBUG)
+            Optional.ofNullable(System.getenv(Debugger.JAMAL_DEBUG_ENV)).orElseGet(
+                () -> System.getProperty(Debugger.JAMAL_DEBUG_SYS)
             ));
     }
 }

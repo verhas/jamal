@@ -39,8 +39,8 @@ public class JamalMain implements Callable<Integer> {
     private String macroOpen = "{";
     @Option(names = {"--close", "-c"}, defaultValue = "}", description = "the macro closing string")
     private String macroClose = "}";
-    @Option(names = {"--include", "-i"}, defaultValue = ".*\\.jam$", description = "file name regex pattern to include into the processing")
-    private String include = ".*\\.jam$";
+    @Option(names = {"--include", "-i"}, defaultValue = "*.jam$", description = "file name regex pattern to include into the processing")
+    private String include = "*.jam$";
     @Option(names = {"--exclude", "-e"}, defaultValue = "", description = "file name regex pattern to exclude from the processing")
     private String exclude = null;
     @Option(names = {"--source", "-s"}, defaultValue = ".", description = "source directory to start the processing")
@@ -61,11 +61,11 @@ public class JamalMain implements Callable<Integer> {
     private boolean verbose = false;
     @Option(names = {"--regex", "-x"}, description = "interpret transform, include and exclude options as regex")
     private boolean regex = false;
-    @Option(names = {"--file", "-f"}, description = "convert a single file, specify nput and output")
+    @Option(names = {"--file", "-f"}, description = "convert a single file, specify input and output")
     private boolean single = false;
-    @Parameters(index = "0", defaultValue = Parameters.NULL_VALUE)
+    @Parameters(index = "0", defaultValue = Parameters.NULL_VALUE, arity = "0..1")
     private String inputFile;
-    @Parameters(index = "1", defaultValue = Parameters.NULL_VALUE)
+    @Parameters(index = "1", defaultValue = Parameters.NULL_VALUE, arity = "0..1")
     private String outputFile;
     //</editor-fold>
     @Spec
@@ -117,7 +117,7 @@ public class JamalMain implements Callable<Integer> {
             if (outputPath != null) {
                 if (!drydry) {
                     final String result;
-                    System.setProperty(Debugger.JAMAL_DEBUG, debug);
+                    System.setProperty(Debugger.JAMAL_DEBUG_SYS, debug);
                     try (final var processor = new Processor(macroOpen, macroClose)) {
                         result = processor.process(createInput(inputPath));
                     }

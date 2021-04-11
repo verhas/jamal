@@ -13,10 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,7 +37,6 @@ import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
 public class HttpServerDebugger implements Debugger, AutoCloseable {
     private static final String MIME_PLAIN = "text/plain";
     public static final String MIME_APPLICATION_JSON = "application/json";
-    private String secret = "";
     private String client = "";
     private String cors = "";
 
@@ -228,7 +224,6 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     throw new IllegalArgumentException("Debugger thread was interrupted", e);
                 }
                 Map<String, Object> response = null;
-                final List<Debuggable.Scope> scopes;
                 switch (task.command) {
                     case ALL:
                         response = new HashMap<>();
@@ -418,7 +413,6 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             } catch (NumberFormatException nfe) {
                 throw new IllegalArgumentException("The debugger connection string '" + s + "' is malformed.", nfe);
             }
-            secret = connection.getOption("secret").map(secret -> "/" + secret).orElse("");
             client = connection.getOption("client").orElse("");
             cors = connection.getOption("cors").orElse(null);
             return 1000;
@@ -469,7 +463,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private void createStaticContext(HttpServer server) {
-        server.createContext(secret + "/", (e) -> {
+        server.createContext("/", (e) -> {
             if (client != null && client.length() > 0 && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
                 respond(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
                 return;
@@ -478,7 +472,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 respond(e, HTTP_BAD_METHOD, MIME_PLAIN, "");
                 return;
             }
-            var file = e.getRequestURI().toString().substring((secret).length() + 1);
+            var file = e.getRequestURI().toString().substring(1);
             if (file.length() == 0) {
                 file = "index.html";
             }
@@ -506,7 +500,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private void createContext(HttpServer server, Command command) {
-        server.createContext(secret + command.url, (e) -> {
+        server.createContext( command.url, (e) -> {
             final var contextPath = e.getHttpContext().getPath();
             final var request = RequestUriParser.parse(e.getRequestURI().toString());
             if (!Objects.equals(contextPath, request.context) &&

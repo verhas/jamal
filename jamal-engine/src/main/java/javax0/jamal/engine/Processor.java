@@ -13,6 +13,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.engine.debugger.DebuggerFactory;
+import javax0.jamal.engine.util.ExceptionDumper;
 import javax0.jamal.engine.util.MacroBodyFetcher;
 import javax0.jamal.engine.util.MacroQualifier;
 import javax0.jamal.engine.util.PrefixComposer;
@@ -126,6 +127,9 @@ public class Processor implements javax0.jamal.api.Processor {
             }
         } catch (BadSyntaxAt bsAt) {
             traceRecordFactory.dump(bsAt);
+            if( !(debugger instanceof NullDebugger)){
+                debugger.setAfter(limiter.get(), ExceptionDumper.dump(bsAt));
+            }
             throw bsAt;
         } finally {
             if (limiter.down() == 0) {

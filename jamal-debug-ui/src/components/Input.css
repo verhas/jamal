@@ -1,11 +1,11 @@
 .red {
     color : red;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 .Input_SourceCode {
-    font-family: "Courier New",sans-serif;
-    font-size: 16px;
+    font-family: "Verdana";
+    font-size: 12px;
     height: 90%;
     min-height: 200px;
     box-sizing: border-box;

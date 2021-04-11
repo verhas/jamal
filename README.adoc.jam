@@ -189,8 +189,8 @@ java -cp {%#for $module in (engine,api,tools,core,cmd)=$HOME/.m2/repository/com/
 ----
 
 It is not a user-friendly approach.
-You do not want to type all the paths and the JARs every time you want to start Jamal.
-For this reason, there is a {%@file (format=`$name`) jamal.sh%} that has the following content:
+You do not want to type all the paths, and the JARs every time you want to start Jamal.
+For this reason, there is a file, {%@file (format=`$name`) jamal.sh%} that has the following content:
 
 [source,bash]
 ----
@@ -236,72 +236,78 @@ If you use a simple option `help`, then Jamal will print out a short screen that
 {%#snip:define usage_snippet={%@include [verbatim] usage.txt%}%}{%@snip usage_snippet%}
 ----
 
-The command line is built up from the command and key-value pairs.
-For example, to convert the single `pom.xml.jam` to `pom.xml`, you can issue the command
+The command line can contain options and parameters.
+Most of the options have single character version and also multiple character versions.
+The option values have to be written after the option in case the option is single character and with a `=` is multiple-character.
 
-[source,bash]
-----
-./jamal.sh depth=1 pattern=pom.xml.jam
-----
+The options you can use with the command line version of Jamal are the followings:
 
-It will tell Jamal to process all the files that
+* `--dry-dry-run` will tell Jamal to perform a dry run without invoking the conversion.
+Use this opition to test the input and output pattern to see which files will Jamal process and what output files it will create.
 
-* match the regular expression `pom.xml.jam`,
+* `--dry-run` is a dry run, but not so dry as `--dry-dry-run`.
+When this option is used the Jamal processing is performed, but the result is not saved into the out.
+Using this option you can see what files Jamal will process and you can also see if there is any error during the processing.
 
-* search for such files in the current directory and below directories
+* `-c` or `--close=<macroClose>` specifies the macro closing string.
+The default macro closing string is `}`.
+When using this option mind that some characters need escape on the command line.
 
-* but not more than one level depth in the directories (essentially only in the current directory).
+* `-o` or `--open=<macroOpen>` specifies the macro opening string.
+The default macro opening string is `{`.
+When using this option mind that some characters need escape on the command line.
 
-The argument pattern is interpreted as a regular expression.
-That way, this use would also match, for example, `pomaxmlojam`.
-The proper way would be to write
+* `-f` or `--file` instructs Jamal not to parse the directory for input files.
+When this option is used Jamal will process the command line parameter `<inputFile>` and it will write the output to `<outputFile>`.
 
-[source,bash]
-----
-./jamal.sh depth=1 pattern=^\./pom\.xml\.jam$
-----
+* `-s` or `--source=<sourceDirectory>` specifies the source directory where Jamal will start looking for input files.
+The file listing is recursive going into subdirectories.
+The default value is the current directory.
 
-Note that in some cases, the regular expression characters may be interpreted by the command line bash.
-In that case, you have to use `\` in front of the character.
+* `-d` or `--depth=<depth>` limits the dept of directory recursion.
+The default value does not limit the depth.
 
-The options you can use with the command-line version of Jamal:
+* `-e` or `--exclude=<exclude>` exclude the files that match the pattern `<exclude>`.
+The pattern can be usualy file matching wild-card pattern or regular expression if the option `-x`, `--regex` is used.
+The default value is not to exclude any file.
 
-* `open` {%@define oOrC($char,$openingClosing)=can define the macro $openingClosing string.
-The default value is `$char`.
-The Jamal source file can later change this value any time using the <<sep,`sep`>> macro.%}{%oOrC /{/opening%}
+* `-i` or `--include=<include> ` include the files that match the pattern `<include>`.
+The pattern can be usualy file matching wild-card pattern or regular expression if the option `-x`, `--regex` is used.
+The default value is `*.jam`.
 
-* `close` {%oOrC/}/closing%}
+* `-r` or `--transform=<transform> [<transform>]` define one or more transformation.
+When multiple files are processed this transformations are used to calculate the output file name from the input file name.
+The option must have two values.
+The first value is the regular expression, the second parameter is the replacement string.
+These are the parameters that will be used in the Java method `inputFileName.replaceAll(a,b)` to calculate the output file name.
+The default value is `\.jam$` and an empty string.
+The default value will cause `replaceAll` to chop off the `.jam` extension from the end of the file.
+That way, for example `pom.xml.jam` will be converted to `pom.xml`.
 
-* `pattern` can define a regular expression that needs to match a file's name to process.
-Jamal's command-line version scans the directories recursively, listing all the files.
-It processes only the files where the name matches the pattern.
+* `-t` or `--target=<targetDirectory>` can specify the target directory where the output will be stored.
+If input files are under some subdirectories of the `<sourceDirectory>` then the same directory structure will be created for the output.
+The default value is the current directory.
 
-* `exclude` can define a regular expression that must not match a file's name to process.
-It is the opposite of the option `pattern`.
+* `-x` or `--regex` use regular expression for the `<include>` and for the `<exclude>` values.
+Transform is always interpreted as regular expression.
 
-* `source` can define the source directory where the search for processable files starts.
-The default directory is '.'
+* `-g` or `--debug=<debug>` start the code in debug mode.
+To use this option the debugger module implementing the debugger must be on the classpath.
+This is automatically enysured when Jamal is started using jbang using the `jbang jamal@verhas` command.
+The parameter `<debug>` is the debugger configuration string.
+To use the web based debugger you can specify `http:8080`.
+With that parameter the debugger will start to listen on the port `8080` on the localhost ip.
+The client code that runs in the browser can also be downloaded from the same server from the `http://localhost:8080` address.
+If you specify a different port, then from that port.
 
-* `target` can define the target directory where Jamal will generate the output files.
-The default directory is '.'.
-When a source file is in a subdirectory under the `source` directory, then the resulting file will also be created in a subdirectory mirroring the source structure.
+* `-v` or `--verbose` verbose output
 
-* `directory` is a shorthand option specifying the same value for `source` and `target`. (1.7.3 and later)
+* `-h` or `--help` help
+{%@define io($x)=the $x file in case the option `-f` or `--file` was used%}
+* `<inputFile>` {%io input%}
 
-* `depth` can define the levels of recursion in the directories looking for source files.
-The default value is practically infinite.
-(Actual value is `Integer.MAX_VALUE`.) (1.7.3 and later)
+* `<outputFile>` {%io output%}
 
-* `from` can specify a regular expression to be used to convert the file name.
-When the output file name is calculated, the input file name is converted, calling the Java `String` method `replaceAll`.
-It replaces any substring matching the regular expression as the first argument to the second argument's string.
-The default value is `\.jam$`. See also the option `to`.
-
-* `to` can specify the replacement string in the call to `replaceAll`, transforming the input file name to the output file name.
-The default value is `''` empty string. If neither `from` nor `to` is set then this will call `replaceAll("\.jam$",""")` on the input file name.
-Since `\.jam$` matches the extension `.jam` at the end of the file name, this will be replaced by an empty string.
-That way, for example, `pom.xml.jam` will be converted to `pom.xml`.
-Feel free to define other file name transformations and feel free to use regular expression capturing groups and `$i` placeholders.
 
 ==== Starting with JBang
 
@@ -316,7 +322,7 @@ To start Jamal when you have JBang installed on your machine the command line to
 
 [source,bash]
 ----
-jbang jamal@verhas options
+jbang jamal@verhas ... options ...
 ----
 
 This command will invoke the command line version automatically caring about all the Jar files.
@@ -327,7 +333,27 @@ NOTE: The possibility to start Jamal using JBang was developed for the version 1
 
 ==== Debugging Macro Conversions
 
-In cases like that, you can specify
+When something goes wrong, Jamal gives you a detailed error message.
+The message will include the file name, line number, and character count where the error happened.
+In other cases, Jamal may think it works fine, but the output is not exactly what you expected.
+Sorry, in this case, the issue, most probably, is with your expectations.
+
+In cases like that, you can try to debug the execution of the macro engine.
+There are two possibilities:
+
+. use the trace functionality, or
+. use the debugger.
+
+The trace functionality can create a detailed XML trace of the execution that can later be examined.
+The trace information is structured with nested structures.
+XML is a format that can accommodate such nested structures and has very extensive editor support.
+
+The debugging functionality can execute the macro transformation step-by-step providing interactive debugger user interface.
+The tracing functionality was developed earlier and its importance lessens by the introduction of the debugger.
+
+===== Tracing
+
+To get a trace file during the execution of Jamal you can
 
 [source]
 ----
@@ -343,11 +369,11 @@ If it is more convenient, you can also specify the trace file using the environm
 export JAMAL_TRACE=tracefile.xml
 ----
 
-Only if the `jamal.trace` system property is not defined.
-When the system property is defined, then the environment variable is ignored.
+The environment variable is taken into account only if the `jamal.trace` system property is not defined.
 
 The trace file will contain all the macro evaluations' inputs and outputs.
-Since there can be many Jamal evaluations one after the other, Jamal does not overwrite old trace information, but rather, it appends the info.
+Since there can be many Jamal evaluations one after the other, Jamal does not overwrite old trace information.
+It appends the new trace information.
 Before starting Jamal, you can manually delete the trace file.
 Trace files grow large quickly.
 If you do not want to trace anymore, do not forget to unset the environment variable typing
@@ -359,7 +385,57 @@ unset JAMAL_TRACE
 
 to avoid an excessively large trace file growing on your disk.
 
-If you use Java 8, you should use it with the release `1.0.2.JDK8`.
+===== Debugging
+
+To debug a Jamal macro processing you have to start Jamal in debugging mode.
+Jamal switches on debugging mode if the system property `jamal.debug` or the environment variable `JAMAL_DEBUG` is defined.
+The value of the property or the variable controls which debugger starts and how.
+
+Currently, there are two debuggers implemented:
+
+. web based debugger with UI written in React.js
+. a TCP/telnet based debugger.
+
+The detailed technical documentation of the server side of the debuggers is described in the document <<jamal-debug/README.adoc,debugger readme>>.
+The TCP based debugger is only for experimental purposes or when the web based debugger is not available.
+
+Here we briefly describe the web based debugger.
+Since the UI can best be described with pictures, especially with moving pictures the documentation is created in screen capture videos.
+
+
+To start Jamal in debugger mode you can specify
+
+[source]
+----
+-Djamal.debug=http:8080
+----
+
+on the command line that starts Jamal.
+It will specify the web based debugger, hence the `http` and the port, in this case `8080`.
+If it is more convenient, you can also specify the `http:8080` debug option file using the environment variable:
+
+[source]
+----
+export JAMAL_DEBUG=http:8080
+----
+
+The environment variable is taken into account only if the `jamal.debug` system property is not defined.
+
+If you do not want to debug anymore, do not forget to unset the environment variable typing
+
+[source]
+----
+unset JAMAL_DEBUG
+----
+
+In debug mode Jamal stops twice for each macro evaluation.
+Once when it selects the next text without macro from the actual start of the input, or a macro at the start of the input.
+Second time when the macro was evaluated, and the text is appended to the output.
+
+If you open your browser after you started Jamal in debug mode and try to open the url `http://localhost:8080` you will get the debugger UI in your browser.
+This user interface will let you see the current input, the current output, the defined built-in and user defined macros.
+You can let the code run, make one step macro evaluation, go into nested macro evaluation, evaluate text interactuvely in the current evaluation envirionment and so on.
+
 
 [[SimpleExample]]
 === {%chapter%}Simple Example

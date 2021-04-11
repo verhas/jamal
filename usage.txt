@@ -2,16 +2,16 @@ Usage: <main class> [-fhvx] [--dry-dry-run] [--dry-run] [-c=<macroClose>]
                     [-d=<depth>] [-e=<exclude>] [-g=<debug>] [-i=<include>]
                     [-o=<macroOpen>] [-s=<sourceDirectory>]
                     [-t=<targetDirectory>] [-r=<transform> [<transform>]]...
-                    <inputFile> <outputFile>
-      <inputFile>
-      <outputFile>
+                    [<inputFile>] [<outputFile>]
+      [<inputFile>]
+      [<outputFile>]
   -c, --close=<macroClose>   the macro closing string
   -d, --depth=<depth>        directory traversal depth, default is infinite
       --dry-dry-run          run dry, do not execute Jamal
       --dry-run              run dry, do not write result to output file
   -e, --exclude=<exclude>    file name regex pattern to exclude from the
                                processing
-  -f, --file                 convert a single file, specify nput and output
+  -f, --file                 convert a single file, specify input and output
   -g, --debug=<debug>        debugger port
   -h, --help                 help
   -i, --include=<include>    file name regex pattern to include into the

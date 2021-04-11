@@ -10,9 +10,8 @@ import java.util.Optional;
 public class DebuggerFactory {
 
     public static Debugger build(Processor processor) {
-        final var s = Optional.ofNullable(System.getenv(Debugger.JAMAL_DEBUG)).orElseGet(
-            () -> System.getProperty(Debugger.JAMAL_DEBUG)
-        );
+        final var s = Optional.ofNullable(System.getProperty(Debugger.JAMAL_DEBUG_SYS)).orElseGet(
+            () -> System.getenv(Debugger.JAMAL_DEBUG_ENV));
         if (s == null || s.length() == 0) {
             return new NullDebugger();
         }

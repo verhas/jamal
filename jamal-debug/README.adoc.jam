@@ -1,9 +1,12 @@
 == Jamal Debugger
 
-Jamal debugger is an experimental feature.
-The current release does not include the debugger.
+The module `jamal-engine` implements the support for the debugger implementations since Jamal version 1.7.3
+The debuggers are implemented in the `jamal-debug` module.
 
-The module `jamal-engine` implements the support for the debugger implementations.
+NOTE: This document is developer documentation.
+There is no need to understand the details outlined in this document to use Jamal or the debugger.
+This documentation is maintained with lower priority than user documentation.
+For this reason this documentation may not be up-to-date.
 
 === How Jamal debugger works
 
@@ -55,18 +58,30 @@ The debugger implementations are free to stop and interact with the debugger cli
 The TCP Server Debugger and the HTTP Server Debugger stop and interact with the debugger client only after the macro evaluation.
 
 === TCP Server Debugger
-Use a connection string, like
+
+The TCP server debugger starts to listen on a TCP port and accepts commands via telnet.
+It was designed having a native UI implementation of the debugger client.
+Currently, there is no native implementation of the debugger UI.
+The TCP debugger is an experimental feature.
+
+The input and output commands are textual, but not human friendly.
+For example, you have to specify the length of the strings in a decimal length-encoded format.
+E.g. a ten-character string has to be preceeded with the characters `210`.
+
+To ease the use of the interface for humans directly typing in commands the debugger can switch to human mode using the `h` command.
+
+To start Jamal with the TCP server debugger use a connection string, like
 
 [source,text]
 ----
            s:8080
 ----
-This debugger will handle all connection strings that start with the characters `s:`.
+The TCP debugger will handle all connection strings that start with the characters `s:`.
 The `p1` parameter is the port that the server will listen on.
 You can connect to `localhost:p1` using telnet.
 
 The commands are single characters.
-When there is a string in the command or the response, then it has the format
+When there is a string in the command, or in the response, it has the format
 
 [source,text]
 ----
@@ -81,7 +96,7 @@ Here
 
 * `tttttttt` is the text.
 
-This debugger can also switch to "human" more where the length is not sent in front of the strings and are also not expected.
+The debugger can also switch to "human" more where the length is not sent in front of the strings and are also not expected.
 In this case, the strings, which are parameters of a command, last till the end of the line.
 This way, someone can debug a code using a telnet command and issue the `x` command (execute) without counting the number of characters.
 
@@ -127,19 +142,14 @@ Use a connection string, like
 
 [source,text]
 ----
-           http:8080?client=127.0.0.1&secret=mySecret&cors=*
+           http:8080?client=127.0.0.1&cors=*
 ----
 
 The HTTP server debugger will handle a connection string if it starts with `http:`.
 The `p1` parameter is the port, so the server listens for incoming HTTP requests on `localhost:p1`.
-The URLs have the format `http://localhost:p1/secret/command` or `http://localhost:p1/command`.
-(Explanation about `secret` comes below.)
+The URLs have the format `http://localhost:p1/command`.
 
 The connection string can also contain two options:
-
-. `secret` will be used in the URL as application context.
-If it is defined, then the URL will contain this string as a secret part.
-Only clients that are aware of this secret can access the URL.
 
 . `client` is the address, as a string of the accepted client.
 A connection coming from a different client will be refused.
@@ -204,7 +214,7 @@ A typical response JSON is
 ----
 
 In the example above, the built-in core macros are listed in level 1.
-Some of the macros are deleted from the list for brevity.
+Some macros are deleted from the list for brevity.
 On level 2, the macros `snip` and `snip:define` are defined at the moment.
 
 * `/userDefinedMacros` `GET` *body:* none, *response body:* the user defined macros for all the nesting levels.
@@ -286,6 +296,11 @@ In case there is an error (405) then the response is JSON format containing the 
 The stack trace in the sample is abbreviated and also roken into seveal lines.
 This is only for documentation purposes.
 
+
+* `/all` `GET` *body:* none, *response body:* the responses of the other commands put into a single JSON.
+This command can be used to get the result of other `GET` commands together in a single JSON.
+The URL parameters are the names of the other commands for which the response is needed.
+These are: `level`, `state`, `input`, `output`, `inputBefore`, `processing`, `builtIn`, `userDefined`, `version`.
 
 * `/run` `POST` *body:* none, *response body:* none
 
