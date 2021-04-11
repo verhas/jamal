@@ -12,6 +12,7 @@
 //DEPS com.javax0.jamal:jamal-ruby:1.7.3-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-plantuml:1.7.3-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-debug:1.7.3-SNAPSHOT
+//DEPS com.javax0.jamal:jamal-jamal:1.7.3-SNAPSHOT
 
 
 

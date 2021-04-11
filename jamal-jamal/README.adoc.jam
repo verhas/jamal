@@ -1,0 +1,39 @@
+= Jamal Self integration module
+
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}
+
+The integration modules, like plantUML, Ruby, Groovy all integrate some external processor into Jamal.
+These external processors get a text input and provide a text output.
+In case of the Ruby module the input is the Ruby code.
+In case of the Groovy module the input is the Groovy code.
+The output in both these cases is the output of the program embedded into the macro.
+
+Jamal itself is a processor that has a text input and produces text output.
+That way it can be integrated into itself.
+The question is if it should be or not?
+
+Using this module you can have a whole Jamal text inside a macro, probably using totally different macro start and strop strings.
+The evaluation of the macro will be executed in a separate processor instance and that way it will not have effect on the current execution.
+
+This feature is used in the readme documentations of Jamal.
+Till the release 1.7.2 it was provided using a proprietary, test scope built-in macro.
+With this module this feature, although this is a niche feature, is available to any application.
+
+To use this module you have to add the dependency to you Maven project, as:
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-jamal</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+
+----
+
+
+== Macros implemented in the package
+
+{%@snip:update%}

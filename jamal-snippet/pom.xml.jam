@@ -15,6 +15,7 @@
         {@for MODULE in (api,tools,engine)=
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency|{GROUPID}|jamal-testsupport||test}
+        {dependency|{GROUPID}|jamal-jamal||test}
         {dependency|{GROUPID}|jamal-core||test}
         {@comment specific release to avoid circular dependency, we use it only to generate documentation}
         {dependency|{GROUPID}|jamal-plantuml|{LAST_RELEASE}|test}

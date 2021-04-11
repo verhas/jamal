@@ -1,5 +1,5 @@
 == Jamal Snippet Handling Macros
-{%@import ../readmemacros.jim%}\
+{%@import res:jamal.jim%}\
 {%@snip:collect from="src/main/java/"%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
 {%#snip:define lastUpdated={%lastUpdated%}%}\
@@ -211,7 +211,7 @@ For example, the test file
 
 [source]
 ----
-{%@include res:javax0/jamal/snippet/test3.jam%}
+{%@include ./src/test/resources/javax0/jamal/snippet/test3.jam%}
 ----
 
 excludes any file that contains the character `2` in its name.
@@ -237,7 +237,7 @@ will load the content of the file `javax0/jamal/snippet/testproperties.propertie
 
 [source]
 ----
-{%@include res:javax0/jamal/snippet/testproperties.properties%}
+{%@include ./src/test/resources/javax0/jamal/snippet/testproperties.properties%}
 ----
 
 and thus using the `snip` macro, like
@@ -263,7 +263,7 @@ For example the same properties file in XML format looks like the following:
 
 [source,xml]
 ----
-{%@include res:javax0/jamal/snippet/testproperties.xml%}
+{%@include ./src/test/resources/javax0/jamal/snippet/testproperties.xml%}
 ----
 
 [[snip:xml]]
@@ -951,7 +951,7 @@ The parameter `directory` can be absolute or relative to the currently processed
 For example,
 
 {%sample/
-{#for macroJavaFile in ({@listDir ./src/main/java/javax0/jamal/})=
+{#for macroJavaFile in ({@listDir (format=$simpleName) ./src/main/java/javax0/jamal/})=
 - macroJavaFile}
 %}
 
@@ -962,34 +962,34 @@ will result
 {%@snip listDir1
 [source]
 ----
-- ../jamal-snippet/src/main/java/javax0/jamal
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Snip.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Case.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/NumberLines.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/DateMacro.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Format.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Update.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/FilesMacro.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Collect.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Replace.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnipXml.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Counter.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Clear.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/KillLines.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnippetStore.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/ListDir.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/XmlFormat.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnipProperties.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/CounterMacro.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SnipList.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/XmlDocument.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Java.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/ReplaceLines.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/SkipLines.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Reflow.java
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet/Snippet.java
+- jamal
+- snippet
+- Snip.java
+- Case.java
+- NumberLines.java
+- DateMacro.java
+- Format.java
+- Update.java
+- FilesMacro.java
+- Collect.java
+- TrimLines.java
+- Replace.java
+- SnipXml.java
+- Counter.java
+- Clear.java
+- KillLines.java
+- SnippetStore.java
+- ListDir.java
+- XmlFormat.java
+- SnipProperties.java
+- CounterMacro.java
+- SnipList.java
+- XmlDocument.java
+- Java.java
+- ReplaceLines.java
+- SkipLines.java
+- Reflow.java
+- Snippet.java
 
 ----
 %}
@@ -999,7 +999,7 @@ The limit of the recursion can be limited by defining the parameter `maxDepth`.
 The same listing limited to 1 depth (non-recursive) is the following
 
 {%sample/
-{#for macroJavaFile in ({#listDir ./src/main/java/javax0/jamal/
+{#for macroJavaFile in ({#listDir (format=$simpleName) ./src/main/java/javax0/jamal/
 {@define maxDepth=1}})=
 - macroJavaFile}
 %}
@@ -1011,8 +1011,8 @@ will result
 {%@snip listDir2
 [source]
 ----
-- ../jamal-snippet/src/main/java/javax0/jamal
-- ../jamal-snippet/src/main/java/javax0/jamal/snippet
+- jamal
+- snippet
 
 ----
 %}
@@ -1029,7 +1029,7 @@ $placeholdes1|placeholder2| ... |placeholder3
 
 This is because the `|` character is the default separator for the different values in a `for` macro loop.
 
-The possible placeholders:
+The possible placeholders are:
 
 {%#snip:define listDirFormats$formatted=
 {%#replaceLines
@@ -1043,7 +1043,7 @@ string literal `true` if the file
 FO
 `false` otherwise.
 %}
-{%#snip listDirFormats%}%}%}%}
+{%#snip listDirFormats%}%}%}
 
 {%@snip listDirFormats$formatted
 

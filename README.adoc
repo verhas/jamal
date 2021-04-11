@@ -409,7 +409,7 @@ To debug a Jamal macro processing you have to start Jamal in debugging mode.
 Jamal switches on debugging mode if the system property `jamal.debug` or the environment variable `JAMAL_DEBUG` is defined.
 The value of the property or the variable controls which debugger starts and how.
 
-Currently there are two debuggers implemented:
+Currently, there are two debuggers implemented:
 
 . web based debugger with UI written in React.js
 . a TCP/telnet based debugger.
@@ -418,7 +418,42 @@ The detailed technical documentation of the server side of the debuggers is desc
 The TCP based debugger is only for experimental purposes or when the web based debugger is not available.
 
 Here we briefly describe the web based debugger.
-Since the UI can best be described with pictures, especially with moving pictures the the documentation will be created in screen capture videos.
+Since the UI can best be described with pictures, especially with moving pictures the documentation is created in screen capture videos.
+
+
+To start Jamal in debugger mode you can specify
+
+[source]
+----
+-Djamal.debug=http:8080
+----
+
+on the command line that starts Jamal.
+It will specify the web based debugger, hence the `http` and the port, in this case `8080`.
+If it is more convenient, you can also specify the `http:8080` debug option file using the environment variable:
+
+[source]
+----
+export JAMAL_DEBUG=http:8080
+----
+
+The environment variable is taken into account only if the `jamal.debug` system property is not defined.
+
+If you do not want to debug anymore, do not forget to unset the environment variable typing
+
+[source]
+----
+unset JAMAL_DEBUG
+----
+
+In debug mode Jamal stops twice for each macro evaluation.
+Once when it selects the next text without macro from the actual start of the input, or a macro at the start of the input.
+Second time when the macro was evaluated, and the text is appended to the output.
+
+If you open your browser after you started Jamal in debug mode and try to open the url `http://localhost:8080` you will get the debugger UI in your browser.
+This user interface will let you see the current input, the current output, the defined built-in and user defined macros.
+You can let the code run, make one step macro evaluation, go into nested macro evaluation, evaluate text interactuvely in the current evaluation envirionment and so on.
+
 
 [[SimpleExample]]
 === 2. Simple Example

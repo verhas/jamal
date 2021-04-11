@@ -1,0 +1,20 @@
+{#import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{project jamal jamal}
+    {GAV ::jamal-jamal:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description Jamal module for Jamal}
+
+    {@define openForTests={opens/jamal/jamal}}
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+      {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
+    }
+
+{end project}

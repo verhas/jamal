@@ -1,0 +1,28 @@
+This file contains macros, which are used in readme files.
+These macros help embedding Jamal macro samples and run them.
+
+{%@options trimVertical%}
+
+{%@define sample(code)={%@define :lastCode=code%}[source]
+----
+{%#trimLines
+{%@sample code%}%}
+----%}
+
+{%@define output=[source]
+----
+{%#trimLines
+{%#output {%lastCode%}%}%}
+----
+%}
+
+{%@define untrimmedSample(code)={%@define :lastCode=code%}[source]
+----
+{%@sample code%}
+----%}
+
+{%@define untrimmedOutput=[source]
+----
+{%#output {%lastCode%}%}
+----
+%}

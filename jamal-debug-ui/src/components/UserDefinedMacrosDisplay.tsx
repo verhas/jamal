@@ -31,7 +31,7 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
         id: j,
         level: i,
         name: macro.id,
-        params: macro.parameters.join(","),
+        params: macro?.parameters?.join(",") ?? "",
         content: macro.content,
       });
     }

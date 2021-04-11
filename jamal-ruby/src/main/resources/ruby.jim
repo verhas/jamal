@@ -1,11 +1,11 @@
-{@comment define macros that help the use of the built-in groovy macros}
+{@comment define macros that help the use of the built-in ruby macros}
 
 {@comment
 
-You can use this macro to declare the name of the groovy shell in case there are multiple shells used in the
-Jamal file. One possibility is to [@define groovyShell= name ]
+You can use this macro to declare the name of the ruby shell in case there are multiple shells used in the
+Jamal file. One possibility is to [@define rubyShell= name ]
 
 The other one is to use this macro and say [shell=name]
 
 }
-{@define shell(x)={@define groovyShell=x}}
+{@define shell(x)={@define rubyShell=x}}

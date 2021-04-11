@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.9555c895.chunk.css",
-    "main.js": "/static/js/main.f32c6e90.chunk.js",
-    "main.js.map": "/static/js/main.f32c6e90.chunk.js.map",
+    "main.css": "/static/css/main.7a59ecea.chunk.css",
+    "main.js": "/static/js/main.ed66d68b.chunk.js",
+    "main.js.map": "/static/js/main.ed66d68b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.633de587.js",
     "runtime-main.js.map": "/static/js/runtime-main.633de587.js.map",
     "static/js/2.9c21f53b.chunk.js": "/static/js/2.9c21f53b.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.f6228c0a.chunk.js": "/static/js/3.f6228c0a.chunk.js",
     "static/js/3.f6228c0a.chunk.js.map": "/static/js/3.f6228c0a.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.9555c895.chunk.css.map": "/static/css/main.9555c895.chunk.css.map",
+    "static/css/main.7a59ecea.chunk.css.map": "/static/css/main.7a59ecea.chunk.css.map",
     "static/js/2.9c21f53b.chunk.js.LICENSE.txt": "/static/js/2.9c21f53b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.633de587.js",
     "static/js/2.9c21f53b.chunk.js",
-    "static/css/main.9555c895.chunk.css",
-    "static/js/main.f32c6e90.chunk.js"
+    "static/css/main.7a59ecea.chunk.css",
+    "static/js/main.ed66d68b.chunk.js"
   ]
 }
