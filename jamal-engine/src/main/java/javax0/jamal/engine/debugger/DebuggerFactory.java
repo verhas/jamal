@@ -34,8 +34,10 @@ public class DebuggerFactory {
 
         try {
             selected.init(new DebuggerStub(processor));
+        } catch (IllegalArgumentException iae) {
+            throw iae;
         } catch (Exception e) {
-            throw new IllegalArgumentException("There was an exception intializing the debugger.", e);
+            throw new IllegalArgumentException("There was an exception initializing the debugger.", e);
         }
         return selected;
     }

@@ -14,7 +14,7 @@ jamal-snippet.
 {%@define pu$template=%}
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]
-https://javadoc.io/doc/com.javax0.jamal/jamal-parent[JavaDoc]
+https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
 
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.

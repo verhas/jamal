@@ -35,12 +35,12 @@ function App() {
   const [macro, setMacro] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [level, setLevel] = useState<string>("-");
-  const evalInput = useRef({ value: "" });
   const [evalOutput, setEvalOutput] = useState<string>("");
   const [stateMessage, setStateMessage] = useState("");
   const [resultCaption, setResultCaption] = useState("no result");
   const [serverVersion, setServerVersion] = useState("unknown");
   const [isLoading, setIsloading] = useState(true);
+  const evalInput = useRef({ value: "" });
 
   const port: string = qs.port
     ? "" + qs.port

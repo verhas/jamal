@@ -427,7 +427,11 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     public void init(Debugger.Stub stub) throws Exception {
         mimeTypes.load(HttpServerDebugger.class.getClassLoader().getResourceAsStream("mime-types.properties"));
         this.stub = stub;
-        server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
+        try {
+            server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
+        } catch (IOException ioe) {
+            throw new IllegalArgumentException("Could not start server on localhost:" + port, ioe);
+        }
         createContext(server, Command.ALL);
         createContext(server, Command.VERSION);
         createContext(server, Command.LEVEL);
@@ -500,7 +504,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private void createContext(HttpServer server, Command command) {
-        server.createContext( command.url, (e) -> {
+        server.createContext(command.url, (e) -> {
             final var contextPath = e.getHttpContext().getPath();
             final var request = RequestUriParser.parse(e.getRequestURI().toString());
             if (!Objects.equals(contextPath, request.context) &&
