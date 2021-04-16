@@ -24,6 +24,7 @@
         <module>jamal-plantuml</module>
         <module>jamal-debug</module>
         <module>jamal-jamal</module>
+        <module>jamal-snake</module>
     </modules>
     <licenses>
         <license>
@@ -178,6 +179,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-jamal</artifactId>
+                <version>1.7.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-snake</artifactId>
                 <version>1.7.4-SNAPSHOT</version>
             </dependency>
             <dependency>

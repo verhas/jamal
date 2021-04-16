@@ -1,0 +1,24 @@
+{#import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{project jamal snake}
+    {GAV ::jamal-snake:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description snake module for Jamal}
+
+    {@define openForTests={opens/snake/snake}
+    }
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+      {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
+      {dependency |{GROUPID}|jamal-snippet|{VERSION}|test}
+      {dependency|{GROUPID}|jamal-jamal||test}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
+      {dependency :org.yaml:snakeyaml:1.21}
+    }
+
+{end project}

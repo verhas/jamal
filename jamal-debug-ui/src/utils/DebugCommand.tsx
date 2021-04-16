@@ -4,7 +4,7 @@ class DebugCommand {
   host: string = "localhost";
 
   constructor(host: string, port: number = 8080) {
-    this.host = host;
+    this.host = host; 
     this.port = port;
   }
 

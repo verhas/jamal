@@ -261,7 +261,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         if (scopeStack.size() > writableOffset()) {
             var macro = writableScope().udMacros.get(id);
             if (macro == null) {
-                throw new BadSyntax("Macro '" + id + "' cannot be exported");
+                throw new BadSyntax("Macro '" + id + "' cannot be exported, not in the scope of export.");
             }
             scopeStack.get(scopeStack.size() - writableOffset() - 1).udMacros.put(id, macro);
             writableScope().udMacros.remove(id);
