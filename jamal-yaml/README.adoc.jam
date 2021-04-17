@@ -62,11 +62,11 @@ The example:
 {@yaml:define xyz=
 a: this is the string value of a
 b:
-- first value of b
-- second value in b
+  - first value of b
+  - second value in b
 c:
-a: this is c.a
-b: this is c.b
+  a: this is c.a
+  b: this is c.b
 }\
 {@verbatim xyz}
 %}
@@ -145,7 +145,7 @@ resulting in the same output
 
 {%output%}
 
-NOTE: You can notice that the macro `a` referenced from `b` is defined later than `a` itself.
+NOTE: You can notice that the macro `a` referenced from `b` is defined later than `b`.
 
 Having these references with Jamal specific class types is of no general use.
 Their value is that Jamal can resolve them by converting the references to the content of the named macro.

@@ -61,11 +61,11 @@ The example:
 {@yaml:define xyz=
 a: this is the string value of a
 b:
-- first value of b
-- second value in b
+  - first value of b
+  - second value in b
 c:
-a: this is c.a
-b: this is c.b
+  a: this is c.a
+  b: this is c.b
 }\
 {@verbatim xyz}
 ----
@@ -74,7 +74,9 @@ will result
 
 [source]
 ----
-{c: null, a: this is c.a, b: this is c.b}
+a: this is the string value of a
+b: [first value of b, second value in b]
+c: {a: this is c.a, b: this is c.b}
 
 ----
 
