@@ -1,0 +1,130 @@
+= Jamal IO module
+
+{%@import res:jamal.jim%}\
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}\
+{%@define RECURSIVE=`io:recursive` (alias `recursive`) is a boolean option controlling if the deletion should be recursive%}\
+{%@define OUTPUT_FILE=`io:outputFile` (aliases `io:output`, `output`, `io:file`, `file`) can define the name of the file.%}\
+{%@define OPTIONS_NOTE=
+Note that the option can be defined as a user defined macro or as an option using the `{@option ...}` macro.
+The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.%}\
+{%@define NO_PARENTHESIS_NOTE=Note that this macro reads the options directly from the input, and they are not enclosed between `(` and `)` characters.%}\
+Using this module, you can handle files from a Jamal source code.
+You can
+
+* create a file,
+
+* write text to the file,
+
+* create directories,
+
+* delete directories, files and
+
+* you can print messages to the standard output or to the standard error.
+
+To use this module, you have to add the dependency to your Maven project, as:
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-io</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+
+----
+
+Following that, you can use the macros
+{%@define chap($x)=. <<$x,`io:$x`>>%}
+
+{%chap write%}
+{%chap remove%}
+{%chap mkdir%}
+{%chap print%}
+
+{%@define chap($x)=[[$x]]
+=== {%macroChapter%}`io:$x`
+%}{%@define link($x)=<<$x,`io::$x`>>%}
+macros.
+
+== Macros implemented in the package
+
+{%chap write%}
+
+Using this macro you can write some text into a file.
+The format of the macro is
+
+{%sample/
+{@io:write (options) text to write into the file}
+%}
+
+The macro will write the input of the macro to a text file.
+The name of the file and write mode can be controlled using options.
+The options are:
+
+* {%OUTPUT_FILE%}
+
+Use the user defined macro if you want to write several different segments to the file, and you do not want to specify the name of the file every the time.
+
+* `io:append` (alias `append`) is a boolean option controlling if the content should be appended, or the file has to be truncated.
+The default value is to truncate the file.
+
+* `io:mkdir` (alias `mkdir`) is a boolean option controlling if the directory where the file has to be is created before writing the file if it does not exist.
+The default is not to create the file.
+
+{%OPTIONS_NOTE%}
+
+{%chap remove%}
+
+This macro can be used to remove a file or directory.
+The format of the macro is
+
+{%sample/
+{@io:remove options}
+%}
+
+The options are:
+
+* {%OUTPUT_FILE%}
+
+* {%RECURSIVE%}
+
+{%NO_PARENTHESIS_NOTE%}
+
+{%OPTIONS_NOTE%}
+
+{%chap mkdir%}
+
+This macro can be used to create a directory.
+The format of the macro is
+
+{%sample/
+{@io:mkdir options}
+%}
+
+The options are:
+
+* {%OUTPUT_FILE%}
+
+* {%RECURSIVE%}
+
+{%NO_PARENTHESIS_NOTE%}
+
+{%OPTIONS_NOTE%}
+
+{%chap print%}
+
+This macro can be used to print some text to the standard output or to the standard error.
+The format of the macro is
+
+{%sample/
+{@io:print (options) message to print}
+%}
+
+There is one option.
+
+* `io:err` (alias `err`) is a boolean option controlling if the message should be written to the standard output or to the standard error.
+The default is the standard output.
+
+{%OPTIONS_NOTE%}

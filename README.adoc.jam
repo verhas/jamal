@@ -2789,6 +2789,18 @@ The integration and how to use the module macros are described in the link:{%@fi
 === {%chapter%}Ruby Integration
 {%GroovyRuby :ruby:Ruby%}
 
+[[Yaml]]
+=== {%chapter%}Yaml Integration
+
+The Yaml module can be used to simplify the maintenance of Yaml files using macros and splitting up the Yaml files into smaller chunks.
+The documentation of the module is {%@file jamal-yaml/README.adoc%}[Yaml readme]
+
+[[IO]]
+=== {%chapter%}IO Module
+
+The Io module can be used to write text into separate files during the processing of a Jamal input file.
+The documentation of the module is {%@file jamal-io/README.adoc%}[Io readme]
+
 [[JamalAPI]]
 === {%chapter%}Jamal API
 

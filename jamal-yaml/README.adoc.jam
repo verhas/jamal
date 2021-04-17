@@ -1,0 +1,426 @@
+= Jamal Yaml integration module
+
+{%@import res:jamal.jim%}
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}
+
+Using this integration module, you can mix Jamal macro text with YAML data.
+To use this module, you have to add the dependency to your Maven project, as:
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-snake</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+
+----
+ Following that, you can use the macros
+{%@define chap($x)=. <<$x,`yaml:$x`>>%}{%@define ImportingChapter=Importing yaml from a file%}
+
+{%chap define%}
+{%chap ref%}
+{%chap resolve%}
+. <<import,{%ImportingChapter%}>>
+{%chap get%}
+{%chap dump%}
+{%chap output%}
+
+{%@define chap($x)=[[$x]]
+==== {%macroChapter%}`yaml:$x`
+%}{%@define link($x)=<<$x,`yaml::$x`>>%}
+macros.
+
+== Macros implemented in the package
+
+{%chap define%}
+
+You can use this macro to define a Yaml structure.
+The format of the macro is
+
+[source]
+----
+{@yaml:define yamlMacro=
+tabulated Yaml content
+}
+----
+
+After that, the name `yamlMacro` will be defined as a user-defined macro and can be used as `{yamlMacro}` without argument.
+The value will replace the place of the use with the actual Yaml content.
+
+NOTE: Internally, Jamal converts the Yaml read in an object structure consisting of strings, primitives, maps, and lists.
+The structure is stored in an object of the type {%@java:class (format=`$simpleName`) javax0.jamal.yaml.YamlObject%}.
+This class technically is a user-defined macro.
+The `yaml:define` macro will register the structure among the user-defined macros.
+When the name is used the same way as any other user-defined macro (without any argument), the content of the Yaml structure is converted to text.
+
+The example:
+
+{%sample/
+{@yaml:define xyz=
+a: this is the string value of a
+b:
+- first value of b
+- second value in b
+c:
+a: this is c.a
+b: this is c.b
+}\
+{@verbatim xyz}
+%}
+
+will result
+
+{%output%}
+
+The advantage of using this macro over just writing the Yaml directly to the output is that:
+
+* you can split up the Yaml file into smaller pieces using the {%link ref%}, and {%link resolve%} macros,
+
+* you can use user-defined macro parameters mixing the yaml content with Jamal macros.
+
+Many times Yaml structures become overly profoundly nested, and it is not trivial to move things around.
+The Yaml structure is a data description structure, and many times these data structures are redundant.
+When editing Yaml structures, it is common to copy some part of the structure and edit its art.
+Using Jamal, you can solve the indentation hell as well as you can reduce the poisonous redundancy.
+Utilizing user-defined macros, you can use macros inside Yaml code, and at the same time, you can use Yaml code inside the macros.
+That way, you can pull out the part, repeat, and use only the macro as a reference.
+
+It is a solution for strings and parts of some strings used at multiple locations in the Yaml file.
+User-defined macros alone do not solve the problem of overcomplexity and deep tabulation.
+
+The Jamal Yaml module allows you to have a partially defined Yaml file to overcome this problem.
+When a Yaml structure is read from the text representation, it is stored in the memory as a Java object structure.
+It utilizes primitive values, strings, lists, and maps.
+In addition to that, you can also use
+
+[source,yaml]
+----
+!!java.class.Name value
+----
+
+type of values that will tell the Yaml reader to create a value stored in an object of the class `java.class.Name`.
+It can only be used when the specified class is on the classpath, and it is rarely used in general Yaml.
+There is a particular class in the `javax0.jamal.api` package, called `Ref`.
+When you specify a value
+
+[source,yaml]
+----
+!!javax0.jamal.api.Ref xyz
+----
+
+it will create a `new Ref(xyz)` object.
+Jamal will interpret this object as a reference to another Yaml data structure stored as a user-defined macro with the name `xyz`.
+When you specify the Yaml structure, the user-defined macro `xyz` does not need to be defined yet.
+It may be defined, but it may also be defined later.
+What is more, the macro can also be the same as the one that contains it.
+These references can be recursive.
+
+The example:
+{%sample/
+{#yaml:define b=- x
+- y
+- {@yaml:ref a}}
+{@yaml:define a=[a,b,c]}
+{@verbatim b}
+%}
+
+results
+
+{%output%}
+
+You can also write this example as
+
+{%sample/
+{@yaml:define b=- x
+- y
+- !!javax0.jamal.api.Ref a}{@comment DON'T DO THIS!}
+{@yaml:define a=[a,b,c]}
+{@verbatim b}
+%}
+
+resulting in the same output
+
+{%output%}
+
+NOTE: You can notice that the macro `a` referenced from `b` is defined later than `a` itself.
+
+Having these references with Jamal specific class types is of no general use.
+Their value is that Jamal can resolve them by converting the references to the content of the named macro.
+When you invoke the built-in macro `yaml:resolve`, these references will be replaced with their actual value.
+
+The same example as above, but resolving the Yaml macro before using it
+
+{%sample/
+{#yaml:define b=- x
+- y
+- {@yaml:ref a}}
+{@yaml:define a=[a,b,c]}
+{@yaml:resolve b}
+{@verbatim b}
+%}
+
+will result
+
+{%output%}
+
+When you invoke `yaml:resolve`, all the referenced Yaml macros have to be defined.
+
+Using this reference possibility, you can have several small Yaml fragments possibly referencing each others using the `!!javax0.jamal.api.Ref`.
+When the small segments are done, you can apply `yaml:resolve` on the root one and create the output.
+
+[NOTE]
+====
+When processing Yaml input, you can use the `{` and `}` characters as macro opening and macro closing strings.
+When you edit a Yaml file, you do not usually use the JSON-compatible `{ ... }` format for mapped values.
+However, when you use a user-defined, named Yaml content, like `{yamlMacro}`, it is likely to happen that the underlying rendering will generate a textual representation of the Yaml data, which contains `{` and `}` characters.
+The values of the user-defined macros are evaluated after they were dereferenced.
+The Yaml macros are not exempt from this.
+This evaluation is not needed because Yaml data hardly ever contain Jamal macros to be processed.
+The `{` and `}` characters may also cause a problem for Jamal.
+Precisely, it will interpret the first identifier following the `{` character as a user-defined macro.
+It will not find it.
+Even if it finds it, it is not likely to properly evaluate.
+
+One solution to this problem is to use a different opening and closing string that does not appear inside the Yaml output.
+If you can find one for your application, you can go for it.
+Usually, you cannot guarantee that none of the string fields will contain the macro opening string.
+The safe solution is to reference Yaml macros in the Jamal source using the `{@verbatim yamlMacro}` format.
+
+For more information on macro evaluation order and on the built-in macro `@verbatim`, see the core documentation of Jamal.
+====
+
+{%chap ref%}
+
+Use this macro to reference another Yaml definition.
+The implementation of a reference is an object, instance of the class {%@java:class (format=`$name`) javax0.jamal.api.Ref%}.
+It, however, is a Java-specific way.
+You can reference another user defined Yaml definition in the form:
+
+{%sample/
+{@yaml:define x=
+a: this is a string
+b: !!javax0.jamal.api.Ref xyz}
+%}
+
+It is more readable if you write:
+
+{%sample/
+{#yaml:define x=
+a: this is a string
+b: {@yaml:ref xyz}}
+%}
+
+NOTE: In this case, the `{\#yaml:define...}` macro starts with the `#` character because the macro `{@yaml:ref...}`, inside it, has to be evaluated.
+
+There is no guarantee that the implementation to reference another named, user-defined Yaml fragment will be compatible with the current implementation.
+Using the `yaml:ref` macro is the safe approach because it will always generate the Yaml reference sequence recognized by `yaml:resolve`.
+
+{%chap resolve%}
+
+Use this macro to resolve one or more user-defined Yaml macro.
+
+The format of the macro is
+
+{%sample/{@yaml:resolve macroName1, macroName2, ..., macroNameX}%}
+
+
+User-defined Yaml macros created using the {%link define%} or {%link import%} macros may reference other user-defined Yaml macros.
+When you invoke the macro `yaml:resolve`, it will replace the references in the Yaml macro content with the content of the Yaml macro it references.
+The resolving process is recursive.
+If there are any references in the referenced Yaml macro, it will also be resolved.
+After resolving a macro `xyz` that references the macro `aqt`, the macro `aqt` will also be resolved.
+In some rare cases, this should not happen.
+If the referenced Yaml macros should not de resolved, then the option `yamlReferenceClone` should be set using the macro `{@option yamlReferenceClone}`.
+This option also has a local parameter alias, `clone`, that can be used between `(` and `)` as a macro option.
+
+The example
+
+{%sample/
+{@yaml:define a=[ a, b ,c ]}
+{#yaml:define aqt=z: {@yaml:ref a}}
+{#yaml:define xyz=
+a: 1
+b: 3
+c: {@yaml:ref aqt}}
+{@yaml:resolve (clone) xyz}
+Resolved:
+{@verbatim xyz}
+Not resolved:
+{@verbatim aqt}
+%}
+
+will result
+
+{%output%}
+
+This process will not change the value of the macro `aqt`.
+In this case, the resolving process will create a copy of the referenced macro, and it will resolve the copy recursively.
+That way, `xyz` is still fully resolved and ready to be used.
+
+The same example doing the resolve without the `clone` option, however
+
+{%sample/
+{@yaml:define a=[ a, b ,c ]}
+{#yaml:define aqt=z: {@yaml:ref a}}
+{#yaml:define xyz=
+a: 1
+b: 3
+c: {@yaml:ref aqt}}
+{@yaml:resolve xyz}
+Resolved:
+{@verbatim xyz}
+Also resolved:
+{@verbatim aqt}
+%}
+
+will result
+
+{%output%}
+
+NOTE: When a macro is resolved, it will remember that it was already resolved and will not execute the resolve process anymore.
+It also means that calling `yaml:resolve` with the `clone` option on `xyz` and then calling it again without it will not resolve the referenced `aqt`.
+Unless you have a specific need, use the `yaml:resolve` macro without cloning.
+
+[[Import]]
+==== {%macroChapter%}{%ImportingChapter%}
+
+There is no import macro to read Yaml formatted data from a file.
+If you want to read data from a file, you should combine the `yaml:define` and the core `include` macros.
+For example, there is a resource file {%@file (format=`$name`) src/test/resources/sample.yaml%} in the project where this documentation is compiled.
+It ren be referenced from the test execution, which also converts this document as `res:sample.yaml`.
+The content of this file is
+
+{%sample/
+{%@include [verbatim] res:sample.yaml%}%}
+
+You can use the following structure to read it from the file and assign the Yaml data to the macro `aqt`:
+
+{%sample/
+{#yaml:define aqt={@include [verbatim] res:sample.yaml}}
+{@verbatim aqt}
+%}
+
+which will result
+
+{%output%}
+
+The file has to be a Yaml formatted file, and it should not contain any Jamal macro.
+(If it does, it will be treated as raw data and will not be macro processed by Jamal.)
+If you want to read a Jamal formatted Yaml file, you must include it using the core `include` macro without the `[verbatim]` option.
+
+NOTE: The built-in core macros use the `[` and `]` characters to enclose the options.
+Other packages usually use `(` and `)`.
+
+The file {%@file (format=`$name`) src/test/resources/sample.yaml.jam%} contains Jamal macros:
+
+{%sample/
+{%@include [verbatim]res:sample.yaml.jam%}
+%}
+
+You can include it with evaluation using the following macro sequence.
+
+{%sample/
+{@define a=wuff wuff}
+{#yaml:define h={@include res:sample.yaml.jam}}
+{@verbatim h}
+%}
+
+which will result:
+
+{%output%}
+
+{%chap get%}
+
+This macro will fetch one value from a Yaml structure.
+This can be useful when you want to document some configuration or other data structure that is present as a Yaml file in your project.
+In that case you can import the Yaml structure into your Jamal document and refer individual values in it.
+The format of the macro is:
+
+{%sample/
+{@yaml:get (from=yamlMacro) OGNL-PATH}
+%}
+
+The option `from` names a Yaml user defined macro, where the Yaml structure was loaded.
+It can also be defined outside as a user defined macro of the name `yamlDataSource`.
+This is useful when you want to retrieve multiple values from the same data structure.
+
+The `OGNL-PATH` is a Object Graph Navigation Library Path.
+The functionality to fetch a value is implemented using the Apache Commons OGNL library.
+For more information about the OGNL language visit the web site https://commons.apache.org/proper/commons-ognl/index.html.
+
+When getting a value out of a Yaml user defined macro the macro will automatically be resolved.
+The resolution can be cloning or in-place.
+To control the resolution process the same options can be used as for the {%link resolve%} macro.
+
+===== Examples
+
+{%sample/
+{@yaml:define a=
+a: alma
+b:
+  c: 3
+  d:
+    - 1
+    - 2
+    - q:
+        h: deep h}
+{@yaml:get (from=a) b.d[2].q.h}
+%}
+
+will result
+
+{%output%}
+
+{%chap dump%}
+
+The macro `yaml:dump` can dump the Yaml data structure to a file.
+The format of the macro is
+
+{%sample/
+{@yaml:dump yamlMacro to file_name}
+%}
+
+where `yamlMacro` is the name of the macro that holds the Yaml data structure.
+`file_name` is the name of the file where the Yaml formatted content is to be written.
+The `to` separating them is a keyword to ease readability.
+The following structure presents an example:
+
+{%sample/
+{@yaml:define x=[a,b,c]}
+{@yaml:dump x to ./target/dump.yaml}
+{@include [verbatim] ./target/dump.yaml}
+%}
+
+will result
+
+{%output%}
+
+There is no reason to dump an unresolved structure into a file.
+If the macro to be dumped to the file was not yet resolved, it will be resolved.
+The resolution process will be in-place unless the option `yamlResolveClone` (alias `clone`) is used before the name of the macro between `(` and `)` characters.
+
+{%sample/
+{@yaml:dump (clone) x to ./target/dump.yaml}
+%}
+
+
+{%chap output%}
+
+The macro `yaml:output` redefines the output of the Jamal processing.
+The format of the macro is:
+
+{%sample/
+{@yaml:output yamlMacro}
+%}
+
+Here the `yamlMacro` is the name of a Yaml macro that has to be defined when the processing finishes.
+It also means that this macro has to be on the top level in the macro hierarchy.
+In other words, it has to be a global macro.
+
+When this macro is used, the output of the Jamal processing will be the Yaml formatted structure of the data held in the macro `yamlMacro`.
+If this macro contained references and was not yet resolved, then it will be resolved.
+Since this is the last step processing the whole Jamal structure following the entire process, there is no need for cloning.
+It is also not possible to enforce cloning during the resolution.

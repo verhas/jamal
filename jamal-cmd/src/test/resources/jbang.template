@@ -2,7 +2,7 @@
 //JAVA 11+
 {@import ../version.jim}\
 //DEPS info.picocli:picocli:{PICOCLI_VERSION}
-{!@for $module in (engine,api,tools,core,cmd,snippet,scriptbasic,groovy,ruby,plantuml,debug,jamal)=//DEPS com.javax0.jamal:jamal-$module:{VERSION}
+{!@for $module in (engine,api,tools,core,cmd,snippet,scriptbasic,groovy,ruby,plantuml,debug,jamal,yaml,io)=//DEPS com.javax0.jamal:jamal-$module:{VERSION}
 }
 
 {@escape `|||`

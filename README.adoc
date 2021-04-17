@@ -3170,8 +3170,20 @@ These scripts are executed during the file processing, and can programmatically 
 The integration and how to use the module macros are described in the link:jamal-ruby/README.adoc[Ruby readme].
 
 
+[[Yaml]]
+=== 11. Yaml Integration
+
+The Yaml module can be used to simplify the maintenance of Yaml files using macros and splitting up the Yaml files into smaller chunks.
+The documentation of the module is jamal-yaml/README.adoc[Yaml readme]
+
+[[IO]]
+=== 12. IO Module
+
+The Io module can be used to write text into separate files during the processing of a Jamal input file.
+The documentation of the module is jamal-io/README.adoc[Io readme]
+
 [[JamalAPI]]
-=== 11. Jamal API
+=== 13. Jamal API
 
 Embedding Jamal into an application is very simple.
 You need the Jamal libraries on your classpath.
@@ -3256,7 +3268,7 @@ These macros eventually cannot have arguments.
 This is a simplified interface to access the functionality of Jamal.
 
 [[javadoc]]
-=== 12. JavaDoc
+=== 14. JavaDoc
 
 The current and past versions of the JavaDoc can be read online at the address:
 
@@ -3302,7 +3314,7 @@ The current and past versions of the JavaDoc can be read online at the address:
 
 
 [[documentmaintenance]]
-=== 13. Maintenance of this document
+=== 15. Maintenance of this document
 
 The source of this document is `README:adoc.jam`.
 The Jamal conversion uses the snippet macros and some aux built-in macros.
