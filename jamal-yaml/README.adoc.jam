@@ -15,9 +15,9 @@ To use this module, you have to add the dependency to your Maven project, as:
     <artifactId>jamal-yaml</artifactId>
     <version>{%VERSION%}</version>
 </dependency>
-
 ----
- Following that, you can use the macros
+
+Following that, you can use the macros
 {%@define chap($x)=. <<$x,`yaml:$x`>>%}{%@define ImportingChapter=Importing yaml from a file%}
 
 {%chap define%}
