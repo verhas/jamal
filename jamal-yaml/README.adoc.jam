@@ -17,7 +17,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 </dependency>
 ----
 
-Following that, you can use the macros
+Following that, you can use the
 {%@define chap($x)=. <<$x,`yaml:$x`>>%}{%@define ImportingChapter=Importing yaml from a file%}
 
 {%chap define%}
@@ -29,7 +29,7 @@ Following that, you can use the macros
 {%chap output%}
 
 {%@define chap($x)=[[$x]]
-==== {%macroChapter%}`yaml:$x`
+=== {%macroChapter%}`yaml:$x`
 %}{%@define link($x)=<<$x,`yaml::$x`>>%}
 macros.
 

@@ -15,7 +15,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 </dependency>
 ----
 
-Following that, you can use the macros
+Following that, you can use the
 
 
 . <<define,`yaml:define`>>
@@ -32,7 +32,7 @@ macros.
 == Macros implemented in the package
 
 [[define]]
-==== i. `yaml:define`
+=== i. `yaml:define`
 
 
 You can use this macro to define a Yaml structure.
@@ -221,7 +221,7 @@ For more information on macro evaluation order and on the built-in macro `@verba
 ====
 
 [[ref]]
-==== ii. `yaml:ref`
+=== ii. `yaml:ref`
 
 
 Use this macro to reference another Yaml definition.
@@ -251,7 +251,7 @@ There is no guarantee that the implementation to reference another named, user-d
 Using the `yaml:ref` macro is the safe approach because it will always generate the Yaml reference sequence recognized by `yaml:resolve`.
 
 [[resolve]]
-==== iii. `yaml:resolve`
+=== iii. `yaml:resolve`
 
 
 Use this macro to resolve one or more user-defined Yaml macro.
@@ -440,7 +440,7 @@ q: *id001
 
 
 [[get]]
-==== v. `yaml:get`
+=== v. `yaml:get`
 
 
 This macro will fetch one value from a Yaml structure.
@@ -491,7 +491,7 @@ deep h
 
 
 [[dump]]
-==== vi. `yaml:dump`
+=== vi. `yaml:dump`
 
 
 The macro `yaml:dump` can dump the Yaml data structure to a file.
@@ -534,7 +534,7 @@ The resolution process will be in-place unless the option `yamlResolveClone` (al
 
 
 [[output]]
-==== vii. `yaml:output`
+=== vii. `yaml:output`
 
 
 The macro `yaml:output` redefines the output of the Jamal processing.
