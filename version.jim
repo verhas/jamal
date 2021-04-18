@@ -30,3 +30,5 @@
 {@define JRUBY_VERSION=9.2.15.0}
 {@define GROOVY_VERSION=3.0.7}
 {@define PICOCLI_VERSION=4.6.1}
+{@define OGNL_VERSION=3.2.20}
+{@define SNAKEYAML_VERSION=1.21}

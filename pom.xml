@@ -26,6 +26,7 @@
         <module>jamal-jamal</module>
         <module>jamal-yaml</module>
         <module>jamal-io</module>
+        <module>jamal-doclet</module>
     </modules>
     <licenses>
         <license>
@@ -86,6 +87,25 @@
                     <version>3.2.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
+                        <doclint>none</doclint>
+                        <taglets>
+                            <taglet>
+                                <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+                                <tagletArtifact>
+                                    <groupId>com.javax0.jamal</groupId>
+                                    <artifactId>jamal-doclet</artifactId>
+                                    <version>1.7.4-SNAPSHOT</version>
+                                </tagletArtifact>
+                            </taglet>
+                        </taglets>
+                        <debug/>
+                        <additionalDependencies>
+                            <additionalDependency>
+                                <groupId>com.javax0.jamal</groupId>
+                                <artifactId>jamal-io</artifactId>
+                                <version>1.7.4-SNAPSHOT</version>
+                            </additionalDependency>
+                        </additionalDependencies>
                     </configuration>
                     <executions>
                         <execution>

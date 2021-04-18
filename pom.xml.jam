@@ -4,7 +4,7 @@
     {packaging pom}
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
     {description Jamal macro library to process text files}
-    {modules jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport,jamal-cmd,jamal-snippet,jamal-test,jamal-scriptbasic,jamal-groovy,jamal-ruby,jamal-plantuml,jamal-debug,jamal-jamal,jamal-yaml,jamal-io}
+    {modules jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-testsupport,jamal-cmd,jamal-snippet,jamal-test,jamal-scriptbasic,jamal-groovy,jamal-ruby,jamal-plantuml,jamal-debug,jamal-jamal,jamal-yaml,jamal-io,jamal-doclet}
     {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
     {github|verhas|jamal}
@@ -34,6 +34,17 @@
                     {GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
                     {configuration|
                         {detectOfflineLinks|false}
+                        <doclint>none</doclint>
+                        <taglets>
+                            <taglet>
+                                <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+                                <tagletArtifact>
+                                    <groupId>com.javax0.jamal</groupId>
+                                    <artifactId>jamal-doclet</artifactId>
+                                    <version>1.7.4-SNAPSHOT</version>
+                                </tagletArtifact>
+                            </taglet>
+                        </taglets>
                     }
                     {executions|{execution|
                             {id|attach-javadocs}

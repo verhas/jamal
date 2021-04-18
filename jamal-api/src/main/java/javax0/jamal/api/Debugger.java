@@ -8,7 +8,7 @@ import java.util.ServiceLoader;
  * Debuggers should implement this interface in order to be loadable via the service loader. Also debugger classes
  * should have a public argument-less constructor.
  */
-public interface Debugger extends AutoCloseable {
+public interface Debugger extends AutoCloseable, ServiceLoaded {
     String JAMAL_DEBUG_ENV = "JAMAL_DEBUG";
     String JAMAL_DEBUG_SYS = "jamal.debug";
 
@@ -18,10 +18,7 @@ public interface Debugger extends AutoCloseable {
      * @return the different debugger objects as returned by the service loader
      */
     static List<Debugger> getInstances() {
-        ServiceLoader<Debugger> services = ServiceLoader.load(Debugger.class);
-        List<Debugger> list = new ArrayList<>();
-        services.iterator().forEachRemaining(list::add);
-        return list;
+        return ServiceLoaded.getInstances(Debugger.class);
     }
 
     /**

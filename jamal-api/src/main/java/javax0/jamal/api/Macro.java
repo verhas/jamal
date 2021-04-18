@@ -14,12 +14,9 @@ import java.util.ServiceLoader;
  * can have many instances while processing a single file if they come into life via the {@code use} macro.
  */
 @FunctionalInterface
-public interface Macro extends Identified{
+public interface Macro extends Identified, ServiceLoaded{
     static List<Macro> getInstances() {
-        ServiceLoader<Macro> services = ServiceLoader.load(Macro.class);
-        List<Macro> list = new ArrayList<>();
-        services.iterator().forEachRemaining(list::add);
-        return list;
+        return ServiceLoaded.getInstances(Macro.class);
     }
 
     /**
