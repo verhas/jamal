@@ -657,8 +657,9 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 [[define]]
 ==== {%macroChapter%}`define`
 
-since 1.0.0 (core)
-since 1.6.4 `default` as special macro
+* since 1.0.0 (core)
+* since 1.6.4 `default` as special macro
+* since 1.7.4 `default` macro fisrt argument
 
 `define` defines a user-defined macro in the current scope.
 {%forMoreAboutEvaluationOrder%}
@@ -852,6 +853,37 @@ Result:
 
 {%output%}
 
+The macro `default` can have arguments, and they will be handled as they should be.
+
+{%sample/
+{@define default($x)=wupppss $x}{hoppala zumzum}
+>>{?hoppala zumzum}<<
+%}
+
+Result:
+
+{%output%}
+
+Note that there can be many undefined macros, and the different macros may expect different number of parameters.
+If the number of the actual parameters is not the same as what the defined `default` expects Jamal will stop with error.
+Consider the use `{@options lenient}` along with the definition of the `default` macro.
+
+Starting with the version 1.7.4 the macro `default` can have a special first parameter.
+If the first argument of the macro is either `$macro` or `$_` then this parameter will hold the name of the macro, which was not found.
+That way the `default` macro can use the name of the macro in its evaluation.
+
+Example:
+
+{%sample/
+{@options lenient}
+{@define default($_,$x)={@if |$x|<$_>$x</$_>|<$_/>}}{hoppala}
+{bikkala zz}
+%}
+
+Result:
+
+{%output%}
+
 The parameters stand after the name of the macro separated by a separator character.
 The first non-whitespace character after the name of the macro is the separator character.
 It is usually `/` as in the examples below, but it can be any non-alphanumeric character.
@@ -867,7 +899,7 @@ The sole parameter of the macro can start after the name of the macro at the fir
 For example,
 
 {%sample/
-{@define enclose(a)=<||a||>}
+{@define enclose(a)=<!!a!!>}
 {enclose this text}
 %}
 
@@ -881,7 +913,7 @@ In this case, because there is only one parameter it will separate the macro nam
 For example,
 
 {%sample/
-{@define enclose(a)=<||a||>}
+{@define enclose(a)=<!!a!!>}
 {enclose /-}
 %}
 
@@ -898,10 +930,10 @@ will result
 
 {%output%}
 
-because `-` is not alphanumeric and therefore it is treated as a separator character.
+because `-` is not alphanumeric and therefore it is treated as a separator character separating a single empty string.
 
 {%sample/
-{@define enclose(a)=<||a||>}
+{@define enclose(a)=<!!a!!>}
 {@define dash=-}
 {enclose {dash}}
 %}
@@ -929,12 +961,13 @@ These uses of the above macro will result
 {%output%}
 
 In the second line in the examples, the separator character is used in the parameter.
-Because the macro needs only one argument all the rest of the parameter until the macro closing character is used as the single parameter.
+Because the macro needs only one argument all the rest of the parameter until the macro closing string is used as the single parameter.
 It is not split up further along the later occurrences of the separator character.
 Just use any non-alphanumeric character in front of the parameter that looks good.
 You need not worry that the character itself presents in the content.
 
 {%sample/
+{@options ~lenient}
 {@define x(a,b)= |a b|}
 {@try!{x/s/h/t}}
 %}
@@ -990,7 +1023,8 @@ will generate
 This is a fairly complex example.
 To ease the understanding note the followings:
 
-1. `%66h` is an absolutely valid macro parameter name
+1. `%66h` is an absolutely valid macro parameter name.
+Anything can be a parameter name that does not contain a comma or a closing parentheses and is not a substring of any other parameter.
 
 2. When a macro parameter is replaced in the body of the macro the processing of that string is finished and is not processed further replacing macro parameters.
 Macro parameters are only replaced with the actual values in the macro body and not in the parameter actual values.

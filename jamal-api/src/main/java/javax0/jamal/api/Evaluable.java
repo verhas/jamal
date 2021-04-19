@@ -4,7 +4,7 @@ package javax0.jamal.api;
  * Something that can be evaluated. The evaluation may use strings as arguments. Typically user defined macros and
  * scripts are evaluable.
  */
-public interface Evaluable {
+public interface Evaluable extends Identified {
 
     /**
      * Evaluate the user defined macro and return the result.
@@ -20,6 +20,11 @@ public interface Evaluable {
      * parameters. This may be the case when an extension defines a special user defined macro, like the regular
      * expression module. The result currently is used by the processor to handle the parameters of the user defined
      * macros differently that accept one single parameter.
+     * <p>
+     * Also, when a macro is named {@code default} and has arguments and the first argument is named {@code $macro} or
+     * {@code $_} then the evaluation gives the name of the macro as an extra into this argument and all other arguments
+     * get filled with the strings that comes from the macro input. This first argument is interesting, when the user
+     * defined macro {@code default} is invoked because the macro used was not defined.
      */
     int expectedNumberOfArguments();
 

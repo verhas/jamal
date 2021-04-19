@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * {@jamal This is {%@define a=processed%}{%a%} as Jamal macros. {%@io:print hahóóóóó I am io module from a taglet%}
+ * {@jamal This is {%@define a=processed%}{%a%} as Jamal macros. {@io:print hahóóóóó I am io module from a taglet}
  * <p>
  * }
  */

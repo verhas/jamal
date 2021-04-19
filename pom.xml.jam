@@ -1,5 +1,6 @@
 {@import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
 {@import version.jim}
+{@define default($_,$x)=<$_>{#if |$x|$x</$_>}}
 {project jamal-parent}
     {packaging pom}
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
@@ -33,18 +34,14 @@
                 {plugin|
                     {GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
                     {configuration|
-                        {detectOfflineLinks|false}
-                        <doclint>none</doclint>
-                        <taglets>
-                            <taglet>
-                                <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
-                                <tagletArtifact>
-                                    <groupId>com.javax0.jamal</groupId>
-                                    <artifactId>jamal-doclet</artifactId>
-                                    <version>1.7.4-SNAPSHOT</version>
-                                </tagletArtifact>
-                            </taglet>
-                        </taglets>
+                        {detectOfflineLinks false}
+                        {doclint none}
+                        {taglets|
+                            {taglet|
+                                {tagletClass javax0.jamal.doclet.JamalTaglet}
+                                {tagletArtifact {GAV :com.javax0.jamal:jamal-doclet:{VERSION}}}
+                            }
+                        }
                     }
                     {executions|{execution|
                             {id|attach-javadocs}

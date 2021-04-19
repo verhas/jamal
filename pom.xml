@@ -98,14 +98,6 @@
                                 </tagletArtifact>
                             </taglet>
                         </taglets>
-                        <debug/>
-                        <additionalDependencies>
-                            <additionalDependency>
-                                <groupId>com.javax0.jamal</groupId>
-                                <artifactId>jamal-io</artifactId>
-                                <version>1.7.4-SNAPSHOT</version>
-                            </additionalDependency>
-                        </additionalDependencies>
                     </configuration>
                     <executions>
                         <execution>

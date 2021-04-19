@@ -26,4 +26,8 @@ public interface Identified {
      * @return the string representation of the identifier. Usually a human readable name.
      */
     String getId();
+
+    String DEFAULT_MACRO = "default";
+    String MACRO_NAME_ARG1 = "$macro";
+    String MACRO_NAME_ARG2 = "$_";
 }

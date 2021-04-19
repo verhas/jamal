@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Configurable;
 import javax0.jamal.api.Debuggable;
+import javax0.jamal.api.Identified;
 import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
@@ -161,8 +162,27 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         }
     }
 
+    /**
+     * Return the number of the expected argument, as defined in the interface. This implementation makes a little
+     * correction. If the macro is named "default" and the first argument is {@code $macro} or {@code $_} then it
+     * returns the number of arguments minus one.
+     * <p>
+     * The reason for that is that the result of this method is used to count the number of the argument provided when
+     * the macro is invoked. In case the macro is named {@code default} and the first argument is named as above this
+     * parameter will get the name of the original macro, which was used in the Jamal source file and which was not
+     * defined. When a macro is not defined Jamal try to call the macro named "default" and if the first argument is as
+     * named above it will insert the name of the original and undefined macro name in front of the other parameters.
+     *
+     * @return the number of values expected on the call of the macro.
+     */
     @Override
     public int expectedNumberOfArguments() {
+        if (Identified.DEFAULT_MACRO.equals(getId()) &&
+            argumentHandler.parameters.length > 0 &&
+            (Identified.MACRO_NAME_ARG1.equals(argumentHandler.parameters[0])
+                || Identified.MACRO_NAME_ARG2.equals(argumentHandler.parameters[0]))) {
+            return argumentHandler.parameters.length - 1;
+        }
         return argumentHandler.parameters.length;
     }
 

@@ -82,8 +82,8 @@ class ArgumentHandler {
     }
 
     /**
-     * When a macro is invoked and there are macros in the parameters of the macro that all valuate to zero string, then
-     * it is parsed as a single space only parameter, but it is not a real parameter. For example
+     * When a macro is invoked and there are macros in the parameters of the macro that all evaluate to zero string,
+     * then it is parsed as a single space only parameter, but it is not a real parameter. For example
      *
      * <pre>{@code
      *      [@define a=[b]]

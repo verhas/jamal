@@ -2,7 +2,7 @@ By default every character is important and no new line characters are eaten up.
 Therefore the following to lines will be like: "alma \n alma \n "
 {@define z=alma}{z}
 {z}
-When we define the {@sep/(/)}{@options nl}(@sep) then the new line character after the macro closing character is skipped.
+When we define the {@sep/(/)}{@options nl}(@sep) then the new line character after the macro closing string is skipped.
 This means that here we will have an empty line and after that the next line will be "almaalma" and then "alma"
 without an empty line between
 {@options ~nl}

@@ -6,6 +6,7 @@ import javax0.jamal.api.Closer;
 import javax0.jamal.api.Context;
 import javax0.jamal.api.Debugger;
 import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.MacroRegister;
@@ -127,7 +128,7 @@ public class Processor implements javax0.jamal.api.Processor {
             }
         } catch (BadSyntaxAt bsAt) {
             traceRecordFactory.dump(bsAt);
-            if( !(debugger instanceof NullDebugger)){
+            if (!(debugger instanceof NullDebugger)) {
                 debugger.setAfter(limiter.get(), ExceptionDumper.dump(bsAt));
             }
             throw bsAt;
@@ -442,52 +443,15 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         skipWhiteSpaces(evaluatedInput);
 
-        final var udMacroOpt = macros.getUserDefined(id, "default")
+        final var udMacroOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO)
             .filter(ud -> ud instanceof Evaluable)
             .map(ud -> (Evaluable) ud);
         if (reportUndef && udMacroOpt.isEmpty()) {
-            final var optMacro = macros.getMacro(id);
-            if (optMacro.isPresent()) {
-                throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id +
-                    "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?", ref);
-            } else {
-                throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id + " ...' is not defined.", ref);
-            }
+            throw throwForUndefinedUdMacro(ref, id);
         }
         if (udMacroOpt.isPresent()) {
             final var udMacro = udMacroOpt.get();
-            final String[] parameters;
-            if (evaluatedInput.length() > 0) {
-                var separator = evaluatedInput.charAt(0);
-                if (!qualifier.oldStyle && (udMacro.expectedNumberOfArguments() == 0 || udMacro.expectedNumberOfArguments() == 1)) {
-                    if (!Character.isLetterOrDigit(separator) && evaluatedInput.indexOf(macros.open()) != 0) {
-                        skip(evaluatedInput, 1);
-                    }
-                    parameters = new String[1];
-                    parameters[0] = process(evaluatedInput);
-                } else {
-                    skip(evaluatedInput, 1);
-                    if (Character.isLetterOrDigit(separator)) {
-                        if (qualifier.oldStyle) {
-                            tr.warning("separator character '" + separator + "' is probably a mistake at " +
-                                evaluatedInput.getPosition().file + ":" + evaluatedInput.getPosition().line + ":" + evaluatedInput.getPosition().column);
-                        } else {
-                            throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", evaluatedInput.getPosition());
-                        }
-                    }
-                    if (qualifier.oldStyle) {
-                        parameters = evaluatedInput.toString().split(Pattern.quote("" + separator), -1);
-                    } else {
-                        parameters = splitParameterString(evaluatedInput, separator);
-                        for (int i = 0; i < parameters.length; i++) {
-                            parameters[i] = process(makeInput(parameters[i], ref));
-                        }
-                    }
-                }
-            } else {
-                parameters = ZERO_STRING_ARRAY;
-            }
-
+            final String[] parameters = getParameters(tr, qualifier, ref, evaluatedInput, udMacro, id);
             tr.setId(id);
             tr.setParameters(parameters);
             try {
@@ -501,6 +465,110 @@ public class Processor implements javax0.jamal.api.Processor {
         } else {
             return "";
         }
+    }
+
+    /**
+     * Throw an exception with an error message telling that the user defined macro was not found. While creating the
+     * error message the code also checks if there is a built-in macro with the same name. In that case the error
+     * message warns the user that probablythe leading {@code #} or {@code @} was only missing.
+     *
+     * @param ref the reference to include in the excepetion that shows which jamal file, line and column was the error
+     *            at
+     * @param id  the identifier of the macro that was not found
+     * @return it never returns. The return value is declared to be {@link BadSyntaxAt}, which is thrown, so that the
+     * calling code can put the method call after a {@code throw} keyword and that way the compiler will not complain
+     * about erroneous code flow if there were any. It is also better for the reader, it expresses that the execution
+     * there ends.
+     * @throws BadSyntaxAt always, this is the main purpose of this method
+     */
+    private BadSyntaxAt throwForUndefinedUdMacro(Position ref, String id) throws BadSyntaxAt {
+        final var optMacro = macros.getMacro(id);
+        if (optMacro.isPresent()) {
+            throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id +
+                "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?", ref);
+        } else {
+            throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id + " ...' is not defined.", ref);
+        }
+    }
+
+    /**
+     * Read the input of the macro and get the parameters to pass to the macro. This is a fairly complex process that
+     * follows several rules.
+     * <p>
+     * The input the method works with contains the already partially evaluated. If this input has no characters then
+     * the parameter array has zero length. The evaluation and the input splitting also cares the {@code omasalgotm}
+     * option.
+     *
+     * @param tr        record tracer
+     * @param qualifier macro evaluation parameters
+     * @param ref       the reference to
+     * @param input     the partially evaluated input, depends on the option {@code omasalgotm}
+     * @param macro     the macro for which we evaluate the input for
+     * @param id        is the original id of the macro (in case undefined and using default it may be different from
+     *                  what {@code macro.getId()} returns.
+     * @return the parameter array
+     * @throws BadSyntax if the separator character is invalid, or the evaluation of the input throws exception
+     */
+    private String[] getParameters(TraceRecord tr, MacroQualifier qualifier, Position ref, Input input, Evaluable macro, String id) throws BadSyntax {
+        final String[] parameters;
+        if (input.length() > 0) {
+            var separator = input.charAt(0);
+            if (!qualifier.oldStyle && (macro.expectedNumberOfArguments() == 0 || macro.expectedNumberOfArguments() == 1)) {
+                if (!Character.isLetterOrDigit(separator) && input.indexOf(macros.open()) != 0) {
+                    skip(input, 1);
+                }
+                parameters = new String[1];
+                parameters[0] = process(input);
+            } else {
+                skip(input, 1);
+                if (Character.isLetterOrDigit(separator)) {
+                    if (qualifier.oldStyle) {
+                        tr.warning("separator character '" + separator + "' is probably a mistake at " +
+                            input.getPosition().file + ":" + input.getPosition().line + ":" + input.getPosition().column);
+                    } else {
+                        throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", input.getPosition());
+                    }
+                }
+                if (qualifier.oldStyle) {
+                    parameters = input.toString().split(Pattern.quote("" + separator), -1);
+                } else {
+                    parameters = splitParameterString(input, separator);
+                    for (int i = 0; i < parameters.length; i++) {
+                        parameters[i] = process(makeInput(parameters[i], ref));
+                    }
+                }
+            }
+        } else {
+            parameters = ZERO_STRING_ARRAY;
+        }
+        return addMacroNameForDefault(parameters, macro, id);
+    }
+
+    /**
+     * If the macro is "default" and the first argument is named {@code $macro} or {@code $_} then add this extra value
+     * to the start of the parameters, so that user defined {@code default} macro will know what th actual name of the
+     * macro was.
+     *
+     * @param parameters the original parameters of the macro
+     * @param macro      the macro we create the parameters for
+     * @param id         the original id of the macro that was used in the source code
+     * @return the original parameters array in case the macro was defined or the first argument is not {@code $macro}
+     * or {@code $_}. Otherwise the original parameter array pushed one poisition to the right and a new first parameter
+     * added to the string array containing the name of the original macro, which is not defined.
+     */
+    private String[] addMacroNameForDefault(String[] parameters, Evaluable macro, String id) {
+        if (macro.getId().equals(Identified.DEFAULT_MACRO) &&
+            macro instanceof javax0.jamal.engine.UserDefinedMacro) {
+            final var arguments = ((javax0.jamal.engine.UserDefinedMacro) macro).getParameters();
+            if (arguments.length > 0 &&
+                (Identified.MACRO_NAME_ARG1.equals(arguments[0]) || Identified.MACRO_NAME_ARG2.equals(arguments[0]))) {
+                final var modified = new String[parameters.length + 1];
+                System.arraycopy(parameters, 0, modified, 1, parameters.length);
+                modified[0] = id;
+                return modified;
+            }
+        }
+        return parameters;
     }
 
     /**
@@ -609,7 +677,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * <p>
      * In the example above the macro will have three arguments, and it is not a problem (since version 1.2.0) that the
      * second argument contains a macro that itself has parameters and it uses the same separator character as the top
-     * level macro of this example. (In the example above we assumed that the macro opening and closing characters are
+     * level macro of this example. (In the example above we assumed that the macro opening and closing strings are
      * the curly braces.)<p>
      * <p>
      * NOTE: that versions prior 1.2.0 were splitting the example above into five arguments. Although there is a

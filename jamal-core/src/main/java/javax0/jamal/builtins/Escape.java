@@ -12,7 +12,7 @@ import javax0.jamal.tools.InputHandler;
  * <p>
  * Before changing anything here, read the following and make sure you understand the consequences!
  * <p>
- * Jamal source text can use this macro to escape macro opening and closing characters. The syntax of the macro is
+ * Jamal source text can use this macro to escape macro opening and closing strings. The syntax of the macro is
  *
  * <pre>{@code
  *         {@escape `x` escaped text presumably containing

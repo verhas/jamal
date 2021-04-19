@@ -43,7 +43,7 @@ public class TestOptions {
                 "Therefore the following to lines will be like: \"alma \\n alma \\n \"\n" +
                 "{@define z=alma}{z}\n" +
                 "{z}\n" +
-                "When we define the {@sep/(/)}{@options nl}(@sep) then the new line character after the macro closing character is skipped.\n" +
+                "When we define the {@sep/(/)}{@options nl}(@sep) then the new line character after the macro closing string is skipped.\n" +
                 "This means that here we will have an empty line and after that the next line will be \"almaalma\" and then \"alma\"\n" +
                 "without an empty line between\n" +
                 "{@options ~nl}\n" +
@@ -58,7 +58,7 @@ public class TestOptions {
                 "Therefore the following to lines will be like: \"alma \\n alma \\n \"\n" +
                 "alma\n" +
                 "alma\n" +
-                "When we define the {@options nl} then the new line character after the macro closing character is skipped.\n" +
+                "When we define the {@options nl} then the new line character after the macro closing string is skipped.\n" +
                 "This means that here we will have an empty line and after that the next line will be \"almaalma\" and then \"alma\"\n" +
                 "without an empty line between\n" +
                 "\n" +
