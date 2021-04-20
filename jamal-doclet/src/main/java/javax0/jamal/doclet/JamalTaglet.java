@@ -19,9 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * {@jamal This is {@define a=processed}{a} as Jamal macros.
- * <p>
- * When we run this processing the current working directory is {#code {@io:cwd}} }
+ *
  */
 public class JamalTaglet implements Taglet {
 
@@ -38,9 +36,15 @@ public class JamalTaglet implements Taglet {
     public JamalTaglet() {
     }
 
-    private Processor getProcessor(){
-        if( processor == null ){
-            this.processor = new javax0.jamal.engine.Processor(open, close);
+    private Link link;
+
+    private Processor getProcessor() {
+        if (processor == null) {
+            processor = new javax0.jamal.engine.Processor(open, close);
+            final var l = processor.getRegister().getMacro("link");
+            if (l.isPresent() && l.get() instanceof Link) {
+                link = (Link) l.get();
+            }
         }
         return processor;
     }
@@ -52,18 +56,15 @@ public class JamalTaglet implements Taglet {
     }
 
     /**
-     *
      * This is before the first Jamal tag.
      *
-     * @jamal here we have another Jamal macro part
-     *
-     * @jamal Jamal can be used as am online as well as a block tag {#code {@io:cwd}}
-     *
-     * The current working directory is {#code {@io:cwd}}
      * @return {@code true} ... always
-     *
+     * <p>
      * This is after the return tag
-     *
+     * @jamal here we have another Jamal macro part
+     * @jamal Jamal can be used as am online as well as a block tag {#code {@io:cwd}}
+     * <p>
+     * The current working directory is {#code {@io:cwd}}
      */
     @Override
     public boolean isInlineTag() {
@@ -130,7 +131,7 @@ public class JamalTaglet implements Taglet {
         final var target = this.getClass().getDeclaredField(fieldName);
         target.setAccessible(true);
         target.set(this, source.get(doclet));
-        note("'"+fieldName+"' is " + source.get(doclet));
+        note("'" + fieldName + "' is " + source.get(doclet));
     }
 
     private Map<String, String> memoize = new HashMap<>();
@@ -142,6 +143,8 @@ public class JamalTaglet implements Taglet {
             element = element.getEnclosingElement();
         }
         final var sourceFile = sourceRoot + "/" + (element.toString().replaceAll("\\.", "/")) + ".java";
+        getProcessor();
+        link.currentClass = element.toString();
         if (tags.size() == 0) {
             return null;
         }

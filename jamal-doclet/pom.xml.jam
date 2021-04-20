@@ -10,8 +10,9 @@
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies
-       {@for MODULE in (api,tools,engine,core,snippet)=
+       {@for MODULE in (api,tools,engine,core)=
          {dependency|{GROUPID}|jamal-MODULE}}
+         {dependency :{GROUPID}:jamal-snippet::test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
     }

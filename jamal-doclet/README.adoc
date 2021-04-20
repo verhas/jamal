@@ -1,1 +1,184 @@
-= Jamal Taglet
+== Jamal Taglet
+
+
+This library can be used to process Jamal macros in JavaDoc comments.
+In order to do that you have to configure the JavaDoc to use the Jamal doclet.
+
+JamalDoclet is an extension of the `StandardDoclet` defined in the JDK.
+It adds simple functionality to the standard built-in doclet handling the JamalDoclet specific options.
+
+The Jamal processing is implemented as a Taglet.
+This tag can be used as an inline as well as a block tag.
+
+[source]
+----
+/**
+ * {@jamal this is jamal interpred text }
+ *
+ */
+----
+
+format is the so- called inline format, while
+
+[source]
+----
+/**
+ * @jamal this is jamal interpred text
+ * several
+ * lines until the
+ * next block tag, like
+ * @param
+ */
+----
+
+is a block tag, that starts at the beginning of a line and lasts till the next block tag.
+
+=== Configuration options
+
+* `--source-root` can defined the source root.
+It has to be specified to reliably use macros that try to open other files.
+These are the `import` and `include` macros from the core macros, but there are many other macros in other packages.
+Notable most of the snippet handling very much relies on the input file name.
+If this option is set then the taglet can calculate the location of the Java source file.
+That way other files can be found using relative file name.
+Failing to set this option properly the relative file names will be calculated from the current working directory.
+The current working directory is not guaranteed, may occasionally be different in different installation.
+Without this option the `res:` and `http:` files can reliably be used as well as files specified using the absolute file name.
+When using Maven, specify this option as
+
+[source]
+----
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <version> ... </version>
+    <configuration>
+        <doclet>javax0.jamal.doclet.JamalDoclet</doclet><debug/>
+        <docletArtifact>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-doclet</artifactId>
+            <version>1.7.4-SNAPSHOT</version>
+        </docletArtifact>
+        <additionalOptions>
+            <additionalOption>--source-root</additionalOption>
+            <additionalOption>${project.build.sourceDirectory}</additionalOption>
+        </additionalOptions>
+    </configuration>
+<plugin>
+----
+
+* `--macro-open` can specify the macro opening string.
+The default value is `{`.
+
+
+* `--macro-close` can specify the macro closing string.
+The default value is `}`.
+This is not recommended altering this, because this macro opening string harmonizes with the inline taglet uses.
+
+In this document we will describe how to configure the `javadoc` command line tool to use JamalDoclet and also the modifications needed in a `pom.xml`.
+
+=== Maven configuration
+
+To use the JamalDoclet you should configure the JavaDoc plugin to use the Jamal doclet.
+It can be done using the following configuration
+
+[source, xml]
+----
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-javadoc-plugin</artifactId>
+  <version>3.2.0</version>
+  <configuration>
+    <doclet>javax0.jamal.doclet.JamalDoclet</doclet>   <!-- this is the class name of the doclet -->
+    <docletArtifact>                                   <!-- you have to specify where Maven finds -->
+      <groupId>com.javax0.jamal</groupId>              <!-- this doclet -->
+      <artifactId>jamal-doclet</artifactId>
+      <version>1.7.4-SNAPSHOT</version>
+    </docletArtifact>
+    <additionalOptions>                                        <!-- these are the options for -->
+      <additionalOption>--source-root</additionalOption>       <!--- the Jamal doclet -->
+      <additionalOption>${project.build.sourceDirectory}</additionalOption>
+
+      <!-- DO NOT USE THESE OPTIONS ONLY IF YOU MUST -->
+      <additionalOption>--macro-open</additionalOption>
+      <additionalOption>[%</additionalOption>
+      <additionalOption>--macro-close</additionalOption>
+      <additionalOption>%]</additionalOption>
+      <!-- DO NOT USE THESE OPTIONS ONLY IF YOU MUST -->
+
+    </additionalOptions>
+
+    <!-- you have to define the taglet class and artifact where Maven finds it -->
+    <taglets>
+      <taglet>
+        <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+        <tagletArtifact>
+          <groupId>com.javax0.jamal</groupId>
+          <artifactId>jamal-doclet</artifactId>
+          <version>1.7.4-SNAPSHOT</version>
+        </tagletArtifact>
+      </taglet>
+      <!-- If you intend to use other macrolibraries you have to add here as taglet artifacts. -->
+      <tagletArtifacts>
+        <tagletArtifact>
+          <groupId>com.javax0.jamal</groupId>
+          <artifactId>jamal-snippet</artifactId>
+          <version>1.7.4-SNAPSHOT</version>
+        </tagletArtifact>
+      </tagletArtifacts>
+    </taglets>
+  </configuration>
+</plugin>
+----
+
+=== Command Line `javadoc` configuration
+
+Please read the documentation of Javadoc command line tool.
+Here is the `options` file that Maven generates if you specify the `<debug>` configuration option for maven Javadoc plugin.
+The important options are:
+
+* `-taglet 'javax0.jamal.doclet.JamalTaglet'`
+
+* `-tagletpath`
+
+* `--source-root ${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java`
+
+[source]
+----
+--module-path
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.7.4-SNAPSHOT/jamal-tools-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.7.4-SNAPSHOT/jamal-core-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.7.4-SNAPSHOT/jamal-engine-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.7.4-SNAPSHOT/jamal-snippet-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.7.4-SNAPSHOT/jamal-api-1.7.4-SNAPSHOT.jar'
+--patch-module
+jamal.doclet='${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java:${PROJECT_ROOT}/jamal/jamal-doclet/target/generated-sources/annotations'
+-doclet
+'javax0.jamal.doclet.JamalDoclet'
+-docletpath
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.7.4-SNAPSHOT/jamal-api-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.7.4-SNAPSHOT/jamal-tools-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.7.4-SNAPSHOT/jamal-engine-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.7.4-SNAPSHOT/jamal-core-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.7.4-SNAPSHOT/jamal-snippet-1.7.4-SNAPSHOT.jar'
+-encoding
+'UTF-8'
+-protected
+--module-source-path
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/apidocs/src'
+--source-root
+${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java
+--macro-open
+[%
+--macro-close
+%]
+-author
+-bottom
+'Copyright &#169; 2021. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/apidocs'
+-docencoding
+'UTF-8'
+-taglet
+'javax0.jamal.doclet.JamalTaglet'
+-tagletpath
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.7.4-SNAPSHOT/jamal-api-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.7.4-SNAPSHOT/jamal-tools-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.7.4-SNAPSHOT/jamal-engine-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.7.4-SNAPSHOT/jamal-core-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.7.4-SNAPSHOT/jamal-snippet-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-io/1.7.4-SNAPSHOT/jamal-io-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.7.4-SNAPSHOT/jamal-api-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.7.4-SNAPSHOT/jamal-tools-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.7.4-SNAPSHOT/jamal-engine-1.7.4-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.7.4-SNAPSHOT/jamal-core-1.7.4-SNAPSHOT.jar'
+-use
+-version
+-windowtitle
+'...'
+----

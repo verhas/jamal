@@ -340,7 +340,7 @@ will result the output:
 ----
 13
 
-! 13
+13
 
 ----
 
@@ -381,7 +381,7 @@ will result the output:
 ----
 13
 
-! 13
+13
 
 ----
 
@@ -408,7 +408,7 @@ will result the output:
 [source]
 ----
 13
-! 13
+13
 13
 
 ----
