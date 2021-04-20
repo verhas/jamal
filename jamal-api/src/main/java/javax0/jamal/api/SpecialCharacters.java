@@ -11,6 +11,7 @@ public class SpecialCharacters {
     public static final String IMPORT_CLOSE = "}";
     public static final String ESCAPE = "escape";
     public static final char QUERY = '?';
+    public static final char DEFINE_VERBATIM = '~';
     public static final char DEFINE_OPTIONALLY = '?';
     public static final char REPORT_UNDEFINED = '?';
     public static final char ERROR_REDEFINE = '!';

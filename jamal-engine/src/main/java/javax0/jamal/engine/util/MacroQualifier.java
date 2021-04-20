@@ -2,6 +2,7 @@ package javax0.jamal.engine.util;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
@@ -16,12 +17,13 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class MacroQualifier {
     public final Input input;
-    public final String macroId;
+    public String macroId;
+    public Evaluable udMacro;
     public final boolean isVerbatim;
     public final boolean isBuiltIn;
     public final Macro macro;
     public final boolean oldStyle;
-    public final int postEvalCount;
+    public int postEvalCount;
     public final Processor processor;
     private final String NOT_USED = null;
 

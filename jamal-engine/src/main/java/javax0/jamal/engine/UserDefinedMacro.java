@@ -22,6 +22,7 @@ import java.util.Optional;
 public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable, Debuggable.UserDefinedMacro {
     private static final String ESCAPE = "@escape ";
     final private String id;
+    final private boolean verbatim;
     final private Processor processor;
     final private String content;
     final private ArgumentHandler argumentHandler;
@@ -58,14 +59,24 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      *                   because this way the result of the macro would be dependent on the evaluation order of the
      *                   parameters.
      */
-    public UserDefinedMacro(Processor processor, String id, String content, String... parameters) throws BadSyntax {
+    public UserDefinedMacro(Processor processor, String id, String content, boolean verbatim, String... parameters) throws BadSyntax {
         this.processor = processor;
         this.openStr = processor.getRegister().open();
         this.closeStr = processor.getRegister().close();
         this.id = id;
+        this.verbatim = verbatim;
         this.content = content;
         argumentHandler = new ArgumentHandler(this, parameters);
         InputHandler.ensure(parameters, null);
+    }
+
+    public UserDefinedMacro(Processor processor, String id, String content, String... parameters) throws BadSyntax {
+        this(processor, id, content, false, parameters);
+    }
+
+    @Override
+    public boolean isVerbatim() {
+        return verbatim;
     }
 
     /**

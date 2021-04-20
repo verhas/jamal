@@ -8,6 +8,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
+import static javax0.jamal.api.SpecialCharacters.DEFINE_VERBATIM;
 import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
 import static javax0.jamal.tools.InputHandler.convertGlobal;
 import static javax0.jamal.tools.InputHandler.fetchId;
@@ -21,9 +22,20 @@ public class Define implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);
+        boolean verbatim = false;
+        if (InputHandler.firstCharIs(input, DEFINE_VERBATIM)) {
+            verbatim = true;
+            skip(input, 1);
+            skipWhiteSpaces(input);
+        }
         var optional = InputHandler.firstCharIs(input, DEFINE_OPTIONALLY);
-        var redefine = InputHandler.firstCharIs(input, ERROR_REDEFINE);
-        if (optional || redefine) {
+        var noRedefine = InputHandler.firstCharIs(input, ERROR_REDEFINE);
+        if (optional || noRedefine) {
+            skip(input, 1);
+            skipWhiteSpaces(input);
+        }
+        if (!verbatim && InputHandler.firstCharIs(input, DEFINE_VERBATIM)) {
+            verbatim = true;
             skip(input, 1);
             skipWhiteSpaces(input);
         }
@@ -32,7 +44,7 @@ public class Define implements Macro {
             if (optional) {
                 return "";
             }
-            if (redefine) {
+            if (noRedefine) {
                 throw new BadSyntax("The macro '" + id + "' was already defined.");
             }
         }
@@ -50,7 +62,7 @@ public class Define implements Macro {
             throw new BadSyntax("define '" + id + "' has no '=' to body");
         }
         skip(input, 1);
-        final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), params);
+        final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, params);
         if (isGlobalMacro(id)) {
             processor.defineGlobal(macro);
         } else {

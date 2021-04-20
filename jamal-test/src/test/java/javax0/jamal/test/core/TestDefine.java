@@ -108,6 +108,15 @@ public class TestDefine {
         );
     }
 
+    @Test
+    void testNoRedefine() throws Exception {
+        TestThat.theInput(
+            "{@define a=1}{@define ! a=2}"
+        ).throwsBadSyntax("The macro 'a' was already defined.");
+        TestThat.theInput(
+            "{@define a=1}{#block {@define ! a=2}}"
+        ).throwsBadSyntax("The macro 'a' was already defined.");
+    }
 
     @Test
     void testNameEvaluationError() throws Exception {
@@ -172,5 +181,19 @@ public class TestDefine {
         TestThat.theInput("{@define :a=1}{#ident {@define ?a=2}{a}}").results("1");
         TestThat.theInput("{@define :a=1}{#ident {@define ?:a=2}{a}}").results("1");
         TestThat.theInput("{@define :a=1}{#ident {@define ?:a=2}{:a}}").results("1");
+    }
+
+    @Test
+    @DisplayName("Test that macro can be defined to behave verbatim")
+    void testVerbatimDefine() throws Exception {
+        TestThat.theInput("{@define~ a={@code}}{a}").results("{@code}");
+        TestThat.theInput("{@define ~ a={@code}}{a}").results("{@code}");
+        TestThat.theInput("{@define ?~ a={@code}}{a}").results("{@code}");
+        TestThat.theInput("{@define !~ a={@code}}{a}").results("{@code}");
+        TestThat.theInput("{@define ~! a={@code}}{a}").results("{@code}");
+        TestThat.theInput("{@define ~? a={@code}}{a}").results("{@code}");
+        TestThat.theInput("{@define ~?~ a={@code}}{a}").throwsBadSyntax("define.*has no.*");
+
+        TestThat.theInput("{@define b=2}{@define ~ a={b}}{!a}").results("2");
     }
 }

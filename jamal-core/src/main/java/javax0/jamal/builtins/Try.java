@@ -24,6 +24,9 @@ public class Try implements Macro {
             report = false;
         } else {
             report = firstCharIs(in, REPORT_ERRMES);
+            if (report) {
+                skip(in, 1);
+            }
         }
         skipWhiteSpaces(in);
         final var markerStart = processor.getRegister().test();
@@ -49,7 +52,7 @@ public class Try implements Macro {
 
     private void cleanUpTheMarkerStack(Processor processor, Marker markerStart) throws BadSyntax {
         Marker markerEnd;
-        while( (markerEnd = processor.getRegister().test()) != null && !Objects.equals(markerStart,markerEnd)){
+        while ((markerEnd = processor.getRegister().test()) != null && !Objects.equals(markerStart, markerEnd)) {
             processor.getRegister().pop(markerEnd);
         }
     }

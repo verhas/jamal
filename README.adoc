@@ -699,7 +699,9 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 
 * since 1.0.0 (core)
 * since 1.6.4 `default` as special macro
-* since 1.7.4 `default` macro fisrt argument
+* since 1.7.4 `default` macro first argument, macro can be defined to evaluate verbatim
+
+===== Define basics
 
 `define` defines a user-defined macro in the current scope.
 
@@ -818,10 +820,119 @@ When a leopard and a *c can run then fish can fly
 ----
 
 
-even though `*c` is a `fish` but the characters `*c` in the output come from the value of a parameter and therefore it is not replaced.
+even though `*c` is a `fish`, but the characters `*c` in the output come from the value of a parameter and therefore it is not replaced.
+
+===== Macro redefine
+
+Macros can be redefined at any point.
+For example
+
+[source]
+----
+{@define a=1}{@define a=2}{a}
+----
+
+will result
+
+[source]
+----
+2
+
+----
+
 
 It is possible to use a question mark `?` after the macro keyword `define`.
 In that case the macro is only defined if is NOT yet defined in the current scope or any other outer scope.
+
+[source]
+----
+{@define a=1}{@define ? a=2}{a}
+----
+
+will result
+
+[source]
+----
+1
+
+----
+
+
+It is also possible to use a `!` instead of the `?`.
+In this case the macro `define` will report an error if the macro is already defined.
+
+[source]
+----
+{@define a=1}{@try! {@define! a=2}}
+----
+
+will result
+
+[source]
+----
+The macro 'a' was already defined.
+
+----
+
+
+When a user defined macro is evaluated, the result of the macro is evaluated again resolving all the macros that happen to be in the result.
+This can be prevented using the <<verbatim,`verbatim`>> macro.
+You can also read more details on the macro evaluation order in the chapter <<verbatim,`verbatim`>>.
+
+If you use the `~` character after the keyword `define` then the macro will be evaluated "verbatim" by default.
+It means that the value of the user defined macro will not be evaluated like if it was used with the macro `verbatim`.
+For example:
+
+[source]
+----
+{@define x=1966}
+{@define a={x}}{@verbatim a} is the same as
+{@define ~ a={x}}{a}
+----
+
+will result
+
+[source]
+----
+{x} is the same as
+{x}
+
+----
+
+
+If, for any reason, you need to evaluate the result of such a macro you can use `eval` or `!` when using th e macro.
+
+[source]
+----
+{@define x=1966}
+{@define a={x}}{a} is the same as
+{@define ~ a={x}}{!a}
+----
+
+will result
+
+[source]
+----
+1966 is the same as
+1966
+
+----
+
+
+[NOTE]
+====
+You cannot use `!` together wit the macro  `verbatim`.
+This is because the format `{!@verbatim ...}` is the same as simply `{...}` without the `!` and the `@verbatim`.
+On the other hand when the macro would almost always would be used together with `verbatim` then it makes sense to define the macro to be a verbatim user defined macro.
+In the few cases when it would be used without `verbatim` you can use `!` instead in this case.
+
+The macros in the module Yaml define the object structures read from the Yaml format as verbatim user defined macros.
+When you use such a macro, like `{yaml}` the Yaml formatted string representation of the data is the result of the macro.
+Yaml itself may use the JSON compatible `{A:1, B:2, ..., X:88}` format, which Jamal may mistakenly try to interpret as a macro.
+To prevent this these Yaml data containing user defined macros are verbatim by default.
+====
+
+===== Global Macros
 
 When the name of the macro contains at least one colon character `:` then the macro will be defined in the global scope.
 Global scope is the top-level scope, and it means that a macro like that can be used everywhere in the text after it was defined.
@@ -845,7 +956,6 @@ will result
 2
  
 ----
-
 
 
 In this case the macro `A:Z` is a global macro because it has a `:` in the name.
@@ -921,6 +1031,8 @@ this is empty string >><<
 
 
 NOTE: The <<try,`try`>> built-in macro is mainly for debugging purposes and returns the error message itself.
+
+===== Default macro
 
 In addition to having a `?` character or using the `try` macro, there is another possibility to avoid the error in case of an undefined macro.
 If the macro `default` is defined then it will be used instead of any undefined macro, even when the `?` character is used in front of the macro name.
@@ -1477,7 +1589,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-16.jdk/Contents/Home
 
 ----
 
@@ -2886,8 +2998,15 @@ For example the following macro will produce an empty string.
 The macro `macro` is not defined, but the error is caught with the macro `try`.
 
 The macro `try` can also be used to include the error message into the output.
-If we use an `!` character right after ( no spaces) the `try` keyword the result will be the error message.
+If we use an `!` character right after (no spaces) the `try` keyword the result will be the error message.
 If there is no error then the result is the result of the evaluated text inside the macro.
+
+NOTE: Jamal usually allows you to have spaces in places like the keyword `try` and the following `!` or `?`.
+For example you can have spaces between the macro name `define` and the `!`, `?` or `~` character.
+In case of `try` there must be no space.
+The reason for this strictness is that `try` is followed by arbitrary text evaluated by the macro itself.
+Allowing space between the macro name and the `!` or `?` character would result ambigous syntax.
+We could not tell if the `!` or `?` character is part of the macro use or already the first starting character of the text to be evaluated.
 
 If we use a `?` character right after (no spaces) the `try` keyword then the result will be the string `true` if there was no error and `false` is there was an error.
 This can be used to test the "computability" of the text.

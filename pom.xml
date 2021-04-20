@@ -88,6 +88,16 @@
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <doclint>none</doclint>
+                        <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
+                        <docletArtifact>
+                            <groupId>com.javax0.jamal</groupId>
+                            <artifactId>jamal-doclet</artifactId>
+                            <version>1.7.4-SNAPSHOT</version>
+                        </docletArtifact>
+                        <additionalOptions>
+                            <additionalOption>--source-root</additionalOption>
+                            <additionalOption>${project.build.sourceDirectory}</additionalOption>
+                        </additionalOptions>
                         <taglets>
                             <taglet>
                                 <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
@@ -97,6 +107,13 @@
                                     <version>1.7.4-SNAPSHOT</version>
                                 </tagletArtifact>
                             </taglet>
+                            <tagletArtifacts>
+                                <tagletArtifact>
+                                    <groupId>com.javax0.jamal</groupId>
+                                    <artifactId>jamal-io</artifactId>
+                                    <version>1.7.4-SNAPSHOT</version>
+                                </tagletArtifact>
+                            </tagletArtifacts>
                         </taglets>
                     </configuration>
                     <executions>

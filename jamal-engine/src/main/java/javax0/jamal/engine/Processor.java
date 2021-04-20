@@ -101,7 +101,12 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, String... params) throws BadSyntax {
-        return new javax0.jamal.engine.UserDefinedMacro(this, id, input, params);
+        return newUserDefinedMacro(id, input, false, params);
+    }
+
+    @Override
+    public UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String... params) throws BadSyntax {
+        return new javax0.jamal.engine.UserDefinedMacro(this, id, input, verbatim, params);
     }
 
     @Override
@@ -333,7 +338,19 @@ public class Processor implements javax0.jamal.api.Processor {
                     popper.run();
                     return rawResult;
                 } else {
-                    return evaluateUserDefinedMacro(rawResult, qualifier, popper, tr);
+                    if (qualifier.udMacro != null && qualifier.udMacro.isVerbatim()) {
+                        if( qualifier.postEvalCount > 0 ){
+                            qualifier.postEvalCount--;
+                            final var result = evaluateUserDefinedMacro(rawResult, qualifier, popper, tr);
+                            qualifier.postEvalCount++;
+                            return result;
+                        }
+                        tr.appendAfterEvaluation(rawResult);
+                        popper.run();
+                        return rawResult;
+                    } else {
+                        return evaluateUserDefinedMacro(rawResult, qualifier, popper, tr);
+                    }
                 }
             } catch (BadSyntaxAt bsAt) {
                 throw bsAt;
@@ -438,6 +455,7 @@ public class Processor implements javax0.jamal.api.Processor {
         skipWhiteSpaces(evaluatedInput);
 
         final String id = fetchId(evaluatedInput);
+        qualifier.macroId = id;
         if (id.length() == 0) {
             throw new BadSyntaxAt("Zero length user defined macro name was found.", ref);
         }
@@ -450,13 +468,13 @@ public class Processor implements javax0.jamal.api.Processor {
             throw throwForUndefinedUdMacro(ref, id);
         }
         if (udMacroOpt.isPresent()) {
-            final var udMacro = udMacroOpt.get();
-            final String[] parameters = getParameters(tr, qualifier, ref, evaluatedInput, udMacro, id);
+            qualifier.udMacro = udMacroOpt.get();
+            final String[] parameters = getParameters(tr, qualifier, ref, evaluatedInput, qualifier.udMacro, id);
             tr.setId(id);
             tr.setParameters(parameters);
             try {
-                udMacro.setCurrentId(id);
-                return udMacro.evaluate(parameters);
+                qualifier.udMacro.setCurrentId(id);
+                return qualifier.udMacro.evaluate(parameters);
             } catch (BadSyntaxAt bsAt) {
                 throw bsAt;
             } catch (BadSyntax bs) {
@@ -677,8 +695,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * <p>
      * In the example above the macro will have three arguments, and it is not a problem (since version 1.2.0) that the
      * second argument contains a macro that itself has parameters and it uses the same separator character as the top
-     * level macro of this example. (In the example above we assumed that the macro opening and closing strings are
-     * the curly braces.)<p>
+     * level macro of this example. (In the example above we assumed that the macro opening and closing strings are the
+     * curly braces.)<p>
      * <p>
      * NOTE: that versions prior 1.2.0 were splitting the example above into five arguments. Although there is a
      * possible use of that kind of macros this was never recommended or meant that way and because there is only a

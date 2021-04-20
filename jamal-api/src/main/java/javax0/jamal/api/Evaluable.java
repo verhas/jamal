@@ -16,6 +16,24 @@ public interface Evaluable extends Identified {
     String evaluate(String... parameters) throws BadSyntax;
 
     /**
+     * The output of this evaluable should be treated verbatim. When this method return true, then evaluating
+     * <pre>{@code
+     *    {userDefinedMacro}
+     * }</pre>
+     * <p>
+     * will have the same result as
+     *
+     * <pre>{@code
+     *    {@verbatim userDefinedMacro}
+     * }</pre>
+     *
+     * @return {@code true} if the result of the macro should not be further evaluated
+     */
+    default boolean isVerbatim() {
+        return false;
+    }
+
+    /**
      * @return the number of parameters that the user defined macro expects or -1 if the macro can accept any number of
      * parameters. This may be the case when an extension defines a special user defined macro, like the regular
      * expression module. The result currently is used by the processor to handle the parameters of the user defined

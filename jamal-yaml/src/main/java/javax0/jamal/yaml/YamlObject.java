@@ -16,6 +16,11 @@ public class YamlObject implements UserDefinedMacro, ObjectHolder {
         return content;
     }
 
+    @Override
+    public boolean isVerbatim() {
+        return true;
+    }
+
     public void setContent(Object content) {
         this.content = content;
     }

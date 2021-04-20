@@ -52,6 +52,21 @@ public interface Processor extends AutoCloseable {
     UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax;
 
     /**
+     * The same as {@link #newUserDefinedMacro(String, String, String[])} but it can also define when the macro is
+     * verbatim.
+     *
+     * @param id       see {@link #newUserDefinedMacro(String, String, String[])}
+     * @param input    see {@link #newUserDefinedMacro(String, String, String[])}
+     * @param verbatim {@code true} if the result of the macro should not be evaluated
+     * @param params   see {@link #newUserDefinedMacro(String, String, String[])}
+     * @return see {@link #newUserDefinedMacro(String, String, String[])}
+     * @throws BadSyntax see {@link #newUserDefinedMacro(String, String, String[])}
+     */
+    default UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String[] params) throws BadSyntax {
+        return newUserDefinedMacro(id, input, params);
+    }
+
+    /**
      * Create a new user defined script. Read the important comments for {@link #newUserDefinedMacro(String, String,
      * String[])}
      *
@@ -164,8 +179,9 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
-     * Load the version property from the properties file and store it into the properties variable {@code version}.
-     * The properties will contain one property named {@code "version"}.
+     * Load the version property from the properties file and store it into the properties variable {@code version}. The
+     * properties will contain one property named {@code "version"}.
+     *
      * @param version the properties that will hold the version property
      */
     static void jamalVersion(Properties version) {
