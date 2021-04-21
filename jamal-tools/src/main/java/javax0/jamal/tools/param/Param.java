@@ -17,6 +17,7 @@ public class Param<K> implements Params.Param<K> {
     private Processor processor;
     private String macroName;
     private String defaultValue = null;
+    private boolean mandatory = true;
     /**
      * When calculating the final value the actual string value from the parameter or the user defined macro is needed.
      * When we return a list or a boolean then we do not need the string. It is okay if it is there, and may be used,
@@ -40,6 +41,14 @@ public class Param<K> implements Params.Param<K> {
     @Override
     public Param<K> orElse(String defaultValue) {
         this.defaultValue = defaultValue;
+        this.mandatory = false;
+        return this;
+    }
+
+    @Override
+    public Param<K> orElseNull() {
+        this.defaultValue = null;
+        this.mandatory = false;
         return this;
     }
 
@@ -47,6 +56,7 @@ public class Param<K> implements Params.Param<K> {
     public Param<Integer> orElseInt(int defaultValue) {
         this.defaultValue = "" + defaultValue;
         this.converter = s -> getInt();
+        this.mandatory = false;
         return (Param<Integer>) this;
     }
 
@@ -57,9 +67,9 @@ public class Param<K> implements Params.Param<K> {
     }
 
     @Override
-    public <K> Param<K> as(Class<K> klass, Function<String, K> converter) {
+    public <Z> Param<Z> as(Class<Z> klass, Function<String, Z> converter) {
         this.converter = converter::apply;
-        return (Param<K>) this;
+        return (Param<Z>) this;
     }
 
     @Override
@@ -113,7 +123,7 @@ public class Param<K> implements Params.Param<K> {
     private Optional<String> _get() throws BadSyntax {
         if (value.size() > 0) {
             if (value.size() > 1 && stringNeeded) {
-                throw new BadSyntax("The key '" + key[0] + "' must not be multi valued in the macro '" + macroName + "'");
+                throw new BadSyntax("The key '" + reportingName(key) + "' must not be multi valued in the macro '" + macroName + "'");
             }
             return Optional.ofNullable(value.get(0));
         }
@@ -121,11 +131,14 @@ public class Param<K> implements Params.Param<K> {
         return reader.readValue(key[0]);
     }
 
+private String reportingName(String[] key){
+        return key[0] == null ? key[1] : key[0];
+}
 
     private String getRaw() throws BadSyntax {
         final var opt = _get();
-        if (opt.isEmpty() && defaultValue == null && stringNeeded) {
-            throw new BadSyntax("The key '" + key[0] + "' for the macro '" + macroName + "' is mandatory");
+        if (opt.isEmpty() && mandatory && stringNeeded) {
+            throw new BadSyntax("The key '" + reportingName(key) + "' for the macro '" + macroName + "' is mandatory");
         }
         return opt.orElse(defaultValue);
     }
@@ -141,7 +154,7 @@ public class Param<K> implements Params.Param<K> {
      */
     public K get() throws BadSyntax {
         if (processor == null) {
-            throw new IllegalArgumentException("The parameter variable '" + key[0] + "' was not processed during parsing.");
+            throw new IllegalArgumentException("The parameter variable '" + reportingName(key) + "' was not processed during parsing.");
         }
         try {
             if (!calculated) {
@@ -152,7 +165,7 @@ public class Param<K> implements Params.Param<K> {
         } catch (BadSyntax bs) {
             throw bs;
         } catch (Exception e) {
-            throw new BadSyntax("There was an exception converting the parameter '" + key[0] + "' for the macro '" + macroName + "'", e);
+            throw new BadSyntax("There was an exception converting the parameter '" + reportingName(key) + "' for the macro '" + macroName + "'", e);
         }
     }
 
@@ -174,7 +187,7 @@ public class Param<K> implements Params.Param<K> {
      */
     private boolean getBoolean() throws BadSyntax {
         if (value.size() > 1) {
-            throw new BadSyntax("The key '" + key[0] + "' must not be multi valued in the macro '" + macroName + "'");
+            throw new BadSyntax("The key '" + reportingName(key) + "' must not be multi valued in the macro '" + macroName + "'");
         }
         if (value.size() > 0) {
             return !value.get(0).equals("false") && !value.get(0).equals("no") && !value.get(0).equals("0");

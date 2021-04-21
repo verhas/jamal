@@ -37,6 +37,9 @@ public class MacroReader {
     }
 
     private Optional<String> _readValue(String id) throws BadSyntax {
+        if( id == null ){
+            return Optional.empty();
+        }
         final var evaluable = processor.getRegister().getUserDefined(id)
             .filter(macro -> macro instanceof Evaluable)
             .map(macro -> (Evaluable) macro);

@@ -210,6 +210,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      */
     @Override
     public <T extends Identified> Optional<T> getUserDefined(String id) {
+        Objects.requireNonNull(id);
         if (InputHandler.isGlobalMacro(id)) {
             return Optional.ofNullable((T) scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
         } else {

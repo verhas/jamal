@@ -57,6 +57,8 @@ public class Params {
 
         Param<T> orElse(String i);
 
+        Param<T> orElseNull();
+
         Param<Integer> orElseInt(int i);
 
         Param<T> as(Function<String, T> converter);
@@ -109,7 +111,7 @@ public class Params {
     }
 
     public Params between(String seps) {
-        Objects.nonNull(seps);
+        Objects.requireNonNull(seps);
         if (seps.length() != 2) {
             throw new IllegalArgumentException("The argument to method 'between()' has to be a 2-character string. It was '" + seps + "'");
         }
@@ -136,7 +138,13 @@ public class Params {
     public Params keys(Param<?>... holders) {
         for (final var holder : holders) {
             for (final var key : holder.keys()) {
-                this.holders.put(key, holder);
+                if (key != null && this.holders.containsKey(key)) {
+                    throw new IllegalArgumentException(
+                        "The key '" + key + "' is used multiple times in macro '" + macroName + "'");
+                }
+                if (key != null) {
+                    this.holders.put(key, holder);
+                }
             }
         }
         return this;
@@ -144,15 +152,22 @@ public class Params {
 
     /**
      * Specify the keys that can be used to specify the value. There can be aliases. The first value is the one that can
-     * also be used as a macro name, the rests are alias.
+     * also be used as a macro name, the rests are alias. If the first value is null then no macro can define the value
+     * for this parameter.
      *
      * @param key the array of key and aliases
      * @param <T> the type of the parameter, can be {@code Integer}, {@code String} or {@code Boolean}
      * @return a new holder
      */
     public static <T> Param<T> holder(String... key) {
-        if (key.length == 0) {
-            throw new IllegalArgumentException("Parameter holder has to have at least one name");
+        Objects.requireNonNull(key);
+        if (key.length == 0 || (key.length == 1 && key[0] == null)) {
+            throw new IllegalArgumentException("Parameter holder has to have at least one name.");
+        }
+        for (int i = 1; i < key.length; i++) {
+            if (key[i] == null) { // key[0] may be null, that is OK, no macro can define the parameter
+                throw new IllegalArgumentException("Parameter alias names must not be null.");
+            }
         }
         return new javax0.jamal.tools.param.Param<T>(key);
     }

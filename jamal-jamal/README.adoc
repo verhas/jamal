@@ -18,19 +18,16 @@ Till the release 1.7.2 it was provided using a proprietary, test scope built-in 
 With this module this feature, although this is a niche feature, is available to any application.
 
 To use this module you have to add the dependency to you Maven project, as:
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
 
 [source,xml]
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-jamal</artifactId>
-    <version>{%VERSION%}</version>
+    <version>1.7.4-SNAPSHOT</version>
 </dependency>
 
 ----
 
 
 == Macros implemented in the package
-

@@ -30,15 +30,17 @@ public class JamalTaglet implements Taglet {
      * Create the taglet. The taglet uses a single processor instance. When the processor instance is created the
      * ServiceLoader is supposed to load all the macro files, which are provided by different modules. It seems, from
      * experience that it does not.
-     * <p>
-     * As a patch
      */
     public JamalTaglet() {
     }
 
     private Link link;
 
-    private Processor getProcessor() {
+    /**
+     * Initialize the processor in case it was not initialized before. Also initialize the field {@link #link}, which
+     * points to the instance of the {@code link} macro used to mimic the behavior of the {@code link} JavaDoc tag.
+     */
+    private void initProcessor() {
         if (processor == null) {
             processor = new javax0.jamal.engine.Processor(open, close);
             final var l = processor.getRegister().getMacro("link");
@@ -46,7 +48,6 @@ public class JamalTaglet implements Taglet {
                 link = (Link) l.get();
             }
         }
-        return processor;
     }
 
     @Override
@@ -56,21 +57,16 @@ public class JamalTaglet implements Taglet {
     }
 
     /**
-     * This is before the first Jamal tag.
-     *
-     * @return {@code true} ... always
-     * <p>
-     * This is after the return tag
-     * @jamal here we have another Jamal macro part
-     * @jamal Jamal can be used as am online as well as a block tag {#code {@io:cwd}}
-     * <p>
-     * The current working directory is {#code {@io:cwd}}
+     * @return {@code true} because the tag {@code jamal} can be used as an inline tag.
      */
     @Override
     public boolean isInlineTag() {
         return true;
     }
 
+    /**
+     * @return {@code true} because the tag {@code jamal} can be used as a block tag. It is not recommended, but it can.
+     */
     public boolean isBlockTag() {
         return true;
     }
@@ -83,8 +79,8 @@ public class JamalTaglet implements Taglet {
     private Processor processor;
     private Reporter reporter;
     private String sourceRoot;
-    private String open;
-    private String close;
+    private String open = "{";
+    private String close = "}";
 
     private void warning(String message) {
         if (reporter != null) {
@@ -98,24 +94,37 @@ public class JamalTaglet implements Taglet {
         }
     }
 
+    /**
+     * Copy the fields {@code reporter}, {@code sourceRoot}, {@code open} and {@code close} from the doclet to this
+     * taglet. These fieds hold configuration options.
+     *
+     * @param env    the environment
+     * @param doclet the executing doclet that uses this taglet
+     */
     @Override
     public void init(DocletEnvironment env, Doclet doclet) {
         Taglet.super.init(env, doclet);
+        /**
+         * If future version of JavaDoc uses the same class loader to load the doclet and the taglet then this code
+         * may work. As it is today using Java 16 only reflection works.
+         */
         if (doclet instanceof JamalDoclet) {
             this.reporter = ((JamalDoclet) doclet).reporter;
             this.sourceRoot = ((JamalDoclet) doclet).sourceRoot;
+            this.open = ((JamalDoclet) doclet).open;
+            this.close = ((JamalDoclet) doclet).close;
         } else {
             try {
                 acquireDocletField(doclet, "reporter");
                 acquireDocletField(doclet, "sourceRoot");
                 acquireDocletField(doclet, "open");
                 acquireDocletField(doclet, "close");
-
-                final var sourceRoot = doclet.getClass().getDeclaredField("sourceRoot");
-                sourceRoot.setAccessible(true);
-                this.sourceRoot = (String) sourceRoot.get(doclet);
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                this.reporter = null;
+                warning("Cannot get the configuration values from the doclet to thetaglet.");
+                reporter = null;
+                sourceRoot = null;
+                open = "{";
+                close = "}";
             }
         }
         if (sourceRoot == null) {
@@ -125,6 +134,16 @@ public class JamalTaglet implements Taglet {
         }
     }
 
+    /**
+     * Copy the value of the field named {@code fieldName} from the {@code doclet} to the field of the same name in this
+     * object.
+     *
+     * @param doclet    where the field is defined, has the same time and the same name as the field in this object
+     * @param fieldName the name of the field to read reflectively and also the same name in this object to set the
+     *                  value read from the other field, reflectively
+     * @throws NoSuchFieldException   if there is no such field
+     * @throws IllegalAccessException if you cannot read or set the field
+     */
     private void acquireDocletField(Doclet doclet, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         final var source = doclet.getClass().getDeclaredField(fieldName);
         source.setAccessible(true);
@@ -136,6 +155,18 @@ public class JamalTaglet implements Taglet {
 
     private Map<String, String> memoize = new HashMap<>();
 
+    /**
+     * Convert the tags processing using Jamal. First the elements of the {@code tags} are copied together and then they
+     * are processed using Jamal. Because JavaDoc assumes that processing a string is cheap and calls this method many
+     * time for each and every taglet occurrence this method is memoized.
+     * <p>
+     * If there is an error in the Jamal processing it will report an error to JavaDoc and will include the source
+     * unmodified (Jamal source) to the output.
+     *
+     * @param tags
+     * @param element
+     * @return
+     */
     @Override
     public String toString(List<? extends DocTree> tags, Element element) {
         while (element.getKind() != ElementKind.CLASS &&
@@ -143,7 +174,7 @@ public class JamalTaglet implements Taglet {
             element = element.getEnclosingElement();
         }
         final var sourceFile = sourceRoot + "/" + (element.toString().replaceAll("\\.", "/")) + ".java";
-        getProcessor();
+        initProcessor();
         link.currentClass = element.toString();
         if (tags.size() == 0) {
             return null;
@@ -168,7 +199,8 @@ public class JamalTaglet implements Taglet {
         }
         String result;
         try {
-            result = getProcessor().process(new Input(sb, new Position(sourceFile)));
+            initProcessor();
+            result = processor.process(new Input(sb, new Position(sourceFile)));
         } catch (BadSyntax badSyntax) {
             warning(badSyntax.getMessage());
             if (reportRelativeLineNumbersFirstOnlyOnce) {

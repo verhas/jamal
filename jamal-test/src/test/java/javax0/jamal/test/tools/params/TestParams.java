@@ -2,6 +2,7 @@ package javax0.jamal.test.tools.params;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.Params;
 import org.junit.jupiter.api.Assertions;
@@ -452,6 +453,15 @@ public class TestParams {
                 "left=\"aligned\"\n" +
                 "top=3"
         );
+    }
+
+    @Test
+    @DisplayName("When multiple holders use the same key it throws Illegal Argument Exception")
+    void testMultipleKeyUseError() throws Exception {
+        final var file = Params.<String>holder("","file").asString();
+        final var name = Params.<String>holder("","name").asString();
+        Assertions.assertThrows(IllegalArgumentException.class, () ->Params.using(null)
+            .tillEnd().keys(file, name));
     }
 
     @Test

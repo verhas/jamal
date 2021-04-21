@@ -75,6 +75,20 @@ The default value is `{`.
 The default value is `}`.
 This is not recommended altering this, because this macro opening string harmonizes with the inline taglet uses.
 
+[NOTE]
+====
+Jamal macros look very similar to Javadoc tags.
+One of the major differences is that the Javadoc tags cannot be enclosed into each other indefinitely.
+Javadoc does not process javadoc tags that are inside another tag.
+The text processed by the Jamal Javadoc tag will not be processed by JavaDoc any more.
+If there is any `{@xxx }` construct in it after the Jamal processing it will get into the output as it is.
+If you leave the macro opening and closing strings to be `{` and `}` then sequences like `{@code ...}` or `{@link ...}` will be Jamal macros.
+The Jamal doclet implements these two macros and thus these two formatting sequences are available inside Jamal processed Javadoc text.
+
+Note, however, that the implementation of `{@link ..}` is very rudimentary and does not properly generate all the links.
+If you have to rely on the proper links then close the Jamal inline tag before the link, and open a new one after it.
+====
+
 In this document we will describe how to configure the `javadoc` command line tool to use JamalDoclet and also the modifications needed in a `pom.xml`.
 
 === Maven configuration

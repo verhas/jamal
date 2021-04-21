@@ -74,7 +74,7 @@ public class ParamsTestSupport {
     private Character start = null;
 
     public ParamsTestSupport between(String seps) {
-        Objects.nonNull(seps);
+        Objects.requireNonNull(seps);
         this.start = seps.charAt(0);
         this.terminal = seps.charAt(1);
         return this;

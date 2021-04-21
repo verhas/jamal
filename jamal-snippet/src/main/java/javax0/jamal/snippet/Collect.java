@@ -45,10 +45,14 @@ public class Collect implements Macro, InnerScopeDependent {
         final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").as(Pattern::compile);
         final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
         final var from = Params.<String>holder("from").as(s -> FileTools.absolute(reference, s));
+        final var setName = Params.<String>holder(null, "onceAs").orElseNull();
         Params.using(processor).from(this)
-            .tillEnd().keys(include, exclude, start, stop, from, scanDepth).parse(in);
+            .tillEnd().keys(include, exclude, start, stop, from, scanDepth, setName).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
+        if (store.testAndSet(setName.get())) {
+            return "";
+        }
         final var fromFile = new File(from.get());
         if (fromFile.isFile()) {
             harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start.get(), stop.get());

@@ -7,8 +7,10 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -16,6 +18,7 @@ import java.util.stream.Stream;
 public class SnippetStore implements Identified {
     public static final String SNIPPETS_MACRO_ID = "`snippets";
     private final Map<String, Snippet> snippets = new LinkedHashMap<>();
+    private final Set<String> collectedNamedSnippetSets = new HashSet<>();
 
     public static class Snippet {
         final String id;
@@ -173,9 +176,36 @@ public class SnippetStore implements Identified {
     }
 
     /**
+     * Tests if the named collection set was already collected or not. In case it was already collected then it will
+     * return {@code true}. If it was not collected then it will return {@code false}, but also remembers that this name
+     * was already used for collection and next time it will already return {@code true}.
+     * <p>
+     * This method does not check that the collection was really done. The caller has to do the collection after calling
+     * this method and should call this method only once.
+     * <p>
+     * If the name is null then it just returns false, as it means that the collection is not named and should not be
+     * remembered.
+     *
+     * @param name of the collection, usually given as a parameter to the {@code snip:collect} macro as parameter {@code
+     *             onceAs}
+     * @return {@code false} the first time for a given name and {@code true} in subsequent calls.
+     */
+    public boolean testAndSet(String name) {
+        if (name != null && collectedNamedSnippetSets.contains(name)) {
+            return true;
+        } else {
+            if (name != null) {
+                collectedNamedSnippetSets.add(name);
+            }
+            return false;
+        }
+    }
+
+    /**
      * Clear the snippet store deleting all snippets that were collected.
      */
     public void clear() {
         snippets.clear();
+        collectedNamedSnippetSets.clear();
     }
 }

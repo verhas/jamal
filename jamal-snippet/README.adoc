@@ -103,13 +103,14 @@ There is no need to invoke the `use` command to get access to these macros.
 
 [[snip:collect]]
 ==== i. `snip:collect`
+Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
 The syntax of the macro is
 
 [source]
 ----
-{@snip:collect from="fileName"}
+{@snip:collect from="fileName" ...options}
 ----
 
 `fileName` can be the name of a text file, or it can be a directory.
@@ -171,6 +172,7 @@ For example, the code
 
 
 
+
 [source]
 ----
 // snippet sample
@@ -193,7 +195,7 @@ The output of the `collect` macro is an empty string.
 
 The macro's input contains parameters.
 These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
-The parameters are `from`, `start`, `stop`, `include`, and `exclude`.
+The parameters are `from`, `start`, `stop`, `include`, `exclude`, `onceAs`.
 
 The snippet start and end matching regular expression can be redefined.
 If the parameter `start` is defined, its value will be used as a snippet start matching regular expression.
@@ -204,7 +206,7 @@ The collection of the files can also be controlled using parameters.
 The parameters `include` and `exclude` can define regular expressions.
 Only the files that match the regular expression specified by `include` and do not match the one set by `exclude` are collected when defined.
 
-It is enough if the regular expressions match a part of the line or the file name.
+It is enough if the regular expressions match a part of the line, or the file name.
 
 For example, the test file
 
@@ -223,6 +225,20 @@ and this is the end
 ----
 
 excludes any file that contains the character `2` in its name.
+
+The parameter `onceAs` can be used to avoid repeated snippet collections.
+Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
+At a certain point it may happen that the snippets you need were already collected, collecting it again would be erroneous.
+When snippets are collected you cannot redefine a snippet.
+If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
+If you try to collect anything with the same `onceAs` parameter the collection will simply ignore it.
+It was already collected.
+
+NOTE: This option was introduced to the `snip:collect` macro along with the Jamal doclet implementation.
+When the individual documentation parts are processed in the same processor the processing order is not guaranteed.
+If you want to refer to some snippets you have to collect them.
+To do that you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
+That collect macro should name the collection to avoid redefinition error.
 
 [[snip:properties]]
 ==== ii. `snip:properties`
@@ -1089,14 +1105,14 @@ will result
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
 - FilesMacro.java: 4,763 bytes
-- Collect.java: 5,329 bytes
+- Collect.java: 5,498 bytes
 - TrimLines.java: 2,849 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,446 bytes
-- SnippetStore.java: 8,442 bytes
+- SnippetStore.java: 9,845 bytes
 - ListDir.java: 3,901 bytes
 - XmlFormat.java: 3,317 bytes
 - SnipProperties.java: 1,485 bytes
@@ -1244,7 +1260,7 @@ wll result the output
 
 [source]
 ----
-2021-04-20 17:35:27
+2021-04-21 21:47:58
 
 ----
 

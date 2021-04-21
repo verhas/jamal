@@ -3,14 +3,15 @@
 {%@define methodFormat=`$name()`%}
 In addition to the method `{%@java:method javax0.jamal.tools.InputHandler#getParts%}` there is another utility that the built-in macros can use.
 It is the class `{%@java:class javax0.jamal.tools.Params%}`.
-The class is a utility to parse some particular part of the whole input of the built-in macro looking for parameters.
-This particular part is usually the first line of the input, but it can be the part betweem `(` and `)` following the macro ID or the whole input.
-This utility is not used currently by the built-in core macros, but it is heavily used, for example, in the snippet package.
+The class is a utility to parse some particular part of the whole input of the built-in macro, looking for parameters.
+This particular part is usually the first line of the input, but it can be the part between `(` and `)` or between other character pairs following the macro ID or the whole input.
+The built-in core macros have parameters that use `[` and `]` characters.
+At the time of the writing of this document, the macros `include` and `for` are using such parameters.
 
 === Introduction
 
 Some macros need configuration.
-For example the `trimLines` macro in the snippet package can trim vertically if we instruct it to do so.
+For example, the `trimLines` macro in the snippet package can trim vertically if we instruct it.
 Similarly, the left trimming can go all to the left, but it may also leave some margin if we specify some margin.
 For this reason, this macro uses two parameters:
 
@@ -22,8 +23,8 @@ This macro reserves the first line of the input and trims and returns only the r
 The first line can contain parameters.
 
 Other macros parse the whole input for parameters.
-Some macros start parsing for parameters if the first non-whitespace character after the macro id is `(` and the parsing stops at the macthing `)`.
-For example the `snip:collect` macro collects snippets from files, and it does not convert anything from its input.
+Some macros start parsing for parameters if the first non-whitespace character after the macro id is `(` and the parsing stops at the matching `)`.
+For example, the `snip:collect` macro collects snippets from files, and it does not convert anything from its input.
 This macro parses the whole input looking for parameters.
 
 The class `{%@java:class javax0.jamal.tools.Params%}` provides the tools to ease parameter parsing.
@@ -31,12 +32,12 @@ Having a unified "standard" parsing has two advantages:
 
 * several macro implementations can use the same parsing class and methods, and
 
-* parsing follows the same rules, users do not need to learn different syntax formats.
+* parsing follows the same rules; users do not need to learn different syntax formats.
 
 === Parameter Sources
 
 When a macro needs parameters and calls the methods of the class `{%@java:class javax0.jamal.tools.Params%}`, it looks at different sources for the parameters.
-First of all, it looks at the input the macro provides and tries to find the parameters there.
+First of all, it looks at the macro's input and tries to find the parameters there.
 The parameters are specified in the format
 
 [source,text]
@@ -47,46 +48,73 @@ name1=value1 name2=value2 ... nameN=valueN
 The names are the parameter names that the macro may use.
 
 The macro first passes the input to the parsing method.
-When a parameter is not defined there then the algorithm tries to look up a user defined macro that has the name as the parameter.
+When a parameter is not defined, the algorithm tries to look up a user-defined macro with the name as the parameter.
 If you set `{@define margin=2}` somewhere in your Jamal source, this value will be used by every `trimLine` following it.
-The parameter of the same name, or a macro defined locally overrides the outer definition.
-If the value is not defined as a parameter, and it is also not defined as a user defined macro then the macros can use default values.
+The parameter of the same name or a macro defined locally overrides the outer definition.
+If the value is not defined as a parameter and is not defined as a user-defined macro, then the built-in macros can use default values.
 
-In case of boolean parameters, the values `false`, `0`, or `no` are treated as false.
+NOTE: The macro `default` usually steps into the place of an undefined macro.
+When you use an undefined user-defined macro, and Jamal does not find the macro, then it uses the macro named `default` assuming it is defined.
+In this case, this macro is not used.
+It is also an error if the macro used as the configuration has parameters unless the option `{@options lenient}` is specified.
+
+In the case of boolean parameters, the values `false`, `0`, or `no` are treated as false.
 Everything else will result true.
-If a required boolean parameter is not present as a parameter then the option of the same name is taken into account.
-The option is the one that can be set useng the macro `{@options ...}`.
-User defined macros for a boolean parameter are not taken into account.
-Because all options are `false` by default there are no mandatory boolean parameters.
-If a boolean parameter is not defined in any way then it will be `false`.
+If a required boolean parameter is not present as a parameter, then the option of the same name is taken into account.
+The option is the one that you can set using the macro `{@options ...}`.
+For example, you can specify `{@options trimVertical}` if you want all uses of the macro `trimLine` to trim vertically.
+User-defined macros for a boolean parameter are not taken into account.
+All options are `false` by default; hence there are no mandatory boolean parameters.
+If a boolean parameter is not defined in any way, then it will be `false`.
 
 Some parameters can have more than one value.
 
-If the macro implementation does not define any default value then the parsing will error if the parameter is not defined and there is no user defined macro for the parameter.
+Suppose the macro implementation does not define any default value. In that case, the parsing will error if the parameter is not defined, and there is also no user-defined macro for the parameter.
 
+The parameter names can have aliases.
+These are defined in the Java code of the built-in macro.
+These can be used inside the macro.
+Alias names are not looked for as user-defined macros.
+
+For example, the core macro uses `$forsep` as a parameter, and it has an alias `separator`.
+If neither of them is used in the macro, only the user-defined macro `$forsep` is used.
+If there is a `{@define separator=;}` in the code, it will not alter the execution of the `for` macro.
+In the macro, the names and the aliases are interchangeable.
+
+Some macros define parameters without a name.
+Technically the name of the parameter is `null`.
+In that case, there should be at least one alias.
+Aliases are never `null`.
+In this case, it is not possible to specify a value for this parameter using a user-defined variable or an option in the case of a boolean parameter.
+
+Aliases are specific to the macro.
+Different macros may use the same option name for other purposes providing different, or the same aliases.
+It is up to the macro implementation what parameter names and what aliases they use.
+However, the parameter names and the aliases are unique in the realm of a single macro implementation.
 
 === Details
 
-The `value1, value2, ..., valueN` values are _numeric_, _boolean_ or _string_ values.
+The `value1, value2, ..., valueN` values are either _numeric_, _boolean_ or _string_ values.
 The type depends on what the macro awaits for the specific parameter.
 
 The values can be represented enclosed between `"`, `"""` or without any delimiter.
 The `"..."` is a typical string representation.
-Using the `"` is optional if there is no space or special escape sequence in the value.
+Using the `"` is optional if there is no space or a particular escape sequence in the value.
 For example `margin=1` is just as good as `margin="1"`.
-On the other hand `name=Peter Verhas` is not valid.
-It has to be represented as `name="Peter Verhas"`, because it contains a space.
+On the other hand, `name=Peter Verhas` is not valid.
+It has to be represented as `name="Peter Verhas"` because it contains a space.
 
-A string starting and ending with a `"` character must not contain a new line character.
-If you need multi-line strings then you can either use the `\n` escape character, or you can use a multi-line string.
-A multi line string starts and ends with `"""`, three quote characters.
+A string starting and ending with a `"` character must not contain a newline character.
+If you need multi-line strings, you can use the `\n` escape character or use a multi-line string.
+A multi-line string starts and ends with `"""`, three quote characters.
 
 Some macros use only the first line for parameters.
-Even in this case the new-line character, which is inside a multi-line string is part of the value and does not stop the parsing.
-The parsing stops only at the first new-line character, which is not part of any value and is not escaped.
+Even in this case, the newline character inside a multi-line string is part of the value and does not stop the parsing.
+The parsing stops only at the first newline character, which is not part of any value and is not escaped.
 
-If there are many parameters, and the first line becomes too long, then the `\` character escapes the new-line.
-It makes the parser skip the new line and go on parsing on the next line.
+If there are many parameters, and the first line becomes too long, then the `\` character escapes the new line.
+Subsequent lines can also escape the newline character using the `\` character.
+It makes the parser skip the new line and go on parsing on the following line.
 
 For example
 
@@ -98,53 +126,54 @@ text and it is
 multi-line
 """ paging=true skip="A" skip="DD" skip="3.145" \
 comment="this is still a parameter because of the \\ at the end of the previous line"
-this is the input the macro will use for its result, everything else till here is parameters
+this is the input the macro will use for its result; everything else till here is parameters
 }
 ----
 
-When the macro asks the parser object to parse the input it also specifies the parameter names it can handle.
-If there is any parameter, which the macro does not handle an error will occur.
+When the macro asks the parser object to parse the input, it also specifies the parameter names it can handle.
+If there is any parameter, which the macro does not handle, an error will occur.
 
 The macro also specifies the type of the parameter.
-If the parameter value cannot be converted to the required type error will occur.
+If Jamal cannot convert the parameter value to the required type, an error will occur.
 
-* Numeric parameters should be integer. They can be enclosed between `"` or `"""`.
+* Numeric parameters should be an integer. They can be enclosed between `"` or `"""`.
 
-* Boolean parameters are false if they are present as parameter, and the string value is either `false`, `0`, or `no`.
-They are also false if they are not present as parameter, and the name is also false as an option.
-A name is false as an option of the macro `{@options name}` was not invoked, or the option was invoked in the form `{@options ~name}`.
-A boolean parameter can be set true simply mentioning the name without `=` following it spcifying a value.
+* Boolean parameters are false if they are present as a parameter, and the string value is either `false`, `0`, or `no`.
+They are also false if they are not present as a parameter, and the name (not an alias) is also false as an option.
+A name is `false` as an option if the macro `{@options name}` was not invoked in the current or higher scope, or if the option was invoked in the form `{@options ~name}`.
+A boolean parameter can be set as `true` simply mentioning the name without `=` and any value.
 
 As you can see in the example, parameters can have multiple values.
-If there are multiple parameters defined, but the macro needs only one an error will occur.
-If there is only one value defined, but the macro needs a list it will get a one element list.
-You cannot specify multiple values for such parameter using user defined macros.
-The globally, or locally defined user macro will not be added to the list of parameters if the parameter is specified at least once on the input.
-If there are parameters then those values are used, and the macro values are ignored.
+If there are multiple parameters defined, but the macro needs only one, an error will occur.
+If there is only one value defined, but the macro needs a list, it will get a one-element list.
+You cannot specify multiple values for such parameters using user-defined macros.
+Jamal will not add the global or locally defined user macro to the parameter list if the parameter is specified at least once on the input.
+If there are parameters, then those values are used, and the macro values are ignored.
 
-Single line and multi-line strings have the same syntax as Java string.
+Single line and multi-line strings have the same syntax as Java strings.
 You can use the same escape sequences.
 
 === Examples
 
-In this chapter we list some examples on the syntax and use of the parameters.
-These examples are coming from the unit test file {%@file ./jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java%}.
-The display of each example contains a definition line, an _INPUT_ part and a _RESULT_ part.
+In this chapter, we list some examples of the syntax and the use of the parameters.
+These examples come from the unit test file {%@file ./jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java%}.
+The display of each example contains a definition line, an _INPUT_ part, and a _RESULT_ part.
 The "INPUT" part shows the code that defines the values of the parameters.
-It may also contain at the start some `options` or `define` macro in case some parameters get value from these source.
-The "RESULT" part shows the calculated value of each and every parameter.
+It may also contain at the start some `options` or `define` macro in case some parameters get value from this source.
+The "RESULT" part shows the calculated value of every parameter.
 
-The definition line contains the names of the parameters comma separated.
+The definition line contains the parameters' names comma separated.
 Each parameter has at least one name.
-In case the parameter has an alias that can be used as a parameter name instead of the original name it is given after a `|` character.
-The type of the parameter is either `I` integer, `S` string, `B` boolean or `L` list.
+In case the parameter has an alias that can be used as a parameter name instead of the original name, it is given after a `|` character.
+The parameter type is either `I` integer, `S` string, `B` boolean, or `L` list.
 The last part following the last `:` is the default value, if there is any.
 
-The test parses this definition string and calls the appropriate `orElse()`, `orEsleInt()`, `asString()` and so on methods, which define the type of the parameter.
+The test parses this definition string and calls the appropriate `orElse()`, `orElseInt()`, `asString()` and so on methods, which define the type of the parameter.
 
 The RESULT part shows the parameters with the values as `key=value`.
-If the returned value is string the result is enclosed between quotes.
-If the value has some other type it is showed like a casting operation `(type)` in front of the value.
+When the returned value is a string, the result is enclosed between quotes.
+When the value has some other type, it is shown like a casting operation `(type)` in front of the value.
+
 {%@define section($X)=
 ==== $X%}
 
@@ -163,12 +192,12 @@ If the value has some other type it is showed like a casting operation `(type)` 
 {%@snip doc_$XXX%}%}%}
 {%@comment
 Get the snippets that are in the file `TestParams.java`.
-Get only those that co not contain a `_` character in the name.
+Get only those that do not contain a `_` character in the name.
 The snippets are named `header_testMethodName`, `testMethodName`, and `doc_testMethodName` for the three parts for each example.
 
-We use # in the 'for' loop, because we want the snip:list to be evaluated to get the snippet ids.
-After the iteration we want to evaluate the 'example' macros, which were protected by a ` back-tick.
-After they were evaluated we evaluate the result as the snippets may also use macros, like 'section'.
+We use # in the 'for' loop because we want the snip:list to be evaluated to get the snippet ids.
+After the iteration, we want to evaluate the 'example' macros, protected by a ` back-tick.
+After Jamal evaluated them, we evaluate the result as the snippets may also use macros, like 'section'.
 %}
 {%!!#for $snippet in ({%@snip:list file="TestParams.java" name="^[^_]+$"%})=
 {%`example $snippet%}
