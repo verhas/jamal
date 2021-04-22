@@ -46,7 +46,45 @@ public class TestTrimming {
             "\n" +
             "}").results("for i in range(1,211):\n" +
             "  print \"hi\"\n" +
-            "  print \"low\"\n"
+            "  print \"low\""
+        );
+    }
+
+    @Test
+    @DisplayName("Trims also vertical deleting empty lines from the start and from the end")
+    void trimsVerticalWithOption() throws Exception {
+        TestThat.theInput("{#trimLines trimVertical" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "      for i in range(1,211):\n" +
+            "        print \"hi\"\n" +
+            "        print \"low\"\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "}").results("for i in range(1,211):\n" +
+            "  print \"hi\"\n" +
+            "  print \"low\""
+        );
+    }
+
+    @Test
+    @DisplayName("Trims only vertical deleting empty lines from the start and from the end")
+    void trimsVerticalOnlyWithOption() throws Exception {
+        TestThat.theInput("{#trimLines verticalTrimOnly" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "      for i in range(1,211):\n" +
+            "        print \"hi\"\n" +
+            "        print \"low\"\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "}").results("      for i in range(1,211):\n" +
+            "        print \"hi\"\n" +
+            "        print \"low\""
         );
     }
 

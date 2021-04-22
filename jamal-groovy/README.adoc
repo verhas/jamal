@@ -72,7 +72,6 @@ will result:
 [source]
 ----
 2
-
 ----
 
 
@@ -159,7 +158,6 @@ and it will result
 [source]
 ----
 100
-
 ----
 
 
@@ -178,7 +176,6 @@ will result
 ----
 133
 133
-
 ----
 
 
@@ -280,7 +277,6 @@ will result the output:
 13
 
 Error evaluating groovy script using eval
-
 ----
 
 
@@ -320,7 +316,6 @@ will result the output:
 13
 
 Error evaluating groovy script using eval
-
 ----
 
 
@@ -347,7 +342,6 @@ will result the output:
 13
 Error evaluating groovy script using eval
 13
-
 ----
 
 
@@ -403,7 +397,6 @@ void testSimpleEval() throws Exception {
     TestThat.theInput("{@groovy:eval 6+3}").results("9");
 }
 // end snippet
-
 ----
 To get this content into the document what we have to write is the following:
 
@@ -479,7 +472,6 @@ final var shell = Shell.getShell(processor,Shell.DEFAULT_GROOVY_SHELL_NAME);
 shell.property("processor",new Processor("{", "}"));
 processor.defineGlobal(shell);
 final var result = processor.process(in);
-
 ----
 
 It is almost a standard invocation of the Jamal processor.

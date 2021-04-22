@@ -66,7 +66,6 @@ For example the following macro call:
 [source]
 ----
 {@ruby:eval 1+1}
-
 ----
 
 will result:
@@ -74,7 +73,6 @@ will result:
 [source]
 ----
 2
-
 ----
 
 
@@ -154,7 +152,6 @@ For example the following sample
 ----
 {@ruby:property $myProp=(to_i)55}
 {@ruby:eval $myProp+45}
-
 ----
 
 and it will result
@@ -162,7 +159,6 @@ and it will result
 [source]
 ----
 100
-
 ----
 
 
@@ -173,7 +169,6 @@ You can also fetch the value of a variable that was set before by the Ruby scrip
 ----
 {@ruby:eval $yourProp=133}
 {@ruby:property $yourProp}
-
 ----
 
 will result
@@ -182,7 +177,6 @@ will result
 ----
 133
 133
-
 ----
 
 
@@ -219,7 +213,6 @@ Some examples:
 ----
 {@ruby:property complex=(to_c)66+13i}
 {@ruby:eval complex * complex}
-
 ----
 
 will result
@@ -227,7 +220,6 @@ will result
 [source]
 ----
 4187.0+1716.0i
-
 ----
 
 
@@ -235,7 +227,6 @@ will result
 ----
 {@ruby:property complex=(to_c/i)66+13i}
 {@ruby:eval complex * complex}
-
 ----
 
 will result
@@ -243,7 +234,6 @@ will result
 [source]
 ----
 4187+1716i
-
 ----
 
 
@@ -251,7 +241,6 @@ will result
 ----
 {@ruby:property ratio=(to_r)66/13}
 {@ruby:eval ratio * ratio}
-
 ----
 
 will result
@@ -259,7 +248,6 @@ will result
 [source]
 ----
 4356/169
-
 ----
 
 
@@ -293,7 +281,6 @@ The scripts will all be invoked one after the other in the order as they were de
 Hi, I am the content of the Jamal file.
 {@ruby:closer "I do not care what the original text was, replace it with this one."}
 I will be killed by the closer.
-
 ----
 
 will result
@@ -331,7 +318,6 @@ It can be done using the usual built-in macro `define`, as in the example
 {@ruby:eval $z = 13}
 {@define rubyShell=myLocalShell}
 {@try! {@ruby:eval $z}}
-
 ----
 
 will result the output:
@@ -341,7 +327,6 @@ will result the output:
 13
 
 13
-
 ----
 
 
@@ -372,7 +357,6 @@ The previous example will look the following:
 {@ruby:eval $z = 13}
 {shell=myLocalShell}
 {@try! {@ruby:eval $z}}
-
 ----
 
 will result the output:
@@ -382,7 +366,6 @@ will result the output:
 13
 
 13
-
 ----
 
 
@@ -400,7 +383,6 @@ For example
 {@ruby:eval $z = 13}
 {@try! {#ruby:eval {shell=myLocalShell}$z}}
 {@ruby:eval $z = 13}
-
 ----
 
 will result the output:
@@ -410,7 +392,6 @@ will result the output:
 13
 13
 13
-
 ----
 
 
@@ -473,7 +454,6 @@ void testRubyPropertyFixNum() throws Exception {
     ).usingTheSeparators("{%", "%}").results("25");
 }
 // end snippet
-
 ----
 To get this content into the document what we have to write is the following:
 
@@ -549,7 +529,6 @@ final var shell = Shell.getShell(processor, Shell.DEFAULT_RUBY_SHELL_NAME);
 shell.property("$processor", new MyProcessor());
 processor.defineGlobal(shell);
 final var result = processor.process(in);
-
 ----
 It is almost a standard invocation of the Jamal processor.
 The only difference is that it creates a Ruby container using the default container name and injects a Jamal `MyProcessor` instance into the container with the name `$processor`.
@@ -566,7 +545,6 @@ public static class MyProcessor {
         return processor.process(Input.makeInput(s));
     }
 }
-
 ----
 
 This class is a wrapper, that provides the method `process()` with a string argument.

@@ -277,7 +277,6 @@ will result
 [source]
 ----
 letter a
-
 ----
 
 
@@ -329,7 +328,6 @@ The result is:
 ...
 <version>1.7.4-SNAPSHOT</version>
 ...
-
 ----
 
 
@@ -358,7 +356,6 @@ will result
 [source]
 ----
 This is the snippet, which is defined inside the file and not collected from an external file
-
 ----
 
 
@@ -466,7 +463,7 @@ This macro can cut off the unneeded spaces from the start and end of the lines.
 When a code fragment is included in the documentation as a snippet, the lines may have extra spaces at the start.
 That is when the fragment comes from a code part that is somewhere in the middle of a tabulated structure.
 This macro can remove the extra spaces from the start of the line keeping the relative tabulation of the lines.
-This way the code formatting remains the same as in the source code but the code sample will be aligned to the left.
+This way the code formatting remains the same as in the source code, but the code sample will be aligned to the left.
 
 The syntax of the macro is:
 
@@ -485,10 +482,10 @@ For example:
 ----
  
 {@trimLines
-k
-a
-b
-c
+  k
+   a
+   b
+ c
 }
 ----
 
@@ -497,14 +494,27 @@ will result
 [source]
 ----
  
-k
-a
-b
+ k
+  a
+  b
 c
 
 
 ----
 
+
+The lines to be trimmed should start on the line following the name of the macro.
+The characters following the macro name to the end of the line are parsed for options.
+Options currently are:
+
+* `margim` can specify the minimum number of spaces that have to appear in front ofevery line.
+Using this option you can even insert extra spaces in front of the lines while keeping the tabulation.
+
+* `trimVertical` is a boolean parameter to remove the new line character from the start and from the end of the sample.
+This eliminates the leading and trailing empty lines.
+
+* `verticalTrimOnly` (alias `vtimOnly`) instructs the macro to do only the vertical trimming.
+If this option is defined there is no need to define `trimVertical` also.
 
 The macro can also delete the empty lines from the start and from the end of its input in case the option `trimVertical` is set.
 For example
@@ -535,7 +545,6 @@ k
  a
  b
 c
-
 
 ----
 
@@ -574,7 +583,6 @@ will result
 1. this is the first line
 2. this is the second line
 3. this is the third line
-
 ----
 
 
@@ -599,7 +607,6 @@ will result
 003::this is the first line
 005::this is the second line
 007::this is the third line
-
 ----
 
 
@@ -651,7 +658,6 @@ creates the output
 
 #define VERSION 1.0 //this line also stays put
 int j = 15;
-
 ----
 
 
@@ -684,7 +690,6 @@ will result
 ----
 this line is there
 there can be more lines
-
 ----
 
 
@@ -709,7 +714,6 @@ will result
 ----
 this line is there
 there can be more lines
-
 ----
 
 
@@ -738,7 +742,6 @@ will result:
 [source]
 ----
 the pear has fallen off the bush
-
 ----
 
 
@@ -755,7 +758,6 @@ will result the same output
 [source]
 ----
 the pear has fallen off the bush
-
 ----
 
 but this time the replace used regular expression substitution.
@@ -797,7 +799,6 @@ will result
 * this can be a snippet content
 * which was collected
 * from a Java or C program comment
-
 ----
 
 
@@ -835,7 +836,6 @@ will result
 [source]
 ----
 1 2 3
-
 ----
 
 
@@ -852,7 +852,6 @@ will result
 [source]
 ----
 2 19 36
-
 ----
 
 
@@ -890,7 +889,6 @@ a. b. c.
 A. B. C.
 MMMCCXIII. MMMCCXIV. MMMCCXV.
 MMMCCXIII. MMMCCXIV. MMMCCXV.
-
 ----
 
 
@@ -930,7 +928,6 @@ The short lines will be put into a single line.
 Empty lines are paragraph limiters.
 
 Multiple empty lines are converted to one.
-
 ----
 
 
@@ -969,7 +966,6 @@ lines
 are
 paragraph
 limiters.
-
 ----
 
 
@@ -1027,7 +1023,6 @@ will result
 - SkipLines.java
 - Reflow.java
 - Snippet.java
-
 ----
 
 
@@ -1048,7 +1043,6 @@ will result
 ----
 - jamal
 - snippet
-
 ----
 
 
@@ -1106,7 +1100,7 @@ will result
 - Update.java: 3,772 bytes
 - FilesMacro.java: 4,763 bytes
 - Collect.java: 5,498 bytes
-- TrimLines.java: 2,849 bytes
+- TrimLines.java: 3,687 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
@@ -1124,7 +1118,6 @@ will result
 - SkipLines.java: 2,048 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
-
 ----
 
 
@@ -1169,7 +1162,6 @@ will result
     <artifactId>jamal-snippet</artifactId>
     <version>1.7.4-SNAPSHOT</version>
 </project>
-
 ----
 
 
@@ -1201,7 +1193,6 @@ will result
 <artifactId>jamal-snippet</artifactId>
 <version>1.7.4-SNAPSHOT</version>
 </project>
-
 ----
 
 
@@ -1260,8 +1251,7 @@ wll result the output
 
 [source]
 ----
-2021-04-21 21:47:58
-
+2021-04-22 13:59:37
 ----
 
 
@@ -1313,7 +1303,6 @@ wll result the output
 5.874660e+05
 5.874660e+05 is 5.874660e+05
 hashCode(0x4d38e0bd5891048a)=0x15a9e437
-
 ----
 
 
@@ -1344,7 +1333,6 @@ will result
 [source]
 ----
 When Jamal processes this file it will generate `README.adoc`.
-
 ----
 
 
@@ -1384,7 +1372,6 @@ will result
 [source]
 ----
 This file is in the directory `../jamal-snippet`.
-
 ----
 
 
@@ -1428,7 +1415,6 @@ wll result the output
 ----
 The class that implements the macro `java:class` is
 ClassMacro.
-
 ----
 
 
@@ -1467,7 +1453,6 @@ javax0.jamal.snippet.Java$ClassMacro with the "normal" name.
 It is in the package javax0.jamal.snippet
 javax0.jamal.snippet.Java$ClassMacro is still the "normal" name,
 format defined inside the macro is local.
-
 ----
 
 
@@ -1500,7 +1485,6 @@ will result the output
 The field PRE_EVALUATE
 defined in the class javax0.jamal.api.SpecialCharacters
 is both `static` and `final` and has the value #
-
 ----
 
 
@@ -1546,7 +1530,6 @@ wll result the output
 [source]
 ----
 evaluate
-
 ----
 
 
@@ -1598,7 +1581,6 @@ but it is simpler to import the jim file included in the snippet library
 and use the user defined macros, like the following:
 
 publicMethodMacro::evaluate(Input,Processor)
-
 ----
 
 

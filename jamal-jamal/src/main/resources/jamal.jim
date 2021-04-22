@@ -6,7 +6,7 @@ These macros help embedding Jamal macro samples and run them.
 {%@define sample(code)={%@define :lastCode=code%}[source]
 ----
 {%#trimLines
-{%@sample code%}%}
+code%}
 ----%}
 
 {%@define output=[source]

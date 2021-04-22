@@ -246,7 +246,6 @@ This method is also part of the `Macro` interface, and it has a `default` implem
 default String getId() {
     return this.getClass().getSimpleName().toLowerCase();
 }
-
 ----
 
 In our case the name of the class was `HelloWorld` which converts to `helloworld` all lower case as a macro name.
@@ -270,7 +269,6 @@ void macroIgnoresInput() throws Exception {
         "{@helloworld the input is totally ignored}"
     ).results("Hello, World!");
 }
-
 ----
 
 ==== Hello, Me Macro
@@ -286,7 +284,6 @@ public class Hello implements Macro {
         return "Hello, " +in.toString().trim()+"!";
     }
 }
-
 ----
 
 It will use the `input`, convert it to string and cutting off the spaces from the start and from the end of the string it uses it as a name for the greeting.
@@ -302,7 +299,6 @@ void macroWorks() throws Exception {
             "{@hello Paul}\n"
     ).results("Hello, Peter!\nHello, Paul!\n");
 }
-
 ----
 
 We are handling the simplest possible way  in this example.
@@ -522,7 +518,8 @@ The first few lines of the method `evaluate()` are the followings:
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var margin = Params.<Integer>holder("margin").orElseInt(0);
         final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
-        Params.using(processor).from(this).keys(margin, trimVertical).parse(in);
+        final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
+        Params.using(processor).from(this).keys(margin, trimVertical, verticalTrimOnly).parse(in);
 
 ----
 

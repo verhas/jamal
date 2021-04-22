@@ -42,7 +42,6 @@ will create the file `first_image.svg` in the folder `images` and will result in
 [source]
 ----
 first_image1.svg
-
 ----
 
 
@@ -67,7 +66,6 @@ will result in an image reference, as in
 [source]
 ----
 image::first_image2.svg[]
-
 ----
 
 

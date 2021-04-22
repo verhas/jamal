@@ -77,7 +77,6 @@ will result
 a: this is the string value of a
 b: [first value of b, second value in b]
 c: {a: this is c.a, b: this is c.b}
-
 ----
 
 
@@ -141,7 +140,6 @@ results
 - x
 - y
 - !!javax0.jamal.api.Ref {id: a}
-
 ----
 
 
@@ -163,7 +161,6 @@ resulting in the same output
 - x
 - y
 - !!javax0.jamal.api.Ref {id: a}
-
 ----
 
 
@@ -192,7 +189,6 @@ will result
 - x
 - y
 - [a, b, c]
-
 ----
 
 
@@ -306,7 +302,6 @@ c:
 
 Not resolved:
 z: !!javax0.jamal.api.Ref {id: a}
-
 ----
 
 
@@ -343,7 +338,6 @@ c:
 
 Also resolved:
 z: [a, b, c]
-
 ----
 
 
@@ -392,7 +386,6 @@ a: this is a
 b: this is b
 c: [1, 2, 3, 5]
 q: *id001
-
 ----
 
 
@@ -439,7 +432,6 @@ a: this is wuff wuff
 b: this is b
 c: [1, 2, 3, 5]
 q: *id001
-
 ----
 
 
@@ -490,7 +482,6 @@ will result
 [source]
 ----
 deep h
-
 ----
 
 
@@ -523,7 +514,6 @@ will result
 [source]
 ----
 [a, b, c]
-
 ----
 
 
