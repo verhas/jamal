@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestConvertJamalJamalReadme {
 
-    //@Test
+    @Test
     void generateDoc() throws Exception {
         final var in = FileTools.getInput("./README.adoc.jam");
         final var processor = new Processor("{%", "%}");

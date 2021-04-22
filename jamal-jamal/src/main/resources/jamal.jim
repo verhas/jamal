@@ -18,7 +18,8 @@ code%}
 
 {%@define untrimmedSample(code)={%@define :lastCode=code%}[source]
 ----
-{%@sample code%}
+{%@trimLines verticalTrimOnly
+code%}
 ----%}
 
 {%@define untrimmedOutput=[source]

@@ -22,3 +22,5 @@ and the list is not a promise or guarantee.
 - Implement XML reading and writing and structural construction similar to Yaml.
 
 - Integrate the MVEL scripting language.
+
+- Module to read data from MIcrosoft XLS formatted file via Apache POI
