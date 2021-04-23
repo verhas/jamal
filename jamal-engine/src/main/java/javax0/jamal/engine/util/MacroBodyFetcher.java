@@ -64,7 +64,7 @@ public class MacroBodyFetcher {
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = makeInput();
 
-        if (startWithEscapeMacro(input,0)) {
+        if (startWithEscapeMacro(input, 0)) {
             moveEscapeMacroBody(input, output, closeStr);
             skip(input, closeStr);
             return output.toString();
@@ -76,7 +76,7 @@ public class MacroBodyFetcher {
             }
 
             if (input.indexOf(openStr) == 0) {
-                if (startWithEscapeMacro(input,openStr.length())) {
+                if (startWithEscapeMacro(input, openStr.length())) {
                     move(input, openStr, output);
                     moveEscapeMacroBody(input, output, closeStr);
                     move(input, closeStr, output);
@@ -116,8 +116,8 @@ public class MacroBodyFetcher {
     /**
      * Move the 'escape' macro body to the output.
      * <p>
-     * The method is invoked only when {@link #startWithEscapeMacro(Input, int)} returned  {@code true}. It assumes that the
-     * start of the input contains an escape macro.
+     * The method is invoked only when {@link #startWithEscapeMacro(Input, int)} returned  {@code true}. It assumes that
+     * the start of the input contains an escape macro.
      * <p>
      * Note that this method will not care if there are extra non-whitespace character between the second {@code `xxx`}
      * string and the macro closing string, like in
@@ -170,8 +170,9 @@ public class MacroBodyFetcher {
     /**
      * Checks that input starts with the 'escape' macro using either # or \@ character. The input is not modified.
      *
-     * @param input to decide if it start with an escape macro
-     * @param offset
+     * @param input  to decide if it start with an escape macro
+     * @param offset is the number of character to skip. This is either zero or the number of cjaracters in the opening
+     *               string.
      * @return true if the input starts with an escape macro
      */
     private static boolean startWithEscapeMacro(Input input, int offset) {
