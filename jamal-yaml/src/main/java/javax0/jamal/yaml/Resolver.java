@@ -117,24 +117,38 @@ class Resolver {
 
     private Map<?, ?> resolveMap(Map<Object, Object> content) throws BadSyntax {
         if (clone) {
-            final var newMap = new LinkedHashMap<>();
-            for (final Map.Entry<Object, Object> e : content.entrySet()) {
-                final var key = _resolve(e.getKey());
-                final var value = _resolve(e.getValue());
-                newMap.put(key, value);
-            }
-            return newMap;
+            return resolveMapCloning(content);
         } else {
-            for (final Map.Entry<Object, Object> e : content.entrySet()) {
-                final var key = _resolve(e.getKey());
-                final var value = _resolve(e.getValue());
-                if (key != e.getKey() || value != e.getValue()) {
-                    content.remove(e.getKey());
-                    content.put(key, value);
-                }
-            }
-            return content;
+            return resolveMapNonCloning(content);
         }
+    }
+
+    private Map<Object, Object> resolveMapCloning(Map<Object, Object> content) throws BadSyntax {
+        final var newMap = new LinkedHashMap<>();
+        for (final Map.Entry<Object, Object> e : content.entrySet()) {
+            final var key = _resolve(e.getKey());
+            final var value = _resolve(e.getValue());
+            newMap.put(key, value);
+        }
+        return newMap;
+    }
+
+    private Map<Object, Object> resolveMapNonCloning(Map<Object, Object> content) throws BadSyntax {
+        final var tempMap = new LinkedHashMap<>();
+        for (final Map.Entry<Object, Object> e : content.entrySet()) {
+            final var key = _resolve(e.getKey());
+            final var value = _resolve(e.getValue());
+            if (key != e.getKey() || value != e.getValue()) {
+                tempMap.put(key, value);
+            } else {
+                tempMap.put(e.getKey(), e.getValue());
+            }
+        }
+        content.clear();
+        for (final Map.Entry<Object, Object> tempe : tempMap.entrySet()) {
+            content.put(tempe.getKey(), tempe.getValue());
+        }
+        return content;
     }
 
 
@@ -147,7 +161,7 @@ class Resolver {
             }
             return newList;
         } else {
-            final var alContent = (ArrayList) content;
+            final var alContent = (ArrayList<Object>) content;
             for (int i = 0; i < alContent.size(); i++) {
                 final var e = alContent.get(i);
                 final var newE = _resolve(e);

@@ -13,6 +13,10 @@ public class TestEscape {
         TestThat.theInput("{@escape `|`abraka dabra`|`        }").results("abraka dabra");
         TestThat.theInput("{@escape`|+brrrr`abraka dabra`|+brrrr`}").results("abraka dabra");
     }
+    @Test
+    void escapesGoodEmbedded() throws Exception{
+        TestThat.theInput("{@comment {@escape`|+brrrr`abra{{{{{ka dabra`|+brrrr`}}").results("");
+    }
 
     @Test
     void escapesGoodEmbeddedOpenAndClose() throws Exception{

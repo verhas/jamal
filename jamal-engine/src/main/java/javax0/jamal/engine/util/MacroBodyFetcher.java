@@ -64,7 +64,7 @@ public class MacroBodyFetcher {
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = makeInput();
 
-        if (startWithEscapeMacro(input)) {
+        if (startWithEscapeMacro(input,0)) {
             moveEscapeMacroBody(input, output, closeStr);
             skip(input, closeStr);
             return output.toString();
@@ -76,7 +76,7 @@ public class MacroBodyFetcher {
             }
 
             if (input.indexOf(openStr) == 0) {
-                if (startWithEscapeMacro(input)) {
+                if (startWithEscapeMacro(input,openStr.length())) {
                     move(input, openStr, output);
                     moveEscapeMacroBody(input, output, closeStr);
                     move(input, closeStr, output);
@@ -116,7 +116,7 @@ public class MacroBodyFetcher {
     /**
      * Move the 'escape' macro body to the output.
      * <p>
-     * The method is invoked only when {@link #startWithEscapeMacro(Input)} returned  {@code true}. It assumes that the
+     * The method is invoked only when {@link #startWithEscapeMacro(Input, int)} returned  {@code true}. It assumes that the
      * start of the input contains an escape macro.
      * <p>
      * Note that this method will not care if there are extra non-whitespace character between the second {@code `xxx`}
@@ -135,7 +135,7 @@ public class MacroBodyFetcher {
      *                 closing strings, including leading and trailing white spaces.
      * @param closeStr the closing string
      * @throws BadSyntaxAt if the syntax of the escape macro is violated. This is not checked by {@link
-     *                     #startWithEscapeMacro(Input)}.
+     *                     #startWithEscapeMacro(Input, int)}.
      */
     private static void moveEscapeMacroBody(Input input, Input output, String closeStr) throws BadSyntaxAt {
         final var start = input.getPosition();
@@ -171,13 +171,15 @@ public class MacroBodyFetcher {
      * Checks that input starts with the 'escape' macro using either # or \@ character. The input is not modified.
      *
      * @param input to decide if it start with an escape macro
+     * @param offset
      * @return true if the input starts with an escape macro
      */
-    private static boolean startWithEscapeMacro(Input input) {
+    private static boolean startWithEscapeMacro(Input input, int offset) {
         final var in = makeInput(input);
+        skip(in, offset);
         skipWhiteSpaces(in);
         if ((in.length() == 0) ||
-            (input.charAt(0) != SpecialCharacters.NO_PRE_EVALUATE && input.charAt(0) != SpecialCharacters.PRE_EVALUATE)) {
+            (in.charAt(0) != SpecialCharacters.NO_PRE_EVALUATE && in.charAt(0) != SpecialCharacters.PRE_EVALUATE)) {
             return false;
         }
         skip(in, 1);
