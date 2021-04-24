@@ -4,7 +4,8 @@
 {%@comment This is the ASCIIDOC version of the readme.
 It replaces the older Markdown version.
 The source of the file is the README.adoc.jam.
-This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
+This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module
+jamal-snippet.
 
 %}{%@import readmemacros.jim%}\
 {%@snip:xml pom=pom.xml%}\
@@ -89,8 +90,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 . <<Starting,Starting Jamal>>
 . <<SimpleExample,Simple Example>>
 . <<OtherMacros,Other Macros>>
-
-[lowerroman,start=1]
+[lowerroman, start=1]
 .. <<comment,`comment`>>
 .. <<block,`block`>>
 .. <<begin,`begin` and `end`>>
@@ -124,10 +124,8 @@ Then we discuss the API that lets you embed the macro processing into your appli
 . <<javadoc,JavaDoc>>
 . <<documentmaintenance,Maintenance of this document>>
 
-{%#counter:define id=chapter {%@define format=%d.
-%}%}
-{%#counter:define id=macroChapter {%@define format=$roman.
-%}%}
+{%#counter:define id=chapter {%@define format=%d. %}%}
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}
 
 === {%chapter%}Starting Jamal
 
@@ -154,8 +152,7 @@ You do not even need to install Jamal.
 If you have Java 11 or later installed, you can execute the above command.
 JShell will download and execute the script from the URL depicted above.
 The script will check if Jamal is installed on your machine.
-If it is not installed, it will automatically download the needed JAR.
-When the JAR files are downloaded, it will start Jamal in the current working directory using the default settings.
+If it is not installed, it will automatically download the needed JAR. When the JAR files are downloaded, it will start Jamal in the current working directory using the default settings.
 You can alter the settings using the `jamal.options` file.
 If this file does not exist in the current working directory, then the JShell script will create one containing the default settings.
 
@@ -311,6 +308,7 @@ If you specify a different port, then from that port.
 
 * `<outputFile>` {%io output%}
 
+
 ==== Starting with JBang
 
 JBang (https://www.jbang.dev) is a popular command line tool that eases the startup of Java applications.
@@ -404,6 +402,7 @@ The TCP based debugger is only for experimental purposes or when the web based d
 Here we briefly describe the web based debugger.
 Since the UI can best be described with pictures, especially with moving pictures the documentation is created in screen capture videos.
 
+
 To start Jamal in debugger mode you can specify
 
 [source]
@@ -437,6 +436,7 @@ If you open your browser after you started Jamal in debug mode and try to open t
 This user interface will let you see the current input, the current output, the defined built-in and user defined macros.
 You can let the code run, make one step macro evaluation, go into nested macro evaluation, evaluate text interactuvely in the current evaluation envirionment and so on.
 
+
 [[SimpleExample]]
 === {%chapter%}Simple Example
 
@@ -445,7 +445,8 @@ As a quick sample to have a jump start what Jamal can do:
 {%sample/
 {@define fruit(color,name,actualSize)=we have an color name of size actualSize}
 {fruit/red/apple/20ounce}
-{fruit/green/melon/1kg} %}
+{fruit/green/melon/1kg}
+%}
 
 will be converted by Jamal to the file
 
@@ -474,12 +475,8 @@ When you import a file into your code, and the imported file starts with the cha
 This way, you can easily import files from external sources, like a JAR file or via the web.
 The package that defines an import file can use the `{` and `}` characters.
 Even if your Jamal file uses different macro opening and closing strings, you do not need to change it to `{` and `}` in this particular case.
-You may have `
-
-[[` and `]]` as opening and closing strings.
-In this case, you write `
-
-[[@import res:MyResource.jim]]` as an example, and it still will be imported correctly.
+You may have `[[` and `]]` as opening and closing strings.
+In this case, you write `[[@import res:MyResource.jim]]` as an example, and it still will be imported correctly.
 
 The parameters are separated using the first non-space, non-alphanumeric character following the macro's name in the macro use.
 Thus, you can write
@@ -488,7 +485,8 @@ Thus, you can write
 {fruit/red/apple/20ounce}
 {fruit|red|apple|20ounce}
 {fruit.red.apple.20ounce}
-{fruit :red:apple:20ounce} %}
+{fruit :red:apple:20ounce}
+%}
 
 the output will be the same for each line:
 
@@ -509,34 +507,35 @@ These are advanced topics and are detailed later.
 `define` is not the only built-in macro in Jamal.
 The comprehensive list of built-in macros are
 
-* <<comment,`comment`>>
-* <<block,`block`>>
-* <<begin,`begin` and `end`>>
-* <<define,`define`>>
-* <<eval,`eval`>>
-* <<env,`env`>>
-* <<export,`export`>>
-* <<import,`import`>>
-* <<include,`include`>>
-* <<use,`use`>>
-* <<script,`script`>>
-* <<JShell,`JSheel`>>
-* <<sep,`sep`>>
-* <<for,`for`>>
-* <<if,`if`>>
-* <<ident,`ident`>>
-* <<verbatim,`verbatim`>>
-* <<options,`options`>>
-* <<try,`try`>>
-* <<escape,`escape`>>
-* <<require,`require`>>
+ * <<comment,`comment`>>
+ * <<block,`block`>>
+ * <<begin,`begin` and `end`>>
+ * <<define,`define`>>
+ * <<eval,`eval`>>
+ * <<env,`env`>>
+ * <<export,`export`>>
+ * <<import,`import`>>
+ * <<include,`include`>>
+ * <<use,`use`>>
+ * <<script,`script`>>
+ * <<JShell,`JSheel`>>
+ * <<sep,`sep`>>
+ * <<for,`for`>>
+ * <<if,`if`>>
+ * <<ident,`ident`>>
+ * <<verbatim,`verbatim`>>
+ * <<options,`options`>>
+ * <<try,`try`>>
+ * <<escape,`escape`>>
+ * <<require,`require`>>
 
 You use the built-in macros with `#` or `@` in front of the macro's name.
 These characters signal that the macro is built-in (as opposed to user defined).
 The typical use is to start a macro with the `@` character.
 In that case, the macro evaluates the rest of the input till the matching closing string.
 
-{%@plantuml evaluationorder.svg @startuml
+{%@plantuml evaluationorder.svg
+@startuml
 
 skinparam monochrome true
 
@@ -544,9 +543,15 @@ title Macro Evaluation
 
 (*) --> "Macro Start String"
 
-if " # or @ character?" then -->[ #] "evaluate the\nmacro input" --> "evaluate built-in macro" else -->[ @] "evaluate built-in macro" endif
+if " # or @ character?" then
+-->[ #] "evaluate the\nmacro input"
+--> "evaluate built-in macro"
+else
+-->[ @] "evaluate built-in macro"
+endif
 
-@enduml %}
+@enduml
+%}
 
 image::evaluationorder.svg[]
 
@@ -555,7 +560,8 @@ If the macro starts with the `#` character, then the input is first parsed for o
 These macros are evaluated, and their results replace their occurrences in the code.
 Only after this, the macro we are looking at is evaluated.
 
-{%@define forMoreAboutEvaluationOrder= For more about definition scopes and exporting, read the section about <<export,`export`>>.
+{%@define forMoreAboutEvaluationOrder=
+For more about definition scopes and exporting, read the section about <<export,`export`>>.
 In that section we discuss the evaluation order of the macros in great detail.
 %}{%forMoreAboutEvaluationOrder%}
 
@@ -570,7 +576,10 @@ For that purpose, use the [`block`](#block) macro.
 
 {%forMoreAboutEvaluationOrder%}
 
-{%sample/ this is some {@comment this text will not appear in the output}text %}
+{%sample/
+this is some {@comment this text
+will not appear in the output}text
+%}
 
 will generate
 
@@ -616,8 +625,8 @@ The spaces from the beginning, and the end of the parameter are trimmed.
 {%sample/
 {@define Z=1}
 {@begin alma}
-{@define Z=2}{Z}
-{@define S=2}{@export S}
+   {@define Z=2}{Z}
+   {@define S=2}{@export S}
 {@end alma }{Z}{S}
 %}
 
@@ -723,7 +732,8 @@ From practice, we see that in case of longer macros using simple, argument names
 For example the macro:
 
 {%sample/
-{@define fox(x)=The brown fox jumps over the high x}{fox fence} %}
+{@define fox(x)=The brown fox jumps over the high x}{fox fence}
+%}
 
 will result
 
@@ -748,7 +758,8 @@ For example:
 
 {%sample/
 {@define z(*a,*b,*c,*d)=When a *a can *b then *c can *d}
-{z /leopard and a *c/run/fish/fly} %}
+{z /leopard and a *c/run/fish/fly}
+%}
 
 will result
 
@@ -784,7 +795,8 @@ It is also possible to use a `!` instead of the `?`.
 In this case the macro `define` will report an error if the macro is already defined.
 
 {%sample/
-{@define a=1}{@try! {@define! a=2}} %}
+{@define a=1}{@try! {@define! a=2}}
+%}
 
 will result
 
@@ -813,7 +825,8 @@ If, for any reason, you need to evaluate the result of such a macro you can use 
 {%sample/
 {@define x=1966}
 {@define a={x}}{a} is the same as
-{@define ~ a={x}}{!a} %}
+{@define ~ a={x}}{!a}
+%}
 
 will result
 
@@ -843,7 +856,8 @@ For example modifying a bit our example from the "<<begin, `begin` and `end`>>" 
 {@define A:Z=1}
 {@begin alma}
 {@define A:Z=2}{A:Z}
-{@end alma }{A:Z} %}
+{@end alma }{A:Z}
+ %}
 
 will result
 
@@ -892,7 +906,9 @@ In that case, the result of an undefined user macro will be the empty string.
 Any other use of an undefined user macro results an error.
 
 {%sample/
-{@try! {undefinedMacro}} this is empty string >>{?undefinedMacro}<< %}
+{@try! {undefinedMacro}}
+this is empty string >>{?undefinedMacro}<<
+%}
 
 which will result:
 
@@ -907,9 +923,11 @@ If the macro `default` is defined then it will be used instead of any undefined 
 
 Example:
 
-{%sample/ >>{?hoppala}<<
+{%sample/
+>>{?hoppala}<<
 {@define default=wupppss}{hoppala}
->>{?hoppala}<< %}
+>>{?hoppala}<<
+%}
 
 Result:
 
@@ -918,7 +936,9 @@ Result:
 The macro `default` can have arguments, and they will be handled as they should be.
 
 {%sample/
-{@define default($x)=wupppss $x}{hoppala zumzum} >>{?hoppala zumzum}<< %}
+{@define default($x)=wupppss $x}{hoppala zumzum}
+>>{?hoppala zumzum}<<
+%}
 
 Result:
 
@@ -937,7 +957,8 @@ Example:
 {%sample/
 {@options lenient}
 {@define default($_,$x)={@if |$x|<$_>$x</$_>|<$_/>}}{hoppala}
-{bikkala zz} %}
+{bikkala zz}
+%}
 
 Result:
 
@@ -959,7 +980,8 @@ For example,
 
 {%sample/
 {@define enclose(a)=<!!a!!>}
-{enclose this text} %}
+{enclose this text}
+%}
 
 will result
 
@@ -972,7 +994,8 @@ For example,
 
 {%sample/
 {@define enclose(a)=<!!a!!>}
-{enclose /-} %}
+{enclose /-}
+%}
 
 will result
 
@@ -980,7 +1003,8 @@ will result
 
 Writing
 {%sample/
-{enclose -} %}
+{enclose -}
+%}
 
 will result
 
@@ -991,7 +1015,8 @@ because `-` is not alphanumeric and therefore it is treated as a separator chara
 {%sample/
 {@define enclose(a)=<!!a!!>}
 {@define dash=-}
-{enclose {dash}} %}
+{enclose {dash}}
+%}
 
 will work, and the result will be
 
@@ -1008,7 +1033,8 @@ In that case the above macro should be used like the following three examples:
 {%sample/
 {enclose |+this text}
 {enclose ||this text}
-{enclose | this text} %}
+{enclose | this text}
+%}
 
 These uses of the above macro will result
 
@@ -1023,7 +1049,8 @@ You need not worry that the character itself presents in the content.
 {%sample/
 {@options ~lenient}
 {@define x(a,b)= |a b|}
-{@try!{x/s/h/t}} %}
+{@try!{x/s/h/t}}
+%}
 
 will result an error, because there are two many arguments:
 
@@ -1035,7 +1062,8 @@ The above example modified to be lenient demonstrates this:
 
 {%sample/
 {@define x(a,b)= |a b|}{@options lenient}
-{x/s/h/t} %}
+{x/s/h/t}
+%}
 
 
 will result
@@ -1101,7 +1129,6 @@ In a situation like this the `:` character belongs to the `:=` assignment symbol
 
 [[undefine]]
 ==== {%macroChapter%}`undefine`
-
 * since 1.6.6
 {%#comment{%sample/{@undefine default}%}{%output%}%}
 `undefine` can be used to undefine a macro.
@@ -1114,7 +1141,8 @@ You can undefine a macro on the global level the same way as you can define a ma
 ===== Simple undefine on one single scope
 
 {%sample/
-{@define fruit=apple}{fruit}{@undefine fruit} |{?fruit}| %}
+{@define fruit=apple}{fruit}{@undefine fruit} |{?fruit}|
+%}
 
 Here we define the macro `fruit` to be `apple`, and we use it once.
 Following it, we undefine the macro.
@@ -1129,7 +1157,8 @@ The use of it is not an error because we use the `?` in front of the macro name,
 ===== Undefine an inherited macro in a local scope
 
 {%sample/
-{@define fruit=apple}{fruit} {#ident {@undefine fruit} |{?fruit}|} |{?fruit}| %}
+{@define fruit=apple}{fruit} {#ident {@undefine fruit} |{?fruit}|}  |{?fruit}|
+%}
 
 In this example we define the macro `apple` on the top level scope, but we undefine it one level deeper.
 The macro is undefined only in the local scope, where it was undefined but on higher levels it is still defined.
@@ -1141,7 +1170,9 @@ The macro is undefined only in the local scope, where it was undefined but on hi
 
 {%sample/
 {@define fruit=apple} {fruit}\
-{#ident {@undefine fruit} |{?fruit}| {@export fruit}}\ |{?fruit}| %}
+{#ident {@undefine fruit} |{?fruit}| {@export fruit}}\
+|{?fruit}|
+%}
 
 In this example we undefine the macro fruit in the local scope, but then we export it from this scope.
 Being explicitly undefined can be exported the same way as the macro, which is defined.
@@ -1153,13 +1184,20 @@ Because the "undefinedness" is exported the macro `fruit` becomes undefined in t
 ===== Undefine, export and redefine
 
 {%sample/
-{@define fruit=apple}\ global scope: {fruit}
-{@begin scope_1}\ scope_1: {fruit}
-{@begin scope_2}\ scope_2: {fruit}
-{@undefine fruit}{@export fruit}\ scope_2: {?fruit}
-{@define fruit=pear}\ scope_2: {fruit}
-{@end scope_2}\ scope_1: {?fruit}
-{@end scope_1}\ global scope: {fruit}
+{@define fruit=apple}\
+global scope: {fruit}
+ {@begin scope_1}\
+   scope_1: {fruit}
+   {@begin scope_2}\
+     scope_2: {fruit}
+     {@undefine fruit}{@export fruit}\
+     scope_2: {?fruit}
+     {@define fruit=pear}\
+     scope_2: {fruit}
+   {@end scope_2}\
+   scope_1: {?fruit}
+ {@end scope_1}\
+global scope: {fruit}
 %}
 
 In this example we define the macro `fruit` on the top level.
@@ -1211,11 +1249,15 @@ Otherwise, the script engine named is used.
 
 The syntax of the macro is
 
-{%sample/ eval macro text %}
+{%sample/
+eval macro text
+%}
 
 or
 
-{%sample/ eval/scripttype script %}
+{%sample/
+eval/scripttype script
+%}
 
 If `eval` is followed by `/` character then the next identifier is the type of the script.
 You can use any scripting language that
@@ -1233,7 +1275,8 @@ That way `{a}` and `{b}` are replaced with their defined values and `eval` itsel
 {%sample/
 {@eval/JShell 1+3}
 {@define a=1}{@define b=2}\
-{#eval/JShell {a}+{b}} %}
+{#eval/JShell {a}+{b}}
+%}
 
 will result
 
@@ -1290,7 +1333,8 @@ If the argument to the macro is the name of an environment variable then the res
 If the variable is not defined then the macro will result empty string.
 
 {%sample/
-{@env JAVA_HOME} %}
+{@env JAVA_HOME}
+%}
 
 is
 
@@ -1328,7 +1372,8 @@ The syntax of the command is
 
 `{@import file_name}`
 
-{%@define fileNameExplanationFor($action$)= The name of the file can be absolute, or it can be relative to the file that $action$s the other file.
+{%@define fileNameExplanationFor($action$)=
+The name of the file can be absolute, or it can be relative to the file that $action$s the other file.
 Any file name starting with the letters `res:` are considered to be resource files in Java.
 This makes it possible to load macros that are provided with JAR libraries and are on the classpath.
 Any file name starting with the letters `https:` are downloaded from the net.%}\
@@ -1473,7 +1518,8 @@ The macro `script` defines a user-defined macro that is interpreted as a script.
 The syntax of the command is
 
 {%sample/
-{@script/scripttype id(parameters)=body} %}
+{@script/scripttype id(parameters)=body}
+%}
 
 If `script` is followed by `/` character then the next identifier is the type of the script.
 If this is missing the default, `JShell` is assumed.
@@ -1510,11 +1556,18 @@ The actual scripting implementation may not have `Integer`, `Double` or `Boolean
 The following sample shows a simple script that implements a looping construct using JavaScript.
 The source Jamal file:
 
-{%@comment the four braces in the code are replaced with a single one before the JShell is executed%}\
+{%@comment  the four braces in the code are replaced with a single one before the JShell is executed%}\
 {%sample/
-{@script for(loopvar,start,end,text)= var c = ""; for( var i = start ; i <= end ; i++ ){
-c = c + text.replaceAll(loopvar, ""+i); } System.out.print(c); }
-{for%xxx%1%3%xxx. iterated } %}
+{@script for(loopvar,start,end,text)=
+    var c = "";
+    for( var i = start ; i <= end ; i++ ){
+        c = c + text.replaceAll(loopvar, ""+i);
+    }
+    System.out.print(c);
+}
+{for%xxx%1%3%xxx. iterated
+}
+%}
 
 The output generated by the Jamal preprocessor:
 
@@ -1565,9 +1618,13 @@ When the script is invoked the output of the macro will be what the script print
 The following example defines a global method, a script using the method and then it invokes the script.
 
 {%sample/
-{@JShell void hello(){
-System.out.println("Hello, " + world); } }{@script hello/JShell(world)=hello();}
-{hello My Dear} %}
+{@JShell
+    void hello(){
+        System.out.println("Hello, " + world);
+    }
+}{@script hello/JShell(world)=hello();}
+{hello My Dear}
+%}
 
 It simply prints
 
@@ -1580,15 +1637,20 @@ This global variable is used in the JShell snippet defined above but this is not
 When we use the line
 
 {%sample/
-{hello My Dear} %}
+{hello My Dear}
+%}
 
 Jamal will invoke the JShell interpreter executing
 
-{%sample/ String world = "My Dear"; %}
+{%sample/
+String world = "My Dear";
+%}
 
 first, and then
 
-{%sample/ hello(); %}
+{%sample/
+hello();
+%}
 
 Since the method `hello()` prints out to the standard output `Hello, My Dear` this is the result of this macro.
 
@@ -1629,12 +1691,16 @@ This macro has two forms.
 The syntax of the macro is either
 
 {%sample/
-{@for variable in (a,b,c,d)= content to be repeated containing variable} %}
+{@for variable in (a,b,c,d)= content to be repeated
+containing variable}
+%}
 
 or
 
 {%sample/
-{@for (v1,v2,v3) in (a|w|1,b|q|2,c|r|5,d|t|9)= content to be repeated containing v1 v2 and v3} %}
+{@for (v1,v2,v3) in (a|w|1,b|q|2,c|r|5,d|t|9)= content to be repeated
+containing v1 v2 and v3}
+%}
 
 The `variable` or the multiple variables can be used in the content and will be replaced for each iteration with the respective element on the comma-separated list.
 When there are multiple variables then the sub-list of the values is separated using the `|` character.
@@ -1644,7 +1710,8 @@ The list of the values can also be separated by other strings.
 If the macro `$forsep` is defined, like in
 
 {%sample/
-{@define $forsep=\s+} %}
+{@define $forsep=\s+}
+%}
 
 then the arguments will be separated by one or more spaces.
 The string between the `(` and the `)` will be split using the string defined in `$forsep` as a regular expression.
@@ -1652,7 +1719,8 @@ The string between the `(` and the `)` will be split using the string defined in
 Similarly, if the macro `$forsubsep` is defined, like in
 
 {%sample/
-{@define $forsubsep=:} %}
+{@define $forsubsep=:}
+%}
 
 then the values for the different variables will be separated by a semicolon.
 
@@ -1662,7 +1730,8 @@ In this case the definition of these macros is limited to the evaluation of this
 Starting with version 1.7.3 you can also define these options locally using the format
 
 {%sample/
-{@for [options] x in (a,b,c)=...} %}
+{@for [options] x in (a,b,c)=...}
+%}
 
 where the options can be
 
@@ -1675,7 +1744,9 @@ where the options can be
 For example the macros:
 
 {%sample/
-{#for $a in (a:b:c)={@define $forsep=:}a is $a }{?$forsep} %}
+{#for $a in (a:b:c)={@define $forsep=:}a is $a
+}{?$forsep}
+%}
 
 will result
 
@@ -1685,7 +1756,9 @@ In this case the value of the macro `$forsep` is effective inside the `for`, but
 Another example:
 
 {%sample/
-{#for [trim separator=":"] $a in ( a : b :c )=a is $a } %}
+{#for [trim separator=":"] $a in ( a : b :c )=a is $a
+}
+%}
 
 will result the same output:
 
@@ -1724,13 +1797,15 @@ In that case the empty value will be split into a one, empty string value for th
 For example
 
 {%sample/
-{#for (k,z) in ()=wukz} %}
+{#for (k,z) in ()=wukz}
+%}
 
 will not work, because the empty string cannot be split into two strings (it results one empty string when it is split).
 On the other hand the following code will work
 
 {%sample/
-{#for (k,z) in ()=wukz{@options lenient}} %}
+{#for (k,z) in ()=wukz{@options lenient}}
+%}
 
 and it will result
 
@@ -1743,7 +1818,8 @@ If this option is used the `for` loop will skip the empty values.
 The previous example with this option:
 
 {%sample/
-{#for (k,z) in ()=wukz{@options skipForEmpty}} %}
+{#for (k,z) in ()=wukz{@options skipForEmpty}}
+%}
 
 will evaluate to an empty string.
 Also note that in this case there is no need to use the option `lenient`.
@@ -1755,12 +1831,14 @@ The option `skipForEmpty` works in any of those cases.
 For example:
 
 {%sample/
-{#for k in (,)=wuk{@options skipForEmpty}} %}
+{#for k in (,)=wuk{@options skipForEmpty}}
+%}
 
 will result an empty string and
 
 {%sample/
-{#for k in (,k)=wuk{@options skipForEmpty}} %}
+{#for k in (,k)=wuk{@options skipForEmpty}}
+%}
 
 will result
 
@@ -1777,7 +1855,8 @@ The starting and ending backtick should also be part of the string closing the v
 For example the following
 
 {%sample/
-{@for x in `END`a),b),c),d)`END`=x } %}
+{@for x in `END`a),b),c),d)`END`=x }
+%}
 
 will result
 
@@ -1793,7 +1872,8 @@ The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
 
 {%sample/
-{#if/test/then content/else content} %}
+{#if/test/then content/else content}
+%}
 
 Here we use `/` as a separator character but this is not hardwired.
 Any other character can be used that does not appear in the `test` text and in the `then content` text.
@@ -1813,7 +1893,20 @@ The `test` is true, if
 
 In the following examples the string before and after the `=` will be the same in the output:
 
-{%sample/ true={@if /1/true/false}               <- non-zero integer true={@if /true/true/false}            <- literal true false={@if /0/true/false}              <- zero integer false={@if ::true:false}               <- condition is empty string false={@if :false:true:false}          <- literal false true={@if :avraka kedabra:true:false}  <- condition is non-empty string False={@if false fFalse fTrue}         <- separator character is 'f' condition is 'alse ', non-empty string ={@if/0/anything can come here}        <- "else" part is missing, output is empty true={@if/+1/true}                     <- non-zero integer true={@if/-1/true}                     <- non-zero integer true={@if/0.000/true}                  <- non-epmty string, floating points dont work %}
+{%sample/
+true={@if /1/true/false}               <- non-zero integer
+true={@if /true/true/false}            <- literal true
+false={@if /0/true/false}              <- zero integer
+false={@if ::true:false}               <- condition is empty string
+false={@if :false:true:false}          <- literal false
+true={@if :avraka kedabra:true:false}  <- condition is non-empty string
+False={@if false fFalse fTrue}         <- separator character is 'f'
+                                          condition is 'alse ', non-empty string
+={@if/0/anything can come here}        <- "else" part is missing, output is empty
+true={@if/+1/true}                     <- non-zero integer
+true={@if/-1/true}                     <- non-zero integer
+true={@if/0.000/true}                  <- non-epmty string, floating points dont work
+%}
 
 The output automatically generated int this document:
 
@@ -1879,7 +1972,9 @@ It is better to choose better opening and closing strings if the default `{` and
 
 As an example, we may want to define a macro that creates a markdown image reference:
 
-{%sample/ ((@define image($ref)=![](images/$ref.png) )) %}
+{%sample/
+((@define image($ref)=![](images/$ref.png) ))
+%}
 
 This example needs a space after the cosing `)` character at the end of the image url.
 If we did not have this space the macro would be closed one `)` sooner than needed.
@@ -1888,7 +1983,9 @@ Usually it is not a problem.
 In some situations, however, we do not want to have that extra space there.
 This is possible using `ident`.
 
-{%sample/ ((@define image($ref)=![](images/$ref.png)((@ident)))) %}
+{%sample/
+((@define image($ref)=![](images/$ref.png)((@ident))))
+%}
 
 The macro `((@ident))` will prevent Jamal to interpret the `)` character after the `.png` as the first character of a macro closing string.
 The same time `((@ident))` produces no character, not even a space in the output.
@@ -1923,12 +2020,14 @@ This built-in "ident" can be used many times in case the evaluation of a macro h
 You can have
 
 {%sample/
-{``c} %}
+{``c}
+%}
 
 or
 
 {%sample/
-{``````c} %}
+{``````c}
+%}
 
 as many times as it makes sense.
 This macro modification character can be used together with the `!` character.
@@ -2000,14 +2099,16 @@ For example
 {%sample/
 {@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
 {#eval {@for _tag in (groupId,artifactId,version)=
-{tag/_tag}}} %}
+{tag/_tag}}}
+%}
 
 can be shortened as
 
 {%sample/
 {@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
 {!@for _tag in (groupId,artifactId,version)=
-{tag/_tag}} %}
+{tag/_tag}}
+%}
 
 The only difference is that the `eval` macro consumes the white-space characters at the start of its argument.
 In the example above the `{#eval macro ...}` before its evaluation is
@@ -2016,7 +2117,8 @@ In the example above the `{#eval macro ...}` before its evaluation is
 {#eval
 {@define groupId(_y)=<groupId></groupId>}
 {@define artifactId(_y)=<artifactId></artifactId>}
-{@define version(_y)=<version></version>}} %}
+{@define version(_y)=<version></version>}}
+%}
 
 The body starts with a new line.
 The macro `eval` deletes this new line, while using the `!` in front of the macro does not.
@@ -2024,13 +2126,15 @@ The macro `eval` deletes this new line, while using the `!` in front of the macr
 The syntax of the `verbatim` macro is the following:
 
 {%sample/
-{@verbatim userDefinedMacroUse} %}
+{@verbatim userDefinedMacroUse}
+%}
 
 The `verbatim` macro has to be followed by a user defined macro use.
 If we modify the previous example to use `verbatim` we can do it the following way:
 
 {%sample/
-{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c} %}
+{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}
+%}
 
 In this example `{@verbatim b}` is the same as `{b}` in the previous example.
 The only exception is that after `b` is evaluated the result is not processed further for macros.
@@ -2125,25 +2229,29 @@ Jamal itself does not impose any such predefined setting.
 The syntax of the command is
 
 {%sample/
-{@sep /startString/endString} %}
+{@sep /startString/endString}
+%}
 
 If both the start and end strings are a single character, for example `[` and `]` then you can use the simple form:
 
 {%sample/
-{@sep []} %}
+{@sep []}
+%}
 
 A two-character argument to the macro `sep` will use the first character as macro opening string and the second as macro closing string.
 You can also use three character.
 For example:
 
 {%sample/
-{@sep [.]} %}
+{@sep [.]}
+%}
 
 The separating character between the opening and closing string characters can be any character except any of the opening or closing string character.
 It is also possible to use the format
 
 {%sample/
-{@sep openingString \s+ closingString} %}
+{@sep openingString  \s+   closingString}
+%}
 
 separating the opening and closing strings with spaces.
 This format is very readable and convenient in many cases.
@@ -2151,7 +2259,8 @@ For example, you can specify
 
 {%sample/
 {@sep (( )) }
-{@sep ([ ]) } %}
+{@sep ([ ]) }
+%}
 
 and other, similar opening and closing strings.
 There are some definitions that can be misleading.
@@ -2159,7 +2268,8 @@ For example, the following declarations can be interpreted by humans in multiple
 
 {%sample/
 {@sep/[/ ] }   <- is it "/[/" and "]" or "[" and "]"
-{@sep/[ /]}    <- is it "/[" and "/]" or "[" and "]" %}
+{@sep/[ /]}    <- is it "/[" and "/]" or "[" and "]"
+%}
 
 Many human readers would tend to think the second.
 The syntax however matches the `\S+\s+\S+` pattern.
@@ -2188,7 +2298,8 @@ This syntax is described in the followings.
 If the syntax does not match and of the previous cases, Jamal will use the syntax that is defined with the following "regular expression" like line:
 
 {%sample/
-{@sep \s* (\S) opening_string (\1) closing_string \s*} %}
+{@sep \s* (\S) opening_string (\1) closing_string \s*}
+%}
 
 There can be whitespace characters after the macro name `sep`, and at the end, but these are optional.
 The first non-space character is used as a separator character that separates the macro opening string from the macro closing string.
@@ -2200,31 +2311,21 @@ Leading and trailing spaces of the opening and closing strings will be trimmed o
 That way
 
 {%sample/
-{@sep /
-
-[[/]]}
-{@sep /
-
-[[ / ]]}
-{@sep /
-
-[[ / ]] }
-{@sep /
-
-[[ / ]] } %}
+{@sep /[[/]]}
+{@sep /[[ / ]]}
+{@sep /[[ / ]] }
+{@sep / [[ / ]] }
+%}
 
 are all the same.
-Note though that `{@sep /
-
-[[ /]]}` would be logical in the above list, but it is missing.
+Note though that `{@sep / [[ /]]}` would be logical in the above list, but it is missing.
 There is only one space (`\s+`) separator between the `/` and `/]]` strings, and it matches the
 
 {%sample/
-{@sep openingString \s+ closingString} %}
+{@sep openingString  \s+   closingString}
+%}
 
-format, and it will set the separators to `/
-
-[[` and `/]]`.
+format, and it will set the separators to `/ [[` and `/]]`.
 
 Note that the macro `sep` should be terminated with the original macro closing string.
 The macros after it already have to use the altered opening and closing strings.
@@ -2235,7 +2336,8 @@ This is often the choice when using Jamal in a programming language environment 
 In this case
 
 {%sample/
-{@sep/{{/}}} %}
+{@sep/{{/}}}
+%}
 
 will not work.
 It will set the closing string empty which is not valid and will raise an error.
@@ -2279,18 +2381,12 @@ In this case the last opening and closing strings are restored.
 The strings are stored in a stack, so you can define new strings and return to the previous one many times nesting the redefinitions.
 
 The following sample is executed with `{` and `}` as opening and closing string at the beginning.
-After that, it sets the strings to `
-
-[[` and `]]`.
+After that, it sets the strings to `[[` and `]]`.
 This is used to define the macro `apple`.
-After this when the scope of the next macro, `comment` starts the opening and closing strings are still `
-
-[[` and `]]`.
+After this when the scope of the next macro, `comment` starts the opening and closing strings are still `[[` and `]]`.
 Starting a new scope does not change the macro opening and closing strings.
 
-It would be an error to use `
-
-[[@sep]]` inside the scope of the macro `comment` at this point trying to restore the original macro opening and closing strings.
+It would be an error to use `[[@sep]]` inside the scope of the macro `comment` at this point trying to restore the original macro opening and closing strings.
 In that scope at the start, there are no opening and closing strings to be restored.
 The opening and closing strings do not belong to this scope, they are simply inherited from the outer scope.
 On the other hand, the sample can change the strings, as it does to `<<` and `>>`.
@@ -2300,9 +2396,7 @@ Note that `z` is not exported from this scope.
 After that the `<<@sep>>` restores the opening and closing strings to the inherited one and with these, it defines `a1`
 and `a2` and exports them.
 Note, that `a1` will have the actual value of the macro `z` evaluated inside the scope of the `comment` macro.
-The macro `a2` starts with `@` thus the body is not parsed during the macro definition and thus the value of `a2` is `
-
-[[z]]` unevaluated, as it is.
+The macro `a2` starts with `@` thus the body is not parsed during the macro definition and thus the value of `a2` is `[[z]]` unevaluated, as it is.
 Similarly, the macro `a3` will have the value`{z}`.
 
 All these macros are evaluated because the macro `comment` is started with the character `#`.
@@ -2314,33 +2408,25 @@ Then we have a simple macro definition that defines `z` and then this `z` is use
 `z` is now, as defined in the outer scope is `SSS`.
 `a1` has the value that came from the macro `z` as it was defined inside the scope of the macro `comment`.
 Macro `a2`
-has the value `
-
-[[z]]` that has nothing special in the current scope.
+has the value `[[z]]` that has nothing special in the current scope.
 The macro `a3` has the value `{z}` which is evaluated after the macro `a3` is replaced with its value.
 
 {%sample/
-{@sep/
-
-[[/]]}
-
+{@sep/[[/]]}
 [[@define apple=fruit]]
 [[apple]]
 [[#comment [[@sep/<</>>]]
 <<@define z=zazi>>
 <<#sep>>
-
 [[#define a1=[[z]]]]
-
 [[@define a2=[[z]]]]
-
 [[@define a3={z}]]
 [[@export a1,a2,a3]]
 ]]
-
 [[@sep]]
 {@define z=SSS}
-{z}{a1}{a2}{a3}{@verbatim a3} %}
+{z}{a1}{a2}{a3}{@verbatim a3}
+%}
 
 {%output%}
 
@@ -2354,7 +2440,8 @@ since 1.0.0 (core)
 The syntax of the macro is
 
 {%sample/
-{@export macroname,macroname, ... ,macroname} %}
+{@export macroname,macroname, ... ,macroname}
+%}
 
 exporting one or more macros, comma separated.
 
@@ -2395,9 +2482,9 @@ The `export` macro moves the definition of the macro from the scope of the `comm
 
 The example:
 
-{%sample/ A comment starts a new scope {#comment {@define Z=13}} Z {?Z} is not defined here unless...
-{#comment {@define Z=14}{@export Z}}Z is exported.
-In that case Z is {Z}.
+{%sample/
+A comment starts a new scope {#comment {@define Z=13}} Z {?Z} is not defined here unless...
+{#comment {@define Z=14}{@export Z}}Z is exported. In that case Z is {Z}.
 %}
 
 will result:
@@ -2442,7 +2529,8 @@ Because the name starts with a backtick, you cannot be redefined it using the `d
 {macro :apple:pie}{@comment nice and easy, global}
 {@options ~lenient}{@comment and we can switch it off}
 {macro :apple:pie:}
-{@options any|option|can | go | ~go | no go} %}
+{@options any|option|can  | go | ~go | no go}
+%}
 
 An option can be switched off using the `~` character in front of the options name.
 There can be no space between the `~` character and the name of the option.
@@ -2487,9 +2575,11 @@ There can be spaces between the `\` character and the following new-line charact
 
 {@define z=1}\\n         <- the \ and new-line will be skipped, it does not get into the output
 
-{@define z=1}\ ... \n    <- there can be spaces between the \ and the \n, still the \ and new-line characters will be skipped
+{@define z=1}\ ... \n    <- there can be spaces between the \ and the \n, still the
+                            \ and new-line characters will be skipped
 
-{@define z=1} ... \\n    <- nothing is skipped, there are spaces before the \ character %}
+{@define z=1} ... \\n    <- nothing is skipped, there are spaces before the \ character
+%}
 
 A backslash in any other places is just a character and will not escape a newline.
 This escaping works only following built-in and user defined macros.
@@ -2511,7 +2601,8 @@ In case the evaluation results an error then the result will be empty string.
 For example the following macro will produce an empty string.
 
 {%sample/
-{@try {!@verbatim macro}} %}
+{@try {!@verbatim macro}}
+%}
 
 The macro `macro` is not defined, but the error is caught with the macro `try`.
 
@@ -2557,7 +2648,8 @@ It the macro is an escape macro, then it finds the `SEP` strings, and the macro 
 If there is any macro opening or macro closing string inside the `escape` macro they are ignored.
 
 {%sample/
-{@escape `a`{`a`} %}
+{@escape `a`{`a`}
+%}
 
 will result
 
@@ -2571,11 +2663,11 @@ That way the macros defined inside the macros will be evaluated even though the 
 At the same time the current macro opening and closing strings had no special effect by the time of the macro definition.
 If there is any current macro opening and closing string in the definition of the macro then they should not play a special role.
 They get protected using the `escape` macro automatically.
-This way it may happen that you see in the error output The macro
+This way it may happen that you see in the error output
+The macro
 
 [[require]]
 ==== {%macroChapter%}`require`
-
 since 1.6.4
 
 Since Jamal has many different versions, there may be a need to stick to a specific version.
@@ -2583,7 +2675,8 @@ To do that, the built-in macro introduced in version 1.6.4 `require` can be used
 The syntax of the macro is
 
 {%sample/
-{@require [<|>|<=|>=|=] version } %}
+{@require [<|>|<=|>=|=] version }
+%}
 
 The evaluation of this built-in macro will check that the currently running version of Jamal is
 
@@ -2607,7 +2700,8 @@ If the current version matches the requirement, then the result of the macro is 
 For example:
 
 {%sample/
-{@try!{@require 6666.5.3}} %}
+{@try!{@require 6666.5.3}}
+%}
 
 will result
 
@@ -2641,7 +2735,7 @@ The splitting offers three syntax variations:
 
 2. `macroName   a   b   c   ...  x`
 
-3. `++macroName `regex` separator a separator b separator ... separator x++`
+3.  `++macroName `regex` separator a separator b separator ... separator x++`
 
 In the first case the argument separator character is the first special character.
 This character can be any unicode character except
@@ -2667,7 +2761,8 @@ In case you need one inside the regular expression then you have to simply doubl
 [[parparsing]]
 === {%chapter%}Standard Built-In Parameter Parsing
 
-{%@define methodFormat=`$name()`%} In addition to the method `{%@java:method javax0.jamal.tools.InputHandler#getParts%}` there is another utility that the built-in macros can use.
+{%@define methodFormat=`$name()`%}
+In addition to the method `{%@java:method javax0.jamal.tools.InputHandler#getParts%}` there is another utility that the built-in macros can use.
 It is the class `{%@java:class javax0.jamal.tools.Params%}`.
 The class is a utility to parse some particular part of the whole input of the built-in macro looking for parameters.
 This particular part is usually the first line of the input, but it can be the part betweem `(` and `)` following the macro ID or the whole input.
@@ -2705,8 +2800,7 @@ It may also happen that you deliberately create complex recursive macros.
 In that case this limit may be too small.
 Set your value to a limit that fits your need.
 
-* `JAMAL_INCLUDE_DEPTH` can set the maximum number of file include nesting.
-The default value is 100.
+* `JAMAL_INCLUDE_DEPTH` can set the maximum number of file include nesting. The default value is 100.
 
 [[httpsres]]
 === {%chapter%}Resource Files and Web Resources
@@ -2822,8 +2916,8 @@ These macros include also date handling, run-time checking of existence of refer
 
 [[Groovy]]
 === {%chapter%}Groovy Integration
-
-{%@define GroovyRuby($x,$X)= The $X language integration lets you include $X code fragments into your document.
+{%@define GroovyRuby($x,$X)=
+The $X language integration lets you include $X code fragments into your document.
 These scripts are executed during the file processing, and can programmatically calculate the macro outputs.
 
 The integration and how to use the module macros are described in the link:{%@file jamal-$x/README.adoc%}[$X readme].
@@ -2832,7 +2926,6 @@ The integration and how to use the module macros are described in the link:{%@fi
 
 [[Ruby]]
 === {%chapter%}Ruby Integration
-
 {%GroovyRuby :ruby:Ruby%}
 
 [[Yaml]]
@@ -2869,8 +2962,13 @@ The library `jamal-engine` transitively depends on the other libraries that are 
 
 You also have to specify that you use these modules (Java 9 and later) if your code uses modules.
 
-{%sample/ module jamal.maven {
-requires jamal.api; requires jamal.tools; requires jamal.engine; } %}
+{%sample/
+module jamal.maven {
+requires jamal.api;
+requires jamal.tools;
+requires jamal.engine;
+}
+%}
 
 The code invoking Jamal needs a processor that will process the input.
 
@@ -2932,7 +3030,8 @@ This is a simplified interface to access the functionality of Jamal.
 
 The current and past versions of the JavaDoc can be read online at the address:
 
-{%@for module in (api,cmd,core,engine,extensions,maven-plugin,plantuml,pomlib,scriptbasic,snippet,test,test-support,tools)= * https://javadoc.io/doc/com.javax0.jamal/jamal-module/
+{%@for module in (api,cmd,core,engine,extensions,maven-plugin,plantuml,pomlib,scriptbasic,snippet,test,test-support,tools)=
+* https://javadoc.io/doc/com.javax0.jamal/jamal-module/
 
 %}
 
