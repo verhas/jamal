@@ -13,13 +13,16 @@ import java.util.regex.Pattern;
  * The macro code can contain {@code use global com.my.class as name} or {@code use com.my.class as name} to use the
  * class {@code com.my.class} as a macro implementation. The class has to implement the {@link Macro} interface. In case
  * it is defined as {@code global} then it will get into the global level, otherwise to the local level.
+ * <p>
+ * If the class name does not contain any dot character then it is assument that this is not a class name, rather an
+ * already loaded macro name. In that case the {@code as alias} is not optional.
  */
 public class Use implements Macro {
     // The syntax is:    [global] com.package.name.MacroClass [as Alias]
     // $1 will be "global" or ""
     // $2 will be the fully qualified name of the class
     // $3 will be the alias or null if no alias
-    private static final Pattern pattern = Pattern.compile("((?:global\\s+)?)((?:\\w+\\.?)+)(?:\\s+as\\s+(\\w+))?");
+    private static final Pattern pattern = Pattern.compile("((?:global\\s+)?)([\\w:.]+)(?:\\s+as\\s+(\\w+))?");
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
@@ -39,8 +42,18 @@ public class Use implements Macro {
                 final var isGlobal = matcher.group(1).length() > 0;
                 final var klassName = matcher.group(2);
                 final var alias = matcher.group(3);
-                final Macro macro = forName(klassName, klassName);
+                final Macro macro;
                 final var register = processor.getRegister();
+                if (klassName.contains(".")) {
+                    macro = forName(klassName, klassName);
+                } else {
+                    macro = register.getMacro(klassName)
+                        .orElseThrow(() -> new BadSyntax("There is no built-in macro with the name '" + klassName + "'"));
+                    if (alias == null || alias.length() == 0) {
+                        throw new BadSyntax("You cannot define an alias for the macro '"
+                            + klassName + "' without actually providing an alias after the 'as'");
+                    }
+                }
                 if (isGlobal) {
                     if (alias != null && alias.length() > 0) {
                         register.global(macro, alias);
@@ -82,7 +95,7 @@ public class Use implements Macro {
                 throw new BadSyntax("Class '" + originalName + "' cannot be used as macro", e);
             }
             var lastDot = klassName.lastIndexOf('.');
-            return forName(klassName.substring(0, lastDot) + "$" + klassName.substring(lastDot + 1),originalName);
+            return forName(klassName.substring(0, lastDot) + "$" + klassName.substring(lastDot + 1), originalName);
         }
         try {
             macro = (Macro) klass.getDeclaredConstructor().newInstance();

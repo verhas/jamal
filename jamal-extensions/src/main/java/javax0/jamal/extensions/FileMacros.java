@@ -19,6 +19,8 @@ public class FileMacros {
     /**
      * Read the content of a file and return the content of the file. This is not the same as {@code import} because the
      * content of the file is used verbatim.
+     *
+     * Since include implemented the option [verbatim] this macro is obsolete and deprecated. Will be deleted.
      */
     public static class Read implements Macro {
 

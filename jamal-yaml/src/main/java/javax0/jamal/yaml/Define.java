@@ -26,7 +26,12 @@ public class Define implements Macro, InnerScopeDependent {
         }
         skip(in, 1);
         skipWhiteSpaces2EOL(in);
-        final var yamlStructure = yaml.load(in.toString());
+        final Object yamlStructure;
+        try {
+            yamlStructure = yaml.load(in.toString());
+        }catch(Exception e){
+            throw new BadSyntax("Cannot load YAML data.",e);
+        }
         final var yamlObject = new YamlObject(yamlStructure, id);
         processor.define(yamlObject);
         processor.getRegister().export(yamlObject.getId());
