@@ -37,7 +37,7 @@
                         {detectOfflineLinks false}
                         {doclint none}
                         {doclet javax0.jamal.doclet.JamalDoclet}
-                        {docletArtifact {GAV :com.javax0.jamal:jamal-doclet:{VERSION}}}
+                        {docletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}}
                         {additionalOptions
                             {additionalOption |--source-root}
                             {additionalOption {```````@escape ``${project.build.sourceDirectory}``}}
@@ -45,10 +45,10 @@
                         {taglets|
                             {taglet|
                                 {tagletClass javax0.jamal.doclet.JamalTaglet}
-                                {tagletArtifact {GAV :com.javax0.jamal:jamal-doclet:{VERSION}}}
+                                {tagletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}}
                             }
                             {tagletArtifacts
-                                {tagletArtifact {GAV :com.javax0.jamal:jamal-io:{VERSION}}}
+                                {tagletArtifact {GAV :com.javax0.jamal:jamal-io:{LAST_RELEASE}}}
                             }
                         }
                     }
