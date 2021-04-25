@@ -17,14 +17,15 @@ public class Get implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
+        final var copy = Resolver.copyOption();
         final var from = holder("yamlDataSource", "from").asString();
-        Params.using(processor).keys(clone, from).between("()").parse(in);
+        Params.using(processor).keys(clone, copy, from).between("()").parse(in);
         final var id = from.get();
         InputHandler.skipWhiteSpaces(in);
         try {
             final var expression = Ognl.parseExpression(in.toString());
             final var yamlObject = Resolve.getYaml(processor, id);
-            Resolver.resolve(yamlObject, processor, clone.get());
+            Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
             return String.valueOf(Ognl.getValue(expression, yamlObject.getObject()));
         } catch (OgnlException e) {
             throw new BadSyntax("Syntax error in the OGNL expression '" + in + "'", e);

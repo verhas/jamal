@@ -219,4 +219,35 @@ public class TestResolve {
             "{@yaml:resolve b}"
         ).throwsBadSyntax("The user defined macro 'a' is not a YAML structure");
     }
+
+    @Test
+    void testRecursiveCopyResolver() throws Exception {
+        TestThat.theInput("" +
+            "{#yaml:define a=[ a1, a2, a3, {@yaml:ref c}]}" +
+            "{#yaml:define b=[ b1, b2, b3, {@yaml:ref a}]}" +
+            "{#yaml:define c=[ c1, c2, c3, {@yaml:ref b}]}" +
+            "{@yaml:output (copy) c}"
+        ).results("&id001\n" +
+            "- c1\n" +
+            "- c2\n" +
+            "- c3\n" +
+            "- - b1\n" +
+            "  - b2\n" +
+            "  - b3\n" +
+            "  - - a1\n" +
+            "    - a2\n" +
+            "    - a3\n" +
+            "    - *id001\n");
+    }
+
+    @Test
+    void testRecursiveCopyResolverCopy() throws Exception {
+        TestThat.theInput("" +
+            "{#yaml:define a=[ a1, {@yaml:ref c}, {@yaml:ref c} ]}" +
+            "{#yaml:define b=[ b1, {@yaml:ref a}]}" +
+            "{#yaml:define c=[ c1, {@yaml:ref b}]}" +
+            "{@yaml:output (copy) c}"
+        ).throwsBadSyntax("There is a recursive data structure while using the copying resolution.");
+    }
+
 }

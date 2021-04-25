@@ -7,6 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.Params;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
@@ -17,11 +18,13 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
     private Processor processor;
     private Input output;
     private String id;
+    private boolean clone, copy;
 
     @Override
     public void close() throws Exception {
+
         final var yamlObject = Resolve.getYaml(processor, id);
-        Resolver.resolve(yamlObject, processor, false);
+        Resolver.resolve(yamlObject, processor, clone, copy);
         final var out = new StringWriter();
         yaml.dump(yamlObject.getObject(), out);
         output.reset();
@@ -40,6 +43,11 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var clone = Resolver.cloneOption();
+        final var copy = Resolver.copyOption();
+        Params.using(processor).keys(clone, copy).between("()").parse(in);
+        this.clone = clone.is();
+        this.copy = copy.is();
         InputHandler.skipWhiteSpaces(in);
         this.id = in.toString();
         processor.deferredClose(this);

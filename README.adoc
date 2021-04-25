@@ -1668,11 +1668,15 @@ The limit can be modified setting the environment variable `JAMAL_INCLUDE_DEPTH`
 [[use]]
 ==== x. `use`
 
-`use` declares a Java class as a built-in macro.
+since 1.0.0 since 1.7.4 can define an alias for an already loaded macro
+
+`use` declares a Java class as a built-in macro or defines an alias name for an already loaded built-in macro.
+
+===== How macros are loaded
 
 Built-in macros are classes that implement the `javax0.jamal.api.Macro` interface.
 When they are registered as services, they are automatically loaded when any application embedding Jamal creates a new processor.
-In other words, the classes that implement some macro are automatically discovered if
+In other words, the classes that implement some macros are automatically discovered if
 
 * they are in the `module-info` module descriptor `provides` directive and/or
 * the fully qualified name of the class is listed in the JAR file in the  `META-INF/services/javax0.jamal.api.Macro`
@@ -1682,11 +1686,13 @@ Some libraries contain `javax0.jamal.api.Macro` implementations that are not loa
 These classes are not advertised in the `module-info` file or in the `META-INF` directory.
 To use these classes as built-in macros the macro `use` has to be invoked.
 
+===== Defining the use of a Java Class as a Macro
+
 The use of the `use` macro (sic) is the following:
 
 [source]
 ----
-{@use global javax0.jamal.scriptbasic.Basic as scriptbasic}
+{@use global javax0.jamal.scriptbasic.Basic as scriptbasic} 
 ----
 
 In this example, the class `javax0.jamal.scriptbasic.Basic` implements a macro.
@@ -1697,7 +1703,7 @@ The keyword `global` can be missing:
 
 [source]
 ----
-{@use javax0.jamal.scriptbasic.Basic as scriptbasic}
+{@use javax0.jamal.scriptbasic.Basic as scriptbasic} 
 ----
 
 In this case, the macro will only be available in the current scope and will not be available as soon as the current scope is closed.
@@ -1708,7 +1714,7 @@ Usually, the alias part (the `as scriptbasic` in the example above) can also be 
 
 [source]
 ----
-{@use javax0.jamal.scriptbasic.Basic}
+{@use javax0.jamal.scriptbasic.Basic} 
 ----
 
 In such a case the macro will be registered with the name that the macro provides by itself as an identifier.
@@ -1718,6 +1724,21 @@ If there is no defined alias following the `as` keyword then the one returned by
 
 It is recommended to use the alias in the Jamal source file.
 That way there is no ambiguity when reading the code what the name of the built-in macro is.
+
+===== Defining the use of a Java Class as a Macro
+
+The syntax of the command is the same to define an alias for an already loaded macro.
+If there is no `.` dot character in the "klass name", then the command will know that it cannot be a class name.
+In that case it will look for an already loaded built-in macro with the given name and it will register it again with the new alias.
+Following this both names can refer to the same macro.
+
+The alias will refer to the built-in macro, which is the closest reachable in the current scope.
+If the evaluation leaves the current scope, and the `global` keyword was not used then the alias will also go out of the scope.
+It is independent of the macro itself.
+The macro may be reachable via the original name.
+
+The alias will refer to the built-in macro, which is the closest reachable in the current scope even if the `global` keyword is used.
+In this case the alias will be global, and the macro will be reachable via the alias even if the original name was not registered global and goes out of scope.
 
 [[script]]
 ==== xi. `script`

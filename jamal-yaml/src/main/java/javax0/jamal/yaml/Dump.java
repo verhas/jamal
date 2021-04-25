@@ -13,8 +13,6 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static javax0.jamal.tools.Params.holder;
-
 
 public class Dump implements Macro, InnerScopeDependent {
     final Yaml yaml = new Yaml();
@@ -22,7 +20,8 @@ public class Dump implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
-        Params.using(processor).keys(clone).between("()").parse(input);
+        final var copy = Resolver.copyOption();
+        Params.using(processor).keys(clone, copy).between("()").parse(input);
 
         InputHandler.skipWhiteSpaces(input);
         final var id = InputHandler.fetchId(input);
@@ -36,7 +35,7 @@ public class Dump implements Macro, InnerScopeDependent {
         var fileName = FileTools.absolute(reference, input.toString().trim());
 
         final var yamlObject = Resolve.getYaml(processor, id);
-        Resolver.resolve(yamlObject, processor,clone.get());
+        Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
         try (final var writer = new FileWriter(fileName)) {
             yaml.dump(yamlObject.getObject(), writer);
         } catch (IOException ioe) {

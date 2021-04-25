@@ -286,6 +286,71 @@ NOTE: When a macro is resolved, it will remember that it was already resolved an
 It also means that calling `yaml:resolve` with the `clone` option on `xyz` and then calling it again without it will not resolve the referenced `aqt`.
 Unless you have a specific need, use the `yaml:resolve` macro without cloning.
 
+There is another option that alters the behaviour of the resolving process.
+This is `yamlResolveCopy` with the alias `copy`.
+This option creates a copy of the referenced structures, cloned or not.
+To understand this we can have a look at the following example:
+
+{%sample/
+{@yaml:define a=[ a, b ,c ]}
+{#yaml:define aqt=z: {@yaml:ref a}
+y: {@yaml:ref a}
+}
+{@yaml:resolve aqt}
+{aqt}
+%}
+
+will result
+
+{%output%}
+
+When the underlying Snake Yaml library generates the text format of the Yaml data it realizes that both `z` and `y` fields refer to the same object.
+Thus SnakeYaml generates a label, something like `&id001` at the first occurrence and instead of repeating the same structure it on second occasion it only references that as `*id001`.
+The resolving process can circumvent this creating a copy for every reference.
+
+{%sample/
+{@yaml:define a=[ a, b ,c ]}
+{#yaml:define aqt=z: {@yaml:ref a}
+y: {@yaml:ref a}
+}
+{@yaml:resolve (copy) aqt}
+{aqt}
+%}
+
+will result
+
+{%output%}
+
+Note that `copy` and `clone` are not the same.
+You can use the `clone` option together or without `copy` and also the other way around.
+The implementation of copy resolution can handle recursive data structures and it will generate references into the output.
+
+For example
+
+{%sample/
+{#yaml:define a=[ a, b ,c, {@yaml:ref a}]}
+{@yaml:resolve (copy clone) a}
+{a}
+%}
+
+works as expected
+
+{%output%}
+
+However, when trying to resolve the following:
+
+{%sample/
+{#yaml:define a=[ a, b ,c, {@yaml:ref a}, {@yaml:ref a}]}
+{@try! {@yaml:resolve (copy clone) a}}
+{a}
+%}
+
+then the result is
+
+{%output%}
+
+Here we got an error message from the macro `try`, and the Yaml structure stored in `a` remained unresolved.
+
 [[Import]]
 ==== {%macroChapter%}{%ImportingChapter%}
 
@@ -418,11 +483,13 @@ The format of the macro is:
 {@yaml:output yamlMacro}
 %}
 
-Here the `yamlMacro` is the name of a Yaml macro that has to be defined when the processing finishes.
+Here the `yamlMacro` is the name of a Yaml macro to be redered as the final output of the Jamal processing.
+It has to be defined at the end of the processing.
 It also means that this macro has to be on the top level in the macro hierarchy.
 In other words, it has to be a global macro.
 
 When this macro is used, the output of the Jamal processing will be the Yaml formatted structure of the data held in the macro `yamlMacro`.
 If this macro contained references and was not yet resolved, then it will be resolved.
-Since this is the last step processing the whole Jamal structure following the entire process, there is no need for cloning.
-It is also not possible to enforce cloning during the resolution.
+Since this is the last step processing the whole Jamal structure following the entire process, usually there is no need for cloning.
+If for any reason there is need for cloning then the `clone` option may be used on the command.
+The command also supports the `copy` option.

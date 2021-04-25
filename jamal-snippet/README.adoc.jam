@@ -245,7 +245,7 @@ For example, the sample
 %}
 
 {%#comment this output is evaluated because this is when the macro in the sample is evaluated
-{%output%} but there is no output. The laster samples use the snippets that this macro evaluation
+{%output%} but there is no output. The later samples use the snippets that this macro evaluation
 was reading from the properties file
 %}\
 

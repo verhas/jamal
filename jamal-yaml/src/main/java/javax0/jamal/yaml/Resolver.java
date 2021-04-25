@@ -9,11 +9,11 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A resolver object can resolve the Jamal Yaml macro references in a Yaml structure.
@@ -21,11 +21,22 @@ import java.util.Map;
 class Resolver {
     final Yaml yaml = new Yaml();
 
+    /**
+     * Those objects that have been resolved, or their resolution is currently going. Since there is no IdentityHashSet,
+     * we use a map, the value is always null.
+     */
     final Map<Object, Object> resolved = new IdentityHashMap<>();
+    /**
+     * Those yaml:define defined macros that are already resolved or their resolution is under progress.
+     */
     final Map<String, Object> resolvedRefs = new HashMap<>();
+    final Set<String> usedRefs = new HashSet<>();
     final Processor processor;
-    int phase = 1;
+    /**
+     * Cloned resolution is done in two passes. The first phase
+     */
     boolean clone;
+    final boolean copy;
 
     /**
      * Creates a new resolver.
@@ -34,9 +45,10 @@ class Resolver {
      *                  references.
      * @param clone     {@code true} if the resolving has to clone the data.
      */
-    Resolver(Processor processor, boolean clone) {
+    Resolver(Processor processor, boolean clone, boolean copy) {
         this.processor = processor;
         this.clone = clone;
+        this.copy = copy;
     }
 
     /**
@@ -46,11 +58,12 @@ class Resolver {
      * @param processor  the processor instance to be used to get access to the Yaml user defined macros in the *
      *                   references.
      * @param clone      {@code true} if the resolving has to clone the data.
+     * @param copy       {@code true} to create copies for referenced parts
      * @throws BadSyntax
      */
-    static void resolve(YamlObject yamlObject, Processor processor, boolean clone) throws BadSyntax {
+    static void resolve(YamlObject yamlObject, Processor processor, boolean clone, boolean copy) throws BadSyntax {
         if (!yamlObject.resolved) {
-            yamlObject.setContent(new Resolver(processor, clone).resolve(new javax0.jamal.api.Ref(yamlObject.getId())));
+            yamlObject.setContent(new Resolver(processor, clone, copy).resolve(yamlObject.getId(), yamlObject.getObject()));
             yamlObject.resolved = true;
         }
     }
@@ -59,117 +72,130 @@ class Resolver {
         return Params.holder("yamlResolveClone", "clone").asBoolean();
     }
 
-    public Object resolve(Object content) throws BadSyntax {
-        final var resObject = _resolve(content);
-        if (clone) {
-            clone = false;
-            phase = 2;
-            return _resolve(resObject);
+    static Params.Param<Boolean> copyOption() {
+        return Params.holder("yamlResolveCopy", "copy").asBoolean();
+    }
+
+    private int stackLimiter;
+
+    public Object resolve(String id, Object content) throws BadSyntax {
+        resolvedRefs.clear();
+        collectRefs(content);
+        dereferenceRefs();
+        if (resolvedRefs.containsKey(id)) {
+            return resolvedRefs.get(id);
         } else {
-            return resObject;
+            stackLimiter = 1000;
+            _resolve(content);
+            return content;
         }
     }
 
-    private Object _resolve(Object content) throws BadSyntax {
+
+    /**
+     * Go through the whole data structure and in case there is a reference then fetch it and store is in the {@code
+     * resolvedRefs} map using the macro name as a key and the actual value.
+     *
+     * @param content the yaml content we search for references to other yaml content macros
+     * @throws BadSyntax if some of the referenced macros are not defined
+     *                   <p>
+     *                   // TODO alter the structure to loop from recursion
+     */
+    private void collectRefs(Object content) throws BadSyntax {
+        if (content instanceof List) {
+            for (final var item : (List<Object>) content) {
+                collectRefs(item);
+            }
+        } else if (content instanceof Map) {
+            for (final var entry : ((Map<Object, Object>) content).entrySet()) {
+                collectRefs(entry.getKey());
+                collectRefs(entry.getValue());
+            }
+        } else if (content instanceof Ref) {
+            Ref ref = (Ref) content;
+            if (!resolvedRefs.containsKey(ref.id)) {
+                var yaml = Resolve.getYaml(processor, ref.id).getObject();
+                while (yaml instanceof Ref) {
+                    yaml = Resolve.getYaml(processor, ((Ref) yaml).id).getObject();
+                }
+                if (clone) {
+                    yaml = clone(yaml);
+                }
+                resolvedRefs.put(ref.id, yaml);
+                collectRefs(yaml);
+            }
+        }/*else there is nothing to do, either some arbitrary object or just a string, or number */
+    }
+
+    /**
+     * Dereference the references in the structures that were referenced from the resolved yaml object.
+     */
+    private void dereferenceRefs() throws BadSyntax {
+        resolved.clear();
+        for (final var entry : resolvedRefs.entrySet()) {
+            stackLimiter = 1000;
+            _resolve(entry.getValue());
+        }
+    }
+
+    private void _resolve(Object content) throws BadSyntax {
+        if (stackLimiter-- == 0) {
+            throw new BadSyntax("There is a recursive data structure while using the copying resolution.");
+        }
         if (resolved.containsKey(content)) {
-            return content;
+            stackLimiter++;
+            return;
         }
         resolved.put(content, null);
         if (content instanceof List) {
-            return resolveList((List<Object>) content);
+            resolveList((List<Object>) content);
+            stackLimiter++;
+            return;
         }
         if (content instanceof Map) {
-            return resolveMap((Map<Object, Object>) content);
+            resolveMap((Map<Object, Object>) content);
+            stackLimiter++;
+            return;
         }
-        if (content instanceof javax0.jamal.api.Ref) {
-            return resolveRef((javax0.jamal.api.Ref) content);
-        }
-        return content;
+        stackLimiter++;
     }
 
-    private Object resolveRef(Ref ref) throws BadSyntax {
-        final var id = ref.id;
-        if (resolvedRefs.containsKey(id)) {
-            return resolvedRefs.get(id);
-        }
-        final var yamlObject = Resolve.getYaml(processor, id);
-        if (clone) {
-            final Object newContent = clone(id, yamlObject.getObject());
-            return newContent;
-        } else {
-            if (phase == 1) {
-                resolvedRefs.put(id, yamlObject.getObject());
-                return _resolve(yamlObject.getObject());
+    private Object resolveRef(Object obj) {
+        if (obj instanceof Ref) {
+            final var id = ((Ref) obj).id;
+            if (copy && usedRefs.contains(id)) {
+                return clone(resolvedRefs.get(id));
             } else {
-                final Object newContent = clone(id, yamlObject.getObject());
-                return _resolve(newContent);
+                usedRefs.add(id);
+                return resolvedRefs.get(id);
             }
+        } else {
+            return obj;
         }
     }
 
-    private Object clone(String id, Object content) {
+    private Object clone(Object content) {
         final var out = new StringWriter();
         yaml.dump(content, out);
-        final var newContent = yaml.load(out.toString());
-        resolvedRefs.put(id, newContent);
-        return newContent;
+        return yaml.load(out.toString());
     }
 
-    private Map<?, ?> resolveMap(Map<Object, Object> content) throws BadSyntax {
-        if (clone) {
-            return resolveMapCloning(content);
-        } else {
-            return resolveMapNonCloning(content);
+    private void resolveMap(Map<Object, Object> map) throws BadSyntax {
+        for (final Map.Entry<Object, Object> e : map.entrySet()) {
+            final var key = resolveRef(e.getKey());
+            final var value = resolveRef(e.getValue());
+            _resolve(key);
+            _resolve(value);
+            map.put(key, value);
         }
     }
 
-    private Map<Object, Object> resolveMapCloning(Map<Object, Object> content) throws BadSyntax {
-        final var newMap = new LinkedHashMap<>();
-        for (final Map.Entry<Object, Object> e : content.entrySet()) {
-            final var key = _resolve(e.getKey());
-            final var value = _resolve(e.getValue());
-            newMap.put(key, value);
-        }
-        return newMap;
-    }
-
-    private Map<Object, Object> resolveMapNonCloning(Map<Object, Object> content) throws BadSyntax {
-        final var tempMap = new LinkedHashMap<>();
-        for (final Map.Entry<Object, Object> e : content.entrySet()) {
-            final var key = _resolve(e.getKey());
-            final var value = _resolve(e.getValue());
-            if (key != e.getKey() || value != e.getValue()) {
-                tempMap.put(key, value);
-            } else {
-                tempMap.put(e.getKey(), e.getValue());
-            }
-        }
-        content.clear();
-        for (final Map.Entry<Object, Object> tempe : tempMap.entrySet()) {
-            content.put(tempe.getKey(), tempe.getValue());
-        }
-        return content;
-    }
-
-
-    private List<?> resolveList(List<Object> content) throws BadSyntax {
-        if (clone || !(content instanceof ArrayList)) {
-            final var newList = new LinkedList<>();
-            for (final var e : content) {
-                final var newE = _resolve(e);
-                newList.add(newE);
-            }
-            return newList;
-        } else {
-            final var alContent = (ArrayList<Object>) content;
-            for (int i = 0; i < alContent.size(); i++) {
-                final var e = alContent.get(i);
-                final var newE = _resolve(e);
-                if (newE != e)
-                    alContent.set(i, newE);
-            }
-            return content;
+    private void resolveList(List<Object> list) throws BadSyntax {
+        final var arrayList = (ArrayList<Object>) list;
+        for (int i = 0; i < arrayList.size(); i++) {
+            final var value = resolveRef(arrayList.get(i));
+            _resolve(value);
+            arrayList.set(i, value);
         }
     }
-
 }

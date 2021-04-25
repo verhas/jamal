@@ -11,19 +11,18 @@ import org.yaml.snakeyaml.Yaml;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.Params.holder;
-
 public class Resolve implements Macro, InnerScopeDependent {
     final Yaml yaml = new Yaml();
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
-        Params.using(processor).keys(clone).between("()").parse(in);
+        final var copy = Resolver.copyOption();
+        Params.using(processor).keys(clone, copy).between("()").parse(in);
 
         for (final var id : Arrays.stream(in.toString().split(",")).map(String::trim).collect(Collectors.toSet())) {
             final var yamlObject = getYaml(processor, id);
-            Resolver.resolve(yamlObject,processor, clone.get());
+            Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
         }
         return "";
     }
