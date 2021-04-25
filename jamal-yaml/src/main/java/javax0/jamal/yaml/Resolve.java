@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class Resolve implements Macro, InnerScopeDependent {
-    final Yaml yaml = new Yaml();
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

@@ -18,6 +18,7 @@ import java.util.Set;
 /**
  * A resolver object can resolve the Jamal Yaml macro references in a Yaml structure.
  */
+@SuppressWarnings("unchecked")
 class Resolver {
     final Yaml yaml = new Yaml();
 
@@ -35,7 +36,7 @@ class Resolver {
     /**
      * Cloned resolution is done in two passes. The first phase
      */
-    boolean clone;
+    final boolean clone;
     final boolean copy;
 
     /**
@@ -59,7 +60,7 @@ class Resolver {
      *                   references.
      * @param clone      {@code true} if the resolving has to clone the data.
      * @param copy       {@code true} to create copies for referenced parts
-     * @throws BadSyntax
+     * @throws BadSyntax if some of the referenced Yaml objects does not exist
      */
     static void resolve(YamlObject yamlObject, Processor processor, boolean clone, boolean copy) throws BadSyntax {
         if (!yamlObject.resolved) {
