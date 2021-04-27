@@ -23,18 +23,18 @@ public class Define implements Macro {
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);
         boolean verbatim = false;
-        if (InputHandler.firstCharIs(input, DEFINE_VERBATIM)) {
+        if (firstCharIs(input, DEFINE_VERBATIM)) {
             verbatim = true;
             skip(input, 1);
             skipWhiteSpaces(input);
         }
-        var optional = InputHandler.firstCharIs(input, DEFINE_OPTIONALLY);
-        var noRedefine = InputHandler.firstCharIs(input, ERROR_REDEFINE);
+        var optional = firstCharIs(input, DEFINE_OPTIONALLY);
+        var noRedefine = firstCharIs(input, ERROR_REDEFINE);
         if (optional || noRedefine) {
             skip(input, 1);
             skipWhiteSpaces(input);
         }
-        if (!verbatim && InputHandler.firstCharIs(input, DEFINE_VERBATIM)) {
+        if (!verbatim && firstCharIs(input, DEFINE_VERBATIM)) {
             verbatim = true;
             skip(input, 1);
             skipWhiteSpaces(input);

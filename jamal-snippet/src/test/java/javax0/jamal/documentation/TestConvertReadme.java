@@ -1,73 +1,57 @@
 package javax0.jamal.documentation;
 
-import javax0.jamal.engine.Processor;
-import javax0.jamal.tools.FileTools;
+import javax0.jamal.DocumentConverter;
 import org.junit.jupiter.api.Test;
 
 public class TestConvertReadme {
 
-    private static void generateAdoc(String directory) throws Exception {
-        generateAdoc(directory, "README");
-    }
-
-    private static void generateAdoc(final String directory, final String fileName) throws Exception {
-        generateDoc(directory, fileName, "adoc");
-    }
-
-    private static void generateDoc(final String directory, final String fileName, final String ext) throws Exception {
-        final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam");
-        final var processor = new Processor("{%", "%}");
-        final var result = processor.process(in);
-        FileTools.writeFileContent(directory + "/" + fileName + "." + ext, result);
-    }
-
     @Test
     void convertSnippetArticle() throws Exception {
-        generateDoc(".", "ARTICLE", "wp");
+        DocumentConverter.convert("./ARTICLE.wp.jam");
     }
 
     @Test
     void convertWritingBuiltIn() throws Exception {
-        generateAdoc("..", "BUILTIN");
+        DocumentConverter.convert("../BUILTIN.adoc.jam");
     }
 
     @Test
     void convertParams() throws Exception {
-        generateAdoc("..", "PARAMS");
+        DocumentConverter.convert("../PARAMS.adoc.jam");
     }
 
     @Test
     void convertGlossary() throws Exception {
-        generateAdoc("..", "GLOSSARY");
+        DocumentConverter.convert("../GLOSSARY.adoc.jam");
     }
 
     @Test
     void convertTopReadme() throws Exception {
-        generateAdoc("..");
+        DocumentConverter.convert("../README.adoc.jam");
     }
 
     @Test
     void convertDebugReadme() throws Exception {
-        generateAdoc("../jamal-debug");
+        DocumentConverter.convert("../jamal-debug/README.adoc.jam");
     }
 
     @Test
     void convertExtensionReadme() throws Exception {
-        generateAdoc("../jamal-extensions");
+        DocumentConverter.convert("../jamal-extensions/README.adoc.jam");
     }
 
     @Test
     void convertScriptBasicReadme() throws Exception {
-        generateAdoc("../jamal-scriptbasic");
+        DocumentConverter.convert("../jamal-scriptbasic/README.adoc.jam");
     }
 
     @Test
     void convertTestReadme() throws Exception {
-        generateAdoc("../jamal-test");
+        DocumentConverter.convert("../jamal-test/README.adoc.jam");
     }
 
     @Test
     void convertSnippetReadme() throws Exception {
-        generateAdoc("../jamal-snippet");
+        DocumentConverter.convert("../jamal-snippet/README.adoc.jam");
     }
 }

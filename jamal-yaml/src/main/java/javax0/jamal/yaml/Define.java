@@ -5,8 +5,13 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.api.SpecialCharacters;
+import javax0.jamal.tools.InputHandler;
 import org.yaml.snakeyaml.Yaml;
 
+import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
+import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
+import static javax0.jamal.tools.InputHandler.convertGlobal;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
@@ -19,7 +24,22 @@ public class Define implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         skipWhiteSpaces(in);
+        var optional = firstCharIs(in, DEFINE_OPTIONALLY);
+        var noRedefine = firstCharIs(in, ERROR_REDEFINE);
+        if (optional || noRedefine) {
+            skip(in, 1);
+            skipWhiteSpaces(in);
+        }
+
         final var id = fetchId(in);
+        if (processor.isDefined(convertGlobal(id))) {
+            if (optional) {
+                return "";
+            }
+            if (noRedefine) {
+                throw new BadSyntax("The macro '" + id + "' was already defined.");
+            }
+        }
         skipWhiteSpaces(in);
         if (!firstCharIs(in, '=')) {
             throw new BadSyntax("yaml '" + id + "' has no '=' to body");

@@ -1,5 +1,6 @@
 package javax0.jamal.documentation;
 
+import javax0.jamal.DocumentConverter;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.FileTools;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,6 @@ public class TestConvertReadme {
 
     @Test
     void convertPlantUMLReadme() throws Exception {
-        generateAdoc(".");
+        DocumentConverter.convert("./README.adoc.jam");
     }
 }
