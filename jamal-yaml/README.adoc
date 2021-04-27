@@ -35,6 +35,7 @@ macros.
 [[define]]
 === i. `yaml:define`
 
+since 1.7.5 `?` and `!` macro redefinition control
 
 You can use this macro to define a Yaml structure.
 The format of the macro is
@@ -54,6 +55,12 @@ The structure is stored in an object of the type `YamlObject`.
 This class technically is a user-defined macro.
 The `yaml:define` macro will register the structure among the user-defined macros.
 When the name is used the same way as any other user-defined macro (without any argument), the content of the Yaml structure is converted to text.
+
+The `yamlMacro` is stored along with the "usual" user-defined macros.
+Any usual or other user-defined macro can be redefined any number of times.
+If you want to define a Yaml macro only if it was not defined prior, use the `?` after the keyword `yaml:define`.
+If you want to get an error message if the macro was already defined, use the `!` after the keyword `yaml:define`.
+This functionality is implemented the same way as it is for the core built-in macro `define`.
 
 The example:
 
@@ -87,7 +94,7 @@ The advantage of using this macro over just writing the Yaml directly to the out
 
 * you can use user-defined macro parameters mixing the yaml content with Jamal macros.
 
-Many times Yaml structures become overly profoundly nested, and it is not trivial to move things around.
+Many times Yaml structures become profoundly nested, and it is not trivial to move things around.
 The Yaml structure is a data description structure, and many times these data structures are redundant.
 When editing Yaml structures, it is common to copy some part of the structure and edit its art.
 Using Jamal, you can solve the indentation hell as well as you can reduce the poisonous redundancy.
