@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.yaml/javax0.jamal.yaml=ALL-UNNAMED
+                          --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>

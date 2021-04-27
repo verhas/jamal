@@ -33,6 +33,13 @@ public class TestSnippets {
     @Test
     @DisplayName("List all the snippets, all or only some of them")
     void testListSnippets() throws Exception {
+        /* This test fails if you accidentally run Jamal for all *.jam files on the source tree and it generates
+         *
+         * /jamal-snippet/src/test/resources/javax0/jamal/snippet/test{X}
+         *
+         * files for X=1, 2, 3, 4.
+         * DELETE THEM.
+         * */
         TestThat.theInput("{@include src/test/resources/javax0/jamal/snippet/test4.jam}")
             .results(
                 "first_snippet,second_snippet,second_file_first$snippet,seconda_snippet_uniconde\n" +

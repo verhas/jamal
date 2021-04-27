@@ -247,7 +247,7 @@ public class TestResolve {
             "{#yaml:define b=[ b1, {@yaml:ref a}]}" +
             "{#yaml:define c=[ c1, {@yaml:ref b}]}" +
             "{@yaml:output (copy) c}"
-        ).throwsBadSyntax("There is a recursive data structure while using the copying resolution.");
+        ).throwsBadSyntax("Jamal source seems to have infinite recursion");
     }
 
 }

@@ -24,6 +24,7 @@ Following that, you can use the
 . <<import,Importing yaml from a file>>
 . <<get,`yaml:get`>>
 . <<dump,`yaml:dump`>>
+. <<xml,`yaml:xml`>>
 . <<output,`yaml:output`>>
 
 
@@ -430,7 +431,7 @@ then the result is
 
 [source]
 ----
-There is a recursive data structure while using the copying resolution.
+Jamal source seems to have infinite recursion
 - a
 - b
 - c
@@ -623,8 +624,137 @@ The resolution process will be in-place unless the option `yamlResolveClone` (al
 ----
 
 
+[[xml]]
+=== vii. `yaml:xml`
+
+
+The macro `yaml:xml` results a Yaml structure in XML format.
+The format of the macro is:
+
+[source]
+----
+{@yaml:xml (options) yamlMacroName}
+----
+
+Here `yamlMacroName` is the name of a Yaml macro that was defined using `yaml:define`.
+Before converting the Yaml structure will be resolved in case it was not resolved yet.
+For this the options `clone` and `copy ` can be specified.
+For more information in these options see the macro documentation of `yaml:resolve`.
+
+In addition to these options you can use the options
+
+* `yamlXmlTopTag` (alias `tag`) can specify the name of the top level tag of the XML.
+The default value is `xml`
+
+* `yamlXmlAttributes` (alias `attributes`) can specify extra attributes for the top level XML tag.
+The default value is not to specify any attribute for the top level tag.
+
+Other than the top level tag the XML converted from a Yaml structure will not contain attributes.
+The maps from the Yaml structure the (key,value) elements will be converted to the XML
+
+[source,xml]
+----
+<key>value</key>
+----
+
+Here `value` can be another map, a list or something else represented as a string.
+For example:
+
+[source]
+----
+{@yaml:define z=
+tagValues:
+  a: 1
+  b: 2
+  c: 3}
+{#xmlFormat {@yaml:xml (tag="tag" attributes="a=\"53\"")z}}
+----
+
+will be converted to
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tag a="53">
+    <tagValues>
+        <a>a</a>
+        <b>b</b>
+        <c>c</c>
+    </tagValues>
+</tag>
+----
+
+
+The lists from the Yaml structure will be converted to the XML using the key value of the map containing the list.
+For example the
+
+[source]
+----
+{@yaml:define z=
+tagValues:
+- a
+- b
+- c}
+{#xmlFormat {@yaml:xml z}}
+----
+
+will be converted to
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xml>
+    <tagValues>
+        <tagValue>a</tagValue>
+        <tagValue>b</tagValue>
+        <tagValue>c</tagValue>
+    </tagValues>
+</xml>
+----
+
+
+The tag names in the list is the same as the one containing the list with the last character chopped off.
+The convention is that map members that contain lists should be some plural nouns having an extra 's' at the end.
+
+If a list element is a list itself then the iterated tag value will be the same as the enclosing one chopping off another character again.
+For example:
+
+[source]
+----
+{@yaml:define z=
+tagValues:
+- a
+- [x, y, z, k]
+- c}
+{#xmlFormat {@yaml:xml (tag=tagV)z}}
+----
+
+will be converted to
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tagV>
+    <tagValues>
+        <tagValue>a</tagValue>
+        <tagValue>
+            <tagValu>x</tagValu>
+            <tagValu>y</tagValu>
+            <tagValu>z</tagValu>
+            <tagValu>k</tagValu>
+        </tagValue>
+        <tagValue>c</tagValue>
+    </tagValues>
+</tagV>
+----
+
+
+There is a limitation in the Yaml structure.
+Yaml structures can be recursive but XML cannot be.
+In case the Yaml structure is recursive or too deep (by default 300) then Jamal will stop the evaluation.
+
 [[output]]
-=== vii. `yaml:output`
+=== viii. `yaml:output`
 
 
 The macro `yaml:output` redefines the output of the Jamal processing.

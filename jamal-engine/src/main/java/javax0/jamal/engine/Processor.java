@@ -18,7 +18,6 @@ import javax0.jamal.engine.util.ExceptionDumper;
 import javax0.jamal.engine.util.MacroBodyFetcher;
 import javax0.jamal.engine.util.MacroQualifier;
 import javax0.jamal.engine.util.PrefixComposer;
-import javax0.jamal.engine.util.StackLimiter;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tracer.TraceRecord;

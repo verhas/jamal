@@ -6,7 +6,9 @@
     {parent :{GROUPID}:jamal-parent}
     {description yaml module for Jamal}
 
-    {@define openForTests={opens/yaml/yaml}}
+    {@define openForTests={opens/yaml/yaml}
+                          {opens/engine/engine}
+    }
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies

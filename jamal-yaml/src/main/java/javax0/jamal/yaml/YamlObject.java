@@ -1,10 +1,13 @@
 package javax0.jamal.yaml;
 
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.UserDefinedMacro;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 
 public class YamlObject implements UserDefinedMacro, ObjectHolder {
     private final Yaml yaml = new Yaml();

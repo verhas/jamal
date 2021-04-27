@@ -32,7 +32,7 @@ public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var tabsize = Params.holder("tabsize").orElseInt(4);
-        Params.using(processor).from(this).keys(tabsize).parse(in);
+        Params.using(processor).from(this).between("()").keys(tabsize).parse(in);
 
         InputHandler.skipWhiteSpaces(in);
         if (in.length() > 0) {

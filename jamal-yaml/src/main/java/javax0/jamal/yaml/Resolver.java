@@ -3,6 +3,7 @@ package javax0.jamal.yaml;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Ref;
+import javax0.jamal.engine.StackLimiter;
 import javax0.jamal.tools.Params;
 import org.yaml.snakeyaml.Yaml;
 
@@ -21,7 +22,6 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 class Resolver {
     final Yaml yaml = new Yaml();
-
     /**
      * Those objects that have been resolved, or their resolution is currently going. Since there is no IdentityHashSet,
      * we use a map, the value is always null.
@@ -77,7 +77,7 @@ class Resolver {
         return Params.holder("yamlResolveCopy", "copy").asBoolean();
     }
 
-    private int stackLimiter;
+    private StackLimiter stackLimiter;
 
     public Object resolve(String id, Object content) throws BadSyntax {
         resolvedRefs.clear();
@@ -86,7 +86,7 @@ class Resolver {
         if (resolvedRefs.containsKey(id)) {
             return resolvedRefs.get(id);
         } else {
-            stackLimiter = 1000;
+            stackLimiter = new StackLimiter();
             _resolve(content);
             return content;
         }
@@ -134,31 +134,29 @@ class Resolver {
     private void dereferenceRefs() throws BadSyntax {
         resolved.clear();
         for (final var entry : resolvedRefs.entrySet()) {
-            stackLimiter = 1000;
+            stackLimiter = new StackLimiter();
             _resolve(entry.getValue());
         }
     }
 
     private void _resolve(Object content) throws BadSyntax {
-        if (stackLimiter-- == 0) {
-            throw new BadSyntax("There is a recursive data structure while using the copying resolution.");
-        }
+        stackLimiter.up();
         if (resolved.containsKey(content)) {
-            stackLimiter++;
+            stackLimiter.down();
             return;
         }
         resolved.put(content, null);
         if (content instanceof List) {
             resolveList((List<Object>) content);
-            stackLimiter++;
+            stackLimiter.down();
             return;
         }
         if (content instanceof Map) {
             resolveMap((Map<Object, Object>) content);
-            stackLimiter++;
+            stackLimiter.down();
             return;
         }
-        stackLimiter++;
+        stackLimiter.down();
     }
 
     private Object resolveRef(Object obj) {

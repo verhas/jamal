@@ -1,4 +1,4 @@
-package javax0.jamal.engine.util;
+package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 

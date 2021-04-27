@@ -1105,7 +1105,7 @@ will result
 - KillLines.java: 1,446 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 3,901 bytes
-- XmlFormat.java: 3,317 bytes
+- XmlFormat.java: 3,331 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes
@@ -1617,7 +1617,7 @@ You can put a few non-space character after the snippet identifier in case you w
 There may be spaces before and after the closing string, but nothing else.
 
 The update macro can be customized.
-If the macros `start` and/or `stop` are defined, then their value will be used as regular expression to find the start and the end of the snippet content insertion points.
+If the macros `start` and/or `stop` are defined, then their value will be used as regular expression to find the start, and the end of the snippet content insertion points.
 The default value for `start` is
 
     ^\s*\Q{\E\s*(?:#|@)\s*snip\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\s*$
