@@ -33,7 +33,7 @@ public class JamalMain implements Callable<Integer> {
 
     //<editor-fold desc="Configuration parameters" >
 
-    @Option(names = {"--debug", "-g"}, defaultValue = "", description = "debugger port")
+    @Option(names = {"--debug", "-g"}, defaultValue = "", description = "type:port, usually http:8080")
     private String debug = "";
     @Option(names = {"--open", "-o"}, defaultValue = "{", description = "the macro opening string")
     private String macroOpen = "{";
