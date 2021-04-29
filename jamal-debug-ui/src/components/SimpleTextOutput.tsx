@@ -12,7 +12,7 @@ const SimpleTextOutput: FC<SimpleTextOutputProps> = ({ children, caption }) => {
   const textConverted = showNewLine("" + children);
   return (
     <div className="SimpleTextInput_Caption">
-      {caption}
+      <div className="textbox_caption">{caption}</div>
       <textarea
         readOnly
         className="SimpleTextInput_TextArea"

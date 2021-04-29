@@ -1,11 +1,14 @@
 import { useCallback, useState, useRef } from "react";
 import Input from "./components/Input";
+import TabPanel from "./components/TabPanel";
 import SimpleTextInput from "./components/SimpleTextInput";
 import SimpleTextOutput from "./components/SimpleTextOutput";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Evaluate from "@material-ui/icons/TrendingFlat";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import Run from "@material-ui/icons/DirectionsRun";
 import Step from "@material-ui/icons/TextRotationNone";
 import Refresh from "@material-ui/icons/Refresh";
@@ -23,6 +26,7 @@ import packageJson from "../package.json";
 
 import { AxiosError, AxiosResponse } from "axios";
 import "./App.css";
+import { AppBar, TablePagination } from "@material-ui/core";
 
 var debug: DebugCommand = new DebugCommand("localhost", 8080);
 var qs = queryString.parse(window.location.search.substring(1));
@@ -40,7 +44,13 @@ function App() {
   const [resultCaption, setResultCaption] = useState("no result");
   const [serverVersion, setServerVersion] = useState("unknown");
   const [isLoading, setIsloading] = useState(true);
+  const [currentTabStop, setCurrentTabStop] = useState(0);
   const evalInput = useRef({ value: "" });
+  const evalBreakpoints = useRef({ value: "" });
+
+  const tabPanelChange = (event: React.ChangeEvent<{}>, newTabStop: number) => {
+    setCurrentTabStop(newTabStop);
+  };
 
   const port: string = qs.port
     ? "" + qs.port
@@ -82,8 +92,8 @@ function App() {
   const step = () => postAndReload(debug.step);
   const stepInto = () => postAndReload(debug.stepInto);
   const stepOut = () => postAndReload(debug.stepOut);
-  const run = () => postAndReload(debug.run);
   const quit = () => postAndReload(debug.quit);
+  const run = () => debug.run("" + evalBreakpoints?.current?.value).then( (response) => reloadActualSource());
   const evaluate = () =>
     debug.execute("" + evalInput?.current?.value).then((response) => {
       if (typeof response.data != "object") {
@@ -226,27 +236,24 @@ function App() {
   );
 
   const builtInMacroList = (
-    <Grid item xs={3}>
-      <Paper className="App_Paper, App_MacroList">
-        <BuiltInMacrosDisplay data={data} />
-      </Paper>
-    </Grid>
+    <Paper className="App_Paper, App_MacroList">
+      <BuiltInMacrosDisplay data={data} />
+    </Paper>
   );
+
   const userDefinedMacroList = (
-    <Grid item xs={3}>
-      <Paper className="App_Paper, App_MacroList">
-        <UserDefinedMacrosDisplay
-          data={data}
-          captionSetter={setResultCaption}
-          contentSetter={setEvalOutput}
-        />
-      </Paper>
-    </Grid>
+    <Paper className="App_Paper, App_MacroList">
+      <UserDefinedMacrosDisplay
+        data={data}
+        captionSetter={setResultCaption}
+        contentSetter={setEvalOutput}
+      />
+    </Paper>
   );
 
   const runInput = (
     <Grid item xs={6}>
-      <Paper className="App_Paper">
+      <Paper className="App_Paper, run_input">
         <div style={{ marginLeft: "30px", fontSize: "12pt" }}>{"input"}</div>
         <Input text={inputBefore} macro={macro} />
       </Paper>
@@ -263,17 +270,23 @@ function App() {
   );
 
   const evaluateInput = (
-    <Grid item xs={3}>
-      <Paper className="App_Paper, App_Eval">
-        <SimpleTextInput caption={"evaluate"} reference={evalInput}>
-          {""}
-        </SimpleTextInput>
-      </Paper>
-    </Grid>
+    <Paper className="App_Paper, App_Eval">
+      <SimpleTextInput caption={"evaluate"} reference={evalInput}>
+        {""}
+      </SimpleTextInput>
+    </Paper>
+  );
+
+  const breakPointsInput = (
+    <Paper className="App_Paper, App_Eval">
+      <SimpleTextInput caption={"breakpoints"} reference={evalBreakpoints}>
+        {""}
+      </SimpleTextInput>
+    </Paper>
   );
 
   const evaluateOutput = (
-    <Grid item xs={3}>
+    <Grid item xs={6}>
       <Paper className="App_Paper, App_Eval">
         <SimpleTextOutput caption={resultCaption}>
           {evalOutput}
@@ -307,6 +320,7 @@ function App() {
         <Grid container direction="row">
           {commandRowDisplay}
         </Grid>
+
         <Grid
           container
           direction="row"
@@ -315,9 +329,29 @@ function App() {
           justify="space-around"
         >
           {runInput}
-          {builtInMacroList}
-          {evaluateInput}
+
+          <Grid item xs={6}>
+            <Tabs onChange={tabPanelChange}>
+              <Tab label="built-in macros" />
+              <Tab label="user defined" />
+              <Tab label="evaluate" />
+              <Tab label="breakponts" />
+            </Tabs>
+            <TabPanel id="0" hidden={currentTabStop !== 0} other="">
+              {builtInMacroList}
+            </TabPanel>
+            <TabPanel id="1" hidden={currentTabStop !== 1} other="">
+              {userDefinedMacroList}
+            </TabPanel>
+            <TabPanel id="2" hidden={currentTabStop !== 2} other="">
+              {evaluateInput}
+            </TabPanel>
+            <TabPanel id="3" hidden={currentTabStop !== 3} other="">
+              {breakPointsInput}
+            </TabPanel>
+          </Grid>
         </Grid>
+
         <Grid
           container
           direction="row"
@@ -326,7 +360,6 @@ function App() {
           justify="space-around"
         >
           {runOutput}
-          {userDefinedMacroList}
           {evaluateOutput}
         </Grid>
         <Grid

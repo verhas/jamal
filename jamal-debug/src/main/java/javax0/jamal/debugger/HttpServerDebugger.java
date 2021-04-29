@@ -163,6 +163,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     private int currentLevel;
     private int stepLevel;
     private RunState state = RunState.STEP_IN;
+    private final List<String> breakpoints = new ArrayList<>();
     String inputBefore = "";
     CharSequence input;
     String inputAfter = "";
@@ -211,6 +212,14 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     volatile boolean isWaiting;
 
     private void handle() {
+        if (state == RunState.RUN && handleState.equals("BEFORE")) {
+            for (final var breakpoint : breakpoints) {
+                if (breakpoint != null && breakpoint.length() > 0 && macros.contains(breakpoint)) {
+                    state = RunState.STEP_IN;
+                    break;
+                }
+            }
+        }
         if (state != RunState.STEP_IN && (state != RunState.STEP || currentLevel > stepLevel)) {
             return;
         }
@@ -248,6 +257,9 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         task.waitForAck();
                         throw new IllegalArgumentException("Debugger was aborted.");
                     case RUN: // run the processor to the end
+                        byte[] breakpointsBuffer = task.messageBuffer.getBytes(StandardCharsets.UTF_8);
+                        breakpoints.clear();
+                        breakpoints.addAll(List.of(new String(breakpointsBuffer, StandardCharsets.UTF_8).split("\n", -1)));
                         state = RunState.RUN;
                         task.done();
                         task.waitForAck();

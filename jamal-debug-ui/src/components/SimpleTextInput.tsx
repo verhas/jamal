@@ -14,7 +14,7 @@ const SimpleTextInput: FC<SimpleTextInputProps> = ({
 }) => {
   return (
     <div className="SimpleTextInput_Caption">
-      {caption}
+      <div className="textbox_caption">{caption}</div>
       <textarea className="SimpleTextInput_TextArea" ref={reference}>
         {children}
       </textarea>

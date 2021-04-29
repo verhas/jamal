@@ -20,7 +20,7 @@ class DebugCommand {
     return axios.get(this.connection() + command);
   }
 
-  run = () => this.post("/run");
+  run = (breakpoints:string) => this.post("/run",breakpoints);
   step = () => this.post("/step");
   stepInto = () => this.post("/stepInto");
   stepOut = () => this.post("/stepOut");
