@@ -19,7 +19,7 @@ public class TestHello {
     }
     // end snippet
 
-    @Test
+    //@Test
     @DisplayName("Used to debug the debugger UI")
     void testDebugger() throws Exception {
         System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
