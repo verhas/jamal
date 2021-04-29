@@ -93,7 +93,10 @@ function App() {
   const stepInto = () => postAndReload(debug.stepInto);
   const stepOut = () => postAndReload(debug.stepOut);
   const quit = () => postAndReload(debug.quit);
-  const run = () => debug.run("" + evalBreakpoints?.current?.value).then( (response) => reloadActualSource());
+  const run = () =>
+    debug
+      .run("" + evalBreakpoints?.current?.value)
+      .then((response) => reloadActualSource());
   const evaluate = () =>
     debug.execute("" + evalInput?.current?.value).then((response) => {
       if (typeof response.data != "object") {
@@ -331,11 +334,18 @@ function App() {
           {runInput}
 
           <Grid item xs={6}>
-            <Tabs onChange={tabPanelChange}>
-              <Tab label="built-in macros" />
-              <Tab label="user defined" />
-              <Tab label="evaluate" />
-              <Tab label="breakponts" />
+            <Tabs
+              value={currentTabStop}
+              onChange={tabPanelChange}
+              className="tab_panel"
+              centered
+              indicatorColor="primary"
+              textColor="primary"
+            >
+              <Tab value={0} label="built-in macros" />
+              <Tab value={1} label="user defined" />
+              <Tab value={2} label="evaluate" />
+              <Tab value={3} label="breakpoints" />
             </Tabs>
             <TabPanel id="0" hidden={currentTabStop !== 0} other="">
               {builtInMacroList}

@@ -237,7 +237,7 @@ Usage: <main class> [-fhvx] [--dry-dry-run] [--dry-run] [-c=<macroClose>]
   -e, --exclude=<exclude>    file name regex pattern to exclude from the
                                processing
   -f, --file                 convert a single file, specify input and output
-  -g, --debug=<debug>        debugger port
+  -g, --debug=<debug>        type:port, usually http:8080
   -h, --help                 help
   -i, --include=<include>    file name regex pattern to include into the
                                processing

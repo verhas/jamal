@@ -19,15 +19,35 @@ public class TestHello {
     }
     // end snippet
 
-    //@Test
+    /**
+     * This test is used only interactively from IntelliJ to test the debugger UI manually. The execution stops and
+     * starts to wait for the debugger. To avoid this when the project is built the code checks that it was invoked from
+     * IntelliJ. If the  string "Idea" is present in the stack trace as part of some class name then this is IntelliJ,
+     * then we run. Otherwise the test just returns.
+     *
+     * @throws Exception
+     */
+    @Test
     @DisplayName("Used to debug the debugger UI")
     void testDebugger() throws Exception {
-        System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
-        TestThat.theInput(
-            "hahóóó\n".repeat(2) +
-                "{@define a=1}{@define b(x)=x2x}{b{a}}"
-        ).results("121");
-        System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
+        boolean isIntelliJStarted = false;
+        final var st = new Exception().getStackTrace();
+        for (final var s : st) {
+            if (s.getClassName().contains("Idea")) {
+                isIntelliJStarted = true;
+                break;
+            }
+        }
+        if (isIntelliJStarted) {
+            System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
+            TestThat.theInput(
+                "hahóóó\n".repeat(2) +
+                    "{@define a=1}{@define b(x)=x2x}{b{a}}"
+            ).results("hahóóó\n" +
+                "hahóóó\n" +
+                "121");
+            System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
 
+        }
     }
 }
