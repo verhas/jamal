@@ -76,6 +76,8 @@ public class Params {
         T get() throws BadSyntax;
 
         boolean is() throws BadSyntax;
+
+        boolean isPresent() throws BadSyntax;
     }
 
     private final Processor processor;

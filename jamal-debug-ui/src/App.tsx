@@ -339,8 +339,7 @@ function App() {
               onChange={tabPanelChange}
               className="tab_panel"
               centered
-              indicatorColor="primary"
-              textColor="primary"
+              indicatorColor="secondary"
             >
               <Tab value={0} label="built-in macros" />
               <Tab value={1} label="user defined" />
@@ -381,7 +380,7 @@ function App() {
         >
           <Grid item xs={12}>
             <div className="App_LicenseLine">
-              {"v1.0.0, Apache License 2.0, "}
+              {"Peter Verhas 2021, Apache License 2.0, "}
               <a href="https://github.com/verhas/jamal">
                 {"https://github.com/verhas/jamal"}
               </a>

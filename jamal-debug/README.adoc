@@ -293,7 +293,7 @@ In case there is an error (405) then the response is JSON format containing the 
 }
 ----
 
-The stack trace in the sample is abbreviated and also roken into seveal lines.
+The stack trace in the sample is abbreviated and also broken into several lines.
 This is only for documentation purposes.
 
 
@@ -302,7 +302,11 @@ This command can be used to get the result of other `GET` commands together in a
 The URL parameters are the names of the other commands for which the response is needed.
 These are: `level`, `state`, `input`, `output`, `inputBefore`, `processing`, `builtIn`, `userDefined`, `version`.
 
-* `/run` `POST` *body:* none, *response body:* none
+* `/run` `POST` *body:* breakpoints, *response body:* none
+This command can be used to execute the code until the end or until a breakpoint is hit.
+The body of the request is interpreted as plain text.
+It split up into separate lines.
+The execution stops when the current macro or text evaluated in the next step contains any of the break point strings.
 
 * `/step` `POST` *body:* none, *response body:* none.
 This command will ask the debugger to step one macro evaluation further.

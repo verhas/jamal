@@ -31,11 +31,7 @@ public class TestThatTest {
 
     @Test
     @DisplayName("TestThat tests macro throwing exception")
-    void testThrowingMacro() throws
-        InvocationTargetException,
-        NoSuchMethodException,
-        InstantiationException,
-        IllegalAccessException, BadSyntax {
+    void testThrowingMacro() throws Exception {
         TestThat.theMacro(TestingThrowingMacro.class).fromTheInput("").throwsUp(BadSyntax.class);
     }
 

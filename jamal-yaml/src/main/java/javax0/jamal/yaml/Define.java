@@ -5,8 +5,6 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.api.SpecialCharacters;
-import javax0.jamal.tools.InputHandler;
 import org.yaml.snakeyaml.Yaml;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
@@ -49,10 +47,10 @@ public class Define implements Macro, InnerScopeDependent {
         final Object yamlStructure;
         try {
             yamlStructure = yaml.load(in.toString());
-        }catch(Exception e){
-            throw new BadSyntax("Cannot load YAML data.",e);
+        } catch (Exception e) {
+            throw new BadSyntax("Cannot load YAML data.", e);
         }
-        final var yamlObject = new YamlObject(yamlStructure, id);
+        final var yamlObject = new YamlObject(processor, id, yamlStructure);
         processor.define(yamlObject);
         processor.getRegister().export(yamlObject.getId());
         return "";

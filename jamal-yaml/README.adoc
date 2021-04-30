@@ -22,7 +22,10 @@ Following that, you can use the
 . <<ref,`yaml:ref`>>
 . <<resolve,`yaml:resolve`>>
 . <<import,Importing yaml from a file>>
+. <<isResolved,`yaml:isResolved`>>
 . <<get,`yaml:get`>>
+. <<add,`yaml:add`>>
+. <<format,`yaml:format`>>
 . <<dump,`yaml:dump`>>
 . <<xml,`yaml:xml`>>
 . <<output,`yaml:output`>>
@@ -90,7 +93,7 @@ c: {a: this is c.a, b: this is c.b}
 
 The advantage of using this macro over just writing the Yaml directly to the output is that:
 
-* you can split up the Yaml file into smaller pieces using the <<ref,`yaml::ref`>>, and <<resolve,`yaml::resolve`>> macros,
+* you can split up the Yaml file into smaller pieces using the <<ref,`yaml:ref`>>, and <<resolve,`yaml:resolve`>> macros,
 
 * you can use user-defined macro parameters mixing the yaml content with Jamal macros.
 
@@ -272,7 +275,7 @@ The format of the macro is
 ----
 
 
-User-defined Yaml macros created using the <<define,`yaml::define`>> or <<import,`yaml::import`>> macros may reference other user-defined Yaml macros.
+User-defined Yaml macros created using the <<define,`yaml:define`>> or <<import,`yaml:import`>> macros may reference other user-defined Yaml macros.
 When you invoke the macro `yaml:resolve`, it will replace the references in the Yaml macro content with the content of the Yaml macro it references.
 The resolving process is recursive.
 If there are any references in the referenced Yaml macro, it will also be resolved.
@@ -539,8 +542,51 @@ q: *id001
 ----
 
 
+[[isResolved]]
+=== v. `yaml:isResolved`
+
+
+The macro `yaml:isResolved` results `true` or `false` if the Yaml macro given as argument is eihter resolved or not.
+The syntax of the macro is
+
+[source]
+----
+{@yaml:isResolved macro_name}
+----
+
+Example:
+
+[source]
+----
+{@yaml:define a=
+a: this is a
+b: this is b
+}
+{@yaml:isResolved a}
+{@yaml:resolve a}\
+{@yaml:isResolved a}
+----
+
+results
+
+[source]
+----
+false
+true
+----
+
+
+Note that the example Yaml structure does not need resolution.
+This macro does not test the structure.
+It simply tells that the structure went through the resolve process or not.
+
+Usually there is narrow use of this macro.
+There is no penalty invoking <<resolve,`yaml:resolve`>> on a structure that was already resolved.
+The macro resolve does not re-run the resolution process for a structure that was already resolved.
+Other macros that need resolved structures automatically invoke resolving.
+
 [[get]]
-=== v. `yaml:get`
+=== vi. `yaml:get`
 
 
 This macro will fetch one value from a Yaml structure.
@@ -563,7 +609,7 @@ For more information about the OGNL language visit the web site https://commons.
 
 When getting a value out of a Yaml user defined macro the macro will automatically be resolved.
 The resolution can be cloning or in-place.
-To control the resolution process the same options can be used as for the <<resolve,`yaml::resolve`>> macro.
+To control the resolution process the same options can be used as for the <<resolve,`yaml:resolve`>> macro.
 
 ===== Examples
 
@@ -589,8 +635,242 @@ deep h
 ----
 
 
+[[add]]
+=== vii. `yaml:add`
+
+
+The macro `yaml:add` can modify an already parsed Yaml data structure.
+You can add elements to lists or maps inside the Yaml structure.
+The syntax of the macro is
+
+[source]
+----
+{@yaml:add options
+yaml data structure
+}
+----
+
+The yaml data structure is the textual representation of the Yaml data to be hooked on the already existing data structure.
+The options present on the same line as the macro keyword `yaml:add` and the yaml data structure starts on the second line.
+The possible options are:
+
+* `yamlDataTarget` (alias `to`) must be specified and should define the point where the new data structure is added.
+The keyword `yamlDataTarget` can also be a user defined macro.
+The alias `to` can only be used in the macro use.
+Using `yamlDataTarget` defined as a user-defined macro makes sense when there are several additions to the same point.
+The format of the option is `macroName.ognl expression`.
+The name of the macro that holds the current data structure to be modified is at the start of the `to` string.
+It is separated by a `.` dot character from the Ognl expression that identifies the part of the structure to be modified.
+If there is no `.` in this parameter then the root of the structure is used.
+
+* `key` should only be specified when adding new data to a `Map`.
+The value of this option will be the key used in the `Map`.
+If data with the key already exists it will be overwritten.
+It is an error to specify a `key` when adding value to a data point, which is a list.
+
+* `flat` or `flatten` will decompose the Yaml structure before adding to the data point in the original yaml.
+Adding values to a `Map` then the top level of the Yaml structure to be added also has to be `Map`.
+Adding values to a `List` then the top level of the Yaml structure to be added also has to be `List`.
+Adding a `Map` this way the key value pairs of the map will be added to the original Yaml map.
+Adding a `List` this way the values of the list will be appended to the original Yaml list.
+When this option is specified it is an error to specify any `key` since in this case the keys of the map will be used.
+
+==== Examples
+
+===== Adding a value to the top level Map
+
+This example adds a new value to the root of the Yaml structure.
+
+[source]
+----
+{@yaml:define a=
+a: this is a simple Yaml with a top level Map
+}
+{@yaml:add to=a key=b
+this is the value to be added to yaml structure a
+}
+{a}
+----
+
+will result:
+
+[source]
+----
+{a: this is a simple Yaml with a top level Map, b: this is the value to be added to
+    yaml structure a}
+----
+
+
+===== Adding element to a Map in the Yaml structure
+
+In this example the value is added to the value of the map from the top level named `b`.
+
+[source]
+----
+{@yaml:define a=
+a: this is a simple Yaml with a top level Map
+b: {}
+}
+{@yaml:add to=a.b key=c
+this is the value to be added to yaml structure a
+}
+{a}
+----
+
+will result:
+
+[source]
+----
+a: this is a simple Yaml with a top level Map
+b: {c: this is the value to be added to yaml structure a}
+----
+
+
+===== Using flat to add multiple elements to a Map
+
+This example will add multiple elements to a map inside the yaml structure.
+
+[source]
+----
+{@yaml:define docker=
+version: "3.6"
+services:
+  jamal-mongodb:
+    build:
+      args:
+        dump_dir: dump
+      context: ./config-dev/mongodb
+    container_name: zrch-mongodb
+    environment:
+      - TZ=Europe/Zurich
+    image: zrch/mongodb:1.0.1-dev
+    labels:
+      com.javax0.jamal.description: "Persistence service."
+      com.javax0.jamal.is-production: "false"
+    ports:
+      - "27017:27017"
+}
+{@yaml:add to=docker.services["jamal-mongodb"].labels flat
+com.javax0.jamal.title: "Non-relational DB Instance"
+com.javax0.jamal.sizing: 1000
+com.javax0.jamal.nodeType: primary
+}
+{docker}
+----
+
+will result:
+
+[source]
+----
+version: '3.6'
+services:
+  jamal-mongodb:
+    build:
+      args: {dump_dir: dump}
+      context: ./config-dev/mongodb
+    container_name: zrch-mongodb
+    environment: [TZ=Europe/Zurich]
+    image: zrch/mongodb:1.0.1-dev
+    labels: {com.javax0.jamal.description: Persistence service., com.javax0.jamal.is-production: 'false',
+      com.javax0.jamal.title: Non-relational DB Instance, com.javax0.jamal.sizing: 1000,
+      com.javax0.jamal.nodeType: primary}
+    ports: ['27017:27017']
+----
+
+
+===== Adding elements to an array
+
+This example adds one element to an array.
+The added element itself is an array.
+It is not flattened
+
+[source]
+----
+{@yaml:define a=
+- this is a simple Yaml with a top level Map
+- kukuruc
+}
+{@yaml:add to=a
+- this is one element
+- this is the second element}
+{a}
+----
+
+will result:
+
+[source]
+----
+- this is a simple Yaml with a top level Map
+- kukuruc
+- [this is one element, this is the second element]
+----
+
+
+If we use flattening we get different result
+
+[source]
+----
+{@yaml:define a=
+- this is a simple Yaml with a top level Map
+- kukuruc
+}
+{@yaml:format flowStyle=BLOCK}
+{@yaml:add to=a flatten
+- this is one element
+- this is the second element
+}
+{a}
+----
+
+will result:
+
+[source]
+----
+- this is a simple Yaml with a top level Map
+- kukuruc
+- this is one element
+- this is the second element
+----
+
+
+[[format]]
+=== viii. `yaml:format`
+
+
+This macro can be used to set the options for Snake Yaml.
+The format of the macro is
+
+[source]
+----
+{@format options}
+----
+
+The options of the macro are
+
+* `allowUnicode`
+* `canonical`
+* `explicitEnd`
+* `explicitStart`
+* `prettyFlow`
+* `splitLines`
+
+* `defaultFlowStyle`
+* `defaultScalarStyle`
+* `lineBreak`
+
+* `indent`
+* `indicatorIndent`
+* `width`
+
+
+
+Each of these options have a `setXXX` counterpart in SnakeYaml `DumperOption` class.
+``setXXX`` methods with boolean argument need boolean option in this macro.
+Similarly, methods with in argument need integer options.
+Those options that have an enum `setXXX` counterpart should use the name of the individual enum values.
+
 [[dump]]
-=== vi. `yaml:dump`
+=== ix. `yaml:dump`
 
 
 The macro `yaml:dump` can dump the Yaml data structure to a file.
@@ -632,7 +912,7 @@ The resolution process will be in-place unless the option `yamlResolveClone` (al
 
 
 [[xml]]
-=== vii. `yaml:xml`
+=== x. `yaml:xml`
 
 
 The macro `yaml:xml` results a Yaml structure in XML format.
@@ -761,7 +1041,7 @@ Yaml structures can be recursive but XML cannot be.
 In case the Yaml structure is recursive or too deep (by default 300) then Jamal will stop the evaluation.
 
 [[output]]
-=== viii. `yaml:output`
+=== xi. `yaml:output`
 
 
 The macro `yaml:output` redefines the output of the Jamal processing.

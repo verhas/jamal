@@ -180,6 +180,10 @@ private String reportingName(String[] key){
         return (boolean)result;
     }
 
+    public boolean isPresent() throws BadSyntax {
+        return _get().isPresent();
+    }
+
     /**
      * @return {@code true} if the key was defined on the input or as user defined macro and the value is not "0",
      * "false" or "no", OR if the key was defined as an option, then the value of the option
@@ -192,7 +196,7 @@ private String reportingName(String[] key){
         if (value.size() > 0) {
             return !value.get(0).equals("false") && !value.get(0).equals("no") && !value.get(0).equals("0");
         } else {
-            return OptionsStore.getInstance(processor).is(key[0]);
+            return key[0] != null && OptionsStore.getInstance(processor).is(key[0]);
         }
     }
 

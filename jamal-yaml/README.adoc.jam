@@ -2,7 +2,7 @@
 
 {%@import res:jamal.jim%}
 {%#counter:define id=macroChapter {%@define format=$roman. %}%}
-
+{%@snip:collect from=src/main/java%}
 Using this integration module, you can mix Jamal macro text with YAML data.
 To use this module, you have to add the dependency to your Maven project, as:
 {%@snip:xml pom=pom.xml%}\
@@ -24,14 +24,17 @@ Following that, you can use the
 {%chap ref%}
 {%chap resolve%}
 . <<import,{%ImportingChapter%}>>
+{%chap isResolved%}
 {%chap get%}
+{%chap add%}
+{%chap format%}
 {%chap dump%}
 {%chap xml%}
 {%chap output%}
 
 {%@define chap($x)=[[$x]]
 === {%macroChapter%}`yaml:$x`
-%}{%@define link($x)=<<$x,`yaml::$x`>>%}
+%}{%@define link($x)=<<$x,`yaml:$x`>>%}
 macros.
 
 == Macros implemented in the package
@@ -407,6 +410,40 @@ which will result:
 
 {%output%}
 
+{%chap isResolved%}
+
+The macro `yaml:isResolved` results `true` or `false` if the Yaml macro given as argument is eihter resolved or not.
+The syntax of the macro is
+
+{%sample/
+{@yaml:isResolved macro_name}
+%}
+
+Example:
+
+{%sample/
+{@yaml:define a=
+a: this is a
+b: this is b
+}
+{@yaml:isResolved a}
+{@yaml:resolve a}\
+{@yaml:isResolved a}
+%}
+
+results
+
+{%output%}
+
+Note that the example Yaml structure does not need resolution.
+This macro does not test the structure.
+It simply tells that the structure went through the resolve process or not.
+
+Usually there is narrow use of this macro.
+There is no penalty invoking {%link resolve%} on a structure that was already resolved.
+The macro resolve does not re-run the resolution process for a structure that was already resolved.
+Other macros that need resolved structures automatically invoke resolving.
+
 {%chap get%}
 
 This macro will fetch one value from a Yaml structure.
@@ -448,6 +485,177 @@ b:
 will result
 
 {%output%}
+
+{%chap add%}
+
+The macro `yaml:add` can modify an already parsed Yaml data structure.
+You can add elements to lists or maps inside the Yaml structure.
+The syntax of the macro is
+
+{%sample/
+{@yaml:add options
+yaml data structure
+}
+%}
+
+The yaml data structure is the textual representation of the Yaml data to be hooked on the already existing data structure.
+The options present on the same line as the macro keyword `yaml:add` and the yaml data structure starts on the second line.
+The possible options are:
+
+* `yamlDataTarget` (alias `to`) must be specified and should define the point where the new data structure is added.
+The keyword `yamlDataTarget` can also be a user defined macro.
+The alias `to` can only be used in the macro use.
+Using `yamlDataTarget` defined as a user-defined macro makes sense when there are several additions to the same point.
+The format of the option is `macroName.ognl expression`.
+The name of the macro that holds the current data structure to be modified is at the start of the `to` string.
+It is separated by a `.` dot character from the Ognl expression that identifies the part of the structure to be modified.
+If there is no `.` in this parameter then the root of the structure is used.
+
+* `key` should only be specified when adding new data to a `Map`.
+The value of this option will be the key used in the `Map`.
+If data with the key already exists it will be overwritten.
+It is an error to specify a `key` when adding value to a data point, which is a list.
+
+* `flat` or `flatten` will decompose the Yaml structure before adding to the data point in the original yaml.
+Adding values to a `Map` then the top level of the Yaml structure to be added also has to be `Map`.
+Adding values to a `List` then the top level of the Yaml structure to be added also has to be `List`.
+Adding a `Map` this way the key value pairs of the map will be added to the original Yaml map.
+Adding a `List` this way the values of the list will be appended to the original Yaml list.
+When this option is specified it is an error to specify any `key` since in this case the keys of the map will be used.
+
+==== Examples
+
+===== Adding a value to the top level Map
+
+This example adds a new value to the root of the Yaml structure.
+
+{%sample/
+{@yaml:define a=
+a: this is a simple Yaml with a top level Map
+}
+{@yaml:add to=a key=b
+this is the value to be added to yaml structure a
+}
+{a}
+%}
+
+will result:
+
+{%output%}
+
+===== Adding element to a Map in the Yaml structure
+
+In this example the value is added to the value of the map from the top level named `b`.
+
+{%sample/
+{@yaml:define a=
+a: this is a simple Yaml with a top level Map
+b: {}
+}
+{@yaml:add to=a.b key=c
+this is the value to be added to yaml structure a
+}
+{a}
+%}
+
+will result:
+
+{%output%}
+
+===== Using flat to add multiple elements to a Map
+
+This example will add multiple elements to a map inside the yaml structure.
+
+{%sample/
+{@yaml:define docker=
+version: "3.6"
+services:
+  jamal-mongodb:
+    build:
+      args:
+        dump_dir: dump
+      context: ./config-dev/mongodb
+    container_name: zrch-mongodb
+    environment:
+      - TZ=Europe/Zurich
+    image: zrch/mongodb:1.0.1-dev
+    labels:
+      com.javax0.jamal.description: "Persistence service."
+      com.javax0.jamal.is-production: "false"
+    ports:
+      - "27017:27017"
+}
+{@yaml:add to=docker.services["jamal-mongodb"].labels flat
+com.javax0.jamal.title: "Non-relational DB Instance"
+com.javax0.jamal.sizing: 1000
+com.javax0.jamal.nodeType: primary
+}
+{docker}
+%}
+
+will result:
+
+{%output%}
+
+===== Adding elements to an array
+
+This example adds one element to an array.
+The added element itself is an array.
+It is not flattened
+
+{%sample/
+{@yaml:define a=
+- this is a simple Yaml with a top level Map
+- kukuruc
+}
+{@yaml:add to=a
+- this is one element
+- this is the second element}
+{a}
+%}
+
+will result:
+
+{%output%}
+
+If we use flattening we get different result
+
+{%sample/
+{@yaml:define a=
+- this is a simple Yaml with a top level Map
+- kukuruc
+}
+{@yaml:format flowStyle=BLOCK}
+{@yaml:add to=a flatten
+- this is one element
+- this is the second element
+}
+{a}
+%}
+
+will result:
+
+{%output%}
+
+{%chap format%}
+
+This macro can be used to set the options for Snake Yaml.
+The format of the macro is
+
+{%sample/
+{@format options}
+%}
+
+The options of the macro are
+
+{%#replaceLines replace="/.*?\"(\\w+)\".*/* `$1`/"
+{%@snip formatOptions%}
+%}
+
+Each of these options have a `setXXX` counterpart in SnakeYaml `DumperOption` class.
+``setXXX`` methods with boolean argument need boolean option in this macro.
+Similarly, methods with in argument need integer options.
+Those options that have an enum `setXXX` counterpart should use the name of the individual enum values.
 
 {%chap dump%}
 

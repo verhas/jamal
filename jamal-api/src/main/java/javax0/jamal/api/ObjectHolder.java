@@ -16,6 +16,6 @@ package javax0.jamal.api;
  * <p>
  * The typical use is, when a Jamal embedded scripting engine can get access to these structures.
  */
-public interface ObjectHolder {
-    Object getObject();
+public interface ObjectHolder<T> {
+    T getObject();
 }

@@ -231,6 +231,7 @@ public class TestThat implements AutoCloseable {
         InvocationTargetException, BadSyntax {
         try {
             results();
+            Assertions.fail("The evaluation did not throw an exception");
         } catch (Throwable t) {
             if (throwable.isAssignableFrom(t.getClass())) {
                 if (regex != null) {

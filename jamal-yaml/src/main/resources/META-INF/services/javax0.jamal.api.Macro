@@ -4,4 +4,7 @@ javax0.jamal.yaml.Ref
 javax0.jamal.yaml.Dump
 javax0.jamal.yaml.Output
 javax0.jamal.yaml.Get
+javax0.jamal.yaml.Add
+javax0.jamal.yaml.IsResolved
+javax0.jamal.yaml.Format
 javax0.jamal.yaml.Xml
