@@ -10,9 +10,8 @@
         {opens/tools/tools.param}
     }
     {build|{plugins| {@include ../plugins.jim}}}
-    {dependencies#
-        {@for MODULE in (api)=
-            {dependency|{GROUPID}|jamal-MODULE}}
+    {dependencies
+        {dependency :{GROUPID}:jamal-api}
         {@for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

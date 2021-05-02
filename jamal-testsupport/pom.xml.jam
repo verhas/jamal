@@ -11,9 +11,10 @@
 
     {build|{plugins| {@include ../plugins.jim}}}
     {dependencies#
-        {@for MODULE in (api,tools,engine)=
+        {@for MODULE in (api,tools,engine,yaml)=
             {dependency :{GROUPID}:jamal-MODULE}}
         {@for MODULE in (api,engine)=
             {dependency :org.junit.jupiter:junit-jupiter-MODULE::compile}}
+        {dependency :org.yaml:snakeyaml:{SNAKEYAML_VERSION}}
     }
 {end project}

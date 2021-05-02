@@ -30,7 +30,6 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.yaml/javax0.jamal.yaml=ALL-UNNAMED
-                          --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>
@@ -48,23 +47,6 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-testsupport</artifactId>
-            <version>1.7.5-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-snippet</artifactId>
-            <version>1.7.5-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-jamal</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

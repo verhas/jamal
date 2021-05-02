@@ -1,4 +1,4 @@
-package javax0.jamal.yaml;
+package javax0.jamal.test.yaml;
 
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;

@@ -648,7 +648,7 @@ The format of the macro is
 
 The options of the macro are
 
-{%#replaceLines replace="/.*?\"(\\w+)\".*/* `$1`/"
+{%#replaceLines replace="~.*?\"(\\w+)\".*~* `$1`~^\\s*//~~"
 {%@snip formatOptions%}
 %}
 
@@ -656,6 +656,150 @@ Each of these options have a `setXXX` counterpart in SnakeYaml `DumperOption` cl
 ``setXXX`` methods with boolean argument need boolean option in this macro.
 Similarly, methods with in argument need integer options.
 Those options that have an enum `setXXX` counterpart should use the name of the individual enum values.
+
+==== Examples
+
+In these example we will use the yaml structure:
+
+{%sample/
+{@yaml:define yaml=
+a: this is a é•
+b: this is b
+bb:
+  h:
+    z:
+      t: t34 panzer
+c:
+- 1
+- 2
+- |
+  this is
+    a multi
+  line
+  string with one fairly long line that will be split 0000000000 1111111111 2222222222 3333333333 4444444444 5555555555 66666666666
+k: 3
+h: [1,2,3]
+}
+{@yaml:format}{@comment this is resetting all previous formatting}
+{yaml}
+%}
+
+It prints as the following without specifying any format:
+
+{%output%}
+
+===== Allow Unicode
+
+`allowUnicode` instructs the snake yaml output to include the unicode characters into the output instead of using escape sequences in string.
+
+{%sample/
+{@yaml:format allowUnicode}
+{yaml}
+%}
+
+{%output%}
+
+===== Canonical
+
+The option `canonical` instructs snake yaml to output the structure in a canonical format.
+
+{%sample/
+{@yaml:format canonical}
+{yaml}
+%}
+
+{%output%}
+
+===== Explicit Start and End
+
+The option `explicitStart` and `explicitEnd` instructs snake yaml to output the starting `---` and ending `...` characters.
+
+{%sample/
+{@yaml:format explicitEnd explicitStart}
+{yaml}
+%}
+
+{%output%}
+
+===== prettyFlow
+
+The option `prettyFlow` instructs snake yaml to output the yaml structure in pretty flow.
+
+{%sample/
+{@yaml:format prettyFlow}
+{yaml}
+%}
+
+{%output%}
+
+===== splitLines
+
+The option `splitLines` instructs snake yaml to output the yaml structure in pretty flow.
+
+{%sample/
+{@yaml:format splitLines}
+{yaml}
+%}
+
+For some reason it does not split the lines
+
+{%output%}
+
+===== Flow Style
+
+{%sample/
+{@yaml:format flowStyle=FLOW}
+FLOW
+{yaml}
+{@yaml:format flowStyle=BLOCK}
+BLOCK
+{yaml}
+{@yaml:format flowStyle=AUTO}
+AUTO
+{yaml}
+%}
+
+{%output%}
+
+===== Scalar Style
+
+{%sample/
+{@yaml:format scalarStyle=DOUBLE_QUOTED}
+DOUBLE_QUOTED
+{yaml}
+{@yaml:format scalarStyle=SINGLE_QUOTED}
+SINGLE_QUOTED
+{yaml}
+{@yaml:format scalarStyle=LITERAL}
+LITERAL
+{yaml}
+{@yaml:format scalarStyle=FOLDED}
+FOLDED
+{yaml}
+{@yaml:format scalarStyle=PLAIN}
+PLAIN
+{yaml}
+%}
+
+{%output%}
+
+===== Indenting
+
+{%sample/
+{@yaml:format indent=5}
+{yaml}
+%}
+
+{%output%}
+
+===== Width
+
+{%sample/
+{@yaml:format width=20}
+{yaml}
+%}
+
+{%output%}
 
 {%chap dump%}
 
@@ -784,7 +928,7 @@ The format of the macro is:
 {@yaml:output yamlMacro}
 %}
 
-Here the `yamlMacro` is the name of a Yaml macro to be redered as the final output of the Jamal processing.
+Here the `yamlMacro` is the name of a Yaml macro to be rendered as the final output of the Jamal processing.
 It has to be defined at the end of the processing.
 It also means that this macro has to be on the top level in the macro hierarchy.
 In other words, it has to be a global macro.

@@ -1,0 +1,39 @@
+{%@yaml:string output=
+a is either a, b, c or d
+b is either a, b, c or d
+c is either a, b, c or d
+d is either a, b, c or d
+%}
+
+{%#yaml:define testFor=
+Test a simple for loop:
+  Input: "{@for x in (a,b,c,d)=x is either a, b, c or d\n}"
+  Output: {%@yaml:ref output%}
+
+multi-variable loop:
+  Input: "{@for (x,y) in (a|1,b|2,c|3,d|4)=x is y\n}"
+  Output: |
+    a is 1
+    b is 2
+    c is 3
+    d is 4
+
+Test a simple for loop with separator redefinition:
+  Input: "{@define $forsep=;}{@for x in (a;b;c;d)=x is either a, b, c or d\n}"
+  Output: {%@yaml:ref output%}
+
+Test a simple for loop with separator redefinition and trimmed:
+  Input: "{@for [separator=; trim] x in (a; b; c; d)=x is either a, b, c or d\n}"
+  Output: {%@yaml:ref output%}
+
+Test a simple for loop with back-ticked separator:
+  Input: "{@define $forsep=;}{@for x in `)))`a);b);c);d)`)))`=x is either a, b, c or d\n}"
+  Output: |
+    a) is either a, b, c or d
+    b) is either a, b, c or d
+    c) is either a, b, c or d
+    d) is either a, b, c or d
+
+end: null
+%}
+{%@yaml:output testFor%}

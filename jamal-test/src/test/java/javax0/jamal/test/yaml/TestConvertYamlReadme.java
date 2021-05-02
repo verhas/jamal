@@ -1,4 +1,4 @@
-package javax0.jamal.yaml;
+package javax0.jamal.test.yaml;
 
 import javax0.jamal.DocumentConverter;
 import javax0.jamal.engine.Processor;
@@ -9,7 +9,7 @@ public class TestConvertYamlReadme {
 
     @Test
     void generateDoc() throws Exception {
-        DocumentConverter.convert("./README.adoc.jam");
+        DocumentConverter.convert("../jamal-yaml/README.adoc.jam");
     }
 
 }

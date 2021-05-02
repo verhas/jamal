@@ -4,4 +4,5 @@ module jamal.testsupport {
     requires jamal.engine;
     requires jamal.tools;
     requires org.junit.jupiter.api;
+    requires snakeyaml;
 }

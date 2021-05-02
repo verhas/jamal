@@ -1,0 +1,3 @@
+comment produces empty string:
+  Input: "{@comment does produce empty string}"
+  Output: ""

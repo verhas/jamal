@@ -1,6 +1,7 @@
 package javax0.jamal.test.examples;
 
 import javax0.jamal.api.Debugger;
+import javax0.jamal.test.tools.junit.IntelliJOnly;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,25 +30,15 @@ public class TestHello {
      */
     @Test
     @DisplayName("Used to debug the debugger UI")
+    @IntelliJOnly
     void testDebugger() throws Exception {
-        boolean isIntelliJStarted = false;
-        final var st = new Exception().getStackTrace();
-        for (final var s : st) {
-            if (s.getClassName().contains("Idea")) {
-                isIntelliJStarted = true;
-                break;
-            }
-        }
-        if (isIntelliJStarted) {
-            System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
-            TestThat.theInput(
-                "hahóóó\n".repeat(2) +
-                    "{@define a=1}{@define b(x)=x2x}{b{a}}"
-            ).results("hahóóó\n" +
-                "hahóóó\n" +
-                "121");
-            System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
-
-        }
+        System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
+        TestThat.theInput(
+            "hahóóó\n".repeat(2) +
+                "{@define a=1}{@define b(x)=x2x}{b{a}}"
+        ).results("hahóóó\n" +
+            "hahóóó\n" +
+            "121");
+        System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
     }
 }

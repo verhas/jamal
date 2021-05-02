@@ -1,0 +1,23 @@
+A good begin and end test:
+  Input: |-
+    {@define a=1}\
+    {a}\{%@comment this is 1 as defined%}
+    {@begin azaza}\
+    {a}\{%@comment a new scope started but the definition was not yet overwritten, it is still 1%}
+    {@define a=2}\
+    {a}\{%@comment value overwritten inside the scope, it is 2%}
+    {@end azaza}\
+    {a}{%@comment scope ended, original value was restored, it is 1%}
+  Output: "1121"
+
+Throws exception when a begin is not closed in an included file:
+  Input: "{@include res:import/unclosedbegin.jim}"
+  Throws: Scope was changed from .*?::\{@include res:import/unclosedbegin.jim\} to \{@begin azta\} and it was not closed before the end.
+
+Throws exception when a begin is not closed in an imported file:
+  Input: "{@import res:import/unclosedbegin.jim}"
+  Throws: Scope was changed from null to \{@begin azta\} and it was not closed before the end.
+
+Throws exception when a begin is not closed:
+  Input: "{@define a=1}{a}{@begin azaza}{a}{@define a=2}{a}"
+  Throws: Scope was changed from null to \{@begin azaza\} and it was not closed before the end.

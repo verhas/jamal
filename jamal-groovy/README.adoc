@@ -200,7 +200,7 @@ The possible types are limited to
 
 * `char`
 
-* `string`
+* `YamlString`
 
 The casting type has to be enclosed between `(` and `)` characters, the same way as casting usually is in Java.
 The default is to set the property to be a string.

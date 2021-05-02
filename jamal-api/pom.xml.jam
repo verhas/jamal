@@ -7,12 +7,9 @@
     {description|Jamal macro library API interfaces}
     {build|
 
-      <resources>
-        <resource>
-          <directory>src/main/resources</directory>
-          <filtering>true</filtering>
-        </resource>
-      </resources>
+      {resources
+        {resource {directory src/main/resources}
+                  {filtering true}}}
         {@define openForTests={opens/api/api}}
         {plugins| {@include ../plugins.jim}}
     }

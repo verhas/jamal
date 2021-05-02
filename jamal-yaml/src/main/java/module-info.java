@@ -9,6 +9,7 @@ import javax0.jamal.yaml.Output;
 import javax0.jamal.yaml.Ref;
 import javax0.jamal.yaml.Resolve;
 import javax0.jamal.yaml.Xml;
+import javax0.jamal.yaml.YamlString;
 
 module jamal.yaml {
     exports javax0.jamal.yaml;
@@ -17,5 +18,5 @@ module jamal.yaml {
     requires snakeyaml;
     requires ognl;
     requires jamal.engine;
-    provides Macro with Define, Resolve, Ref, Dump, Output, Get, Xml, Add, IsResolved, Format;
+    provides Macro with Define, Resolve, Ref, Dump, Output, Get, Xml, Add, IsResolved, Format, YamlString;
 }

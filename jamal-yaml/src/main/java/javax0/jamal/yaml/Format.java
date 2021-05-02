@@ -15,19 +15,28 @@ public class Format implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         // snippet formatOptions
         final var allowUnicode = holder(null, "allowUnicode").asBoolean();
+        // specify whether to emit non-ASCII printable Unicode characters.
         final var canonical = holder(null, "canonical").asBoolean();
+        // force the emitter to produce a canonical YAML document.
         final var explicitEnd = holder(null, "explicitEnd").asBoolean();
+        // force to add `...` at the end of the Yaml data
         final var explicitStart = holder(null, "explicitStart").asBoolean();
+        // force to ass `---` at the start of the yaml data
         final var prettyFlow = holder(null, "prettyFlow").asBoolean();
+        // instruct the output to follow pretty flow
         final var splitLines = holder(null, "splitLines").asBoolean();
-
+        // instruct the output to split too long lines
         final var defaultFlowStyle = holder(null, "defaultFlowStyle", "flowStyle").asString().orElseNull();
+        // the flow style can be `FLOW`, `BLOCK` or `AUTO`
         final var defaultScalarStyle = holder(null, "defaultScalarStyle", "scalarStyle").asString().orElseNull();
+        // the scalar style can be `DOUBLE_QUOTED`, `SINGLE_QUOTED`, `LITERAL`, `FOLDED`, or `PLAIN`,
         final var lineBreak = holder(null, "lineBreak").asString().orElseNull();
-
+        // the output line break can be `WIN`, `MAC`, or `UNIX`
         final var indent = holder(null, "indent").asInt().orElseNull();
+        // sets the indentation size, should be max 10
         final var indicatorIndent = holder(null, "indicatorIndent").asInt().orElseNull();
         final var width = holder(null, "width").asInt().orElseNull();
+        // sets the desired width
         // end snippet
 
         Params.using(processor).keys(

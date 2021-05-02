@@ -11,9 +11,9 @@
         {opens/engine/engine.util}}
     {build|{plugins| {@include ../plugins.jim}}}
 
-    {dependencies#
+    {dependencies
         {@for MODULE in (api,tools,core)=
-            {dependency|{GROUPID}|jamal-MODULE}}
+            {dependency :{GROUPID}:jamal-MODULE}}
         {@for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

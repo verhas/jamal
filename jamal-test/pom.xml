@@ -32,8 +32,11 @@
                     <argLine>
                 --add-opens jamal.test/javax0.jamal.test.extra=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.core=ALL-UNNAMED
+                          --add-opens jamal.test/javax0.jamal.test.yaml=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.tools.params=ALL-UNNAMED
+                          --add-opens jamal.test/javax0.jamal.test.tools.junit=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.examples=ALL-UNNAMED
+                          --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>
@@ -51,6 +54,18 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-snippet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-jamal</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

@@ -1,0 +1,3 @@
+Block returns empty string:
+  Input: "{@block this is a bloc}"
+  Output: ""

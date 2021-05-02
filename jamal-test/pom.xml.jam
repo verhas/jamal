@@ -8,15 +8,17 @@
 
     {@define openForTests={opens/test/test.extra}
                           {opens/test/test.core}
+                          {opens/test/test.yaml}
                           {opens/test/test.tools.params}
-                          {opens/test/test.examples}}
+                          {opens/test/test.tools.junit}
+                          {opens/test/test.examples}
+                          {opens/engine/engine}}
 
-    {build|{plugins| {@include ../plugins.jim}}}
+    {build {plugins  {@include ../plugins.jim}}}
 
-    {dependencies#
-        {@for MODULE in (api,tools,engine)=
+    {dependencies
+        {@for MODULE in (api,tools,engine,yaml,snippet,jamal,debug)=
             {dependency|{GROUPID}|jamal-MODULE}}
-        {dependency|{GROUPID}|jamal-debug||}
         {dependency|{GROUPID}|jamal-testsupport||test}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
