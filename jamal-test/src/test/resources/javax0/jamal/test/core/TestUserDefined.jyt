@@ -1,72 +1,51 @@
-package javax0.jamal.test.core;
+macro named 'default' is invoked when defined instead of undefined error:
+  Input: "{@define default=wupppps...}{something}"
+  Output: "wupppps..."
 
-import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.Test;
+Incomplete user defined macro definition throws exception:
+  Input: "{@define z wupppps...}"
+  Throws: "define 'z' has no '=' to body"
 
-public class TestUserDefined {
+macro named 'default' is invoked when defined instead of zero string when macro used optionally:
+  Input: "{@define default=wupppps...}{?something}"
+  Output: "wupppps..."
 
-    @Test
-    void testDefault() throws Exception {
-        TestThat.theInput("{@define default=wupppps...}{something}").results("wupppps...");
-    }
+simplest ever define and use user-defined macro:
+  Input: "{@define a=wupppps...}{a}"
+  Output: "wupppps..."
 
-    @Test
-    void testIncomplete() throws Exception {
-        TestThat.theInput("{@define z wupppps...}").throwsBadSyntax();
-    }
+macros can be redefined:
+  Input: "{@define a=y}{@define a=x}{a}"
+  Output: "x"
 
-    @Test
-    void testDefaultOptional() throws Exception {
-        TestThat.theInput("{@define default=wupppps...}{?something}").results("wupppps...");
-    }
+macros can be redefined conditionally, and are not redefined if already defined:
+  Input: "{@define a=y}{@define ? a=x}{a}"
+  Output: "y"
 
-    @Test
-    void testDefine() throws Exception {
-        TestThat.theInput("{@define a=wupppps...}{a}").results("wupppps...");
-    }
+macro redefinition can result error in case we use !:
+  Input: "{@define a=y}{@define ! a=x}{a}"
+  Throws: "The macro 'a' was already defined."
 
-    @Test
-    void testReDefine() throws Exception {
-        TestThat.theInput("{@define a=y}{@define a=x}{a}").results("x");
-    }
+conditional redefinition does not redefine any higher scope already defined macro:
+  Input: "{#ident {@define :a=y}}{@define ? a=x}{a}"
+  Output: "y"
 
-    @Test
-    void testReDefineOptional() throws Exception {
-        TestThat.theInput("{@define a=y}{@define ? a=x}{a}").results("y");
-    }
+"last character of a macro can be ':' colon":
+  Input: "{#ident {@define a:()=y}}{a:}"
+  Output: "y"
 
-    @Test
-    void testReDefineError() throws Exception {
-        TestThat.theInput("{@define a=y}{@define ! a=x}{a}").throwsBadSyntax();
-    }
+"when {@define a:=y} actually defines a and not a: because it is a := and not a: =":
+  Input: "{@define a:=y}{a}"
+  Output: "y"
 
-    @Test
-    void testGlobal1() throws Exception {
-        TestThat.theInput("{#ident {@define :a=y}}{@define ? a=x}{a}").results("y");
-    }
+"you can define a macro with := when it has parameters":
+  Input: "{@define a(z):=yz}{a Z}"
+  Output: "yZ"
 
-    @Test
-    void testGlobal2() throws Exception {
-        TestThat.theInput("{#ident {@define a:()=y}}{a:}").results("y");
-    }
+"Using := to define a macro will freeze the opening and closing strings in the macro when used":
+  Input: "{@define a(z):={yz}}{@define yZ=k}{@sep [ ]}[a Z]"
+  Output: "{yZ}"
 
-    @Test
-    void testPure() throws Exception {
-        TestThat.theInput("{@define a:=y}{a}").results("y");
-    }
-
-    @Test
-    void testPureWithArguments() throws Exception {
-        TestThat.theInput("{@define a(z):=yz}{a Z}").results("yZ");
-    }
-
-    @Test
-    void testPureAndUse() throws Exception {
-        TestThat.theInput("{@define a(z):={yz}}{@define yZ=k}{@sep [ ]}[a Z]").results("{yZ}");
-    }
-    @Test
-    void testInpureAndUse() throws Exception {
-        TestThat.theInput("{@define a(z)={yz}}{@define yZ=k}{@sep [ ]}[a Z]").results("k");
-    }
-
-}
+"Using = to define a macro will replace the macros in the macro even if the opening/closing string is already different":
+  Input: "{@define a(z)={yz}}{@define yZ=k}{@sep [ ]}[a Z]"
+  Output: "k"

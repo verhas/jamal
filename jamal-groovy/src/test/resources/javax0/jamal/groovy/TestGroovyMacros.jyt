@@ -1,0 +1,165 @@
+
+Test a simple groovy eval:
+  Input: "{@groovy:eval 6+3}"
+  Output: "9"
+
+Test a simple groovy eval with syntax error:
+  Input: "{@groovy:eval 6+}"
+  Throws: "Error evaluating groovy script using eval"
+
+Test the multiple evals do keep variables:
+  Input: "{@groovy:eval myVar = 3\n2}{@groovy:eval myVar}"
+  Output: "23"
+
+Test groovy can be started via eval as JSR:
+  Input: '{@eval/groovy def z = ""; (0..9).each{z+=it};z}'
+  Output: "0123456789"
+
+Test simple Groovy shell example:
+  Input: |-
+    {%@ident
+    {#sep {@escape `|`{% %}`|`}}\
+    {%@import res:groovy.jim%}\
+    {%#groovy:shell {%shell=engine%}
+      def z = ""; (0..9).each{z+=it}
+      z;
+    %}%}
+  Output: "0123456789"
+
+
+Test simple Groovy shell example with syntax error:
+  Input: |-
+    {#groovy:shell
+    6+}
+  Throws: "There was an exception '.*' executing the groovy script '.*'\\."
+
+Test complex Groovy shell example:
+  Input: |-
+    {%@ident
+    {#sep {@escape `|`{% %}`|`}}\
+    {%@groovy:shell script
+    z = "";%}\
+    {%@groovy:shell script
+    (0..9).each{z+=it};
+    z
+    %}%}
+  Output: "0123456789"
+
+Test complex Groovy shell example with setting and getting a property:
+  Input: |-
+    {%@ident
+    {#sep {@escape `|`{% %}`|`}}\
+    {%@groovy:property z=%}\
+    {%@groovy:shell engine script
+    (0..9).each{z+=it};
+    z
+    %}\
+    {%@groovy:property z%}%}
+  Output: "01234567890123456789"
+
+Test complex Groovy shell example with setting and getting a property:
+  Input: "{%@ident{#sep {@escape `|`{% %}`|`}}{%@groovy:property z : 13%}%}"
+  Throws: "There must be a '=' after the name of the Groovy property to assign a value to it\\."
+
+Test complex Groovy shell example with setting and getting casted property:
+  Input: |-
+    {%@ident
+    {#sep {@escape `|`{% %}`|`}}{%@groovy:property z=(int)55%}{%@groovy:shell script
+    z *= 2
+    (0..9).each{z+=it}
+    z
+    %}%}
+  Output: "155"
+
+
+Test complex Groovy shell example with methods defined in the shell:
+  Input: |-
+    {%@ident
+    {#sep {@escape `|`{% %}`|`}}\
+    {%@groovy:import
+    class Main {
+      static int increment(int x){
+         x + 1
+         }
+      }
+    %}\
+    {%@groovy:shell
+    Main.increment(13)%}%}
+  Output: "14"
+
+
+Test complex Groovy import example with syntax error:
+  Input: "{@groovy:import\n6+}"
+  Throws: "There was an exception '.*' executing the groovy script '.*'\\."
+
+Test complex Groovy shell example with methods defined in the shell:
+  Input: |-
+    {%@ident
+    {#sep {@escape `|`{% %}`|`}}\
+    {%@groovy:import res:increment.groovy%}\
+    {%@groovy:shell
+      Main.increment(13)
+    %}%}
+  Output: "14"
+
+Test complex Groovy shell example with methods defined in the shell:
+  Input: "{%@ident{#sep {@escape `|`{% %}`|`}}{%@try! {%@groovy:eval z%}%}%}"
+  Output: "Error evaluating groovy script using eval"
+
+Test that groovy closer works returning null:
+  Details: >
+    This test shows how a closer written in groovy can access to the result that was created by the run of Jamal and then
+    how it can modify the content of the final result. It does not return the result. Since it returns null the original,
+    modified result is used.
+  Input: |-
+    {%@ident{#sep {@escape `|`{% %}`|`}}\
+    This is a simple text{%@groovy:closer
+    int i=0; while( i < result.size() ){
+      result.insert(i,' ')
+      i += 2
+    }
+    null
+    %}%}
+  Output: " T h i s   i s   a   s i m p l e   t e x t"
+
+
+Test that groovy closer works returning the string builder:
+  Details: >
+    This test shows how a closer written in groovy can access to the result that was created by the run of Jamal and then
+    how it can modify the content of the final result. It returns the result. The original content is thrown away and
+    the returned is used.
+  Input: |-
+    {%@ident{#sep {@escape `|`{% %}`|`}}\
+    This is a simple text{%@groovy:closer
+    int i=0; while( i < result.size() ){
+      result.insert(i,' ')
+      i += 2
+    }
+    result
+    %}%}
+  Output: " T h i s   i s   a   s i m p l e   t e x t"
+
+
+Test that groovy closer works returning the string builder:
+  Input: |
+    {%@ident{#sep {@escape `|`{% %}`|`}}\
+    This is a simple text
+    {%@groovy:closer
+    'I\'m too old for this shit.'%}%}
+  Output: I'm too old for this shit.
+
+Test that groovy closers works if there are multiple, the order is guaranteed:
+  Input: |-
+    {%@ident{#sep {@escape `|`{% %}`|`}}\
+    AAA{%@groovy:closer
+    '*'+result+'*'
+    %}\
+    {%@groovy:closer
+    '+'+result+'+'
+    %}%}
+  Output: +*AAA*+
+
+Test that groovy closer throws when there is a sytax error:
+  Input: "{@groovy:closer\n6+}"
+  Throws: "There was an exception '.*' executing the groovy closer script in the shell '.*'."
+

@@ -21,6 +21,21 @@ public class Define implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final String id = getMacroIdentifier(in, processor);
+        if (id == null) return "";
+        final Object yamlStructure;
+        try {
+            yamlStructure = yaml.load(in.toString());
+        } catch (Exception e) {
+            throw new BadSyntax("Cannot load YAML data.", e);
+        }
+        final var yamlObject = new YamlObject(processor, id, yamlStructure);
+        processor.define(yamlObject);
+        processor.getRegister().export(yamlObject.getId());
+        return "";
+    }
+
+    static String getMacroIdentifier(Input in, Processor processor) throws BadSyntax {
         skipWhiteSpaces(in);
         var optional = firstCharIs(in, DEFINE_OPTIONALLY);
         var noRedefine = firstCharIs(in, ERROR_REDEFINE);
@@ -32,7 +47,7 @@ public class Define implements Macro, InnerScopeDependent {
         final var id = fetchId(in);
         if (processor.isDefined(convertGlobal(id))) {
             if (optional) {
-                return "";
+                return null;
             }
             if (noRedefine) {
                 throw new BadSyntax("The macro '" + id + "' was already defined.");
@@ -44,16 +59,7 @@ public class Define implements Macro, InnerScopeDependent {
         }
         skip(in, 1);
         skipWhiteSpaces2EOL(in);
-        final Object yamlStructure;
-        try {
-            yamlStructure = yaml.load(in.toString());
-        } catch (Exception e) {
-            throw new BadSyntax("Cannot load YAML data.", e);
-        }
-        final var yamlObject = new YamlObject(processor, id, yamlStructure);
-        processor.define(yamlObject);
-        processor.getRegister().export(yamlObject.getId());
-        return "";
+        return id;
     }
 
     @Override

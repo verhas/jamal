@@ -1,44 +1,23 @@
-package javax0.jamal.test.core;
+"Test single export":
+  Input: "{#block {@define a=1}{@export a}}{a}"
+  Output: "1"
 
-import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+"Test multiple exports":
+  Input: "{#block {@define a=1}{@define b=1}{@export a, b}}{a}{b}"
+  Output: "11"
 
-public class TestExport {
+"Throws exception when the macro exported is not defined":
+  Input: "{#block {@define a=1}{@export a, b}}"
+  Throws: "Macro 'b' cannot be exported, not in the scope of export."
 
-    @Test
-    @DisplayName("Test single export")
-    void testSingleExport() throws Exception {
-        TestThat.theInput("{#block {@define a=1}{@export a}}{a}").results("1");
-    }
+"Throws exception when the macro exported is defined in hiher scope":
+  Input: "{@define b=1}{#block {@define a=1}{@export a, b}}"
+  Throws: "Macro 'b' cannot be exported, not in the scope of export."
 
-    @Test
-    @DisplayName("Test multiple exports")
-    void testMultipleExport() throws Exception {
-        TestThat.theInput("{#block {@define a=1}{@define b=1}{@export a, b}}{a}{b}").results("11");
-    }
+"Throws exception when the macro exported from top level":
+  Input: "{@define b=1}{@define a=1}{@export a, b}"
+  Throws: "Macro 'a' cannot be exported from the top level"
 
-    @Test
-    @DisplayName("Throws exception when the macro exported is not defined")
-    void testNotDefined() throws Exception {
-        TestThat.theInput("{#block {@define a=1}{@export a, b}}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Throws exception when the macro exported is defined in hiher scope")
-    void testDefinedHigher() throws Exception {
-        TestThat.theInput("{@define b=1}{#block {@define a=1}{@export a, b}}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Throws exception when the macro exported from top level")
-    void testExportFromTopLevel() throws Exception {
-        TestThat.theInput("{@define b=1}{@define a=1}{@export a, b}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Throws exception when empty export")
-    void testExportEmpty() throws Exception {
-        TestThat.theInput("{#block {@export }}").throwsBadSyntax();
-    }
-}
+"Throws exception when empty export":
+  Input: "{#block {@export }}"
+  Throws: "Macro '' cannot be exported, not in the scope of export."

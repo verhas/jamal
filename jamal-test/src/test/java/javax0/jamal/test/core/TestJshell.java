@@ -70,7 +70,6 @@ public class TestJshell {
             "    }\n" +
             "}\n" +
             "{#block\n" +
-            "{@options JShellScriptBlockEvaluate}\n" +
             "{@script helloBlock/JShell(a,b)=hallo(\n" +
             ");hello()}\n" +
             "{@export helloBlock}}\n" +

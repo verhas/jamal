@@ -1,21 +1,36 @@
 package javax0.jamal.test.core;
 
+import javax0.jamal.testsupport.JamalTests;
 import javax0.jamal.testsupport.JamalYamlTest;
-import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.TestFactory;
-
-import java.util.Collection;
 
 public class Test {
 
     @TestFactory
-    Collection<? extends DynamicNode> testAll() {
+    JamalTests<?> testAll() {
         return JamalYamlTest.factory(
             "TestFor",
             "TestBeginEnd",
             "TestBlock",
             "TestComment",
-            "TestDefine"
+            "TestDefine",
+            "TestEscape",
+            "TestEval",
+            "TestExport",
+            "TestIdent",
+            "TestIf",
+            "TestImport",
+            "TestJShell",
+            "TestNewLineOptions",
+            "TestOptions",
+            "TestRecursiveMacro",
+            "TestRequire",
+            "TestTry",
+            "TestUndefine",
+            "TestUse",
+            "TestUserDefined",
+            "TestSep",
+            "nested_ud_macros"
         );
     }
 }

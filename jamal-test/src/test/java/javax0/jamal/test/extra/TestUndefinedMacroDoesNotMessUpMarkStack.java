@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * These tests check that when a user defined macro is not defined and this error happens inside an `try` macro then the
- * push/pop stack of the scopes do not get messed up.
+ * push/pop stack of the scopes does not get messed up.
  */
 public class TestUndefinedMacroDoesNotMessUpMarkStack {
 

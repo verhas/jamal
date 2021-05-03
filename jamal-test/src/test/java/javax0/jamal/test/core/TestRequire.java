@@ -8,46 +8,6 @@ import org.junit.jupiter.api.Test;
 public class TestRequire {
 
     @Test
-    @DisplayName("Test that the 'require' macro throws an exception if there are no arguments")
-    void testRequireEmptyStringThrowsException() throws Exception {
-        TestThat.theInput("{@require}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Test that the 'require' macro throws an exception if there is an unusable comparison")
-    void testRequireEmptyBadComparisonThrowsException() throws Exception {
-        TestThat.theInput("{@require != 1.6.7}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Test that the 'require' macro throws an exception if there is no version after the comparison sign")
-    void testRequireWoVersionThrowsException() throws Exception {
-        TestThat.theInput("{@require <}").throwsBadSyntax();
-        TestThat.theInput("{@require <=}").throwsBadSyntax();
-        TestThat.theInput("{@require >=}").throwsBadSyntax();
-        TestThat.theInput("{@require >}").throwsBadSyntax();
-        TestThat.theInput("{@require =}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Test that requiring an old version throws BadSyntax")
-    void testOldVersion() throws Exception {
-        TestThat.theInput("{@require 1.5.3}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Test that requiring the latest \"old\" version throws BadSyntax")
-    void testLatestOldVersion() throws Exception {
-        TestThat.theInput("{@require 1.6.3}").throwsBadSyntax();
-    }
-
-    @Test
-    @DisplayName("Test that requiring the first \"new\" version is okay")
-    void testFirstNewVersion() throws Exception {
-        TestThat.theInput("{@require 1.6.4-SNAPSHOT}").results("");
-    }
-
-    @Test
     @DisplayName("Test that requiring a future version throws exception")
     void testFutureVersion() throws Exception {
         final var current = Processor.jamalVersion();

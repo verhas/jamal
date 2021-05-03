@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test the {@code env} macro. Note that this test cannot be implemented using YAML test. It can but then the env macro
+ * would just be tested using itself.
+ */
 public class TestEnv {
 
     @Test

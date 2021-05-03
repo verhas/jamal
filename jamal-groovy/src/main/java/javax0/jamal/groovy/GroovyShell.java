@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 
 public class GroovyShell implements Macro, InnerScopeDependent {
     @Override

@@ -38,4 +38,18 @@ If and when the macro is expected to throw exception (probably BadSyntaxAt) then
 ```
 
 If you expect any other exception, other than `BadSyntaxAt` then you can also use `throwsUp(exception.class)` instead of
-`{throwsBadSyntax()`.
+`throwsBadSyntax()`.
+
+```java
+public class Test {
+
+    @TestFactory
+    Object testAll() {
+        return JamalYamlTest.factory(
+            String[]{ list all test files that are in the same resource directory and have .jyt extension}
+        );
+    }
+}
+```
+
+Then have the files with `.jyt` extension contain Jamal preprocessed Yaml files. Open and close are `{%` and `%}`.

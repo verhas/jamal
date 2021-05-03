@@ -1,4 +1,8 @@
-package javax0.jamal.test.core;
+Use can define a class to be used as a macro:
+  Input: "{@use javax0.jamal.builtins.Define as defidufi}{@defidufi z=13}{z}"
+  Output: "13"
 
-public class TestUse {
-}
+Use can define an alias for an already defined macro:
+  Input: "{@use define as defidufi}{@defidufi z=13}{z}"
+  Output: "13"
+

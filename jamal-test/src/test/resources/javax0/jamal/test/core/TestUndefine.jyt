@@ -1,54 +1,37 @@
-package javax0.jamal.test.core;
+Test that a local macro can be undefined:
+  "a":
+    Input: "{@define fruit=apple}{fruit}{@undefine fruit}{?fruit}"
+    Output: "apple"
+  "b":
+    Input: "{@define fruit=apple}{fruit}{@undefine fruit}{fruit}"
+    Throws: "User defined macro '\\{fruit ...' is not defined."
 
-import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+Test that a global macro can be undefined:
+  "a":
+    Input: "{@define :fruit=apple}{fruit}{@undefine fruit}{?fruit}"
+    Output: "apple"
+  "b":
+    Input: "{@define :fruit=apple}{fruit}{@undefine :fruit}{?:fruit}"
+    Output: "apple"
+  "c":
+    Input: "{@define :fruit=apple}{fruit}{@undefine fruit}{fruit}"
+    Throws: "User defined macro '\\{fruit ...' is not defined."
+  "d":
+    Input: "{@define :fruit=apple}{fruit}{@undefine :fruit}{:fruit}"
+    Throws: "User defined macro '\\{:fruit ...' is not defined."
 
-public class TestUndefine {
+Test that a global macro can be undefined locally:
+  Input: "{@define :fruit=apple}{fruit} {#ident {@undefine fruit} *{?fruit}* }{fruit}"
+  Output: "apple ** apple"
 
-    @Test
-    @DisplayName("Test that a local macro can be undefined")
-    void testLocalUndefine() throws Exception {
-        TestThat.theInput("{@define fruit=apple}{fruit}{@undefine fruit}{?fruit}").results("apple");
-        TestThat.theInput("{@define fruit=apple}{fruit}{@undefine fruit}{fruit}").throwsBadSyntax();
-    }
+Undefinedness can be exported:
+  Input: "{@define :fruit=apple}{fruit} {#ident {@undefine fruit} *{?fruit}* {@export fruit}}{?fruit}"
+  Output: "apple ** "
 
-    @Test
-    @DisplayName("Test that a global macro can be undefined")
-    void testGlobalUndefine() throws Exception {
-        TestThat.theInput("{@define :fruit=apple}{fruit}{@undefine fruit}{?fruit}").results("apple");
-        TestThat.theInput("{@define :fruit=apple}{fruit}{@undefine :fruit}{?:fruit}").results("apple");
-        TestThat.theInput("{@define :fruit=apple}{fruit}{@undefine fruit}{fruit}").throwsBadSyntax();
-        TestThat.theInput("{@define :fruit=apple}{fruit}{@undefine :fruit}{:fruit}").throwsBadSyntax();
-    }
+Test that a global macro can be undefined globally from local place:
+  Input: "{@define :fruit=apple}{fruit} {#ident {@undefine :fruit} *{?fruit}* }{?fruit}"
+  Output: "apple ** "
 
-    @Test
-    @DisplayName("Test that a global macro can be undefined locally")
-    void testGlobalLocallyUndefine() throws Exception {
-        TestThat.theInput("{@define :fruit=apple}{fruit} " +
-            "{#ident {@undefine fruit} *{?fruit}* }" +
-            "{fruit}").results("apple ** apple");
-    }
-
-    @Test
-    @DisplayName("Undefinedness can be exported")
-    void testExportUndefine() throws Exception {
-        TestThat.theInput("{@define :fruit=apple}{fruit} " +
-            "{#ident {@undefine fruit} *{?fruit}* {@export fruit}}" +
-            "{?fruit}").results("apple ** ");
-    }
-
-    @Test
-    @DisplayName("Test that a global macro can be undefined globally from local place")
-    void testGlobalGloballyLocalUndefine() throws Exception {
-        TestThat.theInput("{@define :fruit=apple}{fruit} {#ident {@undefine :fruit} *{?fruit}* }{?fruit}")
-            .results("apple ** ");
-    }
-
-    @Test
-    @DisplayName("Test that a global macro can be undefined globally from local place")
-    void testLocalGloballyLocalUndefine() throws Exception {
-        TestThat.theInput("{#ident {@define fruit=apple}{@undefine :fruit} *{?fruit}*}{?fruit}")
-            .results("*apple*");
-    }
-}
+Test that a global macro can be undefined globally from local place:
+  Input: "{#ident {@define fruit=apple}{@undefine :fruit} *{?fruit}*}{?fruit}"
+  Output: "*apple*"

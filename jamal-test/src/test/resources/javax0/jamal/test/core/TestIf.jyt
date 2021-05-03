@@ -1,29 +1,27 @@
-package javax0.jamal.test.core;
+Empty string is evaluated false:
+  Input: '{@if || this is not the output| this is the output}'
+  Output: ' this is the output'
 
-import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+Literal 'false' is evaluated false:
+  Input: '{@if |false| this is not the output| this is the output}'
+  Output: ' this is the output'
 
-public class TestIf {
+Literal '0' is evaluated false:
+  Input: '{@if |0| this is not the output| this is the output}'
+  Output: ' this is the output'
 
-    @Test
-    void testIf()throws Exception{
-        TestThat.theInput(
-            "{@define enclose(a)=<||a||>}{@define z=13}\n" +
-                "{enclose {#if || |{z}}}\n" +
-                "{enclose {#if |||{z}}}"
-        ).results(
-            "\n" +
-                "<||13||>\n" +
-                "<||13||>"
-        );
-    }
+When condition is false and there is no "else" part then empty string is the result:
+  Input: '{@if |0| this is not the output     }'
+  Output: ''
 
-    @Test
-    @DisplayName("Test if with regular expression separator")
-    void testRegExpSeparator() throws Exception {
-        TestThat.theInput("{#if`///`1///a}").results("a");
-        TestThat.theInput("{#if`///`1///}").results("");
-        TestThat.theInput("{#if`///`1}").results("");
-    }
-}
+Literal '0000' is evaluated false:
+  Input: '{@if |0000| this is not the output| this is the output}'
+  Output: ' this is the output'
+
+Anything that is not zero length string, numeric not zero is true:
+  Input: '{@if|0000.|this is not a number any more}'
+  Output : this is not a number any more
+
+You can use regular expression as separator":
+  Input: '{#if`///`1///a}'
+  Output: a

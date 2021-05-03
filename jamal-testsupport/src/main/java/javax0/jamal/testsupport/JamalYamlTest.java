@@ -17,18 +17,20 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class JamalYamlTest {
-    public static Collection<? extends DynamicNode> factory(String... testFiles) {
+    private static final List<String> keywords = List.of("Input", "Output", "Throws", "Details");
+
+    public static JamalTests factory(String... testFiles) {
         final var klass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
 
         if (testFiles == null || testFiles.length == 0) {
             return new JamalYamlTest().factoryOne(klass, klass.getSimpleName());
         } else {
-            final var dynamicContainers = new ArrayList<DynamicContainer>();
+            final var dynamicContainers = new JamalTests<DynamicContainer>();
             for (final var s : testFiles) {
                 dynamicContainers.add(DynamicContainer.dynamicContainer(s, new JamalYamlTest().factoryOne(klass, s)));
             }
@@ -37,41 +39,53 @@ public class JamalYamlTest {
     }
 
 
-    final ArrayList<DynamicTest> dynamicTests = new ArrayList<>();
     final Yaml yaml = new Yaml();
 
-    public Collection<DynamicTest> factoryOne(Class<?> klass, String testFile) {
-        final InputStream is = getInputStream(klass, testFile);
+    public JamalTests factoryOne(Class<?> klass, String testFile) {
+        final JamalTests<DynamicNode> dynamicTests = new JamalTests<>();
+        final InputStream is = getInputStream(klass, testFile, dynamicTests);
         if (dynamicTests.size() > 0) {
             return dynamicTests;
         }
-        final StringBuffer sb = readFileContent(testFile, is);
+        final StringBuffer sb = readFileContent(testFile, is, dynamicTests);
         if (dynamicTests.size() > 0) {
             return dynamicTests;
         }
-        final String processed = process(testFile, sb);
+        final String processed = process(testFile, sb, dynamicTests);
         if (dynamicTests.size() > 0) {
             return dynamicTests;
         }
-        final Map<String, Map<String, String>> tests = loadYaml(testFile, processed);
+        final Map<String, Map<String, Object>> tests = loadYaml(testFile, processed, dynamicTests);
         if (dynamicTests.size() > 0) {
             return dynamicTests;
         }
+        return addTests(tests, dynamicTests);
+    }
+
+    private JamalTests<DynamicNode> addTests(Map<String, Map<String, Object>> tests, JamalTests<DynamicNode> dynamicNodes) {
         for (final var e : tests.entrySet()) {
             if ("end".equals(e.getKey())) {
                 break;
             }
-            dynamicTests.add(DynamicTest.dynamicTest(e.getKey(), () -> exec(e.getKey(), e.getValue())));
+            if (e.getValue() != null && keywords.stream().noneMatch(k -> e.getValue().containsKey(k))) {
+                dynamicNodes.add(DynamicContainer.dynamicContainer(e.getKey(), new JamalYamlTest().addTests((Map) e.getValue(), new JamalTests<>())));
+            } else {
+                if (e.getValue() == null) {
+                    dynamicNodes.add(DynamicTest.dynamicTest(e.getKey(), () -> Assertions.fail(e.getKey() + " has to describe a Map in Yaml format")));
+                } else {
+                    dynamicNodes.add(DynamicTest.dynamicTest(e.getKey(), () -> exec(e.getKey(), e.getValue())));
+                }
+            }
         }
-        return dynamicTests;
+        return dynamicNodes;
     }
 
-    private Map<String, Map<String, String>> loadYaml(String testFile, String processed) {
+    private Map<String, Map<String, Object>> loadYaml(String testFile, String processed, JamalTests<DynamicNode> dynamicTests) {
         final Object tests;
         try {
             tests = yaml.load(processed);
             if (tests instanceof Map) {
-                return (Map<String, Map<String, String>>) tests;
+                return (Map<String, Map<String, Object>>) tests;
             } else {
                 dynamicTests.add(DynamicTest.dynamicTest(testFile, () -> Assertions.fail(testFile + ".jyt has to describe a Map in Yaml format")));
             }
@@ -81,7 +95,7 @@ public class JamalYamlTest {
         return null;
     }
 
-    private String process(String testFile, StringBuffer sb) {
+    private String process(String testFile, StringBuffer sb, JamalTests<DynamicNode> dynamicTests) {
         final var processor = new Processor("{%", "%}");
         final String processed;
         try {
@@ -93,7 +107,7 @@ public class JamalYamlTest {
         return null;
     }
 
-    private StringBuffer readFileContent(String testFile, InputStream is) {
+    private StringBuffer readFileContent(String testFile, InputStream is, JamalTests<DynamicNode> dynamicTests) {
         final var sb = new StringBuffer();
         try (InputStreamReader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
              BufferedReader reader = new BufferedReader(isReader)) {
@@ -107,7 +121,7 @@ public class JamalYamlTest {
         return sb;
     }
 
-    private InputStream getInputStream(Class<?> klass, String testFile) {
+    private InputStream getInputStream(Class<?> klass, String testFile, JamalTests<DynamicNode> dynamicTests) {
         final var is = klass.getResourceAsStream(testFile + ".jyt");
         if (is == null) {
             dynamicTests.add(DynamicTest.dynamicTest(testFile, () -> Assertions.fail(testFile + ".jyt is not found")));
@@ -115,20 +129,29 @@ public class JamalYamlTest {
         return is;
     }
 
-    public static void exec(String displayName, Map<String, String> testStructure) throws BadSyntax, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+    public static void exec(String displayName, Map<String, Object> testStructure) throws BadSyntax, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
         if (testStructure == null) {
             throw new IllegalAccessException("Test '" + displayName + "' has null body");
         }
-        final var input = Objects.requireNonNull(testStructure.get("Input"), "Input must present for all tests.");
+        final var illegalKeys = new ArrayList<String>();
+        for (final var key : testStructure.keySet()) {
+            if (!keywords.contains(key)) {
+                illegalKeys.add(key);
+            }
+        }
+        if (illegalKeys.size() > 0) {
+            throw new IllegalArgumentException("There are illegal keys in the test '" + displayName + "': " + String.join(", ", illegalKeys));
+        }
+        final var input = Objects.requireNonNull(testStructure.get("Input"), "Input must present for the tests '" + displayName + "'");
         final var output = testStructure.get("Output");
         final var aThrows = testStructure.get("Throws");
         if ((output == null) == (aThrows == null)) {
             throw new IllegalArgumentException("The test '" + displayName + "' must have either 'Output' or 'Throw' and never both.");
         }
         if (output == null) {
-            TestThat.theInput(input).throwsBadSyntax(aThrows);
+            TestThat.theInput((String) input).throwsBadSyntax((String) aThrows);
         } else {
-            TestThat.theInput(input).results(output);
+            TestThat.theInput((String) input).results((String) output);
         }
     }
 }

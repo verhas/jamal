@@ -35,142 +35,141 @@ macro can be defined when another macro is evaluating:
     Band, Julia Band{%@comment this the global value of the macro `firstName`%}
     Junior Band
 
-{%@comment
+Verbatim use of a user defined macro also closes the scope:
+  Input: "{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}"
+  Output: "this is it {a}"
 
-    @Test
-    void testVerbatimAlsoClosesTheScope() throws Exception {
-        TestThat.theInput(
-            "{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}"
-        ).results(
-            "this is it {a}"
-        );
-    }
+Lenient allows more argument than needed:
+  Input: "{@options lenient}{@define z()=zzz}{z aaa}"
+  Output: "zzz"
 
-    @Test
-    void testLenient() throws Exception {
-        TestThat.theInput(
-            "{@options lenient}{@define z()=zzz}{z aaa}"
-        ).results(
-            "zzz"
-        );
-    }
+Lenient allows less argument than needed:
+  Input: "{@options lenient}{@define z(k,h)=kzzzh}{z :aaa}"
+  Output: "aaazzz"
 
-    @Test
-    void testFish() throws Exception {
-        TestThat.theInput(
-            "{@define z(*a,*b,*c,*d)=When a *a can *b then *c can *d}\n" +
-                "{z /leopard and a *c/run/fish/fly}"
-        ).results(
-            "\n" +
-                "When a leopard and a *c can run then fish can fly"
-        );
-    }
+Documentation fish test:
+  Input: |-
+    {@define z(*a,*b,*c,*d)=When a *a can *b then *c can *d}
+    {z /leopard and a *c/run/fish/fly}
+  Output: "\nWhen a leopard and a *c can run then fish can fly"
 
-    @Test
-    void testFor() throws Exception {
-        TestThat.theInput(
-            "{@for x in (a,b,c,d)= x is either a, b, c or d\n" +
-                "}{@define $forsep=;}{@for x in (a;b;c;d)= x is either a, b, c or d\n" +
-                "}"
-        ).results(
-            " a is either a, b, c or d\n" +
-                " b is either a, b, c or d\n" +
-                " c is either a, b, c or d\n" +
-                " d is either a, b, c or d\n" +
-                " a is either a, b, c or d\n" +
-                " b is either a, b, c or d\n" +
-                " c is either a, b, c or d\n" +
-                " d is either a, b, c or d\n"
-        );
-    }
+With the 'define !' you cannot redefine a macro, throws exception:
+  Input: "{@define a=1}{@define ! a=2}"
+  Throws: "The macro 'a' was already defined."
 
-    @Test
-    void testNoRedefine() throws Exception {
-        TestThat.theInput(
-            "{@define a=1}{@define ! a=2}"
-        ).throwsBadSyntax("The macro 'a' was already defined.");
-        TestThat.theInput(
-            "{@define a=1}{#block {@define ! a=2}}"
-        ).throwsBadSyntax("The macro 'a' was already defined.");
-    }
+With the 'define !' you cannot redefine a macro even in inner scope, throws exception:
+  Input: "{@define a=1}{#block {@define ! a=2}}"
+  Throws: "The macro 'a' was already defined."
 
-    @Test
-    void testNameEvaluationError() throws Exception {
-        TestThat.theInput(
-            "{@try! {@define z=a}{@define su=/}\n" +
-                "{@define a(k)=hkh}\n" +
-                "{{z}{su}K}}"
-        ).results(
-            "Macro evaluated result user defined macro name contains the separator. Must not."
-        );
-    }
+Invalid macro evaluation:
+  Input: |-
+    {@try! {@define z=a}{@define su=/}
+    {@define a(k)=hkh}
+    {{z}{su}K}}
+  Output: "Macro evaluated result user defined macro name contains the separator. Must not."
 
-    @Test
-    void testRecursiveDefinitions() throws Exception {
-        TestThat.theInput(
-            "{@define wilfred=define}{#{wilfred} alfred=wilfred}{alfred}\n" +
-                "{@define black=white}{@define white=black}{{black}} {{{black}}}\n" +
-                "{@define bla=whi}{@define ck=te}{{bla}\\\n" +
-                "{ck}} {{{bla}{ck}}}"
-        ).results(
-            "wilfred\n" +
-                "black white\n" +
-                "black white"
-        );
-    }
+Recursive definitions work:
+  Input: |-
+    {@define wilfred=define}{#{wilfred} alfred=wilfred}{alfred}
+    {@define black=white}{@define white=black}{{black}} {{{black}}}
+    {@define bla=whi}{@define ck=te}{{bla}\
+    {ck}} {{{bla}{ck}}}
+  Output: "wilfred\nblack white\nblack white"
 
-    @Test
-    void testOneArgumentMacro() throws Exception {
-        TestThat.theInput(
-            "{@comment When the user define macro has only one argument then the separator character may be missing.}\n" +
-                "{@define enclose(a)=<||a||>}{enclose this text}\n" +
-                "{enclose|this text}\n" +
-                "{enclose |this text}\n" +
-                "{enclose |+this text}\n" +
-                "{enclose ||this text}\n" +
-                "{enclose | this text}\n" +
-                "{enclose | this||text}"
-        ).results(
-            "\n" +
-                "<||this text||>\n" +
-                "<||this text||>\n" +
-                "<||this text||>\n" +
-                "<||+this text||>\n" +
-                "<|||this text||>\n" +
-                "<|| this text||>\n" +
-                "<|| this||text||>"
-        );
-    }
+{%@define OneArg($X)=One argument macro can use $X as a separator%}
+{%OneArg space%}:
+  Input: |-
+    {@define enclose(a)=<||a||>}\
+    {enclose this text}
+  Output: |-
+    <||this text||>
 
-    @Test
-    void testOneArgMacroNesting() throws Exception {
-        TestThat.theInput(
-            "{@define a(x)=<<|x|>>}{@define b=55}{a {b}}"
-        ).results(
-            "<<|55|>>"
-        );
-    }
+{%OneArg non-alpha character%}:
+  Input: |-
+    {@define enclose(a)=<||a||>}\
+    {enclose|this text}
+  Output: |-
+    <||this text||>
 
-    @Test
-    @DisplayName("Test globally defined macro optional redefinition")
-    void testGlobalOptionalRedefine() throws Exception {
-        TestThat.theInput("{@define :a=1}{#ident {@define ?a=2}{a}}").results("1");
-        TestThat.theInput("{@define :a=1}{#ident {@define ?:a=2}{a}}").results("1");
-        TestThat.theInput("{@define :a=1}{#ident {@define ?:a=2}{:a}}").results("1");
-    }
+{%OneArg non-alpha character after space%}:
+  Input: |-
+    {@define enclose(a)=<||a||>}\
+    {enclose |this text}
+  Output: |-
+    <||this text||>
 
-    @Test
-    @DisplayName("Test that macro can be defined to behave verbatim")
-    void testVerbatimDefine() throws Exception {
-        TestThat.theInput("{@define~ a={@code}}{a}").results("{@code}");
-        TestThat.theInput("{@define ~ a={@code}}{a}").results("{@code}");
-        TestThat.theInput("{@define ?~ a={@code}}{a}").results("{@code}");
-        TestThat.theInput("{@define !~ a={@code}}{a}").results("{@code}");
-        TestThat.theInput("{@define ~! a={@code}}{a}").results("{@code}");
-        TestThat.theInput("{@define ~? a={@code}}{a}").results("{@code}");
-        TestThat.theInput("{@define ~?~ a={@code}}{a}").throwsBadSyntax("define.*has no.*");
+{%OneArg non-alpha character after space followed by other non-alpha%}:
+  Input: |-
+    {@define enclose(a)=<||a||>}\
+    {enclose |+this text}
+  Output: |-
+    <||+this text||>
 
-        TestThat.theInput("{@define b=2}{@define ~ a={b}}{!a}").results("2");
-    }
-}
-%}
+{%OneArg non-alpha character after space followed by same non-alpha%}:
+  Input: |-
+    {@define enclose(a)=<||a||>}\
+    {enclose ||this text}
+  Output: |-
+    <|||this text||>
+
+{%OneArg non-alpha character after space followed by space%}:
+  Input: |-
+    {@define enclose(a)=<||a||>}\
+    {enclose | this text}
+  Output: |-
+    <|| this text||>
+
+{%OneArg non-alpha character after space, argument containing the separator%}:
+  Input: |-
+    {@define enclose(a)=<||a||>}\
+    {enclose | this||text}
+  Output: |-
+    <|| this||text||>
+
+One argument macro can get the argument from the evaluation of another macro:
+  Input: "{@define a(x)=<<|x|>>}{@define b=55}{a {b}}"
+  Output: "<<|55|>>"
+
+Test globally defined macro optional redefinition using local name:
+   Input: "{@define :a=1}{#ident {@define ?a=2}{a}}"
+   Output: "1"
+
+Test globally defined macro optional redefinition using global name:
+   Input: "{@define :a=1}{#ident {@define ?:a=2}{a}}"
+   Output: "1"
+
+Test globally defined macro optional redefinition in local scope:
+   Input: "{@define :a=1}{#ident {@define ?:a=2}{:a}}"
+   Output: "1"
+
+Double verbatim character in define is an error:
+  Input: "{@define ~?~ a={@code}}{a}"
+  Throws: "define.*has no.*"
+
+Macro defined to be verbatim:
+  Input: "{@define~ a={@code}}{a}"
+  Output: "{@code}"
+
+Macro defined verbatim using the ~ sign after a space:
+  Input: "{@define ~ a={@code}}{a}"
+  Output: "{@code}"
+
+Optional redefine to be verbatim:
+  Input: "{@define ?~ a={@code}}{a}"
+  Output: "{@code}"
+
+Error redefine to be verbatim:
+  Input: "{@define !~ a={@code}}{a}"
+  Output: "{@code}"
+
+Verbatim error redefine to be verbatim:
+  Input: "{@define ~! a={@code}}{a}"
+  Output: "{@code}"
+
+Verbatim optional redefine to be verbatim:
+  Input: "{@define ~? a={@code}}{a}"
+  Output: "{@code}"
+
+Verbatim macro post evaluated is the same as non-verbatim macro:
+  Input: "{@define b=2}{@define ~ a={b}}{!a}"
+  Output: "2"

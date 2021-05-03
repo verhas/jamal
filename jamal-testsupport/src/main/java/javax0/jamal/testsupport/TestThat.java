@@ -279,7 +279,8 @@ public class TestThat implements AutoCloseable {
      * @return true of the string matches
      */
     private static boolean matches(final Pattern pattern, final String s) {
-        return pattern.matcher(s.replaceAll("\\sat\\s.*/\\d+:\\d+$", "")).matches();
+        final var index = s.lastIndexOf(" at");
+        return pattern.matcher(s.substring(0, index == -1 ? s.length() : index)).matches();
     }
 
     /**

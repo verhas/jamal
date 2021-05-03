@@ -1,4 +1,3 @@
-package javax0.jamal.test.core;
-
-public class TestIdent {
-}
+Ident returns its content:
+  Input: '{@ident this is {uneva} luated}'
+  Output: 'this is {uneva} luated'

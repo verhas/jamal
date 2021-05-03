@@ -1,39 +1,68 @@
-package javax0.jamal.test.core;
+Escapes empty string:
+  Input: "{@escape `|``|`}"
+  Output: ""
 
-import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.Test;
+Escapes plain text:
+  Input: "{@escape `|`abraka dabra`|`}"
+  Output: "abraka dabra"
 
-public class TestEscape {
+Escapes plain text no psace before the starting escape sequence:
+  Input: "{@escape`|`abraka dabra`|`}"
+  Output: "abraka dabra"
 
-    @Test
-    void escapesGood() throws Exception{
-        TestThat.theInput("{@escape `|``|`}").results("");
-        TestThat.theInput("{@escape `|`abraka dabra`|`}").results("abraka dabra");
-        TestThat.theInput("{@escape`|`abraka dabra`|`}").results("abraka dabra");
-        TestThat.theInput("{@escape `|`abraka dabra`|`        }").results("abraka dabra");
-        TestThat.theInput("{@escape`|+brrrr`abraka dabra`|+brrrr`}").results("abraka dabra");
-    }
-    @Test
-    void escapesGoodEmbedded() throws Exception{
-        TestThat.theInput("{@comment {@escape`|+brrrr`abra{{{{{ka dabra`|+brrrr`}}").results("");
-    }
+Escapes plain text tailing spaces:
+  Input: "{@escape `|`abraka dabra`|`        }"
+  Output: "abraka dabra"
 
-    @Test
-    void escapesGoodEmbeddedOpenAndClose() throws Exception{
-        TestThat.theInput("{@escape `|`{`|`}").results("{");
-        TestThat.theInput("{@escape `|`}`|`}").results("}");
-        TestThat.theInput("{@escape`|`{ { { }}`|`}").results("{ { { }}");
-        TestThat.theInput("{@escape `|`abrak{a} }d{abra`|`        }").results("abrak{a} }d{abra");
-        TestThat.theInput("{@escape`|+brrrr`abraka }}dabra`|+brrrr`}").results("abraka }}dabra");
-    }
+Escapes with some more complex escape sequence:
+  Input: "{@escape`|+brrrr`abraka dabra`|+brrrr`}"
+  Output: "abraka dabra"
 
-    @Test
-    void escapeThrows() throws Exception{
-        TestThat.theInput("{@escape `|``|` dddd}").throwsBadSyntax();
-        TestThat.theInput("{@escape `|`|`}").throwsBadSyntax();
-        TestThat.theInput("{@escape `|`}`|`").throwsBadSyntax();
-        TestThat.theInput("{@escape `| sdsds | dddd}").throwsBadSyntax();
-        TestThat.theInput("{@escape dfdfdf `|``|`}").throwsBadSyntax();
-        TestThat.theInput("{@escape `|`summatirada|}").throwsBadSyntax();
-    }
-}
+Escapes properly inside a macro:
+  Input: "{@comment {@escape`|+brrrr`abra{{{{{ka dabra`|+brrrr`}}"
+  Output: ""
+
+Escapes the macro opening string:
+  Input: "{@escape `|`{`|`}"
+  Output: "{"
+
+Escapes the macro closing string:
+  Input: "{@escape `|`}`|`}"
+  Output: "}"
+
+Escapes multiple macro opening and closing strings:
+  Input: "{@escape`|`{ { { }}`|`}"
+  Output: "{ { { }}"
+
+Escapes text with complex macro opening and closing:
+  Input: "{@escape `|`abrak{a} }d{abra`|`        }"
+  Output: "abrak{a} }d{abra"
+
+Escapes text with complex macro opening and closing with more coplex escape string:
+  Input: "{@escape`|+brrrr`abraka }}dabra`|+brrrr`}"
+  Output: "abraka }}dabra"
+
+Error when:
+  escape has something after the closing:
+    Input: "{@escape `|``|` dddd}"
+    Throws: 'There are extra characters in the use of \{@escape \} after the closing escape sequence: `\|`'
+
+  not paired correctly:
+    Input: "{@escape `|`|`}"
+    Throws: 'I cannot find the escape string at the end of the macro: `\|`'
+
+  not terminated correctly:
+    Input: "{@escape `|`}`|`"
+    Throws: Escape macro is not closed
+
+  separator not terminated:
+    Input: "{@escape `| sdsds | dddd}"
+    Throws: The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.
+
+  there is something before the starting escape sequence:
+    Input: "{@escape dfdfdf `|``|`}"
+    Throws: The macro escape needs an escape string enclosed between ` characters.
+
+  the closing escape sequence does not contain the back-ticks:
+    Input: "{@escape `|`summatirada|}"
+    Throws: 'I cannot find the escape string at the end of the macro: `\|`'
