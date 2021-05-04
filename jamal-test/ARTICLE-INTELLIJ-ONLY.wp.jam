@@ -6,9 +6,11 @@ Creating a JUnit 5 ExecutionCondition
 
 %}
 {%@import https://raw.githubusercontent.com/central7/wordpress/main/wp.jim%}
-{%@define svg($x)=<img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-test/articleimages/$x.svg"/>%}
+{%@define code($x)=```java$x```%}
 {%#reflow
 # Introduction
+
+https://youtu.be/z9NL_Il0AQI
 
 JUnit 5 has a lot of underutilized features.
 Developers have learned how to use JUnit 4, and they utilize the same feature set when using JUnit5.
@@ -40,7 +42,7 @@ The easiest way in IntelliJ is to start it from a JUnit test by clicking on the 
 So I had the test:
 %}
 
-[sourcecode language="java]
+{%code/
 @Test
 @DisplayName("Used to debug the debugger UI")
 void testDebugger() throws Exception {
@@ -53,7 +55,7 @@ void testDebugger() throws Exception {
         "121");
     System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
 }
-[/sourcecode]
+%}
 
 {%#reflow
 You have to `//@Test` the code before committing to your repo.
@@ -80,7 +82,7 @@ But this is a solution that eventually works.
 No guarantee, but as for now, it works.
 %}
 
-[sourcecode language="java]
+{%code/
 boolean isIntelliJStarted = false;
 final var st = new Exception().getStackTrace();
 for (final var s : st) {
@@ -89,7 +91,7 @@ for (final var s : st) {
         break;
     }
 }
-[/sourcecode]
+%}
 
 {%#reflow
 The selection of the string `Idea` to check is more or less arbitrary.
@@ -126,19 +128,19 @@ He told me that what I needed was an `ExecutionCondition`.
 It defines one single method with a direct signature:
 %}
 
-[sourcecode language="java]
+{%code/
 ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext ctx);
-[/sourcecode]
+%}
 
 {%#reflow
 The implementation should have a method overriding this interface method, and after doing the above stack examination, it has to
 %}
 
-[sourcecode language="java]
+{%code/
 return isIntelliJStarted ?
     ConditionEvaluationResult.enabled("started from IntelliJ") :
     ConditionEvaluationResult.disabled("not started from IntelliJ");
-[/sourcecode]
+%}
 
 {%#reflow
 It is almost all the work to be done.
@@ -148,7 +150,7 @@ To do that, we created an abjectly named annotation: `@IntelliJOnly`.
 With this, the class we developed was the following (without imports):
 %}
 
-[sourcecode language="java]
+{%code/
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @ExtendWith(IntelliJOnly.IntelliJOnlyCondition.class)
@@ -174,13 +176,13 @@ public @interface IntelliJOnly {
         }
     }
 }
-[/sourcecode]
+%}
 
 {%#reflow
 The test with this annotation is the following:
 %}
 
-[sourcecode language="java]
+{%code/
 @Test
 @DisplayName("Used to debug the debugger UI")
 @IntelliJOnly
@@ -194,7 +196,7 @@ void testDebugger() throws Exception {
         "121");
     System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
 }
-[/sourcecode]
+%}
 
 # Notes
 

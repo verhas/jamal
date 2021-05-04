@@ -3,6 +3,8 @@
 
 # Introduction
 
+https://youtu.be/z9NL_Il0AQI
+
 JUnit 5 has a lot of underutilized features. Developers have learned how to use JUnit 4, and they utilize the same feature set when using JUnit5. The sexy `DisplayName` annotation is used more and more, but the majority of the new features developers skip. In this article, I describe a particular situation I was facing and how I solved the issue by creating a custom `ExecutionCondition`.
 
 # My Special Testing Need
@@ -17,7 +19,7 @@ The important thing for this article is: Jamal pauses and starts to listen on a 
 
 The big question is, how to debug the debugger? The obvious answer is: Start Jamal in debug mode in a JVM started in debug mode. The easiest way in IntelliJ is to start it from a JUnit test by clicking on the debug button. So I had the test: 
 
-[sourcecode language="java]
+```java
 @Test
 @DisplayName("Used to debug the debugger UI")
 void testDebugger() throws Exception {
@@ -30,7 +32,7 @@ void testDebugger() throws Exception {
         "121");
     System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
 }
-[/sourcecode]
+```
 
 You have to `//@Test` the code before committing to your repo. Forgetting that will break the build because when it starts, it pauses and waits. I forget to comment out the annotation because I am such a forgetful person. Maybe age, maybe something else. However, my experience is that every developer has age, and every developer forgets to comment out such a thing. I needed something that realizes that the test is started from IntelliJ and lets it run but aborts it otherwise. 
 
@@ -40,7 +42,7 @@ When you run a unit test from IntelliJ, IntelliJ will invoke your code from Inte
 
 No specifications guarantee it. The name of the classes IntelliJ uses may change from time to time. Like Maven or Gradle, a different execution environment can also use some class names that may be similar to that of IntelliJ. But this is a solution that eventually works. No guarantee, but as for now, it works. 
 
-[sourcecode language="java]
+```java
 boolean isIntelliJStarted = false;
 final var st = new Exception().getStackTrace();
 for (final var s : st) {
@@ -49,7 +51,7 @@ for (final var s : st) {
         break;
     }
 }
-[/sourcecode]
+```
 
 The selection of the string `Idea` to check is more or less arbitrary. It is a string that is not likely to happen in the stack trace of some other application, and at the same time, there is only a tiny chance that it disappears from later IntelliJ versions. It is also to note that creating the stack trace this way is time-consuming. When the code runs from IntelliJ, it is not a problem at all. The time it needs is way less than a fraction of a second, and the next step I have to do after I started the application is opening a browser and the debugger web page. By the time I am finished with that, Java could have analyzed the stack trace a few million times. I, as a human, am much slower than the stack trace gathering.
 
@@ -67,23 +69,23 @@ He told me that what I needed was an `ExecutionCondition`.
 
 `ExecutionCondition` is an interface. It defines one single method with a direct signature: 
 
-[sourcecode language="java]
+```java
 ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext ctx);
-[/sourcecode]
+```
 
 The implementation should have a method overriding this interface method, and after doing the above stack examination, it has to 
 
-[sourcecode language="java]
+```java
 return isIntelliJStarted ?
     ConditionEvaluationResult.enabled("started from IntelliJ") :
     ConditionEvaluationResult.disabled("not started from IntelliJ");
-[/sourcecode]
+```
 
 It is almost all the work to be done. There is one little thing left: tell JUnit to use this condition for this test.
 
 To do that, we created an abjectly named annotation: `@IntelliJOnly`. With this, the class we developed was the following (without imports): 
 
-[sourcecode language="java]
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @ExtendWith(IntelliJOnly.IntelliJOnlyCondition.class)
@@ -109,11 +111,11 @@ public @interface IntelliJOnly {
         }
     }
 }
-[/sourcecode]
+```
 
 The test with this annotation is the following: 
 
-[sourcecode language="java]
+```java
 @Test
 @DisplayName("Used to debug the debugger UI")
 @IntelliJOnly
@@ -127,7 +129,7 @@ void testDebugger() throws Exception {
         "121");
     System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
 }
-[/sourcecode]
+```
 
 # Notes
 
