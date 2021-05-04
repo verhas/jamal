@@ -5,17 +5,14 @@ It is an article published on javax0.wordpress.com
 Creating a JUnit 5 ExecutionCondition
 
 %}
-{%@import https://raw.githubusercontent.com/central7/wordpress/main/wp.jim%}
-{%@define svg($x)=<img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-test/articleimages/$x.svg"/>%}
-{%#reflow
-# Introduction
+== Introduction
 
 JUnit 5 has a lot of underutilized features.
 Developers have learned how to use JUnit 4, and they utilize the same feature set when using JUnit5.
 The sexy `DisplayName` annotation is used more and more, but the majority of the new features developers skip.
 In this article, I describe a particular situation I was facing and how I solved the issue by creating a custom `ExecutionCondition`.
 
-# My Special Testing Need
+== My Special Testing Need
 
 I am developing Jamal, which is a general-purpose transpiler, text macro language.
 It converts from an input text to an output text, resolving and executing macros in the text.
@@ -38,9 +35,9 @@ The big question is, how to debug the debugger?
 The obvious answer is: Start Jamal in debug mode in a JVM started in debug mode.
 The easiest way in IntelliJ is to start it from a JUnit test by clicking on the debug button.
 So I had the test:
-%}
 
-[sourcecode language="java]
+[source]
+----
 @Test
 @DisplayName("Used to debug the debugger UI")
 void testDebugger() throws Exception {
@@ -53,20 +50,17 @@ void testDebugger() throws Exception {
         "121");
     System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
 }
-[/sourcecode]
+----
 
-{%#reflow
 You have to `//@Test` the code before committing to your repo.
 Forgetting that will break the build because when it starts, it pauses and waits.
 I forget to comment out the annotation because I am such a forgetful person.
 Maybe age, maybe something else.
 However, my experience is that every developer has age, and every developer forgets to comment out such a thing.
 I needed something that realizes that the test is started from IntelliJ and lets it run but aborts it otherwise.
-%}
 
-# How to Recognize it is IntelliJ?
+== How to Recognize it is IntelliJ?
 
-{%#reflow
 When you run a unit test from IntelliJ, IntelliJ will invoke your code from IntelliJ.
 Not directly.
 It goes through a few method calls in the stack, but there should be some class that belongs to IntelliJ towards the top of the stack.
@@ -78,9 +72,9 @@ The name of the classes IntelliJ uses may change from time to time.
 Like Maven or Gradle, a different execution environment can also use some class names that may be similar to that of IntelliJ.
 But this is a solution that eventually works.
 No guarantee, but as for now, it works.
-%}
 
-[sourcecode language="java]
+[source]
+----
 boolean isIntelliJStarted = false;
 final var st = new Exception().getStackTrace();
 for (final var s : st) {
@@ -89,9 +83,8 @@ for (final var s : st) {
         break;
     }
 }
-[/sourcecode]
+----
 
-{%#reflow
 The selection of the string `Idea` to check is more or less arbitrary.
 It is a string that is not likely to happen in the stack trace of some other application, and at the same time, there is only a tiny chance that it disappears from later IntelliJ versions.
 It is also to note that creating the stack trace this way is time-consuming.
@@ -105,11 +98,9 @@ It is not tremendous or really significant, but it should be considered.
 It adds to the compile time.
 
 I would not use such a solution in a performance-sensitive production code.
-%}
 
-# Separation of Concern
+== Separation of Concern
 
-{%#reflow
 I could insert this code into the test and return it from the test if it is not executed from IntelliJ.
 I did that as a first try, but I was aware that this is not an amicable solution.
 To make a decision separating the environments is not the responsibility of the test.
@@ -124,31 +115,29 @@ He told me that what I needed was an `ExecutionCondition`.
 
 `ExecutionCondition` is an interface.
 It defines one single method with a direct signature:
-%}
 
-[sourcecode language="java]
+[source]
+----
 ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext ctx);
-[/sourcecode]
+----
 
-{%#reflow
 The implementation should have a method overriding this interface method, and after doing the above stack examination, it has to
-%}
 
-[sourcecode language="java]
+[source]
+----
 return isIntelliJStarted ?
     ConditionEvaluationResult.enabled("started from IntelliJ") :
     ConditionEvaluationResult.disabled("not started from IntelliJ");
-[/sourcecode]
+----
 
-{%#reflow
 It is almost all the work to be done.
 There is one little thing left: tell JUnit to use this condition for this test.
 
 To do that, we created an abjectly named annotation: `@IntelliJOnly`.
 With this, the class we developed was the following (without imports):
-%}
 
-[sourcecode language="java]
+[source]
+----
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @ExtendWith(IntelliJOnly.IntelliJOnlyCondition.class)
@@ -174,13 +163,12 @@ public @interface IntelliJOnly {
         }
     }
 }
-[/sourcecode]
+----
 
-{%#reflow
 The test with this annotation is the following:
-%}
 
-[sourcecode language="java]
+[source]
+----
 @Test
 @DisplayName("Used to debug the debugger UI")
 @IntelliJOnly
@@ -194,19 +182,16 @@ void testDebugger() throws Exception {
         "121");
     System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
 }
-[/sourcecode]
+----
 
-# Notes
+== Notes
 
-{%#reflow
 The implementation of the condition checks that the test method is annotated by `@IntelliJOnly`.
 The annotation may not be there if the user (developer using the annotation) makes some mistake, invokes the condition in the wrong way.
 This extra check may save a few surprises for the developer using this condition.
-%}
 
-# Summary
+== Summary
 
-{%#reflow
 In this article, I described a situation that needed conditional test execution with a particular condition.
 After that, I described how the condition could be evaluated.
 Finally, we created a JUnit 5 execution condition to separate the Hamletian "run or not to run" dilemma from the test code.
@@ -215,5 +200,4 @@ As a takeaway, you should remember that JUnit is way better than JUnit 4.
 Utilizing only the features, which were already available in version 4, is a waste of resources.
 Your tests can be much simpler, more expressive, and easier to maintain if you learn and utilize the programming features of JUnit 5.
 Do!
-%}
 

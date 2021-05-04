@@ -1,0 +1,196 @@
+
+== Introduction
+
+JUnit 5 has a lot of underutilized features.
+Developers have learned how to use JUnit 4, and they utilize the same feature set when using JUnit5.
+The sexy `DisplayName` annotation is used more and more, but the majority of the new features developers skip.
+In this article, I describe a particular situation I was facing and how I solved the issue by creating a custom `ExecutionCondition`.
+
+== My Special Testing Need
+
+I am developing Jamal, which is a general-purpose transpiler, text macro language.
+It converts from an input text to an output text, resolving and executing macros in the text.
+Sometimes macros can be overcomplicated, and it may not be trivial why the output is what we get.
+The first approach to this issue is not to use overcomplicated structures, but this is not how developers work.
+Good developers tend to use the tools they have in their hands to the total capacity.
+
+In the case of Jamal, it needs debugging.
+Jamal supported debugging for a long time, dumping each atomic step into an XML file that the developer can later examine.
+It is, however, not as effective as interactive debugging.
+
+To support interactive debugging, I developed a debugger interface into release 1.7.4 accompanied by a Rest.js client application.
+Jamal starts in debug mode if it sees an environment variable `JAMAL_DEBUG` or system property `JAMAL_DEBUG_SYS`.
+When this variable is defined, Jamal pauses whenever it starts processing a new input and listening on a port configured by the variable.
+It goes on with processing only when it gets a command through the TCP channel.
+
+The important thing for this article is: Jamal pauses and starts to listen on a TCP port in this mode.
+
+The big question is, how to debug the debugger?
+The obvious answer is: Start Jamal in debug mode in a JVM started in debug mode.
+The easiest way in IntelliJ is to start it from a JUnit test by clicking on the debug button.
+So I had the test:
+
+[source]
+----
+@Test
+@DisplayName("Used to debug the debugger UI")
+void testDebugger() throws Exception {
+    System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
+    TestThat.theInput(
+        "hahóóó\n".repeat(2) +
+            "{@define a=1}{@define b(x)=x2x}{b{a}}"
+    ).results("hahóóó\n" +
+        "hahóóó\n" +
+        "121");
+    System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
+}
+----
+
+You have to `//@Test` the code before committing to your repo.
+Forgetting that will break the build because when it starts, it pauses and waits.
+I forget to comment out the annotation because I am such a forgetful person.
+Maybe age, maybe something else.
+However, my experience is that every developer has age, and every developer forgets to comment out such a thing.
+I needed something that realizes that the test is started from IntelliJ and lets it run but aborts it otherwise.
+
+== How to Recognize it is IntelliJ?
+
+When you run a unit test from IntelliJ, IntelliJ will invoke your code from IntelliJ.
+Not directly.
+It goes through a few method calls in the stack, but there should be some class that belongs to IntelliJ towards the top of the stack.
+If the method and the class belong to IntelliJ, then the name of the class should undoubtedly have something specific in it we can check.
+Generally, this is the idea.
+
+No specifications guarantee it.
+The name of the classes IntelliJ uses may change from time to time.
+Like Maven or Gradle, a different execution environment can also use some class names that may be similar to that of IntelliJ.
+But this is a solution that eventually works.
+No guarantee, but as for now, it works.
+
+[source]
+----
+boolean isIntelliJStarted = false;
+final var st = new Exception().getStackTrace();
+for (final var s : st) {
+    if (s.getClassName().contains("Idea")) {
+        isIntelliJStarted = true;
+        break;
+    }
+}
+----
+
+The selection of the string `Idea` to check is more or less arbitrary.
+It is a string that is not likely to happen in the stack trace of some other application, and at the same time, there is only a tiny chance that it disappears from later IntelliJ versions.
+It is also to note that creating the stack trace this way is time-consuming.
+When the code runs from IntelliJ, it is not a problem at all.
+The time it needs is way less than a fraction of a second, and the next step I have to do after I started the application is opening a browser and the debugger web page.
+By the time I am finished with that, Java could have analyzed the stack trace a few million times.
+I, as a human, am much slower than the stack trace gathering.
+
+When the code runs on the CI/CD or Maven on the command line, the delay is considerable.
+It is not tremendous or really significant, but it should be considered.
+It adds to the compile time.
+
+I would not use such a solution in a performance-sensitive production code.
+
+== Separation of Concern
+
+I could insert this code into the test and return it from the test if it is not executed from IntelliJ.
+I did that as a first try, but I was aware that this is not an amicable solution.
+To make a decision separating the environments is not the responsibility of the test.
+
+I was sure that JUnit 5 has a better solution for this.
+I asked `@RealityInUse` (Twitter handle) to help me.
+I was in a lucky situation because we share an office, which happens to be our living room during the pandemic.
+He is an active contributor of JUnit Pioneer https://junit-pioneer.org project of ``@nipafx`, he knows a lot about JUnit 5 extensions.
+(And he is my son.)
+
+He told me that what I needed was an `ExecutionCondition`.
+
+`ExecutionCondition` is an interface.
+It defines one single method with a direct signature:
+
+[source]
+----
+ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext ctx);
+----
+
+The implementation should have a method overriding this interface method, and after doing the above stack examination, it has to
+
+[source]
+----
+return isIntelliJStarted ?
+    ConditionEvaluationResult.enabled("started from IntelliJ") :
+    ConditionEvaluationResult.disabled("not started from IntelliJ");
+----
+
+It is almost all the work to be done.
+There is one little thing left: tell JUnit to use this condition for this test.
+
+To do that, we created an abjectly named annotation: `@IntelliJOnly`.
+With this, the class we developed was the following (without imports):
+
+[source]
+----
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@ExtendWith(IntelliJOnly.IntelliJOnlyCondition.class)
+public @interface IntelliJOnly {
+
+    class IntelliJOnlyCondition implements ExecutionCondition {
+        @Override
+        public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+            final Method method = context.getRequiredTestMethod();
+            final var annotation = method.getDeclaredAnnotation(IntelliJOnly.class);
+            if (annotation == null) {
+                throw new ExtensionConfigurationException("Could not find @" + IntelliJOnly.class + " annotation on the method " + method);
+            }
+            boolean isIntelliJStarted = false;
+            final var st = new Exception().getStackTrace();
+            for (final var s : st) {
+                if (s.getClassName().contains("Idea")) {
+                    isIntelliJStarted = true;
+                    break;
+                }
+            }
+            return isIntelliJStarted ? ConditionEvaluationResult.enabled("started from IntelliJ") : ConditionEvaluationResult.disabled("not started from IntelliJ");
+        }
+    }
+}
+----
+
+The test with this annotation is the following:
+
+[source]
+----
+@Test
+@DisplayName("Used to debug the debugger UI")
+@IntelliJOnly
+void testDebugger() throws Exception {
+    System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
+    TestThat.theInput(
+        "hahóóó\n".repeat(2) +
+            "{@define a=1}{@define b(x)=x2x}{b{a}}"
+    ).results("hahóóó\n" +
+        "hahóóó\n" +
+        "121");
+    System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
+}
+----
+
+== Notes
+
+The implementation of the condition checks that the test method is annotated by `@IntelliJOnly`.
+The annotation may not be there if the user (developer using the annotation) makes some mistake, invokes the condition in the wrong way.
+This extra check may save a few surprises for the developer using this condition.
+
+== Summary
+
+In this article, I described a situation that needed conditional test execution with a particular condition.
+After that, I described how the condition could be evaluated.
+Finally, we created a JUnit 5 execution condition to separate the Hamletian "run or not to run" dilemma from the test code.
+
+As a takeaway, you should remember that JUnit is way better than JUnit 4.
+Utilizing only the features, which were already available in version 4, is a waste of resources.
+Your tests can be much simpler, more expressive, and easier to maintain if you learn and utilize the programming features of JUnit 5.
+Do!
