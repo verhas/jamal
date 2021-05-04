@@ -2,7 +2,7 @@
 
 
 
-{@define VERSION=1.7.5-SNAPSHOT}
+{@define VERSION=1.7.5}
 {@define LAST_RELEASE=1.7.4}
 
 
