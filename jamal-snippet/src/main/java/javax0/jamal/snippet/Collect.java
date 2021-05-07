@@ -63,7 +63,7 @@ public class Collect implements Macro, InnerScopeDependent {
                     harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), stop.get());
                 }
             } catch (IOException e) {
-                throw new BadSyntax("There is some problem collecting snippets from files under '" + from + "'", e);
+                throw new BadSyntax("There is some problem collecting snippets from files under '" + from.get() + "'", e);
             }
         }
         return "";

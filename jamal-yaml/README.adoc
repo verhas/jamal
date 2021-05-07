@@ -842,7 +842,7 @@ The format of the macro is
 
 [source]
 ----
-{@format options}
+{@yaml:format options}
 ----
 
 The options of the macro are

@@ -1,5 +1,6 @@
-== Jamal Macro Language
 :imagesdir: images
+image::logo.svg[width=150px]
+== Jamal Macro Language
 
 {%@comment This is the ASCIIDOC version of the readme.
 It replaces the older Markdown version.

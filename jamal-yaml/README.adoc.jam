@@ -643,7 +643,7 @@ This macro can be used to set the options for Snake Yaml.
 The format of the macro is
 
 {%sample/
-{@format options}
+{@yaml:format options}
 %}
 
 The options of the macro are

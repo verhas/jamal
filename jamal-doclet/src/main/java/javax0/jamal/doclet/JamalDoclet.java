@@ -17,7 +17,6 @@ public class JamalDoclet extends StandardDoclet {
     String close = "}";
 
     public JamalDoclet() {
-        System.out.println("CREATING DOCLET");
     }
 
     @Override

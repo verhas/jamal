@@ -1,5 +1,6 @@
-== Jamal Macro Language
 :imagesdir: images
+image::logo.svg[width=150px]
+== Jamal Macro Language
 
 
 
@@ -348,6 +349,19 @@ The syntax and meaning of the options are the same as in case of the command lin
 This startup also loads all the Jamal extensions, including `snippet`, `scriptbasic`, `groovy`, `ruby`, `plantuml`, and `debug` (1.7.3 and later).
 
 NOTE: The possibility to start Jamal using JBang was developed for the version 1.7.3, and it was retrofitted for the version 1.7.2 before the release of 1.7.3.
+
+[NOTE]
+====
+If you have used Jamal with jbang before then jbang will store its catalog file in the local cache.
+When you start Jamal using `jbang jamal@verhas ...` and you see an old version starting then delete the file
+
+```
+~/.jbang/cache/urls/d917b991facb86b9860fa179df2c804fc2090cc76a83fb15b49f47cc2e885f7c/jbangstarter.java
+```
+
+After that you can start jbang again.
+It will download the new catalog, always pointing to the latest release.
+====
 
 ==== Debugging Macro Conversions
 

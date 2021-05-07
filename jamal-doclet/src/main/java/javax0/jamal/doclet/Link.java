@@ -91,12 +91,6 @@ public class Link implements Macro {
                 + ".html"
                 + (member == null ? "" : "#" + member.replaceAll(" ", ""));
         }
-        System.out.println("###### currentClass " + currentClass);
-        System.out.println("###### input        " + in);
-        System.out.println("###### klass        " + klass);
-        System.out.println("###### member       " + member);
-        System.out.println("###### url          " + url);
-        System.out.println("###### text         " + text);
         return "<a href=\"" + url + "\"><code>" + text + "</code></a>";
     }
 }
