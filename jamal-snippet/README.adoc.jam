@@ -737,9 +737,9 @@ This macro replaces strings in the input.
 {%parameterized%}
 
 It works similarly to the macro <<replace,`replace`>>.
-The difference is that the replace
+The difference is that the `replaceLine`
 
-* is always based on regular expressions, and
+* is always works with regular expressions, and
 
 * it works on the individual lines of the input in a loop.
 
