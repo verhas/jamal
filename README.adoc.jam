@@ -19,7 +19,7 @@ https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
 
 NOTE: This is the latest development documentation.
 This is probably a SNAPSHOT.
-To see the documentation of a release you have to follow the link in the documentation <<RELEASES.adoc,RELEASES>>
+To see the documentation of a release you have to follow the link in the documentation RELEASES.adoc
 
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.
