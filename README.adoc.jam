@@ -16,7 +16,7 @@ jamal-snippet.
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]
 https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
-{%#if/{%#replace|{%VERSION%}|\d+\.\d+\.\d+-SNAPSHOT|%}//
+{%#if/{%#replace(regex)|{%VERSION%}|\d+\.\d+\.\d+-SNAPSHOT|%}//
 NOTE: This is the latest development documentation.
 This is a SNAPSHOT version.
 To see the documentation of a release you have to follow the link in the documentation `RELEASES.adoc`
