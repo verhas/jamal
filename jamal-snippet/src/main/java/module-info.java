@@ -6,8 +6,8 @@ import javax0.jamal.snippet.CounterMacro;
 import javax0.jamal.snippet.DateMacro;
 import javax0.jamal.snippet.FilesMacro;
 import javax0.jamal.snippet.Format;
-import javax0.jamal.snippet.Java.FieldMacro;
 import javax0.jamal.snippet.Java.ClassMacro;
+import javax0.jamal.snippet.Java.FieldMacro;
 import javax0.jamal.snippet.Java.MethodMacro;
 import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.ListDir;
@@ -21,6 +21,10 @@ import javax0.jamal.snippet.SnipList;
 import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
+import javax0.jamal.snippet.StringMacros;
+import javax0.jamal.snippet.StringMacros.Contains;
+import javax0.jamal.snippet.StringMacros.Length;
+import javax0.jamal.snippet.StringMacros.Substring;
 import javax0.jamal.snippet.TrimLines;
 import javax0.jamal.snippet.Update;
 import javax0.jamal.snippet.XmlFormat;
@@ -59,6 +63,9 @@ module jamal.snippet {
         FilesMacro.Directory,
         FilesMacro.FileMacro,
         Reflow,
-        SnipList
+        SnipList,
+        Contains,
+        Substring,
+        Length
         ;
 }

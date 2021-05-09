@@ -1,0 +1,74 @@
+"string:contains tests":
+  Contains string:
+    Input: "{@string:contains (text=alma) this is a string containing alma}"
+    Output: "true" # note that this also has to be quoted, because whatever a macro returns can only be a string
+  Does not contain a string:
+    Input: "{@string:contains (text=alma) this is a string not containing ... ha ha ha}"
+    Output: "false" # see the comment above
+  Contains regex:
+    Input: "{@string:contains (regex text=a.ma) this is a string containing akma}"
+    Output: "true"
+  Still contains a regex:
+    Input: "{@string:contains (text=a..a regex) this is a string not containing ... ha ha ha}"
+    Output: "true"
+  Does not contain a regex:
+    Input: "{@string:contains (text=\"^wuff$\" regex) this is a string not containing ... ha ha ha}"
+    Output: "false"
+  No text is an error:
+    Input: "{@string:contains () this is a string not containing ... ha ha ha}"
+    Throws: "The key 'text' for the macro 'string:contains' is mandatory"
+
+"string:substring tests":
+  "get the whole when no begin and no end":
+    Input: "{@string:substring this is just the whole string}"
+    Output: "this is just the whole string"
+  "get the whole when no begin and no end with spaces at the start":
+    Input: "{@string:substring () this is just the whole string}"
+    Output: " this is just the whole string"
+  "get the whole when no begin and no end with spaces at the start and at the end":
+    Input: "{@string:substring () this is just the whole string  }"
+    Output: " this is just the whole string  "
+  "get a few character from the start":
+    Input: "{@string:substring (begin=0 end=4) this is just the whole string  }"
+    Output: " thi"
+  "get a few character from the middle":
+    Input: "{@string:substring (begin=1 end=5) this is just the whole string  }"
+    Output: "this"
+  "get a few character from the end":
+    Input: "{@string:substring (begin=-10) this is just the whole string  }"
+    Output: "e string  "
+  "chop off the last character":
+    Input: "{@string:substring (end=-1)hokus pokuss}"
+    Output: "hokus pokus"
+  "get a few character with negative indexes":
+    Input: "{@string:substring (begin=-10 end=-2) this is just the whole string  }"
+    Output: "e string"
+
+"string length tests":
+  "just get the length":
+    Input: "{@string:length alma}"
+    Output: "4" # note that this is a string. output is always string
+  "just get the length with leading space":
+    Input: "{@string:length() alma}" # this is not a "function" call with no argument. The () is an empty parameter list.
+    Output: "5"
+  "just get the length with leading space trimmed":
+    Input: "{@string:length (trim left) alma }" # trim right, and left are booleans, it is enough if they are present
+    Output: "5"
+  "just get the length with trailing space trimmed":
+    Input: "{@string:length (trim right) alma }"
+    Output: "5"
+  "just get the length with trailing and leading space trimmed explicitly":
+    Input: "{@string:length (trim right left) alma }"
+    Output: "4"
+  "just get the length with trailing and leading space trimmed implicitly":
+    Input: "{@string:length (trim) alma }"
+    Output: "4"
+  "left without trim":
+    Input: "{@string:length (left) alma }"
+    Throws: {%@define noTrim="You cannot use 'left' or 'right' on 'string:length' without trim"%}{%noTrim%}
+  "right without trim":
+    Input: "{@string:length (right) alma }"
+    Throws: {%noTrim%}
+  "left and right without trim":
+    Input: "{@string:length (left right) alma }"
+    Throws: {%noTrim%}

@@ -77,6 +77,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
+.. <<String,String Macros>>
 .. <<snip:update,`snip:update`>>
 
 
@@ -771,9 +772,9 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 
 
 It works similarly to the macro <<replace,`replace`>>.
-The difference is that the replace
+The difference is that the `replaceLine`
 
-* is always based on regular expressions, and
+* is always works with regular expressions, and
 
 * it works on the individual lines of the input in a loop.
 
@@ -1007,6 +1008,7 @@ will result
 - Replace.java
 - SnipXml.java
 - Counter.java
+- StringMacros.java
 - Clear.java
 - KillLines.java
 - SnippetStore.java
@@ -1089,7 +1091,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 896 bytes
+- snippet: 928 bytes
 - Snip.java: 2,317 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
@@ -1102,6 +1104,7 @@ will result
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
+- StringMacros.java: 3,024 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,446 bytes
 - SnippetStore.java: 9,845 bytes
@@ -1249,7 +1252,7 @@ wll result the output
 
 [source]
 ----
-2021-05-07 21:05:19
+2021-05-09 21:17:17
 ----
 
 
@@ -1582,8 +1585,51 @@ publicMethodMacro::evaluate(Input,Processor)
 ----
 
 
+[[String]]
+==== xxiii. String Macros
+
+[[string:contains]]
+===== `string:contains`
+
+This macro returns the string `true` if the input contains a text given as a parameter, and the text `false` otherwise.
+The macro handles two parameters:
+
+* `text` (alias `string`) must be present, and it should specify the string to find in the input.
+
+* `regex` is an optional parameter.
+If it is `true` then the text will be interpreted as a regular expression, and the macro will check if a match can be found inside the input.
+(It calls the Java regular expression matcher `find()`.)
+
+[[string:substring]]
+===== `string:substring`
+
+This macro returns a substring of the input.
+The parameters are
+
+* `begin` specifying the beginning of the substring (default is start of the string), and
+
+* `end` specifying the end of the substring (default is end of the string).
+
+If any of the parameters is a negative number then the position will be calculated from the end of the string.
+
+[[string:length]]
+===== `string:length`
+
+This macro returns the length of the input.
+The parameters are:
+
+* `trim` tells the macro that the input has to be trimmed before calculating the length
+
+* `left` tells the macro that the trimming has to be applied to the start (left) of the input
+
+* `right` tells the macro that the trimming has to be applied to the end (right) of the input
+
+You can use `left` and `right` together with `trim`.
+This will have the same effect as using `trim` alone.
+Using either `left` or `right` without trim is an error.
+
 [[snip:update]]
-==== xxiii. `snip:update`
+==== xxiv. `snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
