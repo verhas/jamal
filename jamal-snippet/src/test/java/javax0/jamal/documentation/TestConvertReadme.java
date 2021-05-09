@@ -26,6 +26,11 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertReleases() throws Exception {
+        DocumentConverter.convert("../RELEASES.adoc.jam");
+    }
+
+    @Test
     void convertTopReadme() throws Exception {
         DocumentConverter.convert("../README.adoc.jam");
     }

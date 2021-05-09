@@ -1,0 +1,156 @@
+== Jamal Releases
+
+{%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
+
+
+{%RELEASE/1.7.5%}
+
+yaml can be exported as XML
+debugger can handle breakpoints, UI was changed
+yaml macros Add and isResolved are added
+macro tests can now be written an jyt (Jamal Yaml Test) files
+
+
+{%RELEASE/1.7.4%}
+
+JavaDoc support
+Yaml support
+jamal-io module writing file and stdout and stderr
+various bugfixes
+collect can collect onceAs
+verbatim user-defined macros
+default macro can get the actual macro name
+snippet trim macro can verticalTrimOnly
+macro use can define alias for already existing macro
+
+
+{%RELEASE/1.7.3%}
+
+An interactive debugger was developed for Jamal transformation to follow the transformation step-by-step.
+Jamal can be started using jbang.
+command-line parameters are refactored and much more user-friendly.
+
+
+{%RELEASE/1.7.2%}
+
+New module integrating the Ruby scripting language
+A bug is fixed that caused reporting the wrong error when there was an error inside an included file.
+
+
+{%RELEASE/1.7.1%} Groovy module
+
+This release includes a Groovy module that you can use to embed Groovy code into the Jamal input.
+
+Closer objects are invoked in the order they were (first) declared.
+bug fixed and makes it possible to use :a user-defined macros when USED and not only when defined
+Test support can set the separators after the input is specified.
+Cast tool was created in the tool module and use was moved from snippet to there.
+
+
+{%RELEASE/1.7.0%}
+
+New macro to undefine a user-defined macro.
+Built-in macros can do post-processing where they can modify the final result.
+jamal-snippet macro xmlFormat uses the new functionality and can format the whole document at the end
+Embedding application can use a general 'context' that can also be used by the macros
+
+
+{%RELEASE/1.6.5%}
+
+Macro and module plantuml was developed
+
+
+{%RELEASE/1.6.4%}
+
+Snippet collection throws an error when a snippet is not closed but only in case the snippet is used.
+Unclosed macro opening character reported line number is correct after a bug fixed that reported the last opened macro line number.
+documentation about how to write a built-in macro was started
+phantom parameters are handled correctly in case a macro does not have a parameter but there are zero string resulting macros evaluated in the parameters
+InputHandler got a new startWith method
+ScriptBasic module was reintegrated, following the release and is now part of the release
+it is possible to define a user defined macro default which is used in case a macro is not defined. The real good use of it is when the user defined macro is defined using Java support and has special logic.
+
+
+{%RELEASE/1.6.3%}
+
+A new format for the for loop macro that lets you have values that contain the ) character inside.
+
+
+{%RELEASE/1.6.2%}
+
+trimLine was not included in the META-INF. It is now fixed.
+
+
+{%RELEASE/1.6.1%}
+
+File and directory macros were added to the snippet module.
+
+{%RELEASE/1.6.0%}
+
+This release contains two new modules: snippet support and test.
+Macro try cleans the macro nesting stack properly, more possibility to recover after `try` catches an error
+`import` does not allow dangling `begin` macros new macro `escape` was implemented to support macro opening and closing escaping documentation samples are generated on the file and not just copied from tests
+
+
+{%RELEASE/1.5.3%}
+
+Option `skipForEmpty` was implemented for `for` macro error message fixed in for
+
+
+{%RELEASE/1.5.2%}
+
+FEATURE: `for` macro is inner scope dependent.
+FIX: multi variable `for` works properly when some of the values are empty strings FEATURE: multi variable `for` accepts less or more than required arguments with option lenient
+
+
+{%RELEASE/1.5.1%}
+
+Fix a bug that prevented include or import using relative file name in case the including/importing file was downloaded from the net via https protocol.
+
+
+{%RELEASE/1.5.0%} NOT STABLE, DO NOT USE
+
+Introducing macro 'try', the ! and
+
+```
+`
+```
+
+modification characters in front of built-in macros for built-in eval and ident functionality (see more in the README.md).
+
+The for macro has a new syntax (backward compatible) and now it can have multiple loop variables.
+
+
+{%RELEASE/1.4.1%}
+
+There are new macros: env and jshell.
+The default scripting engine is not JavaScript anymore, it is JShell.
+bug fix over 1.3.0. DO NOT USE THAT RELEASE deployment fix from 1.4.0 which also failed to upload for mysterious reasons UPDATE: I have found the bug and fixed the pom for later releases.
+
+
+{%RELEASE/1.3.0%} RELEASE IS CORRUPT, DO NOT USE
+
+Failed release.
+
+
+{%RELEASE/1.1.0%}
+
+New release with extended extension macros and also including some bug fix.
+The built-in macro can now depend on the inner scope defined user-defined macros.
+
+
+{%RELEASE/v1.0.2%}
+
+This release introduces macros `for`, ˛`if`, `use` and supports trace creation.
+At the same time it fixes several bugs.
+
+
+{%RELEASE/v1.0.1%}
+
+Some minor bugs fixed.
+This time parent pom is also released.
+
+
+{%RELEASE/v1.0.0%}
+
+Initial release.
