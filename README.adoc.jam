@@ -19,7 +19,7 @@ https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
 {%#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/
 NOTE: This is the latest development documentation.
 This is a SNAPSHOT version.
-To see the documentation of a release you have to follow the link in the documentation `RELEASES.adoc`
+To see the documentation of a release you have to follow the link in the documentation link:{%@file RELEASES.adoc%}[`RELEASES.adoc`]
 %}
 
 Jamal is a complex text processor with a wide variety of possible use.
