@@ -1407,7 +1407,7 @@ The resolution process will be in-place unless the option `yamlResolveClone` (al
 === x. `yaml:xml`
 
 
-The macro `yaml:xml` results a Yaml structure in XML format.
+The macro `yaml:xml` converts a Yaml structure to XML format.
 The format of the macro is:
 
 [source]
@@ -1416,8 +1416,8 @@ The format of the macro is:
 ----
 
 Here `yamlMacroName` is the name of a Yaml macro that was defined using `yaml:define`.
-Before converting the Yaml structure will be resolved in case it was not resolved yet.
-For this the options `clone` and `copy ` can be specified.
+Before converting, the Yaml structure will be resolved in case it was not resolved yet.
+For this the options `clone` and `copy` can be specified.
 For more information in these options see the macro documentation of `yaml:resolve`.
 
 In addition to these options you can use the options
@@ -1428,13 +1428,14 @@ The default value is `xml`
 * `yamlXmlAttributes` (alias `attributes`) can specify extra attributes for the top level XML tag.
 The default value is not to specify any attribute for the top level tag.
 
-Other than the top level tag the XML converted from a Yaml structure will not contain attributes.
 The maps from the Yaml structure the (key,value) elements will be converted to the XML
 
 [source,xml]
 ----
 <key>value</key>
 ----
+
+structure.
 
 Here `value` can be another map, a list or something else represented as a string.
 For example:
@@ -1456,16 +1457,46 @@ will be converted to
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <tag a="53">
     <tagValues>
-        <a>a</a>
-        <b>b</b>
-        <c>c</c>
+        <a>1</a>
+        <b>2</b>
+        <c>3</c>
     </tagValues>
 </tag>
 ----
 
 
-The lists from the Yaml structure will be converted to the XML using the key value of the map containing the list.
-For example the
+You can also specify attributes, use of CDATA and tag names for list elements using special classes.
+Jamal contains five classes, which can be referred to in Yaml files, and they are treated special during the XML conversion.
+When referring to the class it has to use the fully qualified class name with the `!!` prefix as in the list below.
+
+* `!!javax0.jamal.api.Xml$ATTR` will be used as an attribute for the tag containing this object.
+When the containing object is a map then the `ATTR` object can be a simple string, or it can be a map.
+When the `ATTR` is a simple string then the key of it will be used as attribute name.
+If the `ATTR` object is a member of an array then it can only be a map.
+When the `ATTR` object is a map then the keys and values will be used as attribute keys and values.
+
+* `!!javax0.jamal.api.Xml$TEXT` will be used as the text value for the tag containing this object.
+In an ordinary situation this just happens when you specify a string.
+In those cases there is no need for this class.
+It is only needed when you specified an attribute for some object using an `ATTR` for an object, which is supposed to be a text.
+To use the `ATTR` you had to specify the object as a Map already containing a key with the attribute.
+When the conversion sees the `TEXT` object it knows that it must treat this Map as a special one and should convert it to a simple tag with a text content.
+If you use this object type it has to be the last in the map.
+Any furter keys will result error.
+
+* `!!javax0.jamal.api.Xml$CDATATEXT` is the same as the `TEXT`, but it will also enclose the text as CDATA.
+
+* `!!javax0.jamal.api.Xml$CDATA` will instruct the converter to convert the actual node to CDATA.
+
+* `!!javax0.jamal.api.Xml$TAG` can specify a TAG name for the list members.
+The default behaviour is that a list will be converted to a `<As><A></A><A></A>...</As>` structure.
+Here `As` is the plural form of a word, like `dependencies`.
+The conversion will calculate the singular in the very simple way chopping off the last character.
+In the example case it will be `dependencie`, which is eventually wrong.
+To save the day a object `TAG` can be used.
+The value of this object will be used as the tag for the list elements.
+The `TAG` object can be interleaved with `ATTR` objects, but it should never be specified twice for the same list and it always should preceed the first "real" list member.
+You MUST use a `TAG` if the enclosing object tag is a single character.
 
 [source]
 ----
@@ -1531,6 +1562,10 @@ will be converted to
 There is a limitation in the Yaml structure.
 Yaml structures can be recursive but XML cannot be.
 In case the Yaml structure is recursive or too deep (by default 300) then Jamal will stop the evaluation.
+
+NOTE: This macro was introduced in Jamal version 1.7.5.
+The version had a major bug that rendered this macro unusable.
+Version 1.7.6 extended the conversion from Yaml to XML making it possible to use CDATA sections, spefify tag names for lists and to add attributes to tags.
 
 [[output]]
 === xi. `yaml:output`

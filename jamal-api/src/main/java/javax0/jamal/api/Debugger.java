@@ -120,7 +120,7 @@ public interface Debugger extends AutoCloseable, ServiceLoaded {
      * Affinity -1 means that the debugger cannot handle this connection string. The connection string in this case is
      * probably for a different debugger.
      * <p>
-     * Affinity 0 means that the debugger is abslutely sure that it can handle this connection string and it is the
+     * Affinity 0 means that the debugger is absolutely sure that it can handle this connection string and it is the
      * debugger that has to be used.
      * <p>
      * Values between 0 and {@link Integer#MAX_VALUE Integer.MAX_VALUE} mean a certain affinity expressed numerically.

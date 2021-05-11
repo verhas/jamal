@@ -7,6 +7,10 @@ import javax0.jamal.tools.Input;
 
 import java.util.List;
 
+/**
+ * The {@link javax0.jamal.api.Debugger.Stub} implementation that works together with the {@code jamal.engine} {@link
+ * Processor}.
+ */
 public class DebuggerStub implements Debugger.Stub {
 
     private final Processor processor;

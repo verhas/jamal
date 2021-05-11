@@ -2,6 +2,9 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.Debugger;
 
+/**
+ * A sample implementation of the {@link Debugger} interface that does nothing.
+ */
 public class NullDebugger implements Debugger {
     @Override
     public void setBefore(int level, CharSequence input) {

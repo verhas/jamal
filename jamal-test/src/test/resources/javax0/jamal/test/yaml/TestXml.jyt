@@ -1,0 +1,211 @@
+# test cases for converting a Yaml into XML
+"converting a simple Yaml to XML":
+  Input: |
+    {@yaml:define a=
+    a: alma
+    lists:
+    - a
+    - b
+    - c
+    - d
+    kuka:
+      beno: 665-453
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <a>alma</a>
+        <lists>
+            <list>a</list>
+            <list>b</list>
+            <list>c</list>
+            <list>d</list>
+        </lists>
+        <kuka>
+            <beno>665-453</beno>
+        </kuka>
+    </xml>
+
+"Converting an Yaml with attributes":
+  Input: |
+    {@yaml:define a=
+    a:
+      attribute: !!javax0.jamal.api.Xml$ATTR this is the attribute
+      content: !!javax0.jamal.api.Xml$TEXT this is the content
+    lists:
+    - !!javax0.jamal.api.Xml$ATTR { attribute: is a bitch }
+    - a
+    - !!javax0.jamal.api.Xml$CDATA b
+    - c
+    - d
+    kuka:
+      attribute1: !!javax0.jamal.api.Xml$ATTR {beno: "attribute with a name, which is the same as a tag"}
+      beno:
+        665-453
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <a attribute="this is the attribute">this is the content</a>
+        <lists attribute="is a bitch">
+            <list>a</list>
+            <list><![CDATA[b]]></list>
+            <list>c</list>
+            <list>d</list>
+        </lists>
+        <kuka beno="attribute with a name, which is the same as a tag">
+            <beno>665-453</beno>
+        </kuka>
+    </xml>
+
+"recursive Yaml cannot be converted to XML":
+  Input: |
+    {#yaml:define a=
+    a: alma
+    lists:
+    - a
+    - {@yaml:ref a}
+    }{@yaml:xml a}
+  Throws: Jamal source seems to have infinite recursion
+
+"deep structure":
+  Input: |
+    {@yaml:define a=
+    a:
+      b:
+        c:
+          ds:
+          - e:
+              f: g
+          - h: {i: t}
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <a>
+            <b>
+                <c>
+                    <ds>
+                        <d>
+                            <e>
+                                <f>g</f>
+                            </e>
+                        </d>
+                        <d>
+                            <h>
+                                <i>t</i>
+                            </h>
+                        </d>
+                    </ds>
+                </c>
+            </b>
+        </a>
+    </xml>
+
+"Some text with attribute":
+  Input: |
+    {@yaml:define a=
+    a:
+      att: !!javax0.jamal.api.Xml$ATTR 'this is an " attribute'
+      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$TEXT "this is < the text \" of A"
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <a att="this is an &quot; attribute">this is &lt; the text " of A</a>
+    </xml>
+
+"Some CDATA text with attribute":
+  Input: |
+    {@yaml:define a=
+    a:
+      att: !!javax0.jamal.api.Xml$ATTR this is an attribute
+      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this is the text of A
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <a att="this is an attribute"><![CDATA[this is the text of A]]></a>
+    </xml>
+
+"Some CDATA text with multiple attributes":
+  Input: |
+    {@yaml:define a=
+    a:
+      att: !!javax0.jamal.api.Xml$ATTR { at1: this is an attribute, at2: this is also an attribute }
+      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this is the text of A
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <a at1="this is an attribute" at2="this is also an attribute"><![CDATA[this is the text of A]]></a>
+    </xml>
+
+"CDATA in list":
+  Input: |
+    {@yaml:define a=
+    as:
+    - !!javax0.jamal.api.Xml$CDATA this is the text of A
+    - k: h
+      h: k
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <as>
+            <a><![CDATA[this is the text of A]]></a>
+            <a>
+                <k>h</k>
+                <h>k</h>
+            </a>
+        </as>
+    </xml>
+"Specified tag name for a list":
+  Input: |
+    {@yaml:define a=
+    a:
+    - !!javax0.jamal.api.Xml$ATTR { att: this is an attribute }
+    - !!javax0.jamal.api.Xml$TAG A
+    - k: h
+      h: k
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <a att="this is an attribute">
+            <A>
+                <k>h</k>
+                <h>k</h>
+            </A>
+        </a>
+    </xml>
+"Simple string converted: error":
+  Input: |
+    {@yaml:define a=
+    wuff
+    }{@yaml:xml a}
+  Throws: You can only convert Map or List structures to XML.
+"List is converted okay":
+  Input: |
+    {@yaml:define a=
+    - 1
+    - 2
+    - 3
+    }{#xmlFormat {@yaml:xml a}}
+  Output: |
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <xml>
+        <xm>1</xm>
+        <xm>2</xm>
+        <xm>3</xm>
+    </xml>
+"multiple tags throw error":
+  Input: |
+    {@yaml:define a=
+    a:
+    - !!javax0.jamal.api.Xml$TAG A
+    - !!javax0.jamal.api.Xml$TAG B
+    - h
+    - k
+    }{#xmlFormat {@yaml:xml a}}
+  Throws: "!!javax0.jamal.api.Xml.TAG must not be repeated."

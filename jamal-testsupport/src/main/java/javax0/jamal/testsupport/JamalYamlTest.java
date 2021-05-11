@@ -146,7 +146,7 @@ public class JamalYamlTest {
         final var output = testStructure.get("Output");
         final var aThrows = testStructure.get("Throws");
         if ((output == null) == (aThrows == null)) {
-            throw new IllegalArgumentException("The test '" + displayName + "' must have either 'Output' or 'Throw' and never both.");
+            throw new IllegalArgumentException("The test '" + displayName + "' must have either 'Output' or 'Throws' and never both.");
         }
         if (output == null) {
             TestThat.theInput((String) input).throwsBadSyntax((String) aThrows);

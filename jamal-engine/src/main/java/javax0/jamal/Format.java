@@ -7,18 +7,19 @@ import javax0.jamal.tools.Input;
 
 import java.util.Map;
 
+/**
+ * A simple formatting wrapper that formats a string using macros that are provided in a Map. The Map is a (String,
+ * String) map and these macros cannot have arguments. This is a simple templating implementation using Jamal as a
+ * template engine.
+ */
 public class Format {
 
 
     /**
-     * A simple formatting wrapper that formats a string using macros that are provided in a Map. The Map is a (String,
-     * String) map and these macros cannot have arguments. This is a simple templating implementation using Jamal as a
-     * template engine.
-     * <p>
      * The macro opening string is '{{' and the closing string is '}}' like in many other templating languages, however
      * in this case the whole weaponry of Jamal is available. Since the input does not come from a file and thus there
      * is no actual location of the input any {@code import} or {@code include} in the file can only be absolute file
-     * name or a resource starting with {@code res:xyz} form file name.
+     * name or a resource starting with {@code res:xyz} form file name or a web resource starting with {@code https:}.
      *
      * @param content          the text that uses the macros
      * @param predefinedMacros the Map that contains the predefined macros
