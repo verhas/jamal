@@ -1470,10 +1470,11 @@ Jamal contains five classes, which can be referred to in Yaml files, and they ar
 When referring to the class it has to use the fully qualified class name with the `!!` prefix as in the list below.
 
 * `!!javax0.jamal.api.Xml$ATTR` will be used as an attribute for the tag containing this object.
-When the containing object is a map then the `ATTR` object can be a simple string, or it can be a map.
-When the `ATTR` is a simple string then the key of it will be used as attribute name.
+When the containing object is a map, the `ATTR` object can be a simple string, or it can be a map.
+When the `ATTR` is a simple string, the key of it will be used as attribute name.
 If the `ATTR` object is a member of an array then it can only be a map.
 When the `ATTR` object is a map then the keys and values will be used as attribute keys and values.
+You have to use this form in a map if the name of the attribute is the same as one of the content keys.
 
 * `!!javax0.jamal.api.Xml$TEXT` will be used as the text value for the tag containing this object.
 In an ordinary situation this just happens when you specify a string.
@@ -1482,7 +1483,7 @@ It is only needed when you specified an attribute for some object using an `ATTR
 To use the `ATTR` you had to specify the object as a Map already containing a key with the attribute.
 When the conversion sees the `TEXT` object it knows that it must treat this Map as a special one and should convert it to a simple tag with a text content.
 If you use this object type it has to be the last in the map.
-Any furter keys will result error.
+Any further keys will result error.
 
 * `!!javax0.jamal.api.Xml$CDATATEXT` is the same as the `TEXT`, but it will also enclose the text as CDATA.
 

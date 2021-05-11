@@ -30,18 +30,21 @@
   Input: |
     {@yaml:define a=
     a:
-      attribute: !!javax0.jamal.api.Xml$ATTR this is the attribute
-      content: !!javax0.jamal.api.Xml$TEXT this is the content
+      attribute: !!javax0.jamal.api.Xml$ATTR this is the attribute   # a simple attribute
+      content: !!javax0.jamal.api.Xml$TEXT this is the content       # we have to use this or else it will be a map
+                                                                     # the key is not used, can be anything
     lists:
-    - !!javax0.jamal.api.Xml$ATTR { attribute: is a bitch }
+    # there is no !!javax0.jamal.api.Xml$TAG, the <lists>...</lists> will contains <list></list> tags
+    - !!javax0.jamal.api.Xml$ATTR { attribute: is a bitch }          # this is an attribute to the <lists...>
     - a
-    - !!javax0.jamal.api.Xml$CDATA b
+    - !!javax0.jamal.api.Xml$CDATA b                                 # this will become CDATA
     - c
     - d
     kuka:
+      # the key `attribute1` is ignored by the conversion
+      # here we have to use a map as an attribute because the name 'beno' is a tag in the xml as well as an attribute
       attribute1: !!javax0.jamal.api.Xml$ATTR {beno: "attribute with a name, which is the same as a tag"}
-      beno:
-        665-453
+      beno: 665-453
     }{#xmlFormat {@yaml:xml a}}
   Output: |
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -64,11 +67,11 @@
     a: alma
     lists:
     - a
-    - {@yaml:ref a}
+    - {@yaml:ref a}  # this is a recursive structure. The conversin will stop when it digs too deep.
     }{@yaml:xml a}
   Throws: Jamal source seems to have infinite recursion
 
-"deep structure":
+"just some deep structure, nothing special":
   Input: |
     {@yaml:define a=
     a:
@@ -106,7 +109,9 @@
   Input: |
     {@yaml:define a=
     a:
-      att: !!javax0.jamal.api.Xml$ATTR 'this is an " attribute'
+      att: !!javax0.jamal.api.Xml$ATTR 'this is an " attribute' # note that the " will be escaped
+      # the key here is ignored, this node is a text node in the XML. The text is escaped for the < but not for the ".
+      # The conversion also escapes the ", but the built-in JDK XML formatter converts it back here. He is right.
       "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$TEXT "this is < the text \" of A"
     }{#xmlFormat {@yaml:xml a}}
   Output: |
@@ -120,18 +125,21 @@
     {@yaml:define a=
     a:
       att: !!javax0.jamal.api.Xml$ATTR this is an attribute
-      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this is the text of A
+      # this is the same as the previous example but the text node is also CDATA
+      # in this case there is no conversion, CDATA contains whatever character... even <
+      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this < is the text of A
     }{#xmlFormat {@yaml:xml a}}
   Output: |
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
-        <a att="this is an attribute"><![CDATA[this is the text of A]]></a>
+        <a att="this is an attribute"><![CDATA[this < is the text of A]]></a>
     </xml>
 
 "Some CDATA text with multiple attributes":
   Input: |
     {@yaml:define a=
     a:
+      # here we specify multiple attributes in a single Map object for the sake of simplicity
       att: !!javax0.jamal.api.Xml$ATTR { at1: this is an attribute, at2: this is also an attribute }
       "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this is the text of A
     }{#xmlFormat {@yaml:xml a}}
@@ -165,6 +173,7 @@
     {@yaml:define a=
     a:
     - !!javax0.jamal.api.Xml$ATTR { att: this is an attribute }
+    # it has to be specified here. You can specify any tag name.
     - !!javax0.jamal.api.Xml$TAG A
     - k: h
       h: k
