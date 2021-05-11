@@ -914,6 +914,8 @@ The value of this object will be used as the tag for the list elements.
 The `TAG` object can be interleaved with `ATTR` objects, but it should never be specified twice for the same list and it always should preceed the first "real" list member.
 You MUST use a `TAG` if the enclosing object tag is a single character.
 
+You can find examples of the use of these classes in the file link:/jamal-test/src/test/resources/javax0/jamal/test/yaml/TestXml.jyt[TestXml.jyt]
+
 {%sample/
 {@yaml:define z=
 tagValues:
