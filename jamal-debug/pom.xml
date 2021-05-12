@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal debug</name>
     <artifactId>jamal-debug</artifactId>
-    <version>1.7.6-SNAPSHOT</version>
+    <version>1.7.6</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.7.6-SNAPSHOT</version>
+        <version>1.7.6</version>
     </parent>
     <description>Debugger module for Jamal</description>
     <build>
