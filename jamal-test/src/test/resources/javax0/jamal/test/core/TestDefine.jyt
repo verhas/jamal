@@ -1,8 +1,86 @@
-{%@comment
-When the user defined macro name itself is defined as the result of a macro evaluation it is forbidden to get the
-separator character as the result of the evaluation. In this case `z` is evaluated to `a|` and that would make
-`|` to the separator character for the arguments (we have here only one).
-%}
+# When the user defined macro name itself is defined as the result of a macro evaluation it is forbidden to get the
+# separator character as the result of the evaluation. In this case `z` is evaluated to `a|` and that would make
+# `|` to the separator character for the arguments (we have here only one).
+
+The default macro can have extra parameters when no arg is needed, this is a special case:
+  Input: "{@define default(...)=[undef]}{argless}{oneArg ignored}{twoArgs/1/2}{threeArgs/1/2/3}"
+  Output: "[undef][undef][undef][undef]"
+
+The default macro can have extra parameters when no arg is needed:
+  Input: "{@define default(...$_)=[$_]}{argless}"
+  Output: "[argless]"
+
+The default macro can have extra parameters when no arg is needed, but only one extra:
+  Input: "{@define default(...$_)=[$_]}{oneArg ignored}"
+  Throws: "Macro 'default' needs \\(0 ... 1\\) arguments and got 2.*"
+
+The default macro can have extra parameters when no arg is needed but you need a dummy argument :
+  Input: "{@define default($_...)=[$_]}"
+  Throws: "One parameter macro cannot have 'xxx...' argument."
+
+The default macro can have extra parameters:
+  Input: "{@define default(...$_,b...)=[$_]}{argless}{oneArg ignored}{twoArgs/1/2}{threeArgs/1/2/3}"
+  Output: "[argless][oneArg][twoArgs][threeArgs]"
+
+Macro can ignore all parameters:
+  Input: "{@define w(...)=[undef]}{w}{w ignored}{w/1/2}{w/1/2/3}"
+  Output: "[undef][undef][undef][undef]"
+
+The macro can have extra parameters:
+  Input: "{@define a(a,b...)=[a,b]}{a/1/2}{a/1/2/3}"
+  Output: "[1,2][1,2]"
+
+Some macro parameters may be optional:
+  Input: "{@define a(a, ... b)=[a,b]}{a/1/2}{a/1}"
+  Output: "[1,2][1,]"
+
+Some macro parameters may be optional without space after the ellipsis:
+  Input: "{@define a(a, ...b)=[a,b]}{a/1/2}{a/1}"
+  Output: "[1,2][1,]"
+
+Some macro parameters may be optional but throws for extra parameters:
+  Input: "{@define a(a, ...b)=[a,b]}{a/1/2/3/4/5}"
+  Throws: "Macro 'a' needs \\(1 ... 2\\) arguments and got 5.*"
+
+Some macro parameters may be optional but throws for too few parameters:
+  Input: "{@define a(a, ...b)=[a,b]}{a}"
+  Throws: "Macro 'a' needs \\(1 ... 2\\) arguments and got 0.*"
+
+A macro can have all parameters optional:
+  Input: "{@define a(...a,b)=[a,b]}{a}{a/1}{a/1/2}"
+  Output: "[,][1,][1,2]"
+
+A macro can have all parameters optional throws for extra parameters:
+  Input: "{@define a(...a,b)=[a,b]}{a/1/2/3}"
+  Throws: "Macro 'a' needs \\(0 ... 2\\) arguments and got 3.*"
+
+A macro can be total lenient:
+  Input: "{@define a(...a,b...)=[a,b]}{a}{a/1}{a/1/2}{a/1/2/3}"
+  Output: "[,][1,][1,2][1,2]"
+
+A macro can have one optional parameter:
+  Input: "{@define a(...a)=[a,b]}{a}{a/1}"
+  Output: "[,b][1,b]"
+
+A macro can have one optional parameter and it handles one argument specially:
+  Input: "{@define a(...a)=[a,b]}{a}{a/1}{a/1/2}"
+  Output: "[,b][1,b][1/2,b]"
+
+One parameter macro cannot say it may have extra parameters because one parameter macros are handles specially:
+  Input: "{@define a(a...)=[a,b]}"
+  Throws: "One parameter macro cannot have 'xxx...' argument."
+
+The last parameter may be optional and the same time we can allow extra parameters:
+  Input: "{@define a(a,...b...)=[a,b]}{a /1}{a/1/2}{a/1/2/3}"
+  Output: "[1,][1,2][1,2]"
+
+The last parameter may be optional and the same time we can allow extra parameters but it throws if mandatory parameters are not there:
+  Input: "{@define a(a,...b...)=[a,b]}{a }"
+  Throws: "Macro 'a' needs \\(1 ... inf\\) arguments and got 0"
+
+The macro can also be non lenient:
+  Input: "{@define a(a,b)=[a,b]}{a}{a/1/2}{a/1/2/3}"
+  Throws: Macro 'a' needs 2 arguments and got 0
 
 A macro name can be defined as the result of a macro:
   Input: |
@@ -173,3 +251,59 @@ Verbatim optional redefine to be verbatim:
 Verbatim macro post evaluated is the same as non-verbatim macro:
   Input: "{@define b=2}{@define ~ a={b}}{!a}"
   Output: "2"
+
+macro named 'default' is invoked when defined instead of undefined error:
+  Input: "{@define default=wupppps...}{something}"
+  Output: "wupppps..."
+
+Incomplete user defined macro definition throws exception:
+  Input: "{@define z wupppps...}"
+  Throws: "define 'z' has no '=' to body"
+
+macro named 'default' is invoked when defined instead of zero string when macro used optionally:
+  Input: "{@define default=wupppps...}{?something}"
+  Output: "wupppps..."
+
+simplest ever define and use user-defined macro:
+  Input: "{@define a=wupppps...}{a}"
+  Output: "wupppps..."
+
+macros can be redefined:
+  Input: "{@define a=y}{@define a=x}{a}"
+  Output: "x"
+
+macros can be redefined conditionally, and are not redefined if already defined:
+  Input: "{@define a=y}{@define ? a=x}{a}"
+  Output: "y"
+
+macro redefinition can result error in case we use !:
+  Input: "{@define a=y}{@define ! a=x}{a}"
+  Throws: "The macro 'a' was already defined."
+
+conditional redefinition does not redefine any higher scope already defined macro:
+  Input: "{#ident {@define :a=y}}{@define ? a=x}{a}"
+  Output: "y"
+
+"last character of a macro can be ':' colon":
+  Input: "{#ident {@define a:()=y}}{a:}"
+  Output: "y"
+
+"when {@define a():=y} defines a and must have ()":
+  Input: "{@define a():=y}{a}"
+  Output: "y"
+
+"{@define a:=y} is ambigous and therefore forbidden":
+  Input: "{@define a:=y}{a}"
+  Throws: "The \\(\\) in define is not optional when the macro name ends with ':'\\."
+
+"you can define a macro with := when it has parameters":
+  Input: "{@define a(z):=yz}{a Z}"
+  Output: "yZ"
+
+"Using := to define a macro will freeze the opening and closing strings in the macro when used":
+  Input: "{@define a(z):={yz}}{@define yZ=k}{@sep [ ]}[a Z]"
+  Output: "{yZ}"
+
+"Using = to define a macro will replace the macros in the macro even if the opening/closing string is already different":
+  Input: "{@define a(z)={yz}}{@define yZ=k}{@sep [ ]}[a Z]"
+  Output: "k"

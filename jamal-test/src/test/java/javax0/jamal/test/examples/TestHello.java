@@ -1,5 +1,6 @@
 package javax0.jamal.test.examples;
 
+import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.Debugger;
 import javax0.jamal.test.tools.junit.IntelliJOnly;
 import javax0.jamal.testsupport.TestThat;

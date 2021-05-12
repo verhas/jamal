@@ -48,7 +48,11 @@ public class BadSyntaxAt extends BadSyntax {
 
     @Override
     public String getMessage() {
-        return super.getMessage() + " at " + pos.file + "/" + pos.line + ":" + pos.column;
+        if (pos == null) {
+            return super.getMessage();
+        } else {
+            return super.getMessage() + " at " + pos.file + "/" + pos.line + ":" + pos.column;
+        }
     }
 
     public interface Runnable {

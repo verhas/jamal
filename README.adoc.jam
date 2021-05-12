@@ -679,6 +679,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.0.0 (core)
 * since 1.6.4 `default` as special macro
 * since 1.7.4 `default` macro first argument, macro can be defined to evaluate verbatim
+* since 1.7.6 optional and extra ignored arguments
 
 ===== Define basics
 
@@ -730,13 +731,18 @@ or
 
 Using the `()` characters after the identifier of the macro is optional, and the result is exactly the same as if it omitted.
 The two definitions are equivalent.
+
+NOTE: There is one exception, when you have to use `()` even for empty parameter list.
+This is the case, when the `id` ends with a colon `:`.
+In this case the definition `{@define id:=...}` would be ambigous, because using `:=` instead of `=` has a special meaning (see it later).
+
 When the macro is used, the arguments are replaced in the body by the actual parameters supplied at the place of use.
 The arguments are specified as a comma-separated list.
 They are usually identifiers.
 
 Note that the arguments do not have any special syntax.
-The only requirement is that they do not contain a comma `,` and a closing parenthesis `)`.
-That is because the list is comma-separated, and because `)` terminates the list of the arguments.
+The only requirement is that they do not contain a comma `,`, a closing parenthesis `)` and they do not start or end with `...`.
+That is because the list is comma-separated, because `)` terminates the list of the arguments, and a `...` prefix or postfix denotes optional arguments.
 It is recommended, though, to use normal identifiers and no spaces in the argument names.
 This is only a recommendation and is not enforced by Jamal.
 You may need to process some special text.
@@ -786,6 +792,16 @@ will result
 
 even though `*c` is a `fish`, but the characters `*c` in the output come from the value of a parameter and therefore it is not replaced.
 
+===== Special User Defined Macros
+
+In Jamal user defined macros are defined using the `define` macro.
+Internally, a user defined macro can be anything that implements a specific Java interface.
+Jamal only requires that it can be evaluated and that it handles the string arguments passed to it.
+Some built-in macros implemented in external packages, like the Yaml package have their implementation.
+It means that they create user defined macros that you can pass parameters, and their evaluation results some output, but they are not "classical" user defined macros.
+They just behave like the macros that are defined using `define`.
+Foe example the macro `counter:define`from the Snippet package creates a "user defined" macro that results a number when used, but it also changes the value at every invocation.
+
 ===== Macro redefine
 
 Macros can be redefined at any point.
@@ -821,17 +837,22 @@ will result
 
 {%output%}
 
+NOTE: The macro `try!` will catch the error and send the error message to the output.
+This is mainly used for debugging and in this case for documentation purposes.
+
 When a user defined macro is evaluated, the result of the macro is evaluated again resolving all the macros that happen to be in the result.
 This can be prevented using the <<verbatim,`verbatim`>> macro.
 You can also read more details on the macro evaluation order in the chapter <<verbatim,`verbatim`>>.
 
-If you use the `~` character after the keyword `define` then the macro will be evaluated "verbatim" by default.
+If you use the `~` (tilde) character after the keyword `define` then the macro will be evaluated "verbatim" by default.
 It means that the value of the user defined macro will not be evaluated like if it was used with the macro `verbatim`.
 For example:
 
 {%sample/
 {@define x=1966}
-{@define a={x}}{@verbatim a} is the same as
+{@define a={x}}
+{a} evaluates first to the macro `x` and then that evaluates to 1966
+{@verbatim a} stops before the evaluation of the result of the macro and this way it is the same as
 {@define ~ a={x}}{a}
 %}
 
@@ -855,8 +876,8 @@ will result
 ====
 You cannot use `!` together wit the macro  `verbatim`.
 This is because the format `{!@verbatim ...}` is the same as simply `{...}` without the `!` and the `@verbatim`.
-On the other hand when the macro would almost always would be used together with `verbatim` then it makes sense to define the macro to be a verbatim user defined macro.
-In the few cases when it would be used without `verbatim` you can use `!` instead in this case.
+On the other hand when the macro would almost always be used together with `verbatim` then it makes sense to define the macro to be a verbatim user defined macro.
+In the few cases when it would be used without `verbatim` you can use `!`.
 
 The macros in the module Yaml define the object structures read from the Yaml format as verbatim user defined macros.
 When you use such a macro, like `{yaml}` the Yaml formatted string representation of the data is the result of the macro.
@@ -885,7 +906,7 @@ will result
 In this case the macro `A:Z` is a global macro because it has a `:` in the name.
 
 It is also possible to define a user-defined macro to be global without `:` in the name.
-If the very first character of the name of the macro is `:` then this character is removed, and the macro is defined in the global scope.
+If the very first character of the name of the macro is `:` then this character is removed, but the macro is defined in the global scope.
 Further modifying the example we get:
 
 {%sample/
@@ -983,18 +1004,34 @@ Result:
 
 {%output%}
 
+Starting with the version 1.7.6 Jamal introduced optional arguments to user defined macros.
+(Details are a bit later.)
+You can use optional arguments when you define a `default` macro.
+For example:
+
+{%sample/
+{@define default(...)=DEFAULT}{huppala}{bumbala}{wopsydosy}
+%}
+
+will result
+
+{%output%}
+
+
+
+
 The parameters stand after the name of the macro separated by a separator character.
-The first non-whitespace character after the name of the macro is the separator character.
-It is usually `/` as in the examples below, but it can be any non-alphanumeric character.
-The number of parameters should be exactly the same as the number of argument unless the `{@options lenient}` was specified.
-In that case, the missing arguments will be zero-length strings.
-If there are extra parameters, they will be ignored when in lenient mode.
+The first non-whitespace and non-alphanumeric character after the name of the macro is the separator character.
+It can be `/` as in the examples below, but it can also be any non-alphanumeric character.
+The number of parameters should be exactly the same as the number of argument unless the `{@options lenient}` was specified, or the `...` was used to denote optional arguments.
+In the case of optional arguments, the missing arguments will be zero-length strings.
+If there are extra parameters, they will be ignored.
 
 The separator character cannot be an alphanumeric character (letter or digit, Unicode categories Lu, Ll, Lt, Lm, Lo, and Nd).
 Any other Unicode character can be used as a parameter separator character.
 
 If the user-defined macro has exactly one argument then there is no need to use a separator character.
-The sole parameter of the macro can start after the name of the macro at the first non-whitespace character.
+The sole parameter of the macro can start after the name of the macro at the first non-whitespace, alphanumeric character.
 For example,
 
 {%sample/
@@ -1030,6 +1067,7 @@ will result
 {%output%}
 
 because `-` is not alphanumeric and therefore it is treated as a separator character separating a single empty string.
+On the other hand
 
 {%sample/
 {@define enclose(a)=<!!a!!>}
@@ -1071,11 +1109,13 @@ You need not worry that the character itself presents in the content.
 {@try!{x/s/h/t}}
 %}
 
-will result an error, because there are two many arguments:
+will result an error, because there are too many arguments:
 
 {%output%}
 
-The rule that the separator character is not considered separator in the rest of the argument is valid only when there is one argument.
+NOTE: In the example above we switched off the lenient mode, because it was already switched on for some previous samples.
+
+The rule that the separator character is not considered as another separator in the rest of the argument is valid only when there is only one argument.
 In case of multiple arguments this could easily lead to unreadable macro use.
 The above example modified to be lenient demonstrates this:
 
@@ -1089,13 +1129,14 @@ will result
 
 {%output%}
 
+The provided third value, `t` is ignored.
 
 There are situations where the use of a separator character is not a must, but the use of it helps the readability.
 Consider, for example `{enclose/a/b/v}`.
-We know that `enclose` from the above has only one argument, but the use of it looks like it has three.
+We know  from earlier that `enclose` has only one argument, however the use of it looks like it has three.
 The one argument it has is `a/b/v`.
 
-Omitting the separator character, `/` in this case, does not help the readability.
+Omitting the separator character, `/` in this case, does not help the readability or only a bit.
 The use `{enclose a/b/c}` still looks like a macro with three parameters.
 In situations like that the most readable solution is to use an explicit separator character that looks good.
 For example `{enclose |a/b/c}` makes it evident and readable that there is only one parameter: `a/b/c`.
@@ -1123,7 +1164,7 @@ This is a fairly complex example.
 To ease the understanding note the followings:
 
 1. `%66h` is an absolutely valid macro parameter name.
-Anything can be a parameter name that does not contain a comma or a closing parentheses and is not a substring of any other parameter.
+Anything can be a parameter name that does not contain a comma, a closing parentheses, does not start or end with `...` and is not a substring of any other parameter.
 
 2. When a macro parameter is replaced in the body of the macro the processing of that string is finished and is not processed further replacing macro parameters.
 Macro parameters are only replaced with the actual values in the macro body and not in the parameter actual values.
@@ -1135,16 +1176,93 @@ Using the name `:x` defines the macro `x` in the global scope, that is above the
 When we defined the macro `y` it also starts with `:`
 and so it gets into the global scope.
 However, during the definition, it is in the local scope of the `comment` macro where the local definition of `x` overrides the global definition of `x` even though the global definition happened later.
-Therefore `y` will be `here we are local`.
+Therefore, `y` will be `here we are local`.
 That is also because  `y` is defined using the `#` character before the built-in macro keyword `define` and thus the content of the definition is evaluated before defining the global `y`.
+
+===== Pure Macros
 
 It may happen that the macro opening and closing strings are different when the macro is defined and when used.
 In a situation like that the macro evaluation replaces the macro opening and closing strings in the macro definition to the actual macro opening and closing strings.
 It can be prevented using `:=` instead of a `=` between the name, parameter list and the body of the macro.
 
-Note that when there are no paramneters and the macro definition does not use the optional `()` after the name of the macro the `:=` may be ambiguous.
-The macro definition `{@define a:=b}` may mean, `a` should be `b` with simple evaluation or `a:` global macro shoudl be `b`.
-In a situation like this the `:` character belongs to the `:=` assignment symbol.
+{%sample/
+{@sep [ ]}[@define a=[z]{z}][@sep]{@define z=3}{a}
+{@sep [ ]}[@define a():=[z]{z}][@sep]{@define z=3}{a}
+%}
+
+results
+
+{%output%}
+
+When `a` is evaluated the result is `[z]{z}` on both lines.
+In the next step this result is evaluated, because the macro is not a `verbatim` one.
+In the first case the macro a normal one and the evaluation knows that the macro opening and closing strings were `[` and `]`.
+In this case the evaluation also knows that the characters `{` and `}` are just ordinary characters.
+
+In the second case, however, the macro is a "pure" macro and is evaluated as it using the current macro opening and closing strings.
+
+Note that when there are no parameters, and the macro definition does not use the optional `()` after the name of the macro the `:=` would be ambiguous.
+To avoid this ambiguity you have to use `()` after the name of the macro if the name of the macro finishes with a `:` character.
+
+
+===== Optional Arguments
+
+Setting the option `lenient` is a very aggressive way to make all macros inside the current scope evaluated in the lenient way.
+There are more subtle methods to specify that some macro may work with less or more actual parameter values than their concrete arguments.
+Macros can define a minimum, and a maximum number of parameters they need when they are called.
+When an argument in the `define` macro starts with `...` characters it means that the next argument, and the arguments afterwards are optional.
+When using the macro these arguments will be empty string when not provided. For example,
+
+{%sample/
+{@options ~lenient}{@comment just to be sure}
+{@define a(a,b,...c,d,e)=>a< .b. /c/ |d| (e)}
+{a :1:2:3}
+%}
+
+will result
+
+{%output%}
+
+You can also say that all the parameters are optional in case the `...` is in front of the first argument:
+
+{%sample/
+{@define a(...a,b,c,d,e)=>a< .b. /c/ |d| (e)}
+{a :1:2:3:4:5}
+{a :1:2:3:4}
+{a :1:2:3}
+{a :1:2}
+{a :1}
+{a}
+%}
+
+will result
+
+{%output%}
+
+Optional parameters are different from leinent mode, that they do not allow extra parameters. For example the
+
+{%sample/
+{@try! {a :1:2:3:4:5:6}}
+%}
+
+will result the error
+
+{%output%}
+
+If you want to allow extra parameters then you can append `...` after the last argument:
+
+{%sample/
+{@define a(...a,b,c,d,e...)=>a< .b. /c/ |d| (e)}
+{a :1:2:3:4:5:6}
+%}
+
+resulting in
+
+{%output%}
+
+Appending `...` after some other argument, which is not the last one or using `...` prefix on more than one argument is an error.
+It is also an error to add `...` postfix after the first argument when the macro has one argument.
+One argument macros are treated in a special way and all the text following the macro will be treated as a single argument, thus it is meaningless to use `...` after a single argument.
 
 [[undefine]]
 ==== {%macroChapter%}`undefine`

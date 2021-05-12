@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Utility class with some simple static methods that fetch characters from an input buffer.
  */
@@ -419,6 +421,9 @@ public class InputHandler {
     public static String[] ensure(String[] parameters, Position ref) throws BadSyntaxAt {
         final var exceptionParameters = new ArrayList<String>();
         for (int i = 0; i < parameters.length; i++) {
+            if (requireNonNull(parameters[i]).length() == 0) {
+                throw new BadSyntaxAt("User defined macro argument cannot be empty string.", ref);
+            }
             for (int j = 0; j < parameters.length; j++) {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {

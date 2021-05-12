@@ -5,7 +5,6 @@ import javax0.jamal.api.Configurable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.InputHandler;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
 import static javax0.jamal.api.SpecialCharacters.DEFINE_VERBATIM;
@@ -49,13 +48,12 @@ public class Define implements Macro {
             }
         }
         skipWhiteSpaces(input);
-        final boolean pureByBeforeParams = id.endsWith(":") && !firstCharIs(input, '(');
-        if (pureByBeforeParams) {
-            id = id.substring(0, id.length() - 1);
+        if (id.endsWith(":") && !firstCharIs(input, '(')) {
+            throw new BadSyntax("The () in define is not optional when the macro name ends with ':'.");
         }
         final String[] params = getParameters(input, id);
-        final boolean pure = pureByBeforeParams || firstCharIs(input, ':');
-        if (firstCharIs(input, ':')) {
+        final boolean pure;
+        if (pure = firstCharIs(input, ':')) {
             skip(input, 1);
         }
         if (!firstCharIs(input, '=')) {

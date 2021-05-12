@@ -35,7 +35,7 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
      *                   something like that. The only requirement is that there is no comma in these names. It is
      *                   recommended though to use usual identifiers.
      */
-    public ScriptMacro(Processor processor, String id, String scriptType, String content, String... parameters) {
+    public ScriptMacro(Processor processor, String id, String scriptType, String content, String... parameters) throws BadSyntax {
         this.processor = processor;
         this.scriptType = scriptType;
         this.id = id;

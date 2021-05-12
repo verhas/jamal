@@ -7,14 +7,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.String.format;
+
 /**
  * A little utility class used solely in {@code UserDefinedMacro} and in {@code ScriptMacro} to ensure the proper use of
  * the macro arguments. In case of user defined macros none of the argument can contain any other argument. This
- * restriction is to avoid non-deterministic behavior or rather a deterministic behaviour (the code cannot really be
- * non-deterministic) that is not intuitive. In user defined macros the parameters, as they appear in the text are
- * replaced by the actual string values that are specified for those parameters based on position. If a parameter name
- * is the prefix of another parameter name, then the macro evaluation will become ambiguous. Should it replace the
- * longer parameter with its value or the shorter one included in the longer one. This type of use would lead to
+ * restriction is to avoid non-deterministic behavior. TO be honest the behaviour would not be non-deterministic but
+ * rather a deterministic behaviour that is not intuitive. In user defined macros the parameters, as they appear in the
+ * text are replaced by the actual string values that are specified for those parameters based on position. If a
+ * parameter name contains another parameter name, then the macro evaluation will become ambiguous. Should it replace
+ * the longer parameter with its value or the shorter one included in the longer one. This type of use would lead to
  * confusion and much less readability. Jamal, honestly, gives so much possibility to create unreadable and cryptic
  * macros, so we just avoid a pitfall that we can.
  */
@@ -22,9 +24,47 @@ class ArgumentHandler {
 
     final String[] parameters;
     private final Identified owner;
+    private final int max;
+    private final int min;
+    private static final String ELIPSIS = "...";
 
-    public ArgumentHandler(Identified owner, String[] parameters) {
+    public ArgumentHandler(Identified owner, String[] parameters) throws BadSyntax {
         this.owner = owner;
+        if( parameters.length == 1 && parameters[0].equals(ELIPSIS)){
+            min = 0;
+            max = Integer.MAX_VALUE;
+            this.parameters = new String[0];
+            return;
+        }
+        int min = -1, max = -1;
+        if (parameters.length > 0) {
+            for (int i = 0; i < parameters.length; i++) {
+                if (parameters[i].startsWith(ELIPSIS)) {
+                    if (min == -1) {
+                        min = i;
+                        parameters[i] = parameters[i].substring(ELIPSIS.length()).trim();
+                    } else {
+                        throw new BadSyntax("There can only be one '...xxx' argument in a define.");
+                    }
+                }
+                if (parameters[i].endsWith(ELIPSIS)) {
+                    if (parameters.length == 1) {
+                        throw new BadSyntax("One parameter macro cannot have 'xxx...' argument.");
+                    }
+                    if (max == -1 && i == parameters.length - 1) {
+                        max = Integer.MAX_VALUE;
+                        parameters[i] = parameters[i].substring(0, parameters[i].length() - ELIPSIS.length()).trim();
+                    } else {
+                        throw new BadSyntax("There can only be one 'xxx...' argument in a define, and it has to be the last one.");
+                    }
+                }
+            }
+
+            this.min = min == -1 ? parameters.length : min;
+            this.max = max == -1 ? parameters.length : max;
+        } else {
+            this.min = this.max = 0;
+        }
         this.parameters = parameters;
     }
 
@@ -54,31 +94,46 @@ class ArgumentHandler {
     String[] adjustActualValues(String[] actualValues, boolean lenient) throws BadSyntax {
         if (actualValues.length != parameters.length) {
             if (lenient) {
-                if (actualValues.length < parameters.length) {
-                    final var adjustedValues = Arrays.copyOf(actualValues, parameters.length);
-                    for (int i = 0; i < adjustedValues.length; i++) {
-                        if (adjustedValues[i] == null) {
-                            adjustedValues[i] = "";
-                        }
-                    }
-                    return adjustedValues;
-                }
+                final String[] adjustedValues = ArgumentHandler.this.adjustActualValues(actualValues);
+                if (adjustedValues != null) return adjustedValues;
             } else {
                 if (isFantomParameter(actualValues)) {
                     return new String[0];
                 } else {
-                    var badSyntax = new BadSyntax(String.format("Macro '%s' needs %d arguments and got %d",
-                        owner.getId(),
-                        parameters.length,
-                        actualValues.length));
-                    for (final var actual : actualValues) {
-                        badSyntax.parameter(actual);
+                    if (actualValues.length < min || actualValues.length > max) {
+                        final BadSyntax badSyntax;
+                        if (min == max) {
+                            badSyntax = new BadSyntax(format("Macro '%s' needs %d arguments and got %d",
+                                owner.getId(), parameters.length, actualValues.length));
+                        } else {
+                            badSyntax = new BadSyntax(format("Macro '%s' needs (%s ... %s) arguments and got %d",
+                                owner.getId(), ""+min, (max == Integer.MAX_VALUE ? "inf" : "" + max), actualValues.length));
+                        }
+                        for (final var actual : actualValues) {
+                            badSyntax.parameter(actual);
+                        }
+                        throw badSyntax;
+                    } else {
+                        final String[] adjustedValues = adjustActualValues(actualValues);
+                        if (adjustedValues != null) return adjustedValues;
                     }
-                    throw badSyntax;
                 }
             }
         }
         return actualValues;
+    }
+
+    private String[] adjustActualValues(String[] actualValues) {
+        if (actualValues.length < parameters.length) {
+            final var adjustedValues = Arrays.copyOf(actualValues, parameters.length);
+            for (int i = 0; i < adjustedValues.length; i++) {
+                if (adjustedValues[i] == null) {
+                    adjustedValues[i] = "";
+                }
+            }
+            return adjustedValues;
+        }
+        return null;
     }
 
     /**

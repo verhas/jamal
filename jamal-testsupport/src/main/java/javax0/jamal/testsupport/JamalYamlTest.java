@@ -5,6 +5,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
@@ -23,6 +24,9 @@ import java.util.Objects;
 
 public class JamalYamlTest {
     private static final List<String> keywords = List.of("Input", "Output", "Throws", "Details");
+    public static final String __OFF__ = "__OFF__";
+    public static final String __ON__ = "__ON__";
+    public static final String __SKIP__ = "__SKIP__";
 
     public static JamalTests factory(String... testFiles) {
         final var klass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
@@ -31,8 +35,31 @@ public class JamalYamlTest {
             return new JamalYamlTest().factoryOne(klass, klass.getSimpleName());
         } else {
             final var dynamicContainers = new JamalTests<DynamicContainer>();
+            boolean on = true;
+            boolean oneOff = false;
             for (final var s : testFiles) {
-                dynamicContainers.add(DynamicContainer.dynamicContainer(s, new JamalYamlTest().factoryOne(klass, s)));
+                if (s == null) {
+                    break;
+                }
+                switch (s) {
+                    case __OFF__:
+                        on = false;
+                        break;
+                    case __ON__:
+                        on = true;
+                        break;
+                    case __SKIP__:
+                        oneOff = true;
+                        break;
+                    default:
+                        if (on && !oneOff) {
+                            dynamicContainers.add(DynamicContainer.dynamicContainer(s, new JamalYamlTest().factoryOne(klass, s)));
+                        }else{
+                            dynamicContainers.add(DynamicContainer.dynamicContainer(s,List.of(DynamicTest.dynamicTest(s, () -> Assumptions.assumeTrue(false,"Test was skipped")))));
+                        }
+                        oneOff = false;
+                        break;
+                }
             }
             return dynamicContainers;
         }

@@ -2,8 +2,8 @@
 [[#comment [[@sep/<</>>]]
 <<@define z=zazi>><<@export z>>
 <<#sep>>
-[[#define a1:=[[?z]]]]
-[[@define a2:=[[?z]]]]
+[[#define a1():=[[?z]]]]
+[[@define a2():=[[?z]]]]
 [[@export a1,a2]]
 ]]
 [[@sep]]

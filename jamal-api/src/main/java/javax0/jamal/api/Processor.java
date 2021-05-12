@@ -76,7 +76,7 @@ public interface Processor extends AutoCloseable {
      * @param params     see {@link #newUserDefinedMacro(String, String, String[])}
      * @return see {@link #newUserDefinedMacro(String, String, String[])}
      */
-    ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params);
+    ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params) throws BadSyntax;
 
     /**
      * Register an AutoCloseable resource that has to be closed when the execution is finished.

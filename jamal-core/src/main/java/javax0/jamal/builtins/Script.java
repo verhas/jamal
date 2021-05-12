@@ -16,7 +16,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Script implements Macro {
     @Override
-    public String evaluate(Input input, Processor processor) throws BadSyntaxAt {
+    public String evaluate(Input input, Processor processor) throws BadSyntax {
         var ref = input.getPosition();
         skipWhiteSpaces(input);
         var id = fetchId(input);

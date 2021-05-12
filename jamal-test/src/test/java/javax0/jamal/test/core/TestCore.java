@@ -4,16 +4,16 @@ import javax0.jamal.testsupport.JamalTests;
 import javax0.jamal.testsupport.JamalYamlTest;
 import org.junit.jupiter.api.TestFactory;
 
-public class Test {
+public class TestCore {
 
     @TestFactory
-    JamalTests<?> testAll() {
+    JamalTests<?> testAllCoreMacros() {
         return JamalYamlTest.factory(
+            "TestDefine",
             "TestFor",
             "TestBeginEnd",
             "TestBlock",
             "TestComment",
-            "TestDefine",
             "TestEscape",
             "TestEval",
             "TestExport",
@@ -28,7 +28,6 @@ public class Test {
             "TestTry",
             "TestUndefine",
             "TestUse",
-            "TestUserDefined",
             "TestSep",
             "nested_ud_macros"
         );

@@ -109,7 +109,7 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public ScriptMacro newScriptMacro(String id, String scriptType, String input, String... params) {
+    public ScriptMacro newScriptMacro(String id, String scriptType, String input, String... params) throws BadSyntax {
         return new javax0.jamal.engine.ScriptMacro(this, id, scriptType, input, params);
     }
 
