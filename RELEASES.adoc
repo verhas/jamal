@@ -3,6 +3,13 @@
 
 
 
+=== https://github.com/verhas/jamal/tree/1.7.6[1.7.6]
+
+Yaml XML macro extended to have attributes and CDATA in the output when you design a Yaml, especially for XML.
+Macro `define` can specify optional parameters.
+It is an error to use `:=` on a parameterless macro without `()` to avoid ambiguity.
+Even I, who created the whole shenanigans, could not remember if `a:=` defines a global or a pure macro.
+
 === https://github.com/verhas/jamal/tree/1.7.5[1.7.5]
 
 yaml can be exported as XML
