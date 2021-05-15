@@ -42,6 +42,14 @@ Escapes text with complex macro opening and closing with more coplex escape stri
   Input: "{@escape`|+brrrr`abraka }}dabra`|+brrrr`}"
   Output: "abraka }}dabra"
 
+Escape with extra no-evaluate protection embedded:
+  Input: "{#ident {`@escape`|+brrrr`abraka }}dabra`|+brrrr`}}"
+  Output: "{@escape`|+brrrr`abraka }}dabra`|+brrrr`}"
+
+Escape with extra no-evaluate protection:
+  Input: "{`@escape`|+brrrr`abraka }}dabra`|+brrrr`}"
+  Output: "{@escape`|+brrrr`abraka }}dabra`|+brrrr`}"
+
 Error when:
   escape has something after the closing:
     Input: "{@escape `|``|` dddd}"

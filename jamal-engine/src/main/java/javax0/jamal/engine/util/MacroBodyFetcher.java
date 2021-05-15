@@ -3,19 +3,19 @@ package javax0.jamal.engine.util;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Escape;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
-import javax0.jamal.api.SpecialCharacters;
-import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
 
-import java.util.LinkedList;
+import java.util.Optional;
 
+import static javax0.jamal.api.SpecialCharacters.IDENT;
+import static javax0.jamal.api.SpecialCharacters.NO_PRE_EVALUATE;
+import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.eatEscapedNL;
 import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.move;
-import static javax0.jamal.tools.InputHandler.moveWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
@@ -23,9 +23,10 @@ public class MacroBodyFetcher {
 
     /**
      * Eat off a macro from the input caring about all the macro nesting. The input is right after the macro opening
-     * string and at the end it will eat off from the input not only the macro body but also the last macro closing
-     * string characters. The output will be the string that contains the content of the macro including all the
-     * matching macro opening and closing strings that are inside if there are any.
+     * string and the optional ident and post evaluate characters and at the end it will eat off from the input not only
+     * the macro body but also the last macro closing string characters. The output will be the string that contains the
+     * content of the macro including all the matching macro opening and closing strings that are inside if there are
+     * any.
      * <p>
      * For example the input (here {@code [[} is the macro opening string and {@code ]]} is the macro closing string):
      *
@@ -56,118 +57,68 @@ public class MacroBodyFetcher {
      * @throws BadSyntaxAt if the macro opening and closing strings are not properly balanced
      */
     public static String getNextMacroBody(final Input input, Processor processor) throws BadSyntaxAt {
-        final var openStr = processor.getRegister().open();
-        final var closeStr = processor.getRegister().close();
-        // keep track of all the opened and not yet closed macro start string
-        // use it to report error when a macro is not terminated before EOF
-        // knowing where the last opening string was that had no closing pair
-        var refStack = new LinkedList<Position>();
-        refStack.push(input.getPosition());
-        var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = makeInput();
-
-        if (startWithEscapeMacro(processor, input, 0)) {
-            moveEscapeMacroBody(input, output, closeStr);
-            skip(input, closeStr);
-            return output.toString();
-        }
-
-        while (counter > 0) {// while there is any opened macro
-            if (input.length() == 0) {// some macro was not closed
-                throw new BadSyntaxAt("Macro was not terminated in the file.", refStack.pop());
-            }
-
-            if (input.indexOf(openStr) == 0) {
-                if (startWithEscapeMacro(processor, input, openStr.length())) {
-                    move(input, openStr, output);
-                    moveEscapeMacroBody(input, output, closeStr);
-                    move(input, closeStr, output);
-                } else {
-                    refStack.push(input.getPosition());
-                    move(input, openStr, output);
-                    counter++; //count the new opening
-                }
-            } else if (input.indexOf(closeStr) == 0) {
-                counter--; // count the closing
-                if (counter == 0) {
-                    skip(input, closeStr);
-                    if (!OptionsStore.getInstance(processor).is("nl")) {
-                        eatEscapedNL(input);
-                    }
-                } else {
-                    refStack.pop();
-                    move(input, closeStr, output);
-                }
-            } else {
-                final var open = input.indexOf(openStr);
-                final var close = input.indexOf(closeStr);
-                final int limit;
-                if (close > -1 && (open == -1 || close < open)) {
-                    limit = close;
-                } else if (open > -1) {
-                    limit = open;
-                } else {
-                    limit = input.length();
-                }
-                move(input, limit, output);
-            }
+        final var escapeMacro = getEscapeMacro(processor, input, 0);
+        if (escapeMacro.isPresent()) {
+            escapeMacro.get().moveBody(processor, input, output);
+            skip(input, processor.getRegister().close());
+        } else {
+            moveNonEscapeBody(processor, input, output);
         }
         return output.toString();
     }
 
-    /**
-     * Move the 'escape' macro body to the output.
-     * <p>
-     * The method is invoked only when {@link #startWithEscapeMacro(Processor, Input, int)} returned  {@code true}. It
-     * assumes that the start of the input contains an escape macro.
-     * <p>
-     * Note that this method will not care if there are extra non-whitespace character between the second {@code `xxx`}
-     * string and the macro closing string, like in
-     *
-     * <pre>{@code
-     *     {@escape `|||`escaped content `|||` this is erroneous}
-     * }</pre>
-     * <p>
-     * the characters "{@code this is erroneous}". This will however be an error when the macro as implemented in the
-     * module {@code jamal.core} is executed.
-     *
-     * @param input    has to point to the start of the macro. After the invocation the input will be stepped onto the
-     *                 closing macro string and not after.
-     * @param output   where to copy the body of the escape macro. This means all characters between the opening and
-     *                 closing strings, including leading and trailing white spaces.
-     * @param closeStr the closing string
-     * @throws BadSyntaxAt if the syntax of the escape macro is violated. This is not checked by {@link
-     *                     #startWithEscapeMacro(Processor, Input, int)}.
-     */
-    private static void moveEscapeMacroBody(Input input, Input output, String closeStr) throws BadSyntaxAt {
-        final var start = input.getPosition();
-        moveWhiteSpaces(input, output);
-        move(input, 1, output); // the # or @ character
-        moveWhiteSpaces(input, output);
-        final var escape = fetchId(input);
-        output.append(escape);
-        moveWhiteSpaces(input, output);
-        if (input.charAt(0) != '`') {
-            throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters.", input.getPosition());
+    private static void moveNonEscapeBody(Processor processor, Input input, javax0.jamal.tools.Input output) throws BadSyntaxAt {
+        final var open = processor.getRegister().open();
+        final var close = processor.getRegister().close();
+        var op = new PositionStack(input.getPosition());
+        while (op.size() > 0) {// while there is any opened macro
+            if (input.length() == 0) {// some macro was not closed
+                throw new BadSyntaxAt("Macro was not terminated in the file.", op.pop());
+            }
+
+            if (input.indexOf(open) == 0) {
+                final int offset = getOffset(input, open);
+                final var macro = getEscapeMacro(processor, input, offset);
+                if (macro.isPresent()) {
+                    move(input, offset, output);
+                    macro.get().moveBody(processor, input, output);
+                    move(input, close, output);
+                } else {
+                    op.push(input.getPosition());
+                    move(input, open, output);
+                }
+            } else if (input.indexOf(close) == 0) {
+                if (op.popAndEmpty()) {
+                    skip(input, close);
+                    if (!OptionsStore.getInstance(processor).is("nl")) {
+                        eatEscapedNL(input);
+                    }
+                } else {
+                    move(input, close, output);
+                }
+            } else {
+                final var oIndex = input.indexOf(open);
+                final var cIndex = input.indexOf(close);
+                final int textEnd;
+                if (cIndex != -1 && (oIndex == -1 || cIndex < oIndex)) {
+                    textEnd = cIndex;
+                } else if (oIndex > -1) {
+                    textEnd = oIndex;
+                } else {
+                    textEnd = input.length();
+                }
+                move(input, textEnd, output);
+            }
         }
-        move(input, 1, output);
-        final var endOfEscape = input.indexOf("`");
-        if (endOfEscape == -1) {
-            throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.", input.getPosition());
+    }
+
+    private static int getOffset(Input input, String open) {
+        int offset = open.length();
+        while (offset < input.length() && input.charAt(offset) == IDENT || input.charAt(offset) == PRE_EVALUATE || Character.isWhitespace(input.charAt(offset))) {
+            offset++;
         }
-        final var escapeSequence = "`" + input.subSequence(0, endOfEscape).toString() + "`";
-        move(input, escapeSequence.length() - 1, output);
-        final var endOfString = input.indexOf(escapeSequence);
-        if (endOfString == -1) {
-            throw new BadSyntaxAt("I cannot find the escape string at the end of the macro: " + escapeSequence, input.getPosition());
-        }
-        move(input, endOfString, output);
-        move(input, escapeSequence.length(), output);
-        final var endOfEscapeMacro = input.indexOf(closeStr);
-        if (endOfEscapeMacro == -1) {
-            throw new BadSyntaxAt("Escape macro is not closed", start);
-        }
-        move(input, endOfEscapeMacro, output);
+        return offset;
     }
 
     /**
@@ -175,23 +126,21 @@ public class MacroBodyFetcher {
      *
      * @param processor the processor
      * @param input     to decide if it start with an escape macro
-     * @param offset    is the number of character to skip. This is either zero or the number of cjaracters in the
+     * @param offset    is the number of character to skip. This is either zero or the number of characters in the
      *                  opening string.
-     * @return true if the input starts with an escape macro
+     * @return the optional escape macro if the macro at the start of the input exists and is an escape macro
      */
-    private static boolean startWithEscapeMacro(Processor processor, Input input, int offset) {
-        final var in = makeInput(input);
+    private static Optional<Escape> getEscapeMacro(Processor processor, Input input, int offset) {
+        final var in = makeInput(input); // work on a copy of the input
         skip(in, offset);
         skipWhiteSpaces(in);
-        if ((in.length() == 0) ||
-            (in.charAt(0) != SpecialCharacters.NO_PRE_EVALUATE && in.charAt(0) != SpecialCharacters.PRE_EVALUATE)) {
-            return false;
+        if (firstCharIs(in, NO_PRE_EVALUATE, PRE_EVALUATE)) {
+            skip(in, 1);
+            skipWhiteSpaces(in);
+            return processor.getRegister().getMacro(fetchId(in)).filter(m -> m instanceof Escape).map(Escape.class::cast);
+        } else {
+            return Optional.empty();
         }
-        skip(in, 1);
-        skipWhiteSpaces(in);
-        final var macroId = InputHandler.fetchId(in);
-        final var macro = processor.getRegister().getMacro(macroId);
-        return macro.isPresent() && macro.get() instanceof Escape;
     }
 
 

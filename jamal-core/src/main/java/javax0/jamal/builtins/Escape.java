@@ -7,6 +7,10 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.move;
+import static javax0.jamal.tools.InputHandler.moveWhiteSpaces;
+
 /**
  * W A R N I N G!!!!
  * <p>
@@ -40,7 +44,7 @@ import javax0.jamal.tools.InputHandler;
  * }</pre>
  * <p>
  * will fetch "{@code @escape `st` }} {@code `st`}" because it skips the counting in the part between the {@code `st`}.
- *
+ * <p>
  * This way, this macro is "implemented" not only here but also in the macro body fetcher.
  */
 public class Escape implements Macro, javax0.jamal.api.Escape {
@@ -70,4 +74,61 @@ public class Escape implements Macro, javax0.jamal.api.Escape {
         }
         return escapedString;
     }
+
+
+    /**
+     * Move the 'escape' macro body to the output.
+     * <p>
+     * The method is invoked only when {@code getEscapeMacro(Processor, Input, int)} returned  {@code true}. It assumes
+     * that the start of the input contains an escape macro.
+     * <p>
+     * Note that this method will not care if there are extra non-whitespace character between the second {@code `xxx`}
+     * string and the macro closing string, like in
+     *
+     * <pre>{@code
+     *     {@escape `|||`escaped content `|||` this is erroneous}
+     * }</pre>
+     * <p>
+     * the characters "{@code this is erroneous}". This will however be an error when the macro as implemented in the
+     * module {@code jamal.core} is executed.
+     *
+     * @param processor the Jamal processor
+     * @param input     has to point to the start of the macro. After the invocation the input will be stepped onto the
+     *                  closing macro string and not after.
+     * @param output    where to copy the body of the escape macro. This means all characters between the opening and
+     *                  closing strings, including leading and trailing white spaces.
+     * @throws BadSyntaxAt if the syntax of the escape macro is violated.
+     */
+    @Override
+    public void moveBody(Processor processor, Input input, Input output) throws BadSyntaxAt {
+        final var start = input.getPosition();
+        moveWhiteSpaces(input, output);
+        move(input, 1, output); // the # or @ character
+        moveWhiteSpaces(input, output);
+        output.append(fetchId(input));
+        moveWhiteSpaces(input, output);
+        if (input.charAt(0) != '`') {
+            throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters.", input.getPosition());
+        }
+        move(input, 1, output);
+        final var endOfEscape = input.indexOf("`");
+        if (endOfEscape == -1) {
+            throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.", input.getPosition());
+        }
+        final var escapeSequence = "`" + input.subSequence(0, endOfEscape).toString() + "`";
+        move(input, escapeSequence.length() - 1, output);
+        final var endOfString = input.indexOf(escapeSequence);
+        if (endOfString == -1) {
+            throw new BadSyntaxAt("I cannot find the escape string at the end of the macro: " + escapeSequence, input.getPosition());
+        }
+        move(input, endOfString, output);
+        move(input, escapeSequence.length(), output);
+        final var closeStr = processor.getRegister().close();
+        final var endOfEscapeMacro = input.indexOf(closeStr);
+        if (endOfEscapeMacro == -1) {
+            throw new BadSyntaxAt("Escape macro is not closed", start);
+        }
+        move(input, endOfEscapeMacro, output);
+    }
+
 }
