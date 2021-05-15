@@ -1,0 +1,85 @@
+= Jamal Markdown integration module
+
+With this module you can convert some Markdown text to HTML in your Jamal file.
+The major use case is to include Markdown text into your JavaDoc when you are using Jamal support for Javadoc.
+
+== Dependency
+
+To use the module, you have to have the code on the classpath.
+This can be done adding
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+    <name>jamal markdown</name>
+    <artifactId>jamal-markdown</artifactId>
+    <version>{%VERSION%}</version>
+----
+
+to your Maven `pom.xml`.
+
+To use this macro together with the Jamal doclet you can configure the Maven JavaDoc plugin
+
+[source]
+----
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <version>3.2.0</version>
+    <configuration>
+        <detectOfflineLinks>false</detectOfflineLinks>
+        <doclint>none</doclint>
+        <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
+        <docletArtifact>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-doclet</artifactId>
+            <version>{%VERSION%}</version>
+        </docletArtifact>
+        <additionalOptions>
+            <additionalOption>--source-root</additionalOption>
+            <additionalOption>${project.build.sourceDirectory}</additionalOption>
+        </additionalOptions>
+        <taglets>
+            <taglet>
+                <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+                <tagletArtifact>
+                    <groupId>com.javax0.jamal</groupId>
+                    <artifactId>jamal-doclet</artifactId>
+                    <version>{%VERSION%}</version>
+                </tagletArtifact>
+            </taglet>
+            <tagletArtifacts>
+                <tagletArtifact> <1>
+                    <groupId>com.javax0.jamal</groupId>
+                    <artifactId>jamal-markdown</artifactId>
+                    <version>{%VERSION%}</version>
+                </tagletArtifact>
+            </tagletArtifacts>
+        </taglets>
+    </configuration>
+    <executions>
+        <execution>
+            <id>attach-javadocs</id>
+            <goals>
+                <goal>jar</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+----
+
+<1> in this case the module has to be added to the JavaDoc configuration as a `tagletArtifacts/tagletArtifact` with the module Maven coordinates.
+
+== Use
+{%@import res:jamal.jim%}
+The module defines one single dependency at the moment: `md`.
+The argument of the macro is the
+
+{%sample/
+{@md this is *bold*}
+%}
+
+will output
+
+{%output%}

@@ -1,0 +1,23 @@
+{#import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{project jamal markdown}
+    {GAV ::jamal-markdown:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description Markdown module for Jamal}
+
+    {@define openForTests={opens/markdown/markdown}
+    }
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+       {@for MODULE in (snippet,testsupport,jamal)=
+         {dependency|{GROUPID}|jamal-MODULE||test}}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE||test}}
+      {dependency |com.vladsch.flexmark|flexmark-all|{FLEXMARK_VERSION}}
+    }
+
+{end project}

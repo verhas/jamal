@@ -1,0 +1,7 @@
+#
+# This is the simple and only one test for the macro. There is not much to test because we only want to test the
+# macro and not the markdown conversion itself.
+#
+"Simple sample Markdown macro":
+  Input: "{@md *this is bolt* this is _italian_}"
+  Output: "<p><em>this is bolt</em> this is <em>italian</em></p>\n"
