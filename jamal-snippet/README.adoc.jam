@@ -1252,7 +1252,7 @@ Example
 {@date yyyy-MM-dd HH:mm:ss}
 %}
 
-wll result the output
+will result the output
 
 {%#snip:define dateOutput={%output%}%}\
 {%@snip dateOutput%}
