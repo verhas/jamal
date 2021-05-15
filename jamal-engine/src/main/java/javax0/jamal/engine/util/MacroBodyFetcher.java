@@ -1,6 +1,7 @@
 package javax0.jamal.engine.util;
 
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Escape;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.eatEscapedNL;
+import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.move;
 import static javax0.jamal.tools.InputHandler.moveWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.skip;
@@ -64,7 +66,7 @@ public class MacroBodyFetcher {
         var counter = 1; // we are after one macro opening, so that counts as one opening
         final var output = makeInput();
 
-        if (startWithEscapeMacro(input, 0)) {
+        if (startWithEscapeMacro(processor, input, 0)) {
             moveEscapeMacroBody(input, output, closeStr);
             skip(input, closeStr);
             return output.toString();
@@ -76,7 +78,7 @@ public class MacroBodyFetcher {
             }
 
             if (input.indexOf(openStr) == 0) {
-                if (startWithEscapeMacro(input, openStr.length())) {
+                if (startWithEscapeMacro(processor, input, openStr.length())) {
                     move(input, openStr, output);
                     moveEscapeMacroBody(input, output, closeStr);
                     move(input, closeStr, output);
@@ -116,8 +118,8 @@ public class MacroBodyFetcher {
     /**
      * Move the 'escape' macro body to the output.
      * <p>
-     * The method is invoked only when {@link #startWithEscapeMacro(Input, int)} returned  {@code true}. It assumes that
-     * the start of the input contains an escape macro.
+     * The method is invoked only when {@link #startWithEscapeMacro(Processor, Input, int)} returned  {@code true}. It
+     * assumes that the start of the input contains an escape macro.
      * <p>
      * Note that this method will not care if there are extra non-whitespace character between the second {@code `xxx`}
      * string and the macro closing string, like in
@@ -135,14 +137,15 @@ public class MacroBodyFetcher {
      *                 closing strings, including leading and trailing white spaces.
      * @param closeStr the closing string
      * @throws BadSyntaxAt if the syntax of the escape macro is violated. This is not checked by {@link
-     *                     #startWithEscapeMacro(Input, int)}.
+     *                     #startWithEscapeMacro(Processor, Input, int)}.
      */
     private static void moveEscapeMacroBody(Input input, Input output, String closeStr) throws BadSyntaxAt {
         final var start = input.getPosition();
         moveWhiteSpaces(input, output);
         move(input, 1, output); // the # or @ character
         moveWhiteSpaces(input, output);
-        move(input, SpecialCharacters.ESCAPE, output);
+        final var escape = fetchId(input);
+        output.append(escape);
         moveWhiteSpaces(input, output);
         if (input.charAt(0) != '`') {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters.", input.getPosition());
@@ -170,12 +173,13 @@ public class MacroBodyFetcher {
     /**
      * Checks that input starts with the 'escape' macro using either # or \@ character. The input is not modified.
      *
-     * @param input  to decide if it start with an escape macro
-     * @param offset is the number of character to skip. This is either zero or the number of cjaracters in the opening
-     *               string.
+     * @param processor the processor
+     * @param input     to decide if it start with an escape macro
+     * @param offset    is the number of character to skip. This is either zero or the number of cjaracters in the
+     *                  opening string.
      * @return true if the input starts with an escape macro
      */
-    private static boolean startWithEscapeMacro(Input input, int offset) {
+    private static boolean startWithEscapeMacro(Processor processor, Input input, int offset) {
         final var in = makeInput(input);
         skip(in, offset);
         skipWhiteSpaces(in);
@@ -186,7 +190,8 @@ public class MacroBodyFetcher {
         skip(in, 1);
         skipWhiteSpaces(in);
         final var macroId = InputHandler.fetchId(in);
-        return macroId.equals(SpecialCharacters.ESCAPE);
+        final var macro = processor.getRegister().getMacro(macroId);
+        return macro.isPresent() && macro.get() instanceof Escape;
     }
 
 

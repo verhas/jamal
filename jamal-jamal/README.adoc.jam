@@ -34,3 +34,21 @@ To use this module you have to add the dependency to you Maven project, as:
 
 == Macros implemented in the package
 
+To use the module in an ASCIIDOC file you should include the resurce file `jamal.jim` as
+
+[source]
+----
+{@import res:jamal.jim}
+----
+
+after that you can use the two user defined macros: `sample` and `output`.
+The input of the macro `sample` is the Jamal text to be evaluated.
+The result of the `sample` is the text itself displayed as source.
+When `output` is used the Jamal text is evaluated, and the result is the output as source code.
+
+The macro opening and closing string is `{` and `}`.
+The sample codes one after the other are evaluated in the same processor.
+It means that macros, options or other similar constructs are usable in the consequent outputs.
+
+NOTE: The samples are only evaluated when the macro {%@escape`|``{%output%}``|`%} is invoked.
+

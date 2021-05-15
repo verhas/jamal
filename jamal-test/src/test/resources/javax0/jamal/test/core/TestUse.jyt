@@ -6,3 +6,7 @@ Use can define an alias for an already defined macro:
   Input: "{@use define as defidufi}{@defidufi z=13}{z}"
   Output: "13"
 
+Use can define an alias for an already defined macro even when it is the escape macro:
+  Input: "{@use escape as e}{@e`wuff` {{{{ }}`wuff`}"
+  Output: " {{{{ }}"
+

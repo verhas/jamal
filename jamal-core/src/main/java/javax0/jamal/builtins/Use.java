@@ -7,6 +7,8 @@ import javax0.jamal.api.Processor;
 
 import java.util.regex.Pattern;
 
+import static java.lang.String.format;
+
 /**
  * This macro can be used to define a Java implemented macro class, which is not exported by the module system.
  * <p>
@@ -50,8 +52,9 @@ public class Use implements Macro {
                     macro = register.getMacro(klassName)
                         .orElseThrow(() -> new BadSyntax("There is no built-in macro with the name '" + klassName + "'"));
                     if (alias == null || alias.length() == 0) {
-                        throw new BadSyntax("You cannot define an alias for the macro '"
-                            + klassName + "' without actually providing an alias after the 'as'");
+                        throw new BadSyntax(format(
+                            "You cannot define an alias for the macro '%s' without actually providing an alias after the 'as'"
+                            , klassName));
                     }
                 }
                 if (isGlobal) {

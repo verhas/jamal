@@ -43,7 +43,7 @@ import javax0.jamal.tools.InputHandler;
  *
  * This way, this macro is "implemented" not only here but also in the macro body fetcher.
  */
-public class Escape implements Macro {
+public class Escape implements Macro, javax0.jamal.api.Escape {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         InputHandler.skipWhiteSpaces(in);
