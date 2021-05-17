@@ -1,13 +1,14 @@
 When options 'nl' is used new lines following macro closing is skipped:
   Input: |-
-    {@options nl}By default every character is important and no new line characters are eaten up.
-    Therefore the following to lines will be like: "alma\nalma\n"
+    By default every character is important and no new line characters are eaten up.
+    Therefore the following to lines will be like:
+    alma
+    alma     you see below?
     {@define z=alma}{z}
     {z}
     When we define the {@escape ``{@options nl}``} then the new line character after the macro closing string is skipped.
     This means that here we will have an empty line and after that the next line will be "almaalma" and then "alma"
     without an empty line between
-    {@options ~nl}
     {z}\      {%@comment here we test that there are spaces before the new-line...
 in the sample file editor truncates the line removing these spaces, therefore we have this comment here%}
     {z}\
@@ -17,13 +18,14 @@ in the sample file editor truncates the line removing these spaces, therefore we
     See... there is no empty line before this line or before the previous line.
   Output: |-
     By default every character is important and no new line characters are eaten up.
-    Therefore the following to lines will be like: "alma\nalma\n"
+    Therefore the following to lines will be like:
+    alma
+    alma     you see below?
     alma
     alma
     When we define the {@options nl} then the new line character after the macro closing string is skipped.
     This means that here we will have an empty line and after that the next line will be "almaalma" and then "alma"
     without an empty line between
-
     almaalma
     alma
     See... there is no empty line before this line or before the previous line.

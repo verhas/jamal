@@ -31,13 +31,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static javax0.jamal.api.Macro.validIdChar;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.InputHandler.validIdChar;
 
 public class Processor implements javax0.jamal.api.Processor {
 

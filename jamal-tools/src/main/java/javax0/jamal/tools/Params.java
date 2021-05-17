@@ -63,7 +63,7 @@ public class Params {
 
         Param<T> as(Function<String, T> converter);
 
-        <T> Param<T> as(Class<T> klass, Function<String, T> converter);
+        <K> Param<K> as(Class<K> klass, Function<String, K> converter);
 
         Param<Integer> asInt();
 
@@ -171,7 +171,7 @@ public class Params {
                 throw new IllegalArgumentException("Parameter alias names must not be null.");
             }
         }
-        return new javax0.jamal.tools.param.Param<T>(key);
+        return new javax0.jamal.tools.param.Param<>(key);
     }
 
     /**

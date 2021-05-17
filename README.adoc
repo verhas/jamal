@@ -3103,7 +3103,9 @@ Later versions of Jamal will not implement this option.
 
 ===== `nl` (since 1.3.0)
 
-Jamal 1.3.0 introduces the option `nl`.
+* 1.3.0 till 1.7.6 introduces the option `nl`.
+* 1.7.7 removes this option
+
 When this option is in effect then all new-line characters are copied into the output.
 This was the default and non-changeable behavior prior 1.3.0.
 
@@ -3134,6 +3136,9 @@ NOTE: Since this is a slight behavioral change in the input processing, therefor
 We decided to change the default behavior because there is a little chance to have escaped new-line characters in existing `jam` files.
 On the other hand, we envision that with the introduction of this feature most of the Jamal source files will use this feature.
 We wanted to avoid starting every new Jamal source file with the `nl` option setting.
+
+With the release 1.7.7 this option is not available anymore.
+The default beavior, skipping new lines after a `\` character that follows a macro close string cannot be switched off.
 
 [[try]]
 ==== xx. `try`

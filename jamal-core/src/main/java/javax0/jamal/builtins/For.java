@@ -36,12 +36,11 @@ public class For implements Macro, InnerScopeDependent {
         final String[] variables = getVariables(input);
         skipWhiteSpaces(input);
         checkKeyword(input);
-        final String valuesString = getValuesString(input);
+        final String[] valueArray = getValuesString(input).split(separator.get(), -1);
         skipWhiteSpaces(input);
         checkEqualSign(input);
         final var content = input.toString();
 
-        final var valueArray = valuesString.split(separator.get(), -1);
 
         final var output = new StringBuilder();
         final Segment root = splitContentToSegments(variables, content);
@@ -49,7 +48,7 @@ public class For implements Macro, InnerScopeDependent {
 
         for (final String value : valueArray) {
             if (value.length() > 0 || !skipEmpty.is()) {
-                final var values = value.split(subSeparator.get(), -1);
+                final String[] values = value.split(subSeparator.get(), -1);
                 if (!lenient.is() && values.length != variables.length) {
                     throw new BadSyntax("number of the values does not match the number of the parameters\n" +
                         String.join(",", variables) + "\n" + value);

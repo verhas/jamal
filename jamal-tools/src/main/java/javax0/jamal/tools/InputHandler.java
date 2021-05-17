@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
+import static javax0.jamal.api.Macro.validId1stChar;
+import static javax0.jamal.api.Macro.validIdChar;
 
 /**
  * Utility class with some simple static methods that fetch characters from an input buffer.
@@ -142,8 +144,8 @@ public class InputHandler {
     /**
      * Fetch an id from the start of the {@code input}.
      * <p>
-     * An identifier is a string that starts with a character accepted by {@link #validId1stChar(char)} and contain only
-     * characters that are accepted {@link #validIdChar(char)}
+     * An identifier is a string that starts with a character accepted by {@link javax0.jamal.api.Macro#validId1stChar(char)} and contain only
+     * characters that are accepted {@link javax0.jamal.api.Macro#validIdChar(char)}
      * <p>
      * or
      * <p>
@@ -205,24 +207,6 @@ public class InputHandler {
         } else {
             return id;
         }
-    }
-
-    /**
-     * @param c the character to check
-     * @return {@code true} if the character can be used as the first character of a macro identifier. Currently these
-     * are {@code $}, {@code _} (underscore), {@code :} (colon) and any alphabetic character.
-     */
-    public static boolean validId1stChar(char c) {
-        return c == '$' || c == '_' || c == ':' || Character.isAlphabetic(c);
-    }
-
-    /**
-     * @param c the character to check
-     * @return {@code true} if the character can be used in a macro identifier. These are the same characters that can
-     * be used as first characters (see {@link #validId1stChar(char)}) and also digits.
-     */
-    public static boolean validIdChar(char c) {
-        return validId1stChar(c) || Character.isDigit(c);
     }
 
     /**

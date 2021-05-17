@@ -1248,11 +1248,11 @@ Example
 {@date yyyy-MM-dd HH:mm:ss}
 ----
 
-wll result the output
+will result the output
 
 [source]
 ----
-2021-05-15 16:19:04
+2021-05-17 20:21:48
 ----
 
 

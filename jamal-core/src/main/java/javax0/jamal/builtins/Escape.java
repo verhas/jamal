@@ -10,6 +10,7 @@ import javax0.jamal.tools.InputHandler;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.move;
 import static javax0.jamal.tools.InputHandler.moveWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.skip;
 
 /**
  * W A R N I N G!!!!
@@ -47,7 +48,7 @@ import static javax0.jamal.tools.InputHandler.moveWhiteSpaces;
  * <p>
  * This way, this macro is "implemented" not only here but also in the macro body fetcher.
  */
-public class Escape implements Macro, javax0.jamal.api.Escape {
+public class Escape implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         InputHandler.skipWhiteSpaces(in);
@@ -95,12 +96,12 @@ public class Escape implements Macro, javax0.jamal.api.Escape {
      * @param processor the Jamal processor
      * @param input     has to point to the start of the macro. After the invocation the input will be stepped onto the
      *                  closing macro string and not after.
-     * @param output    where to copy the body of the escape macro. This means all characters between the opening and
-     *                  closing strings, including leading and trailing white spaces.
+     * @return the body of the macro
      * @throws BadSyntaxAt if the syntax of the escape macro is violated.
      */
     @Override
-    public void moveBody(Processor processor, Input input, Input output) throws BadSyntaxAt {
+    public String fetch(Processor processor, Input input) throws BadSyntaxAt {
+        final var output = javax0.jamal.tools.Input.makeInput();
         final var start = input.getPosition();
         moveWhiteSpaces(input, output);
         move(input, 1, output); // the # or @ character
@@ -129,6 +130,8 @@ public class Escape implements Macro, javax0.jamal.api.Escape {
             throw new BadSyntaxAt("Escape macro is not closed", start);
         }
         move(input, endOfEscapeMacro, output);
+        skip(input,closeStr);
+        return output.toString();
     }
 
 }

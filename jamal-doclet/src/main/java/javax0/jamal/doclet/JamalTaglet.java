@@ -104,7 +104,7 @@ public class JamalTaglet implements Taglet {
     @Override
     public void init(DocletEnvironment env, Doclet doclet) {
         Taglet.super.init(env, doclet);
-        /**
+        /*
          * If future version of JavaDoc uses the same class loader to load the doclet and the taglet then this code
          * may work. As it is today using Java 16 only reflection works.
          */

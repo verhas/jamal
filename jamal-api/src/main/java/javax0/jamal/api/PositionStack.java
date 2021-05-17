@@ -1,9 +1,10 @@
-package javax0.jamal.engine.util;
-
-import javax0.jamal.api.Position;
+package javax0.jamal.api;
 
 import java.util.LinkedList;
 
+/**
+ * A simple position stack implementation used in the default implementation of {@link Macro#fetch(Processor, Input)}.
+ */
 class PositionStack {
 
     final private LinkedList<Position> refStack;
@@ -21,7 +22,7 @@ class PositionStack {
         refStack.push(pos);
     }
 
-    boolean popAndEmpty(){
+    boolean popAndEmpty() {
         refStack.pop();
         return refStack.size() == 0;
     }
