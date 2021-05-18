@@ -43,3 +43,19 @@
 {%fail |{@sep [ [ }|using macro 'sep' you cannot use the same string as macro opening and macro closing string%}
 {%fail |{@sep [. [. }|.* is ambiguous. Use a definition that does not contain spaces.%}
 {%fail |{@sep /[/]/}|macro 'sep' closing string must not contain the separator character%}
+{%fail |{@sep//..}x|using macro 'sep' you cannot define zero length macro open and/or macro close strings%}
+{%fail |{@sep/[[/]]}[[|Macro was not terminated in the file.%}
+
+"complex sep use with restore":
+  Input: |-
+    {@sep/[[/]]}
+    [[#comment [[@sep/<</>>]]
+    <<@define z=zazi>><<@export z>>
+    <<#sep>>
+    [[#define a1():=[[?z]]]]
+    [[@define a2():=[[?z]]]]
+    [[@export a1,a2]]
+    ]]
+    [[@sep]]
+    {z}{a1}{a2}
+  Output: "\n\n\nzazizazi[[?z]]"

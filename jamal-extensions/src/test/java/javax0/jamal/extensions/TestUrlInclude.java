@@ -10,6 +10,7 @@ public class TestUrlInclude {
     @Test
     void test() throws Exception {
         //TestThat.theInput("{@sep /{[{/}]}}{[{@include https://raw.githubusercontent.com/verhas/jamal/master/README.md}]}").results("");
-        TestThat.theInput("{@import https://raw.githubusercontent.com/jamalrepo/pom/main/plugins/compiler.jim}").results("");
+        // This is not a unit test and may fail in case there is no network connection
+        //TestThat.theInput("{@import https://raw.githubusercontent.com/jamalrepo/pom/main/plugins/compiler.jim}").results("");
     }
 }

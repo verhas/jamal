@@ -36,6 +36,11 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertTutorials() throws Exception {
+        DocumentConverter.convert("../TUTORIALS.adoc.jam");
+    }
+
+    @Test
     void convertDebugReadme() throws Exception {
         DocumentConverter.convert("../jamal-debug/README.adoc.jam");
     }

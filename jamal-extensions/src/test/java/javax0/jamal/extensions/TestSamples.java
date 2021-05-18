@@ -54,18 +54,6 @@ class TestSamples {
                 "This is extra good.", result("use.jam"));
     }
 
-    @Test
-    @DisplayName("for loop iterates through the elements")
-    void testForLoop() throws IOException, BadSyntax {
-        assertEquals(" a is either a, b, c or d\n" +
-            " b is either a, b, c or d\n" +
-            " c is either a, b, c or d\n" +
-            " d is either a, b, c or d\n" +
-            " a is either a, b, c or d\n" +
-            " b is either a, b, c or d\n" +
-            " c is either a, b, c or d\n" +
-            " d is either a, b, c or d\n", result("for.jam"));
-    }
 
     @Test
     @DisplayName("matcher generates the groups")

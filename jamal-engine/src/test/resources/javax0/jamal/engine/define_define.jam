@@ -1,3 +1,0 @@
-{@define tag(x)={@define x(y)=<x>y</x>}}
-{tag/name}
-{name/Peter}

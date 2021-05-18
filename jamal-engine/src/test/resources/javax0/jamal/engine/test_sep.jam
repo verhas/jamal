@@ -1,4 +1,0 @@
-{@define a=1}{#block
-
-{@sep/[[/]]} [[@define b=1]]
-[[#define a[[a]]=2]][[@export a1,b]]}{a}{a1}{b}

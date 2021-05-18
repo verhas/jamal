@@ -1,0 +1,259 @@
+ "arguments are not replaced when present in the returned text of evaluated macros because of text segment splitting":
+   Input: |-
+     {@define trila(a)=aa{ghh/a}}{@define ghh(z)=.. well, z is simply three aaa}{trila/X}
+   Output: |-
+     XX.. well, X is simply three aaa
+
+ "test_sep.jam":
+   Input: |-
+     {@define a=1}{#block
+
+     {@sep/[[/]]} [[@define b=1]]
+     [[#define a[[a]]=2]][[@export a1,b]]}{a}{a1}{b}
+   Output: |-
+     121
+
+ "Different 'if' statements are correctly evaluated":
+   Input: |-
+     true={@if /1/true/false}
+     true={@if /true/true/false}
+     false={@if /0/true/false}
+     false={@if ::true:false}
+     false={@if :false:true:false}
+     true={@if :avraka kedabra:true:false}
+     False={@if false True False}
+     ={@if/0/anything can come here}
+     true={@if/+1/true}
+     true={@if/-1/true}
+     true={@if/0.000/true}
+   Output: |-
+     true=true
+     true=true
+     false=false
+     false=false
+     false=false
+     true=true
+     False=False
+     =
+     true=true
+     true=true
+     true=true
+
+ "run documentation script":
+   Input: |-
+     {@define output=_output}
+
+     START SNIPPET started{output}
+     {@define fruit(color,actualSize,name)=we have an color name of size actualSize}
+     {fruit/red/apple/20ounce}
+     {fruit/green/melone/1kg}
+     END SNIPPET
+
+     START SNIPPET comment{output}
+     this is some {@comment this text
+     will not appear in the output}text
+     END SNIPPET
+
+     START SNIPPET define{output}
+     {@define parameterless=this is a simple macro} macro defined
+     {parameterless}
+     {@define withparams(a,b,%66h)=this is a b %66h} macro defined
+     {withparams/A/more complex/macro}
+     {withparams/%66h/%66h/zazu} <- %66h is not replaced to zazu in the parameters
+     {@define? withparams(a,b,c)=abc}here 'withparams' is not redefined
+     {withparams|a|b|c}
+     {#comment {@define x=local}{@define :x=global} {#define :y=here we are {x}}}
+     {y}
+     here we are {x}
+     END SNIPPET
+
+     START SNIPPET eval{output}
+     {@eval/JShell System.out.print(1+3)}
+     {@define a=1}{@define b=2}
+     {#eval/JShell System.out.print({a}+{b})}
+     END SNIPPET
+
+     START SNIPPET script{output}
+     {@script for(loopvar,start,end,text)=
+         var c = "";
+         for( var i = start ; i <= end ; i++ ){
+           c = c + text.replaceAll(loopvar, ""+i);
+         }
+         System.out.print(c);
+     }
+     {for%xxx%1%3%xxx. iterated
+     }
+     END SNIPPET
+
+     START SNIPPET verbatim1{output}
+     {@define a=this is it}{@define b={a}}{#define c={b}}{c}
+     END SNIPPET
+
+     START SNIPPET verbatim2{output}
+     {@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}
+     END SNIPPET
+
+     START SNIPPET sep{output}
+     {@sep/[[/]]}
+     [[@define apple=fruit]]
+     [[apple]]
+     [[#comment [[@sep/<</>>]]
+     <<@define z=zazi>>
+     <<#sep>>
+     [[#define a1=[[z]]]]
+     [[@define a2=[[z]]]]
+     [[@define a3={z}]]
+     [[@export a1,a2,a3]]
+     ]]
+     [[@sep]]
+     {@define z=SSS}
+     {z}{a1}{a2}{a3}{@verbatim a3}
+     END SNIPPET
+
+     START SNIPPET ident{output}
+     {@define b=92}{#define c={@ident {a}}{b}}{@define a=14}{c}
+     END SNIPPET
+
+     START SNIPPET export{output}
+     A comment starts a new scope {#comment {@define Z=13}} Z {?Z} is not defined here unless...
+     {#comment {@define Z=14}{@export Z}}Z is exported. In that case Z is {Z}.
+     END SNIPPET
+   Output: |-
+
+
+     START SNIPPET started_output
+
+     we have an red 20ounce of size apple
+     we have an green 1kg of size melone
+     END SNIPPET
+
+     START SNIPPET comment_output
+     this is some text
+     END SNIPPET
+
+     START SNIPPET define_output
+      macro defined
+     this is a simple macro
+      macro defined
+     this is A more complex macro
+     this is %66h %66h zazu <- %66h is not replaced to zazu in the parameters
+     here 'withparams' is not redefined
+     this is a b c
+
+     here we are local
+     here we are global
+     END SNIPPET
+
+     START SNIPPET eval_output
+     4
+
+     3
+     END SNIPPET
+
+     START SNIPPET script_output
+
+     1. iterated
+     2. iterated
+     3. iterated
+
+     END SNIPPET
+
+     START SNIPPET verbatim1_output
+     this is it
+     END SNIPPET
+
+     START SNIPPET verbatim2_output
+     this is it {a}
+     END SNIPPET
+
+     START SNIPPET sep_output
+
+
+     fruit
+
+
+
+     SSSzaziSSS{z}{@escape `a`{`a`}z{@escape `a`}`a`}
+     END SNIPPET
+
+     START SNIPPET ident_output
+     1492
+     END SNIPPET
+
+     START SNIPPET export_output
+     A comment starts a new scope  Z  is not defined here unless...
+     Z is exported. In that case Z is 14.
+     END SNIPPET
+
+ "test simple JShell script for addition":
+   Input: |-
+     {#script eval(a,b)= a + b}{eval/5/6}
+   Output: |-
+     11
+
+ "mixing ? and  ` and ! in user defined macros":
+   Input: |-
+     {@comment this file contains some somples where we use the ? character on user defined macros together with ` and !}\
+     {@define defined=defined}\
+     {@define macro={defined}}\
+     {@define fine=fine}\
+     {?defined} is defined
+     {defined} is also defined
+     "{?undefined}" is empty string because `undefined` is not defined
+     "{`?undefined}" the the literal {@sep ( )}"{?undefined}"(@sep) string because it has a ` in front of the ?
+     "{?!undefined}" is empty string because `!undefined` is not defined
+     "{?`undefined}" is empty string because '`undefined' is not defined
+     "{!?undefined}" is empty string because 'undefined' is not defined and empty string evaluates to empty string
+     "{@verbatim macro}" is {@sep ( )}"{defined}"(@sep)
+     "{@try! {!@verbatim macro}}" is error message
+     "{`@verbatim macro}" is {@sep ( )}"{@verbatim macro}"(@sep)
+     "{@try! {@verbatim `macro}}" is error message because `macro is not defined
+     "{@try {@verbatim `macro}}" is empty string
+     "{@try? {@verbatim `macro}}" is "false" because it failed
+     "{@try? }" is "true" because nothing just evaluates fine
+     "{@verbatim ?`macro}" is empty string, because we use ? in front of the macro name
+     "{@try {@sep [ ]} [this is not terminated}" is empty string because of non-terminated macro, [@sep]but here we are {fine}
+
+   Output: |-
+     defined is defined
+     defined is also defined
+     "" is empty string because `undefined` is not defined
+     "{?undefined}" the the literal "{?undefined}" string because it has a ` in front of the ?
+     "" is empty string because `!undefined` is not defined
+     "" is empty string because '`undefined' is not defined
+     "" is empty string because 'undefined' is not defined and empty string evaluates to empty string
+     "{defined}" is "{defined}"
+     "Verbatim and ! cannot be used together on a user defined macro." is error message
+     "{@verbatim macro}" is "{@verbatim macro}"
+     "User defined macro '{`macro ...' is not defined." is error message because `macro is not defined
+     "" is empty string
+     "false" is "false" because it failed
+     "true" is "true" because nothing just evaluates fine
+     "" is empty string, because we use ? in front of the macro name
+     "" is empty string because of non-terminated macro, but here we are fine
+
+ "define with parameters":
+   Input: |-
+     {@define za(x)=belxanto}{#define {za/1}(x) =tttxttt}{bel1anto/_}
+     {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}
+   Output: |-
+     ttt_ttt
+     ttt_ttt
+
+ "testsupport exporting":
+   Input: |-
+     {#comment
+       {@define undefined=xxx}
+       {@define defined=defined exported}
+       {@export defined}}{?undefined}{defined}
+   Output: |-
+     defined exported
+
+ "Eval/jamal is evaluated properly":
+   Input: |-
+     {#eval {@ident{@define z=zzz}}}{#eval/jamal {@ident{@define s=sss}}}
+     {z}{s}
+   Output: |-
+
+     zzzsss
+

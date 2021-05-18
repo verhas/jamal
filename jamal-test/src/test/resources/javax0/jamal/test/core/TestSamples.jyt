@@ -1,0 +1,26 @@
+"test_env.jam":
+  Input: |-
+    {@env JAVA_HOME}
+    JAVA_HOME {#if /{@env JAVA_HOME ?}/is defined/is not defined}
+    {@env CICA_HOME}
+    CICA_HOME {#if /{@env CICA_HOME ?}/is defined/is not defined}
+  Output: |-
+    /Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
+    JAVA_HOME is defined
+
+    CICA_HOME is not defined
+
+"for.jam":
+  Input: |-
+    {@for x in (a,b,c,d)= x is either a, b, c or d
+    }{@define $forsep=;}{@for x in (a;b;c;d)= x is either a, b, c or d
+    }
+  Output: "
+    a is either a, b, c or d\n
+    b is either a, b, c or d\n
+    c is either a, b, c or d\n
+    d is either a, b, c or d\n
+    a is either a, b, c or d\n
+    b is either a, b, c or d\n
+    c is either a, b, c or d\n
+    d is either a, b, c or d\n"

@@ -307,3 +307,96 @@ conditional redefinition does not redefine any higher scope already defined macr
 "Using = to define a macro will replace the macros in the macro even if the opening/closing string is already different":
   Input: "{@define a(z)={yz}}{@define yZ=k}{@sep [ ]}[a Z]"
   Output: "k"
+
+"throws exception when an argument appears more than once":
+  Input: "{@define a(xx,a,b,a,d)=}"
+  Throws: "User defined macro parameter name should not be a substring of another parameter.*"
+
+"throws exception when an argument is prefix of a later argument":
+  Input: "{@define a(xx,a,b,alma,d)=1}"
+  Throws: "User defined macro parameter name should not be a substring of another parameter.*"
+
+"throws exception when an argument is prefix of an earlier argument":
+  Input: "{@define xx(alma,b,a,d)=}"
+  Throws: "User defined macro parameter name should not be a substring of another parameter.*"
+
+
+"creates the macro object when there are no arguments":
+  Input: "{@define xx=}"
+  Output: ""
+
+"replaces arguments with actual values":
+  Input: "{@define ~ xx(a,b,c,d)=a{b}c{d}}{xx/bbb/ccc/ddd/aaa}"
+  Output: "bbb{ccc}ddd{aaa}"
+
+"a define is defined inside define":
+  Input: |-
+    {@define tag(x)={@define x(y)=<x>y</x>}}
+    {tag/name}
+    {name/Peter}
+  Output: "\n\n<name>Peter</name>"
+
+"ident protects argument from post evaluation":
+  Input: |-
+    {#define a=13}
+    {@define b={a}}
+    {#define c={a}}
+    {#define d={@ident {a}}}
+    {@verbatim b}
+    {@verbatim c}
+    {@verbatim d}
+  Output: "\n\n\n\n{a}\n13\n{a}"
+
+"test that the splitting works even with empty elements":
+  Input: |-
+    {@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
+    {!@for _tag in (groupId,artifactId,version)=
+    {tag/_tag}}
+    {@define GAV(_groupId,_artifactId,_version)=
+        {#if|_groupId|{groupId :_groupId}}{#if|_artifactId|{artifactId :_artifactId}}{#if|_version|{version :_version}}
+        {#define GROUPID=_groupId}{#define VERSION=_version}}
+    {GAV :org.apache.maven.plugins:maven-surefire-plugin:}
+  Output: "\n\n\n\n\n\n\n    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>\n    "
+
+"begin and end works properly":
+  Input: "{@define Z=1}{@begin alma}{@define Z=2}{Z}{@define S=2}{@export S}{@end  alma }{Z}{S}"
+  Output: "212"
+
+"test definition evaluation order":
+  Input: |-
+    {@define firstName=Julia}{@define k(h)=h, {firstName} h{@define son=Junior Bond}}\
+    {k /Bond{@define firstName=James}}
+    {k /Bond}
+    {son}
+  Output: |-
+    Bond, James Bond
+    Bond, Julia Bond
+    Junior Bond
+
+"verbatim also closes the scope":
+  Input: "{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}"
+  Output: "this is it {a}"
+
+"user defined macro post evaluation":
+  Input: |-
+    {@define a=this is it}\
+    {@define b={`a}}\
+    {@define c={`b}}\
+    {@define userDefined={`c}}\
+    {userDefined}
+    {!userDefined}
+    {!!userDefined}
+    {!!!userDefined}
+  Output: |-
+    {c}
+    {b}
+    {a}
+    this is it
+
+"When there is an undefined macro during the evaluation of a macro the mark stack is not messed up 1":
+  Input: "{@try! {@define a={@undefined}}{a}}"
+  Output: "There is no built-in macro with the id 'undefined'"
+
+"When there is an undefined macro during the evaluation of a macro the mark stack is not messed up 2":
+  Input: "{@try! {@define a={undefined}}{a}}"
+  Output: "User defined macro '{undefined ...' is not defined."

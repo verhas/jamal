@@ -1,2 +1,0 @@
-{#eval {@ident{@define z=zzz}}}{#eval/jamal {@ident{@define s=sss}}}
-{z}{s}

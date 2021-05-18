@@ -79,48 +79,9 @@ class TestSamples {
     }
 
     @Test
-    @DisplayName("mixing ? and  ` and ! in user defined macros")
-    void testNoReportUndefWithIdentChar() throws IOException, BadSyntax {
-        assertEquals("defined is defined\n" +
-            "defined is also defined\n" +
-            "\"\" is empty string because `undefined` is not defined\n" +
-            "\"{?undefined}\" the the literal \"{?undefined}\" string because it has a ` in front of the ?\n" +
-            "\"\" is empty string because `!undefined` is not defined\n" +
-            "\"\" is empty string because '`undefined' is not defined\n" +
-            "\"\" is empty string because 'undefined' is not defined and empty string evaluates to empty string\n" +
-            "\"{defined}\" is \"{defined}\"\n" +
-            "\"Verbatim and ! cannot be used together on a user defined macro.\" is error message\n" +
-            "\"{@verbatim macro}\" is \"{@verbatim macro}\"\n" +
-            "\"User defined macro '{`macro ...' is not defined.\" is error message because `macro is not defined\n" +
-            "\"\" is empty string\n" +
-            "\"false\" is \"false\" because it failed\n" +
-            "\"true\" is \"true\" because nothing just evaluates fine\n" +
-            "\"\" is empty string, because we use ? in front of the macro name\n" +
-            "\"\" is empty string because of non-terminated macro, but here we are fine\n", result("reportUndef.jam"));
-    }
-
-    @Test
     @DisplayName("include global definitions")
     void testIncludeGlobalDefine() throws IOException, BadSyntax {
         assertEquals("* belzebub", result("include_global_defines.jam"));
-    }
-
-    @Test
-    @DisplayName("define with parameters")
-    void testDefineWithParameters() throws IOException, BadSyntax {
-        assertEquals("ttt_ttt\nttt_ttt", result("define_with_parameters.jam"));
-    }
-
-    @Test
-    @DisplayName("testsupport exporting")
-    void testExport() throws IOException, BadSyntax {
-        assertEquals("defined exported", result("test_export.jam"));
-    }
-
-    @Test
-    @DisplayName("testsupport separator setting")
-    void testSeparator() throws IOException, BadSyntax {
-        assertEquals("121", result("test_sep.jam"));
     }
 
     @Test
@@ -153,12 +114,6 @@ class TestSamples {
     }
 
     @Test
-    @DisplayName("testsupport script include")
-    void testScriptInclude() throws IOException, BadSyntax {
-        assertEquals("11", result("test_script.jam"));
-    }
-
-    @Test
     @DisplayName("throws BadSyntax when script engine is not found")
     void testEvalNoEngine() {
         assertThrows(BadSyntax.class, () -> result("eval_wrong_script_engine.jam"));
@@ -170,98 +125,6 @@ class TestSamples {
         if (Runtime.version().feature() < 15) {
             assertEquals("apple", result("eval.jam"));
         }
-    }
-
-    @Test
-    @DisplayName("run documentation script")
-    void testDocumentation() throws IOException, BadSyntax {
-        Runtime.version();
-        var fileName = this.getClass().getResource("documentation.out.jam").getFile();
-        fileName = fixupPath(fileName);
-        var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
-        assertEquals(fileContent, result("documentation.jam"));
-    }
-
-    @Test
-    @DisplayName("complex sep use with restore")
-    void testSepComplex() throws IOException, BadSyntax {
-        assertEquals("\n" +
-            "\n" +
-            "\n" +
-            "zazizazi[[?z]]", result("sep_complex.jam"));
-    }
-
-    @Test
-    @DisplayName("a define is defined inside define")
-    void testDefineDefine() throws IOException, BadSyntax {
-        assertEquals("\n\n<name>Peter</name>", result("define_define.jam"));
-    }
-
-    @Test
-    @DisplayName("ident protects argument from post evaluation")
-    void testIdent() throws IOException, BadSyntax {
-        assertEquals("\n\n\n\n{a}\n13\n{a}", result("ident.jam"));
-    }
-
-    @Test
-    @DisplayName("test that the splitting works even with empty elements")
-    void testSplitting() throws IOException, BadSyntax {
-        assertEquals("\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>\n" +
-            "    ", result("gav.jam"));
-    }
-
-    @Test
-    @DisplayName("begin and end works properly")
-    void testBeginEnd() throws IOException, BadSyntax {
-        assertEquals("212", result("begin.jam"));
-    }
-
-    @Test
-    @DisplayName("sep that defines zero length macro open throws exception")
-    void testBadSep() {
-        Assertions.assertThrows(BadSyntaxAt.class, () -> result("badsep.jam"));
-    }
-
-    @Test
-    @DisplayName("when the input has zero character after { it is handled")
-    void zeroLengthInput() {
-        Assertions.assertThrows(BadSyntaxAt.class, () -> result("zeroinput.jam"));
-    }
-
-    @Test
-    @DisplayName("Eval/jamal is evaluated properly")
-    void testEvaluateJamal() throws BadSyntax, IOException {
-        assertThrows(BadSyntaxAt.class, () -> result("ej_fail.jam"));
-        assertEquals("\nzzzsss", result("eval_jamal.jam"));
-    }
-
-    @Test
-    @DisplayName("Different 'if' statements are correctly evaluated")
-    void testIf() throws BadSyntax, IOException {
-        assertEquals("true=true\n" +
-            "true=true\n" +
-            "false=false\n" +
-            "false=false\n" +
-            "false=false\n" +
-            "true=true\n" +
-            "False=False\n" +
-            "=\n" +
-            "true=true\n" +
-            "true=true\n" +
-            "true=true", result("testif.jam"));
-    }
-
-    @Test
-    @DisplayName("arguments are not replaced when present in the returned text of evaluated macros because of text segment splitting")
-    void deepArgRef() throws BadSyntax, IOException {
-        assertEquals("XX.. well, X is simply three aaa", result("deep_arg_ref.jam"));
     }
 
     @Test

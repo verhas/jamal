@@ -1,7 +1,0 @@
-{#define a=13}
-{@define b={a}}
-{#define c={a}}
-{#define d={@ident {a}}}
-{@verbatim b}
-{@verbatim c}
-{@verbatim d}

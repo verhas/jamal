@@ -1,3 +1,0 @@
-{@for x in (a,b,c,d)= x is either a, b, c or d
-}{@define $forsep=;}{@for x in (a;b;c;d)= x is either a, b, c or d
-}

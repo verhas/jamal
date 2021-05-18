@@ -9,6 +9,7 @@ public class TestCore {
     @TestFactory
     JamalTests<?> testAllCoreMacros() {
         return JamalYamlTest.factory(
+            "TestSamples",
             "TestDefine",
             "TestFor",
             "TestBeginEnd",
@@ -29,6 +30,7 @@ public class TestCore {
             "TestUndefine",
             "TestUse",
             "TestSep",
+            "TestEngine",
             "nested_ud_macros"
         );
     }
