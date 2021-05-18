@@ -22,42 +22,38 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  */
 public class For implements Macro, InnerScopeDependent {
 
+    Params.Param<String> separator;
+    Params.Param<String> subSeparator;
+    Params.Param<Boolean> trim;
+    Params.Param<Boolean> skipEmpty;
+    Params.Param<Boolean> lenient;
+
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var separator = Params.<String>holder("$forsep", "separator").orElse(",");
-        final var subSeparator = Params.<String>holder("$forsubsep", "subseparator").orElse("\\|");
-        final var trim = Params.<Boolean>holder("trimForValues", "trim").asBoolean();
-        final var skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
-        final var lenient = Params.<Boolean>holder("lenient").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(subSeparator, separator, trim, skipEmpty, lenient).parse(input);
+        final var it = new For();
+        it.separator = Params.<String>holder("$forsep", "separator").orElse(",");
+        it.subSeparator = Params.<String>holder("$forsubsep", "subseparator").orElse("\\|");
+        it.trim = Params.<Boolean>holder("trimForValues", "trim").asBoolean();
+        it.skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
+        it.lenient = Params.<Boolean>holder("lenient").asBoolean();
+        Params.using(processor).from(this).between("[]").keys(it.subSeparator, it.separator, it.trim, it.skipEmpty, it.lenient).parse(input);
 
         skipWhiteSpaces(input);
 
         final String[] variables = getVariables(input);
         skipWhiteSpaces(input);
         checkKeyword(input);
-        final String[] valueArray = getValuesString(input).split(separator.get(), -1);
+        final String[][] valueMatrix = it.getValueMatrix(input, variables);
+
         skipWhiteSpaces(input);
         checkEqualSign(input);
         final var content = input.toString();
-
-
         final var output = new StringBuilder();
         final Segment root = splitContentToSegments(variables, content);
         final var parameterMap = new HashMap<String, String>();
-
-        for (final String value : valueArray) {
-            if (value.length() > 0 || !skipEmpty.is()) {
-                final String[] values = value.split(subSeparator.get(), -1);
-                if (!lenient.is() && values.length != variables.length) {
-                    throw new BadSyntax("number of the values does not match the number of the parameters\n" +
-                        String.join(",", variables) + "\n" + value);
-                }
-                if(trim.is()){
-                    for( int i = 0 ; i < values.length ; i++ ){
-                        values[i] = values[i].trim();
-                    }
-                }
+        for (int k = 0; k < valueMatrix.length; k++) {
+            final var values = valueMatrix[k];
+            if (values != null) {
                 for (int i = 0; i < variables.length; i++) {
                     parameterMap.put(variables[i], i < values.length ? values[i] : "");
                 }
@@ -68,6 +64,40 @@ public class For implements Macro, InnerScopeDependent {
         }
         return output.toString();
 
+    }
+
+    private String[][] getValueMatrix(Input input, String[] variables) throws BadSyntax {
+        final String valuesString;
+        if (firstCharIs(input, '(')) {
+            return createValueMatrixFromString(getValuesStringFromSimpleList(input), variables);
+        } else if (firstCharIs(input, '`')) {
+            return createValueMatrixFromString(getValuesStringFromStringTerminatedList(input), variables);
+        } else {
+            throw new BadSyntaxAt("for macro has bad syntax '" + input + "'", input.getPosition());
+        }
+    }
+
+    private String[][] createValueMatrixFromString(String valuesString, String[] variables) throws BadSyntax {
+        final String[] valueArray = valuesString.split(separator.get(), -1);
+
+        final String[][] valueMatrix = new String[valueArray.length][];
+        for (int j = 0; j < valueArray.length; j++) {
+            final var value = valueArray[j];
+            if (value.length() > 0 || !skipEmpty.is()) {
+                final String[] values = value.split(subSeparator.get(), -1);
+                if (!lenient.is() && values.length != variables.length) {
+                    throw new BadSyntax("number of the values does not match the number of the parameters\n" +
+                        String.join(",", variables) + "\n" + value);
+                }
+                if (trim.is()) {
+                    for (int i = 0; i < values.length; i++) {
+                        values[i] = values[i].trim();
+                    }
+                }
+                valueMatrix[j] = values;
+            }
+        }
+        return valueMatrix;
     }
 
     /**
@@ -82,7 +112,7 @@ public class For implements Macro, InnerScopeDependent {
      * @param content   the content of the macro to be split up into segments
      * @return the first {@link Segment}
      */
-    private Segment splitContentToSegments(String[] variables, String content) {
+    private static Segment splitContentToSegments(String[] variables, String content) {
         final var root = new Segment(null, content);
         for (final var variable : variables) {
             var it = root;
@@ -95,24 +125,12 @@ public class For implements Macro, InnerScopeDependent {
         return root;
     }
 
-    private void checkEqualSign(Input input) throws BadSyntaxAt {
+    private static void checkEqualSign(Input input) throws BadSyntaxAt {
         if (firstCharIs(input, '=')) {
             skip(input, 1);
         } else {
             throw new BadSyntaxAt("for macro has bad syntax, missing '=' at '" + input + "'", input.getPosition());
         }
-    }
-
-    private String getValuesString(Input input) throws BadSyntaxAt {
-        final String valuesString;
-        if (firstCharIs(input, '(')) {
-            valuesString = getValuesStringFromSimpleList(input);
-        } else if (firstCharIs(input, '`')) {
-            valuesString = getValuesStringFromStringTerminatedList(input);
-        } else {
-            throw new BadSyntaxAt("for macro has bad syntax '" + input + "'", input.getPosition());
-        }
-        return valuesString;
     }
 
     private String getValuesStringFromStringTerminatedList(Input input) throws BadSyntaxAt {
@@ -133,7 +151,7 @@ public class For implements Macro, InnerScopeDependent {
         return valuesString;
     }
 
-    private String getValuesStringFromSimpleList(Input input) throws BadSyntaxAt {
+    private static String getValuesStringFromSimpleList(Input input) throws BadSyntaxAt {
         final String valuesString;
         skip(input, 1);
         int closing = input.indexOf(")");
@@ -145,7 +163,7 @@ public class For implements Macro, InnerScopeDependent {
         return valuesString;
     }
 
-    private void checkKeyword(Input input) throws BadSyntaxAt {
+    private static void checkKeyword(Input input) throws BadSyntaxAt {
         if (input.length() > 1 && input.charAt(0) == 'i' && input.charAt(1) == 'n') {
             skip(input, 2);
             skipWhiteSpaces(input);
@@ -154,7 +172,7 @@ public class For implements Macro, InnerScopeDependent {
         }
     }
 
-    private String[] getVariables(Input input) throws BadSyntaxAt {
+    private static String[] getVariables(Input input) throws BadSyntaxAt {
         final String[] variables;
         if (firstCharIs(input, '(')) {
             variables = getParameters(input, "for loop");
