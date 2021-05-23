@@ -1,0 +1,22 @@
+"test dumping yaml to a file":
+  Input: |-
+    {@yaml:define a=
+    a: a
+    b: b}
+    {@yaml:dump a to target/dumped.yaml}
+    {#yaml:define b={@include [verbatim]target/dumped.yaml}}
+    {b}
+  Output: "\n\n\n{a: a, b: b}\n"
+
+"test dumping a resolved yaml to a file":
+  Input: |
+    {#yaml:define a=
+    a: a
+    b: {@yaml:ref q}}
+    {#yaml:define q=
+    a: a
+    q: qka}
+    {@yaml:dump a to target/qka.yaml}
+    {#yaml:define b={@include [verbatim]target/qka.yaml}}
+    {@yaml:output b}
+  Output: "a: a\nb: {a: a, q: qka}\n"

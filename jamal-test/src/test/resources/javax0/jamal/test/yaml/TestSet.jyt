@@ -1,0 +1,7 @@
+"setting a simple variable":
+  Input: |-
+    {@yaml:define a=
+    a: 1
+    b: 2
+    c: 3}{@yaml:set b=/a.b}{b}
+  Output: "2\n"

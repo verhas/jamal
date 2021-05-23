@@ -44,9 +44,9 @@ public class MacroBodyFetcher {
      */
     public static String getNextMacroBody(final Input input, Processor processor) throws BadSyntaxAt {
         final String output;
-        final var escapeMacro = Macro.getMacro(processor.getRegister(), input, 0);
-        if (escapeMacro.isPresent()) {
-            output = escapeMacro.get().fetch(processor, input);
+        final var macro = Macro.getMacro(processor.getRegister(), input, 0);
+        if (macro.isPresent()) {
+            output = macro.get().fetch(processor, input);
         } else {
             output = Macro.FETCH.fetch(processor, input);
         }

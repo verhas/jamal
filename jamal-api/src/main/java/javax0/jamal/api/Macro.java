@@ -166,7 +166,7 @@ public interface Macro extends Identified, ServiceLoaded {
                         while (i < input.length() && Character.isWhitespace(input.charAt(i)) && input.charAt(i) != '\n') {
                             i++;
                         }
-                        if (i < input.length() && input.charAt(i) == '\n') {
+                        if (i >= input.length() || input.charAt(i) == '\n') {
                             input.delete(i + 1);
                         }
                     }

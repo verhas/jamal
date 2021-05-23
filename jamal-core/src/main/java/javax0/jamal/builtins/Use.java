@@ -22,9 +22,9 @@ import static java.lang.String.format;
 public class Use implements Macro {
     // The syntax is:    [global] com.package.name.MacroClass [as Alias]
     // $1 will be "global" or ""
-    // $2 will be the fully qualified name of the class
+    // $2 will be the fully qualified name of the class, or the name of the macro if there is no . in the name
     // $3 will be the alias or null if no alias
-    private static final Pattern pattern = Pattern.compile("((?:global\\s+)?)([\\w:.]+)(?:\\s+as\\s+(\\w+))?");
+    private static final Pattern pattern = Pattern.compile("((?:global\\s+)?)([\\w\\d:.]+)(?:\\s+as\\s+([\\w][\\w\\d:]*))?");
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
@@ -41,7 +41,7 @@ public class Use implements Macro {
                 if (!matcher.matches()) {
                     throw new BadSyntax("use macro has bad syntax '" + stripped + "'");
                 }
-                final var isGlobal = matcher.group(1).length() > 0;
+                var isGlobal = matcher.group(1).length() > 0;
                 final var klassName = matcher.group(2);
                 final var alias = matcher.group(3);
                 final Macro macro;
@@ -49,6 +49,9 @@ public class Use implements Macro {
                 if (klassName.contains(".")) {
                     macro = forName(klassName, klassName);
                 } else {
+                    if( klassName.contains(":")){
+                        isGlobal = true;
+                    }
                     macro = register.getMacro(klassName)
                         .orElseThrow(() -> new BadSyntax("There is no built-in macro with the name '" + klassName + "'"));
                     if (alias == null || alias.length() == 0) {

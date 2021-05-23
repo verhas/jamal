@@ -1,4 +1,4 @@
-# this is a sample Yaml file that the test TestImport imports
+# this is a sample Yaml file that the test TestImport.jyt imports
 # note that this file is a pure YAML file and no Jamal macros are in it
 &id
 a: this is a

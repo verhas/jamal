@@ -5,12 +5,19 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.getParameters;
@@ -28,6 +35,10 @@ public class For implements Macro, InnerScopeDependent {
     Params.Param<Boolean> skipEmpty;
     Params.Param<Boolean> lenient;
 
+    private enum KeyWord {
+        IN, FROM
+    }
+
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var it = new For();
@@ -42,17 +53,30 @@ public class For implements Macro, InnerScopeDependent {
 
         final String[] variables = getVariables(input);
         skipWhiteSpaces(input);
-        checkKeyword(input);
-        final String[][] valueMatrix = it.getValueMatrix(input, variables);
-
+        final String[][] valueMatrix;
+        switch (checkKeyword(input)) {
+            case IN:
+                valueMatrix = it.getValueMatrix(input, variables);
+                break;
+            case FROM:
+                final var source = fetchId(input);
+                final var sourceObject = processor.getRegister().getUserDefined(source)
+                    .filter(m -> m instanceof ObjectHolder<?>)
+                    .map(m -> (ObjectHolder<?>) m)
+                    .map(ObjectHolder::getObject)
+                    .orElseThrow(() -> new BadSyntax(format("The user defined macro '%s' does not exist or cannot be used as data source for a 'for' loop.", source)));
+                valueMatrix = it.getValueMatrix(sourceObject, variables.length);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown keyword following the 'for'");
+        }
         skipWhiteSpaces(input);
         checkEqualSign(input);
         final var content = input.toString();
         final var output = new StringBuilder();
         final Segment root = splitContentToSegments(variables, content);
         final var parameterMap = new HashMap<String, String>();
-        for (int k = 0; k < valueMatrix.length; k++) {
-            final var values = valueMatrix[k];
+        for (final String[] values : valueMatrix) {
             if (values != null) {
                 for (int i = 0; i < variables.length; i++) {
                     parameterMap.put(variables[i], i < values.length ? values[i] : "");
@@ -66,8 +90,71 @@ public class For implements Macro, InnerScopeDependent {
 
     }
 
+    private String[][] getValueMatrix(Object object, int nrOfVariables) {
+        List<?> valueListList = convertObjectToListList(object, nrOfVariables);
+        final String[][] result = new String[valueListList.size()][];
+        for (int i = 0; i < result.length; i++) {
+            final var valueList = convertObjectToStringList(valueListList.get(i), nrOfVariables);
+            while (valueList.size() < nrOfVariables) {
+                valueList.add("");
+            }
+            result[i] = valueList.toArray(String[]::new);
+        }
+        return result;
+    }
+
+    private List<String> convertObjectToStringList(Object object, int nrOfVariables) {
+        final var list = new ArrayList<String>();
+        for (final var v : convertObjectToListList(object, nrOfVariables)) {
+            list.add(v.toString());
+        }
+        return list;
+    }
+
+    /**
+     * Convert an object to a String. Null is converted to empty string.
+     *
+     * @param object to be converted
+     * @return the converted String
+     */
+    private static String nullToEmpty(Object object) {
+        if (object == null) {
+            return "";
+        } else {
+            return "" + object;
+        }
+    }
+
+    private List<?> convertObjectToListList(Object object, int nrOfVariables) {
+        List<?> valueList;
+        if (object instanceof Set<?>) {
+            valueList = new ArrayList<>(List.of(((Set<?>) object).toArray()));
+        } else if (object instanceof List<?>) {
+            valueList = new ArrayList<>((List<?>) object);
+        } else if (object instanceof Stream<?>) {
+            valueList = ((Stream<?>) object).collect(Collectors.toList());
+        } else if (object instanceof Map<?, ?>) {
+            if (nrOfVariables > 1) {
+                valueList = map2KeyValueLists((Map<?, ?>) object);
+            } else {
+                valueList = new ArrayList<>(List.of(((Map<?, ?>) object).keySet().toArray()));
+            }
+        } else {
+            valueList = new ArrayList<>(List.of("" + object));
+        }
+        return valueList;
+    }
+
+    private List<?> map2KeyValueLists(Map<?, ?> map) {
+        List<?> valueList;
+        valueList = map.entrySet()
+            .stream()
+            .map(e -> List.of(nullToEmpty(e.getKey()), nullToEmpty(e.getValue())))
+            .collect(Collectors.toList());
+        return valueList;
+    }
+
     private String[][] getValueMatrix(Input input, String[] variables) throws BadSyntax {
-        final String valuesString;
         if (firstCharIs(input, '(')) {
             return createValueMatrixFromString(getValuesStringFromSimpleList(input), variables);
         } else if (firstCharIs(input, '`')) {
@@ -163,12 +250,16 @@ public class For implements Macro, InnerScopeDependent {
         return valuesString;
     }
 
-    private static void checkKeyword(Input input) throws BadSyntaxAt {
-        if (input.length() > 1 && input.charAt(0) == 'i' && input.charAt(1) == 'n') {
-            skip(input, 2);
-            skipWhiteSpaces(input);
-        } else {
-            throw new BadSyntaxAt("The keyword 'in' is missing in the 'for' macro '" + input + "'", input.getPosition());
+    private static KeyWord checkKeyword(Input input) throws BadSyntaxAt {
+        final var keyword = fetchId(input);
+        skipWhiteSpaces(input);
+        switch (keyword) {
+            case "in":
+                return KeyWord.IN;
+            case "from":
+                return KeyWord.FROM;
+            default:
+                throw new BadSyntaxAt("The keyword 'in/from' is missing in the 'for' macro '" + input + "'", input.getPosition());
         }
     }
 

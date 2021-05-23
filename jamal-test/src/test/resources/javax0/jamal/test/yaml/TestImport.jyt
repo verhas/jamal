@@ -1,0 +1,17 @@
+"verbatim include works defining a macro from a yaml file":
+  Input: "{#yaml:define a={@include [verbatim] res:sample.yaml}}{@verbatim a}"
+  Output: |
+    &id001
+    a: this is a
+    b: this is b
+    c: [1, 2, 3, 5]
+    q: *id001
+
+"normal import from a resource":
+  Input: "{@define a=wuff wuff}{#yaml:define h={@include res:sample.yaml.jam}}{h}"
+  Output: |
+    &id001
+    a: this is wuff wuff
+    b: this is b
+    c: [1, 2, 3, 5]
+    q: *id001

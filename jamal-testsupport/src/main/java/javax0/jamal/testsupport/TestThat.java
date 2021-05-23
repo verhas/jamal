@@ -11,7 +11,10 @@ import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * A simple class that helps the testing of built-in macros.
@@ -240,7 +243,9 @@ public class TestThat implements AutoCloseable {
                         return;
                     }
                     Assertions.fail("The evaluation did throw an exception but " +
-                        "the exception message did not match the pattern '" + regex + "'", t);
+                        "the exception message did not match the pattern '" + regex + "'\n"+
+                        "Possible patterns are:\n"+
+                        String.join("\n", collect(t)), t);
                 }
             } else {
                 throw t;
@@ -248,6 +253,23 @@ public class TestThat implements AutoCloseable {
         } finally {
             close();
         }
+    }
+
+    private static String myQuote(String string){
+        return string.replaceAll("(\\.|\\\\|\\(|\\)|\\{|\\})","\\\\$1");
+    }
+
+    private static Set<String> collect(final Throwable t) {
+        if( t == null ) {
+            return Set.of();
+        }
+        final var retval = new HashSet<String>();
+        retval.add(myQuote(t.getMessage()));
+        retval.addAll(collect(t.getCause()));
+        for( final var s : t.getSuppressed()){
+            retval.addAll(collect(s));
+        }
+        return retval;
     }
 
     /**
@@ -260,7 +282,7 @@ public class TestThat implements AutoCloseable {
      *
      * @param pattern the pattern to match
      * @param t       the exception to check against the pattern
-     * @return true if the exception of any causing or supressed exception message matches the pattern
+     * @return true if the exception of any causing or suppressed exception message matches the pattern
      */
     private static boolean matches(final Pattern pattern, final Throwable t) {
         return t != null &&

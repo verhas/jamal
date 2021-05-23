@@ -1,0 +1,208 @@
+ClonedResolve:
+  Input: |-
+    {@yaml:define a=
+    b: this is a.b}\
+    {#yaml:define b=
+    b: this is b.b
+    refa: {@yaml:ref a}}\
+    {#yaml:define c=
+    b: this is c.b
+    refb: {@yaml:ref b}}\
+    This is c before resolving
+    {c}
+    {@yaml:resolve (clone) c}
+    This is c after resolving
+    {c}
+    This is b after resolving
+    {b}
+  Output: |
+    This is c before resolving
+    b: this is c.b
+    refb: !!javax0.jamal.api.Ref {id: b}
+
+
+    This is c after resolving
+    b: this is c.b
+    refb:
+      b: this is b.b
+      refa: {b: this is a.b}
+
+    This is b after resolving
+    b: this is b.b
+    refa: !!javax0.jamal.api.Ref {id: a}
+
+deep resolve:
+  Input: |-
+    {@yaml:define a=
+    b: this is a.b}{#yaml:define b=
+    b: this is b.b
+    refa: {#yaml:ref a}}{#yaml:define c=
+    b: this is c.b
+    refa: {#yaml:ref b}}{#yaml:define d=
+    b: this is d.b
+    refa: {#yaml:ref c}}{#yaml:define e=
+    b: this is e.b
+    refa: {#yaml:ref d}}This is e before resolving
+    {@verbatim e}
+    {@yaml:resolve (clone) e}
+    This is a after resolving
+    {@verbatim a}
+    This is b after resolving
+    {@verbatim b}
+    This is c after resolving
+    {@verbatim c}
+    This is d after resolving
+    {@verbatim d}
+    This is e after resolving
+    {@verbatim e}
+  Output: |
+    This is e before resolving
+    b: this is e.b
+    refa: !!javax0.jamal.api.Ref {id: d}
+
+
+    This is a after resolving
+    {b: this is a.b}
+
+    This is b after resolving
+    b: this is b.b
+    refa: !!javax0.jamal.api.Ref {id: a}
+
+    This is c after resolving
+    b: this is c.b
+    refa: !!javax0.jamal.api.Ref {id: b}
+
+    This is d after resolving
+    b: this is d.b
+    refa: !!javax0.jamal.api.Ref {id: c}
+
+    This is e after resolving
+    b: this is e.b
+    refa:
+      b: this is d.b
+      refa:
+        b: this is c.b
+        refa:
+          b: this is b.b
+          refa: {b: this is a.b}
+
+"normal resolve":
+  Input: |-
+    {@yaml:define a=
+    a: this is a.a
+    b: this is a.b}\
+    {@yaml:define b=
+    a: this is b.a
+    b: this is b.b
+    refa: !!javax0.jamal.api.Ref a}\
+    {@yaml:define c=
+    a: this is c.a
+    b: this is c.b
+    refb: !!javax0.jamal.api.Ref b}\
+    This is c before resolving
+    {@verbatim c}
+    {@yaml:resolve c}
+    This is c after resolving
+    {@verbatim c}
+    This is b after resolving
+    {@verbatim b}
+  Output: |
+    This is c before resolving
+    a: this is c.a
+    b: this is c.b
+    refb: !!javax0.jamal.api.Ref {id: b}
+    
+    
+    This is c after resolving
+    a: this is c.a
+    b: this is c.b
+    refb:
+      a: this is b.a
+      b: this is b.b
+      refa: {a: this is a.a, b: this is a.b}
+    
+    This is b after resolving
+    a: this is b.a
+    b: this is b.b
+    refa: {a: this is a.a, b: this is a.b}
+
+"resolve looped structures cloning":
+  Input: |-
+    {#yaml:define a=
+    a: this is a
+    b: this is b
+    c: {@yaml:ref a}}
+    a before resolve
+    {@verbatim a}
+    {@yaml:resolve (clone) a}
+    a after resolve
+    {@verbatim a}
+  Output: |
+
+    a before resolve
+    a: this is a
+    b: this is b
+    c: !!javax0.jamal.api.Ref {id: a}
+
+
+    a after resolve
+    &id001
+    a: this is a
+    b: this is b
+    c: *id001
+
+"resolve looped structures without cloning":
+  Input: |-
+    {#yaml:define a=
+    a: this is a
+    b: this is b
+    c: {@yaml:ref a}}\
+    a before resolve
+    {a}
+    {@yaml:resolve a}\
+    a after resolve
+    {@verbatim a}
+  Output: |
+    a before resolve
+    a: this is a
+    b: this is b
+    c: !!javax0.jamal.api.Ref {id: a}
+
+    a after resolve
+    &id001
+    a: this is a
+    b: this is b
+    c: *id001
+
+"resolve fails if the ud macro is not a yaml structure":
+  Input: |-
+    {@define a=13}{#yaml:define b=
+    a: 1
+    b: {@yaml:ref a}}{@yaml:resolve b}
+  Throws: "The user defined macro 'a' is not a YAML structure"
+
+"resolve works on recursive structure":
+  Input: |-
+    {#yaml:define a=[ a1, a2, a3, {@yaml:ref c}]}
+    {#yaml:define b=[ b1, b2, b3, {@yaml:ref a}]}
+    {#yaml:define c=[ c1, c2, c3, {@yaml:ref b}]}
+    {@yaml:output (copy) c}
+  Output: |
+    &id001
+    - c1
+    - c2
+    - c3
+    - - b1
+      - b2
+      - b3
+      - - a1
+        - a2
+        - a3
+        - *id001
+"resolve does not work on recursive structure if we ask for a copy":
+  Input: |-
+    {#yaml:define a=[ a1, {@yaml:ref c}, {@yaml:ref c} ]}
+    {#yaml:define b=[ b1, {@yaml:ref a}]}
+    {#yaml:define c=[ c1, {@yaml:ref b}]}
+    {@yaml:output (copy) c}
+  Throws: "Jamal source seems to have infinite recursion"

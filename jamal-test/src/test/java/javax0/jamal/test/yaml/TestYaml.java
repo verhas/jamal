@@ -6,12 +6,21 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
-public class TestXml {
+public class TestYaml {
 
     @TestFactory
     JamalTests<?> testAll() {
         return JamalYamlTest.factory(
-            "TestXml"
+            "TestSet",
+            JamalYamlTest.__OFF__,
+            "TestDump",
+            "TestImport",
+            "TestResolve",
+            "TestDefine",
+            "TestAdd",
+            "TestGet",
+            "TestXml",
+            JamalYamlTest.__OFF__
         );
     }
 }

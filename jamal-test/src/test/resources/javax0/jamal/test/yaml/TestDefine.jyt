@@ -1,0 +1,22 @@
+define a simple yaml structure use it with verbatim:
+  Input: |-
+    {@yaml:define z=
+    a: 1
+    b: 2
+    }{@verbatim z}
+  Output: "{a: 1, b: 2}\n"
+define a simple yaml structure use it:
+  Input: |-
+    {@yaml:define z=
+    a: 1
+    b: 2
+    }{z}
+  Output: "{a: 1, b: 2}\n"
+
+define a list and use it with verbatim:
+  Input: |-
+    {@yaml:define z=
+    - a: 1
+      b: 2
+    }{@verbatim z}
+  Output: "- {a: 1, b: 2}\n"

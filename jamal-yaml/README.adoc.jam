@@ -486,6 +486,10 @@ will result
 
 {%output%}
 
+{%chap set%}
+
+
+
 {%chap add%}
 
 The macro `yaml:add` can modify an already parsed Yaml data structure.

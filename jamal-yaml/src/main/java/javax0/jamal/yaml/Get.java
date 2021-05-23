@@ -5,11 +5,11 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import ognl.Ognl;
 import ognl.OgnlException;
 
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.Params.holder;
 
 
@@ -20,11 +20,11 @@ public class Get implements Macro, InnerScopeDependent {
         final var copy = Resolver.copyOption();
         final var from = holder("yamlDataSource", "from").asString();
         Params.using(processor).keys(clone, copy, from).between("()").parse(in);
-        final var id = from.get();
-        InputHandler.skipWhiteSpaces(in);
+        final var fromId = Set.getFromId(in,from,this);
+        skipWhiteSpaces(in);
         try {
             final var expression = Ognl.parseExpression(in.toString());
-            final var yamlObject = Resolve.getYaml(processor, id);
+            final var yamlObject = Resolve.getYaml(processor, fromId);
             Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
             return String.valueOf(Ognl.getValue(expression, yamlObject.getObject()));
         } catch (OgnlException e) {

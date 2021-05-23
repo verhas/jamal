@@ -34,6 +34,61 @@ Test a simple for loop with back-ticked separator:
     c) is either a, b, c or d
     d) is either a, b, c or d
 
+test iterating through a Map:
+  Input: |-
+    {@yaml:define zzz=
+    "abra": null
+    "kadab": null
+    "ra": null
+    }{@for $x from zzz=the key is $x
+    }
+  Output: |
+    the key is abra
+    the key is kadab
+    the key is ra
+
+test iterating through a Map with multiple variables:
+  Input: |-
+    {@yaml:define zzz=
+    "abra": "rubra"
+    "kadab": null
+    "ra": null
+    }{@for ($x,$y) from zzz=the key is $x $y
+    }
+  Output: |
+    the key is abra rubra
+    the key is kadab {%@comment this comment saves the trailing space%}
+    the key is ra {%@comment this comment saves the trailing space%}
+
+test iterating through a list:
+  Input: |-
+    {@use yaml:set as pojo:set}{@yaml:define zzz=
+    "abra": [1,2,3,4]
+    }{@pojo:set zizi=/zzz.abra}{@for $x from zizi=the count $x
+    }
+  Output: |
+    the count 1
+    the count 2
+    the count 3
+    the count 4
+
+test iterating through a list with added empty strings:
+  Input: |-
+    {@use yaml:set as pojo:set}{@yaml:define zzz=
+    "abra": [1,2,3,4]
+    }{@pojo:set zizi=/zzz.abra}{@for ($x, $y) from zizi=the count $x >>$y<<
+    }
+  Output: |
+    the count 1 >><<
+    the count 2 >><<
+    the count 3 >><<
+    the count 4 >><<
+
+Syntax error:
+  Invalid keyword after the variables:
+    Input: "{@for a iiiin (1,2,3)=$a, init}"
+    Throws: "The keyword 'in/from' is missing in the 'for' macro '\\(1,2,3\\)=\\$a, init'"
+
 end: null
 %}
 {%@yaml:output testFor%}

@@ -9,9 +9,9 @@ public class TestCore {
     @TestFactory
     JamalTests<?> testAllCoreMacros() {
         return JamalYamlTest.factory(
+            "TestFor",
             "TestSamples",
             "TestDefine",
-            "TestFor",
             "TestBeginEnd",
             "TestBlock",
             "TestComment",
