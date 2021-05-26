@@ -11,7 +11,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-yaml</artifactId>
-    <version>1.7.7-SNAPSHOT</version>
+    <version>1.7.7</version>
 </dependency>
 ----
 
@@ -24,6 +24,8 @@ Following that, you can use the
 . <<import,Importing yaml from a file>>
 . <<isResolved,`yaml:isResolved`>>
 . <<get,`yaml:get`>>
+. <<get,`yaml:get`>>
+. <<set,`yaml:set`>>
 . <<add,`yaml:add`>>
 . <<format,`yaml:format`>>
 . <<dump,`yaml:dump`>>
@@ -639,9 +641,9 @@ deep h
 === vii. `yaml:set`
 
 
-The macro `yaml:set` can define a user defined macro from an already existing yaml macro.
+The macro `yaml:set` can define a yaml user defined macro from an already existing yaml macro.
 It is similar to `yaml:define` but this macro does not parse a text and interpret it as yaml formatted text.
-Instead, it uses an already defined yaml user defined macro and uses some part of it and assignes that to a user defined macro name.
+Instead, it uses an already defined yaml user defined macro and uses some part of it, and it assignes that to a new user defined macro name.
 
 The syntax of the macro is
 
@@ -660,6 +662,35 @@ If the `from` value is missing then the macro interprets the `OGNL` expression u
 It has to have the form `/macroname.` at the start.
 The identifier between the starting `/` and the `.` is used as the name of the macro from which the data is to be fetched.
 The `macroName` is the name of the macro to assign the new object value.
+
+===== Example
+
+[source]
+----
+{@yaml:define a=
+a: alma
+b:
+  c: 3
+  d:
+    - 1
+    - 2
+    - q:
+        h: deep h}
+{@yaml:set s=/a.b.d[2].q.h}
+{@yaml:set (from=a) r=b.d[2].q.h}
+{s}
+{r}
+----
+
+will result
+
+[source]
+----
+deep h
+
+deep h
+----
+
 
 
 [[add]]
