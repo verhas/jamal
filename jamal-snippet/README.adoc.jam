@@ -314,7 +314,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.7.7</version>
+<version>1.7.8-SNAPSHOT</version>
 ...
 ----
 %}
@@ -1162,7 +1162,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.7</version>
+    <version>1.7.8-SNAPSHOT</version>
 </project>
 ----
 %}
@@ -1195,7 +1195,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.7.7</version>
+<version>1.7.8-SNAPSHOT</version>
 </project>
 ----
 %}
@@ -1235,7 +1235,7 @@ It will result the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.7.7</version>
+    <version>1.7.8-SNAPSHOT</version>
 </project>
 ----
 %}
