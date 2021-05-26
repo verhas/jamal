@@ -127,7 +127,10 @@ public class For implements Macro, InnerScopeDependent {
 
     private List<?> convertObjectToListList(Object object, int nrOfVariables) {
         List<?> valueList;
-        if (object instanceof Set<?>) {
+
+        if (object instanceof Object[]) {
+            valueList = List.of(((Object[])object));
+        } else if (object instanceof Set<?>) {
             valueList = new ArrayList<>(List.of(((Set<?>) object).toArray()));
         } else if (object instanceof List<?>) {
             valueList = new ArrayList<>((List<?>) object);

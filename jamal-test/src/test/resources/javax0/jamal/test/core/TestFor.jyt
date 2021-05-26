@@ -6,6 +6,20 @@ d is either a, b, c or d
 %}
 
 {%#yaml:define testFor=
+iterating through an array:
+    Input: |-
+      {@use javax0.jamal.test.core.ObjectMacro as macroArray}\
+      {@macroArray (type=Array) array}\
+      {@for $x from array=$x}
+      {@macroArray (type=Set) set}\
+      {@for $x from set=$x}
+      {@macroArray (type=Stream) stream}\
+      {@for $x from stream=$x}
+    Output: |-
+      abc
+      abc
+      abc
+
 Test a simple for loop:
   Input: "{@for x in (a,b,c,d)=x is either a, b, c or d\n}"
   Output: {%@yaml:ref output%}
@@ -72,6 +86,23 @@ test iterating through a list:
     the count 3
     the count 4
 
+test iterating through a set:
+  Input: |-
+    {@use yaml:set as pojo:set}{@yaml:define zzz=
+    "abra":
+      ? 1
+      ? 2
+      ? 3
+      ? 4
+    }{@pojo:set zizi=/zzz.abra}{@for $x from zizi=the count $x
+    }
+  Output: |
+    the count 1
+    the count 2
+    the count 3
+    the count 4
+
+
 test iterating through a list with added empty strings:
   Input: |-
     {@use yaml:set as pojo:set}{@yaml:define zzz=
@@ -89,6 +120,28 @@ Syntax error:
     Input: "{@for a iiiin (1,2,3)=$a, init}"
     Throws: "The keyword 'in/from' is missing in the 'for' macro '\\(1,2,3\\)=\\$a, init'"
 
-end: null
+  Non-lenient, different number of arguments:
+    Input: "{@for ($a,$b) in (a|a,b|a,c,12|3|3)=}"
+    Throws: "number of the values does not match the number of the parameters.*"
+
+  Simple syntax error 1:
+    Input: "{@for ($a,$b) in a|a,b|a,c,12|3|3)=}"
+    Throws: "for macro has bad syntax '.*"
+
+  Simple syntax error 2:
+    Input: "{@for ($a,$b) im (a|a,b|a,c,12|3|3)=}"
+    Throws: "The keyword 'in/from' is missing in the 'for'.*"
+  Simple syntax error 3:
+    Input: "{@for ($a) in (a,b,c)}"
+    Throws: "for macro has bad syntax, missing '='.*"
+  Simple syntax error 4:
+    Input: "{@for ($a) in `a,b,c}"
+    Throws: "There is no closing '`' before the values in the for macro."
+  Simple syntax error 5:
+    Input: "{@for ($a) in `|`a,b,c}"
+    Throws: "There is no closing `\\|` for the values in the for macro."
+  Simple syntax error 6:
+    Input: "{@for ($a,$b) in (a|a,b|a,c,12|3|3=}"
+    Throws: "There is no closing '\\)' for the values in the for macro."
 %}
 {%@yaml:output testFor%}

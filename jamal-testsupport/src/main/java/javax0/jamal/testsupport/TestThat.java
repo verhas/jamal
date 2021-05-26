@@ -256,7 +256,7 @@ public class TestThat implements AutoCloseable {
     }
 
     private static String myQuote(String string){
-        return string.replaceAll("(\\.|\\\\|\\(|\\)|\\{|\\})","\\\\$1");
+        return string.replaceAll("(\\.|\\\\|\\(|\\)|\\{|\\}|\\|)","\\\\$1");
     }
 
     private static Set<String> collect(final Throwable t) {

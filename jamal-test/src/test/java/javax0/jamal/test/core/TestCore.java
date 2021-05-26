@@ -10,6 +10,7 @@ public class TestCore {
     JamalTests<?> testAllCoreMacros() {
         return JamalYamlTest.factory(
             "TestFor",
+            JamalYamlTest.__OFF__,
             "TestSamples",
             "TestDefine",
             "TestBeginEnd",

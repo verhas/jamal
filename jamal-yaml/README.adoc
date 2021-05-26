@@ -635,8 +635,35 @@ deep h
 ----
 
 
+[[set]]
+=== vii. `yaml:set`
+
+
+The macro `yaml:set` can define a user defined macro from an already existing yaml macro.
+It is similar to `yaml:define` but this macro does not parse a text and interpret it as yaml formatted text.
+Instead, it uses an already defined yaml user defined macro and uses some part of it and assignes that to a user defined macro name.
+
+The syntax of the macro is
+
+[source]
+----
+{@yaml:set (options) macroName=OGNL}
+----
+
+* The `options` are the same as in the macro `yaml:get`:
+
+ ** `yamlResolveClone` (alias `clone`) to clone
+ ** `yamlResolveCopy` (alias `copy`) to copy resolve
+ ** `yamlDataSource` (alias `from`) the name of the user defined macro which is the source of the data
+
+If the `from` value is missing then the macro interprets the `OGNL` expression using the start of it as the name of the macro.
+It has to have the form `/macroname.` at the start.
+The identifier between the starting `/` and the `.` is used as the name of the macro from which the data is to be fetched.
+The `macroName` is the name of the macro to assign the new object value.
+
+
 [[add]]
-=== vii. `yaml:add`
+=== viii. `yaml:add`
 
 
 The macro `yaml:add` can modify an already parsed Yaml data structure.
@@ -834,7 +861,7 @@ will result:
 
 
 [[format]]
-=== viii. `yaml:format`
+=== ix. `yaml:format`
 
 
 This macro can be used to set the options for Snake Yaml.
@@ -1362,7 +1389,7 @@ h: [1, 2, 3]
 
 
 [[dump]]
-=== ix. `yaml:dump`
+=== x. `yaml:dump`
 
 
 The macro `yaml:dump` can dump the Yaml data structure to a file.
@@ -1404,7 +1431,7 @@ The resolution process will be in-place unless the option `yamlResolveClone` (al
 
 
 [[xml]]
-=== x. `yaml:xml`
+=== xi. `yaml:xml`
 
 
 The macro `yaml:xml` converts a Yaml structure to XML format.
@@ -1571,7 +1598,7 @@ The version had a major bug that rendered this macro unusable.
 Version 1.7.6 extended the conversion from Yaml to XML making it possible to use CDATA sections, spefify tag names for lists and to add attributes to tags.
 
 [[output]]
-=== xi. `yaml:output`
+=== xii. `yaml:output`
 
 
 The macro `yaml:output` redefines the output of the Jamal processing.

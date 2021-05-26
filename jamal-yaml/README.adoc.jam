@@ -488,6 +488,26 @@ will result
 
 {%chap set%}
 
+The macro `yaml:set` can define a user defined macro from an already existing yaml macro.
+It is similar to `yaml:define` but this macro does not parse a text and interpret it as yaml formatted text.
+Instead, it uses an already defined yaml user defined macro and uses some part of it and assignes that to a user defined macro name.
+
+The syntax of the macro is
+
+{%sample/
+{@yaml:set (options) macroName=OGNL}
+%}
+
+* The `options` are the same as in the macro `yaml:get`:
+
+ ** `yamlResolveClone` (alias `clone`) to clone
+ ** `yamlResolveCopy` (alias `copy`) to copy resolve
+ ** `yamlDataSource` (alias `from`) the name of the user defined macro which is the source of the data
+
+If the `from` value is missing then the macro interprets the `OGNL` expression using the start of it as the name of the macro.
+It has to have the form `/macroname.` at the start.
+The identifier between the starting `/` and the `.` is used as the name of the macro from which the data is to be fetched.
+The `macroName` is the name of the macro to assign the new object value.
 
 
 {%chap add%}
