@@ -1097,7 +1097,7 @@ will result
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
-- FilesMacro.java: 4,763 bytes
+- FilesMacro.java: 4,791 bytes
 - Collect.java: 5,504 bytes
 - TrimLines.java: 3,687 bytes
 - Replace.java: 1,775 bytes
