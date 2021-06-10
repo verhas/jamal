@@ -180,6 +180,26 @@ public class TestThat implements AutoCloseable {
         Assertions.assertEquals(expected, resultsClose());
     }
 
+    /**
+     * Create a new macro, a new processor and test that the input creates the expected output. If it is not matched
+     * then JUnit5 assertion failure will happen.
+     *
+     * @param expected the expected output of the macro
+     * @throws NoSuchMethodException     if the macro class can not be instantiated
+     * @throws IllegalAccessException    if the macro class can not be instantiated
+     * @throws InstantiationException    if the macro class can not be instantiated
+     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
+     */
+    public void matches(String expected) throws
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException,
+        BadSyntax {
+        Assertions.assertTrue(Pattern.compile(expected).matcher(resultsClose()).matches());
+    }
+
 
     /**
      * Same as calling {@link #throwsUp(Class, String) throwsUp(Class,null)}

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class TestFilesMacro {
 
@@ -42,13 +43,13 @@ public class TestFilesMacro {
         final var root = getDirectory() + "/jamal-snippet/src/main/java/javax0/jamal/snippet/";
         TestThat.theInput("{@define directoryFormat=$canonicalPath}{#replace {@options regex} |{@directory ./}|^.*?main|main}")
             .atPosition(root,0,0)
-            .results("main/java/javax0/jamal/snippet");
+            .matches("main.java.javax0.jamal.snippet");
         TestThat.theInput("{@define directoryFormat=$canonicalPath}{#replace {@options regex} |{@directory ..}|^.*?main|main}")
             .atPosition(root,0,0)
-            .results("main/java/javax0/jamal");
+            .matches("main.java.javax0.jamal");
         TestThat.theInput("{@define root=../../../}{@directory javax0/jamal}")
             .atPosition(root,0,0)
-            .results("javax0/jamal");
+            .matches("javax0.jamal");
     }
 
     @Test
@@ -72,7 +73,7 @@ public class TestFilesMacro {
     @Test
     @DisplayName("File is found and formatted")
     void testFile() throws Exception {
-        TestThat.theInput("{@define fileFormat=$canonicalPath}{#replace {@options regex} |{@file ./README.adoc}|^.*?jamal-|jamal-}").results("jamal-snippet/README.adoc");
+        TestThat.theInput("{@define fileFormat=$canonicalPath}{#replace {@options regex} |{@file ./README.adoc}|^.*?jamal-|jamal-}").matches("jamal-snippet.README.adoc");
         TestThat.theInput("{@define root=../}{@define fileFormat=`$name`}{@file README.adoc}").results("`README.adoc`");
     }
 
