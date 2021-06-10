@@ -145,7 +145,7 @@ The regular expressions will find snippet start and snippet ends in Java files, 
 Essentially you should not have a problem signaling the start and the end of the snippet in any program code that allows you to write some form of a comment.
 
 The disadvantage of this liberal definition is that sometimes it finds lines that accidentally contain the word snippet.
-If you look at the source code in the file src/main/java/javax0/Jamal/snippet/TrimLines.java you can see examples.
+If you look at the source code in the file src/main/java/javax0/jamal/snippet/TrimLines.java you can see examples.
 The comment mentions snippets, and there is a word eligible to be an identifier after `snippet`, and the parsing thinks that this is a snippet start.
 Eventually, there is no `end snippet` on the lines following it, which is an error the snippet collection process recognizes.
 (Up to 1.7.2. Later versions use this file as a snippet source; thus, it has 'end snippet'.)
@@ -161,7 +161,7 @@ If there is already a correct, error-free snippet collected and the collection f
 
 This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the mal-formed snippets.
 
-If you look at the src/main/java/javax0/Jamal/snippet/TrimLines.javain version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
+If you look at the src/main/java/javax0/jamal/snippet/TrimLines.javain version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
 Because there is also an accidental `snippet` line before it, the collection would not find this line.
 Because of the previous `snippet` line, the real `// snippet` line becomes part of the previous snippet.
 The `// snippet` line is preceded by an `// end snippet` line to avoid this.
