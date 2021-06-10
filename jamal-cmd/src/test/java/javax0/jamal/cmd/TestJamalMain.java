@@ -46,7 +46,9 @@ public class TestJamalMain {
     @DisplayName("Command line converts a single file")
     public void testConvertSingleFile() throws Exception {
         final var out = jamal("-f","src/test/resources/test.jam","target/test-classes/test","-v");
-        Assertions.assertTrue(Pattern.compile("Jamal .*/jamal-cmd/src/test/resources/test.jam -> .*/jamal-cmd/target/test-classes/test").matcher(out).find());
+        Assertions.assertTrue(Pattern.compile("Jamal .*/jamal-cmd/src/test/resources/test.jam -> .*/jamal-cmd/target/test-classes/test").matcher(out).find(),
+            () -> "out: "+out
+        );
         TestThat.theInput("{@include res:test}").results("1");
     }
 
