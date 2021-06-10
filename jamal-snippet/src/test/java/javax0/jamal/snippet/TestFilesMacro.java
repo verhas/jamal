@@ -72,7 +72,7 @@ public class TestFilesMacro {
     @Test
     @DisplayName("File is found and formatted")
     void testFile() throws Exception {
-        TestThat.theInput("{@define fileFormat=$canonicalPath}{#replace {@options regex} |{@file ./README.adoc}|^.*?jamal|jamal}").results("jamal/jamal-snippet/README.adoc");
+        TestThat.theInput("{@define fileFormat=$canonicalPath}{#replace {@options regex} |{@file ./README.adoc}|^.*?jamal-|jamal-}").results("jamal-snippet/README.adoc");
         TestThat.theInput("{@define root=../}{@define fileFormat=`$name`}{@file README.adoc}").results("`README.adoc`");
     }
 
