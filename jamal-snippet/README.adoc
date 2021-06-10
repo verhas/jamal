@@ -157,7 +157,7 @@ The exception is thrown only when you want to use the `snip` macro for an unterm
 The possible situation may even be more complicated because the accidental word following `snippet` in a comment may also be used in other files as a snippet identifier.
 The collector, sooner or later, will find that definition, and it will assume that the one with the error was just an accidental comment and replaces the old with the correct, error-free snippet.
 It is still okay when the snippet collection finds these two snippets in the opposite order.
-If there is already a correct, error-free snippet collected and the collection finds an erroneous one of the same name, it ignores that.
+If there is already a correct, error-free snippet collected, and the collection finds an erroneous one of the same name, it ignores that.
 
 This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the mal-formed snippets.
 
