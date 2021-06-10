@@ -6,6 +6,7 @@ image::logo.svg[width=150px]
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]
 https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
+image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
 
 NOTE: This is the latest development documentation.
 This is a SNAPSHOT version.
