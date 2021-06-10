@@ -79,10 +79,10 @@ public class FilesMacro {
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
             final var file = new File(fileName);
             if (!file.exists()) {
-                throw new BadSyntaxAt("The file '" + fileName + "' does not exist.", in.getPosition());
+                throw new BadSyntaxAt("The file '" + file.getAbsolutePath() + "' does not exist.", in.getPosition());
             }
             if (!file.isFile()) {
-                throw new BadSyntaxAt("The file '" + fileName + "' exists but it is not a plain file.", in.getPosition());
+                throw new BadSyntaxAt("The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.", in.getPosition());
             }
 
             try {
