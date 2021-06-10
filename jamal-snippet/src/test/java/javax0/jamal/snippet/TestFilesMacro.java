@@ -2,6 +2,7 @@ package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -78,6 +79,7 @@ public class TestFilesMacro {
     @Test
     @DisplayName("File is found and formatted using defined root")
     void testFileWithRoot() throws Exception {
+        Assumptions.assumeTrue(new File("../../../github/jamal/README.adoc").exists());
         TestThat.theInput("{@define root=../../../}{@file github/jamal/README.adoc}").results("github/jamal/README.adoc");
     }
 
