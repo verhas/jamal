@@ -262,7 +262,7 @@ public class TestAll {
      * @return the actual result.
      */
     public String getActual() {
-        return actual;
+        return actual.replaceAll("\r","");
     }
 
     /**
@@ -285,7 +285,7 @@ public class TestAll {
         fileName = fixupPath(fileName);
         try (final var is = new FileInputStream(fileName)) {
             final var bytes = is.readAllBytes();
-            return new String(bytes, StandardCharsets.UTF_8);
+            return new String(bytes, StandardCharsets.UTF_8).replaceAll("\r","");
         }
     }
 
