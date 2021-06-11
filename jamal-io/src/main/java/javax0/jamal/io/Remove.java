@@ -30,14 +30,16 @@ public class Remove implements Macro, InnerScopeDependent {
         try {
             final var allDeleted = new AtomicBoolean(true);
             final var errors = new StringBuilder();
+            final var fileList = new StringBuilder();
             if (recursive.is()) {
                 Files.walk(Paths.get(fileName))
                     .map(Path::toFile)
                     .sorted((o1, o2) -> -o1.compareTo(o2))
-                    .forEach(f -> allDeleted.set(allDeleted.get() && remove(f, errors)));
+                    .forEach(f -> allDeleted.set(allDeleted.get() && remove(f, errors, fileList)));
                 if (!allDeleted.get()) {
                     throw new BadSyntax(
-                        format("Not possible to delete the file/dir and all files/dirs under '%s'\n%s", fileName, errors)
+                        format("Not possible to delete the file/dir and all files/dirs under '%s'\n%s\n%s\n",
+                            fileName, fileList, errors)
                     );
                 }
             } else {
@@ -49,7 +51,8 @@ public class Remove implements Macro, InnerScopeDependent {
         return "";
     }
 
-    private static boolean remove(final File f, final StringBuilder errors) {
+    private static boolean remove(final File f, final StringBuilder errors, final StringBuilder fileList) {
+        fileList.append(f.getAbsoluteFile()+"\n");
         try {
             Files.delete(f.toPath());
             return true;
