@@ -205,7 +205,7 @@ public class TestThat implements AutoCloseable {
         final var sb = new StringBuilder();
         int i = 0;
         for (final var b : in.getBytes(StandardCharsets.UTF_8)) {
-            sb.append(Integer.toHexString(0xFF & b));
+            sb.append(String.format("%02X ",b));
             i++;
             if( i % 8 == 0 ){
                 sb.append("\n");
