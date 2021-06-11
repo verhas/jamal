@@ -13,11 +13,12 @@ public class TestWrite {
             "this is the text into the\n" +
             "file\n" +
             "}{#include [verbatim] {fileName}}" +
-            "{#io:remove recursive file=./target/wups}"+
-            "{@io:print (err)I'm done}"
-        ).results("" +
-            "this is the text into the\n" +
-            "file"
-        );
+            "{#io:remove recursive file=./target/wups}" +
+            "{@io:print (err)I'm done}")
+            .ignoreLineEnding()
+            .results("" +
+                "this is the text into the\n" +
+                "file"
+            );
     }
 }
