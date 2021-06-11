@@ -3,7 +3,6 @@ image::logo.svg[width=150px]
 == Jamal Macro Language
 
 
-
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]
 https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
@@ -3555,13 +3554,15 @@ The parameter `input` to the method `process()` has to be an object that impleme
 The easiest way to do that is to use the readily available class `javax0.jamal.tools.Input`.
 
 You can see an example to create an `Input` from an existing file in the `jamal-maven-plugin` module.
-The method `createInput()` reads a file and then it creates a new input:
+The method `createInput()` reads a file, and then it creates a new input:
 
 [source,java]
 ----
 private Input createInput(Path inputFile) throws IOException {
-    var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-    return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+    try (final var lines = Files.lines(inputFile)) {
+        final var fileContent = lines.collect(Collectors.joining("\n"));
+        return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+    }
 }
 ----
 

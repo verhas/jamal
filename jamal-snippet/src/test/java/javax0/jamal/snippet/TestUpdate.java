@@ -4,7 +4,6 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -30,20 +29,22 @@ public class TestUpdate {
         TestThat.theInput("{@include " + file + "}").results("\n" +
             "this is the snippet a\n" +
             "\n");
-        final var result = Files.lines(Paths.get(file)).collect(Collectors.joining("\n"));
-        Assertions.assertEquals("{@snip:define a=this is the snippet a}\n" +
-            "{@snip a\n" +
-            "[source]\n" +
-            "----\n" +
-            "this is the snippet a\n" +
-            "----\n" +
-            "}\n" +
-            "\n" +
-            "{#snip:update\n" +
-            "{@define head=[source]\n" +
-            "----\n" +
-            "}{@define tail=----\n" +
-            "}}", result);
+        try (final var lines = Files.lines(Paths.get(file))) {
+            final var result = lines.collect(Collectors.joining("\n"));
+            Assertions.assertEquals("{@snip:define a=this is the snippet a}\n" +
+                "{@snip a\n" +
+                "[source]\n" +
+                "----\n" +
+                "this is the snippet a\n" +
+                "----\n" +
+                "}\n" +
+                "\n" +
+                "{#snip:update\n" +
+                "{@define head=[source]\n" +
+                "----\n" +
+                "}{@define tail=----\n" +
+                "}}", result);
+        }
     }
 
 
@@ -66,20 +67,22 @@ public class TestUpdate {
         TestThat.theInput("{@include " + file + "}").results("\n" +
             "this is the snippet a\n" +
             "\n");
-        final var result = Files.lines(Paths.get(file)).collect(Collectors.joining("\n"));
-        Assertions.assertEquals("{@snip:define a=this is the snippet a}\n" +
-            "{@snip a\n" +
-            "[source]\n" +
-            "----\n" +
-            "this is the snippet a\n" +
-            "----\n" +
-            "}\n" +
-            "\n" +
-            "{#snip:update\n" +
-            "{@define head=[source]\n" +
-            "----\n" +
-            "}{@define tail=----\n" +
-            "}}", result);
+        try (final var lines = Files.lines(Paths.get(file))) {
+            final var result = lines.collect(Collectors.joining("\n"));
+            Assertions.assertEquals("{@snip:define a=this is the snippet a}\n" +
+                "{@snip a\n" +
+                "[source]\n" +
+                "----\n" +
+                "this is the snippet a\n" +
+                "----\n" +
+                "}\n" +
+                "\n" +
+                "{#snip:update\n" +
+                "{@define head=[source]\n" +
+                "----\n" +
+                "}{@define tail=----\n" +
+                "}}", result);
+        }
     }
 
     @Test

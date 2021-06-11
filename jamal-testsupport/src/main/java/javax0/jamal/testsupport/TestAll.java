@@ -213,8 +213,10 @@ public class TestAll {
     public Input inputFrom(String testFileName) throws IOException {
         var fileName = Objects.requireNonNull(testClass.getResource(testFileName), "File '" + testFileName + "' does not exist").getFile();
         fileName = fixupPath(fileName);
-        var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
-        return makeInput(fileContent, new Position(fileName));
+        try (final var lines = Files.lines(Paths.get(fileName))) {
+            var fileContent = lines.collect(Collectors.joining("\n"));
+            return makeInput(fileContent, new Position(fileName));
+        }
     }
 
     @FunctionalInterface
@@ -262,7 +264,7 @@ public class TestAll {
      * @return the actual result.
      */
     public String getActual() {
-        return actual.replaceAll("\r","");
+        return actual.replaceAll("\r", "");
     }
 
     /**
@@ -285,7 +287,7 @@ public class TestAll {
         fileName = fixupPath(fileName);
         try (final var is = new FileInputStream(fileName)) {
             final var bytes = is.readAllBytes();
-            return new String(bytes, StandardCharsets.UTF_8).replaceAll("\r","");
+            return new String(bytes, StandardCharsets.UTF_8).replaceAll("\r", "");
         }
     }
 

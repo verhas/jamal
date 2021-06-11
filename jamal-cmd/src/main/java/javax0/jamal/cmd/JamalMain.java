@@ -169,8 +169,10 @@ public class JamalMain implements Callable<Integer> {
     }
 
     private Input createInput(Path inputFile) throws IOException {
-        var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-        return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+        try (final var lines = Files.lines(inputFile)) {
+            final var fileContent = lines.collect(Collectors.joining("\n"));
+            return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+        }
     }
 
     private Path calculateTargetFile(final Path inputFile) {

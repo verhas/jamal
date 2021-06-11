@@ -30,8 +30,8 @@ public class Snippet implements Macro, InnerScopeDependent {
         var reference = in.getReference();
         var fileName = absolute(reference, snippetFile);
         final String content;
-        try {
-            content = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
+        try (final var lines = Files.lines(Paths.get(fileName))) {
+            content = lines.collect(Collectors.joining("\n"));
         } catch (IOException ioe) {
             throw new BadSyntax("Snippet file '" + fileName + "' cannot be read.", ioe);
         }

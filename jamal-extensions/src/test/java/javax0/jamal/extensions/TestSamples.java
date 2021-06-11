@@ -21,8 +21,10 @@ class TestSamples {
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {
         var fileName = this.getClass().getResource(testFile).getFile();
         fileName = fixupPath(fileName);
-        var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
-        return new Input(fileContent, new Position(fileName));
+        try (final var lines = Files.lines(Paths.get(fileName))) {
+            var fileContent = lines.collect(Collectors.joining("\n"));
+            return new Input(fileContent, new Position(fileName));
+        }
     }
 
     /**
@@ -48,10 +50,10 @@ class TestSamples {
     @DisplayName("simple import")
     void testSimpleImport() throws IOException, BadSyntax {
         assertEquals("thisIsGood\n" +
-                "ThisIsAlsoGood\n" +
-                "THIS_IS_EXTRA_GOOD\n" +
-                "this is extra good\n" +
-                "This is extra good.", result("use.jam"));
+            "ThisIsAlsoGood\n" +
+            "THIS_IS_EXTRA_GOOD\n" +
+            "this is extra good\n" +
+            "This is extra good.", result("use.jam"));
     }
 
 
@@ -72,8 +74,8 @@ class TestSamples {
         final var cicaHome = System.getenv("CICA_HOME");
         assertNull(cicaHome);
 
-        assertEquals(javaHome+"\n"+
-            "JAVA_HOME is defined\n" +
+        assertEquals(javaHome + "\n" +
+                "JAVA_HOME is defined\n" +
                 "\n" +
                 "CICA_HOME is not defined"
             , result("test_env.jam"));
@@ -100,7 +102,7 @@ class TestSamples {
     @DisplayName("Test all files that have an '.expected' pair")
     @Test
     void testExpectedFiles() throws IOException, BadSyntax {
-        TestAll.testExpected(this,Assertions::assertEquals);
+        TestAll.testExpected(this, Assertions::assertEquals);
     }
 
     @DisplayName("Test all files that have an '.err' extension")

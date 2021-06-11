@@ -15,6 +15,8 @@ public class FileInput {
      * @throws IOException if the file cannot be read
      */
     static String getInput(String fileName) throws IOException {
-        return Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
+        try (final var lines = Files.lines(Paths.get(fileName))) {
+            return lines.collect(Collectors.joining("\n"));
+        }
     }
 }

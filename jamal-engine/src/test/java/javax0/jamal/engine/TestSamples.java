@@ -23,8 +23,10 @@ class TestSamples {
     private Input createInput(String testFileName) throws IOException {
         var fileName = Objects.requireNonNull(this.getClass().getResource(testFileName), "File '" + testFileName + "' does not exist").getFile();
         fileName = fixupPath(fileName);
-        var fileContent = Files.lines(Paths.get(fileName)).collect(Collectors.joining("\n"));
-        return makeInput(fileContent, new Position(fileName));
+        try (final var lines = Files.lines(Paths.get(fileName))) {
+            var fileContent = lines.collect(Collectors.joining("\n"));
+            return makeInput(fileContent, new Position(fileName));
+        }
     }
 
     /**

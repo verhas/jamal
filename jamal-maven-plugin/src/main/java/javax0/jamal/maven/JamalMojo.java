@@ -20,7 +20,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -108,7 +113,7 @@ public class JamalMojo extends AbstractMojo {
             if (output != null) {
                 log.debug("Jamal output for the file is " + qq(output.toString()));
                 final String result;
-                try( final var processor = new Processor(macroOpen, macroClose)) {
+                try (final var processor = new Processor(macroOpen, macroClose)) {
                     if ("true".equals(formatOutput)) {
                         result = formatOutput(output, processor.process(createInput(inputPath)));
                     } else {
@@ -166,11 +171,14 @@ public class JamalMojo extends AbstractMojo {
         Arrays.stream(sw.toString().split("\n")).forEach(log);
     }
 
+    // snippet createInput
     private Input createInput(Path inputFile) throws IOException {
-        var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-        return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+        try (final var lines = Files.lines(inputFile)) {
+            final var fileContent = lines.collect(Collectors.joining("\n"));
+            return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+        }
     }
-
+    // end snippet
     private Path calculateTargetFile(final Path inputFile) {
         final var log = getLog();
         final var inputFileName = inputFile.toString();

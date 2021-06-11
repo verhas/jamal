@@ -12,7 +12,8 @@ jamal-snippet.
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@define pu$folder=images%}\
-{%@define pu$template=%}
+{%@define pu$template=%}\
+{%@snip:collect from=./jamal-maven-plugin/src/main/java/javax0/jamal/maven/JamalMojo.java%}\
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]
 https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
@@ -3128,15 +3129,12 @@ The parameter `input` to the method `process()` has to be an object that impleme
 The easiest way to do that is to use the readily available class `javax0.jamal.tools.Input`.
 
 You can see an example to create an `Input` from an existing file in the `jamal-maven-plugin` module.
-The method `createInput()` reads a file and then it creates a new input:
+The method `createInput()` reads a file, and then it creates a new input:
 
 [source,java]
 ----
 {%#trimLines trimVertical
-    private Input createInput(Path inputFile) throws IOException {
-        var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-        return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
-    }
+{%@snip createInput%}
 %}
 ----
 
