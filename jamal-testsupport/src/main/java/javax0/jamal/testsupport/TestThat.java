@@ -61,6 +61,7 @@ public class TestThat implements AutoCloseable {
     private Processor processor;
     private String input;
     private String macroOpen = "{", macroClose = "}";
+    private boolean ignoreLineEndingFlag = false;
 
     private TestThat(Class<? extends Macro> klass) {
         this.klass = klass;
@@ -71,6 +72,11 @@ public class TestThat implements AutoCloseable {
             processor = new Processor(macroOpen, macroClose);
         }
         return processor;
+    }
+
+    public TestThat ignoreLineEnding() {
+        ignoreLineEndingFlag = true;
+        return this;
     }
 
     /**
@@ -177,7 +183,13 @@ public class TestThat implements AutoCloseable {
         InstantiationException,
         InvocationTargetException,
         BadSyntax {
-        Assertions.assertEquals(expected, resultsClose());
+        if (ignoreLineEndingFlag) {
+            final var expectedNl = expected.replaceAll("\r","");
+            final var resultNl = resultsClose().replaceAll("\r","");
+            Assertions.assertEquals(expectedNl, resultNl);
+        } else {
+            Assertions.assertEquals(expected, resultsClose());
+        }
     }
 
     /**
@@ -205,9 +217,9 @@ public class TestThat implements AutoCloseable {
         final var sb = new StringBuilder();
         int i = 0;
         for (final var b : in.getBytes(StandardCharsets.UTF_8)) {
-            sb.append(String.format("%02X ",b));
+            sb.append(String.format("%02X ", b));
             i++;
-            if( i % 8 == 0 ){
+            if (i % 8 == 0) {
                 sb.append("\n");
             }
         }
