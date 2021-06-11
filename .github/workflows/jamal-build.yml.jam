@@ -11,22 +11,26 @@
 - name: Build with Maven
   run: mvn -B package --file pom.xml
 %}
+
+{%@define job($env)='$env':
+    runs-on: '$env'
+    steps: {%@yaml:ref steps%}
+%}
+
 {%#yaml:define top =
 name: Java CI with Maven
-
-"on":
+'on':
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  linux_build:
-    runs-on: ubuntu-latest
-    steps: {%@yaml:ref steps%}
-
-  windows_build:
-    runs-on: windows-latest
-    steps: {%@yaml:ref steps%}
+  {%job/ubuntu-latest%}
+  {%job/windows-latest%}
+  {%job/windows-2016%}
+  {%job/ubuntu-18%}
+  {%job/macos-11%}
+  {%job/macos-latest%}
 %}
 {%@yaml:output (copy) top%}

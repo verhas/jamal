@@ -5,7 +5,7 @@ name: Java CI with Maven
   pull_request:
     branches: [master]
 jobs:
-  linux_build:
+  ubuntu-latest:
     runs-on: ubuntu-latest
     steps:
     - {uses: actions/checkout@v2}
@@ -14,8 +14,44 @@ jobs:
       with: {java-version: '11', distribution: adopt}
     - {name: Create POM files, run: mvn -f genpom.xml}
     - {name: Build with Maven, run: mvn -B package --file pom.xml}
-  windows_build:
+  windows-latest:
     runs-on: windows-latest
+    steps:
+    - {uses: actions/checkout@v2}
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with: {java-version: '11', distribution: adopt}
+    - {name: Create POM files, run: mvn -f genpom.xml}
+    - {name: Build with Maven, run: mvn -B package --file pom.xml}
+  windows-2016:
+    runs-on: windows-2016
+    steps:
+    - {uses: actions/checkout@v2}
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with: {java-version: '11', distribution: adopt}
+    - {name: Create POM files, run: mvn -f genpom.xml}
+    - {name: Build with Maven, run: mvn -B package --file pom.xml}
+  ubuntu-18:
+    runs-on: ubuntu-18
+    steps:
+    - {uses: actions/checkout@v2}
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with: {java-version: '11', distribution: adopt}
+    - {name: Create POM files, run: mvn -f genpom.xml}
+    - {name: Build with Maven, run: mvn -B package --file pom.xml}
+  macos-11:
+    runs-on: macos-11
+    steps:
+    - {uses: actions/checkout@v2}
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with: {java-version: '11', distribution: adopt}
+    - {name: Create POM files, run: mvn -f genpom.xml}
+    - {name: Build with Maven, run: mvn -B package --file pom.xml}
+  macos-latest:
+    runs-on: macos-latest
     steps:
     - {uses: actions/checkout@v2}
     - name: Set up JDK 11
