@@ -29,9 +29,8 @@ public class TestJshell {
                 "Anya \\ Apa\"/Eszti))\n" +
                 "\n" +
                 "((helloBlock/Misi/Matyi))")
-
+            .ignoreLineEnding()
             .results(
-
                 "hallo Misi\n" +
                     "hello Matyi\n" +
                     "\n" +
@@ -73,12 +72,14 @@ public class TestJshell {
             "{@script helloBlock/JShell(a,b)=hallo(\n" +
             ");hello()}\n" +
             "{@export helloBlock}}\n" +
-            "{hello/My World/You}").results("\n" +
-            "Hello, My Dear\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "Hello, My World/You\n");
+            "{hello/My World/You}")
+            .ignoreLineEnding()
+            .results("\n" +
+                "Hello, My Dear\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "Hello, My World/You\n");
     }
 }
