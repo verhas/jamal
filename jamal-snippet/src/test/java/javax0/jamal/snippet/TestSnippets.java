@@ -1,8 +1,13 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TestSnippets {
 
@@ -40,13 +45,17 @@ public class TestSnippets {
          * files for X=1, 2, 3, 4.
          * DELETE THEM.
          * */
-        TestThat.theInput("{@include src/test/resources/javax0/jamal/snippet/test4.jam}")
-            .results(
-                "first_snippet,second_snippet,second_file_first$snippet,seconda_snippet_uniconde\n" +
-                    "first_snippet,second_file_first$snippet\n" +
-                    "first_snippet,second_snippet\n" +
-                    "second_snippet,seconda_snippet_uniconde"
-            );
+        final var result = TestThat.theInput("{@include src/test/resources/javax0/jamal/snippet/test4.jam}").results();
+        final var lines = result.split("\n");
+        Assertions.assertEquals(4,lines.length);
+        Assertions.assertEquals(Set.of("first_snippet","second_snippet","second_file_first$snippet","seconda_snippet_uniconde"),str2set(lines[0]));
+        Assertions.assertEquals(Set.of("first_snippet","second_file_first$snippet"),str2set(lines[1]));
+        Assertions.assertEquals(Set.of("first_snippet","second_snippet"),str2set(lines[2]));
+        Assertions.assertEquals(Set.of("second_snippet","seconda_snippet_uniconde"),str2set(lines[3]));
+    }
+
+    private static Set<String> str2set(String s){
+        return Arrays.stream(s.split(",")).collect(Collectors.toSet());
     }
 
     @Test
