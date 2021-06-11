@@ -14,6 +14,7 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.String.format;
@@ -52,10 +53,19 @@ public class Remove implements Macro, InnerScopeDependent {
     }
 
     private static boolean remove(final File f, final StringBuilder errors, final StringBuilder fileList) {
-        fileList.append(f.getAbsoluteFile()+"\n");
+        fileList.append(f.getAbsoluteFile() + "\n");
         try {
             Files.delete(f.toPath());
             return true;
+        } catch (java.nio.file.DirectoryNotEmptyException dne) {
+            try (final var sw = new StringWriter();
+                 final var pw = new PrintWriter(sw)) {
+                dne.printStackTrace(pw);
+                errors.append(sw);
+                errors.append(format("Files in the directory: '%s'\n",f.getAbsoluteFile()));
+                Arrays.stream(f.list()).forEach( s -> errors.append(s).append("\n"));
+            } catch (IOException ignored) {
+            }
         } catch (IOException ioe) {
             try (final var sw = new StringWriter();
                  final var pw = new PrintWriter(sw)) {
