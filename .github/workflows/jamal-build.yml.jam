@@ -12,7 +12,7 @@
   run: mvn -B package --file pom.xml
 %}
 
-{%@define job($env)='$env':
+{%@define job($env,...$name)={%@if/$name/$name/$env%}:
     runs-on: '$env'
     steps: {%@yaml:ref steps%}
 %}
@@ -29,7 +29,7 @@ jobs:
   {%job/ubuntu-latest%}
   {%job/windows-latest%}
   {%job/windows-2016%}
-  {%job/ubuntu-18.04%}
+  {%job/ubuntu-18.04/ubuntu-18%}
   {%job/macos-latest%}
 %}
 {%@yaml:output (copy) top%}
