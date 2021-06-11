@@ -177,7 +177,7 @@ public class TestThat implements AutoCloseable {
         InstantiationException,
         InvocationTargetException,
         BadSyntax {
-        Assertions.assertEquals(expected.getBytes(StandardCharsets.UTF_8), resultsClose());
+        Assertions.assertEquals(expected, resultsClose());
     }
 
     /**
