@@ -12,7 +12,7 @@ public class TestXmlFormat {
         TestThat.theInput("{#xmlFormat {@define tabsize=2}\n" +
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
             "<a>\n        <b attribes=\"wuff\">b text</b>\n</a>}")
-            .results("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+            .resultsBin("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<a>\n" +
                 "  <b attribes=\"wuff\">b text</b>\n" +
                 "</a>");
@@ -25,7 +25,7 @@ public class TestXmlFormat {
             "{#xmlFormat {@define tabsize=2}}\n" +
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<a>\n        <b attribes=\"wuff\">b text</b>\n</a>")
-            .results("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+            .resultsBin("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<a>\n" +
                 "  <b attribes=\"wuff\">b text</b>\n" +
                 "</a>");

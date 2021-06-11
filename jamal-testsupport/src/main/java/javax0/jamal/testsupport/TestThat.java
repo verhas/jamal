@@ -10,11 +10,11 @@ import javax0.jamal.engine.UserDefinedMacro;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * A simple class that helps the testing of built-in macros.
@@ -177,7 +177,41 @@ public class TestThat implements AutoCloseable {
         InstantiationException,
         InvocationTargetException,
         BadSyntax {
-        Assertions.assertEquals(expected, resultsClose());
+        Assertions.assertEquals(expected.getBytes(StandardCharsets.UTF_8), resultsClose());
+    }
+
+    /**
+     * The same as {@link #results()} but converts the UTF-8 bytes of the expected and actual string to hexa string
+     * before comparing. This will show the diff in hex format in case there is any and that way it is easier to find
+     * the actual difference in case of non-printable characters differ.
+     *
+     * @param expected the expected output of the macro
+     * @throws NoSuchMethodException     if the macro class can not be instantiated
+     * @throws IllegalAccessException    if the macro class can not be instantiated
+     * @throws InstantiationException    if the macro class can not be instantiated
+     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
+     */
+    public void resultsBin(String expected) throws
+        NoSuchMethodException,
+        IllegalAccessException,
+        InstantiationException,
+        InvocationTargetException,
+        BadSyntax {
+        Assertions.assertEquals(toHex(expected), toHex(resultsClose()));
+    }
+
+    private String toHex(String in) {
+        final var sb = new StringBuilder();
+        int i = 0;
+        for (final var b : in.getBytes(StandardCharsets.UTF_8)) {
+            sb.append(Integer.toHexString(0xFF & b));
+            i++;
+            if( i % 8 == 0 ){
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -263,8 +297,8 @@ public class TestThat implements AutoCloseable {
                         return;
                     }
                     Assertions.fail("The evaluation did throw an exception but " +
-                        "the exception message did not match the pattern '" + regex + "'\n"+
-                        "Possible patterns are:\n"+
+                        "the exception message did not match the pattern '" + regex + "'\n" +
+                        "Possible patterns are:\n" +
                         String.join("\n", collect(t)), t);
                 }
             } else {
@@ -275,18 +309,18 @@ public class TestThat implements AutoCloseable {
         }
     }
 
-    private static String myQuote(String string){
-        return string.replaceAll("(\\.|\\\\|\\(|\\)|\\{|\\}|\\|)","\\\\$1");
+    private static String myQuote(String string) {
+        return string.replaceAll("(\\.|\\\\|\\(|\\)|\\{|\\}|\\|)", "\\\\$1");
     }
 
     private static Set<String> collect(final Throwable t) {
-        if( t == null ) {
+        if (t == null) {
             return Set.of();
         }
         final var retval = new HashSet<String>();
         retval.add(myQuote(t.getMessage()));
         retval.addAll(collect(t.getCause()));
-        for( final var s : t.getSuppressed()){
+        for (final var s : t.getSuppressed()) {
             retval.addAll(collect(s));
         }
         return retval;
