@@ -7,11 +7,16 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.String.format;
 
 public class Remove implements Macro, InnerScopeDependent {
     @Override
@@ -24,14 +29,16 @@ public class Remove implements Macro, InnerScopeDependent {
 
         try {
             final var allDeleted = new AtomicBoolean(true);
+            final var errors = new StringBuilder();
             if (recursive.is()) {
                 Files.walk(Paths.get(fileName))
                     .map(Path::toFile)
                     .sorted((o1, o2) -> -o1.compareTo(o2))
-                    .forEach(f -> allDeleted.set(allDeleted.get() && f.delete()));
+                    .forEach(f -> allDeleted.set(allDeleted.get() && remove(f, errors)));
                 if (!allDeleted.get()) {
-                    throw new BadSyntax("Not possible to delete the file/dir and all files/dirs under '"
-                        + fileName + "'");
+                    throw new BadSyntax(
+                        format("Not possible to delete the file/dir and all files/dirs under '%s'\n%s", fileName, errors)
+                    );
                 }
             } else {
                 Files.delete(Paths.get(fileName));
@@ -40,6 +47,22 @@ public class Remove implements Macro, InnerScopeDependent {
             throw new BadSyntax("Not possible to delete '" + fileName + "'", ioException);
         }
         return "";
+    }
+
+    private static boolean remove(final File f, final StringBuilder errors) {
+        try {
+            Files.delete(f.toPath());
+            return true;
+        } catch (IOException ioe) {
+            try (final var sw = new StringWriter();
+                 final var pw = new PrintWriter(sw)) {
+                ioe.printStackTrace(pw);
+                errors.append(sw);
+            } catch (IOException ignored) {
+                // not happens
+            }
+        }
+        return false;
     }
 
     @Override
