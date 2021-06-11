@@ -29,8 +29,7 @@ jobs:
   {%job/ubuntu-latest%}
   {%job/windows-latest%}
   {%job/windows-2016%}
-  {%job/ubuntu-18%}
-  {%job/macos-11%}
+  {%job/ubuntu-18.04%}
   {%job/macos-latest%}
 %}
 {%@yaml:output (copy) top%}
