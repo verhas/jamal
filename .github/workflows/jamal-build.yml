@@ -1,5 +1,5 @@
 name: Java CI with Maven
-true:
+'on':
   push:
     branches: [master]
   pull_request:
