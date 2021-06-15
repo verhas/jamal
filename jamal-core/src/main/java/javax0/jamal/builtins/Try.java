@@ -30,14 +30,14 @@ public class Try implements Macro {
         }
         skipWhiteSpaces(in);
         final var markerStart = processor.getRegister().test();
+        final int err = processor.errors().size();
         try {
-            final int err = processor.errors().size();
             final var result = processor.process(in);
             BadSyntax bse = null;
-            while( err < processor.errors().size() ){
+            while (err < processor.errors().size()) {
                 bse = processor.errors().pop();
             }
-            if( bse != null ){
+            if (bse != null) {
                 throw bse;
             }
             if (query) {
@@ -46,6 +46,9 @@ public class Try implements Macro {
                 return result;
             }
         } catch (BadSyntax bs) {
+            while (err < processor.errors().size()) {
+                bs = processor.errors().pop();
+            }
             cleanUpTheMarkerStack(processor, markerStart);
             if (query) {
                 return "false";
