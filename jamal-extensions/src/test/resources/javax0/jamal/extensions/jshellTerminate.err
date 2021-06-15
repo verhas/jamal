@@ -1,4 +1,4 @@
-{@define line=3}{@define column=2}{@define message=The JShell snippet 'System.exit(1);' closed the JShell interpreter. Will not be recreated.}\
+{@options failfast}{@define line=3}{@define column=2}{@define message=The JShell snippet 'System.exit(1);' closed the JShell interpreter. Will not be recreated.}\
 {@script exit/JShell=System.exit(1);}\
 {exit}\
 {@script hello/JShell=System.out.println("hello");}\

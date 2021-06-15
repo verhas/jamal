@@ -1,6 +1,8 @@
 package javax0.jamal.api;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Properties;
 
 /**
@@ -163,6 +165,20 @@ public interface Processor extends AutoCloseable {
      */
     default void separators(String openMacro, String closeMacro) throws BadSyntax {
         getRegister().separators(openMacro, closeMacro);
+    }
+
+    Deque<BadSyntax> EMPTY_DEQUEUE = new ArrayDeque<>();
+    /**
+     * @return the current number of errors that were detected in the source file, but were not aborting the evaluation.
+     */
+    default Deque<BadSyntax> errors(){
+        return EMPTY_DEQUEUE;
+    }
+
+    /**
+     * Throw the last exception that was deferred.
+     */
+    default void throwUp() throws BadSyntax{
     }
 
     /**

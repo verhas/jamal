@@ -2731,7 +2731,18 @@ On the other hand, we envision that with the introduction of this feature most o
 We wanted to avoid starting every new Jamal source file with the `nl` option setting.
 
 With the release 1.7.7 this option is not available anymore.
-The default beavior, skipping new lines after a `\` character that follows a macro close string cannot be switched off.
+The default behavior, skipping new lines after a `\` character that follows a macro close string cannot be switched off.
+
+===== `failfast` (since 1.7.8)
+
+This option tells the Jamal processor to stop at the first error.
+With the version 1.7.8 and later the Jamal processor does not stop the processing at the first syntax error.
+This helps the discovery of all the syntax errors in the input.
+Prior 1.7.8 Jamal stopped at the first error.
+The user could fix the error, restart Jamal and repeat this process for each error one by one.
+The feature introduced in 1.7.8 collects all the errors and displays them at the end of the processing as an aggregate error.
+
+Using this option Jamal 1.7.8 and later revert to the old behaviour.
 
 [[try]]
 ==== {%macroChapter%}`try`

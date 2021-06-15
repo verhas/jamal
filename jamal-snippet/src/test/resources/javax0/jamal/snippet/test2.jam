@@ -1,4 +1,4 @@
-{#snip:collect from="." include=1}
+{#snip:collect from="."{@comment the current directory} include=1{@comment scan every file that has a character '1' in the name}}
 First snippet {@snip first_snippet}
 2. snippet {@snip second_snippet}
 

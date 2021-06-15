@@ -31,7 +31,15 @@ public class Try implements Macro {
         skipWhiteSpaces(in);
         final var markerStart = processor.getRegister().test();
         try {
+            final int err = processor.errors().size();
             final var result = processor.process(in);
+            BadSyntax bse = null;
+            while( err < processor.errors().size() ){
+                bse = processor.errors().pop();
+            }
+            if( bse != null ){
+                throw bse;
+            }
             if (query) {
                 return "true";
             } else {

@@ -23,8 +23,9 @@ import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -203,7 +204,12 @@ public class Processor implements javax0.jamal.api.Processor {
             final String macroProcessed;
             final MacroQualifier qualifiers;
             macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
-            qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
+            try {
+                qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
+            }catch(BadSyntax bs){
+                pushBadSyntax(bs,pos);
+                return;
+            }
 
             final String text;
             if (qualifiers.isInnerScopeDependent()) {
@@ -338,7 +344,7 @@ public class Processor implements javax0.jamal.api.Processor {
                     return rawResult;
                 } else {
                     if (qualifier.udMacro != null && qualifier.udMacro.isVerbatim()) {
-                        if( qualifier.postEvalCount > 0 ){
+                        if (qualifier.postEvalCount > 0) {
                             qualifier.postEvalCount--;
                             final var result = evaluateUserDefinedMacro(rawResult, qualifier, popper, tr);
                             qualifier.postEvalCount++;
@@ -419,13 +425,21 @@ public class Processor implements javax0.jamal.api.Processor {
         return input;
     }
 
+    private void pushBadSyntax(BadSyntax bs, final Position ref) throws BadSyntaxAt {
+        final BadSyntaxAt bsa = bs instanceof BadSyntaxAt ? ((BadSyntaxAt) bs) : new BadSyntaxAt(bs, ref);
+        if (option("failfast").isPresent()) {
+            throw bsa;
+        } else {
+            exceptions.push(bsa);
+        }
+    }
+
     private String evaluateBuiltinMacro(final Input input, final Position ref, final Macro macro) throws BadSyntaxAt {
         try {
             return macro.evaluate(input, this);
-        } catch (BadSyntaxAt bsAt) {
-            throw bsAt;
         } catch (BadSyntax bs) {
-            throw new BadSyntaxAt(bs, ref);
+            pushBadSyntax(bs, ref);
+            return "";
         }
     }
 
@@ -464,7 +478,7 @@ public class Processor implements javax0.jamal.api.Processor {
             .filter(ud -> ud instanceof Evaluable)
             .map(ud -> (Evaluable) ud);
         if (reportUndef && udMacroOpt.isEmpty()) {
-            throw throwForUndefinedUdMacro(ref, id);
+            throwForUndefinedUdMacro(ref, id);
         }
         if (udMacroOpt.isPresent()) {
             qualifier.udMacro = udMacroOpt.get();
@@ -474,10 +488,9 @@ public class Processor implements javax0.jamal.api.Processor {
             try {
                 qualifier.udMacro.setCurrentId(id);
                 return qualifier.udMacro.evaluate(parameters);
-            } catch (BadSyntaxAt bsAt) {
-                throw bsAt;
             } catch (BadSyntax bs) {
-                throw new BadSyntaxAt(bs, ref);
+                pushBadSyntax(bs, ref);
+                return "";
             }
         } else {
             return "";
@@ -492,19 +505,15 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param ref the reference to include in the excepetion that shows which jamal file, line and column was the error
      *            at
      * @param id  the identifier of the macro that was not found
-     * @return it never returns. The return value is declared to be {@link BadSyntaxAt}, which is thrown, so that the
-     * calling code can put the method call after a {@code throw} keyword and that way the compiler will not complain
-     * about erroneous code flow if there were any. It is also better for the reader, it expresses that the execution
-     * there ends.
      * @throws BadSyntaxAt always, this is the main purpose of this method
      */
-    private BadSyntaxAt throwForUndefinedUdMacro(Position ref, String id) throws BadSyntaxAt {
+    private void throwForUndefinedUdMacro(Position ref, String id) throws BadSyntaxAt {
         final var optMacro = macros.getMacro(id);
         if (optMacro.isPresent()) {
-            throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id +
-                "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?", ref);
+            pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id +
+                "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?"), ref);
         } else {
-            throw new BadSyntaxAt("User defined macro '" + getRegister().open() + id + " ...' is not defined.", ref);
+            pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id + " ...' is not defined."), ref);
         }
     }
 
@@ -851,26 +860,46 @@ public class Processor implements javax0.jamal.api.Processor {
         debugger.close();
     }
 
+    final Deque<BadSyntax> exceptions = new ArrayDeque<>();
+
+    public Deque<BadSyntax> errors() {
+        return exceptions;
+    }
+
+    @Override
+    public void throwUp() throws BadSyntax {
+        throw exceptions.pop();
+    }
+
     private void closeProcess(final Input result) throws BadSyntax {
-        final var exceptionsAccumulator = new HashSet<Throwable>();
+        Deque<Throwable> exceptions = new ArrayDeque<>(this.exceptions);
         try {
             for (final var resource : openResources) {
                 try {
                     setAwares(resource, result);
                     resource.close();
                 } catch (Exception e) {
-                    exceptionsAccumulator.add(e);
+                    exceptions.push(e);
                 }
             }
         } finally {
-            // they were closed, they are not open any more
+            // they were closed, they are not open anymore
             openResources.clear();
         }
-        if (!exceptionsAccumulator.isEmpty()) {
-            final var nrofExceptions = exceptionsAccumulator.size();
-            final var exception = new BadSyntax("There " + (nrofExceptions == 1 ? "was" : "were")
-                + " " + nrofExceptions + " exception" + (nrofExceptions == 1 ? "" : "s") + " closing the registered resources.");
-            for (final var accumulated : exceptionsAccumulator) {
+        if (!exceptions.isEmpty()) {
+            final var nrofExceptions = exceptions.size();
+            if (nrofExceptions == 1 && exceptions.peek() instanceof BadSyntax) {
+                throw (BadSyntax) exceptions.peek();
+            }
+            final var sb = new StringBuilder(
+            "There " + (nrofExceptions == 1 ? "was" : "were")
+                + " " + nrofExceptions + " syntax error" + (nrofExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
+            int ser = nrofExceptions;
+            for (final var accumulated : exceptions) {
+                sb.append(ser--).append(". ").append(accumulated.getMessage()).append("\n");
+            }
+            final var exception = new BadSyntax(sb.toString());
+            for (final var accumulated : exceptions) {
                 exception.addSuppressed(accumulated);
             }
             throw exception;
