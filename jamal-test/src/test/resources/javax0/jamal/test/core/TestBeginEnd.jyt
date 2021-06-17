@@ -12,7 +12,8 @@ A good begin and end test:
 
 Throws exception when a begin is not closed in an included file:
   Input: "{@include res:import/unclosedbegin.jim}"
-  Throws: Scope was changed from .*?::\{@include res:import/unclosedbegin.jim\} to \{@begin azta\} and it was not closed before the end.
+  Throws: |-
+    Scope was changed from .*?::\{@include res:import/unclosedbegin.jim\} to \{@begin azta\} and it was not closed before the end.
 
 Throws exception when a begin is not closed in an imported file:
   Input: "{@import res:import/unclosedbegin.jim}"
