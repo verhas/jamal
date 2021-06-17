@@ -73,12 +73,6 @@ public class TestCore {
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosC() {
-        return JamalYamlTest.factory(
-            "TestNewLineOpions");
-    }
-
-    @TestFactory
     JamalTests<?> testAllCoreMacrosD() {
         return JamalYamlTest.factory(
             "TestOptions");
@@ -87,7 +81,7 @@ public class TestCore {
     @TestFactory
     JamalTests<?> testAllCoreMacrosE() {
         return JamalYamlTest.factory(
-            "TestRecursiveacro");
+            "TestRecursiveMacro");
     }
 
     @TestFactory
