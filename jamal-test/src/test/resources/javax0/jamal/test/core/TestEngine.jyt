@@ -193,7 +193,7 @@
 
  "mixing ? and  ` and ! in user defined macros":
    Input: |-
-     {@comment this file contains some somples where we use the ? character on user defined macros together with ` and !}\
+     {@comment this file contains some samples where we use the ? character on user defined macros together with ` and !}\
      {@define defined=defined}\
      {@define macro={defined}}\
      {@define fine=fine}\
