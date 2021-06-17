@@ -178,7 +178,7 @@ public class JamalYamlTest {
         if (output == null) {
             TestThat.theInput((String) input).throwsBadSyntax((String) aThrows);
         } else {
-            TestThat.theInput((String) input).results((String) output);
+            TestThat.theInput((String) input).ignoreLineEnding().results((String) output);
         }
     }
 }
