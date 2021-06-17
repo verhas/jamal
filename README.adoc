@@ -2111,6 +2111,7 @@ The scripts have to be used to manifest the error.
 - since 1.5.0 multi-argument `for`
 - since 1.6.3 backtick string separator value list
 - since 1.7.3 options between `[` and `]`
+- since 1.7.8 option `evalist`
 
 The macro `for` can be used to repeat the same text many times.
 This macro has two forms.
@@ -2171,6 +2172,7 @@ where the options can be
 * `trimForValues`, `trim` to trim off the sapces from the values
 * `skipForEmpty`, `skipEmpty` to skip empty parameter list (see below)
 * `lenient` for lenient operation (see below)
+* `evaluateValueList`, or `evalist` to instruct the loop that the list of the values between the `(` and `)` has to be evaluated.
 
 For example the macros:
 
@@ -2195,7 +2197,9 @@ Another example:
 
 [source]
 ----
-{#for [trim separator=":"] $a in ( a : b :c )=a is $a
+{#for {@options trimForValues}{@define $forsep=:} $a in ( a : b :c )=a is $a
+}
+{@for [trim separator=":"] $a in ( a : b :c )=a is $a
 }
 ----
 
@@ -2206,12 +2210,16 @@ will result the same output:
 a is a
 a is b
 a is c
+
+a is a
+a is b
+a is c
 ----
 
 
 [NOTE]
 ====
-Using the `#` character in front of a built-in macro instead of `@` will make the content evaluated before the macro.
+Using the `#` character in front of a built-in macro in the first version instead of `@` will make the content evaluated before the macro.
 The content evaluates in a freshly opened scope, which is usually closed before the built-in macro evaluation.
 It means that any local definitions inside the macro use go out of scope when the built-in macro evaluates.
 
@@ -2226,6 +2234,13 @@ Using the `{#!macro ...}` way, where the `!` character directs Jamal to execute 
 The "post evaluation" runs in the outer scope.
 
 The macro `for` is inner scope dependent.
+
+Also, the second example shows that the same effect can also be reached using the macro options.
+Macro options are always between `[` and `]` characters in case of the core built-in macros.
+The `(` and `)` characters in case of extension package macros.
+Some extension package macros use the first line of the macro content to fetch parameters.
+Note, however that the use of the `(` and `)` characters to enclose options is only a convention.
+A 3rd party macro can decide any time to use any character pair as they like.
 ====
 
 The number of the actual values separated by `|` character should be the same as the number of the variables in the for loop.
@@ -2252,6 +2267,7 @@ On the other hand the following code will work
 [source]
 ----
 {#for (k,z) in ()=wukz{@options lenient}}
+{@for [lenient] (k,z) in ()=wukz}
 ----
 
 and it will result
@@ -2259,10 +2275,13 @@ and it will result
 [source]
 ----
 wu
+wu
 ----
 
 
 as both `k` and `z` are empty strings.
+Here, you can see two versions.
+The first one is declaring the `lenient` option inside the `for` macro, the second one is using the option, which is more coincise and shorter.
 
 This default behaviour can be altered using the option `skipForEmpty`.
 If this option is used the `for` loop will skip the empty values.
@@ -2270,7 +2289,8 @@ The previous example with this option:
 
 [source]
 ----
-{#for (k,z) in ()=wukz{@options skipForEmpty}}
+{#for (k,z) in ()=wukz{@options skipForEmpty}}\
+{@for [skipEmpty] (k,z) in ()=wukz}\
 ----
 
 will evaluate to an empty string.
@@ -2279,15 +2299,16 @@ That is because the empty value is skipped and there is no issue splitting it up
 
 The example above contains one loop value and that loop value is an empty string.
 There can be more than one empty values in a for loop and empty and non-empty values can be mixed.
-The option `skipForEmpty` works in any of those cases.
+The option `skipForEmpty` and the alias `skipEmpty` works in any of those cases.
 For example:
 
 [source]
 ----
-{#for k in (,)=wuk{@options skipForEmpty}}
+{#for k in (,)=wuk{@options skipForEmpty}}\
+{@for [skipEmpty] k in (,)=wuk}
 ----
 
-will result an empty string and
+will also result an empty string and
 
 [source]
 ----
@@ -2301,6 +2322,82 @@ will result
 wuk
 ----
 
+
+Sometimes the values for the `for` loop come from some macro.
+In that case the `for` macro should start with the `#` character, otherwise the macro will not be evaluated to the list of values.
+For example: 
+
+[source]
+----
+{@define list=x,y,z}{@for z in ({list})={@define z=zz}}{?x}{?y}{?z}
+----
+
+will result
+
+[source]
+----
+{@define {list}={list}{list}}
+----
+
+
+That is because the content of the macro `for` is not evaluated before the `for` loop is executed because we used the `@` character.
+The result of the for loop is not evaluated.
+We will have to attend to that, but first we have to solve the issue that the macro `list` is not evaluated.
+To do that we need to use the `#` character in front of the `for` loop.
+
+[source]
+----
+{@define list=x,y,z}{#for z in ({list})={@define z=zz}}{?x}{?y}{?z}
+----
+
+will result an empty string:
+
+[source]
+----
+
+----
+
+
+The reason is that the content of the `for` macro is evaluated before executing the macro itself.
+That way the macro reference `{list}` will become `x,y,z`, but the same time the part, which is after the `=` is also evaluated.
+The evaluation will define the macro `z` to be `zz`, but this macro is within the scope of the `for` macro.
+As soon as the `for` macro execution is finished the definition of `z` is lost.
+What we want is to protect the body of the `for` macro from evaluation before `for` the macro is executed and we want it to execute after.
+
+[source]
+----
+{@define list=x,y,z}{!#for z in ({list})={@ident {@define z=zz}}}{?x}{?y}{?z}
+----
+
+will result
+
+[source]
+----
+xxyyzz
+----
+
+
+The macro `{@ident ...}` is evaluated and its result is the content of the macro and it is not evaluated further before the evaluation of the macro `for`.
+The macro `for` gets evaluated and then the output is evaluated because the macro is preceeded with the back-tick character, which is a shorthand for the core built-in macro `eval`.
+This evaluation defines `x`, `y` and `z`.
+
+Because the case that we want to evaluate the list part of the `for` loop but not the body part is so common there is an option that helps with this.
+The option `evaluateValueList` (alias `evalist`) instructs the macro `for` to evaluate the value list before iterating through it.
+
+[source]
+----
+{@define list=x,y,z}{!@for [evaluateValueList] z in ({list})={@define z=zz}}{?x}{?y}{?z}
+----
+
+will result
+
+[source]
+----
+xxyyzz
+----
+
+
+We still need the `!` character in front of the `for` but we could get rid of the `ident` macro and the extra level of nesting.
 
 Sometimes you may need to do a for loop over values that contain the `)` character.
 With the conventional form of the `for` macro it was not possible, because the first `)` character terminates the list of the values.

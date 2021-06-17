@@ -115,6 +115,12 @@ test iterating through a list with added empty strings:
     the count 3 >><<
     the count 4 >><<
 
+test evaluating the list:
+    Input: |-
+      {@define x=a,b,c}{@for [evalist] z in ({x})=z z z}
+    Output: |-
+      a a ab b bc c c
+
 Syntax error:
   Invalid keyword after the variables:
     Input: "{@for a iiiin (1,2,3)=$a, init}"

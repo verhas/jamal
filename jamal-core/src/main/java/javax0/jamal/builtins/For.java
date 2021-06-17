@@ -34,6 +34,8 @@ public class For implements Macro, InnerScopeDependent {
     Params.Param<Boolean> trim;
     Params.Param<Boolean> skipEmpty;
     Params.Param<Boolean> lenient;
+    Params.Param<Boolean> evalValueList;
+    Processor processor;
 
     private enum KeyWord {
         IN, FROM
@@ -42,12 +44,14 @@ public class For implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var it = new For();
+        it.processor = processor;
         it.separator = Params.<String>holder("$forsep", "separator").orElse(",");
         it.subSeparator = Params.<String>holder("$forsubsep", "subseparator").orElse("\\|");
         it.trim = Params.<Boolean>holder("trimForValues", "trim").asBoolean();
         it.skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
         it.lenient = Params.<Boolean>holder("lenient").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(it.subSeparator, it.separator, it.trim, it.skipEmpty, it.lenient).parse(input);
+        it.evalValueList = Params.<Boolean>holder("evaluateValueList", "evalist").asBoolean();
+        Params.using(processor).from(this).between("[]").keys(it.subSeparator, it.separator, it.trim, it.skipEmpty, it.lenient, it.evalValueList).parse(input);
 
         skipWhiteSpaces(input);
 
@@ -129,7 +133,7 @@ public class For implements Macro, InnerScopeDependent {
         List<?> valueList;
 
         if (object instanceof Object[]) {
-            valueList = List.of(((Object[])object));
+            valueList = List.of(((Object[]) object));
         } else if (object instanceof Set<?>) {
             valueList = new ArrayList<>(List.of(((Set<?>) object).toArray()));
         } else if (object instanceof List<?>) {
@@ -168,6 +172,9 @@ public class For implements Macro, InnerScopeDependent {
     }
 
     private String[][] createValueMatrixFromString(String valuesString, String[] variables) throws BadSyntax {
+        if (this.evalValueList.is()) {
+            valuesString = processor.process(javax0.jamal.tools.Input.makeInput(valuesString));
+        }
         final String[] valueArray = valuesString.split(separator.get(), -1);
 
         final String[][] valueMatrix = new String[valueArray.length][];
