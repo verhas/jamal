@@ -1,15 +1,3 @@
-"test_env.jam":
-  Input: |-
-    {@env JAVA_HOME}
-    JAVA_HOME {#if /{@env JAVA_HOME ?}/is defined/is not defined}
-    {@env CICA_HOME}
-    CICA_HOME {#if /{@env CICA_HOME ?}/is defined/is not defined}
-  Output: |-
-    /Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
-    JAVA_HOME is defined
-
-    CICA_HOME is not defined
-
 "for.jam":
   Input: |-
     {@for x in (a,b,c,d)= x is either a, b, c or d

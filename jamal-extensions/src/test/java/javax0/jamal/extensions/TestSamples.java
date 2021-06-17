@@ -67,20 +67,6 @@ class TestSamples {
             "2. after the slash\n", result("matcher.jam"));
     }
 
-    @Test
-    @DisplayName("test that env returns the ... whatever it returns. we assume there is a JAVA_HOME and there is no CICADA_HOME")
-    void testEnv() throws IOException, BadSyntax {
-        final var javaHome = System.getenv("JAVA_HOME");
-        final var cicaHome = System.getenv("CICA_HOME");
-        assertNull(cicaHome);
-
-        assertEquals(javaHome + "\n" +
-                "JAVA_HOME is defined\n" +
-                "\n" +
-                "CICA_HOME is not defined"
-            , result("test_env.jam"));
-    }
-
     final static String SNIPPET = "\n" +
         "\n" +
         "```\n" +
