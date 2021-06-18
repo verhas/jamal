@@ -20,12 +20,12 @@ public class DocumentConverter {
     /**
      * Create a JUnit test in your application that looks the following:
      *
-     * <pre>{@code
+     * <pre>
      *     @Test
      *     void generateDoc() throws Exception {
      *         DocumentConverter.convert("./README.adoc.jam");
      *     }
-     * }</pre>
+     * </pre>
      * <p>
      * This will convert the {@code README.adoc.jam} file to {@code README.adoc}. The name and the primary extension of
      * the file can be different.

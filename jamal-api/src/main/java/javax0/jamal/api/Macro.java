@@ -91,9 +91,9 @@ public interface Macro extends Identified, ServiceLoaded {
      * <p>
      * The processing will call {@link #fetch(Processor, Input) fetch()} for the macro {@code comment} and that will
      * return
-     * <pre>{@code
+     * <pre>
      * @comment {%@define a=1%}
-     * }</pre>
+     * </pre>
      * <p>
      * During this the recursive call will call {@code prefecth()} when processing the macro {@code define}. This method
      * will return
