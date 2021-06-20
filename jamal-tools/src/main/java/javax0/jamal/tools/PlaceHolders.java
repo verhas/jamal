@@ -613,13 +613,13 @@ public class PlaceHolders {
     /**
      * Replace the placeholders in the string {@code format} with the values from the maps and return the result.
      * <p>
-     * The placeholders and the values are stored in two maps. The keys in the maps are the placeholder strings and the
+     * The placeholders and the values are stored in two maps. The keys in the maps are the placeholder strings, and the
      * values are used to get the string to replace the placeholders with.
      * <p>
-     * One map contains strings as values. The other one contains string suppliers. These suppliers are not {@link
+     * One map contains strings as values. The other one contains string suppliers. These suppliers are NOT {@link
      * java.util.function.Supplier}s because they may throw an exception. Any of the suppliers are invoked only if there
-     * is a need for them. This is an important features, because it means that there will be no exception in case the
-     * placeholder to be replaced by the result of the supplier is not used even if the the supplier would throw an
+     * is a need for them. This is an important feature, because it means that there will be no exception in case the
+     * placeholder to be replaced by the result of the supplier is not used even if the supplier would throw an
      * exception.
      * <p>
      * Any of the suppliers are invoked at most once, when they are referenced the first time. After that the result is
