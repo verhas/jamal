@@ -369,12 +369,12 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             for (final var macro : macros.values()) {
                 macrosList.add(
                     getDebuggable(macro).map(ud -> Map.of(
-                        "open", ud.getOpenStr(),
-                        "close", ud.getCloseStr(),
-                        "id", macro.getId(),
-                        "parameters", Arrays.asList(ud.getParameters()),
-                        "content", ud.getContent(),
-                        "type", macro.getClass().getName()
+                            "open", ud.getOpenStr(),
+                            "close", ud.getCloseStr(),
+                            "id", macro.getId(),
+                            "parameters", Arrays.asList(ud.getParameters()),
+                            "content", ud.getContent(),
+                            "type", macro.getClass().getName()
                         )
                     ).orElseGet(() -> Map.of(
                         "id", macro.getId(),
@@ -501,13 +501,17 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 contentType = Optional.ofNullable(mimeTypes.getProperty(extension)).orElse("text/plain");
             }
             try (final var is = HttpServerDebugger.class.getClassLoader().getResourceAsStream("ui/" + file)) {
-                final var content = is.readAllBytes();
-                e.getResponseHeaders().add("Content-Type", contentType);
+                if (is == null) {
+                    respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "ui/" + file + " is not found");
+                } else {
+                    final var content = is.readAllBytes();
+                    e.getResponseHeaders().add("Content-Type", contentType);
 
-                e.sendResponseHeaders(200, content.length);
-                try (final var out = e.getResponseBody()) {
-                    out.write(content);
-                    out.flush();
+                    e.sendResponseHeaders(200, content.length);
+                    try (final var out = e.getResponseBody()) {
+                        out.write(content);
+                        out.flush();
+                    }
                 }
             } catch (IOException ex) {
                 respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
