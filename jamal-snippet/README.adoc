@@ -55,20 +55,20 @@ This way, it is easier to keep your documentation up to date.
 . <<usage,Usage>>
 . <<macros,Macros>>
 [lowerroman, start=1]
-.. <<snip:collect,`snip:collect`>>
-.. <<snip:properties,`snip:properties`>>
-.. <<snip:xml,`snip:xml`>>
-.. <<snip:define,`snip:define`>>
-.. <<snip:clear,`snip:clear`>>
+.. <<snip_collect,`snip:collect`>>
+.. <<snip_properties,`snip:properties`>>
+.. <<snip_xml,`snip:xml`>>
+.. <<snip_define,`snip:define`>>
+.. <<snip_clear,`snip:clear`>>
 .. <<snip,`snip`>>
-.. <<snipList,`snip:list`>>
+.. <<snipList,`snip_list`>>
 .. <<trimLines,`trimLines`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
 .. <<replace,`replace`>>
 .. <<replaceLines,`replaceLines`>>
-.. <<counter:define,`counter:define`>>
+.. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
@@ -78,7 +78,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
 .. <<String,String Macros>>
-.. <<snip:update,`snip:update`>>
+.. <<snip_update,`snip:update`>>
 
 
 
@@ -102,7 +102,7 @@ There is no need to invoke the `use` command to get access to these macros.
 [[macros]]
 === 2. Macros
 
-[[snip:collect]]
+[[snip_collect]]
 ==== i. `snip:collect`
 Since 1.7.4 option `onceAs`
 
@@ -241,7 +241,7 @@ If you want to refer to some snippets you have to collect them.
 To do that you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
 That collect macro should name the collection to avoid redefinition error.
 
-[[snip:properties]]
+[[snip_properties]]
 ==== ii. `snip:properties`
 
 This macro will load properties from a "properties" file or from an "xml" file.
@@ -296,7 +296,7 @@ For example the same properties file in XML format looks like the following:
 </properties>
 ----
 
-[[snip:xml]]
+[[snip_xml]]
 ==== iii. `snip:xml`
 
 This macro loads an XML file and assigns it to a "user-defined" macro.
@@ -334,7 +334,7 @@ The result is:
 
 which is the current version of the project as read from the `pom.xml` file.
 
-[[snip:define]]
+[[snip_define]]
 ==== iv. `snip:define`
 
 This macro can be used to define a snippet.
@@ -360,7 +360,7 @@ This is the snippet, which is defined inside the file and not collected from an 
 ----
 
 
-[[snip:clear]]
+[[snip_clear]]
 ==== v. `snip:clear`
 
 Calling this macro deletes all collected snippets from the memory.
@@ -809,7 +809,7 @@ It is usually an error when no lines are replaced in a snippet.
 To detect this the parameter`detectNoChange` can be used.
 If this boolean parameter is true, then the macro will result in an error if no line was changed.
 
-[[counter:define]]
+[[counter_define]]
 ==== xiv. `counter:define`
 
 This macro defines a counter.
@@ -852,6 +852,21 @@ will result
 ----
 2 19 36
 ----
+
+
+The same result can be achievet using macro options, as
+[source]
+----
+{#counter:define start=2 step=17 id=c} {c} {c} {c}
+----
+
+will result
+
+[source]
+----
+2 19 36
+----
+
 
 
 The format can contain the usual `String.format` formattings.
@@ -1252,7 +1267,7 @@ will result the output
 
 [source]
 ----
-2021-06-18 10:06:29
+2021-06-24 15:56:22
 ----
 
 
@@ -1628,7 +1643,7 @@ You can use `left` and `right` together with `trim`.
 This will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
-[[snip:update]]
+[[snip_update]]
 ==== xxiv. `snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.

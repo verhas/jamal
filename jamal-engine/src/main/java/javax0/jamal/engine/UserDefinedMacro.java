@@ -175,7 +175,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
 
     /**
      * Return the number of the expected argument, as defined in the interface. This implementation makes a little
-     * correction. If the macro is named "default" and the first argument is {@code $macro} or {@code $_} then it
+     * correction. If the macro is named "default", and the first argument is {@code $macro} or {@code $_} then it
      * returns the number of arguments minus one.
      * <p>
      * The reason for that is that the result of this method is used to count the number of the argument provided when

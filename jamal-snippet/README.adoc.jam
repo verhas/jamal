@@ -61,20 +61,20 @@ This way, it is easier to keep your documentation up to date.
 . <<usage,Usage>>
 . <<macros,Macros>>
 [lowerroman, start=1]
-.. <<snip:collect,`snip:collect`>>
-.. <<snip:properties,`snip:properties`>>
-.. <<snip:xml,`snip:xml`>>
-.. <<snip:define,`snip:define`>>
-.. <<snip:clear,`snip:clear`>>
+.. <<snip_collect,`snip:collect`>>
+.. <<snip_properties,`snip:properties`>>
+.. <<snip_xml,`snip:xml`>>
+.. <<snip_define,`snip:define`>>
+.. <<snip_clear,`snip:clear`>>
 .. <<snip,`snip`>>
-.. <<snipList,`snip:list`>>
+.. <<snipList,`snip_list`>>
 .. <<trimLines,`trimLines`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
 .. <<replace,`replace`>>
 .. <<replaceLines,`replaceLines`>>
-.. <<counter:define,`counter:define`>>
+.. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
@@ -84,7 +84,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
 .. <<String,String Macros>>
-.. <<snip:update,`snip:update`>>
+.. <<snip_update,`snip:update`>>
 
 {%#counter:define id=chapter {%@define format=%d. %}%}
 {%#counter:define id=macroChapter {%@define format=$roman. %}%}
@@ -111,7 +111,7 @@ There is no need to invoke the `use` command to get access to these macros.
 The first line following the macro identifier until the end of the line may contain parameters.
 These parameters are parsed using the Standard Parameter Parsing as defined in <<{%@file ../PARAMS.adoc%},PARAMS>>.
 %}
-[[snip:collect]]
+[[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
 Since 1.7.4 option `onceAs`
 
@@ -233,7 +233,7 @@ If you want to refer to some snippets you have to collect them.
 To do that you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
 That collect macro should name the collection to avoid redefinition error.
 
-[[snip:properties]]
+[[snip_properties]]
 ==== {%macroChapter%}`snip:properties`
 
 This macro will load properties from a "properties" file or from an "xml" file.
@@ -282,7 +282,7 @@ For example the same properties file in XML format looks like the following:
 {%@include ./src/test/resources/javax0/jamal/snippet/testproperties.xml%}
 ----
 
-[[snip:xml]]
+[[snip_xml]]
 ==== {%macroChapter%}`snip:xml`
 
 This macro loads an XML file and assigns it to a "user-defined" macro.
@@ -321,7 +321,7 @@ The result is:
 
 which is the current version of the project as read from the `pom.xml` file.
 
-[[snip:define]]
+[[snip_define]]
 ==== {%macroChapter%}`snip:define`
 
 This macro can be used to define a snippet.
@@ -347,7 +347,7 @@ This is the snippet, which is defined inside the file and not collected from an 
 ----
 %}
 
-[[snip:clear]]
+[[snip_clear]]
 ==== {%macroChapter%}`snip:clear`
 
 Calling this macro deletes all collected snippets from the memory.
@@ -776,7 +776,7 @@ It is usually an error when no lines are replaced in a snippet.
 To detect this the parameter`detectNoChange` can be used.
 If this boolean parameter is true, then the macro will result in an error if no line was changed.
 
-[[counter:define]]
+[[counter_define]]
 ==== {%macroChapter%}`counter:define`
 
 This macro defines a counter.
@@ -815,15 +815,18 @@ For example,
 %}
 
 will result
-{%#snip:define counter2=
-{%output%}%}\
 
-{%@snip counter2
-[source]
-----
-2 19 36
-----
+{%output%}
+
+The same result can be achievet using macro options, as
+{%sample/
+{#counter:define start=2 step=17 id=c} {c} {c} {c}
 %}
+
+will result
+
+{%output%}
+
 
 The format can contain the usual `String.format` formattings.
 In addition to that it can also contain one of the `$alpha`, `$ALPHA`, `$roman` or `$ROMAN` literals.
@@ -1633,7 +1636,7 @@ You can use `left` and `right` together with `trim`.
 This will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
-[[snip:update]]
+[[snip_update]]
 ==== {%macroChapter%}`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.

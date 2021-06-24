@@ -1,7 +1,7 @@
 package javax0.jamal.api;
 
 /**
- * Something that can be evaluated. The evaluation may use strings as arguments. Typically user defined macros and
+ * Something that can be evaluated. The evaluation may use strings as arguments. Typically, user defined macros and
  * scripts are evaluable.
  */
 public interface Evaluable extends Identified {
@@ -47,11 +47,14 @@ public interface Evaluable extends Identified {
     int expectedNumberOfArguments();
 
     /**
-     * Set the identifier that was used to identify the macro. If may not be the same as the one the macro thinks about
+     * Set the identifier that was used to identify the macro. It may not be the same as the one the macro thinks about
      * itself. The built-in {@code javax0.jamal.engine.UserDefinedMacro} does not use this feature, but other
      * implementations can rely on the actual id, when the same {@link Evaluable} instance is registered with different
-     * names, or when the the user defined macro {@code default} is defined by some Java code and not the built-in
+     * names, or when the user defined macro {@code default} is defined by some Java code and not the built-in
      * {@code UserDefinedMacro}.
+     * <p>
+     * This method is invoked by the processor right before invoking evaluate. It is important to note that processor
+     * instances are single threaded.
      *
      * @param id the actual identifier that was used in the source
      */

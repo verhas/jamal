@@ -7,6 +7,13 @@ import java.util.Properties;
 
 /**
  * The processor object that can be used to process an input to generate the Jamal output.
+ * <p>
+ * Processor instances should not be used by multiple threads. They are not thread safe by design.
+ * <p>
+ * A processor is AutoClosable, and it has to be closed.
+ * <p>
+ * Creating a processor instance may be expensive consuming significant amount of CPU cycles. Create one in your code
+ * when you are going to need it.
  */
 public interface Processor extends AutoCloseable {
     /**
@@ -168,17 +175,18 @@ public interface Processor extends AutoCloseable {
     }
 
     Deque<BadSyntax> EMPTY_DEQUEUE = new ArrayDeque<>();
+
     /**
      * @return the current number of errors that were detected in the source file, but were not aborting the evaluation.
      */
-    default Deque<BadSyntax> errors(){
+    default Deque<BadSyntax> errors() {
         return EMPTY_DEQUEUE;
     }
 
     /**
      * Throw the last exception that was deferred.
      */
-    default void throwUp() throws BadSyntax{
+    default void throwUp() throws BadSyntax {
     }
 
     /**

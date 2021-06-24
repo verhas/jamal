@@ -89,7 +89,7 @@ class ArgumentHandler {
      * @return the adjusted array, which may be the same array as the argument {@code actualValues} or a newly allocated
      * array with the values copied from {@code actualValues} and with extra empty strings to have the proper length.
      * @throws BadSyntax if the length of the array {@code actualValues} is not then same as the length of the required
-     *                   parameters and the operation is not lenient.
+     *                   parameters, and the operation is not lenient.
      */
     String[] adjustActualValues(String[] actualValues, boolean lenient) throws BadSyntax {
         if (actualValues.length != parameters.length) {
