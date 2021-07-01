@@ -26,7 +26,6 @@ import packageJson from "../package.json";
 
 import { AxiosError, AxiosResponse } from "axios";
 import "./App.css";
-import { AppBar, TablePagination } from "@material-ui/core";
 
 var debug: DebugCommand = new DebugCommand("localhost", 8080);
 var qs = queryString.parse(window.location.search.substring(1));
@@ -43,7 +42,7 @@ function App() {
   const [stateMessage, setStateMessage] = useState("");
   const [resultCaption, setResultCaption] = useState("no result");
   const [serverVersion, setServerVersion] = useState("unknown");
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentTabStop, setCurrentTabStop] = useState(0);
   const evalInput = useRef({ value: "" });
   const evalBreakpoints = useRef({ value: "" });
@@ -122,7 +121,7 @@ function App() {
 
   if (isLoading) {
     document.title = "Jamal Debugger";
-    setIsloading(false);
+    setIsLoading(false);
     reloadActualSource();
   }
 
