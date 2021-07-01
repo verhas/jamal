@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal ruby</name>
     <artifactId>jamal-ruby</artifactId>
-    <version>1.7.8</version>
+    <version>1.7.9-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.7.8</version>
+        <version>1.7.9-SNAPSHOT</version>
     </parent>
     <description>Ruby module for Jamal</description>
     <build>
@@ -53,13 +53,13 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
-            <version>1.7.8</version>
+            <version>1.7.9-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-snippet</artifactId>
-            <version>1.7.8</version>
+            <version>1.7.9-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
