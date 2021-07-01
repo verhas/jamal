@@ -3,6 +3,26 @@
 
 
 
+=== https://github.com/verhas/jamal/tree/1.7.8[1.7.8]
+
+This release opens the debugger package, and so it can be used from Java::Geci. It still needs investigation why this is needed, though, but this patch solves this issue.
+
+io:delete gives more meaningful error messages
+
+TestWrite did not check that the output was really written. Fixed.
+
+Various documentation and JavaDoc fixes.
+SNAKE Yaml now uses the latest version and not an outdated one.
+Build runs with Github action
+Various tests and some production code were fixed so that the build runs also on Windows and Linux.
+
+=== https://github.com/verhas/jamal/tree/1.7.7[1.7.7]
+
+Markdown module was added with one single macro. Using this you can use markdown in JavaDoc files.
+Macro can implement its own fetching, and that way now escape macro can also be aliased.
+Option nl is removed, does not exist any more. Any \ after a macro escapes the next new line character.
+For has new keyword from to iterate through a collection that a user defined ObjectHolder macro can provide.
+
 === https://github.com/verhas/jamal/tree/1.7.6[1.7.6]
 
 Yaml XML macro extended to have attributes and CDATA in the output when you design a Yaml, especially for XML.

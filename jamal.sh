@@ -2,7 +2,7 @@
 MODULES="api engine core tools cmd"
 REPO=$HOME/.m2/repository
 REPO_JAMAL=$REPO/com/javax0/jamal
-VERSION=1.7.8
+VERSION=1.7.9-SNAPSHOT
 CENTRAL=https://repo1.maven.org/maven2
 
 for MODULE in $MODULES ; do
