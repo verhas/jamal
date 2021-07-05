@@ -138,7 +138,13 @@ public interface Macro extends Identified, ServiceLoaded {
         var op = new PositionStack(input.getPosition());
         while (op.size() > 0) {// while there is any opened macro
             if (input.length() == 0) {
-                throw new BadSyntaxAt("Macro was not terminated in the file.", op.pop());
+                var head = output.substring(0, Math.min(40, output.length()));
+                final var nlPos = head.indexOf('\n');
+                if( nlPos != -1 ){
+                    head = head.substring(0,nlPos);
+                }
+                throw new BadSyntaxAt("Macro was not terminated in the file.\n" +
+                    head + "\n", op.pop());
             }
 
             if (input.indexOf(open) == 0) {
@@ -211,7 +217,7 @@ public interface Macro extends Identified, ServiceLoaded {
                     i++;
                 }
             }
-            return register.getMacro(input.substring(offset,i));
+            return register.getMacro(input.substring(offset, i));
         } else {
             return Optional.empty();
         }

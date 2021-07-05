@@ -3436,8 +3436,18 @@ In case you need one inside the regular expression then you have to simply doubl
 In addition to the method ``getParts()`` there is another utility that the built-in macros can use.
 It is the class `Params`.
 The class is a utility to parse some particular part of the whole input of the built-in macro looking for parameters.
-This particular part is usually the first line of the input, but it can be the part betweem `(` and `)` following the macro ID or the whole input.
-This utility is not used currently by the built-in core macros, but it is heavily used, for example, in the snippet package.
+This particular part is usually the first line of the input, but it can be the part between `(` and `)` following the macro ID or the whole input.
+This utility is used by some of the built-in core macros.
+The core macros use the `[` and `]` characters to enclose the parameters.
+
+[NOTE]
+====
+The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
+Because of that options between `(` and `)` could not be distinguished from the variable list.
+To be consistent the macro `include` also use the `[` and the `]` characters.
+
+====
+
 
 The documentation of the parameter handling in these macros is not part of this readme.
 It can be found in the separate link:PARAMS.adoc[PARAMS] document.

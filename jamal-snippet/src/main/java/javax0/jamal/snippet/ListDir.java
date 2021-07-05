@@ -12,10 +12,12 @@ import javax0.jamal.tools.PlaceHolders;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
@@ -25,9 +27,14 @@ public class ListDir implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var format = holder("format").orElse("$name").asString();
+        final var separator = holder("separator", "sep").orElse(",").asString();
+        final var grep = holder("grep").orElse(null).asString();
+        final var glob = holder("pattern").orElse(null).asString();
         final var maxDepth = holder("maxDepth").orElseInt(Integer.MAX_VALUE);
         final var isFollowSymlinks = holder("followSymlinks").asBoolean();
-        Params.using(processor).from(this).between("()").keys(format,maxDepth,isFollowSymlinks).parse(in);
+        final var countOnly = holder("countOnly").asBoolean();
+        Params.using(processor).from(this).between("()")
+            .keys(format, maxDepth, isFollowSymlinks, separator, grep, glob, countOnly).parse(in);
 
         final FileVisitOption[] options;
         if (isFollowSymlinks.get()) {
@@ -35,6 +42,9 @@ public class ListDir implements Macro, InnerScopeDependent {
         } else {
             options = new FileVisitOption[0];
         }
+
+        final var grepPattern = grep.get() == null ? null : Pattern.compile(grep.get());
+        final var globPattern = glob.get() == null ? null : Pattern.compile(glob.get());
 
         skipWhiteSpaces(in);
         final var reference = in.getReference();
@@ -47,11 +57,32 @@ public class ListDir implements Macro, InnerScopeDependent {
 
         try {
             final var fmt = format.get();
-            return Files.walk(Paths.get(dirName), maxDepth.get(), options)
-                .map(p -> format(p, fmt))
-                .collect(Collectors.joining(","));
+            final var stream = Files.walk(Paths.get(dirName), maxDepth.get(), options)
+                .filter(p -> grep(p, grepPattern))
+                .filter(p -> glob(p, globPattern))
+                .map(p -> format(p, fmt));
+            if (countOnly.is()) {
+                return "" + stream.count();
+            } else {
+                return stream.collect(Collectors.joining(separator.get()));
+            }
         } catch (Exception e) {
-            throw new BadSyntaxAt("There was an IOException listing the files '" + in.toString() + "'", in.getPosition(), e);
+            throw new BadSyntaxAt("There was an IOException listing the files '" + in + "'", in.getPosition(), e);
+        }
+    }
+
+    private static boolean glob(Path p, Pattern pattern) {
+        return pattern == null || pattern.matcher(p.toFile().getAbsolutePath()).find();
+    }
+
+    private static boolean grep(Path p, Pattern pattern) {
+        try {
+            if (pattern == null || p.toFile().isDirectory()) {
+                return true;
+            }
+            return pattern.matcher(Files.readString(p, StandardCharsets.UTF_8)).find();
+        } catch (IOException e) {
+            return false;
         }
     }
 

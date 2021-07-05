@@ -910,7 +910,7 @@ MMMCCXIII. MMMCCXIV. MMMCCXV.
 ==== xv. `reflow`
 
 This macro reflows the content of it.
-The default behaviour is that the lines will be any long and the paragraph will be separated by double new-lines.
+The default behaviour is that the lines will be any long and the paragraphs will be separated by double new-lines.
 
 For example:
 
@@ -934,7 +934,6 @@ converted to one.}
 
 The output will be
 
-
 [source]
 ----
 The short lines will be put into a single line.
@@ -948,24 +947,104 @@ Multiple empty lines are converted to one.
 If the parameter `width` specifies a positive integer number, then it will be used to limit the length of the lines.
 For example
 
+
+
+
 [source]
 ----
-{@define width=1}
-{@reflow
+{@reflow width=10
+0123456789|
 The
 long
 lines
 will
 be broken into words.
 
-Empty lines are paragraph limiters.}
+Empty lines are paragraph limiters.
+}
 ----
 
 The output will be
 
+[source]
+----
+0123456789|
+The long
+lines will
+be broken
+into words.
+
+Empty
+lines are
+paragraph
+limiters.
+----
+
+
+The lines are collected and broken so that none of the lines is longer than 10.
+In some cases the limiting cannot be done.
+When the width is too small, but still positive there may be some word longer than the given width. 
+
+For example setting the width to `1`, reflow will cut the lines into words, but it will not break the individual words.
 
 [source]
 ----
+{@reflow width=1
+0123456789|
+The
+long
+lines
+will
+be broken into words.
+
+Empty lines are paragraph limiters.
+}
+----
+
+The output will be
+
+[source]
+----
+0123456789|
+The
+long
+lines
+will
+be
+broken
+into
+words.
+
+Empty
+lines
+are
+paragraph
+limiters.
+----
+
+
+
+The `width` parameter can be set as a macro option as well as a macro, for example
+
+[source]
+----
+{#reflow {@define width=1}
+0123456789|
+The
+long
+lines
+will
+be broken into words.
+
+Empty lines are paragraph limiters.
+}
+----
+
+will have again the same result:
+
+[source]
+----
+0123456789|
 The
 long
 lines
@@ -984,19 +1063,39 @@ limiters.
 
 
 Setting the `width` to any non-positive value will remove the limit from the line length.
+This may be used to override a globally set `width` macro.
 
 [[listDir]]
 ==== xvi. `listDir`
 
-This macro list the files in a directory and then returns the comma separated list of the formatted files.
+This macro list the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
 [source]
 ----
-{@listDir directory}
+{@listDir (options) directory}
 ----
 
 The parameter `directory` can be absolute or relative to the currently processed document.
+The options are
+
+* `format` specifying the format of the individual files
+
+* `separator` to specify the separator. The default is `,` (comma).
+
+* `grep` to specify a regular expression to filter the files based on their content
+
+* `pattern` to specify a regular expression to filter the files based on their name
+
+* `maxDepth` the maximum dept of recursion into subdirectories.
+Specify `1` in case you do not want to recurse into subdirectories.
+
+* `followSymlinks` to follow symbolic links
+
+* `countOnly` return the number of the files as a string instead of the list of the file names.
+
+The returned names of the files and directories are comma separated by default.
+This makes the use of the macro a good candidate to provide the list elements for a `for` loop.
 For example,
 
 [source]
@@ -1041,8 +1140,9 @@ will result
 ----
 
 
-The listing of the files is recursive and is unlimited.
-The limit of the recursion can be limited by defining the parameter `maxDepth`.
+The macro `for` is used with the `#` character, so the macro `listDir` is evaluated before the `for` starts to execute.
+The listing of the files is recursive and is unlimited by default.
+The recursion can be limited by defining the parameter `maxDepth`.
 The same listing limited to 1 depth (non-recursive) is the following
 
 [source]
@@ -1119,11 +1219,11 @@ will result
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,511 bytes
 - Counter.java: 3,323 bytes
-- StringMacros.java: 3,024 bytes
+- StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,446 bytes
 - SnippetStore.java: 9,845 bytes
-- ListDir.java: 3,901 bytes
+- ListDir.java: 5,220 bytes
 - XmlFormat.java: 3,331 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
@@ -1137,7 +1237,6 @@ will result
 ----
 
 
-
 If the option `followSymlinks` is used, like in
 
 [source]
@@ -1145,12 +1244,29 @@ If the option `followSymlinks` is used, like in
 {@options followSymlinks}
 ----
 
-then the recursive collection process for colelction the files will follow symlinks.
+then the recursive collection process for collection the files will follow symlinks.
+
+The separator character between the formatted items is a comma by default.
+It can be modified setting the option `separator` or its alias `sep`.
+For example the example:
+
+[source]
+----
+{#listDir (format=$simpleName maxDepth=1 sep=*) ./src/main/java/javax0/jamal/}
+----
+
+will result
+
+[source]
+----
+jamal*snippet
+----
+
 
 [[xmlFormat]]
 ==== xvii. `xmlFormat`
 
-The macro `xmlFormat` interprets the input as an XML document if there is any, and the result is the document formatted.
+The macro `xmlFormat` interprets the input as an XML document if there is any, and it results the formatted document.
 If the input is empty or contains only spaces, then it registers a post-processor that runs after the Jamal processing is done and formats the final output as XML.
 For example,
 
@@ -1214,7 +1330,6 @@ will result
 
 As you can see there is no tabulation in this case.
 
-
 There is another use of the macro `xmlFormat`.
 If you do not include any XML, or anything else into the macro as input, then the macro will treat this as a command to format the whole output.
 I registers itself into the processor and when the processing was finished this registered call-back starts and at that point it will format the output of the processing.
@@ -1267,7 +1382,7 @@ will result the output
 
 [source]
 ----
-2021-07-01 14:23:57
+2021-07-03 08:32:14
 ----
 
 
@@ -1341,7 +1456,7 @@ For example, you can write
 
 [source]
 ----
-When Jamal processes this file it will generate {@define fileFormat=`$name`}{@file README.adoc}.
+When Jamal processes this file it will generate {@file (format=`$name`)README.adoc}.
 ----
 
 will result
@@ -1615,6 +1730,128 @@ The macro handles two parameters:
 If it is `true` then the text will be interpreted as a regular expression, and the macro will check if a match can be found inside the input.
 (It calls the Java regular expression matcher `find()`.)
 
+[[string:quote]]
+===== `string:quote`
+
+This macro returns the input of the macro quoted.
+That way the string can be used inside a string.
+This macro is useful when the output is used in some programming language source.
+Example:
+
+[source]
+----
+{@string:quote This "is" quoted '
+ new line is also quoted, tabs are also and line-feed also \ becomes doubled}
+----
+
+will result
+
+[source]
+----
+This \"is\" quoted '\n new line is also quoted, tabs are also and line-feed also \\ becomes doubled
+----
+
+
+The actual conversions performed are:
+
+* `\` -> `\\`
+* tab -> `\t`
+* back space -> `\b`
+* new line -> `\n`
+* line feed -> `\r`
+* form feed -> `\f`
+* `"` -> `\"`
+
+[[string:equals]]
+===== `string:equals`
+
+This macro returns the string literal `true` or `false` comparing the two arguments.
+It returns `true` if the two arguments are equal and `false` otherwise.
+If the option `ignoreCase` is used then the comparison is done ignoring the character casing.
+
+Example:
+
+[source]
+----
+{@string:equals/aaa/aaa}
+{@string:equals/aaa/bbb}
+----
+
+will result
+
+[source]
+----
+true
+false
+----
+
+
+
+[[string:startsWith]]
+===== `string:startsWith`
+
+This macro returns the string literal `true` or `false` comparing the two arguments.
+It returns `true` if the first argument starts with the second argument and `false` otherwise.
+
+Example:
+
+[source]
+----
+{@string:startsWith/aaa/aa}
+{@string:startsWith/aaa/ba}
+----
+
+will result
+
+[source]
+----
+true
+false
+----
+
+
+[[string:endsWith]]
+===== `string:endsWith`
+
+This macro returns the string literal `true` or `false` comparing the two arguments.
+It returns `true` if the first argument ends with the second argument and `false` otherwise.
+
+Example:
+
+[source]
+----
+{@string:endsWith/aaa/aa}
+{@string:endsWith/aaa/ab}
+----
+
+will result
+
+[source]
+----
+true
+false
+----
+
+
+[[string:reverse]]
+===== `string:reverse`
+
+This macro returns the reverse of the input string.
+For example:
+
+[source]
+----
+{@string:reverse 0123456789abcdefgh}
+----
+
+will result
+
+[source]
+----
+hgfedcba9876543210
+----
+
+
 [[string:substring]]
 ===== `string:substring`
 
@@ -1626,6 +1863,25 @@ The parameters are
 * `end` specifying the end of the substring (default is end of the string).
 
 If any of the parameters is a negative number then the position will be calculated from the end of the string.
+
+Examples:
+
+[source]
+----
+{@string:substring the whole string}
+{@string:substring (begin=0 end=3)the first three character} only the'
+{@string:substring (begin=1 end=-1)ythea}
+----
+
+will result
+
+[source]
+----
+the whole string
+the only the'
+the
+----
+
 
 [[string:length]]
 ===== `string:length`

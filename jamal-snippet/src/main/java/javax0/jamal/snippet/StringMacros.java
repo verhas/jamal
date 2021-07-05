@@ -5,8 +5,10 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
+import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Params.holder;
@@ -30,6 +32,99 @@ public class StringMacros {
         @Override
         public String getId() {
             return "string:contains";
+        }
+    }
+
+    public static class Quote implements Macro, InnerScopeDependent {
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            return in.toString()
+                .replace("\\", "\\\\")
+                .replace("\t", "\\t")
+                .replace("\b", "\\b")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\f", "\\f")
+                .replace("\"", "\\\"");
+        }
+
+        @Override
+        public String getId() {
+            return "string:quote";
+        }
+    }
+
+    private static abstract class XWith implements Macro, InnerScopeDependent {
+        private final BiPredicate<String, String> with;
+
+        protected XWith(BiPredicate<String, String> with) {
+            this.with = with;
+        }
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            String[] parts = InputHandler.getParts(in);
+            if (parts.length != 2) {
+                throw new BadSyntax(getId() + " needs two parts");
+            }
+            return "" + with.test(parts[0], parts[1]);
+        }
+    }
+
+    public static class StartsWith extends XWith {
+        public StartsWith() {
+            super(String::startsWith);
+        }
+
+        @Override
+        public String getId() {
+            return "string:startsWith";
+        }
+
+    }
+
+    public static class EndsWith extends XWith {
+        public EndsWith() {
+            super(String::endsWith);
+        }
+
+        @Override
+        public String getId() {
+            return "string:endsWith";
+        }
+
+    }
+
+    public static class Equals implements Macro, InnerScopeDependent {
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            final var ignoreCase = holder("ignoreCase").asBoolean();
+            Params.using(processor).from(this).between("()").keys(ignoreCase).parse(in);
+            String[] parts = InputHandler.getParts(in);
+            if (parts.length != 2) {
+                throw new BadSyntax(getId() + " needs two parts");
+            }
+            return "" + (ignoreCase.is() ? parts[0].equalsIgnoreCase(parts[1]) : parts[0].equals(parts[1]));
+        }
+
+        @Override
+        public String getId() {
+            return "string:equals";
+        }
+    }
+
+    public static class Reverse implements Macro, InnerScopeDependent {
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            return new StringBuilder(in.toString()).reverse().toString();
+        }
+
+        @Override
+        public String getId() {
+            return "string:reverse";
         }
     }
 
@@ -59,7 +154,7 @@ public class StringMacros {
             final var left = holder(null, "left").asBoolean();
             final var right = holder(null, "right").asBoolean();
             Params.using(processor).from(this).between("()").keys(trim, left, right).parse(in);
-            if( (left.is() || right.is() ) && !trim.is()){
+            if ((left.is() || right.is()) && !trim.is()) {
                 throw new BadSyntax("You cannot use 'left' or 'right' on 'string:length' without trim");
             }
             var string = in.toString();

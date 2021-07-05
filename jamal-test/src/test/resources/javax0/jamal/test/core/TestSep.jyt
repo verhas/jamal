@@ -44,7 +44,7 @@
 {%fail |{@sep [. [. }|.* is ambiguous. Use a definition that does not contain spaces.%}
 {%fail |{@sep /[/]/}|macro 'sep' closing string must not contain the separator character%}
 {%fail |{@sep//..}x|using macro 'sep' you cannot define zero length macro open and/or macro close strings%}
-{%fail |{@sep/[[/]]}[[|Macro was not terminated in the file.%}
+{%fail |{@sep/[[/]]}[[|Macro was not terminated in the file.*%}
 
 "complex sep use with restore":
   Input: |-

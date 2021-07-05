@@ -21,10 +21,14 @@ import javax0.jamal.snippet.SnipList;
 import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
-import javax0.jamal.snippet.StringMacros;
 import javax0.jamal.snippet.StringMacros.Contains;
+import javax0.jamal.snippet.StringMacros.EndsWith;
+import javax0.jamal.snippet.StringMacros.Equals;
 import javax0.jamal.snippet.StringMacros.Length;
+import javax0.jamal.snippet.StringMacros.Quote;
+import javax0.jamal.snippet.StringMacros.StartsWith;
 import javax0.jamal.snippet.StringMacros.Substring;
+import javax0.jamal.snippet.StringMacros.Reverse;
 import javax0.jamal.snippet.TrimLines;
 import javax0.jamal.snippet.Update;
 import javax0.jamal.snippet.XmlFormat;
@@ -66,6 +70,10 @@ module jamal.snippet {
         SnipList,
         Contains,
         Substring,
-        Length
-        ;
+        Length,
+        Quote,
+        Equals,
+        StartsWith,
+        Reverse,
+        EndsWith;
 }

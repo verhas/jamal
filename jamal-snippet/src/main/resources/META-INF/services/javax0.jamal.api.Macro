@@ -30,3 +30,8 @@ javax0.jamal.snippet.SnipList
 javax0.jamal.snippet.StringMacros$Contains
 javax0.jamal.snippet.StringMacros$Substring
 javax0.jamal.snippet.StringMacros$Length
+javax0.jamal.snippet.StringMacros$Equals
+javax0.jamal.snippet.StringMacros$Quote
+javax0.jamal.snippet.StringMacros$StartsWith
+javax0.jamal.snippet.StringMacros$EndsWith
+javax0.jamal.snippet.StringMacros$Reverse
