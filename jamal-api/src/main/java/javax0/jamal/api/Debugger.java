@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -56,6 +57,8 @@ public interface Debugger extends AutoCloseable, ServiceLoaded {
          * @throws BadSyntax if the evaluation of the input is erroneous
          */
         String process(String in) throws BadSyntax;
+
+        Deque<BadSyntax> errors();
     }
 
     /**

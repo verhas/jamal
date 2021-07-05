@@ -5,6 +5,7 @@ import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Debugger;
 import javax0.jamal.tools.Input;
 
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -25,5 +26,9 @@ public class DebuggerStub implements Debugger.Stub {
 
     public String process(String in) throws BadSyntax {
         return processor.process(Input.makeInput(in));
+    }
+
+    public Deque<BadSyntax> errors() {
+        return processor.errors();
     }
 }

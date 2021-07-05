@@ -93,7 +93,7 @@
                         <docletArtifact>
                             <groupId>com.javax0.jamal</groupId>
                             <artifactId>jamal-doclet</artifactId>
-                            <version>1.7.7</version>
+                            <version>1.7.8</version>
                         </docletArtifact>
                         <additionalOptions>
                             <additionalOption>--source-root</additionalOption>
@@ -105,14 +105,14 @@
                                 <tagletArtifact>
                                     <groupId>com.javax0.jamal</groupId>
                                     <artifactId>jamal-doclet</artifactId>
-                                    <version>1.7.7</version>
+                                    <version>1.7.8</version>
                                 </tagletArtifact>
                             </taglet>
                             <tagletArtifacts>
                                 <tagletArtifact>
                                     <groupId>com.javax0.jamal</groupId>
                                     <artifactId>jamal-io</artifactId>
-                                    <version>1.7.7</version>
+                                    <version>1.7.8</version>
                                 </tagletArtifact>
                             </tagletArtifacts>
                         </taglets>

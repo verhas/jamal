@@ -24,7 +24,7 @@ public class TestHello {
      * This test is used only interactively from IntelliJ to test the debugger UI manually. The execution stops and
      * starts to wait for the debugger. To avoid this when the project is built the code checks that it was invoked from
      * IntelliJ. If the  string "Idea" is present in the stack trace as part of some class name then this is IntelliJ,
-     * then we run. Otherwise the test just returns.
+     * then we run. Otherwise, the test just returns.
      *
      * @throws Exception
      */

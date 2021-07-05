@@ -307,6 +307,24 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                             state = RunState.NODEBUG;
                             task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
                             task.contentType = MIME_PLAIN;
+                            final var exceptions = stub.errors();
+                            if (exceptions != null && !exceptions.isEmpty()) {
+                                final var nrOfExceptions = exceptions.size();
+                                final var sb = new StringBuilder(
+                                    "There " + (nrOfExceptions == 1 ? "was" : "were")
+                                        + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
+                                int ser = nrOfExceptions;
+                                for (final var accumulated : exceptions) {
+                                    sb.append(ser--).append(". ").append(accumulated.getMessage()).append("\n");
+                                }
+                                exceptions.clear();
+                                response = Map.of(
+                                    "message", sb.toString(),
+                                    "trace", "",
+                                    "status-link", "https://http.cat/405"
+                                );
+                                task.status = HTTP_BAD_METHOD;
+                            }
                         } catch (BadSyntax badSyntax) {
                             try (final var baos = new ByteArrayOutputStream(); final var st = new PrintStream(baos)) {
                                 badSyntax.printStackTrace(st);
