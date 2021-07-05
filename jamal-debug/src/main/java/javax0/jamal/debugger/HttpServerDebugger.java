@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -305,19 +306,26 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         final RunState stateSave = state;
                         try {
                             state = RunState.NODEBUG;
+                            final var exceptions = stub.errors();
+                            final var saveExceptions = new ArrayDeque<BadSyntax>();
+                            saveExceptions.addAll(exceptions);
+                            exceptions.clear();
                             task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
                             task.contentType = MIME_PLAIN;
-                            final var exceptions = stub.errors();
-                            if (exceptions != null && !exceptions.isEmpty()) {
-                                final var nrOfExceptions = exceptions.size();
+                            final var evalExceptions = new ArrayDeque<BadSyntax>();
+                            evalExceptions.addAll(exceptions);
+                            exceptions.clear();
+                            exceptions.addAll(saveExceptions);
+                            if (evalExceptions != null && !evalExceptions.isEmpty()) {
+                                final var nrOfExceptions = evalExceptions.size();
                                 final var sb = new StringBuilder(
                                     "There " + (nrOfExceptions == 1 ? "was" : "were")
                                         + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
                                 int ser = nrOfExceptions;
-                                for (final var accumulated : exceptions) {
+                                for (final var accumulated : evalExceptions) {
                                     sb.append(ser--).append(". ").append(accumulated.getMessage()).append("\n");
                                 }
-                                exceptions.clear();
+                                evalExceptions.clear();
                                 response = Map.of(
                                     "message", sb.toString(),
                                     "trace", "",
