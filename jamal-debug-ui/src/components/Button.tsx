@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 import "./Label.css";
-import {Grid, PropTypes} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {Button as MaterialButton} from "@material-ui/core";
 
 type ButtonProps = {
