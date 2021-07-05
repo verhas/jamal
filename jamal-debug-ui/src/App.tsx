@@ -1,9 +1,8 @@
-import React, {useCallback, useState, useRef} from "react";
+import React, {useRef, useEffect} from "react";
 import Input from "./components/Input";
 import TabPanel from "./components/TabPanel";
 import SimpleTextInput from "./components/SimpleTextInput";
 import SimpleTextOutput from "./components/SimpleTextOutput";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Evaluate from "@material-ui/icons/TrendingFlat";
@@ -17,180 +16,44 @@ import StepOut from "@material-ui/icons/TextRotationAngleup";
 import Quit from "@material-ui/icons/ExitToApp";
 import Label from "./components/Label";
 import TitleBar from "./components/TitleBar";
-import queryString from "querystring";
-import DebugCommand from "./utils/DebugCommand";
-import VersionFetcher from "./utils/VersionFetcher";
+import getVersionMessage from "./utils/VersionFetcher";
 import BuiltInMacrosDisplay from "./components/BuiltInMacrosDisplay";
 import UserDefinedMacrosDisplay from "./components/UserDefinedMacrosDisplay";
-import packageJson from "../package.json";
-
-import {AxiosError, AxiosResponse} from "axios";
+import initState, {state} from "./StateHandler"
+import loadSource from "./utils/LoadSource";
+import {evaluate, run, stepInto, step, stepOut, quit} from "./utils/DebugCommands"
+import Button from "./components/Button";
 import "./App.css";
 
-const debug: DebugCommand = new DebugCommand("localhost", 8080);
-const qs = queryString.parse(window.location.search.substring(1));
-const versionFetcher = new VersionFetcher();
-let latestVersion = "";
+const App = () => {
 
-function App() {
-    const [data, setData] = useState<any>({});
-    const [inputBefore, setInputBefore] = useState<string>("");
-    const [macro, setMacro] = useState<string>("");
-    const [output, setOutput] = useState<string>("");
-    const [level, setLevel] = useState<string>("-");
-    const [evalOutput, setEvalOutput] = useState<string>("");
-    const [stateMessage, setStateMessage] = useState("");
-    const [resultCaption, setResultCaption] = useState("no result");
-    const [serverVersion, setServerVersion] = useState("unknown");
-    const [isLoading, setIsLoading] = useState(true);
-    const [currentTabStop, setCurrentTabStop] = useState(0);
-    const evalInput = useRef({value: ""});
-    const evalBreakpoints = useRef({value: ""});
+    initState({
+        data: {},
+        inputBefore: "",
+        macro: "",
+        output: "",
+        level: "-",
+        evalOutput: "",
+        stateMessage: "",
+        resultCaption: "no result",
+        serverVersion: "unknown",
+        currentTabStop: 0
+    });
+
+    useEffect(() => {
+            document.title = "Jamal Debugger";
+            loadSource(state);
+            // eslint-disable-next-line
+        }, []
+    )
+
 
     const tabPanelChange = (event: React.ChangeEvent<{}>, newTabStop: number) => {
-        setCurrentTabStop(newTabStop);
+        state.setCurrentTabStop(newTabStop);
     };
 
-    const port: string = qs.port
-        ? "" + qs.port
-        : new URL(window.location.href).port;
-
-    debug.port = +port;
-
-    const reloadActualSource = useCallback(() => {
-        debug
-            .all(
-                "level&input&output&inputBefore&processing&macros&userDefined&state&output&version"
-            )
-            .then((response) => {
-                setInputBefore(response.data?.inputBefore ?? "");
-                setMacro(response.data?.processing ?? "");
-                setOutput(response.data?.output ?? "");
-                setStateMessage(response.data?.state ?? "");
-                setLevel(response.data?.level ?? "");
-                setServerVersion(response.data?.version?.version ?? "unknown");
-                setData(response.data);
-            })
-            .catch((err: AxiosError) => {
-                if (err?.response?.status === 503) {
-                    setStateMessage("RUN");
-                    setTimeout(reloadActualSource, 500);
-                } else {
-                    setStateMessage("DISCONNECTED");
-                    setInputBefore("");
-                    setMacro("");
-                    setOutput("");
-                    //setTimeout(reloadActualSource, 1000);
-                }
-            });
-    }, []);
-
-    const postAndReload = (x: () => Promise<AxiosResponse>) => {
-        x().then(() => reloadActualSource());
-    };
-    const step = () => postAndReload(debug.step);
-    const stepInto = () => postAndReload(debug.stepInto);
-    const stepOut = () => postAndReload(debug.stepOut);
-    const quit = () => postAndReload(debug.quit);
-    const run = () =>
-        debug.run("" + evalBreakpoints?.current?.value)
-            .then(() => reloadActualSource());
-    const evaluate = () =>
-        debug.execute("" + evalInput?.current?.value).then((response) => {
-            if (typeof response.data != "object") {
-                if (response.data.length === 0) {
-                    setEvalOutput("");
-                    setResultCaption("empty evaluation result");
-                } else {
-                    setEvalOutput("" + response.data);
-                    setResultCaption("result");
-                }
-                document.title = "Jamal Debugger";
-            } else {
-                setEvalOutput("" + response.data.trace);
-                setResultCaption("error result");
-                document.title = "Jamal Debugger (e)";
-            }
-            reloadActualSource();
-        });
-
-    if (latestVersion === "") {
-        latestVersion = versionFetcher.lastRelease;
-    }
-
-    if (isLoading) {
-        document.title = "Jamal Debugger";
-        setIsLoading(false);
-        reloadActualSource();
-    }
-
-    const buttonCaption = (caption: string) => {
-        const m = 21 - caption.length + "px";
-        return <div style={{marginLeft: m, fontSize: "8pt"}}>{caption}</div>;
-    };
-
-    const refreshButton = (
-        <Grid item>
-            <Button variant="contained" onClick={reloadActualSource}>
-                <Refresh/>
-            </Button>
-            {buttonCaption("Refresh")}
-        </Grid>
-    );
-
-    const evaluateButton = (
-        <Grid item>
-            <Button variant="contained" onClick={evaluate} color="primary">
-                <Evaluate/>
-            </Button>
-            {buttonCaption("Evaluate")}
-        </Grid>
-    );
-
-    const quitButton = (
-        <Grid item>
-            <Button variant="contained" onClick={quit} color="secondary">
-                <Quit/>
-            </Button>
-            {buttonCaption("Quit")}
-        </Grid>
-    );
-
-    const runButton = (
-        <Grid item>
-            <Button variant="contained" onClick={run}>
-                <Run/>
-            </Button>
-            {buttonCaption("Run")}
-        </Grid>
-    );
-
-    const stepButton = (
-        <Grid item>
-            <Button variant="contained" onClick={step}>
-                <Step/>
-            </Button>
-            {buttonCaption("Step")}
-        </Grid>
-    );
-
-    const stepIntoButton = (
-        <Grid item>
-            <Button variant="contained" onClick={stepInto}>
-                <StepInto/>
-            </Button>
-            {buttonCaption("Step In")}
-        </Grid>
-    );
-
-    const stepOutButton = (
-        <Grid item>
-            <Button variant="contained" onClick={stepOut}>
-                <StepOut/>
-            </Button>
-            {buttonCaption("Step Out")}
-        </Grid>
-    );
+    const input2Evaluate = useRef({value: ""});
+    const breakpoints = useRef({value: ""});
 
     const debugButtons = (
         <Grid container direction="column">
@@ -200,18 +63,19 @@ function App() {
                 justify="space-around"
                 alignContent="center"
             >
-                {refreshButton} {runButton} {stepButton} {stepIntoButton}
-                {stepOutButton}
+                <Button onClick={loadSource} caption="Refresh"><Refresh/></Button>
+                <Button onClick={() => run(breakpoints)} caption="Run"><Run/></Button>
+                <Button onClick={step} caption="Step"><Step/></Button>
+                <Button onClick={stepInto} caption="Step In"><StepInto/></Button>
+                <Button onClick={stepOut} caption="Step out"><StepOut/></Button>
             </Grid>
         </Grid>
     );
 
     const levelDisplay = (
-        <>
-            <Grid item>
-                <Label message={"" + level}/>
-            </Grid>
-        </>
+        <Grid item>
+            <Label message={"" + state.level}/>
+        </Grid>
     );
 
     const commandRowDisplay = (
@@ -230,24 +94,25 @@ function App() {
                 alignItems="flex-end"
                 alignContent="flex-end"
             >
-                {evaluateButton}
-                {quitButton}
+                <Button onClick={() => evaluate(input2Evaluate)} color="primary"
+                        caption={"Evaluate"}><Evaluate/></Button>
+                <Button onClick={quit} caption="Quit" color="secondary"><Quit/></Button>
             </Grid>
         </>
     );
 
     const builtInMacroList = (
         <Paper className="App_Paper, App_MacroList">
-            <BuiltInMacrosDisplay data={data}/>
+            <BuiltInMacrosDisplay data={state.data}/>
         </Paper>
     );
 
     const userDefinedMacroList = (
         <Paper className="App_Paper, App_MacroList">
             <UserDefinedMacrosDisplay
-                data={data}
-                captionSetter={setResultCaption}
-                contentSetter={setEvalOutput}
+                data={state.data}
+                captionSetter={state.setResultCaption}
+                contentSetter={state.setEvalOutput}
             />
         </Paper>
     );
@@ -256,7 +121,7 @@ function App() {
         <Grid item xs={6}>
             <Paper className="App_Paper, run_input">
                 <div style={{marginLeft: "30px", fontSize: "12pt"}}>{"input"}</div>
-                <Input text={inputBefore} macro={macro}/>
+                <Input text={state.inputBefore} macro={state.macro}/>
             </Paper>
         </Grid>
     );
@@ -265,14 +130,14 @@ function App() {
         <Grid item xs={6}>
             <Paper className="App_Paper">
                 <div style={{marginLeft: "30px", fontSize: "12pt"}}>{"output"}</div>
-                <Input text={output}/>
+                <Input text={state.output}/>
             </Paper>
         </Grid>
     );
 
     const evaluateInput = (
         <Paper className="App_Paper, App_Eval">
-            <SimpleTextInput caption={"evaluate"} reference={evalInput}>
+            <SimpleTextInput caption={"evaluate"} reference={input2Evaluate}>
                 {""}
             </SimpleTextInput>
         </Paper>
@@ -280,7 +145,7 @@ function App() {
 
     const breakPointsInput = (
         <Paper className="App_Paper, App_Eval">
-            <SimpleTextInput caption={"breakpoints"} reference={evalBreakpoints}>
+            <SimpleTextInput caption={"breakpoints"} reference={breakpoints}>
                 {""}
             </SimpleTextInput>
         </Paper>
@@ -289,34 +154,20 @@ function App() {
     const evaluateOutput = (
         <Grid item xs={6}>
             <Paper className="App_Paper, App_Eval">
-                <SimpleTextOutput caption={resultCaption}>
-                    {evalOutput}
+                <SimpleTextOutput caption={state.resultCaption}>
+                    {state.evalOutput}
                 </SimpleTextOutput>
             </Paper>
         </Grid>
     );
-    var versionMessage;
-    if (serverVersion === packageJson.version) {
-        versionMessage = "Version: " + serverVersion;
-    } else {
-        versionMessage =
-            "Server version: " +
-            serverVersion +
-            ", Client version: " +
-            packageJson.version;
-    }
-    if (
-        latestVersion !== "" &&
-        (latestVersion !== serverVersion || latestVersion !== packageJson.version)
-    ) {
-        versionMessage += ", Latest release: " + latestVersion;
-    }
+
+    let versionMessage = getVersionMessage();
 
     return (
         <div className="App">
             <header className="App-header">
                 <Grid container direction="row">
-                    <TitleBar message={stateMessage}/>
+                    <TitleBar message={state.stateMessage}/>
                 </Grid>
                 <Grid container direction="row">
                     {commandRowDisplay}
@@ -333,7 +184,7 @@ function App() {
 
                     <Grid item xs={6}>
                         <Tabs
-                            value={currentTabStop}
+                            value={state.currentTabStop}
                             onChange={tabPanelChange}
                             className="tab_panel"
                             centered
@@ -344,16 +195,16 @@ function App() {
                             <Tab value={2} label="evaluate"/>
                             <Tab value={3} label="breakpoints"/>
                         </Tabs>
-                        <TabPanel id="0" hidden={currentTabStop !== 0} other="">
+                        <TabPanel id="0" hidden={state.currentTabStop !== 0} other="">
                             {builtInMacroList}
                         </TabPanel>
-                        <TabPanel id="1" hidden={currentTabStop !== 1} other="">
+                        <TabPanel id="1" hidden={state.currentTabStop !== 1} other="">
                             {userDefinedMacroList}
                         </TabPanel>
-                        <TabPanel id="2" hidden={currentTabStop !== 2} other="">
+                        <TabPanel id="2" hidden={state.currentTabStop !== 2} other="">
                             {evaluateInput}
                         </TabPanel>
-                        <TabPanel id="3" hidden={currentTabStop !== 3} other="">
+                        <TabPanel id="3" hidden={state.currentTabStop !== 3} other="">
                             {breakPointsInput}
                         </TabPanel>
                     </Grid>
