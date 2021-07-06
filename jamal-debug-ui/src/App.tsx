@@ -2,7 +2,6 @@ import React, {useRef, useEffect} from "react";
 import Input from "./components/Input";
 import TabPanel from "./components/TabPanel";
 import SimpleTextInput from "./components/SimpleTextInput";
-import SimpleTextOutput from "./components/SimpleTextOutput";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Evaluate from "@material-ui/icons/TrendingFlat";
@@ -14,7 +13,6 @@ import Refresh from "@material-ui/icons/Refresh";
 import StepInto from "@material-ui/icons/TextRotateVertical";
 import StepOut from "@material-ui/icons/TextRotationAngleup";
 import Quit from "@material-ui/icons/ExitToApp";
-import Label from "./components/Label";
 import TitleBar from "./components/TitleBar";
 import getVersionMessage from "./utils/VersionFetcher";
 import BuiltInMacrosDisplay from "./components/BuiltInMacrosDisplay";
@@ -24,12 +22,15 @@ import loadSource from "./utils/LoadSource";
 import {evaluate, run, stepInto, step, stepOut, quit} from "./utils/DebugCommands"
 import Button from "./components/Button";
 import "./App.css";
+import LevelDisplay from "./components/LevelDisplay";
+import EvaluateOutput from "./components/EvaluateOutput";
 
 const App = () => {
 
     initState({
         data: {},
         inputBefore: "",
+        errors: [],
         macro: "",
         output: "",
         level: "-",
@@ -42,7 +43,7 @@ const App = () => {
 
     useEffect(() => {
             document.title = "Jamal Debugger";
-            loadSource(state);
+            loadSource();
             // eslint-disable-next-line
         }, []
     )
@@ -72,19 +73,13 @@ const App = () => {
         </Grid>
     );
 
-    const levelDisplay = (
-        <Grid item>
-            <Label message={"" + state.level}/>
-        </Grid>
-    );
-
     const commandRowDisplay = (
         <>
             <Grid item xs={6}>
                 {debugButtons}
             </Grid>
             <Grid item xs={3}>
-                {levelDisplay}
+                <LevelDisplay/>
             </Grid>
             <Grid
                 container
@@ -151,18 +146,6 @@ const App = () => {
         </Paper>
     );
 
-    const evaluateOutput = (
-        <Grid item xs={6}>
-            <Paper className="App_Paper, App_Eval">
-                <SimpleTextOutput caption={state.resultCaption}>
-                    {state.evalOutput}
-                </SimpleTextOutput>
-            </Paper>
-        </Grid>
-    );
-
-    let versionMessage = getVersionMessage();
-
     return (
         <div className="App">
             <header className="App-header">
@@ -218,7 +201,7 @@ const App = () => {
                     justify="space-around"
                 >
                     {runOutput}
-                    {evaluateOutput}
+                    <EvaluateOutput/>
                 </Grid>
                 <Grid
                     container
@@ -233,7 +216,7 @@ const App = () => {
                             <a href="https://github.com/verhas/jamal">
                                 {"https://github.com/verhas/jamal"}
                             </a>
-                            {", " + versionMessage}
+                            {", " + getVersionMessage()}
                         </div>
                     </Grid>
                 </Grid>

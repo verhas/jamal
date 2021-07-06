@@ -1,11 +1,10 @@
 import debug from "./Debug";
 import {AxiosError} from "axios";
+import {state} from "../StateHandler";
 
-
-const loadSource = (state: Record<string, any>) => {
-    debug
-        .all(
-            "level&input&output&inputBefore&processing&macros&userDefined&state&output&version"
+const loadSource = () => {
+    debug.all(
+            "level&errors&input&output&inputBefore&processing&macros&userDefined&state&output&version"
         )
         .then((response) => {
             state.setInputBefore(response.data?.inputBefore ?? "");
@@ -14,12 +13,18 @@ const loadSource = (state: Record<string, any>) => {
             state.setStateMessage(response.data?.state ?? "");
             state.setLevel(response.data?.level ?? "");
             state.setServerVersion(response.data?.version?.version ?? "unknown");
+            const lastErrors = response.data?.errors ?? [];
+            state.setErrors(lastErrors);
+            if( state.currentTabStop !== 2 && lastErrors.length ) {
+                state.setEvalOutput(lastErrors.join("\n"));
+                state.setResultCaption("execution errors");
+            }
             state.setData(response.data);
         })
         .catch((err: AxiosError) => {
             if (err?.response?.status === 503) {
                 state.setStateMessage("RUN");
-                setTimeout( () => loadSource(state), 500);
+                setTimeout(loadSource, 500);
             } else {
                 state.setStateMessage("DISCONNECTED");
                 state.setInputBefore("");

@@ -49,6 +49,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         ALL("all", Method.GET),
         VERSION("version", Method.GET),
         LEVEL("level", Method.GET),
+        ERRORS("errors", Method.GET),
         STATE("state", Method.GET),
         INPUT("input", Method.GET),
         INPUT_BEFORE("inputBefore", Method.GET),
@@ -204,7 +205,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private void addToResponse(Task task, Map<String, Object> response, Command command, Object value) {
-        final var key = command.url.substring(1);
+        final var key = command.url.substring(1); // url starts with '/', key is the part that follows
         if (task.params.containsKey(key)) {
             response.put(key, value);
         }
@@ -238,6 +239,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                     case ALL:
                         response = new HashMap<>();
                         addToResponse(task, response, Command.LEVEL, "" + currentLevel);
+                        addToResponse(task, response, Command.ERRORS, new ArrayList<>(stub.errors()));
                         addToResponse(task, response, Command.STATE, handleState);
                         addToResponse(task, response, Command.INPUT, inputAfter);
                         addToResponse(task, response, Command.OUTPUT, output);
@@ -246,6 +248,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         addToResponse(task, response, Command.BUILT_IN, getBuiltIns());
                         addToResponse(task, response, Command.USER_DEFINED, getUserDefineds());
                         addToResponse(task, response, Command.VERSION, getJamalVersion());
+                        break;
+                    case ERRORS:
+                        response = new HashMap<>();
+                        addToResponse(task, response, Command.ERRORS, new ArrayList<>(stub.errors()));
                         break;
                     case VERSION:
                         response = getJamalVersion();
@@ -307,13 +313,11 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         try {
                             state = RunState.NODEBUG;
                             final var exceptions = stub.errors();
-                            final var saveExceptions = new ArrayDeque<BadSyntax>();
-                            saveExceptions.addAll(exceptions);
+                            final var saveExceptions = new ArrayDeque<BadSyntax>(exceptions);
                             exceptions.clear();
                             task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
                             task.contentType = MIME_PLAIN;
-                            final var evalExceptions = new ArrayDeque<BadSyntax>();
-                            evalExceptions.addAll(exceptions);
+                            final var evalExceptions = new ArrayDeque<BadSyntax>(exceptions);
                             exceptions.clear();
                             exceptions.addAll(saveExceptions);
                             if (evalExceptions != null && !evalExceptions.isEmpty()) {
@@ -473,6 +477,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         createContext(server, Command.ALL);
         createContext(server, Command.VERSION);
         createContext(server, Command.LEVEL);
+        createContext(server, Command.ERRORS);
         createContext(server, Command.STATE);
         createContext(server, Command.INPUT);
         createContext(server, Command.INPUT_BEFORE);
