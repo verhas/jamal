@@ -15,12 +15,8 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
 
     const rows: Array<Record<string, any>> = [];
 
-    let i: number = 0;
-    let j: number = 0;
     for (let macros of data?.userDefined?.scopes || []) {
-        i++;
-        for (var macro of macros || []) {
-            j++;
+        for (let macro of macros || []) {
             rows.push({
                 name: macro.id,
                 params: macro?.parameters?.join(",") ?? "",
@@ -29,8 +25,8 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
         }
     }
 
-    j = 0;
-    i = 0;
+    let j = 0;
+    let i = 0;
     return (
         <div style={{height: "310px", width: "100%", marginTop: "10px", overflowY: "auto", backgroundColor: "#d2eaff"}}>
             <Table celled size="small" sortable striped style={{fontSize: "12px", backgroundColor: "#d2eaff"}}>
