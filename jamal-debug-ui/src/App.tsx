@@ -219,7 +219,9 @@ const App = () => {
                     justify="space-around"
                 >
                     {runOutput}
-                    <EvaluateOutput/>
+                    <Grid item xs={6}>
+                        <EvaluateOutput/>
+                    </Grid>
                 </Grid>
                 <Grid
                     container

@@ -35,7 +35,7 @@ public class TestHello {
         System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
         TestThat.theInput(
             "hahóóó\n".repeat(2) +
-                "{@define a=1}{@define ! a=2}{@define b(x)=x2x}{b{a}}"
+                "{@define a=1}{@define b(x)=x2x}{b{b{b{b{a}}}}}"
         ).results("hahóóó\n" +
             "hahóóó\n" +
             "121");
