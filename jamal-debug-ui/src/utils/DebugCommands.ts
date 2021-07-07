@@ -4,7 +4,7 @@ import {state} from "./GlobalState"
 import debug from "./Debug"
 
 const postAndReload = (x: () => Promise<AxiosResponse>) => {
-    x().then(() => loadSource());
+    x().then(loadSource);
 };
 
 export const step = () => postAndReload(debug.step);

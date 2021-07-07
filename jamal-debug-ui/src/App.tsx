@@ -30,10 +30,13 @@ const App = () => {
     initState({
         data: {},
         inputBefore: "",
+        inputBeforeArray: [],
         errors: [],
         macro: "",
         output: "",
+        outputArray: [],
         level: "-",
+        displayedLevel: 0,
         evalOutput: "",
         savedEvalOutput: "",
         resultCaption: "no result",
@@ -104,9 +107,9 @@ const App = () => {
                 alignItems="flex-end"
                 alignContent="flex-end"
             >
-                <Button onClick={() => evaluate(input2Evaluate)} color="primary"
+                <Button onClick={() => evaluate(input2Evaluate)} color="blue"
                         caption={"Evaluate"} disabled={state.currentTabStop !== 2}><Evaluate/></Button>
-                <Button onClick={quit} caption="Quit" color="secondary"><Quit/></Button>
+                <Button onClick={quit} caption="Quit" color="red"><Quit/></Button>
             </Grid>
         </>
     );

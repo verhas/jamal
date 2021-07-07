@@ -1,4 +1,4 @@
-.Label_Label {
+.LevelNumber {
     border-radius: 50%;
     width: 55px;
     height: 55px;
@@ -7,11 +7,28 @@
     border: 2px solid black;
     color: white;
     text-align: center;
-
+    cursor: default;
     font: 32px Arial, sans-serif;
 }
 
-.Label_When_Errors {
+.LevelUpDown {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    padding: 8px;
+    font: 20px Arial, sans-serif;
+}
+
+.LevelUpDownLabel {
+    position: relative;
+    top: -9px;
+}
+
+.LevelUpLabel {
+    left: -2px;
+}
+
+.RedAsError {
     background: red;
     border: 2px solid red;
 }

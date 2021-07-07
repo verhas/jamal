@@ -19,7 +19,7 @@ const SimpleTextInput: FC<SimpleTextInputProps> = ({
             <div className="textbox_caption" style={{backgroundColor: backgroundColor}}>{caption}</div>
             <textarea className="SimpleTextInput_TextArea" ref={reference}
                       style={{backgroundColor: backgroundColor, width: "99%"}}
-                      value={children}/>
+                      value={children} onChange={()=>{}}/>
         </div>
     );
 };
