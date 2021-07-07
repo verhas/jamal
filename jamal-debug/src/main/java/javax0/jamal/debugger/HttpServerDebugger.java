@@ -313,14 +313,14 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         try {
                             state = RunState.NODEBUG;
                             final var exceptions = stub.errors();
-                            final var saveExceptions = new ArrayDeque<BadSyntax>(exceptions);
+                            final var saveExceptions = new ArrayDeque<>(exceptions);
                             exceptions.clear();
                             task.messageBuffer = stub.process(new String(buffer, StandardCharsets.UTF_8));
                             task.contentType = MIME_PLAIN;
-                            final var evalExceptions = new ArrayDeque<BadSyntax>(exceptions);
+                            final var evalExceptions = new ArrayDeque<>(exceptions);
                             exceptions.clear();
                             exceptions.addAll(saveExceptions);
-                            if (evalExceptions != null && !evalExceptions.isEmpty()) {
+                            if (!evalExceptions.isEmpty()) {
                                 final var nrOfExceptions = evalExceptions.size();
                                 final var sb = new StringBuilder(
                                     "There " + (nrOfExceptions == 1 ? "was" : "were")

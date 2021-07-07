@@ -1,6 +1,6 @@
 import {AxiosResponse} from "axios";
 import loadSource from "./LoadSource";
-import {state} from "../StateHandler"
+import {state} from "./GlobalState"
 import debug from "./Debug"
 
 const postAndReload = (x: () => Promise<AxiosResponse>) => {
@@ -19,10 +19,17 @@ export const evaluate = (evalInput: any) =>
         if (typeof response.data != "object") {
             if (response.data.length === 0) {
                 state.setEvalOutput("");
-                state.setResultCaption("empty evaluation result");
+                const resultCaption = "empty evaluation result";
+                state.setResultCaption(resultCaption);
+                state.setSavedEvalOutput("");
+                state.setSavedResultCaption(resultCaption);
             } else {
-                state.setEvalOutput("" + response.data);
-                state.setResultCaption("result");
+                const evalOutput = "" + response.data;
+                const resultCaption = "result";
+                state.setEvalOutput(evalOutput);
+                state.setResultCaption(resultCaption);
+                state.setSavedEvalOutput(evalOutput);
+                state.setSavedResultCaption(resultCaption);
             }
             document.title = "Jamal Debugger";
         } else {

@@ -1,6 +1,6 @@
 import debug from "./Debug";
 import {AxiosError} from "axios";
-import {state} from "../StateHandler";
+import {state} from "./GlobalState";
 
 const loadSource = () => {
     debug.all(

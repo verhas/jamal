@@ -17,7 +17,7 @@ import TitleBar from "./components/TitleBar";
 import getVersionMessage from "./utils/VersionFetcher";
 import BuiltInMacrosDisplay from "./components/BuiltInMacrosDisplay";
 import UserDefinedMacrosDisplay from "./components/UserDefinedMacrosDisplay";
-import initState, {state} from "./StateHandler"
+import initState, {state} from "./utils/GlobalState"
 import loadSource from "./utils/LoadSource";
 import {evaluate, run, stepInto, step, stepOut, quit} from "./utils/DebugCommands"
 import Button from "./components/Button";
@@ -35,8 +35,11 @@ const App = () => {
         output: "",
         level: "-",
         evalOutput: "",
-        stateMessage: "",
+        savedEvalOutput: "",
         resultCaption: "no result",
+        savedResultCaption: "no result",
+        showP: true,
+        stateMessage: "",
         serverVersion: "unknown",
         currentTabStop: 0
     });
@@ -51,6 +54,17 @@ const App = () => {
 
     const tabPanelChange = (event: React.ChangeEvent<{}>, newTabStop: number) => {
         state.setCurrentTabStop(newTabStop);
+        if (newTabStop !== 2 && state.errors.length) {
+            if (state.currentTabStop === 2) {
+                state.setSavedEvalOutput(state.evalOutput);
+                state.setSavedResultCaption(state.resultCaption);
+            }
+            state.setEvalOutput(state.errors.join("\n"));
+            state.setResultCaption("execution errors");
+        } else {
+            state.setEvalOutput(state.savedEvalOutput);
+            state.setResultCaption(state.savedResultCaption);
+        }
     };
 
     const input2Evaluate = useRef({value: ""});
@@ -64,6 +78,7 @@ const App = () => {
                 justify="space-around"
                 alignContent="center"
             >
+                <Button onClick={() => state.setShowP(!state.showP)} caption="">{"\u00b6"}</Button>
                 <Button onClick={loadSource} caption="Refresh"><Refresh/></Button>
                 <Button onClick={() => run(breakpoints)} caption="Run"><Run/></Button>
                 <Button onClick={step} caption="Step"><Step/></Button>
@@ -90,7 +105,7 @@ const App = () => {
                 alignContent="flex-end"
             >
                 <Button onClick={() => evaluate(input2Evaluate)} color="primary"
-                        caption={"Evaluate"}><Evaluate/></Button>
+                        caption={"Evaluate"} disabled={state.currentTabStop !== 2}><Evaluate/></Button>
                 <Button onClick={quit} caption="Quit" color="secondary"><Quit/></Button>
             </Grid>
         </>
@@ -140,7 +155,7 @@ const App = () => {
 
     const breakPointsInput = (
         <Paper className="App_Paper, App_Eval">
-            <SimpleTextInput caption={"breakpoints"} reference={breakpoints}>
+            <SimpleTextInput caption={"breakpoints"} reference={breakpoints} backgroundColor="#ffe0e0">
                 {""}
             </SimpleTextInput>
         </Paper>

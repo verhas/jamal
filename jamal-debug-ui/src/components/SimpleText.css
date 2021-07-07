@@ -1,15 +1,15 @@
 .SimpleTextInput_Caption {
-  font-family: "Courier New", sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   font-size: 11px;
 }
 .SimpleTextInput_TextArea {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   font-size: 16px;
-  height: 90%;
+  height: 260px;
   width: 90%;
   padding-bottom: 20px;
   border: 0.5px solid gray;
   text-align: left;
   margin: 5px;
-  height: 260px;
 }
 

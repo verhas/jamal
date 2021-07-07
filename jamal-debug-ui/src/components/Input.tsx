@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 import Box from "@material-ui/core/Box";
 import "./Input.css";
+import showNewLine from "../utils/NewLineDisplay";
 
 type InputProps = {
   text: string;
   macro?: string;
 };
 
-const showNewLine = (s: string) => s.replaceAll("\n", "\u00b6\n");
 const convertToJSX = (s: string) => {
   var jsx = <></>;
   if (s.length === 0) {

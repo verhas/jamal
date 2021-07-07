@@ -4,17 +4,15 @@
 }
 
 .Input_SourceCode {
-    font-family: "Verdana";
-    font-size: 12px;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    font-size: 16px;
     height: 90%;
     min-height: 200px;
     box-sizing: border-box;
     width:100%;
-    border: 1px solid white;
+    border: 1px solid black;
     text-align: left;
-    margin: 0px;
-    border: "solid";
-    border-color: grey;
+    margin: 0;
 }
 
 .Input_SourceCode > span {

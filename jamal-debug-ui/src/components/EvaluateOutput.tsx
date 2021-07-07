@@ -2,7 +2,8 @@ import {FC} from "react";
 import Grid from "@material-ui/core/Grid";
 import {Paper} from "@material-ui/core";
 import SimpleTextOutput from "./SimpleTextOutput";
-import {state} from "../StateHandler"
+import {state} from "../utils/GlobalState"
+import '../App.css'
 
 const EvaluateOutput: FC = () => {
     return (

@@ -1,12 +1,13 @@
 import {FC} from "react";
-import {state} from "../StateHandler"
-import Grid from "@material-ui/core/Grid";
-import Label from "./Label";
+import {state} from "../utils/GlobalState"
+import "./LevelDisplay.css";
 
 const LevelDisplay: FC = () => {
-    return <Grid item>
-        <Label message={"" + state.level}/>
-    </Grid>;
+    let errorClass = "";
+    if( state.errors.length ){
+        errorClass = "Label_When_Errors"
+    }
+    return <div className={`Label_Label ${errorClass}`}>{"" + state.level}</div>;
 }
 
 export default LevelDisplay;

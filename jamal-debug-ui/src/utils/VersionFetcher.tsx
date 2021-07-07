@@ -1,6 +1,6 @@
 import axios from "axios";
 import packageJson from "../../package.json";
-import {state} from "../StateHandler"
+import {state} from "./GlobalState"
 /**
  * This singleton fetches the version string from GitHub. This way the application can how in the footer the
  * available latest version of the application. The latest version is what appears in the file version.jim

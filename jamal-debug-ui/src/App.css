@@ -21,7 +21,6 @@
 .App_Paper {
   margin-top: 10px;
   height: 300px;
-  max-height: 300px;
   padding: 5px;
 }
 
@@ -32,8 +31,7 @@
 }
 
 .App_Eval {
-  height: 310px;
-  max-height: 310px;
+  height: 300px;
   margin-top: 10px;
 }
 

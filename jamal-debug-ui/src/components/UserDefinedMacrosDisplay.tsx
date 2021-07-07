@@ -1,67 +1,74 @@
-import React, { FC } from "react";
-import { DataGrid, GridRowSelectedParams } from "@material-ui/data-grid";
+import React, {FC} from "react";
 import "./UserDefinedMacrosDisplay.css";
+import {Table} from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
 
 type UserDefinedMacrosDisplayProps = {
-  data: any;
-  captionSetter: (caption: string) => void;
-  contentSetter: (caption: string) => void;
+    data: any;
+    captionSetter: (caption: string) => void;
+    contentSetter: (caption: string) => void;
 };
 
 const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
-  data,captionSetter,contentSetter
-}) => {
-  const columns = [
-    { field: "id", headerName: "n", width: 10 },
-    { field: "level", headerName: "Level", width: 25 },
-    { field: "name", headerName: "macro", width: 100 },
-    { field: "params", headerName: "params", width: 100 },
-    { field: "content", headerName: "content" },
-  ];
+                                                                         data, captionSetter, contentSetter
+                                                                     }) => {
 
-  const rows = [];
+    const rows: Array<Record<string, any>> = [];
 
-  var i: number = 0;
-  var j: number = 0;
-  for (var macros of data?.userDefined?.scopes || []) {
-    i++;
-    for (var macro of macros || []) {
-      j++;
-      rows.push({
-        id: j,
-        level: i,
-        name: macro.id,
-        params: macro?.parameters?.join(",") ?? "",
-        content: macro.content,
-      });
+    let i: number = 0;
+    let j: number = 0;
+    for (let macros of data?.userDefined?.scopes || []) {
+        i++;
+        for (var macro of macros || []) {
+            j++;
+            rows.push({
+                name: macro.id,
+                params: macro?.parameters?.join(",") ?? "",
+                content: macro.content,
+            });
+        }
     }
-  }
-  return (
-    <div style={{ height: "310px", width: "100%", marginTop: "10px" }}>
-      <DataGrid
-        className="UserDefinedMacrosDisplay"
-        headerHeight={33}
-        rowHeight={33}
-        rows={rows}
-        columns={columns}
-        density="compact"
-        pageSize={rows.length}
-        hideFooter={true}
-        onRowSelected={(row: GridRowSelectedParams) => {
-          const text =
-            "{@define " +
-            row.data.name +
-            "(" +
-            row.data.params +
-            ")=" +
-            row.data.content +
-            "}";
-            captionSetter("macro definition");
-            contentSetter(text);
-        }}
-      />
-    </div>
-  );
+
+    j = 0;
+    i = 0;
+    return (
+        <div style={{height: "310px", width: "100%", marginTop: "10px", overflowY: "auto", backgroundColor: "#d2eaff"}}>
+            <Table celled size="small" sortable striped style={{fontSize: "12px", backgroundColor: "#d2eaff"}}>
+                <Table.Header>
+                    <Table.Row key={0}>
+                        <Table.HeaderCell>n</Table.HeaderCell>
+                        <Table.HeaderCell>L</Table.HeaderCell>
+                        <Table.HeaderCell>macro</Table.HeaderCell>
+                        <Table.HeaderCell>parameters</Table.HeaderCell>
+                        <Table.HeaderCell>body</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                {(data?.userDefined?.scopes || []).map((macros: Record<string, any>) => {
+                        i++;
+                        return macros.map((macro: Record<string, any>) => {
+                                j++;
+                                return <Table.Row key={j} onClick={((rowNr: number) => () => {
+                                    const row = rows[rowNr];
+                                    const text = "{@define " + row.name + "(" + row.params + ")=" + row.content + "}";
+                                    captionSetter("macro definition");
+                                    contentSetter(text);
+                                })(j - 1)}>
+                                    <Table.Cell style={{width: 30}}>{j}</Table.Cell>
+                                    <Table.Cell style={{width: 30}}>{i}</Table.Cell>
+                                    <Table.Cell style={{width: 100}}>{macro.id}</Table.Cell>
+                                    <Table.Cell style={{
+                                        width: 200,
+                                        overflowX: "auto"
+                                    }}>{macro?.parameters?.join(",") ?? ""}</Table.Cell>
+                                    <Table.Cell style={{width: "100%"}}>{macro.content}</Table.Cell>
+                                </Table.Row>;
+                            }
+                        );
+                    }
+                )}
+            </Table>
+        </div>
+    );
 };
 
 export default UserDefinedMacrosDisplay;
