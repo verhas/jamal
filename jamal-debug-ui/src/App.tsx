@@ -150,17 +150,13 @@ const App = () => {
 
     const evaluateInput = (
         <Paper className="App_Paper, App_Eval">
-            <SimpleTextInput caption={"evaluate"} reference={input2Evaluate}>
-                {""}
-            </SimpleTextInput>
+            <SimpleTextInput caption={"evaluate"} reference={input2Evaluate}/>
         </Paper>
     );
 
     const breakPointsInput = (
         <Paper className="App_Paper, App_Eval">
-            <SimpleTextInput caption={"breakpoints"} reference={breakpoints} backgroundColor="#ffe0e0">
-                {""}
-            </SimpleTextInput>
+            <SimpleTextInput caption={"breakpoints"} reference={breakpoints} backgroundColor="#ffe0e0"/>
         </Paper>
     );
 

@@ -2,14 +2,12 @@ import React, {FC} from "react";
 import "./SimpleText.css";
 
 type SimpleTextInputProps = {
-    children: string;
     caption: string;
     reference: any;
     backgroundColor?: string;
 };
 
 const SimpleTextInput: FC<SimpleTextInputProps> = ({
-                                                       children,
                                                        caption,
                                                        reference,
                                                        backgroundColor = "white"
@@ -19,7 +17,7 @@ const SimpleTextInput: FC<SimpleTextInputProps> = ({
             <div className="textbox_caption" style={{backgroundColor: backgroundColor}}>{caption}</div>
             <textarea className="SimpleTextInput_TextArea" ref={reference}
                       style={{backgroundColor: backgroundColor, width: "99%"}}
-                      value={children} onChange={()=>{}}/>
+                      defaultValue="" onChange={() => {}}/>
         </div>
     );
 };

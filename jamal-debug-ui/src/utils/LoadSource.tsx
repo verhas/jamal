@@ -7,7 +7,6 @@ const loadSource = () => {
         "level&errors&input&output&inputBefore&processing&macros&userDefined&state&output&version"
     )
         .then((response) => {
-            console.log(state)
             const level = +(response.data?.level);
             const inputBeforeArray = [];
             for (let i = 0; i < state.inputBeforeArray.length && i < level-1; i++) {

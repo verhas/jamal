@@ -34,6 +34,7 @@ const LevelDisplay: FC = () => {
                 </div>
             </div>
         </div>
+        <div style={{fontSize: "8pt"}}>source level</div>
     </>;
 }
 
