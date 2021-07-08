@@ -24,7 +24,6 @@ import Button from "./components/Button";
 import "./App.css";
 import LevelDisplay from "./components/LevelDisplay";
 import EvaluateOutput from "./components/EvaluateOutput";
-import SimpleTextOutput from "./components/SimpleTextOutput";
 import ErrorsDisplay from "./components/ErrorsDisplay";
 
 const App = () => {
@@ -114,8 +113,6 @@ const App = () => {
                 alignItems="flex-end"
                 alignContent="flex-end"
             >
-                <Button onClick={() => evaluate(input2Evaluate)} color="blue"
-                        caption={"Evaluate"} disabled={state.currentTabStop !== 2}><Evaluate/></Button>
                 <Button onClick={quit} caption="Quit" color="red"><Quit/></Button>
             </Grid>
         </>
@@ -198,7 +195,10 @@ const App = () => {
                         >
                             <Tab value={0} label="built-in macros"/>
                             <Tab value={1} label="user defined"/>
-                            <Tab value={2} label="evaluate"/>
+                            <Tab value={2} label={<>
+                                <Button onClick={() => evaluate(input2Evaluate)} color="blue"
+                                        caption={"Evaluate"} disabled={state.currentTabStop !== 2}>{<></>}</Button>
+                            </>}/>
                             <Tab value={3} label="breakpoints"/>
                             <Tab value={4} label={state?.errors?.length > 0 ? "errors" : ""}
                                  disabled={!state?.errors?.length}/>

@@ -4,9 +4,9 @@ import {Table} from 'semantic-ui-react';
 import {state} from '../utils/GlobalState';
 import 'semantic-ui-css/semantic.min.css';
 
-type ErrorsDisplay = {};
+type ErrorsDisplayProps = {};
 
-const ErrorsDisplay: FC<ErrorsDisplay> = () => {
+const ErrorsDisplay: FC<ErrorsDisplayProps> = () => {
 
     const errors = state.errors;
     let j = 0;

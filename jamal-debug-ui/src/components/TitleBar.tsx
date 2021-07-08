@@ -2,7 +2,6 @@ import React, { FC, useMemo } from "react";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import MenuIcon from "@material-ui/icons/Menu";
 import Disconnect from "@material-ui/icons/WifiOff";
 import Before from "@material-ui/icons/PauseCircleOutline";
 import After from "@material-ui/icons/CheckCircle";

@@ -1,5 +1,4 @@
 import React, {FC} from "react";
-import Box from "@material-ui/core/Box";
 import "./Input.css";
 import showNewLine from "../utils/NewLineDisplay";
 
