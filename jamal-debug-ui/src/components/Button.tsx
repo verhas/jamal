@@ -9,7 +9,7 @@ type ButtonProps = {
     disabled?: boolean;
 };
 
-const Button: FC<ButtonProps> = ({onClick, caption, color = "default", disabled = false, children}) => {
+const Button: FC<ButtonProps> = ({onClick, caption, color = "grey", disabled = false, children}) => {
     return (
         <>
             <SemanticButton variant="contained" onClick={onClick} color={color} disabled={disabled}>

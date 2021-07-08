@@ -39,29 +39,31 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
                         <Table.HeaderCell>body</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
-                {(data?.userDefined?.scopes || []).map((macros: Record<string, any>) => {
-                        i++;
-                        return macros.map((macro: Record<string, any>) => {
-                                j++;
-                                return <Table.Row key={j} onClick={((rowNr: number) => () => {
-                                    const row = rows[rowNr];
-                                    const text = "{@define " + row.name + "(" + row.params + ")=" + row.content + "}";
-                                    captionSetter("macro definition");
-                                    contentSetter(text);
-                                })(j - 1)}>
-                                    <Table.Cell style={{width: 30}}>{j}</Table.Cell>
-                                    <Table.Cell style={{width: 30}}>{i}</Table.Cell>
-                                    <Table.Cell style={{width: 100}}>{macro.id}</Table.Cell>
-                                    <Table.Cell style={{
-                                        width: 200,
-                                        overflowX: "auto"
-                                    }}>{macro?.parameters?.join(",") ?? ""}</Table.Cell>
-                                    <Table.Cell style={{width: "100%"}}>{macro.content}</Table.Cell>
-                                </Table.Row>;
-                            }
-                        );
-                    }
-                )}
+                <Table.Body>
+                    {(data?.userDefined?.scopes || []).map((macros: Record<string, any>) => {
+                            i++;
+                            return macros.map((macro: Record<string, any>) => {
+                                    j++;
+                                    return <Table.Row key={j} onClick={((rowNr: number) => () => {
+                                        const row = rows[rowNr];
+                                        const text = "{@define " + row.name + "(" + row.params + ")=" + row.content + "}";
+                                        captionSetter("macro definition");
+                                        contentSetter(text);
+                                    })(j - 1)}>
+                                        <Table.Cell style={{width: 30}}>{j}</Table.Cell>
+                                        <Table.Cell style={{width: 30}}>{i}</Table.Cell>
+                                        <Table.Cell style={{width: 100}}>{macro.id}</Table.Cell>
+                                        <Table.Cell style={{
+                                            width: 200,
+                                            overflowX: "auto"
+                                        }}>{macro?.parameters?.join(",") ?? ""}</Table.Cell>
+                                        <Table.Cell style={{width: "100%"}}>{macro.content}</Table.Cell>
+                                    </Table.Row>;
+                                }
+                            );
+                        }
+                    )}
+                </Table.Body>
             </Table>
         </div>
     );

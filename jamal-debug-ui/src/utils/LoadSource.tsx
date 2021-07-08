@@ -29,10 +29,6 @@ const loadSource = () => {
             state.setServerVersion(response.data?.version?.version ?? "unknown");
             const lastErrors = response.data?.errors ?? [];
             state.setErrors(lastErrors);
-            if (state.currentTabStop !== 2 && lastErrors.length) {
-                state.setEvalOutput(lastErrors.join("\n"));
-                state.setResultCaption("execution errors");
-            }
             state.setData(response.data);
         })
         .catch((err: AxiosError) => {

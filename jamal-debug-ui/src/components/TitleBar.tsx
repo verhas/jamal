@@ -39,7 +39,7 @@ const TitleBar: FC<TitleBarProps> = ({ message }) => {
         justify="space-between"
       >
         <Grid item>
-          <MenuIcon />
+          &nbsp;
         </Grid>
         <Grid item>
           <Typography variant="h6" className="title">

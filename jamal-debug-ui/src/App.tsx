@@ -24,6 +24,8 @@ import Button from "./components/Button";
 import "./App.css";
 import LevelDisplay from "./components/LevelDisplay";
 import EvaluateOutput from "./components/EvaluateOutput";
+import SimpleTextOutput from "./components/SimpleTextOutput";
+import ErrorsDisplay from "./components/ErrorsDisplay";
 
 const App = () => {
 
@@ -57,14 +59,18 @@ const App = () => {
 
     const tabPanelChange = (event: React.ChangeEvent<{}>, newTabStop: number) => {
         state.setCurrentTabStop(newTabStop);
-        if (newTabStop !== 2 && state.errors.length) {
-            if (state.currentTabStop === 2) {
-                state.setSavedEvalOutput(state.evalOutput);
-                state.setSavedResultCaption(state.resultCaption);
-            }
-            state.setEvalOutput(state.errors.join("\n"));
-            state.setResultCaption("execution errors");
-        } else {
+        if (newTabStop === 4 && !state?.errors?.length) {
+            state.setCurrentTabStop(state.currentTabStop);
+            return;
+        }
+        if (state.currentTabStop === 2) {
+            state.setSavedEvalOutput(state.evalOutput);
+            state.setSavedResultCaption(state.resultCaption);
+        }
+        if (newTabStop === 1) {
+            state.setResultCaption("macro definition");
+        }
+        if (newTabStop === 2) {
             state.setEvalOutput(state.savedEvalOutput);
             state.setResultCaption(state.savedResultCaption);
         }
@@ -81,7 +87,8 @@ const App = () => {
                 justify="space-around"
                 alignContent="center"
             >
-                <Button onClick={() => state.setShowP(!state.showP)} caption="">{"\u00b6"}</Button>
+                <Button onClick={() => state.setShowP(!state.showP)}
+                        caption={state.showP ? "hide" : "show"}>{"\u00b6"}</Button>
                 <Button onClick={loadSource} caption="Refresh"><Refresh/></Button>
                 <Button onClick={() => run(breakpoints)} caption="Run"><Run/></Button>
                 <Button onClick={step} caption="Step"><Step/></Button>
@@ -133,19 +140,17 @@ const App = () => {
     const runInput = (
         <Grid item xs={6}>
             <Paper className="App_Paper, run_input">
-                <div style={{marginLeft: "30px", fontSize: "12pt"}}>{"input"}</div>
+                <div style={{marginLeft: "5px", fontSize: "10pt", fontWeight: "bold"}}>{"input"}</div>
                 <Input text={state.inputBefore} macro={state.macro}/>
             </Paper>
         </Grid>
     );
 
     const runOutput = (
-        <Grid item xs={6}>
-            <Paper className="App_Paper">
-                <div style={{marginLeft: "30px", fontSize: "12pt"}}>{"output"}</div>
-                <Input text={state.output}/>
-            </Paper>
-        </Grid>
+        <Paper className="App_Paper">
+            <div style={{marginLeft: "5px", fontSize: "10pt", fontWeight: "bold"}}>{"output"}</div>
+            <Input text={state.output}/>
+        </Paper>
     );
 
     const evaluateInput = (
@@ -156,10 +161,14 @@ const App = () => {
 
     const breakPointsInput = (
         <Paper className="App_Paper, App_Eval">
-            <SimpleTextInput caption={"breakpoints"} reference={breakpoints} backgroundColor="#ffe0e0"/>
+            <SimpleTextInput caption={"breakpoints"} reference={breakpoints} backgroundColor="#ffe0e0" height={585}/>
         </Paper>
     );
-
+    const errorsOutput = (
+        <Paper className="App_Paper, App_Eval">
+            <ErrorsDisplay/>
+        </Paper>
+    );
     return (
         <div className="App">
             <header className="App-header">
@@ -191,6 +200,8 @@ const App = () => {
                             <Tab value={1} label="user defined"/>
                             <Tab value={2} label="evaluate"/>
                             <Tab value={3} label="breakpoints"/>
+                            <Tab value={4} label={state?.errors?.length > 0 ? "errors" : ""}
+                                 disabled={!state?.errors?.length}/>
                         </Tabs>
                         <TabPanel id="0" hidden={state.currentTabStop !== 0} other="">
                             {builtInMacroList}
@@ -204,6 +215,9 @@ const App = () => {
                         <TabPanel id="3" hidden={state.currentTabStop !== 3} other="">
                             {breakPointsInput}
                         </TabPanel>
+                        <TabPanel id="4" hidden={state.currentTabStop !== 4} other="">
+                            {errorsOutput}
+                        </TabPanel>
                     </Grid>
                 </Grid>
 
@@ -214,9 +228,12 @@ const App = () => {
                     style={{width: "100%"}}
                     justify="space-around"
                 >
-                    {runOutput}
                     <Grid item xs={6}>
-                        <EvaluateOutput/>
+                        {runOutput}
+                    </Grid>
+                    <Grid item xs={6}>
+                        {state.currentTabStop === 1 || state.currentTabStop === 2 ?
+                            <EvaluateOutput/> : <></>}
                     </Grid>
                 </Grid>
                 <Grid
