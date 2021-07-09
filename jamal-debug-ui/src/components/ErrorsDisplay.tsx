@@ -28,7 +28,7 @@ const ErrorsDisplay: FC<ErrorsDisplayProps> = () => {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {errors.map((error: Record<string, any>) => {
+                        {errors.map((error: { [key: string]: any }) => {
                             j++;
                             return <Table.Row key={j} >
                                 <Table.Cell style={{width: "100%",}} warning verticalAlign="top">{error}</Table.Cell>

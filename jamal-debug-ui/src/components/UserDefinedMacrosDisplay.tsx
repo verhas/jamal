@@ -2,24 +2,32 @@ import React, {FC} from "react";
 import "./UserDefinedMacrosDisplay.css";
 import {Table} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import type Data from '../server/Data'
+import type {UserDefinedMacro} from "../server/Data";
 
 type UserDefinedMacrosDisplayProps = {
-    data: any;
+    data: Data;
     captionSetter: (caption: string) => void;
     contentSetter: (caption: string) => void;
 };
+
+type Macro = {
+    name: string;
+    params: string;
+    content: string
+}
 
 const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
                                                                          data, captionSetter, contentSetter
                                                                      }) => {
 
-    const rows: Array<Record<string, any>> = [];
+    const rows: Macro[] = [];
 
-    for (let macros of data?.userDefined?.scopes || []) {
+    for (let macros of data.userDefined?.scopes || []) {
         for (let macro of macros || []) {
             rows.push({
                 name: macro.id,
-                params: macro?.parameters?.join(",") ?? "",
+                params: macro.parameters?.join(",") ?? "",
                 content: macro.content,
             });
         }
@@ -40,9 +48,9 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {(data?.userDefined?.scopes || []).map((macros: Record<string, any>) => {
+                    {(data?.userDefined?.scopes || []).map((macros: { [key: string]: any }) => {
                             i++;
-                            return macros.map((macro: Record<string, any>) => {
+                            return macros.map((macro: UserDefinedMacro) => {
                                     j++;
                                     return <Table.Row key={j} onClick={((rowNr: number) => () => {
                                         const row = rows[rowNr];

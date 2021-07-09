@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, {FC, useMemo} from "react";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -45,7 +45,7 @@ const TitleBar: FC<TitleBarProps> = ({ message }) => {
             Jamal Debug
           </Typography>
         </Grid>
-        <Grid item>{icon}</Grid>
+        <Grid item><span style={{fontSize: "8pt"}}>{message}&nbsp;</span>{icon}</Grid>
       </Grid>
     </Toolbar>
   );

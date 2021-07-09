@@ -1,40 +1,53 @@
 import debug from "./Debug";
-import {AxiosError} from "axios";
+import {AxiosError, AxiosResponse} from "axios";
 import {state} from "./GlobalState";
+import type Data from '../server/Data';
+import {RUN_WAIT, RUN_RESPONSE_CODE} from "../Constants";
 
 const loadSource = () => {
-    debug.all(
-        "level&errors&input&output&inputBefore&processing&macros&userDefined&state&output&version"
-    )
-        .then((response) => {
-            const level = +(response.data?.level);
-            const inputBeforeArray = [];
-            for (let i = 0; i < state.inputBeforeArray.length && i < level-1; i++) {
-                inputBeforeArray[i] = state.inputBeforeArray[i];
+    debug.all("level&errors&input&output&inputBefore&processing&macros&userDefined&state&output&version")
+        .then((response: AxiosResponse<Data>) => {
+            const data = response.data
+            if (data) {
+                const level = +(data.level);
+
+                const inputBeforeArray = state.inputBeforeArray.slice(0, level - 1);
+                inputBeforeArray.push(data.inputBefore);
+
+                const outputArray = state.outputArray.slice(0, level - 1);
+                outputArray[level - 1] = data.output;
+
+                state.setInputBeforeArray(inputBeforeArray);
+                state.setOutputArray(outputArray);
+
+                state.setDisplayedLevel(level);
+                state.setInputBefore(data.inputBefore ?? "");
+                state.setMacro(data.processing ?? "");
+                state.setOutput(data.output ?? "");
+                state.setStateMessage(data.state ?? "");
+                state.setLevel(data.level ?? "");
+                state.setServerVersion(data.version?.version ?? "unknown");
+                const lastErrors = data.errors ?? [];
+                if (!state.errors.length && lastErrors.length && !state.wasErrorAlerted) {
+                    let [isan, s]: [string, string] =
+                        lastErrors.length === 1 ? ["is an", ''] : ["are", 's'];
+                    alert(`There ${isan} error${s} in the Jamal source.\n\n`
+                        + lastErrors.join("\n")
+                        + "\n\n"
+                        + "This is a one time only alert. When there is an error "
+                        + "the 'ERROR' tab is visible and the level counter is red.");
+                    state.setWasErrorAlerted(true);
+                }
+                state.setErrors(lastErrors);
+                state.setData(data);
+            } else {
+                alert("Server response contained no data.");
             }
-            inputBeforeArray[level-1] = response.data?.inputBefore;
-            const outputArray = [];
-            for (let i = 0; i < state.outputArray.length && i < level-1; i++) {
-                outputArray[i] = state.outputArray[i];
-            }
-            outputArray[level-1] = response.data?.output;
-            state.setDisplayedLevel(level);
-            state.setInputBefore(response.data?.inputBefore ?? "");
-            state.setInputBeforeArray(inputBeforeArray);
-            state.setMacro(response.data?.processing ?? "");
-            state.setOutput(response.data?.output ?? "");
-            state.setOutputArray(outputArray);
-            state.setStateMessage(response.data?.state ?? "");
-            state.setLevel(response.data?.level ?? "");
-            state.setServerVersion(response.data?.version?.version ?? "unknown");
-            const lastErrors = response.data?.errors ?? [];
-            state.setErrors(lastErrors);
-            state.setData(response.data);
         })
-        .catch((err: AxiosError) => {
-            if (err?.response?.status === 503) {
+        .catch((err: AxiosError<undefined>) => {
+            if (err?.response?.status === RUN_RESPONSE_CODE) {
                 state.setStateMessage("RUN");
-                setTimeout(loadSource, 500);
+                setTimeout(loadSource, RUN_WAIT);
             } else {
                 state.setStateMessage("DISCONNECTED");
                 state.setInputBefore("");

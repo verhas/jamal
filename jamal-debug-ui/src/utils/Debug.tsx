@@ -26,7 +26,7 @@ class Debug {
     return "http://" + this.host + ":" + this.port;
   }
 
-  post = (command: string, data?: string) => {
+  post = (command: string, data='') => {
     return axios.post(this.connection() + command, data);
   }
   
@@ -39,16 +39,7 @@ class Debug {
   stepInto = () => this.post("/stepInto");
   stepOut = () => this.post("/stepOut");
   quit = () => this.post("/quit");
-  execute = (data: string) => this.post("/execute", data);
-
-  //level = () => this.get("/level");
-  //state = () => this.get("/state");
-  //input = () => this.get("/input");
-  //inputBefore = () => this.get("/inputBefore");
-  //output = () => this.get("/output");
-  //processing = () => this.get("/processing");
-  //macros = () => this.get("/macros");
-  //userDefinedMacros = () => this.get("/userDefinedMacros");
+  execute = (code: string) => this.post("/execute", code);
   all = (queryParams: string) => this.get("/all?" + queryParams);
 }
 

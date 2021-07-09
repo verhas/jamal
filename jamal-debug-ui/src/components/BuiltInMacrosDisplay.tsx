@@ -2,9 +2,10 @@ import React, {FC} from "react";
 import "./BuiltInMacrosDisplay.css";
 import {Table} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import type Data from '../server/Data'
 
 type BuiltInMacrosDisplayProps = {
-    data: Record<string, any>
+    data: Data
 };
 
 const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({data}) => {
@@ -31,9 +32,9 @@ const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({data}) => {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {(data?.macros?.macros || []).map((macros: Record<string, any>) => {
+                        {(data?.macros?.macros || []).map((macros: { [key: string]: any }) => {
                                 i++;
-                                return macros.macros.map((macro: Record<string, any>) => {
+                                return macros.macros.map((macro: { [key: string]: any }) => {
                                         j++;
                                         return <Table.Row key={j}>
                                             <Table.Cell style={{width: 30}}>{j}</Table.Cell>

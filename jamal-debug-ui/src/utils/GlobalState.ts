@@ -8,9 +8,9 @@ import {useState} from "react";
  * @param init the record with the initial values
  */
 
-export let state: any = {};
+export let state: { [x: string]: any } = {};
 
-const initState = (init: Record<string, any>) => {
+const initState = (init: { [key: string]: any }) => {
     const loopUseState = useState; // or else the linter screams and fails
     for (let key in init) {
         [state[key], state["set" + key.charAt(0).toUpperCase() + key.slice(1)]] = loopUseState(init[key]);

@@ -4,7 +4,6 @@ import TabPanel from "./components/TabPanel";
 import SimpleTextInput from "./components/SimpleTextInput";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Evaluate from "@material-ui/icons/TrendingFlat";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Run from "@material-ui/icons/DirectionsRun";
@@ -45,7 +44,8 @@ const App = () => {
         showP: true,
         stateMessage: "",
         serverVersion: "unknown",
-        currentTabStop: 0
+        currentTabStop: 0,
+        wasErrorAlerted: false
     });
 
     useEffect(() => {
