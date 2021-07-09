@@ -18,18 +18,20 @@ import BuiltInMacrosDisplay from "./components/BuiltInMacrosDisplay";
 import UserDefinedMacrosDisplay from "./components/UserDefinedMacrosDisplay";
 import initState, {state} from "./utils/GlobalState"
 import loadSource from "./utils/LoadSource";
-import {evaluate, run, stepInto, step, stepOut, quit} from "./utils/DebugCommands"
+import {evaluate, run, stepInto, fetch, step, stepOut, quit} from "./utils/DebugCommands"
 import Button from "./components/Button";
 import "./App.css";
 import LevelDisplay from "./components/LevelDisplay";
 import EvaluateOutput from "./components/EvaluateOutput";
 import ErrorsDisplay from "./components/ErrorsDisplay";
+import {DISCONNECTED} from "./Constants";
 
 const App = () => {
 
     initState({
         data: {},
         inputBefore: "",
+        inputAfter: "",
         inputBeforeArray: [],
         errors: [],
         macro: "",
@@ -90,6 +92,7 @@ const App = () => {
                         caption={state.showP ? "hide" : "show"}>{"\u00b6"}</Button>
                 <Button onClick={loadSource} caption="Refresh"><Refresh/></Button>
                 <Button onClick={() => run(breakpoints)} caption="Run"><Run/></Button>
+                <Button onClick={fetch} caption="Fetch" disabled={state.stateMessage === "BEFORE"}>{"{...}"}</Button>
                 <Button onClick={step} caption="Step"><Step/></Button>
                 <Button onClick={stepInto} caption="Step In"><StepInto/></Button>
                 <Button onClick={stepOut} caption="Step out"><StepOut/></Button>
@@ -138,7 +141,8 @@ const App = () => {
         <Grid item xs={6}>
             <Paper className="App_Paper, run_input">
                 <div style={{marginLeft: "5px", fontSize: "10pt", fontWeight: "bold"}}>{"input"}</div>
-                <Input text={state.inputBefore} macro={state.macro}/>
+                <Input text={state.stateMessage === "AFTER" ? state.inputAfter : state.inputBefore}
+                       macro={state.stateMessage === "AFTER" ? '' : state.macro}/>
             </Paper>
         </Grid>
     );
@@ -193,15 +197,16 @@ const App = () => {
                             centered
                             indicatorColor="secondary"
                         >
-                            <Tab value={0} label="built-in macros"/>
-                            <Tab value={1} label="user defined"/>
+                            <Tab value={0} label="built-in macros" disabled={state.stateMessage === DISCONNECTED}/>
+                            <Tab value={1} label="user defined" disabled={state.stateMessage === DISCONNECTED}/>
                             <Tab value={2} label={<>
                                 <Button onClick={() => evaluate(input2Evaluate)} color="blue"
-                                        caption={"Evaluate"} disabled={state.currentTabStop !== 2}>{<></>}</Button>
-                            </>}/>
-                            <Tab value={3} label="breakpoints"/>
-                            <Tab value={4} label={state?.errors?.length > 0 ? "errors" : ""}
-                                 disabled={!state?.errors?.length}/>
+                                        caption={"Evaluate"} disabled={state.currentTabStop !== 2 || state.stateMessage === DISCONNECTED}>{<></>}</Button>
+                            </>} disabled={state.stateMessage === DISCONNECTED}/>
+                            <Tab value={3} label="breakpoints" disabled={state.stateMessage === DISCONNECTED}/>
+                            <Tab value={4}
+                                 label={state?.errors?.length > 0 ? `error${state?.errors?.length === 1 ? '' : 's'} (${state?.errors?.length})` : ""}
+                                 disabled={!state?.errors?.length || state.stateMessage === DISCONNECTED}/>
                         </Tabs>
                         <TabPanel id="0" hidden={state.currentTabStop !== 0} other="">
                             {builtInMacroList}

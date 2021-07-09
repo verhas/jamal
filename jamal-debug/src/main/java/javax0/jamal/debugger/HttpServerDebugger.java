@@ -162,8 +162,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     private Debugger.Stub stub;
 
-    private int currentLevel;
-    private int stepLevel;
+    private int currentLevel = 1;
+    private int stepLevel = 0;
     private RunState state = RunState.STEP_IN;
     private final List<String> breakpoints = new ArrayList<>();
     String inputBefore = "";
@@ -175,7 +175,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     @Override
     public void setStart(CharSequence macro) {
-        if (state != RunState.NODEBUG) {
+        if (state != RunState.NODEBUG && (stepLevel == 0 || currentLevel <= stepLevel)) {
             macros = macro.toString();
             handleState = "BEFORE";
             handle();
@@ -184,8 +184,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     @Override
     public void setBefore(int level, CharSequence input) {
-        if (state != RunState.NODEBUG) {
-            currentLevel = level;
+        currentLevel = level;
+        if (state != RunState.NODEBUG && (stepLevel == 0 || currentLevel <= stepLevel)) {
             this.input = input;
             this.inputBefore = input.toString();
             macros = "";
@@ -195,8 +195,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
 
     @Override
     public void setAfter(int level, CharSequence output) {
-        if (state != RunState.NODEBUG) {
-            currentLevel = level;
+        currentLevel = level;
+        if (state != RunState.NODEBUG && (stepLevel == 0 || currentLevel <= stepLevel)) {
             inputAfter = input.toString();
             this.output = output.toString();
             handleState = "AFTER";

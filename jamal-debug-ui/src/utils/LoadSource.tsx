@@ -2,7 +2,7 @@ import debug from "./Debug";
 import {AxiosError, AxiosResponse} from "axios";
 import {state} from "./GlobalState";
 import type Data from '../server/Data';
-import {RUN_WAIT, RUN_RESPONSE_CODE} from "../Constants";
+import {RUN_WAIT, RUN_RESPONSE_CODE, DISCONNECTED, RUN} from "../Constants";
 
 const loadSource = () => {
     debug.all("level&errors&input&output&inputBefore&processing&macros&userDefined&state&output&version")
@@ -22,6 +22,7 @@ const loadSource = () => {
 
                 state.setDisplayedLevel(level);
                 state.setInputBefore(data.inputBefore ?? "");
+                state.setInputAfter(data.input ?? "");
                 state.setMacro(data.processing ?? "");
                 state.setOutput(data.output ?? "");
                 state.setStateMessage(data.state ?? "");
@@ -45,14 +46,15 @@ const loadSource = () => {
             }
         })
         .catch((err: AxiosError<undefined>) => {
-            if (err?.response?.status === RUN_RESPONSE_CODE) {
-                state.setStateMessage("RUN");
+            if (err.response?.status === RUN_RESPONSE_CODE) {
+                state.setStateMessage(RUN);
                 setTimeout(loadSource, RUN_WAIT);
             } else {
-                state.setStateMessage("DISCONNECTED");
+                state.setStateMessage(DISCONNECTED);
                 state.setInputBefore("");
                 state.setMacro("");
                 state.setOutput("");
+                state.setData({});
             }
         });
 };

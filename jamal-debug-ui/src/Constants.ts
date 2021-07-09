@@ -5,3 +5,5 @@ export const RUN_WAIT = 500;
 // the HTTP response code that the server uses when it cannot answer the request because the code is running
 export const RUN_RESPONSE_CODE = 503; // service unavailable
 
+export const DISCONNECTED = "DISCONNECTED";
+export const RUN = "RUN";

@@ -7,6 +7,7 @@ import Before from "@material-ui/icons/PauseCircleOutline";
 import After from "@material-ui/icons/CheckCircle";
 import Run from "@material-ui/icons/DirectionsRun";
 import UnknownStatus from "@material-ui/icons/TextRotationNone";
+import {DISCONNECTED, RUN} from "../Constants";
 import "./TitleBar.css";
 
 type TitleBarProps = {
@@ -20,9 +21,9 @@ const TitleBar: FC<TitleBarProps> = ({ message }) => {
         return <Before />;
       case "AFTER":
         return <After />;
-      case "DISCONNECTED":
+      case DISCONNECTED:
         return <Disconnect />;
-      case "RUN":
+      case RUN:
         return <Run />;
       default:
         return <UnknownStatus />;

@@ -1,13 +1,43 @@
-import {AxiosResponse} from "axios";
+import {AxiosError, AxiosResponse} from "axios";
 import loadSource from "./LoadSource";
 import {state} from "./GlobalState"
 import debug from "./Debug"
+import {RUN, RUN_RESPONSE_CODE, RUN_WAIT} from "../Constants";
 
 const postAndReload = (x: () => Promise<AxiosResponse>) => {
-    x().then(loadSource);
+    state.setStateMessage(RUN);
+    x().then(loadSource)
+        .catch((err: AxiosError<undefined>) => {
+            if (err.response?.status === RUN_RESPONSE_CODE) {
+                setTimeout(() => postAndReload(x), RUN_WAIT);
+            }else{
+                setTimeout(loadSource, RUN_WAIT);
+            }
+        });
 };
 
-export const step = () => postAndReload(debug.step);
+const postDoubleAndReload = (x: () => Promise<AxiosResponse>) => {
+    state.setStateMessage(RUN);
+    x().then(() => postAndReload(x))
+        .catch((err: AxiosError<undefined>) => {
+        if (err.response?.status === RUN_RESPONSE_CODE) {
+            setTimeout(() => postDoubleAndReload(x), RUN_WAIT);
+        }else{
+            setTimeout(loadSource, RUN_WAIT);
+        }
+    });
+};
+
+const doubledWhenBefore = () => {
+    if (state.stateMessage === "AFTER") {
+        return postDoubleAndReload;
+    } else {
+        return postAndReload;
+    }
+};
+
+export const step = () => doubledWhenBefore()(debug.step);
+export const fetch = () => postAndReload(debug.step);
 export const stepInto = () => postAndReload(debug.stepInto);
 export const stepOut = () => postAndReload(debug.stepOut);
 export const quit = () => postAndReload(debug.quit);

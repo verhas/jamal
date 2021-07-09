@@ -36,15 +36,17 @@ public class TestHello {
         TestThat.theInput(
             "hahóóó\n".repeat(2) +
                 "{@define !a=1}" +
+                "{@try {@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
+                "{@define !a=1}}" +
                 "{@define !a=1}" +
-                "{@define !a=1}{@define b(x)=x2x}" +
-                "{b{b{b{b{b{b{b{b{b{b{b{b{a}}}}}}}}}}}}}"
+                "{@define b(x)=x2x}" +
+                "{b{b{b{b{b{b{b{b{b{b{b{b{a}}}}zuma}}}}}}}}}"
         ).results("hahóóó\n" +
             "hahóóó\n" +
             "121");

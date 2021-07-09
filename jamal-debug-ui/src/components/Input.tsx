@@ -1,7 +1,6 @@
 import React, {FC} from "react";
 import "./Input.css";
 import showNewLine from "../utils/NewLineDisplay";
-import {state} from '../utils/GlobalState';
 
 type InputProps = {
     text: string;
@@ -23,12 +22,7 @@ const Input: FC<InputProps> = ({text, macro = ""}) => {
     const start = text.indexOf(macro);
     const end = start + macro.length;
     const startText = showNewLine(start === -1 ? text : text.substr(0, start));
-    let middleText: string;
-    if (state.stateMessage === "AFTER" && start === 0) {
-        middleText = "";
-    } else {
-        middleText = showNewLine(start === -1 ? "" : macro);
-    }
+    const middleText = showNewLine(start === -1 ? "" : macro);
     const endText = showNewLine(start === -1 ? "" : text.substr(end));
 
     return (
