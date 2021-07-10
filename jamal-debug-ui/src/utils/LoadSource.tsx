@@ -2,7 +2,7 @@ import debug from "./Debug";
 import {AxiosError, AxiosResponse} from "axios";
 import {state} from "./GlobalState";
 import type Data from '../server/Data';
-import {RUN_WAIT, RUN_RESPONSE_CODE, DISCONNECTED, RUN} from "../Constants";
+import {RUN_WAIT, RUN_RESPONSE_CODE, DISCONNECTED, RUN, REFRESH_MESSAGE_DELAY} from "../Constants";
 
 const loadSource = () => {
     debug.all("level&errors&input&output&inputBefore&processing&macros&userDefined&state&output&version")
@@ -55,6 +55,15 @@ const loadSource = () => {
                 state.setMacro("");
                 state.setOutput("");
                 state.setData({});
+                setTimeout( () =>{
+                    if( state.stateMessage === DISCONNECTED){
+                        const doRefresh = window.confirm("Refresh the page to retry connecting to the Jamal debugger server.\n" +
+                            "Refresh now?");
+                        if( doRefresh ){
+                            window.location.reload();
+                        }
+                    }
+                },REFRESH_MESSAGE_DELAY);
             }
         });
 };

@@ -7,3 +7,4 @@ export const RUN_RESPONSE_CODE = 503; // service unavailable
 
 export const DISCONNECTED = "DISCONNECTED";
 export const RUN = "RUN";
+export const REFRESH_MESSAGE_DELAY = 5000;
