@@ -57,7 +57,7 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
                                         const text = "{@define " + row.name + "(" + row.params + ")=" + row.content + "}";
                                         captionSetter("macro definition");
                                         contentSetter(text);
-                                    })(j - 1)}>
+                                    })(j - 1)} warning={macro.content === undefined}>
                                         <Table.Cell style={{width: 30}}>{j}</Table.Cell>
                                         <Table.Cell style={{width: 30}}>{i}</Table.Cell>
                                         <Table.Cell style={{width: 100}}>{macro.id}</Table.Cell>
@@ -65,7 +65,7 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
                                             width: 200,
                                             overflowX: "auto"
                                         }}>{macro?.parameters?.join(",") ?? ""}</Table.Cell>
-                                        <Table.Cell style={{width: "100%"}}>{macro.content || macro.type}</Table.Cell>
+                                        <Table.Cell style={{width: "100%"}}>{macro.content !== undefined ? macro.content : macro.type}</Table.Cell>
                                     </Table.Row>;
                                 }
                             );
