@@ -6,5 +6,7 @@ export const RUN_WAIT = 500;
 export const RUN_RESPONSE_CODE = 503; // service unavailable
 
 export const DISCONNECTED = "DISCONNECTED";
+export const BEFORE = "BEFORE";
+export const AFTER = "AFTER";
 export const RUN = "RUN";
 export const REFRESH_MESSAGE_DELAY = 5000;

@@ -1,5 +1,5 @@
 export type UserDefinedMacro = {
-    content: string,
+    content?: string,
     open: string,
     close: string,
     parameters: [string],

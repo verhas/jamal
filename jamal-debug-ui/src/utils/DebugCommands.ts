@@ -2,7 +2,7 @@ import {AxiosError, AxiosResponse} from "axios";
 import loadSource from "./LoadSource";
 import {state} from "./GlobalState"
 import debug from "./Debug"
-import {RUN, RUN_RESPONSE_CODE, RUN_WAIT} from "../Constants";
+import {AFTER, RUN, RUN_RESPONSE_CODE, RUN_WAIT} from "../Constants";
 
 const postAndReload = (x: () => Promise<AxiosResponse>) => {
     state.setStateMessage(RUN);
@@ -10,33 +10,32 @@ const postAndReload = (x: () => Promise<AxiosResponse>) => {
         .catch((err: AxiosError<undefined>) => {
             if (err.response?.status === RUN_RESPONSE_CODE) {
                 setTimeout(() => postAndReload(x), RUN_WAIT);
-            }else{
+            } else {
                 setTimeout(loadSource, RUN_WAIT);
             }
         });
 };
 
 const postDoubleAndReload = (x: () => Promise<AxiosResponse>) => {
-    state.setStateMessage(RUN);
-    x().then(() => postAndReload(x))
-        .catch((err: AxiosError<undefined>) => {
-        if (err.response?.status === RUN_RESPONSE_CODE) {
-            setTimeout(() => postDoubleAndReload(x), RUN_WAIT);
-        }else{
-            setTimeout(loadSource, RUN_WAIT);
-        }
-    });
-};
-
-const doubledWhenBefore = () => {
-    if (state.stateMessage === "AFTER") {
-        return postDoubleAndReload;
-    } else {
-        return postAndReload;
+    if (state.stateMessage !== AFTER) {
+        postAndReload(x);
+        return;
     }
+    state.setStateMessage(RUN);
+    x().then(
+        () => postAndReload(x)
+    ).catch(
+        (err: AxiosError<undefined>) => {
+            if (err.response?.status === RUN_RESPONSE_CODE) {
+                setTimeout(() => postDoubleAndReload(x), RUN_WAIT);
+            } else {
+                setTimeout(loadSource, RUN_WAIT);
+            }
+        }
+    );
 };
 
-export const step = () => doubledWhenBefore()(debug.step);
+export const step = () => postDoubleAndReload(debug.step);
 export const fetch = () => postAndReload(debug.step);
 export const stepInto = () => postAndReload(debug.stepInto);
 export const stepOut = () => postAndReload(debug.stepOut);

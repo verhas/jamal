@@ -26,7 +26,8 @@ public class TestHello {
      * IntelliJ. If the  string "Idea" is present in the stack trace as part of some class name then this is IntelliJ,
      * then we run. Otherwise, the test just returns.
      *
-     * @throws Exception
+     * @throws Exception when there is some error in the tested source code or when the debugger is aborted
+     * interactively
      */
     @Test
     @DisplayName("Used to debug the debugger UI")
@@ -36,14 +37,14 @@ public class TestHello {
         TestThat.theInput(
             "hahóóó\n".repeat(2) +
                 "{@define !a=1}" +
-                "{@try {@define !a=1}" +
+                "{@try {#comment{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
                 "{@define !a=1}" +
-                "{@define !a=1}}" +
+                "{@define !a=1}}}" +
                 "{@define !a=1}" +
                 "{@define b(x)=x2x}" +
                 "{b{b{b{b{b{b{b{b{b{b{b{b{a}}}}zuma}}}}}}}}}"

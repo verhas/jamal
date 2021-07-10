@@ -16,7 +16,7 @@ const LevelDisplay: FC = () => {
         }}>
             <div className={`LevelNumber ${errorClass}`}>{"" + state.displayedLevel}</div>
             <div>
-                <div className={'LevelNumber LevelUpDown'} onClick={() => {
+                <div className={'LevelNumber LevelUpDown LevelUp'} onClick={() => {
                     if (state.displayedLevel < state.level) {
                         state.setDisplayedLevel(state.displayedLevel + 1);
                         state.setInputBefore(state.inputBeforeArray[state.displayedLevel] || '');

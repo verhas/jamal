@@ -12,20 +12,29 @@
 }
 
 .LevelUpDown {
+    border-radius: 20%;
+    background: gray;
+    border: 1px solid grey;
     cursor: pointer;
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     padding: 8px;
-    font: 20px Arial, sans-serif;
+    margin-left: 5px;
+    font: 24px Arial, sans-serif;
 }
 
+.LevelUp {
+    margin-bottom: 15px;
+}
 .LevelUpDownLabel {
     position: relative;
-    top: -9px;
+    top: -13px;
+    left: -2px;
 }
 
 .LevelUpLabel {
-    left: -2px;
+    top: -13px;
+    left: -5px;
 }
 
 .RedAsError {

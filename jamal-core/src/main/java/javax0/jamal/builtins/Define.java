@@ -2,6 +2,7 @@ package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Configurable;
+import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
@@ -39,7 +40,8 @@ public class Define implements Macro {
             skipWhiteSpaces(input);
         }
         var id = fetchId(input);
-        if (processor.isDefined(convertGlobal(id))) {
+        final var existing = processor.getRegister().getUserDefined(id);
+        if (existing.isPresent() && !(existing.get() instanceof Identified.Undefined)) {
             if (optional) {
                 return "";
             }
@@ -52,8 +54,8 @@ public class Define implements Macro {
             throw new BadSyntax("The () in define is not optional when the macro name ends with ':'.");
         }
         final String[] params = getParameters(input, id);
-        final boolean pure;
-        if (pure = firstCharIs(input, ':')) {
+        final var pure = firstCharIs(input, ':');
+        if (pure) {
             skip(input, 1);
         }
         if (!firstCharIs(input, '=')) {

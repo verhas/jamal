@@ -7,49 +7,49 @@ import Before from "@material-ui/icons/PauseCircleOutline";
 import After from "@material-ui/icons/CheckCircle";
 import Run from "@material-ui/icons/DirectionsRun";
 import UnknownStatus from "@material-ui/icons/TextRotationNone";
-import {DISCONNECTED, RUN} from "../Constants";
+import {AFTER, BEFORE, DISCONNECTED, RUN} from "../Constants";
 import "./TitleBar.css";
 
 type TitleBarProps = {
-  message: string;
+    message: string;
 };
 
-const TitleBar: FC<TitleBarProps> = ({ message }) => {
-  const icon = useMemo(() => {
-    switch (message) {
-      case "BEFORE":
-        return <Before />;
-      case "AFTER":
-        return <After />;
-      case DISCONNECTED:
-        return <Disconnect />;
-      case RUN:
-        return <Run />;
-      default:
-        return <UnknownStatus />;
-    }
-  }, [message]);
+const TitleBar: FC<TitleBarProps> = ({message}) => {
+    const icon = useMemo(() => {
+        switch (message) {
+            case BEFORE:
+                return <Before/>;
+            case AFTER:
+                return <After/>;
+            case DISCONNECTED:
+                return <Disconnect/>;
+            case RUN:
+                return <Run/>;
+            default:
+                return <UnknownStatus/>;
+        }
+    }, [message]);
 
-  return (
-    <Toolbar className="TitleBar">
-      <Grid
-        container
-        direction="row"
-        alignItems="flex-start"
-        justify="space-between"
-      >
-        <Grid item>
-          &nbsp;
-        </Grid>
-        <Grid item>
-          <Typography variant="h6" className="title">
-            Jamal Debug
-          </Typography>
-        </Grid>
-        <Grid item><span style={{fontSize: "8pt"}}>{message}&nbsp;</span>{icon}</Grid>
-      </Grid>
-    </Toolbar>
-  );
+    return (
+        <Toolbar className="TitleBar">
+            <Grid
+                container
+                direction="row"
+                alignItems="flex-start"
+                justify="space-between"
+            >
+                <Grid item>
+                    &nbsp;
+                </Grid>
+                <Grid item>
+                    <Typography variant="h6" className="title">
+                        Jamal Debug
+                    </Typography>
+                </Grid>
+                <Grid item><span style={{fontSize: "8pt"}}>{message}&nbsp;</span>{icon}</Grid>
+            </Grid>
+        </Toolbar>
+    );
 };
 
 export default TitleBar;

@@ -24,7 +24,7 @@ import "./App.css";
 import LevelDisplay from "./components/LevelDisplay";
 import EvaluateOutput from "./components/EvaluateOutput";
 import ErrorsDisplay from "./components/ErrorsDisplay";
-import {DISCONNECTED} from "./Constants";
+import {BEFORE, DISCONNECTED} from "./Constants";
 
 const App = () => {
 
@@ -92,7 +92,7 @@ const App = () => {
                         caption={state.showP ? "hide" : "show"}>{"\u00b6"}</Button>
                 <Button onClick={loadSource} caption="Refresh"><Refresh/></Button>
                 <Button onClick={() => run(breakpoints)} caption="Run"><Run/></Button>
-                <Button onClick={fetch} caption="Fetch" disabled={state.stateMessage === "BEFORE"}>{"{...}"}</Button>
+                <Button onClick={fetch} caption="Fetch" disabled={state.stateMessage === BEFORE}>{"{...}"}</Button>
                 <Button onClick={step} caption="Step"><Step/></Button>
                 <Button onClick={stepInto} caption="Step In"><StepInto/></Button>
                 <Button onClick={stepOut} caption="Step out"><StepOut/></Button>
@@ -141,8 +141,8 @@ const App = () => {
         <Grid item xs={6}>
             <Paper className="App_Paper, run_input">
                 <div style={{marginLeft: "5px", fontSize: "10pt", fontWeight: "bold"}}>{"input"}</div>
-                <Input text={state.stateMessage === "AFTER" ? state.inputAfter : state.inputBefore}
-                       macro={state.stateMessage === "AFTER" ? '' : state.macro}/>
+                <Input text={state.stateMessage !== BEFORE ? state.inputAfter : state.inputBefore}
+                       macro={state.stateMessage !== BEFORE ? '' : state.macro}/>
             </Paper>
         </Grid>
     );

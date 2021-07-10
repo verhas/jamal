@@ -14,7 +14,7 @@ type UserDefinedMacrosDisplayProps = {
 type Macro = {
     name: string;
     params: string;
-    content: string
+    content?: string
 }
 
 const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
@@ -65,7 +65,7 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
                                             width: 200,
                                             overflowX: "auto"
                                         }}>{macro?.parameters?.join(",") ?? ""}</Table.Cell>
-                                        <Table.Cell style={{width: "100%"}}>{macro.content}</Table.Cell>
+                                        <Table.Cell style={{width: "100%"}}>{macro.content || macro.type}</Table.Cell>
                                     </Table.Row>;
                                 }
                             );

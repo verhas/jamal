@@ -31,7 +31,7 @@ const loadSource = () => {
                 const lastErrors = data.errors ?? [];
                 if (!state.errors.length && lastErrors.length && !state.wasErrorAlerted) {
                     let [isan, s]: [string, string] =
-                        lastErrors.length === 1 ? ["is an", ''] : ["are", 's'];
+                        lastErrors.length === 1 ? ["is an", ''] : [`are ${lastErrors.length}`, 's'];
                     alert(`There ${isan} error${s} in the Jamal source.\n\n`
                         + lastErrors.join("\n")
                         + "\n\n"

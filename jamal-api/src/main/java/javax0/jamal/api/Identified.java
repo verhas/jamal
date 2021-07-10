@@ -30,4 +30,30 @@ public interface Identified {
     String DEFAULT_MACRO = "default";
     String MACRO_NAME_ARG1 = "$macro";
     String MACRO_NAME_ARG2 = "$_";
+
+    /**
+     * A special placeholder for Identified enties that get undefined.
+     * <p>
+     * When an entity (typically a user defined macro) is not defined it is nowhere in the different layers. If it were
+     * defined in any fo the layers then the current layer would inherit it and then it is defined.
+     * <p>
+     * When we explicitly want to undefine a macro we should not delete the definition from the structure, because the
+     * effect of undefining a macro should have the same locality as defining it. For this reason we insert a dummy
+     * definition, which is an instance of this class.
+     * <p>
+     * This "undefined" definition is local, can be exported and behaves exactly the same way as a "normal" defined
+     * macro.
+     */
+    class Undefined implements Identified {
+        private final String id;
+
+        public Undefined(String id) {
+            this.id = id;
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+    }
 }

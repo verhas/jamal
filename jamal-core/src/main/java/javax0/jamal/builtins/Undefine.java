@@ -1,6 +1,6 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
@@ -19,9 +19,9 @@ public class Undefine implements Macro {
         final var id = fetchId(input);
         final var convertedId = convertGlobal(id);
         if (isGlobalMacro(id)) {
-            processor.defineGlobal(() -> convertedId);
+            processor.defineGlobal(new Identified.Undefined(convertedId));
         } else {
-            processor.define(() -> convertedId);
+            processor.define(new Identified.Undefined(convertedId));
         }
         return "";
     }

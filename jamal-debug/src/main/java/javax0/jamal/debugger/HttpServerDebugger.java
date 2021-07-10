@@ -173,9 +173,20 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     String macros = "";
     int port;
 
+    private boolean weDebug() {
+        switch (state) {
+            case NODEBUG:
+                return false;
+            case STEP_IN:
+                return true;
+            default:
+                return (stepLevel == 0 || currentLevel <= stepLevel);
+        }
+    }
+
     @Override
     public void setStart(CharSequence macro) {
-        if (state != RunState.NODEBUG && (stepLevel == 0 || currentLevel <= stepLevel)) {
+        if (weDebug()) {
             macros = macro.toString();
             handleState = "BEFORE";
             handle();
@@ -185,7 +196,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     @Override
     public void setBefore(int level, CharSequence input) {
         currentLevel = level;
-        if (state != RunState.NODEBUG && (stepLevel == 0 || currentLevel <= stepLevel)) {
+        if (weDebug()) {
             this.input = input;
             this.inputBefore = input.toString();
             macros = "";
@@ -196,7 +207,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     @Override
     public void setAfter(int level, CharSequence output) {
         currentLevel = level;
-        if (state != RunState.NODEBUG && (stepLevel == 0 || currentLevel <= stepLevel)) {
+        if (weDebug()) {
             inputAfter = input.toString();
             this.output = output.toString();
             handleState = "AFTER";
