@@ -12,7 +12,7 @@ This can be done adding
 ----
     <name>jamal markdown</name>
     <artifactId>jamal-markdown</artifactId>
-    <version>1.7.9-SNAPSHOT</version>
+    <version>1.7.9</version>
 ----
 
 to your Maven `pom.xml`.
@@ -32,7 +32,7 @@ To use this macro together with the Jamal doclet you can configure the Maven Jav
         <docletArtifact>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-doclet</artifactId>
-            <version>1.7.9-SNAPSHOT</version>
+            <version>1.7.9</version>
         </docletArtifact>
         <additionalOptions>
             <additionalOption>--source-root</additionalOption>
@@ -44,14 +44,14 @@ To use this macro together with the Jamal doclet you can configure the Maven Jav
                 <tagletArtifact>
                     <groupId>com.javax0.jamal</groupId>
                     <artifactId>jamal-doclet</artifactId>
-                    <version>1.7.9-SNAPSHOT</version>
+                    <version>1.7.9</version>
                 </tagletArtifact>
             </taglet>
             <tagletArtifacts>
                 <tagletArtifact> <1>
                     <groupId>com.javax0.jamal</groupId>
                     <artifactId>jamal-markdown</artifactId>
-                    <version>1.7.9-SNAPSHOT</version>
+                    <version>1.7.9</version>
                 </tagletArtifact>
             </tagletArtifacts>
         </taglets>
