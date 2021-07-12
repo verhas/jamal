@@ -74,6 +74,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<xmlFormat,`xmlFormat`>>
 .. <<date,`date`>>
 .. <<format,`format`>>
+.. <<case,`case:lower`, `case:upper`, ...>>
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
@@ -1382,7 +1383,7 @@ will result the output
 
 [source]
 ----
-2021-07-11 08:08:19
+2021-07-12 17:03:38
 ----
 
 
@@ -1437,8 +1438,21 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 ----
 
 
+[[case]]
+==== xx. `case:lower`, `case:upper`, ...
+
+There are a few character case changing macros implemented in the snippet package.
+These are:
+
+
+* `case:lower` changes the characters in the input to lower case letters
+* `case:upper` changes the characters in the input to upper case letters
+
+* `case:cap` changes the first character in the input to upper case letter
+* `case:decap` changes the first character in the input to lower case letter
+
 [[file]]
-==== xx. `file`
+==== xxi. `file`
 
 You can use this macro to include the name of a file in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1477,7 +1491,7 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xxi. `directory`
+==== xxii. `directory`
 
 You can use this macro to include the name of a directory in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1517,7 +1531,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxii. Java Macros
+==== xxiii. Java Macros
 
 [[java:class]]
 ===== `java:class`
@@ -1716,7 +1730,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxiii. String Macros
+==== xxiv. String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -1900,7 +1914,7 @@ This will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxiv. `snip:update`
+==== xxv. `snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

@@ -80,6 +80,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<xmlFormat,`xmlFormat`>>
 .. <<date,`date`>>
 .. <<format,`format`>>
+.. <<case,`case:lower`, `case:upper`, ...>>
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
@@ -1294,6 +1295,19 @@ wll result the output
 hashCode(0x4d38e0bd5891048a)=0x15a9e437
 ----
 %}
+
+[[case]]
+==== {%macroChapter%}`case:lower`, `case:upper`, ...
+
+There are a few character case changing macros implemented in the snippet package.
+These are:
+
+{%@define case(lower)=* `case:lower` changes the characters in the input to lower case letters%}
+{%case lower%}
+{%case upper%}
+{%@define case(cap,upper)=* `case:cap` changes the first character in the input to upper case letter%}
+{%case/cap/upper%}
+{%case/decap/lower%}
 
 [[file]]
 ==== {%macroChapter%}`file`

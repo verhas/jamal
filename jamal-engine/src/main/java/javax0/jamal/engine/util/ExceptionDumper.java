@@ -13,8 +13,8 @@ public class ExceptionDumper {
     public static StringBuilder dump(BadSyntaxAt t) {
         final var me = new ExceptionDumper();
         final var pos = t.getPosition();
-        me.output.append(t.getMessage()).append(" at ").append(pos.file).append("/")
-            .append(pos.line).append(":").append(pos.column).append("\n");
+        me.output.append(t.getMessage()).append(" at ").append(pos.file).append('/')
+            .append(pos.line).append(':').append(pos.column).append('\n');
         me.dumpIt(t, false);
         return me.output;
     }

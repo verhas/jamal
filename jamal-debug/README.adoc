@@ -8,6 +8,18 @@ There is no need to understand the details outlined in this document to use Jama
 This documentation is maintained with lower priority than user documentation.
 For this reason this documentation may not be up-to-date.
 
+To use the Jamal debugger start it so that the
+
+* Debugger module is on the classpath or on the module path, e.g.: use `jbang`.
+When Jamal started with jbang it automatically puts a lot of modules, including the debugger on the classpath.
+
+* Start Jamal in a way that it looks for debugger modules and uses it, eg use the option `jbang` jamal@verhas --debug=http:8080` with jbang.
+Alternatively you can specify the environment variable `JAMAL_DEBUG` to be `http:8080`
+
+* Start your web browser and open the page `http://localhost:8080`.
+The port is the one you specified in the debug option.
+You are free to choose any port that is not used by other programs.
+
 === How Jamal debugger works
 
 When the application creates a Processor, it looks at the environment variable `JAMAL_DEBUG`.

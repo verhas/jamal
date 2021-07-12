@@ -15,8 +15,7 @@ jamal-snippet.
 {%@define pu$template=%}\
 {%@snip:collect from=./jamal-maven-plugin/src/main/java/javax0/jamal/maven/JamalMojo.java%}\
 
-image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[]
-https://javadoc.io/doc/com.javax0.jamal[JavaDoc]
+image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
 {%#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/
 NOTE: This is the latest development documentation.
@@ -50,7 +49,7 @@ The types include document formats, like Markdown, AsciiDoc, HTML, and textual d
 
 The source text can
 
-* use built-in macros (there is a purposefully limited number of them),
+* use built-in macros (there is a purposefully limited number of them in the core module and there are a lot in different other modules),
 
 * define and use previously defined user-defined macros,
 
@@ -64,7 +63,9 @@ You can start Jamal processing
 
 * on the command line even without installing Jamal itself automatically downloading from the net,
 
-* as a Maven plugin, and
+* as a Maven plugin,
+
+* starting with `jbang`, and
 
 * embedded into applications using a simple API.
 
@@ -72,13 +73,32 @@ You can extend the set of built-in macros creating new macros in any JVM languag
 
 Jamal is a text to text processor.
 It is also a templating engine to maintain redundant text files.
-During development, there are often text files that you need to maintain, which contain redundant information.
+During development, there are often text files with redundant information you may need to maintain.
 
 * Some property or other resource files in a Java project may be slightly different for the different environments, test support, user acceptance test, production.
+Changing something in one of them many times should be followed in the other versions.
+This can be automated using Jamal.
 
 * A textual documentation has cross-references, but the format does not support automatic symbolic anchors and references.
+Jamal macros can keep track of the references and give you a warning when a reference becomes obsolete needing update.
 
-* There can be some makefile or other script or documentation file that differs only slightly for the different platforms.
+* The documentation may refer to some files in the project or some Java objects.
+Jamal macros can check that the files, classes, methods or fields exist and in case they were moved, removed, renamed Jamal will warn you to update the documentation.
+
+* You can use Jamal to automatically copy some part of your code source files as examples into the documentation.
+Whenever the source changes the output will automatically change when Jamal runs.
+
+* Jamal can collect and transform documentation text form different sources.
+You can put some of the documentation into the source code right at the place where the functionality is implemented.
+You have less chance forgetting the documentation update related to that feature whenever it changes.
+Jamal will fetch the documentation from the file, transform it to fit the output format and generate up-to-date compiled documentation.
+
+* You can embed Plant UML diagram text definition into your documentation source.
+The Plant UML acro extension will generate the diagrams and create the image reference into the output document.
+Some document format support embedding Plant UML.
+Using Jamal you can embed Plant UML into any textual documentation format.
+Because the diagram description is part of a Jamal macro processed source you can use Jamal macros in the diagrams.
+That way you are not limited by the macro features supported by Plant UML.
 
 * If you have any other use, please tell us.
 
@@ -89,6 +109,38 @@ That way, text, and macros are mixed conveniently.
 You can use Jamal as a maven plugin.
 The Java::Geci code generators also support Jamal, where you can write your Java code template using Jamal.
 You can use it as an embeddable macro engine in your Java application.
+Jamal can be used in JavaDoc using the Jamal Doclet implementation.
+
+These different features are documented in their respective module documentations:
+
+=== Debugger
+image::jamaldebugger2559x1089.png[]
+* <<./jamal-debug/README.adoc#,Debugger Technical Documentation>>
+
+=== Applications, Embedding
+
+* <<./jamal-doclet/README.adoc#,Jamal Doclet Documentation>>, How to use Jama in JavaDoc
+* <<./jamal-maven/README.md#,Jamal Maven Plugin README>>, How to use Jamal as a Maven plugin
+
+=== Programming Language Modules
+
+{%@define LANGUAGE(Ruby)=* <<./jamal-{%@case:lower Ruby%}/README.adoc#,Ruby Module README>>, How to use Ruby code in your Jamal source%}
+{%LANGUAGE Ruby%}
+{%LANGUAGE Groovy%}
+{%LANGUAGE ScriptBasic%}
+
+=== Other External Modules
+
+* <<./jamal-io/README.adoc#,Io Module README>>, How to read and write external files from Jamal macros
+* <<./jamal-jamal/README.adoc#,Jamal Jamal Module README>>, How to use Jamal inside Jamal as an embedded language
+* <<./jamal-markdown/README.adoc#,Jamal Markdown Module README>>, Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
+* <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
+* <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
+* <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files
+
+=== Test Support
+
+* <<./jamal-testsupport/README.adoc#,Jamal Test Module README>>, Use this module to test your own Java implemented macros
 
 In this readme, we first discuss how the macros look and how Jamal will convert its input to the output.
 Then we discuss the API that lets you embed the macro processing into your application.
