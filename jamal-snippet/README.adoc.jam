@@ -416,7 +416,7 @@ If the regular expression is not find in the first line of the snippet, or there
 [[snipList]]
 ==== {%macroChapter%}`snip:list`
 
-This macro list the defined snippets.
+This macro lists the defined snippets.
 The list is represented as a comma delimited list, which contains the names of the snippets.
 
 There are four parameters the macro handles, all are optional:
@@ -959,7 +959,7 @@ This may be used to override a globally set `width` macro.
 [[listDir]]
 ==== {%macroChapter%}`listDir`
 
-This macro list the files in a directory and then returns the list of the formatted files.
+This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
 [source]

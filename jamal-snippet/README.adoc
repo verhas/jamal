@@ -429,7 +429,7 @@ If the regular expression is not find in the first line of the snippet, or there
 [[snipList]]
 ==== vii. `snip:list`
 
-This macro list the defined snippets.
+This macro lists the defined snippets.
 The list is represented as a comma delimited list, which contains the names of the snippets.
 
 There are four parameters the macro handles, all are optional:
@@ -1069,7 +1069,7 @@ This may be used to override a globally set `width` macro.
 [[listDir]]
 ==== xvi. `listDir`
 
-This macro list the files in a directory and then returns the list of the formatted files.
+This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
 [source]
@@ -1383,7 +1383,7 @@ will result the output
 
 [source]
 ----
-2021-07-13 16:07:57
+2021-08-19 10:42:34
 ----
 
 
