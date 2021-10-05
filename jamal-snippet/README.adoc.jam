@@ -11,9 +11,9 @@ Snippet handling macros help you to include information from program source code
 When you document an application, there is a lot of information that changes by changing the source code.
 These changes have to be followed in the documentation.
 Some changes need manual editing.
-Some changes you can automate.
+Some changes can be automated.
 When the functionality of the program changes, then the new documentation has to describe the new functionality.
-We can hardly automate this change of the documentation.
+We can hardly automate this change of documentation.
 When some literal parameter also used in the document changes, then Jamal can automatically update the documentation.
 A typical example is the version number of the application.
 The documentation many times may refer to the latest version.
@@ -205,11 +205,11 @@ If the parameter `start` is defined, its value will be used as a snippet start m
 It must have one collection group.
 If the parameter `stop` is defined, then its value will be used as snippet end matching regular expression.
 
-The collection of the files can also be controlled using parameters.
+You can also control the collection of the files using parameters.
 The parameters `include` and `exclude` can define regular expressions.
 Only the files that match the regular expression specified by `include` and do not match the one set by `exclude` are collected when defined.
 
-It is enough if the regular expressions match a part of the line, or the file name.
+It is enough if the regular expressions match a part of the line or the file name.
 
 For example, the test file
 
@@ -220,25 +220,26 @@ For example, the test file
 
 excludes any file that contains the character `2` in its name.
 
-The parameter `onceAs` can be used to avoid repeated snippet collections.
+You can use the parameter `onceAs` to avoid repeated snippet collections.
 Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
-At a certain point it may happen that the snippets you need were already collected, collecting it again would be erroneous.
-When snippets are collected you cannot redefine a snippet.
+At a certain point, it may happen that Jamal already collected the snippets you need.
+Collecting it again would be erroneous.
+When snippets are collected, you cannot redefine a snippet.
 If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
-If you try to collect anything with the same `onceAs` parameter the collection will simply ignore it.
+If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
 It was already collected.
 
-NOTE: This option was introduced to the `snip:collect` macro along with the Jamal doclet implementation.
-When the individual documentation parts are processed in the same processor the processing order is not guaranteed.
-If you want to refer to some snippets you have to collect them.
-To do that you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
+NOTE: We introduced this option to the `snip:collect` macro along with the Jamal doclet implementation.
+When the individual documentation parts are processed in the same processor, the processing order is not guaranteed.
+To refer to some snippets, you have to collect them.
+To do that, you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
 That collect macro should name the collection to avoid redefinition error.
 
 [[snip_properties]]
 ==== {%macroChapter%}`snip:properties`
 
-This macro will load properties from a "properties" file or from an "xml" file.
-The names of the properties will become the names of the snippets and the values the values of the snippets.
+This macro will load properties from a "properties" file or an "XML" file.
+The names of the properties will become the names of the snippets and the values of the snippets.
 
 For example, the sample
 
@@ -247,8 +248,8 @@ For example, the sample
 %}
 
 {%#comment this output is evaluated because this is when the macro in the sample is evaluated
-{%output%} but there is no output. The later samples use the snippets that this macro evaluation
-was reading from the properties file
+{%output%} but there is no output. The later examples use the snippets that this macro evaluation
+was reading from the properties file.
 %}\
 
 will load the content of the file `javax0/jamal/snippet/testproperties.properties`, which is
@@ -275,8 +276,8 @@ letter a
 ----
 %}
 
-If the extension of the file is `.xml`, then the properties will be loaded as XML format properties.
-For example the same properties file in XML format looks like the following:
+If the file extension is `.xml`, the properties will be loaded as XML format properties.
+For example, the same properties file in XML format looks like the following:
 
 [source,xml]
 ----
@@ -294,8 +295,8 @@ The syntax of the command is
 {@snip:xml macroName=xml_file.xml}
 ----
 
-The defined `macroName` macro can be used as an ordinary user defined macro that accepts one argument.
-This user defined macro evaluates in a special way.
+The defined `macroName` macro can be used as an ordinary user-defined macro that accepts one argument.
+This user-defined macro evaluates in a particular way.
 It uses the argument as an XPath expression and returns the value from the XML document that matches the argument.
 
 For example this document contains the following macros at the start:
@@ -325,16 +326,16 @@ which is the current version of the project as read from the `pom.xml` file.
 [[snip_define]]
 ==== {%macroChapter%}`snip:define`
 
-This macro can be used to define a snippet.
-Snippets are usually collected from project files, but it is also possible to defined them via the macro `snip:define`.
+You can use this macro to define a snippet.
+Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
 For example,
 
 {%sample/
 {@snip:define mySnippet=
-This is the snippet, which is defined inside the file and not collected from an external file
+It is the snippet, which is defined inside the file and not collected from an external file.
 }
 {@snip mySnippet
-is used here and then the rest of the text is ignored}
+is used here, and then the rest of the text is ignored}
 %}
 
 will result
@@ -344,20 +345,20 @@ will result
 {%@snip mySnippet
 [source]
 ----
-This is the snippet, which is defined inside the file and not collected from an external file
+It is the snippet, which is defined inside the file and not collected from an external file.
 ----
 %}
 
 [[snip_clear]]
 ==== {%macroChapter%}`snip:clear`
 
-Calling this macro deletes all collected snippets from the memory.
+Calling this macro deletes all collected snippets from memory.
 The result of the macro is an empty string.
 
 [[snip]]
 ==== {%macroChapter%}`snip`
 
-The `snip` macro should have one argument, which should be the name of the snippet previously collected.
+The `snip` macro should have one argument: the name of the snippet previously collected.
 The result of the macro is the content of the snippet.
 
 For example
@@ -370,13 +371,13 @@ For example
 is replaced by the content of the snippet named `snipped_id`.
 The macro reads the ID from the input, and it purposefully ignores the rest of the input.
 The reason to have the rest of the input as the comment is to allow the Jamal file users to insert a description of the snippet.
-You can manually copy the content of the snippet there, which helps the navigation in the source code, but the same time it is not a problem if the copy gets outdated.
+You can manually copy the content of the snippet there, which helps the navigation in the source code, but at the same time, it is not a problem if the copy gets outdated.
 The output fetched the content from the actual value of the snippet.
 
 Starting with Jamal version 1.7.2, the `snippet_id` can also be followed by a regular expression.
-The regular expression can be used to extract and use a smaller part from the first line of the snippet.
-The typical use is when there is a constant defined in the code and you want to reference the value of the constant.
-In this case you can add
+You can use the regular expression to extract and use a smaller part from the first line of the snippet.
+The typical use is when there is a constant defined in the code, and you want to reference the value of the constant.
+In this case, you can add
 
 [source,java]
 ----
@@ -385,7 +386,7 @@ In this case you can add
 // end snippet
 ----
 
-lines before and after the line defining the constant and add a regular expression that has one capturing group.
+lines before and after the line defining the constant, and add a regular expression with one capturing group.
 For example, you can have
 
 [source,java]
@@ -404,55 +405,55 @@ and the Jamal code
 
 to gauge out the string `:rubyShell` from the source code.
 
-If the first character after the `snippet_id` is a `/` character, then the macro will treat the rest of the input as a regular expression.
+If the first character after the `snippet_id` is a `/` character, the macro will treat the rest of the input as a regular expression.
 This part also has to end using a `/`.
 The characters between the first and the last `/` are interpreted as a regular expression.
 This regex has to have at least one capturing group.
-The string captured by the first group will be returned by the macro.
-The characters that follow the last `/` character are ignored, and eventually can not contain any more `/` characters.
+The macro will return the string captured by the first group.
+The characters that follow the last `/` character are ignored, and eventually can not contain more `/` characters.
 
-If the regular expression is not find in the first line of the snippet, or there is no capturing group, then the first line itself will be the result of the macro.
+If the regular expression is not found in the first line of the snippet, or there is no capturing group, then the first line itself will result from the macro.
 
 [[snipList]]
 ==== {%macroChapter%}`snip:list`
 
 This macro lists the defined snippets.
-The list is represented as a comma delimited list, which contains the names of the snippets.
+The list is represented as comma-delimited, which contains the names of the snippets.
 
-There are four parameters the macro handles, all are optional:
+There are four parameters the macro handles; all are optional:
 
 * `name` (can be aliased as `id`) for the name of the snippet
 
 * `file` for the file name of the snippet
 
-* `text` for the contect of the snippet
+* `text` for the content of the snippet
 
-* `listSeparator` can redefine the list separator. The default is comma.
+* `listSeparator` can redefine the list separator. The default is the comma.
 
 The first three parameters are interpreted as regular expressions.
-If any of them missing or empty string then the parameter is not taken into account.
+If any missing or empty string, then the parameter is not taken into account.
 
 The listing will filter the snippets to include only those into the list that
 
 * the name of the snippet matches the parameter `name`, and
 
-* the file name, from which the snippet was harvested matches the parameter `file`, and
+* the file name from which we harvested the snippet matches the parameter `file`, and
 
 * at least one line of the snippet matches the parameter `text`.
 
 The matching means that the regular expression should match part of the text.
-If you want to match the whole name, file name or content line you have to use a `^ ... $` format regular expression.
+If you want to match the full name, file name, or content line, you have to use a `^ ... $` format regular expression.
 
-If all the parameters are missing then the macro will list all the snippet names.
+If all the parameters are missing, then the macro will list all the snippet names.
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
 
 This macro can cut off the unneeded spaces from the start and end of the lines.
-When a code fragment is included in the documentation as a snippet, the lines may have extra spaces at the start.
-That is when the fragment comes from a code part that is somewhere in the middle of a tabulated structure.
+When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
+It is the case when the fragment comes from a code part somewhere in the middle of a tabulated structure.
 This macro can remove the extra spaces from the start of the line keeping the relative tabulation of the lines.
-This way the code formatting remains the same as in the source code, but the code sample will be aligned to the left.
+The code formatting remains the same as the source code, but the macro will align the code sample to the left.
 
 The syntax of the macro is:
 
@@ -484,16 +485,16 @@ The lines to be trimmed should start on the line following the name of the macro
 The characters following the macro name to the end of the line are parsed for options.
 Options currently are:
 
-* `margim` can specify the minimum number of spaces that have to appear in front ofevery line.
-Using this option you can even insert extra spaces in front of the lines while keeping the tabulation.
+* `margin` can specify the minimum number of spaces that appear in front of every line.
+You can even insert extra spaces in front of the lines while keeping the tabulation using this option.
 
-* `trimVertical` is a boolean parameter to remove the new line character from the start and from the end of the sample.
-This eliminates the leading and trailing empty lines.
+* `trimVertical` is a boolean parameter to remove the new line character from the sample's start and end.
+It eliminates the leading and trailing empty lines.
 
-* `verticalTrimOnly` (alias `vtimOnly`) instructs the macro to do only the vertical trimming.
-If this option is defined there is no need to define `trimVertical` also.
+* `verticalTrimOnly` (alias `vtrimOnly`) instructs the macro to do only the vertical trimming.
+If this option is defined, there is no need to define `trimVertical` also.
 
-The macro can also delete the empty lines from the start and from the end of its input in case the option `trimVertical` is set.
+The macro can also delete the empty lines from the start and the end of its input if the option `trimVertical` is set.
 For example
 
 {%untrimmedSample/
@@ -530,7 +531,7 @@ The syntax of the macro is
 }
 ----
 
-By default, the numbering of the lines start with one and every line gets the next number.
+By default, the numbering of the lines starts with one, and every line gets the next number.
 For example
 
 {%sample/
@@ -553,9 +554,9 @@ will result
 ----
 %}
 
-The number will be inserted with a `.` (dot) after the number and a space.
+The macro will insert the number with a `.` (dot) after the number and space.
 
-The parameters `start`, `step` and `format` can define different start value, step value and format for the numbers.
+The parameters `start`, `step`, and `format` can define different start values, step values, and formats for the numbers.
 For example
 
 {%sample/
@@ -578,8 +579,8 @@ will result
 ----
 %}
 
-The formatting will be used in the method `String::format`.
-Any illegal formatting will result an error.
+The standard Java method `String::format` will format the number using the formatting string.
+Any illegal formatting will result in an error.
 
 [[killLines]]
 ==== {%macroChapter%}`killLines`
@@ -598,8 +599,8 @@ The format of the macro is
 }
 ----
 
-By default, the lines, which contain only spaces are deleted.
-The parameter macro `pattern` may define a regular expression that can be used to select the lines.
+The macro deletes the lines, which contain only spaces, by default.
+The parameter macro `pattern` may define a regular expression to select the lines.
 
 For example:
 
@@ -630,11 +631,11 @@ int j = 15;
 [[skipLines]]
 ==== {%macroChapter%}`skipLines`
 
-This macro can be used to skip lines from the snippet.
+You can use this macro to skip lines from the snippet.
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
 The macro uses two regular expressions, named `skip` and `endSkip`.
-When a line matches the line `skip` then the line, and the following lines are deleted from the output until a line matching `endSkip` is matched.
-The lines that match the regular expressions are also deleted.
+When a line matches the line `skip`, the line and the following lines are deleted from the output until a matching `endSkip`.
+The macro also deletes the lines that match the regular expressions.
 
 For example,
 
@@ -685,18 +686,18 @@ there can be more lines
 %}
 
 It is not an error if there is no line matching the `endSkip`.
-In that case all lines starting with the line matching the `skip` will be removed from the output.
+In that case, the macro will remove all lines starting with a string matching the `skip` from the output.
 There can be multiple `skip` and `endSkip` lines.
 The `skip` and `endSkip` lines cannot be nested.
-When there is a match for a `skip` then any further `skip` is ignored until an `endSkip` is found.
+When there is a match for a `skip`, any further `skip` is ignored until an `endSkip`.
 
 [[replace]]
 ==== {%macroChapter%}`replace`
 
-The macro `replace` replaces strings to other strings in its input.
+The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
-It uses the first argument as the input and then every following argument pairs as search and replace strings.
+It uses the first argument as the input, and then every following argument pairs as search and replace strings.
 For example:
 
 {%sample/
@@ -713,14 +714,14 @@ the pear has fallen off the bush
 ----
 %}
 
-If the option `regex` is active, then the search string are treated as regular expressions and the replace strings may also contain replacement parts.
+If the option `regex` is active, then the search string is treated as regular expressions, and the replace string may also contain replacement parts.
 For example,
 
 {%sample/
 {#replace {@options regex}/the apple has fallen off the tree/appl(.)/p$1ar/tree/bush}
 %}
 
-will result the same output
+will result in the same output
 {%#snip:define replace2={%output%}%}\
 
 {%@snip replace2
@@ -729,7 +730,7 @@ will result the same output
 the pear has fallen off the bush
 ----
 %}
-but this time the replace used regular expression substitution.
+but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
 ==== {%macroChapter%}`replaceLines`
@@ -745,7 +746,7 @@ The difference is that the `replaceLine`
 
 * it works on the individual lines of the input in a loop.
 
-The difference is significant when you want to match something line by line at the start or at the end of the line.
+The difference is significant when you want to match something line by line at the start or the end of the line.
 For example,
 
 {%sample/
@@ -769,19 +770,19 @@ will result
 ----
 %}
 
-The search regular expressions, and the replacement strings have to be defined in the parameter `replace`.
+The searched regular expressions and the replacement strings have to be defined in the parameter `replace`.
 This parameter can be defined inside the `replaceLines` macro.
 The macro scans the value of the parameter `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
 
 It is usually an error when no lines are replaced in a snippet.
-To detect this the parameter`detectNoChange` can be used.
-If this boolean parameter is true, then the macro will result in an error if no line was changed.
+Use the parameter`detectNoChange` to detect this.
+If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 ==== {%macroChapter%}`counter:define`
 
 This macro defines a counter.
-The counter can be used like a parameterless user defined macro that returns the formatted actual value of the counter each time.
+The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
 The format of the macro is
 
@@ -830,7 +831,7 @@ will result
 
 
 The format can contain the usual `String.format` formattings.
-In addition to that it can also contain one of the `$alpha`, `$ALPHA`, `$roman` or `$ROMAN` literals.
+In addition to that, it can also contain one of the `$alpha`, `$ALPHA`, `$roman` or `$ROMAN` literals.
 
 {%@define alphaRomanReplace($format,$by,$number)={%@ident%}\
 * `$format` will be replaced by $by for 1, 2, ... , $number counter values.%}\
@@ -874,8 +875,9 @@ MMMCCXIII. MMMCCXIV. MMMCCXV.
 [[reflow]]
 ==== {%macroChapter%}`reflow`
 
-This macro reflows the content of it.
-The default behaviour is that the lines will be any long and the paragraphs will be separated by double new-lines.
+This macro reflows the content.
+The default behavior is to remove all single new-line characters replacing them with spaces.
+That way, the lines will extend without wrapping around, and double newlines will separate the paragraphs.
 
 For example:
 
@@ -900,7 +902,7 @@ The output will be
 
 {%output%}
 
-If the parameter `width` specifies a positive integer number, then it will be used to limit the length of the lines.
+If the parameter `width` specifies a positive integer number, the macro will use it to limit the length of the lines.
 For example
 
 {%@define reflowSample=0123456789|
@@ -924,11 +926,11 @@ The output will be
 {%output%}
 
 The lines are collected and broken so that none of the lines is longer than {%REFLOW_WIDTH%}.
-In some cases the limiting cannot be done.
-When the width is too small, but still positive there may be some word longer than the given width. 
+In some cases, limiting is not possible.
+When the width is too small but still positive, some words may be longer than the given width.
 
 {%@define REFLOW_WIDTH=1%}\
-For example setting the width to `{%REFLOW_WIDTH%}`, reflow will cut the lines into words, but it will not break the individual words.
+For example, setting the width to `{%REFLOW_WIDTH%}`, reflow will cut the lines into words, but it will not break the individual words.
 
 {%sample/
 {@reflow width={%REFLOW_WIDTH%}
@@ -941,7 +943,8 @@ The output will be
 {%output%}
 
 
-The `width` parameter can be set as a macro option as well as a macro, for example
+The `width` parameter can be a macro option as well as a macro.
+For example
 
 {%sample/
 {#reflow {@define width={%REFLOW_WIDTH%}}
@@ -949,12 +952,12 @@ The `width` parameter can be set as a macro option as well as a macro, for examp
 }
 %}
 
-will have again the same result:
+will have the same result as:
 
 {%output%}
 
 Setting the `width` to any non-positive value will remove the limit from the line length.
-This may be used to override a globally set `width` macro.
+You may use this to override a globally set `width` macro.
 
 [[listDir]]
 ==== {%macroChapter%}`listDir`
@@ -978,12 +981,12 @@ The options are
 
 * `pattern` to specify a regular expression to filter the files based on their name
 
-* `maxDepth` the maximum dept of recursion into subdirectories.
+* `maxDepth` is the maximum depth of recursion into subdirectories.
 Specify `1` in case you do not want to recurse into subdirectories.
 
 * `followSymlinks` to follow symbolic links
 
-* `countOnly` return the number of the files as a string instead of the list of the file names.
+* `countOnly` returns the number of the files as a string instead of the list of the file names.
 
 The returned names of the files and directories are comma separated by default.
 This makes the use of the macro a good candidate to provide the list elements for a `for` loop.
@@ -998,9 +1001,9 @@ will result
 
 {%output%}
 
-The macro `for` is used with the `#` character, so the macro `listDir` is evaluated before the `for` starts to execute.
+The macro `for` is used with the `#` character, so the macro `listDir` is evaluated before executing the `for`.
 The listing of the files is recursive and is unlimited by default.
-The recursion can be limited by defining the parameter `maxDepth`.
+The parameter `maxDepth` can limit the recursion.
 The same listing limited to 1 depth (non-recursive) is the following
 
 {%sample/
@@ -1016,7 +1019,7 @@ will result
 The default formatting for the list of the files is the name of the file.
 The parameter `format` can define other formats.
 This format can contain placeholder, and these will be replaced with actual parameters of the files.
-When used in a multivariable for loop then the format usually has the format
+When used in a multivariable for loop, then the format usually has the format
 
 [source]
 ----
@@ -1111,10 +1114,10 @@ If the option `followSymlinks` is used, like in
 {@options followSymlinks}
 ----
 
-then the recursive collection process for collection the files will follow symlinks.
+then the recursive collection process for collecting the files will follow symlinks.
 
 The separator character between the formatted items is a comma by default.
-It can be modified setting the option `separator` or its alias `sep`.
+The option `separator` or its alias `sep` can modify it.
 For example the example:
 
 {%sample/
@@ -1128,8 +1131,8 @@ will result
 [[xmlFormat]]
 ==== {%macroChapter%}`xmlFormat`
 
-The macro `xmlFormat` interprets the input as an XML document if there is any, and it results the formatted document.
-If the input is empty or contains only spaces, then it registers a post-processor that runs after the Jamal processing is done and formats the final output as XML.
+The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
+If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
 For example,
 
 {%sample/
@@ -1194,12 +1197,13 @@ will result
 ----
 %}
 
-As you can see there is no tabulation in this case.
+As you can see, there is no tabulation in this case.
 
 There is another use of the macro `xmlFormat`.
-If you do not include any XML, or anything else into the macro as input, then the macro will treat this as a command to format the whole output.
-I registers itself into the processor and when the processing was finished this registered call-back starts and at that point it will format the output of the processing.
-That way you can easily format a whole processed file.
+If you do not include any XML or anything else into the macro as input, the macro will treat this as a command to format the whole output.
+It registers itself into the processor, and when the processing is finished, this registered call-back starts.
+At that point, it will format the output of the processing.
+That way, you can easily format a whole processed file.
 
 The previous example that we used before can also be formulated this way.
 
@@ -1213,8 +1217,8 @@ The previous example that we used before can also be formulated this way.
 %}
 
 Note that the macro invocation `{#xmlFormat}` in this case can be anywhere in the input.
-The formatting will take place postponed, when the processing is finished.
-It will result the same output as before:
+The formatting will take place postponed when the processing is finished.
+It will result in the same output as before:
 {%#snip:define tabulatedXmlFormat1=
 {%output%}%}\
 
@@ -1245,7 +1249,7 @@ Example
 {@date yyyy-MM-dd HH:mm:ss}
 %}
 
-will result the output
+will result in the output
 
 {%#snip:define dateOutput={%output%}%}\
 {%@snip dateOutput%}
@@ -1253,13 +1257,13 @@ will result the output
 [[format]]
 ==== {%macroChapter%}`format`
 
-The macro `format` can be used to format the arguments.
+You can use the macro `format` to format the arguments.
 {%standardInput%}
 
 The first argument will be interpreted as the format string.
 The rest of the arguments will be used as the values for the formatting.
-By the nature of Jamal all these arguments are strings.
-Since the parameters to the underlying `String::format` method are not only strings they can be converted.
+By the nature of Jamal, all these arguments are strings.
+Since the parameters to the underlying `String::format` method are not only strings, they can be converted.
 If any of the parameters starts with a `(xxx)` string, then the string will be converted to the type`xxx` before passing to `String::format` as an argument.
 This format is similar to the cast syntax of Java and C.
 
@@ -1281,7 +1285,7 @@ Examples:
 {#format /hashCode(0x%x)=0x%h/(long){LONG}/(long){LONG}}
 %}
 
-wll result the output
+will result in the output
 
 {%#snip:define formatOutput={%output%}%}\
 {%@snip formatOutput
@@ -1299,7 +1303,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 [[case]]
 ==== {%macroChapter%}`case:lower`, `case:upper`, ...
 
-There are a few character case changing macros implemented in the snippet package.
+There are a few character case-changing macros implemented in the snippet package.
 These are:
 
 {%@define case(lower)=* `case:lower` changes the characters in the input to lower case letters%}
@@ -1317,8 +1321,8 @@ First, it seems counterintuitive to have a macro for that.
 You can type in the name of the $what, and it will appear in the output.
 
 The real added value of the macro is that it checks that the $what exists.
-If the $what does not exist or is not a $what, then the macro will error.
-It helps the maintenance of the application.
+The macro will error if the $what does not exist or is not a $what.
+It helps the maintenance of the documentation.
 If the $what gets renamed, moved, or deleted, the document will not compile until you follow the change.
 
 The macro can also format the name of the $what.
@@ -1395,11 +1399,11 @@ In the format you can use the following placeholders:
 ===== `java:class`
 
 {%@define classMethodMacroIntro($x)=
-The macro `java:$x` checks that the parameter is a valid Java $x and can be found on the classpath.
-It is an error if the class cannot be found on the classpath.
-This macro can be useful when you document Java source code, and you run the Jamal conversion from a unit test.
-In this case the macro will see the test and main classes.
-It can check that the $x mentioned in the documentation is still there, it was not deleted or renamed.%}\
+The macro `java:$x` checks that the parameter is a valid Java $x and found on the classpath.
+It is an error if the class is not on the classpath.
+This macro is useful when you document Java source code and run the Jamal conversion from a unit test.
+In this case, the macro will see the test and main classes.
+It can check that the $x mentioned in the documentation is still there; it was not deleted or renamed.%}\
 {%classMethodMacroIntro class%}
 
 The output of the macro is the class formatted.
@@ -1412,7 +1416,7 @@ The class that implements the macro `java:class` is
 {@java:class javax0.jamal.snippet.Java$ClassMacro}.
 %}
 
-wll result the output
+will result in the output
 
 {%#snip:define class1={%output%}%}\
 {%@snip class1
@@ -1449,7 +1453,7 @@ It is in the package {#java:class javax0.jamal.snippet.Java$ClassMacro {@define 
 format defined inside the macro is local.
 %}
 
-wll result the output
+will result in the output
 
 {%#snip:define class2={%output%}%}\
 {%@snip class2
@@ -1464,9 +1468,9 @@ format defined inside the macro is local.
 ----
 %}
 
-It is not recommended overusing the format string.
+It is not recommended to overuse the format string.
 Do not include verbatim text into the format string.
-Choose a format string how you want to refer to the classes and use it globally in the document.
+Choose a format string you want to refer to the classes and use it globally in the document.
 
 [[java:field]]
 ===== `java:field`
@@ -1480,7 +1484,7 @@ defined in the class {#java:field (format="$className") {field}}
 is both `static` and `final` and has the value {#java:field (format="$value") {field}}
 %}
 
-will result the output
+will result in the output
 
 {%output%}
 
@@ -1525,7 +1529,7 @@ For example:
 {#java:method {method}}
 %}
 
-wll result the output
+will result in the output
 
 {%#snip:define method1={%output%}%}\
 {%@snip method1
@@ -1535,8 +1539,8 @@ evaluate
 ----
 %}
 
-The macro can have two-argument, using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>> or one specifying the full name of the method.
-The full name of the method is the full name of the class and the same of the method separated by either a `#` character or by `::` characters.
+The macro can have two arguments, using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>> or one, specifying the full name of the method.
+The method's full name is the class's full name, and the method name separated by either a `#` character or by `::` characters.
 
 The format string can be any string with `$` prefixed placeholders.
 The placeholders that the macro handles are:
@@ -1580,7 +1584,7 @@ and use the user defined macros, like the following:
 ::{java:method:name |{method}}({java:method:parameterTypes:simpleName |{method}})
 %}
 
-will result the output
+will result in the output
 
 {%#snip:define method2={%output%}%}\
 {%@snip method2
@@ -1602,21 +1606,22 @@ publicMethodMacro::evaluate(Input,Processor)
 [[string:contains]]
 ===== `string:contains`
 
-This macro returns the string `true` if the input contains a text given as a parameter, and the text `false` otherwise.
+This macro returns the string `true` if the input contains a text given as a parameter and the text `false` otherwise.
 The macro handles two parameters:
 
 * `text` (alias `string`) must be present, and it should specify the string to find in the input.
 
 * `regex` is an optional parameter.
-If it is `true` then the text will be interpreted as a regular expression, and the macro will check if a match can be found inside the input.
+If it is `true`, then the text will be interpreted as a regular expression.
+The macro will check if a match is found inside the input.
 (It calls the Java regular expression matcher `find()`.)
 
 [[string:quote]]
 ===== `string:quote`
 
 This macro returns the input of the macro quoted.
-That way the string can be used inside a string.
-This macro is useful when the output is used in some programming language source.
+You can use the string inside another string that way.
+This macro is useful when the output is used as some programming language source.
 Example:
 
 {%sample/
@@ -1643,7 +1648,7 @@ The actual conversions performed are:
 
 This macro returns the string literal `true` or `false` comparing the two arguments.
 It returns `true` if the two arguments are equal and `false` otherwise.
-If the option `ignoreCase` is used then the comparison is done ignoring the character casing.
+If the option `ignoreCase` is used, then the comparison is made ignoring the character casing.
 
 Example:
 
@@ -1711,11 +1716,11 @@ will result
 This macro returns a substring of the input.
 The parameters are
 
-* `begin` specifying the beginning of the substring (default is start of the string), and
+* `begin` specifying the beginning of the substring (default is the start of the string), and
 
-* `end` specifying the end of the substring (default is end of the string).
+* `end` specifying the end of the substring (default is the end of the string).
 
-If any of the parameters is a negative number then the position will be calculated from the end of the string.
+If any of the parameters is a negative number, then the macro calculates the position from the end of the string.
 
 Examples:
 
@@ -1742,40 +1747,40 @@ The parameters are:
 * `right` tells the macro that the trimming has to be applied to the end (right) of the input
 
 You can use `left` and `right` together with `trim`.
-This will have the same effect as using `trim` alone.
+It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
 ==== {%macroChapter%}`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
-That way the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
+That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
 
 The result of the macro is an empty string, and it has no side effect inside the macro processor.
 When it does, however, is that it alters the file it was used in inserting the snippets into the comment part of the `snip` macro.
 Its operation is done in three steps:
 
 1. Reads the file into the memory.
-2. It goes through all the lines and inserts the content of the snippet into the comment part of the `snip` macros.
+2. It goes through all the lines and inserts the snippet's content into the comment part of the `snip` macros.
 If there is already a comment there, then it gets deleted and replaced.
 3. Writes the altered content into the original file updating it.
 
-This macro alters the original file, therefore the use of it has to performed with great care.
-Ensure that before executing Jamal, you save the original file, making a copy of it or committing into the git repository.
+This macro alters the original file; therefore, its use has to be performed with great care.
+Ensure that you save the original file before executing Jamal, making a copy of it or committing it into the git repository.
 
 The `snip:update` macro does not perform Jamal syntax analysis.
-To use this macro successfully you have to follow the extra rules:
+To use this macro successfully, you have to follow the additional rules:
 
 * The `{@snip id...` macro should start on a new line.
 There may be spaces before the macro.
 There must not be a comment on the same line following the snipped identifier.
-You can put a few non-space character after the snippet identifier in case you want to exclude a snippet use from the update.
+You can put a few non-space characters after the snippet identifier if you want to exclude a snippet use from the update.
 
 * The `snip` macro matching macro closing string has to be on a separate line.
 There may be spaces before and after the closing string, but nothing else.
 
-The update macro can be customized.
-If the macros `start` and/or `stop` are defined, then their value will be used as regular expression to find the start, and the end of the snippet content insertion points.
+You can customize the `update` macro.
+If the macros `start` and/or `stop` are defined, their value will be used as a regular expression to find the beginning, and the end of the snippet content insertion points.
 The default value for `start` is
 
     ^\s*\Q{\E\s*(?:#|@)\s*snip\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\s*$
@@ -1792,7 +1797,7 @@ When this pattern is calculated, the current macro closing string is used instea
 It is also possible to define a `head` and `tail` macro.
 The content of the `head` macro will be copied in front of the inserted snippet.
 The content of the `tail` macro will be copied after the inserted snippet.
-It can be used to insert, for example asciidoc
+It can be used to insert, for example, asciidoc
 
    [source]
    ----
