@@ -18,8 +18,7 @@ public class Snip implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         skipWhiteSpaces(in);
-        final String id;
-        id = InputHandler.fetchId(in);
+        final var id = InputHandler.fetchId(in);
         skipWhiteSpaces(in);
         if (firstCharIs(in, '/')) {
             skip(in, 1);

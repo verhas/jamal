@@ -176,7 +176,7 @@ public class Params {
 
     /**
      * Parse the input and collect the parameters in a map. The characters parsed are consumed from the input including
-     * the last new-line character.
+     * the last new-line  or other specified terminating character.
      * <p>
      * The parameters have the format
      * <pre>{@code

@@ -61,6 +61,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<snip_define,`snip:define`>>
 .. <<snip_clear,`snip:clear`>>
 .. <<snip,`snip`>>
+.. <<snip_check,`snip:check`>>
 .. <<snipList,`snip_list`>>
 .. <<trimLines,`trimLines`>>
 .. <<numberLines,`numberLines`>>
@@ -427,8 +428,78 @@ The characters that follow the last `/` character are ignored, and eventually ca
 
 If the regular expression is not found in the first line of the snippet, or there is no capturing group, then the first line itself will result from the macro.
 
+[[snip_check]]
+==== vii. `snip:check`
+
+You can use this macro to enforce consistency between the documented system and the documentation.
+Using this macro will nudge the maintainer to check the relevant part of the document when the documented code changes.
+The macro itself will not update the documentation but will warn with an error if some part of the application needs update.
+That way, the document remains up-to-date, and you will not forget to update it.
+
+To use the macro, you should first select some part of the code, which is documented to become a snippet.
+There is no particular way for the purpose.
+You have to do it the same way as you would do for any other snippet.
+You just enclose the text between 
+
+[source,text]
+----
+snippet specialCodeToCheck
+  ...
+end snippet
+----
+
+lines.
+
+This snippet, just like any other snippet, could be included in the documentation; however, in this case, this is not our goal.
+The macro `snip:check` calculates a hashcode of the snippet.
+The hashcode can also be specified in the macro option `hash` before the snippet's name.
+
+[source,text]
+----
+{@snip:check (hash=2a4ddeab580ad1fe8c95a) specialCodeToCheck}
+----
+
+If this code is the same as the one calculated, the programmer did not change the code in the snippet since the denoted part of the documentation was last updated.
+If the codes are different, then the macro will error.
+It means that the snipped has changed, and the documentation has to follow the change.
+When the documentation is updated, then you should also update the hash code to the current version.
+
+Nothing will stop you from updating the hash code without updating the documentation, though.
+It takes discipline to keep the documentation up-to-date.
+This macro only helps not to forget some parts.
+
+The hash code calculated contains 64 hexadecimal characters.
+You may notice that the example above does not contain that many.
+The macro accepts if only the last characters of the hash code are present.
+However, you have to specify at least six characters to ensure consistency.
+You have one to the ten million magnitude chance to change the snippet and get the same hash using six characters.
+
+When you create the documentation of some code, you should follow the steps:
+
+1. Enclose the part of the code documented between `snippet NAME` and `end snippet`.
+2. Insert the `{@snip:check (hash=) NAME}` macro into the parts of the documentation where the part is documented.
+3. Run the macro processing.
+It will eventually result in an error.
+The error message will include the hash code.
+Copy at least six of the last characters to the macro, like `{@snip:check (hash=af6ed3) NAME}`
+4. Rerun the macro processing.
+
+When you update the documentation, and you get an error like
+
+[source,text]
+----
+The snippet 'NAME' hash is 'ebbe085bcd314f7c306ab5ed095086505135209326580fbf1bfee58323f3fa92'. at ...
+----
+
+then you have to
+
+1. Look at the documentation around where the macro is.
+Update the documentation to follow the change of the code part.
+2. Update the hash code in the macro to the new value.
+3. Rerun the macro processing.
+
 [[snipList]]
-==== vii. `snip:list`
+==== viii. `snip:list`
 
 This macro lists the defined snippets.
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -460,7 +531,7 @@ If you want to match the full name, file name, or content line, you have to use 
 If all the parameters are missing, then the macro will list all the snippet names.
 
 [[trimLines]]
-==== viii. `trimLines`
+==== ix. `trimLines`
 
 This macro can cut off the unneeded spaces from the start and end of the lines.
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -551,7 +622,7 @@ c
 
 
 [[numberLines]]
-==== ix. `numberLines`
+==== x. `numberLines`
 
 This macro can put numbers in front of the lines, sequentially numbering them.
 The syntax of the macro is
@@ -615,7 +686,7 @@ The standard Java method `String::format` will format the number using the forma
 Any illegal formatting will result in an error.
 
 [[killLines]]
-==== x. `killLines`
+==== xi. `killLines`
 
 This macro deletes selected lines from its input.
 
@@ -663,7 +734,7 @@ int j = 15;
 
 
 [[skipLines]]
-==== xi. `skipLines`
+==== xii. `skipLines`
 
 You can use this macro to skip lines from the snippet.
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -725,7 +796,7 @@ The `skip` and `endSkip` lines cannot be nested.
 When there is a match for a `skip`, any further `skip` is ignored until an `endSkip`.
 
 [[replace]]
-==== xii. `replace`
+==== xiii. `replace`
 
 The macro `replace` replaces strings with other strings in its input.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -764,7 +835,7 @@ the pear has fallen off the bush
 but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
-==== xiii. `replaceLines`
+==== xiv. `replaceLines`
 
 This macro replaces strings in the input.
 
@@ -812,7 +883,7 @@ Use the parameter`detectNoChange` to detect this.
 If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
-==== xiv. `counter:define`
+==== xv. `counter:define`
 
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
@@ -909,7 +980,7 @@ MMMCCXIII. MMMCCXIV. MMMCCXV.
 
 
 [[reflow]]
-==== xv. `reflow`
+==== xvi. `reflow`
 
 This macro reflows the content.
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -1070,7 +1141,7 @@ Setting the `width` to any non-positive value will remove the limit from the lin
 You may use this to override a globally set `width` macro.
 
 [[listDir]]
-==== xvi. `listDir`
+==== xvii. `listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -1139,6 +1210,7 @@ will result
 - Java.java
 - ReplaceLines.java
 - SkipLines.java
+- SnipCheck.java
 - Reflow.java
 - Snippet.java
 ----
@@ -1210,8 +1282,8 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 928 bytes
-- Snip.java: 2,317 bytes
+- snippet: 960 bytes
+- Snip.java: 2,302 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
@@ -1236,6 +1308,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
+- SnipCheck.java: 2,487 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -1268,7 +1341,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xvii. `xmlFormat`
+==== xviii. `xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -1371,7 +1444,7 @@ It will result in the same output as before:
 
 
 [[date]]
-==== xviii. `date`
+==== xix. `date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -1387,12 +1460,12 @@ will result in the output
 
 [source]
 ----
-2021-10-06 11:28:18
+2021-10-06 18:16:41
 ----
 
 
 [[format]]
-==== xix. `format`
+==== xx. `format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -1443,7 +1516,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[case]]
-==== xx. `case:lower`, `case:upper`, ...
+==== xxi. `case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -1456,7 +1529,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxi. `file`
+==== xxii. `file`
 
 You can use this macro to include the name of a file in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1495,7 +1568,7 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xxii. `directory`
+==== xxiii. `directory`
 
 You can use this macro to include the name of a directory in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1535,7 +1608,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxiii. Java Macros
+==== xxiv. Java Macros
 
 [[java:class]]
 ===== `java:class`
@@ -1734,7 +1807,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxiv. String Macros
+==== xxv. String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -1919,7 +1992,7 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxv. `snip:update`
+==== xxvi. `snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

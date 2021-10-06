@@ -2,6 +2,7 @@ javax0.jamal.snippet.Clear
 javax0.jamal.snippet.Collect
 javax0.jamal.snippet.NumberLines
 javax0.jamal.snippet.Snip
+javax0.jamal.snippet.SnipCheck
 javax0.jamal.snippet.TrimLines
 javax0.jamal.snippet.SnipProperties
 javax0.jamal.snippet.SnipXml

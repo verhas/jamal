@@ -67,6 +67,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<snip_define,`snip:define`>>
 .. <<snip_clear,`snip:clear`>>
 .. <<snip,`snip`>>
+.. <<snip_check,`snip:check`>>
 .. <<snipList,`snip_list`>>
 .. <<trimLines,`trimLines`>>
 .. <<numberLines,`numberLines`>>
@@ -413,6 +414,77 @@ The macro will return the string captured by the first group.
 The characters that follow the last `/` character are ignored, and eventually can not contain more `/` characters.
 
 If the regular expression is not found in the first line of the snippet, or there is no capturing group, then the first line itself will result from the macro.
+
+[[snip_check]]
+==== {%macroChapter%}`snip:check`
+{%@snip:check (hash=fee58323f3fa92) SnipCheck%}\
+
+You can use this macro to enforce consistency between the documented system and the documentation.
+Using this macro will nudge the maintainer to check the relevant part of the document when the documented code changes.
+The macro itself will not update the documentation but will warn with an error if some part of the application needs update.
+That way, the document remains up-to-date, and you will not forget to update it.
+
+To use the macro, you should first select some part of the code, which is documented to become a snippet.
+There is no particular way for the purpose.
+You have to do it the same way as you would do for any other snippet.
+You just enclose the text between {%@define specialCodeToCheck=specialCodeToCheck%}
+
+[source,text]
+----
+snippet {%specialCodeToCheck%}
+  ...
+end snippet
+----
+
+lines.
+
+This snippet, just like any other snippet, could be included in the documentation; however, in this case, this is not our goal.
+The macro `snip:check` calculates a hashcode of the snippet.
+The hashcode can also be specified in the macro option `hash` before the snippet's name.
+
+[source,text]
+----
+{@snip:check (hash=2a4ddeab580ad1fe8c95a) {%specialCodeToCheck%}}
+----
+
+If this code is the same as the one calculated, the programmer did not change the code in the snippet since the denoted part of the documentation was last updated.
+If the codes are different, then the macro will error.
+It means that the snipped has changed, and the documentation has to follow the change.
+When the documentation is updated, then you should also update the hash code to the current version.
+
+Nothing will stop you from updating the hash code without updating the documentation, though.
+It takes discipline to keep the documentation up-to-date.
+This macro only helps not to forget some parts.
+
+The hash code calculated contains 64 hexadecimal characters.
+You may notice that the example above does not contain that many.
+The macro accepts if only the last characters of the hash code are present.
+However, you have to specify at least six characters to ensure consistency.
+You have one to the ten million magnitude chance to change the snippet and get the same hash using six characters.
+
+When you create the documentation of some code, you should follow the steps:
+
+1. Enclose the part of the code documented between `snippet NAME` and `end snippet`.
+2. Insert the `{@snip:check (hash=) NAME}` macro into the parts of the documentation where the part is documented.
+3. Run the macro processing.
+It will eventually result in an error.
+The error message will include the hash code.
+Copy at least six of the last characters to the macro, like `{@snip:check (hash=af6ed3) NAME}`
+4. Rerun the macro processing.
+
+When you update the documentation, and you get an error like
+
+[source,text]
+----
+The snippet 'NAME' hash is 'ebbe085bcd314f7c306ab5ed095086505135209326580fbf1bfee58323f3fa92'. at ...
+----
+
+then you have to
+
+1. Look at the documentation around where the macro is.
+Update the documentation to follow the change of the code part.
+2. Update the hash code in the macro to the new value.
+3. Rerun the macro processing.
 
 [[snipList]]
 ==== {%macroChapter%}`snip:list`
@@ -1076,8 +1148,8 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 928 bytes
-- Snip.java: 2,317 bytes
+- snippet: 960 bytes
+- Snip.java: 2,302 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
@@ -1102,6 +1174,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
+- SnipCheck.java: 2,487 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----

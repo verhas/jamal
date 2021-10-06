@@ -21,6 +21,7 @@ import javax0.jamal.snippet.SnipList;
 import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
+import javax0.jamal.snippet.SnipCheck;
 import javax0.jamal.snippet.StringMacros.Contains;
 import javax0.jamal.snippet.StringMacros.EndsWith;
 import javax0.jamal.snippet.StringMacros.Equals;
@@ -43,6 +44,7 @@ module jamal.snippet {
         Collect,
         NumberLines,
         Snip,
+        SnipCheck,
         TrimLines,
         SnipProperties,
         SnipXml,

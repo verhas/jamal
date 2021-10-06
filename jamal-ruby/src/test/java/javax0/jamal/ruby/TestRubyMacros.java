@@ -13,7 +13,7 @@ public class TestRubyMacros {
     }
 
     @Test
-    @DisplayName("Test the multiple evals do keep variables")
+    @DisplayName("Test the multiple evals do keep global variables")
     void testSimpleMultipleEval() throws Exception {
         TestThat.theInput(
             "{@ruby:eval $myVar = 3\n" +
@@ -23,12 +23,21 @@ public class TestRubyMacros {
     }
 
     @Test
+    @DisplayName("Test the multiple evals does not keep local variables")
+    void testErroneousMultipleEval() throws Exception {
+        TestThat.theInput(
+            "{@ruby:eval myVar = 3\n" +
+                "2}{@ruby:eval myVar}"
+        ).throwsBadSyntax(".*NameError.*");
+    }
+
+    @Test
     @DisplayName("Test ruby can be started via eval as JSR")
     void testEvalJSRIntegration() throws Exception {
         TestThat.theInput(
-            "{@eval/ruby $z = \"\"\n" +
-                "(0..9).each { |it|  $z+=it.to_s }\n" +
-                "$z}"
+            "{@eval/ruby z = \"\"\n" +
+                "(0..9).each { |it|  z+=it.to_s }\n" +
+                "z}"
         ).results("0123456789");
     }
 
