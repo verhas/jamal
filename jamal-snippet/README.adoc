@@ -434,12 +434,11 @@ If the regular expression is not found in the first line of the snippet, or ther
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant part of the document when the documented code changes.
 The macro itself will not update the documentation but will warn with an error if some part of the application needs update.
-That way, the document remains up-to-date, and you will not forget to update it.
+That way, the document may remain up-to-date, and you will not forget to update it.
 
-To use the macro, you should first select some part of the code, which is documented to become a snippet.
-There is no particular way for the purpose.
-You have to do it the same way as you would do for any other snippet.
-You just enclose the text between 
+To use the macro, you should first select some part of the code.
+This part can be a snippet or a whole source file.
+If you have code surrounded by 
 
 [source,text]
 ----
@@ -448,20 +447,30 @@ snippet specialCodeToCheck
 end snippet
 ----
 
-lines.
+lines and the `snip:collect` collects the file, the snippet `specialCodeToCheck` is created.
 
 This snippet, just like any other snippet, could be included in the documentation; however, in this case, this is not our goal.
 The macro `snip:check` calculates a hashcode of the snippet.
-The hashcode can also be specified in the macro option `hash` before the snippet's name.
+The hashcode can also be specified in the macro option `hash`, or `hashCode`.
+The identifier of the snippet can be specified using the macro option 'id'.
 
 [source,text]
 ----
-{@snip:check (hash=2a4ddeab580ad1fe8c95a) specialCodeToCheck}
+{@snip:check hash=2a4ddeab580ad1fe8c95a id=specialCodeToCheck}
 ----
+
+If the hash is calculated for a whole file then the macro option `file` is used
+
+[source,text]
+----
+{@snip:check hash=14c70f44df492ca file=src/main/java/javax0/jamal/snippet/SnipCheck.java}
+----
+
+(These hex codes above are totally made up.)
 
 If this code is the same as the one calculated, the programmer did not change the code in the snippet since the denoted part of the documentation was last updated.
 If the codes are different, then the macro will error.
-It means that the snipped has changed, and the documentation has to follow the change.
+It means that the snipped or file has changed, and the documentation has to follow the change.
 When the documentation is updated, then you should also update the hash code to the current version.
 
 Nothing will stop you from updating the hash code without updating the documentation, though.
@@ -469,19 +478,20 @@ It takes discipline to keep the documentation up-to-date.
 This macro only helps not to forget some parts.
 
 The hash code calculated contains 64 hexadecimal characters.
-You may notice that the example above does not contain that many.
+You may notice that the examples above contain less.
 The macro accepts if only the last characters of the hash code are present.
 However, you have to specify at least six characters to ensure consistency.
 You have one to the ten million magnitude chance to change the snippet and get the same hash using six characters.
+It is fairly safe, but you can go safer listing more characters.
 
 When you create the documentation of some code, you should follow the steps:
 
 1. Enclose the part of the code documented between `snippet NAME` and `end snippet`.
-2. Insert the `{@snip:check (hash=) NAME}` macro into the parts of the documentation where the part is documented.
+2. Insert the `{@snip:check hash="" id=NAME}` macro into the parts of the documentation where the part is documented.
 3. Run the macro processing.
 It will eventually result in an error.
 The error message will include the hash code.
-Copy at least six of the last characters to the macro, like `{@snip:check (hash=af6ed3) NAME}`
+Copy at least six of the last characters to the macro, like `{@snip:check hash=af6ed3 id=NAME}`
 4. Rerun the macro processing.
 
 When you update the documentation, and you get an error like
@@ -1308,7 +1318,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
-- SnipCheck.java: 2,487 bytes
+- SnipCheck.java: 3,458 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -1460,7 +1470,7 @@ will result in the output
 
 [source]
 ----
-2021-10-06 18:16:41
+2021-10-07 09:30:46
 ----
 
 

@@ -183,28 +183,38 @@ will result
 once by the result of the `ruby:eval` and once as the `ruby:property` also fetched this value.
 
 Setting the value, you can specify the type of the property.
+In the sample above we wrote
+
+[source]
+----
+{@ruby:property $myProp=(to_i)55}
+----
+
+In that code `(to_i)` is a conversion and the `ruby:property` macro will evaluate, and act upon it.
+The `(tp_i)` converts the text following it to a Fixnum value.
+You can use other type conversions following the `=` between `(` and `)`.
+
 The possible types are limited to
 
-* `to_i` to convert the value to a Fixnum
+* `to_i` to convert the string to a Fixnum
 
-* `to_f` to convert to Float
+* `to_f` to convert  the string to Float
 
-* `to_s` to convert to string.
-
-It also happens if you d not specify conversion.
+* `to_s` to convert  the string to string.
+This is the default conversion in case you do not specify any.
 
 * `to_r` to convert the string to rational.
 In this case, the number has to be `X/Y` formatted.
 
-* `to_c` to complex number.
+* `to_c` to convert the string to complex number.
 In this case, the number has to be `R+Ii` formatted, where `R` and `I` are integers or floating-point numbers, and `i` is the letter i (lower case).
 
-* `to_c/i` to complex number.
-
+* `to_c/i` to convert the string to a complex integer number.
 It is the same as `(to_c)`, but the real and the imaginary parts of the number have to be integers.
 
+* `to_sym` to convert the string to be a Ruby symbol.
 
-The casting type has to be enclosed between `(` and `)` characters.
+The casting type has to be enclosed between `(` and `)` characters, no spaces are allowed.
 The default is to set the property to be a string.
 The casting `(to_s)` is available if you want to emphasize that the value should be handled as a string.
 It may also happen that you want to pass a *string* that starts with the characters `(to_i)` or something similar.

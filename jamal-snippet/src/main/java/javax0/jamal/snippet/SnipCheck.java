@@ -4,14 +4,12 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 // snippet SnipCheck
 public class SnipCheck implements Macro {
@@ -22,10 +20,22 @@ public class SnipCheck implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var hashString = Params.<String>holder("hash", "hashCode").orElse("");
-        Params.using(processor).from(this).between("()").keys(hashString).parse(in);
-        skipWhiteSpaces(in);
-        final var id = fetchId(in);
-        final var snippet = SnippetStore.getInstance(processor).snippet(id);
+        final var id = Params.<String>holder("id");
+        final var fileName = Params.<String>holder("file");
+        Params.using(processor).from(this).keys(hashString, id, fileName).parse(in);
+        if (id.isPresent() && fileName.isPresent()) {
+            throw new BadSyntax("You cannot specify 'id' and 'file' the same time for snip:check");
+        }
+        final String snippet;
+        if (id.isPresent()) {
+            snippet = SnippetStore.getInstance(processor).snippet(id.get());
+        } else if (fileName.isPresent()) {
+            var reference = in.getReference();
+            var absoluteFileName = FileTools.absolute(reference, fileName.get());
+            snippet = FileTools.getInput(absoluteFileName).toString();
+        } else {
+            throw new BadSyntax("You have to specify either 'id' or 'fileName' for snip:check");
+        }
 
         final MessageDigest md;
         try {
@@ -43,12 +53,20 @@ public class SnipCheck implements Macro {
         final var bytes = md.digest(snippet.getBytes(StandardCharsets.UTF_8));
         final var hashStringCalculated = byteArrayToHex(bytes);
         if (hashString.get().length() < MIN_LENGTH) {
-            throw new BadSyntax("The snippet '" + id + "' hash is '" + hashStringCalculated + "'.");
+            if (id.isPresent()) {
+                throw new BadSyntax("The snippet '" + id.get() + "' hash is '" + hashStringCalculated + "'.");
+            } else {
+                throw new BadSyntax("The file '" + fileName.get() + "' hash is '" + hashStringCalculated + "'.");
+            }
         }
         if (hashStringCalculated.endsWith(hashString.get())) {
             return "";
         }
-        throw new BadSyntax("The snippet '" + id + "' hash is '" + hashStringCalculated + "' does not end with '" + hashString.get() + "'.");
+        if (id.isPresent()) {
+            throw new BadSyntax("The snippet '" + id.get() + "' hash is '" + hashStringCalculated + "' does not end with '" + hashString.get() + "'.");
+        } else {
+            throw new BadSyntax("The file '" + fileName.get() + "' hash is '" + hashStringCalculated + "' does not end with '" + hashString.get() + "'.");
+        }
     }
 
     private static String byteArrayToHex(byte[] a) {
