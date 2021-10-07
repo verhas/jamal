@@ -417,8 +417,14 @@ If the regular expression is not found in the first line of the snippet, or ther
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
-{%@snip:check hash=4f6bf772ae1775595d15dcabf7214c70f44df492cad900d0cf62a39235bba24b id=SnipCheck%}\
-{%@snip:check hash=8661a4742b6f1999ab434e63e267c2d227ecfd40c3e4274992ad4dc5dcadd46a file=src/main/java/javax0/jamal/snippet/SnipCheck.java%}\
+{%@comment
+
+This is a simple demonstration of snip check that checks both the snippet and the whole file.
+This check does not get into the processed output, but if you read this then you see a real life example use of snip:check.
+
+%}\
+{%@snip:check hash=dce73d257cc901bc16ba7fc092a0ea5adda9909757e0671b88ffffd1b035a2dd id=SnipCheck%}\
+{%@snip:check hash=f722154fc77ca13e26d6c7b6e262931a5397a5907cb5de2a849373a85fd02448 file=src/main/java/javax0/jamal/snippet/SnipCheck.java%}\
 
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant part of the document when the documented code changes.
@@ -1185,7 +1191,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
-- SnipCheck.java: 3,458 bytes
+- SnipCheck.java: 3,497 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----

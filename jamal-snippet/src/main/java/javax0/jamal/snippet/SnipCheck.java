@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 
 import java.nio.charset.StandardCharsets;
@@ -51,7 +52,7 @@ public class SnipCheck implements Macro {
             throw new BadSyntax("There is no algorithm '" + ALGORITHM + "' to create the digest for snippet consistency check.", nsae);
         }
         final var bytes = md.digest(snippet.getBytes(StandardCharsets.UTF_8));
-        final var hashStringCalculated = byteArrayToHex(bytes);
+        final var hashStringCalculated = HexDumper.encode(bytes);
         if (hashString.get().length() < MIN_LENGTH) {
             if (id.isPresent()) {
                 throw new BadSyntax("The snippet '" + id.get() + "' hash is '" + hashStringCalculated + "'.");
