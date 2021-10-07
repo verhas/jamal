@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.engine.UserDefinedMacro;
+import javax0.jamal.tools.HexDumper;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -210,20 +211,7 @@ public class TestThat implements AutoCloseable {
         InstantiationException,
         InvocationTargetException,
         BadSyntax {
-        Assertions.assertEquals(toHex(expected), toHex(resultsClose()));
-    }
-
-    private String toHex(String in) {
-        final var sb = new StringBuilder();
-        int i = 0;
-        for (final var b : in.getBytes(StandardCharsets.UTF_8)) {
-            sb.append(String.format("%02X ", b));
-            i++;
-            if (i % 8 == 0) {
-                sb.append("\n");
-            }
-        }
-        return sb.toString();
+        Assertions.assertEquals(HexDumper.encode(expected.getBytes(StandardCharsets.UTF_8)), HexDumper.encode(resultsClose().getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
