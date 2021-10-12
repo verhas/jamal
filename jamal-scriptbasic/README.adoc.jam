@@ -19,9 +19,8 @@ To use this module you have to add the dependency to you Maven project, as:
 
 This library has one single macro, `basic`.
 Using this macro you can embed BASIC programs into your Jamal file, as
-{%@define replace=/^\s*"(.*?)(?:\\n)?".*$/$1%}
 {%#snip:define sampleFormatted ={%#trimLines
-{%#replaceLines
+{%#replaceLines replace="""/^\\s*"(.*)(?:\\\\n)".*$/$1/\\\\"/"/\\\\\\\\/\\\\/"""
 {%@snip sample%}%}%}%}
 
 [source]
@@ -31,18 +30,18 @@ Using this macro you can embed BASIC programs into your Jamal file, as
 {expr 13+1}{@define start=1}{@define end=13}
 {#basic for i={start} to {end}
 if i%2 = 1 then
-  oddity = \
+  oddity = "odd"
 else
-  oddity = \
+  oddity = "even"
 endif
-print i,\
+print i,". is an ",oddity," number\n"
 next
 }
 %}
 ----
 resulting
 {%#snip:define sample_outputFormatted ={%#trimLines
-{%#replaceLines
+{%#replaceLines replace="""/^\\s*"(.*)(?:\\\\n)".*$/$1/"""
 {%@snip sample_output%}%}%}%}
 [source]
 ----
@@ -61,6 +60,7 @@ resulting
 11. is an odd number
 12. is an even number
 13. is an odd number
+
 %}
 ----
 
