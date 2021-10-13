@@ -1,0 +1,13 @@
+javax0.jamal.assertions.AssertEquals
+javax0.jamal.assertions.AssertContains
+javax0.jamal.assertions.AssertStartsWith
+javax0.jamal.assertions.AssertEndsWith
+javax0.jamal.assertions.AssertEmpty
+javax0.jamal.assertions.AssertFail
+javax0.jamal.assertions.NumericAsserts$AssertIntEquals
+javax0.jamal.assertions.NumericAsserts$AssertLess
+javax0.jamal.assertions.NumericAsserts$AssertGreater
+javax0.jamal.assertions.NumericAsserts$AssertLessOrEqual
+javax0.jamal.assertions.NumericAsserts$AssertGreaterOrEqual
+javax0.jamal.assertions.NumericAsserts$AssertNumeric
+javax0.jamal.assertions.NumericAsserts$AssertInt

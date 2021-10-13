@@ -28,6 +28,7 @@
         <module>jamal-io</module>
         <module>jamal-doclet</module>
         <module>jamal-markdown</module>
+        <module>jamal-assertions</module>
     </modules>
     <licenses>
         <license>

@@ -32,10 +32,10 @@ public class SnipXml implements Macro, InnerScopeDependent {
         final XmlDocument xmlDoc;
 
         if (isGlobalMacro(id)) {
-            xmlDoc = new XmlDocument(convertGlobal(id),input.toString());
+            xmlDoc = new XmlDocument(convertGlobal(id),input);
             processor.defineGlobal(xmlDoc);
         } else {
-            xmlDoc = new XmlDocument(id,input.toString());
+            xmlDoc = new XmlDocument(id,input);
             processor.define(xmlDoc);
             // it has to be exported because it is inner scope dependent
             processor.getRegister().export(xmlDoc.getId());

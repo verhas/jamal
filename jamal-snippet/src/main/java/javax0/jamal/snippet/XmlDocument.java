@@ -3,6 +3,8 @@ package javax0.jamal.snippet;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
+import javax0.jamal.api.Input;
+import javax0.jamal.tools.FileTools;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,8 +20,9 @@ public class XmlDocument implements Identified, Evaluable {
     final Document doc;
     final XPath xPath;
 
-    public XmlDocument(String id,String fileName) throws BadSyntax {
-        this.fileName = fileName;
+    public XmlDocument(String id, Input input) throws BadSyntax {
+        var reference = input.getReference();
+        this.fileName = FileTools.absolute(reference, input.toString().trim());
         this.id = id;
 
         var dbFactory = DocumentBuilderFactory.newInstance();

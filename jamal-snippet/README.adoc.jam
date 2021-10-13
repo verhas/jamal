@@ -1194,7 +1194,7 @@ will result
 - Collect.java: 5,504 bytes
 - TrimLines.java: 3,687 bytes
 - Replace.java: 1,775 bytes
-- SnipXml.java: 1,511 bytes
+- SnipXml.java: 1,489 bytes
 - Counter.java: 3,323 bytes
 - StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
@@ -1205,7 +1205,7 @@ will result
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes
-- XmlDocument.java: 2,038 bytes
+- XmlDocument.java: 2,195 bytes
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes

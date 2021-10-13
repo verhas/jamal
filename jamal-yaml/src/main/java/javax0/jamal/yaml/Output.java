@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
 
+@Macro.Stateful
 public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, Closer.ProcessorAware, AutoCloseable {
     final Yaml yaml = new Yaml();
 
@@ -46,6 +47,7 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
         Params.using(processor).keys(clone, copy).between("()").parse(in);
+        // TODO create a new instance and defer closing to that one to be thread safe
         this.clone = clone.is();
         this.copy = copy.is();
         InputHandler.skipWhiteSpaces(in);

@@ -12,6 +12,7 @@ import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
+@Macro.Stateful
 public class Include implements Macro {
     /**
      * Count the depth of the includes. In case this is more than 100 stop the processing. Most likely this is a wrong

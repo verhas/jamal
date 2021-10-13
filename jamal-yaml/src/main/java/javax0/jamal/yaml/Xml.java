@@ -16,6 +16,7 @@ import javax0.jamal.tools.Params;
 import java.util.List;
 import java.util.Map;
 
+@Macro.Stateful
 public class Xml implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -27,7 +28,7 @@ public class Xml implements Macro, InnerScopeDependent {
 
         final var yamlObject = Resolve.getYaml(processor, in.toString().trim());
         Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
-
+        //TODO create a new instance to make it thread safe
         return toXml(topTag.get(), attributes.get(), yamlObject.getObject());
     }
 

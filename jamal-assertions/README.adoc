@@ -1,0 +1,111 @@
+= Jamal Assertions
+
+The Jamal assertions module contains macros to check the consistency of the documentation.
+The checks are implemented as assertions each asserting some simple condition and giving error if the condition is false.
+Although it may be used other than checking the consistency of the documentation, that is the module's main purpose.
+
+Macros can gather information from different parts of the document and from the documented system.
+The assertions can check that the gathered information is consistent.
+
+== Examlpe
+
+For example the macro
+
+[source]
+----
+{@snip:xml pom=pom.xml}
+----
+
+
+reads the `pom.xml` file from the same directory where the document is.
+It stores the XML in the memory and it can be queried via the `pom` macro afterward.
+This `pom` macro can be use with an XPath expression to get parts of the project description.
+For example the following macro will get the version string of the project:
+
+[source]
+----
+{pom //project/version}
+----
+
+This version currently is
+
+[source]
+----
+1.7.10-SNAPSHOT
+----
+
+
+If we create an assertion that this version is in the `1.xxx` range, we can write it as the following:
+
+[source]
+----
+here we have an assertion
+{#assert:startsWith /{pom //project/version}/1./we are not in the 1.xxx range any more}
+assertion was okay
+----
+
+which results
+
+[source]
+----
+here we have an assertion
+
+assertion was okay
+----
+
+
+The output of the assertion is an empty string when the condition is ok.
+Since the string `{pom //project/version}` starts with `1.` the assertion does not fail.
+If we do a different assertion that tests that the version does NOT start with `1.` the assertion will result error.
+
+[source]
+----
+{@try! {#assert:startsWith (not) /{pom //project/version}/1./we are still in the 1.xxx range}}
+if the assertion was not okay, the macro try! displays the error message
+----
+
+which results
+
+[source]
+----
+we are still in the 1.xxx range
+if the assertion was not okay, the macro try! displays the error message
+----
+
+
+
+Document consistency can be checked during the processing.
+Macros can discover some inconsistencies.
+
+
+
+[source]
+----
+{@define a=1}{a} is 1
+----
+
+[source]
+----
+1 is 1
+----
+
+
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-assertions</artifactId>
+    <version>1.7.10-SNAPSHOT</version>
+</dependency>
+
+----
+
+
+== Macros implemented in the package
+
+The macros imp
+
+[[Sample]]
+=== Sample Application, Converting this `README.adoc`
+

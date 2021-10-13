@@ -10,6 +10,8 @@ import javax0.jamal.api.Marker;
 import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.InputHandler;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -189,13 +191,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      */
     private <T> Optional<T> stackGet(Function<Scope, Map<String, T>> field, String id) {
         final int end = scopeStack.size() - 1;
-        return IntStream.range(TOP_LEVEL, scopeStack.size())
-            .sequential()
-            .mapToObj(i -> scopeStack.get(end - i))
-            .map(field)
-            .filter(map -> map.containsKey(id))
-            .map(map -> map.get(id))
-            .findFirst();
+        return IntStream.range(TOP_LEVEL, scopeStack.size()).sequential().mapToObj(i -> scopeStack.get(end - i)).map(field).filter(map -> map.containsKey(id)).map(map -> map.get(id)).findFirst();
     }
 
     /**
@@ -254,7 +250,23 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void define(Macro macro, String alias) {
+        assertMacroClassIsStateless(macro);
         writableScope().macros.put(alias, macro);
+    }
+
+    private void assertMacroClassIsStateless(Macro macro) {
+        for (Class<?> m = macro.getClass(); m != null; m = m.getSuperclass()) {
+            if (m.getDeclaredAnnotation(Macro.Stateful.class) == null && m.getDeclaredFields().length > 0) {
+                for (Field field : m.getDeclaredFields()) {
+                    if ((field.getModifiers() & Modifier.FINAL) == 0 && (field.getModifiers() & Modifier.STATIC) == 0) {
+                        throw new RuntimeException("The macro class '" + macro.getClass().getName() +
+                            "' is not stateless, " +
+                            (m == macro.getClass() ? "it " : "parent class " + m.getName()) +
+                            " has non-final, non-static field '" + field.getName() + "'");
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -302,9 +314,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                 if (markerIsInTheStack(check)) {
                     tryCleanUpStack(check);
                 }
-                throw new BadSyntaxAt("Scope was changed from " +
-                    check + " to " + current.checkObject + " and it was not closed before the end.",
-                    current.checkObject.getPosition());
+                throw new BadSyntaxAt("Scope was changed from " + check + " to " + current.checkObject + " and it was not closed before the end.", current.checkObject.getPosition());
             }
         } else {
             if (check != null) {
@@ -322,8 +332,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                     tryCleanUpStack(check);
                     popStackOneLevel();
                 }
-                throw new BadSyntax("Pop was performed by " +
-                    check + " for a level pushed by " + current.checkObject);
+                throw new BadSyntax("Pop was performed by " + check + " for a level pushed by " + current.checkObject);
             }
             popStackOneLevel();
         } else {
@@ -376,10 +385,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     public void lock(Marker check) throws BadSyntax {
         if (scopeStack.size() > 1) {
             if (!Objects.equals(check, currentScope().checkObject)) {
-                throw new BadSyntax("Lock was performed by " +
-                    check +
-                    " for a level pushed by " +
-                    currentScope().checkObject);
+                throw new BadSyntax("Lock was performed by " + check + " for a level pushed by " + currentScope().checkObject);
             }
             currentScope().locked = true;
         } else {
@@ -395,13 +401,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      */
     private String stackGet(Function<Delimiters, String> openOrClose) {
         final int end = scopeStack.size() - 1;
-        return IntStream.range(TOP_LEVEL, scopeStack.size())
-            .sequential()
-            .mapToObj(i -> scopeStack.get(end - i))
-            .map(scope -> scope.delimiterPair)
-            .map(openOrClose)
-            .filter(Objects::nonNull)
-            .findFirst().orElse(null);
+        return IntStream.range(TOP_LEVEL, scopeStack.size()).sequential().mapToObj(i -> scopeStack.get(end - i)).map(scope -> scope.delimiterPair).map(openOrClose).filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     @Override

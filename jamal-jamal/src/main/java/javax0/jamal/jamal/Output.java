@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
+@Macro.Stateful
 public class Output implements Macro {
     /**
      * Instantiating a processor also instantiates all macro classes via the ServiceLoader. Instantiating here the

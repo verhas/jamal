@@ -1,5 +1,8 @@
 package javax0.jamal.api;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +18,17 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
  * the class has a zero-parameter (default) constructor.
  * <p>
  * Macro implementations are supposed to be state-less, but they can have state. Be careful, however, that the macros
- * can have many instances while processing a single file if they come into life via the {@code use} macro.
+ * can have many instances while processing a single file if they come into life via the {@code use} macro. At the same
+ * time multiple threads in some installations may use the same macro instance.
+ * <p>
+ * When a macro implementation has state then it has to be annotated using {@link Macro.Stateful}.
  */
 @FunctionalInterface
 public interface Macro extends Identified, ServiceLoaded {
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Stateful {
+    }
+
     static List<Macro> getInstances() {
         return ServiceLoaded.getInstances(Macro.class);
     }
@@ -140,8 +150,8 @@ public interface Macro extends Identified, ServiceLoaded {
             if (input.length() == 0) {
                 var head = output.substring(0, Math.min(40, output.length()));
                 final var nlPos = head.indexOf('\n');
-                if( nlPos != -1 ){
-                    head = head.substring(0,nlPos);
+                if (nlPos != -1) {
+                    head = head.substring(0, nlPos);
                 }
                 throw new BadSyntaxAt("Macro was not terminated in the file.\n" +
                     head + "\n", op.pop());

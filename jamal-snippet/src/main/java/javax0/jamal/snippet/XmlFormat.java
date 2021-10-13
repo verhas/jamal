@@ -28,6 +28,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Macro.Stateful
 public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware, AutoCloseable {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -40,6 +41,7 @@ public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware
             return formatXml(input, "" + tabsize.get());
         } else {
             this.tabsize = "" + tabsize.get();
+            //TODO create a new instance and defer to that one to be thread safe
             processor.deferredClose(this);
             return "";
         }

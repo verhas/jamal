@@ -470,7 +470,7 @@ If the hash is calculated for a whole file then the macro option `file` is used
 
 If this code is the same as the one calculated, the programmer did not change the code in the snippet since the denoted part of the documentation was last updated.
 If the codes are different, then the macro will error.
-It means that the snipped or file has changed, and the documentation has to follow the change.
+It means that the snippet or file has changed, and the documentation has to follow the change.
 When the documentation is updated, then you should also update the hash code to the current version.
 
 Nothing will stop you from updating the hash code without updating the documentation, though.
@@ -507,6 +507,22 @@ then you have to
 Update the documentation to follow the change of the code part.
 2. Update the hash code in the macro to the new value.
 3. Rerun the macro processing.
+
+In some rare cases, you do not want to check all the modifications of the file.
+You specify the option `lines` to check the number of lines in the snippet or file has not changed.
+To do that, you can
+
+[source,text]
+----
+{@snip:check lines=22 id=specialCodeToCheck}
+----
+
+and the macro will not error so long as long the snippet or the file contains exactly 22 lines.
+
+You can specify both the `lines` and the `hash` together, but it does not make much sense.
+The macro will check the hash value first.
+If the hash value fails, the macro error.
+If the hash value is correct, then the file or snippet is identical, meaning it has the same number of lines as before.
 
 [[snipList]]
 ==== viii. `snip:list`
@@ -1303,7 +1319,7 @@ will result
 - Collect.java: 5,504 bytes
 - TrimLines.java: 3,687 bytes
 - Replace.java: 1,775 bytes
-- SnipXml.java: 1,511 bytes
+- SnipXml.java: 1,489 bytes
 - Counter.java: 3,323 bytes
 - StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
@@ -1314,7 +1330,7 @@ will result
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes
-- XmlDocument.java: 2,038 bytes
+- XmlDocument.java: 2,195 bytes
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
@@ -1470,7 +1486,7 @@ will result in the output
 
 [source]
 ----
-2021-10-07 21:23:36
+2021-10-12 18:54:05
 ----
 
 
