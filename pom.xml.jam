@@ -69,7 +69,7 @@
                     {GAV :org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M4}
                 }
                 {plugin|
-                      {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:1.6.7}
+                      {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8}
                       {extensions :true}
                       {configuration|
                         <serverId>ossrh</serverId>
