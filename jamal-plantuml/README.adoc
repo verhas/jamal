@@ -146,7 +146,7 @@ The maven coordinates for the Jamal module are:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-plantuml</artifactId>
-    <version>1.7.10-SNAPSHOT</version>
+    <version>1.8.0</version>
 </dependency>
 ----
 

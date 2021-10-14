@@ -4,11 +4,11 @@
     <name>jamal plantuml</name>
     <packaging>jar</packaging>
     <artifactId>jamal-plantuml</artifactId>
-    <version>1.7.10-SNAPSHOT</version>
+    <version>1.8.0</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.7.10-SNAPSHOT</version>
+        <version>1.8.0</version>
     </parent>
     <description>Jamal macro library snippet macros</description>
     <build>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-snippet</artifactId>
-            <version>1.7.10-SNAPSHOT</version>
+            <version>1.8.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

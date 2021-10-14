@@ -30,7 +30,7 @@ public class TestEnvironmentNoDebug {
     void testUiBackEndVersionIsTheSame() {
         Assertions.assertEquals(backEndVersion(),frontEndVersion(),
             "The back-end version and the front-end versions must be the same\n" +
-                "Execute the shell script ${projectRoor}/jamal-debug-ui/deploybuild and git commit/push.");
+                "Execute the shell script ${projectRoot}/jamal-debug-ui/deployprod and git commit/push.");
     }
 
     private static String backEndVersion() {

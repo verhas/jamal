@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>1.7.10-SNAPSHOT</version>
+    <version>1.8.0</version>
     <description>Jamal macro library to process text files</description>
     <modules>
         <module>jamal-engine</module>
@@ -161,62 +161,62 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-testsupport</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-core</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-tools</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-engine</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-scriptbasic</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-snippet</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-plantuml</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-debug</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-jamal</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-yaml</artifactId>
-                <version>1.7.10-SNAPSHOT</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
