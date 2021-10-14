@@ -116,6 +116,7 @@ public class TestProcessor {
         Assertions.assertEquals("{zz}", result);
     }
 
+    @Macro.Stateful
     public static class SignalMacro implements Macro {
         String closed = "not closed";
 
@@ -125,6 +126,7 @@ public class TestProcessor {
         }
     }
 
+    @Macro.Stateful
     public static class AutoClosingMacro implements Macro, AutoCloseable {
 
         javax0.jamal.api.Processor p = null;
@@ -276,6 +278,7 @@ public class TestProcessor {
         Assertions.assertTrue(ctx.deferred.isClosed);
     }
 
+    @Macro.Stateful
     public static class Postprocessor implements Macro, AutoCloseable, ProcessorAware, OutputAware {
 
         private javax0.jamal.api.Input output;
@@ -320,6 +323,7 @@ public class TestProcessor {
         }
     }
 
+    @Macro.Stateful
     public static class CloseOnlyOneTime implements Macro, AutoCloseable {
         boolean isClosed = false;
 

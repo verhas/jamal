@@ -2,22 +2,25 @@ package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StackLimiter {
     private static final int LIMIT = getLimit();
-    private static final String JAMAL_STACK_LIMIT = "JAMAL_STACK_LIMIT";
+    private static final String JAMAL_STACK_LIMIT_ENV = "JAMAL_STACK_LIMIT";
+    private static final String JAMAL_STACK_LIMIT_SYS = "jamal.stack.limit";
     private static final int DEFAULT_LIMIT = 300;
 
     private static int getLimit() {
-        final String limitString = System.getenv(JAMAL_STACK_LIMIT);
+        final String limitString = Optional.ofNullable(System.getProperty(JAMAL_STACK_LIMIT_SYS)).orElseGet(
+            () -> System.getenv(JAMAL_STACK_LIMIT_ENV));
         if (limitString == null) {
             return DEFAULT_LIMIT;
         }
         try {
             return Integer.parseInt(limitString);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(new BadSyntax("The environment variable " + JAMAL_STACK_LIMIT + " should be an integer"));
+            throw new RuntimeException(new BadSyntax("The environment variable " + JAMAL_STACK_LIMIT_ENV + " should be an integer"));
         }
     }
 

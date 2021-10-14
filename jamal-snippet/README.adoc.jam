@@ -1201,7 +1201,7 @@ will result
 - KillLines.java: 1,446 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,220 bytes
-- XmlFormat.java: 3,331 bytes
+- XmlFormat.java: 3,428 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes

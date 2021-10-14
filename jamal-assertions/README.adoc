@@ -1,5 +1,6 @@
 = Jamal Assertions
 
+
 The Jamal assertions module contains macros to check the consistency of the documentation.
 The checks are implemented as assertions each asserting some simple condition and giving error if the condition is false.
 Although it may be used other than checking the consistency of the documentation, that is the module's main purpose.
@@ -7,7 +8,9 @@ Although it may be used other than checking the consistency of the documentation
 Macros can gather information from different parts of the document and from the documented system.
 The assertions can check that the gathered information is consistent.
 
-== Examlpe
+
+
+== i.Example
 
 For example the macro
 
@@ -40,7 +43,7 @@ If we create an assertion that this version is in the `1.xxx` range, we can writ
 [source]
 ----
 here we have an assertion
-{#assert:startsWith /{pom //project/version}/1./we are not in the 1.xxx range any more}
+{#assert:startsWith /{pom //project/version}/1./ERROR: we are not in the 1.xxx range any more}
 assertion was okay
 ----
 
@@ -60,7 +63,7 @@ If we do a different assertion that tests that the version does NOT start with `
 
 [source]
 ----
-{@try! {#assert:startsWith (not) /{pom //project/version}/1./we are still in the 1.xxx range}}
+{@try! {#assert:startsWith (not) /{pom //project/version}/1./ERROR: we are still in the 1.xxx range}}
 if the assertion was not okay, the macro try! displays the error message
 ----
 
@@ -68,28 +71,28 @@ which results
 
 [source]
 ----
-we are still in the 1.xxx range
+ERROR: we are still in the 1.xxx range
 if the assertion was not okay, the macro try! displays the error message
 ----
 
 
-
-Document consistency can be checked during the processing.
-Macros can discover some inconsistencies.
-
-
-
-[source]
+[NOTE]
 ----
-{@define a=1}{a} is 1
+This document uses the `try` macro with the `!` mark after it.
+This macro with the `!` evaluates its content and then results the error message in case there was an error.
+If you are not familiar with the use of this macro, please consult the link:../README.adoc[Jamal main documentation].
 ----
 
-[source]
-----
-1 is 1
-----
+Checking documentation consistency can be done in many different ways.
+The one we have shown in this section is only a single example.
+The assertion package helps consistency checks.
 
+== ii.Use
 
+The macro package is defined in a jar file as a Java module.
+The macros are automatically loaded using the service loader.
+In order to use the macros the library has to be on the classpath.
+To do it as a Maven dependency use the following Maven coordinates:
 
 [source,xml]
 ----
@@ -98,14 +101,449 @@ Macros can discover some inconsistencies.
     <artifactId>jamal-assertions</artifactId>
     <version>1.7.10-SNAPSHOT</version>
 </dependency>
+----
 
+== iii.Assertions Formats and Options
+
+All assertions have the same options and the same syntax.
+The name of the macro is followed by the options , if there is any, between `(` and `)` characters.
+The rest of the macro are the parameters.
+The parameters are parsed using the link:../PARAMS.adoc[Standard Built-In Parameter Parsing].
+The different assertions can have different number of parameters.
+The last parameter is always optional.
+If it is present it specifies the error message for the case the assertion fails.
+
+For an example, let us have a look at the sample we have already visited in the previous section.
+
+[source]
+----
+{#assert:startsWith (not) /{pom //project/version}/1./ERROR: we are still in the 1.xxx range}
+----
+
+The assertion macro `assert:startsWith` has two mandatory parameters and the optional message as third parameter.
+This assertion checks that the first parameter interpreted as a string starts with the second parameter.
+In this example we want an error when the version does NOT start with `1.` thus the use of the option `not`.
+
+All the assertions interpret two options.
+These are
+
+* `trim` with the alias `strip`, and
+* `not` with the alias `negate`.
+
+The option names and the aliases are equivalent, you can use the one that fits your taste.
+The first option `trim` tells the assertion that the parameters should be stripped before the assertion is evaluated.
+This will remove all white space from the start and the end of the parameters.
+The second option reverses the outcome of the assertion.
+
+
+== iv.Macros Implemented in the Package
+
+
+
+
+=== iv.a.  `assert:contains`
+Asserts that the first argument contains the second argument.
+
+Example
+[source]
+----
+1. OK: {@assert:contains /abba/bb/contains}
+2. OK: {@assert:contains (not) /abba/aa/abba does not contain aa}
+3. ERROR: {@try! {@assert:contains /abba/aa/abba does not contain aa}}
+4. ERROR: {@try! {@assert:contains /abba/aa/}}
+5. ERROR: {@try! {@assert:contains (not) /abba/bb/abba contains bb}}
+6. ERROR: {@try! {@assert:contains (not) /abba/bb/}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. ERROR: abba does not contain aa
+4. ERROR: assert:contains has failed 'abba' does not contain 'aa'
+5. ERROR: abba contains bb
+6. ERROR: assert:contains has failed 'abba' contains 'bb'
 ----
 
 
-== Macros implemented in the package
+=== iv.b.  `assert:empty`
 
-The macros imp
+Asserts that the first argument is a zero length string.
+Note that there is no `assert:blank` assertion.
+If you want to check that the argument is empty OR blank then you should use the `trim` option.
 
-[[Sample]]
-=== Sample Application, Converting this `README.adoc`
+Example
+[source]
+----
+1. OK: {@assert:empty //this is empty}
+2. OK: {@assert:empty (trim) /    /this is empty also, as trimmed}
+3. OK: {@assert:empty (not) /    /this is not empty as expected}
+4. OK: {@assert:empty (not trim) /  wuff   /this is not empty as expected, even though trimmed}
+5. ERROR: {@try! {@assert:empty (not) //sadly nothing here}}
+6. ERROR: {@try! {@assert:empty /    /blank is not empty unless trimmed}}
+7. ERROR: {@try! {@assert:empty /wuff/not empty is not empty}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. ERROR: sadly nothing here
+6. ERROR: blank is not empty unless trimmed
+7. ERROR: not empty is not empty
+----
+
+
+=== iv.c.  `assert:startsWith`
+
+Asserts that the first argument starts with the second argument.
+
+Example
+[source]
+----
+1. OK: {@assert:startsWith /abba/abb/abba starts with abb}
+2. OK: {@assert:startsWith (trim) / abba/  abb /the same as above}
+3. OK: {@assert:startsWith (not) /abba/ebb/abba does not start with ebb}
+4. ERROR: {@try! {@assert:startsWith (not) /abba/abb/ but it does start with abb}}
+5. ERROR: {@try! {@assert:startsWith /abba/ebb/abba does not start with ebb}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. ERROR:  but it does start with abb
+5. ERROR: abba does not start with ebb
+----
+
+
+=== iv.d.  `assert:endWith`
+
+Asserts that the first argument ends with the second argument.
+
+Example
+[source]
+----
+1. OK: {@assert:endsWith /abba/bba/abba ends with bba}
+2. OK: {@assert:endsWith (trim) / abba/  bba /the same as above}
+3. OK: {@assert:endsWith (not) /abba/bbe/abba does not end with bbe}
+4. ERROR: {@try! {@assert:endsWith (not) /abba/bba/ but it does end with bba}}
+5. ERROR: {@try! {@assert:endsWith /abba/bbe/abba does not end with bbe}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. ERROR:  but it does end with bba
+5. ERROR: abba does not end with bbe
+----
+
+
+=== iv.e.  `assert:equals`
+
+Asserts that the first and the second arguments are equal strings.
+
+Example
+[source]
+----
+1. OK: {@assert:equals /abba/abba/abba is abba}
+2. OK: {@assert:equals (trim) / abba/  abba /the same as above}
+3. OK: {@assert:equals (not) /abba/boney m/abba is not boney m}
+4. ERROR: {@try! {@assert:equals (not) /abba/abba/abba forever}}
+5. ERROR: {@try! {@assert:equals /abba/boney N/we meant real Swedish music}}
+6. ERROR: {@try! {@assert:equals /333/+333/this is not numeric comparison}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. ERROR: abba forever
+5. ERROR: we meant real Swedish music
+6. ERROR: this is not numeric comparison
+----
+
+
+=== iv.f.  `assert:fail`
+
+This assertion has only one optional argument, the message.
+If this macro is evaluated it will always result error.
+The use of this assertion makes sense in part of the code that is conditionally evaluated, like a part of an `if` macro.
+Note that this macro also interprets the `trim` option, though it has no parameters that could be trimmed.
+The option `trim` can be used, but has no effect.
+The option `not` is also interpreted.
+If the option `not` is used, then the macro will result an empty string and will not error.
+
+Example
+[source]
+----
+1. ERROR: {@try! {@assert:fail just fail, okay? just fail}}
+----
+
+results
+
+[source]
+----
+1. ERROR: just fail, okay? just fail
+----
+
+
+
+
+=== iv.g.  `assert:greater`
+This assertion interprets the first two arguments as integer values.
+It checks that the first argument is greater than the second.
+
+Example
+[source]
+----
+1. OK: {@assert:greater /6/3/six is greater than three}
+2. OK: {@assert:greater /-3/-6/minus three is greater than minus six}
+3. OK: {@assert:greater (trim) / 6 /  3 /space needs trimming, converted to numeric}
+4. OK: {@assert:greater (not) /3/6/three is not greater than six}
+5. OK: {@assert:greater (not) /3/3/three is not greater than three}
+6. ERROR: {@try! {@assert:greater /60/3A/3A is not numeric}}
+7. ERROR: {@try! {@assert:greater / 6 / 3 /with spaces it is not numeric}}
+8. ERROR: {@try! {@assert:greater (not) /6/666/six is not greater than 666}}
+9. ERROR: {@try! {@assert:greater /3/3/three is not greater than three, three is three}}
+10. ERROR: {@try! {@assert:greater /-6/-3/this is numeric comparison, negative numbers are negative}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. OK:
+6. ERROR: The parameter in assert:greater is not a well formatted integer: '3A'
+7. ERROR: The parameter in assert:greater is not a well formatted integer: ' 6 '
+8. ERROR:
+9. ERROR: three is not greater than three, three is three
+10. ERROR: this is numeric comparison, negative numbers are negative
+----
+
+=== iv.h.  `assert:greaterOrEqual`
+This assertion interprets the first two arguments as integer values.
+It checks that the first argument is greater or equal than the second.
+
+Example
+[source]
+----
+1. OK: {@assert:greaterOrEqual /6/3/six is greater than three}
+2. OK: {@assert:greaterOrEqual /-3/-6/minus three is greater than minus six}
+3. OK: {@assert:greaterOrEqual (trim) / 6 /  3 /space needs trimming, converted to numeric}
+4. OK: {@assert:greaterOrEqual (not) /3/6/three is not greater than six}
+5. OK: {@assert:greaterOrEqual /3/3/three is not greater than three but it is equal}
+6. ERROR: {@try! {@assert:greaterOrEqual /60/3A/3A is not numeric}}
+7. ERROR: {@try! {@assert:greaterOrEqual / 6 / 3 /with spaces it is not numeric}}
+8. ERROR: {@try! {@assert:greaterOrEqual (not) /6/666/six is not greater than 666}}
+9. ERROR: {@try! {@assert:greaterOrEqual (not) /3/3/three is not greater than three, three is three}}
+10. ERROR: {@try! {@assert:greaterOrEqual /-6/-3/this is numeric comparison, negative numbers are negative}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. OK:
+6. ERROR: The parameter in assert:greaterOrEqual is not a well formatted integer: '3A'
+7. ERROR: The parameter in assert:greaterOrEqual is not a well formatted integer: ' 6 '
+8. ERROR:
+9. ERROR: three is not greater than three, three is three
+10. ERROR: this is numeric comparison, negative numbers are negative
+----
+
+
+
+=== iv.i.  `assert:less`
+This assertion interprets the first two arguments as integer values.
+It checks that the first argument is less than the second.
+
+Example
+[source]
+----
+1. OK: {@assert:less /3/6/three is less than six}
+2. OK: {@assert:less /-6/-3/minus six is less than minus three}
+3. OK: {@assert:less (trim) / 3 /  6 /space needs trimming, converted to numeric}
+4. OK: {@assert:less (not) /6/3/six is not less than three}
+5. OK: {@assert:less (not) /3/3/three is not less than three}
+6. ERROR: {@try! {@assert:less /60/3A/3A is not numeric}}
+7. ERROR: {@try! {@assert:less / 3 / 6 /with spaces it is not numeric}}
+8. ERROR: {@try! {@assert:less (not) /666/6/666 is not less than six}}
+9. ERROR: {@try! {@assert:less /3/3/three is not less than three, three is three}}
+10. ERROR: {@try! {@assert:less /-3/-6/this is numeric comparison, negative numbers are negative}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. OK:
+6. ERROR: The parameter in assert:less is not a well formatted integer: '3A'
+7. ERROR: The parameter in assert:less is not a well formatted integer: ' 3 '
+8. ERROR:
+9. ERROR: three is not less than three, three is three
+10. ERROR: this is numeric comparison, negative numbers are negative
+----
+
+
+=== iv.j.  `assert:lessOrEqual`
+This assertion interprets the first two arguments as integer values.
+It checks that the first argument is less or equal than the second.
+
+Example
+[source]
+----
+1. OK: {@assert:lessOrEqual /3/6/three is less than six}
+2. OK: {@assert:lessOrEqual /-6/-3/minus six is less than minus three}
+3. OK: {@assert:lessOrEqual (trim) / 3 /  6 /space needs trimming, converted to numeric}
+4. OK: {@assert:lessOrEqual (not) /6/3/six is not less than three}
+5. OK: {@assert:lessOrEqual /3/3/three is not less than three but it is equal}
+6. ERROR: {@try! {@assert:lessOrEqual /60/3A/3A is not numeric}}
+7. ERROR: {@try! {@assert:lessOrEqual / 3 / 6 /with spaces it is not numeric}}
+8. ERROR: {@try! {@assert:lessOrEqual /666/6/666 is not less than six}}
+9. ERROR: {@try! {@assert:lessOrEqual (not) /3/3/three is not less than three, three is three}}
+10. ERROR: {@try! {@assert:lessOrEqual /-3/-6/this is numeric comparison, negative numbers are negative}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. OK:
+6. ERROR: The parameter in assert:lessOrEqual is not a well formatted integer: '3A'
+7. ERROR: The parameter in assert:lessOrEqual is not a well formatted integer: ' 3 '
+8. ERROR: 666 is not less than six
+9. ERROR: three is not less than three, three is three
+10. ERROR: this is numeric comparison, negative numbers are negative
+----
+
+
+=== iv.k.  `assert:intEquals`
+This assertion interprets the first two arguments as integer values.
+It checks that the two arguments are equal as integer numbers.
+
+Example
+[source]
+----
+1. OK: {@assert:intEquals /3/3/three is three}
+2. OK: {@assert:intEquals (trim) / 3/3 /three is three but needs trimming if it needs trimming}
+3. OK: {@assert:intEquals /+3/3/plus three is three}
+4. OK: {@assert:intEquals (not) /-3/3/minus three is not three}
+5. ERROR: {@try! {@assert:intEquals /3A/3A/3A is not numeric}}
+6. ERROR: {@try! {@assert:intEquals / 3 / 6 /with spaces it is not numeric}}
+7. ERROR: {@try! {@assert:intEquals /666/6/666 is not six}}
+8. ERROR: {@try! {@assert:intEquals (not) /3/3/three is three}}
+9. ERROR: {@try! {@assert:intEquals /3/6/simply not equal}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. ERROR: The parameter in assert:intEquals is not a well formatted integer: '3A'
+6. ERROR: The parameter in assert:intEquals is not a well formatted integer: ' 3 '
+7. ERROR: 666 is not six
+8. ERROR: three is three
+9. ERROR: simply not equal
+----
+
+
+=== iv.l.  `assert:int`
+This macro checks that the first argument can be interpreted as an integer number.
+
+Example
+[source]
+----
+1. OK: {@assert:int /3/3 is an int}
+2. OK: {@assert:int (trim) / 3/3 is an int if trimmed}
+3. OK: {@assert:int /+3/plus three is also int}
+4. OK: {@assert:int (not) /3.14/that is not an int}
+5. ERROR: {@try! {@assert:int /3A/3A is not numeric}}
+6. ERROR: {@try! {@assert:int / 3 /3 with spaces it is not int}}
+7. ERROR: {@try! {@assert:int /3.14/3.14 is not an int}}
+8. ERROR: {@try! {@assert:int (not) /3/three is an int, not a not int}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. ERROR: 3A is not numeric
+6. ERROR: 3 with spaces it is not int
+7. ERROR: 3.14 is not an int
+8. ERROR: three is an int, not a not int
+----
+
+
+=== iv.m.  `assert:numeric`
+This macro checks that the first argument can be interpreted as a numeric (possibly floating point) number.
+
+[source]
+----
+1. OK: {@assert:numeric /3/3 is an int}
+2. OK: {@assert:numeric (trim) / 3/3 is an int if trimmed}
+3. OK: {@assert:numeric /+3/plus three is also int}
+4. OK: {@assert:numeric /3.14/that is numeric}
+5. OK: {@assert:numeric /0x0.C90FDAP2f/that is also numeric}
+6. ERROR: {@try! {@assert:numeric /3A/3A is not numeric}}
+7. ERROR: {@try! {@assert:numeric / 3 /3 with spaces it is not int}}
+8. ERROR: {@try! {@assert:numeric (not) /3.14/3.14 is not a not numeric}}
+9. ERROR: {@try! {@assert:numeric (not) /3/three is an int, not a not int, and thus a numeric}}
+----
+
+results
+
+[source]
+----
+1. OK:
+2. OK:
+3. OK:
+4. OK:
+5. OK:
+6. ERROR: 3A is not numeric
+7. ERROR:
+8. ERROR: 3.14 is not a not numeric
+9. ERROR: three is an int, not a not int, and thus a numeric
+----
+
 

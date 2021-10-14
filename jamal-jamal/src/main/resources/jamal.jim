@@ -12,7 +12,8 @@ code%}
 {%@define output=[source]
 ----
 {%#trimLines
-{%#output {%lastCode%}%}%}
+{%!#output
+{%lastCode%}%}%}
 ----
 %}
 

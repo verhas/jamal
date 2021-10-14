@@ -59,8 +59,10 @@ abstract class AbstractAssert implements Macro {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
+        // snippet Assertion_params
         Params.Param<Boolean> trim = Params.<Boolean>holder("trim", "strip").asBoolean();
         Params.Param<Boolean> not = Params.<Boolean>holder("not", "negate").asBoolean();
+        //end snippet
 
         Params.using(processor).between("()").from(this).keys(trim, not).parse(input);
         String[] parts = getParts(input, N, trim, this);

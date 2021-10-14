@@ -1,5 +1,6 @@
 = Jamal Assertions
 {%@import res:jamal.jim%}\
+{%@snip:collect from=src/main/java%}
 
 The Jamal assertions module contains macros to check the consistency of the documentation.
 The checks are implemented as assertions each asserting some simple condition and giving error if the condition is false.
@@ -8,7 +9,9 @@ Although it may be used other than checking the consistency of the documentation
 Macros can gather information from different parts of the document and from the documented system.
 The assertions can check that the gathered information is consistent.
 
-== Examlpe
+{%#counter:define id=macroChapter format=$roman. %}
+
+== {%macroChapter%}Example
 
 For example the macro
 
@@ -34,7 +37,7 @@ If we create an assertion that this version is in the `1.xxx` range, we can writ
 {%@define MAJOR_VERSION=1.%}
 {%sample/
 here we have an assertion
-{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/we are not in the 1.xxx range any more}
+{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are not in the 1.xxx range any more}
 assertion was okay
 %}
 
@@ -47,7 +50,7 @@ Since the string `{pom //project/version}` starts with `{%MAJOR_VERSION%}` the a
 If we do a different assertion that tests that the version does NOT start with `{%MAJOR_VERSION%}` the assertion will result error.
 
 {%sample/
-{@try! {#assert:startsWith (not) /{pom //project/version}/{%MAJOR_VERSION%}/we are still in the 1.xxx range}}
+{@try! {#assert:startsWith (not) /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are still in the 1.xxx range}}
 if the assertion was not okay, the macro try! displays the error message
 %}
 
@@ -55,21 +58,26 @@ which results
 
 {%output%}
 
+[NOTE]
+----
+This document uses the `try` macro with the `!` mark after it.
+This macro with the `!` evaluates its content and then results the error message in case there was an error.
+If you are not familiar with the use of this macro, please consult the link:../README.adoc[Jamal main documentation].
+----
 
-Document consistency can be checked during the processing.
-Macros can discover some inconsistencies.
+Checking documentation consistency can be done in many different ways.
+The one we have shown in this section is only a single example.
+The assertion package helps consistency checks.
 
-{%#counter:define id=macroChapter {%@define format=$roman. %}%}
+== {%macroChapter%}Use
 
-{%sample/
-{@define a=1}{a} is 1
-%}
-
-{%output%}
+The macro package is defined in a jar file as a Java module.
+The macros are automatically loaded using the service loader.
+In order to use the macros the library has to be on the classpath.
+To do it as a Maven dependency use the following Maven coordinates:
 
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-
 [source,xml]
 ----
 <dependency>
@@ -77,15 +85,299 @@ Macros can discover some inconsistencies.
     <artifactId>jamal-assertions</artifactId>
     <version>{%VERSION%}</version>
 </dependency>
-
 ----
 
+== {%macroChapter%}Assertions Formats and Options
 
-== Macros implemented in the package
+All assertions have the same options and the same syntax.
+The name of the macro is followed by the options , if there is any, between `(` and `)` characters.
+The rest of the macro are the parameters.
+The parameters are parsed using the link:../PARAMS.adoc[Standard Built-In Parameter Parsing].
+The different assertions can have different number of parameters.
+The last parameter is always optional.
+If it is present it specifies the error message for the case the assertion fails.
 
-The macros imp
+For an example, let us have a look at the sample we have already visited in the previous section.
 
-[[Sample]]
-=== Sample Application, Converting this `README.adoc`
+{%sample/
+{#assert:startsWith (not) /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are still in the 1.xxx range}
+%}
 
-{%@snip:update%}
+The assertion macro `assert:startsWith` has two mandatory parameters and the optional message as third parameter.
+This assertion checks that the first parameter interpreted as a string starts with the second parameter.
+In this example we want an error when the version does NOT start with `{%MAJOR_VERSION%}` thus the use of the option `not`.
+
+All the assertions interpret two options.{%@snip:check lines=2 id=Assertion_params%}
+These are
+
+* `trim` with the alias `strip`, and
+* `not` with the alias `negate`.
+
+The option names and the aliases are equivalent, you can use the one that fits your taste.
+The first option `trim` tells the assertion that the parameters should be stripped before the assertion is evaluated.
+This will remove all white space from the start and the end of the parameters.
+The second option reverses the outcome of the assertion.
+
+{%#define MACROS_CHAPTER={%macroChapter%}%}
+== {%MACROS_CHAPTER%}Macros Implemented in the Package
+{%#counter:define format="$alpha. " id=macroSection%}
+{%#counter:define id=macroCounter start=0%}
+{%@define MAC($title)={%#comment {%macroCounter%}%}\
+=== {%MACROS_CHAPTER%}{%macroSection%} `$title`%}
+
+{%MAC assert:contains%}
+Asserts that the first argument contains the second argument.
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:contains /abba/bb/contains}
+OK: {@assert:contains (not) /abba/aa/abba does not contain aa}
+ERROR: {@try! {@assert:contains /abba/aa/abba does not contain aa}}
+ERROR: {@try! {@assert:contains /abba/aa/}}
+ERROR: {@try! {@assert:contains (not) /abba/bb/abba contains bb}}
+ERROR: {@try! {@assert:contains (not) /abba/bb/}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:empty%}
+
+Asserts that the first argument is a zero length string.
+Note that there is no `assert:blank` assertion.
+If you want to check that the argument is empty OR blank then you should use the `trim` option.
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:empty //this is empty}
+OK: {@assert:empty (trim) /    /this is empty also, as trimmed}
+OK: {@assert:empty (not) /    /this is not empty as expected}
+OK: {@assert:empty (not trim) /  wuff   /this is not empty as expected, even though trimmed}
+ERROR: {@try! {@assert:empty (not) //sadly nothing here}}
+ERROR: {@try! {@assert:empty /    /blank is not empty unless trimmed}}
+ERROR: {@try! {@assert:empty /wuff/not empty is not empty}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:startsWith%}
+
+Asserts that the first argument starts with the second argument.
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:startsWith /abba/abb/abba starts with abb}
+OK: {@assert:startsWith (trim) / abba/  abb /the same as above}
+OK: {@assert:startsWith (not) /abba/ebb/abba does not start with ebb}
+ERROR: {@try! {@assert:startsWith (not) /abba/abb/ but it does start with abb}}
+ERROR: {@try! {@assert:startsWith /abba/ebb/abba does not start with ebb}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:endWith%}
+
+Asserts that the first argument ends with the second argument.
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:endsWith /abba/bba/abba ends with bba}
+OK: {@assert:endsWith (trim) / abba/  bba /the same as above}
+OK: {@assert:endsWith (not) /abba/bbe/abba does not end with bbe}
+ERROR: {@try! {@assert:endsWith (not) /abba/bba/ but it does end with bba}}
+ERROR: {@try! {@assert:endsWith /abba/bbe/abba does not end with bbe}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:equals%}
+
+Asserts that the first and the second arguments are equal strings.
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:equals /abba/abba/abba is abba}
+OK: {@assert:equals (trim) / abba/  abba /the same as above}
+OK: {@assert:equals (not) /abba/boney m/abba is not boney m}
+ERROR: {@try! {@assert:equals (not) /abba/abba/abba forever}}
+ERROR: {@try! {@assert:equals /abba/boney N/we meant real Swedish music}}
+ERROR: {@try! {@assert:equals /333/+333/this is not numeric comparison}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:fail%}
+
+This assertion has only one optional argument, the message.
+If this macro is evaluated it will always result error.
+The use of this assertion makes sense in part of the code that is conditionally evaluated, like a part of an `if` macro.
+Note that this macro also interprets the `trim` option, though it has no parameters that could be trimmed.
+The option `trim` can be used, but has no effect.
+The option `not` is also interpreted.
+If the option `not` is used, then the macro will result an empty string and will not error.
+
+Example
+{%sample/{%#numberLines format="%d. "
+ERROR: {@try! {@assert:fail just fail, okay? just fail}}
+%}%}
+
+results
+
+{%output%}
+
+{%#define NUMERIC=This assertion interprets the first two arguments as integer values.%}
+{%#define NUM2($iswhat)={%NUMERIC%}
+It checks that the first argument is $iswhat than the second.%}
+{%MAC assert:greater%}
+{%NUM2 greater%}
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:greater /6/3/six is greater than three}
+OK: {@assert:greater /-3/-6/minus three is greater than minus six}
+OK: {@assert:greater (trim) / 6 /  3 /space needs trimming, converted to numeric}
+OK: {@assert:greater (not) /3/6/three is not greater than six}
+OK: {@assert:greater (not) /3/3/three is not greater than three}
+ERROR: {@try! {@assert:greater /60/3A/3A is not numeric}}
+ERROR: {@try! {@assert:greater / 6 / 3 /with spaces it is not numeric}}
+ERROR: {@try! {@assert:greater (not) /6/666/six is not greater than 666}}
+ERROR: {@try! {@assert:greater /3/3/three is not greater than three, three is three}}
+ERROR: {@try! {@assert:greater /-6/-3/this is numeric comparison, negative numbers are negative}}
+%}%}
+
+results
+
+{%output%}
+{%MAC assert:greaterOrEqual%}
+{%NUM2 greater or equal%}
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:greaterOrEqual /6/3/six is greater than three}
+OK: {@assert:greaterOrEqual /-3/-6/minus three is greater than minus six}
+OK: {@assert:greaterOrEqual (trim) / 6 /  3 /space needs trimming, converted to numeric}
+OK: {@assert:greaterOrEqual (not) /3/6/three is not greater than six}
+OK: {@assert:greaterOrEqual /3/3/three is not greater than three but it is equal}
+ERROR: {@try! {@assert:greaterOrEqual /60/3A/3A is not numeric}}
+ERROR: {@try! {@assert:greaterOrEqual / 6 / 3 /with spaces it is not numeric}}
+ERROR: {@try! {@assert:greaterOrEqual (not) /6/666/six is not greater than 666}}
+ERROR: {@try! {@assert:greaterOrEqual (not) /3/3/three is not greater than three, three is three}}
+ERROR: {@try! {@assert:greaterOrEqual /-6/-3/this is numeric comparison, negative numbers are negative}}
+%}%}
+
+results
+
+{%output%}
+
+
+{%MAC assert:less%}
+{%NUM2 less%}
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:less /3/6/three is less than six}
+OK: {@assert:less /-6/-3/minus six is less than minus three}
+OK: {@assert:less (trim) / 3 /  6 /space needs trimming, converted to numeric}
+OK: {@assert:less (not) /6/3/six is not less than three}
+OK: {@assert:less (not) /3/3/three is not less than three}
+ERROR: {@try! {@assert:less /60/3A/3A is not numeric}}
+ERROR: {@try! {@assert:less / 3 / 6 /with spaces it is not numeric}}
+ERROR: {@try! {@assert:less (not) /666/6/666 is not less than six}}
+ERROR: {@try! {@assert:less /3/3/three is not less than three, three is three}}
+ERROR: {@try! {@assert:less /-3/-6/this is numeric comparison, negative numbers are negative}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:lessOrEqual%}
+{%NUM2 less or equal%}
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:lessOrEqual /3/6/three is less than six}
+OK: {@assert:lessOrEqual /-6/-3/minus six is less than minus three}
+OK: {@assert:lessOrEqual (trim) / 3 /  6 /space needs trimming, converted to numeric}
+OK: {@assert:lessOrEqual (not) /6/3/six is not less than three}
+OK: {@assert:lessOrEqual /3/3/three is not less than three but it is equal}
+ERROR: {@try! {@assert:lessOrEqual /60/3A/3A is not numeric}}
+ERROR: {@try! {@assert:lessOrEqual / 3 / 6 /with spaces it is not numeric}}
+ERROR: {@try! {@assert:lessOrEqual /666/6/666 is not less than six}}
+ERROR: {@try! {@assert:lessOrEqual (not) /3/3/three is not less than three, three is three}}
+ERROR: {@try! {@assert:lessOrEqual /-3/-6/this is numeric comparison, negative numbers are negative}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:intEquals%}
+{%NUMERIC%}
+It checks that the two arguments are equal as integer numbers.
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:intEquals /3/3/three is three}
+OK: {@assert:intEquals (trim) / 3/3 /three is three but needs trimming if it needs trimming}
+OK: {@assert:intEquals /+3/3/plus three is three}
+OK: {@assert:intEquals (not) /-3/3/minus three is not three}
+ERROR: {@try! {@assert:intEquals /3A/3A/3A is not numeric}}
+ERROR: {@try! {@assert:intEquals / 3 / 6 /with spaces it is not numeric}}
+ERROR: {@try! {@assert:intEquals /666/6/666 is not six}}
+ERROR: {@try! {@assert:intEquals (not) /3/3/three is three}}
+ERROR: {@try! {@assert:intEquals /3/6/simply not equal}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:int%}
+This macro checks that the first argument can be interpreted as an integer number.
+
+Example
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:int /3/3 is an int}
+OK: {@assert:int (trim) / 3/3 is an int if trimmed}
+OK: {@assert:int /+3/plus three is also int}
+OK: {@assert:int (not) /3.14/that is not an int}
+ERROR: {@try! {@assert:int /3A/3A is not numeric}}
+ERROR: {@try! {@assert:int / 3 /3 with spaces it is not int}}
+ERROR: {@try! {@assert:int /3.14/3.14 is not an int}}
+ERROR: {@try! {@assert:int (not) /3/three is an int, not a not int}}
+%}%}
+
+results
+
+{%output%}
+
+{%MAC assert:numeric%}
+This macro checks that the first argument can be interpreted as a numeric (possibly floating point) number.
+
+{%sample/{%#numberLines format="%d. "
+OK: {@assert:numeric /3/3 is an int}
+OK: {@assert:numeric (trim) / 3/3 is an int if trimmed}
+OK: {@assert:numeric /+3/plus three is also int}
+OK: {@assert:numeric /3.14/that is numeric}
+OK: {@assert:numeric /0x0.C90FDAP2f/that is also numeric}
+ERROR: {@try! {@assert:numeric /3A/3A is not numeric}}
+ERROR: {@try! {@assert:numeric / 3 /3 with spaces it is not int}}
+ERROR: {@try! {@assert:numeric (not) /3.14/3.14 is not a not numeric}}
+ERROR: {@try! {@assert:numeric (not) /3/three is an int, not a not int, and thus a numeric}}
+%}%}
+
+results
+
+{%output%}
+
+{%#snip:check lines={%macroCounter%} id=AssertionMacroClasses%}

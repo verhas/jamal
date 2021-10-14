@@ -98,12 +98,44 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         return (List<Debuggable.Scope>) (List) scopeStack;
     }
 
+    /**
+     * This variable is set in the constructor based on the system property {@link Macro#JAMAL_CHECKSTATE_SYS} or the
+     * environment variable {@link Macro#JAMAL_CHECKSTATE_ENV} when no system property.
+     * <p>
+     * When this variable is {@code true} then registering a macro checks that the macro has no state holding fields,
+     * (fields that are neither {@code final}, nor {@code static}) and refuses to load the macro if it has state.
+     * <p>
+     * It is generally recommended that the macros are stateless to support multi-thread evaluation when a single JVM
+     * runs multiple Jamal processors in one or more threads.
+     * <p>
+     * If a macro has to have a state then it has to be annotated using the annotation {@link Macro.Stateful}
+     * <p>
+     * To programmatically switch of this checking set the system property like
+     * <pre>{@code
+     * System.setProperty(Macro.JAMAL_CHECKSTATE_SYS,"false");
+     * }</pre>
+     * This may be needed when you want to load a macro from a library that does not conform to the stateless
+     * requirement and does not use the {@link Macro.Stateful} annotation. All macros prior to Jamal 1.8.0 are like
+     * that.
+     */
+    private final boolean checkState;
+
+    /**
+     * At the creation of the register we start with a new macro evaluation level, which is the top level.
+     * <p>
+     * The constructor also reads the system property {@link Macro#JAMAL_CHECKSTATE_SYS} or the environment variable
+     * {@link Macro#JAMAL_CHECKSTATE_ENV} when no system property and based on that sets the global {@link #checkState}
+     * field.
+     */
     public MacroRegister() {
         try {
             push(null);
         } catch (BadSyntax badSyntax) {
             throw new RuntimeException("SNAFU: should not happen");
         }
+        final var s = Optional.ofNullable(System.getProperty(Macro.JAMAL_CHECKSTATE_SYS)).orElseGet(
+            () -> System.getenv(Macro.JAMAL_CHECKSTATE_ENV));
+        checkState = s != null && s.length() > 0 && !s.equals("false");
     }
 
     private Scope currentScope() {
@@ -255,6 +287,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     private void assertMacroClassIsStateless(Macro macro) {
+        if (!checkState) {
+            return;
+        }
         for (Class<?> m = macro.getClass(); m != null; m = m.getSuperclass()) {
             if (m.getDeclaredAnnotation(Macro.Stateful.class) == null && m.getDeclaredFields().length > 0) {
                 for (Field field : m.getDeclaredFields()) {

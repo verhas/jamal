@@ -15,6 +15,7 @@
 //DEPS com.javax0.jamal:jamal-jamal:1.7.10-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-yaml:1.7.10-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-io:1.7.10-SNAPSHOT
+//DEPS com.javax0.jamal:jamal-assertions:1.7.10-SNAPSHOT
 
 
 

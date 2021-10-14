@@ -1,10 +1,10 @@
 package javax0.jamal.api;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javax0.jamal.api.SpecialCharacters.IDENT;
 import static javax0.jamal.api.SpecialCharacters.NO_PRE_EVALUATE;
@@ -25,6 +25,9 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
  */
 @FunctionalInterface
 public interface Macro extends Identified, ServiceLoaded {
+    String JAMAL_CHECKSTATE_SYS = "jamal.checkstate";
+    String JAMAL_CHECKSTATE_ENV = "JAMAL_CHECKSTATE";
+
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Stateful {
     }
