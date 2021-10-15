@@ -277,7 +277,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void define(Macro macro) {
-        define(macro, macro.getId());
+        for (final var alias : macro.getIds()) {
+            define(macro, alias);
+        }
     }
 
     @Override

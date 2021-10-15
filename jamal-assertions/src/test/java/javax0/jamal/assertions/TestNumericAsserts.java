@@ -26,7 +26,7 @@ public class TestNumericAsserts {
     void testLess() throws Exception {
         TestThat.theInput("{@assert:less /2/3}").results("");
         TestThat.theInput("{@assert:lessOrEqual /2/3}").results("");
-        TestThat.theInput("{@assert:lessOrEqual /2/2}").results("");
+        TestThat.theInput("{@assert:lessOrEquals /2/2}").results("");
 
         TestThat.theInput("{@assert:greater /4/3}").results("");
         TestThat.theInput("{@assert:greaterOrEqual /4/3}").results("");
@@ -39,7 +39,7 @@ public class TestNumericAsserts {
 
         TestThat.theInput("{@assert:greater /1/3}")
             .throwsBadSyntax("assert:greater has failed '1' is not greater '3'.*");
-        TestThat.theInput("{@assert:greaterOrEqual /1/3}")
+        TestThat.theInput("{@assert:greaterOrEquals /1/3}")
             .throwsBadSyntax("assert:greaterOrEqual has failed '1' is not greater or equal '3'.*");
     }
 

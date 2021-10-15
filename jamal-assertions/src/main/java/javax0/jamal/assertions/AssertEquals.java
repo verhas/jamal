@@ -9,4 +9,10 @@ public class AssertEquals extends AbstractAssert {
     protected boolean test(String[] parts) {
         return parts[0].equals(parts[1]);
     }
+
+    private static final String[] IDS = {"assert:equals","assert:equal"};
+    @Override
+    public String[] getIds(){
+        return IDS;
+    }
 }

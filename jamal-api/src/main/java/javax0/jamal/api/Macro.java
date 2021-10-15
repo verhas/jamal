@@ -4,7 +4,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javax0.jamal.api.SpecialCharacters.IDENT;
 import static javax0.jamal.api.SpecialCharacters.NO_PRE_EVALUATE;
@@ -78,7 +77,7 @@ public interface Macro extends Identified, ServiceLoaded {
     /**
      * When a built-in macro is registered then the name used in the source file will be the string returned by this
      * method. When a macro is registered using the built-in macro {@code use} (see {@code javax0.jamal.builtins.Use})
-     * the the caller can provide an alias. Even when the proposed use is to be declared through the {@code use} macro
+     * the caller can provide an alias. Even when the proposed use is to be declared through the {@code use} macro
      * it is recommended to provide a reasonable id.
      *
      * @return the id/name of the macro
@@ -89,12 +88,15 @@ public interface Macro extends Identified, ServiceLoaded {
     }
     // end snippet
 
+    default String[] getIds() {
+        return new String[]{getId()};
+    }
 
     /**
      * Fetch the body of the macro including the closing string.
      * <p>
      * This method is invoked when the macro body is read from the input before processing and the macro body is inside
-     * another macro. For example we have the macro structure:
+     * another macro. For example, we have the macro-structure:
      *
      * <pre>{@code
      *

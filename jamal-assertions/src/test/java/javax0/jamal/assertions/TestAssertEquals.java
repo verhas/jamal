@@ -15,7 +15,7 @@ public class TestAssertEquals {
     @Test
     @DisplayName("Test a failing assert:equals")
     void failingAssertion() throws Exception {
-        TestThat.theInput("{@assert:equals /abba/ebbe/should fail/}").throwsBadSyntax(".*should fail.*");
+        TestThat.theInput("{@assert:equal /abba/ebbe/should fail/}").throwsBadSyntax(".*should fail.*");
     }
 
     @Test

@@ -36,6 +36,13 @@ public abstract class NumericAsserts extends AbstractAssert {
         protected boolean test(int a, int b) {
             return a == b;
         }
+
+        private static final String[] IDS = {"assert:intEquals", "assert:intEqual"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
     }
 
     public static class AssertLess extends NumericAsserts {
@@ -55,6 +62,13 @@ public abstract class NumericAsserts extends AbstractAssert {
 
         protected boolean test(int a, int b) {
             return a <= b;
+        }
+
+        private static final String[] IDS = {"assert:lessOrEquals", "assert:lessOrEqual"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
         }
     }
 
@@ -76,6 +90,14 @@ public abstract class NumericAsserts extends AbstractAssert {
         protected boolean test(int a, int b) {
             return a >= b;
         }
+
+        private static final String[] IDS = {"assert:greaterOrEquals", "assert:greaterOrEqual"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
+
     }
 
     public static class AssertNumeric extends AbstractAssert {
@@ -92,7 +114,9 @@ public abstract class NumericAsserts extends AbstractAssert {
             }
             return true;
         }
-    }    public static class AssertInt extends AbstractAssert {
+    }
+
+    public static class AssertInt extends AbstractAssert {
         public AssertInt() {
             super(2, "'%s' not numeric", "'%s' numeric");
         }
