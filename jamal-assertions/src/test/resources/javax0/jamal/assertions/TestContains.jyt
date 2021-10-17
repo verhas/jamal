@@ -1,0 +1,21 @@
+"Test a space diff only assert:contains w/o trim":
+    Input: "{@assert:contains (trim) /abba/   abba   /should fail/}"
+    Output: ""
+"Test a simple assert:contains":
+    Input: "{@assert:contains /abbaba/abba/should be ok/}"
+    Output: ""
+"Test a space diff only assert:contains w/o trim":
+    Input: "{@assert:contains /abba/   abba   /should fail/}"
+    Throws: ".*should fail.*"
+"Test a not successful assert:contains":
+    Input: "{@assert:contains (not) /abba/abba/should fail}"
+    Throws: ".*should fail.*"
+"Test assert:contains failure w/o message":
+    Input: "{@assert:contains /abba/   abba   }"
+    Throws: ".*assert:contains has failed 'abba' does not contain '   abba   '.*"
+"Test a not failing assert:contains":
+    Input: "{@assert:contains (not) /abba/ebbe/should be ok/}"
+    Output: ""
+"Test a failing assert:contains":
+    Input: "{@assert:contains /abba/ebbe/should fail/}"
+    Throws: ".*should fail.*"

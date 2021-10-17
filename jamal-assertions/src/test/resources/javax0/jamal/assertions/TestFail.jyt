@@ -1,0 +1,9 @@
+"negated fail, which makes nonsense, but here it is":
+    Input: "{@assert:fail (not) it makes no sense but the option 'not' is available for all assertions}"
+    Output: ""
+"simple fail without message":
+    Input: "{@assert:fail}"
+    Throws: ".*assert:fail has failed.*"
+"simple fail":
+    Input: "{@assert:fail huhh}"
+    Throws: ".*huhh.*"

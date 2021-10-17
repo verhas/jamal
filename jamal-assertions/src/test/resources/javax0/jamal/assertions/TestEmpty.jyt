@@ -1,0 +1,18 @@
+"Test non empty string assertion with default message":
+    Input: "{@assert:empty /abba/}"
+    Throws: ".*assert:empty has failed 'abba' is not empty.*"
+"Test non empty string assertion":
+    Input: "{@assert:empty /abba/should fail}"
+    Throws: ".*should fail.*"
+"Test empty string assertion":
+    Input: "{@assert:empty (not) //should fail}"
+    Throws: ".*should fail.*"
+"Test empty string assertion":
+    Input: "{@assert:empty //should fail}"
+    Output: ""
+"Test non empty string assertion":
+    Input: "{@assert:empty(not) /abba/should fail}"
+    Output: ""
+"Test empty string assertion with default message":
+    Input: "{@assert:empty (not) //}"
+    Throws: ".*assert:empty has failed value is empty.*"
