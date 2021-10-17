@@ -1,0 +1,21 @@
+"Test a simple assert:equals":
+    Input: "{@assert:equals /abba/abba/should be ok/}"
+    Output: ""
+"Test a failing assert:equals":
+    Input: "{@assert:equal /abba/ebbe/should fail/}"
+    Throws: ".*should fail.*"
+"Test a not successful assert:equals":
+    Input: "{@assert:equals (not) /abba/abba/should fail}"
+    Throws: ".*should fail.*"
+"Test a not failing assert:equals":
+    Input: "{@assert:equals (not) /abba/ebbe/should be ok/}"
+    Output: ""
+"Test a space diff only assert:equals w/o trim":
+    Input: "{@assert:equals /abba/   abba   /should fail/}"
+    Throws: ".*should fail.*"
+"Test assert:equals failure w/o message":
+    Input: "{@assert:equals /abba/   abba   }"
+    Throws: ".*assert:equals has failed 'abba' does not equal '   abba   '.*"
+"Test a space diff only assert:equals w/o trim":
+    Input: "{@assert:equals (trim) /abba/   abba   /should fail/}"
+    Output: ""

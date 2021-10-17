@@ -9,9 +9,11 @@ import javax0.jamal.engine.Processor;
 import javax0.jamal.engine.UserDefinedMacro;
 import javax0.jamal.tools.HexDumper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -95,6 +97,8 @@ public class TestThat implements AutoCloseable {
         it.input = input;
         return it;
     }
+
+    public static boolean dumpYaml = true;
 
     public TestThat usingTheSeparators(final String macroOpen, final String macroClose) {
         this.macroOpen = macroOpen;
@@ -184,12 +188,44 @@ public class TestThat implements AutoCloseable {
         InstantiationException,
         InvocationTargetException,
         BadSyntax {
+        final var result = resultsClose();
+        if (dumpYaml) {
+            final var title = getTitle();
+            System.out.println(yamlStringify(title) + ":");
+            System.out.println("    Input: " + yamlStringify(input));
+            System.out.println("    Output: " + yamlStringify(result));
+        }
         if (ignoreLineEndingFlag) {
-            final var expectedNl = expected.replaceAll("\r","");
-            final var resultNl = resultsClose().replaceAll("\r","");
+            final var expectedNl = expected.replaceAll("\r", "");
+            final var resultNl = result.replaceAll("\r", "");
             Assertions.assertEquals(expectedNl, resultNl);
         } else {
-            Assertions.assertEquals(expected, resultsClose());
+            Assertions.assertEquals(expected, result);
+        }
+    }
+
+    private static String yamlStringify(String s) {
+        return "\"" + s.replaceAll("\"", "\\\"") + "\"";
+    }
+
+    /**
+     * Get the title from the caller {@link DisplayName} annotation using stack walker and reflection.
+     *
+     * @return the title string
+     */
+    private static String getTitle() {
+        try {
+            var methodNames = new ArrayList<String>();
+            var classes = new ArrayList<String>();
+            StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).forEach(
+                f -> {
+                    methodNames.add(f.getMethodName());
+                    classes.add(f.getClassName());
+                }
+            );
+            return Class.forName(classes.get(2)).getDeclaredMethod(methodNames.get(2), new Class[0]).getAnnotation(DisplayName.class).value();
+        } catch (Exception e) {
+            return "";
         }
     }
 
@@ -391,6 +427,12 @@ public class TestThat implements AutoCloseable {
         IllegalAccessException,
         InstantiationException,
         InvocationTargetException, BadSyntax {
+        if (dumpYaml) {
+            final var title = getTitle();
+            System.out.println(yamlStringify(title) + ":");
+            System.out.println("    Input: " + yamlStringify(input));
+            System.out.println("    Throws: " + yamlStringify(regex));
+        }
         throwsUp(BadSyntax.class, regex);
     }
 

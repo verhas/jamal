@@ -54,8 +54,8 @@ public class JamalYamlTest {
                     default:
                         if (on && !oneOff) {
                             dynamicContainers.add(DynamicContainer.dynamicContainer(s, new JamalYamlTest().factoryOne(klass, s)));
-                        }else{
-                            dynamicContainers.add(DynamicContainer.dynamicContainer(s,List.of(DynamicTest.dynamicTest(s, () -> Assumptions.assumeTrue(false,"Test was skipped")))));
+                        } else {
+                            dynamicContainers.add(DynamicContainer.dynamicContainer(s, List.of(DynamicTest.dynamicTest(s, () -> Assumptions.assumeTrue(false, "Test was skipped")))));
                         }
                         oneOff = false;
                         break;
@@ -175,10 +175,13 @@ public class JamalYamlTest {
         if ((output == null) == (aThrows == null)) {
             throw new IllegalArgumentException("The test '" + displayName + "' must have either 'Output' or 'Throws' and never both.");
         }
+        final var save = TestThat.dumpYaml;
+        TestThat.dumpYaml = false;
         if (output == null) {
             TestThat.theInput((String) input).throwsBadSyntax((String) aThrows);
         } else {
             TestThat.theInput((String) input).ignoreLineEnding().results((String) output);
         }
+        TestThat.dumpYaml = save;
     }
 }

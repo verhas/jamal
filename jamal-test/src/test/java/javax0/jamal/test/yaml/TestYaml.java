@@ -12,7 +12,6 @@ public class TestYaml {
     JamalTests<?> testAll() {
         return JamalYamlTest.factory(
             "TestSet",
-            JamalYamlTest.__OFF__,
             "TestDump",
             "TestImport",
             "TestResolve",
