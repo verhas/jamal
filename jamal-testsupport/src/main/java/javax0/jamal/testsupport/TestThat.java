@@ -193,7 +193,7 @@ public class TestThat implements AutoCloseable {
             final var title = getTitle();
             System.out.println(yamlStringify(title) + ":");
             System.out.println("    Input: " + yamlStringify(input));
-            System.out.println("    Output: " + yamlStringify(result));
+            System.out.println("    Output: " + yamlStringify(result == null ? "" : result));
         }
         if (ignoreLineEndingFlag) {
             final var expectedNl = expected.replaceAll("\r", "");
@@ -431,7 +431,7 @@ public class TestThat implements AutoCloseable {
             final var title = getTitle();
             System.out.println(yamlStringify(title) + ":");
             System.out.println("    Input: " + yamlStringify(input));
-            System.out.println("    Throws: " + yamlStringify(regex));
+            System.out.println("    Throws: " + yamlStringify(regex == null ? ".*" : regex));
         }
         throwsUp(BadSyntax.class, regex);
     }
