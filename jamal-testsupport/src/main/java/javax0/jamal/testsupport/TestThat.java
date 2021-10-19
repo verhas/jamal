@@ -197,6 +197,7 @@ public class TestThat implements AutoCloseable {
         }
         if (ignoreLineEndingFlag) {
             final var expectedNl = expected.replaceAll("\r", "");
+            //noinspection ConstantConditions
             final var resultNl = result.replaceAll("\r", "");
             Assertions.assertEquals(expectedNl, resultNl);
         } else {
@@ -217,13 +218,18 @@ public class TestThat implements AutoCloseable {
         try {
             var methodNames = new ArrayList<String>();
             var classes = new ArrayList<String>();
+            var fileNames = new ArrayList<String>();
+            var lineNumbers = new ArrayList<String>();
             StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).forEach(
                 f -> {
                     methodNames.add(f.getMethodName());
                     classes.add(f.getClassName());
+                    fileNames.add(f.getFileName());
+                    lineNumbers.add("" + f.getLineNumber());
                 }
             );
-            return Class.forName(classes.get(2)).getDeclaredMethod(methodNames.get(2), new Class[0]).getAnnotation(DisplayName.class).value();
+            return Class.forName(classes.get(2)).getDeclaredMethod(methodNames.get(2))
+                .getAnnotation(DisplayName.class).value() + " " + fileNames.get(2) + ":" + lineNumbers.get(2);
         } catch (Exception e) {
             return "";
         }
@@ -346,6 +352,7 @@ public class TestThat implements AutoCloseable {
     }
 
     private static String myQuote(String string) {
+        //noinspection RegExpSingleCharAlternation,RegExpRedundantEscape
         return string.replaceAll("(\\.|\\\\|\\(|\\)|\\{|\\}|\\|)", "\\\\$1");
     }
 

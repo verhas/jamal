@@ -8,7 +8,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Cache;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
 import javax0.jamal.tools.PlaceHolders;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
@@ -24,12 +24,12 @@ import java.util.Map;
 public class PlantUml implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var macroReader = MacroReader.macro(processor);
-        final var root = macroReader.readValue("pu$folder").map(s -> s.endsWith("/") ? s : s + "/").orElse("");
-        final var format = macroReader.readValue("pu$format").orElse("SVG");
-        final var template = macroReader.readValue("pu$template").orElse("$file");
+        final var root = Params.<String>holder("pu$folder", "folder").as(String.class, s -> s.endsWith("/") ? s : s + "/").orElse("");
+        final var format = Params.<String>holder("pu$format", "format").orElse("SVG");
+        final var template = Params.<String>holder("pu$template", "template").orElse("$file");
+        Params.using(processor).keys(root, format, template).between("()").parse(in);
         final var fileName = InputHandler.fetch2EOL(in).trim();
-        var absoluteFileName = FileTools.absolute(in.getReference(), root + fileName);
+        var absoluteFileName = FileTools.absolute(in.getReference(), root.get() + fileName);
         InputHandler.skipWhiteSpaces(in);
         String umlText = getUmlText(in);
         final var output = new File(absoluteFileName).getAbsoluteFile();
@@ -37,8 +37,9 @@ public class PlantUml implements Macro, InnerScopeDependent {
         try {
             final boolean erred;
             if (needPlantUmlRun(umlText, output, entry)) {
-                erred = convertToFile(umlText, output, format);
+                erred = convertToFile(umlText, output, format.get());
                 if (entry != null) {
+                    //noinspection unchecked
                     entry.save(umlText, Map.of("error", "" + erred));
                 }
             } else {
@@ -47,7 +48,7 @@ public class PlantUml implements Macro, InnerScopeDependent {
             if (erred) {
                 throw new BadSyntax("There was an error processing diagram for '" + fileName + "' in PlantUml.");
             }
-            return PlaceHolders.with("$file", fileName).format(template);
+            return PlaceHolders.with("$file", fileName).format(template.get());
         } catch (Exception e) {
             throw new BadSyntax("PlantUml diagram '" + fileName + "'cannot be created.", e);
         }
@@ -71,6 +72,7 @@ public class PlantUml implements Macro, InnerScopeDependent {
         try (os) {
             erred = "(Error)".equals(reader.outputImage(os, new FileFormatOption(fileFormat)).getDescription());
         }
+        //noinspection ResultOfMethodCallIgnored
         file.getParentFile().mkdirs();
         try (final var fos = new FileOutputStream(file)) {
             fos.write(os.toByteArray());
