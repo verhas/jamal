@@ -239,6 +239,14 @@ Jamal may think it works fine in other cases, but the output is not exactly what
 Sorry, in this case, the issue, most probably, is with your expectations.
 Jamal converts the text following the rules defined in this document.
 
+==== Maven Extension
+
+If you want to use Jamal macros to maintain your Maven POM files, you can do that.
+Edit the content of the POM XML in the file `pom.xml.jam`.
+This file should contain the POM XML possibly enhanced with Jamal macros.
+Create a `.mvn` directory with an `extensions.xml` file in your project root.
+About the content and how this Maven extension works read the extension's link:jamal-maven-extension/README.adoc[documentation].
+
 ==== Starting Command Line Version
 
 To start Jamal on the command line, you need a command:
@@ -353,7 +361,7 @@ Transform is always interpreted as regular expression.
 
 * `-g` or `--debug=<debug>` start the code in debug mode.
 To use this option the debugger module implementing the debugger must be on the classpath.
-This is automatically enysured when Jamal is started using jbang using the `jbang jamal@verhas` command.
+This is automatically ensured when Jamal is started using jbang using the `jbang jamal@verhas` command.
 The parameter `<debug>` is the debugger configuration string.
 To use the web based debugger you can specify `http:8080`.
 With that parameter the debugger will start to listen on the port `8080` on the localhost ip.
@@ -387,7 +395,8 @@ jbang jamal@verhas ... options ...
 
 This command will invoke the command line version automatically caring about all the Jar files.
 The syntax and meaning of the options are the same as in case of the command line version.
-This startup also loads all the Jamal extensions, including `snippet`, `scriptbasic`, `groovy`, `ruby`, `plantuml`, and `debug` (1.7.3 and later).
+This startup also loads all the Jamal extensions, including `snippet`, `scriptbasic`, `groovy`, `ruby`, `plantuml`, and `debug` (1.7.3 and later) and some others.
+If you want to see the exact list of the modules this startup loads have a look at the link:jbangstarter.java[starter] file.
 
 NOTE: The possibility to start Jamal using JBang was developed for the version 1.7.3, and it was retrofitted for the version 1.7.2 before the release of 1.7.3.
 
