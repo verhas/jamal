@@ -285,8 +285,8 @@ Note that the default name starts with `:`; therefore, this is a global name, av
 It is a feature to ease the use of the Ruby shells when you have only one.
 It will be created and be available everywhere in the Jamal file, even if the first use of Ruby was in a local scope.
 
-YOu can overwrite the name of the shell, defining the user-defined macro
-`{%shellNamingMacro%}`.
+You can overwrite the name of the shell, defining the user-defined macro
+`{%shellNamingMacro%}`, or using the macro option of the same name or the alias `shell`.
 
 It can be done using the usual built-in macro `define`, as in the example
 {%@define myLocalShell=myLocalShell%}
@@ -299,7 +299,7 @@ we need this here, to be safe
 {%sample/
 {@ruby:eval $z = 13}
 {@define {%shellNamingMacro%}={%myLocalShell%}}
-{@try! {@ruby:eval $z}}
+{@ruby:eval $z}
 %}
 
 will result in the output:
@@ -336,7 +336,7 @@ we need this here because all samples run in the same processor, and we renamed 
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
 {shell={%myLocalShell%}}
-{@try! {@ruby:eval $z}}
+{@ruby:eval $z}
 %}
 
 will result in the output:
@@ -359,7 +359,7 @@ we need this here because all samples run in the same processor, and we renamed 
 {%sample/
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
-{@try! {#ruby:eval {shell={%myLocalShell%}}$z}}
+{#ruby:eval {shell={%myLocalShell%}}$z}
 {@ruby:eval $z = 13}
 %}
 
@@ -369,6 +369,25 @@ will result in the output:
 
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `ruby:eval`.
 (What is more, it is local to the `try` macro.)
+
+The last example can also be written as
+
+{%#comment
+we need this here because all samples run in the same processor, and we renamed the shell
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}
+
+{%sample/
+{@ruby:eval $z = 13}
+{#ruby:eval (shell={%myLocalShell%})$z}
+{@ruby:eval $z = 13}
+%}
+
+will result in the same output:
+
+{%output%}
 
 [[Sample]]
 === Sample Application, Converting this `README.adoc`

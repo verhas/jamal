@@ -9,8 +9,8 @@ This file is processed by the test javax0.jamal.documentation.TestConvertReadme 
 {%@snip:collect from="jamal-api/src/main/java/"%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-{%@define MACRO_INTERFACE={%#java:class {%#define classFormat=`$simpleName`%}javax0.jamal.api.Macro%}%}
-{%@define INPUT_INTERFACE={%#java:class {%#define classFormat=`$simpleName`%}javax0.jamal.api.Input%}%}
+{%@define MACRO_INTERFACE={%@java:class (classFormat=`$simpleName`) javax0.jamal.api.Macro%}%}
+{%@define INPUT_INTERFACE={%@java:class (classFormat=`$simpleName`) javax0.jamal.api.Input%}%}
 
 
 Built-in macros in Jamal are the macros, which are implemented using Java code.
@@ -33,7 +33,7 @@ The document assumes that you are familiar with Jamal macro structure and you kn
 
 * how to export user defined macros to a higher scope
 
-* how user defined macros arguments are separated and parsed
+* how user defined macro arguments are separated and parsed
 
 * generally, how to use Jamal.
 
@@ -73,8 +73,8 @@ If you plan to use Java Platform Module System (JPMS) then you also have to add 
     requires jamal.tools;
 ----
 
-directoves to your `module-info.java` file.
-Having the project set up that way we can create our first nuilt-in macro.
+directives to your `module-info.java` file.
+Having the project set up that way we can create our first built-in macro.
 The whole class is included in this document:
 
 [source,java]
@@ -98,8 +98,8 @@ public class HelloWorld implements Macro {
 
 {%@define classFormat=`$simpleName`%}{%@define methodFormat=`$name()`%}
 The class has to implement the interface {%MACRO_INTERFACE%}.
-This interface, as well as the other interfaces and classes imported are defined in the package {%#java:class {%@define classFormat=`$packageName`%}javax0.jamal.api.Macro%}.
-This interface requires us to create one method {%@java:method javax0.jamal.api.Macro#evaluate%}.
+This interface, as well as the other interfaces and classes imported are defined in the package {%@java:class (classFormat=`$packageName`) javax0.jamal.api.Macro%}.
+This interface requires us to create one method {%@java:method javax0.jamal.api.Macro::evaluate%}.
 This method gets the input text of the macro, a reference to the processor executing Jamal and it has to return a `String` that will be the content of the macro after evaluation.
 In the example case we do not read the input and we do not use any service the processor can provide.
 We will see in later chapters how to read and parse the input and also how to use the processor to access the executing environment.

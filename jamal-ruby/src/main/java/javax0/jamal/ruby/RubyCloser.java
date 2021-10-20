@@ -27,7 +27,7 @@ public class RubyCloser implements Macro, InnerScopeDependent {
                     throw new BadSyntax("Ruby closer script '" + shell.getId() + "' returned null");
                 }
                 result.getSB().delete(0, result.getSB().length());
-                result.getSB().append(sb.toString());
+                result.getSB().append(sb);
             } catch (Exception e) {
                 throw new BadSyntax("There was an exception '"
                     + e.getMessage()
@@ -43,7 +43,7 @@ public class RubyCloser implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var shell = Shell.getShell(processor);
+        final var shell = Shell.getShell(in, processor);
         final var closer = new Closer(shell, in.toString());
         processor.deferredClose(closer);
         return "";

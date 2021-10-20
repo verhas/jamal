@@ -25,6 +25,16 @@ Test simple Groovy shell example:
     %}`---`%}
   Output: "0123456789"
 
+Test simple Groovy shell example using option specifying engine:
+  Input: |-
+    {%@escape `---`{#sep {@escape `|`{% %}`|`}}\
+    {%@import res:groovy.jim%}\
+    {%#groovy:shell (shell=engine)
+      def z = ""; (0..9).each{z+=it}
+      z;
+    %}`---`%}
+  Output: "0123456789"
+
 
 Test simple Groovy shell example with syntax error:
   Input: |-

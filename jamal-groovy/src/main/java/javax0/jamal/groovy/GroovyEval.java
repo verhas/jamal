@@ -9,7 +9,7 @@ import javax0.jamal.api.Processor;
 public class GroovyEval implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         try {
-            final var shell = Shell.getShell(processor);
+            final var shell = Shell.getShell(in, processor);
             return "" + shell.evaluate(in.toString(), null);
         } catch (Exception e) {
             throw new BadSyntax("Error evaluating groovy script using eval", e);

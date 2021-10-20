@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
@@ -81,7 +82,7 @@ public class Params {
     }
 
     private final Processor processor;
-    private Map<String, Param> holders = new HashMap<>();
+    private final Map<String, Param<?>> holders = new HashMap<>();
     private String macroName = "undefined";
     private Character terminal = '\n';
     private Character start = null;
@@ -205,10 +206,10 @@ public class Params {
      */
     public void parse(Input input) throws BadSyntax {
         parse();
-        skipSpacesAndEscapedTerminal(input);
+        skipStartingSpacesAndEscapedTerminal(input);
         if (start != null) {
-            if (InputHandler.firstCharIs(input, start)) {
-                InputHandler.skip(input, 1);
+            if (firstCharIs(input, start)) {
+                skip(input, 1);
             } else {
                 return;
             }
@@ -242,9 +243,9 @@ public class Params {
         }
     }
 
-    private void skipSpacesAndEscapedTerminal(Input input) {
+    private static void skipper(Input input, Predicate<Input> skipper) {
         while (true) {
-            while (input.length() > 0 && Character.isWhitespace(input.charAt(0)) && !Objects.equals(input.charAt(0), terminal)) {
+            while (skipper.test(input)) {
                 input.delete(1);
             }
             if (startsWith(input, "\\\n") != -1) {
@@ -253,6 +254,27 @@ public class Params {
                 return;
             }
         }
+
     }
 
+    /**
+     * Skip all characters, also new line characters, except when the terminal character is newline. In that case
+     * the terminal character (which is a new line) stops the skipping. This method is used to eat the extra characters
+     * between parameters.
+     *
+     * @param input the input that contains the next parameters with spaces optionally in front of them
+     */
+    private void skipSpacesAndEscapedTerminal(Input input) {
+        skipper(input, i -> i.length() > 0 && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), terminal));
+    }
+
+    /**
+     * Skip all the white space characters except new line. This method is invoked before the parameters.
+     * An \ escaped newline character does not stop the skipping.
+     *
+     * @param input that contains the parameters with spaces optionally in front of them
+     */
+    private void skipStartingSpacesAndEscapedTerminal(Input input) {
+        skipper(input, i -> i.length() > 0 && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), '\n'));
+    }
 }

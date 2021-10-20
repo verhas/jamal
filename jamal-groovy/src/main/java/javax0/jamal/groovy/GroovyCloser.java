@@ -22,9 +22,9 @@ public class GroovyCloser implements Macro, InnerScopeDependent {
             shell.property("result", result.getSB());
             try {
                 final var sb = shell.evaluate(closerScript, null);
-                if( sb != null && sb != result.getSB() ){// NOT EQUALS, does it return the same object or not
-                    result.getSB().delete(0,result.getSB().length());
-                    result.getSB().append(sb.toString());
+                if (sb != null && sb != result.getSB()) {// NOT EQUALS, does it return the same object or not
+                    result.getSB().delete(0, result.getSB().length());
+                    result.getSB().append(sb);
                 }
             } catch (Exception e) {
                 throw new BadSyntax("There was an exception '"
@@ -41,7 +41,7 @@ public class GroovyCloser implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var shell = Shell.getShell(processor);
+        final var shell = Shell.getShell(in, processor);
         final var closer = new Closer(shell, in.toString());
         processor.deferredClose(closer);
         return "";

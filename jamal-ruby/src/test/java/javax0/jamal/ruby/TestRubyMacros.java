@@ -13,6 +13,15 @@ public class TestRubyMacros {
     }
 
     @Test
+    void testDifferentShells() throws Exception{
+        TestThat.theInput("{@ruby:eval $z = 13}\n" +
+            "{@define rubyShell=myLocalShell}\n" +
+            "{@try! {@ruby:eval $z}}").results("13\n" +
+            "\n" +
+            "null");
+    }
+
+    @Test
     @DisplayName("Test the multiple evals do keep global variables")
     void testSimpleMultipleEval() throws Exception {
         TestThat.theInput(
@@ -104,7 +113,7 @@ public class TestRubyMacros {
             "{#sep {@escape `|`{% %}`|`}}" +
                 "{%@ruby:property $z=%}" +
                 "{%@ruby:shell engine script\n" +
-                "asdnjasdasdsasad asdsajdsanjd"+
+                "asdnjasdasdsasad asdsajdsanjd" +
                 "%}" +
                 "{%@ruby:property $z%}"
         ).throwsBadSyntax();
@@ -226,23 +235,34 @@ public class TestRubyMacros {
     @DisplayName("Test that ruby conversion to fixnum works")
     void testRubyPropertyFixNum() throws Exception {
         TestThat.theInput(
-            "{%@define rubyShell=wuff%}"+
-            "{%@ruby:property int=(to_i)5%}" +
+            "{%@define rubyShell=wuff%}" +
+                "{%@ruby:property int=(to_i)5%}" +
                 "{%@ruby:shell\n" +
                 "  (int*int)\n" +
                 "%}"
         ).usingTheSeparators("{%", "%}").results("25");
     }
+
     // end snippet
+    @Test
+    @DisplayName("Test shell id can be given using option")
+    void testRubyPropertyFixNumWithOption() throws Exception {
+        TestThat.theInput(
+            "{%@ruby:property (shell=wuff) int=(to_i)5%}" +
+                "{%@ruby:shell (shell=wuff)\n" +
+                "  (int*int)\n" +
+                "%}"
+        ).usingTheSeparators("{%", "%}").results("25");
+    }
 
     @Test
     @DisplayName("Test that ruby conversion to complex works")
     void testRubyPropertyComplex() throws Exception {
         TestThat.theInput(
-            "{%@ruby:property c=(to_c)1+1i%}{%@ruby:eval (c*c)%}"
+            "{%@ruby:property c=(to_c)1+1i%}{%@ruby:eval c*c%}"
         ).usingTheSeparators("{%", "%}").results("0.0+2.0i");
         TestThat.theInput(
-            "{%@ruby:property c=(to_c/i)1+1i%}{%@ruby:eval (c*c)%}"
+            "{%@ruby:property c=(to_c/i)1+1i%}{%@ruby:eval c*c%}"
         ).usingTheSeparators("{%", "%}").results("0+2i");
     }
 

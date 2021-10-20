@@ -227,10 +227,8 @@ The scripts will all be invoked one after the other in the order as they were de
 [[{%ShellObjects%}]]
 === {%ShellObjectsTitle%}
 
-{%#define defaultShellName={%#replace|{%#replace{%@options regex%}/{%@snip defaultShellName%}/^.*"(.*)".*$/$1/%}|
-||%}%}\
-{%#define shellNamingMacro={%#replace|{%#replace{%@options regex%}/{%@snip shellNamingMacro%}/^.*"(.*)".*$/$1/%}|
-||%}%}\
+{%#define defaultShellName={%@snip defaultShellName /"(.*)"/%}%}\
+{%#define shellNamingMacro={%@snip shellNamingMacro /"(.*)"/%}%}\
 
 If you do not specify any shell object it will be created automatically using the name `{%defaultShellName%}`.
 
@@ -247,15 +245,15 @@ This is a feature to ease the use of the Groovy shells when you have only one.
 It will be created and be available everywhere in the Jamal file even if the first use of Groovy was in a local scope.
 
 The name of the shell can be overwritten defining the user defined macro
-`{%shellNamingMacro%}`.
+`{%shellNamingMacro%}` or using macro options.
 
 It can be done using the usual built-in macro `define`, as in the example
 {%@define myLocalShell=myLocalShell%}
 {%#comment
-we need this here, to be safe
+we need this here, to be safe. note the # in front of 'comment'. It will be evaluated what is here.
 {%sample/
 {@undefine {%shellNamingMacro%}}
-%}{%output%}
+%}{%output%} output has to be used to execute the commands in the sample
 %}\
 {%sample/
 {@groovy:eval z = 13}
@@ -290,7 +288,7 @@ The previous example will look the following:
 we need this here, because all samples run in the same processor, and the shell was renamed
 {%sample/
 {@undefine {%shellNamingMacro%}}
-%}{%output%}
+%}{%output%} see above
 %}
 
 {%sample/
@@ -330,6 +328,29 @@ will result the output:
 
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `groovy:eval`.
 (What is more, it is local to the `try` macro.)
+
+The simplest way (starting with version 1.8.1) is to specify the shell name using an option.
+The macro `groovyShell` reads the option named `{%defaultShellName%}` which also has the alias `shell`.
+Note that when macros use options the name of the option can also be used to name macro that holds the value of the macro.
+Aliases are not checked as macro names.
+
+The above example using options will look as the following:
+{%#comment
+we need this here, because all samples run in the same processor, and the shell was renamed
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}
+
+{%sample/
+{@groovy:eval z = 13}
+{@try! {#groovy:eval (shell={%myLocalShell%}) z}}
+{@groovy:eval z = 13}
+%}
+
+will result the same output:
+
+{%output%}
 
 [[Sample]]
 === Sample Application, Converting this `README.adoc`

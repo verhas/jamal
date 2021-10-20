@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class RubyProperty implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var shell = Shell.getShell(processor);
+        final var shell = Shell.getShell(in, processor);
         InputHandler.skipWhiteSpaces(in);
         final var id = InputHandler.fetchId(in);
         InputHandler.skipWhiteSpaces(in);

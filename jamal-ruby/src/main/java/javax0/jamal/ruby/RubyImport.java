@@ -11,6 +11,7 @@ import javax0.jamal.tools.InputHandler;
 public class RubyImport implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var shell = Shell.getShell(in,processor);
         final var scriptName = InputHandler.fetch2EOL(in).trim();
         final Input script;
         if( scriptName.length() > 0 ) {
@@ -20,7 +21,6 @@ public class RubyImport implements Macro, InnerScopeDependent {
             script = in;
         }
         script.getSB().append("\n''");
-        final var shell = Shell.getShell(processor);
         try {
             shell.evaluate(script.toString(), scriptName);
         } catch (Exception e) {

@@ -259,7 +259,7 @@ This is a feature to ease the use of the Groovy shells when you have only one.
 It will be created and be available everywhere in the Jamal file even if the first use of Groovy was in a local scope.
 
 The name of the shell can be overwritten defining the user defined macro
-`groovyShell`.
+`groovyShell` or using macro options.
 
 It can be done using the usual built-in macro `define`, as in the example
 
@@ -347,6 +347,31 @@ Error evaluating groovy script using eval
 
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `groovy:eval`.
 (What is more, it is local to the `try` macro.)
+
+The simplest way (starting with version 1.8.1) is to specify the shell name using an option.
+The macro `groovyShell` reads the option named `:groovyShell` which also has the alias `shell`.
+Note that when macros use options the name of the option can also be used to name macro that holds the value of the macro.
+Aliases are not checked as macro names.
+
+The above example using options will look as the following:
+
+
+[source]
+----
+{@groovy:eval z = 13}
+{@try! {#groovy:eval (shell=myLocalShell) z}}
+{@groovy:eval z = 13}
+----
+
+will result the same output:
+
+[source]
+----
+13
+Error evaluating groovy script using eval
+13
+----
+
 
 [[Sample]]
 === Sample Application, Converting this `README.adoc`

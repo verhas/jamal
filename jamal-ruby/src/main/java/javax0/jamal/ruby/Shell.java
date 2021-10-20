@@ -2,9 +2,11 @@ package javax0.jamal.ruby;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
+import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.Params;
+import org.jruby.embed.LocalContextScope;
 import org.jruby.embed.ScriptingContainer;
 
 import java.io.StringReader;
@@ -24,7 +26,8 @@ public class Shell implements Identified {
 
     public Shell(String id) {
         this.id = id;
-        this.shell = new ScriptingContainer();
+        this.shell = new ScriptingContainer(LocalContextScope.SINGLETHREAD);
+        //noinspection NullableProblems
         shell.setError(new StringWriter() {
             public void write(char[] cbuf, int off, int len) {
             }
@@ -45,15 +48,16 @@ public class Shell implements Identified {
     }
 
     // snippet defaultShellName
-    public static final String DEFAULT_RUBY_SHELL_NAME = ":rubyShell";
+    public static final String DEFAULT_RUBY_SHELL_NAME = ":ruby_shell";
     // end snippet
     // snippet shellNamingMacro
     public static final String RUBY_SHELL_NAMING_MACRO = "rubyShell";
 
     // end snippet
-    public static Shell getShell(final Processor processor) throws BadSyntax {
-        final var id = MacroReader.macro(processor).readValue(RUBY_SHELL_NAMING_MACRO).orElse(DEFAULT_RUBY_SHELL_NAME);
-        return getShell(processor, id);
+    public static Shell getShell(final Input in, final Processor processor) throws BadSyntax {
+        final var id = Params.<String>holder(Shell.RUBY_SHELL_NAMING_MACRO, "shell").orElse(Shell.DEFAULT_RUBY_SHELL_NAME);
+        Params.using(processor).keys(id).between("()").parse(in);
+        return getShell(processor, id.get());
     }
 
     public static Shell getShell(final Processor processor, final String id) throws BadSyntax {
@@ -69,10 +73,9 @@ public class Shell implements Identified {
                 processor.define(shell);
                 processor.getRegister().export(shell.getId());
             }
-
+            return shell;
         } else {
-            shell = (Shell) opt.get();
+            return (Shell) opt.get();
         }
-        return shell;
     }
 }

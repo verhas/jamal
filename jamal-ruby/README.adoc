@@ -306,7 +306,7 @@ I do not care what the original text was, replace it with this one.
 [[ShellObjects]]
 === Using Multiple Container Objects
 
-If you do not specify any shell object, it will be created automatically using the name `:rubyShell`.
+If you do not specify any shell object, it will be created automatically using the name `:ruby_shell`.
 
 Jamal stores Ruby shell objects along with the user-defined macros.
 It has two consequences.
@@ -320,8 +320,8 @@ Note that the default name starts with `:`; therefore, this is a global name, av
 It is a feature to ease the use of the Ruby shells when you have only one.
 It will be created and be available everywhere in the Jamal file, even if the first use of Ruby was in a local scope.
 
-YOu can overwrite the name of the shell, defining the user-defined macro
-`rubyShell`.
+You can overwrite the name of the shell, defining the user-defined macro
+`rubyShell`, or using the macro option of the same name or the alias `shell`.
 
 It can be done using the usual built-in macro `define`, as in the example
 
@@ -329,7 +329,7 @@ It can be done using the usual built-in macro `define`, as in the example
 ----
 {@ruby:eval $z = 13}
 {@define rubyShell=myLocalShell}
-{@try! {@ruby:eval $z}}
+{@ruby:eval $z}
 ----
 
 will result in the output:
@@ -338,11 +338,11 @@ will result in the output:
 ----
 13
 
-13
+null
 ----
 
 
-The reason for this is that the first evaluation is executed in a shell named `:rubyShell`.
+The reason for this is that the first evaluation is executed in a shell named `:ruby_shell`.
 The second evaluation, however, runs in a different shell, named `myLocalShell`.
 
 [NOTE]
@@ -368,7 +368,7 @@ The previous example will look the following:
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
 {shell=myLocalShell}
-{@try! {@ruby:eval $z}}
+{@ruby:eval $z}
 ----
 
 will result in the output:
@@ -377,7 +377,7 @@ will result in the output:
 ----
 13
 
-13
+null
 ----
 
 
@@ -393,7 +393,7 @@ For example
 ----
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
-{@try! {#ruby:eval {shell=myLocalShell}$z}}
+{#ruby:eval {shell=myLocalShell}$z}
 {@ruby:eval $z = 13}
 ----
 
@@ -402,13 +402,34 @@ will result in the output:
 [source]
 ----
 13
-13
+null
 13
 ----
 
 
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `ruby:eval`.
 (What is more, it is local to the `try` macro.)
+
+The last example can also be written as
+
+
+
+[source]
+----
+{@ruby:eval $z = 13}
+{#ruby:eval (shell=myLocalShell)$z}
+{@ruby:eval $z = 13}
+----
+
+will result in the same output:
+
+[source]
+----
+13
+null
+13
+----
+
 
 [[Sample]]
 === Sample Application, Converting this `README.adoc`
@@ -458,13 +479,14 @@ The test file `jamal-ruby/src/test/java/javax0/jamal/ruby/TestRubyMacros.java` c
 @DisplayName("Test that ruby conversion to fixnum works")
 void testRubyPropertyFixNum() throws Exception {
     TestThat.theInput(
-        "{%@define rubyShell=wuff%}"+
-        "{%@ruby:property int=(to_i)5%}" +
+        "{%@define rubyShell=wuff%}" +
+            "{%@ruby:property int=(to_i)5%}" +
             "{%@ruby:shell\n" +
             "  (int*int)\n" +
             "%}"
     ).usingTheSeparators("{%", "%}").results("25");
 }
+
 // end snippet
 ----
 To get this content into the document what we have to write is the following:

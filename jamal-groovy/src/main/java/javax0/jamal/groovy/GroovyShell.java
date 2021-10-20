@@ -12,10 +12,10 @@ import javax0.jamal.tools.Params;
 public class GroovyShell implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var id = MacroReader.macro(processor).readValue(Shell.GROOVY_SHELL_NAMING_MACRO).orElse(Shell.DEFAULT_GROOVY_SHELL_NAME);
+        final var s = in.toString();
+        final var shell = Shell.getShell(in, processor);
         final var inputDefinedScriptName = InputHandler.fetch2EOL(in).trim();
-        final var scriptName = inputDefinedScriptName.length() == 0 ? id + ".groovy" : inputDefinedScriptName;
-        final var shell = Shell.getShell(processor);
+        final var scriptName = inputDefinedScriptName.length() == 0 ? "" : inputDefinedScriptName;
         try {
             return "" + shell.evaluate(in.toString(), scriptName);
         } catch (Exception e) {
