@@ -14,6 +14,7 @@
         <module>jamal-core</module>
         <module>jamal-extensions</module>
         <module>jamal-maven-plugin</module>
+        <module>jamal-maven-extension</module>
         <module>jamal-testsupport</module>
         <module>jamal-cmd</module>
         <module>jamal-snippet</module>
@@ -94,7 +95,7 @@
                         <docletArtifact>
                             <groupId>com.javax0.jamal</groupId>
                             <artifactId>jamal-doclet</artifactId>
-                            <version>1.7.9</version>
+                            <version>1.8.0</version>
                         </docletArtifact>
                         <additionalOptions>
                             <additionalOption>--source-root</additionalOption>
@@ -106,14 +107,14 @@
                                 <tagletArtifact>
                                     <groupId>com.javax0.jamal</groupId>
                                     <artifactId>jamal-doclet</artifactId>
-                                    <version>1.7.9</version>
+                                    <version>1.8.0</version>
                                 </tagletArtifact>
                             </taglet>
                             <tagletArtifacts>
                                 <tagletArtifact>
                                     <groupId>com.javax0.jamal</groupId>
                                     <artifactId>jamal-io</artifactId>
-                                    <version>1.7.9</version>
+                                    <version>1.8.0</version>
                                 </tagletArtifact>
                             </tagletArtifacts>
                         </taglets>
@@ -216,6 +217,26 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-yaml</artifactId>
+                <version>1.8.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-io</artifactId>
+                <version>1.8.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-doclet</artifactId>
+                <version>1.8.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-markdown</artifactId>
+                <version>1.8.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-assertions</artifactId>
                 <version>1.8.1-SNAPSHOT</version>
             </dependency>
             <dependency>

@@ -67,8 +67,14 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-assertions</artifactId>
+            <version>1.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-plantuml</artifactId>
-            <version>1.7.9</version>
+            <version>1.8.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

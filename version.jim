@@ -3,7 +3,7 @@
 
 
 {@define VERSION=1.8.1-SNAPSHOT}
-{@define LAST_RELEASE=1.7.9}
+{@define LAST_RELEASE=1.8.0}
 
 
 
@@ -33,3 +33,6 @@
 {@define OGNL_VERSION=3.2.21}
 {@define SNAKEYAML_VERSION=1.29}
 {@define FLEXMARK_VERSION=0.62.2}
+
+{@define MAVEN_CORE_VERSION=3.5.4}
+{@define PLEXUS_COMPONENT_METADATA_VERSION=2.1.0}

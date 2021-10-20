@@ -1,0 +1,32 @@
+{@import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+{@import ../version.jim}
+{project jamal maven extension}
+    {GAV ::jamal-maven-extension:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description :Jamal macro library maven extension}
+
+    {build|
+        {plugins|
+            {plugin|
+                {GAV :org.codehaus.plexus:plexus-component-metadata:{PLEXUS_COMPONENT_METADATA_VERSION}}
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-metadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            }
+            {@import ../plugins.jim}
+        }
+    }
+
+
+    {dependencies#
+        {#for MODULE in (engine,extensions,groovy,ruby,snippet,scriptbasic,plantuml,io,markdown,yaml,assertions,debug)=
+            {dependency|{GROUPID}|jamal-MODULE|{VERSION}}}
+        {#for MODULE in (api,engine)=
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency :org.apache.maven:maven-core:{MAVEN_CORE_VERSION}:provided}
+    }
+{end project}

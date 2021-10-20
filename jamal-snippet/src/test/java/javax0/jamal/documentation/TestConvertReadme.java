@@ -51,6 +51,16 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertMavenExtensionReadme() throws Exception {
+        DocumentConverter.convert("../jamal-maven-extension/README.adoc.jam");
+    }
+
+    @Test
+    void convertMavenPluginReadme() throws Exception {
+        DocumentConverter.convert("../jamal-maven-plugin/README.adoc.jam");
+    }
+
+    @Test
     void convertScriptBasicReadme() throws Exception {
         DocumentConverter.convert("../jamal-scriptbasic/README.adoc.jam");
     }

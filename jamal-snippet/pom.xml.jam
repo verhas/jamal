@@ -18,6 +18,7 @@
         {dependency|{GROUPID}|jamal-jamal||test}
         {dependency|{GROUPID}|jamal-core||test}
         {@comment specific release to avoid circular dependency, we use it only to generate documentation}
+        {dependency|{GROUPID}|jamal-assertions|{LAST_RELEASE}|test}
         {dependency|{GROUPID}|jamal-plantuml|{LAST_RELEASE}|test}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}

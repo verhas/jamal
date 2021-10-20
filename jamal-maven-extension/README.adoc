@@ -1,0 +1,145 @@
+= Jamal Maven Extension
+This module lets you maintain your `pom.xml` files using Jamal macros.
+To use this module create a `.mvn` in your project root.
+This directory should contain the file `extensions.xml` with the content:
+
+[source,xml]
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<extensions>
+    <extension>
+        <groupId>com.javax0.jamal</groupId>
+        <artifactId>jamal-maven-extension</artifactId>
+        <version>1.8.1-SNAPSHOT</version>
+    </extension>
+</extensions>
+---
+
+When you start Maven, it will read the `pom.xml.jam` file, convert it using Jamal and create the `pom.xml` file.
+
+[NOTE]
+====
+The actual process is the following.
+When a user invokes Maven, it looks at the `extensions.xml` file and sees that the Jamal Maven Extension is configured there.
+It loads the Jamal Maven Extension and invokes it to locate the POM file.
+This call assumes that the file is already there, and at this point, the extension is supposed to find it simply.
+The extension, however, reads the `pom.xml.jam` file and processes it.
+The processing includes the resolution of all the macros and the formatting of the final XML result.
+When the extension is done with this step, it returns the file reference as a Java `File` object.
+
+Maven does whatever it has to do with this file, but since it was given to it by this extension, Maven later asks the extension to load the project object model from this file.
+The extension knows at this point that the generated `pom.xml` file is a standard XML formatted pom, and it simply asks the standard Maven Platform Reader to read it.
+When the Maven Platform Reader returns with the object model, the extension passes it on to Maven, and the rest is standard Maven business as usual.
+
+image::call-sequence.svg[]
+====
+
+== Using the generated `pom.xml`
+
+The created `pom.xml` is saved to the directory and not removed after it was processed.
+It is also available for the IDE, which may not read the macro enhanced POM file.
+You can add it to your source control if you wish.
+
+== Getting Rid of the Extension
+
+It may happen that, for some reason, you want to get rid of the extension.
+The reasons can be various.
+The maintenance of the project is passed on to a team that is not knowledgeable about Jamal.
+A new corporate policy may exclude external tools or restrict the extensions and plugins you can use with Maven.
+You may run into some unforeseen complexity problem using Jamal, and you may not have time to debug your macros.
+It is straightforward to revert the operation to standard Maven compilation temporarily or final in any of those cases.
+
+This extension retains the XML format as opposed to Polyglot Maven, where you use a Java, Kotlin, Yaml, etc., based DSL instead of XML.
+You do not need any conversion step from DSL to XML; the `pom.xml` is always there.
+What you have to do to revert the operation to standard Maven and `pom.xml` based compilation is to remove the `.mvn` directory.
+
+If the reverting to standard `pom.xml` based compilation is final, then do not forget to remove the `.mvn` directory from the source control.
+
+== Error Handling and Debugging
+
+If there is an error processing the Jamal file or XML formatting, the extension will give a very detailed stack trace.
+Jamal can also be debugged as described in the link:../jamal-debug/README.adoc[debugger documentation].
+You have to set an environment variable `JAMAL_DEBUG` to be `http:8080`, start Maven, and when the debugger pauses, open `http://localhost:8080`.
+(You can use any other port.)
+
+The commands you will apply are:
+
+[source,bash]
+----
+export JAMAL_DEBUG=http:8080
+mvn verify
+unset JAMAL_DEBUG
+----
+
+The extension is compatible with the Jamal Maven plugin so that you can generate the `pom.xml` file with command `mvn -f genpom.xml`.
+
+== Available Macros
+
+
+When Maven loads the Jamal Maven Extension, it recursively loads the dependencies of the artifact.
+The dependencies configured are the followings:
+
+
+
+===  `engine`
+This module is the Jamal execution engine.
+It is needed to execute Jamal.
+The module does not provide macros.
+
+===  `groovy`
+This module provides macros that allow embedding Groovy code into the `pom.xml.jam` file.
+For further information read the link:../jamal-groovy/README.adoc[documentation] of the module.
+
+===  `ruby`
+This module provides macros that allow embedding Ruby code into the `pom.xml.jam` file.
+For further information read the link:../jamal-ruby/README.adoc[documentation] of the module.
+
+===  `scriptbasic`
+This module provides macros that allow embedding ScriptBasic code into the `pom.xml.jam` file.
+For further information read the link:../jamal-scriptbasic/README.adoc[documentation] of the module.
+
+===  `snippet`
+This module provides snippet macros.
+For further information read the link:../jamal-snippet/README.adoc[documentation] of the module.
+
+===  `plantuml`
+This module lets you embed PlantUML diagrams into your `pom.xml.jam` file.
+I do not think that you would need anything like this, but if you need, there is no way to put it on the classpath other than listed here as a dependency.
+For further information read the link:../jamal-plantuml/README.adoc[documentation] of the module.
+
+===  `io`
+This module provides macros that can help you read text from files and write text to external files.
+For further information read the link:../jamal-io/README.adoc[documentation] of the module.
+
+===  `markdown`
+This module lets you convert Markdown to HTML.
+This module is mainly practical when you embed Jamal macros in a JavaDoc and use the Jamal doclet extension.
+I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
+For further information read the link:../jamal-markdown/README.adoc[documentation] of the module.
+
+===  `yaml`
+This module provides macros that can read, write and manipulate YAML data.
+This macro package may be handy if you use macros that build up the POM structure in memory as a YAML structure.
+There is a macro that can convert the built-up YAML structure as XML.
+Although the conversion from Yaml to XML is limited, it may be very well suited to build up POM structures.
+The current macros used in the Jamal projects and some other projects handle the POM structure as XML text and not as structure.
+Managing and building up a structure would be much more powerful.
+If you want to do anything like that, the in-memory Yaml structures these macros can manage are excellent for the purpose.
+
+For further information read the link:../jamal-yaml/README.adoc[documentation] of the module.
+
+===  `assertions`
+This module gives you assertion macros that can fail if certain conditions are not met.
+For further information read the link:../jamal-assertions/README.adoc[documentation] of the module.
+
+===  `extensions`
+It is an extension module with experimental macros.
+The macros in this package are not supported and may change incompatible ways from version to version.
+For further information read the link:../jamal-extensions/README.adoc[documentation] of the module.
+
+===  `debug`
+This module does not provide any macro, but it has to be on the classpath to start the debugger.
+A brief introduction is described above on how to start the Jamal processing when compiling a `pom.xml.jam.
+For further information read the link:../jamal-debug/README.adoc[documentation] of the module.
+
+

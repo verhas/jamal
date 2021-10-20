@@ -48,6 +48,7 @@ public class Sep implements Macro {
         } else {
             final var matcher = PATTERN.matcher(input);
             if (matcher.matches()) {
+                // format {@sep [% %]}
                 openMacro = matcher.group(1);
                 closeMacro = matcher.group(2);
                 if (misleadingOpenString(openMacro, closeMacro)) {

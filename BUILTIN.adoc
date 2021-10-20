@@ -253,11 +253,21 @@ In our case the name of the class was `HelloWorld` which converts to `helloworld
 You are free to override the implementation of the default method, and there are real examples for that.
 For example the `jamal-snippet` library macros `trimLines`, or `killLines` override the method `getId()`.
 
+Starting with the version 1.8.1 a macro can define multiple names to register itself.
+The different names will serve as equal aliases for the same macro.
+To do that the macro should define the abstract method `getIds()`.
+The default implementation of this method simply calls `getId()` and returns a one element string array with the single name.
+When the method is defined all the strings returned in the string array will be registered.
+It was first used to register `assert:equals`, `assert:lessOrEquals` and so on, with the 3rd person `equals` ending as well as with the simple `equal` ending.
+Modesty and discipline is recommended when defining multiple names for a macro.
+
 === Handling the Input of the Macro
 
 In the `HelloWorld` macro we totally ignored the input of the macro.
 There are some built-in macros, like `comment` or `block` which deliberately do this.
-It is not a good practice unless it has a purpose.
+It is usually not something we can do.
+Macros usually need their input to work with.
+Even macros ignoring the input are encouraged to check that there are no extra characters following the macro name.
 
 If we write another test, we can see that the macro really ignores its input.
 
@@ -275,7 +285,7 @@ void macroIgnoresInput() throws Exception {
 ==== Hello, Me Macro
 
 The next macro we will write is one that will not simply greet the whole word, but rather the person, who we tell it to.
-The code of the macro method in the class `Hello` will be the following:
+The code of the macro `Hello` will be the following:
 
 [source,java]
 ----
@@ -287,7 +297,7 @@ public class Hello implements Macro {
 }
 ----
 
-It will use the `input`, convert it to string and cutting off the spaces from the start and from the end of the string it uses it as a name for the greeting.
+It will use the `input`, convert it to string and cutting off the spaces from the start, and from the end of the string it uses it as a name for the greeting.
 The test is also straightforward and shows the direct use of the macro:
 
 [source,java]
@@ -312,14 +322,14 @@ Most of the macros use their input, and they use it in a more complex way.
 To do that macros can parse, split up the input into smaller pieces that the code can afterwards work with.
 To do that there are many possibilities.
 
-For of all the interface `Input` extends the Java JDK `CharSequence` interface.
-You can use all the methods defined there, they are implemented in the class.
+First of all, the interface `Input` extends the Java JDK `CharSequence` interface.
+You can use all the methods defined there.
 The characters in the underlying structure are stored in a `StringBuilder`, and you can get direct access to that calling `getSB()`.
 
 Built-in macros, however, rarely use these methods directly.
-Instead, they use the static methods implemented in the `InputHandler`.
+They use the static methods implemented in the `InputHandler` instead.
 
-The `Input` object is essentially a character sequence, which also keeps track of the file name the characters came from and the actual line number and column position of the first character.
+The `Input` object is essentially a character sequence, which also keeps track of the file name, and location the characters came from.
 If you directly access the underlying `StringBuilder` and modify it then you may lose track of the line number and column position.
 
 The class `InputHandler` defined methods that are safe to use for parsing the input.
