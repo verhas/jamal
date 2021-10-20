@@ -18,7 +18,7 @@
       {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
       {dependency |{GROUPID}|jamal-snippet|{VERSION}|test}
       {@for MODULE in (api,engine)=
-          {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
       {dependency :org.jruby:jruby-complete:{JRUBY_VERSION}}
     }
 

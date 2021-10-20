@@ -14,6 +14,6 @@
          {dependency|{GROUPID}|jamal-MODULE}}
          {dependency :{GROUPID}:jamal-snippet::test}
       {@for MODULE in (api,engine)=
-          {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
     }
 {end project}

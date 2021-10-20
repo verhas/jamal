@@ -14,7 +14,7 @@
        {@for MODULE in (api,tools,engine)=
          {dependency|{GROUPID}|jamal-MODULE}}
       {@for MODULE in (api,engine)=
-          {dependency|org.junit.jupiter|junit-jupiter-MODULE|5.2.0|test}}
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
       {dependency :org.yaml:snakeyaml:{SNAKEYAML_VERSION}}
       {dependency :ognl:ognl:{OGNL_VERSION}}
     }
