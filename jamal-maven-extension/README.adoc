@@ -16,6 +16,7 @@ This directory should contain the file `extensions.xml` with the content:
 ---
 
 When you start Maven, it will read the `pom.xml.jam` file, convert it using Jamal and create the `pom.xml` file.
+If it does not find a `pom.xml.jam` it will also try `pom.jam`.
 
 [NOTE]
 ====

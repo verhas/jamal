@@ -5,7 +5,6 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
-import org.apache.maven.model.io.ModelParseException;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
@@ -47,7 +46,10 @@ public class CustomModelProcessor implements ModelProcessor {
     public File locatePom(File projectDirectory) {
         File jamFile = new File(projectDirectory, "pom.xml.jam");
         if (!jamFile.exists()) {
-            throw new RuntimeException("There is no 'pom.xml.jam' file.");
+            jamFile = new File(projectDirectory, "pom.jam");
+            if (!jamFile.exists()) {
+                throw new RuntimeException("There is no 'pom.xml.jam' or 'pom.jam' file.");
+            }
         }
         Processor processor = new javax0.jamal.engine.Processor();
         final String fileName = jamFile.getAbsolutePath();
@@ -55,13 +57,13 @@ public class CustomModelProcessor implements ModelProcessor {
         try {
             pomXml = processor.process(FileTools.getInput(fileName));
         } catch (BadSyntax e) {
-            throw new RuntimeException("Jamal error processing the file 'pom.xml.jam'\n" + dumpException(e), e);
+            throw new RuntimeException("Jamal error processing the file " + fileName + "\n" + dumpException(e), e);
         }
         String formattedPomXml;
         try {
             formattedPomXml = formatOutput(pomXml);
         } catch (Exception e) {
-            throw new RuntimeException("Cannot format the file 'pom.xml'\n" + dumpException(e), e);
+            throw new RuntimeException("Cannot format the file " + fileName + "\n" + dumpException(e), e);
         }
 
         final File output = new File(projectDirectory, "pom.xml");
@@ -125,6 +127,6 @@ public class CustomModelProcessor implements ModelProcessor {
 
     @Override
     public Model read(File input, Map<String, ?> options) throws IOException {
-        return read( new FileInputStream(input),options);
+        return read(new FileInputStream(input), options);
     }
 }

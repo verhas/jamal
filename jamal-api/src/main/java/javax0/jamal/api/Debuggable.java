@@ -57,10 +57,22 @@ public interface Debuggable<T> {
     interface UserDefinedMacro {
         String[] getParameters();
 
+        /**
+         * Get the content of the user defined macro.
+         * @return the content text (the text following the '=' in the define macro)
+         */
         String getContent();
 
+        /**
+         * Get the opening string registered into the user defined macro.
+         * @return the macro opening string
+         */
         String getOpenStr();
 
+        /**
+         * Get the closing string registered into the user defined macro.
+         * @return the macro closing string
+         */
         String getCloseStr();
     }
 }

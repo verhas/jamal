@@ -24,10 +24,22 @@ Built-in Macro:: A built-in macro is a macro, which is implemented in Java.
 The built-in macro is the opposite of a __user-defined__ macro.
 Built-in macros are defined in the __core__ package of Jamal and in other packages.
 
+User Defined Macro:: A macro, which is defined using Jamal macro source.
+The most common user defined macro is created using the built-in core (see *Core*) macro `define`.
+A user defined macro defined using `define` inside Jamal is an instance of the class {%@java:class (format=`$name`) javax0.jamal.engine.UserDefinedMacro%}.
+This class implements the interface {%@java:class (format=`$name`) javax0.jamal.api.UserDefinedMacro%}.
+Any class implementing this interface can be a user defined macro.
+The major difference between the implementation of built-in macros and user defined macros that built-in macros are service objects, user defined macro classes are not.
+For each built-in macro class there is usually only one instance per processor and these instances are supposed to be state less.
+User defined macro classes are instantiated many time and may contain state.
+The instance of the class {%@java:class (format=`$name`) javax0.jamal.engine.UserDefinedMacro%} is created by the built in macro `define`.
+Other built-in macros can create instances of different classes, so long as long they implement the {%@java:class (format=`$name`) javax0.jamal.api.UserDefinedMacro%} interface.
+
 Core:: The core package defines __built-in__ macros, which are essential for the use of Jamal.
 Some of these macros are directly tied to the source parsing process.
 For example the macro `escape` and `verbatim` cannot be redefined.
-`escape` relies on a special parsing implemented into the execution __engine__ of Jamal.
+(`escape` relies on a special parsing implemented into the execution __engine__ of Jamal.
+Note: this is not true any more, since the method {%@java:method (format="`$name`()")javax0.jamal.api.Macro#fetch%} was introduced in the interface {%@java:class (format=`$name`)javax0.jamal.api.Macro%}.)
 `verbatim` is implemented in the __engine__ itself, and that way it only looks like as a macro.
 
 Engine:: Engine is the Java module and program code that executes the Jamal processor.
