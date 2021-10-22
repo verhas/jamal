@@ -8,3 +8,47 @@ Evaluates JShell expression:
 Evaluates macro:
   Input: "{@define a=2}{a}{@eval {a}}"
   Output: "22"
+
+Evaluates deferred macro:
+  Input: "{@define a=2}{a}{@eval {`a}}"
+  Output: "2{a}"
+
+Evaluates double deferred macro:
+  Input: "{@define a=2}{a}{@eval {``a}}"
+  Output: "2{`a}"
+
+Star evaluates multiple deferred macro:
+  Input: "{@define a=2}{a}{@eval* {```````a}}"
+  Output: "22"
+
+Star evaluate gets into infinite loop:
+  Input: "{@define ~ a={b}}{@define ~ b={a}}{@eval* {a}}"
+  Throws: "eval\\* probably got into an infinite loop"
+
+Star evaluate gets into limited loop1 (limit):
+  Input: "{@define a=2}{a}{@eval* [limit=4] {```````a}}"
+  Throws: "eval\\* probably got into an infinite loop"
+
+Star evaluate gets into limited loop2 (max):
+  Input: "{@define a=2}{a}{@eval* [max=4] {```````a}}"
+  Throws: "eval\\* probably got into an infinite loop"
+
+Star evaluate gets into limited loop3 (evaluateLoopLimit):
+  Input: "{@define a=2}{a}{@eval* [evaluateLoopLimit=4] {```````a}}"
+  Throws: "eval\\* probably got into an infinite loop"
+
+Star evaluate gets into limited loop4 (define evaluateLoopLimit inner):
+  Input: "{@define a=2}{a}{#eval* {@define evaluateLoopLimit=4} {```````a}}"
+  Throws: "eval\\* probably got into an infinite loop"
+
+Star evaluate gets into limited loop5 (define evaluateLoopLimit extern):
+  Input: "{@define evaluateLoopLimit=4}{@define a=2}{a}{@eval* {```````a}}"
+  Throws: "eval\\* probably got into an infinite loop"
+
+Eval can define macros:
+  Input: "{@eval {@define a=1}}{a}"
+  Output: "1"
+
+Eval can define macros deeper:
+  Input: "{@eval {@eval {@define a=1}}}{a}"
+  Output: "1"

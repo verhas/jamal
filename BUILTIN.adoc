@@ -253,7 +253,7 @@ In our case the name of the class was `HelloWorld` which converts to `helloworld
 You are free to override the implementation of the default method, and there are real examples for that.
 For example the `jamal-snippet` library macros `trimLines`, or `killLines` override the method `getId()`.
 
-Starting with the version 1.8.1 a macro can define multiple names to register itself.
+Starting with the version 1.9.0 a macro can define multiple names to register itself.
 The different names will serve as equal aliases for the same macro.
 To do that the macro should define the abstract method `getIds()`.
 The default implementation of this method simply calls `getId()` and returns a one element string array with the single name.

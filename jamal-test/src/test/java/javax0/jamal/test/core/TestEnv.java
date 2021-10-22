@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class TestEnv {
 
     @Test
-    @DisplayName("test that env returns the ... whatever it returns. we assume there is a JAVA_HOME and there is no CICADA_HOME")
+    @DisplayName("test that env returns the ... whatever it returns. we assume there is a JAVA_HOME and there is no CICA_HOME")
     void testEnv() throws Exception {
         final var javaHome = System.getenv("JAVA_HOME");
         final var cicaHome = System.getenv("CICA_HOME");
@@ -20,14 +20,27 @@ public class TestEnv {
 
         TestThat.theInput(
             "{@env JAVA_HOME}\n" +
+                "{@env JAVA_HOME !}\n" +
                 "JAVA_HOME {#if /{@env JAVA_HOME ?}/is defined/is not defined}\n" +
                 "{@env CICA_HOME}\n" +
                 "CICA_HOME {#if /{@env CICA_HOME ?}/is defined/is not defined}\n"
         ).results(
             javaHome + "\n" +
+                javaHome + "\n" +
                 "JAVA_HOME is defined\n" +
                 "\n" +
                 "CICA_HOME is not defined\n"
         );
+    }
+
+    @Test
+    @DisplayName("test that env throws up when the variable is not defined and we use a ! after the name CICADA_HOME")
+    void testEnvThrow() throws Exception {
+        final var cicaHome = System.getenv("CICADA_HOME");
+        Assertions.assertNull(cicaHome);
+
+        TestThat.theInput(
+            "{@env CICADA_HOME !}\n"
+        ).throwsBadSyntax("Environment variable 'CICADA_HOME' is not defined.*");
     }
 }

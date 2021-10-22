@@ -329,7 +329,7 @@ will result the output:
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `groovy:eval`.
 (What is more, it is local to the `try` macro.)
 
-The simplest way (starting with version 1.8.1) is to specify the shell name using an option.
+The simplest way (starting with version 1.9.0) is to specify the shell name using an option.
 The macro `groovyShell` reads the option named `{%defaultShellName%}` which also has the alias `shell`.
 Note that when macros use options the name of the option can also be used to name macro that holds the value of the macro.
 Aliases are not checked as macro names.

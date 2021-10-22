@@ -3,6 +3,31 @@
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
 
+{%RELEASE/1.9.0%}
+
+Maven extension module is developed.
+Using this module there is no need to preprocess `pom.xml.jam` or `pom.jam` files.
+Maven automatically reads those files instead of the `pom.xml` using the extension.
+Ruby scripts do not share the global variables any more.
+It was a bug that the differently named Ruby scripts used the same set of global variables.
+Ruby and Groovy macros can be configured using options and not only user defined macros.
+PlantUml macro also uses options and not only user defined macros to define the parameters like the image directory.
+Built-in macros can have multiple names, and the assertion package immediately starts to use it so `equals` and `equal` ending denote the same macro.
+
+{%RELEASE/1.8.0%}
+
+SnipCheck was introduced to enforce snippet and documentation consistency.
+There is a new package to check consistency.
+This is the assertions package.
+The macro statefulness is checked during macro load an in case a macro is stateful and not annotated to signal this then the macro load fails.
+XML snippet reading bug (using CWD instead of document dir) was fixed.
+Different dependencies were updated to the latest releases.
+
+{%RELEASE/1.7.9%}
+
+Fully reworked, redesigned, and functionally extended debugger client
+`{@undefined }` macros can be `{@define ! ...}` defined
+
 {%RELEASE/1.7.8%}
 
 This release opens the debugger package, and so it can be used from Java::Geci. It still needs investigation why this is needed, though, but this patch solves this issue.

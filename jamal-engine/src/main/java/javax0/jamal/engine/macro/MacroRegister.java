@@ -143,14 +143,23 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     /**
-     * When defining a new macro then this offset is used from the end. It is 1 or 2 because we subtract this value from
-     * the length of the stack, and the indexing starts with zero, therefore the last element is length-1, but when that
-     * locked then the last writable element is length-2
+     * When defining a new macro then this offset is used from the end. This offset starts with 1 because we subtract
+     * this value from the length of the stack, and the indexing starts with zero, therefore the last element is
+     * size()-1, but when that is locked then the last writable element is size()-2, except when that is also locked
+     * and so on. The top level scope cannot be locked, because if any code tries to lock the top level scope then an
+     * exception is thrown.
      *
-     * @return 1 or 2
+     * @return the offset you have to subtract from the scopeStack size.
      */
     private int writableOffset() {
-        return currentScope().locked ? 2 : 1;
+        int i = 1;
+        while (scopeStack.get(scopeStack.size() - i).locked) {
+            i++;
+            if( i > scopeStack.size()){
+                throw new RuntimeException("Internal Error: scopeStack is fully locked.");
+            }
+        }
+        return i;
     }
 
     /**
@@ -308,12 +317,13 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void export(String id) throws BadSyntax {
-        if (scopeStack.size() > writableOffset()) {
+        final int offset = writableOffset();
+        if (scopeStack.size() > offset) {
             var macro = writableScope().udMacros.get(id);
             if (macro == null) {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported, not in the scope of export.");
             }
-            scopeStack.get(scopeStack.size() - writableOffset() - 1).udMacros.put(id, macro);
+            scopeStack.get(scopeStack.size() - offset - 1).udMacros.put(id, macro);
             writableScope().udMacros.remove(id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
@@ -424,6 +434,15 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
             if (!Objects.equals(check, currentScope().checkObject)) {
                 throw new BadSyntax("Lock was performed by " + check + " for a level pushed by " + currentScope().checkObject);
             }
+            currentScope().locked = true;
+        } else {
+            throw new BadSyntax("Cannot lock the top level scope.");
+        }
+    }
+
+    @Override
+    public void lock() throws BadSyntax {
+        if (scopeStack.size() > 1) {
             currentScope().locked = true;
         } else {
             throw new BadSyntax("Cannot lock the top level scope.");

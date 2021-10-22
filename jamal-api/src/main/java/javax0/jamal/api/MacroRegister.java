@@ -1,7 +1,6 @@
 package javax0.jamal.api;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * General macro registry that can be used to register built-in (Java implemented) and user defined macros. API and
@@ -185,4 +184,15 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      *                   push
      */
     void lock(Marker check) throws BadSyntax;
+
+    /**
+     * Closes most inner scope of the macros for update. The macros are still in scope, but any new macro defined will
+     * be defined one level higher. This version of {@link #lock(Marker)} does not check that the last scope was opened
+     * using a specific marker. This method can be used in built-in macro classes when the macro needs options and
+     * therefore may need the values of the user defined macros which are inside the macro (so they are essentially
+     * {@link InnerScopeDependent}, but may also define user defined macros, like {@code Eval}.
+     *
+     * @throws BadSyntax
+     */
+    void lock() throws BadSyntax;
 }
