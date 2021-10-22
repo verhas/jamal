@@ -8,7 +8,7 @@
 Maven extension module is developed.
 Using this module there is no need to preprocess `pom.xml.jam` or `pom.jam` files.
 Maven automatically reads those files instead of the `pom.xml` using the extension.
-Ruby scripts do not share the global variables any more.
+Ruby scripts do not share the global variables anymore.
 It was a bug that the differently named Ruby scripts used the same set of global variables.
 Ruby and Groovy macros can be configured using options and not only user defined macros.
 PlantUml macro also uses options and not only user defined macros to define the parameters like the image directory.

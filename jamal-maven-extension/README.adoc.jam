@@ -1,6 +1,6 @@
 = Jamal Maven Extension
 {%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
+{%#define VERSION={%pom /project/version/text()%}%}
 This module lets you maintain your `pom.xml` files using Jamal macros.
 To use this module create a `.mvn` in your project root.
 This directory should contain the file `extensions.xml` with the content:
