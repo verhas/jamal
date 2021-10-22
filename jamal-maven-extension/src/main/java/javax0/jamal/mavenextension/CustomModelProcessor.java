@@ -37,6 +37,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This is the extension class that implements the maven macro extension
+ */
 @Component(role = ModelProcessor.class)
 public class CustomModelProcessor implements ModelProcessor {
     @Requirement
