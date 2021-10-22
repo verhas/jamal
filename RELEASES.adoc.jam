@@ -13,6 +13,8 @@ It was a bug that the differently named Ruby scripts used the same set of global
 Ruby and Groovy macros can be configured using options and not only user defined macros.
 PlantUml macro also uses options and not only user defined macros to define the parameters like the image directory.
 Built-in macros can have multiple names, and the assertion package immediately starts to use it so `equals` and `equal` ending denote the same macro.
+Evaluate can evaluate macros in its input in a loop till all macros get evaluated.
+Environment variable can be queried to throw exception when the variable is not defined.
 
 {%RELEASE/1.8.0%}
 

@@ -10,7 +10,7 @@ This directory should contain the file `extensions.xml` with the content:
     <extension>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-maven-extension</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.9.0</version>
     </extension>
 </extensions>
 ---

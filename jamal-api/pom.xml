@@ -4,11 +4,11 @@
     <name>jamal api</name>
     <packaging>jar</packaging>
     <artifactId>jamal-api</artifactId>
-    <version>1.8.1-SNAPSHOT</version>
+    <version>1.9.0</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.9.0</version>
     </parent>
     <description>Jamal macro library API interfaces</description>
     <build>

@@ -1,83 +1,41 @@
 #!/usr/bin/env bash
 
-echo [INFO] -------------------------------------------------------
-echo [INFO]  M A N U A L   R E L E A S E
-echo [INFO] -------------------------------------------------------
-echo [INFO] Execute this file to create the artifacts
-echo [INFO] to manually upload to https://oss.sonatype.org/
-echo [INFO]
-echo [INFO] Normal release should use
-echo [INFO]
-echo [INFO]   mvn -f genpom.xml clean
-echo [INFO]   mvn verify
-echo [INFO]
-echo [INFO] if all compilation went well, then and only then:
-echo [INFO]
-echo [INFO]   git commit -m "new release <VERSION>"
-echo [INFO]   mvn deploy -Prelease
-echo [INFO] -------------------------------------------------------
-echo [INFO]
+cat <<END
+-------------------------------------------------------
+ M A N U A L   R E L E A S E  I S   N O T   A V A I L
+-------------------------------------------------------
+Execute this file to get this message.
 
-echo Cleaning old release directory if any
-rm -rf release
-echo Creating directory 01engine
-mkdir -p release/01engine
-cp jamal-engine/target/*.jar release/01engine
-cp jamal-engine/pom.xml release/01engine
+Normal release should
 
-echo Creating directory 02api
-mkdir -p release/02api
-cp jamal-api/target/*.jar release/02api
-cp jamal-api/pom.xml release/02api
+1. Edit the version.jim file and update the release version.
+2. cd jamal-debug-ui
+3. $ ./deployprod
 
-echo Creating directory 03tools
-mkdir -p release/03tools
-cp jamal-tools/target/*.jar release/03tools
-cp jamal-tools/pom.xml release/03tools
+This will ensure that that the version number of the React
+client is the same as the version of the application. It is
+not really the version number, which is important, but that
+is used to ensure compatibility between the debugger server
+and client.
 
-echo Creating directory 04core
-mkdir -p release/04core
-cp jamal-core/target/*.jar release/04core
-cp jamal-core/pom.xml release/04core
+4. cd ..
+5. mvn -f genpom.xml clean
+6. mvn verify
 
-echo Creating directory 05extensions
-mkdir -p release/05extensions
-cp jamal-extensions/target/*.jar release/05extensions
-cp jamal-extensions/pom.xml release/05extensions
+At this point we can be sure that there are no errors. If
+there are errors then they have to be fixed.
 
-echo Creating directory 06maven
-mkdir -p release/06maven
-cp jamal-maven-plugin/target/*.jar release/06maven
-cp jamal-maven-plugin/pom.xml release/06maven
+If all compilation went well, then and only then:
 
-echo Creating directory 07testsupport
-mkdir -p release/07testsupport
-cp jamal-testsupport/target/*.jar release/07testsupport
-cp jamal-testsupport/pom.xml release/07testsupport
+7.  git commit -m "new release <VERSION>"
 
-echo Creating directory 08cmd
-mkdir -p release/08cmd
-cp jamal-cmd/target/*.jar release/08cmd
-cp jamal-cmd/pom.xml release/08cmd
+push all changes to github
 
-cd release
-for artifact in *
-do
-    for file in ${artifact}/*.jar ${artifact}/pom.xml
-    do
-        echo Signing ${file}
-        gpg -s -b ${file}
-        mv ${file}.sig ${file}.asc
-    done
-    cd ${artifact}
-    echo Creating ${artifact}_release.zip
-    jar -c -M -f ${artifact}_release.zip *.jar pom.xml *.asc
-    cd ..
-done
-echo Creating parent bundle
-cp ../pom.xml .
-gpg -s -b pom.xml
-mv pom.xml.sig pom.xml.asc
-jar -c -M -f 00parent_release.zip  pom.xml pom.xml.asc
-cd ..
-echo done.
+8.  mvn deploy -Prelease
+
+publish the release
+
+9. When the release went well, then create a new release tag in GutHub.
+-------------------------------------------------------
+
+END
