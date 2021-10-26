@@ -206,8 +206,8 @@ public class Processor implements javax0.jamal.api.Processor {
             macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
             try {
                 qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
-            }catch(BadSyntax bs){
-                pushBadSyntax(bs,pos);
+            } catch (BadSyntax bs) {
+                pushBadSyntax(bs, pos);
                 return;
             }
 
@@ -892,8 +892,8 @@ public class Processor implements javax0.jamal.api.Processor {
                 throw (BadSyntax) exceptions.peek();
             }
             final var sb = new StringBuilder(
-            "There " + (nrofExceptions == 1 ? "was" : "were")
-                + " " + nrofExceptions + " syntax error" + (nrofExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
+                "There " + (nrofExceptions == 1 ? "was" : "were")
+                    + " " + nrofExceptions + " syntax error" + (nrofExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
             int ser = nrofExceptions;
             for (final var accumulated : exceptions) {
                 sb.append(ser--).append(". ").append(accumulated.getMessage()).append("\n");

@@ -173,6 +173,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<options,`options`>>
 .. <<try,`try`>>
 .. <<escape,`escape`>>
+.. <<unescape,`unescape`>>
 .. <<require,`require`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
@@ -610,6 +611,7 @@ The comprehensive list of built-in macros are
  * <<options,`options`>>
  * <<try,`try`>>
  * <<escape,`escape`>>
+ * <<unescape,`unescape`>>
  * <<require,`require`>>
 
 You use the built-in macros with `#` or `@` in front of the macro's name.
@@ -2973,15 +2975,89 @@ will result
 {%output%}
 
 It is recommended not to use this macro in your Jamal source.
-This macro is intended to be used by Jamal itself when evaluating a user defined macro, which was defined using different macro opening and closing strings than the actual one.
+If you can solve your task without this macro, then you should do it without such a strong tool.
+
+[NOTE]
+====
+This macro originally was intended to be used by Jamal itself when evaluating a user defined macro, which was defined using different macro opening and closing strings than the actual one.
 In this case the macro opening and closing strings, which were in effect at the time of the macro definition are replaced with the current one.
 That way the macros defined inside the macros will be evaluated even though the macro opening and closing strings have changed.
 
 At the same time the current macro opening and closing strings had no special effect by the time of the macro definition.
 If there is any current macro opening and closing string in the definition of the macro then they should not play a special role.
 They get protected using the `escape` macro automatically.
-This way it may happen that you see in the error output
-The macro
+====
+
+There is a special way to escape content from macro evaluation.
+In this special case you can write a `*` right after the `escape` keyword, as
+
+{%sample/
+{@escape* `a`{`a`}
+%}
+
+In this case the escape not only escapes the macro opening and any other otherwise processable content but also results the protecting shell around the escaped string.
+The result in this case will be
+
+{%output%}
+
+This macro comes in handy when you want to protect something from evaluation that should never be interpreted as a macro text.
+For example you can have a Maven property in a `pom.jam` file, like `${project.build.sourceDirectory}`.
+You can redefine at the start of the file the macro open and macro close strings, but it may be simpler to protect the one or few special strings.
+A normal escape, without the `\*` after the keyword hides the content from evaluation only once.
+When the `*` character is used the content will be protected even when it is deep inside macros and target for many different evaluations.
+It should only be eliminated at the very end of the processing on the top level, which can be achieved using the <<unescape,`unescape`>> macro.
+
+[[unescape]]
+==== {%macroChapter%}`unescape`
+
+The macro `unescape` will liberate the content of the `escape` macros, which were locked in eternally using the `escape*` format.
+
+There are two different ways to invoke the macro.
+One encloses the content to be liberated.
+The other one has no content.
+In this second case the macro schedules a closer object that does the liberation after the whole processing was done.
+
+{%sample/
+{@define a(x)=x}\
+{#unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
+%}
+
+will result
+
+{%output%}
+
+The other possibility is
+
+{%sample/
+{@define a(x)=x}\
+{@unescape}{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}
+%}
+
+will also result
+
+{%output%}
+
+Note that in the first example the `unescape` macro was used with the `#` prefix, so that the several `{a...}` macros are evaluated before the macro `unescape` was executed.
+If we look at the first example using the `@` prefix, as
+
+{%sample/
+{@define a(x)=x}\
+{@unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
+%}
+
+will result an error.
+
+The macro `unescape` works very simple.
+It simply evaluates the input of the macro, or the whole result in case it works deferred setting a flag that tells `escape` that this time it should ignore the `\*` character.
+If the `unescape` in the example above is using the `@` character then the content is evaluated with the flag set and it becomes equivalent to the
+
+{%sample/
+{@define a(x)=x}\
+{a{a{a{a{a{a{a {@escape ``${qqq}``}}}}}}}}
+%}
+
+which is also erroneous, because `qqq` is not defined.
+
 
 [[require]]
 ==== {%macroChapter%}`require`

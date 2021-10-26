@@ -1,0 +1,25 @@
+"Testing deep escape":
+  Input: |-
+    {@define a(x)=x}\
+    {#unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
+  Output: "${qqq}"
+
+"Testing deep escape deferred":
+    Input: |-
+      {@unescape}\
+      {@define a(x)=x}\
+      {a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}
+    Output: "${qqq}"
+
+"Testing deep escape after deferred":
+    Input: |-
+      {@define a(x)=x}\
+      {a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}\
+      {@unescape}
+    Output: "${qqq}"
+
+"Testing deep escape in deferred":
+    Input: |-
+      {@define a(x)=x}\
+      {a{a{a{a{a{a{@unescape}{a {@escape* ``${qqq}``}}}}}}}}
+    Output: "${qqq}"

@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.OptionsStore;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.move;
@@ -51,6 +52,13 @@ import static javax0.jamal.tools.InputHandler.skip;
 public class Escape implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final boolean fullPreserve;
+        if (in.charAt(0) == '*') {
+            InputHandler.skip(in, 1);
+            fullPreserve = ! OptionsStore.getInstance(processor).is(Unescape.UNESCAPE_OPTION);
+        } else {
+            fullPreserve = false;
+        }
         InputHandler.skipWhiteSpaces(in);
         if (in.charAt(0) != '`') {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters.", in.getPosition());
@@ -60,7 +68,7 @@ public class Escape implements Macro {
         if (endOfEscape == -1) {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.", in.getPosition());
         }
-        final var escapeSequence = "`" + in.subSequence(0, endOfEscape).toString() + "`";
+        final var escapeSequence = "`" + in.subSequence(0, endOfEscape) + "`";
         InputHandler.skip(in, escapeSequence.length() - 1);
         final var endOfString = in.indexOf(escapeSequence);
         if (endOfString == -1) {
@@ -72,6 +80,9 @@ public class Escape implements Macro {
         InputHandler.skipWhiteSpaces(in);
         if (in.length() > 0) {
             throw new BadSyntaxAt("There are extra characters in the use of {@escape } after the closing escape sequence: " + escapeSequence, in.getPosition());
+        }
+        if (fullPreserve) {
+            return processor.getRegister().open() + "@escape*" + escapeSequence + escapedString + escapeSequence + processor.getRegister().close();
         }
         return escapedString;
     }
@@ -107,6 +118,10 @@ public class Escape implements Macro {
         move(input, 1, output); // the # or @ character
         moveWhiteSpaces(input, output);
         output.append(fetchId(input));
+        if( input.charAt(0) == '*'){
+            output.append('*');
+            skip(input,1);
+        }
         moveWhiteSpaces(input, output);
         if (input.charAt(0) != '`') {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters.", input.getPosition());
@@ -130,7 +145,7 @@ public class Escape implements Macro {
             throw new BadSyntaxAt("Escape macro is not closed", start);
         }
         move(input, endOfEscapeMacro, output);
-        skip(input,closeStr);
+        skip(input, closeStr);
         return output.toString();
     }
 

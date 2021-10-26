@@ -126,4 +126,10 @@ public class TestCore {
             "nested_ud_macros"
         );
     }
+
+    @TestFactory
+    JamalTests<?> testAllCoreMacrosM() {
+        return JamalYamlTest.factory(
+            "TestDeepEscape");
+    }
 }

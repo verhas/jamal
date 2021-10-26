@@ -6,6 +6,10 @@ image::logo.svg[width=150px]
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
 
+NOTE: This is the latest development documentation.
+This is a SNAPSHOT version.
+To see the documentation of a release you have to follow the link in the documentation link:RELEASES.adoc[`RELEASES.adoc`]
+
 
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.
@@ -156,6 +160,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<options,`options`>>
 .. <<try,`try`>>
 .. <<escape,`escape`>>
+.. <<unescape,`unescape`>>
 .. <<require,`require`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
@@ -237,7 +242,7 @@ To start Jamal on the command line, you need a command:
 
 [source,bash]
 ----
-java -cp $HOME/.m2/repository/com/javax0/jamal/jamal-engine/1.9.0/jamal-engine-1.9.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-api/1.9.0/jamal-api-1.9.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-tools/1.9.0/jamal-tools-1.9.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-core/1.9.0/jamal-core-1.9.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-cmd/1.9.0/jamal-cmd-1.9.0.jar: javax0.jamal.cmd.JamalMain options
+java -cp $HOME/.m2/repository/com/javax0/jamal/jamal-engine/1.9.1-SNAPSHOT/jamal-engine-1.9.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-api/1.9.1-SNAPSHOT/jamal-api-1.9.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-tools/1.9.1-SNAPSHOT/jamal-tools-1.9.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-core/1.9.1-SNAPSHOT/jamal-core-1.9.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-cmd/1.9.1-SNAPSHOT/jamal-cmd-1.9.1-SNAPSHOT.jar: javax0.jamal.cmd.JamalMain options
 ----
 
 It is not a user-friendly approach.
@@ -249,7 +254,7 @@ For this reason, there is a file, `jamal.sh` that has the following content:
 #!/usr/bin/env bash
 MODULES="api engine core tools cmd"
 REPO=$HOME/.m2/repository/com/javax0/jamal
-VERSION=1.9.0
+VERSION=1.9.1-SNAPSHOT
 
 for MODULE in $MODULES ; do
   if ! test -f $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar; then
@@ -635,6 +640,7 @@ The comprehensive list of built-in macros are
  * <<options,`options`>>
  * <<try,`try`>>
  * <<escape,`escape`>>
+ * <<unescape,`unescape`>>
  * <<require,`require`>>
 
 You use the built-in macros with `#` or `@` in front of the macro's name.
@@ -1812,7 +1818,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
 ----
 
 
@@ -3401,18 +3407,109 @@ will result
 
 
 It is recommended not to use this macro in your Jamal source.
-This macro is intended to be used by Jamal itself when evaluating a user defined macro, which was defined using different macro opening and closing strings than the actual one.
+If you can solve your task without this macro, then you should do it without such a strong tool.
+
+[NOTE]
+====
+This macro originally was intended to be used by Jamal itself when evaluating a user defined macro, which was defined using different macro opening and closing strings than the actual one.
 In this case the macro opening and closing strings, which were in effect at the time of the macro definition are replaced with the current one.
 That way the macros defined inside the macros will be evaluated even though the macro opening and closing strings have changed.
 
 At the same time the current macro opening and closing strings had no special effect by the time of the macro definition.
 If there is any current macro opening and closing string in the definition of the macro then they should not play a special role.
 They get protected using the `escape` macro automatically.
-This way it may happen that you see in the error output
-The macro
+====
+
+There is a special way to escape content from macro evaluation.
+In this special case you can write a `*` right after the `escape` keyword, as
+
+[source]
+----
+{@escape* `a`{`a`}
+----
+
+In this case the escape not only escapes the macro opening and any other otherwise processable content but also results the protecting shell around the escaped string.
+The result in this case will be
+
+[source]
+----
+{@escape*`a`{`a`}
+----
+
+
+This macro comes in handy when you want to protect something from evaluation that should never be interpreted as a macro text.
+For example you can have a Maven property in a `pom.jam` file, like `${project.build.sourceDirectory}`.
+You can redefine at the start of the file the macro open and macro close strings, but it may be simpler to protect the one or few special strings.
+A normal escape, without the `\*` after the keyword hides the content from evaluation only once.
+When the `*` character is used the content will be protected even when it is deep inside macros and target for many different evaluations.
+It should only be eliminated at the very end of the processing on the top level, which can be achieved using the <<unescape,`unescape`>> macro.
+
+[[unescape]]
+==== xxii. `unescape`
+
+The macro `unescape` will liberate the content of the `escape` macros, which were locked in eternally using the `escape*` format.
+
+There are two different ways to invoke the macro.
+One encloses the content to be liberated.
+The other one has no content.
+In this second case the macro schedules a closer object that does the liberation after the whole processing was done.
+
+[source]
+----
+{@define a(x)=x}\
+{#unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
+----
+
+will result
+
+[source]
+----
+${qqq}
+----
+
+
+The other possibility is
+
+[source]
+----
+{@define a(x)=x}\
+{@unescape}{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}
+----
+
+will also result
+
+[source]
+----
+${qqq}
+----
+
+
+Note that in the first example the `unescape` macro was used with the `#` prefix, so that the several `{a...}` macros are evaluated before the macro `unescape` was executed.
+If we look at the first example using the `@` prefix, as
+
+[source]
+----
+{@define a(x)=x}\
+{@unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
+----
+
+will result an error.
+
+The macro `unescape` works very simple.
+It simply evaluates the input of the macro, or the whole result in case it works deferred setting a flag that tells `escape` that this time it should ignore the `\*` character.
+If the `unescape` in the example above is using the `@` character then the content is evaluated with the flag set and it becomes equivalent to the
+
+[source]
+----
+{@define a(x)=x}\
+{a{a{a{a{a{a{a {@escape ``${qqq}``}}}}}}}}
+----
+
+which is also erroneous, because `qqq` is not defined.
+
 
 [[require]]
-==== xxii. `require`
+==== xxiii. `require`
 since 1.6.4
 
 Since Jamal has many different versions, there may be a need to stick to a specific version.
@@ -3454,7 +3551,7 @@ will result
 
 [source]
 ----
-The current version 1.9 is older than the required version. It has to be newer.
+The current version 1.9.1-SNAPSHOT is older than the required version. It has to be newer.
 ----
 
 
@@ -3604,7 +3701,7 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.9.0</version>
+    <version>1.9.1-SNAPSHOT</version>
     <executions>
         <execution>
             <id>execution</id>
@@ -3732,7 +3829,7 @@ If you use Maven, you can simply have
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
-    <version>1.9.0</version>
+    <version>1.9.1-SNAPSHOT</version>
 </dependency>
 ----
 

@@ -190,7 +190,10 @@ public class TestThat implements AutoCloseable {
         BadSyntax {
         final var result = resultsClose();
         if (dumpYaml) {
-            final var title = getTitle();
+            var title = getTitle();
+            if (title == null || title.length() == 0 ){
+                title = input + " -> " + result;
+            }
             System.out.println(yamlStringify(title) + ":");
             System.out.println("    Input: " + yamlStringify(input));
             System.out.println("    Output: " + yamlStringify(result == null ? "" : result));
