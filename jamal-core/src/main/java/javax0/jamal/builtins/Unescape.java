@@ -24,10 +24,17 @@ public class Unescape implements Macro {
         }
     }
 
+    /**
+     * This closer will recursively invoke the {@link Processor#process(Input)} method after setting an option driving
+     * the {@code escape*} macros to return only the content and not the whole macro.
+     * <p>
+     * To have the correct result such a closer should only run once, even of there are many {@code unescape} macros in
+     * the Jamal source. For this reason the {@link Object#equals(Object)} and {@link Object#hashCode()} are implemented
+     * so that there will only be one instance of this closer registered in a processor.
+     */
     static class UnescapeCloser implements Closer.OutputAware, Closer.ProcessorAware, AutoCloseable {
         private Processor processor;
         private Input output;
-        private boolean iAmAlreadyClosing = false;
 
         @Override
         public boolean equals(Object o) {
@@ -46,18 +53,12 @@ public class Unescape implements Macro {
 
         @Override
         public void set(Input output) {
-            if (!iAmAlreadyClosing) {
-                this.output = output;
-            }
+            this.output = output;
         }
 
 
         @Override
         public void close() throws Exception {
-            if (iAmAlreadyClosing) {
-                return;
-            }
-            iAmAlreadyClosing = true;
             OptionsStore.getInstance(processor).addOptions(UNESCAPE_OPTION);
             final String result = processor.process(output);
             OptionsStore.getInstance(processor).addOptions("~" + UNESCAPE_OPTION);

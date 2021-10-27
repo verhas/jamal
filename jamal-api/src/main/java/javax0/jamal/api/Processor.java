@@ -88,40 +88,59 @@ public interface Processor extends AutoCloseable {
     ScriptMacro newScriptMacro(String id, String scriptType, String input, String[] params) throws BadSyntax;
 
     /**
-     * Register an AutoCloseable resource that has to be closed when the execution is finished.
+     * Register an AutoCloseable closer that has to be closed when the execution is finished.
      * <p>
      * Some user defined (Java implemented) or built-in macro may create resources that perform some actions
      * asynchronous. The typical example is when a macro that creates some external resource starts a separate thread to
      * execute the task. This task has to be joined at the end of the processing. The general model is that there is a
-     * resource that has to be closed. If it is a thread, then an object has to be created that joins the thread upon
-     * closing. If it is a task in a thread pool then it has to wait for the task to be finished. It is up to the
-     * implementation of the macro.
+     * resource that has to be closed. The {@code closer} may be the resource itself or some object that will close the
+     * resource.
      * <p>
-     * The {@code resource} may also implement the interfaces {@link javax0.jamal.api.Closer.ProcessorAware} or {@link
-     * javax0.jamal.api.Closer.OutputAware} or both. In that case the {@link javax0.jamal.api.Closer.ProcessorAware#set(Processor)
-     * set()} method will be called before calling {@link AutoCloseable#close() close()} passing the {@link Processor}
-     * instance or the {@link Input} instance holding the final processed output as argument.
+     * Closing as an operation may be treated fairly liberal. Almost anything can be "closing". The macro
+     * {@code xmlFormat}, for example, "closes" the operation replacing the final output of Jamal with the XML formatted
+     * version.
+     * <p>
+     * The {@code closer} may also implement the interfaces {@link javax0.jamal.api.Closer.ProcessorAware} or {@link
+     * javax0.jamal.api.Closer.OutputAware} or both.
+     * In that case the
+     * {@link javax0.jamal.api.Closer.ProcessorAware#set(Processor) set(Processor)}
+     * and/or
+     * {@link javax0.jamal.api.Closer.OutputAware#set(Input)}  set(Input)}
+     * methods will be called before calling {@link AutoCloseable#close() close()} passing the {@link Processor}
+     * or the {@link Input} instance holding the final processed output as argument.
      * <p>
      * Since the call to {@link AutoCloseable#close() close()} comes before {@link Processor#process(Input)} returns the
-     * output may be defined by the implemented {@link AutoCloseable#close() close()} method. That way a built-in macro
+     * output may be altered by the implemented {@link AutoCloseable#close() close()} method. That way a built-in macro
      * may implement post-processing logic that works on the whole output.
      * <p>
      * The sample test {@code javax0.jamal.engine.TestProcessor#testPostProcessor()} in the file {@code
      * src/test/java/javax0/jamal/engine/TestProcessor.java} shows an example that converts the whole result to
      * uppercase.
      * <p>
-     * Calling this method the macro may register the object as something {@link AutoCloseable}. The method {@link
+     * The closer objects {@link AutoCloseable#close() close()} method may invoke the injected processors
+     * {@link Processor#process(Input) process(Input)} method. In this case, however, the processor is already in a
+     * state closing resources and processing the whole input again will not recursively invoke the closers. After
+     * the input is processed the invocation of the closers registered in the first round continues. Any closer
+     * registered during the call to {@link Processor#process(Input) process(Input)} from a closer will be ignored.
+     * <p>
+     * Calling this method the macro can register an {@link AutoCloseable} object. The method {@link
      * AutoCloseable#close() close()} will be invoked when the method {@link Processor#process(Input)} finishes its top
      * level execution. When the method is called in recursive calls from a macro or from any other place the deferred
-     * resources will not be closed upn return only when the top level call is to be returned.
+     * resources will not be closed upon return, only when the top level call is to be returned.
+     * <p>
+     * The processor implementation guarantees that the processor will invoke the closers in the order registered.
+     * The processor will never register an already registered closer. In other words, every closer is invoked only
+     * once. In the order of executions the first registering is relevant. A closer {@code c2} is treated as already
+     * registered if there is a registered closer {@code c1} so that {@code c1.equals(c2)}. (See also the implementation
+     * comments on {@code Unescape}.
      * <p>
      * Note that this method, or any other method of the processor MUST NOT be invoked from other than the main thread
      * of the Jamal processing. Even if a macro spawns a new thread the new thread must not do anything with the
      * processor.
      *
-     * @param resource the autocloseable object to be closed at the end of the processing.
+     * @param closer the autocloseable object to be closed at the end of the processing.
      */
-    void deferredClose(AutoCloseable resource);
+    void deferredClose(AutoCloseable closer);
 
     /**
      * Get the context object that the embedding application was setting. The context object is a general object and the

@@ -23,3 +23,11 @@
       {@define a(x)=x}\
       {a{a{a{a{a{a{@unescape}{a {@escape* ``${qqq}``}}}}}}}}
     Output: "${qqq}"
+
+"Testing deep escape in deferred XML":
+    Input: |-
+      {@define a(x)=x}{@unescape}{@xmlFormat}\
+      {a{a{a{a{a{a{a {@escape* ``<xml>${qqq}</xml>``}}}}}}}}
+    Output: |-
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <xml>${qqq}</xml>

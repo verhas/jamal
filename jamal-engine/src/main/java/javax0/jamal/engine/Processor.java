@@ -871,10 +871,18 @@ public class Processor implements javax0.jamal.api.Processor {
         throw exceptions.pop();
     }
 
+    private boolean currentlyClosing = false;
+
     private void closeProcess(final Input result) throws BadSyntax {
+        if( currentlyClosing ){
+            return;
+        }
         Deque<Throwable> exceptions = new ArrayDeque<>(this.exceptions);
+        final var closers = new LinkedHashSet<AutoCloseable>();
+        closers.addAll(openResources);
         try {
-            for (final var resource : openResources) {
+            currentlyClosing = true;
+            for (final var resource : closers) {
                 try {
                     setAwares(resource, result);
                     resource.close();
@@ -885,6 +893,7 @@ public class Processor implements javax0.jamal.api.Processor {
         } finally {
             // they were closed, they are not open anymore
             openResources.clear();
+            currentlyClosing = false;
         }
         if (!exceptions.isEmpty()) {
             final var nrofExceptions = exceptions.size();
@@ -929,8 +938,8 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public void deferredClose(AutoCloseable resource) {
-        openResources.add(resource);
+    public void deferredClose(AutoCloseable closer) {
+        openResources.add(closer);
     }
 
     private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);
