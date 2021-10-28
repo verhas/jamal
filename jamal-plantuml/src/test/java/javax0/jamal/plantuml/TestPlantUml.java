@@ -4,6 +4,8 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 public class TestPlantUml {
 
     @Test
@@ -41,6 +43,7 @@ public class TestPlantUml {
                 "}"
         ).results("myfirstdiagram3.png");
     }
+
     @Test
     @DisplayName("Create a simple PNG diagram using option to define the output directory and the format")
     void createSimpleDiagramWithOptionsPNG() throws Exception {
@@ -51,6 +54,18 @@ public class TestPlantUml {
                 "@enduml\n" +
                 "}"
         ).results("myfirstdiagram4.png");
+    }
+
+    @Test
+    @DisplayName("Create a simple PNG diagram using option to define the format only")
+    void createSimpleDiagramWithOptionsPNGNoFolder() throws Exception {
+        final String fn = "myfirstdiagram1.svg";
+        TestThat.theInput(
+            "{#plantuml " + fn + "\n" +
+                "Bob -> Alice : hello\n" +
+                "}"
+        ).results(fn);
+        new File(fn).deleteOnExit();
     }
 
     @Test
