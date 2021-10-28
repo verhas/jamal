@@ -24,14 +24,15 @@ import java.util.Map;
 public class PlantUml implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var root = Params.<String>holder("pu$folder", "folder").as(String.class, s -> s.endsWith("/") ? s : s + "/").orElse("");
+        final var root = Params.<String>holder("pu$folder", "folder").orElse("./");
         final var format = Params.<String>holder("pu$format", "format").orElse("SVG");
         final var template = Params.<String>holder("pu$template", "template").orElse("$file");
         Params.using(processor).keys(root, format, template).between("()").parse(in);
         final var fileName = InputHandler.fetch2EOL(in).trim();
-        var absoluteFileName = FileTools.absolute(in.getReference(), root.get() + fileName);
+        final var imageDir = root.get().endsWith("/") ? root.get() : root.get() + "/";
+        final var absoluteFileName = FileTools.absolute(in.getReference(), imageDir + fileName);
         InputHandler.skipWhiteSpaces(in);
-        String umlText = getUmlText(in);
+        final var umlText = getUmlText(in);
         final var output = new File(absoluteFileName).getAbsoluteFile();
         final var entry = getCacheEntry(output);
         try {
