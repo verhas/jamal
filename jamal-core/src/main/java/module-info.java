@@ -22,8 +22,7 @@ module jamal.core {
         javax0.jamal.builtins.JShell,
         javax0.jamal.builtins.Escape,
         javax0.jamal.builtins.Require,
-        javax0.jamal.builtins.Undefine,
-        javax0.jamal.builtins.Unescape
+        javax0.jamal.builtins.Undefine
 
         ;
 

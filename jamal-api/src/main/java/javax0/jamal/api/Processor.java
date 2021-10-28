@@ -139,8 +139,11 @@ public interface Processor extends AutoCloseable {
      * processor.
      *
      * @param closer the autocloseable object to be closed at the end of the processing.
+     * @return the registered closer. It may not be the same closer as the argument {@code closer}. If the closer
+     * was already registered, then the first registered closer will be returned. More formally, if there was a {@code
+     * closer2} already registered such that {@code closer2.equals(closer)} then {@code closer2} will be returned.
      */
-    void deferredClose(AutoCloseable closer);
+    AutoCloseable deferredClose(AutoCloseable closer);
 
     /**
      * Get the context object that the embedding application was setting. The context object is a general object and the

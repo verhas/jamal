@@ -26,10 +26,11 @@ import javax0.jamal.tracer.TraceRecordFactory;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.api.Macro.validIdChar;
@@ -52,7 +53,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     final private JShellEngine shellEngine = new JShellEngine();
 
-    final private Set<AutoCloseable> openResources = new LinkedHashSet<>();
+    final private Map<AutoCloseable,AutoCloseable> openResources = new LinkedHashMap<>();
 
     private final Context context;
 
@@ -874,12 +875,12 @@ public class Processor implements javax0.jamal.api.Processor {
     private boolean currentlyClosing = false;
 
     private void closeProcess(final Input result) throws BadSyntax {
-        if( currentlyClosing ){
+        if (currentlyClosing) {
             return;
         }
         Deque<Throwable> exceptions = new ArrayDeque<>(this.exceptions);
         final var closers = new LinkedHashSet<AutoCloseable>();
-        closers.addAll(openResources);
+        closers.addAll(openResources.keySet());
         try {
             currentlyClosing = true;
             for (final var resource : closers) {
@@ -938,8 +939,11 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public void deferredClose(AutoCloseable closer) {
-        openResources.add(closer);
+    public AutoCloseable deferredClose(AutoCloseable closer) {
+        if( ! openResources.containsKey(closer)) {
+            openResources.put(closer, closer);
+        }
+        return openResources.get(closer);
     }
 
     private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);

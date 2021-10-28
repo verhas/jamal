@@ -215,9 +215,11 @@ public class InputHandler {
      * @param input from which the spaces should be deleted.
      */
     public static void skipWhiteSpaces(Input input) {
-        while (input.length() > 0 && Character.isWhitespace(input.charAt(0))) {
-            input.delete(1);
+        int i = 0;
+        while (input.length() > i && Character.isWhitespace(input.charAt(i))) {
+            i++;
         }
+        input.delete(i);
     }
 
     /**

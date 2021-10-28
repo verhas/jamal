@@ -1,33 +1,22 @@
 "Testing deep escape":
-  Input: |-
-    {@define a(x)=x}\
-    {#unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
-  Output: "${qqq}"
-
-"Testing deep escape deferred":
+# unescape happens in the closer and the closer is registered by `escape*`
     Input: |-
-      {@unescape}\
       {@define a(x)=x}\
       {a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}
     Output: "${qqq}"
 
-"Testing deep escape after deferred":
-    Input: |-
-      {@define a(x)=x}\
-      {a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}\
-      {@unescape}
-    Output: "${qqq}"
-
-"Testing deep escape in deferred":
-    Input: |-
-      {@define a(x)=x}\
-      {a{a{a{a{a{a{@unescape}{a {@escape* ``${qqq}``}}}}}}}}
-    Output: "${qqq}"
-
 "Testing deep escape in deferred XML":
+# when there are multiple closers it does not matter that the unescape closer recursively invokes the same Jamal processor
     Input: |-
-      {@define a(x)=x}{@unescape}{@xmlFormat}\
+      {@define a(x)=x}{@escape* `.``.`}{@xmlFormat}\
       {a{a{a{a{a{a{a {@escape* ``<xml>${qqq}</xml>``}}}}}}}}
     Output: |-
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <xml>${qqq}</xml>
+
+"Testing deep escape in deferred XML in wrong order":
+# when there are multiple closers it does not matter that the unescape closer recursively invokes the same Jamal processor
+    Input: |-
+      {@define a(x)=x}{@xmlFormat}\
+      {a{a{a{a{a{a{a {@escape* ``<xml>${qqq}</xml>``}}}}}}}}
+    Throws: "Content is not allowed in prolog\\."

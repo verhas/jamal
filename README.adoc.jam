@@ -173,7 +173,6 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<options,`options`>>
 .. <<try,`try`>>
 .. <<escape,`escape`>>
-.. <<unescape,`unescape`>>
 .. <<require,`require`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
@@ -611,7 +610,6 @@ The comprehensive list of built-in macros are
  * <<options,`options`>>
  * <<try,`try`>>
  * <<escape,`escape`>>
- * <<unescape,`unescape`>>
  * <<require,`require`>>
 
 You use the built-in macros with `#` or `@` in front of the macro's name.
@@ -2945,7 +2943,8 @@ When an error happens, and the `try` macro catches the exception thrown the scop
 [[escape]]
 ==== {%macroChapter%}`escape`
 
-since 1.5.4 (core)
+- since 1.5.4 (core)
+- since 1.9.1 (`escape*`)
 
 The built-in macro escape is a special one, like `verbatim`.
 It is implemented as Java a macro class, but the macro evaluation process takes the presence of an `escape` macro into account.
@@ -2998,66 +2997,53 @@ In this special case you can write a `*` right after the `escape` keyword, as
 In this case the escape not only escapes the macro opening and any other otherwise processable content but also results the protecting shell around the escaped string.
 The result in this case will be
 
-{%output%}
+[source,text]
+----
+{@escape*`a`{`a`}
+----
+
+[NOTE]
+====
+You will never see in your output the `escape*` macro.
+It is eliminated after the whole file was processed by Jamal invoking a so called closer.
+The closer object is automatically created and registered by Jamal when the `escape*` macro is used.
+====
 
 This macro comes in handy when you want to protect something from evaluation that should never be interpreted as a macro text.
 For example you can have a Maven property in a `pom.jam` file, like `${project.build.sourceDirectory}`.
 You can redefine at the start of the file the macro open and macro close strings, but it may be simpler to protect the one or few special strings.
 A normal escape, without the `\*` after the keyword hides the content from evaluation only once.
 When the `*` character is used the content will be protected even when it is deep inside macros and target for many different evaluations.
-It should only be eliminated at the very end of the processing on the top level, which can be achieved using the <<unescape,`unescape`>> macro.
+It should only be eliminated at the very end of the processing on the top level, which is done automatically.
 
-[[unescape]]
-==== {%macroChapter%}`unescape`
+The macro `escape*` will liberate the content.
+The liberation will happen after the whole content was already processed in a so called "closer".
+Built-in macros implemented in Java have the possibility to register an object to be executed after the processing of the whole content.
+Such an object is a closer and it can be used to close resources that were open by the macro during processing.
+During the execution of this closer the code can access and modify the final result.
 
-The macro `unescape` will liberate the content of the `escape` macros, which were locked in eternally using the `escape*` format.
+The macro `escape*` registers a closer that will invoke the the Jamal processing again for the output with a flag that tells every `escape*` macro to release its content.
 
-There are two different ways to invoke the macro.
-One encloses the content to be liberated.
-The other one has no content.
-In this second case the macro schedules a closer object that does the liberation after the whole processing was done.
+In some cases it may happen that you want the `escape*` closer run before some other closers, but the `escape*` happens later than the register of the other closer.
 
-{%sample/
-{@define a(x)=x}\
-{#unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
-%}
+The different closers are invoked in the order they were registered.
+You may use a macro `X`, which also creates a closer.
+The use of the macro `X` precedes the first evaluation of an `escape*` macro.
+In this case the closer registered by `X` would be evaluated before the `escape*` closer.
+If you want the `escape*` closer to run first, you have to use the macro `escape*` before `X`.
+The simplest form is
 
-will result
+[source]
+----
+{@escape*````}
+----
 
-{%output%}
+It essentially escapes an empty string delimited by two backtick delimited empty strings.
+(Hence the four back ticks.)
+After the content liberation the result will be an empty string, thus there is no harm using this before any `X` macro.
 
-The other possibility is
-
-{%sample/
-{@define a(x)=x}\
-{@unescape}{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}
-%}
-
-will also result
-
-{%output%}
-
-Note that in the first example the `unescape` macro was used with the `#` prefix, so that the several `{a...}` macros are evaluated before the macro `unescape` was executed.
-If we look at the first example using the `@` prefix, as
-
-{%sample/
-{@define a(x)=x}\
-{@unescape{a{a{a{a{a{a{a {@escape* ``${qqq}``}}}}}}}}}
-%}
-
-will result an error.
-
-The macro `unescape` works very simple.
-It simply evaluates the input of the macro, or the whole result in case it works deferred setting a flag that tells `escape` that this time it should ignore the `\*` character.
-If the `unescape` in the example above is using the `@` character then the content is evaluated with the flag set and it becomes equivalent to the
-
-{%sample/
-{@define a(x)=x}\
-{a{a{a{a{a{a{a {@escape ``${qqq}``}}}}}}}}
-%}
-
-which is also erroneous, because `qqq` is not defined.
-
+The closer registered by `escape*` works very simple.
+It simply evaluates the result setting a flag that tells `escape*` that this time it should ignore the `\*` character.
 
 [[require]]
 ==== {%macroChapter%}`require`
