@@ -34,7 +34,7 @@ Maven does whatever it has to do with this file, but since it was given to it by
 The extension knows at this point that the generated {%@file (format=`$name`)pom.xml%} file is a standard XML formatted pom, and it simply asks the standard Maven Platform Reader to read it.
 When the Maven Platform Reader returns with the object model, the extension passes it on to Maven, and the rest is standard Maven business as usual.
 
-image::{%@plantuml call-sequence.svg
+image::{%@plantuml (folder=.) call-sequence.svg
 @startuml
 actor User
 skinparam style strictuml
