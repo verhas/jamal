@@ -1,8 +1,20 @@
 = Jamal Maven Extension
 
+
 This module lets you maintain your `pom.xml` files using Jamal macros.
+[WARNING]
+====
+This project is a Maven extension.
+A Maven extension runs before Maven and is different from a Maven plugin.
+The Jamal project supports Maven providing a plugin as well as an extension.
+In this documentation we talk about the use of the extension.
+The plugin can be used to aid the use of the extension.
+The way to support the use of the extension is also documented here.
+The documentation clearly distinguishes the extension from the plugin.
+====
+
 To use this module create a `.mvn` in your project root.
-This directory should contain the file `extensions.xml` with the content:
+This directory will contain the file `extensions.xml` with the content:
 
 [source,xml]
 ---
@@ -11,13 +23,12 @@ This directory should contain the file `extensions.xml` with the content:
     <extension>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-maven-extension</artifactId>
-        <version>1.9.1-SNAPSHOT</version>
+        <version>1.9.1</version>
     </extension>
 </extensions>
 ---
 
-When you start Maven, it will read the `pom.xml.jam` file, convert it using Jamal and create the `pom.xml` file.
-If it does not find a `pom.xml.jam` it will also try `pom.jam`.
+When you start Maven, it will read the `pom.xml.jam` or `pom.jam` file, convert it using Jamal and create the `pom.xml` file.
 
 [NOTE]
 ====
@@ -25,22 +36,54 @@ The actual process is the following.
 When a user invokes Maven, it looks at the `extensions.xml` file and sees that the Jamal Maven Extension is configured there.
 It loads the Jamal Maven Extension and invokes it to locate the POM file.
 This call assumes that the file is already there, and at this point, the extension is supposed to find it simply.
-The extension, however, reads the `pom.xml.jam` file and processes it.
+The extension, however, reads the `pom.xml.jam` or `pom.jam` file and processes it.
 The processing includes the resolution of all the macros and the formatting of the final XML result.
-When the extension is done with this step, it returns the file reference as a Java `File` object.
+When the extension is done with this step, it writes the `pom.xml` file and returns the file reference as a Java `File` object.
 
-Maven does whatever it has to do with this file, but since it was given to it by this extension, Maven later asks the extension to load the project object model from this file.
+Maven later asks the extension to load the project object model from this file.
 The extension knows at this point that the generated `pom.xml` file is a standard XML formatted pom, and it simply asks the standard Maven Platform Reader to read it.
-When the Maven Platform Reader returns with the object model, the extension passes it on to Maven, and the rest is standard Maven business as usual.
-
+When the Maven Platform Reader returns with the object model, the extension passes it back to Maven, and the rest is standard Maven business as usual.
 image::call-sequence.svg[]
 ====
 
-== Using the generated `pom.xml`
+== Using the Generated `pom.xml`
 
 The created `pom.xml` is saved to the directory and not removed after it was processed.
 It is also available for the IDE, which may not read the macro enhanced POM file.
 You can add it to your source control if you wish.
+
+== Converting Your Project to Use `pom.jam`
+
+When you want to convert a project to use the Jamal maven extension you only have to
+
+1. create the `.mvn` directory
+
+2. create the `extensions.xml` file
+
+3. rename the existing `pom.xml` files to `pom.jam`.
+
+When you have a multi-module project this can be cumbersome and error prone.
+To automate this, the Jamal Maven plugin can be started with the command line
+
+[source]
+----
+mvn -Djamalize=true com.javax0.jamal:jamal-maven-plugin:1.9.1:jamal
+----
+
+from the top level project directory.
+
+The plugin will scan all the directories from the current and below and add the `.mvn/extensions.xml` files to the project directories.
+The plugin will consider every directory to be a project directory that has a
+
+* `pom.xml`,
+* `pom.jam`, or
+* `pom.xml.jam` in it.
+
+If there is only a `pom.xml` in the project directory, but no `pom.jam` nor `pom.xml.jam` then the plugin will copy the `pom.xml` to `pom.jam`.
+
+== Updating Your Project
+
+When you want to use a new version of the Jamal Maven Extension
 
 == Getting Rid of the Extension
 

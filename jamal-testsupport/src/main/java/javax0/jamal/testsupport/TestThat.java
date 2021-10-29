@@ -98,7 +98,7 @@ public class TestThat implements AutoCloseable {
         return it;
     }
 
-    public static boolean dumpYaml = true;
+    public static boolean dumpYaml = false;
 
     public TestThat usingTheSeparators(final String macroOpen, final String macroClose) {
         this.macroOpen = macroOpen;

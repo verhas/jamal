@@ -1,9 +1,21 @@
 = Jamal Maven Extension
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}
+
 This module lets you maintain your `pom.xml` files using Jamal macros.
+[WARNING]
+====
+This project is a Maven extension.
+A Maven extension runs before Maven and is different from a Maven plugin.
+The Jamal project supports Maven providing a plugin as well as an extension.
+In this documentation we talk about the use of the extension.
+The plugin can be used to aid the use of the extension.
+The way to support the use of the extension is also documented here.
+The documentation clearly distinguishes the extension from the plugin.
+====
+
 To use this module create a `.mvn` in your project root.
-This directory should contain the file `extensions.xml` with the content:
+This directory will contain the file `extensions.xml` with the content:
 
 [source,xml]
 ---
@@ -17,8 +29,7 @@ This directory should contain the file `extensions.xml` with the content:
 </extensions>
 ---
 
-When you start Maven, it will read the `pom.xml.jam` file, convert it using Jamal and create the {%@file (format=`$name`)pom.xml%} file.
-If it does not find a `pom.xml.jam` it will also try `pom.jam`.
+When you start Maven, it will read the `pom.xml.jam` or `pom.jam` file, convert it using Jamal and create the `pom.xml` file.
 
 [NOTE]
 ====
@@ -33,8 +44,8 @@ When the extension is done with this step, it writes the `pom.xml` file and retu
 Maven later asks the extension to load the project object model from this file.
 The extension knows at this point that the generated `pom.xml` file is a standard XML formatted pom, and it simply asks the standard Maven Platform Reader to read it.
 When the Maven Platform Reader returns with the object model, the extension passes it back to Maven, and the rest is standard Maven business as usual.
-
-image::{%@plantuml (folder=.) call-sequence.svg
+{%@define pu$folder=images%}\
+image::{%@plantuml call-sequence.svg
 @startuml
 actor User
 skinparam style strictuml
@@ -56,13 +67,13 @@ User <-- Maven : done
 %}[]
 ====
 
-== Using the generated `pom.xml`
+== Using the Generated `pom.xml`
 
 The created {%@file (format=`$name`)pom.xml%} is saved to the directory and not removed after it was processed.
 It is also available for the IDE, which may not read the macro enhanced POM file.
 You can add it to your source control if you wish.
 
-== Converting your project to use `pom.jam`
+== Converting Your Project to Use `pom.jam`
 
 When you want to convert a project to use the Jamal maven extension you only have to
 
@@ -73,7 +84,7 @@ When you want to convert a project to use the Jamal maven extension you only hav
 3. rename the existing `pom.xml` files to `pom.jam`.
 
 When you have a multi-module project this can be cumbersome and error prone.
-To automate this the Jamal Maven plugin can be started with the command line
+To automate this, the Jamal Maven plugin can be started with the command line
 
 [source]
 ----
@@ -82,7 +93,18 @@ mvn -Djamalize=true com.javax0.jamal:jamal-maven-plugin:{%VERSION%}:jamal
 
 from the top level project directory.
 
-The Jamal plugin will scan all the
+The plugin will scan all the directories from the current and below and add the `.mvn/extensions.xml` files to the project directories.
+The plugin will consider every directory to be a project directory that has a
+
+* `pom.xml`,
+* `pom.jam`, or
+* `pom.xml.jam` in it.
+
+If there is only a `pom.xml` in the project directory, but no `pom.jam` nor `pom.xml.jam` then the plugin will copy the `pom.xml` to `pom.jam`.
+
+== Updating Your Project
+
+When you want to use a new version of the Jamal Maven Extension
 
 == Getting Rid of the Extension
 
