@@ -6,10 +6,8 @@
   with:
     java-version: '17'
     distribution: 'adopt'
-- name: Create POM files
-  run: mvn -f genpom.xml
 - name: Build with Maven
-  run: mvn -B package --file pom.xml
+  run: mvn -B package
 %}
 
 {%@define job($env,...$name)={%@if/$name/$name/$env%}:
