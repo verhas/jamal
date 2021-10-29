@@ -53,6 +53,9 @@ public class JamalMojo extends AbstractMojo {
     @Parameter(defaultValue = "${filePattern}")
     private String filePattern;
 
+    @Parameter(defaultValue = "${jamalize}")
+    private String jamalize;
+
     @Parameter(defaultValue = "${project.build.formatOutput}")
     private String formatOutput;
 
@@ -85,6 +88,14 @@ public class JamalMojo extends AbstractMojo {
         logParameters();
         normalizeDirectories();
         logParameters();
+        if( "true".equals(jamalize)){
+            try {
+                new Jamalizer().jamalize();
+            } catch (IOException e) {
+                throw new MojoExecutionException("Cannot jamalize",e);
+            }
+            return;
+        }
         final var includePredicate = getPathPredicate(filePattern);
         final var excludePredicate = getPathPredicate(exclude).negate();
         processingSuccessful = true;
@@ -246,6 +257,7 @@ public class JamalMojo extends AbstractMojo {
         log.debug("    sourceDirectory=" + sourceDirectory);
         log.debug("    targetDirectory=" + targetDirectory);
         log.debug("    transform " + qq(transformFrom) + " -> " + qq(transformTo));
+        log.debug("    jamalize=" + jamalize);
         log.debug("----");
     }
 
