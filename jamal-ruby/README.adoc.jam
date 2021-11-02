@@ -1,5 +1,5 @@
 = Jamal Ruby integration module
-{%@import readmemacros.jim%}\
+{%@import res:jamal.jim%}\
 {%@snip:collect from="src/test/java/"%}\
 {%@snip:collect from="src/main/java/"%}\
 {%@snip:collect from="../jamal-snippet/src/test/java/javax0/jamal/documentation"%}\

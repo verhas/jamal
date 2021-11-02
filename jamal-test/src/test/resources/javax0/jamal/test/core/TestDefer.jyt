@@ -1,0 +1,113 @@
+"Simple deferred evaluation with error":
+  Input: |-
+    {@defer
+      {#define $input={doplikate/{$input}}}
+    }\
+    Annoying?
+  Throws: "User defined macro '\\{doplikate ...' is not defined."
+
+"Simple deferred evaluation duplicating the input":
+  Input: |-
+    {@define doplikate(a)=aa}\
+    {@defer
+      {#define $output={doplikate/{$input}}}
+    }\
+    Is this doplikated?
+  Output: "Is this doplikated?Is this doplikated?"
+
+"Simple deferred evaluation with macro renamed input and output":
+  Input: |-
+    {#block
+      {@define $output=OUT}\
+      {@define $input=IN}\
+      {@defer
+        {#define OUT=|{IN}|}\
+      }\
+    }\
+    {@defer {#define $output=*{$input}*}}\
+    Framed
+  Output: "*|Framed|*"
+
+"Simple deferred evaluation with option renamed input and output":
+  Input: |-
+    {@defer [input=IN output=OUT]
+      {#define OUT=|{IN}|}\
+    }\
+    {@defer {#define $output=*{$input}*}}\
+    Framed
+  Output: "*|Framed|*"
+
+"Simple deferred evaluation ignoring the input":
+  Input: |-
+    {@defer
+      {#define $output=}{@comment just nothing}
+    }\
+    Is this ignored?
+  Output: ""
+
+"Simple deferred evaluation duplicating the input with a late defined macro":
+  Input: |-
+    {@defer
+      {#define $output={doplikate/{$input}}}
+    }\
+    Annoying?{@define ~ doplikate(a)=aa}\
+  Output: "Annoying?Annoying?"
+
+"Deferred evaluation with input still containing macros":
+  Input: |-
+    {@escape*````}\
+    {@defer
+      {#define $output={doplikate/{$input}}}{@comment DEBUG}
+    }\
+    {@escape* ``{mememe}``}Mememe?{@define ~ doplikate(a)=aa}
+  Output: "{mememe}Mememe?{mememe}Mememe?"
+
+"Deferred macro that does nothing":
+  Input: |-
+    {@defer}\
+    Annoying?
+  Output: "Annoying?"
+
+"$output is not retained from the main macro evaluation":
+  Input: |-
+    {@defer {#define $output=aaa{?$output}}}\
+    {#define $output=this will not survive}
+    Annoying?
+  Output: "aaa"
+
+"$output is not retained between deferred evals":
+  Input: |-
+    {@defer {#define $output=this will not survive{?$output}}}\
+    {@defer {#define $output=aaa{?$output}}}\
+    {#define $output=this also will not survive}
+    Annoying?
+  Output: "aaa"
+
+"Multiple deferred macros are evaluated in order 1":
+  Input: |-
+    {@defer {#define $output={$input}/{$input}}}\
+    {@defer {#define $output=|{$input}|}}\
+    Oy weh
+  Output: "|Oy weh/Oy weh|"
+
+"Multiple deferred macros are evaluated in order 2":
+  Input: |-
+    {@defer {#define $output=|{$input}|}}\
+    {@defer {#define $output={$input}/{$input}}}\
+    Oy weh
+  Output: "|Oy weh|/|Oy weh|"
+
+"Multiple deferred macros are evaluated in order 2":
+  Input: |-
+    {@defer {#define $output=|{$input}|}}\
+    {@defer {#define $output={$input}/{$input}}}\
+    Oy weh
+  Output: "|Oy weh|/|Oy weh|"
+
+"Multiple deferred macros are evaluated in order 3":
+  Input: |-
+    {@defer {#define $output=|{$input}|}}\
+    {@defer {@define ~ doplikate(a)=a/a}}\
+    {@defer {#define $output={doplikate {$input}}}}\
+    Oy weh
+  Output: "|Oy weh|/|Oy weh|"

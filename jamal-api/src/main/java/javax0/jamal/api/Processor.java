@@ -49,7 +49,7 @@ public interface Processor extends AutoCloseable {
      * implements this interface, but does not need to access directly the UserDefinedMacro or other interface
      * implementations.
      * <p>
-     * NOTE: The invocation of this method creates a new object but it DOES NOT register the created user defined macro
+     * NOTE: The invocation of this method creates a new object, but it DOES NOT register the created user defined macro
      * in the macro registry. The sole purpose of this method is to decouple the API usage and the implementation.
      *
      * @param id     the identifier (name) of the macro
@@ -62,7 +62,8 @@ public interface Processor extends AutoCloseable {
 
     /**
      * The same as {@link #newUserDefinedMacro(String, String, String[])} but it can also define when the macro is
-     * verbatim.
+     * verbatim. The default implementation ignores the verbatim flag. See the note of {@link
+     * #newUserDefinedMacro(String, String, String[]) newUserDefinedMacro()}
      *
      * @param id       see {@link #newUserDefinedMacro(String, String, String[])}
      * @param input    see {@link #newUserDefinedMacro(String, String, String[])}

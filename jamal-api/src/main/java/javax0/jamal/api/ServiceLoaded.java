@@ -15,7 +15,10 @@ import java.util.ServiceLoader;
  * loader does not see the classes (the program sees that zero service instances were loaded) then as a fallback it tries
  * to load the {@code META-INF/services/className} files and the classes listed in those.
  * <p>
- * The Javadoc Taglet execution environment for some reson does not load the service loader loaded instances.
+ * The Javadoc Taglet execution environment for some reason does not load the service loader loaded instances.
+ * This is a workaround.
+ * <p>
+ * The {@link Macro} interface extends this interface, because macros are service loaded.
  */
 public interface ServiceLoaded {
 

@@ -3,7 +3,7 @@ These macros help embedding Jamal macro samples and run them.
 
 {%@options trimVertical%}
 
-{%@define sample(code)={%@define :lastCode=code%}[source]
+{%@define sample(code)={%#define :lastCode=code%}[source]
 ----
 {%#trimLines
 code%}
@@ -11,9 +11,8 @@ code%}
 
 {%@define output=[source]
 ----
-{%#trimLines
-{%!#output
-{%lastCode%}%}%}
+{%#trimLines trimVertical
+{%!#output {%lastCode%}%}%}
 ----
 %}
 

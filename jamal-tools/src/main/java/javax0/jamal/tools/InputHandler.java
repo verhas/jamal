@@ -495,7 +495,7 @@ public class InputHandler {
     }
 
     /**
-     * Fetch a regular expression from the input. The regular expression starts at the start of the input and it is
+     * Fetch a regular expression from the input. The regular expression starts at the start of the input, and it is
      * terminated by a {@code `} (backtick) character or by the end of the input. If there are backtick characters in
      * the regular expression they have to be doubled. After the fetching the first character on the input is the
      * character that follows the terminating backtick character.

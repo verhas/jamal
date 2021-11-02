@@ -4,6 +4,8 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.Params;
 
 @Macro.Stateful
 public class Output implements Macro {
@@ -16,9 +18,17 @@ public class Output implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        if (localProc == null) {
-            localProc = new javax0.jamal.engine.Processor("{", "}");
+        final var isolate = Params.<Boolean>holder("isolatedOutput","isolate").asBoolean();
+        Params.using(processor).from(this).between("()").keys(isolate).parse(in);
+        InputHandler.skipWhiteSpaces2EOL(in);
+        if (isolate.is()) {
+            final var isolatedProc = new javax0.jamal.engine.Processor("{", "}");
+            return isolatedProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
+        } else {
+            if (localProc == null) {
+                localProc = new javax0.jamal.engine.Processor("{", "}");
+            }
+            return localProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
         }
-        return localProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
     }
 }

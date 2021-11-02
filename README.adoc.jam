@@ -8,7 +8,7 @@ The source of the file is the README.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module
 jamal-snippet.
 
-%}{%@import readmemacros.jim%}\
+%}{%@import res:jamal.jim%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@define pu$folder=images%}\
@@ -158,6 +158,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<define,`define`>>
 .. <<undefine,`undefine`>>
 .. <<eval,`eval`>>
+.. <<defer,`defer`>>
 .. <<env,`env`>>
 .. <<import,`import`>>
 .. <<include,`include`>>
@@ -1544,6 +1545,229 @@ You can use this character together with the back-tick macro modifying character
 They do not eliminate each other, because the back-tick prevents pre-evaluation and `!` provides extra post evaluation.
 When using `!` to evaluate the result of a macro you cannot specify any scripting language.
 The evaluation will be Jamal macros evaluation.
+
+[[defer]]
+==== {%macroChapter%}`defer`
+since 1.10.0
+
+The macro `defer` evaluates its input only when the processing is finished.
+It can be used to execute some macros at the end of the execution, which have side effect, or to modify the final output using some macros.
+
+At the place of the the macro the value of the macro is an empty string.
+The result of the evaluation, since it happens after the whole input was already processed and we have a final output, is also ignored.
+There is, however, a possibility for the content of the macro to read the final result and also to modify it.
+
+When the input of the macro is executed the global macro `$input` contains the output of the processing.
+The naming may be strange at first, but consider that this string is the input for the deferred macro evaluation.
+
+{%@plantuml input_output.svg
+@startuml
+start
+-> input;
+:Jamal Processing;
+-> output;
+: $input;
+:Defer macro evaluation;
+-> output;
+: $output;
+stop
+@enduml
+%}
+image::input_output.svg[]
+
+If this evaluation defines the global macro `$output` the value of the macro will be used instead of the original output.
+
+The name of the input and output macros can be changed using options.
+The options
+
+- `$input` with the aliases `input`, and `inputName` can specify the name of the input macro.
+- `$output` with the aliases `output`, and `outputName` can specify the name of the output macro.
+
+As usually the option name can be defined as a macro, like `{@define $input=$INPUT}`, the aliases can only be used as macro options, like
+
+{%sample/
+  {@defer [output=OUTPUT] ... }
+%}
+
+[NOTE]
+====
+You probably want to use the macro `defer` with the `@` character in front of the macro name.
+If you use `#` then the content is evaluated before the macro `defer` is executed.
+In this case the macro sees the evaluated input and will defer the evaluation of that to the end of the execution.
+This way the macro `defer` is similar to the macro `eval`.
+====
+
+In the followings we will give some examples.
+
+This example is the simplest.
+It defers an empty string.
+{%@options isolatedOutput%}
+{%sample/
+{@defer}
+Original result.
+%}
+
+When the empty string is evaluated nothing happens, the original output is retained:
+
+{%output%}
+
+The second example is a bit more complex:
+
+{%sample/
+{@define doplikate(a)=aa}\
+{@defer
+  {#define $output={doplikate/{$input}}}
+}\
+Is this doplikated?%}
+
+This example defines a user defined macro that duplicates the input.
+In the deferred evaluation the macro `$output` is defined and it will be the same as the `$input` repeated.
+
+{%output%}
+
+The next example demonstrates that
+
+- the name of the input and output macros can be redefined, and
+- multiple `defer` macros are executed in the order as they were evaluated in the input during the Jamal processin.
+
+{%sample/
+{#block
+  {@define $output=OUT}\
+  {@define $input=IN}\
+  {@defer
+    {#define OUT=|{IN}|}\
+  }\
+}\
+{@defer {#define $output=*{$input}*}}\
+Framed%}
+
+Note that the definition of the macros `$input` and `$output` are local to the `block` and therefore they have no impact on the second defer.
+Since the `{#define OUT=|{IN}|}` is defind before `{#define $output=*{$input}*}` the text `Framed` is enclosed first between `|` characters and only the result is enclosed between `\*`.
+
+The output is:
+
+{%output%}
+
+The next example is almost the same as the previous.
+It uses macro options to set the input and output names for the first `defer` macro:
+
+{%sample/
+{@defer [input=IN output=OUT]
+  {#define OUT=|{IN}|}\
+}\
+{@defer {#define $output=*{$input}*}}\
+Framed%}
+
+In this case there is no need for the `block` macro, since option setting is always local to the macro where it is set.
+The result is the same as in the previous case:
+
+{%output%}
+
+The next example shows that you do not need to use the input at all to set the output.
+
+{%sample/
+{@defer
+  {#define $output=}{@comment just nothing}
+}\
+Is this ignored?
+%}
+
+In this case the output is an empty string
+
+{%output%}
+
+The following sample shows that the macros used in the text of `defer` have to be defined only when it gets executed.
+In the example the macro `doplikate` is not defined when used in `defer` only at the end of the file.
+
+{%sample/
+{@defer
+  {#define $output={doplikate/{$input}}}
+}\
+Annoying?{@define ~ doplikate(a)=aa}\
+%}
+
+The output is:
+
+{%output%}
+
+The following example is a bit more complex.
+In this case the code uses the `escape*` macro.
+
+{%sample/
+{@escape*````}\
+{@defer
+    {#define $output={doplikate/{$input}}}{@comment DEBUG}
+}\
+{@escape* ``{mememe}``}Mememe?{@define ~ doplikate(a)=aa}\
+%}
+
+In this case there are two deferred operations.
+The first one is the unescaping of `escape*`.
+This is executed first, because the use of the first `escape*` macro precedes the macro `defer`.
+When this unescaping is finished the result of the processing will be `{mememe}Mememe?`.
+It contains a string that can be interpreted as a macro.
+For this reason the macro `doplikate` is defined as a "verbatim" macro.
+This is signalled by the `~` character after the `define` keyword.
+Verbatim user defined macros are not post evaluated.
+When `doplikate` is invoked in the `defer` then `{mememe}Mememe?` will be converted to `{mememe}Mememe?{mememe}Mememe?`.
+This result also will not be evaluated again.
+
+However, when we set the macro `$output` in the line `{#define $output={doplikate/{$input}}}` why `{mememe}Mememe?` is not evaluated.
+The reason is that the user defined macro `$input` holding the final result of the Jamal processing is also a verbatim macro.
+
+The output is:
+
+{%output%}
+
+Although `$input` is verbatim, `$output` does not need to be.
+This macro is used temporarily by the deferred action to change the output of Jamal processing.
+The following example shows that the value of `$output` is not available as input for `defer`.
+The macro `$output` can only be set by the input of `defer` and `$output` is undefined when the evaluation starts:
+
+{%sample/
+{@defer {#define $output=aaa{?$output}}}\
+{#define $output=this will not survive}
+Annoying?
+%}
+
+This example tries to use the value of the macro `$output` in the deferred code.
+The deferred code can rely on the macros defined during the Jamal processing.
+Note, however that only the top level macros are available as all other macros are out of scope and only those, which were defined at the end of the Jama processing.
+
+The macro `$output`, however, is used in a special way.
+Because it serves to pass a modified output from the deferred code it is undefined before the deferred code start.
+The result of this evaluation is:
+
+{%output%}
+
+The macro `$output` gets undefined before the evaluation of each deferred code.
+If we extend the previous example and define the output in one deferred code and try to use that in the next one it will still be undefined.
+
+{%sample/
+{@defer {#define $output=this will not survive{?$output}}}\
+{@defer {#define $output=aaa{?$output}}}\
+{#define $output=this also will not survive}
+Annoying?
+%}
+
+The output is still:
+
+{%output%}
+
+The last example shows that other macros survive and can be used in subsequent deferred actions.
+If the macro `doplikate` is defined in a deferred action then the subsequent deferred actions can use the macro:
+
+{%sample/
+{@defer {#define $output=|{$input}|}}\
+{@defer {@define ~ doplikate(a)=a/a}}\
+{@defer {#define $output={doplikate {$input}}}}\
+wuff%}
+
+And the output is:
+
+{%output%}
+
+{%@options ~isolatedOutput%}
 
 [[env]]
 ==== {%macroChapter%}`env`
@@ -3152,13 +3376,14 @@ The core macros use the `[` and `]` characters to enclose the parameters.
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `eval` also use the `[` and the `]` characters.
+To be consistent the macros `include`, `eval`, and `defer` also use the `[` and the `]` characters.
+This is also a clear visual separation of core macros from other macros provided by extra modules.
 
 {%@comment The following macro does not generate anything into the output.
 It simply fails when the number of files using Params is not the same as expected.
 %}\
 {%#define nrCoreMacrosUsingParams={%@listDir (grep="Params.using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
-{%#define nrCoreMacrosUsingParamsDocumented=3%}\
+{%#define nrCoreMacrosUsingParamsDocumented=4%}\
 {%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than nrCoreMacrosUsingParamsDocumented core macros using params, update the text above and the number.%}\
 ====
 
@@ -3436,7 +3661,7 @@ This is a simplified interface to access the functionality of Jamal.
 
 The current and past versions of the JavaDoc can be read online at the address:
 
-{%@for module in (api,cmd,core,engine,extensions,maven-plugin,plantuml,pomlib,scriptbasic,snippet,test,test-support,tools)=
+{%@for module in (api,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,markdown,maven-extension,maven-plugin,plantuml,ruby,scriptbasic,snippet,test,test-support,tools,yaml)=
 * https://javadoc.io/doc/com.javax0.jamal/jamal-module/
 
 %}
@@ -3444,7 +3669,7 @@ The current and past versions of the JavaDoc can be read online at the address:
 [[documentmaintenance]]
 === {%chapter%}Maintenance of this document
 
-The source of this document is `README:adoc.jam`.
+The source of this document is `README.adoc.jam`.
 The Jamal conversion uses the snippet macros and some aux built-in macros.
 The conversion is part of the execution of the tests.
 The code samples are automatically executed using this process, and the sample output is automatically inserted into the document.

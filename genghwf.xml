@@ -23,15 +23,14 @@
                             <goal>jamal</goal>
                         </goals>
                         <configuration>
-                            <formatOutput>true</formatOutput>
                             <transformFrom>\.jam$</transformFrom>
                             <transformTo/>
-                            <filePattern>.*pom\.xml\.jam$</filePattern>
+                            <filePattern>(.*\.yml\.jam)$</filePattern>
                             <exclude>target|\.iml$|\.java$|\.xml$</exclude>
-                            <sourceDirectory>.</sourceDirectory>
-                            <targetDirectory>.</targetDirectory>
-                            <macroOpen>{</macroOpen>
-                            <macroClose>}</macroClose>
+                            <sourceDirectory>.github/workflows</sourceDirectory>
+                            <targetDirectory>.github/workflows</targetDirectory>
+                            <macroOpen>{%</macroOpen>
+                            <macroClose>%}</macroClose>
                         </configuration>
                     </execution>
                 </executions>

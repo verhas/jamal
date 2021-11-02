@@ -14,9 +14,8 @@
     {dependencies#
         {@for MODULE in (api,tools,engine)=
             {dependency|{GROUPID}|jamal-MODULE}}
-        {dependency|{GROUPID}|jamal-testsupport||test}
-        {dependency|{GROUPID}|jamal-core||test}
-        {dependency|{GROUPID}|jamal-snippet|{VERSION}|test}
+        {@for MODULE in (testsupport,core,snippet,jamal)=
+            {dependency|{GROUPID}|jamal-MODULE||test}}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
         {dependency|net.sourceforge.plantuml|plantuml|{PLANTUML_VERSION}|}

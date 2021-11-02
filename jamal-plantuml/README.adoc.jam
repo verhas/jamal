@@ -1,7 +1,7 @@
 == Jamal PlantUML Diagrams
 :imagesdir: images
 
-{%@import ../readmemacros.jim%}\
+{%@import res:jamal.jim%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
 {%#snip:define lastUpdated={%lastUpdated%}%}\
 {%@snip:xml pom=pom.xml%}\

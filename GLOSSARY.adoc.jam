@@ -4,7 +4,7 @@
 The source of the file is the GLOSSARY.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
 
-%}{%@import readmemacros.jim%}\
+%}{%@import res:jamal.jim%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 

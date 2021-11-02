@@ -3,6 +3,21 @@
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
 
+{%RELEASE/1.10.0%}
+
+New macro `defer`, which evaluates its input after the whole input was processed in a closer.
+
+Due to a bug the backslash character did not escape the following new line after an `escape` macro (ironic).
+Fixed.
+
+{%RELEASE/1.9.1%}
+
+The macro `escape` was extended.
+Now if the macro name `escape` is followed by a `\*` character then the escaping works multiple levels and is unescaped only when the whole processing is finished.
+There is a new option for the Maven plugin of Jama.
+If you specify the system option `jamalify` to be `true` then the plugin will create all the `.env` directories and `extensions.xml` files.
+There was a bug in the macro `plantuml` in release 1.9.0, which prevented its working when no folder was defined explicitly.
+
 {%RELEASE/1.9.0%}
 
 Maven extension module is developed.
@@ -11,7 +26,7 @@ Maven automatically reads those files instead of the `pom.xml` using the extensi
 Ruby scripts do not share the global variables any more.
 It was a bug that the differently named Ruby scripts used the same set of global variables.
 Ruby and Groovy macros can be configured using options and not only user defined macros.
-PlantUml macro also uses options and not only user defined macros to define the parameters like the image directory.
+`plantuml` macro also uses options and not only user defined macros to define the parameters like the image directory.
 Built-in macros can have multiple names, and the assertion package immediately starts to use it so `equals` and `equal` ending denote the same macro.
 Evaluate can evaluate macros in its input in a loop till all macros get evaluated.
 Environment variable can be queried to throw exception when the variable is not defined.

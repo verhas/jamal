@@ -132,4 +132,10 @@ public class TestCore {
         return JamalYamlTest.factory(
             "TestDeepEscape");
     }
+
+    @TestFactory
+    JamalTests<?> testAllCoreMacrosN() {
+        return JamalYamlTest.factory(
+            "TestDefer");
+    }
 }

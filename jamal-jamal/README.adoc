@@ -24,7 +24,7 @@ To use this module you have to add the dependency to you Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-jamal</artifactId>
-    <version>1.9.2-SNAPSHOT</version>
+    <version>1.10.0-SNAPSHOT</version>
 </dependency>
 
 ----
@@ -32,7 +32,32 @@ To use this module you have to add the dependency to you Maven project, as:
 
 == Macros implemented in the package
 
-To use the module in an ASCIIDOC file you should include the resurce file `jamal.jim` as
+There is only one built-in macro defined in the module: `output`.
+It uses a separate Jamal processor to evaluate its input and returns the processed result.
+
+The macro instantiates a new Jamal processor (internally called localProc)on its first use.
+The macro start and end strings are the `{` and `}` characters.
+
+If for any reason you want to execute the samples in isolated processors then you can define the option `isolatedOutput`.
+
+[source]
+----
+{@options isolatedOutput}
+----
+
+In that case the macro will allocate a new Jamal processor (internally called isolatedProc) for every invocation.
+
+You can also use the `isolate` options between `(` and `)` characters in the macro.
+If you switch off this option
+
+[source]
+----
+{@options ~isolatedOutput}
+----
+
+the subsequent calls to the macro will use the separate, but shared, localProc Jamal processor.
+
+To use the module in an ASCIIDOC file you can include the resource file `jamal.jim` as
 
 [source]
 ----

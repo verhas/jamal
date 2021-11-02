@@ -3,7 +3,7 @@
 The source of the file is the BUILTIN.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
 
-%}{%@import readmemacros.jim%}\
+%}{%@import res:jamal.jim%}\
 {%@snip:collect from="jamal-test/src/test/java/javax0/jamal/test/examples"%}\
 {%@snip:collect from="jamal-test/src/main/java/"%}\
 {%@snip:collect from="jamal-api/src/main/java/"%}\

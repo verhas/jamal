@@ -1,4 +1,3 @@
-{@sep [ ]}[@sep {% %}]
 {%@yaml:define steps=
 - uses: actions/checkout@v2
 - name: Set up JDK 17

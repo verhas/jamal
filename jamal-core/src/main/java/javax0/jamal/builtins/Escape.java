@@ -135,7 +135,7 @@ public class Escape implements Macro {
         if (endOfEscape == -1) {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.", input.getPosition());
         }
-        final var escapeSequence = "`" + input.subSequence(0, endOfEscape).toString() + "`";
+        final var escapeSequence = "`" + input.subSequence(0, endOfEscape) + "`";
         move(input, escapeSequence.length() - 1, output);
         final var endOfString = input.indexOf(escapeSequence);
         if (endOfString == -1) {
@@ -150,6 +150,15 @@ public class Escape implements Macro {
         }
         move(input, endOfEscapeMacro, output);
         skip(input, closeStr);
+        if (input.length() > 0 && input.charAt(0) == '\\') {
+            int i = 1;
+            while (i < input.length() && Character.isWhitespace(input.charAt(i)) && input.charAt(i) != '\n') {
+                i++;
+            }
+            if (i >= input.length() || input.charAt(i) == '\n') {
+                input.delete(i + 1);
+            }
+        }
         return output.toString();
     }
 

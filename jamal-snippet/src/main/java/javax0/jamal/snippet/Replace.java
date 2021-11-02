@@ -19,7 +19,7 @@ public class Replace implements Macro, InnerScopeDependent {
         InputHandler.skipWhiteSpaces(in);
         final var parts = InputHandler.getParts(in);
         if (parts.length < 2) {
-            throw new BadSyntax("Marco 'replace' needs at least two arguments, gon only "
+            throw new BadSyntax("Marco 'replace' needs at least two arguments, got only "
                 + parts.length
                 + ":\n" + String.join("\n", parts)
                 + "\n----------");

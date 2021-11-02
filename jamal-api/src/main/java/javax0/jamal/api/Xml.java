@@ -2,6 +2,13 @@ package javax0.jamal.api;
 
 import java.util.LinkedHashMap;
 
+/**
+ * This interface contains a lot of classes, which can be used in Yaml data structures that hold XML data.
+ * When a Yaml data has the type of one of these classes then the Yaml module XML converter will create the
+ * appropriate part of the XML. For example, an {@code !!javax0.jamal.api.Xml$ATTR} object will be converted
+ * to an attribute. Each of these classes have an {@code id} as content and nothing else, as there is no need
+ * for anything else.
+ */
 public interface Xml {
 
     class ATTR extends LinkedHashMap<String,String> {
