@@ -209,4 +209,4 @@ A brief introduction is described above on how to start the Jamal processing whe
 {%further debug%}
 
 
-{%#assert:equals /{%dependencies%}/{%depCounter%}/Not all dependencies are documented or some documented dependecy is not there any more%}
+{%#assert:equals /{%dependencies%}/{%depCounter%}/Not all dependencies are documented or some documented dependency is not there any more%}

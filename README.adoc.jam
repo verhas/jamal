@@ -3393,7 +3393,7 @@ It can be found in the separate link:PARAMS.adoc[PARAMS] document.
 
 [[JamalENV]]
 === {%chapter%}Jamal Environment Variables
-
+{%@define fieldFormat=`$value`%}
 You do not need to configure Jamal.
 The environment variables that you may set to modify the behavior of Jamal are documented in this section.
 All environment variables start with the prefix "`JAMAL_`".
@@ -3402,9 +3402,11 @@ The name of the system property is the same as the environment variable lower ca
 For example, for the environment variable `CHECK_STATE`, the system property is `check.state`.
 First, the system property is consulted, and the environment variable has only effect when the system property is not defined.
 
+{%@comment JAMAL_TRACE is defined in a module not on the classpath when this document is compiled.%}\
 * `JAMAL_TRACE` defines the name of the trace file.
 This environment variable is used only when the Java system property `-Djamal.trace=tracefile.xml` is not set.
 
+{%@comment JAMAL_STACK_LIMIT is defined in a module not on the classpath when this document is compiled.%}\
 * `JAMAL_STACK_LIMIT` sets the recursive call depth in macro evaluation.
 Macros may be recursive and in some cases it may create infinite recursive calls in Jamal.
 Try a simple Jamal file that contains `{@define a={a}}{a}`.
@@ -3424,15 +3426,16 @@ It may also happen that you deliberately create complex recursive macros.
 In that case this limit may be too small.
 Set your value to a limit that fits your need.
 
-* `JAMAL_INCLUDE_DEPTH` can set the maximum number of file include nesting. The default value is 100.
+* {%@java:field javax0.jamal.builtins.Include#JAMAL_INCLUDE_DEPTH_ENV%} can set the maximum number of file include nesting. The default value is 100.
 
-* `JAMAL_CHECKSTATE` can switch off macro statefulness checking during macro registration.
+* {%@java:field javax0.jamal.api.Macro#JAMAL_CHECKSTATE_ENV%} can switch off macro statefulness checking during macro registration.
 It is generally recommended that the macros are stateless to support multi-thread evaluation when a single JVM runs multiple Jamal processors in one or more threads.
 If a macro has to have a state, it must be annotated using the annotation `Macro.Stateful`.
 The statelessness or annotation is checked during macro registering since Jamal version 1.8.0.
 You can switch off the functionality if this environment variable is set to `false`.
 It may be needed if you want to use an older, prior 1.8.0 library or a library that does not follow this rule.
 You can also set `System.setProperty(Macro.JAMAL_CHECKSTATE_SYS,"false");` programmatically.
+{%#assert:empty (negate) /{%@java:field javax0.jamal.api.Macro#JAMAL_CHECKSTATE_SYS%}%}\
 It is used in two tests in the 1.8.0 release of Jamal, which uses the 1.7.9 version of the snippet macros to generate the documentation.
 
 
