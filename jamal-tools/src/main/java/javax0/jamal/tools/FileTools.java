@@ -10,6 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static javax0.jamal.tools.Input.makeInput;
 
@@ -101,6 +104,53 @@ public class FileTools {
     }
 
     /**
+     * Environment variable or system property that can define replacement for files.
+     * <p>
+     * The aim of this feature to use a local file during development, and still refer to it using the {@code https://}
+     * URL, which will be the production URL. You want to run tests without pushing the file to a repository, but at
+     * the same time you do not want your code to refer to a dev location to be changed before releasing.
+     * <p>
+     * Only absolute file names can be replaced.
+     * <p>
+     * For example, you include the file {@code https://raw.githubusercontent.com/central7/pom/main/pom.jim}
+     * in your Jamal file, and you can replace it with a local file, like {@code ~/projects/jamal/pom.jim} then you
+     * should set the environment variable
+     *
+     * <pre>{@code
+     * export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.jim=~/github/jamal/pom.jim
+     * }</pre>
+     *
+     * The environment variable {@code JAMAL_DEV_PATH} is a list of {@code =} separated pairs. The list is parsed using
+     * the standard {@link InputHandler#getParts(Input)} method. This is the reason why the first character in the
+     * example is the separator {@code |}.
+     */
+    private static final String JAMAL_DEV_PATH_ENV = "JAMAL_DEV_PATH";
+    private static final String JAMAL_DEV_PATH_SYS = "jamal.dev.path";
+
+    private static final Map<String, String> devPaths = new HashMap<>();
+
+    static {
+        final var devPathString = Optional.ofNullable(System.getProperty(JAMAL_DEV_PATH_SYS)).orElseGet(
+            () -> System.getenv(JAMAL_DEV_PATH_ENV));
+        if (devPathString != null) {
+            try {
+                final String[] paths;
+                paths = InputHandler.getParts(makeInput(devPathString));
+                for (String path : paths) {
+                    final var parts = path.split("=", 2);
+                    if (parts.length == 2) {
+                        devPaths.put(parts[0], parts[1]);
+                    } else {
+                        throw new RuntimeException("Invalid dev path: " + path);
+                    }
+                }
+            } catch (BadSyntaxAt e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
      * Convert the file name to an absolute file name if it is relative to the directory containing the reference file.
      * Note that {@code reference} is the name of a file and not a directory.
      * <p>
@@ -117,7 +167,11 @@ public class FileTools {
      * <p>
      * or starts with the HTTPS prefix {@code https:},
      * <p>
-     * then the file name is absolute and it is returned as it is.
+     * then the file name is absolute.
+     * <p>
+     * Absolute file names are not modified usually. If the environment variable {@code JAMAL_DEV_PATH} is set, or the
+     * system property {@code jamal.dev.path} is set, then the file name is replaced by the value specified as a
+     * replacement in the variable if any.
      * <p>
      * Otherwise the string in the parameter {@code reference} is used as it was a file name (the file does not need to
      * exist) and {@code file} is treated as a relative file name and the absolute path is calculated.
@@ -126,34 +180,43 @@ public class FileTools {
      * @param fileName  the name of the file, absolute or relative
      * @return the absolute file name of the file
      */
-    public static String absolute(final String reference, String fileName) {
+    public static String absolute(final String reference, final String fileName) {
         if (isAbsolute(fileName)) {
-            return fileName;
-        }
-        final var unixedReference = reference == null ? "." : reference.replaceAll("\\\\", "/");
-        final String prefix;
-        final String unprefixedReference;
-        if (unixedReference.startsWith(HTTPS_PREFIX)) {
-            unprefixedReference = unixedReference.substring((HTTPS_PREFIX).length());
-            prefix = HTTPS_PREFIX;
+            return adjustedFileName(devPaths.getOrDefault(fileName, fileName));
         } else {
-            prefix = "";
-            unprefixedReference = unixedReference;
+            final var unixedReference = reference == null ? "." : reference.replaceAll("\\\\", "/");
+            final String prefix;
+            final String unprefixedReference;
+            if (unixedReference.startsWith(HTTPS_PREFIX)) {
+                unprefixedReference = unixedReference.substring((HTTPS_PREFIX).length());
+                prefix = HTTPS_PREFIX;
+            } else {
+                prefix = "";
+                unprefixedReference = unixedReference;
+            }
+            final var referencePath = unprefixedReference.contains("/") ?
+                unprefixedReference.substring(0, unprefixedReference.lastIndexOf("/") + 1)
+                : "";
+            return prefix + Paths.get(referencePath)
+                .resolve(Paths.get(fileName))
+                .normalize()
+                .toString()
+                .replaceAll("\\\\", "/");
         }
-        final var referencePath = unprefixedReference.contains("/") ?
-            unprefixedReference.substring(0, unprefixedReference.lastIndexOf("/") + 1)
-            : "";
-        return prefix + Paths.get(referencePath)
-            .resolve(Paths.get(fileName))
-            .normalize()
-            .toString()
-            .replaceAll("\\\\", "/");
     }
+
+    public static String adjustedFileName(final String fileName){
+        if (fileName.charAt(0) == '~' && fileName.charAt(1) == '/') {
+            return System.getProperty("user.home") + fileName.substring(1);
+        }
+        return fileName;
+    }
+
 
     /**
      * Check if the name of the file has to be interpreted as an absolute filename or not. This is not the same as any
      * JDK provided method, because it checks the {@code res://} and {@code https://} prefix as well and also the {@code
-     * ~/} at the start, which is usually reoved by the shell, but Jamal file handling resolves it so that Jamal files
+     * ~/} at the start, which is usually resolved by the shell, but Jamal file handling resolves it so that Jamal files
      * can also use the {@code ~/... } file format.
      *
      * @param fileName the file name to check.

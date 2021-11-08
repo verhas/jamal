@@ -31,7 +31,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import static javax0.jamal.api.Macro.validIdChar;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
@@ -53,7 +52,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     final private JShellEngine shellEngine = new JShellEngine();
 
-    final private Map<AutoCloseable,AutoCloseable> openResources = new LinkedHashMap<>();
+    final private Map<AutoCloseable, AutoCloseable> openResources = new LinkedHashMap<>();
 
     private final Context context;
 
@@ -256,9 +255,8 @@ public class Processor implements javax0.jamal.api.Processor {
             tr.appendAfterEvaluation(macroProcessed);
             return macroProcessed;
         }
-        macroProcessed = processUdMacroOldStyleOrNone(macroRaw, macroInputBefore);
-        tr.appendAfterEvaluation(macroProcessed);
-        return macroProcessed;
+        tr.appendAfterEvaluation(macroRaw);
+        return macroRaw;
     }
 
     /**
@@ -290,25 +288,6 @@ public class Processor implements javax0.jamal.api.Processor {
      * No operation.
      */
     private void noop() {
-    }
-
-    /**
-     * Process the text of the user defined macro before the macro itself is evaluated. In case the evaluation is
-     * oldStyle (option omasalgotm is defined) then the content IS evaluated. Otherwise the content is not evaluated
-     * here.
-     *
-     * @param macroRaw         the raw macro to be evaluated
-     * @param macroInputBefore the macro content as an Input object
-     * @return the result after the macro body was (or was not) evaluated.
-     * @throws BadSyntax if the content of the macro cannot be evaluated
-     */
-    private String processUdMacroOldStyleOrNone(String macroRaw, Input macroInputBefore)
-        throws BadSyntax {
-        if (option("omasalgotm").isPresent()) {
-            return process(macroInputBefore);
-        } else {
-            return macroRaw;
-        }
     }
 
     private interface Runnable {
@@ -453,9 +432,9 @@ public class Processor implements javax0.jamal.api.Processor {
      *                  after the optional {@code @verbatim} start as well as ! and ` characters.
      * @param tr        is the tracker where the tracking information and warnings are sent
      * @param qualifier is the macro qualifying parameters
-     * @return the string that is the result of the macro evaluation. If the macro is not defined and it is preceded by
+     * @return the string that is the result of the macro evaluation. If the macro is not defined, and it is preceded by
      * a {@code ?} character then the return value is am empty string.
-     * @throws BadSyntax if the macro is not defined and is not preceded by a {@code ?} character or when the some other
+     * @throws BadSyntax if the macro is not defined and is not preceded by a {@code ?} character or when some other
      *                   syntax error is detected.
      */
     private String evalUserDefinedMacro(final Input input, final TraceRecord tr, MacroQualifier qualifier)
@@ -523,13 +502,12 @@ public class Processor implements javax0.jamal.api.Processor {
      * follows several rules.
      * <p>
      * The input the method works with contains the already partially evaluated. If this input has no characters then
-     * the parameter array has zero length. The evaluation and the input splitting also cares the {@code omasalgotm}
-     * option.
+     * the parameter array has zero length.
      *
      * @param tr        record tracer
      * @param qualifier macro evaluation parameters
      * @param ref       the reference to
-     * @param input     the partially evaluated input, depends on the option {@code omasalgotm}
+     * @param input     the partially evaluated input
      * @param macro     the macro for which we evaluate the input for
      * @param id        is the original id of the macro (in case undefined and using default it may be different from
      *                  what {@code macro.getId()} returns.
@@ -539,8 +517,9 @@ public class Processor implements javax0.jamal.api.Processor {
     private String[] getParameters(TraceRecord tr, MacroQualifier qualifier, Position ref, Input input, Evaluable macro, String id) throws BadSyntax {
         final String[] parameters;
         if (input.length() > 0) {
-            var separator = input.charAt(0);
-            if (!qualifier.oldStyle && (macro.expectedNumberOfArguments() == 0 || macro.expectedNumberOfArguments() == 1)) {
+            final var separator = input.charAt(0);
+            final var expectedArgNr = macro.expectedNumberOfArguments();
+            if (expectedArgNr == 0 || expectedArgNr == 1) {// note, that -1 means no limit
                 if (!Character.isLetterOrDigit(separator) && input.indexOf(macros.open()) != 0) {
                     skip(input, 1);
                 }
@@ -549,20 +528,11 @@ public class Processor implements javax0.jamal.api.Processor {
             } else {
                 skip(input, 1);
                 if (Character.isLetterOrDigit(separator)) {
-                    if (qualifier.oldStyle) {
-                        tr.warning("separator character '" + separator + "' is probably a mistake at " +
-                            input.getPosition().file + ":" + input.getPosition().line + ":" + input.getPosition().column);
-                    } else {
-                        throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", input.getPosition());
-                    }
+                    throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", input.getPosition());
                 }
-                if (qualifier.oldStyle) {
-                    parameters = input.toString().split(Pattern.quote("" + separator), -1);
-                } else {
-                    parameters = splitParameterString(input, separator);
-                    for (int i = 0; i < parameters.length; i++) {
-                        parameters[i] = process(makeInput(parameters[i], ref));
-                    }
+                parameters = splitParameterString(input, separator);
+                for (int i = 0; i < parameters.length; i++) {
+                    parameters[i] = process(makeInput(parameters[i], ref));
                 }
             }
         } else {
@@ -573,14 +543,14 @@ public class Processor implements javax0.jamal.api.Processor {
 
     /**
      * If the macro is "default" and the first argument is named {@code $macro} or {@code $_} then add this extra value
-     * to the start of the parameters, so that user defined {@code default} macro will know what th actual name of the
+     * to the start of the parameters, so that user defined {@code default} macro will know what the actual name of the
      * macro was.
      *
      * @param parameters the original parameters of the macro
      * @param macro      the macro we create the parameters for
      * @param id         the original id of the macro that was used in the source code
      * @return the original parameters array in case the macro was defined or the first argument is not {@code $macro}
-     * or {@code $_}. Otherwise the original parameter array pushed one poisition to the right and a new first parameter
+     * or {@code $_}. Otherwise, the original parameter array pushed one poisition to the right and a new first parameter
      * added to the string array containing the name of the original macro, which is not defined.
      */
     private String[] addMacroNameForDefault(String[] parameters, Evaluable macro, String id) {
@@ -650,7 +620,7 @@ public class Processor implements javax0.jamal.api.Processor {
      */
     private Input evaluateMacroStart(Input input, MacroQualifier qualifier) throws BadSyntax {
         final Input output = makeInput("", input.getPosition());
-        if (input.indexOf(macros.open()) == 0 && !qualifier.oldStyle) {
+        if (input.indexOf(macros.open()) == 0) {
             while (input.length() > 0 && input.indexOf(macros.open()) == 0) {
                 skip(input, macros.open());
                 final var macroStart = getNextMacroBody(input);
@@ -940,7 +910,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public AutoCloseable deferredClose(AutoCloseable closer) {
-        if( ! openResources.containsKey(closer)) {
+        if (!openResources.containsKey(closer)) {
             openResources.put(closer, closer);
         }
         return openResources.get(closer);

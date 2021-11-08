@@ -1,0 +1,27 @@
+"error":
+  Input: |-
+    {@define default($_,$x)=[$_ $x]}{aaa}
+  Throws: "Macro 'aaa' needs 2 arguments and got 1.*"
+
+"define a default with one optional argument":
+  Input: |-
+    {@define default($_,...$x)=$_ $x ooo}\
+    {@define szulva(...$x)=szilva $x ooo}\
+    {alma}{korte 33}{szilva |14|15}{szulva |14|15}
+  Output: |-
+    alma  oookorte 33 oooszilva 14|15 oooszilva 14|15 ooo
+
+"define a verbatim default with one optional argument":
+  Input: |-
+    {@define ~ default($_,...$x)=$_ $x {ooo}}\
+    {@define ~ szulva(...$x)=szilva $x {ooo}}\
+    {alma}{korte 33}{szilva |14|15}{szulva |14|15}
+  Output: |-
+    alma  {ooo}korte 33 {ooo}szilva 14|15 {ooo}szilva 14|15 {ooo}
+
+"define a verbatim default with one optional argument posteval":
+  Input: |-
+    {@define ~ default($_,...$x)=$_ $x {ooo}}\
+    {@define ~ szulva(...$x)=szilva $x {ooo}}\
+    {#eval* {alma}{korte 33}{szilva |14|15}{szulva |14|15}}
+  Throws: "eval\\* probably got into an infinite loop"

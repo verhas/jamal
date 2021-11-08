@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -119,7 +118,7 @@ public class Cache {
          * will still work.
          *
          * @param content to be saved into the cache file
-         * @param maps contains the key value pairs that will be saved into the cache properties file
+         * @param maps    contains the key value pairs that will be saved into the cache properties file
          */
         public void save(String content, Map<String, String>... maps) {
             if (cacheExists()) {
@@ -154,22 +153,17 @@ public class Cache {
         }
     }
 
-    private static final String JAMAL_HTTPS_CACHE = "JAMAL_HTTPS_CACHE";
+    private static final String JAMAL_HTTPS_CACHE_ENV = "JAMAL_HTTPS_CACHE";
+    private static final String JAMAL_HTTPS_CACHE_SYS = "jamal.https.cache";
     private static final String DEFAULT_CACHE_ROOT = "~/.jamal/cache/";
     private static final String SNAPSHOT = "SNAPSHOT";
 
     static final Entry NO_CACHE = new Entry(NonexistentFile.INSTANCE, NonexistentFile.INSTANCE);
 
-    private static final File CACHE_ROOT_DIRECTORY;
-
-    static {
-        final var envCacheRoot = System.getenv(JAMAL_HTTPS_CACHE);
-        final var userHome = System.getProperty("user.home");
-
-        final String cacheRoot;
-        cacheRoot = Objects.requireNonNullElse(envCacheRoot, DEFAULT_CACHE_ROOT);
-        CACHE_ROOT_DIRECTORY = new File(cacheRoot.charAt(0) == '~' ? userHome + cacheRoot.substring(1) : cacheRoot);
-    }
+    private static final File CACHE_ROOT_DIRECTORY = new File(
+        Optional.ofNullable(System.getProperty(JAMAL_HTTPS_CACHE_SYS))
+            .or(() -> Optional.ofNullable(System.getenv(JAMAL_HTTPS_CACHE_ENV)))
+            .or(() -> Optional.of(DEFAULT_CACHE_ROOT)).map(FileTools::adjustedFileName).get());
 
 
     /**

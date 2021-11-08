@@ -1,5 +1,7 @@
 package javax0.jamal.tracer;
 
+import javax0.jamal.tools.FileTools;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,13 +25,7 @@ public class TraceDumper {
     }
 
     public void dump(List<TraceRecord> traces, String fileName, Exception ex) {
-        final String adjustedFileName;
-        if (fileName.startsWith("~/")) {
-            adjustedFileName = System.getProperty("user.home") + fileName.substring(2);
-        } else {
-            adjustedFileName = fileName;
-        }
-        dumpXml(traces, adjustedFileName, ex);
+        dumpXml(traces, FileTools.adjustedFileName(fileName), ex);
     }
 
     private void dumpXml(List<TraceRecord> traces, String fileName, Exception ex) {

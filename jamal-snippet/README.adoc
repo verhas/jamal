@@ -1332,7 +1332,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
-- SnipCheck.java: 3,832 bytes
+- SnipCheck.java: 3,811 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -1484,7 +1484,7 @@ will result in the output
 
 [source]
 ----
-2021-11-06 17:04:41
+2021-11-08 16:15:43
 ----
 
 

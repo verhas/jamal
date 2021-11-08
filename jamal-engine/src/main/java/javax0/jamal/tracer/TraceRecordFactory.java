@@ -6,6 +6,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 
 public class TraceRecordFactory {
     final List<TraceRecord> traces = new ArrayList<>();
@@ -21,12 +22,8 @@ public class TraceRecordFactory {
     private int level = 0;
 
     public TraceRecordFactory() {
-        final var sysProp = System.getProperty(JAMAL_TRACE_SYS);
-        if (sysProp != null) {
-            traceFile = sysProp;
-        } else {
-            traceFile = System.getenv(JAMAL_TRACE_ENV);
-        }
+        traceFile = Optional.ofNullable(System.getProperty(JAMAL_TRACE_SYS)).orElseGet(
+            () -> System.getenv(JAMAL_TRACE_ENV));
     }
 
     public TraceRecord openUserDefinedMacroRecord(Position position) {

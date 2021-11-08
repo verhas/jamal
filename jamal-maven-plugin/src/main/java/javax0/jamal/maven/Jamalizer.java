@@ -13,38 +13,14 @@ import java.util.stream.Collectors;
 
 class Jamalizer {
     void jamalize() throws IOException {
-        for (final Path pp : Files.walk(Path.of(".")).filter(this::isProjectDir).collect(Collectors.toList())) {
-            renameAndCreate(pp);
+        final Path newDir = createMvnDir(Path.of("."));
+        writeExtensionsFile(newDir);
+        for (final Path pp : Files.walk(Path.of(".")).collect(Collectors.toList())) {
+            createNewPomJam(pp);
         }
     }
 
     final static String[] fileNames = {"pom.xml", "pom.xml.jam", "pom.jam"};
-
-    /**
-     *
-     * @param p the directory
-     * @return true if {@code p} is a directory and is a project directory.
-     * More specifically if it has a file named {@code pom.xml}, {@code pom.xml.jam} or {@code pom.jam}
-     */
-    private boolean isProjectDir(Path p) {
-        if (p.toFile().isDirectory()) {
-            final var fn = p.toFile().getAbsolutePath();
-            for (final var s : fileNames) {
-                if (Files.exists(Paths.get(fn, s))) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            return false;
-        }
-    }
-
-    private void renameAndCreate(Path p) throws IOException {
-        final Path newDir = createMvnDir(p);
-        writeExtensionsFile(newDir);
-        createNewPomJam(p);
-    }
 
     /**
      * If neither {@code pom.xml.jam}, nor {@code pom.jam} exists in the directory then create a new {@code pom.jam}

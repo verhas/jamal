@@ -138,4 +138,14 @@ public class TestCore {
         return JamalYamlTest.factory(
             "TestDefer");
     }
+
+    @TestFactory
+    JamalTests<?> testAllCoreMacrosO() {
+        return JamalYamlTest.factory(
+            "TestImport");
+    }    @TestFactory
+    JamalTests<?> testAllCoreMacrosP() {
+        return JamalYamlTest.factory(
+            "TestDefineDefault");
+    }
 }

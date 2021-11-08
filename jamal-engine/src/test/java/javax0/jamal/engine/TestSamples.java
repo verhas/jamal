@@ -128,12 +128,4 @@ class TestSamples {
             assertEquals("apple", result("eval.jam"));
         }
     }
-
-    @Test
-    void testErrorLineReport() {
-        final var thrown = assertThrows(BadSyntaxAt.class, () -> result("fail.deep.jam"));
-        Assertions.assertEquals(3, thrown.getPosition().line);
-        Assertions.assertEquals(5, thrown.getPosition().column);
-    }
-
 }

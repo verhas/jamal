@@ -22,7 +22,6 @@ public class MacroQualifier {
     public final boolean isVerbatim;
     public final boolean isBuiltIn;
     public final Macro macro;
-    public final boolean oldStyle;
     public int postEvalCount;
     public final Processor processor;
     private final String NOT_USED = null;
@@ -32,7 +31,6 @@ public class MacroQualifier {
         this.processor = processor;
         this.input = input;
         this.postEvalCount = postEvalCount;
-        this.oldStyle = OptionsStore.getInstance(processor).is("omasalgotm");
         if (macroIsBuiltIn(input)) {
             skip(input, 1);
             skipWhiteSpaces(input);

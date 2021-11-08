@@ -239,7 +239,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      * Get the user defined macro. In case the macro is a global macro (contains a `:` in the name) then look for it in
      * the top level scope. Without this the macros cannot be used in the {@code :a} form, which is rarely a problem,
      * but with the introduction of the macro {@code undefine} when a macro is undefined on one level then it is not
-     * possible any more to refer to the global macro from a scope that is below.
+     * possible anymore to refer to the global macro from a scope that is below.
      *
      * @param id  the identifier (name) of the macro
      * @param <T> the subtype of the identified macro stored

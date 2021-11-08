@@ -1,6 +1,16 @@
 {@import https://raw.githubusercontent.com/central7/pom/main/pom.jim}
 {@import version.jim}
-{@define default($_,$x)=<$_>{#if |$x|$x</$_>}}
+{@define taglets($x)=<taglets>$x</taglets>}
+{@define taglet($x)=<taglet>$x</taglet>}
+{@define tagletArtifacts($x)=<tagletArtifacts>$x</tagletArtifacts>}
+{@define tagletArtifact($x)=<tagletArtifact>$x</tagletArtifact>}
+{@define tagletClass($x)=<tagletClass>$x</tagletClass>}
+{@define additionalOptions($x)=<additionalOptions>$x</additionalOptions>}
+{@define additionalOption($x)=<additionalOption>$x</additionalOption>}
+{@define docletArtifact($x)=<docletArtifact>$x</docletArtifact>}
+{@define doclet($x)=<doclet>$x</doclet>}
+{@define doclint($x)=<doclint>$x</doclint>}
+
 {project jamal-parent}
     {packaging pom}
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
@@ -40,7 +50,7 @@
                         {docletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}}
                         {additionalOptions
                             {additionalOption |--source-root}
-                            {additionalOption {```````@escape ``${project.build.sourceDirectory}``}}
+                            {additionalOption {@escape* ``${project.build.sourceDirectory}``}}
                         }
                         {taglets|
                             {taglet|

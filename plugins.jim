@@ -1,11 +1,8 @@
-{plugin|{GAV :org.apache.maven.plugins:maven-source-plugin:}}
-{plugin|{GAV :org.apache.maven.plugins:maven-javadoc-plugin: }}
-{plugin|{GAV :org.sonatype.plugins:nexus-staging-maven-plugin: }}
 {plugin|{GAV :org.apache.maven.plugins:maven-surefire-plugin:}
-    {#if`///`{?openForTests}///
+    {#if`///`{#ident {@undefine default}{?openForTests}}///
         {configuration|
             <argLine>
-                {?openForTests}
+                {#ident {@undefine default}{?openForTests}}
             </argLine>
         }///
     }

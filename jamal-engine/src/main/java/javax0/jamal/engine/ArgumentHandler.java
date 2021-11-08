@@ -6,6 +6,7 @@ import javax0.jamal.api.Identified;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -30,7 +31,7 @@ class ArgumentHandler {
 
     public ArgumentHandler(Identified owner, String[] parameters) throws BadSyntax {
         this.owner = owner;
-        if( parameters.length == 1 && parameters[0].equals(ELIPSIS)){
+        if (parameters.length == 1 && parameters[0].equals(ELIPSIS)) {
             min = 0;
             max = Integer.MAX_VALUE;
             this.parameters = new String[0];
@@ -103,11 +104,17 @@ class ArgumentHandler {
                     if (actualValues.length < min || actualValues.length > max) {
                         final BadSyntax badSyntax;
                         if (min == max) {
-                            badSyntax = new BadSyntax(format("Macro '%s' needs %d arguments and got %d",
-                                owner.getId(), parameters.length, actualValues.length));
+                            if (Objects.equals(owner.getId(), Identified.DEFAULT_MACRO) && parameters.length > 0 &&
+                                (parameters[0].equals(Identified.MACRO_NAME_ARG1) || parameters[0].equals(Identified.MACRO_NAME_ARG2))) {
+                                badSyntax = new BadSyntax(format("Macro '%s' needs %d arguments and got %d",
+                                    actualValues[0], parameters.length, actualValues.length));
+                            } else {
+                                badSyntax = new BadSyntax(format("Macro '%s' needs %d arguments and got %d",
+                                    owner.getId(), parameters.length, actualValues.length));
+                            }
                         } else {
                             badSyntax = new BadSyntax(format("Macro '%s' needs (%s ... %s) arguments and got %d",
-                                owner.getId(), ""+min, (max == Integer.MAX_VALUE ? "inf" : "" + max), actualValues.length));
+                                owner.getId(), "" + min, (max == Integer.MAX_VALUE ? "inf" : "" + max), actualValues.length));
                         }
                         for (final var actual : actualValues) {
                             badSyntax.parameter(actual);

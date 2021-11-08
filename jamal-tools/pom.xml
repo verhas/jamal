@@ -18,7 +18,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-        --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
+                --add-opens jamal.tools/javax0.jamal.tools=ALL-UNNAMED
         --add-opens jamal.tools/javax0.jamal.tools.param=ALL-UNNAMED
             </argLine>
                 </configuration>

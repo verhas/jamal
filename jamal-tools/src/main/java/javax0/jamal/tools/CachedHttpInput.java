@@ -5,18 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 class CachedHttpInput {
-    private static final String JAMAL_CONNECT_TIMEOUT = "JAMAL_CONNECT_TIMEOUT";
-    private static final String JAMAL_READ_TIMEOUT = "JAMAL_READ_TIMEOUT";
+    private static final String JAMAL_CONNECT_TIMEOUT_ENV = "JAMAL_CONNECT_TIMEOUT";
+    private static final String JAMAL_CONNECT_TIMEOUT_SYS = "jamal.connect.timeout";
+    private static final String JAMAL_READ_TIMEOUT_ENV = "JAMAL_READ_TIMEOUT";
+    private static final String JAMAL_READ_TIMEOUT_SYS = "jamal.read.timeout";
     private static final int CONNECT_TIMEOUT;
     private static final int READ_TIMEOUT;
 
     static {
-        final var connTimeout = System.getenv(JAMAL_CONNECT_TIMEOUT);
+        final var connTimeout = Optional.ofNullable(System.getProperty(JAMAL_CONNECT_TIMEOUT_SYS)).orElseGet(
+            () -> System.getenv(JAMAL_CONNECT_TIMEOUT_ENV));
         if (connTimeout != null) {
             CONNECT_TIMEOUT = Integer.parseInt(connTimeout);
         } else {
@@ -25,7 +28,8 @@ class CachedHttpInput {
     }
 
     static {
-        final var readTimeout = System.getenv(JAMAL_READ_TIMEOUT);
+        final var readTimeout = Optional.ofNullable(System.getProperty(JAMAL_READ_TIMEOUT_SYS)).orElseGet(
+            () -> System.getenv(JAMAL_READ_TIMEOUT_ENV));
         if (readTimeout != null) {
             READ_TIMEOUT = Integer.parseInt(readTimeout);
         } else {
@@ -84,13 +88,13 @@ class CachedHttpInput {
      */
     private static BufferedReader getBufferedReader(URL url) throws IOException {
         final var con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET" );
+        con.setRequestMethod("GET");
         con.setConnectTimeout(CONNECT_TIMEOUT);
         con.setReadTimeout(READ_TIMEOUT);
         con.setInstanceFollowRedirects(true);
         final int status = con.getResponseCode();
         if (status != 200) {
-            throw new IOException("GET url '" + url.toString() + "' returned " + status);
+            throw new IOException("GET url '" + url + "' returned " + status);
         }
         return new HttpBufferedReader(
             new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8), con);

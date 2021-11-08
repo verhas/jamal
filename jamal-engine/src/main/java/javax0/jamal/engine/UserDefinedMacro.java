@@ -111,7 +111,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
             root = createSegmentList();
         }
         final var output = new StringBuilder(segmentsLengthSum(root, values));
-        final String sep = pure || OptionsStore.getInstance(processor).is("omasalgotm") ||
+        final String sep = pure ||
             (openStr.equals(processor.getRegister().open()) && closeStr.equals(processor.getRegister().close()))
             ? null :
             "`" + new SeparatorCalculator("abcdefghijklmnopqsrtxvyz")
