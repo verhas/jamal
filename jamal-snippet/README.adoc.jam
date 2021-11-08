@@ -145,6 +145,37 @@ end snippet
 
 lines.
 
+A special snippet containing only a single line can be specified preceeding it with a line
+
+[source]
+----
+snipline name
+----
+
+In this case there is no need for `end snippet` line.
+This way
+
+[source]
+----
+// snippet MY_CONSTANT_SNIPPET_NAME
+  public static final MY_CONSTANT = "Hello World";
+// end snippet
+----
+
+is the same as
+
+[source]
+----
+// snipline MY_CONSTANT_SNIPPET_NAME
+  public static final MY_CONSTANT = "Hello World";
+----
+
+[NOTE]
+====
+The only difference is that the first version will contain a line with a trailing `\n` at the end of the line.
+The `snipline` version does not contain the trailing `\n`.
+====
+
 There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
 The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.
 
@@ -197,38 +228,16 @@ The snippets can be used later using the <<snip,`snip`>> macro.
 
 The output of the `collect` macro is an empty string.
 
-The macro's input contains parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in <<{%@file ../PARAMS.adoc%},PARAMS>>.
-The parameters are `from`, `start`, `stop`, `include`, `exclude`, `onceAs`.
+The macro behaviour can be altered using options.
+These options are parsed using the Standard Parameter Parsing as defined in <<{%@file ../PARAMS.adoc%},PARAMS>>.
 
-The snippet start and end matching regular expression can be redefined.
-If the parameter `start` is defined, its value will be used as a snippet start matching regular expression.
-It must have one collection group.
-If the parameter `stop` is defined, then its value will be used as snippet end matching regular expression.
+{%#eval {%`@comment%}
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*?)\".*~* `$1`~.*//~"
+{%@snip collect_options%}
+%}%}
 
-You can also control the collection of the files using parameters.
-The parameters `include` and `exclude` can define regular expressions.
-Only the files that match the regular expression specified by `include` and do not match the one set by `exclude` are collected when defined.
-
-It is enough if the regular expressions match a part of the line or the file name.
-
-For example, the test file
-
-[source]
-----
-{%@include ./src/test/resources/javax0/jamal/snippet/test3.jam%}
-----
-
-excludes any file that contains the character `2` in its name.
-
-You can use the parameter `onceAs` to avoid repeated snippet collections.
-Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
-At a certain point, it may happen that Jamal already collected the snippets you need.
-Collecting it again would be erroneous.
-When snippets are collected, you cannot redefine a snippet.
-If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
-If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
-It was already collected.
+If the parameter `start` or `liner` are defined, the value will be used as a snippet start matching regular expression.
+They must have one collection group.
 
 NOTE: We introduced this option to the `snip:collect` macro along with the Jamal doclet implementation.
 When the individual documentation parts are processed in the same processor, the processing order is not guaranteed.
@@ -1191,7 +1200,7 @@ will result
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
 - FilesMacro.java: 4,791 bytes
-- Collect.java: 5,504 bytes
+- Collect.java: 8,007 bytes
 - TrimLines.java: 3,687 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes

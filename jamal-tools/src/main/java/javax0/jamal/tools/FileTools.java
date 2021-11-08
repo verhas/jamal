@@ -124,7 +124,9 @@ public class FileTools {
      * the standard {@link InputHandler#getParts(Input)} method. This is the reason why the first character in the
      * example is the separator {@code |}.
      */
+    // snipline JAMAL_DEV_PATH_ENV
     private static final String JAMAL_DEV_PATH_ENV = "JAMAL_DEV_PATH";
+    // snipline JAMAL_DEV_PATH_SYS
     private static final String JAMAL_DEV_PATH_SYS = "jamal.dev.path";
 
     private static final Map<String, String> devPaths = new HashMap<>();

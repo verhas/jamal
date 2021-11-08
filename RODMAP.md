@@ -14,10 +14,10 @@ and the list is not a promise or guarantee.
 
 - Implement Yaml data exporting in XML format. No attributes in this case, but that is perfect for XMLs like POM files,
   and it makes possible to use Yaml structural composition for POM files and other XML formats that do not use
-  attributes.
+  attributes. (DONE)
 
 - Implement breakpoints in Jamal debugger. A Jamal breakpoint is a string, and the execution in the debugger stops when
-  the string is part of the next part to be executed.
+  the string is part of the next part to be executed. (DONE)
 
 - Implement JSON reading and writing and structural construction similar to Yaml.
 

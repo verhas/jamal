@@ -82,7 +82,7 @@ You have less chance forgetting the documentation update related to that feature
 Jamal will fetch the documentation from the file, transform it to fit the output format and generate up-to-date compiled documentation.
 
 * You can embed Plant UML diagram text definition into your documentation source.
-The Plant UML acro extension will generate the diagrams and create the image reference into the output document.
+The Plant UML macro extension will generate the diagrams and create the image reference into the output document.
 Some document format support embedding Plant UML.
 Using Jamal you can embed Plant UML into any textual documentation format.
 Because the diagram description is part of a Jamal macro processed source you can use Jamal macros in the diagrams.
@@ -3875,7 +3875,7 @@ The environment variables that you may set to modify the behavior of Jamal are d
 All environment variables start with the prefix "`JAMAL_`".
 For every environment variable, there is a corresponding system property.
 The name of the system property is the same as the environment variable lower case converted and replacing the `_` to `.` characters.
-For example, for the environment variable `CHECK_STATE`, the system property is `check.state`.
+For example, for the environment variable `JAMAL_CHECK_STATE`, the system property is `jamal.check.state`.
 First, the system property is consulted, and the environment variable has only effect when the system property is not defined.
 
 * `JAMAL_TRACE` defines the name of the trace file.
@@ -3911,6 +3911,17 @@ It may be needed if you want to use an older, prior 1.8.0 library or a library t
 You can also set `System.setProperty(Macro.JAMAL_CHECKSTATE_SYS,"false");` programmatically.
 It is used in two tests in the 1.8.0 release of Jamal, which uses the 1.7.9 version of the snippet macros to generate the documentation.
 
+* `JAMAL_DEV_PATH` can define file replacements.
+It may happen that you want to develop a macro package.
+The package will be deployed to a repository and will have a file name of the form `https://myServer.com/myfile.jim`.
+While you develop the package you want to test it locally and you do not want to deploy it to the server for every test run.
+Still you want to use the final URL to reference the file.
+Using this environment variable you can list the files that should be replaced.
+Each entry in the variable has the format `file name=replacement file name`.
+No spaces are allowed or stripped off.
+The entries are separated using the <<argsplit,Standard Built-In Macro Argument Splitting>>.
+Only absolute file names can be replaced.
+Do not forget to `unset` the variable after use to avoid surprises.
 
 [[httpsres]]
 === 7. Resource Files and Web Resources

@@ -39,15 +39,43 @@ public class Collect implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var reference = in.getReference();
+        // snippet collect_options
         final var include = Params.<Predicate<String>>holder("include").orElse(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
+        // can define a regular expression. Only those files will be collected that match partially the regular expression.
         final var exclude = Params.<Predicate<String>>holder("exclude").orElse(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
+        // can define a regular expression. Only those files will be collected that do not match partially the regular expression.
+        // For example, the test file
+        //
+        //[source]
+        //----
+        //    {%@include ./src/test/resources/javax0/jamal/snippet/test3.jam%}
+        //----
+        //
+        //excludes any file that contains the character `2` in its name.
+        //
         final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
+        // can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
+        final var liner = Params.<Pattern>holder("liner").orElse("snipline\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
+        // can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
         final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").as(Pattern::compile);
+        // can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
         final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
+        // can limit the directory traversing to a certain depth.
         final var from = Params.<String>holder("from").as(s -> FileTools.absolute(reference, s));
+        // can specify the start directory for the traversing.
         final var setName = Params.<String>holder(null, "onceAs").orElseNull();
+        // You can use the parameter `onceAs` to avoid repeated snippet collections.
+        // Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
+        // At a certain point, it may happen that Jamal already collected the snippets you need.
+        // Collecting it again would be erroneous.
+        // When snippets are collected, you cannot redefine a snippet.
+        // If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
+        // If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
+        // It was already collected.
+
+        // end snippet
         Params.using(processor).from(this)
-            .tillEnd().keys(include, exclude, start, stop, from, scanDepth, setName).parse(in);
+            .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
         if (store.testAndSet(setName.get())) {
@@ -55,12 +83,12 @@ public class Collect implements Macro, InnerScopeDependent {
         }
         final var fromFile = new File(from.get());
         if (fromFile.isFile()) {
-            harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start.get(), stop.get());
+            harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start.get(), liner.get(), stop.get());
         } else {
             try {
                 for (final var file : files(from.get(), scanDepth.get()).map(p -> p.toAbsolutePath().toString())
                     .filter(include.get()).filter(exclude.get()).collect(Collectors.toSet())) {
-                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), stop.get());
+                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), liner.get(), stop.get());
                 }
             } catch (IOException e) {
                 throw new BadSyntax("There is some problem collecting snippets from files under '" + from.get() + "'", e);
@@ -69,7 +97,7 @@ public class Collect implements Macro, InnerScopeDependent {
         return "";
     }
 
-    private void harvestSnippets(String file, SnippetStore store, Pattern start, Pattern stop) throws BadSyntax {
+    private void harvestSnippets(String file, SnippetStore store, Pattern start, Pattern liner, Pattern stop) throws BadSyntax {
         var state = State.OUT;
         String id = "";
         StringBuilder text = new StringBuilder();
@@ -81,15 +109,23 @@ public class Collect implements Macro, InnerScopeDependent {
                 switch (state) {
                     case OUT:
                         final var startMatcher = start.matcher(line);
+                        final var linerMatcher = liner.matcher(line);
                         if (startMatcher.find()) {
                             id = startMatcher.group(1);
                             text.delete(0, text.length());
                             startLine = lineNr;
                             state = State.IN;
-                            break;
-                        } else {
-                            break;
+                        } else if (linerMatcher.find()) {
+                            id = linerMatcher.group(1);
+                            text.delete(0, text.length());
+                            line = br.readLine();
+                            lineNr++;
+                            if (line == null) {
+                                throw new BadSyntax("'snipline " + id + "' is on the last line of the file '" + file + "'");
+                            }
+                            store.snippet(id, line, new Position(file, lineNr));
                         }
+                        break;
                     case IN:
                         final var stopMatcher = stop.matcher(line);
                         if (stopMatcher.find()) {
