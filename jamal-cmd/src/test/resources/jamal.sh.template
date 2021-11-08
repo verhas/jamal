@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-{@import ../version.jim}\
+{#import {ROOT}/version.jim}\
 MODULES="api engine core tools cmd"
 REPO=$HOME/.m2/repository
 REPO_JAMAL=$REPO/com/javax0/jamal

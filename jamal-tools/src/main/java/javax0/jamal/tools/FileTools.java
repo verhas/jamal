@@ -119,7 +119,7 @@ public class FileTools {
      * <pre>{@code
      * export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.jim=~/github/jamal/pom.jim
      * }</pre>
-     *
+     * <p>
      * The environment variable {@code JAMAL_DEV_PATH} is a list of {@code =} separated pairs. The list is parsed using
      * the standard {@link InputHandler#getParts(Input)} method. This is the reason why the first character in the
      * example is the separator {@code |}.
@@ -190,6 +190,9 @@ public class FileTools {
             if (unixedReference.startsWith(HTTPS_PREFIX)) {
                 unprefixedReference = unixedReference.substring((HTTPS_PREFIX).length());
                 prefix = HTTPS_PREFIX;
+            } else if (unixedReference.startsWith(RESOURCE_PREFIX)) {
+                unprefixedReference = unixedReference.substring((RESOURCE_PREFIX).length());
+                prefix = RESOURCE_PREFIX;
             } else {
                 prefix = "";
                 unprefixedReference = unixedReference;
@@ -205,7 +208,7 @@ public class FileTools {
         }
     }
 
-    public static String adjustedFileName(final String fileName){
+    public static String adjustedFileName(final String fileName) {
         if (fileName.charAt(0) == '~' && fileName.charAt(1) == '/') {
             return System.getProperty("user.home") + fileName.substring(1);
         }

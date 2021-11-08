@@ -44,8 +44,8 @@ public class TestCreateStarters {
 
     @Test
     void testCreateTheJBangStarterFile() throws Exception {
-        final var content = TestThat.theInput("{@include res:jbang.template}").results();
         final var root = getDirectory();
+        final var content = TestThat.theInput("{@include res:jbang.template}").define("ROOT",root).results();
         final var version = new Properties();
         Processor.jamalVersion(version);
         final var versionString = version.getProperty("version");
@@ -60,8 +60,8 @@ public class TestCreateStarters {
 
     @Test
     void testCreateJamalSh() throws Exception {
-        final var content = TestThat.theInput("{@include res:jamal.sh.template}").results();
         final var root = getDirectory();
+        final var content = TestThat.theInput("{@include res:jamal.sh.template}").define("ROOT",root).results();
         final var version = new Properties();
         Processor.jamalVersion(version);
         final var versionString = version.getProperty("version");
