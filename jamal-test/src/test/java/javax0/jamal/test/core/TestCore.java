@@ -2,6 +2,8 @@ package javax0.jamal.test.core;
 
 import javax0.jamal.testsupport.JamalTests;
 import javax0.jamal.testsupport.JamalYamlTest;
+import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 public class TestCore {
@@ -139,11 +141,24 @@ public class TestCore {
             "TestDefer");
     }
 
+    @Test
+    void testWindows() {
+        try {
+            TestThat.theInput(
+                "{@import res:import/included_as_resource.jim}\n" +
+                    "{hello World}{hella me}").results("\\nHello, World!Hella, me!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @TestFactory
     JamalTests<?> testAllCoreMacrosO() {
         return JamalYamlTest.factory(
             "TestImport");
-    }    @TestFactory
+    }
+
+    @TestFactory
     JamalTests<?> testAllCoreMacrosP() {
         return JamalYamlTest.factory(
             "TestDefineDefault");
