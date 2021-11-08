@@ -6,7 +6,7 @@
     java-version: '17'
     distribution: 'adopt'
 - name: Build with Maven
-  run: mvn -B -X package
+  run: mvn -B package
 %}
 
 {%@define job($env,...$name)={%@if/$name/$name/$env%}:
@@ -25,8 +25,9 @@ name: Java CI with Maven
 jobs:
   {%job/ubuntu-latest%}
   {%job/windows-latest%}
-  {%job/windows-2016%}
+  {%job/windows-2022%}
   {%job/ubuntu-18.04/ubuntu-18%}
   {%job/macos-latest%}
+  {%job/macos-11%}
 %}
 {%@yaml:output (copy) top%}
