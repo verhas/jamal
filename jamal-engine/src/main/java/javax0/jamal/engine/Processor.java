@@ -43,6 +43,10 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 public class Processor implements javax0.jamal.api.Processor {
 
     private static final String[] ZERO_STRING_ARRAY = new String[0];
+    // snipline NO_UNDEFAULT
+    public static final String NO_UNDEFAULT = "noUndefault";
+    // snipline EMPTY_UNDEF
+    public static final String EMPTY_UNDEF = "emptyUndef";
 
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
 
@@ -444,7 +448,7 @@ public class Processor implements javax0.jamal.api.Processor {
         final boolean reportUndefBeforeEval = doesStartWithQuestionMark(input);
         final Input evaluatedInput = evaluateMacroStart(input, qualifier);
         final boolean reportUndefAfterEval = doesStartWithQuestionMark(evaluatedInput);
-        final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval;
+        final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval && !option(EMPTY_UNDEF).isPresent();
         skipWhiteSpaces(evaluatedInput);
 
         final String id = fetchId(evaluatedInput);
@@ -453,10 +457,16 @@ public class Processor implements javax0.jamal.api.Processor {
             throw new BadSyntaxAt("Zero length user defined macro name was found.", ref);
         }
         skipWhiteSpaces(evaluatedInput);
-
-        final var udMacroOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO)
+        final Optional<Identified> identifiedOpt;
+        if (reportUndef || !option(NO_UNDEFAULT).isPresent()) {
+            identifiedOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO);
+        } else {
+            identifiedOpt = macros.getUserDefined(id);
+        }
+        final Optional<Evaluable> udMacroOpt = identifiedOpt
             .filter(ud -> ud instanceof Evaluable)
             .map(ud -> (Evaluable) ud);
+
         if (reportUndef && udMacroOpt.isEmpty()) {
             throwForUndefinedUdMacro(ref, id);
         }
@@ -475,14 +485,15 @@ public class Processor implements javax0.jamal.api.Processor {
         } else {
             return "";
         }
+
     }
 
     /**
      * Throw an exception with an error message telling that the user defined macro was not found. While creating the
      * error message the code also checks if there is a built-in macro with the same name. In that case the error
-     * message warns the user that probablythe leading {@code #} or {@code @} was only missing.
+     * message warns the user that probably the leading {@code #} or {@code @} was only missing.
      *
-     * @param ref the reference to include in the excepetion that shows which jamal file, line and column was the error
+     * @param ref the reference to include in the exception that shows which jamal file, line and column was the error
      *            at
      * @param id  the identifier of the macro that was not found
      * @throws BadSyntaxAt always, this is the main purpose of this method

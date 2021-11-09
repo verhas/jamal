@@ -393,6 +393,14 @@ conditional redefinition does not redefine any higher scope already defined macr
     {a}
     this is it
 
+"undefined macro with ? mark results empty string":
+  Input: "{?a}"
+  Output: ""
+
+"undefined macro without ? mark results empty string when option emptyUndef":
+  Input: "{@options emptyUndef}{a}"
+  Output: ""
+
 "When there is an undefined macro during the evaluation of a macro the mark stack is not messed up 1":
   Input: "{@try! {@define a={@undefined}}{a}}"
   Output: "There is no built-in macro with the id 'undefined'"

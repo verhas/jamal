@@ -25,3 +25,9 @@
     {@define ~ szulva(...$x)=szilva $x {ooo}}\
     {#eval* {alma}{korte 33}{szilva |14|15}{szulva |14|15}}
   Throws: "eval\\* probably got into an infinite loop"
+
+"undefined macros use default or can be empty string when using ? before the macro depending on the option emptyUndef":
+  Input: |-
+    {@define default=THIS IS DEFAULT}\
+    {?undefinedMacro}{@options noUndefault}>>{?undefinedMacro}<<{@options ~noUndefault}{?undefinedMacro}
+  Output: "THIS IS DEFAULT>><<THIS IS DEFAULT"

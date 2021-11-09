@@ -1100,9 +1100,9 @@ It defines a scope local macro, which gets out of scope with the macro `end`.
 
 When a user-defined macro is used, the parameters are defined after the name of the macro.
 In the case of user-defined macros, there is no `@` or `#` in front of the name of the macro.
-Optionally there may be a `?` character before the macro name.
+Optionally there may be a `?` character.
 In that case, the result of an undefined user macro will be the empty string.
-Any other use of an undefined user macro results an error.
+In most other cases using an undefined user macro results an error.
 
 [source]
 ----
@@ -1120,6 +1120,23 @@ this is empty string >><<
 
 
 NOTE: The <<try,`try`>> built-in macro is mainly for debugging purposes and returns the error message itself.
+
+If you automatically want to interpret all user defined macro reference if there was a `?` in front of them then you can use the option `emptyUndef`.
+With this option there is no need for the `?` in front of the macro name, every undefined macro will evaluate to empty string.
+
+[source]
+----
+{@options emptyUndef}>{?notDefined}<>{notDefined}<
+----
+
+results
+
+[source]
+----
+><><
+----
+
+
 
 ===== Default macro
 
@@ -1142,6 +1159,46 @@ Result:
 >><<
 wupppss
 >>wupppss<<
+----
+
+
+[NOTE]
+====
+During the design there were two possibilities.
+One, to let the `{?...}` macro use perform the same way as if there was no defined `default` macro.
+The other, to let the `{?...}` use the `default` macro.
+We selected the second option because in that case there is a fallback.
+You can simply write `{#ident {@undefine default}{?...}}`.
+If we selected the first option, then the `{?...}` macro would not have and alternative way to use the default macro.
+====
+
+[source]
+----
+{@define default=wupppss}\
+{#ident {@undefine default}>>{?hoppala}<<}>>{?hoppala}<<
+----
+
+results
+
+[source]
+----
+>><<>>wupppss<<
+----
+
+
+Because it is cumbersome to write `{#ident {@undefine default}{?...}}` every time the option `noUndefault` can also be used.
+
+[source]
+----
+{@define default=wupppss}\
+{@options noUndefault}>>{?hoppala}<<{@options ~noUndefault}>>{?hoppala}<<
+----
+
+results
+
+[source]
+----
+>><<>>wupppss<<
 ----
 
 
@@ -2083,7 +2140,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
 ----
 
 
