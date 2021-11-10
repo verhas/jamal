@@ -40,7 +40,7 @@ public class TestSnippet {
         TestThat.theInput("{@snip:define snippet1=    \n" +
                 "thjs is the content of the snippet}" +
                 "{@snip:check hash=47ee01 id=snippet1}")
-            .throwsBadSyntax(".*The snippet 'snippet1' hash is '55f950595d9c5e656dbca254b682a4ddeab580ad1fe8c95a3d1ffd230d35c97e' does not end with '47ee01'\\..*");
+            .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}' does not contain '47ee01'\\..*");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class TestSnippet {
         TestThat.theInput("{@snip:define snippet1=    \n" +
                 "this is the content of the snippet}" +
                 "{@snip:check hash=\"\" id=snippet1}")
-            .throwsBadSyntax(".*The snippet 'snippet1' hash is 'b0a2c1555ec779acfdfd3d09190921adcd4a8efdbe536993cf48112a7d47ee01'\\..*");
+            .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}'\\..*");
     }
 
     @Test

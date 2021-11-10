@@ -428,56 +428,43 @@ If the regular expression is not found in the first line of the snippet, or ther
 ==== {%macroChapter%}`snip:check`
 {%@comment
 
-This is a simple demonstration of snip check that checks both the snippet and the whole file.
-This check does not get into the processed output, but if you read this then you see a real life example use of snip:check.
+This code below is a simple demonstration of a snip check that checks both the snippet and the whole file.
+This check does not get into the processed output, but if you read this, you see a real-life example of snip:check.
 
 %}\
-{%@snip:check hash=510544d646a157743ea339ef81f0cddc6987d042727e69d631090303adabf318 id=SnipCheck%}\
-{%@snip:check hash=61a3ac5821d6aa0a67741d1dfbed97fc97e754f9bf035fd82553f2893861581e file=src/main/java/javax0/jamal/snippet/SnipCheck.java%}\
-{%@snip:check lines=77 id=SnipCheck%}\
-{%@snip:check lines=89 file=src/main/java/javax0/jamal/snippet/SnipCheck.java%}\
+{%@snip:check hash=4039b33b.289A44B3
+              file=src/main/java/javax0/jamal/snippet/SnipCheck.java
+              message="Review the whole chapter of 'snip:check'"
+%}\
 
 You can use this macro to enforce consistency between the documented system and the documentation.
-Using this macro will nudge the maintainer to check the relevant part of the document when the documented code changes.
-The macro itself will not update the documentation but will warn with an error if some part of the application needs update.
+Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
+The macro itself will not update the documentation.
+It will warn with an error if some part of the documentation needs update due to changed application code.
 That way, the document may remain up-to-date, and you will not forget to update it.
 
 To use the macro, you should first select some part of the code.
-This part can be a snippet or a whole source file.
-If you have code surrounded by {%@define specialCodeToCheck=specialCodeToCheck%}
+This part can be one or more snippets and whole source files.
+You specify file names using the `file` or `files` option of the macro.
+Snippets are specified using the `id` or `ids` option.
+You can define one or more files and snippets at the same time.
+The values are comma-separated.
 
 [source,text]
 ----
-snippet {%specialCodeToCheck%}
-  ...
-end snippet
+{@snip:check hash=2a4ddeab580ad1fe8c95a id=snippet1,snippet2
+    file=src/main/java/javax0/jamal/snippet/SnipCheck.java,src/test/java/javax0/jamal/snippet/TestSnipCheck.java%}
 ----
 
-lines and the `snip:collect` collects the file, the snippet `{%specialCodeToCheck%}` is created.
-
-This snippet, just like any other snippet, could be included in the documentation; however, in this case, this is not our goal.
 The macro `snip:check` calculates a hashcode of the snippet.
-The hashcode can also be specified in the macro option `hash`, or `hashCode`.
-The identifier of the snippet can be specified using the macro option 'id'.
+The hashcode can also be specified in the macro option `hash` or `hashCode`.
 
-[source,text]
-----
-{@snip:check hash=2a4ddeab580ad1fe8c95a id={%specialCodeToCheck%}}
-----
+(These hex code above is made up, `TestSnipChek.java` does not even exist.)
 
-If the hash is calculated for a whole file then the macro option `file` is used
-
-[source,text]
-----
-{@snip:check hash=14c70f44df492ca file=src/main/java/javax0/jamal/snippet/SnipCheck.java}
-----
-
-(These hex codes above are totally made up.)
-
-If this code is the same as the one calculated, the programmer did not change the code in the snippet since the denoted part of the documentation was last updated.
+If this hash code is the same as the one calculated, the programmer did not change the code in the snippet.
 If the codes are different, then the macro will error.
 It means that the snippet or file has changed, and the documentation has to follow the change.
-When the documentation is updated, then you should also update the hash code to the current version.
+When the documentation is updated, you should also update the hash code.
 
 Nothing will stop you from updating the hash code without updating the documentation, though.
 It takes discipline to keep the documentation up-to-date.
@@ -485,34 +472,74 @@ This macro only helps not to forget some parts.
 
 The hash code calculated contains 64 hexadecimal characters.
 You may notice that the examples above contain less.
-The macro accepts if only the last characters of the hash code are present.
+The macro accepts if only a few characters of the hash code are present.
+{%#assert:intEquals /6/{%@snip SnipCheck_MIN_LINE /(\d+)/%}/fix the number written out in the next line%}\
 However, you have to specify at least six characters to ensure consistency.
-You have one to the ten million magnitude chance to change the snippet and get the same hash using six characters.
-It is fairly safe, but you can go safer listing more characters.
+You have one to the ten million chance to change the snippet and get the same hash using six characters.
+It is reasonably safe, but you can go safer listing more characters.
+
+It is a considerable practice to include some instruction into the error message helping the maintainer.
+You can do that using the option `message`.
+The string of this option will be part of the error message.
+For example, this document includes some lines similar to the following ones.
+
+[source]
+----
+{@snip:check hash=72415fa846e6f
+             file=src/main/java/javax0/jamal/snippet/SnipCheck.java
+             message="Review the whole chapter of 'snip:check'"
+}\
+----
 
 When you create the documentation of some code, you should follow the steps:
 
-1. Enclose the part of the code documented between `snippet NAME` and `end snippet`.
-2. Insert the `{@snip:check hash="" id=NAME}` macro into the parts of the documentation where the part is documented.
+1. Enclose the parts of the code documented between `snippet NAME` and `end snippet`, or use complete files.
+
+2. Insert the `{@snip:check hash="" id=NAME}` macro into the parts of the documentation where the pieces are documented.
+Do not be afraid to copy and paste the macro.
+In this case, copy-pasting is allowed, as the aim of this macro is to increase redundancy.
+
 3. Run the macro processing.
 It will eventually result in an error.
 The error message will include the hash code.
-Copy at least six of the last characters to the macro, like `{@snip:check hash=af6ed3 id=NAME}`
+Copy at least six characters to the macro, like `{@snip:check hash=af6ed3 id=NAME}`.
+If you use more than one `snip:check` in your documents, using different parts of the hash code is recommended.
+It will later help navigation when you search for the specific part of the document.
+
 4. Rerun the macro processing.
 
 When you update the documentation, and you get an error like
 
 [source,text]
 ----
-The snippet 'NAME' hash is 'ebbe085bcd314f7c306ab5ed095086505135209326580fbf1bfee58323f3fa92'. at ...
+javax0.jamal.api.BadSyntaxAt: The file(src/main/java/javax0/jamal/snippet/SnipCheck.java)
+hash is 'fa58557b.9735f98d.31c87ea5.074bd7f5.064ec63f.ec447a7e.58b8f969.958e5d4f' does not contain 'fa58557b9735f98k'.
+'Review the whole chapter of 'snip:check'' at ../jamal-snippet/README.adoc.jam/435:14
 ----
 
-then you have to
+then you have to do the following steps.
 
 1. Look at the documentation around where the macro is.
+The wrong hash code included in the error message will help you.
+Use text search in the files looking for the hex code.
+It should be reasonably unique.
 Update the documentation to follow the change of the code part.
+
 2. Update the hash code in the macro to the new value.
+
 3. Rerun the macro processing.
+
+[NOTE]
+====
+The error message contains the 64 character hex code as eight times eight characters dot-separated.
+It helps you select a part of the code when you copy the new code into the documentation after the update.
+It also helps you select different parts if you want to have more than one reference to the hash code.
+The dots are not part of the code and are printed only for convenience and ignored when comparing.
+You can use as many or as few dots in the hash code as you like.
+
+The hash code is displayed using lower case hexadecimal characters, but you can use upper case or mixed case characters.
+Before the check, the dots are removed, and the characters are converted to lower case.
+====
 
 In some rare cases, you do not want to check all the modifications of the file.
 You specify the option `lines` to check the number of lines in the snippet or file has not changed.
@@ -520,15 +547,15 @@ To do that, you can
 
 [source,text]
 ----
-{@snip:check lines=22 id={%specialCodeToCheck%}}
+{@snip:check lines=22 id=snippet1,snippet2}
 ----
 
 and the macro will not error so long as long the snippet or the file contains exactly 22 lines.
 
 You can specify both the `lines` and the `hash` together, but it does not make much sense.
 The macro will check the hash value first.
-If the hash value fails, the macro error.
-If the hash value is correct, then the file or snippet is identical, meaning it has the same number of lines as before.
+If the hash value fails, the macro results an error.
+If the hash value is correct, the file or snippet is identical, meaning it has the same number of lines as before.
 
 [[snipList]]
 ==== {%macroChapter%}`snip:list`
@@ -1210,7 +1237,7 @@ will result
 - KillLines.java: 1,446 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,220 bytes
-- XmlFormat.java: 3,428 bytes
+- XmlFormat.java: 3,586 bytes
 - SnipProperties.java: 1,485 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,233 bytes
@@ -1218,7 +1245,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,293 bytes
 - SkipLines.java: 2,048 bytes
-- SnipCheck.java: 3,811 bytes
+- SnipCheck.java: 5,219 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----

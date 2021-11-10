@@ -1,6 +1,7 @@
 package javax0.jamal.documentation;
 
 import javax0.jamal.DocumentConverter;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestConvertReadme {
@@ -71,6 +72,7 @@ public class TestConvertReadme {
     }
 
     @Test
+    @DisplayName("Convert the Snippet module README.adoc.jam -> README.adoc")
     void convertSnippetReadme() throws Exception {
         DocumentConverter.convert("../jamal-snippet/README.adoc.jam");
     }
