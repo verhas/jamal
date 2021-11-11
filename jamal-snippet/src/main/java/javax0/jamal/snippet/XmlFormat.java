@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Macro.Stateful
-public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware, AutoCloseable {
+public class XmlFormat implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var tabsize = Params.holder("tabsize").orElseInt(4);
@@ -40,9 +40,8 @@ public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware
             final String input = in.toString();
             return formatXml(input, "" + tabsize.get());
         } else {
-            this.tabsize = "" + tabsize.get();
-            //TODO create a new instance and defer to that one to be thread safe
-            processor.deferredClose(this);
+            final var it = new XmlFormatCloser(tabsize.get());
+            processor.deferredClose(it);
             return "";
         }
     }
@@ -70,21 +69,28 @@ public class XmlFormat implements Macro, InnerScopeDependent, Closer.OutputAware
         return "xmlFormat";
     }
 
-    private Input output = null;
-    private String tabsize = "4";
+    private static class XmlFormatCloser implements Closer.OutputAware, AutoCloseable {
 
-    @Override
-    public void close() throws BadSyntax {
-        if (output != null) {
-            InputHandler.skipWhiteSpaces(output);
-            final var result = formatXml(output.toString(), tabsize);
-            output.getSB().delete(0, output.getSB().length());
-            output.getSB().append(result);
+        private Input output = null;
+        private final String tabsize;
+
+        private XmlFormatCloser(final int tabsize) {
+            this.tabsize = "" + tabsize;
         }
-    }
 
-    @Override
-    public void set(Input output) {
-        this.output = output;
+        @Override
+        public void close() throws BadSyntax {
+            if (output != null) {
+                InputHandler.skipWhiteSpaces(output);
+                final var result = formatXml(output.toString(), tabsize);
+                output.getSB().delete(0, output.getSB().length());
+                output.getSB().append(result);
+            }
+        }
+
+        @Override
+        public void set(Input output) {
+            this.output = output;
+        }
     }
 }

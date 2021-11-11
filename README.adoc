@@ -1137,7 +1137,7 @@ results
 ----
 
 
-
+[[default]]
 ===== Default macro
 
 In addition to having a `?` character or using the `try` macro, there is another possibility to avoid the error in case of an undefined macro.
@@ -2140,7 +2140,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
 ----
 
 
@@ -2838,61 +2838,116 @@ The syntax of the macro is:
 
 [source]
 ----
-{#if/test/then content/else content}
+{#if [options]/test/then content/else content}
 ----
 
 Here we use `/` as a separator character but this is not hardwired.
-Any other character can be used that does not appear in the `test` text and in the `then content` text.
-The first non-space character following the macro keyword `if` will be used as a separator character.
+The `if` macro uses the <<argsplit,Standard Built-In Macro Argument Splitting>> to parse the body of the macro.
 
 The result of the evaluated macro will be the `then content` when the `test` is true, and the `else` content otherwise.
 
-The `test` is true, if
+When no options are specified the `test` is true, if
 
 * it is the literal string `true` (case-insensitive),
 
-* it is an integer number, and the value is not zero or
+* it is a signed or unsigned integer number, and the value is not zero,
 
 * it is any other string that contains at least one non-space character, except
 
-* when the `test` is the literal string `false` (case-insensitive) then the test is false.
+* when the `test` is the literal string `false` (case-insensitive).
 
-In the following examples the string before and after the `=` will be the same in the output:
+The literal `false` is false using any combination of upper and lower case letters with or without surrounding spaces.
+
+The evaluation of the test string can be modified using options.
+There are  3 options.
+
+
+* `blank` will test true if the test string is blank, it is empty or contains spaces only.
+* `empty` will test true if the test string is zero length and does not contain even spaces.
+* `not`  will negate the test result.
+
+[NOTE]
+====
+The option `blank` is needed in case you have a special case when the literal `false` should be treated positively.
+The need for this option arose when we wanted to create a macro supporting XML documents.
+The <<default,`default`>> macro generated `<tag>` from `{tag}` when the tag was not defined.
+At the same time `{tag something}` was converted to `<tag>something</tag>`.
+The two different cases were separated using an `if` macro.
+The definition was something like this:
 
 [source]
 ----
-true={@if /1/true/false}               <- non-zero integer
-true={@if /true/true/false}            <- literal true
-false={@if /0/true/false}              <- zero integer
-false={@if ::true:false}               <- condition is empty string
-false={@if :false:true:false}          <- literal false
-true={@if :avraka kedabra:true:false}  <- condition is non-empty string
-False={@if false fFalse fTrue}         <- separator character is 'f'
-                                          condition is 'alse ', non-empty string
-={@if/0/anything can come here}        <- "else" part is missing, output is empty
-true={@if/+1/true}                     <- non-zero integer
-true={@if/-1/true}                     <- non-zero integer
-true={@if/0.000/true}                  <- non-epmty string, floating points dont work
+{@define default($_,...$x)={#if
+    `/SEPARATOR/`$x/SEPARATOR/<$_>$x</$_>/SEPARATOR/<$_>}}\
+{tag false}
 ----
 
-The output automatically generated int this document:
+The only problem was that the `if` macro was not able to handle the case `{tag false}`.
+In that case the evaluation results
 
 [source]
 ----
-true=true               <- non-zero integer
-true=true            <- literal true
-false=false              <- zero integer
-false=false               <- condition is empty string
-false=false          <- literal false
-true=true  <- condition is non-empty string
-False=fTrue         <- separator character is 'f'
-                                          condition is 'alse ', non-empty string
-=        <- "else" part is missing, output is empty
-true=true                     <- non-zero integer
-true=true                     <- non-zero integer
-true=true                  <- non-epmty string, floating points dont work
+<tag>
 ----
 
+
+instead of `<tag>false</tag>`.
+
+To fix that we need to use the option `blank` as in the following sample:
+
+[source]
+----
+{@define default($_,...$x)={#if [not blank]
+           `/SEPARATOR/`$x/SEPARATOR/<$_>$x</$_>/SEPARATOR/<$_>}}\
+{tag false}
+----
+
+This will result the desired
+
+[source]
+----
+<tag>false</tag>
+----
+
+====
+
+The following examples show a few cases, as demonstrations:
+
+
+[source]
+----
+{@if /1/true/false}=true non-zero integer
+{@if /true/true/false}=true literal true
+{@if /0/true/false}=false zero integer
+{@if ::true:false}=false condition is empty string
+{@if :false:true:false}=false literal false
+{@if :FaLSe:true:false}=false literal false
+{@if :avraka kedabra:true:false}=true condition is non-empty string
+{@if/0/anything can come here}= 'else' part is missing, output is empty
+{@if/+1/true}=true  non-zero integer
+{@if/-1/true}=true  non-zero integer
+{@if/0.000/true}=true  non-empty string, floating points don't work
+{@if [not blank]/false/true/false}=true true because 'false' is not blank
+{@if [not empty]/false/true/false}=true true because 'false' is not empty
+{@if [not]/1/true/false}=false the option 'not' can be used solitary
+{@if /  /true/false}=false spaces mean false by default, but
+{@if [not empty]/  /true/false}=true not empty
+{@if [not blank]/  /true/false}=false is the same in this case as no option
+{@if [empty]/  /true/false}=false no, not empty
+{@if [not]/  /true/false}=true blank is false by default, but it is negated
+{@if [blank]/  /true/false}=true is the same as the above in this case
+----
+
+
+[NOTE]
+====
+The above example is generated running the samples.
+The composition of the sample is somewhat complex.
+It uses sophisticated macros that heavily use the macro evaluation order.
+These macros also check that the 'if' macro really works the way it is supposed to.
+If you are interested in how it looks, check the file `README.adoc.jam` and search for the string "avraka kedabra".
+This string, avraka kedabra appears only once in the Jamal source file.
+====
 
 [[ident]]
 ==== xvi. `ident`
@@ -3915,7 +3970,7 @@ The core macros use the `[` and `]` characters to enclose the parameters.
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `eval`, and `defer` also use the `[` and the `]` characters.
+To be consistent the macros `include`, `eval`, `if`, and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 
 ====

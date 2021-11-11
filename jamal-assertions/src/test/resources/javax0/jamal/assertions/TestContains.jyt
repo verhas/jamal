@@ -19,3 +19,6 @@
 "Test a failing assert:contains":
     Input: "{@assert:contains /abba/ebbe/should fail/}"
     Throws: ".*should fail.*"
+"Test a failing assert:contains with boolean result":
+    Input: "{@assert:contains (test) /abba/ebbe/should fail/}"
+    Output: "false"

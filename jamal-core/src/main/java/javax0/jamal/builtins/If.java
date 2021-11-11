@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.Params;
 
 /**
  * Define the {@code if} conditional macro. The syntax of the macro is
@@ -28,18 +29,31 @@ public class If implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var pos = input.getPosition();
-        final var parts = InputHandler.getParts(input,3);
-        if( parts.length < 1 ){
-            throw new BadSyntaxAt("Macro 'if' needs 1, 2 or 3 arguments",pos);
+        // snippet if_options
+        final var empty = Params.<Boolean>holder("empty").asBoolean();
+        final var blank = Params.<Boolean>holder("blank").asBoolean();
+        final var not = Params.<Boolean>holder("negate", "not").asBoolean();
+        // end snippet
+        Params.using(processor).from(this).between("[]").keys(empty, blank, not).parse(input);
+        final var parts = InputHandler.getParts(input, 3);
+        if (parts.length < 1) {
+            throw new BadSyntaxAt("Macro 'if' needs 1, 2 or 3 arguments", pos);
         }
-        if (isTrue(parts[0])) {
+
+        if (not.is() != isTrue(parts[0], empty.is(), blank.is())) {
             return parts.length > 1 ? parts[1] : "";
         } else {
             return parts.length > 2 ? parts[2] : "";
         }
     }
 
-    private boolean isTrue(String test) {
+    private boolean isTrue(final String test, final boolean empty, final boolean blank) {
+        if (blank) {
+            return test.trim().length() == 0;
+        }
+        if (empty) {
+            return test.length() == 0;
+        }
         if (test.trim().equalsIgnoreCase("true")) {
             return true;
         }

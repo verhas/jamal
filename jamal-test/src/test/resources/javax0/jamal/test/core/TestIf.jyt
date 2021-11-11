@@ -2,12 +2,40 @@ Empty string is evaluated false:
   Input: '{@if || this is not the output| this is the output}'
   Output: ' this is the output'
 
+Content with spaces only is false:
+  Input: '{@if |   | this is not the output| this is the output}'
+  Output: ' this is the output'
+
+Content with spaces only is true with options [not empty]:
+  Input: '{@if [not empty] |   | this is the output| this is not the output}'
+  Output: ' this is the output'
+
+Empty string is evaluated true when negated:
+  Input: '{@if [not]|| this is not the output| this is the output}'
+  Output: ' this is not the output'
+
 Literal 'false' is evaluated false:
   Input: '{@if |false| this is not the output| this is the output}'
   Output: ' this is the output'
 
 Literal '0' is evaluated false:
   Input: '{@if |0| this is not the output| this is the output}'
+  Output: ' this is the output'
+
+Literal 'true' is evaluated true as any non-empty string:
+  Input: '{@if |true| this is the output| this is not the output}'
+  Output: ' this is the output'
+
+Non empty string is evaluated true:
+  Input: '{@if |blabla bla bla| this is the output| this is not the output}'
+  Output: ' this is the output'
+
+Literal 'false' is also true when we check with options [not empty]:
+  Input: '{@if [not empty] |false| this is the output| this is not the output}'
+  Output: ' this is the output'
+
+Literal 'false' is also true when we check with options [not blank]:
+  Input: '{@if [not blank] |false| this is the output| this is not the output}'
   Output: ' this is the output'
 
 When condition is false and there is no "else" part then empty string is the result:
@@ -18,7 +46,7 @@ Literal '0000' is evaluated false:
   Input: '{@if |0000| this is not the output| this is the output}'
   Output: ' this is the output'
 
-Anything that is not zero length string, numeric not zero is true:
+Anything that is not zero length string, not numeric zero is true:
   Input: '{@if|0000.|this is not a number any more}'
   Output : this is not a number any more
 

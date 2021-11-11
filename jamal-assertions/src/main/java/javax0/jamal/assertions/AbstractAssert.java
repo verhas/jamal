@@ -62,18 +62,24 @@ abstract class AbstractAssert implements Macro {
         // snippet Assertion_params
         Params.Param<Boolean> trim = Params.<Boolean>holder("trim", "strip").asBoolean();
         Params.Param<Boolean> not = Params.<Boolean>holder("not", "negate").asBoolean();
+        Params.Param<Boolean> test = Params.<Boolean>holder("test", "boolean", "bool").asBoolean();
         //end snippet
 
-        Params.using(processor).between("()").from(this).keys(trim, not).parse(input);
+        Params.using(processor).between("()").from(this).keys(trim, not, test).parse(input);
         String[] parts = getParts(input, N, trim, this);
         if (negateIfNeeded(test(parts), not)) {
-            return "";
+            return test.is() ? "true" : "";
+        } else {
+            if (test.is()) {
+                return "false";
+            } else {
+                final String format = not.is() ? negatedDefaultMessage : defaultMessage;
+                if (parts.length >= N && parts[N - 1].trim().length() > 0) {
+                    throw new BadSyntax(String.format(parts[N - 1], (Object[]) parts));
+                }
+                throw new BadSyntax(getId() + " has failed " + String.format(format, (Object[]) parts));
+            }
         }
-        final String format = not.is() ? negatedDefaultMessage : defaultMessage;
-        if (parts.length >= N && parts[N - 1].trim().length() > 0 ) {
-            throw new BadSyntax(String.format(parts[N - 1], (Object[]) parts));
-        }
-        throw new BadSyntax(getId() + " has failed " + String.format(format, (Object[]) parts));
     }
 
     /**
@@ -86,7 +92,7 @@ abstract class AbstractAssert implements Macro {
      * AssertSomeFunnyName -> assert:somFunnyName
      * AssireAny -> assert:any
      * }</pre>
-     *
+     * <p>
      * If the naming of the class does not conform to this schema or the macro implemented needs some special name then
      * the method has to be overridden.
      *
@@ -95,7 +101,7 @@ abstract class AbstractAssert implements Macro {
     @Override
     public String getId() {
         final var s = this.getClass().getSimpleName().substring(6);
-        return "assert:" + s.substring(0,1).toLowerCase() + s.substring(1);
+        return "assert:" + s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
     private static String[] getParts(Input input, int N, Params.Param<Boolean> trim, Macro macro) throws BadSyntax {

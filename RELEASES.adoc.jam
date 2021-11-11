@@ -10,10 +10,32 @@ New macro `defer`, which evaluates its input after the whole input was processed
 Due to a bug the backslash character did not escape the following new line after an `escape` macro (ironic).
 Fixed.
 
+The old style macro evaluation is not available any more. This significantly sped up the processing.
+There were bug fixes for bugs that in some situation revented the proper handling of `~/...` format file names.
+
+Some environment variables did not have the system property pair.
+Fixed.
+
+The maven plugin when used to convert a project to Jamalized project does not create .mvn/extensions.xml in the subdirectories anymore.
+
+There is a new environment variable `JAMAL_DEV_PATH` and system property `jamal.dev.path`.
+See the documentation.
+
+A bug prevented file include in Windows in some special cases.
+Fixed.
+
+`snipline NAME` can be used to define a single line snippet without end snippet.
+
+Options `noUndefault` and `emptyUndef` are handled by macro evaluation.
+
+`xmlFormat` works even in applications that embed Jamal in multi-thread.
+
+`snip:check` is reworked, extended and improved.
+
 {%RELEASE/1.9.1%}
 
 The macro `escape` was extended.
-Now if the macro name `escape` is followed by a `\*` character then the escaping works multiple levels and is unescaped only when the whole processing is finished.
+Now if the macro name `escape` is followed by a `*` character then the escaping works multiple levels and is unescaped only when the whole processing is finished.
 There is a new option for the Maven plugin of Jama.
 If you specify the system option `jamalify` to be `true` then the plugin will create all the `.env` directories and `extensions.xml` files.
 There was a bug in the macro `plantuml` in release 1.9.0, which prevented its working when no folder was defined explicitly.

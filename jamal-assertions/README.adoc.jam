@@ -3,17 +3,17 @@
 {%@snip:collect from=src/main/java%}
 
 The Jamal assertions module contains macros to check the consistency of the documentation.
-The checks are implemented as assertions each asserting some simple condition and giving error if the condition is false.
-Although it may be used other than checking the consistency of the documentation, that is the module's main purpose.
+The checks are implemented as assertions, asserting some simple conditions and giving an error if the condition is false.
+Although it may be used other than checking the consistency of the documentation, that is the module's primary purpose.
 
-Macros can gather information from different parts of the document and from the documented system.
+Macros can gather information from different parts of the document and the documented system.
 The assertions can check that the gathered information is consistent.
 
 {%#counter:define id=macroChapter format=$roman. %}
 
 == {%macroChapter%}Example
 
-For example the macro
+For example, the macro
 
 {%sample/
 {@snip:xml pom=pom.xml}
@@ -21,9 +21,9 @@ For example the macro
 {%#comment {%output%}%}
 
 reads the `pom.xml` file from the same directory where the document is.
-It stores the XML in the memory and it can be queried via the `pom` macro afterward.
-This `pom` macro can be use with an XPath expression to get parts of the project description.
-For example the following macro will get the version string of the project:
+It stores the XML in the memory, and you can query it via the `pom` macro afterward.
+You can use this `pom` macro with an XPath expression to get parts of the project description.
+For example, the following macro will get the version string of the project:
 
 {%sample/
 {pom //project/version}
@@ -46,8 +46,8 @@ which results
 {%output%}
 
 The output of the assertion is an empty string when the condition is ok.
-Since the string `{pom //project/version}` starts with `{%MAJOR_VERSION%}` the assertion does not fail.
-If we do a different assertion that tests that the version does NOT start with `{%MAJOR_VERSION%}` the assertion will result error.
+Since the string `{pom //project/version}` starts with `{%MAJOR_VERSION%}`, the assertion does not fail.
+If we do a different assertion that tests that the version does NOT start with `{%MAJOR_VERSION%}`, the assertion will result in an error.
 
 {%sample/
 {@try! {#assert:startsWith (not) /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are still in the 1.xxx range}}
@@ -61,7 +61,7 @@ which results
 [NOTE]
 ----
 This document uses the `try` macro with the `!` mark after it.
-This macro with the `!` evaluates its content and then results the error message in case there was an error.
+This macro with the `!` evaluates its content and then results in the error message if there was an error.
 If you are not familiar with the use of this macro, please consult the link:../README.adoc[Jamal main documentation].
 ----
 
@@ -73,7 +73,7 @@ The assertion package helps consistency checks.
 
 The macro package is defined in a jar file as a Java module.
 The macros are automatically loaded using the service loader.
-In order to use the macros the library has to be on the classpath.
+To use the macros, the library has to be on the classpath.
 To do it as a Maven dependency use the following Maven coordinates:
 
 {%@snip:xml pom=pom.xml%}\
@@ -90,33 +90,39 @@ To do it as a Maven dependency use the following Maven coordinates:
 == {%macroChapter%}Assertions Formats and Options
 
 All assertions have the same options and the same syntax.
-The name of the macro is followed by the options , if there is any, between `(` and `)` characters.
-The rest of the macro are the parameters.
+If any, the options follow the macro's name between `(` and `)` characters.
+The rest of the macro is the parameters.
 The parameters are parsed using the link:../PARAMS.adoc[Standard Built-In Parameter Parsing].
 The different assertions can have different number of parameters.
 The last parameter is always optional.
-If it is present it specifies the error message for the case the assertion fails.
+If it is present, it specifies the error message for the case the assertion fails.
 
-For an example, let us have a look at the sample we have already visited in the previous section.
+For example, let us look at the sample we have already visited in the previous section.
 
 {%sample/
 {#assert:startsWith (not) /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are still in the 1.xxx range}
 %}
 
-The assertion macro `assert:startsWith` has two mandatory parameters and the optional message as third parameter.
+The assertion macro `assert:startsWith` has two mandatory parameters and the optional message as the third parameter.
 This assertion checks that the first parameter interpreted as a string starts with the second parameter.
-In this example we want an error when the version does NOT start with `{%MAJOR_VERSION%}` thus the use of the option `not`.
+In this example, we want an error when the version does NOT start with `{%MAJOR_VERSION%}` thus the use of the option `not`.
 
-All the assertions interpret two options.{%@snip:check lines=2 id=Assertion_params%}
+All the assertions interpret three options.{%@snip:check lines=3 id=Assertion_params%}
 These are
 
 * `trim` with the alias `strip`, and
 * `not` with the alias `negate`.
+* `test` with aliases `boolean` and `bool`.
 
-The option names and the aliases are equivalent, you can use the one that fits your taste.
-The first option `trim` tells the assertion that the parameters should be stripped before the assertion is evaluated.
-This will remove all white space from the start and the end of the parameters.
-The second option reverses the outcome of the assertion.
+The option names and the aliases are equivalent; you can use the one that fits your taste.
+The first option `trim` tells the assertion that the parameters should be stripped before evaluating the assertion.
+This process will remove all white space from the start and the end of the parameters.
+
+The second option, `negate` reverses the outcome of the assertion.
+
+The option `test` will modify the behavior of the macro.
+When this option is used the assertion will not fail if the assertion is false.
+Instead the return value of the assertion will be the literal string `true` or `false`.
 
 {%#define MACROS_CHAPTER={%macroChapter%}%}
 == {%MACROS_CHAPTER%}Macros Implemented in the Package
@@ -144,9 +150,9 @@ results
 
 {%MAC assert:empty%}
 
-Asserts that the first argument is a zero length string.
+Asserts that the first argument is a zero-length string.
 Note that there is no `assert:blank` assertion.
-If you want to check that the argument is empty OR blank then you should use the `trim` option.
+If you want to check that the argument is empty OR blank, you should use the `trim` option.
 
 Example
 {%sample/{%#numberLines format="%d. "
@@ -218,12 +224,12 @@ results
 {%MAC assert:fail%}
 
 This assertion has only one optional argument, the message.
-If this macro is evaluated it will always result error.
+If this macro is evaluated, it will always result in an error.
 The use of this assertion makes sense in part of the code that is conditionally evaluated, like a part of an `if` macro.
-Note that this macro also interprets the `trim` option, though it has no parameters that could be trimmed.
-The option `trim` can be used, but has no effect.
+Note that this macro also interprets the `trim` option, though it has no parameters to be trimmed.
+The option `trim` can be used but has no effect.
 The option `not` is also interpreted.
-If the option `not` is used, then the macro will result an empty string and will not error.
+If the option `not` is used, the macro will result in an empty string and will not error.
 
 Example
 {%sample/{%#numberLines format="%d. "
@@ -362,7 +368,7 @@ results
 {%output%}
 
 {%MAC assert:numeric%}
-This macro checks that the first argument can be interpreted as a numeric (possibly floating point) number.
+This macro checks that the first argument can be interpreted as a numeric (possibly floating-point) number.
 
 {%sample/{%#numberLines format="%d. "
 OK: {@assert:numeric /3/3 is an int}
