@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Param<K> implements Params.Param<K> {
     final public String[] key;
@@ -99,6 +100,17 @@ public class Param<K> implements Params.Param<K> {
     }
 
     @Override
+    public <K> Param<List<K>> asList(Class<K> k) {
+        stringNeeded = false;
+        if (k == Integer.class) {
+            this.converter = s -> getIntList();
+        } else {
+            this.converter = s -> getList();
+        }
+        return (Param<List<K>>) this;
+    }
+
+    @Override
     public void inject(Processor processor, String macroName) {
         this.processor = processor;
         this.macroName = macroName;
@@ -131,9 +143,9 @@ public class Param<K> implements Params.Param<K> {
         return reader.readValue(key[0]);
     }
 
-private String reportingName(String[] key){
+    private String reportingName(String[] key) {
         return key[0] == null ? key[1] : key[0];
-}
+    }
 
     private String getRaw() throws BadSyntax {
         final var opt = _get();
@@ -177,7 +189,7 @@ private String reportingName(String[] key){
         if (!(result instanceof Boolean)) {
             throw new IllegalArgumentException("Param.is() can only be used for boolean parameters");
         }
-        return (boolean)result;
+        return (boolean) result;
     }
 
     public boolean isPresent() throws BadSyntax {
@@ -210,6 +222,19 @@ private String reportingName(String[] key){
             return value;
         } else {
             return MacroReader.macro(processor).readValue(key[0]).map(List::of).orElse(List.of());
+        }
+    }
+
+    /**
+     * @return the possibly empty list of the values converted to integer values
+     * @throws BadSyntax if there was no parameter defined with the name {@code key} and evaluating the user defined
+     *                   macro of the same name throws up.
+     */
+    private List<Integer> getIntList() throws BadSyntax {
+        if (value.size() > 0) {
+            return value.stream().map(Integer::parseInt).collect(Collectors.toList());
+        } else {
+            return MacroReader.macro(processor).readValue(key[0]).map(Integer::parseInt).map(List::of).orElse(List.of());
         }
     }
 

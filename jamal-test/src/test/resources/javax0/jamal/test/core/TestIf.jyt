@@ -50,6 +50,98 @@ Anything that is not zero length string, not numeric zero is true:
   Input: '{@if|0000.|this is not a number any more}'
   Output : this is not a number any more
 
-You can use regular expression as separator":
+You can use regular expression as separator:
   Input: '{#if`///`1///a}'
   Output: a
+
+If cannot live without arguments:
+  Input: '{#if}'
+  Throws: Macro 'if' needs 1, 2 or 3 arguments
+
+Testing numerical comparing lessThan true:
+  Input: '{@if [lessThan=55] /-3/it is less than 55/what?}'
+  Output: it is less than 55
+
+Testing numerical comparing lessThan false:
+  Input: '{@if [lessThan=55] /55/what?/55 is not less than 55}'
+  Output: 55 is not less than 55
+
+Testing numerical comparing greaterThan true:
+  Input: '{@if [greaterThan=55] /63/it is greater than 55/what?}'
+  Output: it is greater than 55
+
+Testing numerical comparing greaterThan false:
+  Input: '{@if [greaterThan=55] /55/what?/55 is not greater than 55}'
+  Output: 55 is not greater than 55
+
+Testing numerical comparing greaterThan or equals true:
+  Input: '{@if [greaterThan=55 equals=55] /55/55 equals 55/what?/}'
+  Output: 55 equals 55
+
+Testing numerical comparing equals with multiple options:
+  Input: '{@if [equals=55 equals=56 equals=57] /55/55 equals 55/what?/}'
+  Output: 55 equals 55
+
+Testing numerical comparing equals with multiple options with 'or':
+  Input: '{@if [equals=55 or equals=56 equals=57] /55/55 equals 55/what?/}'
+  Output: 55 equals 55
+
+Testing numerical comparing lessThan and greaterThan true:
+  Input: '{@if [lessThan=55 and greaterThan=53] /54/54 is between 53 and 55/what?/}'
+  Output: 54 is between 53 and 55
+
+Testing numerical comparing lessThan and greaterThan false:
+  Input: '{@if [lessThan=55 and greaterThan=53] /56/what?/56 is not between 53 and 55}'
+  Output: 56 is not between 53 and 55
+
+Testing numerical comparing all three as and true:
+  Input: '{@if [lessThan=55 and greaterThan=53 equals=54] /54/54 is between 53 and 55/what?}'
+  Output: 54 is between 53 and 55
+
+Testing numerical comparing with non numerical test value:
+  Input: '{@if [equals=0] /haha}'
+  Throws: When macro 'if' uses a numeric option the test has to be an integer value\.
+
+Testing numerical comparing 'lessThan and greaterThan and' throwing:
+  Input: '{@if [lessThan=55 and greaterThan=53 and] /56/what?/56 is not between 53 and 55}'
+  Throws: The key 'and' must not be multi valued in the macro 'if'
+
+Testing numerical comparing malformed numbers:
+  Input: '{@if [lessThan=55wussy and greaterThan=53] /56/what?/56 is not between 53 and 55}'
+  Throws: There was an exception converting the parameter 'lessThan' for the macro 'if'
+
+Testing 'and' and 'or' together:
+  Input: '{@if [lessThan=55wussy and greaterThan=53 or equals=13] /56/what?/56 is not between 53 and 55}'
+  Throws: You cannot have both 'and' and 'or' options in an 'if' macro\.
+
+Testing 'blank' and 'empty':
+  Input: '{@if [empty blank] /whatever/what?/56 is not between 53 and 55}'
+  Throws: You cannot have both 'blank' and 'empty' options in an 'if' macro\.
+
+Testing 'blank' and numeric together:
+  Input: '{@if [lessThan=55wussy blank] /56/what?/56 is not between 53 and 55}'
+  Throws: You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options\.
+
+Testing 'empty' and numeric together:
+  Input: '{@if [lessThan=55wussy empty] /56/what?/56 is not between 53 and 55}'
+  Throws: You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options\.
+
+Testing 'and' without numeric options:
+  Input: '{@if [and] /56}'
+  Throws: You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro\.
+
+Testing 'or' without numeric options:
+  Input: '{@if [or] /56}'
+  Throws: You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro\.
+
+Testing 'and' with one numeric options:
+  Input: '{@if [and equals=3] /56}'
+  Throws: You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro\.
+
+Testing 'or' with one numeric options:
+  Input: '{@if [or equals=3] /56}'
+  Throws: You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro\.
+
+Testing 'or' set to false:
+  Input: '{@if [or=false equals=3 equals=4] /4/or set to false is no way/what?}'
+  Output: or set to false is no way

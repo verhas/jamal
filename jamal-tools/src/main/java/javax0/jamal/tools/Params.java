@@ -73,6 +73,7 @@ public class Params {
         Param<String> asString();
 
         Param<List<?>> asList();
+        <K> Param<List<K>> asList(Class<K> k);
 
         T get() throws BadSyntax;
 

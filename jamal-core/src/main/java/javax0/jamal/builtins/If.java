@@ -8,6 +8,10 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
 /**
  * Define the {@code if} conditional macro. The syntax of the macro is
  *
@@ -26,32 +30,109 @@ import javax0.jamal.tools.Params;
  */
 public class If implements Macro {
 
+    private static class Options {
+        // snippet if_options
+        final Params.Param<Boolean> empty = Params.<Boolean>holder("empty").asBoolean();
+        final Params.Param<Boolean> blank = Params.<Boolean>holder("blank").asBoolean();
+        final Params.Param<Boolean> not = Params.<Boolean>holder("not").asBoolean();
+        final Params.Param<Boolean> and = Params.<Boolean>holder("and").asBoolean();
+        final Params.Param<Boolean> or = Params.<Boolean>holder("or").asBoolean();
+        final Params.Param<List<Integer>> lessThan = Params.<Integer>holder("lessThan", "less","smaller", "smallerThan").asList(Integer.class);
+        final Params.Param<List<Integer>> greaterThan = Params.<Integer>holder("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan").asList(Integer.class);
+        final Params.Param<List<Integer>> equals = Params.<Integer>holder("equals", "equal", "equalsTo", "equalTo").asList(Integer.class);
+        // end snippet
+        private final List<Params.Param<List<Integer>>> numericOptions = List.of(lessThan, greaterThan, equals);
+
+        void assertConsistency() throws BadSyntax {
+            if (and.is() && or.is()) {
+                throw new BadSyntax("You cannot have both 'and' and 'or' options in an 'if' macro.");
+            }
+            if ((and.is() || or.is()) && countNumOptionsPresent() < 2) {
+                throw new BadSyntax("You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
+            }
+            if (blank.is() && empty.is()) {
+                throw new BadSyntax("You cannot have both 'blank' and 'empty' options in an 'if' macro.");
+            }
+            if ((empty.is() || blank.is()) && numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals)) {
+                throw new BadSyntax("You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
+            }
+        }
+
+        Params.Param<?>[] options() {
+            return new Params.Param[]{empty, blank, not, and, or, lessThan, greaterThan, equals};
+        }
+
+        List<Boolean> numericOptionsPresent() throws BadSyntax {
+            List<Boolean> list = new ArrayList<>();
+            for (Params.Param<List<Integer>> numericOption : numericOptions) {
+                list.add(numericOption.isPresent());
+            }
+            return list;
+        }
+
+        long countNumOptionsPresent() throws BadSyntax {
+            int counter = 0;
+            for (final var param : numericOptions) {
+                if (param.isPresent()) {
+                    counter += param.get().size();
+                }
+            }
+            return counter;
+        }
+    }
+
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var pos = input.getPosition();
-        // snippet if_options
-        final var empty = Params.<Boolean>holder("empty").asBoolean();
-        final var blank = Params.<Boolean>holder("blank").asBoolean();
-        final var not = Params.<Boolean>holder("negate", "not").asBoolean();
-        // end snippet
-        Params.using(processor).from(this).between("[]").keys(empty, blank, not).parse(input);
+        final var opt = new Options();
+        Params.using(processor).from(this).between("[]").keys(opt.options()).parse(input);
+        opt.assertConsistency();
         final var parts = InputHandler.getParts(input, 3);
         if (parts.length < 1) {
             throw new BadSyntaxAt("Macro 'if' needs 1, 2 or 3 arguments", pos);
         }
 
-        if (not.is() != isTrue(parts[0], empty.is(), blank.is())) {
+
+        if (opt.not.is() != isTrue(parts[0], opt)) {
             return parts.length > 1 ? parts[1] : "";
         } else {
             return parts.length > 2 ? parts[2] : "";
         }
     }
 
-    private boolean isTrue(final String test, final boolean empty, final boolean blank) {
-        if (blank) {
+    private boolean compare(List<Integer> number, boolean and, Predicate<Integer> p) {
+        if (and) {
+            return number.stream().allMatch(p::test);
+        } else {
+            return number.stream().anyMatch(p::test);
+        }
+    }
+
+    private boolean isTrue(final String test,
+                           final Options opt) throws BadSyntax {
+        if (opt.countNumOptionsPresent() > 0) {
+            final int testN;
+            try {
+                testN = Integer.parseInt(test);
+            } catch (NumberFormatException nfe) {
+                throw new BadSyntax("When macro 'if' uses a numeric option the test has to be an integer value.");
+            }
+            if (opt.and.is()) {
+                return (!opt.lessThan.isPresent() || compare(opt.lessThan.get(), true, n -> n > testN))
+                    && (!opt.greaterThan.isPresent() || compare(opt.greaterThan.get(), true, n -> n < testN))
+                    && (!opt.equals.isPresent() || compare(opt.equals.get(), true, n -> n == testN))
+                    ;
+            } else {
+                return (opt.lessThan.isPresent() && compare(opt.lessThan.get(), false, n -> n > testN))
+                    || (opt.greaterThan.isPresent() && compare(opt.greaterThan.get(), false, n -> n < testN))
+                    || (opt.equals.isPresent() && compare(opt.equals.get(), false, n -> n == testN))
+                    ;
+            }
+        }
+        if (opt.blank.is()) {
             return test.trim().length() == 0;
         }
-        if (empty) {
+        if (opt.empty.is()) {
             return test.length() == 0;
         }
         if (test.trim().equalsIgnoreCase("true")) {

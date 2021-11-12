@@ -2432,7 +2432,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=d58495c8%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=7b846153%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -2444,7 +2444,7 @@ The syntax of the macro is:
 Here we use `/` as a separator character but this is not hardwired.
 The `if` macro uses the <<argsplit,Standard Built-In Macro Argument Splitting>> to parse the body of the macro.
 
-The result of the evaluated macro will be the `then content` when the `test` is true, and the `else` content otherwise.
+The result of the evaluated macro will be the `then content` when the `test` is true, and the `else content` otherwise.
 
 When no options are specified the `test` is true, if
 
@@ -2459,12 +2459,44 @@ When no options are specified the `test` is true, if
 The literal `false` is false using any combination of upper and lower case letters with or without surrounding spaces.
 
 The evaluation of the test string can be modified using options.
-There are {%@define nrIfOptions=3%} {%nrIfOptions%} options.
+There are {%@define nrIfOptions=8%} {%nrIfOptions%} options.
 {%#snip:check id=if_options lines={%nrIfOptions%} %}
+
+The first three options are "boolean" options.
+It is enough to use their keyword between the `[` and `]`.
+(See examples later.)
 
 * `blank` will test true if the test string is blank, it is empty or contains spaces only.
 * `empty` will test true if the test string is zero length and does not contain even spaces.
 * `not`  will negate the test result.
+* `or` can be used with the numerical options when more than one test is needed.
+When you specify more than one `equals`, `lessThan`, or `greaterThan` option the test is true if any of the tests is true.
+This is the default behaviour, so this option is not needed.
+Setting `or=false` has no effect and is not the same as using the option `and`.
+This option is included only to add readability if needed.
+* `and` after the evaluation of multiple tests.
+When this option is used the test is true if all of the tests are true.
+This option cannot be used together with the option `or` and is also needs multiple numeric options.
+
+Note that the options `and` and `or` are simple boolean options.
+They can appear only once in the list of the macro options.
+You cannot write `{@if [equals=3 or equals=4 or equals=6] /9/a/b}`.
+It is recommended to use the `or` or the `and` option following the first numeric option.
+For example, {@if [lessThan=7 and greaterThan=2] /6/it is in (2,7)/out of range}`.
+If you feel it is more readable you can put these options at any place in the list.
+
+The following options will do numerical comparison.
+When any of them are used then the test string is converted to a number.
+If the test string is not a number an error will happen.
+These options are integer options, which means that you have to specify a number following them like `lessThan=55`.
+
+* `lessThan` (aliases `less`,`smaller`, `smallerThan`) is true if the number is less than the value.
+* `greaterThan` (aliases `greater`, `bigger`, `biggerThan`, `larger`, `largerThan`) is true if the number is greater than the value.
+* `equals` (aliases `equal`, `equalsTo`, `equalTo`) is true if the number is equal to the value.
+
+There is no separately "less than or equal" and "greater or equal" option.
+If, for example, you want to test that a number is greater than or equal to a certain value then you can use the `greaterThan` and the `equals` options together.
+An alternative is to use the `lessThan` option along with the boolean `not` option.
 
 [NOTE]
 ====
@@ -2529,6 +2561,12 @@ The following examples show a few cases, as demonstrations:
 {s/{`@if [empty]/  /true/false}/false} no, not empty
 {s/{`@if [not]/  /true/false}/true} blank is false by default, but it is negated
 {s/{`@if [blank]/  /true/false}/true} is the same as the above in this case
+{s/{`@if [lessThan=13]/12/true/false}/true} 12 is really less than 13
+{s/{`@if [lessThan=13]/13/true/false}/false} 13 is not less than 13
+{s/{`@if [lessThan=13 equals=13]/13/true/false}/true} 13 is less than or equals 13, note the value twice
+{s/{`@if [greaterThan=13 not]/13/true/false}/true} 13 is not greater than 13, it is the same logic as the previous
+{s/{`@if [lessThan=13 equals=14]/13/true/false}/false} 13 is not less than 13 and does not equal 14
+{s/{`@if [lessThan=13 and largerThan=2]/12/true/false}/true} 12 is in the range (2,13)
 %}%}{%output%}
 
 [NOTE]
