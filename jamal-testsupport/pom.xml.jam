@@ -7,7 +7,12 @@
     {description|Jamal macro library macro test supporting classes}
 
     {@define openForTests={opens/testsupport/builtinstest}
-                          {opens/testsupport/testsupport}}
+                          {opens/testsupport/testsupport}
+                          {opens/testsupport/testsupport/org.junit.platform.commons}
+                          {opens/testsupport/builtinstest/org.junit.platform.commons}
+                           --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
+                           --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
+                           }
 
     {build|{plugins| {@include ../plugins.jim}}}
     {dependencies#

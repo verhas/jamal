@@ -44,9 +44,12 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private static final String[] ZERO_STRING_ARRAY = new String[0];
     // snipline NO_UNDEFAULT
-    public static final String NO_UNDEFAULT = "noUndefault";
+    public static final String NO_UNDEFAULT = ":noUndefault";
     // snipline EMPTY_UNDEF
-    public static final String EMPTY_UNDEF = "emptyUndef";
+    public static final String EMPTY_UNDEF = ":emptyUndef";
+
+    final private OptionsStore.OptionValue noUndefault;
+    final private OptionsStore.OptionValue emptyUndef;
 
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
 
@@ -78,6 +81,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param context    is the embedding context
      */
     public Processor(String macroOpen, String macroClose, Context context) {
+        noUndefault = optionValue(NO_UNDEFAULT);
+        emptyUndef = optionValue(EMPTY_UNDEF);
         this.context = context;
         try {
             macros.separators(macroOpen, macroClose);
@@ -448,7 +453,7 @@ public class Processor implements javax0.jamal.api.Processor {
         final boolean reportUndefBeforeEval = doesStartWithQuestionMark(input);
         final Input evaluatedInput = evaluateMacroStart(input, qualifier);
         final boolean reportUndefAfterEval = doesStartWithQuestionMark(evaluatedInput);
-        final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval && !option(EMPTY_UNDEF).isPresent();
+        final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval && !emptyUndef.is();
         skipWhiteSpaces(evaluatedInput);
 
         final String id = fetchId(evaluatedInput);
@@ -458,7 +463,7 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         skipWhiteSpaces(evaluatedInput);
         final Optional<Identified> identifiedOpt;
-        if (reportUndef || !option(NO_UNDEFAULT).isPresent()) {
+        if (reportUndef || !noUndefault.is()) {
             identifiedOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO);
         } else {
             identifiedOpt = macros.getUserDefined(id);
@@ -932,12 +937,21 @@ public class Processor implements javax0.jamal.api.Processor {
     /**
      * Returns an optional telling if an option is present or not.
      *
-     * @param optionName the name of the option
+     * @param option the name of the option
      * @return an empty optional if the option is not present and a non-empty optional if the option is present. The
      * value inside the optional is not defined.
      */
-    Optional<Boolean> option(String optionName) {
-        return OptionsStore.getInstance(this).is(optionName) ? OPTIONAL_TRUE : Optional.empty();
+    Optional<Boolean> option(String option) {
+        return OptionsStore.getInstance(this).is(option) ? OPTIONAL_TRUE : Optional.empty();
     }
 
+    /**
+     * Get the option value for a specific option. Should be used for global options. Use for local options may be
+     * tricky.
+     * @param option the name of the option
+     * @return an {@link javax0.jamal.tools.OptionsStore.OptionValue} holding the value for this option.
+     */
+    public OptionsStore.OptionValue optionValue(String option) {
+        return OptionsStore.getInstance(this).value(option);
+    }
 }

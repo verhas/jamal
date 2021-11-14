@@ -1,27 +1,25 @@
 test options:
   Input: |-
-    {@define macro(a,b,c)=a is a, b is b{#if :c:, and c is c}}
+    {@define macro($a,$b,$c)=$a is $a, $b is $b{#if :$c:, and $c is $c}}\
+    {macro :apple:pie:truffle}{@comment if there are three arguments, we handle it}
     {macro :apple:pie:}{@comment here we need : at end, default is not lenient}
-    {#ident {@options lenient}{macro :apple:pie}}{@comment options is local inside the ident block}
-    {macro :apple:pie:}{@comment here we must have the trailing : because options is local}
-    {#ident
-    {#ident {@options lenient}{macro :apple:pie}{@export `options}}{@comment local but gets exported one level up}
-    {macro :apple:pie}}
+    {#ident {@options lenient}{macro :apple:pie:}}{@comment options is local, but lenient is a global option}
+    {macro :apple:pie:}{@comment here we must have the trailing : because we still do not have a globally defined option options is local}
+    {#ident {#ident {@options lenient}{macro :apple:pie:}{@export `options}}{@comment local but gets exported one level up, still not global}
+    {macro :apple:pie:}{@comment still not global}}
     {macro :apple:pie:}{@comment was not exported to this level, only to inside the outer ident block}
-    {@options lenient}{@comment now this is on the global level}
-    {macro :apple:pie}{@comment nice and easy, global}
+    {@options lenient}{@comment now this is on the global level}{macro :apple:pie}{@comment nice and easy, global}
     {@options ~lenient}{@comment and we can switch it off}
     {macro :apple:pie:}
     {@options any|option|can  | go | ~go | no go}
   Output: |
-
+    apple is apple, pie is pie, and truffle is truffle
     apple is apple, pie is pie
     apple is apple, pie is pie
     apple is apple, pie is pie
     apple is apple, pie is pie
     apple is apple, pie is pie
     apple is apple, pie is pie
-
     apple is apple, pie is pie
 
     apple is apple, pie is pie

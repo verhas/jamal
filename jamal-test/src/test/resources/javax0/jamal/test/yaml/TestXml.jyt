@@ -208,6 +208,7 @@
         <xm>2</xm>
         <xm>3</xm>
     </xml>
+
 "multiple tags throw error":
   Input: |
     {@yaml:define a=

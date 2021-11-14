@@ -3,6 +3,7 @@ package javax0.jamal.tools;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
+import javax0.jamal.api.SpecialCharacters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -202,7 +203,7 @@ public class InputHandler {
      * @return the converted identifier.
      */
     public static String convertGlobal(String id) {
-        if (id.length() > 0 && id.charAt(0) == ':') {
+        if (id.length() > 0 && id.charAt(0) == SpecialCharacters.GLOBAL_NAME_CHAR) {
             return id.substring(1);
         } else {
             return id;

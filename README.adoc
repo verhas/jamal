@@ -1186,12 +1186,12 @@ results
 ----
 
 
-Because it is cumbersome to write `{#ident {@undefine default}{?...}}` every time the option `noUndefault` can also be used.
+Because it is cumbersome to write `{#ident {@undefine default}{?...}}` every time the option `:noUndefault` can also be used.
 
 [source]
 ----
 {@define default=wupppss}\
-{@options noUndefault}>>{?hoppala}<<{@options ~noUndefault}>>{?hoppala}<<
+{@options :noUndefault}>>{?hoppala}<<{@options ~:noUndefault}>>{?hoppala}<<
 ----
 
 results

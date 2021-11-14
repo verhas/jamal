@@ -10,6 +10,16 @@ public class SpecialCharacters {
      */
     public static final char PRE_EVALUATE = '#';
     /**
+     * When this character is contained in the name of a macro, then the macro is global.
+     * If the first character is ':' then this is removed from the name of the macro and the macro can be used
+     * with a normal name. The use of the macro does not need to know that the macro is defined globally.
+     * <p>
+     * Local macros, however, override global macros. In situations like that, the local macro is used unless the ':'
+     * is used explicitly.
+     */
+    public static final char GLOBAL_NAME_CHAR = ':';
+
+    /**
      * The opposite of {@link #PRE_EVALUATE}. When this character is used in front of a built-in macro, the input of the
      * macro is NOT evaluated before the invoking {@link Macro#evaluate(Input, Processor)}.
      */
@@ -75,6 +85,26 @@ public class SpecialCharacters {
      * macro is a verbatim macro.
      */
     public static final char DEFINE_VERBATIM = '~';
+
+    /**
+     * When this character is used in front of an option then the option is to be reset instead of set. For example
+     * <pre>{@code
+     *    [options mySpecialOption]
+     * }</pre>
+     *
+     *  switches the option on/true and
+     *
+     *  <pre>{@code
+     *     [options ~mySpecialOption]
+     *  }</pre>
+     *
+     *  switches the option off/false.
+     */
+    public static final char OPTION_NEGATE = '~';
+
+
+
+
     /**
      * This character can be used in a {@code define} macro to signal that the named macro should only be defined if
      * it was not defined yet, otherwise just keep the original. Without this character the macro would be redefined.

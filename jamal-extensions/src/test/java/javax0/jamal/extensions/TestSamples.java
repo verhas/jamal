@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.testsupport.TestAll;
+import javax0.jamal.testsupport.TestThat;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TestSamples {
     private javax0.jamal.api.Input createInput(String testFile) throws IOException {

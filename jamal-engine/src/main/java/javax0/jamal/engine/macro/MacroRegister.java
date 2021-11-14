@@ -9,6 +9,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.OptionsStore;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -155,7 +156,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         int i = 1;
         while (scopeStack.get(scopeStack.size() - i).locked) {
             i++;
-            if( i > scopeStack.size()){
+            if (i > scopeStack.size()) {
                 throw new RuntimeException("Internal Error: scopeStack is fully locked.");
             }
         }
@@ -222,6 +223,16 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         return scopeStack.get(scopeStack.size() - writableOffset());
     }
 
+    @Override
+    public <T extends Identified> Optional<T> getLocalUserDefined(final String id) {
+        Objects.requireNonNull(id);
+        if (InputHandler.isGlobalMacro(id)) {
+            return getUserDefined(id);
+        } else {
+            return Optional.ofNullable((T) writableScope().udMacros.get(InputHandler.convertGlobal(id)));
+        }
+    }
+
     /**
      * Get the macro or user defined macro from the stack.
      *
@@ -232,7 +243,12 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      */
     private <T> Optional<T> stackGet(Function<Scope, Map<String, T>> field, String id) {
         final int end = scopeStack.size() - 1;
-        return IntStream.range(TOP_LEVEL, scopeStack.size()).sequential().mapToObj(i -> scopeStack.get(end - i)).map(field).filter(map -> map.containsKey(id)).map(map -> map.get(id)).findFirst();
+        return IntStream.range(TOP_LEVEL, scopeStack.size()).sequential()
+            .mapToObj(i -> scopeStack.get(end - i))
+            .map(field)
+            .filter(map -> map.containsKey(id))
+            .map(map -> map.get(id))
+            .findFirst();
     }
 
     /**
@@ -323,7 +339,18 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
             if (macro == null) {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported, not in the scope of export.");
             }
-            scopeStack.get(scopeStack.size() - offset - 1).udMacros.put(id, macro);
+            final var exportToScope= scopeStack.get(scopeStack.size() - offset - 1);
+            final var udMacros = exportToScope.udMacros;
+            if (macro instanceof OptionsStore) {
+                final var existing = udMacros.get(id);
+                if (existing == null || ! (existing instanceof OptionsStore)) {
+                    udMacros.put(id, macro);
+                } else {
+                    ((OptionsStore)existing).pullFrom(((OptionsStore)macro));
+                }
+            } else {
+                udMacros.put(id, macro);
+            }
             writableScope().udMacros.remove(id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");

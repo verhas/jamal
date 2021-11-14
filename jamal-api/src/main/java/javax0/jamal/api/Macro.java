@@ -47,7 +47,7 @@ public interface Macro extends Identified, ServiceLoaded {
      * are {@code $}, {@code _} (underscore), {@code :} (colon) and any alphabetic character.
      */
     static boolean validId1stChar(char c) {
-        return c == '$' || c == '_' || c == ':' || Character.isAlphabetic(c);
+        return c == '$' || c == '_' || c == SpecialCharacters.GLOBAL_NAME_CHAR || Character.isAlphabetic(c);
     }
 
     /**

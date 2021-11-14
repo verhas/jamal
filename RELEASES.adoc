@@ -32,6 +32,10 @@ Options `noUndefault` and `emptyUndef` are handled by macro evaluation.
 
 `snip:check` is reworked, extended and improved.
 
+The core macro `if` now has several options and it is possible to test numeric comparisons as well as string emptiness.
+
+JUNIT dependency upped to 5.8.1
+
 === https://github.com/verhas/jamal/tree/1.9.1[1.9.1]
 
 The macro `escape` was extended.
