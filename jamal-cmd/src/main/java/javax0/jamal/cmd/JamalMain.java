@@ -1,6 +1,6 @@
 package javax0.jamal.cmd;
 
-import javax0.jamal.api.Debugger;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
@@ -117,7 +117,7 @@ public class JamalMain implements Callable<Integer> {
             if (outputPath != null) {
                 if (!drydry) {
                     final String result;
-                    System.setProperty(Debugger.JAMAL_DEBUG_SYS, debug);
+                    System.setProperty(EnvironmentVariables.JAMAL_DEBUG_SYS, debug);
                     try (final var processor = new Processor(macroOpen, macroClose)) {
                         result = processor.process(createInput(inputPath));
                     }

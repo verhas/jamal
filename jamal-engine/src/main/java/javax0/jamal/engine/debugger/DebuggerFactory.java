@@ -1,6 +1,7 @@
 package javax0.jamal.engine.debugger;
 
 import javax0.jamal.api.Debugger;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.engine.DebuggerStub;
 import javax0.jamal.engine.NullDebugger;
 import javax0.jamal.engine.Processor;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 /**
  * The debugger factory finds and instantiates a debugger for the given processor. To perform this task the code looks
- * at the system property {@link Debugger#JAMAL_DEBUG_SYS} or the environment variable {@link Debugger#JAMAL_DEBUG_ENV}.
+ * at the system property {@link EnvironmentVariables#JAMAL_DEBUG_SYS} or the environment variable {@link EnvironmentVariables#JAMAL_DEBUG_ENV}.
  * (If sys property is defined then the environment variable is ignored.)
  * <p>
  * The value of the sys property or env variable is the configuration string for the debugger.
@@ -36,8 +37,8 @@ public class DebuggerFactory {
      * @return the dbugger instance and never {@code null}.
      */
     public static Debugger build(Processor processor) {
-        final var s = Optional.ofNullable(System.getProperty(Debugger.JAMAL_DEBUG_SYS)).orElseGet(
-            () -> System.getenv(Debugger.JAMAL_DEBUG_ENV));
+        final var s = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_DEBUG_SYS)).orElseGet(
+            () -> System.getenv(EnvironmentVariables.JAMAL_DEBUG_ENV));
         if (s == null || s.length() == 0) {
             return new NullDebugger();
         }

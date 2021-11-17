@@ -22,7 +22,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent {
         boolean noChange = detectNoChange.get();
         final var parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replace.get()));
         if (parts.length == 0) {
-            throw new BadSyntaxAt("The replace macro should have at least one part: '" + replace + "'", in.getPosition());
+            throw new BadSyntaxAt("The replace macro should have at least one part: '" + replace.get() + "'", in.getPosition());
         }
 
         final var lines = in.toString().split("\n", -1);

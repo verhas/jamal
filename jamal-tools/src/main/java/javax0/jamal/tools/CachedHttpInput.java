@@ -1,5 +1,7 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.EnvironmentVariables;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,16 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 class CachedHttpInput {
-    private static final String JAMAL_CONNECT_TIMEOUT_ENV = "JAMAL_CONNECT_TIMEOUT";
-    private static final String JAMAL_CONNECT_TIMEOUT_SYS = "jamal.connect.timeout";
-    private static final String JAMAL_READ_TIMEOUT_ENV = "JAMAL_READ_TIMEOUT";
-    private static final String JAMAL_READ_TIMEOUT_SYS = "jamal.read.timeout";
     private static final int CONNECT_TIMEOUT;
     private static final int READ_TIMEOUT;
 
     static {
-        final var connTimeout = Optional.ofNullable(System.getProperty(JAMAL_CONNECT_TIMEOUT_SYS)).orElseGet(
-            () -> System.getenv(JAMAL_CONNECT_TIMEOUT_ENV));
+        final var connTimeout = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_CONNECT_TIMEOUT_SYS)).orElseGet(
+            () -> System.getenv(EnvironmentVariables.JAMAL_CONNECT_TIMEOUT_ENV));
         if (connTimeout != null) {
             CONNECT_TIMEOUT = Integer.parseInt(connTimeout);
         } else {
@@ -28,8 +26,8 @@ class CachedHttpInput {
     }
 
     static {
-        final var readTimeout = Optional.ofNullable(System.getProperty(JAMAL_READ_TIMEOUT_SYS)).orElseGet(
-            () -> System.getenv(JAMAL_READ_TIMEOUT_ENV));
+        final var readTimeout = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_READ_TIMEOUT_SYS)).orElseGet(
+            () -> System.getenv(EnvironmentVariables.JAMAL_READ_TIMEOUT_ENV));
         if (readTimeout != null) {
             READ_TIMEOUT = Integer.parseInt(readTimeout);
         } else {

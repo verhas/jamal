@@ -36,6 +36,8 @@ The core macro `if` now has several options and it is possible to test numeric c
 
 JUNIT dependency upped to 5.8.1
 
+Handling of `lenient` option has changed. From now on `lenient` has to be a global option.
+
 {%RELEASE/1.9.1%}
 
 The macro `escape` was extended.

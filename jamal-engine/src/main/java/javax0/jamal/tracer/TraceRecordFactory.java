@@ -1,5 +1,6 @@
 package javax0.jamal.tracer;
 
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Position;
 
 import java.util.ArrayDeque;
@@ -11,8 +12,6 @@ import java.util.Optional;
 public class TraceRecordFactory {
     final List<TraceRecord> traces = new ArrayList<>();
     final Deque<TraceRecord> stack = new ArrayDeque<>();
-    private static final String JAMAL_TRACE_ENV = "JAMAL_TRACE";
-    private static final String JAMAL_TRACE_SYS = "jamal.trace";
     private final String traceFile;
     /**
      * Contains the level of execution during the evaluation. Since the implementation of macro evaluation is
@@ -22,8 +21,8 @@ public class TraceRecordFactory {
     private int level = 0;
 
     public TraceRecordFactory() {
-        traceFile = Optional.ofNullable(System.getProperty(JAMAL_TRACE_SYS)).orElseGet(
-            () -> System.getenv(JAMAL_TRACE_ENV));
+        traceFile = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_TRACE_SYS)).orElseGet(
+            () -> System.getenv(EnvironmentVariables.JAMAL_TRACE_ENV));
     }
 
     public TraceRecord openUserDefinedMacroRecord(Position position) {

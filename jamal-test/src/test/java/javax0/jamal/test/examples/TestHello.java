@@ -1,6 +1,6 @@
 package javax0.jamal.test.examples;
 
-import javax0.jamal.api.Debugger;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.test.tools.junit.IntelliJOnly;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +33,7 @@ public class TestHello {
     @DisplayName("Used to debug the debugger UI")
     @IntelliJOnly
     void testDebugger() throws Exception {
-        System.setProperty(Debugger.JAMAL_DEBUG_SYS, "http:8081?cors=*");
+        System.setProperty(EnvironmentVariables.JAMAL_DEBUG_SYS, "http:8081?cors=*");
         TestThat.theInput(
             "hahóóó\n".repeat(2) +
                 "{@define !a=1}" +
@@ -51,6 +51,6 @@ public class TestHello {
         ).results("hahóóó\n" +
             "hahóóó\n" +
             "121");
-        System.clearProperty(Debugger.JAMAL_DEBUG_SYS);
+        System.clearProperty(EnvironmentVariables.JAMAL_DEBUG_SYS);
     }
 }

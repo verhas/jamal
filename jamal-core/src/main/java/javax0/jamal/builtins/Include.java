@@ -1,6 +1,7 @@
 package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
@@ -21,20 +22,18 @@ public class Include implements Macro {
      */
     private int depth = getDepth();
 
-    private static final String JAMAL_INCLUDE_DEPTH_ENV = "JAMAL_INCLUDE_DEPTH";
-    private static final String JAMAL_INCLUDE_DEPTH_SYS = "jamal.include.depth";
     private static final int DEFAULT_DEPTH = 100;
 
     private static int getDepth() {
-        final String limitString = Optional.ofNullable(System.getProperty(JAMAL_INCLUDE_DEPTH_SYS)).orElseGet(
-            () -> System.getenv(JAMAL_INCLUDE_DEPTH_ENV));
+        final String limitString = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_INCLUDE_DEPTH_SYS)).orElseGet(
+            () -> System.getenv(EnvironmentVariables.JAMAL_INCLUDE_DEPTH_ENV));
         if (limitString == null) {
             return DEFAULT_DEPTH;
         }
         try {
             return Integer.parseInt(limitString);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(new BadSyntax("The environment variable " + JAMAL_INCLUDE_DEPTH_ENV + " should be an integer"));
+            throw new RuntimeException(new BadSyntax("The environment variable " + EnvironmentVariables.JAMAL_INCLUDE_DEPTH_ENV + " should be an integer"));
         }
     }
 

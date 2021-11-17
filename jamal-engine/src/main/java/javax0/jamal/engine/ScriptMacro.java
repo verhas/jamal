@@ -15,7 +15,7 @@ import static javax0.jamal.tools.ScriptingTools.resultToString;
 public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
     final private String id;
     final private Processor processor;
-    final private OptionsStore.OptionValue lenient;
+    final private OptionsStore optionsStore;
     final private String content;
     final private String scriptType;
     final ArgumentHandler argumentHandler;
@@ -39,7 +39,7 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
      */
     public ScriptMacro(Processor processor, String id, String scriptType, String content, String... parameters) throws BadSyntax {
         this.processor = processor;
-        this.lenient = processor.optionValue(":lenient");
+        this.optionsStore = OptionsStore.getInstance(processor);
         this.scriptType = scriptType;
         this.id = id;
         this.content = content;
@@ -68,7 +68,7 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
      */
     @Override
     public String evaluate(final String... parameters) throws BadSyntax {
-        final var adjustedValues = argumentHandler.adjustActualValues(parameters, lenient.is());
+        final var adjustedValues = argumentHandler.adjustActualValues(parameters, optionsStore.is(Processor.LENIENT));
         if (isJShell) {
             for (int i = 0; i < argumentHandler.parameters.length; i++) {
                 ScriptingTools.populateJShell(processor.getJShellEngine(), argumentHandler.parameters[i], adjustedValues[i]);

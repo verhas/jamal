@@ -10,10 +10,6 @@ import java.util.ServiceLoader;
  * should have a public argument-less constructor.
  */
 public interface Debugger extends AutoCloseable, ServiceLoaded {
-    // snipline JAMAL_DEBUG_ENV
-    String JAMAL_DEBUG_ENV = "JAMAL_DEBUG";
-    // snipline JAMAL_DEBUG_SYS
-    String JAMAL_DEBUG_SYS = "jamal.debug";
 
     /**
      * Loads the instances that are available via the service loader.

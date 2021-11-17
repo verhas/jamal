@@ -24,7 +24,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     final private String id;
     final private boolean verbatim;
     final private Processor processor;
-    final private OptionsStore.OptionValue lenient;
+    final private OptionsStore optionsStore;
     final private String content;
     final private ArgumentHandler argumentHandler;
     final private String openStr, closeStr;
@@ -62,7 +62,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      */
     public UserDefinedMacro(Processor processor, String id, String content, boolean verbatim, String... parameters) throws BadSyntax {
         this.processor = processor;
-        this.lenient = processor.optionValue(":lenient");
+        this.optionsStore = OptionsStore.getInstance(processor);
         this.openStr = processor.getRegister().open();
         this.closeStr = processor.getRegister().close();
         this.id = id;
@@ -102,7 +102,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      */
     @Override
     public String evaluate(final String... parameters) throws BadSyntax {
-        final var adjustedValues = argumentHandler.adjustActualValues(parameters, lenient.is());
+        final var adjustedValues = argumentHandler.adjustActualValues(parameters, optionsStore.is(Processor.LENIENT));
         var values = argumentHandler.buildValueMap(adjustedValues);
         if (root == null) {
             root = createSegmentList();

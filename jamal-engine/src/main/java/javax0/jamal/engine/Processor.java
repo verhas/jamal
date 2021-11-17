@@ -47,9 +47,10 @@ public class Processor implements javax0.jamal.api.Processor {
     public static final String NO_UNDEFAULT = ":noUndefault";
     // snipline EMPTY_UNDEF
     public static final String EMPTY_UNDEF = ":emptyUndef";
-
-    final private OptionsStore.OptionValue noUndefault;
-    final private OptionsStore.OptionValue emptyUndef;
+    // snipline FAIL_FAST
+    public static final String FAIL_FAST = ":failfast";
+    // snipline LENIENT
+    public static final String LENIENT = ":lenient";
 
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
 
@@ -64,6 +65,8 @@ public class Processor implements javax0.jamal.api.Processor {
     private final Context context;
 
     private final Debugger debugger;
+
+    private final OptionsStore optionsStore;
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -81,9 +84,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param context    is the embedding context
      */
     public Processor(String macroOpen, String macroClose, Context context) {
-        noUndefault = optionValue(NO_UNDEFAULT);
-        emptyUndef = optionValue(EMPTY_UNDEF);
         this.context = context;
+        optionsStore = OptionsStore.getInstance(this);
         try {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {
@@ -416,7 +418,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private void pushBadSyntax(BadSyntax bs, final Position ref) throws BadSyntaxAt {
         final BadSyntaxAt bsa = bs instanceof BadSyntaxAt ? ((BadSyntaxAt) bs) : new BadSyntaxAt(bs, ref);
-        if (option("failfast").isPresent()) {
+        if (optionsStore.is(FAIL_FAST)) {
             throw bsa;
         } else {
             exceptions.push(bsa);
@@ -434,7 +436,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     /**
      * Evaluate a user defined macro that starts at the start of the input. If it starts with a  {@code ?} character
-     * then the user defined macro may not be defined. In this case the result will be an empty string. Otherwise an
+     * then the user defined macro may not be defined. In this case the result will be an empty string. Otherwise, an
      * undefined macro results a syntax error.<p>
      *
      * @param input     starts at the start of the user defined macro but after the macro opening character and possibly
@@ -453,7 +455,7 @@ public class Processor implements javax0.jamal.api.Processor {
         final boolean reportUndefBeforeEval = doesStartWithQuestionMark(input);
         final Input evaluatedInput = evaluateMacroStart(input, qualifier);
         final boolean reportUndefAfterEval = doesStartWithQuestionMark(evaluatedInput);
-        final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval && !emptyUndef.is();
+        final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval && !optionsStore.is(EMPTY_UNDEF);
         skipWhiteSpaces(evaluatedInput);
 
         final String id = fetchId(evaluatedInput);
@@ -463,7 +465,7 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         skipWhiteSpaces(evaluatedInput);
         final Optional<Identified> identifiedOpt;
-        if (reportUndef || !noUndefault.is()) {
+        if (reportUndef || !optionsStore.is(NO_UNDEFAULT)) {
             identifiedOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO);
         } else {
             identifiedOpt = macros.getUserDefined(id);
@@ -865,8 +867,7 @@ public class Processor implements javax0.jamal.api.Processor {
             return;
         }
         Deque<Throwable> exceptions = new ArrayDeque<>(this.exceptions);
-        final var closers = new LinkedHashSet<AutoCloseable>();
-        closers.addAll(openResources.keySet());
+        final var closers = new LinkedHashSet<>(openResources.keySet());
         try {
             currentlyClosing = true;
             for (final var resource : closers) {
@@ -930,28 +931,5 @@ public class Processor implements javax0.jamal.api.Processor {
             openResources.put(closer, closer);
         }
         return openResources.get(closer);
-    }
-
-    private static final Optional<Boolean> OPTIONAL_TRUE = Optional.of(true);
-
-    /**
-     * Returns an optional telling if an option is present or not.
-     *
-     * @param option the name of the option
-     * @return an empty optional if the option is not present and a non-empty optional if the option is present. The
-     * value inside the optional is not defined.
-     */
-    Optional<Boolean> option(String option) {
-        return OptionsStore.getInstance(this).is(option) ? OPTIONAL_TRUE : Optional.empty();
-    }
-
-    /**
-     * Get the option value for a specific option. Should be used for global options. Use for local options may be
-     * tricky.
-     * @param option the name of the option
-     * @return an {@link javax0.jamal.tools.OptionsStore.OptionValue} holding the value for this option.
-     */
-    public OptionsStore.OptionValue optionValue(String option) {
-        return OptionsStore.getInstance(this).value(option);
     }
 }

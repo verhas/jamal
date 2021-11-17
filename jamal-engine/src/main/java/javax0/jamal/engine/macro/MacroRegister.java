@@ -4,12 +4,12 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Delimiters;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.OptionsStore;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -100,8 +100,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     /**
-     * This variable is set in the constructor based on the system property {@link Macro#JAMAL_CHECKSTATE_SYS} or the
-     * environment variable {@link Macro#JAMAL_CHECKSTATE_ENV} when no system property.
+     * This variable is set in the constructor based on the system property {@link EnvironmentVariables#JAMAL_CHECKSTATE_SYS} or the
+     * environment variable {@link EnvironmentVariables#JAMAL_CHECKSTATE_ENV} when no system property.
      * <p>
      * When this variable is {@code true} then registering a macro checks that the macro has no state holding fields,
      * (fields that are neither {@code final}, nor {@code static}) and refuses to load the macro if it has state.
@@ -124,8 +124,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     /**
      * At the creation of the register we start with a new macro evaluation level, which is the top level.
      * <p>
-     * The constructor also reads the system property {@link Macro#JAMAL_CHECKSTATE_SYS} or the environment variable
-     * {@link Macro#JAMAL_CHECKSTATE_ENV} when no system property and based on that sets the global {@link #checkState}
+     * The constructor also reads the system property {@link EnvironmentVariables#JAMAL_CHECKSTATE_SYS} or the environment variable
+     * {@link EnvironmentVariables#JAMAL_CHECKSTATE_ENV} when no system property and based on that sets the global {@link #checkState}
      * field.
      */
     public MacroRegister() {
@@ -134,8 +134,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         } catch (BadSyntax badSyntax) {
             throw new RuntimeException("SNAFU: should not happen");
         }
-        final var s = Optional.ofNullable(System.getProperty(Macro.JAMAL_CHECKSTATE_SYS)).orElseGet(
-            () -> System.getenv(Macro.JAMAL_CHECKSTATE_ENV));
+        final var s = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_CHECKSTATE_SYS)).orElseGet(
+            () -> System.getenv(EnvironmentVariables.JAMAL_CHECKSTATE_ENV));
         checkState = s != null && s.length() > 0 && !s.equals("false");
     }
 
@@ -221,16 +221,6 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      */
     private Scope writableScope() {
         return scopeStack.get(scopeStack.size() - writableOffset());
-    }
-
-    @Override
-    public <T extends Identified> Optional<T> getLocalUserDefined(final String id) {
-        Objects.requireNonNull(id);
-        if (InputHandler.isGlobalMacro(id)) {
-            return getUserDefined(id);
-        } else {
-            return Optional.ofNullable((T) writableScope().udMacros.get(InputHandler.convertGlobal(id)));
-        }
     }
 
     /**
@@ -339,18 +329,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
             if (macro == null) {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported, not in the scope of export.");
             }
-            final var exportToScope= scopeStack.get(scopeStack.size() - offset - 1);
+            final var exportToScope = scopeStack.get(scopeStack.size() - offset - 1);
             final var udMacros = exportToScope.udMacros;
-            if (macro instanceof OptionsStore) {
-                final var existing = udMacros.get(id);
-                if (existing == null || ! (existing instanceof OptionsStore)) {
-                    udMacros.put(id, macro);
-                } else {
-                    ((OptionsStore)existing).pullFrom(((OptionsStore)macro));
-                }
-            } else {
-                udMacros.put(id, macro);
-            }
+            udMacros.put(id, macro);
             writableScope().udMacros.remove(id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");

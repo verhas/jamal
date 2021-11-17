@@ -2,6 +2,7 @@ package javax0.jamal.tools;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 
@@ -103,37 +104,11 @@ public class FileTools {
         }
     }
 
-    /**
-     * Environment variable or system property that can define replacement for files.
-     * <p>
-     * The aim of this feature to use a local file during development, and still refer to it using the {@code https://}
-     * URL, which will be the production URL. You want to run tests without pushing the file to a repository, but at
-     * the same time you do not want your code to refer to a dev location to be changed before releasing.
-     * <p>
-     * Only absolute file names can be replaced.
-     * <p>
-     * For example, you include the file {@code https://raw.githubusercontent.com/central7/pom/main/pom.jim}
-     * in your Jamal file, and you can replace it with a local file, like {@code ~/projects/jamal/pom.jim} then you
-     * should set the environment variable
-     *
-     * <pre>{@code
-     * export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.jim=~/github/jamal/pom.jim
-     * }</pre>
-     * <p>
-     * The environment variable {@code JAMAL_DEV_PATH} is a list of {@code =} separated pairs. The list is parsed using
-     * the standard {@link InputHandler#getParts(Input)} method. This is the reason why the first character in the
-     * example is the separator {@code |}.
-     */
-    // snipline JAMAL_DEV_PATH_ENV
-    private static final String JAMAL_DEV_PATH_ENV = "JAMAL_DEV_PATH";
-    // snipline JAMAL_DEV_PATH_SYS
-    private static final String JAMAL_DEV_PATH_SYS = "jamal.dev.path";
-
     private static final Map<String, String> devPaths = new HashMap<>();
 
     static {
-        final var devPathString = Optional.ofNullable(System.getProperty(JAMAL_DEV_PATH_SYS)).orElseGet(
-            () -> System.getenv(JAMAL_DEV_PATH_ENV));
+        final var devPathString = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_DEV_PATH_SYS)).orElseGet(
+            () -> System.getenv(EnvironmentVariables.JAMAL_DEV_PATH_ENV));
         if (devPathString != null) {
             try {
                 final String[] paths;

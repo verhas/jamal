@@ -10,6 +10,7 @@ import javax0.jamal.snippet.Java.ClassMacro;
 import javax0.jamal.snippet.Java.FieldMacro;
 import javax0.jamal.snippet.Java.MethodMacro;
 import javax0.jamal.snippet.KillLines;
+import javax0.jamal.snippet.LineCount;
 import javax0.jamal.snippet.ListDir;
 import javax0.jamal.snippet.NumberLines;
 import javax0.jamal.snippet.Reflow;
@@ -17,19 +18,19 @@ import javax0.jamal.snippet.Replace;
 import javax0.jamal.snippet.ReplaceLines;
 import javax0.jamal.snippet.SkipLines;
 import javax0.jamal.snippet.Snip;
+import javax0.jamal.snippet.SnipCheck;
 import javax0.jamal.snippet.SnipList;
 import javax0.jamal.snippet.SnipProperties;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
-import javax0.jamal.snippet.SnipCheck;
 import javax0.jamal.snippet.StringMacros.Contains;
 import javax0.jamal.snippet.StringMacros.EndsWith;
 import javax0.jamal.snippet.StringMacros.Equals;
 import javax0.jamal.snippet.StringMacros.Length;
 import javax0.jamal.snippet.StringMacros.Quote;
+import javax0.jamal.snippet.StringMacros.Reverse;
 import javax0.jamal.snippet.StringMacros.StartsWith;
 import javax0.jamal.snippet.StringMacros.Substring;
-import javax0.jamal.snippet.StringMacros.Reverse;
 import javax0.jamal.snippet.TrimLines;
 import javax0.jamal.snippet.Update;
 import javax0.jamal.snippet.XmlFormat;
@@ -42,6 +43,7 @@ module jamal.snippet {
     requires java.xml;
     provides Macro with Clear,
         Collect,
+        LineCount,
         NumberLines,
         Snip,
         SnipCheck,

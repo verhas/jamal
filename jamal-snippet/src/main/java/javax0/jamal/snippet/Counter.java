@@ -9,6 +9,7 @@ import java.util.IllegalFormatException;
 public class Counter implements Identified, Evaluable {
     final String id;
     int value;
+    int lastValue;
     final int step;
     final String format;
 
@@ -16,6 +17,7 @@ public class Counter implements Identified, Evaluable {
         this.id = id;
         this.step = step;
         this.value = start;
+        this.lastValue = start;
         this.format = format;
     }
 
@@ -24,6 +26,18 @@ public class Counter implements Identified, Evaluable {
 
     @Override
     public String evaluate(String... parameters) throws BadSyntax {
+        final String s;
+        if (parameters.length > 0 && parameters[0].equals("last")) {
+            s = formatValue(lastValue);
+        } else {
+            s = formatValue(value);
+            lastValue = value;
+            value += step;
+        }
+        return s;
+    }
+
+    private String formatValue(int value) throws BadSyntax {
         String s;
         try {
             s = String.format(format, value);
@@ -43,7 +57,6 @@ public class Counter implements Identified, Evaluable {
             s = s.replace("$ROMAN", roman)
                 .replace("$roman", roman.toLowerCase());
         }
-        value += step;
         return s;
     }
 

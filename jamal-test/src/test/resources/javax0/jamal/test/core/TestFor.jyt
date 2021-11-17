@@ -6,6 +6,20 @@ d is either a, b, c or d
 %}
 
 {%#yaml:define testFor=
+Test evaluating lenient:
+  Test that works:
+    Input: |-
+      {#for (k,z) in ()=wukz{@options :lenient}}
+    Output: |-
+      wu
+  Test that does not work, though it should:
+    Input: |-
+      {#for (k,z) in ()=wukz{@options :lenient}}
+    Output: |-
+      wu
+
+
+
 iterating through an array:
     Input: |-
       {@use javax0.jamal.test.core.ObjectMacro as macroArray}\
@@ -149,5 +163,6 @@ Syntax error:
   Simple syntax error 6:
     Input: "{@for ($a,$b) in (a|a,b|a,c,12|3|3=}"
     Throws: "There is no closing '\\)' for the values in the for macro."
+
 %}
 {%@yaml:output testFor%}

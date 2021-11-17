@@ -1,5 +1,7 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.EnvironmentVariables;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -153,16 +155,14 @@ public class Cache {
         }
     }
 
-    private static final String JAMAL_HTTPS_CACHE_ENV = "JAMAL_HTTPS_CACHE";
-    private static final String JAMAL_HTTPS_CACHE_SYS = "jamal.https.cache";
     private static final String DEFAULT_CACHE_ROOT = "~/.jamal/cache/";
     private static final String SNAPSHOT = "SNAPSHOT";
 
     static final Entry NO_CACHE = new Entry(NonexistentFile.INSTANCE, NonexistentFile.INSTANCE);
 
     private static final File CACHE_ROOT_DIRECTORY = new File(
-        Optional.ofNullable(System.getProperty(JAMAL_HTTPS_CACHE_SYS))
-            .or(() -> Optional.ofNullable(System.getenv(JAMAL_HTTPS_CACHE_ENV)))
+        Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_HTTPS_CACHE_SYS))
+            .or(() -> Optional.ofNullable(System.getenv(EnvironmentVariables.JAMAL_HTTPS_CACHE_ENV)))
             .or(() -> Optional.of(DEFAULT_CACHE_ROOT)).map(FileTools::adjustedFileName).get());
 
 

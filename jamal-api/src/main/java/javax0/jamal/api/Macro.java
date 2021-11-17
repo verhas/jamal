@@ -24,8 +24,6 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
  */
 @FunctionalInterface
 public interface Macro extends Identified, ServiceLoaded {
-    String JAMAL_CHECKSTATE_SYS = "jamal.checkstate";
-    String JAMAL_CHECKSTATE_ENV = "JAMAL_CHECKSTATE";
 
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Stateful {

@@ -17,13 +17,14 @@ public class KillLines implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var pattern = Params.holder("pattern").orElse("^\\s*$").as(Pattern.class, Pattern::compile);
-        Params.using(processor).from(this).keys(pattern).parse(in);
+        final var keep = Params.<Boolean>holder("keep").asBoolean();
+        Params.using(processor).from(this).keys(pattern,keep).parse(in);
 
         final var lines = in.toString().split("\n", -1);
         int from = 0, to = 0;
         boolean lastLineCopied = false;
         while (from < lines.length) {
-            if (!pattern.get().matcher(lines[from]).find()) {
+            if (keep.is() == pattern.get().matcher(lines[from]).find()) {
                 lines[to] = lines[from];
                 lastLineCopied = from == lines.length - 1;
                 to++;
