@@ -17,10 +17,7 @@ public class TestEnvironmentNoDebug {
     @Test
     @DisplayName("The environment variable JAMAL_DEBUG is not set")
     void test() {
-        Assertions.assertNull(
-            Optional.ofNullable(System.getenv(EnvironmentVariables.JAMAL_DEBUG_ENV)).orElseGet(
-                () -> System.getProperty(EnvironmentVariables.JAMAL_DEBUG_SYS)
-            ));
+        Assertions.assertFalse( EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_DEBUG_ENV).isPresent());
     }
 
     private static final Pattern JSON_VERSION_LINE = Pattern.compile("^\\s*\"version\"\\s*:\\s*\"(.*?)\"\\s*,\\s*$");

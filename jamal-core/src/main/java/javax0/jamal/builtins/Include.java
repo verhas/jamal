@@ -22,14 +22,10 @@ public class Include implements Macro {
      */
     private int depth = getDepth();
 
-    private static final int DEFAULT_DEPTH = 100;
+    private static final String DEFAULT_DEPTH = "100";
 
     private static int getDepth() {
-        final String limitString = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_INCLUDE_DEPTH_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_INCLUDE_DEPTH_ENV));
-        if (limitString == null) {
-            return DEFAULT_DEPTH;
-        }
+        final String limitString = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_INCLUDE_DEPTH_ENV).orElse(DEFAULT_DEPTH);
         try {
             return Integer.parseInt(limitString);
         } catch (NumberFormatException nfe) {

@@ -117,7 +117,7 @@ public class JamalMain implements Callable<Integer> {
             if (outputPath != null) {
                 if (!drydry) {
                     final String result;
-                    System.setProperty(EnvironmentVariables.JAMAL_DEBUG_SYS, debug);
+                    EnvironmentVariables.setenv(EnvironmentVariables.JAMAL_DEBUG_ENV, debug);
                     try (final var processor = new Processor(macroOpen, macroClose)) {
                         result = processor.process(createInput(inputPath));
                     }

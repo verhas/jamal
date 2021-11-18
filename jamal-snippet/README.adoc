@@ -71,6 +71,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
+.. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
 .. <<date,`date`>>
@@ -86,7 +87,7 @@ This way, it is easier to keep your documentation up to date.
 
 
 [[usage]]
-=== 1. Usage
+=== 1.Usage
 
 If you are using Jamal programmatically or from Maven then the dependency you have to add to your project is:
 
@@ -102,10 +103,10 @@ The macro classes are listed in the `provides` directive in the `module-info.jav
 There is no need to invoke the `use` command to get access to these macros.
 
 [[macros]]
-=== 2. Macros
+=== 2.Macros
 
 [[snip_collect]]
-==== i. `snip:collect`
+==== i.`snip:collect`
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -286,7 +287,7 @@ To do that, you have to have the `snip:collect` in every JavaDoc, presumably usi
 That collect macro should name the collection to avoid redefinition error.
 
 [[snip_properties]]
-==== ii. `snip:properties`
+==== ii.`snip:properties`
 
 This macro will load properties from a "properties" file or an "XML" file.
 The names of the properties will become the names of the snippets and the values of the snippets.
@@ -341,7 +342,7 @@ For example, the same properties file in XML format looks like the following:
 ----
 
 [[snip_xml]]
-==== iii. `snip:xml`
+==== iii.`snip:xml`
 
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
@@ -379,7 +380,7 @@ The result is:
 which is the current version of the project as read from the `pom.xml` file.
 
 [[snip_define]]
-==== iv. `snip:define`
+==== iv.`snip:define`
 
 You can use this macro to define a snippet.
 Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
@@ -405,13 +406,13 @@ It is the snippet, which is defined inside the file and not collected from an ex
 
 
 [[snip_clear]]
-==== v. `snip:clear`
+==== v.`snip:clear`
 
 Calling this macro deletes all collected snippets from memory.
 The result of the macro is an empty string.
 
 [[snip]]
-==== vi. `snip`
+==== vi.`snip`
 
 The `snip` macro should have one argument: the name of the snippet previously collected.
 The result of the macro is the content of the snippet.
@@ -470,7 +471,7 @@ The characters that follow the last `/` character are ignored, and eventually ca
 If the regular expression is not found in the first line of the snippet, or there is no capturing group, then the first line itself will result from the macro.
 
 [[snip_check]]
-==== vii. `snip:check`
+==== vii.`snip:check`
 
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
@@ -592,7 +593,7 @@ If the hash value fails, the macro results an error.
 If the hash value is correct, the file or snippet is identical, meaning it has the same number of lines as before.
 
 [[snipList]]
-==== viii. `snip:list`
+==== viii.`snip:list`
 
 This macro lists the defined snippets.
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -624,7 +625,7 @@ If you want to match the full name, file name, or content line, you have to use 
 If all the parameters are missing, then the macro will list all the snippet names.
 
 [[trimLines]]
-==== ix. `trimLines`
+==== ix.`trimLines`
 
 This macro can cut off the unneeded spaces from the start and end of the lines.
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -713,7 +714,7 @@ c
 
 
 [[numberLines]]
-==== x. `numberLines`
+==== x.`numberLines`
 
 This macro can put numbers in front of the lines, sequentially numbering them.
 The syntax of the macro is
@@ -777,9 +778,9 @@ The standard Java method `String::format` will format the number using the forma
 Any illegal formatting will result in an error.
 
 [[killLines]]
-==== xi. `killLines`
+==== xi.`killLines`
 
-This macro deletes selected lines from its input.
+This macro deletes, or keeps the selected lines from its input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
 These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
@@ -796,7 +797,9 @@ The format of the macro is
 }
 ----
 
-The macro deletes the lines, which contain only spaces, by default.
+The default behavior of the macro is to delete the empty lines.
+In that case it removes all lines that contain only spaces or nothing at all.
+
 The parameter macro `pattern` may define a regular expression to select the lines.
 
 For example:
@@ -824,8 +827,34 @@ int j = 15;
 ----
 
 
+If the option `keep` is used then the lines that match the pattern are kept and the other lines are deleted.
+
+
+[source]
+----
+{#killLines pattern=^\s*// keep
+/* this stays */
+// this is some C code that we want to list without the
+// single line comments
+
+#define VERSION 1.0 //this line also stays put
+int j = 15;
+}
+----
+
+creates the output
+
+[source]
+----
+// this is some C code that we want to list without the
+// single line comments
+----
+
+
+In this case only the comment lines remained that start with `//` at the start of the line.
+
 [[skipLines]]
-==== xii. `skipLines`
+==== xii.`skipLines`
 
 You can use this macro to skip lines from the snippet.
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -887,7 +916,7 @@ The `skip` and `endSkip` lines cannot be nested.
 When there is a match for a `skip`, any further `skip` is ignored until an `endSkip`.
 
 [[replace]]
-==== xiii. `replace`
+==== xiii.`replace`
 
 The macro `replace` replaces strings with other strings in its input.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -926,7 +955,7 @@ the pear has fallen off the bush
 but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
-==== xiv. `replaceLines`
+==== xiv.`replaceLines`
 
 This macro replaces strings in the input.
 
@@ -974,7 +1003,7 @@ Use the parameter`detectNoChange` to detect this.
 If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
-==== xv. `counter:define`
+==== xv.`counter:define`
 
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
@@ -1007,7 +1036,7 @@ For example,
 
 [source]
 ----
-{#counter:define id=c{@define start=2}{@define step=17}} {c} {c} {c}
+{#counter:define id=c start=2 step=17} {c} {c} {c}
 ----
 
 will result
@@ -1018,22 +1047,7 @@ will result
 ----
 
 
-The same result can be achievet using macro options, as
-[source]
-----
-{#counter:define start=2 step=17 id=c} {c} {c} {c}
-----
-
-will result
-
-[source]
-----
-2 19 36
-----
-
-
-
-The format can contain the usual `String.format` formattings.
+The format can contain the usual `String.format` format string.
 In addition to that, it can also contain one of the `$alpha`, `$ALPHA`, `$roman` or `$ROMAN` literals.
 
 * `$alpha` will be replaced by `a`, `b`, ... , `z` for 1, 2, ... , 26 counter values.
@@ -1070,8 +1084,42 @@ MMMCCXIII. MMMCCXIV. MMMCCXV.
 ----
 
 
+Sometimes you want to use the current value of the counter multiple times.
+It is possible to define a macro using the counter and then use the macro referring to the value.
+For example the following code
+
+[source]
+----
+{@counter:define id=c}{c} {#define second={c}}{second} {second} {c}
+----
+
+will result
+
+[source]
+----
+1 2 2 3
+----
+
+
+The implemented counters, however provide a simplified approach for this.
+
+[source]
+----
+{@counter:define id=c}{c} {c} {c last} {c}
+----
+
+will have the same output:
+
+[source]
+----
+1 2 2 3
+----
+
+
+In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without increment.
+
 [[reflow]]
-==== xvi. `reflow`
+==== xvi.`reflow`
 
 This macro reflows the content.
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -1231,8 +1279,30 @@ limiters.
 Setting the `width` to any non-positive value will remove the limit from the line length.
 You may use this to override a globally set `width` macro.
 
+
+[[lineCount]]
+==== xvii.`lineCount`
+
+This macro counts the lines in the content and returns the number of lines in decimal format.
+
+[source]
+----
+{@lineCount
+1
+2
+3}
+----
+
+results
+
+[source]
+----
+3
+----
+
+
 [[listDir]]
-==== xvii. `listDir`
+==== xviii.`listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -1249,7 +1319,8 @@ The options are
 
 * `separator` to specify the separator. The default is `,` (comma).
 
-* `grep` to specify a regular expression to filter the files based on their content
+* `grep` to specify a regular expression to filter the files based on their content.
+Only the files that contain a string that matches the `grep` pattern will be listed.
 
 * `pattern` to specify a regular expression to filter the files based on their name
 
@@ -1285,6 +1356,7 @@ will result
 - FilesMacro.java
 - Collect.java
 - TrimLines.java
+- LineCount.java
 - Replace.java
 - SnipXml.java
 - Counter.java
@@ -1373,7 +1445,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 960 bytes
+- snippet: 992 bytes
 - Snip.java: 2,302 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
@@ -1383,12 +1455,13 @@ will result
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 8,007 bytes
 - TrimLines.java: 3,687 bytes
+- LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
-- Counter.java: 3,323 bytes
+- Counter.java: 3,691 bytes
 - StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 1,446 bytes
+- KillLines.java: 1,532 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,220 bytes
 - XmlFormat.java: 3,586 bytes
@@ -1397,7 +1470,7 @@ will result
 - SnipList.java: 1,233 bytes
 - XmlDocument.java: 2,195 bytes
 - Java.java: 9,275 bytes
-- ReplaceLines.java: 2,293 bytes
+- ReplaceLines.java: 2,299 bytes
 - SkipLines.java: 2,048 bytes
 - SnipCheck.java: 5,219 bytes
 - Reflow.java: 1,716 bytes
@@ -1432,7 +1505,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xviii. `xmlFormat`
+==== xix.`xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -1535,7 +1608,7 @@ It will result in the same output as before:
 
 
 [[date]]
-==== xix. `date`
+==== xx.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -1551,12 +1624,12 @@ will result in the output
 
 [source]
 ----
-2021-11-16 13:41:09
+2021-11-18 15:28:02
 ----
 
 
 [[format]]
-==== xx. `format`
+==== xxi.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -1607,7 +1680,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[case]]
-==== xxi. `case:lower`, `case:upper`, ...
+==== xxii.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -1620,7 +1693,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxii. `file`
+==== xxiii.`file`
 
 You can use this macro to include the name of a file in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1659,7 +1732,7 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xxiii. `directory`
+==== xxiv.`directory`
 
 You can use this macro to include the name of a directory in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1699,7 +1772,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxiv. Java Macros
+==== xxv.Java Macros
 
 [[java:class]]
 ===== `java:class`
@@ -1898,7 +1971,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxv. String Macros
+==== xxvi.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -2083,7 +2156,7 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxvi. `snip:update`
+==== xxvii.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

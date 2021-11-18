@@ -10,8 +10,9 @@ import java.util.Optional;
 
 /**
  * The debugger factory finds and instantiates a debugger for the given processor. To perform this task the code looks
- * at the system property {@link EnvironmentVariables#JAMAL_DEBUG_SYS} or the environment variable {@link EnvironmentVariables#JAMAL_DEBUG_ENV}.
- * (If sys property is defined then the environment variable is ignored.)
+ * at the system property, or the environment variable {@link EnvironmentVariables#JAMAL_DEBUG_ENV}.
+ * (If sys property is defined then the environment variable is ignored. The name of the system property is the
+ * lowercase value of the environment variable with dots in place of the {@code _} characters.)
  * <p>
  * The value of the sys property or env variable is the configuration string for the debugger.
  * <p>
@@ -37,9 +38,8 @@ public class DebuggerFactory {
      * @return the dbugger instance and never {@code null}.
      */
     public static Debugger build(Processor processor) {
-        final var s = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_DEBUG_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_DEBUG_ENV));
-        if (s == null || s.length() == 0) {
+        final var s = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_DEBUG_ENV).orElse("");
+        if (s.length() == 0) {
             return new NullDebugger();
         }
         int min = Integer.MAX_VALUE;

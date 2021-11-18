@@ -21,8 +21,7 @@ public class TraceRecordFactory {
     private int level = 0;
 
     public TraceRecordFactory() {
-        traceFile = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_TRACE_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_TRACE_ENV));
+        traceFile = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_TRACE_ENV).orElse(null);
     }
 
     public TraceRecord openUserDefinedMacroRecord(Position position) {

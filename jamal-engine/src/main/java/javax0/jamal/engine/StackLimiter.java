@@ -8,14 +8,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class StackLimiter {
     private static final int LIMIT = getLimit();
-    private static final int DEFAULT_LIMIT = 300;
+    private static final String DEFAULT_LIMIT = "300";
 
     private static int getLimit() {
-        final String limitString = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_STACK_LIMIT_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_STACK_LIMIT_ENV));
-        if (limitString == null) {
-            return DEFAULT_LIMIT;
-        }
+        final String limitString = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_STACK_LIMIT_ENV).orElse(DEFAULT_LIMIT);
         try {
             return Integer.parseInt(limitString);
         } catch (NumberFormatException nfe) {

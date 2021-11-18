@@ -1,7 +1,9 @@
 = Jamal Maven Extension
 
 
+
 This module lets you maintain your `pom.xml` files using Jamal macros.
+
 [WARNING]
 ====
 This project is a Maven extension.

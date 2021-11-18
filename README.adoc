@@ -5,10 +5,6 @@ image::logo.svg[width=150px]
 
 
 
-
-
-
-
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
 
@@ -2160,7 +2156,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
 ----
 
 
@@ -4064,6 +4060,8 @@ For every environment variable, there is a corresponding system property.
 The name of the system property is the same as the environment variable lower case converted and replacing the `_` to `.` characters.
 For example, for the environment variable `JAMAL_CHECKSTATE`, the system property is `jamal.checkstate`.
 First, the system property is consulted, and the environment variable has only effect when the system property is not defined.
+The following sections describe the individual environment variables.
+
 
 ==== `JAMAL_CONNECT_TIMEOUT`
 This variable can define the connection timeout value for the web download in millisecond as unit.
@@ -4149,6 +4147,27 @@ export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.
 The environment value is a list of `=` separated pairs.
 The list is parsed using the standard `InputHandler.getParts(Input)` method.
 This is the reason why the first character in the example is the separator `|`
+
+==== `JAMAL_OPTIONS`
+
+This environment variable can define options for the Jama processor.
+The value of the variable is interpreted as a multi-part input.
+The list is parsed using the standard `InputHandler.getParts(Input)` method.
+If you just have one option then you can define that with the name.
+If there are multiple options then you have to select a non-alphanumeric separator character and present it in front of the list.
+
+NOTE: that the usual `|` character has a special meaning for the bash, and therefore you may need escaping.
+Also note that using `:` as a separator character may work, but it may be misleading as it can also be part of an option name.
+
+The options are set on the top level, there is no need to use a `:` prefix.
+To set an option to `false`, you can use the `~` character, but please do not.
+Every option default value is `false` when not set.
+
+The typical use of this possibility is to set the option `failfast`.
+This option alters the error processing, and it is more "bound" to the execution than to the document.
+It may be a better option to include it in an environment variable, or system property than in the document itself.
+Both approaches work.
+
 
 
 

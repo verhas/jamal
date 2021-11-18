@@ -9,30 +9,19 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 class CachedHttpInput {
     private static final int CONNECT_TIMEOUT;
     private static final int READ_TIMEOUT;
 
     static {
-        final var connTimeout = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_CONNECT_TIMEOUT_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_CONNECT_TIMEOUT_ENV));
-        if (connTimeout != null) {
-            CONNECT_TIMEOUT = Integer.parseInt(connTimeout);
-        } else {
-            CONNECT_TIMEOUT = 5000;
-        }
+        final var connTimeout = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_CONNECT_TIMEOUT_ENV).orElse("5000");
+        CONNECT_TIMEOUT = Integer.parseInt(connTimeout);
     }
 
     static {
-        final var readTimeout = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_READ_TIMEOUT_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_READ_TIMEOUT_ENV));
-        if (readTimeout != null) {
-            READ_TIMEOUT = Integer.parseInt(readTimeout);
-        } else {
-            READ_TIMEOUT = 5000;
-        }
+        final var readTimeout = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_READ_TIMEOUT_ENV).orElse("5000");
+        READ_TIMEOUT = Integer.parseInt(readTimeout);
     }
 
 

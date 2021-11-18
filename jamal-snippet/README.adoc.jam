@@ -77,6 +77,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
+.. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
 .. <<date,`date`>>
@@ -88,8 +89,8 @@ This way, it is easier to keep your documentation up to date.
 .. <<String,String Macros>>
 .. <<snip_update,`snip:update`>>
 
-{%#counter:define id=chapter {%@define format=%d. %}%}
-{%#counter:define id=macroChapter {%@define format=$roman. %}%}
+{%@counter:define id=chapter format=%d. %}
+{%@counter:define id=macroChapter format=$roman. %}
 
 [[usage]]
 === {%chapter%}Usage
@@ -728,7 +729,7 @@ Any illegal formatting will result in an error.
 [[killLines]]
 ==== {%macroChapter%}`killLines`
 
-This macro deletes selected lines from its input.
+This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
 The format of the macro is
@@ -742,7 +743,9 @@ The format of the macro is
 }
 ----
 
-The macro deletes the lines, which contain only spaces, by default.
+The default behavior of the macro is to delete the empty lines.
+In that case it removes all lines that contain only spaces or nothing at all.
+
 The parameter macro `pattern` may define a regular expression to select the lines.
 
 For example:
@@ -759,17 +762,28 @@ int j = 15;
 %}
 
 creates the output
-{%#snip:define killLines1={%output%}%}\
 
-{%@snip killLines1
-[source]
-----
+{%output%}
+
+If the option `keep` is used then the lines that match the pattern are kept and the other lines are deleted.
+
+
+{%sample/
+{#killLines pattern=^\s*// keep
 /* this stays */
+// this is some C code that we want to list without the
+// single line comments
 
 #define VERSION 1.0 //this line also stays put
 int j = 15;
-----
+}
 %}
+
+creates the output
+
+{%output%}
+
+In this case only the comment lines remained that start with `//` at the start of the line.
 
 [[skipLines]]
 ==== {%macroChapter%}`skipLines`
@@ -942,38 +956,21 @@ For example,
 %}
 
 will result
-{%#snip:define counter1=
-{%output%}%}\
 
-{%@snip counter1
-[source]
-----
-1 2 3
-----
-%}
+{%output%}
 
 You can define the start, and the step value for the counter as well as the format.
 For example,
 
 {%sample/
-{#counter:define id=c{@define start=2}{@define step=17}} {c} {c} {c}
+{#counter:define id=c start=2 step=17} {c} {c} {c}
 %}
 
 will result
 
 {%output%}
 
-The same result can be achievet using macro options, as
-{%sample/
-{#counter:define start=2 step=17 id=c} {c} {c} {c}
-%}
-
-will result
-
-{%output%}
-
-
-The format can contain the usual `String.format` formattings.
+The format can contain the usual `String.format` format string.
 In addition to that, it can also contain one of the `$alpha`, `$ALPHA`, `$roman` or `$ROMAN` literals.
 
 {%@define alphaRomanReplace($format,$by,$number)={%@ident%}\
@@ -1014,6 +1011,30 @@ MMMCCXIII. MMMCCXIV. MMMCCXV.
 MMMCCXIII. MMMCCXIV. MMMCCXV.
 ----
 %}
+
+Sometimes you want to use the current value of the counter multiple times.
+It is possible to define a macro using the counter and then use the macro referring to the value.
+For example the following code
+
+{%sample/
+{@counter:define id=c}{c} {#define second={c}}{second} {second} {c}
+%}
+
+will result
+
+{%output%}
+
+The implemented counters, however provide a simplified approach for this.
+
+{%sample/
+{@counter:define id=c}{c} {c} {c last} {c}
+%}
+
+will have the same output:
+
+{%output%}
+
+In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without increment.
 
 [[reflow]]
 ==== {%macroChapter%}`reflow`
@@ -1102,6 +1123,23 @@ will have the same result as:
 Setting the `width` to any non-positive value will remove the limit from the line length.
 You may use this to override a globally set `width` macro.
 
+
+[[lineCount]]
+==== {%macroChapter%}`lineCount`
+
+This macro counts the lines in the content and returns the number of lines in decimal format.
+
+{%sample/
+{@lineCount
+1
+2
+3}
+%}
+
+results
+
+{%output%}
+
 [[listDir]]
 ==== {%macroChapter%}`listDir`
 
@@ -1120,7 +1158,8 @@ The options are
 
 * `separator` to specify the separator. The default is `,` (comma).
 
-* `grep` to specify a regular expression to filter the files based on their content
+* `grep` to specify a regular expression to filter the files based on their content.
+Only the files that contain a string that matches the `grep` pattern will be listed.
 
 * `pattern` to specify a regular expression to filter the files based on their name
 
@@ -1219,7 +1258,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 960 bytes
+- snippet: 992 bytes
 - Snip.java: 2,302 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
@@ -1229,12 +1268,13 @@ will result
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 8,007 bytes
 - TrimLines.java: 3,687 bytes
+- LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
-- Counter.java: 3,323 bytes
+- Counter.java: 3,691 bytes
 - StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 1,446 bytes
+- KillLines.java: 1,532 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,220 bytes
 - XmlFormat.java: 3,586 bytes
@@ -1243,7 +1283,7 @@ will result
 - SnipList.java: 1,233 bytes
 - XmlDocument.java: 2,195 bytes
 - Java.java: 9,275 bytes
-- ReplaceLines.java: 2,293 bytes
+- ReplaceLines.java: 2,299 bytes
 - SkipLines.java: 2,048 bytes
 - SnipCheck.java: 5,219 bytes
 - Reflow.java: 1,716 bytes

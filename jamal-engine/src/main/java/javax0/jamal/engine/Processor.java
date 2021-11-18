@@ -5,6 +5,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Closer;
 import javax0.jamal.api.Context;
 import javax0.jamal.api.Debugger;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
@@ -37,6 +38,7 @@ import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
+import static javax0.jamal.tools.InputHandler.getParts;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
@@ -86,6 +88,14 @@ public class Processor implements javax0.jamal.api.Processor {
     public Processor(String macroOpen, String macroClose, Context context) {
         this.context = context;
         optionsStore = OptionsStore.getInstance(this);
+        EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s -> {
+            try {
+                optionsStore.addOptions(getParts(makeInput(s)));
+            } catch (BadSyntaxAt e) {
+                throw new IllegalArgumentException("The environment variable '"
+                    + EnvironmentVariables.JAMAL_OPTIONS_ENV + "' is malformed.", e);
+            }
+        });
         try {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {

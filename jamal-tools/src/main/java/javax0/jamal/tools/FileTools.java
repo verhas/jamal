@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static javax0.jamal.tools.Input.makeInput;
 
@@ -107,12 +106,10 @@ public class FileTools {
     private static final Map<String, String> devPaths = new HashMap<>();
 
     static {
-        final var devPathString = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_DEV_PATH_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_DEV_PATH_ENV));
-        if (devPathString != null) {
+        EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_DEV_PATH_ENV).ifPresent(devPath -> {
             try {
                 final String[] paths;
-                paths = InputHandler.getParts(makeInput(devPathString));
+                paths = InputHandler.getParts(makeInput(devPath));
                 for (String path : paths) {
                     final var parts = path.split("=", 2);
                     if (parts.length == 2) {
@@ -124,7 +121,7 @@ public class FileTools {
             } catch (BadSyntaxAt e) {
                 throw new RuntimeException(e);
             }
-        }
+        });
     }
 
     /**

@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * This class defined all the strings for the environment variables that Jamal uses in the engine or in the core
@@ -17,8 +18,8 @@ import java.util.Locale;
  */
 public class EnvironmentVariables {
     /*
-    snippet JAMAL_CONNECT_TIMEOUT_documentation
-
+snippet JAMAL_CONNECT_TIMEOUT_documentation
+{%@define E===== %}
 {%E%}{%JAMAL_CONNECT_TIMEOUT_ENV%}
 This variable can define the connection timeout value for the web download in millisecond as unit.
 
@@ -29,7 +30,6 @@ For more information see the JavaDoc documentation of the class `java.net.HttpUR
 end snippet
 */
     public static final String JAMAL_CONNECT_TIMEOUT_ENV = "JAMAL_CONNECT_TIMEOUT";
-    public static final String JAMAL_CONNECT_TIMEOUT_SYS = env2sys(JAMAL_CONNECT_TIMEOUT_ENV);
     /*
     snippet JAMAL_READ_TIMEOUT_documentation
 
@@ -40,7 +40,6 @@ The default value for the timeouts is 5000, meaning five seconds.
 end snippet
 */
     public static final String JAMAL_READ_TIMEOUT_ENV = "JAMAL_READ_TIMEOUT";
-    public static final String JAMAL_READ_TIMEOUT_SYS = env2sys(JAMAL_READ_TIMEOUT_ENV);
     /*
 snippet JAMAL_TRACE_documentation
 
@@ -51,7 +50,6 @@ This file can grow very fast, and it is not purged or deleted by Jamal.
 end snippet
 */
     public static final String JAMAL_TRACE_ENV = "JAMAL_TRACE";
-    public static final String JAMAL_TRACE_SYS = env2sys(JAMAL_TRACE_ENV);
     /*
 snippet JAMAL_STACK_LIMIT_documentation
 
@@ -79,7 +77,6 @@ Set your value to a limit that fits your need.
 end snippet
  */
     public static final String JAMAL_STACK_LIMIT_ENV = "JAMAL_STACK_LIMIT";
-    public static final String JAMAL_STACK_LIMIT_SYS = env2sys(JAMAL_STACK_LIMIT_ENV);
     /*
 snippet JAMAL_CHECKSTATE_documentation
 
@@ -94,7 +91,6 @@ It may be needed if you want to use an older, prior 1.8.0 library or a library t
 end snippet
 */
     public static final String JAMAL_CHECKSTATE_ENV = "JAMAL_CHECKSTATE";
-    public static final String JAMAL_CHECKSTATE_SYS = env2sys(JAMAL_CHECKSTATE_ENV);
     /*
 snippet JAMAL_DEBUG_documentation
 
@@ -108,7 +104,6 @@ The debugger and the use of it is detailed in a separate section.
 end snippet
 */
     public static final String JAMAL_DEBUG_ENV = "JAMAL_DEBUG";
-    public static final String JAMAL_DEBUG_SYS = env2sys(JAMAL_DEBUG_ENV);
     /*
 snippet JAMAL_INCLUDE_DEPTH_documentation
 
@@ -119,7 +114,6 @@ The default value is 100.
 end snippet
 */
     public static final String JAMAL_INCLUDE_DEPTH_ENV = "JAMAL_INCLUDE_DEPTH";
-    public static final String JAMAL_INCLUDE_DEPTH_SYS = env2sys(JAMAL_INCLUDE_DEPTH_ENV);
     /*
 snippet JAMAL_HTTPS_CACHE_documentation
 
@@ -127,7 +121,6 @@ snippet JAMAL_HTTPS_CACHE_documentation
 end snippet
 */
     public static final String JAMAL_HTTPS_CACHE_ENV = "JAMAL_HTTPS_CACHE";
-    public static final String JAMAL_HTTPS_CACHE_SYS = env2sys(JAMAL_HTTPS_CACHE_ENV);
     /*
 snippet JAMAL_DEV_PATH_documentation
 
@@ -154,15 +147,54 @@ This is the reason why the first character in the example is the separator `|`
 end snippet
 */
     public static final String JAMAL_DEV_PATH_ENV = "JAMAL_DEV_PATH";
-    public static final String JAMAL_DEV_PATH_SYS = "jamal.dev.path";
 
-    /**
-     * Converts the environment variable name to the system property name during class initialization.
-     *
-     * @param s the environment variable name
-     * @return the system property name
-     */
+    /*
+snippet JAMAL_OPTIONS_documentation
+
+{%E%}{%JAMAL_OPTIONS_ENV%}
+
+This environment variable can define options for the Jama processor.
+The value of the variable is interpreted as a multi-part input.
+The list is parsed using the standard `InputHandler.getParts(Input)` method.
+If you just have one option then you can define that with the name.
+If there are multiple options then you have to select a non-alphanumeric separator character and present it in front of the list.
+
+NOTE: that the usual `|` character has a special meaning for the bash, and therefore you may need escaping.
+Also note that using `:` as a separator character may work, but it may be misleading as it can also be part of an option name.
+
+The options are set on the top level, there is no need to use a `:` prefix.
+To set an option to `false`, you can use the `~` character, but please do not.
+Every option default value is `false` when not set.
+
+The typical use of this possibility is to set the option `{%@snip FAIL_FAST /":(.\w+)"/%}`.
+This option alters the error processing, and it is more "bound" to the execution than to the document.
+It may be a better option to include it in an environment variable, or system property than in the document itself.
+Both approaches work.
+
+end snippet
+*/
+   public static final String JAMAL_OPTIONS_ENV = "JAMAL_OPTIONS";
+
+   /**
+    * Converts the environment variable name to the system property name during class initialization.
+    *
+    * @param s the environment variable name
+    * @return the system property name
+    */
     private static String env2sys(String s) {
         return s.replace('_', '.').toLowerCase(Locale.ROOT);
+    }
+
+    public static Optional<String> getenv(String env) {
+        return Optional.ofNullable(System.getProperty(env2sys(env)))
+            .or(() -> Optional.ofNullable(System.getenv(env)));
+    }
+
+    public static void setenv(String env, String value) {
+        System.setProperty(env2sys(env), value);
+    }
+
+    public static void resetenv(String env) {
+        System.clearProperty(env2sys(env));
     }
 }

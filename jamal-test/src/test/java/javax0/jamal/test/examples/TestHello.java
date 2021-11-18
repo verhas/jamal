@@ -33,7 +33,7 @@ public class TestHello {
     @DisplayName("Used to debug the debugger UI")
     @IntelliJOnly
     void testDebugger() throws Exception {
-        System.setProperty(EnvironmentVariables.JAMAL_DEBUG_SYS, "http:8081?cors=*");
+        EnvironmentVariables.setenv(EnvironmentVariables.JAMAL_DEBUG_ENV, "http:8081?cors=*");
         TestThat.theInput(
             "hahóóó\n".repeat(2) +
                 "{@define !a=1}" +
@@ -51,6 +51,6 @@ public class TestHello {
         ).results("hahóóó\n" +
             "hahóóó\n" +
             "121");
-        System.clearProperty(EnvironmentVariables.JAMAL_DEBUG_SYS);
+        EnvironmentVariables.resetenv(EnvironmentVariables.JAMAL_DEBUG_ENV);
     }
 }

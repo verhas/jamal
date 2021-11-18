@@ -100,8 +100,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     /**
-     * This variable is set in the constructor based on the system property {@link EnvironmentVariables#JAMAL_CHECKSTATE_SYS} or the
-     * environment variable {@link EnvironmentVariables#JAMAL_CHECKSTATE_ENV} when no system property.
+     * This variable is set in the constructor based on the
+     * environment variable {@link EnvironmentVariables#JAMAL_CHECKSTATE_ENV} or the corresponding system property.
      * <p>
      * When this variable is {@code true} then registering a macro checks that the macro has no state holding fields,
      * (fields that are neither {@code final}, nor {@code static}) and refuses to load the macro if it has state.
@@ -124,9 +124,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     /**
      * At the creation of the register we start with a new macro evaluation level, which is the top level.
      * <p>
-     * The constructor also reads the system property {@link EnvironmentVariables#JAMAL_CHECKSTATE_SYS} or the environment variable
-     * {@link EnvironmentVariables#JAMAL_CHECKSTATE_ENV} when no system property and based on that sets the global {@link #checkState}
-     * field.
+     * The constructor also reads the environment variable {@link EnvironmentVariables#JAMAL_CHECKSTATE_ENV} when no
+     * system property is given, and based on that sets the global {@link #checkState} field.
      */
     public MacroRegister() {
         try {
@@ -134,9 +133,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         } catch (BadSyntax badSyntax) {
             throw new RuntimeException("SNAFU: should not happen");
         }
-        final var s = Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_CHECKSTATE_SYS)).orElseGet(
-            () -> System.getenv(EnvironmentVariables.JAMAL_CHECKSTATE_ENV));
-        checkState = s != null && s.length() > 0 && !s.equals("false");
+        final var s = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_CHECKSTATE_ENV).orElse("");
+        checkState = s.length() > 0 && !s.equals("false");
     }
 
     private Scope currentScope() {

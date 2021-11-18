@@ -1,0 +1,49 @@
+{@comment environmentvariables.jim}
+
+DEFINE ALL THE ENVIRONMENT VARIABLES AS MACROS
+
+Import this file to use the environment variable names as macros.
+
+The names and the values are fetched from the file {@java:class javax0.jamal.api.EnvironmentVariables}.
+The name of the variables will be the name of the Java constant.
+The value of the macro will be the value of the Java constants.
+
+After importing this file (IMPORT and NOT INCLUDE!!!) you can use the variable names as user defined macros in the documentation.
+
+HOW THIS WORKS:
+===============
+
+First of all the comment at the start tells Jamal that the macro start and stop strings in this file are single braces.
+This behaviour is defined in the documentation.
+This is a demonstration here, and also it is simpler to use these characters as start and stop strings in this file.
+Also, as this file is imported the free text, like this is ignored.
+It may slow down processing a bit.
+A few nano-, or micro-seconds.
+
+
+The rest of the macros:
+-----------------------
+This is a bit tricky here, but if you want to learn Jamal usage to the full extent you can learn from examples.
+So here it is.
+Let's go from the inside towards out.
+We include the class file EnvironmentVariables.java in a verbatim mode.
+That means it does not get interpreted.
+It is like copying the content of the file and surrounding it with an ident macro.
+After that `killLines` keeps only the lines that match the pattern.
+Essentially the lines, which have `JAMAL_`something`_ENV` or `JAMAL_`something`_SYS` defined on it.
+The replaceLines replaces these lines to Jamal define macros.
+Each define uses the name of the variable and assigns to it the value of the variable.
+Note that it works also for the system properties which are calculated during class initialization.
+To protect the macros in the replace string not to be executed/evaluated immediately we use the ident macro.
+The result of this is a series of define macros, which should be evaluated to have the desired effect.
+So the steps in short:
+
+1. include the file verbatim
+2. keep the important lines only
+3. convert the lines to Jamal macro definitions
+4. execute the macro definition lines to have the macros in the macro table
+
+{#eval {#replaceLines {@ident replace="/.*public\\s+static\\s+final\\s+String\\s+(\\w+)\\s*=\\s*.*;/{#define $1={@java:field (format=`\\$value`)javax0.jamal.api.EnvironmentVariables#$1}}/"}
+{#killLines keep pattern="^.*JAMAL_.*_ENV\\s*=.*$"
+{@include [verbatim] ./jamal-api/src/main/java/javax0/jamal/api/EnvironmentVariables.java}
+}}}

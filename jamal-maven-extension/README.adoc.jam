@@ -1,8 +1,10 @@
 = Jamal Maven Extension
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}
+{%@import ../environmentvariables.jim%}
 
 This module lets you maintain your `pom.xml` files using Jamal macros.
+
 [WARNING]
 ====
 This project is a Maven extension.
@@ -125,16 +127,16 @@ If the reverting to standard `pom.xml` based compilation is final, then do not f
 {%@snip:collect from="../jamal-api/"%}
 If there is an error processing the Jamal file or XML formatting, the extension will give a very detailed stack trace.
 Jamal can also be debugged as described in the link:../jamal-debug/README.adoc[debugger documentation].
-You have to set an environment variable `{%@snip JAMAL_DEBUG_ENV /"(.*)"/%}` to be `http:8080`, start Maven, and when the debugger pauses, open `http://localhost:8080`.
+You have to set an environment variable {%JAMAL_DEBUG_ENV%} to be `http:8080`, start Maven, and when the debugger pauses, open `http://localhost:8080`.
 (You can use any other port.)
 
 The commands you will apply are:
 
 [source,bash]
 ----
-export {%@snip JAMAL_DEBUG_ENV /"(.*)"/%}=http:8080
+export {%#replace /{%JAMAL_DEBUG_ENV%}/`//%}=http:8080
 mvn verify
-unset {%@snip JAMAL_DEBUG_ENV /"(.*)"/%}
+unset {%#replace /{%JAMAL_DEBUG_ENV%}/`//%}
 ----
 
 The extension is compatible with the Jamal Maven plugin so that you can generate the {%@file (format=`$name`)pom.xml%} file with command `mvn -f genpom.xml`.

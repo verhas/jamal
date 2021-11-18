@@ -161,8 +161,7 @@ public class Cache {
     static final Entry NO_CACHE = new Entry(NonexistentFile.INSTANCE, NonexistentFile.INSTANCE);
 
     private static final File CACHE_ROOT_DIRECTORY = new File(
-        Optional.ofNullable(System.getProperty(EnvironmentVariables.JAMAL_HTTPS_CACHE_SYS))
-            .or(() -> Optional.ofNullable(System.getenv(EnvironmentVariables.JAMAL_HTTPS_CACHE_ENV)))
+        EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_HTTPS_CACHE_ENV)
             .or(() -> Optional.of(DEFAULT_CACHE_ROOT)).map(FileTools::adjustedFileName).get());
 
 
