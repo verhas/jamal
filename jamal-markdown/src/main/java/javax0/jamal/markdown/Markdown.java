@@ -14,7 +14,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 public class Markdown implements Macro, InnerScopeDependent {
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         MutableDataSet options = new MutableDataSet();
 
         Parser parser = Parser.builder(options).build();

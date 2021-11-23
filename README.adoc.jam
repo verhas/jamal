@@ -1655,7 +1655,6 @@ As usually the option name can be defined as a macro, like `{@define $input=$INP
 You probably want to use the macro `defer` with the `@` character in front of the macro name.
 If you use `#` then the content is evaluated before the macro `defer` is executed.
 In this case the macro sees the evaluated input and will defer the evaluation of that to the end of the execution.
-This way the macro `defer` is similar to the macro `eval`.
 ====
 
 In the followings we will give some examples.
