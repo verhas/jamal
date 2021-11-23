@@ -7,38 +7,38 @@
 
 New macro `defer`, which evaluates its input after the whole input was processed in a closer.
 
-Due to a bug the backslash character did not escape the following new line after an `escape` macro (ironic).
+Due to a bug, the backslash character did not escape the following newline after an `escape` macro (ironic).
 Fixed.
 
-The old style macro evaluation is not available any more. This significantly sped up the processing.
-There were bug fixes for bugs that in some situation revented the proper handling of `~/...` format file names.
+The old-style macro evaluation is not available anymore. This significantly sped up the processing.
+There were bug fixes for bugs that, in some situations, prevented the proper handling of `~/...` format file names.
 
 Some environment variables did not have the system property pair.
 Fixed.
 
-The maven plugin when used to convert a project to Jamalized project does not create .mvn/extensions.xml in the subdirectories anymore.
+The maven plugin, when used to convert a project to a Jamalized project, does not create `.mvn/extensions.xml` in the subdirectories anymore.
 
 There is a new environment variable `JAMAL_DEV_PATH` and system property `jamal.dev.path`.
 See the documentation.
 
-A bug prevented file include in Windows in some special cases.
+A bug prevented file `include` in Windows in some special cases.
 Fixed.
 
-`snipline NAME` can be used to define a single line snippet without end snippet.
+`snipline NAME` can be used to define a single line snippet without an end snippet.
 
 Options `noUndefault` and `emptyUndef` are handled by macro evaluation.
 
 `xmlFormat` works even in applications that embed Jamal in multi-thread.
 
-`snip:check` is reworked, extended and improved.
+`snip:check` is reworked, extended, and improved.
 
-The core macro `if` now has several options and it is possible to test numeric comparisons as well as string emptiness.
+The core macro `if` now has several options, and it is possible to test numeric comparisons as well as string emptiness.
 
-JUNIT dependency upped to 5.8.1
+JUNIT dependency upped to 5.2.0
 
-Handling of `lenient` option has changed. From now on `lenient` has to be a global option.
+The handling of the `lenient` option has changed. From now on, `lenient` has to be a global option.
 
-Environment variable handling was refactored and the documentation was moved to the class defined in the API module.
+Environment variable handling was refactored, and the documentation was moved to the class defined in the API module.
 
 JavaScript dependencies were upped to newer versions to avoid security issues.
 
@@ -48,9 +48,9 @@ KillLine macro has to option `keep` that reverses which lines to keep and which 
 
 There is a new `snip:lineCount` macro that returns the number of lines in a snippet.
 
-Options are not stored in option stores any more.
-Options are simple `Identified` objects stored along with the user defined macros.
-This also means that options can individually be exported, and the whole options store cannot be exported any more in one.
+Options are not stored in option stores anymore.
+Options are simple `Identified` objects stored along with the user-defined macros.
+This also means that options can individually be exported, and the whole options store cannot be exported anymore in one.
 
 {%RELEASE/1.9.1%}
 
