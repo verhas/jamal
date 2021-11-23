@@ -38,6 +38,20 @@ JUNIT dependency upped to 5.8.1
 
 Handling of `lenient` option has changed. From now on `lenient` has to be a global option.
 
+Environment variable handling was refactored and the documentation was moved to the class defined in the API module.
+
+JavaScript dependencies were upped to newer versions to avoid security issues.
+
+Counter macros (from snippet) can be invoked with the parameter `last` to simply return the last value.
+
+KillLine macro has to option `keep` that reverses which lines to keep and which lines to keep.
+
+There is a new `snip:lineCount` macro that returns the number of lines in a snippet.
+
+Options are not stored in option stores any more.
+Options are simple `Identified` objects stored along with the user defined macros.
+This also means that options can individually be exported, and the whole options store cannot be exported any more in one.
+
 === https://github.com/verhas/jamal/tree/1.9.1[1.9.1]
 
 The macro `escape` was extended.
