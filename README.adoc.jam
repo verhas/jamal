@@ -1688,7 +1688,7 @@ In the deferred evaluation the macro `$output` is defined and it will be the sam
 The next example demonstrates that
 
 - the name of the input and output macros can be redefined, and
-- multiple `defer` macros are executed in the order as they were evaluated in the input during the Jamal processin.
+- multiple `defer` macros are executed in the order as they were evaluated in the input during the Jamal processing.
 
 {%sample/
 {#block

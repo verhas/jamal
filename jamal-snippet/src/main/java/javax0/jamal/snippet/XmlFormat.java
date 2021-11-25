@@ -52,13 +52,7 @@ public class XmlFormat implements Macro, InnerScopeDependent {
             dbf.setValidating(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(new StringReader(input)));
-            Transformer tf = TransformerFactory.newInstance().newTransformer();
-            tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            tf.setOutputProperty(OutputKeys.INDENT, "yes");
-            tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", tabsize);
-            Writer out = new StringWriter();
-            tf.transform(new DOMSource(doc), new StreamResult(out));
-            return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
+            return XmlDocument.formatDocument(doc, tabsize);
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
             throw new BadSyntax("There was an XML exception", e);
         }
@@ -76,6 +70,16 @@ public class XmlFormat implements Macro, InnerScopeDependent {
 
         private XmlFormatCloser(final int tabsize) {
             this.tabsize = "" + tabsize;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return XmlFormatCloser.class == o.getClass();
+        }
+
+        @Override
+        public int hashCode() {
+            return XmlFormatCloser.class.hashCode();
         }
 
         @Override

@@ -14,6 +14,8 @@ javax0.jamal.snippet.ReplaceLines
 javax0.jamal.snippet.Update
 javax0.jamal.snippet.LineCount
 javax0.jamal.snippet.XmlFormat
+javax0.jamal.snippet.XmlInsert
+javax0.jamal.snippet.Xml
 javax0.jamal.snippet.DateMacro
 javax0.jamal.snippet.ListDir
 javax0.jamal.snippet.CounterMacro

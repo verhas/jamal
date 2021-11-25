@@ -132,8 +132,7 @@ public interface Processor extends AutoCloseable {
      * The processor implementation guarantees that the processor will invoke the closers in the order registered.
      * The processor will never register an already registered closer. In other words, every closer is invoked only
      * once. In the order of executions the first registering is relevant. A closer {@code c2} is treated as already
-     * registered if there is a registered closer {@code c1} so that {@code c1.equals(c2)}. (See also the implementation
-     * comments on {@code Unescape}.
+     * registered if there is a registered closer {@code c1} so that {@code c1.equals(c2)}.
      * <p>
      * Note that this method, or any other method of the processor MUST NOT be invoked from other than the main thread
      * of the Jamal processing. Even if a macro spawns a new thread the new thread must not do anything with the

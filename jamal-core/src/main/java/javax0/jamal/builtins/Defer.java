@@ -6,6 +6,7 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.Params;
@@ -15,7 +16,7 @@ public class Defer implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var inputName = Params.<String>holder("$input", "input", "inputName").orElse("$input");
         final var outputName = Params.<String>holder("$output", "output", "outputName").orElse("$output");
-        Params.using(processor).from(this).between("[]").keys(inputName,outputName).parse(in);
+        Params.using(processor).from(this).between("[]").keys(inputName, outputName).parse(in);
         processor.deferredClose(new DeferredCloser(in, inputName.get(), outputName.get()));
         return "";
     }
@@ -25,9 +26,14 @@ public class Defer implements Macro, InnerScopeDependent {
         private Input output;
         private final Input input;
 
+        @Override
+        public String toString() {
+            return "Defer[" + inputName + "->" + outputName + "]=" + input;
+        }
+
         /**
          * Creates a new closer and stores a copy of the input. It does not store the original input since that is not
-         * immutable and it may not be the same when the deferred input is evaluated.
+         * immutable, and it may not be the same when the deferred input is evaluated.
          *
          * @param input      of the deferred macro. Note that this is not the result of the processing. The input of the
          *                   processing, a.k.a. the result of the Jamal execution is available in the macro {@code $input}

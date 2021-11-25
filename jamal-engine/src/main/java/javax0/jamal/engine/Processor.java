@@ -26,9 +26,11 @@ import javax0.jamal.tracer.TraceRecordFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -872,12 +874,25 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private boolean currentlyClosing = false;
 
+    /**
+     * This method closes the current processor invoking all the registered closers.
+     * <p>
+     * It ma happen that a closer is invoking the processor itself recursively and that may initiate the closing of
+     * the processor recursively. In that case the original closing process should continue. To manage this situation
+     * the processor state field `currentlyClosing` is set to true, meaning the closing process has already started and
+     * should not be started again to avoid infinite recursion.
+     * <p>
+     *  Closers registered during closing are ignored.
+     *
+     * @param result the final state of the macro processing before the closers were started.
+     * @throws BadSyntax
+     */
     private void closeProcess(final Input result) throws BadSyntax {
         if (currentlyClosing) {
             return;
         }
         Deque<Throwable> exceptions = new ArrayDeque<>(this.exceptions);
-        final var closers = new LinkedHashSet<>(openResources.keySet());
+        final var closers = new LinkedList<>(openResources.keySet());
         try {
             currentlyClosing = true;
             for (final var resource : closers) {
@@ -901,9 +916,9 @@ public class Processor implements javax0.jamal.api.Processor {
             final var sb = new StringBuilder(
                 "There " + (nrofExceptions == 1 ? "was" : "were")
                     + " " + nrofExceptions + " syntax error" + (nrofExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
-            int ser = nrofExceptions;
+            int exceptionSerialNum = nrofExceptions;
             for (final var accumulated : exceptions) {
-                sb.append(ser--).append(". ").append(accumulated.getMessage()).append("\n");
+                sb.append(exceptionSerialNum--).append(". ").append(accumulated.getMessage()).append("\n");
             }
             final var exception = new BadSyntax(sb.toString());
             for (final var accumulated : exceptions) {

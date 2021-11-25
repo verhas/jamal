@@ -1952,7 +1952,7 @@ Is this doplikated?Is this doplikated?
 The next example demonstrates that
 
 - the name of the input and output macros can be redefined, and
-- multiple `defer` macros are executed in the order as they were evaluated in the input during the Jamal processin.
+- multiple `defer` macros are executed in the order as they were evaluated in the input during the Jamal processing.
 
 [source]
 ----
@@ -2155,7 +2155,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-14.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
 ----
 
 

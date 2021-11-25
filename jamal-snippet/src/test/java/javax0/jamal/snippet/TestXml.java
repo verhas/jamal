@@ -41,4 +41,99 @@ public class TestXml {
     void cantUsingMacroAsXML() throws Exception {
         TestThat.theInput("{@define pom=pom.xml}{pom...uiaer..n88/ufd()}").throwsBadSyntax();
     }
+
+    @Test
+    @DisplayName("Define an XML from the input")
+    void canDefineXml() throws Exception {
+        TestThat.theInput("" +
+            "{@xml:define myXml=<xml>" +
+            "<yml>babu</yml>" +
+            "</xml>}{myXml /xml/yml/text()}").results("babu");
+    }
+
+    @Test
+    @DisplayName("Read POM including")
+    void canReadPomIncluding() throws Exception {
+        TestThat.theInput("" +
+            "{#xml:define pom={@include [verbatim] pom.xml}}" +
+            "{pom /project/artifactId/text()}").results("jamal-snippet");
+    }
+
+    @Test
+    @DisplayName("Insert XML into another XML")
+    void insertXml() throws Exception {
+        TestThat.theInput("" +
+            "{@xml:define pom=<project><dependencies></dependencies></project>}" +
+            "{@xml:insert (id=pom path=/project/dependencies) <dependency>hukk</dependency>}" +
+            "{pom}"
+        ).results("" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+            "<project>\n" +
+            "    <dependencies>\n" +
+            "        <dependency>hukk</dependency>\n" +
+            "    </dependencies>\n" +
+            "</project>");
+    }
+
+    @Test
+    @DisplayName("Insert XML into the main XML deferred")
+    void insertXmlDeferred() throws Exception {
+        TestThat.theInput("" +
+            "<project><dependencies></dependencies></project>" +
+            "{@xml:insert (path=/project/dependencies) <dependency>hukk</dependency>}"
+        ).results("" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+            "<project>\n" +
+            "    <dependencies>\n" +
+            "        <dependency>hukk</dependency>\n" +
+            "    </dependencies>\n" +
+            "</project>");
+    }
+
+    @Test
+    @DisplayName("Insert XML into the main XML deferred multiple times")
+    void insertMultipleXmlDeferred() throws Exception {
+        TestThat.theInput("" +
+            "{@xml:insert (path=/project/dependencies tabsize=13546) <dependency>bakk</dependency>}" +
+            "<project><dependen" +
+            // the last tabsize is relevant
+            "{@xml:insert (path=/project/dependencies tabsize=7) <dependency>makk</dependency>}" +
+            "cies></dependencies></project>" +
+            // the default tabsize does not override the last tabsize
+            "{@xml:insert (path=/project/dependencies) <dependency>hukk</dependency>}"
+        ).results("" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+            "<project>\n" +
+            "       <dependencies>\n" +
+            "              <dependency>bakk</dependency>\n" +
+            "              <dependency>makk</dependency>\n" +
+            "              <dependency>hukk</dependency>\n" +
+            "       </dependencies>\n" +
+            "</project>");
+    }
+
+    @Test
+    @DisplayName("Insert XML into the main XML deferred multiple times")
+    void insertMultipleXmlDeferredToExisting() throws Exception {
+        TestThat.theInput("" +
+            "{@xml:insert (path=/ ifneeded) <project></project>}" +
+            "{@xml:insert (path=/project ifneeded) <dependencies></dependencies>}" +
+            "{@xml:insert (path=/project/dependencies tabsize=13546) <dependency>bakk</dependency>}" +
+            "<project><dependen" +
+            // the last tabsize is relevant
+            "{@xml:insert (path=/project/dependencies tabsize=7) <dependency>makk</dependency>}" +
+            "cies></dependencies></project>" +
+            // the default tabsize does not override the last tabsize
+            "{@xml:insert (path=/project/dependencies) <dependency>hukk</dependency>}"
+        ).results("" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+            "<project>\n" +
+            "       <dependencies>\n" +
+            "              <dependency>bakk</dependency>\n" +
+            "              <dependency>makk</dependency>\n" +
+            "              <dependency>hukk</dependency>\n" +
+            "       </dependencies>\n" +
+            "</project>");
+    }
+
 }

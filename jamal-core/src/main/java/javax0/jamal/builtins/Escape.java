@@ -166,7 +166,7 @@ public class Escape implements Macro {
      * This closer will recursively invoke the {@link Processor#process(Input)} method after setting an option driving
      * the {@code escape*} macros to return only the content and not the whole macro.
      * <p>
-     * To have the correct result such a closer should only run once, even of there are many {@code unescape} macros in
+     * To have the correct result such a closer should only run once, even of there are many {@code escape*} macros in
      * the Jamal source. For this reason the {@link Object#equals(Object)} and {@link Object#hashCode()} are implemented
      * so that there will only be one instance of this closer registered in a processor.
      */
@@ -181,7 +181,7 @@ public class Escape implements Macro {
 
         @Override
         public int hashCode() {
-            return 0;
+            return UnescapeCloser.class.hashCode();
         }
 
         @Override
