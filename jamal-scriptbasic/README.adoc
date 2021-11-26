@@ -10,7 +10,7 @@ To use this module you have to add the dependency to you Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-scriptbasic</artifactId>
-    <version>1.10.1-SNAPSHOT</version>
+    <version>1.10.1</version>
 </dependency>
 
 ----
