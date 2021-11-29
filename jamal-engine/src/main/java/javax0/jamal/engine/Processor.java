@@ -92,7 +92,7 @@ public class Processor implements javax0.jamal.api.Processor {
         optionsStore = OptionsStore.getInstance(this);
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s -> {
             try {
-                optionsStore.addOptions(getParts(makeInput(s)));
+                optionsStore.addOptions(getParts(makeInput(s,new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV,1,1))));
             } catch (BadSyntaxAt e) {
                 throw new IllegalArgumentException("The environment variable '"
                     + EnvironmentVariables.JAMAL_OPTIONS_ENV + "' is malformed.", e);
@@ -141,7 +141,7 @@ public class Processor implements javax0.jamal.api.Processor {
     public String process(final Input input) throws BadSyntax {
         limiter.up();
         final var marker = macros.test();
-        final var output = makeInput();
+        final var output = makeInput(input.getPosition());
         try {
             while (input.length() > 0) {
                 debugger.setBefore(limiter.get(), input);

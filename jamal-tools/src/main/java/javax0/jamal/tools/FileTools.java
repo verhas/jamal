@@ -53,11 +53,24 @@ public class FileTools {
      *                 that is on the classpath. If the file name starts with {@code https:} then the string is treated
      *                 as an URL. In that case the UTL is fetched and if there is a cache directory configured it will
      *                 be loaded from the cache.
-     * @return the input containing the contend of the file.
+     * @return the input containing the content of the file.
      * @throws BadSyntaxAt if the file cannot be read.
      */
     public static Input getInput(String fileName) throws BadSyntax {
         return makeInput(getFileContent(fileName), new Position(fileName));
+    }
+
+    /**
+     * Same as {@link #getInput(String)} but this metjod also specifies the parent position. It is usually the file
+     * that includes or imports the file that is being read.
+     *
+     * @param fileName the name of the file to be read
+     * @param parent the parent/including/importing file position
+     * @return the input containing the content of the file.
+     * @throws BadSyntaxAt if the file cannot be read.
+     */
+    public static Input getInput(String fileName, Position parent) throws BadSyntax {
+        return makeInput(getFileContent(fileName), new Position(fileName, 1, 1, parent));
     }
 
     /**
