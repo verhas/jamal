@@ -132,13 +132,13 @@ You want to run tests without pushing the file to a repository, but at the same 
 
 Only absolute file names can be replaced.
 
-For example, you include the file `https://raw.githubusercontent.com/central7/pom/main/pom.jim` in your Jamal file.
+For example, you include the file `https://raw.githubusercontent.com/central7/pom/1/pom.jim` in your Jamal file.
 You want to replace it with a local file `~/projects/jamal/pom.jim`.
 In that case you should set the environment variable
 
 [source]
 ----
-export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.jim=~/github/jamal/pom.jim
+export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.jim?SNAPSHOT=~/github/jamal/pom.jim
 ----
 
 The environment value is a list of `=` separated pairs.

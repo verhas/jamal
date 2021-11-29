@@ -9,7 +9,7 @@ To use this module you have to add the dependency to you Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-groovy</artifactId>
-    <version>1.10.1</version>
+    <version>1.10.2-SNAPSHOT</version>
 </dependency>
 
 ----

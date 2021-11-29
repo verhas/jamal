@@ -50,9 +50,9 @@ public class Include implements Macro {
         final String result;
         processor.getRegister().push(marker);
         if( verbatim.get() ){
-            result = getInput(fileName).toString();
+            result = getInput(fileName,position).toString();
         }else {
-            result = processor.process(getInput(fileName));
+            result = processor.process(getInput(fileName,position));
         }
         processor.getRegister().pop(marker);
         depth++;

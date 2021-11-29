@@ -8,6 +8,10 @@ image::logo.svg[width=150px]
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
 
+NOTE: This is the latest development documentation.
+This is a SNAPSHOT version.
+To see the documentation of a release you have to follow the link in the documentation link:RELEASES.adoc[`RELEASES.adoc`]
+
 
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.
@@ -254,7 +258,7 @@ To start Jamal on the command line, you need a command:
 
 [source,bash]
 ----
-java -cp $HOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.1/jamal-engine-1.10.1.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.1/jamal-api-1.10.1.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.1/jamal-tools-1.10.1.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.1/jamal-core-1.10.1.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-cmd/1.10.1/jamal-cmd-1.10.1.jar: javax0.jamal.cmd.JamalMain options
+java -cp $HOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.2-SNAPSHOT/jamal-engine-1.10.2-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.2-SNAPSHOT/jamal-api-1.10.2-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.2-SNAPSHOT/jamal-tools-1.10.2-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.2-SNAPSHOT/jamal-core-1.10.2-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-cmd/1.10.2-SNAPSHOT/jamal-cmd-1.10.2-SNAPSHOT.jar: javax0.jamal.cmd.JamalMain options
 ----
 
 It is not a user-friendly approach.
@@ -266,7 +270,7 @@ For this reason, there is a file, `jamal.sh` that has the following content:
 #!/usr/bin/env bash
 MODULES="api engine core tools cmd"
 REPO=$HOME/.m2/repository/com/javax0/jamal
-VERSION=1.10.1
+VERSION=1.10.2-SNAPSHOT
 
 for MODULE in $MODULES ; do
   if ! test -f $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar; then
@@ -3966,7 +3970,7 @@ will result
 
 [source]
 ----
-The current version 1.10.1 is older than the required version. It has to be newer.
+The current version 1.10.2-SNAPSHOT is older than the required version. It has to be newer.
 ----
 
 
@@ -4130,13 +4134,13 @@ You want to run tests without pushing the file to a repository, but at the same 
 
 Only absolute file names can be replaced.
 
-For example, you include the file `https://raw.githubusercontent.com/central7/pom/main/pom.jim` in your Jamal file.
+For example, you include the file `https://raw.githubusercontent.com/central7/pom/1/pom.jim` in your Jamal file.
 You want to replace it with a local file `~/projects/jamal/pom.jim`.
 In that case you should set the environment variable
 
 [source]
 ----
-export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.jim=~/github/jamal/pom.jim
+export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.jim?SNAPSHOT=~/github/jamal/pom.jim
 ----
 
 The environment value is a list of `=` separated pairs.
@@ -4193,7 +4197,7 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.10.1</version>
+    <version>1.10.2-SNAPSHOT</version>
     <executions>
         <execution>
             <id>execution</id>
@@ -4304,7 +4308,7 @@ If you use Maven, you can simply have
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
-    <version>1.10.1</version>
+    <version>1.10.2-SNAPSHOT</version>
 </dependency>
 ----
 

@@ -72,10 +72,11 @@ public class Import implements Stackable {
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         skipWhiteSpaces(input);
         var reference = input.getReference();
+        var position = input.getPosition();
         var fileName = absolute(reference, input.toString().trim());
         if (wasNotImported(fileName)) {
             importedAlready.get(importedAlready.size() - 1).add(fileName);
-            final var in = getInput(fileName);
+            final var in = getInput(fileName,position);
             final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
             final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
             final var marker = processor.getRegister().test();

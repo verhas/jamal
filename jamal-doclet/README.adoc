@@ -57,7 +57,7 @@ When using Maven, specify this option as
         <docletArtifact>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-doclet</artifactId>
-            <version>1.10.1</version>
+            <version>1.10.2-SNAPSHOT</version>
         </docletArtifact>
         <additionalOptions>
             <additionalOption>--source-root</additionalOption>
@@ -107,7 +107,7 @@ It can be done using the following configuration
     <docletArtifact>                                   <!-- you have to specify where Maven finds -->
       <groupId>com.javax0.jamal</groupId>              <!-- this doclet -->
       <artifactId>jamal-doclet</artifactId>
-      <version>1.10.1</version>
+      <version>1.10.2-SNAPSHOT</version>
     </docletArtifact>
     <additionalOptions>                                        <!-- these are the options for -->
       <additionalOption>--source-root</additionalOption>       <!--- the Jamal doclet -->
@@ -129,7 +129,7 @@ It can be done using the following configuration
         <tagletArtifact>
           <groupId>com.javax0.jamal</groupId>
           <artifactId>jamal-doclet</artifactId>
-          <version>1.10.1</version>
+          <version>1.10.2-SNAPSHOT</version>
         </tagletArtifact>
       </taglet>
       <!-- If you intend to use other macrolibraries you have to add here as taglet artifacts. -->
@@ -137,7 +137,7 @@ It can be done using the following configuration
         <tagletArtifact>
           <groupId>com.javax0.jamal</groupId>
           <artifactId>jamal-snippet</artifactId>
-          <version>1.10.1</version>
+          <version>1.10.2-SNAPSHOT</version>
         </tagletArtifact>
       </tagletArtifacts>
     </taglets>
@@ -160,13 +160,13 @@ The important options are:
 [source]
 ----
 --module-path
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.1/jamal-tools-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.1/jamal-core-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.1/jamal-engine-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.10.1/jamal-snippet-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.1/jamal-api-1.10.1.jar'
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.2-SNAPSHOT/jamal-tools-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.2-SNAPSHOT/jamal-core-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.2-SNAPSHOT/jamal-engine-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.10.2-SNAPSHOT/jamal-snippet-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.2-SNAPSHOT/jamal-api-1.10.2-SNAPSHOT.jar'
 --patch-module
 jamal.doclet='${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java:${PROJECT_ROOT}/jamal/jamal-doclet/target/generated-sources/annotations'
 -doclet
 'javax0.jamal.doclet.JamalDoclet'
 -docletpath
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.1/jamal-api-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.1/jamal-tools-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.1/jamal-engine-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.1/jamal-core-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.10.1/jamal-snippet-1.10.1.jar'
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.2-SNAPSHOT/jamal-api-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.2-SNAPSHOT/jamal-tools-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.2-SNAPSHOT/jamal-engine-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.2-SNAPSHOT/jamal-core-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.10.2-SNAPSHOT/jamal-snippet-1.10.2-SNAPSHOT.jar'
 -encoding
 'UTF-8'
 -protected
@@ -190,7 +190,7 @@ ${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java
 -taglet
 'javax0.jamal.doclet.JamalTaglet'
 -tagletpath
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.1/jamal-api-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.1/jamal-tools-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.1/jamal-engine-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.1/jamal-core-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.10.1/jamal-snippet-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-io/1.10.1/jamal-io-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.1/jamal-api-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.1/jamal-tools-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.1/jamal-engine-1.10.1.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.1/jamal-core-1.10.1.jar'
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.2-SNAPSHOT/jamal-api-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.2-SNAPSHOT/jamal-tools-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.2-SNAPSHOT/jamal-engine-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.2-SNAPSHOT/jamal-core-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-snippet/1.10.2-SNAPSHOT/jamal-snippet-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-io/1.10.2-SNAPSHOT/jamal-io-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.10.2-SNAPSHOT/jamal-api-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.10.2-SNAPSHOT/jamal-tools-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.10.2-SNAPSHOT/jamal-engine-1.10.2-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.10.2-SNAPSHOT/jamal-core-1.10.2-SNAPSHOT.jar'
 -use
 -version
 -windowtitle

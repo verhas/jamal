@@ -10,21 +10,44 @@ package javax0.jamal.api;
  */
 public class Position {
     public final String file;
-    public final int line;
-    public final int column;
+    public int line;
+    public int column;
+    public final Position parent;
 
+    public Position(String file, int line, int column, Position parent) {
+        this.file = file;
+        this.line = line;
+        this.column = column;
+        this.parent = parent;
+    }
 
-    public Position(String file) {
-        this(file, 1);
+    public Position(Position clone) {
+        if( clone == null ){
+            file = null;
+            line = 1;
+            column = 1;
+            parent = null;
+        }else {
+            file = clone.file;
+            line = clone.line;
+            column = clone.column;
+            parent = clone.parent;
+        }
+    }
+
+    public Position(String file, int line, int column) {
+        this(file, line, column, null);
     }
 
     public Position(String file, int line) {
         this(file, line, 1);
     }
 
-    public Position(String file, int line, int column) {
-        this.file = file;
-        this.line = line;
-        this.column = column;
+    public Position(String file) {
+        this(file, 1);
+    }
+
+    public Position clone() {
+        return new Position(this);
     }
 }
