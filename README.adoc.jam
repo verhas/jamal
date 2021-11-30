@@ -1886,8 +1886,18 @@ The syntax of the command is
 The name of the file can be absolute, or it can be relative to the file that $action$s the other file.
 Any file name starting with the letters `res:` are considered to be resource files in Java.
 This makes it possible to load macros that are provided with JAR libraries and are on the classpath.
-Any file name starting with the letters `https:` are downloaded from the net.%}\
+Any file name starting with the letters `https:` are downloaded from the net.
+
+The option `[top]` can be used along with the `$action$`.
+In this case a relative file name is relative to the main file that $action$s the other files.
+It is not possible to to step one or a few levels up in the $action$ hierarchy.
+The only two possibilities are to $action$ as file relative to the current one or the top level one.
+%}\
 {%fileNameExplanationFor/import%}
+
+Note, however, that using the option `[top]` does not change the scope of the imports.
+The definitions will be exported to the importing scope.
+This option only changes the base directory for the file name calculation.
 
 Use `import` to import user-defined macro definitions.
 
@@ -3553,14 +3563,15 @@ The core macros use the `[` and `]` characters to enclose the parameters.
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `eval`, `if`, and `defer` also use the `[` and the `]` characters.
+To be consistent the macros `include`, `import`, `eval`, `if`, and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 
 {%@comment The following macro does not generate anything into the output.
 It simply fails when the number of files using Params is not the same as expected.
+And it already saved the consistency of this documentation many times.
 %}\
 {%#define nrCoreMacrosUsingParams={%@listDir (grep="Params.using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
-{%#define nrCoreMacrosUsingParamsDocumented=5%}\
+{%#define nrCoreMacrosUsingParamsDocumented=6%}\
 {%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
 ====
 

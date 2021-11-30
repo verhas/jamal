@@ -35,12 +35,17 @@ public class Include implements Macro {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var position = input.getPosition();
+        var position = input.getPosition();
+        final var top = Params.<Boolean>holder(null,"top").asBoolean();
         final var verbatim = Params.<Boolean>holder("includeVerbatim","verbatim").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(verbatim).parse(input);
-
+        Params.using(processor).from(this).between("[]").keys(verbatim,top).parse(input);
+        if( top.is()){
+            while( position.parent != null ){
+                position = position.parent;
+            }
+        }
         skipWhiteSpaces(input);
-        var reference = input.getReference();
+        var reference = position.file;
         var fileName = absolute(reference, input.toString().trim());
         if (depth-- == 0) {
             depth = getDepth(); // try macro may recover

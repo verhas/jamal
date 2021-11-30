@@ -465,7 +465,7 @@ public class Processor implements javax0.jamal.api.Processor {
         var ref = input.getPosition();
         skipWhiteSpaces(input);
         final boolean reportUndefBeforeEval = doesStartWithQuestionMark(input);
-        final Input evaluatedInput = evaluateMacroStart(input, qualifier);
+        final Input evaluatedInput = evaluateMacroStart(input);
         final boolean reportUndefAfterEval = doesStartWithQuestionMark(evaluatedInput);
         final boolean reportUndef = reportUndefBeforeEval && reportUndefAfterEval && !optionsStore.is(EMPTY_UNDEF);
         skipWhiteSpaces(evaluatedInput);
@@ -643,18 +643,16 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param input     the input where the macro starts, or perhaps does not start, but definitely after the optional
      *                  spaces
-     * @param qualifier the macro qualifiers. It is used to know if the evaluation is oldStyle or not. If it is old
-     *                  style then the macros here were already evaluated.
      * @return The input with the macros at the start replaced with the evaluated text of them
      * @throws BadSyntax if some macro cannot be evaluated
      */
-    private Input evaluateMacroStart(Input input, MacroQualifier qualifier) throws BadSyntax {
-        final Input output = makeInput("", input.getPosition());
+    private Input evaluateMacroStart(Input input) throws BadSyntax {
+        final Input output = makeInput("", input.forkPosition());
         if (input.indexOf(macros.open()) == 0) {
             while (input.length() > 0 && input.indexOf(macros.open()) == 0) {
                 skip(input, macros.open());
                 final var macroStart = getNextMacroBody(input);
-                final var macroStartInput = makeInput(macroStart, input.getPosition())
+                final var macroStartInput = makeInput(macroStart, input.forkPosition())
                     .append(macros.close());
                 final var macroStartOutput = makeInput();
                 processMacro(macroStartInput, macroStartOutput);

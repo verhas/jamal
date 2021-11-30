@@ -11,9 +11,9 @@ public class TestDeepIncludeErrorPosition {
     @DisplayName("The exception message position part is hierarchical.")
     void test() throws Exception {
         try {
-            TestThat.theInput("{@include res:inc1.jim}").results("");
+            TestThat.theInput("{@include res:inc1.jim}").atPosition("baba",1,1).results("");
         }catch (BadSyntax bs){
-            Assertions.assertEquals("User defined macro '{this ...' is not defined. at res:inc4.jim/1:2 <<< res:inc3.jim/1:10 <<< res:inc2.jim/1:10 <<< res:inc1.jim/1:10 <<< null/1:10"
+            Assertions.assertEquals("User defined macro '{this ...' is not defined. at res:inc4.jim/1:2 <<< res:inc3.jim/1:10 <<< res:inc2.jim/1:10 <<< res:inc1.jim/1:10 <<< baba/1:10"
                     , bs.getMessage());
         }
     }
