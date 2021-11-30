@@ -161,6 +161,10 @@ public class Input implements javax0.jamal.api.Input {
         return pos.clone();
     }
 
+    public Position forkPosition() {
+        return new Position(pos.file, pos.line, pos.column,pos);
+    }
+
     /**
      * Get the file name of the position of the input. This is called {@code getReference()} because this file name is
      * the reference file name to calculate the absolute path of a file specified as relative file name. The relative

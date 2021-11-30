@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
+import javax0.jamal.tools.Params;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,9 +71,16 @@ public class Import implements Stackable {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        skipWhiteSpaces(input);
-        var reference = input.getReference();
         var position = input.getPosition();
+        final var top = Params.<Boolean>holder(null,"top").asBoolean();
+        Params.using(processor).from(this).between("[]").keys(top).parse(input);
+        if( top.is()){
+            while( position.parent != null ){
+                position = position.parent;
+            }
+        }
+        skipWhiteSpaces(input);
+        var reference = position.file;
         var fileName = absolute(reference, input.toString().trim());
         if (wasNotImported(fileName)) {
             importedAlready.get(importedAlready.size() - 1).add(fileName);
