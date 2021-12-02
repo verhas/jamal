@@ -20,18 +20,6 @@ public interface Input extends CharSequence {
      */
     Position getPosition();
 
-    /**
-     * @return return the position, which is the same as the position of the input, but references the position of the
-     * input as parent. This means that we will have two positions, with the same file/line:column information, but
-     * one will be the parent of the other.
-     * <p>
-     * This method can be used when a macro is evaluated. In that case the current position may be the actual position
-     * in the file. When the macro is evaluated recursively evaluation of the macro may be much longer that the actual
-     * use. An error may be reported at the wrong position in this case. With the hierarchical position we can report
-     * the presumably "wrong" position, which does not reflect the real line number and column number in the file. At
-     * the same time the hierarchy will also contain the position of the character in the file where the macro started.
-     */
-    Position forkPosition();
 
     /**
      * @return the reference file name that the input was read from
