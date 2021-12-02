@@ -26,10 +26,8 @@ import javax0.jamal.tracer.TraceRecordFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +44,6 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Processor implements javax0.jamal.api.Processor {
 
-    private static final String[] ZERO_STRING_ARRAY = new String[0];
     // snipline NO_UNDEFAULT
     public static final String NO_UNDEFAULT = ":noUndefault";
     // snipline EMPTY_UNDEF
@@ -55,22 +52,18 @@ public class Processor implements javax0.jamal.api.Processor {
     public static final String FAIL_FAST = ":failfast";
     // snipline LENIENT
     public static final String LENIENT = ":lenient";
-
+    private static final String[] ZERO_STRING_ARRAY = new String[0];
+    private static final Input[] ZERO_INPUT_ARRAY = new Input[0];
+    final Deque<BadSyntax> exceptions = new ArrayDeque<>();
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
-
     final private TraceRecordFactory traceRecordFactory = new TraceRecordFactory();
-
     final private StackLimiter limiter = new StackLimiter();
-
     final private JShellEngine shellEngine = new JShellEngine();
-
     final private Map<AutoCloseable, AutoCloseable> openResources = new LinkedHashMap<>();
-
     private final Context context;
-
     private final Debugger debugger;
-
     private final OptionsStore optionsStore;
+    private boolean currentlyClosing = false;
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -92,7 +85,7 @@ public class Processor implements javax0.jamal.api.Processor {
         optionsStore = OptionsStore.getInstance(this);
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s -> {
             try {
-                optionsStore.addOptions(getParts(makeInput(s,new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV,1,1))));
+                optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))));
             } catch (BadSyntaxAt e) {
                 throw new IllegalArgumentException("The environment variable '"
                     + EnvironmentVariables.JAMAL_OPTIONS_ENV + "' is malformed.", e);
@@ -272,7 +265,7 @@ public class Processor implements javax0.jamal.api.Processor {
         if (firstCharIs(macroRaw, SpecialCharacters.NO_PRE_EVALUATE)) {
             return macroRaw;
         }
-        final var macroInputBefore = makeInput(macroRaw, pos);
+        final var macroInputBefore = makeInput(macroRaw, pos.fork());
         if (firstCharIs(macroRaw, SpecialCharacters.PRE_EVALUATE)) {
             macroProcessed = process(macroInputBefore);
             tr.appendAfterEvaluation(macroProcessed);
@@ -311,10 +304,6 @@ public class Processor implements javax0.jamal.api.Processor {
      * No operation.
      */
     private void noop() {
-    }
-
-    private interface Runnable {
-        void run() throws BadSyntax;
     }
 
     /**
@@ -369,24 +358,19 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private String evaluateUserDefinedMacro(String rawResult, MacroQualifier qualifier, Runnable popper, TraceRecord tr) throws BadSyntax {
-        String result = safeEvaluate(() -> process(makeInput(rawResult, qualifier.input.getPosition())), popper);
-        final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, qualifier.input.getPosition());
+        String result = safeEvaluate(() -> process(makeInput(rawResult, qualifier.input.getPosition().fork())), popper);
+        final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, qualifier.input.getPosition().fork());
         tr.appendAfterEvaluation(postEvaluated);
         return postEvaluated;
     }
-
 
     private String evaluateBuiltInMacro(TraceRecord tr, MacroQualifier qualifier, Runnable popper) throws BadSyntax {
         final var ref = qualifier.input.getPosition();
         tr.type(TraceRecord.Type.MACRO);
         final String result = safeEvaluate(() -> evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro), popper);
-        final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, ref);
+        final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, ref.fork());
         tr.appendAfterEvaluation(postEvaluated);
         return postEvaluated;
-    }
-
-    private interface ThrowingStringSupplier {
-        String get() throws BadSyntax;
     }
 
     private String safeEvaluate(ThrowingStringSupplier supplier, Runnable finalizer) throws BadSyntax {
@@ -462,7 +446,7 @@ public class Processor implements javax0.jamal.api.Processor {
      */
     private String evalUserDefinedMacro(final Input input, final TraceRecord tr, MacroQualifier qualifier)
         throws BadSyntax {
-        var ref = input.getPosition();
+        var pos = input.getPosition();
         skipWhiteSpaces(input);
         final boolean reportUndefBeforeEval = doesStartWithQuestionMark(input);
         final Input evaluatedInput = evaluateMacroStart(input);
@@ -473,7 +457,7 @@ public class Processor implements javax0.jamal.api.Processor {
         final String id = fetchId(evaluatedInput);
         qualifier.macroId = id;
         if (id.length() == 0) {
-            throw new BadSyntaxAt("Zero length user defined macro name was found.", ref);
+            throw new BadSyntaxAt("Zero length user defined macro name was found.", pos);
         }
         skipWhiteSpaces(evaluatedInput);
         final Optional<Identified> identifiedOpt;
@@ -487,18 +471,18 @@ public class Processor implements javax0.jamal.api.Processor {
             .map(ud -> (Evaluable) ud);
 
         if (reportUndef && udMacroOpt.isEmpty()) {
-            throwForUndefinedUdMacro(ref, id);
+            throwForUndefinedUdMacro(pos, id);
         }
         if (udMacroOpt.isPresent()) {
             qualifier.udMacro = udMacroOpt.get();
-            final String[] parameters = getParameters(tr, qualifier, ref, evaluatedInput, qualifier.udMacro, id);
+            final String[] parameters = getParameters(pos.fork(), evaluatedInput, qualifier.udMacro, id);
             tr.setId(id);
             tr.setParameters(parameters);
             try {
                 qualifier.udMacro.setCurrentId(id);
                 return qualifier.udMacro.evaluate(parameters);
             } catch (BadSyntax bs) {
-                pushBadSyntax(bs, ref);
+                pushBadSyntax(bs, pos);
                 return "";
             }
         } else {
@@ -531,20 +515,18 @@ public class Processor implements javax0.jamal.api.Processor {
      * Read the input of the macro and get the parameters to pass to the macro. This is a fairly complex process that
      * follows several rules.
      * <p>
-     * The input the method works with contains the already partially evaluated. If this input has no characters then
-     * the parameter array has zero length.
+     * The method works with the partially evaluated input. If this input has no characters then the parameter array has
+     * zero length.
      *
-     * @param tr        record tracer
-     * @param qualifier macro evaluation parameters
-     * @param ref       the reference to
-     * @param input     the partially evaluated input
-     * @param macro     the macro for which we evaluate the input for
-     * @param id        is the original id of the macro (in case undefined and using default it may be different from
-     *                  what {@code macro.getId()} returns.
+     * @param ref   the reference to the
+     * @param input the partially evaluated input
+     * @param macro the macro for which we evaluate the input for
+     * @param id    is the original id of the macro (in case undefined and using default it may be different from
+     *              what {@code macro.getId()} returns).
      * @return the parameter array
      * @throws BadSyntax if the separator character is invalid, or the evaluation of the input throws exception
      */
-    private String[] getParameters(TraceRecord tr, MacroQualifier qualifier, Position ref, Input input, Evaluable macro, String id) throws BadSyntax {
+    private String[] getParameters(Position ref, Input input, Evaluable macro, String id) throws BadSyntax {
         final String[] parameters;
         if (input.length() > 0) {
             final var separator = input.charAt(0);
@@ -560,9 +542,10 @@ public class Processor implements javax0.jamal.api.Processor {
                 if (Character.isLetterOrDigit(separator)) {
                     throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", input.getPosition());
                 }
-                parameters = splitParameterString(input, separator);
+                final Input[] paramInputs = splitParameterString(input, separator);
+                parameters = new String[paramInputs.length];
                 for (int i = 0; i < parameters.length; i++) {
-                    parameters[i] = process(makeInput(parameters[i], ref));
+                    parameters[i] = process(paramInputs[i]);
                 }
             }
         } else {
@@ -641,18 +624,18 @@ public class Processor implements javax0.jamal.api.Processor {
      * <p>
      * Note that at the start of the macro the name may be the result of the concatenation of several macros.
      *
-     * @param input     the input where the macro starts, or perhaps does not start, but definitely after the optional
-     *                  spaces
+     * @param input the input where the macro starts, or perhaps does not start, but definitely after the optional
+     *              spaces
      * @return The input with the macros at the start replaced with the evaluated text of them
      * @throws BadSyntax if some macro cannot be evaluated
      */
     private Input evaluateMacroStart(Input input) throws BadSyntax {
-        final Input output = makeInput("", input.forkPosition());
+        final Input output = makeInput("", input.getPosition().fork());
         if (input.indexOf(macros.open()) == 0) {
             while (input.length() > 0 && input.indexOf(macros.open()) == 0) {
                 skip(input, macros.open());
                 final var macroStart = getNextMacroBody(input);
-                final var macroStartInput = makeInput(macroStart, input.forkPosition())
+                final var macroStartInput = makeInput(macroStart, input.getPosition().fork())
                     .append(macros.close());
                 final var macroStartOutput = makeInput();
                 processMacro(macroStartInput, macroStartOutput);
@@ -701,7 +684,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * }</pre>
      * <p>
      * In the example above the macro will have three arguments, and it is not a problem (since version 1.2.0) that the
-     * second argument contains a macro that itself has parameters and it uses the same separator character as the top
+     * second argument contains a macro that itself has parameters, and it uses the same separator character as the top
      * level macro of this example. (In the example above we assumed that the macro opening and closing strings are the
      * curly braces.)<p>
      * <p>
@@ -713,15 +696,15 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param in        the input that starts after the first occurrence of the separator character
      * @param separator the separator character
-     * @return the parameter array
+     * @return the parameter array as input, with correct positioning to where the parameters start
      * @throws BadSyntaxAt if the nesting of the macro opening and closing strings do not match. The implementation does
-     *                     not check this purposefully. If there is an balance mismatch of opening and closing strings
-     *                     then this will not be detected.
+     *                     not check this purposefully. If there are unbalanced opening and closing strings it will not
+     *                     be detected.
      */
-    private String[] splitParameterString(final Input in, final char separator) throws BadSyntaxAt {
+    private Input[] splitParameterString(final Input in, final char separator) throws BadSyntaxAt {
         final var open = macros.open();
         final var close = macros.close();
-        final var parameters = new ArrayList<String>();
+        final var parameters = new ArrayList<Input>();
         final var input = in.toString();
         final var pos = in.getPosition();
         int start = 0;
@@ -730,7 +713,7 @@ public class Processor implements javax0.jamal.api.Processor {
             final var separatorIndex = input.indexOf(separator, searchFrom);
             if (separatorIndex == -1) {
                 checkForImbalance(input, searchFrom, pos);
-                appendTheLastParameter(parameters, input, start);
+                appendTheLastParameter(parameters, input, start, pos);
                 break;
             }
             final var openIndex = input.indexOf(open, searchFrom);
@@ -740,14 +723,14 @@ public class Processor implements javax0.jamal.api.Processor {
                     pos);
             }
             if (openIndex == -1 || separatorIndex < openIndex) {
-                appendTheNextParameter(parameters, input, start, separatorIndex);
+                appendTheNextParameter(parameters, input, start, separatorIndex, pos);
                 start = separatorIndex + 1;
                 searchFrom = start;
             } else {
                 searchFrom = stepOverNestedMacros(input, openIndex, pos);
             }
         }
-        return parameters.toArray(ZERO_STRING_ARRAY);
+        return parameters.toArray(ZERO_INPUT_ARRAY);
     }
 
     /**
@@ -795,20 +778,22 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
-    private void appendTheNextParameter(final List<String> parameters,
+    private void appendTheNextParameter(final List<Input> parameters,
                                         final String input,
                                         final int start,
-                                        final int separatorIndex) {
-        parameters.add(input.substring(start, separatorIndex));
+                                        final int separatorIndex,
+                                        final Position pos) {
+        parameters.add(makeInput(input.substring(start, separatorIndex),pos.fork()));
     }
 
-    private void appendTheLastParameter(final List<String> parameters,
+    private void appendTheLastParameter(final List<Input> parameters,
                                         final String input,
-                                        final int start) {
+                                        final int start,
+                                        final Position pos) {
         if (start < input.length()) {
-            parameters.add(input.substring(start));
+            parameters.add(makeInput(input.substring(start),pos.fork()));
         } else {
-            parameters.add("");
+            parameters.add(makeInput("",pos.fork()));
         }
     }
 
@@ -859,8 +844,6 @@ public class Processor implements javax0.jamal.api.Processor {
         debugger.close();
     }
 
-    final Deque<BadSyntax> exceptions = new ArrayDeque<>();
-
     public Deque<BadSyntax> errors() {
         return exceptions;
     }
@@ -870,8 +853,6 @@ public class Processor implements javax0.jamal.api.Processor {
         throw exceptions.pop();
     }
 
-    private boolean currentlyClosing = false;
-
     /**
      * This method closes the current processor invoking all the registered closers.
      * <p>
@@ -880,7 +861,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * the processor state field `currentlyClosing` is set to true, meaning the closing process has already started and
      * should not be started again to avoid infinite recursion.
      * <p>
-     *  Closers registered during closing are ignored.
+     * Closers registered during closing are ignored.
      *
      * @param result the final state of the macro processing before the closers were started.
      * @throws BadSyntax
@@ -907,14 +888,14 @@ public class Processor implements javax0.jamal.api.Processor {
             currentlyClosing = false;
         }
         if (!exceptions.isEmpty()) {
-            final var nrofExceptions = exceptions.size();
-            if (nrofExceptions == 1 && exceptions.peek() instanceof BadSyntax) {
+            final var nrOfExceptions = exceptions.size();
+            if (nrOfExceptions == 1 && exceptions.peek() instanceof BadSyntax) {
                 throw (BadSyntax) exceptions.peek();
             }
             final var sb = new StringBuilder(
-                "There " + (nrofExceptions == 1 ? "was" : "were")
-                    + " " + nrofExceptions + " syntax error" + (nrofExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
-            int exceptionSerialNum = nrofExceptions;
+                "There " + (nrOfExceptions == 1 ? "was" : "were")
+                    + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
+            int exceptionSerialNum = nrOfExceptions;
             for (final var accumulated : exceptions) {
                 sb.append(exceptionSerialNum--).append(". ").append(accumulated.getMessage()).append("\n");
             }
@@ -954,5 +935,13 @@ public class Processor implements javax0.jamal.api.Processor {
             openResources.put(closer, closer);
         }
         return openResources.get(closer);
+    }
+
+    private interface Runnable {
+        void run() throws BadSyntax;
+    }
+
+    private interface ThrowingStringSupplier {
+        String get() throws BadSyntax;
     }
 }

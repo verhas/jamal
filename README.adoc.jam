@@ -198,6 +198,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 . <<parparsing,Standard Built-In Parameter Parsing>>
 . <<JamalENV,Jamal Environment Variables>>
 . <<httpsres,Resource Files and Web Resources>>
+. <<error_messages,Error Messages>>
 . <<snippet,Snippet Handling>>
 . <<Groovy,Groovy Integration>>
 . <<Ruby,Ruby Integration>>
@@ -3208,7 +3209,7 @@ The options can be listed `|` separated as an argument to the macro.
 
 The macro does not check the option's name.
 For example the option `lenient` is used by Jamal itself and by the `for` macro, however, if you type `{@options lenuent}` misspelled the `options` macro will not recognize it as an error.
-The option `lenuent` could be used by some other macros and the `options` macro just treats it as a new option.
+The option `lenuent`{%@comment DELIBERATELY MISTYPED!!!%} could be used by some other macros and the `options` macro just treats it as a new option.
 It stores the options specified, and they can be queried by any other built-in macros.
 Any extension can define and use any options it likes.
 
@@ -3678,6 +3679,26 @@ The default value for the timeouts is 5000, meaning five seconds.
 
 The proxy setting can be configured using standard Java system properties.
 For more information see the JavaDoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
+
+[[error_messages]]
+=== {%chapter%}Error Messages
+
+When there is a processing error then Jamal throws a Java exception.
+The message of the exception contains at the end the location of the error.
+Sometimes it is not simple to identify the location due to the string replacement nature of Jamal processing.
+To help locating the error as precise as possible the location is given as a series as triplets.
+Each triplet contains a file name, a line number and a column number.
+The location is given in the following format:
+
+    file/line:column
+
+When a file includes or imports another file then the location of the file is given in the error message along with the location from where the file is included or imported.
+The format in this case is
+
+    file/line:column <<< file/line:column
+
+If the include/import hierarchy is deeper then the location is also given in several levels.
+In some cases the hierarchy is created in the error message inside a single file to help locating the error.
 
 [[snippet]]
 === {%chapter%}Snippet Handling
