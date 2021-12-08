@@ -73,7 +73,7 @@ public class SnipCheck implements Macro {
             "' does not contain '" + hashString.get() + "'.\n" + "'" + message.get() + "'");
     }
 
-    private static String doted(final String s){
+    public static String doted(final String s){
         return s.replaceAll("([0-9a-fA-F]{8})(?!$)", "$1.");
     }
 
