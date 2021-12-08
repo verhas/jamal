@@ -20,7 +20,9 @@ import javax0.jamal.snippet.SkipLines;
 import javax0.jamal.snippet.Snip;
 import javax0.jamal.snippet.SnipCheck;
 import javax0.jamal.snippet.SnipList;
+import javax0.jamal.snippet.SnipLoad;
 import javax0.jamal.snippet.SnipProperties;
+import javax0.jamal.snippet.SnipSave;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
 import javax0.jamal.snippet.StringMacros.Contains;
@@ -76,6 +78,8 @@ module jamal.snippet {
         FilesMacro.FileMacro,
         Reflow,
         SnipList,
+        SnipSave,
+        SnipLoad,
         Contains,
         Substring,
         Length,
