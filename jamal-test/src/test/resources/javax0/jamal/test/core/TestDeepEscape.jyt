@@ -10,10 +10,9 @@
     Input: |-
       {@define a(x)=x}{@escape* `.``.`}{@xmlFormat}\
       {a{a{a{a{a{a{a {@escape* ``<xml>${qqq}</xml>``}}}}}}}}
-    Output: |-
+    Output: |+
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <xml>${qqq}</xml>
-
 "Testing deep escape in deferred XML in wrong order":
 # when there are multiple closers it does not matter that the unescape closer recursively invokes the same Jamal processor
     Input: |-

@@ -72,7 +72,7 @@ public class TestXml {
             "    <dependencies>\n" +
             "        <dependency>hukk</dependency>\n" +
             "    </dependencies>\n" +
-            "</project>");
+            "</project>\n");
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TestXml {
             "    <dependencies>\n" +
             "        <dependency>hukk</dependency>\n" +
             "    </dependencies>\n" +
-            "</project>");
+            "</project>\n");
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TestXml {
             "              <dependency>makk</dependency>\n" +
             "              <dependency>hukk</dependency>\n" +
             "       </dependencies>\n" +
-            "</project>");
+            "</project>\n");
     }
 
     @Test
@@ -133,7 +133,7 @@ public class TestXml {
             "              <dependency>makk</dependency>\n" +
             "              <dependency>hukk</dependency>\n" +
             "       </dependencies>\n" +
-            "</project>");
+            "</project>\n");
     }
 
 }

@@ -7,6 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.tools.FileTools;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -98,14 +99,54 @@ public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document
         return 1;
     }
 
+    /**
+     * Remove the blank text nodes from the XML. These are the nodes that result from the source formatting of the
+     * XML file. On the other hand when we write them back to a file formatted, then they are treated as first class
+     * citizen nodes, that deserve their separate lines and indentation.
+     * <p>
+     * This way reading an XML file and writing back inserts a new new-line for one already existing, unless we delete
+     * these before formatting.
+     *
+     * @param doc the document to remove the blank text nodes from
+     */
+    private static void trimDocument(Document doc)  {
+        final var root = doc.getDocumentElement();
+        final var children = root.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            final var child = children.item(i);
+            if (child.getNodeType() == Node.TEXT_NODE ){
+                if( child.getTextContent().trim().isEmpty() ) {
+                    child.setTextContent("");
+                }
+            }else{
+                trimNode(child);
+            }
+        }
+    }
+
+    private static void trimNode(Node node) {
+        final var children = node.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            final var child = children.item(i);
+            if (child.getNodeType() == Node.TEXT_NODE ){
+                if( child.getTextContent().trim().isEmpty()) {
+                    child.setTextContent("");
+                }
+            }else{
+                trimNode(child);
+            }
+        }
+    }
+
     public static String formatDocument(Document doc, String tabsize) throws TransformerException {
         Transformer tf = TransformerFactory.newInstance().newTransformer();
         tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         tf.setOutputProperty(OutputKeys.INDENT, "yes");
         tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", tabsize);
         Writer out = new StringWriter();
+        trimDocument(doc);
         tf.transform(new DOMSource(doc), new StreamResult(out));
-        return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
+        return out.toString();
     }
 
     @Override

@@ -702,9 +702,9 @@ If all the parameters are missing, then the macro will list all the snippet name
 
 [[snipSave]]
 ==== {%macroChapter%}`snip:save`
-{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=79771b19%}
+{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=129dc311%}
 This macro saves all the collected snippets to a file.
-The file's name has to be specified by the parameter `output`.
+The file's name must be specified by the parameter `output`.
 The general syntax of the macro is
 
 [source,text]
@@ -721,7 +721,7 @@ The usable options are the following:
 * `text` {%alias contains%} for the content of the snippet
 
 These parameters are interpreted as regular expressions.
-If there is any missing or empty string, then the parameter is not considered.
+If there is any missing or empty string, the parameter is not considered.
 If any of them is specified, the macro will save only those snippets that match the expression.
 
 * `output` should specify the name of the output file.
@@ -736,9 +736,51 @@ This parameter is present for future compatibility and to provide readability if
 * `tab` {%alias tabSize%} can specify the number of spaces to use for indentation.
 The default value is 4.
 
+The saved XML file will use the namespace {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#NS%}.
+The top level element is {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%}.
+
+The {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%} tag has the following attributes:
+
+* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#TIME_STAMP%} is the time stamp {%@define WHEN=when the snippets were saved.%}{%WHEN%}
+
+* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#DATE_TIME%} the date and time {%WHEN%}
+
+The timestamp and the date/time values reflect the same value.
+The timestamp is present, so it is easier to use the value by programs.
+At the same time, it is more human-friendly to have a date value.
+Currently, none of these values are used by Jamal.
+
+The elements below the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%} tag are {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tags.
+Every {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tag has the following attributes:
+
+* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#ID%} id the identifier of the snippet.
+When this XML is loaded, <<snipLoad,`snip:load`>> will use this identifier to load the snippet.
+
+* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#FILE%} the file the snippet was defined in.
+When this XML has loaded, this file will be stored so that the snippet will look like one loaded from this file.
+
+* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#LINE%} is the line number in the file where the snippet starts.
+When this XML is loaded, this line number will be stored so that the snippet will look like one loaded from this line from the specified file.
+
+* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#COLUMN%} is the column where the snippet was loaded from.
+This value is usually `1` since snippets are multi-lined strings and do not contain fractional lines.
+When this XML is loaded, the snippet will look like one loaded from this column from the specified line.
+
+* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#HASH%} contains the hash value of the snippet.
+This value is calculated precisely as the hash value in the <<snip_check,`snip:check`>> macro.
+When the <<snipLoad,`snip:load`>> macro reads the XML file, it compares the hash value calculated from the snippet's text with the hash value.
+It is an error if the hash values do not match.
+In that case, the snippet is loading terminates, and no more snippets are loaded from the XML file.
+The snippets already loaded will stay put.
+Note, however, that you are allowed to delete the hash attribute from the XML file using an editor of your choice.
+In that case, no check is performed.
+
+The text of the snippet is the content of the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tag.
+It is saved as a `CDATA` section(s).
+
 [[snipLoad]]
 ==== {%macroChapter%}`snip:load`
-{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=da535203%}
+{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=3417d5ca%}
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -768,6 +810,23 @@ This parameter has to be specified.
 The default value is `XML`.
 The available formats are `XML` and nothing else.
 This parameter is present for future compatibility and to provide readability if the command has to specify that the output is XML.
+
+The format of th XML file has to be the same as the one used by the <<snipSave,`snip:save`>> macro.
+It has to use the same name space, and tags.
+The content of snippets must be in CDATA section(s).
+
+The {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#TIME_STAMP%}, and
+{%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#DATE_TIME%} attributes of the tag
+{%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%} may be missing and are ignored during reading.
+The attributes of the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tags are mandatory except the
+{%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#HASH%} attribute.
+If the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#HASH%} attribute is present its value will be checked against the content of the snippet.
+This guarantees the snippet integrity.
+If the tag is missing the check is skipped.
+
+Any tag can have any extra attributes.
+If you want to change something in the XML file and edit some snippet code temporarily you can rename the tag to `_hash` for example.
+
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
@@ -1439,7 +1498,7 @@ will result
 - jamal: 96 bytes
 - snippet: 1,120 bytes
 - Snip.java: 2,302 bytes
-- SnipSave.java: 3,872 bytes
+- SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
@@ -1455,7 +1514,7 @@ will result
 - StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,532 bytes
-- SnipLoad.java: 5,480 bytes
+- SnipLoad.java: 6,932 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,220 bytes
 - XmlFormat.java: 3,317 bytes
@@ -1464,7 +1523,7 @@ will result
 - Xml.java: 1,543 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,260 bytes
-- XmlDocument.java: 4,181 bytes
+- XmlDocument.java: 5,656 bytes
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,299 bytes
 - SkipLines.java: 2,048 bytes

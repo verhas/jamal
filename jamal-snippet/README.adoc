@@ -801,7 +801,7 @@ If all the parameters are missing, then the macro will list all the snippet name
 ==== xi.`snip:save`
 
 This macro saves all the collected snippets to a file.
-The file's name has to be specified by the parameter `output`.
+The file's name must be specified by the parameter `output`.
 The general syntax of the macro is
 
 [source,text]
@@ -818,7 +818,7 @@ The usable options are the following:
 * `text` (can be aliased as `contains`) for the content of the snippet
 
 These parameters are interpreted as regular expressions.
-If there is any missing or empty string, then the parameter is not considered.
+If there is any missing or empty string, the parameter is not considered.
 If any of them is specified, the macro will save only those snippets that match the expression.
 
 * `output` should specify the name of the output file.
@@ -832,6 +832,48 @@ This parameter is present for future compatibility and to provide readability if
 
 * `tab` (can be aliased as `tabSize`) can specify the number of spaces to use for indentation.
 The default value is 4.
+
+The saved XML file will use the namespace `https://snippets.jamal.javax0.com/v1/snippets`.
+The top level element is `snippets`.
+
+The `snippets` tag has the following attributes:
+
+* `ts` is the time stamp when the snippets were saved.
+
+* `dateTime` the date and time when the snippets were saved.
+
+The timestamp and the date/time values reflect the same value.
+The timestamp is present, so it is easier to use the value by programs.
+At the same time, it is more human-friendly to have a date value.
+Currently, none of these values are used by Jamal.
+
+The elements below the `snippets` tag are `snippet` tags.
+Every `snippet` tag has the following attributes:
+
+* `id` id the identifier of the snippet.
+When this XML is loaded, <<snipLoad,`snip:load`>> will use this identifier to load the snippet.
+
+* `file` the file the snippet was defined in.
+When this XML has loaded, this file will be stored so that the snippet will look like one loaded from this file.
+
+* `line` is the line number in the file where the snippet starts.
+When this XML is loaded, this line number will be stored so that the snippet will look like one loaded from this line from the specified file.
+
+* `column` is the column where the snippet was loaded from.
+This value is usually `1` since snippets are multi-lined strings and do not contain fractional lines.
+When this XML is loaded, the snippet will look like one loaded from this column from the specified line.
+
+* `hash` contains the hash value of the snippet.
+This value is calculated precisely as the hash value in the <<snip_check,`snip:check`>> macro.
+When the <<snipLoad,`snip:load`>> macro reads the XML file, it compares the hash value calculated from the snippet's text with the hash value.
+It is an error if the hash values do not match.
+In that case, the snippet is loading terminates, and no more snippets are loaded from the XML file.
+The snippets already loaded will stay put.
+Note, however, that you are allowed to delete the hash attribute from the XML file using an editor of your choice.
+In that case, no check is performed.
+
+The text of the snippet is the content of the `snippet` tag.
+It is saved as a `CDATA` section(s).
 
 [[snipLoad]]
 ==== xii.`snip:load`
@@ -865,6 +907,23 @@ This parameter has to be specified.
 The default value is `XML`.
 The available formats are `XML` and nothing else.
 This parameter is present for future compatibility and to provide readability if the command has to specify that the output is XML.
+
+The format of th XML file has to be the same as the one used by the <<snipSave,`snip:save`>> macro.
+It has to use the same name space, and tags.
+The content of snippets must be in CDATA section(s).
+
+The `ts`, and
+`dateTime` attributes of the tag
+`snippets` may be missing and are ignored during reading.
+The attributes of the `snippet` tags are mandatory except the
+`hash` attribute.
+If the `hash` attribute is present its value will be checked against the content of the snippet.
+This guarantees the snippet integrity.
+If the tag is missing the check is skipped.
+
+Any tag can have any extra attributes.
+If you want to change something in the XML file and edit some snippet code temporarily you can rename the tag to `_hash` for example.
+
 
 [[trimLines]]
 ==== xiii.`trimLines`
@@ -1693,7 +1752,7 @@ will result
 - jamal: 96 bytes
 - snippet: 1,120 bytes
 - Snip.java: 2,302 bytes
-- SnipSave.java: 3,872 bytes
+- SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
@@ -1709,7 +1768,7 @@ will result
 - StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,532 bytes
-- SnipLoad.java: 5,480 bytes
+- SnipLoad.java: 6,932 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,220 bytes
 - XmlFormat.java: 3,317 bytes
@@ -1718,7 +1777,7 @@ will result
 - Xml.java: 1,543 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,260 bytes
-- XmlDocument.java: 4,181 bytes
+- XmlDocument.java: 5,656 bytes
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,299 bytes
 - SkipLines.java: 2,048 bytes
@@ -1874,7 +1933,7 @@ will result in the output
 
 [source]
 ----
-2021-12-08 16:02:32
+2021-12-08 21:14:58
 ----
 
 

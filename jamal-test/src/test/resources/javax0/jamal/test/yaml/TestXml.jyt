@@ -11,7 +11,7 @@
     kuka:
       beno: 665-453
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <a>alma</a>
@@ -46,7 +46,7 @@
       attribute1: !!javax0.jamal.api.Xml$ATTR {beno: "attribute with a name, which is the same as a tag"}
       beno: 665-453
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <a attribute="this is the attribute">this is the content</a>
@@ -82,7 +82,7 @@
               f: g
           - h: {i: t}
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <a>
@@ -114,7 +114,7 @@
       # The conversion also escapes the ", but the built-in JDK XML formatter converts it back here. He is right.
       "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$TEXT "this is < the text \" of A"
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <a att="this is an &quot; attribute">this is &lt; the text " of A</a>
@@ -129,7 +129,7 @@
       # in this case there is no conversion, CDATA contains whatever character... even <
       "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this < is the text of A
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <a att="this is an attribute"><![CDATA[this < is the text of A]]></a>
@@ -143,7 +143,7 @@
       att: !!javax0.jamal.api.Xml$ATTR { at1: this is an attribute, at2: this is also an attribute }
       "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this is the text of A
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <a at1="this is an attribute" at2="this is also an attribute"><![CDATA[this is the text of A]]></a>
@@ -157,7 +157,7 @@
     - k: h
       h: k
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <as>
@@ -168,6 +168,7 @@
             </a>
         </as>
     </xml>
+
 "Specified tag name for a list":
   Input: |
     {@yaml:define a=
@@ -178,7 +179,7 @@
     - k: h
       h: k
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <a att="this is an attribute">
@@ -188,6 +189,7 @@
             </A>
         </a>
     </xml>
+
 "Simple string converted: error":
   Input: |
     {@yaml:define a=
@@ -201,7 +203,7 @@
     - 2
     - 3
     }{#xmlFormat {@yaml:xml a}}
-  Output: |
+  Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <xml>
         <xm>1</xm>
