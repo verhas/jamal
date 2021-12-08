@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
+import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.tools.FileTools;
 import org.w3c.dom.Document;
 
@@ -27,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class XmlDocument implements Identified, Evaluable {
+public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document> {
     final String id;
     final Document doc;
     final XPath xPath;
@@ -105,5 +106,10 @@ public class XmlDocument implements Identified, Evaluable {
         Writer out = new StringWriter();
         tf.transform(new DOMSource(doc), new StreamResult(out));
         return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    @Override
+    public Document getObject() {
+        return doc;
     }
 }

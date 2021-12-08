@@ -4284,13 +4284,13 @@ The location is given in the following format:
 
     file/line:column
 
-When a file includes or imports another file then the location of the included or imported file is given along with the location from where the file is included or imported.
+When a file includes or imports another file then the location of the file is given in the error message along with the location from where the file is included or imported.
 The format in this case is
 
     file/line:column <<< file/line:column
 
 If the include/import hierarchy is deeper then the location is also given in several levels.
-In some cases the such hierarchy is given in the error message inside a single file to help locating the error.
+In some cases the hierarchy is created in the error message inside a single file to help locating the error.
 
 [[snippet]]
 === 9. Snippet Handling

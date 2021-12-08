@@ -15,10 +15,10 @@ public class SnipList implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var idRegex = holder("name", "id").orElse("").asString();
-        final var fnRegex = holder("file").orElse("").asString();
-        final var textRegex = holder("text").orElse("").asString();
+        final var fnRegex = holder("file", "fileName").orElse("").asString();
+        final var textRegex = holder("text", "contains").orElse("").asString();
         final var listSeparator = holder("listSeparator").orElse(",").asString();
-        Params.using(processor).from(this).keys(idRegex,fnRegex,textRegex,listSeparator).tillEnd().parse(in);
+        Params.using(processor).from(this).keys(idRegex, fnRegex, textRegex, listSeparator).tillEnd().parse(in);
         final var store = SnippetStore.getInstance(processor);
         return String.join(listSeparator.get(),
             store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())

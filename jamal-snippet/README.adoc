@@ -2,6 +2,7 @@
 
 
 
+
 Snippet handling macros help you to include information from program source code into the documentation automatically.
 
 When you document an application, there is a lot of information that changes by changing the source code.
@@ -64,7 +65,9 @@ This way, it is easier to keep your documentation up to date.
 .. <<snip_clear,`snip:clear`>>
 .. <<snip,`snip`>>
 .. <<snip_check,`snip:check`>>
-.. <<snipList,`snip_list`>>
+.. <<snipList,`snip:list`>>
+.. <<snipSave,`snip:save`>>
+.. <<snipLoad,`snip:load`>>
 .. <<trimLines,`trimLines`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
@@ -109,6 +112,7 @@ There is no need to invoke the `use` command to get access to these macros.
 
 [[snip_collect]]
 ==== i.`snip:collect`
+
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -438,15 +442,15 @@ The syntax of the command is
 
 The options define the name of the xml formatted user defined macro the content should be inserted into as well as the xPath that defines the location of the insertion.
 
-* `xpath` (alias `path`) defines the location in the original XML where to insert the content.
+* `xpath` (can be aliased as `path`) defines the location in the original XML where to insert the content.
 
-* `id`, (alias `to`) defines the name of the XML user defined macro which will be modified.
+* `id`, (can be aliased as `to`) defines the name of the XML user defined macro which will be modified.
 If this option is missing then the insertion will happen when the whole document processing is already finished.
 In that case the target XML is the one, which is the result of the Jamal processing.
 This is usable when the Jamal processing creates an XML as a result.
 The insertions are done in the order of the `xml:insert` commands and after that the output will be the resulting XML formatted.
 
-* `ifneeded` (alias `optional`) defines whether the insertion is optional.
+* `ifneeded` (can be aliased as `optional`) defines whether the insertion is optional.
 If the location specified by the `path` already contains a tag with the given name, then the XML will not be modified.
 Without this option a new child is appended having the name that may already be there.
 
@@ -770,14 +774,15 @@ There are four parameters the macro handles; all are optional:
 
 * `name` (can be aliased as `id`) for the name of the snippet
 
-* `file` for the file name of the snippet
+* `file` (can be aliased as `fileName`) for the file name of the snippet
 
-* `text` for the content of the snippet
+* `text` (can be aliased as `contains`) for the content of the snippet
 
 * `listSeparator` can redefine the list separator. The default is the comma.
 
 The first three parameters are interpreted as regular expressions.
 If any missing or empty string, then the parameter is not taken into account.
+If any of them is specified only those snippets will be listed that match the expression.
 
 The listing will filter the snippets to include only those into the list that
 
@@ -792,8 +797,77 @@ If you want to match the full name, file name, or content line, you have to use 
 
 If all the parameters are missing, then the macro will list all the snippet names.
 
+[[snipSave]]
+==== xi.`snip:save`
+
+This macro saves all the collected snippets to a file.
+The file's name has to be specified by the parameter `output`.
+The general syntax of the macro is
+
+[source,text]
+----
+{@snip:save options}
+----
+
+The usable options are the following:
+
+* `name` (can be aliased as `id`) for the name of the snippet
+
+* `file` (can be aliased as `fileName`) for the file name of the snippet
+
+* `text` (can be aliased as `contains`) for the content of the snippet
+
+These parameters are interpreted as regular expressions.
+If there is any missing or empty string, then the parameter is not considered.
+If any of them is specified, the macro will save only those snippets that match the expression.
+
+* `output` should specify the name of the output file.
+The default value is an empty string, which eventually leads to an error.
+This parameter has to be specified.
+
+* `format` can specify the format of the output file.
+The default value is `XML`.
+The available formats are `XML` and nothing else.
+This parameter is present for future compatibility and to provide readability if the command has to specify that the output is XML.
+
+* `tab` (can be aliased as `tabSize`) can specify the number of spaces to use for indentation.
+The default value is 4.
+
+[[snipLoad]]
+==== xii.`snip:load`
+
+This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
+The file's name has to be specified by the parameter `input`.
+The general syntax of the macro is
+
+[source,text]
+----
+{@snip:save options}
+----
+
+The usable options are the following:
+
+* `name` (can be aliased as `id`) for the name of the snippet
+
+* `file` (can be aliased as `fileName`) for the file name of the snippet
+
+* `text` (can be aliased as `contains`) for the content of the snippet
+
+These parameters are interpreted as regular expressions.
+If there is any missing or empty string, then the parameter is not considered.
+If any of them is specified, the macro will load only those snippets that match the expression.
+
+* `input` should specify the name of the input file.
+The default value is an empty string, which eventually leads to an error.
+This parameter has to be specified.
+
+* `format` can specify the format of the output file.
+The default value is `XML`.
+The available formats are `XML` and nothing else.
+This parameter is present for future compatibility and to provide readability if the command has to specify that the output is XML.
+
 [[trimLines]]
-==== xi.`trimLines`
+==== xiii.`trimLines`
 
 This macro can cut off the unneeded spaces from the start and end of the lines.
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -847,7 +921,7 @@ You can even insert extra spaces in front of the lines while keeping the tabulat
 * `trimVertical` is a boolean parameter to remove the new line character from the sample's start and end.
 It eliminates the leading and trailing empty lines.
 
-* `verticalTrimOnly` (alias `vtrimOnly`) instructs the macro to do only the vertical trimming.
+* `verticalTrimOnly` (can be aliased as `vtrimOnly`) instructs the macro to do only the vertical trimming.
 If this option is defined, there is no need to define `trimVertical` also.
 
 The macro can also delete the empty lines from the start and the end of its input if the option `trimVertical` is set.
@@ -882,7 +956,7 @@ c
 
 
 [[numberLines]]
-==== xii.`numberLines`
+==== xiv.`numberLines`
 
 This macro can put numbers in front of the lines, sequentially numbering them.
 The syntax of the macro is
@@ -946,7 +1020,7 @@ The standard Java method `String::format` will format the number using the forma
 Any illegal formatting will result in an error.
 
 [[killLines]]
-==== xiii.`killLines`
+==== xv.`killLines`
 
 This macro deletes, or keeps the selected lines from its input.
 
@@ -1022,7 +1096,7 @@ creates the output
 In this case only the comment lines remained that start with `//` at the start of the line.
 
 [[skipLines]]
-==== xiv.`skipLines`
+==== xvi.`skipLines`
 
 You can use this macro to skip lines from the snippet.
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -1084,7 +1158,7 @@ The `skip` and `endSkip` lines cannot be nested.
 When there is a match for a `skip`, any further `skip` is ignored until an `endSkip`.
 
 [[replace]]
-==== xv.`replace`
+==== xvii.`replace`
 
 The macro `replace` replaces strings with other strings in its input.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -1123,7 +1197,7 @@ the pear has fallen off the bush
 but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
-==== xvi.`replaceLines`
+==== xviii.`replaceLines`
 
 This macro replaces strings in the input.
 
@@ -1171,7 +1245,7 @@ Use the parameter`detectNoChange` to detect this.
 If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
-==== xvii.`counter:define`
+==== xix.`counter:define`
 
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
@@ -1287,7 +1361,7 @@ will have the same output:
 In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without increment.
 
 [[reflow]]
-==== xviii.`reflow`
+==== xx.`reflow`
 
 This macro reflows the content.
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -1449,7 +1523,7 @@ You may use this to override a globally set `width` macro.
 
 
 [[lineCount]]
-==== xix.`lineCount`
+==== xxi.`lineCount`
 
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
@@ -1470,7 +1544,7 @@ results
 
 
 [[listDir]]
-==== xx.`listDir`
+==== xxii.`listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -1516,6 +1590,7 @@ will result
 - jamal
 - snippet
 - Snip.java
+- SnipSave.java
 - Case.java
 - NumberLines.java
 - DateMacro.java
@@ -1531,6 +1606,7 @@ will result
 - StringMacros.java
 - Clear.java
 - KillLines.java
+- SnipLoad.java
 - SnippetStore.java
 - ListDir.java
 - XmlFormat.java
@@ -1615,8 +1691,9 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,056 bytes
+- snippet: 1,120 bytes
 - Snip.java: 2,302 bytes
+- SnipSave.java: 3,872 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,151 bytes
 - DateMacro.java: 613 bytes
@@ -1632,6 +1709,7 @@ will result
 - StringMacros.java: 5,828 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,532 bytes
+- SnipLoad.java: 5,480 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,220 bytes
 - XmlFormat.java: 3,317 bytes
@@ -1639,12 +1717,12 @@ will result
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,543 bytes
 - CounterMacro.java: 1,811 bytes
-- SnipList.java: 1,233 bytes
-- XmlDocument.java: 4,044 bytes
+- SnipList.java: 1,260 bytes
+- XmlDocument.java: 4,181 bytes
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,299 bytes
 - SkipLines.java: 2,048 bytes
-- SnipCheck.java: 5,219 bytes
+- SnipCheck.java: 5,218 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -1677,7 +1755,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xxi.`xmlFormat`
+==== xxiii.`xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -1780,7 +1858,7 @@ It will result in the same output as before:
 
 
 [[date]]
-==== xxii.`date`
+==== xxiv.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -1796,12 +1874,12 @@ will result in the output
 
 [source]
 ----
-2021-12-02 12:12:04
+2021-12-08 16:02:32
 ----
 
 
 [[format]]
-==== xxiii.`format`
+==== xxv.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -1852,7 +1930,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[case]]
-==== xxiv.`case:lower`, `case:upper`, ...
+==== xxvi.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -1865,7 +1943,8 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxv.`file`
+==== xxvii.`file`
+
 
 You can use this macro to include the name of a file in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1904,7 +1983,8 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xxvi.`directory`
+==== xxviii.`directory`
+
 
 You can use this macro to include the name of a directory in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1944,7 +2024,8 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxvii.Java Macros
+==== xxix.Java Macros
+
 
 [[java:class]]
 ===== `java:class`
@@ -2143,7 +2224,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxviii.String Macros
+==== xxx.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -2151,7 +2232,7 @@ publicMethodMacro::evaluate(Input,Processor)
 This macro returns the string `true` if the input contains a text given as a parameter and the text `false` otherwise.
 The macro handles two parameters:
 
-* `text` (alias `string`) must be present, and it should specify the string to find in the input.
+* `text` (can be aliased as `string`) must be present, and it should specify the string to find in the input.
 
 * `regex` is an optional parameter.
 If it is `true`, then the text will be interpreted as a regular expression.
@@ -2328,13 +2409,13 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxix.`snip:update`
+==== xxxi.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
 
 The result of the macro is an empty string, and it has no side effect inside the macro processor.
-When it does, however, is that it alters the file it was used in inserting the snippets into the comment part of the `snip` macro.
+What it does, however, is that it alters the file it was used in inserting the snippets into the comment part of the `snip` macro.
 Its operation is done in three steps:
 
 1. Reads the file into the memory.
@@ -2362,12 +2443,12 @@ The default value for `start` is
 
     ^\s*\Q{\E\s*(?:#|@)\s*snip\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\s*$
 
-When this pattern is calculated, the current macro opening string is used instead of `{`.
+When this pattern is calculated, the actual macro opening string is used instead of `{`.
 The `stop` string is
 
     ^\s*\Q}\E\s*$
 
-When this pattern is calculated, the current macro closing string is used instead of `}`.
+When this pattern is calculated, the actual macro closing string is used instead of `}`.
 
 (The `\Q` and `\E` escape sequences in Java regular expressions denote escaping, so that the characters between are matched literally.)
 
