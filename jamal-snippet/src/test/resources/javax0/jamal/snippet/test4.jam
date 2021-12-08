@@ -1,4 +1,5 @@
-{@snip:collect from="."}\
+{@snip:collect from=SnippetSource-1.txt}\
+{@snip:collect from=SnippetSource-2.txt}\
 {@snip:list}
 {@snip:list id="first"}
 {@snip:list file="SnippetSource-1"}

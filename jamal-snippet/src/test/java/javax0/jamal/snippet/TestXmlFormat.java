@@ -16,7 +16,7 @@ public class TestXmlFormat {
             .results("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<a>\n" +
                 "  <b attribes=\"wuff\">b text</b>\n" +
-                "</a>");
+                "</a>\n");
     }
 
     @Test
@@ -30,6 +30,6 @@ public class TestXmlFormat {
             .results("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<a>\n" +
                 "  <b attribes=\"wuff\">b text</b>\n" +
-                "</a>");
+                "</a>\n");
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<snippets dateTime="2021-12-8T17:19:17+0100" ts="1638980357645" xmlns="https://snippets.jamal.javax0.com/v1/snippets">
+    <!-- comment must be ok -->
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java"
+             hash="63901977.19b9b263.39c6f950.60a67cd1.bb78a29e.e31776fe.64c04333.eeb8ca38"
+             id="identifier"
+             line="14">
+        <!-- comment is absolutely valid -->
+        <![CDATA[ * this snippet will be moved to the left as much as possible.
+ */
+public class TrimLines implements Macro, InnerScopeDependent {
+    @Override
+    public String getId() {
+        return "trimLines";
+    }
+
+]]>
+    </snippet>
+    <!-- no comment -->
+</snippets>

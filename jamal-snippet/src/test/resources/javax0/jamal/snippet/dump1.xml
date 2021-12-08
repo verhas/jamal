@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<snippets dateTime="2021-12-8T17:19:17+0100" ts="1638980357645" xmlns="https://snippets.jamal.javax0.com/v1/snippets">
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java" id="is" line="14"><![CDATA[ * this snippet will be moved to the left as much as possible.
+ */
+public class TrimLines implements Macro, InnerScopeDependent {
+    @Override
+    public String getId() {
+        return "trimLines";
+    }
+
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java" hash="bb3c0ca0.ca23b4ad.77ceddf4.84fd9ac1.92ad1875.9b5865f9.7f8f84f0.575ca94c" id="trimLineStart" line="24"><![CDATA[    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var margin = Params.<Integer>holder("margin").orElseInt(0);
+        final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
+        final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
+        Params.using(processor).from(this).keys(margin, trimVertical, verticalTrimOnly).parse(in);
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/SnippetStore.java" _hash="f67e8838.621311e3.1c53fb4c.3e50a472.72464410.04ccc250.eee64e47.71229b35" id="store" line="38"><![CDATA[     * <p>
+     *
+     * @param processor the processor of which we need the options store
+     * @return the snippet store.
+     */
+    public static SnippetStore getInstance(Processor processor) {
+        final var snippetsMacro = processor.getRegister().getUserDefined(SNIPPETS_MACRO_ID);
+        if (snippetsMacro.isPresent()) {
+            return (SnippetStore) snippetsMacro.get();
+        } else {
+            final var newSnippetStore = new SnippetStore();
+            processor.defineGlobal(newSnippetStore);
+            return newSnippetStore;
+        }
+    }
+    /**
+     * Get the list of all the snippets that have an id that matches the {@code idRegex} and come from a file that the
+     * name matches the {@code fnRegex} and the content matches {@code textRegex}.
+     * <p>
+     * Any of the parameters can be {@code null}. In that case no filtering will be done on that condition. For example
+     * {@code snippetList(null,null,null)} will list all snippets.
+     *
+     * @param idRegex   regular expression to match against the name
+     * @param fnRegex   regular expression to match against the name of the file
+     * @param textRegex regular expression to match against the lines of the snippet content
+     * @return the stream of the snippets, possibly an empty stream
+     */
+    public Stream<Snippet> snippetList(String idRegex, String fnRegex, String textRegex) {
+        final Predicate<String> idTest = convertRegex(idRegex);
+        final Predicate<String> fnTest = convertRegex(fnRegex);
+        final Predicate<String> textTest = convertRegex(textRegex);
+        final Predicate<Snippet> snTest = s -> idTest.test(s.id) && fnTest.test(s.pos.file) &&
+            Arrays.stream(s.text.split("\n", -1)).anyMatch(textTest);
+        return snippets.values().stream().filter(snTest);
+    }
+    private static Predicate<String> convertRegex(String regex) {
+        return regex == null || regex.length() == 0 ? x -> true : Pattern.compile(regex).asPredicate();
+    }
+    /**
+     * The name of the macro is {@code `snippets} that starts with a backtick. This is a character that is not allowed
+     * in a macro name. This way the macro instances will be stored in the macro register when it gets registered
+     * programmatically, but the macro source cannot reference it and also the built-in macro {@code define} will not
+     * overwrite it.
+     *
+     * @return the constant string {@code `snippets}
+     */
+    @Override
+    public String getId() {
+        return SNIPPETS_MACRO_ID;
+    }
+    /**
+     * Add a new snippet to the snippet store.
+     *
+     * @param id      the identifier (name) of the snippet
+     * @param snippet the snippet
+     * @param pos     is the position of the snippet, used for error reporting in case a snippet is defined twice
+     * @throws BadSyntax when a snippet is redefined
+     */
+    public void snippet(String id, String snippet, Position pos) throws BadSyntax {
+        snippet(id, snippet, pos, null);
+    }
+    /**
+     * Add a new snippet to the snippet store.
+     * <p>
+     * The snippet store takes into account the fact that ill-formed snippets can be found in some source files. The
+     * identification of the snippet start and snippet end is very liberal in order to let different source files to
+     * have a snippet start and end lines with different type of comment lines. Java has one liner comments, XML has
+     * other tye of comments. The collection process thinks that a snippet starts if there is a line that contains the
+     * word {@code snippet} literally and there is an identifier after it. The end of the snippet is recognized by any
+     * line that contains the words {@code end} and {@code snippet} with one or more spaces between them.
+     * <p>
+     * Because of this liberal approach it may happen, as it happens even in this very JavaDoc comment that the
+     * collection process finds a snippet start, but does not find the end of a snippet. This should not be a problem.
+     * Jamal snippet handler should handle this case, and it does it.
+     * <p>
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/FilesMacro.java" hash="09679a93.5d0c706c.489c9fd9.280f0d4f.585c8bee.0d2f4151.dbdff9ec.8a4c2f07" id="dirMacroFormatPlaceholders" line="46"><![CDATA[                    "$name", name, // gives the name of the directory as was specified on the macro
+                    "$absolutePath", dir.getAbsolutePath(), // gives the name of the directory as was specified on the macro
+                    "$parent", dir.getParent() // the parent directory
+                ).and(
+                    "$canonicalPath", dir::getCanonicalPath // the canonical path
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/FilesMacro.java" hash="3d37b66e.439ed16b.f00abd98.dbf0fe48.42494567.cd079a85.f7f6a8cc.e962f4c2" id="fileMacroFormatPlaceholders" line="90"><![CDATA[                    "$name", name, // gives the name of the file as was specified on the macro
+                    "$absolutePath", file.getAbsolutePath(), // the absolute path to the file
+                    "$parent", file.getParent() // the parent directory where the file is
+                ).and(
+                    "$canonicalPath", file::getCanonicalPath // the canonical path
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/Collect.java" hash="0ef68339.d7d60f17.78815166.bd111124.646a5e99.2401a314.93039e34.dcc516d9" id="collect_options" line="42"><![CDATA[        final var include = Params.<Predicate<String>>holder("include").orElse(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
+        // can define a regular expression. Only those files will be collected that match partially the regular expression.
+        final var exclude = Params.<Predicate<String>>holder("exclude").orElse(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
+        // can define a regular expression. Only those files will be collected that do not match partially the regular expression.
+        // For example, the test file
+        //
+        //[source]
+        //----
+        //    {%@include ./src/test/resources/javax0/jamal/snippet/test3.jam%}
+        //----
+        //
+        //excludes any file that contains the character `2` in its name.
+        //
+        final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
+        // can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
+        final var liner = Params.<Pattern>holder("liner").orElse("snipline\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
+        // can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
+        final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").as(Pattern::compile);
+        // can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
+        final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
+        // can limit the directory traversing to a certain depth.
+        final var from = Params.<String>holder("from").as(s -> FileTools.absolute(reference, s));
+        // can specify the start directory for the traversing.
+        final var setName = Params.<String>holder(null, "onceAs").orElseNull();
+        // You can use the parameter `onceAs` to avoid repeated snippet collections.
+        // Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
+        // At a certain point, it may happen that Jamal already collected the snippets you need.
+        // Collecting it again would be erroneous.
+        // When snippets are collected, you cannot redefine a snippet.
+        // If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
+        // If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
+        // It was already collected.
+
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/ListDir.java" hash="2e2c3ac6.ff42ad0a.ba8bdcb2.b2cf6bc1.2770ffbe.f404c55a.9d7f50d1.ecdec8b0" id="defaultTimeForListDir" line="100"><![CDATA[            time = "1970-01-01T00:00:00Z";
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/ListDir.java" hash="ccf840c6.45461705.b2ef6da3.4113b99c.ea0c6c82.aa20a457.2c5b0598.d6a6a3b9" id="listDirFormats" line="109"><![CDATA[                "$size", size, // size OTF
+                "$time", time, // modification time OTF
+                "$absolutePath", p.toAbsolutePath().toString(), // absolute path OTF
+                "$name", p.toString(), // name OTF
+                "$simpleName", p.toFile().getName(), // simple name OTF
+                "$isDirectory", "" + p.toFile().isDirectory(), // TITF is a directory, FO
+                "$isFile", "" + p.toFile().isFile(), // TITF is a plain file, FO
+                "$isHidden", "" + p.toFile().isHidden(), // TITF is hidden, FO
+                "$canExecute", "" + p.toFile().canExecute(), // TITF can be executed, FO
+                "$canRead", "" + p.toFile().canRead(), // TIFT can be read, FO
+                "$canWrite", "" + p.toFile().canWrite() //TITF can be written, FO
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/Java.java" hash="0beebc8a.92c97c5f.b47784ef.a46bef56.5c8835df.4b10cc99.76c75a94.ef731144" id="classFormats" line="32"><![CDATA[                    "$simpleName", klass.getSimpleName(),
+                    "$name", klass.getName(),
+                    "$canonicalName", klass.getCanonicalName(),
+                    "$packageName", klass.getPackageName(),
+                    "$typeName", klass.getTypeName()
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/Java.java" hash="e1b941e1.21aef519.9d70c82b.81030942.5f8f064d.08ef790c.ae034888.294f796a" id="fieldFormats" line="87"><![CDATA[                    "$name", field.getName(), // name OTF
+                    "$classSimpleName", klass.getSimpleName(), // simple name OTFDC
+                    "$className", klass.getName(), // name of the OTFDC
+                    "$classCanonicalName", klass.getCanonicalName(),// canonical name OTFDC
+                    "$classTypeName", klass.getTypeName(), // type name OTFDC
+                    "$packageName", klass.getPackageName(), // package where the method is
+                    "$typeClass", field.getType().getName(), // type OTF
+                    "$modifiers", Modifier.toString(field.getModifiers()) // modifiers list of the method
+                ).and(
+                    "$value", valueCalculator // value OTF in case the field is both `static` and `final`
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/Java.java" hash="5e5bce6b.48f82567.c71a6da5.df13d737.f1f90c8d.98bc36af.49734838.fb826f54" id="methodFormats" line="135"><![CDATA[                    "$classSimpleName", klass.getSimpleName(), // simple name OTMDC
+                    "$className", klass.getName(), // name of the OTMDC
+                    "$classCanonicalName", klass.getCanonicalName(),// canonical name OTMDC
+                    "$classTypeName", klass.getTypeName(), // type name OTMDC
+                    "$packageName", klass.getPackageName(), // package where the method is
+                    "$name", method.getName(), // name OTM
+                    "$typeClass", method.getReturnType().getName(), // return type OTM
+                    "$exceptions", Arrays.stream(method.getExceptionTypes()).map(Class::getName).collect(Collectors.joining(",")), // comma separated values of the exception types the method throws
+                    "$parameterTypes", Arrays.stream(method.getParameterTypes()).map(Class::getName).collect(Collectors.joining(",")),// comma separated parameter types
+                    "$parameterCount", "" + method.getParameterCount(), // number of the parameters in decimal format
+                    "$modifiers", Modifier.toString(method.getModifiers() // modifiers list of the method
+]]></snippet>
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/SnipCheck.java" hash="9eecde3f.fa9b3487.f667f953.8121ee6c.5dd002b1.c8695fd2.2d8b8b8c.9f502fcf" id="SnipCheck_MIN_LINE" line="17"><![CDATA[    private static final int MIN_LENGTH = 6;]]></snippet>
+</snippets>

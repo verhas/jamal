@@ -22,6 +22,15 @@ import static javax0.jamal.tools.Params.holder;
 
 public class SnipSave implements Macro, InnerScopeDependent {
     public static final String NS = "https://snippets.jamal.javax0.com/v1/snippets";
+    public static final String SNIPPETS = "snippets";
+    public static final String SNIPPET = "snippet";
+    public static final String TIME_STAMP = "ts";
+    public static final String DATE_TIME = "dateTime";
+    public static final String ID = "id";
+    public static final String FILE = "file";
+    public static final String LINE = "line";
+    public static final String COLUMN = "column";
+    public static final String HASH = "hash";
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -40,13 +49,13 @@ public class SnipSave implements Macro, InnerScopeDependent {
             final var documentFactory = DocumentBuilderFactory.newInstance();
             final var documentBuilder = documentFactory.newDocumentBuilder();
             final var document = documentBuilder.newDocument();
-            final var root = document.createElementNS(NS, "snippets");
+            final var root = document.createElementNS(NS, SNIPPETS);
             document.appendChild(root);
-            final var timeStamp = document.createAttribute("ts");
+            final var timeStamp = document.createAttribute(TIME_STAMP);
             final var currTime = System.currentTimeMillis();
             timeStamp.setValue(currTime + "");
             root.setAttributeNode(timeStamp);
-            final var date = document.createAttribute("dateTime");
+            final var date = document.createAttribute(DATE_TIME);
             final var formatter = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ssZ");
             date.setValue(formatter.format(currTime));
             root.setAttributeNode(date);
@@ -55,12 +64,12 @@ public class SnipSave implements Macro, InnerScopeDependent {
             store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())
                 .filter(snip -> snip.exception == null)
                 .forEach(snip -> {
-                    final var snippet = document.createElement("snippet");
-                    snippet.setAttribute("id",snip.id);
-                    snippet.setAttribute("file",snip.pos.file);
-                    snippet.setAttribute("line",snip.pos.line + "");
-                    snippet.setAttribute("column",snip.pos.column + "");
-                    snippet.setAttribute("hash",SnipCheck.doted(HexDumper.encode(SHA256.digest(snip.text))));
+                    final var snippet = document.createElement(SNIPPET);
+                    snippet.setAttribute(ID, snip.id);
+                    snippet.setAttribute(FILE, snip.pos.file);
+                    snippet.setAttribute(LINE, snip.pos.line + "");
+                    snippet.setAttribute(COLUMN, snip.pos.column + "");
+                    snippet.setAttribute(HASH, SnipCheck.doted(HexDumper.encode(SHA256.digest(snip.text))));
                     final var text = document.createCDATASection(snip.text);
                     snippet.appendChild(text);
                     root.appendChild(snippet);
