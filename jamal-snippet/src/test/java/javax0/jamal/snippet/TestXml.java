@@ -1,6 +1,7 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
+import javax0.jamal.tools.HexDumper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,13 +71,13 @@ public class TestXml {
             "{@xml:insert (id=pom path=/project/dependencies) <dependency>hukk</dependency>}" +
             "{pom}"
         ).results();
-        Assertions.assertEquals("" +
+        Assertions.assertEquals(("" +
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
             "<project>\n" +
             "    <dependencies>\n" +
             "        <dependency>hukk</dependency>\n" +
             "    </dependencies>\n" +
-            "</project>\n".getBytes(StandardCharsets.UTF_8), result.getBytes(StandardCharsets.UTF_8));
+            "</project>\n").getBytes(StandardCharsets.UTF_8), result.getBytes(StandardCharsets.UTF_8));
     }
     @Test
     @DisplayName("Insert XML into another XML")
