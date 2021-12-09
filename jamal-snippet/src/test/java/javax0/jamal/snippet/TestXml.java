@@ -66,34 +66,17 @@ public class TestXml {
     @Test
     @DisplayName("Insert XML into another XML")
     void insertXml() throws Exception {
-        final var result = TestThat.theInput("" +
+        TestThat.theInput("" +
             "{@xml:define pom=<project><dependencies></dependencies></project>}" +
             "{@xml:insert (id=pom path=/project/dependencies) <dependency>hukk</dependency>}" +
             "{pom}"
-        ).results();
-        Assertions.assertEquals(("" +
+        ).ignoreLineEnding().results("" +
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
             "<project>\n" +
             "    <dependencies>\n" +
             "        <dependency>hukk</dependency>\n" +
             "    </dependencies>\n" +
-            "</project>\n").getBytes(StandardCharsets.UTF_8), result.getBytes(StandardCharsets.UTF_8));
-    }
-    @Test
-    @DisplayName("Insert XML into another XML")
-    void insertXml1() throws Exception {
-        final var result = TestThat.theInput("" +
-            "{@xml:define pom=<project><dependencies></dependencies></project>}" +
-            "{@xml:insert (id=pom path=/project/dependencies) <dependency>hukk</dependency>}" +
-            "{pom}"
-        ).results();
-        Assertions.assertEquals("" +
-            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
-            "<project>\n" +
-            "    <dependencies>\n" +
-            "        <dependency>hukk</dependency>\n" +
-            "    </dependencies>\n" +
-            "</project>\n", result);
+            "</project>\n");
     }
     @Test
     @DisplayName("Insert XML into the main XML deferred")
@@ -101,7 +84,7 @@ public class TestXml {
         TestThat.theInput("" +
             "<project><dependencies></dependencies></project>" +
             "{@xml:insert (path=/project/dependencies) <dependency>hukk</dependency>}"
-        ).results("" +
+        ).ignoreLineEnding().results("" +
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
             "<project>\n" +
             "    <dependencies>\n" +
@@ -121,7 +104,7 @@ public class TestXml {
             "cies></dependencies></project>" +
             // the default tabsize does not override the last tabsize
             "{@xml:insert (path=/project/dependencies) <dependency>hukk</dependency>}"
-        ).results("" +
+        ).ignoreLineEnding().results("" +
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
             "<project>\n" +
             "       <dependencies>\n" +
@@ -145,7 +128,7 @@ public class TestXml {
             "cies></dependencies></project>" +
             // the default tabsize does not override the last tabsize
             "{@xml:insert (path=/project/dependencies) <dependency>hukk</dependency>}"
-        ).results("" +
+        ).ignoreLineEnding().results("" +
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
             "<project>\n" +
             "       <dependencies>\n" +
