@@ -1,8 +1,11 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.nio.charset.StandardCharsets;
 
 public class TestXml {
 
@@ -62,19 +65,35 @@ public class TestXml {
     @Test
     @DisplayName("Insert XML into another XML")
     void insertXml() throws Exception {
-        TestThat.theInput("" +
+        final var result = TestThat.theInput("" +
             "{@xml:define pom=<project><dependencies></dependencies></project>}" +
             "{@xml:insert (id=pom path=/project/dependencies) <dependency>hukk</dependency>}" +
             "{pom}"
-        ).results("" +
+        ).results();
+        Assertions.assertEquals("" +
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
             "<project>\n" +
             "    <dependencies>\n" +
             "        <dependency>hukk</dependency>\n" +
             "    </dependencies>\n" +
-            "</project>\n");
+            "</project>\n".getBytes(StandardCharsets.UTF_8), result.getBytes(StandardCharsets.UTF_8));
     }
-
+    @Test
+    @DisplayName("Insert XML into another XML")
+    void insertXml1() throws Exception {
+        final var result = TestThat.theInput("" +
+            "{@xml:define pom=<project><dependencies></dependencies></project>}" +
+            "{@xml:insert (id=pom path=/project/dependencies) <dependency>hukk</dependency>}" +
+            "{pom}"
+        ).results();
+        Assertions.assertEquals("" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+            "<project>\n" +
+            "    <dependencies>\n" +
+            "        <dependency>hukk</dependency>\n" +
+            "    </dependencies>\n" +
+            "</project>\n", result);
+    }
     @Test
     @DisplayName("Insert XML into the main XML deferred")
     void insertXmlDeferred() throws Exception {
