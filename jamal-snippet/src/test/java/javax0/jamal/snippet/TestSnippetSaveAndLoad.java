@@ -155,7 +155,8 @@ public class TestSnippetSaveAndLoad {
                 "{@snip:save output=res:target/dump4.xml format=XML}"
             )
             .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
-            .throwsBadSyntax("res:target/dump4\\.xml \\(No such file or directory\\)");
+            // cant say target/dump4.xml because it fails on Windows
+            .throwsBadSyntax("res:target.*dump4\\.xml \\(No such file or directory\\)");
     }
 
     @Test
