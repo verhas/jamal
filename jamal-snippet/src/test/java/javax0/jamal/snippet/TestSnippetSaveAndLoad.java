@@ -1,8 +1,13 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TestSnippetSaveAndLoad {
 
@@ -10,7 +15,7 @@ public class TestSnippetSaveAndLoad {
     @DisplayName("Test that snippets can be saved as XML and then they can be loaded")
     void testSaveAllLoadAll() throws Exception {
         final var root = TestFilesMacro.getDirectory();
-        TestThat
+        final var result = Arrays.stream(TestThat
             .theInput("" +
                 "{@snip:collect from=\"src/main/java/\"}" +
                 "{@snip:save output=target/dump1.xml}" +
@@ -19,19 +24,10 @@ public class TestSnippetSaveAndLoad {
                 "{@snip:list listSeparator=\"\\n\"}"
             )
             .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
-            .results("" +
-                "is\n" +
-                "trimLineStart\n" +
-                "store\n" +
-                "dirMacroFormatPlaceholders\n" +
-                "fileMacroFormatPlaceholders\n" +
-                "collect_options\n" +
-                "defaultTimeForListDir\n" +
-                "listDirFormats\n" +
-                "classFormats\n" +
-                "fieldFormats\n" +
-                "methodFormats\n" +
-                "SnipCheck_MIN_LINE");
+            .results().split("\n")).collect(Collectors.toSet());
+        Assertions.assertEquals(Set.of("is", "trimLineStart", "store", "dirMacroFormatPlaceholders",
+            "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats",
+            "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE"), result);
     }
 
     @Test
@@ -46,7 +42,9 @@ public class TestSnippetSaveAndLoad {
             .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
             .results("" +
                 "trimLineStart");
-    }    @Test
+    }
+
+    @Test
     @DisplayName("Test that snippets can be loaded without hash code in the XML file")
     void testLoadWithoutHash() throws Exception {
         final var root = TestFilesMacro.getDirectory();
@@ -322,11 +320,11 @@ public class TestSnippetSaveAndLoad {
 
     @Test
     @DisplayName("Challenge CDATA closing tag")
-    void testCDATA()throws Exception{
-        TestThat.theInput(""+
-            "{@snip:define cdata=]]>}"+
-            "{@snip:save output=target/cdata.xml}"+
-            "{@snip:clear}"+
+    void testCDATA() throws Exception {
+        TestThat.theInput("" +
+            "{@snip:define cdata=]]>}" +
+            "{@snip:save output=target/cdata.xml}" +
+            "{@snip:clear}" +
             "{@snip:load input=target/cdata.xml}" +
             "{@snip cdata}"
         ).results("]]>");
