@@ -2,6 +2,23 @@
 
 
 
+=== https://github.com/verhas/jamal/tree/1.10.2[1.10.2]
+
+The position in error messsages became hierarchical showing the position not only where the error is, but also where the actual file was imported, included from.
+Snippets can be collected from resource and from teh web using file names that start with `res:` and `https://`.
+Snippet collection still fails when trying to collect snippets from binary files, but the error message is more readable.
+SnipCheck can be switched off using -Djamal.snippet.check=false
+SnipLoad and SnipSave macros were developed letting the macro save and/or load snippets from an XML file
+`string:xxx` macros now properly handle their arguments and do not use the whole input as an argument.
+It makes difference in case of leading spaces.
+Xml formatting is fixed.
+Former formatting deleted the new lines from the output, that adversely affected CDATA content.
+The new format fixes this and also adds a trailing `\n` at the end of the XML file.
+
+=== https://github.com/verhas/jamal/tree/1.10.1[1.10.1]
+
+The snippet library was extended with two new macros `xml:define` and `xml:insert`.
+When an XML user-defined macro is used without an argument then the whole XML formatted is returned.
 
 === https://github.com/verhas/jamal/tree/1.10.0[1.10.0]
 
