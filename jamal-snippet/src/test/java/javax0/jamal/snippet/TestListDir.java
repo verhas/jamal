@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestListDir {
 
-    @Test
+    //@Test
     void testListDir() throws Exception {
         TestThat.theInput("{#for ($absolutePath,$name,$simpleName,$isDirectory,$isFile,$isHidden,$canExecute,$canRead,$canWrite,$size,$time) in ({#listDir src/" +
             "{@define maxDepth=1}" +
@@ -52,7 +52,7 @@ public class TestListDir {
             "\n");
     }
 
-    @Test
+    //@Test
     void testListDirWithOptions() throws Exception {
         TestThat.theInput("{#for ($absolutePath,$name,$simpleName,$isDirectory,$isFile,$isHidden,$canExecute,$canRead,$canWrite,$size,$time) in " +
             "({#listDir (maxDepth=1 format=$absolutePath|$name|$simpleName|$isDirectory|$isFile|$isHidden|$canExecute|$canRead|$canWrite|$size|$time) src/})=" +
