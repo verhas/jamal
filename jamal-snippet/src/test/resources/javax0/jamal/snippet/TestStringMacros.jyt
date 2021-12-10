@@ -20,28 +20,28 @@
 
 "string:substring tests":
   "get the whole when no begin and no end":
-    Input: "{@string:substring this is just the whole string}"
+    Input: "{@string:substring /this is just the whole string}"
     Output: "this is just the whole string"
   "get the whole when no begin and no end with spaces at the start":
-    Input: "{@string:substring () this is just the whole string}"
-    Output: " this is just the whole string"
+    Input: "{@string:substring () /this is just the whole string}"
+    Output: "this is just the whole string"
   "get the whole when no begin and no end with spaces at the start and at the end":
-    Input: "{@string:substring () this is just the whole string  }"
-    Output: " this is just the whole string  "
+    Input: "{@string:substring () /this is just the whole string  }"
+    Output: "this is just the whole string  "
   "get a few character from the start":
-    Input: "{@string:substring (begin=0 end=4) this is just the whole string  }"
-    Output: " thi"
+    Input: "{@string:substring (begin=0 end=4) /this is just the whole string  }"
+    Output: "this"
   "get a few character from the middle":
-    Input: "{@string:substring (begin=1 end=5) this is just the whole string  }"
+    Input: "{@string:substring (begin=1 end=5) / this is just the whole string  }"
     Output: "this"
   "get a few character from the end":
-    Input: "{@string:substring (begin=-10) this is just the whole string  }"
+    Input: "{@string:substring (begin=-10) /this is just the whole string  }"
     Output: "e string  "
   "chop off the last character":
-    Input: "{@string:substring (end=-1)hokus pokuss}"
+    Input: "{@string:substring (end=-1)/hokus pokuss}"
     Output: "hokus pokus"
   "get a few character with negative indexes":
-    Input: "{@string:substring (begin=-10 end=-2) this is just the whole string  }"
+    Input: "{@string:substring (begin=-10 end=-2) /this is just the whole string  }"
     Output: "e string"
 
 "string length tests":
@@ -72,3 +72,40 @@
   "left and right without trim":
     Input: "{@string:length (left right) alma }"
     Throws: {%noTrim%}
+
+"string quoting":
+  "quote strings":
+    Input: "{@string:quote| \\ \t \b \n \r \f \"}"
+    Output: " \\\\ \\t \\b \\n \\r \\f \\\""
+
+"comparing strings":
+    "strings equal":
+      Input: "{@string:equals /abraka dabra/abraka dabra}"
+      Output: "true"
+    "strings not equal":
+      Input: "{@string:equals /abraka dabre/abraka dabra}"
+      Output: "false"
+    "strings equal ignoring case":
+      Input: "{@string:equals (ignoreCase) /abraka dabra/AbrAkA dAbrA}"
+      Output: "true"
+    "strings not equal":
+      Input: "{@string:equals (ignoreCase) /abraka dabre/abraka dAbra}"
+      Output: "false"
+
+"string reversing":
+    Input: "{@string:reverse /abraka dabra}"
+    Output: "arbad akarba"
+
+"starts and ends with tests":
+    "starts with":
+      Input: "{@string:startsWith /abraka dabra/abraka}"
+      Output: "true"
+    "does not start with":
+      Input: "{@string:startsWith /abraka dabra/dabra}"
+      Output: "false"
+    "does not end with":
+      Input: "{@string:endsWith /abraka dabra/abraka}"
+      Output: "false"
+    "ends with":
+      Input: "{@string:endsWith /abraka dabra/dabra}"
+      Output: "true"

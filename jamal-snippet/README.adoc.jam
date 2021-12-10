@@ -121,7 +121,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=8bbf85b0.60f9fd86.0de1b987.c0422752.68662893.b340efbf.b2d9d893.69986abd%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=082df639.4fd02dd1%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -135,6 +135,10 @@ The syntax of the macro is
 `fileName` can be the name of a text file, or it can be a directory.
 If the `fileName` is a text file, then the macro will collect the single file's snippets.
 If the `fileName` is a directory, then the macro will collect the snippets from the files in that directory and from directories beneath recursively.
+
+The file name is relative to the Jamal source, which contains the `snip:collect` macro.
+The file name can start with `res:` or `https://`.
+In these cases the content of the file will be loaded from a resource or through the net respectively.
 
 A snippet in a file is a series of lines that happen between
 
@@ -152,7 +156,7 @@ end snippet
 
 lines.
 
-A special snippet containing only a single line can be specified preceeding it with a line
+A special snippet containing only a single line can be specified preceding it with a line
 
 [source]
 ----
@@ -546,7 +550,7 @@ If the regular expression is not found in the first line of the snippet, or ther
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=4b0b4da5.9ea30bd4%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=d1097a6e.e0cefb8a%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -667,6 +671,20 @@ The macro will check the hash value first.
 If the hash value fails, the macro results an error.
 If the hash value is correct, the file or snippet is identical, meaning it has the same number of lines as before.
 
+{%#define JAMAL_SNIPPET_CHECK={%@snip SnipCheck_JAMAL_SNIPPET_CHECK /"(.+)"/%}%}
+You can ask the macro `snip:check` to ignore its task defining the `{%JAMAL_SNIPPET_CHECK%}` system property to `false`.
+It is handy when your documentation has many `snip:check` control, and the compilation of the documentation is don in the tests.
+This would require the update of the hash code in the documentation whenever you make any small changes in the source code.
+To avoid this you can
+
+[source]
+----
+mvn clean verify -D{%JAMAL_SNIPPET_CHECK%}=false
+----
+
+which will compile your code on the development machine fine.
+When you are finished with the adhoc changing, however, you have to update the documentation to reflect the changes in the code.
+
 [[snipList]]
 ==== {%macroChapter%}`snip:list`
 {%#snip:check file={%JAVA_DIR%}SnipList.java hash=4a56d72f%}
@@ -780,7 +798,7 @@ It is saved as a `CDATA` section(s).
 
 [[snipLoad]]
 ==== {%macroChapter%}`snip:load`
-{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=3417d5ca%}
+{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=cd86a711%}
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -900,7 +918,7 @@ will result
 
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=a95c5aae%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=284e54b7%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 The syntax of the macro is
 
@@ -1380,7 +1398,7 @@ results
 
 [[listDir]]
 ==== {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=7194aef5%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=7f68a4d8%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
@@ -1496,28 +1514,29 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,120 bytes
+- snippet: 1,152 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,151 bytes
+- NumberLines.java: 2,362 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
 - FilesMacro.java: 4,791 bytes
-- Collect.java: 8,007 bytes
+- Collect.java: 7,839 bytes
 - TrimLines.java: 3,687 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
 - Counter.java: 3,691 bytes
-- StringMacros.java: 5,828 bytes
+- StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,532 bytes
-- SnipLoad.java: 6,932 bytes
+- SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
-- ListDir.java: 5,220 bytes
+- ListDir.java: 5,321 bytes
 - XmlFormat.java: 3,317 bytes
+- SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,199 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,543 bytes
@@ -1527,7 +1546,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,299 bytes
 - SkipLines.java: 2,048 bytes
-- SnipCheck.java: 5,218 bytes
+- SnipCheck.java: 5,619 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -2031,7 +2050,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 [[String]]
 ==== {%macroChapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=cc4b1ccc.162b726a.b1d224df.fb79804b.39ddb354.f8180eeb.0b9942e8.dd17638a%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=4b8d5a64%}
 [[string:contains]]
 ===== `string:contains`
 

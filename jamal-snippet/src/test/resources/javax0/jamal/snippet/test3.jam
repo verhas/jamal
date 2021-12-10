@@ -1,4 +1,4 @@
-{#snip:collect from="." exclude=2}
+{#snip:collect from="." exclude=2 include=SnippetSource-\d\.txt}
 First snippet {@snip first_snippet}
 2. snippet {@snip second_snippet}
 

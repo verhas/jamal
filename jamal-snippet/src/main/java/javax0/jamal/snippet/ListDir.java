@@ -12,6 +12,7 @@ import javax0.jamal.tools.PlaceHolders;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
@@ -81,7 +82,7 @@ public class ListDir implements Macro, InnerScopeDependent {
                 return true;
             }
             return pattern.matcher(Files.readString(p, StandardCharsets.UTF_8)).find();
-        } catch (IOException e) {
+        } catch (IOException| UncheckedIOException e) {
             return false;
         }
     }
@@ -90,13 +91,13 @@ public class ListDir implements Macro, InnerScopeDependent {
         String size;
         try {
             size = "" + Files.size(p);
-        } catch (IOException e) {
+        } catch (IOException|UncheckedIOException e) {
             size = "0";
         }
         String time;
         try {
             time = "" + Files.getLastModifiedTime(p);
-        } catch (IOException e) {
+        } catch (IOException|UncheckedIOException e) {
             // snippet defaultTimeForListDir
             time = "1970-01-01T00:00:00Z";
             //end snippet

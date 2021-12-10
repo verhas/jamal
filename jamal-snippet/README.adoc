@@ -127,6 +127,10 @@ The syntax of the macro is
 If the `fileName` is a text file, then the macro will collect the single file's snippets.
 If the `fileName` is a directory, then the macro will collect the snippets from the files in that directory and from directories beneath recursively.
 
+The file name is relative to the Jamal source, which contains the `snip:collect` macro.
+The file name can start with `res:` or `https://`.
+In these cases the content of the file will be loaded from a resource or through the net respectively.
+
 A snippet in a file is a series of lines that happen between
 
 [source]
@@ -143,7 +147,7 @@ end snippet
 
 lines.
 
-A special snippet containing only a single line can be specified preceeding it with a line
+A special snippet containing only a single line can be specified preceding it with a line
 
 [source]
 ----
@@ -246,7 +250,7 @@ These options are parsed using the Standard Parameter Parsing as defined in <<..
 
 [source]
 ----
-    {#snip:collect from="." exclude=2}
+    {#snip:collect from="." exclude=2 include=SnippetSource-\d\.txt}
 First snippet {@snip first_snippet}
 2. snippet {@snip second_snippet}
 
@@ -763,6 +767,20 @@ You can specify both the `lines` and the `hash` together, but it does not make m
 The macro will check the hash value first.
 If the hash value fails, the macro results an error.
 If the hash value is correct, the file or snippet is identical, meaning it has the same number of lines as before.
+
+
+You can ask the macro `snip:check` to ignore its task defining the `JAMAL_SNIPPET_CHECK` system property to `false`.
+It is handy when your documentation has many `snip:check` control, and the compilation of the documentation is don in the tests.
+This would require the update of the hash code in the documentation whenever you make any small changes in the source code.
+To avoid this you can
+
+[source]
+----
+mvn clean verify -DJAMAL_SNIPPET_CHECK=false
+----
+
+which will compile your code on the development machine fine.
+When you are finished with the adhoc changing, however, you have to update the documentation to reflect the changes in the code.
 
 [[snipList]]
 ==== x.`snip:list`
@@ -1669,6 +1687,7 @@ will result
 - SnippetStore.java
 - ListDir.java
 - XmlFormat.java
+- SnippetXmlReader.java
 - XmlInsert.java
 - SnipProperties.java
 - Xml.java
@@ -1750,28 +1769,29 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,120 bytes
+- snippet: 1,152 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,151 bytes
+- NumberLines.java: 2,362 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
 - FilesMacro.java: 4,791 bytes
-- Collect.java: 8,007 bytes
+- Collect.java: 7,839 bytes
 - TrimLines.java: 3,687 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
 - Counter.java: 3,691 bytes
-- StringMacros.java: 5,828 bytes
+- StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
 - KillLines.java: 1,532 bytes
-- SnipLoad.java: 6,932 bytes
+- SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
-- ListDir.java: 5,220 bytes
+- ListDir.java: 5,321 bytes
 - XmlFormat.java: 3,317 bytes
+- SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,199 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,543 bytes
@@ -1781,7 +1801,7 @@ will result
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 2,299 bytes
 - SkipLines.java: 2,048 bytes
-- SnipCheck.java: 5,218 bytes
+- SnipCheck.java: 5,619 bytes
 - Reflow.java: 1,716 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -1933,7 +1953,7 @@ will result in the output
 
 [source]
 ----
-2021-12-09 10:57:36
+2021-12-10 11:44:19
 ----
 
 

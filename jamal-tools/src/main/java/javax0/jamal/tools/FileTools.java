@@ -9,6 +9,7 @@ import javax0.jamal.api.Position;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -90,7 +91,7 @@ public class FileTools {
             } else {
                 return FileInput.getInput(fileName);
             }
-        } catch (IOException e) {
+        } catch (IOException| UncheckedIOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
         }
     }
@@ -213,14 +214,24 @@ public class FileTools {
      * @return {@code true} if the file name should be treated as an absolute file name and {@code false} otherwise
      */
     public static boolean isAbsolute(String fileName) {
-        return fileName.startsWith(RESOURCE_PREFIX) ||
-            fileName.startsWith(HTTPS_PREFIX) ||
+        return isRemote(fileName) ||
             fileName.startsWith("/") ||
             fileName.startsWith("\\") ||
             fileName.startsWith("~") ||
             (fileName.length() > 1 &&
                 Character.isAlphabetic(fileName.charAt(0))
                 && fileName.charAt(1) == ':');
+    }
+
+    /**
+     * Check if the name of the file has to be interpreted as a remote file or as a resource.
+     *
+     * @param fileName the file name to check.
+     * @return {@code true} if the file name should be treated as a remote file and {@code false} otherwise
+     */
+    public static boolean isRemote(String fileName) {
+        return fileName.startsWith(HTTPS_PREFIX) ||
+            fileName.startsWith(RESOURCE_PREFIX);
     }
 
     /**

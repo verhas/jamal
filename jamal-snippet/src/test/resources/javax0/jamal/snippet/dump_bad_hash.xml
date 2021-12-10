@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<snippets dateTime="2021-12-8T17:19:17+0100" ts="1638980357645" xmlns="https://snippets.jamal.javax0.com/v1/snippets">
+    <snippet column="1" file="/Users/verhasp/github/jamal/jamal-snippet/src/main/java/javax0/jamal/snippet/FilesMacro.java" hash="09679a92.5d0c706c.489c9fd9.280f0d4f.585c8bee.0d2f4151.dbdff9ec.8a4c2f07" id="dirMacroFormatPlaceholders" line="46"><![CDATA[                    "$name", name, // gives the name of the directory as was specified on the macro
+                    "$absolutePath", dir.getAbsolutePath(), // gives the name of the directory as was specified on the macro
+                    "$parent", dir.getParent() // the parent directory
+                ).and(
+                    "$canonicalPath", dir::getCanonicalPath // the canonical path
+]]></snippet>
+</snippets>

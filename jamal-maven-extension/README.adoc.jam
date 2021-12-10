@@ -124,7 +124,7 @@ What you have to do to revert the operation to standard Maven and `pom.xml` base
 If the reverting to standard `pom.xml` based compilation is final, then do not forget to remove the `.mvn` directory from the source control.
 
 == Error Handling and Debugging
-{%@snip:collect from="../jamal-api/"%}
+{%@snip:collect from="../jamal-api/src/"%}
 If there is an error processing the Jamal file or XML formatting, the extension will give a very detailed stack trace.
 Jamal can also be debugged as described in the link:../jamal-debug/README.adoc[debugger documentation].
 You have to set an environment variable {%JAMAL_DEBUG_ENV%} to be `http:8080`, start Maven, and when the debugger pauses, open `http://localhost:8080`.

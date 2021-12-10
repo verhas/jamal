@@ -59,16 +59,13 @@ public class NumberLines implements Macro, InnerScopeDependent {
         int i = 0;
         final var sb = in.getSB();
         int lineNr = start.get();
+        final var fmt = format.get();
+        final var stp = step.get();
         while (i > -1) {
-            final String formattedNr;
-            try {
-                formattedNr = String.format(format.get(), lineNr);
-            } catch (IllegalFormatException e) {
-                throw new BadSyntax("The format string in macro '" + getId() + "' is incorrect.", e);
-            }
+            final var formattedNr = getFormattedNr(lineNr, fmt);
             sb.insert(i, formattedNr);
             i += formattedNr.length();
-            lineNr += step.get();
+            lineNr += stp;
             i = sb.indexOf("\n", i);
             if (i != -1) {
                 i++;
@@ -78,5 +75,15 @@ public class NumberLines implements Macro, InnerScopeDependent {
             }
         }
         return in.toString();
+    }
+
+    private String getFormattedNr(int lineNr, String fmt) throws BadSyntax {
+        final String formattedNr;
+        try {
+            formattedNr = String.format(fmt, lineNr);
+        } catch (IllegalFormatException e) {
+            throw new BadSyntax("The format string in macro '" + getId() + "' is incorrect.", e);
+        }
+        return formattedNr;
     }
 }

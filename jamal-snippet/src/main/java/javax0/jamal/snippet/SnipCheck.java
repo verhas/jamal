@@ -1,6 +1,7 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
@@ -15,9 +16,14 @@ public class SnipCheck implements Macro {
 
     // snipline SnipCheck_MIN_LINE
     private static final int MIN_LENGTH = 6;
+    // snipline SnipCheck_JAMAL_SNIPPET_CHECK
+    public static final String JAMAL_SNIPPET_CHECK = "JAMAL_SNIPPET_CHECK";
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        if (EnvironmentVariables.getenv(JAMAL_SNIPPET_CHECK).filter(s -> s.equals("false")).isPresent()) {
+            return "";
+        }
         final var hashString = Params.<String>holder("hash", "hashCode").orElse("");
         final var lines = Params.<String>holder("lines").asInt();
         final var id = Params.<String>holder("id");
@@ -41,7 +47,8 @@ public class SnipCheck implements Macro {
     }
 
     private String checkLineCount(Params.Param<Integer> lines, Params.Param<String> id, Params.Param<String> fileName, Params.Param<String> message, String snippet) throws BadSyntax {
-        final var newlines = snippet.replaceAll("[^\\n]", "").length();
+        final var lastNl = snippet.charAt(snippet.length() - 1) == '\n' ? 0 : 1 ;
+        final var newlines = snippet.replaceAll("[^\\n]", "").length() + lastNl;
         if (newlines == lines.get()) {
             return "";
         }
@@ -54,7 +61,7 @@ public class SnipCheck implements Macro {
                                    Params.Param<String> message,
                                    String snippet) throws BadSyntax {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(snippet));
-        final var hash = hashString.get().replaceAll("\\.","").toLowerCase(Locale.ENGLISH);
+        final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < MIN_LENGTH) {
             if (hashStringCalculated.contains(hash)) {
                 throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) + "'. '" +
@@ -73,7 +80,7 @@ public class SnipCheck implements Macro {
             "' does not contain '" + hashString.get() + "'.\n" + "'" + message.get() + "'");
     }
 
-    public static String doted(final String s){
+    public static String doted(final String s) {
         return s.replaceAll("([0-9a-fA-F]{8})(?!$)", "$1.");
     }
 

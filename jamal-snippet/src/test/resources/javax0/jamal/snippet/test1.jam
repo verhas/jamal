@@ -1,4 +1,4 @@
-{@snip:collect from="."}
+{@snip:collect from="./SnippetSource-1.txt"}{@snip:collect from="./SnippetSource-2.txt"}
 First snippet {@snip first_snippet}
 2. snippet {@snip second_snippet}
 

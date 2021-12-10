@@ -14,6 +14,8 @@ public class TestSnippetSaveAndLoad {
     @Test
     @DisplayName("Test that snippets can be saved as XML and then they can be loaded")
     void testSaveAllLoadAll() throws Exception {
+        // When this test fails, then check if there was any new snippet
+        // defined in the module in the main Java source dir
         final var root = TestFilesMacro.getDirectory();
         final var result = Arrays.stream(TestThat
             .theInput("" +
@@ -27,7 +29,7 @@ public class TestSnippetSaveAndLoad {
             .results().split("\n")).collect(Collectors.toSet());
         Assertions.assertEquals(Set.of("is", "trimLineStart", "store", "dirMacroFormatPlaceholders",
             "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats",
-            "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE"), result);
+            "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK"), result);
     }
 
     @Test
@@ -143,6 +145,16 @@ public class TestSnippetSaveAndLoad {
             )
             .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
             .throwsBadSyntax("The only supported format is XML");
+    }
+
+    @Test
+    @DisplayName("snip:save throws up for a bad format")
+    void testLoadThrowsBadHash() throws Exception {
+        TestThat
+            .theInput("" +
+                "{@snip:load input=res:javax0/jamal/snippet/dump_bad_hash.xml}"
+            )
+            .throwsBadSyntax("The 'hash'.*");
     }
 
     @Test

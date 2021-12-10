@@ -10,10 +10,9 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -81,16 +80,21 @@ public class Collect implements Macro, InnerScopeDependent {
         if (store.testAndSet(setName.get())) {
             return "";
         }
-        final var fromFile = new File(from.get());
-        if (fromFile.isFile()) {
-            harvestSnippets(Paths.get(fromFile.toURI()).normalize().toString(), store, start.get(), liner.get(), stop.get());
+        final var fn = from.get();
+        final var fromFile = new File(fn);
+        if (FileTools.isRemote(fn) || fromFile.isFile()) {
+            harvestSnippets(fn, store, start.get(), liner.get(), stop.get());
         } else {
             try {
-                for (final var file : files(from.get(), scanDepth.get()).map(p -> p.toAbsolutePath().toString())
-                    .filter(include.get()).filter(exclude.get()).collect(Collectors.toSet())) {
+                final var selectedFiles = files(fn, scanDepth.get())
+                    .map(p -> p.toAbsolutePath().toString())
+                    .filter(include.get())
+                    .filter(exclude.get())
+                    .collect(Collectors.toSet());
+                for (final var file : selectedFiles) {
                     harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), liner.get(), stop.get());
                 }
-            } catch (IOException e) {
+            } catch (IOException | UncheckedIOException e) {
                 throw new BadSyntax("There is some problem collecting snippets from files under '" + from.get() + "'", e);
             }
         }
@@ -101,48 +105,43 @@ public class Collect implements Macro, InnerScopeDependent {
         var state = State.OUT;
         String id = "";
         StringBuilder text = new StringBuilder();
+        final var lines = FileTools.getFileContent(file).split("\n", -1);
         int startLine = 0;
-        try (final var br = new BufferedReader(new FileReader(file))) {
-            int lineNr = 0;
-            for (String line; (line = br.readLine()) != null; ) {
-                lineNr++;
-                switch (state) {
-                    case OUT:
-                        final var startMatcher = start.matcher(line);
-                        final var linerMatcher = liner.matcher(line);
-                        if (startMatcher.find()) {
-                            id = startMatcher.group(1);
-                            text.delete(0, text.length());
-                            startLine = lineNr;
-                            state = State.IN;
-                        } else if (linerMatcher.find()) {
-                            id = linerMatcher.group(1);
-                            text.delete(0, text.length());
-                            line = br.readLine();
-                            lineNr++;
-                            if (line == null) {
-                                throw new BadSyntax("'snipline " + id + "' is on the last line of the file '" + file + "'");
-                            }
-                            store.snippet(id, line, new Position(file, lineNr));
+        for (int lineNr = 0; lineNr < lines.length; lineNr++) {
+            String line = lines[lineNr];
+            switch (state) {
+                case OUT:
+                    final var startMatcher = start.matcher(line);
+                    final var linerMatcher = liner.matcher(line);
+                    if (startMatcher.find()) {
+                        id = startMatcher.group(1);
+                        text.delete(0, text.length());
+                        startLine = lineNr;
+                        state = State.IN;
+                    } else if (linerMatcher.find()) {
+                        id = linerMatcher.group(1);
+                        text.delete(0, text.length());
+                        if (lineNr == lines.length - 1) {
+                            throw new BadSyntax("'snipline " + id + "' is on the last line of the file '" + file + "'");
                         }
+                        line = lines[++lineNr];
+                        store.snippet(id, line, new Position(file, lineNr));
+                    }
+                    break;
+                case IN:
+                    final var stopMatcher = stop.matcher(line);
+                    if (stopMatcher.find()) {
+                        store.snippet(id, text.toString(), new Position(file, startLine));
+                        state = State.OUT;
                         break;
-                    case IN:
-                        final var stopMatcher = stop.matcher(line);
-                        if (stopMatcher.find()) {
-                            store.snippet(id, text.toString(), new Position(file, startLine));
-                            state = State.OUT;
-                            break;
-                        }
-                        text.append(line).append("\n");
-                        break;
-                }
+                    }
+                    text.append(line).append("\n");
+                    break;
             }
-            if (state == State.IN) {
-                store.snippet(id, "", new Position(file, startLine),
-                    new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
-            }
-        } catch (IOException e) {
-            throw new BadSyntax("Cannot read the file '" + file + "'");
+        }
+        if (state == State.IN) {
+            store.snippet(id, "", new Position(file, startLine),
+                new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
         }
     }
 

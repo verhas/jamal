@@ -34,13 +34,22 @@ public class TestSnippet {
             .results("");
     }
 
+    private static final String JAMAL_SNIPPET_CHECK = "jamal.snippet.check";
+
     @Test
     @DisplayName("Snippets check fails even for one character change")
     void testSnippetCheck2() throws Exception {
+        final var save = System.getProperty(JAMAL_SNIPPET_CHECK);
+        System.setProperty(JAMAL_SNIPPET_CHECK, "true");
         TestThat.theInput("{@snip:define snippet1=    \n" +
                 "thjs is the content of the snippet}" +
                 "{@snip:check hash=47ee01 id=snippet1}")
             .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}' does not contain '47ee01'\\..*");
+        if (save == null) {
+            System.clearProperty(JAMAL_SNIPPET_CHECK);
+        } else {
+            System.setProperty(JAMAL_SNIPPET_CHECK, save);
+        }
     }
 
     @Test
@@ -55,10 +64,17 @@ public class TestSnippet {
     @Test
     @DisplayName("Snippets check fails with zero length postfix")
     void testSnippetCheck4() throws Exception {
+        final var save = System.getProperty(JAMAL_SNIPPET_CHECK);
+        System.setProperty(JAMAL_SNIPPET_CHECK, "true");
         TestThat.theInput("{@snip:define snippet1=    \n" +
                 "this is the content of the snippet}" +
                 "{@snip:check hash=\"\" id=snippet1}")
             .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}'\\..*");
+        if (save == null) {
+            System.clearProperty(JAMAL_SNIPPET_CHECK);
+        } else {
+            System.setProperty(JAMAL_SNIPPET_CHECK, save);
+        }
     }
 
     @Test
