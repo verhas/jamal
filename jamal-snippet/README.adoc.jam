@@ -1604,7 +1604,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.10.2-SNAPSHOT</version>
+    <version>1.10.2</version>
 </project>
 ----
 %}
@@ -1637,7 +1637,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.10.2-SNAPSHOT</version>
+<version>1.10.2</version>
 </project>
 ----
 %}
@@ -1677,7 +1677,7 @@ It will result in the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.10.2-SNAPSHOT</version>
+    <version>1.10.2</version>
 </project>
 ----
 %}
