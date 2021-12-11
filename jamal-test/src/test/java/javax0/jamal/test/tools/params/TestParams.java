@@ -630,5 +630,23 @@ public class TestParams {
         Assertions.assertEquals("", left.get());
     }
 
+
+    @Test
+    @DisplayName("Tests that the parameters can be fetched using 'fetchParameters()'")
+    void testFetchParameters() throws BadSyntax {
+        final var processor = new Processor("{", "}");
+        final var parameters = Params.using(processor).fetchParameters(Input.makeInput("margin=5 left="));
+        Assertions.assertEquals(2, parameters.size());
+        Assertions.assertEquals("5", parameters.get("margin"));
+        Assertions.assertEquals("", parameters.get("left"));
+        int i=0;
+        for(var parameter : parameters.entrySet()) {
+            switch (i){
+                case 0: Assertions.assertEquals("margin", parameter.getKey()); Assertions.assertEquals("5", parameter.getValue()); break;
+                case 1: Assertions.assertEquals("left", parameter.getKey());Assertions.assertEquals("", parameter.getValue()); break;
+            }
+            i++;
+        }
+    }
 }
 

@@ -1514,7 +1514,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,152 bytes
+- snippet: 1,184 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
@@ -1525,6 +1525,7 @@ will result
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 7,839 bytes
 - TrimLines.java: 3,687 bytes
+- ThinXml.java: 4,608 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
@@ -1535,7 +1536,7 @@ will result
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,321 bytes
-- XmlFormat.java: 3,317 bytes
+- XmlFormat.java: 3,261 bytes
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,199 bytes
 - SnipProperties.java: 1,485 bytes
@@ -1575,7 +1576,7 @@ will result
 
 [[xmlFormat]]
 ==== {%macroChapter%}`xmlFormat`
-{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=d8c6b2ea%}
+{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=7827406b%}
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
 For example,
@@ -1591,23 +1592,8 @@ For example,
 %}
 
 will result
-{%#snip:define tabulatedXmlFormat=
-{%output%}%}\
 
-{%@snip tabulatedXmlFormat
-[source]
-----
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <name>jamal snippet</name>
-    <packaging>jar</packaging>
-    <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-snippet</artifactId>
-    <version>1.10.2</version>
-</project>
-----
-%}
+{%output%}
 
 The default tabulation size is four.
 You can alter it by defining the parameter `tabsize`.
@@ -1624,23 +1610,8 @@ For example,
 %}
 
 will result
-{%#snip:define zeroTabulatedXmlFormat=
-{%output%}%}\
 
-{%#snip zeroTabulatedXmlFormat
-[source]
-----
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<name>jamal snippet</name>
-<packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId>
-<artifactId>jamal-snippet</artifactId>
-<version>1.10.2</version>
-</project>
-----
-%}
+{%output%}
 
 As you can see, there is no tabulation in this case.
 
@@ -1664,23 +1635,38 @@ The previous example that we used before can also be formulated this way.
 Note that the macro invocation `{#xmlFormat}` in this case can be anywhere in the input.
 The formatting will take place postponed when the processing is finished.
 It will result in the same output as before:
-{%#snip:define tabulatedXmlFormat1=
-{%output%}%}\
 
-{%@snip tabulatedXmlFormat1
-[source]
-----
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <name>jamal snippet</name>
-    <packaging>jar</packaging>
-    <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-snippet</artifactId>
-    <version>1.10.2</version>
-</project>
-----
+{%output%}
+
+The macro can also convert thin XML to normal XML.
+Thin XML is the same as normal XML, but the tags start without the `<` character, and the closing tag is omitted.
+The actual place of the closing tag is determined by the position of the opening tag.
+Whenever a tag line (containing a `>` character after a tag name) or a text line start on a column smaller than the tag tabulation the tag is closed.
+
+To use the thin XML format the parameter `thin` must be specified.
+
+For example:
+
+{%sample/
+{#xmlFormat (thin)
+project>
+  modelVersion>4.0.0
+  name>jamal snippet
+  packaging>jar
+  groupId>com.javax0.jamal
+  artifactId>jamal-snippet
+  version>{%VERSION%}
+  parent>
+    groupId>com.javax0.jamal
+    artifactId>jamal-parent
+    version>1.10.3-SNAPSHOT
+    relativePath>../jamal-parent
+}
 %}
+
+will result
+
+{%output%}
 
 [[date]]
 ==== {%macroChapter%}`date`

@@ -7,9 +7,11 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.StringFetcher;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -73,6 +75,7 @@ public class Params {
         Param<String> asString();
 
         Param<List<?>> asList();
+
         <K> Param<List<K>> asList(Class<K> k);
 
         T get() throws BadSyntax;
@@ -178,7 +181,7 @@ public class Params {
 
     /**
      * Parse the input and collect the parameters in a map. The characters parsed are consumed from the input including
-     * the last new-line  or other specified terminating character.
+     * the last new-line or other specified terminating character.
      * <p>
      * The parameters have the format
      * <pre>{@code
@@ -206,6 +209,24 @@ public class Params {
      *                   </ul>
      */
     public void parse(Input input) throws BadSyntax {
+        parse(input, (id, param) -> holders.get(id).set(param), id -> holders.containsKey(id));
+    }
+
+    /**
+     * This is a general purpose version of the parameter handling. This method parses the parameters and fills them
+     * into a LinkedHashMap. It is guaranteed that the keys are in the same order as they are in the input.
+     *
+     * @param input the input that contains the parameters
+     * @return the linked hash map with the parameters
+     * @throws BadSyntax in the same cases as {@link #parse(Input)}
+     */
+    public LinkedHashMap<String, String> fetchParameters(Input input) throws BadSyntax {
+        final var parameters = new LinkedHashMap<String, String>();
+        parse(input, (id, param) -> parameters.put(id, param), id -> !parameters.containsKey(id));
+        return parameters;
+    }
+
+    public void parse(Input input, BiConsumer<String, String> store, Predicate<String> valid) throws BadSyntax {
         parse();
         skipStartingSpacesAndEscapedTerminal(input);
         if (start != null) {
@@ -220,7 +241,7 @@ public class Params {
                 break;
             }
             final var id = fetchId(input);
-            if (!holders.containsKey(id)) {
+            if (!valid.test(id)) {
                 throw new BadSyntax("The key '" + id + "' is not used by the macro '" + macroName + "'.");
             }
             final String param;
@@ -232,7 +253,7 @@ public class Params {
             } else {
                 param = "true";
             }
-            holders.get(id).set(param);
+            store.accept(id, param);
             skipSpacesAndEscapedTerminal(input);
         }
         skip(input, 1);
