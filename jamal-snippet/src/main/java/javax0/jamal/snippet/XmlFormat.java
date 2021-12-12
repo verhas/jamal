@@ -24,22 +24,23 @@ public class XmlFormat implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var tabsize = Params.holder("tabsize").orElseInt(4);
-        final var thin = Params.holder(null,"thin").asBoolean();
-        Params.using(processor).from(this).between("()").keys(tabsize, thin).parse(in);
+        final var thin = Params.holder(null, "thin").asBoolean();
+        final var wrong = Params.holder(null, "wrong").asBoolean();
+        Params.using(processor).from(this).between("()").keys(tabsize, thin, wrong).parse(in);
 
 
         InputHandler.skipWhiteSpaces(in);
         if (in.length() > 0) {
             final String input = in.toString();
-            return formatXml(input, "" + tabsize.get(), thin.is());
+            return formatXml(input, "" + tabsize.get(), thin.is(), wrong.is());
         } else {
-            final var it = new XmlFormatCloser(tabsize.get(), thin.is());
+            final var it = new XmlFormatCloser(tabsize.get(), thin.is(), wrong.is());
             processor.deferredClose(it);
             return "";
         }
     }
 
-    private static String formatXml(String input, String tabsize, boolean thin) throws BadSyntax {
+    private static String formatXml(String input, String tabsize, boolean thin, boolean wrong) throws BadSyntax {
         if (thin) {
             input = new ThinXml(input).getXml();
         }
@@ -50,6 +51,9 @@ public class XmlFormat implements Macro, InnerScopeDependent {
             Document doc = db.parse(new InputSource(new StringReader(input)));
             return XmlDocument.formatDocument(doc, tabsize);
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
+            if (wrong) {
+                return input;
+            }
             throw new BadSyntax("There was an XML exception", e);
         }
     }
@@ -64,10 +68,12 @@ public class XmlFormat implements Macro, InnerScopeDependent {
         private Input output = null;
         private final String tabsize;
         private final boolean thin;
+        private final boolean wrong;
 
-        private XmlFormatCloser(final int tabsize, boolean thin) {
+        private XmlFormatCloser(final int tabsize, boolean thin, boolean wrong) {
             this.tabsize = "" + tabsize;
             this.thin = thin;
+            this.wrong = wrong;
         }
 
         @Override
@@ -84,7 +90,7 @@ public class XmlFormat implements Macro, InnerScopeDependent {
         public void close() throws BadSyntax {
             if (output != null) {
                 InputHandler.skipWhiteSpaces(output);
-                final var result = formatXml(output.toString(), tabsize, thin);
+                final var result = formatXml(output.toString(), tabsize, thin, wrong);
                 output.getSB().delete(0, output.getSB().length());
                 output.getSB().append(result);
             }

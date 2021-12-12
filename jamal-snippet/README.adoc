@@ -1781,7 +1781,7 @@ will result
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 7,839 bytes
 - TrimLines.java: 3,687 bytes
-- ThinXml.java: 4,608 bytes
+- ThinXml.java: 5,963 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
@@ -1792,7 +1792,7 @@ will result
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,321 bytes
-- XmlFormat.java: 3,261 bytes
+- XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,199 bytes
 - SnipProperties.java: 1,485 bytes
@@ -1987,6 +1987,8 @@ will result
 ----
 
 
+For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
+
 [[date]]
 ==== xxiv.`date`
 
@@ -2004,7 +2006,7 @@ will result in the output
 
 [source]
 ----
-2021-12-11 21:42:25
+2021-12-12 17:34:15
 ----
 
 

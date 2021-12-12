@@ -75,5 +75,9 @@ public class TestConvertReadme {
     @DisplayName("Convert the Snippet module README.adoc.jam -> README.adoc")
     void convertSnippetReadme() throws Exception {
         DocumentConverter.convert("../jamal-snippet/README.adoc.jam");
+    }    @Test
+    @DisplayName("Convert the Snippet module THINXML.adoc.jam -> THINXML.adoc")
+    void convertThinXml() throws Exception {
+        DocumentConverter.convert("../jamal-snippet/THINXML.adoc.jam");
     }
 }

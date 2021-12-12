@@ -1525,7 +1525,7 @@ will result
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 7,839 bytes
 - TrimLines.java: 3,687 bytes
-- ThinXml.java: 4,608 bytes
+- ThinXml.java: 5,963 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
@@ -1536,7 +1536,7 @@ will result
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,321 bytes
-- XmlFormat.java: 3,261 bytes
+- XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,199 bytes
 - SnipProperties.java: 1,485 bytes
@@ -1576,7 +1576,7 @@ will result
 
 [[xmlFormat]]
 ==== {%macroChapter%}`xmlFormat`
-{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=7827406b%}
+{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=1be3ddbe%}
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
 For example,
@@ -1667,6 +1667,8 @@ project>
 will result
 
 {%output%}
+
+For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[date]]
 ==== {%macroChapter%}`date`
