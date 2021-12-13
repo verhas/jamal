@@ -1781,7 +1781,7 @@ will result
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 7,839 bytes
 - TrimLines.java: 3,687 bytes
-- ThinXml.java: 5,963 bytes
+- ThinXml.java: 7,884 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
@@ -2006,7 +2006,7 @@ will result in the output
 
 [source]
 ----
-2021-12-12 17:34:15
+2021-12-13 14:27:25
 ----
 
 

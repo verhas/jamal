@@ -66,12 +66,13 @@ public class TestThinXml {
                 "</pineApple>\n" +
                 "</apple>\n"
             , new ThinXml("" +
-                "apple core=hard chew=\"bak\\\"ka\">plum>\n" +
-                "                              this is just text &gt; under plum\n" +
+                "apple core=hard chew=\"bak\\\"ka\">\n" +
+                "        plum>\n" +
+                "          this is just text &gt; under plum\n" +
                 "        here plum is closed and this is another text\n" +
                 "\n" + // an empty line
                 "     pineApple>is another fine fruit that goes well with pizz...aaarghhh\n" +
-                "<![CDATA[\n" +
+                "         <![CDATA[\n" +
                 "    this is a CDATA section\n a few lines\n  ever more tabbed\nand untabbed\n" +
                 "]]>\n"
             ).getXml());

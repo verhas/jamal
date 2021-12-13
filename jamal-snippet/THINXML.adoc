@@ -2,9 +2,6 @@
 
 
 
-
-
-
 == Introduction
 
 Thin XML is a format mapped to XML effortlessly and straightforwardly, but it contains fewer characters and is more readable.
@@ -194,6 +191,101 @@ will be
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
     <version>1.10.3-SNAPSHOT</version>
+</project>
+----
+
+
+When you place more than one tag on a single line the tabbing counts only for the first one.
+For example:
+
+[source]
+----
+project>
+  films>film id="goldfinger">girls>
+    girl id="Pussy Galore">
+      year>1925
+    girl id="Jill Masterton">
+      year>1937
+    girl id="Tilly Masterson">
+      year>1941
+----
+
+will result in:
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+    <films>
+        <film id="goldfinger">
+            <girls>
+                <girl id="Pussy Galore">
+                    <year>1925</year>
+                </girl>
+                <girl id="Jill Masterton">
+                    <year>1937</year>
+                </girl>
+                <girl id="Tilly Masterson">
+                    <year>1941</year>
+                </girl>
+            </girls>
+        </film>
+    </films>
+</project>
+----
+
+
+Even though the `girl` tags are on a column left to the start of the `girls` or `film` tags, the tabbing counts only for the first one.
+The tags that are on the same line inherit the tag positions of the first tag on the line.
+
+This way, you cannot insert more than one `film` tags following the joined line.
+To do that you have to split the opening line into separate lines.
+
+[source]
+----
+project>
+  films>
+    film id="goldfinger">
+      girls>
+        girl id="Pussy Galore">
+          year>1925
+        girl id="Jill Masterton">
+          year>1937
+        girl id="Tilly Masterson">
+          year>1941
+    film id="casino royale">girls>
+      girl id="Vesper Lynd">
+        year>1923
+----
+
+will result in:
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+    <films>
+        <film id="goldfinger">
+            <girls>
+                <girl id="Pussy Galore">
+                    <year>1925</year>
+                </girl>
+                <girl id="Jill Masterton">
+                    <year>1937</year>
+                </girl>
+                <girl id="Tilly Masterson">
+                    <year>1941</year>
+                </girl>
+            </girls>
+        </film>
+        <film id="casino royale">
+            <girls>
+                <girl id="Vesper Lynd">
+                    <year>1923</year>
+                </girl>
+            </girls>
+        </film>
+    </films>
 </project>
 ----
 
@@ -424,6 +516,66 @@ and it still gets the same output:
     </profiles>
 </project>
 ----
+
+
+== CDATA
+
+Thin XML can contain CDATA sections.
+A CDATA section should start on a separate line and should end on its own line.
+The start of the CDATA section is any line that starts with `<![CDATA[`.
+Then end of the section is the line that ends with `]]>`.
+
+[source]
+----
+project>
+     name>jamal snippet
+     <![CDATA[ you can have text already here
+content verbatim    anything can come here <>!
+and finally something else]]>
+     packaging>super
+----
+
+is representing the XML
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+    <name>jamal snippet</name><![CDATA[ you can have text already here
+content verbatim    anything can come here <>!
+and finally something else]]>
+    <packaging>super</packaging>
+</project>
+----
+
+
+The position of the `<![CDATA[` controls which tags are closed before the CDATA section.
+In the example above the CDATA section closes the `name` tag, as it appears on the same tabbing level.
+If we increase the tabbing it does not close the `name` tag.
+
+[source]
+----
+project>
+    name>jamal snippet
+     <![CDATA[ you can have text already here
+content verbatim    anything can come here <>!
+and finally something else]]>
+    packaging>super
+----
+
+will result in the following output:
+
+[source]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+    <name>jamal snippet<![CDATA[ you can have text already here
+content verbatim    anything can come here <>!
+and finally something else]]></name>
+    <packaging>super</packaging>
+</project>
+----
+
 
 
 == Implementation

@@ -1,22 +1,14 @@
 == Thin XML Format
-
-{%@comment ---------------------------------------------------------------------------------------------------------------------------------------------------%}
+{%@snip:check file=./src/main/java/javax0/jamal/snippet/ThinXml.java hash="c1bb6569"%}
 {%@import res:jamal.jim%}\
 {%@define sample(code)={%#define :lastCode={@xmlFormat (thin)}
 code%}[source]
-----
-{%#trimLines
-code%}
-----%}
-{%@define wrongSample(code)={%#define :lastCode={@xmlFormat (thin wrong)}
-code%}[source]
-----
+{%@comment%}----
 {%#trimLines
 code%}
 ----%}
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-{%@comment ---------------------------------------------------------------------------------------------------------------------------------------------------%}
 
 == Introduction
 
@@ -122,6 +114,50 @@ project>
 %}
 
 will be
+
+{%output%}
+
+When you place more than one tag on a single line the tabbing counts only for the first one.
+For example:
+
+{%sample/
+project>
+  films>film id="goldfinger">girls>
+    girl id="Pussy Galore">
+      year>1925
+    girl id="Jill Masterton">
+      year>1937
+    girl id="Tilly Masterson">
+      year>1941
+%}
+
+will result in:
+
+{%output%}
+
+Even though the `girl` tags are on a column left to the start of the `girls` or `film` tags, the tabbing counts only for the first one.
+The tags that are on the same line inherit the tag positions of the first tag on the line.
+
+This way, you cannot insert more than one `film` tags following the joined line.
+To do that you have to split the opening line into separate lines.
+
+{%sample/
+project>
+  films>
+    film id="goldfinger">
+      girls>
+        girl id="Pussy Galore">
+          year>1925
+        girl id="Jill Masterton">
+          year>1937
+        girl id="Tilly Masterson">
+          year>1941
+    film id="casino royale">girls>
+      girl id="Vesper Lynd">
+        year>1923
+%}
+
+will result in:
 
 {%output%}
 
@@ -236,6 +272,44 @@ project>
 and it still gets the same output:
 
 {%output%}
+
+== CDATA
+
+Thin XML can contain CDATA sections.
+A CDATA section should start on a separate line and should end on its own line.
+The start of the CDATA section is any line that starts with `<![CDATA[`.
+Then end of the section is the line that ends with `]]>`.
+
+{%sample/
+project>
+     name>jamal snippet
+     <![CDATA[ you can have text already here
+content verbatim    anything can come here <>!
+and finally something else]]>
+     packaging>super
+%}
+
+is representing the XML
+
+{%output%}
+
+The position of the `<![CDATA[` controls which tags are closed before the CDATA section.
+In the example above the CDATA section closes the `name` tag, as it appears on the same tabbing level.
+If we increase the tabbing it does not close the `name` tag.
+
+{%sample/
+project>
+    name>jamal snippet
+     <![CDATA[ you can have text already here
+content verbatim    anything can come here <>!
+and finally something else]]>
+    packaging>super
+%}
+
+will result in the following output:
+
+{%output%}
+
 
 == Implementation
 

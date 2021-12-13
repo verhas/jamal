@@ -11,16 +11,32 @@ import java.util.LinkedHashMap;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
+/**
+ * Convert a thin XML to regular XML.
+ */
 public class ThinXml {
 
+    public static final int NOT_CALCULATED_YET = -1;
     private final String thinXml;
+    /**
+     * The tab size in spaces for the generated XML. This is not fascinating since the resulting XML is formatted.
+     */
     private int tabSize = 4;
-    boolean tabClose = true;
+    boolean tabClosed = true;
 
     public ThinXml(final String thinXml) {
         this.thinXml = thinXml;
     }
 
+    /**
+     * Store the data for an opening tag. We store the tag id, so that when it closed we know what to output following
+     * the {@code </} character. We also store the position of the opening tag in the thin XML source. It is needed, so
+     * we know when a text or tag starts on a column which is more left than the column of the opening tag. We also store
+     * the position of the closing tag in the output so we know how to tab the elements below it and also the closing tag.
+     * <p>
+     * When the tag is {@code null} then the tag comes from an XML tag start, which should be closed explicitly by the
+     * XML tag in the source, which is copied verbatim.
+     */
     private static class Tag {
         final int srcTab;
         final String tag;
@@ -33,15 +49,28 @@ public class ThinXml {
         }
     }
 
+    /**
+     * The stack of tags which are open. (This comment 100% was written by GitHub copilot before I even could ask for it.)
+     */
     final ArrayList<Tag> tags = new ArrayList<>();
 
+    /**
+     * Format the think XML to regular XML and return the XML as a string. The XML is not processed as XML, only as text.
+     * It is not formatted, not checked for completeness, not checked for correctness, not checked for syntax errors.
+     * The leading {@code <?xml} line is not generated in front of the XML as it may be a partial XML.
+     *
+     * @return the regular XML created from the thin XML
+     * @throws BadSyntax if there is any problem parsing the attributes
+     */
     public String getXml() throws BadSyntax {
         final var xml = new StringBuilder();
         final var lines = thinXml.split("\n", -1);
         for (int i = 0; i < lines.length; i++) {
             final var line = lines[i];
-            if (line.trim().equals("<![CDATA[")) {
-                while (i < lines.length && !lines[i].trim().equals("]]>")) {
+            if (line.trim().startsWith("<![CDATA[")) {
+                closeTags(xml, line.indexOf("<"));
+                lines[i] = line.substring(line.indexOf("<"));
+                while (i < lines.length && !lines[i].trim().endsWith("]]>")) {
                     xml.append(lines[i++]).append("\n");
                 }
                 xml.append(lines[i]).append("\n");
@@ -52,13 +81,18 @@ public class ThinXml {
             } else {
                 final boolean containsBirdBeak = line.contains("<");
                 final var in = Input.makeInput(line, new Position(null, 0, 0));
-                if( !containsBirdBeak ) {
+                if (!containsBirdBeak) {
                     closeTags(xml, spcCount(line));
                 }
                 boolean tabText = true;
+                int firstTagColumn = NOT_CALCULATED_YET;
                 while (in.length() > 0) {
                     if (in.indexOf(">") >= 0 && !containsBirdBeak) {
-                        tabText = convertTag(xml, in, tabText);
+                        if (firstTagColumn == NOT_CALCULATED_YET) {
+                            skipWhiteSpaces(in);
+                            firstTagColumn = in.getColumn();
+                        }
+                        tabText = convertTag(xml, in, tabText, firstTagColumn);
                     } else {
                         convertText(xml, in, tabText);
                     }
@@ -74,7 +108,7 @@ public class ThinXml {
             cleanTags(xml);
             xml.append(in).append("\n");
         } else if (in.indexOf("<") >= 0) {
-            if( !tabClose ) {
+            if (!tabClosed) {
                 closeLastTag(xml);
             }
             xml.append(in).append("\n");
@@ -92,17 +126,16 @@ public class ThinXml {
             if (tabText) {
                 xml.append("\n");
             }
-            tabClose = tabText;
+            tabClosed = tabText;
         }
         in.getSB().setLength(0);
     }
 
-    private boolean convertTag(StringBuilder xml, Input in, boolean tabText) throws BadSyntax {
+    private boolean convertTag(StringBuilder xml, Input in, boolean tabText, int column) throws BadSyntax {
         if (!tabText) {
             xml.append("\n");
         }
         skipWhiteSpaces(in);
-        final var column = in.getColumn();
         final var tag = fetchId(in);
         final int outTab;
         if (tags.size() == 0) {
@@ -121,7 +154,7 @@ public class ThinXml {
         if (tabText) {
             xml.append("\n");
         }
-        tabClose = tabText;
+        tabClosed = tabText;
         return tabText;
     }
 
@@ -138,40 +171,41 @@ public class ThinXml {
 
     private void cleanTags(StringBuilder xml) {
         while (tags.size() > 0 && tags.get(tags.size() - 1).tag != null) {
-            if (tabClose) {
+            if (tabClosed) {
                 xml.append(spaces(tags.get(tags.size() - 1).outTab));
             }
             xml.append("</")
                 .append(tags.remove(tags.size() - 1).tag)
                 .append(">")
                 .append("\n");
-            tabClose = true;
+            tabClosed = true;
         }
-        if( tags.size() > 0 ) {
+        if (tags.size() > 0) {
             tags.remove(tags.size() - 1);
         }
     }
 
     private void closeLastTag(StringBuilder xml) {
-        if (tags.size() > 0 ) {
+        if (tags.size() > 0) {
             xml.append("</")
                 .append(tags.remove(tags.size() - 1).tag)
                 .append(">")
                 .append("\n");
-            tabClose = true;
+            tabClosed = true;
         }
 
     }
+
     private void closeTags(StringBuilder xml, int tab) {
         while (tags.size() > 0 && tags.get(tags.size() - 1).tag != null && tags.get(tags.size() - 1).srcTab >= tab) {
-            if (tabClose) {
+            if (tabClosed) {
                 xml.append(spaces(tags.get(tags.size() - 1).outTab));
             }
             xml.append("</")
                 .append(tags.remove(tags.size() - 1).tag)
                 .append(">")
                 .append("\n");
-            tabClose = true;
+            tabClosed = true;
         }
     }
 
