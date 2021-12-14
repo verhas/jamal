@@ -11,7 +11,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-yaml</artifactId>
-    <version>1.10.3-SNAPSHOT</version>
+    <version>1.10.3</version>
 </dependency>
 ----
 
