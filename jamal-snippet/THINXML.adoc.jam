@@ -161,6 +161,9 @@ will result in:
 
 {%output%}
 
+This way the tabbing can be more condensed for deep XML structures, and the same time it is more readable where the individual tags are closed.
+If you could close a tag standing in line after another tag the readability would suffer.
+
 == Attributes
 
 The tags in thin XML can also have attributes.
