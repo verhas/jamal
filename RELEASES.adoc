@@ -2,6 +2,10 @@
 
 
 
+=== https://github.com/verhas/jamal/tree/1.10.3[1.10.3]
+
+Support for ThinXML was added.
+
 === https://github.com/verhas/jamal/tree/1.10.2[1.10.2]
 
 The position in error messages became hierarchical showing the position not only where the error is, but also where the actual file was imported, included from.
