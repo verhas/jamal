@@ -1,4 +1,4 @@
-== Thin XML Format
+== ThinXML Format
 {%@snip:check file=./src/main/java/javax0/jamal/snippet/ThinXml.java hash="c1bb6569"%}
 {%@import res:jamal.jim%}\
 {%@define sample(code)={%#define :lastCode={@xmlFormat (thin)}
@@ -12,15 +12,15 @@ code%}
 
 == Introduction
 
-Thin XML is a format mapped to XML effortlessly and straightforwardly, but it contains fewer characters and is more readable.
-The thin XML format lets you leave the closing tags.
+ThinXML is a format mapped to XML effortlessly and straightforwardly, but it contains fewer characters and is more readable.
+The ThinXML format lets you leave the closing tags.
 Instead of the closing tags, it introduces positioning.
 
 It is somewhat similar to what the Python language is doing compared to other languages.
 Many languages use explicit closing for complex constructs, like adding a `}` to the end of a block or using the `end` keyword.
 Python starts to write with the previous indentation following a block.
 
-Thin XML does the same.
+ThinXML does the same.
 To ease understanding here is a simple example:
 
 {%sample/
@@ -45,7 +45,7 @@ It is the same as the standard XML in the following way:
 The tags `modelVersion`, `name`, and so on are all tabbed deeper than `project`; thus, they are tags inside the `project` tag.
 The `parent` also has children, which are tabbed deeper.
 
-== Thin XML Tabbing
+== ThinXML Tabbing
 
 The tabbing can go back and forth many times.
 If we move the `groupId`, `artifactId`, and `version` tags to follow the `parent` tag, but with the same tab depth:
@@ -78,7 +78,7 @@ project>
   packaging>jar
   description>
     The snippet library for the jamal language.
-    It also contains the xmlFormat macro that can convert from thin XML to regular XML.
+    It also contains the xmlFormat macro that can convert from ThinXML to regular XML.
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -121,19 +121,21 @@ When you place more than one tag on a single line the tabbing counts only for th
 For example:
 
 {%sample/
-project>
-  films>film id="goldfinger">girls>
-    girl id="Pussy Galore">
-      year>1925
-    girl id="Jill Masterton">
-      year>1937
-    girl id="Tilly Masterson">
-      year>1941
+jb:project xmlns:jb="https://www.007.com">
+  jb:films>jb:film id="goldfinger">girls>
+    jb:girl id="Pussy Galore">
+      jb:year>1925
+    jb:girl id="Jill Masterton">
+      jb:year>1937
+    jb:girl id="Tilly Masterson">
+      jb:year>1941
 %}
 
 will result in:
 
 {%output%}
+
+This example also demonstrates the use of nameSpaces in ThinXML.
 
 Even though the `girl` tags are on a column left to the start of the `girls` or `film` tags, the tabbing counts only for the first one.
 The tags that are on the same line inherit the tag positions of the first tag on the line.
@@ -166,7 +168,7 @@ If you could close a tag standing in line after another tag the readability woul
 
 == Attributes
 
-The tags in thin XML can also have attributes.
+The tags in ThinXML can also have attributes.
 Attributes can be written with `"` separators only.
 The `'` character is not allowed as a separator.
 If the attribute value does not have space, then the `"` around the value is optional.
@@ -187,7 +189,7 @@ All the tags will have attributes surrounded with `"` characters in the output.
 
 {%output%}
 
-== XML tags in Thin XML
+== XML tags in ThinXML
 
 You can also include regular XML tags into think XML.
 You can manage the file even if the tabbing would otherwise go excessive.
@@ -214,7 +216,7 @@ It is still correct and works as expected:
 
 {%output%}
 
-This example does not achieve the original aim of thin XML to have readable and straightforward XML structured data.
+This example does not achieve the original aim of ThinXML to have readable and straightforward XML structured data.
 This can be amended including normal XML tags into think XML:
 
 {%sample/
@@ -241,14 +243,14 @@ It will result in the same as the previous example:
 {%output%}
 
 The tabulation of the XML part is not essential and is generally ignored.
-After an opening XML tag, the thin XML tabbing is reset and gets back to the previous level after the closing XML tag.
+After an opening XML tag, the ThinXML tabbing is reset and gets back to the previous level after the closing XML tag.
 It can start to the left of the previous tags; the already opened tags will not be closed.
-The only important rule is that you should align the thin XML inside the opening and closing tags.
+The only important rule is that you should align the ThinXML inside the opening and closing tags.
 
 The opened XML tag has to be closed with the closing tag.
 There is no shorthand for that.
 
-You can embed XML into the thin XML and thin XML into the XML into any level deep.
+You can embed XML into the ThinXML and ThinXML into the XML into any level deep.
 For example the previous example can also be written as:
 
 {%sample/
@@ -278,7 +280,7 @@ and it still gets the same output:
 
 == CDATA
 
-Thin XML can contain CDATA sections.
+ThinXML can contain CDATA sections.
 A CDATA section should start on a separate line and should end on its own line.
 The start of the CDATA section is any line that starts with `<![CDATA[`.
 Then end of the section is the line that ends with `]]>`.
@@ -313,9 +315,25 @@ will result in the following output:
 
 {%output%}
 
+== ThinXML is not Yaml
+
+Although there are overlapping features ThinXML is not Yaml, and it is not the reimplementation of Yaml.
+ThinXML uses tabbing to structure data, just like Yaml, and it may lure to the fals conclusion that this is just another Yaml.
+Yaml is an object serialisation format, where you can define data types, circular references, and so on.
+XML is a data description format.
+It is one abstraction layer above the objects.
+XML and Yaml serve different purposes even though you could use the one where the other is used.
+Both has its purposes, advantages, and disadvantages making them perfect fit for different cases.
+ThinXML may look like a bit as Yaml because of the tabbing, but it is not.
+
+NOTE: ThinXML is essentially XML.
+
+It is intended replacing XML as a format, where preferable, and possible to insert the converter into the processing.
+It is not a new structure.
+It is still XML expressed in a different way.
 
 == Implementation
 
-The thin XML converter is implemented in the Jamal Snippet module and can be used with the macro `xmlFormat`.
-The primary purpose of developing thin XML was to support Maven POM shortening while keeping it strictly XML.
+The ThinXML converter is implemented in the Jamal Snippet module and can be used with the macro `xmlFormat`.
+The primary purpose of developing ThinXML was to support Maven POM shortening while keeping it strictly XML.
 You can use the Jamal Maven extension (not a plugin!) to instruct Maven to locate and parse the POM via the extension.
