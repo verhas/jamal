@@ -33,6 +33,7 @@ import javax0.jamal.snippet.StringMacros.Quote;
 import javax0.jamal.snippet.StringMacros.Reverse;
 import javax0.jamal.snippet.StringMacros.StartsWith;
 import javax0.jamal.snippet.StringMacros.Substring;
+import javax0.jamal.snippet.ThinXmlMacro;
 import javax0.jamal.snippet.TrimLines;
 import javax0.jamal.snippet.Update;
 import javax0.jamal.snippet.Xml;
@@ -61,6 +62,7 @@ module jamal.snippet {
         ReplaceLines,
         Update,
         XmlFormat,
+        ThinXmlMacro,
         XmlInsert,
         Xml,
         DateMacro,

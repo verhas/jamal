@@ -67,14 +67,10 @@ public class ThinXml {
         final var lines = thinXml.split("\n", -1);
         for (int i = 0; i < lines.length; i++) {
             final var line = lines[i];
-            if (line.trim().startsWith("<![CDATA[")) {
-                closeTags(xml, line.indexOf("<"));
-                lines[i] = line.substring(line.indexOf("<"));
-                while (i < lines.length && !lines[i].trim().endsWith("]]>")) {
-                    xml.append(lines[i++]).append("\n");
-                }
-                xml.append(lines[i]).append("\n");
-            } else if (line.length() == 0) {
+            final var trimmedLine = line.trim();
+            if (trimmedLine.startsWith("<![CDATA[")) {
+                i = handleCDATA(xml, lines, i);
+            } else if (trimmedLine.length() == 0) {
                 if (i < lines.length - 1) {
                     xml.append("\n");
                 }
@@ -101,6 +97,29 @@ public class ThinXml {
         }
         closeTags(xml, 0);
         return xml.toString();
+    }
+
+    /**
+     * Convert a CDATA section from the thinXML to regular XML.
+     * <p>
+     *
+     * The CDATA start should be on its own line, though it may be followed by characters that belong to the CDATA
+     * section. The position of the {@code <![CDATA[} controls which opened tags are closed before the CDATA section.
+     *
+     * @param xml   the built-up XML
+     * @param lines the lines containing the thinXML
+     * @param i     the index of the current line that contains the first line of the CDATA section
+     * @return the index of the line after the last line of the CDATA section
+     */
+    private int handleCDATA(StringBuilder xml, String[] lines, int i) {
+        final var line = lines[i];
+        closeTags(xml, line.indexOf("<"));
+        lines[i] = line.substring(line.indexOf("<"));
+        while (i < lines.length && !lines[i].trim().endsWith("]]>")) {
+            xml.append(lines[i++]).append("\n");
+        }
+        xml.append(lines[i]).append("\n");
+        return i;
     }
 
     private void convertText(StringBuilder xml, Input in, boolean tabText) {
