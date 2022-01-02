@@ -131,6 +131,11 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
+    public String process(final String input) throws BadSyntax {
+        return process(javax0.jamal.tools.Input.makeInput(input));
+    }
+
+    @Override
     public String process(final Input input) throws BadSyntax {
         limiter.up();
         final var marker = macros.test();
@@ -783,7 +788,7 @@ public class Processor implements javax0.jamal.api.Processor {
                                         final int start,
                                         final int separatorIndex,
                                         final Position pos) {
-        parameters.add(makeInput(input.substring(start, separatorIndex),pos.fork()));
+        parameters.add(makeInput(input.substring(start, separatorIndex), pos.fork()));
     }
 
     private void appendTheLastParameter(final List<Input> parameters,
@@ -791,9 +796,9 @@ public class Processor implements javax0.jamal.api.Processor {
                                         final int start,
                                         final Position pos) {
         if (start < input.length()) {
-            parameters.add(makeInput(input.substring(start),pos.fork()));
+            parameters.add(makeInput(input.substring(start), pos.fork()));
         } else {
-            parameters.add(makeInput("",pos.fork()));
+            parameters.add(makeInput("", pos.fork()));
         }
     }
 

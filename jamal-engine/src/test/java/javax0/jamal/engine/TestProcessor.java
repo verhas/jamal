@@ -72,6 +72,14 @@ public class TestProcessor {
     }
 
     @Test
+    @DisplayName("A simple input processing using a string input")
+    public void testStringInput() throws BadSyntax {
+        final var sut = new Processor("{", "}");
+        final var result = sut.process("{@define q(a,b)=abba}{q/z/q}");
+        Assertions.assertEquals("zqqz", result);
+    }
+
+    @Test
     @DisplayName("nested macro definitions")
     public void testNestedDefine() throws BadSyntax {
         final var input = new Input("{#define b=b}{#define q=zqq{#define b=z}{b}}{q}{b}");

@@ -85,6 +85,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
+.. <<thinXml,`thinXml`>>
 .. <<date,`date`>>
 .. <<format,`format`>>
 .. <<case,`case:lower`, `case:upper`, ...>>
@@ -1670,6 +1671,15 @@ will result
 {%output%}
 
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
+
+[[thinXml]]
+==== {%macroChapter%}`thinXml`
+
+This macro converts thin XML to normal XML.
+Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it does other things also.
+If the output is not a full XML then the format may fail.
+This macro does only the conversion and does not format the XML or check in any way that the output os correct.
+It is useful when you want to convert a thin XML fraction to normal XML.
 
 [[date]]
 ==== {%macroChapter%}`date`

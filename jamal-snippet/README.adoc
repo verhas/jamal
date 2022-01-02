@@ -79,6 +79,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
+.. <<thinXml,`thinXml`>>
 .. <<date,`date`>>
 .. <<format,`format`>>
 .. <<case,`case:lower`, `case:upper`, ...>>
@@ -1991,8 +1992,17 @@ will result
 
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
+[[thinXml]]
+==== xxiv.`thinXml`
+
+This macro converts thin XML to normal XML.
+Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it does other things also.
+If the output is not a full XML then the format may fail.
+This macro does only the conversion and does not format the XML or check in any way that the output os correct.
+It is useful when you want to convert a thin XML fraction to normal XML.
+
 [[date]]
-==== xxiv.`date`
+==== xxv.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -2008,12 +2018,12 @@ will result in the output
 
 [source]
 ----
-2021-12-16 17:55:12
+2022-01-02 16:14:54
 ----
 
 
 [[format]]
-==== xxv.`format`
+==== xxvi.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -2064,7 +2074,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[case]]
-==== xxvi.`case:lower`, `case:upper`, ...
+==== xxvii.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -2077,7 +2087,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxvii.`file`
+==== xxviii.`file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -2117,7 +2127,7 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xxviii.`directory`
+==== xxix.`directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -2158,7 +2168,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxix.Java Macros
+==== xxx.Java Macros
 
 
 [[java:class]]
@@ -2358,7 +2368,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxx.String Macros
+==== xxxi.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -2543,7 +2553,7 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxxi.`snip:update`
+==== xxxii.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
