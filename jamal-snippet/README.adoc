@@ -1996,10 +1996,53 @@ For more examples and detailed explanation of the thin XML format, see the <<./T
 ==== xxiv.`thinXml`
 
 This macro converts thin XML to normal XML.
-Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it does other things also.
-If the output is not a full XML then the format may fail.
+Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it works only for full XML files and not for XML fragments.
+If the output is not a full XML then the macro `xmlFormat` may fail.
 This macro does only the conversion and does not format the XML or check in any way that the output os correct.
 It is useful when you want to convert a thin XML fraction to normal XML.
+
+For example:
+
+[source]
+----
+{#thinXml
+  modelVersion>4.0.0
+  name>jamal snippet
+  packaging>jar
+  groupId>com.javax0.jamal
+  artifactId>jamal-snippet
+  version>1.10.4-SNAPSHOT
+  parent>
+    groupId>com.javax0.jamal
+    artifactId>jamal-parent
+    version>1.10.3-SNAPSHOT
+    relativePath>../jamal-parent
+}
+----
+
+will result
+
+[source]
+----
+<modelVersion>4.0.0</modelVersion>
+<name>jamal snippet</name>
+<packaging>jar</packaging>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-snippet</artifactId>
+<version>1.10.4-SNAPSHOT</version>
+<parent>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-parent</artifactId>
+    <version>1.10.3-SNAPSHOT</version>
+    <relativePath>../jamal-parent</relativePath>
+</parent>
+----
+
+
+As you can see in this example the output is not a full XML file.
+It is not formatted also and there is no leading ```<?xml version="1.0" encoding="UTF-8" standalone="no"?>``` line.
+
+For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[date]]
 ==== xxv.`date`
@@ -2018,7 +2061,7 @@ will result in the output
 
 [source]
 ----
-2022-01-02 16:14:54
+2022-01-02 16:33:00
 ----
 
 
