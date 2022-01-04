@@ -93,9 +93,9 @@ This method gets the input text of the macro, a reference to the processor execu
 In the example case we do not read the input and we do not use any service the processor can provide.
 We will see in later chapters how to read and parse the input and also how to use the processor to access the executing environment.
 
-The last step to use this macro is to create a text file and process it using Jamal.
+The last step is to create a unit test.
 
-The simplest way is creating a unit test to use the classes from the `jamal-testsupport` library.
+The simplest way is to do that is using the classes from the `jamal-testsupport` library.
 It is recommended to use this package and to create unit tests for your macros.
 
 To do that you have to add the dependency to your `pom.xml` file:
