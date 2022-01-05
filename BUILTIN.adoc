@@ -38,7 +38,7 @@ You need the following dependency in your project:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-api</artifactId>
-    <version>1.10.4-SNAPSHOT</version>
+    <version>1.10.4</version>
 </dependency>
 ----
 
@@ -50,7 +50,7 @@ In later versions, when we will do a bit more in our macros we will also need th
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-tools</artifactId>
-    <version>1.10.4-SNAPSHOT</version>
+    <version>1.10.4</version>
 </dependency>
 ----
 
@@ -96,16 +96,17 @@ We will see in later chapters how to read and parse the input and also how to us
 The last step is to create a unit test.
 
 The simplest way is to do that is using the classes from the `jamal-testsupport` library.
-It is recommended to use this package and to create unit tests for your macros.
+This library contains test utilities that mimic a Jamal environment for the macro and also provide useful test mocks.
+It is recommended to use this package instead of trying to invoke the macro method directly and creating mocks using some general library.
 
-To do that you have to add the dependency to your `pom.xml` file:
+To use the test support library you have to add the dependency to your `pom.xml` file:
 
 [source,xml]
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-testsupport</artifactId>
-    <version>1.10.4-SNAPSHOT</version>
+    <version>1.10.4</version>
     <scope>test</scope>
 </dependency>
 ----
