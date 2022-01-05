@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal doclet</name>
     <artifactId>jamal-doclet</artifactId>
-    <version>1.10.4</version>
+    <version>1.10.5-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.10.4</version>
+        <version>1.10.5-SNAPSHOT</version>
     </parent>
     <description>doclet module for Jamal</description>
     <build>

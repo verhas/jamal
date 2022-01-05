@@ -2,6 +2,11 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
+{%RELEASE/1.10.4%}
+
+A bug fix in handling thin XML.
+`thinXml`  macro was added.
+
 {%RELEASE/1.10.3%}
 
 Support for ThinXML was added.
