@@ -32,6 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static javax0.jamal.api.Macro.validIdChar;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
@@ -512,7 +514,14 @@ public class Processor implements javax0.jamal.api.Processor {
             pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id +
                 "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?"), ref);
         } else {
-            pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id + " ...' is not defined."), ref);
+            final Set<String> suggestions = getRegister().suggest(id);
+            if (suggestions.isEmpty()) {
+                pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id + " ...' is not defined."), ref);
+            } else {
+                pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id +
+                    " ...' is not defined. Did you mean " + suggestions.stream()
+                    .map(s -> "'"  + s + "'").collect(Collectors.joining(", ")) + "?"), ref);
+            }
         }
     }
 

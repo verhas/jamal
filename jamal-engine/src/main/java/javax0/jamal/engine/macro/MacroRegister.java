@@ -10,15 +10,18 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.InputHandler;
+import javax0.levenshtein.Levenshtein;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -281,6 +284,37 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     @Override
     public void global(Macro macro, String alias) {
         scopeStack.get(TOP_LEVEL).macros.put(alias, macro);
+    }
+
+    @Override
+    public Set<String> suggest(String spelling) {
+        final Set<String> suggestions = new HashSet<>();
+        int minDistance = 3;
+        for (Scope scope : scopeStack) {
+            for (final var macro : scope.macros.keySet()) {
+                final int distance = Levenshtein.distance(macro, spelling);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    suggestions.clear();
+                }
+                if (distance <= minDistance) {
+                    suggestions.add("@" + macro);
+                }
+            }
+            for (final var macro : scope.udMacros.entrySet()) {
+                if (!(macro.getValue() instanceof Identified.Undefined)) {
+                    final int distance = Levenshtein.distance(macro.getKey(), spelling);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        suggestions.clear();
+                    }
+                    if (distance <= minDistance) {
+                        suggestions.add(macro.getKey());
+                    }
+                }
+            }
+        }
+        return suggestions;
     }
 
     @Override

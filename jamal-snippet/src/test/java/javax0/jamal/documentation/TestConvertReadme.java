@@ -4,6 +4,9 @@ import javax0.jamal.DocumentConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 public class TestConvertReadme {
 
     @Test

@@ -23,7 +23,7 @@ public class TestErrorPositions {
             //                 1234567890123456789012345678901234567890123456789012345678901234567890123
             TestThat.theInput("{@options failfast}{@define gulp(1,2,3)={zumi123}}{gulp /one/tw{o}/three}").results("");
         }catch (final BadSyntax bs){
-            Assertions.assertEquals("User defined macro '{o ...' is not defined. at null/1:61 <<< null/1:58",bs.getMessage());
+            Assertions.assertEquals("User defined macro '{o ...' is not defined. Did you mean '@for', '@if'? at null/1:61 <<< null/1:58",bs.getMessage());
         }
     }
     @Test
@@ -33,7 +33,7 @@ public class TestErrorPositions {
             //                 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234
             TestThat.theInput("{@options failfast}{@define gulp(1,2,3)={zumi123}}{@define zumione=kakk}{gulp /one/{@ident {two}}/three}").results("");
         }catch (final BadSyntax bs){
-            Assertions.assertEquals("User defined macro '{two ...' is not defined. at null/1:89 <<< null/1:80",bs.getMessage());
+            Assertions.assertEquals("User defined macro '{two ...' is not defined. Did you mean '@try'? at null/1:89 <<< null/1:80",bs.getMessage());
         }
     }
 }

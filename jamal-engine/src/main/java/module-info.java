@@ -12,5 +12,6 @@ module jamal.engine {
     requires jamal.api;
     requires jamal.tools;
     requires jdk.jshell;
+    requires levenshtein;
     provides Debugger with NullDebugger;
 }

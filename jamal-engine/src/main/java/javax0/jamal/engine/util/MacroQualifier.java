@@ -9,7 +9,9 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.engine.Processor;
-import javax0.jamal.tools.OptionsStore;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.skip;
@@ -62,21 +64,29 @@ public class MacroQualifier {
     /**
      * Get the macro object.
      *
-     * @param macroId   the identifier of the macro.
+     * @param id        the identifier of the macro.
      * @param pos       used to throw exception in case the macro is not defined
      * @param isBuiltIn signals that the macro is built-in. If the macro is not built-in the return value is {@code
      *                  null}.
      * @return the macro object or {@code null} if the macro is not built-in
      * @throws BadSyntaxAt if there is no macro registered for the given name
      */
-    private Macro getMacro(String macroId, Position pos, boolean isBuiltIn) throws BadSyntaxAt {
+    private Macro getMacro(String id, Position pos, boolean isBuiltIn) throws BadSyntaxAt {
         if (isBuiltIn) {
-            var optMacro = processor.getRegister().getMacro(macroId);
+            var optMacro = processor.getRegister().getMacro(id);
             if (optMacro.isEmpty()) {
-                throw new BadSyntaxAt(
-                    "There is no built-in macro with the id '"
-                        + macroId
-                        + "'", pos);
+                final Set<String> suggestions = processor.getRegister().suggest(id);
+                if (suggestions.isEmpty()) {
+                    throw new BadSyntaxAt(
+                        "There is no built-in macro with the id '"
+                            + id
+                            + "'", pos);
+                } else {
+                    throw new BadSyntaxAt(
+                        "There is no built-in macro with the id '"
+                            + id + "'; did you mean " + suggestions.stream()
+                            .map(s -> "'" + s + "'").collect(Collectors.joining(", ")) + "?", pos);
+                }
             }
             return optMacro.get();
         } else {

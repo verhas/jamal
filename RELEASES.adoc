@@ -2,6 +2,11 @@
 
 
 
+=== https://github.com/verhas/jamal/tree/1.10.4[1.10.4]
+
+A bug fix in handling thin XML.
+`thinXml`  macro was added.
+
 === https://github.com/verhas/jamal/tree/1.10.3[1.10.3]
 
 Support for ThinXML was added.

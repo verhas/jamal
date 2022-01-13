@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * General macro registry that can be used to register built-in (Java implemented) and user defined macros. API and
@@ -61,6 +62,18 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      *              Macro#getId()}
      */
     void global(Macro macro, String alias);
+
+    /**
+     * Given a misspelled macro name suggest the closest possible currently defined and in scope user defined or
+     * build-it macro.
+     *
+     * @param spelling the misspelled macro name
+     * @return the closest possible suggestions or an empty set if no suggestion can be found. The default implementation
+     * returns an empty set.
+     */
+    default Set<String> suggest(String spelling) {
+        return Set.of();
+    }
 
     /**
      * Define a user defined macro in the current evaluation level.
