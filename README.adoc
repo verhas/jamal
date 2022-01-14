@@ -4420,7 +4420,7 @@ These macros eventually cannot have arguments.
 This is a simplified interface to access the functionality of Jamal.
 
 [[javadoc]]
-=== 15. JavaDoc
+=== 15. JavaDoc and API
 
 The current and past versions of the JavaDoc can be read online at the address:
 
@@ -4492,10 +4492,39 @@ The current and past versions of the JavaDoc can be read online at the address:
 
 
 
+In addition to the low level API, there are facades that help the use of Jamal for special purposes.
+One of them is implemented by the class `javax0.jamal.Format`.
+The other one is in the class `javax0.jamal.DocumentConverter`.
+
+The class `Format` is a facade that provides a simplified interface to the functionality of the Jamal.
+The method `name()` has two arguments.
+The first is the content to be formatted.
+The second is a map of predefined macros.
+These macros are all parameterless macros.
+It is not possible to define parameters using this interface.
+Although the content string can contain any Jamal macros.
+
+This interface also invokes the Jamal processor with `{{` and `}}` as the macro open and close characters.
+
+
+The other class, `DocumentConverter` supports document converting.
+This is usually done during the build process in the unit test phase.
+The practice is to create one or more unit tests converting the project `.jam` files.
+
+The method `convert(file)` converts the file given as argument.
+The resulting file will be created in the same directory as the original file with the `.jam` extra extension chopped off.
+For example, if you convert `README.adoc.jam` then the resulting file will be `README.adoc`.
+
+The other method `convertAll(file)` converts many files.
+It takes two arguments, both are list of file name endings.
+The first is the file endings (extensions) to include, the second one is the file endings (extensions) to exclude.
+The two static methods `include()` and `exclude()` can be used to create these arguments.
+
+
 [[documentmaintenance]]
 === 16. Maintenance of this document
 
 The source of this document is `README.adoc.jam`.
-The Jamal conversion uses the snippet macros and some aux built-in macros.
+The Jamal conversion uses the snippet macros and some core built-in macros.
 The conversion is part of the execution of the tests.
 The code samples are automatically executed using this process, and the sample output is automatically inserted into the document.
