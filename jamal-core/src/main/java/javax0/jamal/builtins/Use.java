@@ -47,7 +47,7 @@ public class Use implements Macro {
                 final Macro macro;
                 final var register = processor.getRegister();
                 if (klassName.contains(".")) {
-                    macro = forName(klassName, klassName);
+                    macro = forName(klassName);
                 } else {
                     if( klassName.contains(":")){
                         isGlobal = true;
@@ -78,6 +78,10 @@ public class Use implements Macro {
         return "";
     }
 
+    private Macro forName(final String klassName) throws BadSyntax {
+        return forName(klassName, klassName);
+    }
+
     /**
      * Get a new instance of the built-in macro. The implementation loads the class first. If the class is an static
      * inner class then it recognizes that and loads the inner class.
@@ -85,9 +89,9 @@ public class Use implements Macro {
      * @param klassName    the name of the class with dots as separator. Using {@code $} in case of inner classes is
      *                     also possible, but it is not the intended use. In case of an inner class the algorithm tries
      *                     to load the class as a top level class and in case it fails it replaces the last dot with a
-     *                     {@code $} sign and tries to load again and again until all dots are replaces.
+     *                     {@code $} sign and tries to load again and again until all dots are replaced.
      * @param originalName is the original class name before the search process started to replace the {@code .} to
-     *                     {@code $}. Used to create the exception.
+     *                     {@code $}. Used only to create the exception and needed for the recursive calls.
      * @return the instance of the macro class
      * @throws BadSyntax if the class cannot be found or the instance cannot be created
      */
