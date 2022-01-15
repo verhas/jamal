@@ -116,7 +116,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      * <p>
      * To programmatically switch of this checking set the system property like
      * <pre>{@code
-     * System.setProperty(Macro.JAMAL_CHECKSTATE_SYS,"false");
+     *          System.setProperty(Macro.JAMAL_CHECKSTATE_SYS, "false");
      * }</pre>
      * This may be needed when you want to load a macro from a library that does not conform to the stateless
      * requirement and does not use the {@link Macro.Stateful} annotation. All macros prior to Jamal 1.8.0 are like
@@ -137,7 +137,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
             throw new RuntimeException("SNAFU: should not happen");
         }
         final var s = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_CHECKSTATE_ENV).orElse("");
-        checkState = s.length() > 0 && !s.equals("false");
+        checkState = s.length() == 0 || !s.equals("false");
     }
 
     private Scope currentScope() {
@@ -235,11 +235,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     private <T> Optional<T> stackGet(Function<Scope, Map<String, T>> field, String id) {
         final int end = scopeStack.size() - 1;
         return IntStream.range(TOP_LEVEL, scopeStack.size()).sequential()
-            .mapToObj(i -> scopeStack.get(end - i))
-            .map(field)
-            .filter(map -> map.containsKey(id))
-            .map(map -> map.get(id))
-            .findFirst();
+                .mapToObj(i -> scopeStack.get(end - i))
+                .map(field)
+                .filter(map -> map.containsKey(id))
+                .map(map -> map.get(id))
+                .findFirst();
     }
 
     /**
@@ -331,22 +331,34 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void define(Macro macro, String alias) {
-        assertMacroClassIsStateless(macro);
+        assertMacroClassIsStateless(macro.getClass());
         writableScope().macros.put(alias, macro);
     }
 
-    private void assertMacroClassIsStateless(Macro macro) {
+    /**
+     * This method will check that a macro class is either stateless (does not have any field) or is declared to be
+     * stateful, which is not recommended, but sometimes may be a reasonable approach. A class is declared to be
+     * stateful if it implements the {@link javax0.jamal.api.Macro.Stateful Stateful} interface.
+     *
+     * If the macro is not declared to be stateful, but has declared fields, which are neither final, nor static then
+     * the method throws a run-time exception. This check is performed for the class and in the chain of the
+     * superclasses for each parent class excluding but up to the {@link Object} class.
+     *
+     *
+     * @param klass the macro class we check
+     */
+    private void assertMacroClassIsStateless(Class<? extends Macro> klass) {
         if (!checkState) {
             return;
         }
-        for (Class<?> m = macro.getClass(); m != null; m = m.getSuperclass()) {
-            if (m.getDeclaredAnnotation(Macro.Stateful.class) == null && m.getDeclaredFields().length > 0) {
-                for (Field field : m.getDeclaredFields()) {
+        for (Class<?> k = klass; k != Object.class; k = k.getSuperclass()) {
+            if (k.getDeclaredAnnotation(Macro.Stateful.class) == null && k.getDeclaredFields().length > 0) {
+                for (Field field : k.getDeclaredFields()) {
                     if ((field.getModifiers() & Modifier.FINAL) == 0 && (field.getModifiers() & Modifier.STATIC) == 0) {
-                        throw new RuntimeException("The macro class '" + macro.getClass().getName() +
-                            "' is not stateless, " +
-                            (m == macro.getClass() ? "it " : "parent class " + m.getName()) +
-                            " has non-final, non-static field '" + field.getName() + "'");
+                        throw new RuntimeException("The macro class '" + klass.getName() +
+                                "' is not stateless, " +
+                                (k == klass ? "it " : "parent class " + k.getName()) +
+                                " has non-final, non-static field '" + field.getName() + "'");
                     }
                 }
             }

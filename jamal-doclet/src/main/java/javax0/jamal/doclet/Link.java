@@ -1,6 +1,5 @@
 package javax0.jamal.doclet;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
@@ -8,18 +7,19 @@ import javax0.jamal.tools.InputHandler;
 
 /**
  * Poor men's implementation of the link tag.
- *
+ * <p>
  * It creates the link based on the text and does not look into the code if that really exists or not. That way
  * most of the links that point to some method, which has arguments will lead to an invalid link because there is
  * no easy way to get the full name of the parameter classes. These are usually added by the IDE as simple names
  * when the classes are imported into the application.
  */
+@Macro.Stateful
 public class Link implements Macro {
 
     String currentClass;
 
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         InputHandler.skipWhiteSpaces(in);
         final var str = in.toString();
         final var clIndex = str.indexOf(')');
@@ -88,8 +88,8 @@ public class Link implements Macro {
             }
         } else {
             url = klass.replaceAll("[\\w\\d]+\\.", "../").replaceAll("\\w+$", "") + klass.replaceAll("\\.", "/")
-                + ".html"
-                + (member == null ? "" : "#" + member.replaceAll(" ", ""));
+                    + ".html"
+                    + (member == null ? "" : "#" + member.replaceAll(" ", ""));
         }
         return "<a href=\"" + url + "\"><code>" + text + "</code></a>";
     }

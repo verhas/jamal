@@ -8,9 +8,7 @@ public class TestConvertDocletReadme {
 
     @Test
     void generateDoc() throws Exception {
-        EnvironmentVariables.setenv(EnvironmentVariables.JAMAL_CHECKSTATE_ENV,"false");
         DocumentConverter.convert("./README.adoc.jam");
-        EnvironmentVariables.resetenv(EnvironmentVariables.JAMAL_CHECKSTATE_ENV);
     }
 
 }

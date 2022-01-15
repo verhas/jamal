@@ -24,8 +24,9 @@ public interface ServiceLoaded {
 
     /**
      * Load the classes that implement the interface {@code klass} and are provided by the modules or are available.
+     *
      * @param klass the interface for which the implementing class instances are needed
-     * @param <T> the interface
+     * @param <T>   the interface
      * @return the list of instances
      */
     static <T> List<T> getInstances(Class<T> klass) {
@@ -57,11 +58,11 @@ public interface ServiceLoaded {
     }
 
 
-    public static List<InputStream> loadResources(String name, ClassLoader classLoader) throws IOException {
+    static List<InputStream> loadResources(String name, ClassLoader classLoader) throws IOException {
         final List<InputStream> list = new ArrayList<>();
         final Enumeration<URL> systemResources =
-            (classLoader == null ? ClassLoader.getSystemClassLoader() : classLoader)
-                .getResources(name);
+                (classLoader == null ? ClassLoader.getSystemClassLoader() : classLoader)
+                        .getResources(name);
         while (systemResources.hasMoreElements()) {
             list.add(systemResources.nextElement().openStream());
         }

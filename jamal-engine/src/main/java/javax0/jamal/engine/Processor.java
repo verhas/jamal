@@ -254,11 +254,10 @@ public class Processor implements javax0.jamal.api.Processor {
      * <ul>
      *     <li>Built-in macro starts with {@code @} character: returned as it is
      *     <li>Built-in macro starts with {@code #} character: evaluated resolving macros
-     *     <li>User defined macro old style option is in effect: evaluated resolving macros
-     *     <li>User defined macro no old style: returned as it is
+     *     <li>User defined macro: returned as it is
      * </ul>
      * <p>
-     * Note that the processing of the macro itself comes only after this
+     * Note that the processing of the macro itself comes only after this step is finished.
      *
      * @param macroRaw the raw macro that may optionally be processed
      * @param pos      the position in the input
@@ -272,8 +271,8 @@ public class Processor implements javax0.jamal.api.Processor {
         if (firstCharIs(macroRaw, SpecialCharacters.NO_PRE_EVALUATE)) {
             return macroRaw;
         }
-        final var macroInputBefore = makeInput(macroRaw, pos.fork());
         if (firstCharIs(macroRaw, SpecialCharacters.PRE_EVALUATE)) {
+            final var macroInputBefore = makeInput(macroRaw, pos.fork());
             macroProcessed = process(macroInputBefore);
             tr.appendAfterEvaluation(macroProcessed);
             return macroProcessed;
