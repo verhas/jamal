@@ -278,11 +278,12 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void global(Macro macro) {
-        scopeStack.get(TOP_LEVEL).macros.put(macro.getId(), macro);
+        global(macro,macro.getId());
     }
 
     @Override
     public void global(Macro macro, String alias) {
+        assertMacroClassIsStateless(macro.getClass());
         scopeStack.get(TOP_LEVEL).macros.put(alias, macro);
     }
 
