@@ -1,55 +1,29 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
+
+import static javax0.jamal.DocumentConverter.getRoot;
 
 public class TestFilesMacro {
-
-    /**
-     * Find the project root directory based on the fact that this is the only directory that has a {@code ROOT.dir}
-     * file. Start with the current working directory and works up maximum 10 directories.
-     *
-     * @return the canonical path of the project root directory
-     * @throws IOException if the directory structure cannot be read
-     */
-    static String getDirectory() throws IOException {
-        var rootDir = new StringBuilder("ROOT.dir");
-        var counter = new AtomicInteger(10);
-        File rootDirFile;
-        while (true) {
-            rootDirFile = new File(rootDir.toString());
-            if (rootDirFile.exists()) {
-                break;
-            }
-            rootDir.insert(0, "../");
-            Assertions.assertTrue(counter.decrementAndGet() > 0,
-                "Cannot find the ROOT.dir file.");
-        }
-        final var parent = rootDirFile.getParentFile();
-        return parent == null ? "." : parent.getCanonicalPath();
-    }
 
     @Test
     @DisplayName("Directory is found and formatted")
     void testDirectory() throws Exception {
-        final var root = getDirectory() + "/jamal-snippet/src/main/java/javax0/jamal/snippet/";
+        final var root = getRoot() + "/jamal-snippet/src/main/java/javax0/jamal/snippet/";
         TestThat.theInput("{@define directoryFormat=$canonicalPath}{#replace {@options regex} |{@directory ./}|^.*?main|main}")
-            .atPosition(root,0,0)
-            .matches("main.java.javax0.jamal.snippet");
+                .atPosition(root, 0, 0)
+                .matches("main.java.javax0.jamal.snippet");
         TestThat.theInput("{@define directoryFormat=$canonicalPath}{#replace {@options regex} |{@directory ..}|^.*?main|main}")
-            .atPosition(root,0,0)
-            .matches("main.java.javax0.jamal");
+                .atPosition(root, 0, 0)
+                .matches("main.java.javax0.jamal");
         TestThat.theInput("{@define root=../../../}{@directory javax0/jamal}")
-            .atPosition(root,0,0)
-            .matches("javax0.jamal");
+                .atPosition(root, 0, 0)
+                .matches("javax0.jamal");
     }
 
     @Test
