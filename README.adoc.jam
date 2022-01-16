@@ -21,13 +21,13 @@ jamal-snippet.
 
 {%@import environmentvariables.jim%}
 
-[.left]
-image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
-[.left]
-image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
+****
+image:jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
 
-image:jetbrains.svg[Suppoted,"link=https://www.jetbrains.com",width=50px, align="left", alt="JetBrains"]
-Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License].
+image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
+image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
+****
+
 
 
 {%#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/
