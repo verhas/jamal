@@ -869,7 +869,7 @@ public class Processor implements javax0.jamal.api.Processor {
     /**
      * This method closes the current processor invoking all the registered closers.
      * <p>
-     * It ma happen that a closer is invoking the processor itself recursively and that may initiate the closing of
+     * It may happen that a closer is invoking the processor itself recursively and that may initiate the closing of
      * the processor recursively. In that case the original closing process should continue. To manage this situation
      * the processor state field `currentlyClosing` is set to true, meaning the closing process has already started and
      * should not be started again to avoid infinite recursion.

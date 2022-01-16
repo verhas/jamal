@@ -12,6 +12,7 @@
                           {opens/test/test.tools.params}
                           {opens/test/test.tools.junit}
                           {opens/test/test.examples}
+                          {opens/test/test.statecheck}
                           {opens/engine/engine}}
 
     {build {plugins  {@include ../plugins.jim}}}

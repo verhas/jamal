@@ -423,6 +423,17 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         }
     }
 
+    /**
+     *
+     * This implementation checks the marker and in case it is not the last one it tries to clean the stack before
+     * throwing the exception. If the marker is included in the stack, but not in the last level, then the method
+     * will iteratively close all levels below and at the level of the marker, and only then it will throw the
+     * exception.
+     *
+     * @param check the marker to check
+     * @throws BadSyntax if the last marked when calling push was not the one passed to this method or if we are on the
+     * global level.
+     */
     @Override
     public void pop(Marker check) throws BadSyntax {
         if (scopeStack.size() > 1) {
@@ -455,6 +466,23 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         }
     }
 
+    /**
+     * Clean one level of the stack. It means that the user defined macro stack last element is removed as well as the
+     * macro stack last element is removed. If any of the removed macros or user defined macros are AutoCloseable then
+     * the close method is invoked.
+     *
+     * Note that the processor or the input will NOT be injected even if the macro implements one of the
+     * {@code Closer.*Aware} interfaces. That is because macros are generally stateless and as such, injecting to a
+     * macro object (either built-in or user defined) is not really possible.
+     *
+     * The marker of the removed scope is added to the {@code poppedMarkers} list. This is used to create better error
+     * messages later on.
+     *
+     * Finally, all remaining (not removed) built-in macros that implement the {@link Stackable} interface are invoked
+     * calling the method {@link Stackable#pop()}.
+     *
+     * @throws BadSyntax
+     */
     private void popStackOneLevel() throws BadSyntax {
         if (scopeStack.size() > 0) {
             final var removedScope = scopeStack.remove(scopeStack.size() - 1);

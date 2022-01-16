@@ -139,8 +139,9 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      * #pop(Marker)} is called.
      * <p>
      * Technically when the {@code push()} is called then the macro register creates a new level in the list of the
-     * macros and in the list of the user defined macros. These elements are dropped by the method {@code pop()}. Also
-     * it saves the macro opening and closing string. These are also restored by {@code pop()}. The method {@code
+     * macros and in the list of the user defined macros. These elements are dropped by the method {@link #pop(Marker)}.
+     * Also,
+     * it saves the macro opening and closing string. These are also restored by {@link #pop(Marker)}. The method {@code
      * push()} also adds a new layer to the definition of the macro opening and closing string definitions so no layer
      * can "pop" back to a macro opening and closing string definition that way defined in a higher layer, but the same
      * time the layers do not need to pop back all macro opening and closing string definitions.
@@ -162,18 +163,24 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     void push(Marker check) throws BadSyntax;
 
     /**
-     * See the documentation of the method {@link #push(Marker)}
+     * Pop the last level of the macro stack. This level has to be marked with the marker {@code check}.
+     * <p>
+     * For a more detailed explanation of macro stack, see the documentation of the method {@link #push(Marker)}.
      *
      * @param check see {@link #push(Marker)}
      * @throws BadSyntax when the pop cannot be performed at the specific situation because there was no corresponding
-     *                   push
+     *                   push. The marker is not the same as the one passed to the last {@code push(Marker)} or there is
+     *                   only one level in the stack, the global one, which cannot be popped.
      */
     void pop(Marker check) throws BadSyntax;
 
     /**
      * See the documentation of the method {@link #push(Marker)}
      * <p>
-     * This method does all the checks that {@link #pop(Marker)} but does not perform a pop.
+     * This method does all the checks that {@link #pop(Marker)} but does not perform a pop. It is used by the
+     * processor. The processor's {@link Processor#process(Input) process()} method calls itself recursively when a new
+     * block is opened. After the processing finished it checks that all pushed blocks in the recursive call were
+     * popped.
      *
      * @param check see {@link #push(Marker)}
      * @throws BadSyntax when the pop cannot be performed at the specific situation because there was no corresponding
