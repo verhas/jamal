@@ -8,13 +8,15 @@ There is no need to understand the details outlined in this document to use Jama
 This documentation is maintained with lower priority than user documentation.
 For this reason this documentation may not be up-to-date.
 
-To use the Jamal debugger start it so that the
+To use the Jamal debugger, start it so that the
 
-* Debugger module is on the classpath or on the module path, e.g.: use `jbang`.
-When Jamal started with jbang it automatically puts a lot of modules, including the debugger on the classpath.
+* Debugger module is on the classpath, or on the module path, e.g.: use `jbang`.
+When Jamal starts with jbang, it automatically puts a lot of modules including the debugger on the classpath.
 
-* Start Jamal in a way that it looks for debugger modules and uses it, eg use the option `jbang` jamal@verhas --debug=http:8080` with jbang.
-Alternatively you can specify the environment variable `JAMAL_DEBUG` to be `http:8080`
+* Start Jamal in a way that it looks for debugger modules and uses it, e.g. use the option `jbang jamal@verhas --debug=http:8080` with jbang.
+
++
+Alternatively you can specify the environment variable `JAMAL_DEBUG` to be `http:8080`.
 
 * Start your web browser and open the page `http://localhost:8080`.
 The port is the one you specified in the debug option.
@@ -31,7 +33,7 @@ Debuggers are loaded using the service loader, and they have to implement the `j
 
 The processor invokes the method `affinity(s)` for each the available debuggers.
 The argument `s` is the connection string.
-The method returns an integer number, and the more the debugger thinks it can handle the connection string, the smaller number it should return.
+The method returns an integer number, and the more the debugger thinks it can handle the connection string, the smaller number it returns.
 
 If the returned value is -1, then the debugger cannot handle the connection string at all.
 The processor will select the debugger that returns the smallest non-negative number.
@@ -43,6 +45,7 @@ If no other debugger thinks they can handle a connection, then Jamal will use th
 It is an error if two or more debuggers report the same minimal, non-negative affinity.
 
 Usually, debuggers return `1000` if they can handle a string and `-1` if not.
+The whole affinity number is a way of over engineering, but it works, tested and there is no reason to unimplement it.
 
 The connection string has the general format
 
@@ -57,7 +60,7 @@ The HTTP Server Debugger handles all connection strings that start with the `htt
 
 The parameters `p1`, `p2`, ..., `pn` and the options `o1`, `o2`, ... `oj` are interpreted by the debugger.
 
-When Jamal is started with a debugger, the processor is regularly invoking the debugger at specific points.
+When Jamal starts with a debugger, the processor is regularly invoking the debugger at specific points.
 It passes
 
 * the current state of the input before the evaluation of a text block or macroblock, before evaluating a macro or text block;
