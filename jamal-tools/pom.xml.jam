@@ -14,5 +14,6 @@
         {dependency :{GROUPID}:jamal-api}
         {@for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency|com.javax0|levenshtein}
     }
 {end project}

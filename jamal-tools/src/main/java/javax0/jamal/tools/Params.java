@@ -5,15 +5,19 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.StringFetcher;
+import javax0.levenshtein.Levenshtein;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
@@ -91,6 +95,15 @@ public class Params {
     private Character terminal = '\n';
     private Character start = null;
 
+    private static class BadKey extends BadSyntax {
+        final String key;
+
+        BadKey(String key, String message) {
+            super(message);
+            this.key = key;
+        }
+    }
+
     private Params(Processor processor) {
         this.processor = processor;
     }
@@ -147,7 +160,7 @@ public class Params {
             for (final var key : holder.keys()) {
                 if (key != null && this.holders.containsKey(key)) {
                     throw new IllegalArgumentException(
-                        "The key '" + key + "' is used multiple times in macro '" + macroName + "'");
+                            "The key '" + key + "' is used multiple times in macro '" + macroName + "'");
                 }
                 if (key != null) {
                     this.holders.put(key, holder);
@@ -209,12 +222,21 @@ public class Params {
      *                   </ul>
      */
     public void parse(Input input) throws BadSyntax {
-        parse(input, (id, param) -> holders.get(id).set(param), id -> holders.containsKey(id));
+        try {
+            parse(input, (id, param) -> holders.get(id).set(param), holders::containsKey);
+        } catch (BadKey e) {
+            final var suggestions = suggest(e.key, holders.keySet());
+            throw throwExceptionWithSuggestions(suggestions, e);
+        }
     }
 
     /**
      * This is a general purpose version of the parameter handling. This method parses the parameters and fills them
      * into a LinkedHashMap. It is guaranteed that the keys are in the same order as they are in the input.
+     * <p>
+     * This version of the parsing was added to support parameter parsing of XML tag attributes, which is the same
+     * syntax as the parameters. In this version the parsed values are returned as a map and the holders of the
+     * {@code Params} are not used.
      *
      * @param input the input that contains the parameters
      * @return the linked hash map with the parameters
@@ -222,8 +244,63 @@ public class Params {
      */
     public LinkedHashMap<String, String> fetchParameters(Input input) throws BadSyntax {
         final var parameters = new LinkedHashMap<String, String>();
-        parse(input, (id, param) -> parameters.put(id, param), id -> !parameters.containsKey(id));
+        try {
+            parse(input, parameters::put, id -> !parameters.containsKey(id));
+        } catch (BadKey e) {
+            final var suggestions = suggest(e.key, parameters.keySet());
+            throw throwExceptionWithSuggestions(suggestions, e);
+        }
         return parameters;
+    }
+
+    /**
+     * Throws a BadSyntax exception fetching the erroneous key from the {@link BadKey} exception and composing a
+     * suggestion set.
+     * <p>
+     * If the suggestions set is empty, the exception is thrown without suggestions.
+     *
+     * @param suggestions the set of suggestions
+     * @param e           the BadKey exception
+     * @return does not return, but declared to return a BadSyntax exception, so that the caller can "throw" it, and
+     * it helps the data flow analysis of the compiler.
+     * @throws BadSyntax is the composed exception
+     */
+    private BadSyntax throwExceptionWithSuggestions(final Set<String> suggestions, final BadKey e) throws BadSyntax {
+        if (suggestions.isEmpty()) {
+            throw e;
+        } else {
+            throw new BadSyntax("The key '"
+                    + e.key
+                    + "' is not used by the macro '" + macroName
+                    + "'. Did you mean "
+                    + suggestions
+                    .stream()
+                    .map(s -> "'" + s + "'")
+                    .collect(Collectors.joining(", ")) + "?");
+        }
+    }
+
+    /**
+     * Get the suggestions that are similar to the given key.
+     *
+     * @param spelling the misspelled key
+     * @param keys the set of the valid keys
+     * @return the set of suggestions
+     */
+    private Set<String> suggest(String spelling, Set<String> keys) {
+        final Set<String> suggestions = new HashSet<>();
+        int minDistance = 3;
+        for (String key : keys) {
+            final int distance = Levenshtein.distance(key, spelling);
+            if (distance < minDistance) {
+                minDistance = distance;
+                suggestions.clear();
+            }
+            if (distance <= minDistance) {
+                suggestions.add(key);
+            }
+        }
+        return suggestions;
     }
 
     public void parse(Input input, BiConsumer<String, String> store, Predicate<String> valid) throws BadSyntax {
@@ -242,7 +319,7 @@ public class Params {
             }
             final var id = fetchId(input);
             if (!valid.test(id)) {
-                throw new BadSyntax("The key '" + id + "' is not used by the macro '" + macroName + "'.");
+                throw new BadKey(id, "The key '" + id + "' is not used by the macro '" + macroName + "'.");
             }
             final String param;
             skipSpacesAndEscapedTerminal(input);
