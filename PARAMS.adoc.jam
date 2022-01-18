@@ -179,17 +179,20 @@ When the value has some other type, it is shown like a casting operation `(type)
 
 {%@snip:collect from="./jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java"%}
 {%@define example($XXX)=
+{%#replaceLines replace=/<p>//
 {%#replaceLines replace=/^\s*\*\s*//
-{%@snip head_$XXX%}%}
+{%@snip head_$XXX%}%}%}
 [source,text]
 ----
+{%#replaceLines replace=/<p>//
 {%#replaceLines replace="/input:/----\nINPUT\n\n[source,text]\n----\n/result:/----\n\nRESULT\n\n[source,text]\n----\n/"
 {%#replaceLines replace=/^\s*"//(\\n)?"\s?\+?$//\\"/"/\\\\/\\/
-{%@snip $XXX%}%}
+{%@snip $XXX%}%}%}
 ----
 %}
+{%#replaceLines replace=/<p>//
 {%#replaceLines replace=/^\s*\*\s*
-{%@snip doc_$XXX%}%}%}
+{%@snip doc_$XXX%}%}%}%}
 {%@comment
 Get the snippets that are in the file `TestParams.java`.
 Get only those that do not contain a `_` character in the name.

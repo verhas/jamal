@@ -26,7 +26,7 @@ public class TestParams {
      * {testName} is the name of the unit test method. It is only convention, it could be anything unique, but there is
      * no reason to make it more complex.
      *
-     * DO NOT USE '<p>' in the comments.
+     * DO NOT USE '<p>' in the comments. However, if you do, they will be removed by the jamal processing.
      *
      * You can use Jamal macros in the snippet. They will be evaluated as 'head_' , result, 'doc_', which is not the
      * order as they usually appear in the file. On the other hand the s n i p p e t triplets are used in the order as they

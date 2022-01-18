@@ -2,6 +2,27 @@
 
 
 
+=== https://github.com/verhas/jamal/tree/1.10.5-SNAPSHOT[1.10.5-SNAPSHOT]
+
+Jamal provides suggestion in case a macro name is misspelled.
+Macro parameter handling provides suggestions when the parameter name is misspelled.
+The suggestions are based on the Levenshtein distance.
+Root directory finding and converting all jamal files with exclude/include list is part of the APO.
+This API is supposed to be used during unit test execution, which creates the documentation from the Jamal files.
+Finding the project root directory is also part of the API.
+The project root directory is the directory above the current working directory that
+
+* is less than 100 level above the current working directory AND
+* contains a file or directory named
+
+ ** `ROOT.dir`, or
+ ** `.mvn`, or
+ ** `.git`
+
+Macro statelessness was NOT checked by default in prior versions due to a bug.
+This bug is fixed and the macro statelessness is now checked by default.
+The macro statelessness check was also implemented when registering global macros.
+
 === https://github.com/verhas/jamal/tree/1.10.4[1.10.4]
 
 A bug fix in handling thin XML.
