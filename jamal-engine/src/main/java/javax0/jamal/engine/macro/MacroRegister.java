@@ -15,6 +15,7 @@ import javax0.levenshtein.Levenshtein;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -278,7 +280,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void global(Macro macro) {
-        global(macro,macro.getId());
+        global(macro, macro.getId());
     }
 
     @Override
@@ -336,15 +338,16 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         writableScope().macros.put(alias, macro);
     }
 
+    private static Map<Class<? extends Macro>, Boolean> macroClasses = Collections.synchronizedMap(new WeakHashMap<>());
+
     /**
      * This method will check that a macro class is either stateless (does not have any field) or is declared to be
      * stateful, which is not recommended, but sometimes may be a reasonable approach. A class is declared to be
      * stateful if it implements the {@link javax0.jamal.api.Macro.Stateful Stateful} interface.
-     *
+     * <p>
      * If the macro is not declared to be stateful, but has declared fields, which are neither final, nor static then
      * the method throws a run-time exception. This check is performed for the class and in the chain of the
      * superclasses for each parent class excluding but up to the {@link Object} class.
-     *
      *
      * @param klass the macro class we check
      */
@@ -352,18 +355,31 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         if (!checkState) {
             return;
         }
+        final Boolean wronglyStateful = macroClasses.get(klass);
+        if (wronglyStateful != null) {
+            if (wronglyStateful) {
+                throwRTE(klass, klass, null);
+            }
+            return;
+        }
         for (Class<?> k = klass; k != Object.class; k = k.getSuperclass()) {
             if (k.getDeclaredAnnotation(Macro.Stateful.class) == null && k.getDeclaredFields().length > 0) {
                 for (Field field : k.getDeclaredFields()) {
                     if ((field.getModifiers() & Modifier.FINAL) == 0 && (field.getModifiers() & Modifier.STATIC) == 0) {
-                        throw new RuntimeException("The macro class '" + klass.getName() +
-                                "' is not stateless, " +
-                                (k == klass ? "it " : "parent class " + k.getName()) +
-                                " has non-final, non-static field '" + field.getName() + "'");
+                        macroClasses.put(klass, true);
+                        throwRTE(klass, k, field);
                     }
                 }
             }
         }
+        macroClasses.put(klass, false);
+    }
+
+    private void throwRTE(final Class<? extends Macro> klass, final Class<?> k, final Field field) {
+        throw new RuntimeException(String.format("The macro class '%1$s' is not stateless, %2$s has non-final, non-static field%3$s.",
+                klass.getName(),
+                (k == klass ? "it " : "parent class " + k.getName()),
+                (field == null ? "" : (" '" + field.getName() + "'"))));
     }
 
     @Override
@@ -424,7 +440,6 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     /**
-     *
      * This implementation checks the marker and in case it is not the last one it tries to clean the stack before
      * throwing the exception. If the marker is included in the stack, but not in the last level, then the method
      * will iteratively close all levels below and at the level of the marker, and only then it will throw the
@@ -432,7 +447,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      *
      * @param check the marker to check
      * @throws BadSyntax if the last marked when calling push was not the one passed to this method or if we are on the
-     * global level.
+     *                   global level.
      */
     @Override
     public void pop(Marker check) throws BadSyntax {
@@ -470,14 +485,14 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      * Clean one level of the stack. It means that the user defined macro stack last element is removed as well as the
      * macro stack last element is removed. If any of the removed macros or user defined macros are AutoCloseable then
      * the close method is invoked.
-     *
+     * <p>
      * Note that the processor or the input will NOT be injected even if the macro implements one of the
      * {@code Closer.*Aware} interfaces. That is because macros are generally stateless and as such, injecting to a
      * macro object (either built-in or user defined) is not really possible.
-     *
+     * <p>
      * The marker of the removed scope is added to the {@code poppedMarkers} list. This is used to create better error
      * messages later on.
-     *
+     * <p>
      * Finally, all remaining (not removed) built-in macros that implement the {@link Stackable} interface are invoked
      * calling the method {@link Stackable#pop()}.
      *

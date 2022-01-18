@@ -5,6 +5,7 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 public class TestCheckState {
 
@@ -15,6 +16,33 @@ public class TestCheckState {
             TestThat.theInput("{@use javax0.jamal.test.examples.StatefulBadMacro as macro}")
                     .results("");
         });
+    }
+
+    /**
+     * State checking stores the result for each class in a WeakHashMap. The second time the check does not repeat the
+     * deep search of non-static and non-final fields. It uses the result from the first time. When it is done the field
+     * violating the statelessness is not found and is not included in the error message.
+     *
+     * @throws Exception if the test fails
+     */
+    @Test
+    @DisplayName("Statelessness is checked differently second time, even in different processors")
+    void testCheckStateTwice() throws Exception {
+        try {
+            TestThat.theInput("{@use javax0.jamal.test.examples.StatefulBadMacro as macro}")
+                    .results("");
+            throw new AssertionFailedError("The exception was not thrown.");
+        } catch (RuntimeException e) {
+            // may or may not contain the field name in case other tests were already running
+            Assertions.assertTrue(e.getMessage().startsWith("The macro class 'javax0.jamal.test.examples.StatefulBadMacro' is not stateless, it  has non-final, non-static field"));
+        }
+        try {
+            TestThat.theInput("{@use javax0.jamal.test.examples.StatefulBadMacro as macro}")
+                    .results("");
+            throw new AssertionFailedError("The exception was not thrown.");
+        } catch (RuntimeException e) {
+            Assertions.assertEquals("The macro class 'javax0.jamal.test.examples.StatefulBadMacro' is not stateless, it  has non-final, non-static field.", e.getMessage());
+        }
     }
 
     @Test
