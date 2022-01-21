@@ -19,6 +19,19 @@ public class TestReplaceLines {
     }
 
     @Test
+    void testReplaceLinesWithRegexMultipleParameters() throws Exception {
+        TestThat.theInput(
+            "{@replaceLines replace=/^appl(.)/p$1ar/ replace=/^fox/whale/ replace=\"/win(.)e(.) //\" replace=/f(.)rest/$1cean\n" +
+            "apple fell off the tree\n" +
+            "fox mating in the winter firest\n" +
+            "fox mating in the winter forest\n" +
+            "}").results("pear fell off the tree\n" +
+            "whale mating in the icean\n" +
+            "whale mating in the ocean\n"
+        );
+    }
+
+    @Test
     void testReplaceLinesWithRegexInParams() throws Exception {
         TestThat.theInput(
             "{@replaceLines detectNoChange replace=\"/^appl(.)/p$1ar/^fox/whale/win(.)e(.) //f(.)rest/$1cean\"\n" +
