@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
@@ -43,7 +44,7 @@ import static javax0.jamal.tools.Params.holder;
  * <p>
  * are the default values.
  */
-public class NumberLines implements Macro, InnerScopeDependent {
+public class NumberLines implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public String getId() {
         return "numberLines";
@@ -56,8 +57,16 @@ public class NumberLines implements Macro, InnerScopeDependent {
         final var step = holder("step").orElseInt(1);
         Params.using(processor).from(this).keys(format, start, step).parse(in);
 
+        convertTextBlock(in.getSB(),in.getPosition(),format,start,step);
+        return in.toString();
+    }
+    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+        checkNumberOfParams(3, params);
+        final var format = params[0].asString();
+        final var start = params[1].asInt();
+        final var step = params[2].asInt();
+
         int i = 0;
-        final var sb = in.getSB();
         int lineNr = start.get();
         final var fmt = format.get();
         final var stp = step.get();
@@ -74,9 +83,7 @@ public class NumberLines implements Macro, InnerScopeDependent {
                 break;
             }
         }
-        return in.toString();
     }
-
     private String getFormattedNr(int lineNr, String fmt) throws BadSyntax {
         final String formattedNr;
         try {

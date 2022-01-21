@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
@@ -11,13 +12,24 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class SkipLines implements Macro, InnerScopeDependent {
+public class SkipLines implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var skipStart = Params.<Pattern>holder("skip").orElse("skip").as(Pattern::compile);
         final var skipEnd = Params.<Pattern>holder("endSkip").orElse("end\\s+skip").as(Pattern::compile);
         Params.using(processor).from(this).keys(skipEnd, skipStart).parse(in);
-        final var lines = in.toString().split("\n", -1);
+
+        convertTextBlock(in.getSB(), in.getPosition(), skipStart, skipEnd);
+        return in.toString();
+    }
+
+    @Override
+    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+        checkNumberOfParams(2, params);
+        final var skipStart = params[0].asType(Pattern.class);
+        final var skipEnd = params[1].asType(Pattern.class);
+
+        final var lines = sb.toString().split("\n", -1);
         int from = 0;
         int to = 0;
         boolean skipping = false;
@@ -39,15 +51,16 @@ public class SkipLines implements Macro, InnerScopeDependent {
             from++;
         }
         final var joined = Arrays.stream(lines).limit(to).collect(Collectors.joining("\n"));
-        if (needsNoExtraNl(in, lastLineCopied, joined)) {
-            return joined;
-        } else {
-            return joined + "\n";
+        final var extraNl = !needsNoExtraNl(sb.toString(), lastLineCopied, joined);
+        sb.setLength(0);
+        sb.append(joined);
+        if (extraNl) {
+            sb.append("\n");
         }
     }
 
-    static boolean needsNoExtraNl(Input in, boolean lastLineCopied, String joined) {
-        return joined.length() == 0 || joined.charAt(joined.length() - 1) == '\n' || (lastLineCopied && in.toString().charAt(in.length() - 1) != '\n');
+    static boolean needsNoExtraNl(String in, boolean lastLineCopied, String joined) {
+        return joined.length() == 0 || joined.charAt(joined.length() - 1) == '\n' || (lastLineCopied && in.charAt(in.length() - 1) != '\n');
     }
 
     @Override

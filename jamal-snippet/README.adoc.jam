@@ -849,7 +849,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=215d6c10%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=4bb28494%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
 It is the case when the fragment comes from a code part somewhere in the middle of a tabulated structure.
@@ -919,7 +919,7 @@ will result
 
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=284e54b7%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=640fdfce%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 The syntax of the macro is
 
@@ -985,7 +985,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 ==== {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=72dd7ec8%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=ca4bfda8.9164b995.3924ef43.597aad41%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1044,7 +1044,7 @@ In this case only the comment lines remained that start with `//` at the start o
 
 [[skipLines]]
 ==== {%macroChapter%}`skipLines`
-{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=f6e5a8bc%}
+{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=fea94697%}
 You can use this macro to skip lines from the snippet.
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
 The macro uses two regular expressions, named `skip` and `endSkip`.
@@ -1148,7 +1148,7 @@ but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
 ==== {%macroChapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=f3f46339%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=401ba5d1%}
 This macro replaces strings in the input.
 
 {%parameterized%}
@@ -1295,7 +1295,7 @@ In this case we used the word `last` as an argument to the counter macro `c`, wh
 
 [[reflow]]
 ==== {%macroChapter%}`reflow`
-{%#snip:check file={%JAVA_DIR%}Reflow.java hash=3b6479c0%}
+{%#snip:check file={%JAVA_DIR%}Reflow.java hash=efef6ad2%}
 This macro reflows the content.
 The default behavior is to remove all single new-line characters replacing them with spaces.
 That way, the lines will extend without wrapping around, and double newlines will separate the paragraphs.
@@ -1515,26 +1515,27 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,216 bytes
+- snippet: 1,248 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,362 bytes
+- NumberLines.java: 2,763 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,772 bytes
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 7,839 bytes
-- TrimLines.java: 3,687 bytes
+- TrimLines.java: 4,179 bytes
 - ThinXml.java: 8,678 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipXml.java: 1,489 bytes
 - ThinXmlMacro.java: 585 bytes
+- BlockConverter.java: 1,715 bytes
 - Counter.java: 3,691 bytes
 - StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 1,532 bytes
+- KillLines.java: 2,035 bytes
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,321 bytes
@@ -1547,10 +1548,10 @@ will result
 - SnipList.java: 1,260 bytes
 - XmlDocument.java: 5,656 bytes
 - Java.java: 9,275 bytes
-- ReplaceLines.java: 2,299 bytes
-- SkipLines.java: 2,048 bytes
+- ReplaceLines.java: 3,015 bytes
+- SkipLines.java: 2,562 bytes
 - SnipCheck.java: 5,619 bytes
-- Reflow.java: 1,716 bytes
+- Reflow.java: 1,988 bytes
 - Snippet.java: 1,088 bytes
 ----
 %}

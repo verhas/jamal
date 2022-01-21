@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
@@ -14,7 +15,7 @@ import javax0.jamal.tools.Params;
  * This can be used, when a snippet is included into the macro file and some program code is tabulated. In that case
  * this snippet will be moved to the left as much as possible.
  */
-public class TrimLines implements Macro, InnerScopeDependent {
+public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public String getId() {
         return "trimLines";
@@ -30,14 +31,25 @@ public class TrimLines implements Macro, InnerScopeDependent {
         Params.using(processor).from(this).keys(margin, trimVertical, verticalTrimOnly).parse(in);
         //end snippet
         final var sb = in.getSB();
+        convertTextBlock(sb, in.getPosition(), margin, trimVertical, verticalTrimOnly);
+        return sb.toString();
+    }
+
+    @Override
+    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+        checkNumberOfParams(3, params);
+        final var margin = params[0].asInt();
+        final var trimVertical = params[1].asBoolean();
+        final var verticalTrimOnly = params[2].asBoolean();
+
         if (!verticalTrimOnly.is()) {
             trimHorizontal(sb, margin.get());
         }
         if (trimVertical.is() || verticalTrimOnly.is()) {
             trimVertical(sb);
         }
-        return sb.toString();
     }
+
 
     private static void trimVertical(StringBuilder sb) {
         int i = 0;

@@ -70,6 +70,8 @@ public class Params {
 
         Param<T> as(Function<String, T> converter);
 
+        <K> Param<K> asType(Class<K> type);
+
         <K> Param<K> as(Class<K> klass, Function<String, K> converter);
 
         Param<Integer> asInt();

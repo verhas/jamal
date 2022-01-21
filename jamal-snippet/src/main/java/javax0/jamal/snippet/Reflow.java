@@ -4,16 +4,23 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
-public class Reflow implements Macro, InnerScopeDependent {
+public class Reflow implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var width = Params.holder("width").orElseInt(0);
         Params.using(processor).from(this).keys(width).parse(in);
-        final var sb = in.getSB();
+        convertTextBlock(in.getSB(), in.getPosition(), width);
+        return in.toString();
+    }
+
+    @Override
+    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+        checkNumberOfParams(1, params);
+        final var width = params[0].asInt();
         int index = 0;
         int relative = 0;
         int lastSpace = -1;
@@ -42,8 +49,6 @@ public class Reflow implements Macro, InnerScopeDependent {
                 index++;
                 relative++;
             }
-
         }
-        return sb.toString();
     }
 }

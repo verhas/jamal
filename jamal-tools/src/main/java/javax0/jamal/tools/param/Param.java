@@ -68,6 +68,11 @@ public class Param<K> implements Params.Param<K> {
     }
 
     @Override
+    public <H> Param<H> asType(Class<H> klass) {
+        return (Param<H>)this;
+    }
+
+    @Override
     public <Z> Param<Z> as(Class<Z> klass, Function<String, Z> converter) {
         this.converter = converter::apply;
         return (Param<Z>) this;
