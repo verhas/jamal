@@ -6,7 +6,7 @@
     <artifactId>pom-xml-file-builder</artifactId>
     <version>1.0.0</version>
     <properties>
-        <jamalVersion>1.9.1</jamalVersion>
+        <jamalVersion>1.10.4</jamalVersion>
     </properties>
     <build>
         <defaultGoal>clean</defaultGoal>
