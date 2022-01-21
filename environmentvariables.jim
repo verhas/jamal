@@ -2,40 +2,40 @@
 
 DEFINE ALL THE ENVIRONMENT VARIABLES AS MACROS
 
-Import this file to use the environment variable names as macros.
+Import this file to use the environment variable names as macros inside the Jamal source documentations.
 
 The names and the values are fetched from the file {@java:class javax0.jamal.api.EnvironmentVariables}.
 The name of the variables will be the name of the Java constant.
 The value of the macro will be the value of the Java constants.
 
-After importing this file (IMPORT and NOT INCLUDE!!!) you can use the variable names as user defined macros in the documentation.
+After importing this file (IMPORT and NOT INCLUDE!!!), you can use the variable names as user-defined macros in the documentation.
 
 HOW THIS WORKS:
 ===============
 
-First of all the comment at the start tells Jamal that the macro start and stop strings in this file are single braces.
-This behaviour is defined in the documentation.
-This is a demonstration here, and also it is simpler to use these characters as start and stop strings in this file.
-Also, as this file is imported the free text, like this is ignored.
+First of all, the comment tells Jamal that the macro start and stop strings in this file are single braces.
+This behavior is defined in the documentation.
+It is a demonstration here, and also, it is simpler to use these characters as start and stop strings in this file.
+Also, as this file is imported, free text is ignored.
 It may slow down processing a bit.
-A few nano-, or micro-seconds.
+A few microseconds.
 
 
 The rest of the macros:
 -----------------------
-This is a bit tricky here, but if you want to learn Jamal usage to the full extent you can learn from examples.
+It is a bit tricky here, but if you want to learn Jamal usage to the full extent, you can learn from examples.
 So here it is.
 Let's go from the inside towards out.
-We include the class file EnvironmentVariables.java in a verbatim mode.
+We include the class file EnvironmentVariables.java in verbatim mode.
 That means it does not get interpreted.
-It is like copying the content of the file and surrounding it with an ident macro.
-After that `killLines` keeps only the lines that match the pattern.
-Essentially the lines, which have `JAMAL_`something`_ENV` or `JAMAL_`something`_SYS` defined on it.
-The replaceLines replaces these lines to Jamal define macros.
-Each define uses the name of the variable and assigns to it the value of the variable.
-Note that it works also for the system properties which are calculated during class initialization.
-To protect the macros in the replace string not to be executed/evaluated immediately we use the ident macro.
-The result of this is a series of define macros, which should be evaluated to have the desired effect.
+It is like copying the file's content and surrounding it with an ident macro.
+After that, `killLines` keeps only the lines that match the pattern.
+Essentially, the lines having `JAMAL_`something`_ENV` or `JAMAL_`something`_SYS` defined on it remain.
+The `replaceLines` macro replaces these lines to Jamal define macros.
+Each define uses the variable's name and assigns to it the value of the variable.
+Note that it also works for the system properties calculated during class initialization.
+We use the `ident` macro to protect the replace string's macros from being executed/evaluated immediately.
+It is a series of `define` macros, which should be evaluated to have the desired effect.
 So the steps in short:
 
 1. include the file verbatim
