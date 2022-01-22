@@ -2,9 +2,9 @@
 
 
 
+In this document we will describe how you can write built-in macros for your specific application.
 
 Built-in macros in Jamal are the macros, which are implemented using Java code.
-In this document we will describe how you can write built-in macros for your specific application.
 The document assumes that you are familiar with Jamal macro structure and you know
 
 * the difference between built-in and user defined macros in the Jamal file,
