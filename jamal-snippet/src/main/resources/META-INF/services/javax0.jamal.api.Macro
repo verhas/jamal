@@ -34,6 +34,7 @@ javax0.jamal.snippet.Reflow
 javax0.jamal.snippet.SnipList
 javax0.jamal.snippet.SnipSave
 javax0.jamal.snippet.SnipLoad
+javax0.jamal.snippet.SnipTransform
 javax0.jamal.snippet.StringMacros$Contains
 javax0.jamal.snippet.StringMacros$Substring
 javax0.jamal.snippet.StringMacros$Length

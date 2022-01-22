@@ -122,7 +122,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=082df639.4fd02dd1%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=8859d830%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -985,7 +985,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 ==== {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=ca4bfda8.9164b995.3924ef43.597aad41%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=d4252c93.1f397a7d%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1044,7 +1044,7 @@ In this case only the comment lines remained that start with `//` at the start o
 
 [[skipLines]]
 ==== {%macroChapter%}`skipLines`
-{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=fea94697%}
+{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=563d996a%}
 You can use this macro to skip lines from the snippet.
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
 The macro uses two regular expressions, named `skip` and `endSkip`.
@@ -1515,16 +1515,17 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,248 bytes
+- snippet: 1,280 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,763 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
-- Update.java: 3,772 bytes
+- Update.java: 3,754 bytes
+- SnipTransform.java: 8,667 bytes
 - FilesMacro.java: 4,791 bytes
-- Collect.java: 7,839 bytes
+- Collect.java: 7,812 bytes
 - TrimLines.java: 4,179 bytes
 - ThinXml.java: 8,678 bytes
 - LineCount.java: 604 bytes
@@ -1535,7 +1536,7 @@ will result
 - Counter.java: 3,691 bytes
 - StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 2,035 bytes
+- KillLines.java: 2,019 bytes
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,321 bytes
@@ -1549,7 +1550,7 @@ will result
 - XmlDocument.java: 5,656 bytes
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 3,015 bytes
-- SkipLines.java: 2,562 bytes
+- SkipLines.java: 2,544 bytes
 - SnipCheck.java: 5,619 bytes
 - Reflow.java: 1,988 bytes
 - Snippet.java: 1,088 bytes
@@ -1830,6 +1831,7 @@ In the format you can use the following placeholders:
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
 * `$parent` the parent directory where the file is
+                ).and(
 * `$canonicalPath` the canonical path
 %}
 
@@ -1862,6 +1864,7 @@ In the format you can use the following placeholders:
 * `$name` gives the name of the directory as was specified on the macro
 * `$absolutePath` gives the name of the directory as was specified on the macro
 * `$parent` the parent directory
+                ).and(
 * `$canonicalPath` the canonical path
 %}
 
@@ -2227,7 +2230,7 @@ Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
 ==== {%macroChapter%}`snip:update`
-{%#snip:check file={%JAVA_DIR%}Update.java hash=bf350d84%}
+{%#snip:check file={%JAVA_DIR%}Update.java hash=c3fcf71f%}
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
 

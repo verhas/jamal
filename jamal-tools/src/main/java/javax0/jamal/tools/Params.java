@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
@@ -69,6 +70,8 @@ public class Params {
         Param<Integer> orElseInt(int i);
 
         Param<T> as(Function<String, T> converter);
+
+        Param<Pattern> asPattern();
 
         <K> Param<K> asType(Class<K> type);
 
@@ -286,7 +289,7 @@ public class Params {
      * Get the suggestions that are similar to the given key.
      *
      * @param spelling the misspelled key
-     * @param keys the set of the valid keys
+     * @param keys     the set of the valid keys
      * @return the set of suggestions
      */
     private Set<String> suggest(String spelling, Set<String> keys) {

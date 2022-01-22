@@ -52,11 +52,11 @@ public class Collect implements Macro, InnerScopeDependent {
         //
         //excludes any file that contains the character `2` in its name.
         //
-        final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
+        final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").asPattern();
         // can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
-        final var liner = Params.<Pattern>holder("liner").orElse("snipline\\s+([a-zA-Z0-9_$]+)").as(Pattern::compile);
+        final var liner = Params.<Pattern>holder("liner").orElse("snipline\\s+([a-zA-Z0-9_$]+)").asPattern();
         // can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
-        final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").as(Pattern::compile);
+        final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").asPattern();
         // can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
         final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
         // can limit the directory traversing to a certain depth.

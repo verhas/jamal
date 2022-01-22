@@ -1674,6 +1674,7 @@ will result
 - DateMacro.java
 - Format.java
 - Update.java
+- SnipTransform.java
 - FilesMacro.java
 - Collect.java
 - TrimLines.java
@@ -1773,16 +1774,17 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,248 bytes
+- snippet: 1,280 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,763 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
-- Update.java: 3,772 bytes
+- Update.java: 3,754 bytes
+- SnipTransform.java: 8,667 bytes
 - FilesMacro.java: 4,791 bytes
-- Collect.java: 7,839 bytes
+- Collect.java: 7,812 bytes
 - TrimLines.java: 4,179 bytes
 - ThinXml.java: 8,678 bytes
 - LineCount.java: 604 bytes
@@ -1793,7 +1795,7 @@ will result
 - Counter.java: 3,691 bytes
 - StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 2,035 bytes
+- KillLines.java: 2,019 bytes
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 9,845 bytes
 - ListDir.java: 5,321 bytes
@@ -1807,7 +1809,7 @@ will result
 - XmlDocument.java: 5,656 bytes
 - Java.java: 9,275 bytes
 - ReplaceLines.java: 3,015 bytes
-- SkipLines.java: 2,562 bytes
+- SkipLines.java: 2,544 bytes
 - SnipCheck.java: 5,619 bytes
 - Reflow.java: 1,988 bytes
 - Snippet.java: 1,088 bytes
@@ -2063,7 +2065,7 @@ will result in the output
 
 [source]
 ----
-2022-01-21 21:58:40
+2022-01-22 23:22:47
 ----
 
 
@@ -2168,6 +2170,7 @@ In the format you can use the following placeholders:
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
 * `$parent` the parent directory where the file is
+                ).and(
 * `$canonicalPath` the canonical path
 
 
@@ -2208,6 +2211,7 @@ In the format you can use the following placeholders:
 * `$name` gives the name of the directory as was specified on the macro
 * `$absolutePath` gives the name of the directory as was specified on the macro
 * `$parent` the parent directory
+                ).and(
 * `$canonicalPath` the canonical path
 
 

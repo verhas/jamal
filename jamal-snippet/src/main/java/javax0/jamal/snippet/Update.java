@@ -25,9 +25,9 @@ public class Update implements Macro, InnerScopeDependent {
         final var start = Params.<Pattern>holder("start").orElse(
             "^\\s*" +
                 Pattern.quote(processor.getRegister().open()) +
-                "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$").as(Pattern::compile);
+                "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$").asPattern();
         final var stop = Params.<Pattern>holder("stop").orElse(
-            "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$").as(Pattern::compile);
+            "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$").asPattern();
         Params.using(processor).from(this).keys(head, tail, start, stop).parse(in);
 
         final var snippets = SnippetStore.getInstance(processor);

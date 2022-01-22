@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Param<K> implements Params.Param<K> {
@@ -67,9 +68,13 @@ public class Param<K> implements Params.Param<K> {
         return this;
     }
 
+    public Param<Pattern> asPattern() {
+        return as(Pattern.class, Pattern::compile);
+    }
+
     @Override
     public <H> Param<H> asType(Class<H> klass) {
-        return (Param<H>)this;
+        return (Param<H>) this;
     }
 
     @Override

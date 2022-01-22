@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 public class SkipLines implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var skipStart = Params.<Pattern>holder("skip").orElse("skip").as(Pattern::compile);
-        final var skipEnd = Params.<Pattern>holder("endSkip").orElse("end\\s+skip").as(Pattern::compile);
+        final var skipStart = Params.<Pattern>holder("skip").orElse("skip").asPattern();
+        final var skipEnd = Params.<Pattern>holder("endSkip").orElse("end\\s+skip").asPattern();
         Params.using(processor).from(this).keys(skipEnd, skipStart).parse(in);
 
         convertTextBlock(in.getSB(), in.getPosition(), skipStart, skipEnd);
