@@ -6,11 +6,14 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * This macro composes several other macros and invokes them using the parameters given.
@@ -43,6 +46,10 @@ import java.util.regex.Pattern;
 public class SnipTransform implements Macro {
     private static final Set<String> knownActions = Set.of("kill", "skip", "replace", "trim", "reflow", "number");
 
+    /**
+     * Parse the input for parameters and store the parameters. The input is parsed in the constructor and then the
+     * parameter set is checked for consistency as well as implicit actions are added.
+     */
     private class Parameters {
         // parameter that lists the actions in the order they should be performed. The list is comma delimited.
         final Params.Param<String> actions = Params.holder(null, "action", "actions").orElse("").asString();
@@ -78,6 +85,7 @@ public class SnipTransform implements Macro {
             actionsSet = getOrderedActionSet();
 
             addImplicitConfiguredActions();
+            checkMissingActions();
 
             for (final String action : actionsSet) {
                 if (!knownActions.contains(action)) {
@@ -87,7 +95,13 @@ public class SnipTransform implements Macro {
         }
 
         private Set<String> getOrderedActionSet() throws BadSyntax {
-            final var actionsList = Arrays.asList(actions.get().split(","));
+            final List<String> actionsList;
+            if (actions.isPresent()) {
+                actionsList = Arrays.stream(actions.get().split(",", -1)).map(String::trim).collect(Collectors.toList());
+            } else {
+                actionsList = new ArrayList<>();
+            }
+
             final var actionsSet = new LinkedHashSet<>(actionsList);
             if (actionsSet.size() != actionsList.size()) {
                 throw new BadSyntax("Duplicate action(s) in " + actions.get());
@@ -95,37 +109,135 @@ public class SnipTransform implements Macro {
             return actionsSet;
         }
 
+        /**
+         * The elements of the table that contains the list of the actions added automatically to the list of explicit
+         * actions when a parameter for the missing action is used.
+         */
+        private class TableImplicits {
+            /**
+             * The name of the parameter that belongs to an action. It is usually the same as the name of the action,
+             * with one exception (as for 1.10.5 release, may change later).
+             */
+            final String name;
+            /**
+             * The name of the action.
+             */
+            final String action;
+            /**
+             * The parameter that configures the action.
+             */
+            final Params.Param<?> param;
+
+            TableImplicits(final String name, final String action, final Params.Param<?> param) {
+                this.name = name;
+                this.action = action;
+                this.param = param;
+            }
+        }
+
+        /**
+         * Create an action with the parameter and the name of the action is the same as the name of the parameter.
+         *
+         * @param name  the name of the parameter and the action
+         * @param param the parameter used to configure the action
+         * @return the table row
+         */
+        TableImplicits action(final String name, final Params.Param<?> param) {
+            return new TableImplicits(name, name, param);
+        }
+
+        /**
+         * Create a table row with the name of the action and the parameter that configures the action.
+         *
+         * @param name   the name of the parameter
+         * @param param  the parameter
+         * @param action the name of the action
+         * @return the table row
+         */
+        TableImplicits action(final String name, final Params.Param<?> param, final String action) {
+            return new TableImplicits(name, action, param);
+        }
+
+        TableImplicits[] implicitActions(final TableImplicits... ts) {
+            return ts;
+        }
+
+        /**
+         * Add the actions that may not need to be listed in the {@code actions} parameter. When the name of a parameter
+         * is the same as the name of an action, the action is added to the set of actions. The action is also
+         * automatically added when the name of the parameter reasonably suggests what to do. For example, when the
+         * parameter is {@code keep} the action {@code kill} is added.
+         * <p>
+         * The code also checks in some cases (in one case to be precise, at the moment) that the name of the parameter
+         * is the one from the many alternatives that makes sense. The example is the parameter {@code kill} which is an
+         * alias for {@code pattern}. You can use {@code kill} as a parameter and then the action {@code kill} will be
+         * added, but if you use the alias {@code pattern} the action {@code kill} will not be added automatically. This
+         * is for readability reason.
+         *
+         * @throws BadSyntax when there is some problem with the parameter handling
+         */
         private void addImplicitConfiguredActions() throws BadSyntax {
-            if (pattern.isPresent() || keep.isPresent()) {
-                actionsSet.add("kill");
+            for (final var a : implicitActions(
+                    action("kill", pattern),
+                    action("keep", keep, "kill"),
+                    action("skip", skipStart),
+                    action("replace", replace))) {
+                if (a.param.isPresent() && a.param.name().equals(a.name)) {
+                    actionsSet.add(a.action);
+                }
             }
-            if (skipStart.isPresent() || skipEnd.isPresent()) {
-                actionsSet.add("skip");
-            }
-            if (replace.isPresent() || detectNoChange.isPresent()) {
-                actionsSet.add("replace");
-            }
-            if (margin.isPresent() || trimVertical.isPresent() || verticalTrimOnly.isPresent()) {
-                actionsSet.add("trim");
-            }
-            if (width.isPresent()) {
-                actionsSet.add("reflow");
-            }
-            if (start.isPresent() || step.isPresent() || format.isPresent()) {
-                actionsSet.add("number");
+        }
+
+        /**
+         * Check that there is no parameter for a missing, non-listed action. This method is invoked after the actions
+         * implicit configuration is done.
+         *
+         * @throws BadSyntax when there is a parameter for a missing action
+         */
+        private void checkMissingActions() throws BadSyntax {
+            final var needs = Map.of(
+                    "kill", List.of(pattern, keep),
+                    "skip", List.of(skipEnd),
+                    "replace", List.of(detectNoChange),
+                    "trim", List.of(margin, trimVertical, verticalTrimOnly),
+                    "reflow", List.of(width),
+                    "number", List.of(format, start, step));
+            for (final var e : needs.entrySet()) {
+                final var action = e.getKey();
+                if (!actionsSet.contains(action)) {
+                    for (final var param : e.getValue()) {
+                        if (param.isPresent()) {
+                            throw new BadSyntax(
+                                    String.format("'%s' can be used only when '%s' specified as action or parameter.",
+                                            param.name(), action));
+                        }
+                    }
+                }
             }
         }
     }
 
+    /**
+     * Collect and store the macros that implement the different actions.
+     * <p>
+     * These macros are located by their identifier. The usual situation is that they are the macros that are defined
+     * in the snippet library (this one, actually) and the macros are global. Jamal, however, can redefine globally and
+     * locally the macros. If these macro names lead to a different macro, then they should conform to the original
+     * macro of the same name. They have to implement the {@link BlockConverter} interface, and they should work with
+     * the same parameters.
+     * <p>
+     * If some macro does not implement the interface, then the {@link #getConverter(Processor, String) getConverter()}
+     * method will throw an exception. If the parameters are different, then the functionality may not be correct. There
+     * is no technical way to check that with the current implementation.
+     */
     private static class UnderlyingMacros {
 
         final BlockConverter killLines;
-
-        final BlockConverter numberLines;
-        final BlockConverter reflow;
-        final BlockConverter replaceLines;
         final BlockConverter skipLines;
+        final BlockConverter replaceLines;
         final BlockConverter trimLines;
+        final BlockConverter reflow;
+        final BlockConverter numberLines;
 
         private static BlockConverter getConverter(final Processor processor, final String macroName) throws BadSyntax {
             return processor.getRegister().getMacro(macroName)
@@ -135,11 +247,11 @@ public class SnipTransform implements Macro {
 
         UnderlyingMacros(final Processor processor) throws BadSyntax {
             killLines = getConverter(processor, "killLines");
-            numberLines = getConverter(processor, "numberLines");
-            reflow = getConverter(processor, "reflow");
-            replaceLines = getConverter(processor, "replaceLines");
             skipLines = getConverter(processor, "skipLines");
+            replaceLines = getConverter(processor, "replaceLines");
             trimLines = getConverter(processor, "trimLines");
+            reflow = getConverter(processor, "reflow");
+            numberLines = getConverter(processor, "numberLines");
         }
     }
 
@@ -158,7 +270,7 @@ public class SnipTransform implements Macro {
                     macros.skipLines.convertTextBlock(sb, pos, params.skipStart, params.skipEnd);
                     break;
                 case "replace":
-                    macros.replaceLines.convertTextBlock(sb, pos, params.replace,params.detectNoChange);
+                    macros.replaceLines.convertTextBlock(sb, pos, params.replace, params.detectNoChange);
                     break;
                 case "trim":
                     macros.trimLines.convertTextBlock(sb, pos, params.margin, params.trimVertical, params.verticalTrimOnly);

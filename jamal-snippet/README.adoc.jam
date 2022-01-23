@@ -82,6 +82,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
+.. <<snipTransform,`snip:transform`>>
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
@@ -1380,6 +1381,151 @@ will have the same result as:
 Setting the `width` to any non-positive value will remove the limit from the line length.
 You may use this to override a globally set `width` macro.
 
+[[snipTransform]]
+==== {%macroChapter%}`snip:transform`
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=1b305c2c%}
+
+The `snip:transform` macro integrates the functionality of the macros
+
+* `KillLines`
+* `SkipLines`
+* `ReplaceLines`
+* `TrimLines`
+* `Reflow`
+* `NumberLines`
+
+It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, and it can number the lines.
+The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
+The purpose of the macro is to provide a shorthand for the common use case of the other macros used together.
+
+The macro is configured with parameters in a similar way as the underlying macros.
+The parameters are the same as in those macros and they are used by the underlying macros the same way.
+There are two differences, however.
+
+1. Th `snip:transform` macro does not use any user defined macro or option as a parameter.
+
+2. There is an extra parameters named `action` (alias `actions`, plural) that lists the actions to perform.
+
+The names for the actions are the followings:
+
+* `kill`
+* `skip`
+* `replace`
+* `trim`
+* `reflow`
+* `number`
+
+If you have a block that you want simultaneously trim and then number the lines, you have to write
+
+{%sample/
+{@snip:transform actions=trim,number
+         wuff
+        line
+     Mayak
+            Canoe
+}
+%}
+
+which will result
+
+{%output%}
+
+This is essentially the same as
+
+{%sample/
+{#numberLines
+{@trimLines
+         wuff
+        line
+     Mayak
+            Canoe
+}}
+%}
+
+eventually with the same result:
+
+{%output%}
+
+The `snip:transform` takes all the actions in the order as they are specified and invokes the macros implementing them passing the parameters.
+It is not possible to invoke one action more than once.
+Any syntax allowing the separation of the parameters of one execution from another would be complex and probably hard to read.
+
+Some actions have parameters that are the same as the name of the action.
+These are `skip`, `kill` and `replace`.
+When one of these parameters is specified there may not be a need to specify the action separately.
+It is evident that
+
+{%sample/
+{@snip:transform kill=A
+Apple
+Birnen
+Birds
+Sumatra
+}
+%}
+
+will delete all lines that contain the uppercase letter `A` and will result:
+
+{%output%}
+
+On the other hand
+
+{%sample/
+{@snip:transform pattern=A
+ ...
+}
+%}
+
+does not work, even though the parameter `pattern` is the alias of `kill`.
+
+The following parameters will add the action implicitly to the list:
+
+* `kill` will add the action `kill`
+* `keep` will add the action `kill`
+* `skip` will add the action `skip`
+* `replace` will add the action `replace`
+
+If an action is already in the list (they are present in the parameter `actions`) they are not added again.
+Also, their position remains as specified in the parameter `actions`.
+When added, it is in the order as they are listed here in the documentation.
+The actual order of the parameters in the macro is irrelevant.
+When implicitly added `kill` will always precede `skip` and `replace`.
+Likewise `skip` will precede `replace`.
+
+A parameter other than these belonging to an action not listed in the `actions` parameter is an error.
+You cannot, for example, specify `width` without adding `reflow` to the actions as it is not evident what the meaning of `width` is without `reflow`.
+
+[NOTE]
+====
+The macro `snip:transform` is just a wrapper around the underlying macros.
+It first looks up the macros by the name and then invokes them according to the parameters.
+It is usually not interesting for the user of the macro.
+The underlying macros are implemented in the snippet package, just like `snip:transform` itself.
+
+Jamal, however, makes it possible to redefine built-in macros locally and globally via the `use` macro.
+If any of the underlying macros are redefined when the `snip:transform` is invoked, then the actual macro will be invoked.
+It also implies that the developers should implement these macros as compatible as the macro of the same name in the snippet package.
+They have to implement the `BlockConverter` interface, and their `convertTextBlock()` method should accept the same parameters as their snippet counterpart.
+====
+
+The parameters for the `snip:transform` are:
+
+* `action`, (alias `actions`) listing the actions to perform.
+* `kill`, (alias `pattern`) passed to `killLines`
+* `keep` passed to `killLines`
+* `format` passed to `NumberLines`
+* `start`  passed to `NumberLines`
+* `step` passed to `NumberLines`
+* `width` passed to `reflow`
+* `replace` passed to `replaceLines`
+* `detectNoChange` passed to `replaceLines`
+* `skip` passed to `skipLines`
+* `endSkip` passed to `skipLines`
+* `margin` passed to `trimLines`
+* `trimVertical` passed to `trimLines`
+* `verticalTrimOnly` passed to `trimLines`
+
+The meaning and the interpreation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
 ==== {%macroChapter%}`lineCount`
@@ -1523,7 +1669,7 @@ will result
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
-- SnipTransform.java: 8,667 bytes
+- SnipTransform.java: 14,199 bytes
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 7,812 bytes
 - TrimLines.java: 4,179 bytes

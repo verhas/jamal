@@ -92,6 +92,10 @@ public class Params {
         boolean is() throws BadSyntax;
 
         boolean isPresent() throws BadSyntax;
+        
+        String name();
+
+        void setName(String id);
     }
 
     private final Processor processor;
@@ -228,7 +232,7 @@ public class Params {
      */
     public void parse(Input input) throws BadSyntax {
         try {
-            parse(input, (id, param) -> holders.get(id).set(param), holders::containsKey);
+            parse(input, (id, param) -> {holders.get(id).set(param); holders.get(id).setName(id);}, holders::containsKey);
         } catch (BadKey e) {
             final var suggestions = suggest(e.key, holders.keySet());
             throw throwExceptionWithSuggestions(suggestions, e);

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class Param<K> implements Params.Param<K> {
     final public String[] key;
+    private String name;
     List<String> value = new ArrayList<>();
     private Processor processor;
     private String macroName;
@@ -32,6 +33,16 @@ public class Param<K> implements Params.Param<K> {
     @Override
     public String[] keys() {
         return key;
+    }
+
+    @Override
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String name() {
+        return name;
     }
 
     private interface ThrowFunction<T> {

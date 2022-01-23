@@ -11,7 +11,7 @@ public class TestSnipTransform {
     @DisplayName("snip:transform - simple kill and trim, number auto added")
     void testCompoundSnipTransfer() throws Exception {
         TestThat.theInput(""
-                + "{@snip:transform actions=kill,trim margin=3 start=10 step=10 \n"
+                + "{@snip:transform actions=kill,trim,number margin=3 start=10 step=10 \n"
                 + "       \n" // empty line will be killed by default
                 + "       papirus mapirus\n"
                 + "         tabbed in hamarin\n"
@@ -24,6 +24,79 @@ public class TestSnipTransform {
                 + "30.    tabbed in hamarine\n");
     }
 
+    @Test
+    @DisplayName("snip:transform - throw using parameter without action")
+    void testThrowsWhenActionIsNotDefined() throws Exception {
+        TestThat.theInput(""
+                + "{@snip:transform actions=kill,trim margin=3 start=10 step=10 \n"
+                + "       \n" // empty line will be killed by default
+                + "       papirus mapirus\n"
+                + "         tabbed in hamarin\n"
+                + "       \n" // empty line will be killed by default
+                + "       tabbed in hamarine\n"
+                + "}"
+        ).throwsBadSyntax("'start' can be used only when 'number' specified as action or parameter.");
+    }
+
+    @Test
+    @DisplayName("snip:transform - simple number and trim, kill auto added")
+    void testKillCanBeUsedAsAParameterOnly() throws Exception {
+        TestThat.theInput(""
+                + "{@snip:transform actions=trim,number kill=^\\d+.\\s*$ margin=3 start=10 step=10\n"
+                + "       \n" // empty line will be killed by default
+                + "       papirus mapirus\n"
+                + "         tabbed in hamarin\n"
+                + "       \n" // empty line will be killed by default
+                + "       tabbed in hamarine\n"
+                + "}"
+        ).results(""
+                + "20.    papirus mapirus\n"
+                + "30.      tabbed in hamarin\n"
+                + "50.    tabbed in hamarine\n");
+    }
+
+    @Test
+    @DisplayName("snip:transform - works with empty actions")
+    void testKillParameterOnly() throws Exception {
+        TestThat.theInput(""
+                + "{@snip:transform kill=A\n"
+                + "Apple\n"
+                + "Bpple\n"
+                + "}"
+        ).results(""
+                + "Bpple\n"
+        );
+    }
+
+    @Test
+    @DisplayName("snip:transform - simple number and trim, kill auto added by keep parameter")
+    void testKeepCanBeUsedAsAParameterOnly() throws Exception {
+        TestThat.theInput(""
+                + "{@snip:transform actions=trim,number kill=^\\d+.\\s*$ margin=3 start=10 step=10\n"
+                + "       \n" // empty line will be killed by default
+                + "       papirus mapirus\n"
+                + "         tabbed in hamarin\n"
+                + "       \n" // empty line will be killed by default
+                + "       tabbed in hamarine\n"
+                + "}"
+        ).results(""
+                + "20.    papirus mapirus\n"
+                + "30.      tabbed in hamarin\n"
+                + "50.    tabbed in hamarine\n");
+    }
+    @Test
+    @DisplayName("snip:transform - simple kill and trim, number auto added")
+    void testPatternCanNotBeUsedAsAParameterOnly() throws Exception {
+        TestThat.theInput(""
+                + "{@snip:transform actions=trim,number pattern=^\\d+.\\s*$ margin=3 start=10 step=10\n"
+                + "       \n" // empty line will be killed by default
+                + "       papirus mapirus\n"
+                + "         tabbed in hamarin\n"
+                + "       \n" // empty line will be killed by default
+                + "       tabbed in hamarine\n"
+                + "}"
+        ).throwsBadSyntax("'pattern' can be used only when 'kill' specified as action or parameter.");
+    }
 
     @Test
     @DisplayName("snip:transform - unnokwn action throws BadSyntax")

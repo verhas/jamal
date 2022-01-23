@@ -76,6 +76,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
+.. <<snipTransform,`snip:transform`>>
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
 .. <<xmlFormat,`xmlFormat`>>
@@ -1599,9 +1600,178 @@ limiters.
 Setting the `width` to any non-positive value will remove the limit from the line length.
 You may use this to override a globally set `width` macro.
 
+[[snipTransform]]
+==== xxi.`snip:transform`
+
+
+The `snip:transform` macro integrates the functionality of the macros
+
+* `KillLines`
+* `SkipLines`
+* `ReplaceLines`
+* `TrimLines`
+* `Reflow`
+* `NumberLines`
+
+It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, and it can number the lines.
+The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
+The purpose of the macro is to provide a shorthand for the common use case of the other macros used together.
+
+The macro is configured with parameters in a similar way as the underlying macros.
+The parameters are the same as in those macros and they are used by the underlying macros the same way.
+There are two differences, however.
+
+1. Th `snip:transform` macro does not use any user defined macro or option as a parameter.
+
+2. There is an extra parameters named `action` (alias `actions`, plural) that lists the actions to perform.
+
+The names for the actions are the followings:
+
+* `kill`
+* `skip`
+* `replace`
+* `trim`
+* `reflow`
+* `number`
+
+If you have a block that you want simultaneously trim and then number the lines, you have to write
+
+[source]
+----
+{@snip:transform actions=trim,number
+         wuff
+        line
+     Mayak
+            Canoe
+}
+----
+
+which will result
+
+[source]
+----
+1.     wuff
+2.    line
+3. Mayak
+4.        Canoe
+----
+
+
+This is essentially the same as
+
+[source]
+----
+{#numberLines
+{@trimLines
+         wuff
+        line
+     Mayak
+            Canoe
+}}
+----
+
+eventually with the same result:
+
+[source]
+----
+1.     wuff
+2.    line
+3. Mayak
+4.        Canoe
+----
+
+
+The `snip:transform` takes all the actions in the order as they are specified and invokes the macros implementing them passing the parameters.
+It is not possible to invoke one action more than once.
+Any syntax allowing the separation of the parameters of one execution from another would be complex and probably hard to read.
+
+Some actions have parameters that are the same as the name of the action.
+These are `skip`, `kill` and `replace`.
+When one of these parameters is specified there may not be a need to specify the action separately.
+It is evident that
+
+[source]
+----
+{@snip:transform kill=A
+Apple
+Birnen
+Birds
+Sumatra
+}
+----
+
+will delete all lines that contain the uppercase letter `A` and will result:
+
+[source]
+----
+Birnen
+Birds
+Sumatra
+----
+
+
+On the other hand
+
+[source]
+----
+{@snip:transform pattern=A
+ ...
+}
+----
+
+does not work, even though the parameter `pattern` is the alias of `kill`.
+
+The following parameters will add the action implicitly to the list:
+
+* `kill` will add the action `kill`
+* `keep` will add the action `kill`
+* `skip` will add the action `skip`
+* `replace` will add the action `replace`
+
+If an action is already in the list (they are present in the parameter `actions`) they are not added again.
+Also, their position remains as specified in the parameter `actions`.
+When added, it is in the order as they are listed here in the documentation.
+The actual order of the parameters in the macro is irrelevant.
+When implicitly added `kill` will always precede `skip` and `replace`.
+Likewise `skip` will precede `replace`.
+
+A parameter other than these belonging to an action not listed in the `actions` parameter is an error.
+You cannot, for example, specify `width` without adding `reflow` to the actions as it is not evident what the meaning of `width` is without `reflow`.
+
+[NOTE]
+====
+The macro `snip:transform` is just a wrapper around the underlying macros.
+It first looks up the macros by the name and then invokes them according to the parameters.
+It is usually not interesting for the user of the macro.
+The underlying macros are implemented in the snippet package, just like `snip:transform` itself.
+
+Jamal, however, makes it possible to redefine built-in macros locally and globally via the `use` macro.
+If any of the underlying macros are redefined when the `snip:transform` is invoked, then the actual macro will be invoked.
+It also implies that the developers should implement these macros as compatible as the macro of the same name in the snippet package.
+They have to implement the `BlockConverter` interface, and their `convertTextBlock()` method should accept the same parameters as their snippet counterpart.
+====
+
+The parameters for the `snip:transform` are:
+
+* `action`, (alias `actions`) listing the actions to perform.
+* `kill`, (alias `pattern`) passed to `killLines`
+* `keep` passed to `killLines`
+* `format` passed to `NumberLines`
+* `start`  passed to `NumberLines`
+* `step` passed to `NumberLines`
+* `width` passed to `reflow`
+* `replace` passed to `replaceLines`
+* `detectNoChange` passed to `replaceLines`
+* `skip` passed to `skipLines`
+* `endSkip` passed to `skipLines`
+* `margin` passed to `trimLines`
+* `trimVertical` passed to `trimLines`
+* `verticalTrimOnly` passed to `trimLines`
+
+The meaning and the interpreation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
-==== xxi.`lineCount`
+==== xxii.`lineCount`
 
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
@@ -1622,7 +1792,7 @@ results
 
 
 [[listDir]]
-==== xxii.`listDir`
+==== xxiii.`listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -1782,7 +1952,7 @@ will result
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
-- SnipTransform.java: 8,667 bytes
+- SnipTransform.java: 14,199 bytes
 - FilesMacro.java: 4,791 bytes
 - Collect.java: 7,812 bytes
 - TrimLines.java: 4,179 bytes
@@ -1843,7 +2013,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xxiii.`xmlFormat`
+==== xxiv.`xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -1997,7 +2167,7 @@ will result
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[thinXml]]
-==== xxiv.`thinXml`
+==== xxv.`thinXml`
 
 This macro converts thin XML to normal XML.
 Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it works only for full XML files and not for XML fragments.
@@ -2049,7 +2219,7 @@ It is not formatted also and there is no leading ```<?xml version="1.0" encoding
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[date]]
-==== xxv.`date`
+==== xxvi.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -2065,12 +2235,12 @@ will result in the output
 
 [source]
 ----
-2022-01-22 23:22:47
+2022-01-23 18:25:15
 ----
 
 
 [[format]]
-==== xxvi.`format`
+==== xxvii.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -2121,7 +2291,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[case]]
-==== xxvii.`case:lower`, `case:upper`, ...
+==== xxviii.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -2134,7 +2304,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxviii.`file`
+==== xxix.`file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -2175,7 +2345,7 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xxix.`directory`
+==== xxx.`directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -2217,7 +2387,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxx.Java Macros
+==== xxxi.Java Macros
 
 
 [[java:class]]
@@ -2417,7 +2587,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxxi.String Macros
+==== xxxii.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -2602,7 +2772,7 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxxii.`snip:update`
+==== xxxiii.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
