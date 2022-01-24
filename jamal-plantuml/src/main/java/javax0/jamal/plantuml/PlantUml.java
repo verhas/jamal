@@ -7,9 +7,9 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Cache;
 import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.PlaceHolders;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
@@ -22,6 +22,12 @@ import java.net.MalformedURLException;
 import java.util.Map;
 
 public class PlantUml implements Macro, InnerScopeDependent {
+    private static class Trie {
+        static IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+                "$file"
+        );
+    }
+
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var root = Params.<String>holder("pu$folder", "folder").orElse("./");
@@ -49,7 +55,7 @@ public class PlantUml implements Macro, InnerScopeDependent {
             if (erred) {
                 throw new BadSyntax("There was an error processing diagram for '" + fileName + "' in PlantUml.");
             }
-            return PlaceHolders.with("$file", fileName).format(template.get());
+            return Trie.formatter.format(template.get(), fileName);
         } catch (Exception e) {
             throw new BadSyntax("PlantUml diagram '" + fileName + "'cannot be created.", e);
         }
@@ -132,8 +138,8 @@ public class PlantUml implements Macro, InnerScopeDependent {
         var umlText = in.toString();
         if (umlText.length() > 0 && umlText.charAt(0) != '@') {
             umlText = "@startuml\n" +
-                umlText +
-                "@enduml\n";
+                    umlText +
+                    "@enduml\n";
         }
         return umlText;
     }

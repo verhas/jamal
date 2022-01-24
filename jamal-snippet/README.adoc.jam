@@ -1602,7 +1602,7 @@ results
 
 [[listDir]]
 ==== {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=7f68a4d8%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=5a08f7ac%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
@@ -1727,7 +1727,7 @@ will result
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,199 bytes
-- FilesMacro.java: 4,883 bytes
+- FilesMacro.java: 5,196 bytes
 - Collect.java: 7,848 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,179 bytes
@@ -1744,7 +1744,7 @@ will result
 - KillLines.java: 2,019 bytes
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 10,174 bytes
-- ListDir.java: 5,321 bytes
+- ListDir.java: 5,583 bytes
 - XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,199 bytes
@@ -1753,7 +1753,7 @@ will result
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,260 bytes
 - XmlDocument.java: 5,656 bytes
-- Java.java: 9,275 bytes
+- Java.java: 10,404 bytes
 - ReplaceLines.java: 3,015 bytes
 - SkipLines.java: 2,544 bytes
 - SnipCheck.java: 5,619 bytes
@@ -1993,7 +1993,7 @@ These are:
 
 [[file]]
 ==== {%macroChapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=41a12a1a%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=228815ff%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2024,26 +2024,23 @@ When Jamal processes this file it will generate `README.adoc`.
 ----
 %}
 
-{%@define replace=|^.*?"(.*?)"|* `$1`!|!.*?//||%}\
-{%@define pattern=\)\.and\(%}\
 In the format you can use the following placeholders:
+{%@comment the two replaces are executed from left to right. The first one puts a ! after the `xxx` name, and the second one finds it.%}
 {%#snip:define fileMacroFormatPlaceholdersFormatted=
-{%#replaceLines
-{%#killLines
-{%@snip fileMacroFormatPlaceholders %}%}%}%}
+{%#snip:transform replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||"
+{%@snip fileMacroFormatPlaceholders %}%}%}
 
 {%@snip fileMacroFormatPlaceholdersFormatted
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
 * `$parent` the parent directory where the file is
 * `$simpleName` the name of the file without the path
-                ).and(
 * `$canonicalPath` the canonical path
 %}
 
 [[directory]]
 ==== {%macroChapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=b569430d%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=b8519137%}
 {%fileDirectory directory%}
 
 {%sample/
@@ -2062,22 +2059,20 @@ This file is in the directory `../jamal-snippet`.
 
 In the format you can use the following placeholders:
 {%#snip:define dirMacroFormatPlaceholdersFormatted=
-{%#replaceLines
-{%#killLines
-{%@snip dirMacroFormatPlaceholders %}%}%}%}
+{%#snip:transform replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||"
+{%@snip dirMacroFormatPlaceholders %}%}%}
 
 {%@snip dirMacroFormatPlaceholdersFormatted
 * `$name` gives the name of the directory as was specified on the macro
 * `$absolutePath` gives the name of the directory as was specified on the macro
 * `$parent` the parent directory
-                ).and(
 * `$canonicalPath` the canonical path
 %}
 
 
 [[Java]]
 ==== {%macroChapter%}Java Macros
-{%#snip:check file={%JAVA_DIR%}Java.java hash=3f795145%}
+{%#snip:check file={%JAVA_DIR%}Java.java hash=42188e24%}
 
 [[java:class]]
 ===== `java:class`
@@ -2117,11 +2112,11 @@ The placeholders that the macro handles are:
 {%#snip:define classFormatFormatted={%#replaceLines
 {%@snip classFormats%}%}%}
 {%@snip classFormatFormatted
-* `$simpleName` will be replaced by the result of calling `getSimpleName()`
-* `$name` will be replaced by the result of calling `getName()`
-* `$canonicalName` will be replaced by the result of calling `getCanonicalName()`
-* `$packageName` will be replaced by the result of calling `getPackageName()`
-* `$typeName` will be replaced by the result of calling `getTypeName()`
+"$simpleName",
+                    "$name",
+                    "$canonicalName",
+                    "$packageName",
+                    "$typeName"
 %}
 
 For example
@@ -2194,7 +2189,6 @@ of the field
 * `$packageName` will be replaced by the package where the method is
 * `$typeClass` will be replaced by the type of the field
 * `$modifiers` will be replaced by the modifiers list of the method
-                
 * `$value` will be replaced by the value of the field in case the field is both `static` and `final`
 %}
 

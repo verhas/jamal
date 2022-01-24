@@ -7,13 +7,13 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.PlaceHolders;
 
 import java.io.File;
 import java.nio.file.Paths;
 
+import static javax0.jamal.tools.IndexedPlaceHolders.value;
 import static javax0.jamal.tools.Params.holder;
 
 /**
@@ -25,12 +25,21 @@ public class FilesMacro {
      * Check that the directory exists, and it is a directory.
      */
     public static class Directory implements Macro, InnerScopeDependent {
-
+        private static class Trie {
+             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+                    // snippet dirMacroFormatPlaceholders
+                    "$name", // gives the name of the directory as was specified on the macro
+                    "$absolutePath",  // gives the name of the directory as was specified on the macro
+                    "$parent", // the parent directory
+                    "$canonicalPath" // the canonical path
+                    // end snippet
+            );
+        }
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var format = holder("directoryFormat","format").orElse("$name").asString();
+            final var format = holder("directoryFormat", "format").orElse("$name").asString();
             final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Params.using(processor).from(this).between("()").keys(format,root).parse(in);
+            Params.using(processor).from(this).between("()").keys(format, root).parse(in);
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
             final var dir = new File(dirName.length() > 0 ? dirName : ".");
@@ -42,20 +51,12 @@ public class FilesMacro {
             }
 
             try {
-                return PlaceHolders.with(
-                    // snippet dirMacroFormatPlaceholders
-                    "$name", name, // gives the name of the directory as was specified on the macro
-                    "$absolutePath", dir.getAbsolutePath(), // gives the name of the directory as was specified on the macro
-                    "$parent", dir.getParent() // the parent directory
-                ).and(
-                    "$canonicalPath", dir::getCanonicalPath // the canonical path
-                    //end snippet
-                ).format(format.get());
+                return Trie.formatter.format(format.get(), value(name), value(dir.getAbsolutePath()), value(dir.getParent()), value(dir::getCanonicalPath));
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + dirName
-                    + "' cannot be formatted using the given format '"
-                    + format.get() + "'", in.getPosition(), e);
+                        + "' cannot be formatted using the given format '"
+                        + format.get() + "'", in.getPosition(), e);
             }
         }
 
@@ -69,12 +70,23 @@ public class FilesMacro {
      * Check that the file exists, and it is a file.
      */
     public static class FileMacro implements Macro, InnerScopeDependent {
+        private static class Trie {
+            static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+                    // snippet fileMacroFormatPlaceholders
+                    "$name", // gives the name of the file as was specified on the macro
+                    "$absolutePath", // the absolute path to the file
+                    "$parent", // the parent directory where the file is
+                    "$simpleName",  // the name of the file without the path
+                    "$canonicalPath" // the canonical path
+                    // end snippet
+            );
+        }
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var format = holder("fileFormat","format").orElse("$name").asString();
+            final var format = holder("fileFormat", "format").orElse("$name").asString();
             final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Params.using(processor).from(this).between("()").keys(format,root).parse(in);
+            Params.using(processor).from(this).between("()").keys(format, root).parse(in);
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
             final var file = new File(fileName);
@@ -86,21 +98,12 @@ public class FilesMacro {
             }
 
             try {
-                return PlaceHolders.with(
-                    // snippet fileMacroFormatPlaceholders
-                    "$name", name, // gives the name of the file as was specified on the macro
-                    "$absolutePath", file.getAbsolutePath(), // the absolute path to the file
-                    "$parent", file.getParent(), // the parent directory where the file is
-                    "$simpleName", file.getName() // the name of the file without the path
-                ).and(
-                    "$canonicalPath", file::getCanonicalPath // the canonical path
-                    // end snippet
-                ).format(format.get());
+                return Trie.formatter.format(format.get(), value(name), value(file.getAbsolutePath()), value(file.getParent()), value(file::getName), value(file::getCanonicalPath));
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + fileName
-                    + "'cannot be formatted using the given format '"
-                    + format + "'", in.getPosition(), e);
+                        + "'cannot be formatted using the given format '"
+                        + format + "'", in.getPosition(), e);
             }
         }
 

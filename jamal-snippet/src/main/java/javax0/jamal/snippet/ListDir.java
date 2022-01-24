@@ -7,8 +7,8 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.PlaceHolders;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class ListDir implements Macro, InnerScopeDependent {
         final var isFollowSymlinks = holder("followSymlinks").asBoolean();
         final var countOnly = holder("countOnly").asBoolean();
         Params.using(processor).from(this).between("()")
-            .keys(format, maxDepth, isFollowSymlinks, separator, grep, glob, countOnly).parse(in);
+                .keys(format, maxDepth, isFollowSymlinks, separator, grep, glob, countOnly).parse(in);
 
         final FileVisitOption[] options;
         if (isFollowSymlinks.get()) {
@@ -59,9 +59,9 @@ public class ListDir implements Macro, InnerScopeDependent {
         try {
             final var fmt = format.get();
             final var stream = Files.walk(Paths.get(dirName), maxDepth.get(), options)
-                .filter(p -> grep(p, grepPattern))
-                .filter(p -> glob(p, globPattern))
-                .map(p -> format(p, fmt));
+                    .filter(p -> grep(p, grepPattern))
+                    .filter(p -> glob(p, globPattern))
+                    .map(p -> format(p, fmt));
             if (countOnly.is()) {
                 return "" + stream.count();
             } else {
@@ -82,45 +82,53 @@ public class ListDir implements Macro, InnerScopeDependent {
                 return true;
             }
             return pattern.matcher(Files.readString(p, StandardCharsets.UTF_8)).find();
-        } catch (IOException| UncheckedIOException e) {
+        } catch (IOException | UncheckedIOException e) {
             return false;
         }
+    }
+
+    private static class Trie {
+        final static IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+                // OTF will be replaced by "of the file"
+                // TITF will be replaced by "`true` if the file"
+                // FO will be replaced by "``false` otherwise"
+                // snippet listDirFormats
+                "$size",         // size OTF
+                "$time",         // modification time OTF
+                "$absolutePath", // absolute path OTF
+                "$name",         // name OTF
+                "$simpleName",   // simple name OTF
+                "$isDirectory",  // TITF is a directory, FO
+                "$isFile",       // TITF is a plain file, FO
+                "$isHidden",     // TITF is hidden, FO
+                "$canExecute",   // TITF can be executed, FO
+                "$canRead",      // TIFT can be read, FO
+                "$canWrite"      // TITF can be written, FO
+                // end snippet
+        );
     }
 
     private static String format(Path p, String format) {
         String size;
         try {
             size = "" + Files.size(p);
-        } catch (IOException|UncheckedIOException e) {
+        } catch (IOException | UncheckedIOException e) {
             size = "0";
         }
         String time;
         try {
             time = "" + Files.getLastModifiedTime(p);
-        } catch (IOException|UncheckedIOException e) {
+        } catch (IOException | UncheckedIOException e) {
             // snippet defaultTimeForListDir
             time = "1970-01-01T00:00:00Z";
             //end snippet
         }
         try {
-            return PlaceHolders.with(
-                // OTF will be replaced by "of the file"
-                // TITF will be replaced by "`true` if the file"
-                // FO will be replaced by "``false` otherwise"
-                // snippet listDirFormats
-                "$size", size, // size OTF
-                "$time", time, // modification time OTF
-                "$absolutePath", p.toAbsolutePath().toString(), // absolute path OTF
-                "$name", p.toString(), // name OTF
-                "$simpleName", p.toFile().getName(), // simple name OTF
-                "$isDirectory", "" + p.toFile().isDirectory(), // TITF is a directory, FO
-                "$isFile", "" + p.toFile().isFile(), // TITF is a plain file, FO
-                "$isHidden", "" + p.toFile().isHidden(), // TITF is hidden, FO
-                "$canExecute", "" + p.toFile().canExecute(), // TITF can be executed, FO
-                "$canRead", "" + p.toFile().canRead(), // TIFT can be read, FO
-                "$canWrite", "" + p.toFile().canWrite() //TITF can be written, FO
-                // end snippet
-            ).format(format);
+            return Trie.formatter.format(format, size, time, p.toAbsolutePath().toString(),
+                    p.toString(), p.toFile().getName(), "" + p.toFile().isDirectory(),
+                    "" + p.toFile().isFile(), "" + p.toFile().isHidden(),
+                    "" + p.toFile().canExecute(), "" + p.toFile().canRead(), "" + p.toFile().canWrite()
+            );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -2013,7 +2013,7 @@ will result
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,199 bytes
-- FilesMacro.java: 4,883 bytes
+- FilesMacro.java: 5,196 bytes
 - Collect.java: 7,848 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,179 bytes
@@ -2030,7 +2030,7 @@ will result
 - KillLines.java: 2,019 bytes
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 10,174 bytes
-- ListDir.java: 5,321 bytes
+- ListDir.java: 5,583 bytes
 - XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,199 bytes
@@ -2039,7 +2039,7 @@ will result
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,260 bytes
 - XmlDocument.java: 5,656 bytes
-- Java.java: 9,275 bytes
+- Java.java: 10,404 bytes
 - ReplaceLines.java: 3,015 bytes
 - SkipLines.java: 2,544 bytes
 - SnipCheck.java: 5,619 bytes
@@ -2297,7 +2297,7 @@ will result in the output
 
 [source]
 ----
-2022-01-24 09:50:29
+2022-01-24 18:51:24
 ----
 
 
@@ -2399,11 +2399,11 @@ When Jamal processes this file it will generate `README.adoc`.
 In the format you can use the following placeholders:
 
 
+
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
 * `$parent` the parent directory where the file is
 * `$simpleName` the name of the file without the path
-                ).and(
 * `$canonicalPath` the canonical path
 
 
@@ -2444,7 +2444,6 @@ In the format you can use the following placeholders:
 * `$name` gives the name of the directory as was specified on the macro
 * `$absolutePath` gives the name of the directory as was specified on the macro
 * `$parent` the parent directory
-                ).and(
 * `$canonicalPath` the canonical path
 
 
@@ -2487,11 +2486,11 @@ The format string can be any string with `$` prefixed placeholders.
 The placeholders that the macro handles are:
 
 
-* `$simpleName` will be replaced by the result of calling `getSimpleName()`
-* `$name` will be replaced by the result of calling `getName()`
-* `$canonicalName` will be replaced by the result of calling `getCanonicalName()`
-* `$packageName` will be replaced by the result of calling `getPackageName()`
-* `$typeName` will be replaced by the result of calling `getTypeName()`
+"$simpleName",
+                    "$name",
+                    "$canonicalName",
+                    "$packageName",
+                    "$typeName"
 
 
 For example
@@ -2565,7 +2564,6 @@ The placeholders that the macro handles are:
 * `$packageName` will be replaced by the package where the method is
 * `$typeClass` will be replaced by the type of the field
 * `$modifiers` will be replaced by the modifiers list of the method
-                
 * `$value` will be replaced by the value of the field in case the field is both `static` and `final`
 
 
