@@ -82,6 +82,8 @@ This way, it is easier to keep your documentation up to date.
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
+.. <<snipLine,`snip:line`>>
+.. <<snipFile,`snip:file`>>
 .. <<snipTransform,`snip:transform`>>
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
@@ -1381,6 +1383,53 @@ will have the same result as:
 Setting the `width` to any non-positive value will remove the limit from the line length.
 You may use this to override a globally set `width` macro.
 
+[[snipLine]]
+==== {%macroChapter%}`snip:line`
+
+The macro `snip:line` results in the starting line number of the snippet in the file where the snippet is defined.
+For example, if the snippet `hubbaba` was collected from a file with the `snippet hubbaba` on line 5, the macro will return 6.
+The returned number counts the lines at the start of the file with one, and it is the line, which is the first line of the snippet following the snippet signaling line.
+
+In this document, we use different snippets collected from the Java files of the snippet library.
+One of the snippets is named `collect_options`.
+It contains the lines that list the options for implementing the macro `snip:collect`.
+
+The snippet `collect_options` is defined in the file {%#file (format=`$simpleName`) {%@snip:file collect_options%}%} at the line {%@snip:line collect_options%}.
+
+You can find the previous sentence in the {%@file (format=`$simpleName`) README.adoc.jam%} file as:
+{%sample/
+{%@escape* ``The snippet `collect_options` is defined
+in the file {%#file (format=`$simpleName`) {%@snip:file collect_options%}%}
+at the line {%@snip:line collect_options%}.``%}
+%}
+
+You can use this macro to refer to a source code line or if you want to include some source code into your documentation with the actual positions as line numbering.
+The syntax of the macro is
+
+{%sample/
+{@snip:line snippet_name}
+%}
+
+{%@define SNIPLINE_NOCOMMENT=The text following the snippet id is ignored, reserved for future development.%}
+{%SNIPLINE_NOCOMMENT%}
+
+[[snipFile]]
+==== {%macroChapter%}`snip:file`
+
+The macro `snip:file` returns the file's name where the snippet is defined.
+The returned file name is a full absolute path.
+If you want to display only the name or the directory, you can use the macro <<file,`file`>> to format the output.
+It is recommended to use this macro together with the macro <<snipLine,`snip:line`>> described above.
+
+You can use this macro to refer to a source file.
+The syntax of the macro is
+
+{%sample/
+{@snip:file snippet_name}
+%}
+
+{%SNIPLINE_NOCOMMENT%}
+
 [[snipTransform]]
 ==== {%macroChapter%}`snip:transform`
 {%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=1b305c2c%}
@@ -1678,7 +1727,7 @@ will result
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,199 bytes
-- FilesMacro.java: 4,791 bytes
+- FilesMacro.java: 4,883 bytes
 - Collect.java: 7,848 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,179 bytes
@@ -1944,7 +1993,7 @@ These are:
 
 [[file]]
 ==== {%macroChapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=dd90a6a4%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=41a12a1a%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -1987,13 +2036,14 @@ In the format you can use the following placeholders:
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
 * `$parent` the parent directory where the file is
+* `$simpleName` the name of the file without the path
                 ).and(
 * `$canonicalPath` the canonical path
 %}
 
 [[directory]]
 ==== {%macroChapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=e64a38c0%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=b569430d%}
 {%fileDirectory directory%}
 
 {%sample/

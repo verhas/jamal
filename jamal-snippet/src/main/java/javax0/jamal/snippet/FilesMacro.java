@@ -90,7 +90,8 @@ public class FilesMacro {
                     // snippet fileMacroFormatPlaceholders
                     "$name", name, // gives the name of the file as was specified on the macro
                     "$absolutePath", file.getAbsolutePath(), // the absolute path to the file
-                    "$parent", file.getParent() // the parent directory where the file is
+                    "$parent", file.getParent(), // the parent directory where the file is
+                    "$simpleName", file.getName() // the name of the file without the path
                 ).and(
                     "$canonicalPath", file::getCanonicalPath // the canonical path
                     // end snippet

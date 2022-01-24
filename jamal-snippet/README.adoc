@@ -31,12 +31,10 @@ The original file, however, contains
 
 [source,xml]
 ----
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>{%VERSION%}</version>
+    <version>1.10.5-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -76,6 +74,8 @@ This way, it is easier to keep your documentation up to date.
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
 .. <<reflow,`reflow`>>
+.. <<snipLine,`snip:line`>>
+.. <<snipFile,`snip:file`>>
 .. <<snipTransform,`snip:transform`>>
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
@@ -1600,8 +1600,58 @@ limiters.
 Setting the `width` to any non-positive value will remove the limit from the line length.
 You may use this to override a globally set `width` macro.
 
+[[snipLine]]
+==== xxi.`snip:line`
+
+The macro `snip:line` results in the starting line number of the snippet in the file where the snippet is defined.
+For example, if the snippet `hubbaba` was collected from a file with the `snippet hubbaba` on line 5, the macro will return 6.
+The returned number counts the lines at the start of the file with one, and it is the line, which is the first line of the snippet following the snippet signaling line.
+
+In this document, we use different snippets collected from the Java files of the snippet library.
+One of the snippets is named `collect_options`.
+It contains the lines that list the options for implementing the macro `snip:collect`.
+
+The snippet `collect_options` is defined in the file `Collect.java` at the line 42.
+
+You can find the previous sentence in the `README.adoc.jam` file as:
+[source]
+----
+The snippet `collect_options` is defined
+in the file {%#file (format=`$simpleName`) {%@snip:file collect_options%}%}
+at the line {%@snip:line collect_options%}.
+----
+
+You can use this macro to refer to a source code line or if you want to include some source code into your documentation with the actual positions as line numbering.
+The syntax of the macro is
+
+[source]
+----
+{@snip:line snippet_name}
+----
+
+
+The text following the snippet id is ignored, reserved for future development.
+
+[[snipFile]]
+==== xxii.`snip:file`
+
+The macro `snip:file` returns the file's name where the snippet is defined.
+The returned file name is a full absolute path.
+If you want to display only the name or the directory, you can use the macro <<file,`file`>> to format the output.
+It is recommended to use this macro together with the macro <<snipLine,`snip:line`>> described above.
+
+You can use this macro to refer to a source file.
+The syntax of the macro is
+
+[source]
+----
+{@snip:file snippet_name}
+----
+
+The text following the snippet id is ignored, reserved for future development.
+
 [[snipTransform]]
-==== xxi.`snip:transform`
+==== xxiii.`snip:transform`
 
 
 The `snip:transform` macro integrates the functionality of the macros
@@ -1779,7 +1829,7 @@ The parameters for the `snip:transform` are:
 The meaning and the interpreation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
-==== xxii.`lineCount`
+==== xxiv.`lineCount`
 
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
@@ -1800,7 +1850,7 @@ results
 
 
 [[listDir]]
-==== xxiii.`listDir`
+==== xxv.`listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -1963,7 +2013,7 @@ will result
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,199 bytes
-- FilesMacro.java: 4,791 bytes
+- FilesMacro.java: 4,883 bytes
 - Collect.java: 7,848 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,179 bytes
@@ -2025,7 +2075,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xxiv.`xmlFormat`
+==== xxvi.`xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -2179,7 +2229,7 @@ will result
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[thinXml]]
-==== xxv.`thinXml`
+==== xxvii.`thinXml`
 
 This macro converts thin XML to normal XML.
 Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it works only for full XML files and not for XML fragments.
@@ -2231,7 +2281,7 @@ It is not formatted also and there is no leading ```<?xml version="1.0" encoding
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[date]]
-==== xxvi.`date`
+==== xxviii.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -2247,12 +2297,12 @@ will result in the output
 
 [source]
 ----
-2022-01-24 02:02:36
+2022-01-24 09:50:29
 ----
 
 
 [[format]]
-==== xxvii.`format`
+==== xxix.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -2303,7 +2353,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[case]]
-==== xxviii.`case:lower`, `case:upper`, ...
+==== xxx.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -2316,7 +2366,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxix.`file`
+==== xxxi.`file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -2352,12 +2402,13 @@ In the format you can use the following placeholders:
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
 * `$parent` the parent directory where the file is
+* `$simpleName` the name of the file without the path
                 ).and(
 * `$canonicalPath` the canonical path
 
 
 [[directory]]
-==== xxx.`directory`
+==== xxxii.`directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -2399,7 +2450,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxxi.Java Macros
+==== xxxiii.Java Macros
 
 
 [[java:class]]
@@ -2599,7 +2650,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxxii.String Macros
+==== xxxiv.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -2784,7 +2835,7 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxxiii.`snip:update`
+==== xxxv.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

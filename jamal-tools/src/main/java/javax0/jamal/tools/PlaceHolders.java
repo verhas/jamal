@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * Replace the placeholders to the actual values in strings. The placeholders are searched from left to right in the
- * string and are replaced one after the other. The string that gets into the plae of the placeholder will not be
+ * string and are replaced one after the other. The string that gets into the place of the placeholder will not be
  * searched for additional placeholders.
  * <p>
  * Placeholders are specified as strings and the replacement can be specified either as  string or as a string supplier.
