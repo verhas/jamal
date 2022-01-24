@@ -158,13 +158,25 @@ public class SnippetStore implements Identified {
     }
 
     /**
-     * Get the identified snippet
+     * Get the identified snippet's text.
      *
      * @param id the identifier of the snippet needed
      * @return the snippet
      * @throws BadSyntax when a snippet is not defined
      */
     public String snippet(final String id) throws BadSyntax {
+        return fetchSnippet(id).text;
+    }
+
+    public int line(final String id) throws BadSyntax {
+        return fetchSnippet(id).pos.line;
+    }
+
+    public String file(final String id) throws BadSyntax {
+        return fetchSnippet(id).pos.file;
+    }
+
+    public Snippet fetchSnippet(final String id) throws BadSyntax {
         if (!snippets.containsKey(id)) {
             throw new BadSyntax("Snippet '" + id + "' is not defined");
         }
@@ -172,7 +184,7 @@ public class SnippetStore implements Identified {
         if (snippet.exception != null) {
             throw new BadSyntax("There was an exception during the collection of the snippet '" + id + "'", snippet.exception);
         }
-        return snippet.text;
+        return snippet;
     }
 
     /**

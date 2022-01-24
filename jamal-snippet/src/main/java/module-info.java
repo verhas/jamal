@@ -19,6 +19,8 @@ import javax0.jamal.snippet.ReplaceLines;
 import javax0.jamal.snippet.SkipLines;
 import javax0.jamal.snippet.Snip;
 import javax0.jamal.snippet.SnipCheck;
+import javax0.jamal.snippet.SnipFile;
+import javax0.jamal.snippet.SnipLine;
 import javax0.jamal.snippet.SnipList;
 import javax0.jamal.snippet.SnipLoad;
 import javax0.jamal.snippet.SnipProperties;
@@ -91,5 +93,7 @@ module jamal.snippet {
             StartsWith,
             Reverse,
             EndsWith,
+            SnipLine,
+            SnipFile,
             SnipTransform;
 }

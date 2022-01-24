@@ -74,7 +74,7 @@ public class Collect implements Macro, InnerScopeDependent {
 
         // end snippet
         Params.using(processor).from(this)
-            .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName).parse(in);
+                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
         if (store.testAndSet(setName.get())) {
@@ -87,10 +87,10 @@ public class Collect implements Macro, InnerScopeDependent {
         } else {
             try {
                 final var selectedFiles = files(fn, scanDepth.get())
-                    .map(p -> p.toAbsolutePath().toString())
-                    .filter(include.get())
-                    .filter(exclude.get())
-                    .collect(Collectors.toSet());
+                        .map(p -> p.toAbsolutePath().toString())
+                        .filter(include.get())
+                        .filter(exclude.get())
+                        .collect(Collectors.toSet());
                 for (final var file : selectedFiles) {
                     harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), liner.get(), stop.get());
                 }
@@ -131,7 +131,7 @@ public class Collect implements Macro, InnerScopeDependent {
                 case IN:
                     final var stopMatcher = stop.matcher(line);
                     if (stopMatcher.find()) {
-                        store.snippet(id, text.toString(), new Position(file, startLine));
+                        store.snippet(id, text.toString(), new Position(file, startLine + 1));
                         state = State.OUT;
                         break;
                     }
@@ -141,7 +141,7 @@ public class Collect implements Macro, InnerScopeDependent {
         }
         if (state == State.IN) {
             store.snippet(id, "", new Position(file, startLine),
-                new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
+                    new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
         }
     }
 
@@ -155,8 +155,8 @@ public class Collect implements Macro, InnerScopeDependent {
      */
     private static Stream<Path> files(final String dir, int scanDepth) throws IOException {
         return Files.find(Paths.get(dir),
-            scanDepth,
-            (filePath, fileAttr) -> fileAttr.isRegularFile()
+                scanDepth,
+                (filePath, fileAttr) -> fileAttr.isRegularFile()
         );
     }
 }

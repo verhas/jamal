@@ -123,7 +123,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=8859d830%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=0f20e613%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -1403,8 +1403,10 @@ The parameters are the same as in those macros and they are used by the underlyi
 There are two differences, however.
 
 1. Th `snip:transform` macro does not use any user defined macro or option as a parameter.
+You cannot, for example, `{@define replace=/foo/bar/}` and hope that `snip:transform` will replace `foo` with `bar`.
+You have to use the parameter `replace` as a macro option.
 
-2. There is an extra parameters named `action` (alias `actions`, plural) that lists the actions to perform.
+2. There is an extra parameter named `action` (alias `actions`, plural) that lists the actions to perform.
 
 The names for the actions are the followings:
 
@@ -1494,6 +1496,12 @@ Likewise `skip` will precede `replace`.
 
 A parameter other than these belonging to an action not listed in the `actions` parameter is an error.
 You cannot, for example, specify `width` without adding `reflow` to the actions as it is not evident what the meaning of `width` is without `reflow`.
+
+You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get addedd implicitly.
+For example, you want to kill a few lines and also number the lines.
+If you do not list the action `kill` then it will be executed after the numbering.
+When the lines are deleted the numbering will have gaps.
+It may be your intention, but usually it is not.
 
 [NOTE]
 ====
@@ -1661,7 +1669,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,280 bytes
+- snippet: 1,344 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,309 bytes
 - Case.java: 2,273 bytes
@@ -1671,11 +1679,13 @@ will result
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,199 bytes
 - FilesMacro.java: 4,791 bytes
-- Collect.java: 7,812 bytes
+- Collect.java: 7,848 bytes
+- SnipFile.java: 680 bytes
 - TrimLines.java: 4,179 bytes
 - ThinXml.java: 8,678 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
+- SnipLine.java: 691 bytes
 - SnipXml.java: 1,489 bytes
 - ThinXmlMacro.java: 585 bytes
 - BlockConverter.java: 1,715 bytes
@@ -1684,7 +1694,7 @@ will result
 - Clear.java: 434 bytes
 - KillLines.java: 2,019 bytes
 - SnipLoad.java: 3,530 bytes
-- SnippetStore.java: 9,845 bytes
+- SnippetStore.java: 10,174 bytes
 - ListDir.java: 5,321 bytes
 - XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes

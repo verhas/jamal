@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 public class TestSnippets {
 
+    final static String RESOURCE_ROOT = new File(TestSnippets.class.getClassLoader().getResource("javax0/jamal/snippet/test3.jam").getFile()).getParent();
+
     @Test
     @DisplayName("Finds all files and collects all snippets and inserts them into the output")
     void testSimpleCase() throws Exception {
@@ -75,8 +77,6 @@ public class TestSnippets {
                 "Snippet 'second_file_first$snippet' is not defined\n" +
                 "and this is the end");
     }
-
-    final static String RESOURCE_ROOT = new File(TestSnippets.class.getClassLoader().getResource("javax0/jamal/snippet/test3.jam").getFile()).getParent();
 
     @Test
     @DisplayName("Finds files that does not match the 'exclude' and collects all snippets and inserts them into the output")
