@@ -45,6 +45,18 @@ public class SnipSave implements Macro, InnerScopeDependent {
         if (!"XML".equals(format.get())) {
             throw new BadSyntax("The only supported format is XML");
         }
+        saveXML(processor, ref, idRegex, fnRegex, textRegex, output, tab);
+        return "";
+
+    }
+
+    private void saveXML(final Processor processor,
+                         final String ref,
+                         final Params.Param<String> idRegex,
+                         final Params.Param<String> fnRegex,
+                         final Params.Param<String> textRegex,
+                         final Params.Param<String> output,
+                         final Params.Param<Integer> tab) throws BadSyntax {
         try {
             final var documentFactory = DocumentBuilderFactory.newInstance();
             final var documentBuilder = documentFactory.newDocumentBuilder();
@@ -62,28 +74,26 @@ public class SnipSave implements Macro, InnerScopeDependent {
 
             final var store = SnippetStore.getInstance(processor);
             store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())
-                .filter(snip -> snip.exception == null)
-                .forEach(snip -> {
-                    final var snippet = document.createElement(SNIPPET);
-                    snippet.setAttribute(ID, snip.id);
-                    snippet.setAttribute(FILE, snip.pos.file);
-                    snippet.setAttribute(LINE, snip.pos.line + "");
-                    snippet.setAttribute(COLUMN, snip.pos.column + "");
-                    snippet.setAttribute(HASH, SnipCheck.doted(HexDumper.encode(SHA256.digest(snip.text))));
-                    final var text = document.createCDATASection(snip.text);
-                    snippet.appendChild(text);
-                    root.appendChild(snippet);
-                });
+                    .filter(snip -> snip.exception == null)
+                    .forEach(snip -> {
+                        final var snippet = document.createElement(SNIPPET);
+                        snippet.setAttribute(ID, snip.id);
+                        snippet.setAttribute(FILE, snip.pos.file);
+                        snippet.setAttribute(LINE, snip.pos.line + "");
+                        snippet.setAttribute(COLUMN, snip.pos.column + "");
+                        snippet.setAttribute(HASH, SnipCheck.doted(HexDumper.encode(SHA256.digest(snip.text))));
+                        final var text = document.createCDATASection(snip.text);
+                        snippet.appendChild(text);
+                        root.appendChild(snippet);
+                    });
             final var dump = XmlDocument.formatDocument(document, "" + tab.get());
             try (final var o = new FileOutputStream(FileTools.absolute(ref, output.get()))) {
                 o.write(dump.getBytes(StandardCharsets.UTF_8));
             }
-            return "";
         } catch (
-            ParserConfigurationException | TransformerException | IOException e) {
+                ParserConfigurationException | TransformerException | IOException e) {
             throw new BadSyntax("Failed to create XML document", e);
         }
-
     }
 
     @Override

@@ -8,6 +8,7 @@
 {%@define alias(x)=(can be aliased as `x`)%}
 
 Snippet handling macros help you to include information from program source code into the documentation automatically.
+This macro package also includes some XML handling, string, and text formatting macros, which are usually used together with snippets.
 
 When you document an application, there is a lot of information that changes by changing the source code.
 These changes have to be followed in the documentation.
@@ -42,11 +43,11 @@ The original file, however, contains
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>{{%@ident%}%VERSION%{%@ident%}}</version>
+    <version>{%@escape* ``{%VERSION%}``%}</version>
 </dependency>
 ----
 
-The Jamal Snippet macros help you automate to insert actual values and code fragments from
+The Jamal Snippet macros help you automate to insert actual, and transformed values, text fragments from
 
 * any source code
 * XML file
@@ -114,7 +115,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 </dependency>
 ----
 
-The macro classes are listed in the `provides` directive in the `module-info.java`; therefore, they are available for the Jama source code.
+The macro classes are listed in the `provides` directive in the `module-info.java`; therefore, they are available for the Jamal processor when the JAR file is on the path (class or module).
 There is no need to invoke the `use` command to get access to these macros.
 
 [[macros]]
@@ -129,6 +130,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
+{%parameterized%}
 The syntax of the macro is
 
 [source]
@@ -519,19 +521,17 @@ In this case, you can add
 
 [source,java]
 ----
-// snippet snippet_id
+// snipline snippet_id
 ...
-// end snippet
 ----
 
-lines before and after the line defining the constant, and add a regular expression with one capturing group.
+line before the one defining the constant, and add a regular expression with one capturing group.
 For example, you can have
 
 [source,java]
 ----
-// snippet defaultShellName
+// snipline defaultShellName
 public static final String DEFAULT_RUBY_SHELL_NAME = ":rubyShell";
-// end snippet
 ----
 
 and the Jamal code
@@ -550,7 +550,7 @@ This regex has to have at least one capturing group.
 The macro will return the string captured by the first group.
 The characters that follow the last `/` character are ignored, and eventually can not contain more `/` characters.
 
-If the regular expression is not found in the first line of the snippet, or there is no capturing group, then the first line itself will result from the macro.
+If the regular expression is not found in the first line of the snippet, or there is no capturing group, then the line itself will result from the macro.
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
@@ -693,6 +693,8 @@ When you are finished with the adhoc changing, however, you have to update the d
 ==== {%macroChapter%}`snip:list`
 {%#snip:check file={%JAVA_DIR%}SnipList.java hash=4a56d72f%}
 This macro lists the defined snippets.
+{%parameterized%}
+
 The list is represented as comma-delimited, which contains the names of the snippets.
 
 There are four parameters the macro handles; all are optional:
@@ -724,9 +726,10 @@ If all the parameters are missing, then the macro will list all the snippet name
 
 [[snipSave]]
 ==== {%macroChapter%}`snip:save`
-{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=129dc311%}
+{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=983d5378.1ac8f71a%}
 This macro saves all the collected snippets to a file.
-The file's name must be specified by the parameter `output`.
+{%parameterized%}
+The file name must be specified by the parameter `output`.
 The general syntax of the macro is
 
 [source,text]
@@ -735,20 +738,19 @@ The general syntax of the macro is
 ----
 
 The usable options are the following:
+{%@define REGEXTO=regular expression to match%}
+* `name` {%alias id%} {%REGEXTO%} the name of the snippet
 
-* `name` {%alias id%} for the name of the snippet
+* `file` {%alias fileName%} {%REGEXTO%} the file name of the snippet
 
-* `file` {%alias fileName%} for the file name of the snippet
-
-* `text` {%alias contains%} for the content of the snippet
+* `text` {%alias contains%} {%REGEXTO%} the content of the snippet
 
 These parameters are interpreted as regular expressions.
 If there is any missing or empty string, the parameter is not considered.
 If any of them is specified, the macro will save only those snippets that match the expression.
 
 * `output` should specify the name of the output file.
-The default value is an empty string, which eventually leads to an error.
-This parameter has to be specified.
+It is a mandatory parameter.
 
 * `format` can specify the format of the output file.
 The default value is `XML`.
@@ -757,103 +759,104 @@ This parameter is present for future compatibility and to provide readability if
 
 * `tab` {%alias tabSize%} can specify the number of spaces to use for indentation.
 The default value is 4.
+{%!@for $X in (NS,SNIPPETS,SNIPPET,TIME_STAMP,DATE_TIME,ID,FILE,LINE,COLUMN,HASH)=
+{%#define saveLoad:$X={%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#$X%}%}%}
 
-The saved XML file will use the namespace {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#NS%}.
-The top level element is {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%}.
+The saved XML file will use the namespace {%saveLoad:NS%}.
+The top level element is {%saveLoad:SNIPPETS%}.
 
-The {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%} tag has the following attributes:
+The {%saveLoad:SNIPPETS%} tag has the following attributes:
 
-* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#TIME_STAMP%} is the time stamp {%@define WHEN=when the snippets were saved.%}{%WHEN%}
+* {%saveLoad:TIME_STAMP%} is the time stamp {%@define WHEN=when the snippets were saved.%}{%WHEN%}
 
-* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#DATE_TIME%} the date and time {%WHEN%}
+* {%saveLoad:DATE_TIME%} the date and time {%WHEN%}
 
 The timestamp and the date/time values reflect the same value.
-The timestamp is present, so it is easier to use the value by programs.
-At the same time, it is more human-friendly to have a date value.
+Programs reading the XML can use the timestamp value.
+The human-readable date-time value is for the human reader.
 Currently, none of these values are used by Jamal.
 
-The elements below the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%} tag are {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tags.
-Every {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tag has the following attributes:
+The elements below the {%saveLoad:SNIPPETS%} tag are {%saveLoad:SNIPPET%} tags.
+Every {%saveLoad:SNIPPET%} tag has the following attributes:
 
-* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#ID%} id the identifier of the snippet.
+* {%saveLoad:ID%} id the identifier of the snippet.
 When this XML is loaded, <<snipLoad,`snip:load`>> will use this identifier to load the snippet.
 
-* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#FILE%} the file the snippet was defined in.
-When this XML has loaded, this file will be stored so that the snippet will look like one loaded from this file.
+* {%saveLoad:FILE%} the file the snippet was defined in.
+When this XML has loaded, this file name will be restored so that the snippet will look like one loaded from this file.
 
-* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#LINE%} is the line number in the file where the snippet starts.
-When this XML is loaded, this line number will be stored so that the snippet will look like one loaded from this line from the specified file.
+* {%saveLoad:LINE%} is the line number in the file where the snippet starts.
+When this XML is loaded, this line number will be restored so that the snippet will look like one loaded from this line from the specified file.
 
-* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#COLUMN%} is the column where the snippet was loaded from.
+* {%saveLoad:COLUMN%} is the column where Jamal initially loaded the snippet from.
 This value is usually `1` since snippets are multi-lined strings and do not contain fractional lines.
-When this XML is loaded, the snippet will look like one loaded from this column from the specified line.
+The snippet will look like one loaded from this column from the specified line when this XML is loaded.
 
-* {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#HASH%} contains the hash value of the snippet.
+* {%saveLoad:HASH%} contains the hash value of the snippet.
 This value is calculated precisely as the hash value in the <<snip_check,`snip:check`>> macro.
 When the <<snipLoad,`snip:load`>> macro reads the XML file, it compares the hash value calculated from the snippet's text with the hash value.
 It is an error if the hash values do not match.
-In that case, the snippet is loading terminates, and no more snippets are loaded from the XML file.
+In that case, the snippet loading terminates, and no more snippets are loaded from the XML file.
 The snippets already loaded will stay put.
 Note, however, that you are allowed to delete the hash attribute from the XML file using an editor of your choice.
 In that case, no check is performed.
 
-The text of the snippet is the content of the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tag.
+The text of the snippet is the content of the {%saveLoad:SNIPPET%} tag.
 It is saved as a `CDATA` section(s).
 
 [[snipLoad]]
 ==== {%macroChapter%}`snip:load`
 {%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=cd86a711%}
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
+{%parameterized%}
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
 
 [source,text]
 ----
-{@snip:save options}
+{@snip:load options}
 ----
 
 The usable options are the following:
 
-* `name` {%alias id%} for the name of the snippet
+* `name` {%alias id%} {%REGEXTO%} the name of the snippet
 
-* `file` {%alias fileName%} for the file name of the snippet
+* `file` {%alias fileName%} {%REGEXTO%} the file name of the snippet
 
-* `text` {%alias contains%} for the content of the snippet
+* `text` {%alias contains%} {%REGEXTO%} the content of the snippet
 
 These parameters are interpreted as regular expressions.
-If there is any missing or empty string, then the parameter is not considered.
+If there is any missing or empty string, the parameter is not considered.
 If any of them is specified, the macro will load only those snippets that match the expression.
 
 * `input` should specify the name of the input file.
-The default value is an empty string, which eventually leads to an error.
-This parameter has to be specified.
+It is a mandatory parameter.
 
-* `format` can specify the format of the output file.
+* `format` can specify the format of the input file.
 The default value is `XML`.
 The available formats are `XML` and nothing else.
-This parameter is present for future compatibility and to provide readability if the command has to specify that the output is XML.
+This parameter is present for future compatibility and to provide readability if the command has to specify that the input is XML formatted.
 
-The format of th XML file has to be the same as the one used by the <<snipSave,`snip:save`>> macro.
-It has to use the same name space, and tags.
-The content of snippets must be in CDATA section(s).
+The XML file format has to be the same as the one used by the <<snipSave,`snip:save`>> macro.
+It has to use the same namespace and tags.
+The content of snippets must be in a CDATA section(s).
 
-The {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#TIME_STAMP%}, and
-{%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#DATE_TIME%} attributes of the tag
-{%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPETS%} may be missing and are ignored during reading.
-The attributes of the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#SNIPPET%} tags are mandatory except the
-{%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#HASH%} attribute.
-If the {%@java:field (format=`$value`) javax0.jamal.snippet.SnipSave#HASH%} attribute is present its value will be checked against the content of the snippet.
-This guarantees the snippet integrity.
-If the tag is missing the check is skipped.
+The {%saveLoad:TIME_STAMP%}, and {%saveLoad:DATE_TIME%} attributes of the tag {%saveLoad:SNIPPETS%} may be missing and are ignored during reading.
+The attributes of the {%saveLoad:SNIPPET%} tags are mandatory except the {%saveLoad:HASH%} attribute.
+If the {%saveLoad:HASH%} attribute is present, the macro will check its value against the content of the snippet.
+It guarantees the snippet integrity.
+If the tag is missing, the check is skipped.
 
 Any tag can have any extra attributes.
-If you want to change something in the XML file and edit some snippet code temporarily you can rename the tag to `_hash` for example.
-
+Extra attributes are ignored.
+If you want to change something in the XML file and edit some snippet code temporarily, you can rename the tag {%saveLoad:HASH%} to `_hash`, for example.
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
 {%#snip:check file={%JAVA_DIR%}TrimLines.java hash=4bb28494%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
+{%parameterized%}
+
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
 It is the case when the fragment comes from a code part somewhere in the middle of a tabulated structure.
 This macro can remove the extra spaces from the start of the line keeping the relative tabulation of the lines.
@@ -924,11 +927,13 @@ will result
 ==== {%macroChapter%}`numberLines`
 {%#snip:check file={%JAVA_DIR%}NumberLines.java hash=640fdfce%}
 This macro can put numbers in front of the lines, sequentially numbering them.
+{%parameterized%}
+
 The syntax of the macro is
 
 [source]
 ----
-{@numberLines
+{@numberLines options
      ..
      ..
      ..
@@ -1049,6 +1054,8 @@ In this case only the comment lines remained that start with `//` at the start o
 ==== {%macroChapter%}`skipLines`
 {%#snip:check file={%JAVA_DIR%}SkipLines.java hash=563d996a%}
 You can use this macro to skip lines from the snippet.
+{%parameterized%}
+
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
 The macro uses two regular expressions, named `skip` and `endSkip`.
 When a line matches the line `skip`, the line and the following lines are deleted from the output until a matching `endSkip`.
@@ -1153,7 +1160,6 @@ but this time, the replace used regular expression substitution.
 ==== {%macroChapter%}`replaceLines`
 {%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=401ba5d1%}
 This macro replaces strings in the input.
-
 {%parameterized%}
 
 It works similarly to the macro <<replace,`replace`>>.
@@ -1300,6 +1306,8 @@ In this case we used the word `last` as an argument to the counter macro `c`, wh
 ==== {%macroChapter%}`reflow`
 {%#snip:check file={%JAVA_DIR%}Reflow.java hash=efef6ad2%}
 This macro reflows the content.
+{%parameterized%}
+
 The default behavior is to remove all single new-line characters replacing them with spaces.
 That way, the lines will extend without wrapping around, and double newlines will separate the paragraphs.
 
@@ -1444,6 +1452,9 @@ The `snip:transform` macro integrates the functionality of the macros
 * `NumberLines`
 
 It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, and it can number the lines.
+
+{%parameterized%}
+
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
 The purpose of the macro is to provide a shorthand for the common use case of the other macros used together.
 
@@ -1582,7 +1593,7 @@ The parameters for the `snip:transform` are:
 * `trimVertical` passed to `trimLines`
 * `verticalTrimOnly` passed to `trimLines`
 
-The meaning and the interpreation of the parameters is the same as for the underlying macros and documented there.
+The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
 ==== {%macroChapter%}`lineCount`
@@ -1720,7 +1731,7 @@ will result
 - jamal: 96 bytes
 - snippet: 1,344 bytes
 - Snip.java: 2,302 bytes
-- SnipSave.java: 4,309 bytes
+- SnipSave.java: 4,856 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,763 bytes
 - DateMacro.java: 613 bytes
