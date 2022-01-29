@@ -9,7 +9,7 @@ import static javax0.jamal.api.SpecialCharacters.QUERY;
 import static javax0.jamal.api.SpecialCharacters.REPORT_ERRMES;
 
 /**
- * Get the value of an environment variable.
+ * Get the value of an environment variable. For example,
  *
  * <pre>{@code
  * {@env JAVA_HOME}
