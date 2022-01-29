@@ -971,6 +971,11 @@ If you want to change something in the XML file and edit some snippet code tempo
 ==== xiii.`trimLines`
 
 This macro can cut off the unneeded spaces from the start and end of the lines.
+
+The first line following the macro identifier until the end of the line may contain parameters.
+These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
+
+
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
 It is the case when the fragment comes from a code part somewhere in the middle of a tabulated structure.
 This macro can remove the extra spaces from the start of the line keeping the relative tabulation of the lines.
@@ -1060,11 +1065,16 @@ c
 ==== xiv.`numberLines`
 
 This macro can put numbers in front of the lines, sequentially numbering them.
+
+The first line following the macro identifier until the end of the line may contain parameters.
+These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
+
+
 The syntax of the macro is
 
 [source]
 ----
-{@numberLines
+{@numberLines options
      ..
      ..
      ..
@@ -1200,6 +1210,11 @@ In this case only the comment lines remained that start with `//` at the start o
 ==== xvi.`skipLines`
 
 You can use this macro to skip lines from the snippet.
+
+The first line following the macro identifier until the end of the line may contain parameters.
+These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
+
+
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
 The macro uses two regular expressions, named `skip` and `endSkip`.
 When a line matches the line `skip`, the line and the following lines are deleted from the output until a matching `endSkip`.
@@ -1301,7 +1316,6 @@ but this time, the replace used regular expression substitution.
 ==== xviii.`replaceLines`
 
 This macro replaces strings in the input.
-
 
 The first line following the macro identifier until the end of the line may contain parameters.
 These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
@@ -1465,6 +1479,11 @@ In this case we used the word `last` as an argument to the counter macro `c`, wh
 ==== xx.`reflow`
 
 This macro reflows the content.
+
+The first line following the macro identifier until the end of the line may contain parameters.
+These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
+
+
 The default behavior is to remove all single new-line characters replacing them with spaces.
 That way, the lines will extend without wrapping around, and double newlines will separate the paragraphs.
 
@@ -1686,6 +1705,12 @@ The `snip:transform` macro integrates the functionality of the macros
 * `NumberLines`
 
 It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, and it can number the lines.
+
+
+The first line following the macro identifier until the end of the line may contain parameters.
+These parameters are parsed using the Standard Parameter Parsing as defined in <<../PARAMS.adoc,PARAMS>>.
+
+
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
 The purpose of the macro is to provide a shorthand for the common use case of the other macros used together.
 
@@ -1848,7 +1873,7 @@ The parameters for the `snip:transform` are:
 * `trimVertical` passed to `trimLines`
 * `verticalTrimOnly` passed to `trimLines`
 
-The meaning and the interpreation of the parameters is the same as for the underlying macros and documented there.
+The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
 ==== xxiv.`lineCount`
@@ -2319,7 +2344,7 @@ will result in the output
 
 [source]
 ----
-2022-01-25 21:43:11
+2022-01-29 20:42:35
 ----
 
 
