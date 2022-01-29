@@ -1,0 +1,25 @@
+A macro can result an ordinary user defined macro:
+  Input: "{@define a=value of a}{@macro a}"
+  Output: "value of a"
+
+A macro can result an ordinary user defined macro locally:
+  Input: "{@define a=yayy}{#ident {@define a=value of a}{@macro a}}"
+  Output: "value of a"
+
+A macro can result an ordinary user defined macro globally:
+  Input: "{@define a=yayy}{#ident {@define a=value of a}{@macro [global]a}}"
+  Output: "yayy"
+
+A macro can result an ordinary user defined macro explicitly defined a user defined:
+  Input: "{@define a=value of a}{@macro [type=userdefined]a}"
+  Output: "value of a"
+
+A macro can result an ordinary user defined macro locally explicitly defined a user defined:
+  Input: "{@define a=yayy}{#ident {@define a=value of a}{@macro [type=user-defined]a}}"
+  Output: "value of a"
+
+A macro can result an ordinary user defined macro globally explicitly defined a user defined:
+  Input: "{@define a=yayy}{#ident {@define a=value of a}{@macro [global type=\"user defined\"]a}}"
+  Output: "yayy"
+
+

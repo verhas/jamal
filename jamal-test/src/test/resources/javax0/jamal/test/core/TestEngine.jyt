@@ -225,7 +225,7 @@
      "{defined}" is "{defined}"
      "Verbatim and ! cannot be used together on a user defined macro." is error message
      "{@verbatim macro}" is "{@verbatim macro}"
-     "User defined macro '{`macro ...' is not defined. Did you mean 'macro'?" is error message because `macro is not defined
+     "User defined macro '{`macro ...' is not defined. Did you mean 'macro', '@macro'?" is error message because `macro is not defined
      "" is empty string
      "false" is "false" because it failed
      "true" is "true" because nothing just evaluates fine

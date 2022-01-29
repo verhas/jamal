@@ -3564,14 +3564,14 @@ In addition to the method `{%@java:method javax0.jamal.tools.InputHandler#getPar
 It is the class `{%@java:class javax0.jamal.tools.Params%}`.
 The class is a utility to parse some particular part of the whole input of the built-in macro looking for parameters.
 This particular part is usually the first line of the input, but it can be the part between `(` and `)` following the macro ID or the whole input.
-This utility is used by some of the built-in core macros.
+This utility is used by some built-in core macros.
 The core macros use the `[` and `]` characters to enclose the parameters.
 
 [NOTE]
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `import`, `eval`, `if`, and `defer` also use the `[` and the `]` characters.
+To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 
 {%@comment The following macro does not generate anything into the output.
@@ -3579,7 +3579,7 @@ It simply fails when the number of files using Params is not the same as expecte
 And it already saved the consistency of this documentation many times.
 %}\
 {%#define nrCoreMacrosUsingParams={%@listDir (grep="Params.using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
-{%#define nrCoreMacrosUsingParamsDocumented=6%}\
+{%#define nrCoreMacrosUsingParamsDocumented=7%}\
 {%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
 ====
 
