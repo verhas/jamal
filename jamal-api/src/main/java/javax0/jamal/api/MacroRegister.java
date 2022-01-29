@@ -82,6 +82,10 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      */
     void define(Identified macro);
 
+    default void define(final Identified macro, final String alias) {
+        throw new UnsupportedOperationException("This method is not supported by this implementation.");
+    }
+
     /**
      * Define a macro on the current evaluation level.
      *
@@ -99,7 +103,10 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     void define(Macro macro, String alias);
 
     /**
-     * Export the user defined macro {@code id}.
+     * Export a built-in or user defined macro {@code id}.
+     * If there are both types of macros then export both of them.
+     * It is not a good practice to have a built-in macro and a user defined macro having the same name.
+     * Versions prior 1.10.5 did not support exporting built-in macros.
      * <p>
      * Moves the definition of the macro {@code id} one level higher in the macro definition list. This way the macro is
      * exported into the scope of the environment that is surrounding the macro definition.

@@ -322,7 +322,12 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void define(Identified macro) {
-        writableScope().udMacros.put(macro.getId(), macro);
+        define(macro, macro.getId());
+    }
+
+    @Override
+    public void define(final Identified macro, final String alias) {
+        writableScope().udMacros.put(alias, macro);
     }
 
     @Override
@@ -385,15 +390,26 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     @Override
     public void export(String id) throws BadSyntax {
         final int offset = writableOffset();
+        boolean exported = false;
         if (scopeStack.size() > offset) {
-            var macro = writableScope().udMacros.get(id);
-            if (macro == null) {
+            final var exportToScope = scopeStack.get(scopeStack.size() - offset - 1);
+            var udMacro = writableScope().udMacros.get(id);
+            if (udMacro != null) {
+                final var udMacros = exportToScope.udMacros;
+                udMacros.put(id, udMacro);
+                writableScope().udMacros.remove(id);
+                exported = true;
+            }
+            final var macro = writableScope().macros.get(id);
+            if (macro != null) {
+                final var macros = exportToScope.macros;
+                macros.put(id, macro);
+                writableScope().macros.remove(id);
+                exported = true;
+            }
+            if (!exported) {
                 throw new BadSyntax("Macro '" + id + "' cannot be exported, not in the scope of export.");
             }
-            final var exportToScope = scopeStack.get(scopeStack.size() - offset - 1);
-            final var udMacros = exportToScope.udMacros;
-            udMacros.put(id, macro);
-            writableScope().udMacros.remove(id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
         }
