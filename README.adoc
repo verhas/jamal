@@ -4084,6 +4084,89 @@ This is the same behaviour that the macro `define` follows.
 
 Note that there is no restriction on the alias.
 You can use any string as alias, however, there is no point to use and alias that you cannot use later as a Jamal compliant macro name.
+The macro named `macro` is a special one needed only in rare cases.
+The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
+A hypothetical library, built-in macro package may import macros from a property file, where the property names contain `.` dots.
+Jamal does not permit these names as identifiers.
+The implementation provides extra built-in macros to access the values or converts the names to conforming ones.
+The first approach loses the aim of pure import.
+The second approach forces the users to remember the transformations, and it may be a source of name collisions.
+
+The solution is the use of the macro `macro`.
+The syntax of the macro is
+
+[source]
+----
+{@macro [options] original macro name}
+----
+
+The macro will evaluate the macro with the name `original macro name` without any parameters.
+The catch is that the `original macro name` does not need to conform to the naming of Jamal.
+It can be any string.
+
+Evaluating the macro without parameters is a good use case because the imported macros usually assign a string to a name.
+If the macro is a "proper" Jamal macro with a non-conforming name, then it can be evaluated with arguments in a particular way.
+To do that, the option `alias` has to be used.
+For example
+
+[source]
+----
+{@macro [alias]my.weird.macro}/1/2/3}
+----
+
+will evaluate the macro `my.weird.macro` with the arguments `1` and `2` and `3`.
+When the parameter `alias` is used, the macro `macro` does not evaluate the macro, but instead, it creates an alias to the macro.
+The alias is also returned and can be used as in the example.
+If the automatically generated alias is `_1`, then the above example will evaluate through the intermediary step:
+
+[source]
+----
+_1/1/2/3}
+----
+
+and the macro at this point will be the same user-defined macro, which is named `my.weird.macro`.
+The automatically generated macro has the format `_n` where `nnn` is a number usually starting with 1 and increasing by one for each macro.
+If it happens to be defined, then the counting skips the number.
+This alias has scope inside the user-defined macro use, and it is not exported from there.
+
+If you want to use the alias many times, you can select a name yourself.
+In this case the format is:
+
+[source]
+----
+#block {@macro [alias=my_weird_macro]my.weird.macro}}
+----
+
+After this, you can write
+
+[source]
+----
+my_weird_macro /1/2/3}
+----
+
+When the alias' name is given and not generated, the name is exported and can be used later.
+Note that the macro `#block` is used to omit the macro's output, which is the alias itself in this case.
+
+The macro `macro` does not care if the original macro is defined in a higher scope.
+The only thing that matters is that the macro is defined.
+
+You can force the macro `macro` to only search for the original macro at the global level.
+To do that, use the option `global`.
+This option, however, does not alter the scope of the new aliases in case an alias is created.
+Jamal will create the alias in the current scope for generated aliases or one level higher (exported) for specified aliases.
+If the specified alias contains one or more `:` characters, then Jamal will define the macro with the alias in the global scope.
+It is the same behavior that the macro `define` follows.
+
+Note that there is no restriction on the alias.
+You can use any string as an alias.
+However, there is no point in using an alias that you cannot use later as a Jamal compliant macro name.
+
+You can use this macro to create aliases for standard macros with proper names.
+
+The macro `macro` can invoke weirdly named built-in macros directly or create aliases for them.
+To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `built in`.
+The behavior will be the same as for user-defined macros.
+If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
 
 You can use this macro to create aliases for ordinary macros that have proper names.
 
