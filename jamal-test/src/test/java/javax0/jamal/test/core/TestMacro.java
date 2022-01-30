@@ -39,10 +39,10 @@ public class TestMacro {
         }
     };
 
-    final Macro macro = new Macro() {
+    final Macro builtIn = new Macro() {
         @Override
         public String evaluate(final Input in, final Processor processor) {
-            if( in.length() == 0 ) {
+            if (in.length() == 0) {
                 return "no param";
             }
             return Arrays.stream(in.toString().split(",", -1)).map(String::trim).mapToInt(Integer::parseInt).sum() + "";
@@ -73,10 +73,26 @@ public class TestMacro {
 
     @Test
     @DisplayName("Get the user defined macro with given alias")
-    void testUdAliasDefined() throws Exception {
+    void testUdAliasDefined1() throws Exception {
         final var test = TestThat.theInput("{{@macro [alias=add] +++}/1/2/3}{add/1/2/3}{add/3/3}");
         test.getProcessor().getRegister().define(ud);
         test.results("666");
+    }
+
+    @Test
+    @DisplayName("Get the user defined macro with given alias in block")
+    void testUdAliasDefined2() throws Exception {
+        final var test = TestThat.theInput("{#block {@macro [alias=add] +++}}{add/1/2/3}{add/3/3}");
+        test.getProcessor().getRegister().define(ud);
+        test.results("66");
+    }
+
+    @Test
+    @DisplayName("Get the user defined macro with given alias global")
+    void testUdAliasDefinedGlobal() throws Exception {
+        final var test = TestThat.theInput("{#block {@macro [alias=:add] +++}}{add/1/2/3}{add/3/3}");
+        test.getProcessor().getRegister().define(ud);
+        test.results("66");
     }
 
     @Test
@@ -84,7 +100,7 @@ public class TestMacro {
     void testBuiltInName() throws Exception {
 
         final var test = TestThat.theInput("{@macro [type=builtin]not an identifier}");
-        test.getProcessor().getRegister().define(macro);
+        test.getProcessor().getRegister().define(builtIn);
         test.results("no param");
     }
 
@@ -92,7 +108,7 @@ public class TestMacro {
     @DisplayName("Get the built in macro with alias")
     void testBuiltInAlias() throws Exception {
         final var test = TestThat.theInput("{#{@macro [alias type=built-in] not an identifier} 1,2,3}");
-        test.getProcessor().getRegister().define(macro);
+        test.getProcessor().getRegister().define(builtIn);
         test.results("6");
     }
 
@@ -100,7 +116,23 @@ public class TestMacro {
     @DisplayName("Get the built in macro with given alias")
     void testBuiltInAliasDefined() throws Exception {
         final var test = TestThat.theInput("{#{@macro [alias=add type=\"built in\"] not an identifier} 1,2,3}{@add 1,2,3}{@add 3,3}");
-        test.getProcessor().getRegister().define(macro);
+        test.getProcessor().getRegister().define(builtIn);
         test.results("666");
+    }
+
+    @Test
+    @DisplayName("Get the built in macro with given alias in block")
+    void testBuiltInAliasDefined2() throws Exception {
+        final var test = TestThat.theInput("{#block {@macro [alias=add type=built-in] not an identifier}}{@add 1,2,3}{@add 3,3}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.results("66");
+    }
+
+    @Test
+    @DisplayName("Get the built in macro with given alias global")
+    void testBuiltInAliasDefinedGlobal() throws Exception {
+        final var test = TestThat.theInput("{#block {@macro [alias=:add type=built-in] not an identifier}}{@add 1,2,3}{@add 3,3}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.results("66");
     }
 }

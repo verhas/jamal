@@ -274,8 +274,12 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     @Override
-    public void global(Identified macro) {
-        scopeStack.get(TOP_LEVEL).udMacros.put(macro.getId(), macro);
+    public void global(final Identified macro) {
+       global(macro,macro.getId());
+    }
+    @Override
+    public void global(final Identified macro, final String alias) {
+        scopeStack.get(TOP_LEVEL).udMacros.put(alias, macro);
     }
 
     @Override

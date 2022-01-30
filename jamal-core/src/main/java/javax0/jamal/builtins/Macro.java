@@ -5,13 +5,14 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import static javax0.jamal.tools.InputHandler.convertGlobal;
+import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Macro implements javax0.jamal.api.Macro {
@@ -41,7 +42,7 @@ public class Macro implements javax0.jamal.api.Macro {
         }
     }
 
-    private static final AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger counter = new AtomicInteger(0);
 
     private static final Input EMPTY_INPUT = javax0.jamal.tools.Input.makeInput();
 
@@ -64,12 +65,22 @@ public class Macro implements javax0.jamal.api.Macro {
     }
 
     private <T extends Identified> String aliasMacro(final Processor processor, final Params.Param<String> alias, final T macro) throws BadSyntax {
-        final boolean export = isExportable(alias);
+        boolean export = isExportable(alias);
         final String name = calculateAlias(export, processor, alias);
         if (macro instanceof javax0.jamal.api.Macro) {
-            processor.getRegister().define((javax0.jamal.api.Macro) macro, name);
+            if (isGlobalMacro(name)) {
+                processor.getRegister().global((javax0.jamal.api.Macro)macro, convertGlobal(name));
+                export = false;
+            } else {
+                processor.getRegister().define((javax0.jamal.api.Macro) macro, name);
+            }
         } else {
-            processor.getRegister().define(macro, name);
+            if (isGlobalMacro(name)) {
+                processor.getRegister().global(macro, convertGlobal(name));
+                export = false;
+            } else {
+                processor.getRegister().define(macro, name);
+            }
         }
         if (export) {
             processor.getRegister().export(name);
@@ -79,7 +90,7 @@ public class Macro implements javax0.jamal.api.Macro {
 
     private String getMacroName(final boolean global, final Input input) {
         final String macroName;
-        if (global && !InputHandler.isGlobalMacro(input.toString())) {
+        if (global && !isGlobalMacro(input.toString())) {
             macroName = ":" + input;
         } else {
             macroName = input.toString();

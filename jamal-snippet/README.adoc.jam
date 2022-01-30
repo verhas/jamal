@@ -1440,7 +1440,7 @@ The syntax of the macro is
 
 [[snipTransform]]
 ==== {%macroChapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=1b305c2c%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=2ec0c1e4%}
 
 The `snip:transform` macro integrates the functionality of the macros
 

@@ -116,7 +116,7 @@ public class SnipTransform implements Macro {
         private class TableImplicits {
             /**
              * The name of the parameter that belongs to an action. It is usually the same as the name of the action,
-             * with one exception (as for 1.10.5 release, may change later).
+             * with one exception (as for 1.11.0 release, may change later).
              */
             final String name;
             /**
