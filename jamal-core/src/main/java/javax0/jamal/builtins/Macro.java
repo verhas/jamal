@@ -50,16 +50,23 @@ public class Macro implements javax0.jamal.api.Macro {
         final var macro = getMacro(input, processor, global, javax0.jamal.api.Macro.class, processor.getRegister()::getMacro);
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, macro);
+        }
+        if (macro == null) {
+            throw new BadSyntax("Unknown built-in macro{@" + input + "}");
         } else {
             return macro.evaluate(EMPTY_INPUT, processor);
         }
     }
 
     private String getUserDefined(final Input input, final Processor processor, final boolean global, final Params.Param<String> alias) throws BadSyntax {
-        final var macro = getMacro(input, processor, global, UserDefinedMacro.class, processor.getRegister()::getUserDefined);
+        final var macro = getMacro(input, processor, global, UserDefinedMacro.class,
+                id -> processor.getRegister().getUserDefined(id,Identified.DEFAULT_MACRO));
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, (Identified) macro);
         } else {
+            if( macro == null ) {
+                throw new BadSyntax("Unknown user-defined macro {" + input + "}");
+            }
             return macro.evaluate();
         }
     }
@@ -67,9 +74,12 @@ public class Macro implements javax0.jamal.api.Macro {
     private <T extends Identified> String aliasMacro(final Processor processor, final Params.Param<String> alias, final T macro) throws BadSyntax {
         boolean export = isExportable(alias);
         final String name = calculateAlias(export, processor, alias);
-        if (macro instanceof javax0.jamal.api.Macro) {
+        if (macro == null) {
+            // just return the name, which is undefined and the use will throw an exception or call the defaulr macro
+            return name;
+        } else if (macro instanceof javax0.jamal.api.Macro) {
             if (isGlobalMacro(name)) {
-                processor.getRegister().global((javax0.jamal.api.Macro)macro, convertGlobal(name));
+                processor.getRegister().global((javax0.jamal.api.Macro) macro, convertGlobal(name));
                 export = false;
             } else {
                 processor.getRegister().define((javax0.jamal.api.Macro) macro, name);
@@ -98,12 +108,12 @@ public class Macro implements javax0.jamal.api.Macro {
         return macroName;
     }
 
-    private <T> T getMacro(final Input input, final Processor processor, final boolean global, final Class<T> klass, final Function<String, Optional<T>> get) throws BadSyntax {
+    private <T> T getMacro(final Input input, final Processor processor, final boolean global, final Class<T> klass, final Function<String, Optional<T>> get) {
         final String macroName = getMacroName(global, input);
         return get.apply(macroName)
                 .filter(klass::isInstance)
                 .map(klass::cast)
-                .orElseThrow(() -> new BadSyntax("Unknown macro: " + input));
+                .orElse(null);
     }
 
     private boolean isExportable(final Params.Param<String> alias) throws BadSyntax {

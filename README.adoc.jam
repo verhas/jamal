@@ -3514,7 +3514,7 @@ Using a version before `1.6.4` in the `require` argument is an error.
 [[macro]]
 ==== {%macroChapter%}`macro`
 since 1.11.0
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=7b2991d9%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=485eb67c%}
 
 The macro named `macro` is a special one that is needed only in rare cases.
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
@@ -3522,7 +3522,7 @@ A hypothetical library, built-in macro package may import macros from a property
 These names are not permitted in Jamal.
 The implementation then either provides extra built-in macros to access the values or converts the names to conforming ones.
 The first approach loses the aim of the pure import.
-The second approach forces the users to remember the transformations and it may be a source of name collisions.
+The second approach forces the users to remember the transformations, and it may be a source of name collisions.
 
 The solution is the use of the macro `macro`.
 The syntax of the macro is
@@ -3547,7 +3547,7 @@ For example
 will evaluate the macro `my.weird.macro` with the arguments `1` and `2` and `3`.
 When the parameter `alias` is used the macro `macro` does not evaluate the macro, but instead it creates an alias to the macro.
 The alias is also returned and can be used as in the example.
-If the automatically generated alias is `_1` then the above example will evaluate through the intermediarey step:
+If the automatically generated alias is `_1` then the above example will evaluate through the intermediary step:
 
 {%sample
 {_1/1/2/3}
@@ -3657,6 +3657,15 @@ It is the same behavior that the macro `define` follows.
 Note that there is no restriction on the alias.
 You can use any string as an alias.
 However, there is no point in using an alias that you cannot use later as a Jamal compliant macro name.
+
+`macro` behaves similar to the normal use of the macros when the macro is not defined.
+If an alias is to be created, `macro` will create the alias and return it even when the original macro is undefined.
+If this returned name is used later an exception may occur.
+This is the same for user-defined macros and built-in macros as well.
+Note, however, that undefined user-defined macros may revert to the macro `default` if present.
+There is no such fallback for built-in macros.
+
+When `macro` tries to evaluate an undefined original macro, it will revert to the `default` in case of a user-defined macro, or will result an error if the macro is built-in.
 
 You can use this macro to create aliases for standard macros with proper names.
 

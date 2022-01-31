@@ -135,4 +135,53 @@ public class TestMacro {
         test.getProcessor().getRegister().define(builtIn);
         test.results("66");
     }
+
+    @Test
+    @DisplayName("Evaluating undefined built-in macro will throw an exception")
+    void testBuiltInUndefinedEvaluete() throws Exception {
+        final var test = TestThat.theInput("{@macro [type=built-in] abrakadabra}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.throwsBadSyntax("Unknown built-in macro\\{@abrakadabra\\}");
+    }
+
+    @Test
+    @DisplayName("Aliasing undefined built-in macro will return alias undefined")
+    void testBuiltInUndefinedAlias() throws Exception {
+        final var test = TestThat.theInput("{@macro [alias=add type=built-in]abraka debra}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.results("add");
+    }
+
+    @Test
+    @DisplayName("Evaluating undefined user defined macro will throw an exception")
+    void testUserDefinedUndefinedEvaluete() throws Exception {
+        final var test = TestThat.theInput("{@macro abrakadabra}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.throwsBadSyntax("Unknown user-defined macro \\{abrakadabra\\}");
+    }
+
+    @Test
+    @DisplayName("Using alias of undefined user defined macro will use default")
+    void testUserDefinedUndefinedAliasUsedDefault() throws Exception {
+        final var test = TestThat.theInput("{@define default=aaa}{{@macro [alias] abrakadabra}}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.results("aaa");
+    }
+
+    @Test
+    @DisplayName("Evaluating undefined user defined macro will use default")
+    void testUserDefinedUndefinedEvalueteDefault() throws Exception {
+        final var test = TestThat.theInput("{@define default=aaa}{@macro abrakadabra}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.results("aaa");
+    }
+
+    @Test
+    @DisplayName("Aliasing undefined user defined macro will return alias undefined")
+    void testUserDefinedUndefinedAlias() throws Exception {
+        final var test = TestThat.theInput("{@macro [alias=add]abraka debra}");
+        test.getProcessor().getRegister().define(builtIn);
+        test.results("add");
+    }
+
 }
