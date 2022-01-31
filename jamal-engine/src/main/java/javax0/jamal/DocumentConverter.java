@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -67,7 +66,7 @@ public class DocumentConverter {
             this.includes = includes;
         }
 
-        Stream<String> stream(){
+        Stream<String> stream() {
             return Arrays.stream(includes);
         }
     }
@@ -78,7 +77,8 @@ public class DocumentConverter {
         private Excludes(String[] excludes) {
             this.excludes = excludes;
         }
-        Stream<String> stream(){
+
+        Stream<String> stream() {
             return Arrays.stream(excludes);
         }
     }
@@ -91,12 +91,20 @@ public class DocumentConverter {
         return new Excludes(s);
     }
 
+    /**
+     * Convert all files starting in the project root directory which match any of the 'include' patterns and do not match
+     * any of the 'exclude' patterns.
+     *
+     * @param include the patterns to include.
+     * @param exclude the patterns to exclude.
+     * @throws Exception when there is an error in the conversion.
+     */
     public static void convertAll(Includes include, Excludes exclude) throws Exception {
         for (final var p :
-            Files.walk(Paths.get(getRoot()), Integer.MAX_VALUE)
-                .filter(Files::isRegularFile)
-                .filter(s -> include.stream().anyMatch(z -> s.toString().endsWith(z)) && exclude.stream().noneMatch(z -> s.toString().endsWith(z)))
-                .collect(Collectors.toList())) {
+                Files.walk(Paths.get(getRoot()), Integer.MAX_VALUE)
+                        .filter(Files::isRegularFile)
+                        .filter(s -> include.stream().anyMatch(z -> s.toString().endsWith(z)) && exclude.stream().noneMatch(z -> s.toString().endsWith(z)))
+                        .collect(Collectors.toList())) {
             executeJamal(p, Paths.get(p.toString().replaceAll("\\.jam$", "")));
         }
     }
@@ -138,19 +146,19 @@ public class DocumentConverter {
      */
     public static String getRoot() throws IOException {
         final var dirs = Stream.of("ROOT.dir", ".git", ".mvn")
-            .map(StringBuilder::new)
-            .collect(Collectors.toList());
+                .map(StringBuilder::new)
+                .collect(Collectors.toList());
 
         final Optional<File> file =
-            IntStream.range(0, 100).mapToObj(i ->
-                    dirs.stream()
-                        .map(DocumentConverter::found)
+                IntStream.range(0, 100).mapToObj(i ->
+                                dirs.stream()
+                                        .map(DocumentConverter::found)
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .findFirst())
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .findFirst())
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findFirst();
+                        .findFirst();
 
         if (file.isPresent()) {
             final var parent = file.get().getParentFile();
