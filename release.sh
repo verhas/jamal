@@ -19,23 +19,22 @@ is used to ensure compatibility between the debugger server
 and client.
 
 4. cd ..
-5. mvn -f genpom.xml clean
-6. mvn verify
+5. mvn clean verify
 
 At this point we can be sure that there are no errors. If
 there are errors then they have to be fixed.
 
 If all compilation went well, then and only then:
 
-7.  git commit -m "new release <VERSION>"
+6.  git commit -m "new release <VERSION>"
 
 push all changes to github
 
-8.  mvn deploy -Prelease
+7.  mvn deploy -Prelease
 
 publish the release
 
-9. When the release went well, then create a new release tag in GutHub.
+8. When the release went well, then create a new release tag in GutHub.
 -------------------------------------------------------
 
 END

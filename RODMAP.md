@@ -21,8 +21,10 @@ and the list is not a promise or guarantee.
 
 - Implement JSON reading and writing and structural construction similar to Yaml.
 
-- Implement XML reading and writing and structural construction similar to Yaml.
+- Implement XML reading and writing and structural construction similar to Yaml. (PARTIAL part of the snippet package)
 
 - Integrate the MVEL scripting language.
 
 - Module to read data from Microsoft XLS formatted file via Apache POI
+
+- Import properties as user defined macros from a `pom.xml`.

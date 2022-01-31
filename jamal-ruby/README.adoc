@@ -441,7 +441,7 @@ Several macros are used during the maintenance of the documentation to ensure th
 This particular document's processing uses Ruby scripts, which are used instead of some built-in macros for demonstration purposes.
 
 
-The documentation of Jamal is a series of Asccidoc files.
+The documentation of Jamal is a series of Asciidoc files.
 The Asciidoc format was invented to be a documentation source format that is easy to read and edit.
 At the same time, Jamal can also convert it to many different output formats.
 Asciidoc, however, provides only limited possibility to eliminate redundancy and to ensure consistency.
