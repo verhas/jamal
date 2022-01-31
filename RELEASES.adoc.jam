@@ -30,6 +30,8 @@ Template handling and Trie implementation was refactored to improve performance,
 Macro register export also experts built-in macros.
 New core macro named `macro` was added.
 
+New API class `JamalOutputStream` was added, which is a filtering output stream.
+
 {%RELEASE/1.10.4%}
 
 A bug fix in handling thin XML.
