@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.DocumentConverter.getRoot;
@@ -36,9 +37,9 @@ public class TestSnippetSaveAndLoad {
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
                 .results().split("\n")).collect(Collectors.toSet());
-        Assertions.assertEquals(Set.of("is", "trimLineStart", "store", "dirMacroFormatPlaceholders",
+        Assertions.assertEquals(new TreeSet(Set.of("is", "trimLineStart", "store", "dirMacroFormatPlaceholders",
                 "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats",
-                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK"), result);
+                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK","names")), new TreeSet<>(result));
     }
 
     @Test

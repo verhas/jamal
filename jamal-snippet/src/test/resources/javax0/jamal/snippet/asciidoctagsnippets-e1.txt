@@ -1,0 +1,22 @@
+Test file to be collected using the asciidoc parameter
+
+ONE is a simple snippet
+# tag::one[]
+this is one
+
+Nested snippets
+
+// tag::two[]
+this is two
+tag::three[]
+this is three and two also
+end::three[]
+end::two[]
+
+tag::four[]
+this is four
+-->  tag::five[]
+this is five and four
+end::four[]
+this is five
+-->  end::five[]

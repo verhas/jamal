@@ -33,6 +33,17 @@
 
 * New API class `JamalOutputStream` was added, which is a filtering output stream.
 
+* Macro `include` has a parameter `lines`, which can limit which lines to include.
+
+* Error reporting was fixed avoiding circular exceptio references when closers were running.
+For the user this means cleaner error report.
+
+* New macro `untab` in the snippet library. It is also supported by the `snip:transform` macro.
+
+* Macro `snip:collect` can collect snippets which start and stop with the asciidoc tag notation:
+`tag::name[]` and `end::name[]`.
+
+
 === https://github.com/verhas/jamal/tree/1.10.4[1.10.4]
 
 A bug fix in handling thin XML.

@@ -303,6 +303,10 @@ For example, if you define the postfix as `::mypostfix` then the snippet named `
 +
 The parameter `prefix` and `postfix` can be used together.
 The use case is when you collect snippets from different sources where the names may collide.
+* `asciidoc`
+Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
+This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
+Using these start and stop delimiters the snippets can also be nested arbitrarily, and they can also overlap.
 
 
 
@@ -1724,7 +1728,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 45.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 46.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2140,7 +2144,7 @@ will result
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 10,390 bytes
+- Collect.java: 15,811 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
@@ -2423,7 +2427,7 @@ will result in the output
 
 [source]
 ----
-2022-02-02 17:19:37
+2022-02-02 19:56:43
 ----
 
 

@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -86,9 +87,13 @@ public class Collect implements Macro, InnerScopeDependent {
         //+
         // The parameter `prefix` and `postfix` can be used together.
         // The use case is when you collect snippets from different sources where the names may collide.
+        final var asciidoc = Params.<Boolean>holder("asciidoc", "asciidoctor").asBoolean();
+        // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
+        // This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
+        // Using these start and stop delimiters the snippets can also be nested arbitrarily, and they can also overlap.
         // end snippet
         Params.using(processor).from(this)
-                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName, prefix, postfix).parse(in);
+                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName, prefix, postfix, asciidoc).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
         if (store.testAndSet(setName.get())) {
@@ -97,7 +102,11 @@ public class Collect implements Macro, InnerScopeDependent {
         final var fn = from.get();
         final var fromFile = new File(fn);
         if (FileTools.isRemote(fn) || fromFile.isFile()) {
-            harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get());
+            if (asciidoc.is()) {
+                harvestAsciiDoc(fn, store, pos, prefix.get(), postfix.get());
+            } else {
+                harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get());
+            }
         } else {
             try {
                 final var selectedFiles = files(fn, scanDepth.get())
@@ -106,14 +115,22 @@ public class Collect implements Macro, InnerScopeDependent {
                         .filter(exclude.get())
                         .collect(Collectors.toSet());
                 for (final var file : selectedFiles) {
-                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(),
-                            store,
-                            start.get(),
-                            liner.get(),
-                            stop.get(),
-                            pos,
-                            prefix.get(),
-                            postfix.get());
+                    if (asciidoc.is()) {
+                        harvestAsciiDoc(Paths.get(new File(file).toURI()).normalize().toString(),
+                                store,
+                                pos,
+                                prefix.get(),
+                                postfix.get());
+                    } else {
+                        harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(),
+                                store,
+                                start.get(),
+                                liner.get(),
+                                stop.get(),
+                                pos,
+                                prefix.get(),
+                                postfix.get());
+                    }
                 }
             } catch (IOException | UncheckedIOException e) {
                 throw new BadSyntax("There is some problem collecting snippets from files under '" + from.get() + "'", e);
@@ -122,6 +139,89 @@ public class Collect implements Macro, InnerScopeDependent {
         return "";
     }
 
+    private static class SnippetAccumulator {
+        StringBuilder sb = new StringBuilder();
+        String id;
+        int startLine;
+    }
+
+    private static Pattern ASCIIDOC_START = Pattern.compile("tag::([\\w\\d_$]+)\\[.*?\\]");
+    private static Pattern ASCIIDOC_STOP = Pattern.compile("end::([\\w\\d_$]+)\\[.*?\\]");
+
+    /**
+     * Harvest snippets from a file where the snippets are defined using the ASCIIDOC tag syntax.
+     * The syntax is `tag::name[]` and `end::name[]`, where `name` is the name of the snippet.
+     *
+     * @param file    the file to harvest snippets from
+     * @param store   the store to store the snippets in
+     * @param pos     the position to store the snippets at
+     * @param prefix  the prefix to use for the snippet names
+     * @param postfix the postfix to use for the snippet names
+     * @throws BadSyntax
+     */
+    private void harvestAsciiDoc(final String file,
+                                 final SnippetStore store,
+                                 final Position pos,
+                                 final String prefix,
+                                 final String postfix) throws BadSyntax {
+        final var openedSnippets = new HashMap<String, SnippetAccumulator>();
+        final var lines = FileTools.getFileContent(file).split("\n", -1);
+        List<BadSyntax> errors = new ArrayList<>();
+        for (int lineNr = 0; lineNr < lines.length; lineNr++) {
+            String line = lines[lineNr];
+            final var startMatcher = ASCIIDOC_START.matcher(line);
+            final var stopMatcher = ASCIIDOC_STOP.matcher(line);
+            if (startMatcher.find()) {
+                final var id = startMatcher.group(1);
+                if (openedSnippets.containsKey(id)) {
+                    errors.add(new BadSyntax("Snippet '" + id + "' is already opened on line " + openedSnippets.get(id).startLine));
+                } else {
+                    final var sa = new SnippetAccumulator();
+                    sa.id = id;
+                    sa.startLine = lineNr;
+                    openedSnippets.put(id, sa);
+                }
+            } else if (stopMatcher.find()) {
+                final var id = stopMatcher.group(1);
+                if (!openedSnippets.containsKey(id)) {
+                    errors.add(new BadSyntax("Snippet '" + id + "' is not opened"));
+                } else {
+                    final var sa = openedSnippets.get(id);
+                    try {
+                        store.snippet(prefix + sa.id + postfix, sa.sb.toString(), new Position(file, sa.startLine));
+                    } catch (BadSyntax e) {
+                        errors.add(new BadSyntaxAt("Collection error", pos, e));
+                    }
+                    openedSnippets.remove(id);
+                }
+            } else {
+                for (final var sa : openedSnippets.values()) {
+                    sa.sb.append(line).append("\n");
+                }
+            }
+        }
+        if (!openedSnippets.isEmpty()) {
+            for (final var sa : openedSnippets.values()) {
+                errors.add(new BadSyntax("Snippet '" + sa.id + "' opened on the line " + sa.startLine + " is not closed."));
+            }
+        }
+        assertNoErrors(file, errors);
+    }
+
+    /**
+     * Harvest snippets from a file.
+     *
+     * @param file    the file to harvest from
+     * @param store   the store to store the snippets in
+     * @param start   the start pattern
+     * @param liner   the one line pattern that reads a one-line snippet
+     * @param stop    the stop pattern
+     * @param pos     the position of the file
+     * @param prefix  the prefix to add to the snippet id
+     * @param postfix the postfix to add to the snippet id
+     * @throws BadSyntax if there is some problem collecting the snippets, snippets are not closed, or are defined more
+     *                   than once.
+     */
     private void harvestSnippets(final String file,
                                  final SnippetStore store,
                                  final Pattern start,
@@ -180,6 +280,18 @@ public class Collect implements Macro, InnerScopeDependent {
             store.snippet(id, "", new Position(file, startLine),
                     new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
         }
+        assertNoErrors(file, errors);
+    }
+
+    /**
+     * If there are no errors the method simply returns.
+     *
+     * @param file   the file name that was parsed and from which the errors were collected
+     * @param errors the errors collected
+     * @throws BadSyntax is thrown if there are errors. The exception contains a list of all errors as suppressed
+     *                   exceptions.
+     */
+    private void assertNoErrors(final String file, final List<BadSyntax> errors) throws BadSyntax {
         if (!errors.isEmpty()) {
             if (errors.size() == 1) {
                 throw errors.get(0);

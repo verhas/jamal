@@ -128,7 +128,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=994ae36d%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=dd104d32%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -1803,7 +1803,7 @@ will result
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 10,390 bytes
+- Collect.java: 15,811 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
