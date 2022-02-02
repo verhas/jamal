@@ -74,10 +74,21 @@ public class Collect implements Macro, InnerScopeDependent {
         // If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
         // If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
         // It was already collected.
-
+        final var prefix = Params.<String>holder("prefix").orElse("");
+        // You can define a prefix, which is prepended to the snippet names.
+        // The snippets will be stored with this prefix and the macros should use these prefixed names to reference the snippets.
+        // For example, if you define the prefix as `myprefix::` then the snippet named `mysnippet` will be stored as `myprefix::mysnippet`.
+        final var postfix = Params.<String>holder("postfix").orElse("");
+        // You can define a postfix, which is appended to the snippet names.
+        // The snippets will be stored with this postfix and the macros should use these postfixed names to reference the snippets.
+        // For example, if you define the postfix as `::mypostfix` then the snippet named `mysnippet` will be stored as `mysnippet::mypostfix`.
+        //
+        //+
+        // The parameter `prefix` and `postfix` can be used together.
+        // The use case is when you collect snippets from different sources where the names may collide.
         // end snippet
         Params.using(processor).from(this)
-                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName).parse(in);
+                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName, prefix, postfix).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
         if (store.testAndSet(setName.get())) {
@@ -86,7 +97,7 @@ public class Collect implements Macro, InnerScopeDependent {
         final var fn = from.get();
         final var fromFile = new File(fn);
         if (FileTools.isRemote(fn) || fromFile.isFile()) {
-            harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos);
+            harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get());
         } else {
             try {
                 final var selectedFiles = files(fn, scanDepth.get())
@@ -100,7 +111,9 @@ public class Collect implements Macro, InnerScopeDependent {
                             start.get(),
                             liner.get(),
                             stop.get(),
-                            pos);
+                            pos,
+                            prefix.get(),
+                            postfix.get());
                 }
             } catch (IOException | UncheckedIOException e) {
                 throw new BadSyntax("There is some problem collecting snippets from files under '" + from.get() + "'", e);
@@ -109,11 +122,14 @@ public class Collect implements Macro, InnerScopeDependent {
         return "";
     }
 
-    private void harvestSnippets(String file, SnippetStore store,
-                                 Pattern start,
-                                 Pattern liner,
-                                 Pattern stop,
-                                 Position pos) throws BadSyntax {
+    private void harvestSnippets(final String file,
+                                 final SnippetStore store,
+                                 final Pattern start,
+                                 final Pattern liner,
+                                 final Pattern stop,
+                                 final Position pos,
+                                 final String prefix,
+                                 final String postfix) throws BadSyntax {
         var state = State.OUT;
         String id = "";
         StringBuilder text = new StringBuilder();
@@ -139,7 +155,7 @@ public class Collect implements Macro, InnerScopeDependent {
                         }
                         line = lines[++lineNr];
                         try {
-                            store.snippet(id, line, new Position(file, lineNr));
+                            store.snippet(prefix + id + postfix, line, new Position(file, lineNr));
                         } catch (BadSyntax e) {
                             errors.add(new BadSyntaxAt("Collection error", pos, e));
                         }
@@ -149,7 +165,7 @@ public class Collect implements Macro, InnerScopeDependent {
                     final var stopMatcher = stop.matcher(line);
                     if (stopMatcher.find()) {
                         try {
-                            store.snippet(id, text.toString(), new Position(file, startLine + 1));
+                            store.snippet(prefix + id + postfix, text.toString(), new Position(file, startLine + 1));
                         } catch (BadSyntax e) {
                             errors.add(new BadSyntaxAt("Collection error: " + e.getMessage(), pos, e));
                         }

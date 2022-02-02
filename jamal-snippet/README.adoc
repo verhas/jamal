@@ -251,14 +251,14 @@ These options are parsed using the Standard Parameter Parsing as defined in <<..
 
 
 * `include`
- can define a regular expression. Only those files will be collected that match partially the regular expression.
+can define a regular expression. Only those files will be collected that match partially the regular expression.
 * `exclude`
- can define a regular expression. Only those files will be collected that do not match partially the regular expression.
- For example, the test file
+can define a regular expression. Only those files will be collected that do not match partially the regular expression.
+For example, the test file
 
 [source]
 ----
-    {#snip:collect from="." exclude=2 include=SnippetSource-\d\.txt}
+{#snip:collect from="." exclude=2 include=SnippetSource-\d\.txt}
 First snippet {@snip first_snippet}
 2. snippet {@snip second_snippet}
 
@@ -273,25 +273,36 @@ and this is the end
 excludes any file that contains the character `2` in its name.
 
 * `start`
- can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
+can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
 * `liner`
- can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
+can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
 * `stop`
- can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
+can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
 * `scanDepth`
- can limit the directory traversing to a certain depth.
+can limit the directory traversing to a certain depth.
 * `from`
- can specify the start directory for the traversing.
+can specify the start directory for the traversing.
 * `onceAs`
- You can use the parameter `onceAs` to avoid repeated snippet collections.
- Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
- At a certain point, it may happen that Jamal already collected the snippets you need.
- Collecting it again would be erroneous.
- When snippets are collected, you cannot redefine a snippet.
- If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
- If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
- It was already collected.
+You can use the parameter `onceAs` to avoid repeated snippet collections.
+Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
+At a certain point, it may happen that Jamal already collected the snippets you need.
+Collecting it again would be erroneous.
+When snippets are collected, you cannot redefine a snippet.
+If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
+If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
+It was already collected.
+* `prefix`
+You can define a prefix, which is prepended to the snippet names.
+The snippets will be stored with this prefix and the macros should use these prefixed names to reference the snippets.
+For example, if you define the prefix as `myprefix::` then the snippet named `mysnippet` will be stored as `myprefix::mysnippet`.
+* `postfix`
+You can define a postfix, which is appended to the snippet names.
+The snippets will be stored with this postfix and the macros should use these postfixed names to reference the snippets.
+For example, if you define the postfix as `::mypostfix` then the snippet named `mysnippet` will be stored as `mysnippet::mypostfix`.
 
++
+The parameter `prefix` and `postfix` can be used together.
+The use case is when you collect snippets from different sources where the names may collide.
 
 
 
@@ -2129,7 +2140,7 @@ will result
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 9,001 bytes
+- Collect.java: 10,390 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
@@ -2412,7 +2423,7 @@ will result in the output
 
 [source]
 ----
-2022-02-02 12:32:50
+2022-02-02 17:19:37
 ----
 
 
