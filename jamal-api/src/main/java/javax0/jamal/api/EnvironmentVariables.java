@@ -58,7 +58,7 @@ snippet JAMAL_STACK_LIMIT_documentation
 sets the recursive call depth in macro evaluation.
 Macros may be recursive and in some cases it may create infinite recursive calls in Jamal.
 Try a simple Jamal file that contains `{@define a={a}}{a}`.
-This will drive Jama into an infinite recursive call.
+This will drive Jamal into an infinite recursive call.
 During the macro evaluation `{a}` will result `{a}` again and this will be evaluated again and again.
 Infinite recursive calls result `StackOverflowError` which should not be caught by any program.
 To avoid this Jamal limits the recursive calls to the maximum depth 1000.
@@ -153,7 +153,7 @@ snippet JAMAL_OPTIONS_documentation
 
 {%E%}{%JAMAL_OPTIONS_ENV%}
 
-This environment variable can define options for the Jama processor.
+This environment variable can define options for the Jamal processor.
 The value of the variable is interpreted as a multi-part input.
 The list is parsed using the standard `InputHandler.getParts(Input)` method.
 If you just have one option then you can define that with the name.

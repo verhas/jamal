@@ -236,13 +236,13 @@ After this out unit test will be the following:
 
 Now we do not need to declare the class in the Jamal file, it is available in the global scope.
 
-There is a third option to register a macro in the Jama processor.
+There is a third option to register a macro in the Jamal processor.
 The processor has an API and it is possible to register a user defined or a built-in macro programmatically.
 
 === Name of a Built-In Macro
 
 In the <<helloworld,Creating a "Hello World" Macro>> chapter we did not discuss how the name of the macro is created.
-We just created a class implementing an interface and then magically it was usable in the Jama source in the unit test with a reasonable name.
+We just created a class implementing an interface and then magically it was usable in the Jamal source in the unit test with a reasonable name.
 There is no magic.
 
 The name of the macro can be defined in the macro `use` when a macro class is explicitly declared for use.
