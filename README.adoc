@@ -130,7 +130,7 @@ image::jamaldebugger2559x1089.png[]
 
 === Applications, Embedding
 
-* <<./jamal-doclet/README.adoc#,Jamal Doclet Documentation>>, How to use Jama in JavaDoc
+* <<./jamal-doclet/README.adoc#,Jamal Doclet Documentation>>, How to use Jamal in JavaDoc
 * <<./jamal-maven/README.md#,Jamal Maven Plugin README>>, How to use Jamal as a Maven plugin
 
 === Programming Language Modules
@@ -2093,7 +2093,7 @@ Annoying?
 
 This example tries to use the value of the macro `$output` in the deferred code.
 The deferred code can rely on the macros defined during the Jamal processing.
-Note, however that only the top level macros are available as all other macros are out of scope and only those, which were defined at the end of the Jama processing.
+Note, however that only the top level macros are available as all other macros are out of scope and only those, which were defined at the end of the Jamal processing.
 
 The macro `$output`, however, is used in a special way.
 Because it serves to pass a modified output from the deferred code it is undefined before the deferred code start.
@@ -3131,7 +3131,7 @@ Be aware that the macro `ident` consumes the white spaces (including newlines) t
 It is to avoid extra white spaces when tabulation gives better readability.
 If you need the whitespace (e.g., newline) in the output, you can put those in the `ident` macro.
 
-Starting with Jama 1.5.0, there is a built-in language syntax similar to `ident`.
+Starting with Jamal 1.5.0, there is a built-in language syntax similar to `ident`.
 If a macro is preceded with a
 
 [source]
