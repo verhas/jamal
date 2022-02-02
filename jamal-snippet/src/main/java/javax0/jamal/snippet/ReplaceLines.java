@@ -10,8 +10,6 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
-import java.util.Arrays;
-
 import static javax0.jamal.tools.Params.holder;
 
 public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter {
@@ -29,7 +27,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter 
 
     @Override
     public void convertTextBlock(StringBuilder sb, Position pos, Params.Param<?>... params) throws BadSyntax {
-        checkNumberOfParams(2, params);
+        assertParams(2, params);
         final var replace = params[0].asList(String.class);
         final var detectNoChange = params[1].asBoolean();
         boolean noChange = detectNoChange.get();

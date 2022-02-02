@@ -84,6 +84,7 @@ public class TestSnipTransform {
                 + "30.      tabbed in hamarin\n"
                 + "50.    tabbed in hamarine\n");
     }
+
     @Test
     @DisplayName("snip:transform - simple kill and trim, number auto added")
     void testPatternCanNotBeUsedAsAParameterOnly() throws Exception {
@@ -479,6 +480,27 @@ public class TestSnipTransform {
                     "}").results(" for i in range(1,211):\n" +
                     "   print \"hi\"\n" +
                     "   print \"low\"");
+        }
+    }
+
+    @Nested
+    @DisplayName("All the untabbing tests")
+    class TestUntab {
+        @Test
+        @DisplayName("Replaces the tabs properly")
+        void replacesTabs() throws Exception {
+            TestThat.theInput("{@snip:transform action=trim tab=8\n" +
+                            "..\t.\t.}"
+                    //          01234567890123456
+            ).results("..      .       .");
+        }
+
+        @Test
+        @DisplayName("tab value can only be positive")
+        void onlyPositiveTabs() throws Exception {
+            TestThat.theInput("{@snip:transform action=trim tab=0\n" +
+                    "..\t.\t.}"
+            ).throwsBadSyntax("The tab size must be greater than zero");
         }
     }
 

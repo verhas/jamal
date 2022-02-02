@@ -19,7 +19,7 @@ public class Reflow implements Macro, InnerScopeDependent, BlockConverter {
 
     @Override
     public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
-        checkNumberOfParams(1, params);
+        assertParams(1, params);
         final var width = params[0].asInt();
         int index = 0;
         int relative = 0;

@@ -33,6 +33,7 @@ javax0.jamal.snippet.FilesMacro$FileMacro
 javax0.jamal.snippet.Reflow
 javax0.jamal.snippet.SnipList
 javax0.jamal.snippet.SnipSave
+javax0.jamal.snippet.Untab
 javax0.jamal.snippet.SnipLoad
 javax0.jamal.snippet.SnipTransform
 javax0.jamal.snippet.SnipLine

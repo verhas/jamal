@@ -37,7 +37,7 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
 
     @Override
     public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
-        checkNumberOfParams(3, params);
+        assertParams(3, params);
         final var margin = params[0].asInt();
         final var trimVertical = params[1].asBoolean();
         final var verticalTrimOnly = params[2].asBoolean();
@@ -53,7 +53,7 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
 
     private static void trimVertical(StringBuilder sb) {
         int i = 0;
-        while ( i < sb.length() && sb.charAt(i) == '\n') {
+        while (i < sb.length() && sb.charAt(i) == '\n') {
             i++;
         }
         sb.delete(0, i);

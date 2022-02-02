@@ -38,6 +38,7 @@ import javax0.jamal.snippet.StringMacros.StartsWith;
 import javax0.jamal.snippet.StringMacros.Substring;
 import javax0.jamal.snippet.ThinXmlMacro;
 import javax0.jamal.snippet.TrimLines;
+import javax0.jamal.snippet.Untab;
 import javax0.jamal.snippet.Update;
 import javax0.jamal.snippet.Xml;
 import javax0.jamal.snippet.XmlFormat;
@@ -95,5 +96,6 @@ module jamal.snippet {
             EndsWith,
             SnipLine,
             SnipFile,
+            Untab,
             SnipTransform;
 }

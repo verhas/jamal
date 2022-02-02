@@ -32,7 +32,7 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter {
 
     @Override
     public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
-        checkNumberOfParams(2, params);
+        assertParams(2, params);
         final var pattern = params[0].asType(Pattern.class);
         final var keep = params[1].asBoolean();
         final var lines = sb.toString().split("\n", -1);

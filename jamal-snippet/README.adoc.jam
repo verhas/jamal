@@ -1,6 +1,7 @@
 == Jamal Snippet Handling Macros
 {%@import res:jamal.jim%}\
 {%@snip:collect from="src/main/java/"%}\
+{%@snip:collect from="src/test/java/" exclude="Sample.java"%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
 {%#snip:define lastUpdated={%lastUpdated%}%}\
 {%@define JAVA_DIR=src/main/java/javax0/jamal/snippet/%}
@@ -76,6 +77,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<snipSave,`snip:save`>>
 .. <<snipLoad,`snip:load`>>
 .. <<trimLines,`trimLines`>>
+.. <<untab,`untab`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
@@ -126,7 +128,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=0f20e613%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=61d65c03%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -554,7 +556,7 @@ If the regular expression is not found in the first line of the snippet, or ther
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=d1097a6e.e0cefb8a%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=6ac93ea2%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -853,7 +855,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=4bb28494%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=f1c274c0%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -923,9 +925,65 @@ will result
 
 {%untrimmedOutput%}
 
+[[untab]]
+==== {%macroChapter%}`untab`
+{%#snip:check file={%JAVA_DIR%}Untab.java hash=762b0400%}
+
+The syntax of the macro is:
+
+[source,text]
+----
+{@untab tabSize=8
+multiple line of
+    text with \t tab characters
+}
+----
+
+This macro replaces the tab characters in the input with spaces.
+Each tab will be replaced with one or more spaces so that the alignment of the lines is preserved.
+The tab stop is 8 by default, but it can be set to any value using the options `tabSize`.
+This option has two aliases `tab` and `size`, which you can also use as macro parameters.
+However, only `tabSize` is recognized as a macro if defined outside or inside the `untab`.
+With that you can set the tab stop globally for all the snippets:
+
+[source]
+----
+{@define :tabSize=8}
+...
+
+{@untab ... tabSize is defined as a global macro
+
+  possible
+    multiple lines
+}
+----
+
+
+For example:
+For example:
+{%@snip:check id=untabSample,untabSampleOutput hash=3ea1ff00 message="Check the untab sample if it is still okay!"%}
+[source,text]
+----
+{%@define TRANSFORMATIONS=actions=replace,trim replace="/\"//" replace=/\\n// replace=/\+//%}
+{%#snip:transform {%TRANSFORMATIONS%}
+{%@snip untabSample%}%}
+----
+
+will be converted to
+
+[source,text]
+----
+{%#snip:transform {%TRANSFORMATIONS%}
+{%@snip untabSampleOutput%}%}
+----
+
+
+
+
+
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=640fdfce%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=bdbd5924%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 {%parameterized%}
 
@@ -993,7 +1051,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 ==== {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=d4252c93.1f397a7d%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=b82fabdd%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1052,7 +1110,7 @@ In this case only the comment lines remained that start with `//` at the start o
 
 [[skipLines]]
 ==== {%macroChapter%}`skipLines`
-{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=563d996a%}
+{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=cdfdc8ed%}
 You can use this macro to skip lines from the snippet.
 {%parameterized%}
 
@@ -1158,7 +1216,7 @@ but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
 ==== {%macroChapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=401ba5d1%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=feaed33e%}
 This macro replaces strings in the input.
 {%parameterized%}
 
@@ -1304,7 +1362,7 @@ In this case we used the word `last` as an argument to the counter macro `c`, wh
 
 [[reflow]]
 ==== {%macroChapter%}`reflow`
-{%#snip:check file={%JAVA_DIR%}Reflow.java hash=efef6ad2%}
+{%#snip:check file={%JAVA_DIR%}Reflow.java hash=d11bdcb8%}
 This macro reflows the content.
 {%parameterized%}
 
@@ -1440,7 +1498,7 @@ The syntax of the macro is
 
 [[snipTransform]]
 ==== {%macroChapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=2ec0c1e4%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=0badaf1d%}
 
 The `snip:transform` macro integrates the functionality of the macros
 
@@ -1450,8 +1508,9 @@ The `snip:transform` macro integrates the functionality of the macros
 * `TrimLines`
 * `Reflow`
 * `NumberLines`
+* `untab`
 
-It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, and it can number the lines.
+It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, replace tabs with spaces, and it can number the lines.
 
 {%parameterized%}
 
@@ -1476,6 +1535,7 @@ The names for the actions are the followings:
 * `trim`
 * `reflow`
 * `number`
+* `untab`
 
 If you have a block that you want simultaneously trim and then number the lines, you have to write
 
@@ -1546,6 +1606,7 @@ The following parameters will add the action implicitly to the list:
 * `keep` will add the action `kill`
 * `skip` will add the action `skip`
 * `replace` will add the action `replace`
+* `tab` or `tabSize` will add the action `untab`
 
 If an action is already in the list (they are present in the parameter `actions`) they are not added again.
 Also, their position remains as specified in the parameter `actions`.
@@ -1557,7 +1618,7 @@ Likewise `skip` will precede `replace`.
 A parameter other than these belonging to an action not listed in the `actions` parameter is an error.
 You cannot, for example, specify `width` without adding `reflow` to the actions as it is not evident what the meaning of `width` is without `reflow`.
 
-You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get addedd implicitly.
+You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get added implicitly.
 For example, you want to kill a few lines and also number the lines.
 If you do not list the action `kill` then it will be executed after the numbering.
 When the lines are deleted the numbering will have gaps.
@@ -1592,6 +1653,8 @@ The parameters for the `snip:transform` are:
 * `margin` passed to `trimLines`
 * `trimVertical` passed to `trimLines`
 * `verticalTrimOnly` passed to `trimLines`
+*`tab` or `tabSize` passed to `untab`. Note that the original `untab` parameter is not supported in the `snip:transform` macro.
+The reason for that is readability. While `untab size` may be acceptable, it is not clear what the meaning of `size` is in `snip:transform`.
 
 The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
@@ -1729,32 +1792,33 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,344 bytes
+- snippet: 1,376 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,856 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,763 bytes
+- NumberLines.java: 2,756 bytes
+- Untab.java: 2,285 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
-- SnipTransform.java: 14,199 bytes
+- SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 7,848 bytes
+- Collect.java: 9,001 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 4,179 bytes
+- TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipLine.java: 691 bytes
 - SnipXml.java: 1,489 bytes
 - ThinXmlMacro.java: 585 bytes
-- BlockConverter.java: 1,715 bytes
+- BlockConverter.java: 1,822 bytes
 - Counter.java: 3,691 bytes
 - StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 2,019 bytes
+- KillLines.java: 2,012 bytes
 - SnipLoad.java: 3,530 bytes
-- SnippetStore.java: 10,174 bytes
+- SnippetStore.java: 10,222 bytes
 - ListDir.java: 5,583 bytes
 - XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes
@@ -1765,10 +1829,10 @@ will result
 - SnipList.java: 1,260 bytes
 - XmlDocument.java: 5,656 bytes
 - Java.java: 10,404 bytes
-- ReplaceLines.java: 3,015 bytes
-- SkipLines.java: 2,544 bytes
-- SnipCheck.java: 5,619 bytes
-- Reflow.java: 1,988 bytes
+- ReplaceLines.java: 2,982 bytes
+- SkipLines.java: 2,537 bytes
+- SnipCheck.java: 5,866 bytes
+- Reflow.java: 1,981 bytes
 - Snippet.java: 1,088 bytes
 ----
 %}

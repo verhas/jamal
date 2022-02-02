@@ -16,6 +16,8 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ public class Collect implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var reference = in.getReference();
+        final var pos = in.getPosition();
         // snippet collect_options
         final var include = Params.<Predicate<String>>holder("include").orElse(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
         // can define a regular expression. Only those files will be collected that match partially the regular expression.
@@ -83,7 +86,7 @@ public class Collect implements Macro, InnerScopeDependent {
         final var fn = from.get();
         final var fromFile = new File(fn);
         if (FileTools.isRemote(fn) || fromFile.isFile()) {
-            harvestSnippets(fn, store, start.get(), liner.get(), stop.get());
+            harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos);
         } else {
             try {
                 final var selectedFiles = files(fn, scanDepth.get())
@@ -92,7 +95,12 @@ public class Collect implements Macro, InnerScopeDependent {
                         .filter(exclude.get())
                         .collect(Collectors.toSet());
                 for (final var file : selectedFiles) {
-                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(), store, start.get(), liner.get(), stop.get());
+                    harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(),
+                            store,
+                            start.get(),
+                            liner.get(),
+                            stop.get(),
+                            pos);
                 }
             } catch (IOException | UncheckedIOException e) {
                 throw new BadSyntax("There is some problem collecting snippets from files under '" + from.get() + "'", e);
@@ -101,12 +109,17 @@ public class Collect implements Macro, InnerScopeDependent {
         return "";
     }
 
-    private void harvestSnippets(String file, SnippetStore store, Pattern start, Pattern liner, Pattern stop) throws BadSyntax {
+    private void harvestSnippets(String file, SnippetStore store,
+                                 Pattern start,
+                                 Pattern liner,
+                                 Pattern stop,
+                                 Position pos) throws BadSyntax {
         var state = State.OUT;
         String id = "";
         StringBuilder text = new StringBuilder();
         final var lines = FileTools.getFileContent(file).split("\n", -1);
         int startLine = 0;
+        List<BadSyntax> errors = new ArrayList<>();
         for (int lineNr = 0; lineNr < lines.length; lineNr++) {
             String line = lines[lineNr];
             switch (state) {
@@ -125,13 +138,21 @@ public class Collect implements Macro, InnerScopeDependent {
                             throw new BadSyntax("'snipline " + id + "' is on the last line of the file '" + file + "'");
                         }
                         line = lines[++lineNr];
-                        store.snippet(id, line, new Position(file, lineNr));
+                        try {
+                            store.snippet(id, line, new Position(file, lineNr));
+                        } catch (BadSyntax e) {
+                            errors.add(new BadSyntaxAt("Collection error", pos, e));
+                        }
                     }
                     break;
                 case IN:
                     final var stopMatcher = stop.matcher(line);
                     if (stopMatcher.find()) {
-                        store.snippet(id, text.toString(), new Position(file, startLine + 1));
+                        try {
+                            store.snippet(id, text.toString(), new Position(file, startLine + 1));
+                        } catch (BadSyntax e) {
+                            errors.add(new BadSyntaxAt("Collection error: " + e.getMessage(), pos, e));
+                        }
                         state = State.OUT;
                         break;
                     }
@@ -142,6 +163,14 @@ public class Collect implements Macro, InnerScopeDependent {
         if (state == State.IN) {
             store.snippet(id, "", new Position(file, startLine),
                     new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
+        }
+        if (!errors.isEmpty()) {
+            if (errors.size() == 1) {
+                throw errors.get(0);
+            }
+            final var bs = new BadSyntax("There are some problems with snippets in file '" + file + "'");
+            errors.forEach(bs::addSuppressed);
+            throw bs;
         }
     }
 

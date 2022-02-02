@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * order of the listing and after that all other macros that were configured in the order as they are listed above.
  */
 public class SnipTransform implements Macro {
-    private static final Set<String> knownActions = Set.of("kill", "skip", "replace", "trim", "reflow", "number");
+    private static final Set<String> knownActions = Set.of("kill", "skip", "replace", "trim", "reflow", "number", "untab");
 
     /**
      * Parse the input for parameters and store the parameters. The input is parsed in the constructor and then the
@@ -72,6 +72,7 @@ public class SnipTransform implements Macro {
         final Params.Param<Integer> margin = Params.<Integer>holder(null, "margin").orElseInt(0);
         final Params.Param<Boolean> trimVertical = Params.<Boolean>holder(null, "trimVertical").asBoolean();
         final Params.Param<Boolean> verticalTrimOnly = Params.<Boolean>holder(null, "verticalTrimOnly", "vtrimOnly").asBoolean();
+        final Params.Param<Integer> tabSize = Params.<Integer>holder("tabSize", "tab").asInt();
 
         final Set<String> actionsSet;
 
@@ -79,7 +80,7 @@ public class SnipTransform implements Macro {
             // there is no '(' and ')' around the parameters
             Params.using(processor)
                     .from(SnipTransform.this)
-                    .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange, skipStart, skipEnd, margin, trimVertical, verticalTrimOnly)
+                    .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange, skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize)
                     .parse(in);
 
             actionsSet = getOrderedActionSet();
@@ -181,7 +182,10 @@ public class SnipTransform implements Macro {
                     action("kill", pattern),
                     action("keep", keep, "kill"),
                     action("skip", skipStart),
-                    action("replace", replace))) {
+                    action("replace", replace),
+                    action("tab", tabSize, "untab"),
+                    action("tabSize", tabSize, "untab")
+            )) {
                 if (a.param.isPresent() && a.param.name().equals(a.name)) {
                     actionsSet.add(a.action);
                 }
@@ -199,8 +203,9 @@ public class SnipTransform implements Macro {
                     "kill", List.of(pattern, keep),
                     "skip", List.of(skipEnd),
                     "replace", List.of(detectNoChange),
-                    "trim", List.of(margin, trimVertical, verticalTrimOnly),
+                    "trim", List.of(margin, trimVertical, verticalTrimOnly, tabSize),
                     "reflow", List.of(width),
+                    "untab", List.of(tabSize),
                     "number", List.of(format, start, step));
             for (final var e : needs.entrySet()) {
                 final var action = e.getKey();
@@ -238,6 +243,7 @@ public class SnipTransform implements Macro {
         final BlockConverter trimLines;
         final BlockConverter reflow;
         final BlockConverter numberLines;
+        final BlockConverter untab;
 
         private static BlockConverter getConverter(final Processor processor, final String macroName) throws BadSyntax {
             return processor.getRegister().getMacro(macroName)
@@ -252,6 +258,7 @@ public class SnipTransform implements Macro {
             trimLines = getConverter(processor, "trimLines");
             reflow = getConverter(processor, "reflow");
             numberLines = getConverter(processor, "numberLines");
+            untab = getConverter(processor, "untab");
         }
     }
 
@@ -280,6 +287,9 @@ public class SnipTransform implements Macro {
                     break;
                 case "number":
                     macros.numberLines.convertTextBlock(sb, pos, params.format, params.start, params.step);
+                    break;
+                case "untab":
+                    macros.untab.convertTextBlock(sb, pos, params.tabSize);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown action: " + action + "This is an internal error, as illegal actions was already checked");

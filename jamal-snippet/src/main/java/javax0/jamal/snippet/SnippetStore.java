@@ -145,7 +145,7 @@ public class SnippetStore implements Identified {
         if (snippets.containsKey(id)) {
             if (snippets.get(id).exception == null && collectionException == null) {
                 final var snip = snippets.get(id);
-                throw new BadSyntaxAt("Snippet '" + id + "' is already defined in " + snip.pos.file + ":" + snip.pos.line, pos);
+                throw new BadSyntax(String.format("Snippet '%s' is already defined originally at %s:%s and again at %s:%s",id,snip.pos.file,snip.pos.line, pos.file, pos.line));
             } else if (snippets.get(id).exception != null && collectionException == null) {
                 snippets.put(id, new Snippet(id, snippet, pos, null));
             } else if (snippets.get(id).exception != null && collectionException != null) {

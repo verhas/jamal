@@ -75,9 +75,13 @@ public class SnipCheck implements Macro {
         }
         if (hashStringCalculated.contains(hash)) {
             return "";
+        }if(message.isPresent()) {
+            throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) +
+                    "' does not contain '" + hashString.get() + "'.\n" + "'" + message.get() + "'");
+        }else{
+            throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) +
+                    "' does not contain '" + hashString.get() + "'.");
         }
-        throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) +
-            "' does not contain '" + hashString.get() + "'.\n" + "'" + message.get() + "'");
     }
 
     public static String doted(final String s) {

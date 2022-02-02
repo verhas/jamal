@@ -90,14 +90,14 @@ public class Processor implements javax0.jamal.api.Processor {
                 optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))));
             } catch (BadSyntaxAt e) {
                 throw new IllegalArgumentException("The environment variable '"
-                    + EnvironmentVariables.JAMAL_OPTIONS_ENV + "' is malformed.", e);
+                        + EnvironmentVariables.JAMAL_OPTIONS_ENV + "' is malformed.", e);
             }
         });
         try {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {
             throw new IllegalArgumentException(
-                "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
+                    "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
         }
         Macro.getInstances().forEach(macros::define);
         debugger = DebuggerFactory.build(this);
@@ -451,7 +451,7 @@ public class Processor implements javax0.jamal.api.Processor {
      *                   syntax error is detected.
      */
     private String evalUserDefinedMacro(final Input input, final TraceRecord tr, MacroQualifier qualifier)
-        throws BadSyntax {
+            throws BadSyntax {
         var pos = input.getPosition();
         skipWhiteSpaces(input);
         final boolean reportUndefBeforeEval = doesStartWithQuestionMark(input);
@@ -473,8 +473,8 @@ public class Processor implements javax0.jamal.api.Processor {
             identifiedOpt = macros.getUserDefined(id);
         }
         final Optional<Evaluable> udMacroOpt = identifiedOpt
-            .filter(ud -> ud instanceof Evaluable)
-            .map(ud -> (Evaluable) ud);
+                .filter(ud -> ud instanceof Evaluable)
+                .map(ud -> (Evaluable) ud);
 
         if (reportUndef && udMacroOpt.isEmpty()) {
             throwForUndefinedUdMacro(pos, id);
@@ -511,15 +511,15 @@ public class Processor implements javax0.jamal.api.Processor {
         final var optMacro = macros.getMacro(id);
         if (optMacro.isPresent()) {
             pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id +
-                "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?"), ref);
+                    "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?"), ref);
         } else {
             final Set<String> suggestions = getRegister().suggest(id);
             if (suggestions.isEmpty()) {
                 pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id + " ...' is not defined."), ref);
             } else {
                 pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id +
-                    " ...' is not defined. Did you mean " + suggestions.stream()
-                    .map(s -> "'"  + s + "'").collect(Collectors.joining(", ")) + "?"), ref);
+                        " ...' is not defined. Did you mean " + suggestions.stream()
+                        .map(s -> "'" + s + "'").collect(Collectors.joining(", ")) + "?"), ref);
             }
         }
     }
@@ -581,10 +581,10 @@ public class Processor implements javax0.jamal.api.Processor {
      */
     private String[] addMacroNameForDefault(String[] parameters, Evaluable macro, String id) {
         if (macro.getId().equals(Identified.DEFAULT_MACRO) &&
-            macro instanceof javax0.jamal.engine.UserDefinedMacro) {
+                macro instanceof javax0.jamal.engine.UserDefinedMacro) {
             final var arguments = ((javax0.jamal.engine.UserDefinedMacro) macro).getParameters();
             if (arguments.length > 0 &&
-                (Identified.MACRO_NAME_ARG1.equals(arguments[0]) || Identified.MACRO_NAME_ARG2.equals(arguments[0]))) {
+                    (Identified.MACRO_NAME_ARG1.equals(arguments[0]) || Identified.MACRO_NAME_ARG2.equals(arguments[0]))) {
                 final var modified = new String[parameters.length + 1];
                 System.arraycopy(parameters, 0, modified, 1, parameters.length);
                 modified[0] = id;
@@ -649,7 +649,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 skip(input, macros.open());
                 final var macroStart = getNextMacroBody(input);
                 final var macroStartInput = makeInput(macroStart, input.getPosition().fork())
-                    .append(macros.close());
+                        .append(macros.close());
                 final var macroStartOutput = makeInput();
                 processMacro(macroStartInput, macroStartOutput);
                 output.append(macroStartOutput);
@@ -680,7 +680,7 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         if (i < output.length() && !Character.isWhitespace(output.charAt(i))) {
             throw new BadSyntaxAt("Macro evaluated result user defined macro name contains the separator. Must not.",
-                pos);
+                    pos);
         }
     }
 
@@ -733,7 +733,7 @@ public class Processor implements javax0.jamal.api.Processor {
             final var closeIndex = input.indexOf(close, searchFrom);
             if (closeIndex < openIndex) {
                 throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                    pos);
+                        pos);
             }
             if (openIndex == -1 || separatorIndex < openIndex) {
                 appendTheNextParameter(parameters, input, start, separatorIndex, pos);
@@ -765,7 +765,7 @@ public class Processor implements javax0.jamal.api.Processor {
         if (openIndex != -1) {
             if (closeIndex < openIndex) {
                 throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                    pos);
+                        pos);
             }
             while (true) {
                 openIndex = stepOverNestedMacros(input, openIndex, pos);
@@ -777,8 +777,8 @@ public class Processor implements javax0.jamal.api.Processor {
                 if (openIndex == -1) {
                     if (closeIndex != -1) {
                         throw new BadSyntaxAt(
-                            "There are trailing macro closing strings in the last argument of the user defined macro.",
-                            pos);
+                                "There are trailing macro closing strings in the last argument of the user defined macro.",
+                                pos);
                     }
                     break;
                 }
@@ -786,7 +786,7 @@ public class Processor implements javax0.jamal.api.Processor {
         } else {
             if (input.indexOf(closeIndex, searchFrom) != -1) {
                 throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                    pos);
+                        pos);
             }
         }
     }
@@ -888,6 +888,7 @@ public class Processor implements javax0.jamal.api.Processor {
         try {
             currentlyClosing = true;
             for (final var resource : closers) {
+                this.exceptions.clear();
                 try {
                     setAwares(resource, result);
                     resource.close();
@@ -906,8 +907,8 @@ public class Processor implements javax0.jamal.api.Processor {
                 throw (BadSyntax) exceptions.peek();
             }
             final var sb = new StringBuilder(
-                "There " + (nrOfExceptions == 1 ? "was" : "were")
-                    + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
+                    "There " + (nrOfExceptions == 1 ? "was" : "were")
+                            + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
             int exceptionSerialNum = nrOfExceptions;
             for (final var accumulated : exceptions) {
                 sb.append(exceptionSerialNum--).append(". ").append(accumulated.getMessage()).append("\n");

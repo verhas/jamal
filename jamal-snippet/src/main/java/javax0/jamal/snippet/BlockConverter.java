@@ -6,9 +6,15 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
+import java.util.Arrays;
+import java.util.Objects;
+
+/**
+ * Block converter macros implement this interface.
+ */
 public interface BlockConverter {
     /**
-     * Block converter macros implement this interface. This method is usually called from inside from the method
+     * This method is usually called from inside from the method
      * {@link javax0.jamal.api.Macro#evaluate(Input, Processor) evaluate()}, but it is also possible to invoked it
      * from other macros. It separates the input parsing for parameters and the actual processing of the block.
      *
@@ -23,8 +29,8 @@ public interface BlockConverter {
      * Use this method in the macros implementing this interface to check that the caller was passing the right
      * amount of parameters.
      */
-    default void checkNumberOfParams(int numberOfParams, Params.Param<?>[] params) {
-        if (params.length != numberOfParams) {
+    default void assertParams(int numberOfParams, Params.Param<?>[] params) {
+        if (params.length != numberOfParams || Arrays.stream(params).anyMatch(Objects::isNull)) {
             final var macro = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass().getSimpleName();
             throw new IllegalArgumentException("The number of parameters is "
                     + params.length

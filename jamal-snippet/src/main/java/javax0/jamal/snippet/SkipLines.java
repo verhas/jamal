@@ -25,7 +25,7 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter {
 
     @Override
     public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
-        checkNumberOfParams(2, params);
+        assertParams(2, params);
         final var skipStart = params[0].asType(Pattern.class);
         final var skipEnd = params[1].asType(Pattern.class);
 

@@ -61,7 +61,7 @@ public class NumberLines implements Macro, InnerScopeDependent, BlockConverter {
         return in.toString();
     }
     public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
-        checkNumberOfParams(3, params);
+        assertParams(3, params);
         final var format = params[0].asString();
         final var start = params[1].asInt();
         final var step = params[2].asInt();

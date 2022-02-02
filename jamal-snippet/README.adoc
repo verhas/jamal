@@ -68,6 +68,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<snipSave,`snip:save`>>
 .. <<snipLoad,`snip:load`>>
 .. <<trimLines,`trimLines`>>
+.. <<untab,`untab`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
@@ -1061,8 +1062,68 @@ c
 ----
 
 
+[[untab]]
+==== xiv.`untab`
+
+
+The syntax of the macro is:
+
+[source,text]
+----
+{@untab tabSize=8
+multiple line of
+    text with \t tab characters
+}
+----
+
+This macro replaces the tab characters in the input with spaces.
+Each tab will be replaced with one or more spaces so that the alignment of the lines is preserved.
+The tab stop is 8 by default, but it can be set to any value using the options `tabSize`.
+This option has two aliases `tab` and `size`, which you can also use as macro parameters.
+However, only `tabSize` is recognized as a macro if defined outside or inside the `untab`.
+With that you can set the tab stop globally for all the snippets:
+
+[source]
+----
+{@define :tabSize=8}
+...
+
+{@untab ... tabSize is defined as a global macro
+
+  possible
+    multiple lines
+}
+----
+
+
+For example:
+For example:
+
+[source,text]
+----
+
+{@untab tabSize=8
+.......|.......|.......|.......|
+...\t... .   .\t.. \t.
+}
+
+----
+
+will be converted to
+
+[source,text]
+----
+.......|.......|.......|.......|
+...     ... .   .       ..      .
+
+----
+
+
+
+
+
 [[numberLines]]
-==== xiv.`numberLines`
+==== xv.`numberLines`
 
 This macro can put numbers in front of the lines, sequentially numbering them.
 
@@ -1131,7 +1192,7 @@ The standard Java method `String::format` will format the number using the forma
 Any illegal formatting will result in an error.
 
 [[killLines]]
-==== xv.`killLines`
+==== xvi.`killLines`
 
 This macro deletes, or keeps the selected lines from its input.
 
@@ -1207,7 +1268,7 @@ creates the output
 In this case only the comment lines remained that start with `//` at the start of the line.
 
 [[skipLines]]
-==== xvi.`skipLines`
+==== xvii.`skipLines`
 
 You can use this macro to skip lines from the snippet.
 
@@ -1274,7 +1335,7 @@ The `skip` and `endSkip` lines cannot be nested.
 When there is a match for a `skip`, any further `skip` is ignored until an `endSkip`.
 
 [[replace]]
-==== xvii.`replace`
+==== xviii.`replace`
 
 The macro `replace` replaces strings with other strings in its input.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -1313,7 +1374,7 @@ the pear has fallen off the bush
 but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
-==== xviii.`replaceLines`
+==== xix.`replaceLines`
 
 This macro replaces strings in the input.
 
@@ -1360,7 +1421,7 @@ Use the parameter`detectNoChange` to detect this.
 If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
-==== xix.`counter:define`
+==== xx.`counter:define`
 
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
@@ -1476,7 +1537,7 @@ will have the same output:
 In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without increment.
 
 [[reflow]]
-==== xx.`reflow`
+==== xxi.`reflow`
 
 This macro reflows the content.
 
@@ -1642,7 +1703,7 @@ Setting the `width` to any non-positive value will remove the limit from the lin
 You may use this to override a globally set `width` macro.
 
 [[snipLine]]
-==== xxi.`snip:line`
+==== xxii.`snip:line`
 
 The macro `snip:line` results in the starting line number of the snippet in the file where the snippet is defined.
 For example, if the snippet `hubbaba` was collected from a file with the `snippet hubbaba` on line 5, the macro will return 6.
@@ -1652,7 +1713,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 42.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 45.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -1674,7 +1735,7 @@ The syntax of the macro is
 The text following the snippet id is ignored, reserved for future development.
 
 [[snipFile]]
-==== xxii.`snip:file`
+==== xxiii.`snip:file`
 
 The macro `snip:file` returns the file's name where the snippet is defined.
 The returned file name is a full absolute path.
@@ -1692,7 +1753,7 @@ The syntax of the macro is
 The text following the snippet id is ignored, reserved for future development.
 
 [[snipTransform]]
-==== xxiii.`snip:transform`
+==== xxiv.`snip:transform`
 
 
 The `snip:transform` macro integrates the functionality of the macros
@@ -1703,8 +1764,9 @@ The `snip:transform` macro integrates the functionality of the macros
 * `TrimLines`
 * `Reflow`
 * `NumberLines`
+* `untab`
 
-It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, and it can number the lines.
+It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, replace tabs with spaces, and it can number the lines.
 
 
 The first line following the macro identifier until the end of the line may contain parameters.
@@ -1732,6 +1794,7 @@ The names for the actions are the followings:
 * `trim`
 * `reflow`
 * `number`
+* `untab`
 
 If you have a block that you want simultaneously trim and then number the lines, you have to write
 
@@ -1826,6 +1889,7 @@ The following parameters will add the action implicitly to the list:
 * `keep` will add the action `kill`
 * `skip` will add the action `skip`
 * `replace` will add the action `replace`
+* `tab` or `tabSize` will add the action `untab`
 
 If an action is already in the list (they are present in the parameter `actions`) they are not added again.
 Also, their position remains as specified in the parameter `actions`.
@@ -1837,7 +1901,7 @@ Likewise `skip` will precede `replace`.
 A parameter other than these belonging to an action not listed in the `actions` parameter is an error.
 You cannot, for example, specify `width` without adding `reflow` to the actions as it is not evident what the meaning of `width` is without `reflow`.
 
-You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get addedd implicitly.
+You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get added implicitly.
 For example, you want to kill a few lines and also number the lines.
 If you do not list the action `kill` then it will be executed after the numbering.
 When the lines are deleted the numbering will have gaps.
@@ -1872,11 +1936,13 @@ The parameters for the `snip:transform` are:
 * `margin` passed to `trimLines`
 * `trimVertical` passed to `trimLines`
 * `verticalTrimOnly` passed to `trimLines`
+*`tab` or `tabSize` passed to `untab`. Note that the original `untab` parameter is not supported in the `snip:transform` macro.
+The reason for that is readability. While `untab size` may be acceptable, it is not clear what the meaning of `size` is in `snip:transform`.
 
 The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
-==== xxiv.`lineCount`
+==== xxv.`lineCount`
 
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
@@ -1897,7 +1963,7 @@ results
 
 
 [[listDir]]
-==== xxv.`listDir`
+==== xxvi.`listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -1946,6 +2012,7 @@ will result
 - SnipSave.java
 - Case.java
 - NumberLines.java
+- Untab.java
 - DateMacro.java
 - Format.java
 - Update.java
@@ -2051,32 +2118,33 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,344 bytes
+- snippet: 1,376 bytes
 - Snip.java: 2,302 bytes
 - SnipSave.java: 4,856 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,763 bytes
+- NumberLines.java: 2,756 bytes
+- Untab.java: 2,285 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
-- SnipTransform.java: 14,199 bytes
+- SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 7,848 bytes
+- Collect.java: 9,001 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 4,179 bytes
+- TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipLine.java: 691 bytes
 - SnipXml.java: 1,489 bytes
 - ThinXmlMacro.java: 585 bytes
-- BlockConverter.java: 1,715 bytes
+- BlockConverter.java: 1,822 bytes
 - Counter.java: 3,691 bytes
 - StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 2,019 bytes
+- KillLines.java: 2,012 bytes
 - SnipLoad.java: 3,530 bytes
-- SnippetStore.java: 10,174 bytes
+- SnippetStore.java: 10,222 bytes
 - ListDir.java: 5,583 bytes
 - XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes
@@ -2087,10 +2155,10 @@ will result
 - SnipList.java: 1,260 bytes
 - XmlDocument.java: 5,656 bytes
 - Java.java: 10,404 bytes
-- ReplaceLines.java: 3,015 bytes
-- SkipLines.java: 2,544 bytes
-- SnipCheck.java: 5,619 bytes
-- Reflow.java: 1,988 bytes
+- ReplaceLines.java: 2,982 bytes
+- SkipLines.java: 2,537 bytes
+- SnipCheck.java: 5,866 bytes
+- Reflow.java: 1,981 bytes
 - Snippet.java: 1,088 bytes
 ----
 
@@ -2122,7 +2190,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xxvi.`xmlFormat`
+==== xxvii.`xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -2276,7 +2344,7 @@ will result
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[thinXml]]
-==== xxvii.`thinXml`
+==== xxviii.`thinXml`
 
 This macro converts thin XML to normal XML.
 Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it works only for full XML files and not for XML fragments.
@@ -2328,7 +2396,7 @@ It is not formatted also and there is no leading ```<?xml version="1.0" encoding
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[date]]
-==== xxviii.`date`
+==== xxix.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -2344,12 +2412,12 @@ will result in the output
 
 [source]
 ----
-2022-02-01 01:51:53
+2022-02-02 12:32:50
 ----
 
 
 [[format]]
-==== xxix.`format`
+==== xxx.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -2400,7 +2468,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[case]]
-==== xxx.`case:lower`, `case:upper`, ...
+==== xxxi.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -2413,7 +2481,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxxi.`file`
+==== xxxii.`file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -2455,7 +2523,7 @@ In the format you can use the following placeholders:
 
 
 [[directory]]
-==== xxxii.`directory`
+==== xxxiii.`directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -2496,7 +2564,7 @@ In the format you can use the following placeholders:
 
 
 [[Java]]
-==== xxxiii.Java Macros
+==== xxxiv.Java Macros
 
 
 [[java:class]]
@@ -2695,7 +2763,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xxxiv.String Macros
+==== xxxv.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -2880,7 +2948,7 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
-==== xxxv.`snip:update`
+==== xxxvi.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
