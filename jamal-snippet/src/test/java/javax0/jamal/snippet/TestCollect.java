@@ -17,7 +17,7 @@ public class TestCollect {
         TestThat.theInput("" +
                 "{@snip:collect from=res:javax0/jamal/snippet/SnippetSource-1.txt prefix=prefix:: postfix=::postfix}\n" +
                 "{@snip prefix::first_snippet::postfix}"
-        ).results("\n" +
+        ).ignoreLineEnding().results("\n" +
                 "This is a one line snippet\n");
     }
 
@@ -31,7 +31,7 @@ public class TestCollect {
                 "4. {@snip four}" +
                 "5. {@snip five}" +
                 ""
-        ).results("" +
+        ).ignoreLineEnding().results("" +
                 "1. this is one\n" +
                 "2. this is two\n" +
                 "this is three and two also\n" +
