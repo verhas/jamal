@@ -1,4 +1,4 @@
-## Jamal Test Support
+== Jamal Test Support
 
 This project provides code that can be used to help test Jamal extension macros that are written in Java.
 
@@ -9,17 +9,18 @@ method and checks the returned string against the expected.
 
 To ease this task you can put this module on the test dependencies
 
-```
+----
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
             <version>1.0.4</version>
         </dependency>
-```
+
+----
 
 and have a test like
 
-```
+----
     var camelLowerCase = TestThat.forMacro(Camel.LowerCase.class);
     camelLowerCase.fromInput("INPUT").results( "input");
     camelLowerCase.fromInput("INpUT").results( "input");
@@ -29,18 +30,21 @@ and have a test like
     camelLowerCase.fromInput("input").results( "input");
     camelLowerCase.fromInput("IN-PUT").results( "inPut");
     camelLowerCase.fromInput("I-N-P-U-T").results( "iNPUT");
-```
+
+----
 
 If and when the macro is expected to throw exception (probably BadSyntaxAt) then you can write
 
-```
+----
     TestThat.forMacro(For.class).fromInput(" x in a,b,c,d= x is either a, b, c or d\n").throwsBadSyntax();
-```
+
+----
 
 If you expect any other exception, other than `BadSyntaxAt` then you can also use `throwsUp(exception.class)` instead of
 `throwsBadSyntax()`.
 
-```java
+[source,java]
+----
 public class Test {
 
     @TestFactory
@@ -50,6 +54,6 @@ public class Test {
         );
     }
 }
-```
+----
 
 Then have the files with `.jyt` extension contain Jamal preprocessed Yaml files. Open and close are `{%` and `%}`.
