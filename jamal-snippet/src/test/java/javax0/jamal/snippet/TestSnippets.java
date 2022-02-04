@@ -120,4 +120,18 @@ public class TestSnippets {
                 "letter b\n" +
                 "letter c");
     }
+
+    @Test
+    void testCollectAsciidocMultiple() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:collect from=res:javax0/jamal/snippet/snippets-multiple.txt asciidoc}" +
+                "{@snip (poly) snip\\d{4}}" +
+                ""
+        ).ignoreLineEnding().results("" +
+                "snip 0100\n" +
+                "snip 0200\n" +
+                "snip 0300\n"
+        );
+    }
+
 }

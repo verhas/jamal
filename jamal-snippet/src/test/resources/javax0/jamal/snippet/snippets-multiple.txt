@@ -1,0 +1,15 @@
+Test file to be collected using the asciidoc parameter
+
+ONE is a simple snippet
+tag::snip0100[]
+snip 0100
+end::snip0100[]
+
+This is a sample text file that defines a snippet for ASCIIDOC to demonstrate that one snippet can be composed of several parts scattered around the file.
+tag::snip0300[]
+snip 0300
+end::snip0300[]
+
+tag::snip0200[]
+snip 0200
+end::snip0200[]

@@ -141,8 +141,22 @@ public class Collect implements Macro, InnerScopeDependent {
 
     private static class SnippetAccumulator {
         StringBuilder sb = new StringBuilder();
-        String id;
-        int startLine;
+        final String id;
+        final int startLine;
+        boolean isOpen = true;
+
+        private SnippetAccumulator(final String id, final int startLine) {
+            this.id = id;
+            this.startLine = startLine;
+        }
+
+        void close() {
+            isOpen = false;
+        }
+
+        void open() {
+            isOpen = true;
+        }
     }
 
     private static Pattern ASCIIDOC_START = Pattern.compile("tag::([\\w\\d_$]+)\\[.*?\\]");
@@ -173,36 +187,39 @@ public class Collect implements Macro, InnerScopeDependent {
             final var stopMatcher = ASCIIDOC_STOP.matcher(line);
             if (startMatcher.find()) {
                 final var id = startMatcher.group(1);
-                if (openedSnippets.containsKey(id)) {
+                if (openedSnippets.containsKey(id) && openedSnippets.get(id).isOpen) {
                     errors.add(new BadSyntax("Snippet '" + id + "' is already opened on line " + openedSnippets.get(id).startLine));
                 } else {
-                    final var sa = new SnippetAccumulator();
-                    sa.id = id;
-                    sa.startLine = lineNr;
-                    openedSnippets.put(id, sa);
+                    final var startLine = lineNr;
+                    final var sa = openedSnippets.computeIfAbsent(id, _id -> new SnippetAccumulator(id, startLine));
+                    sa.open();
                 }
             } else if (stopMatcher.find()) {
                 final var id = stopMatcher.group(1);
-                if (!openedSnippets.containsKey(id)) {
+                if (!openedSnippets.containsKey(id) && !openedSnippets.get(id).isOpen) {
                     errors.add(new BadSyntax("Snippet '" + id + "' is not opened"));
                 } else {
                     final var sa = openedSnippets.get(id);
-                    try {
-                        store.snippet(prefix + sa.id + postfix, sa.sb.toString(), new Position(file, sa.startLine));
-                    } catch (BadSyntax e) {
-                        errors.add(new BadSyntaxAt("Collection error", pos, e));
-                    }
-                    openedSnippets.remove(id);
+                    sa.close();
                 }
             } else {
                 for (final var sa : openedSnippets.values()) {
-                    sa.sb.append(line).append("\n");
+                    if (sa.isOpen) {
+                        sa.sb.append(line).append("\n");
+                    }
                 }
             }
         }
         if (!openedSnippets.isEmpty()) {
             for (final var sa : openedSnippets.values()) {
-                errors.add(new BadSyntax("Snippet '" + sa.id + "' opened on the line " + sa.startLine + " is not closed."));
+                if (sa.isOpen) {
+                    errors.add(new BadSyntax("Snippet '" + sa.id + "' opened on the line " + sa.startLine + " is not closed."));
+                }
+                try {
+                    store.snippet(prefix + sa.id + postfix, sa.sb.toString(), new Position(file, sa.startLine));
+                } catch (BadSyntax e) {
+                    errors.add(new BadSyntaxAt("Collection error", pos, e));
+                }
             }
         }
         assertNoErrors(file, errors);

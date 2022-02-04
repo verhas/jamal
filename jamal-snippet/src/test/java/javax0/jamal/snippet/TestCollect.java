@@ -43,6 +43,18 @@ public class TestCollect {
     }
 
     @Test
+    void testCollectAsciidocMultiple() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:collect from=res:javax0/jamal/snippet/asciidoctagsnippets-multiple.txt asciidoc}" +
+                "1. {@snip one}" +
+                ""
+        ).ignoreLineEnding().results("" +
+                "1. this is one\n" +
+                "one again\n"
+        );
+    }
+
+    @Test
     void testCollectAsciidocError1() throws Exception {
         TestThat.theInput("" +
                 "{@snip:collect from=res:javax0/jamal/snippet/asciidoctagsnippets-e1.txt asciidoc}" +

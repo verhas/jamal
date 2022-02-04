@@ -1,0 +1,12 @@
+Test file to be collected using the asciidoc parameter
+
+ONE is a simple snippet
+# tag::one[]
+this is one
+<!-- end::one[] -->
+
+This is a sample text file that defines a snippet for ASCIIDOC to demonstrate that one snippet can be composed of several parts scattered around the file.
+
+# tag::one[]
+one again
+<!-- end::one[] -->

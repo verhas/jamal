@@ -596,8 +596,6 @@ is used here, and then the rest of the text is ignored}
 
 will result
 
-
-
 [source]
 ----
 It is the snippet, which is defined inside the file and not collected from an external file.
@@ -613,24 +611,45 @@ The result of the macro is an empty string.
 [[snip]]
 ==== viii.`snip`
 
-The `snip` macro should have one argument: the name of the snippet previously collected.
-The result of the macro is the content of the snippet.
 
-For example
+You can use the `snip` macro to insert one or more snippets into the output.
+There are three different ways to use the macro.
+
+. insert a single snippet into the output with the full text of the snippet
+
+. insert a part of the first line of a snippet into the output
+
+. insert multiple snippets into the output.
+
+==== Use one snippet
+
+The syntax for the first case is
 
 [source]
 ----
 {@snip snipped_id comment}
 ----
 
-is replaced by the content of the snippet named `snipped_id`.
-The macro reads the ID from the input, and it purposefully ignores the rest of the input.
+The result of the macro is the content of the snippet named `snipped_id`.
+The macro reads the snippet identifier from the input, and it purposefully ignores the rest when used without the option `poly`.
 The reason to have the rest of the input as the comment is to allow the Jamal file users to insert a description of the snippet.
-You can manually copy the content of the snippet there, which helps the navigation in the source code, but at the same time, it is not a problem if the copy gets outdated.
-The output fetched the content from the actual value of the snippet.
+You can manually copy the content of the snippet there, which helps the navigation in the source code, but at the same time, it may not be a problem if the copy gets outdated.
+You can use the macro <<snip_update,snip_update>> to update the snippet's content in the Jamal source file.
+Since that macro modifies the file you edit, you must use it with care.
 
-Starting with Jamal version 1.7.2, the `snippet_id` can also be followed by a regular expression.
-You can use the regular expression to extract and use a smaller part from the first line of the snippet.
+==== Partial snippet
+
+The second case uses only part of the snippet. (starting from Jamal version 1.7.2)
+
+[source]
+----
+{@snip snipped_id /regular expression/}
+----
+
+If the "comment" following the snippet id starts with the `/` character, then the result of the macro is the first line of the snippet.
+This line should match the regular expression, or an error is reported.
+Also, the regular expression must be error-free and must have a match group.
+The result of the macro will be the part of the first line of the snippet that matches the regular expression match group.
 The typical use is when there is a constant defined in the code, and you want to reference the value of the constant.
 In this case, you can add
 
@@ -640,7 +659,7 @@ In this case, you can add
 ...
 ----
 
-line before the one defining the constant, and add a regular expression with one capturing group.
+line before defining the constant, and add a regular expression with one capturing group.
 For example, you can have
 
 [source,java]
@@ -658,14 +677,43 @@ and the Jamal code
 
 to gauge out the string `:rubyShell` from the source code.
 
-If the first character after the `snippet_id` is a `/` character, the macro will treat the rest of the input as a regular expression.
-This part also has to end using a `/`.
-The characters between the first and the last `/` are interpreted as a regular expression.
-This regex has to have at least one capturing group.
-The macro will return the string captured by the first group.
-The characters that follow the last `/` character are ignored, and eventually can not contain more `/` characters.
+==== Multiple Snippets
 
-If the regular expression is not found in the first line of the snippet, or there is no capturing group, then the line itself will result from the macro.
+The third use is to insert multiple snippets into the output. (starting from Jamal 1.11.0)
+In this case, the syntax is the following:
+
+[source]
+----
+{@snip (poly) regular expression}
+----
+
+Note that there is no `/` around the regular expression.
+
+The option `poly` has to be between `(` and `)` characters as usual in non-core built-in macros.
+
+In this case, the macro collects and concatenates all snippets matching the regular expression, and the value of the macro is the resulting text.
+The snippets are sorted by their name before concatenation regardless of their appearance order in the file or files.
+
+[NOTE]
+====
+This ordering is different from what you can achieve using AsciiDoc style snippet collecting.
+When you do AsciiDoc style snippet collecting, you use the `tag::` name `[]` and `end::` name `[]` syntax to start and stop snippets.
+A snippet can be started and stopped using the same name many times in the same file.
+Following the style of AsciiDoc snippets, the collection process collects all those fragments into a single snippet.
+The ordering is the same as the appearance order of the snippet fragments in the file.
+The collection process does the concatenation.
+
+When the `snip` macro is used with the option `poly`, the snippets are concatenated during the use.
+The snippets may be collected from different files.
+The order of the different snippets coming from separate files is not defined.
+The snippets are sorted by their name before concatenation to guarantee a definite order.
+It is recommended to name these snippets with a name and a number, like `my_snippet_1000`, `my_snippet_2000`, etc.
+That way, the regular expression can be `my_snippet_\d{4}`, and in case the ordering needs to be changed slightly, there is room to insert a new snippet between two already existing ones.
+You may remember this technique from 40 years ago when BASIC program lines had to be numbered.
+====
+
+When used with the option `poly`, it is impossible to use any comment following the regular expression.
+The whole text after the option till the macro closing string is interpreted as part of the regular expression.
 
 [[snip_check]]
 ==== ix.`snip:check`
@@ -2134,7 +2182,7 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 1,376 bytes
-- Snip.java: 2,302 bytes
+- Snip.java: 2,738 bytes
 - SnipSave.java: 4,856 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,756 bytes
@@ -2144,7 +2192,7 @@ will result
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 15,811 bytes
+- Collect.java: 16,292 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
@@ -2159,7 +2207,7 @@ will result
 - Clear.java: 434 bytes
 - KillLines.java: 2,012 bytes
 - SnipLoad.java: 3,530 bytes
-- SnippetStore.java: 10,222 bytes
+- SnippetStore.java: 10,730 bytes
 - ListDir.java: 5,583 bytes
 - XmlFormat.java: 3,536 bytes
 - SnippetXmlReader.java: 6,607 bytes
@@ -2427,7 +2475,7 @@ will result in the output
 
 [source]
 ----
-2022-02-02 21:27:13
+2022-02-04 14:08:46
 ----
 
 

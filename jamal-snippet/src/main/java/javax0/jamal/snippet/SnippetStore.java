@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -166,6 +167,20 @@ public class SnippetStore implements Identified {
      */
     public String snippet(final String id) throws BadSyntax {
         return fetchSnippet(id).text;
+    }
+
+    public String snippet(final Pattern pattern) throws BadSyntax {
+        final var snipSet = new TreeSet<String>();
+        for(final var entry : snippets.entrySet()) {
+            if(pattern.matcher(entry.getKey()).find()) {
+                snipSet.add(entry.getKey());
+            }
+        }
+        final var sb = new StringBuilder();
+        for( final var snip : snipSet) {
+                sb.append(snippets.get(snip).text);
+        }
+        return sb.toString();
     }
 
     public int line(final String id) throws BadSyntax {
