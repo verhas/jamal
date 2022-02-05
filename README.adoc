@@ -2229,12 +2229,19 @@ If the very first two characters in the file are `{@` then it evaluates the cont
 This way you can freely import resource files provided in JAR file or through the net even if you use different macro opening and closing strings.
 Such import files cannot redefine the macro opening and closing string unless file importing also uses `{` and `}`.
 
+Starting with version 1.11.0 the import macro has the option `noCache`.
+
+
+* `noCache` will ignore the cache when downloading resources using `https:` protocol.
+More precisely, it will download the resource from the network and update the cache file with the new content.
+
 [[include]]
 ==== x. `include`
 
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
+* since 1.11.0 noCache
 
 `include` reads a file similarly to `import`, but it starts a new scope for the processing of the included file, and it also results the content of the file included into the main file.
 
@@ -2266,6 +2273,10 @@ In that case that lines appear reversed.
 The lines are included in the order as the ranges specify.
 Using this option you can rearrange the order of the lines.
 This option cannot be defined as macro.
+
+
+* `noCache` will ignore the cache when downloading resources using `https:` protocol.
+More precisely, it will download the resource from the network and update the cache file with the new content.
 
 [NOTE]
 ====

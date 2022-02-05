@@ -1867,7 +1867,7 @@ In this case the macro will throw exception when the environment variable is not
 
 [[import]]
 ==== {%macroChapter%}`import`
-
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=352bd77a%}
 since 1.0.0 (core)
 
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
@@ -1918,12 +1918,19 @@ If the very first two characters in the file are `{@` then it evaluates the cont
 This way you can freely import resource files provided in JAR file or through the net even if you use different macro opening and closing strings.
 Such import files cannot redefine the macro opening and closing string unless file importing also uses `{` and `}`.
 
+Starting with version 1.11.0 the import macro has the option `noCache`.
+{%@define noCacheExplanation=
+* `noCache` will ignore the cache when downloading resources using `https:` protocol.
+More precisely, it will download the resource from the network and update the cache file with the new content.%}
+{%noCacheExplanation%}
+
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=4e06f0f9%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=292f9491%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
+* since 1.11.0 noCache
 
 `include` reads a file similarly to `import`, but it starts a new scope for the processing of the included file, and it also results the content of the file included into the main file.
 
@@ -1955,6 +1962,8 @@ In that case that lines appear reversed.
 The lines are included in the order as the ranges specify.
 Using this option you can rearrange the order of the lines.
 This option cannot be defined as macro.
+
+{%noCacheExplanation%}
 
 [NOTE]
 ====

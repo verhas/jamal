@@ -35,11 +35,15 @@ class CachedHttpInput {
      *                     fails. A wrong cache configuration will lead slower execution and repeated download but does
      *                     not stop operation.
      */
-    public static StringBuilder getInput(String urlString) throws IOException {
+    public static StringBuilder getInput(final String urlString) throws IOException {
+        return getInput(urlString, false);
+    }
+
+    public static StringBuilder getInput(final String urlString, final boolean noCache) throws IOException {
         final var url = new URL(urlString);
         final var entry = Cache.getEntry(url);
         final StringBuilder content;
-        if (entry.isMiss() || (content = entry.getContent()) == null) {
+        if (noCache || entry.isMiss() || (content = entry.getContent()) == null) {
             return entry.save(readBufferedReader(getBufferedReader(url)));
         } else {
             return content;
@@ -84,7 +88,7 @@ class CachedHttpInput {
             throw new IOException("GET url '" + url + "' returned " + status);
         }
         return new HttpBufferedReader(
-            new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8), con);
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8), con);
     }
 
     /**

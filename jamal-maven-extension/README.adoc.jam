@@ -8,15 +8,15 @@ This module lets you maintain your `pom.xml` files using Jamal macros.
 [WARNING]
 ====
 This project is a Maven extension.
-A Maven extension runs before Maven and is different from a Maven plugin.
+Maven extensions run before Maven, and they are different from Maven plugins.
 The Jamal project supports Maven providing a plugin as well as an extension.
-In this documentation we talk about the use of the extension.
-The plugin can be used to aid the use of the extension.
+In this documentation, we talk about the use of the extension.
+You can use the plugin to aid the use of the extension.
 The way to support the use of the extension is also documented here.
 The documentation clearly distinguishes the extension from the plugin.
 ====
 
-To use this module create a `.mvn` in your project root.
+Create a `.mvn` in your project root to use this module.
 This directory will contain the file `extensions.xml` with the content:
 
 [source,xml]
@@ -38,15 +38,15 @@ When you start Maven, it will read the `pom.xml.jam` or `pom.jam` file, convert 
 The actual process is the following.
 When a user invokes Maven, it looks at the `extensions.xml` file and sees that the Jamal Maven Extension is configured there.
 It loads the Jamal Maven Extension and invokes it to locate the POM file.
-This call assumes that the file is already there, and at this point, the extension is supposed to find it simply.
+This call assumes that the file is already there, and at this point, the extension is supposed to find it.
 The extension, however, reads the `pom.xml.jam` or `pom.jam` file and processes it.
 The processing includes the resolution of all the macros and the formatting of the final XML result.
 When the extension is done with this step, it writes the `pom.xml` file and returns the file reference as a Java `File` object.
 
-Maven later asks the extension to load the project object model from this file.
+Maven later asks for the extension to load the project object model from this file.
 The extension knows at this point that the generated `pom.xml` file is a standard XML formatted pom, and it simply asks the standard Maven Platform Reader to read it.
 When the Maven Platform Reader returns with the object model, the extension passes it back to Maven, and the rest is standard Maven business as usual.
-{%@define pu$folder=images%}\
+
 image::{%@plantuml call-sequence.svg
 @startuml
 actor User
@@ -55,9 +55,14 @@ User -> Maven : mvn verify
 Maven -> Maven : read .mvn/extensions.xml
 Maven -> "Jamal Maven Extension" : LOAD
 Maven -> "Jamal Maven Extension" : get pom structure
-"Jamal Maven Extension" -> Jamal : process pom.xml.jam
+"Jamal Maven Extension" -> Jamal : process pom.jam
 "Jamal Maven Extension" <-- Jamal : result
 "Jamal Maven Extension" -> "Jamal Maven Extension" : save pom.xml
+alt .mvn exists
+  "Jamal Maven Extension" -> Jamal : process .mvn/extensions.jam
+  "Jamal Maven Extension" <-- Jamal : result
+  "Jamal Maven Extension" -> "Jamal Maven Extension" : update .mvn/extensions.xml
+end
 Maven <- "Jamal Maven Extension" : pom.xml file
 Maven -> "Jamal Maven Extension" : get pom structure
 "Jamal Maven Extension" -> "Maven Plaform Reader" : read the pom.xml
@@ -85,7 +90,7 @@ When you want to convert a project to use the Jamal maven extension you only hav
 
 3. rename the existing `pom.xml` files to `pom.jam`.
 
-When you have a multi-module project this can be cumbersome and error prone.
+When you have a multi-module project this can be cumbersome and error-prone.
 To automate this, the Jamal Maven plugin can be started with the command line
 
 [source]
@@ -106,7 +111,27 @@ If there is only a `pom.xml` in the project directory, but no `pom.jam` nor `pom
 
 == Updating Your Project
 
-When you want to use a new version of the Jamal Maven Extension
+When you want to use a new version of the Jamal Maven Extension simply edit the `.mvn/extensions.xml` file and replace the version number.
+
+== Using Jamal to maintain `extensions.xml`
+
+The extension looks into the `.mvn` directory of the project.
+If there is an `extensions.jam` or `extensions.xml.jam` file in there, it will be used to generate and overwrite the `extensions.xml` file.
+Since the `extensions.xml` is small it may be pointless to maintain it that way, but the possibility exists.
+
+The Jamal project itself has the following `extensions.jam` file in the project's root directory:
+
+[source]
+----
+include::../.mvn/extensions.jam[]
+----
+
+This will always use the latest, usually development version of the extension and keeps the `extensions.xml` file up to date.
+When a new release is available it will be used after the first build.
+The actually running build does not restart with the newer version.
+
+This feature does not work if the version configured in the `extensions.xml` file is older than 1.10.0.
+The feature was introduced in 1.10.0.
 
 == Getting Rid of the Extension
 

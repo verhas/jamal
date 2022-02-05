@@ -41,7 +41,8 @@ public class Include implements Macro {
         final var top = Params.<Boolean>holder(null, "top").asBoolean();
         final var verbatim = Params.<Boolean>holder("includeVerbatim", "verbatim").asBoolean();
         final var lines = Params.<Boolean>holder(null, "lines").asString();
-        Params.using(processor).from(this).between("[]").keys(verbatim, top, lines).parse(input);
+        final var noCache = Params.<Boolean>holder(null, "noCache").asBoolean();
+        Params.using(processor).from(this).between("[]").keys(verbatim, top, lines, noCache).parse(input);
 
         position = repositionToTop(position, top);
 
@@ -55,7 +56,7 @@ public class Include implements Macro {
         var marker = new Marker("{@include " + fileName + "}", position);
         final String result;
         processor.getRegister().push(marker);
-        final var includedInput = getInput(fileName, position);
+        final var includedInput = getInput(fileName, position, noCache.is());
         if (lines.isPresent()) {
             filterLines(includedInput, lines.get());
         }
@@ -76,10 +77,6 @@ public class Include implements Macro {
         private Range(final int from, final int to) {
             this.from = from;
             this.to = to;
-        }
-
-        boolean in(int x) {
-            return x >= from && x <= to;
         }
     }
 
@@ -141,7 +138,7 @@ public class Include implements Macro {
      * Get the position of the 'include' from the input. When the 'top' parameter is true the position is the position
      * of the root document even if the include macro is used several level deeper in included documents.
      *
-     * @param input from which we will gauge the position
+     * @param position the position of the include macro from which we calculate the top file position
      * @param top   flag to signal if we need to include from the top
      * @return the effective position used to calculate the file location of the included file when specified as a
      * relative file name

@@ -47,35 +47,47 @@ public class CustomModelProcessor implements ModelProcessor {
 
     @Override
     public File locatePom(File projectDirectory) {
-        File jamFile = new File(projectDirectory, "pom.xml.jam");
+        final var dotMvnDir = new File(projectDirectory, ".mvn");
+        if (dotMvnDir.exists()) {
+            jam2Xml(dotMvnDir, "extensions", true);
+        }
+        jam2Xml(projectDirectory, "pom", false);
+        return new File(projectDirectory, "pom.xml");
+    }
+
+    private void jam2Xml(final File directory, final String sourceName, final boolean optional) {
+        File jamFile = new File(directory, sourceName + ".xml.jam");
         if (!jamFile.exists()) {
-            jamFile = new File(projectDirectory, "pom.jam");
+            jamFile = new File(directory, sourceName + ".jam");
             if (!jamFile.exists()) {
-                throw new RuntimeException("There is no 'pom.xml.jam' or 'pom.jam' file.");
+                if (optional) {
+                    return;
+                } else {
+                    throw new RuntimeException("There is no 'pom.xml.jam' or 'pom.jam' file.");
+                }
             }
         }
         Processor processor = new javax0.jamal.engine.Processor();
         final String fileName = jamFile.getAbsolutePath();
-        final String pomXml;
+        final String xml;
         try {
-            pomXml = processor.process(FileTools.getInput(fileName));
+            xml = processor.process(FileTools.getInput(fileName));
         } catch (BadSyntax e) {
             throw new RuntimeException("Jamal error processing the file " + fileName + "\n" + dumpException(e), e);
         }
-        String formattedPomXml;
+        String formattedXml;
         try {
-            formattedPomXml = formatOutput(pomXml);
+            formattedXml = formatOutput(xml);
         } catch (Exception e) {
             throw new RuntimeException("Cannot format the file " + fileName + "\n" + dumpException(e), e);
         }
 
-        final File output = new File(projectDirectory, "pom.xml");
+        final File output = new File(directory, sourceName + ".xml");
         try (final OutputStream os = new FileOutputStream(output)) {
-            os.write(formattedPomXml.getBytes(StandardCharsets.UTF_8));
+            os.write(formattedXml.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write the 'pom.xml' file.", e);
+            throw new RuntimeException("Cannot write the '" + sourceName + ".xml' file.", e);
         }
-        return new File(projectDirectory, "pom.xml");
     }
 
     private String dumpException(Throwable e) {

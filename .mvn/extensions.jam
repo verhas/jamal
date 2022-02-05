@@ -1,0 +1,8 @@
+{@import [noCache] https://raw.githubusercontent.com/verhas/jamal/master/version.jim}
+{#thinXml
+extensions>
+  extension>
+    groupId>com.javax0.jamal
+    artifactId>jamal-maven-extension
+    version>{LAST_RELEASE}
+}

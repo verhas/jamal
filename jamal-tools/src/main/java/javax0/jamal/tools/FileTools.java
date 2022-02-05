@@ -57,8 +57,12 @@ public class FileTools {
      * @return the input containing the content of the file.
      * @throws BadSyntaxAt if the file cannot be read.
      */
-    public static Input getInput(String fileName) throws BadSyntax {
-        return makeInput(getFileContent(fileName), new Position(fileName));
+    public static Input getInput(final String fileName) throws BadSyntax {
+        return getInput(fileName, false);
+    }
+
+    public static Input getInput(final String fileName, final boolean noCache) throws BadSyntax {
+        return makeInput(getFileContent(fileName, noCache), new Position(fileName));
     }
 
     /**
@@ -66,12 +70,16 @@ public class FileTools {
      * that includes or imports the file that is being read.
      *
      * @param fileName the name of the file to be read
-     * @param parent the parent/including/importing file position
+     * @param parent   the parent/including/importing file position
      * @return the input containing the content of the file.
      * @throws BadSyntaxAt if the file cannot be read.
      */
     public static Input getInput(String fileName, Position parent) throws BadSyntax {
-        return makeInput(getFileContent(fileName), new Position(fileName, 1, 1, parent));
+        return getInput(fileName, parent, false);
+    }
+
+    public static Input getInput(String fileName, Position parent, final boolean noCache) throws BadSyntax {
+        return makeInput(getFileContent(fileName, noCache), new Position(fileName, 1, 1, parent));
     }
 
     /**
@@ -82,16 +90,20 @@ public class FileTools {
      * @throws BadSyntax if the file cannot be read
      */
     public static String getFileContent(String fileName) throws BadSyntax {
+        return getFileContent(fileName, false);
+    }
+
+    public static String getFileContent(final String fileName, final boolean noCache) throws BadSyntax {
         try {
             if (fileName.startsWith(RESOURCE_PREFIX)) {
                 return ResourceInput.getInput(fileName.substring(RESOURCE_PREFIX_LENGTH));
             }
             if (fileName.startsWith(HTTPS_PREFIX)) {
-                return CachedHttpInput.getInput(fileName).toString();
+                return CachedHttpInput.getInput(fileName, noCache).toString();
             } else {
                 return FileInput.getInput(fileName);
             }
-        } catch (IOException| UncheckedIOException e) {
+        } catch (IOException | UncheckedIOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
         }
     }
@@ -186,13 +198,13 @@ public class FileTools {
                 unprefixedReference = unixedReference;
             }
             final var referencePath = unprefixedReference.contains("/") ?
-                unprefixedReference.substring(0, unprefixedReference.lastIndexOf("/") + 1)
-                : "";
+                    unprefixedReference.substring(0, unprefixedReference.lastIndexOf("/") + 1)
+                    : "";
             return prefix + Paths.get(referencePath)
-                .resolve(Paths.get(fileName))
-                .normalize()
-                .toString()
-                .replaceAll("\\\\", "/");
+                    .resolve(Paths.get(fileName))
+                    .normalize()
+                    .toString()
+                    .replaceAll("\\\\", "/");
         }
     }
 
@@ -215,12 +227,12 @@ public class FileTools {
      */
     public static boolean isAbsolute(String fileName) {
         return isRemote(fileName) ||
-            fileName.startsWith("/") ||
-            fileName.startsWith("\\") ||
-            fileName.startsWith("~") ||
-            (fileName.length() > 1 &&
-                Character.isAlphabetic(fileName.charAt(0))
-                && fileName.charAt(1) == ':');
+                fileName.startsWith("/") ||
+                fileName.startsWith("\\") ||
+                fileName.startsWith("~") ||
+                (fileName.length() > 1 &&
+                        Character.isAlphabetic(fileName.charAt(0))
+                        && fileName.charAt(1) == ':');
     }
 
     /**
@@ -231,7 +243,7 @@ public class FileTools {
      */
     public static boolean isRemote(String fileName) {
         return fileName.startsWith(HTTPS_PREFIX) ||
-            fileName.startsWith(RESOURCE_PREFIX);
+                fileName.startsWith(RESOURCE_PREFIX);
     }
 
     /**
