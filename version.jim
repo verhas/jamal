@@ -20,20 +20,32 @@
 {@define PACKAGE_PREFIX=javax0.jamal.}
 
 {@define JAVA_RELEASE=11}
-{@define JAVA_SOURCE=13}
+{@define JAVA_SOURCE=17}
 {@define JAVA_TARGET=11}
-{@define MAVEN_COMPILER_PLUGIN_VERSION=3.8.1}
-{@define MAVEN_JAVADOC_PLUGIN_VERSION=3.2.0}
-{@define MAVEN_GPG_PLUGIN_VERSION=3.0.1}
-{@define JUPITER_VERSION=5.2.0}
 
-{@define PLANTUML_VERSION=1.2022.1}
-{@define JRUBY_VERSION=9.3.0.0}
-{@define GROOVY_VERSION=3.0.9}
-{@define PICOCLI_VERSION=4.6.1}
-{@define OGNL_VERSION=3.2.21}
-{@define SNAKEYAML_VERSION=1.29}
-{@define FLEXMARK_VERSION=0.62.2}
+-- dependencies
+                                                     -- to ease the version maintenance when upgrading to new version here are the repo URLs
+-- plugin dependencies
+{@define MAVEN_COMPILER_PLUGIN_VERSION=3.9.0}        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin
+{@define MAVEN_JAVADOC_PLUGIN_VERSION=3.3.1}         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
+{@define MAVEN_GPG_PLUGIN_VERSION=3.0.1}             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/
 
-{@define MAVEN_CORE_VERSION=3.5.4}
-{@define PLEXUS_COMPONENT_METADATA_VERSION=2.1.0}
+-- test dependency
+{@define JUPITER_VERSION=5.8.2}                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
+                                                     -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine
+                                                     -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-params
+
+-- dependencies needed for the Jamal libraries
+{@define PLANTUML_VERSION=1.2022.1}                  -- https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml
+{@define JRUBY_VERSION=9.3.3.0}                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
+{@define GROOVY_VERSION=3.0.9}                       -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
+{@define OGNL_VERSION=3.3.2}                         -- https://repo.maven.apache.org/maven2/ognl/ognl
+{@define SNAKEYAML_VERSION=1.30}                     -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
+{@define FLEXMARK_VERSION=0.62.2}                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
+
+-- picocli is needed for the Jamal command line version
+{@define PICOCLI_VERSION=4.6.2}                      -- https://repo.maven.apache.org/maven2/info/picocli/picocli
+
+-- dependencies needed for the Maven extension (not the plugin)
+{@define MAVEN_CORE_VERSION=3.8.4}                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
+{@define PLEXUS_COMPONENT_METADATA_VERSION=2.1.1}    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata

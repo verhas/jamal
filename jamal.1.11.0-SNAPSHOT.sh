@@ -20,7 +20,7 @@ for MODULE in $MODULES ; do
   fi
 done
 
-PICOCLI_VERSION=4.6.1
+PICOCLI_VERSION=4.6.2
 PICOCLI=info/picocli/picocli/$PICOCLI_VERSION/picocli-$PICOCLI_VERSION.jar
 
 if ! test -f $REPO/$PICOCLI; then
