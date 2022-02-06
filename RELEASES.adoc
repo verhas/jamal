@@ -43,6 +43,13 @@ For the user this means cleaner error report.
 * Macro `snip:collect` can collect snippets which start and stop with the asciidoc tag notation:
 `tag::name[]` and `end::name[]`.
 
+* Macro `snip` implements the `poly` option to concatenate snippets.
+
+* dependencies following the latest releases
+
+* `import` and `include` macros implement a new option `noCache`.
+
+* Maven extension can keep its own `extensions.xml` automatically up-to-date.
 
 === https://github.com/verhas/jamal/tree/1.10.4[1.10.4]
 

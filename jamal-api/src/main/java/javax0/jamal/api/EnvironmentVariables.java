@@ -173,21 +173,32 @@ Both approaches work.
 
 end snippet
 */
-   public static final String JAMAL_OPTIONS_ENV = "JAMAL_OPTIONS";
+    public static final String JAMAL_OPTIONS_ENV = "JAMAL_OPTIONS";
 
-   /**
-    * Converts the environment variable name to the system property name during class initialization.
-    *
-    * @param s the environment variable name
-    * @return the system property name
-    */
+    /**
+     * Converts the environment variable name to the system property name during class initialization.
+     *
+     * @param s the environment variable name
+     * @return the system property name
+     */
     private static String env2sys(String s) {
         return s.replace('_', '.').toLowerCase(Locale.ROOT);
     }
 
+    /**
+     * Get a configuration parameter. The name {@code env} is the name of the environment variable.
+     * The method first looks at the system variables, to see if there is a value defined there and if there is none
+     * then it tries to read the environment variable. The name {@code env} is capital letters, words concatenated using
+     * {@code _}. The system variable name is the same as the environment variable name, but lower cased and using
+     * {@code .} instead of {@code _}.
+     *
+     * @param env the name of the environment variable
+     * @return the string value of the system property, or the environment variable value, or {@code empty} if not
+     * found.
+     */
     public static Optional<String> getenv(String env) {
         return Optional.ofNullable(System.getProperty(env2sys(env)))
-            .or(() -> Optional.ofNullable(System.getenv(env)));
+                .or(() -> Optional.ofNullable(System.getenv(env)));
     }
 
     public static void setenv(String env, String value) {

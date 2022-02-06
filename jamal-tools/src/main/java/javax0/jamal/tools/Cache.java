@@ -42,19 +42,72 @@ public class Cache {
         private final File file;
         private final File propertiesFile;
         private final Properties properties;
+        private final Properties effectiveProperties;
         private boolean propertiesLoaded = false;
 
         private Entry(File file, File propertiesFile) {
             this.file = file;
             this.propertiesFile = propertiesFile;
             this.properties = new Properties();
+            this.effectiveProperties = new Properties();
         }
 
         /**
          * @return {@code true} if the file is not in the cache
          */
         public boolean isMiss() {
-            return !file.exists();
+            if (!file.exists()) {
+                return true;
+            }
+            final var ttl = getProperty("ttl");
+            if (ttl == null) {
+                return false;
+            }
+            final var write = getProperty("write");
+            var b= expiration(ttl, write) < System.currentTimeMillis();
+            return b;
+        }
+
+        private long expiration(final String ttl, final String write) {
+            final var ttlMillis = parseTtl(ttl);
+            long writeMillis = 0L;
+            try {
+                writeMillis = Long.parseLong(write);
+            } catch (NumberFormatException e) {
+                //
+            }
+            return writeMillis + ttlMillis;
+        }
+
+        private long parseTtl(final String ttl) {
+            final var sb = new StringBuilder(ttl);
+            long seconds = 0L;
+            try {
+                seconds += chopSeconds(sb, "y", 365 * 24 * 60 * 60);
+                seconds += chopSeconds(sb, "M", 31 * 24 * 60 * 60);
+                seconds += chopSeconds(sb, "w", 37 * 24 * 60 * 60);
+                seconds += chopSeconds(sb, "d", 24 * 60 * 60);
+                seconds += chopSeconds(sb, "h", 60 * 60);
+                seconds += chopSeconds(sb, "m", 60);
+                seconds += chopSeconds(sb, "s", 1);
+                final var value = sb.toString().trim();
+                if (value.length() > 0) {
+                    seconds += Long.parseLong(value);
+                }
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+            return seconds;
+        }
+
+        public long chopSeconds(StringBuilder sb, String unit, long seconds) {
+            final var index = sb.indexOf(unit);
+            if (index == -1) {
+                return 0;
+            }
+            final var value = sb.substring(0, index).trim();
+            sb.delete(0, index + 1);
+            return Long.parseLong(value) * seconds;
         }
 
         /**
@@ -62,10 +115,7 @@ public class Cache {
          */
         public StringBuilder getContent() {
             try {
-                if (propertiesFile.exists()) {
-                    properties.load(new FileInputStream(propertiesFile));
-                    propertiesLoaded = true;
-                }
+                assertPropertiesAreLoaded();
                 if (file.exists()) {
                     properties.put("read", "" + System.currentTimeMillis());
                     properties.put("read_formatted", now());
@@ -82,16 +132,40 @@ public class Cache {
 
         public String getProperty(String key) {
             try {
-                if (!propertiesLoaded) {
-                    if (propertiesFile.exists()) {
-                        properties.load(new FileInputStream(propertiesFile));
-                        propertiesLoaded = true;
-                    }
-                }
-                return properties.getProperty(key);
+                assertPropertiesAreLoaded();
+                effectiveProperties.putAll(collectEffectiveProperties(propertiesFile.getParentFile()));
+                effectiveProperties.putAll(properties);
+                return effectiveProperties.getProperty(key);
             } catch (IOException ignored) {
                 return null;
             }
+        }
+
+        private void assertPropertiesAreLoaded() throws IOException {
+            if (!propertiesLoaded) {
+                if (propertiesFile.exists()) {
+                    properties.load(new FileInputStream(propertiesFile));
+                }
+                propertiesLoaded = true;
+            }
+        }
+
+        private Properties collectEffectiveProperties(final File directory) {
+            final var properties = new Properties();
+            if (!directory.getParentFile().equals(CACHE_ROOT_DIRECTORY)) {
+                properties.putAll(collectEffectiveProperties(directory.getParentFile()));
+            }
+            final var dotPropertiesFile = new File(directory, ".properties");
+            if (dotPropertiesFile.exists()) {
+                try {
+                    final var localProperties = new Properties();
+                    localProperties.load(new FileInputStream(dotPropertiesFile));
+                    properties.putAll(localProperties);
+                } catch (IOException e) {
+                    //
+                }
+            }
+            return properties;
         }
 
         /**
@@ -125,12 +199,14 @@ public class Cache {
         public void save(String content, Map<String, String>... maps) {
             if (cacheExists()) {
                 try {
+                    assertPropertiesAreLoaded();
                     properties.put("write", "" + System.currentTimeMillis());
                     properties.put("write_formatted", now());
                     for (final var map : maps) {
-                        map.forEach(properties::put);
+                        properties.putAll(map);
                     }
                     saveProperties();
+                    //noinspection ResultOfMethodCallIgnored
                     file.getParentFile().mkdirs();
                     try (final var fos = new FileOutputStream(file)) {
                         fos.write(content.getBytes(StandardCharsets.UTF_8));
@@ -146,10 +222,11 @@ public class Cache {
          * private after all.)
          */
         private void saveProperties() {
+            //noinspection ResultOfMethodCallIgnored
             propertiesFile.getParentFile().mkdirs();
             try {
                 properties.store(new FileOutputStream(propertiesFile),
-                    " cache parameters of the entry " + file.getAbsolutePath());
+                        " cache parameters of the entry " + file.getAbsolutePath());
             } catch (IOException ignore) {
             }
         }
@@ -160,10 +237,9 @@ public class Cache {
 
     static final Entry NO_CACHE = new Entry(NonexistentFile.INSTANCE, NonexistentFile.INSTANCE);
 
-    private static final File CACHE_ROOT_DIRECTORY = new File(
-        EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_HTTPS_CACHE_ENV)
-            .or(() -> Optional.of(DEFAULT_CACHE_ROOT)).map(FileTools::adjustedFileName).get());
-
+    private static File CACHE_ROOT_DIRECTORY = new File(
+            EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_HTTPS_CACHE_ENV)
+                    .or(() -> Optional.of(DEFAULT_CACHE_ROOT)).map(FileTools::adjustedFileName).get());
 
     /**
      * Get a cache entry for the given URL.
