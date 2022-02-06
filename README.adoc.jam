@@ -3860,10 +3860,48 @@ Jamal will create the subdirectories if needed, but Jamal will never create the 
 If you do not want to use the caching then do not create the cache directory.
 
 Jamal will not cache a downloaded files that has `SNAPSHOT` in the URL (all capital letters).
-There is no cache eviction or expiration.
+There is no cache eviction or expiration by default.
 You can find the files in the cache directory in subdirectories.
 You can also find there corresponding property files that contain information about the caching.
-These properties files are information purpose and Jamal does not use them at the moment.
+These properties files contain information about when a file was stored in the cache and also when it was last time read.
+It is also possible to define Time To Live (TTL) for the cache items.
+
+Ttl value can be defined with the `ttl` property key.
+The value can be a raw number expressing the ttl inseconds or a string with time unit(s).
+The unites are:
+
+* `y` for year(s) (365 days)
+
+* `M` for month(s) (31 days)
+
+* `w` for week(s) (7 days)
+
+* `d` for day(s) (24 hours)
+
+* `h` for hour(s) (60 minutes)
+
+* `m` for minute(s) (60 seconds)
+
+* `s` for second(s)
+
+If you use multiple time units then the value is the sum of the time units.
+The units should be used in `Y`, `M`, `w`, `d`, `h`, `m`, `s` order.
+You can omit the units that have zero value.
+You can use any number in front of a unit, you are not limited with the natural amount of time units.
+For example, you can say `1d25h` for 1 day and 25 hours, which is exactly the same as `2d1h`
+
+Examples:
+
+* `13y` means 13 years
+
+* 13y1m3h` means 13 years, 1 month and 3 hours
+
+The property values, `ttl` or other values, are read from the property file and are inherited from `.properties` files.
+These files are not created by Jamal, but you are free to create them with different keys and values.
+The `.properties` files can be created in the different cache directories up to the root directory of the properties.
+When a key is defined in multiple `.properties` files then the value closer to the properties file of the cached item is used.
+If the key is defined in the properties file of the cached item, then the value is used.
+This way you can define the TTL for a specific cache item, a group of items and for the whole cache.
 
 The connection to the web can be configured if needed.
 The environment variables that can be used are the followings:
