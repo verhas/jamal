@@ -51,6 +51,8 @@ For the user this means cleaner error report.
 
 * Maven extension can keep its own `extensions.xml` automatically up-to-date.
 
+* `https` include and import cache can be configured to evict entries.
+
 {%RELEASE/1.10.4%}
 
 A bug fix in handling thin XML.
