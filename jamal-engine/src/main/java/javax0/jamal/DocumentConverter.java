@@ -118,8 +118,10 @@ public class DocumentConverter {
     }
 
     private static Input createInput(Path inputFile) throws IOException {
-        var fileContent = Files.lines(inputFile).collect(Collectors.joining("\n"));
-        return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+        try (final var lines = Files.lines(inputFile)) {
+            var fileContent = lines.collect(Collectors.joining("\n"));
+            return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
+        }
     }
 
     private static Optional<File> found(final StringBuilder sb) {

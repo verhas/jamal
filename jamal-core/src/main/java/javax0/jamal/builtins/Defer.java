@@ -74,7 +74,7 @@ public class Defer implements Macro, InnerScopeDependent {
             final var reader = MacroReader.macro(processor);
             final String result = reader.readValue(outputName).orElse(out);
             final StringBuilder sb = output.getSB();
-            sb.delete(0, sb.length());
+            sb.setLength(0);
             sb.append(result);
         }
     }

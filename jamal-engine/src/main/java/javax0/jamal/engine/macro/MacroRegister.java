@@ -101,6 +101,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public List<Debuggable.Scope> getScopes() {
+        //noinspection unchecked,rawtypes
         return (List<Debuggable.Scope>) (List) scopeStack;
     }
 
@@ -139,7 +140,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
             throw new RuntimeException("SNAFU: should not happen");
         }
         final var s = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_CHECKSTATE_ENV).orElse("");
-        checkState = s.length() == 0 || !s.equals("false");
+        checkState = !s.equals("false");
     }
 
     private Scope currentScope() {
@@ -258,8 +259,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     public <T extends Identified> Optional<T> getUserDefined(String id) {
         Objects.requireNonNull(id);
         if (InputHandler.isGlobalMacro(id)) {
+            //noinspection unchecked
             return Optional.ofNullable((T) scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
         } else {
+            //noinspection unchecked
             return (Optional<T>) stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getUdMacros, id);
         }
     }
@@ -347,7 +350,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         writableScope().macros.put(alias, macro);
     }
 
-    private static Map<Class<? extends Macro>, Boolean> macroClasses = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Class<? extends Macro>, Boolean> macroClasses = Collections.synchronizedMap(new WeakHashMap<>());
 
     /**
      * This method will check that a macro class is either stateless (does not have any field) or is declared to be

@@ -91,7 +91,7 @@ public class XmlFormat implements Macro, InnerScopeDependent {
             if (output != null) {
                 InputHandler.skipWhiteSpaces(output);
                 final var result = formatXml(output.toString(), tabsize, thin, wrong);
-                output.getSB().delete(0, output.getSB().length());
+                output.getSB().setLength(0);
                 output.getSB().append(result);
             }
         }

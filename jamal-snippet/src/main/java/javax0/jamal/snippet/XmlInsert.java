@@ -141,7 +141,7 @@ public class XmlInsert implements Macro {
                     }
                 }
                 final var result = XmlDocument.formatDocument(doc, "" + tabsize);
-                output.getSB().delete(0, output.getSB().length());
+                output.getSB().setLength(0);
                 output.getSB().append(result);
             } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
                 throw new BadSyntax("Error while inserting XML nodes into the final document.", e);

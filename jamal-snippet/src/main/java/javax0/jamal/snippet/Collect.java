@@ -261,12 +261,12 @@ public class Collect implements Macro, InnerScopeDependent {
                     final var linerMatcher = liner.matcher(line);
                     if (startMatcher.find()) {
                         id = startMatcher.group(1);
-                        text.delete(0, text.length());
+                        text.setLength(0);
                         startLine = lineNr;
                         state = State.IN;
                     } else if (linerMatcher.find()) {
                         id = linerMatcher.group(1);
-                        text.delete(0, text.length());
+                        text.setLength(0);
                         if (lineNr == lines.length - 1) {
                             throw new BadSyntax("'snipline " + id + "' is on the last line of the file '" + file + "'");
                         }

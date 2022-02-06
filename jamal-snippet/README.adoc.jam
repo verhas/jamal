@@ -128,7 +128,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=19440102%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=c7bf918f%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -376,7 +376,7 @@ which is the current version of the project as read from the `pom.xml` file.
 
 [[xml_insert]]
 ==== {%macroChapter%}`xml:insert`
-{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=6bf4c82a.93893acb.58a76746.50555292.e646ecc8.4bac3343.b8ad1890.b58b9f6e%}
+{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=2ca0b9b8%}
 This macro can modify an XML formatted user defined macro inserting content into the XML document.
 It can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
 This latter use is for the case when the Jamal file processed creates an XML file.
@@ -1846,7 +1846,7 @@ will result
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 16,292 bytes
+- Collect.java: 16,268 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
@@ -1863,9 +1863,9 @@ will result
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 10,730 bytes
 - ListDir.java: 5,583 bytes
-- XmlFormat.java: 3,536 bytes
+- XmlFormat.java: 3,514 bytes
 - SnippetXmlReader.java: 6,607 bytes
-- XmlInsert.java: 6,199 bytes
+- XmlInsert.java: 6,177 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,543 bytes
 - CounterMacro.java: 1,811 bytes
@@ -1903,7 +1903,7 @@ will result
 
 [[xmlFormat]]
 ==== {%macroChapter%}`xmlFormat`
-{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=1be3ddbe%}
+{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=fd479bae%}
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
 For example,

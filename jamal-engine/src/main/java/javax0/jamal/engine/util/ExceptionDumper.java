@@ -8,13 +8,25 @@ import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Utility class to print out an exception stack trace and cause stack trace and suppressed exceptions.
+ * <p>
+ * This exception dumper is used in the debugger to report the full exception information to the debugger client.
+ */
 public class ExceptionDumper {
 
+    /**
+     * Create an exception report.
+     *
+     * @param t the exception to be printed
+     * @return a StringBuilder that contains the message of the exception, the stack trace and then recursively
+     * all the suppressed exceptions and the causing exception in a similar manner.
+     */
     public static StringBuilder dump(BadSyntaxAt t) {
         final var me = new ExceptionDumper();
         final var pos = t.getPosition();
         me.output.append(t.getMessage()).append(" at ").append(pos.file).append('/')
-            .append(pos.line).append(':').append(pos.column).append('\n');
+                .append(pos.line).append(':').append(pos.column).append('\n');
         me.dumpIt(t, false);
         return me.output;
     }

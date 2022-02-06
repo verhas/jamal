@@ -296,7 +296,7 @@ public class TestProcessor {
         public void close() {
             final var sb = output.getSB();
             final var text = sb.toString().toUpperCase(Locale.ENGLISH);
-            sb.delete(0, sb.length());
+            sb.setLength(0);
             sb.append(text);
         }
 

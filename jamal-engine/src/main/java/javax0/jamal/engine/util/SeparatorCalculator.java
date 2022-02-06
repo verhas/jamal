@@ -3,8 +3,7 @@ package javax0.jamal.engine.util;
 import static java.lang.Math.min;
 
 /**
- * Calculates a string using the characters given in the argument to the constructor that does not appear in a given
- * string.
+ * Calculates a string using the characters given in the constructor argument that does not appear in a given string.
  */
 public class SeparatorCalculator {
 
@@ -140,5 +139,4 @@ public class SeparatorCalculator {
         System.arraycopy(layers, 0, array, 0, layers.length);
         layers = array;
     }
-
 }

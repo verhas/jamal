@@ -26,7 +26,7 @@ public class RubyCloser implements Macro, InnerScopeDependent {
                 if (sb == null) {
                     throw new BadSyntax("Ruby closer script '" + shell.getId() + "' returned null");
                 }
-                result.getSB().delete(0, result.getSB().length());
+                result.getSB().setLength(0);
                 result.getSB().append(sb);
             } catch (Exception e) {
                 throw new BadSyntax("There was an exception '"

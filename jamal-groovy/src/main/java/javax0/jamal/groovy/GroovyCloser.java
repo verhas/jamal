@@ -23,7 +23,7 @@ public class GroovyCloser implements Macro, InnerScopeDependent {
             try {
                 final var sb = shell.evaluate(closerScript, null);
                 if (sb != null && sb != result.getSB()) {// NOT EQUALS, does it return the same object or not
-                    result.getSB().delete(0, result.getSB().length());
+                    result.getSB().setLength(0);
                     result.getSB().append(sb);
                 }
             } catch (Exception e) {

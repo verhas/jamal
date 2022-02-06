@@ -2192,7 +2192,7 @@ will result
 - Update.java: 3,754 bytes
 - SnipTransform.java: 14,715 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 16,292 bytes
+- Collect.java: 16,268 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
@@ -2209,9 +2209,9 @@ will result
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 10,730 bytes
 - ListDir.java: 5,583 bytes
-- XmlFormat.java: 3,536 bytes
+- XmlFormat.java: 3,514 bytes
 - SnippetXmlReader.java: 6,607 bytes
-- XmlInsert.java: 6,199 bytes
+- XmlInsert.java: 6,177 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,543 bytes
 - CounterMacro.java: 1,811 bytes
@@ -2475,7 +2475,7 @@ will result in the output
 
 [source]
 ----
-2022-02-05 14:18:12
+2022-02-06 18:41:13
 ----
 
 
