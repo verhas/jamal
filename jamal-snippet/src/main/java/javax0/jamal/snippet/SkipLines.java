@@ -50,6 +50,10 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter {
             }
             from++;
         }
+        joinLines(sb, lines, to, lastLineCopied);
+    }
+
+    static void joinLines(final StringBuilder sb, final String[] lines, final int to, final boolean lastLineCopied) {
         final var joined = Arrays.stream(lines).limit(to).collect(Collectors.joining("\n"));
         final var extraNl = !needsNoExtraNl(sb.toString(), lastLineCopied, joined);
         sb.setLength(0);
@@ -59,7 +63,7 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter {
         }
     }
 
-    static boolean needsNoExtraNl(String in, boolean lastLineCopied, String joined) {
+    private static boolean needsNoExtraNl(String in, boolean lastLineCopied, String joined) {
         return joined.length() == 0 || joined.charAt(joined.length() - 1) == '\n' || (lastLineCopied && in.charAt(in.length() - 1) != '\n');
     }
 

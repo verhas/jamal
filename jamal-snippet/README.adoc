@@ -2205,7 +2205,7 @@ will result
 - Counter.java: 3,691 bytes
 - StringMacros.java: 6,429 bytes
 - Clear.java: 434 bytes
-- KillLines.java: 2,012 bytes
+- KillLines.java: 1,659 bytes
 - SnipLoad.java: 3,530 bytes
 - SnippetStore.java: 10,730 bytes
 - ListDir.java: 5,583 bytes
@@ -2219,7 +2219,7 @@ will result
 - XmlDocument.java: 5,656 bytes
 - Java.java: 10,404 bytes
 - ReplaceLines.java: 2,982 bytes
-- SkipLines.java: 2,537 bytes
+- SkipLines.java: 2,720 bytes
 - SnipCheck.java: 5,866 bytes
 - Reflow.java: 1,981 bytes
 - Snippet.java: 1,088 bytes
@@ -2475,7 +2475,7 @@ will result in the output
 
 [source]
 ----
-2022-02-06 18:41:13
+2022-02-07 15:24:06
 ----
 
 

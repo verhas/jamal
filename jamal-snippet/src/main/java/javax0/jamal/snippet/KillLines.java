@@ -8,11 +8,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
-import java.util.Arrays;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import static javax0.jamal.snippet.SkipLines.needsNoExtraNl;
 
 public class KillLines implements Macro, InnerScopeDependent, BlockConverter {
     @Override
@@ -46,12 +42,7 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter {
             }
             from++;
         }
-        final var joined = Arrays.stream(lines).limit(to).collect(Collectors.joining("\n"));
-        final var extraNl = !needsNoExtraNl(sb.toString(), lastLineCopied, joined);
-        sb.setLength(0);
-        sb.append(joined);
-        if (extraNl) {
-            sb.append("\n");
-        }
+        SkipLines.joinLines(sb, lines, to, lastLineCopied);
     }
+
 }
