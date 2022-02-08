@@ -91,9 +91,15 @@ public class Collect implements Macro, InnerScopeDependent {
         // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
         // This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
         // Using these start and stop delimiters the snippets can also be nested arbitrarily, and they can also overlap.
+        final var ignoreIOEx = Params.<Boolean>holder("ignoreErrors").asBoolean();
+        // Using this parameter, the macro will ignore IOExceptions.
+        // An IOException typically occur, when a file is binary and by accident it contains an invalid UTF-8 sequence.
+        // Use this option only as a last resort.
+        // Better do not mix binary files with ASCII files.
+        // Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.
         // end snippet
         Params.using(processor).from(this)
-                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName, prefix, postfix, asciidoc).parse(in);
+                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName, prefix, postfix, asciidoc, ignoreIOEx).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
         if (store.testAndSet(setName.get())) {
@@ -103,9 +109,9 @@ public class Collect implements Macro, InnerScopeDependent {
         final var fromFile = new File(fn);
         if (FileTools.isRemote(fn) || fromFile.isFile()) {
             if (asciidoc.is()) {
-                harvestAsciiDoc(fn, store, pos, prefix.get(), postfix.get());
+                harvestAsciiDoc(fn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is());
             } else {
-                harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get());
+                harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is());
             }
         } else {
             try {
@@ -120,7 +126,8 @@ public class Collect implements Macro, InnerScopeDependent {
                                 store,
                                 pos,
                                 prefix.get(),
-                                postfix.get());
+                                postfix.get(),
+                                ignoreIOEx.is());
                     } else {
                         harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(),
                                 store,
@@ -129,7 +136,8 @@ public class Collect implements Macro, InnerScopeDependent {
                                 stop.get(),
                                 pos,
                                 prefix.get(),
-                                postfix.get());
+                                postfix.get()
+                                , ignoreIOEx.is());
                     }
                 }
             } catch (IOException | UncheckedIOException e) {
@@ -177,9 +185,10 @@ public class Collect implements Macro, InnerScopeDependent {
                                  final SnippetStore store,
                                  final Position pos,
                                  final String prefix,
-                                 final String postfix) throws BadSyntax {
+                                 final String postfix,
+                                 boolean ignoreIOEx) throws BadSyntax {
         final var openedSnippets = new HashMap<String, SnippetAccumulator>();
-        final var lines = FileTools.getFileContent(file).split("\n", -1);
+        final String[] lines = getFileContent(file, ignoreIOEx);
         List<BadSyntax> errors = new ArrayList<>();
         for (int lineNr = 0; lineNr < lines.length; lineNr++) {
             String line = lines[lineNr];
@@ -246,11 +255,12 @@ public class Collect implements Macro, InnerScopeDependent {
                                  final Pattern stop,
                                  final Position pos,
                                  final String prefix,
-                                 final String postfix) throws BadSyntax {
+                                 final String postfix,
+                                 boolean ignoreIOEx) throws BadSyntax {
         var state = State.OUT;
         String id = "";
         StringBuilder text = new StringBuilder();
-        final var lines = FileTools.getFileContent(file).split("\n", -1);
+        final String[] lines = getFileContent(file, ignoreIOEx);
         int startLine = 0;
         List<BadSyntax> errors = new ArrayList<>();
         for (int lineNr = 0; lineNr < lines.length; lineNr++) {
@@ -298,6 +308,26 @@ public class Collect implements Macro, InnerScopeDependent {
                     new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
         }
         assertNoErrors(file, errors);
+    }
+
+    /**
+     * Get the content of a file.
+     *
+     * @param file       the name of the file to be read
+     * @param ignoreIOEx ignore IOException if true. In that case the method returns an empty array.
+     * @return the lines of the file
+     * @throws BadSyntax if the file cannot be read
+     */
+    private String[] getFileContent(final String file, final boolean ignoreIOEx) throws BadSyntax {
+        try {
+            return FileTools.getFileContent(file).split("\n", -1);
+        }catch (BadSyntax e) {
+            if( ignoreIOEx ) {
+                return new String[0];
+            }else{
+                throw e;
+            }
+        }
     }
 
     /**

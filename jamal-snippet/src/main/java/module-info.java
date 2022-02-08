@@ -13,9 +13,11 @@ import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.LineCount;
 import javax0.jamal.snippet.ListDir;
 import javax0.jamal.snippet.NumberLines;
+import javax0.jamal.snippet.RangeMacro;
 import javax0.jamal.snippet.Reflow;
 import javax0.jamal.snippet.Replace;
 import javax0.jamal.snippet.ReplaceLines;
+import javax0.jamal.snippet.Rot13;
 import javax0.jamal.snippet.SkipLines;
 import javax0.jamal.snippet.Snip;
 import javax0.jamal.snippet.SnipCheck;
@@ -97,5 +99,7 @@ module jamal.snippet {
             SnipLine,
             SnipFile,
             Untab,
+            RangeMacro,
+            Rot13,
             SnipTransform;
 }

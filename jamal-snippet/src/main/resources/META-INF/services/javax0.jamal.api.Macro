@@ -38,6 +38,8 @@ javax0.jamal.snippet.SnipLoad
 javax0.jamal.snippet.SnipTransform
 javax0.jamal.snippet.SnipLine
 javax0.jamal.snippet.SnipFile
+javax0.jamal.snippet.RangeMacro
+javax0.jamal.snippet.Rot13
 javax0.jamal.snippet.StringMacros$Contains
 javax0.jamal.snippet.StringMacros$Substring
 javax0.jamal.snippet.StringMacros$Length

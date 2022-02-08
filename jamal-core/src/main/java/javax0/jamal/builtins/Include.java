@@ -8,9 +8,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Params;
-
-import java.util.ArrayList;
-import java.util.List;
+import javax0.jamal.tools.Range;
 
 import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
@@ -58,7 +56,7 @@ public class Include implements Macro {
         processor.getRegister().push(marker);
         final var includedInput = getInput(fileName, position, noCache.is());
         if (lines.isPresent()) {
-            filterLines(includedInput, lines.get());
+            Range.Lines.filter(includedInput.getSB(), lines.get());
         }
         if (verbatim.get()) {
             result = includedInput.toString();
@@ -70,76 +68,13 @@ public class Include implements Macro {
         return result;
     }
 
-    private static class Range {
-        final int from;
-        final int to;
-
-        private Range(final int from, final int to) {
-            this.from = from;
-            this.to = to;
-        }
-    }
-
-    private static Range range(final int from, final int to) {
-        return new Range(from, to);
-    }
-
-    private void filterLines(final Input in, final String s) throws BadSyntax {
-        final var sb = in.getSB();
-        final var lines = sb.toString().split("\n", -1);
-        for (int i = 0; i < lines.length - 1; i++) {
-            lines[i] = lines[i] + "\n";
-        }
-        final var ranges = calculateRanges(s, lines.length);
-        sb.setLength(0);
-        for (final var range : ranges) {
-            final int step = range.to >= range.from ? 1 : -1;
-            for (int i = range.from; i != range.to + step; i += step) {
-                if (i <= lines.length && i > 0) {
-                    sb.append(lines[i - 1]);
-                }
-            }
-        }
-    }
-
-    private List<Range> calculateRanges(final String s, final int n) throws BadSyntax {
-        final var lines = s.split("[,;]");
-        final var ranges = new ArrayList<Range>();
-        for (final var line : lines) {
-            var range = line.split("\\.\\.");
-            if (range.length == 1) {
-                range = new String[]{line, line};
-            }
-            if (range.length != 2) {
-                throw new BadSyntax("The line range " + line + " is not valid");
-            }
-            int to, from;
-            try {
-                from = Integer.parseInt(range[0].trim());
-                to = Integer.parseInt(range[1].trim());
-            } catch (NumberFormatException nfe) {
-                throw new BadSyntax("The line range " + line + " is not valid");
-            }
-            if (from < 0) {
-                from += n;
-            }
-            if (to < 0) {
-                to += n;
-            }
-            if (from == 0 || to == 0) {
-                throw new BadSyntax("The line range " + line + " is not valid");
-            }
-            ranges.add(range(from, to));
-        }
-        return ranges;
-    }
 
     /**
      * Get the position of the 'include' from the input. When the 'top' parameter is true the position is the position
      * of the root document even if the include macro is used several level deeper in included documents.
      *
      * @param position the position of the include macro from which we calculate the top file position
-     * @param top   flag to signal if we need to include from the top
+     * @param top      flag to signal if we need to include from the top
      * @return the effective position used to calculate the file location of the included file when specified as a
      * relative file name
      * @throws BadSyntax if 'top' is erroneous and querying it throws exception

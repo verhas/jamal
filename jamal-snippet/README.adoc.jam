@@ -1,5 +1,6 @@
 == Jamal Snippet Handling Macros
 {%@import res:jamal.jim%}\
+{%@import ../shared_text.jim%}\
 {%@snip:collect from="src/main/java/"%}\
 {%@snip:collect from="src/test/java/" exclude="Sample.java"%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
@@ -78,6 +79,8 @@ This way, it is easier to keep your documentation up to date.
 .. <<snipLoad,`snip:load`>>
 .. <<trimLines,`trimLines`>>
 .. <<untab,`untab`>>
+.. <<range,`range`>>
+.. <<rot13,`rot13`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
@@ -128,7 +131,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=c7bf918f%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=7bb5d00b%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -1024,6 +1027,51 @@ will be converted to
 
 
 
+[[range]]
+==== {%macroChapter%}`range`
+{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=f43d9dfb%}
+
+This macro can filter lines of its input by a range of numbers.
+The syntax of the macro is:
+
+{%sample/
+{@range lines=1-3,5-7;-1,0
+
+lines
+}
+%}
+
+The macro has an alias `ranges` that you are free to use in case the plural form is more readable.
+The option `lines` cannot be used in singular, but it can also be aliased as `range` or `ranges`.
+
+The format and the meaning of the option `lines` is exactly the same as the option of the same name in the core `import` macro.
+
+{%TEXT:RANGE%}
+
+[[rot13]]
+==== {%macroChapter%}`rot13`
+{%#snip:check file={%JAVA_DIR%}Rot13.java hash=9ecfbae6%}
+
+This macro calculates the ROT13 transformation of the input.
+For example
+
+{%sample/
+{@rot13 ROT13 is a simple letter substitution cipher
+that replaces a letter with the 13th letter after it in the alphabet.
+ROT13 is a special case of the Caesar cipher which
+was developed in ancient Rome.}
+%}
+
+will result in
+
+{%output%}
+
+Rot13 encoding is not a strong encryption algorithm.
+It can easily decrypt by the reader visiting the site http://rot13.com/
+The main use is to provide some kind of obfuscation for the text that requires some effort to decipher.
+For example, your documents asks a question to the reader, and you also give the answer in ROT13.
+The reader will not be able to read the answer, only when they put effort deciphering.
+
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
 {%#snip:check file={%JAVA_DIR%}NumberLines.java hash=bdbd5924%}
@@ -1541,19 +1589,20 @@ The syntax of the macro is
 
 [[snipTransform]]
 ==== {%macroChapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=0badaf1d%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=9ecdaa81%}
 
 The `snip:transform` macro integrates the functionality of the macros
 
-* `KillLines`
-* `SkipLines`
-* `ReplaceLines`
-* `TrimLines`
-* `Reflow`
-* `NumberLines`
+* `kill`
+* `skipLines`
+* `range` or `ranges`
+* `replaceLines`
+* `trimLines`
+* `reflow`
+* `numberLines`
 * `untab`
 
-It can kill/keep lines, skip, replace, trim lines, it can reflow the lines, replace tabs with spaces, and it can number the lines.
+It can kill/keep lines, skip, replace, trim, lines, select line ranges; it can reflow the lines, replace tabs with spaces, and it can number the lines.
 
 {%parameterized%}
 
@@ -1561,7 +1610,7 @@ The macro implementation itself is calling the underlying other macros, so the f
 The purpose of the macro is to provide a shorthand for the common use case of the other macros used together.
 
 The macro is configured with parameters in a similar way as the underlying macros.
-The parameters are the same as in those macros and they are used by the underlying macros the same way.
+The parameters are the same as in those macros, and they are used by the underlying macros the same way.
 There are two differences, however.
 
 1. Th `snip:transform` macro does not use any user defined macro or option as a parameter.
@@ -1574,6 +1623,7 @@ The names for the actions are the followings:
 
 * `kill`
 * `skip`
+* `range` or `ranges`
 * `replace`
 * `trim`
 * `reflow`
@@ -1616,7 +1666,7 @@ It is not possible to invoke one action more than once.
 Any syntax allowing the separation of the parameters of one execution from another would be complex and probably hard to read.
 
 Some actions have parameters that are the same as the name of the action.
-These are `skip`, `kill` and `replace`.
+These are `skip`, `range`, `kill` and `replace`.
 When one of these parameters is specified there may not be a need to specify the action separately.
 It is evident that
 
@@ -1648,6 +1698,7 @@ The following parameters will add the action implicitly to the list:
 * `kill` will add the action `kill`
 * `keep` will add the action `kill`
 * `skip` will add the action `skip`
+* `lines`, `range˛ or `ranges` will add the action `range`
 * `replace` will add the action `replace`
 * `tab` or `tabSize` will add the action `untab`
 
@@ -1659,7 +1710,7 @@ When implicitly added `kill` will always precede `skip` and `replace`.
 Likewise `skip` will precede `replace`.
 
 A parameter other than these belonging to an action not listed in the `actions` parameter is an error.
-You cannot, for example, specify `width` without adding `reflow` to the actions as it is not evident what the meaning of `width` is without `reflow`.
+You cannot, for example, specify `width` without adding `reflow` to the actions as it is not readable what the meaning of `width` is without `reflow`.
 
 You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get added implicitly.
 For example, you want to kill a few lines and also number the lines.
@@ -1696,8 +1747,9 @@ The parameters for the `snip:transform` are:
 * `margin` passed to `trimLines`
 * `trimVertical` passed to `trimLines`
 * `verticalTrimOnly` passed to `trimLines`
-*`tab` or `tabSize` passed to `untab`. Note that the original `untab` parameter is not supported in the `snip:transform` macro.
+* `tab` or `tabSize` passed to `untab`. Note that the original `untab` parameter is not supported in the `snip:transform` macro.
 The reason for that is readability. While `untab size` may be acceptable, it is not clear what the meaning of `size` is in `snip:transform`.
+* `lines` (alias `range`, `ranges`) passed to `range`
 
 The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
@@ -1835,18 +1887,19 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,376 bytes
+- snippet: 1,440 bytes
 - Snip.java: 2,738 bytes
 - SnipSave.java: 4,856 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,756 bytes
+- RangeMacro.java: 1,240 bytes
 - Untab.java: 2,285 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
 - Update.java: 3,754 bytes
-- SnipTransform.java: 14,715 bytes
+- SnipTransform.java: 16,201 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 16,268 bytes
+- Collect.java: 17,685 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
 - ThinXml.java: 8,678 bytes
@@ -1861,6 +1914,7 @@ will result
 - Clear.java: 434 bytes
 - KillLines.java: 1,659 bytes
 - SnipLoad.java: 3,530 bytes
+- Rot13.java: 907 bytes
 - SnippetStore.java: 10,730 bytes
 - ListDir.java: 5,583 bytes
 - XmlFormat.java: 3,514 bytes

@@ -2265,11 +2265,12 @@ The options are:
 
 * `top` - the file is included relative to the top level file. This option cannot be defined as macro.
 
-* `lines` - the option can list ranges of lines to include. The individual ranges can be separated by `,` or `;`.
+* `lines` - the option can list ranges of lines to include.
+The individual ranges can be separated by `,` or `;`.
 The ranges are specified as a range of numbers separated by `..`.
 A one line range can be specified by a single number.
-The range can be specified in reverse order.
-In that case that lines appear reversed.
+The range start line number can be larger than the end line number.
+In that case that lines appear in reversed order from the start to the end.
 The lines are included in the order as the ranges specify.
 Using this option you can rearrange the order of the lines.
 This option cannot be defined as macro.

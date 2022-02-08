@@ -1,0 +1,9 @@
+{@comment text fragments used in different documents}
+{@define TEXT:RANGE=The individual ranges can be separated by `,` or `;`.
+The ranges are specified as a range of numbers separated by `..`.
+A one line range can be specified by a single number.
+The range start line number can be larger than the end line number.
+In that case that lines appear in reversed order from the start to the end.
+The lines are included in the order as the ranges specify.
+Using this option you can rearrange the order of the lines.
+This option cannot be defined as macro.}

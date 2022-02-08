@@ -883,7 +883,7 @@ public class Processor implements javax0.jamal.api.Processor {
         if (currentlyClosing) {
             return;
         }
-        Deque<Throwable> exceptions = new ArrayDeque<>(this.exceptions);
+        final ArrayDeque<Exception> exceptions = new ArrayDeque<>(this.exceptions);
         final var closers = new LinkedList<>(openResources.keySet());
         try {
             currentlyClosing = true;
@@ -906,16 +906,16 @@ public class Processor implements javax0.jamal.api.Processor {
             if (nrOfExceptions == 1 && exceptions.peek() instanceof BadSyntax) {
                 throw (BadSyntax) exceptions.peek();
             }
-            final var sb = new StringBuilder(
-                    "There " + (nrOfExceptions == 1 ? "was" : "were")
-                            + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
-            int exceptionSerialNum = nrOfExceptions;
-            for (final var accumulated : exceptions) {
-                sb.append(exceptionSerialNum--).append(". ").append(accumulated.getMessage()).append("\n");
+            final var exArr = exceptions.toArray(Exception[]::new);
+            final var sb = new StringBuilder();
+            sb.append("There ").append(nrOfExceptions == 1 ? "was" : "were").append(" ").append(nrOfExceptions).append(" syntax error").append(nrOfExceptions == 1 ? "" : "s").append(" processing the Jamal input:\n");
+            int j = 1;
+            for (int i = exArr.length-1; i >= 0 ; i--) {
+                sb.append(j++).append(". ").append(exArr[i].getMessage()).append("\n");
             }
             final var exception = new BadSyntax(sb.toString());
-            for (final var accumulated : exceptions) {
-                exception.addSuppressed(accumulated);
+            for (int i = exArr.length-1; i >= 0 ; i--) {
+                exception.addSuppressed(exArr[i]);
             }
             throw exception;
         }

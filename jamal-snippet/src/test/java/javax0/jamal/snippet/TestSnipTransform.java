@@ -657,4 +657,61 @@ public class TestSnipTransform {
 
         }
     }
+
+    @Nested
+    @DisplayName("All the tests of range invoked through snip:transform")
+    class TestRange {
+        @Test
+        @DisplayName("A range with no specification returns all the lines")
+        void testNoRangeNoOp() throws Exception {
+            TestThat.theInput("{@snip:transform action=range\n" +
+                    "1\n" +
+                    "2\n" +
+                    "3\n" +
+                    "4\n" +
+                    "}").results("1\n2\n3\n4\n");
+        }
+
+        @Test
+        @DisplayName("A transform range with lines returns one range")
+        void testOneRange() throws Exception {
+            TestThat.theInput("{@snip:transform action=range lines=1..2\n" +
+                    "1\n" +
+                    "2\n" +
+                    "3\n" +
+                    "4\n" +
+                    "}").results("1\n2\n");
+        }
+
+        @Test
+        @DisplayName("transform ranges' with lines returns the ranges")
+        void testTwoRanges() throws Exception {
+            TestThat.theInput("{@snip:transform action=ranges lines=1..2;2..3\n" +
+                    "1\n" +
+                    "2\n" +
+                    "3\n" +
+                    "4\n" +
+                    "}").results("1\n2\n2\n3\n");
+        }
+
+        @Test
+        @DisplayName("transform range preserves the last new line")
+        void testTrailingNoNewLine1() throws Exception {
+            TestThat.theInput("{@snip:transform action=ranges lines=1..4\n" +
+                    "1\n" +
+                    "2\n" +
+                    "3\n" +
+                    "4}").results("1\n2\n3\n4");
+        }
+
+        @Test
+        @DisplayName("transform range preserves the last new line")
+        void testTrailingNoNewLine2() throws Exception {
+            TestThat.theInput("{@snip:transform lines=1..4,4\n" +
+                    "1\n" +
+                    "2\n" +
+                    "3\n" +
+                    "4}").results("1\n2\n3\n4\n4");
+        }
+    }
 }

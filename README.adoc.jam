@@ -8,7 +8,7 @@ The source of the file is the README.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module
 jamal-snippet.
 
-%}{%@import res:jamal.jim%}\
+%}{%@import res:jamal.jim%}{%@import shared_text.jim%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@define pu$folder=images%}\
@@ -1926,7 +1926,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=292f9491%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=3328a6f6%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
@@ -1954,14 +1954,8 @@ The options are:
 
 * `top` - the file is included relative to the top level file. This option cannot be defined as macro.
 
-* `lines` - the option can list ranges of lines to include. The individual ranges can be separated by `,` or `;`.
-The ranges are specified as a range of numbers separated by `..`.
-A one line range can be specified by a single number.
-The range can be specified in reverse order.
-In that case that lines appear reversed.
-The lines are included in the order as the ranges specify.
-Using this option you can rearrange the order of the lines.
-This option cannot be defined as macro.
+* `lines` - the option can list ranges of lines to include.
+{%TEXT:RANGE%}
 
 {%noCacheExplanation%}
 

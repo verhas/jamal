@@ -44,8 +44,10 @@ import java.util.stream.Collectors;
  * order of the listing and after that all other macros that were configured in the order as they are listed above.
  */
 public class SnipTransform implements Macro {
-    private static final Set<String> knownActions = Set.of("kill", "skip", "replace", "trim", "reflow", "number", "untab");
-
+    private static final Set<String> knownActions = Set.of("kill", "skip", "replace", "trim", "reflow", "number", "untab", "range");
+    private static final Map<String,String> actionAliases = Map.of(
+            "ranges","range"
+    );
     /**
      * Parse the input for parameters and store the parameters. The input is parsed in the constructor and then the
      * parameter set is checked for consistency as well as implicit actions are added.
@@ -73,14 +75,16 @@ public class SnipTransform implements Macro {
         final Params.Param<Boolean> trimVertical = Params.<Boolean>holder(null, "trimVertical").asBoolean();
         final Params.Param<Boolean> verticalTrimOnly = Params.<Boolean>holder(null, "verticalTrimOnly", "vtrimOnly").asBoolean();
         final Params.Param<Integer> tabSize = Params.<Integer>holder("tabSize", "tab").asInt();
-
+        // parameter for range
+        final Params.Param<String> ranges = Params.holder(null, "range", "ranges", "lines").asString();
         final Set<String> actionsSet;
 
         Parameters(final Input in, final Processor processor) throws BadSyntax {
             // there is no '(' and ')' around the parameters
             Params.using(processor)
                     .from(SnipTransform.this)
-                    .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange, skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize)
+                    .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange,
+                            skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize, ranges)
                     .parse(in);
 
             actionsSet = getOrderedActionSet();
@@ -98,16 +102,29 @@ public class SnipTransform implements Macro {
         private Set<String> getOrderedActionSet() throws BadSyntax {
             final List<String> actionsList;
             if (actions.isPresent()) {
-                actionsList = Arrays.stream(actions.get().split(",", -1)).map(String::trim).collect(Collectors.toList());
+                actionsList = Arrays.stream(actions.get().split(",", -1)).map(String::trim).collect(Collectors.toCollection(ArrayList::new));
             } else {
                 actionsList = new ArrayList<>();
             }
-
+            unaliasActions(actionsList);
             final var actionsSet = new LinkedHashSet<>(actionsList);
             if (actionsSet.size() != actionsList.size()) {
                 throw new BadSyntax("Duplicate action(s) in " + actions.get());
             }
             return actionsSet;
+        }
+
+        /**
+         * Replace the elements in the action list if they are aliases with the real action.
+         * @param actionsList the list of actions optionally containing aliases
+         */
+        private void unaliasActions(final List<String> actionsList) {
+            for(final var alias : actionAliases.keySet()) {
+                final var aliasIndex = actionsList.indexOf(alias);
+                if( aliasIndex != -1 ) {
+                    actionsList.set(aliasIndex, actionAliases.get(alias));
+                }
+            }
         }
 
         /**
@@ -179,9 +196,13 @@ public class SnipTransform implements Macro {
          */
         private void addImplicitConfiguredActions() throws BadSyntax {
             for (final var a : implicitActions(
+                    // THIS IS THE DEFAULT ORDER OF THE ACTIONS
                     action("kill", pattern),
                     action("keep", keep, "kill"),
                     action("skip", skipStart),
+                    action("range", ranges),
+                    action("ranges", ranges, "range"),
+                    action("lines", ranges, "range"),
                     action("replace", replace),
                     action("tab", tabSize, "untab"),
                     action("tabSize", tabSize, "untab")
@@ -189,6 +210,9 @@ public class SnipTransform implements Macro {
                 if (a.param.isPresent() && a.param.name().equals(a.name)) {
                     actionsSet.add(a.action);
                 }
+            }
+            if (actionsSet.contains("ranges")) {
+                actionsSet.add("range");
             }
         }
 
@@ -206,7 +230,8 @@ public class SnipTransform implements Macro {
                     "trim", List.of(margin, trimVertical, verticalTrimOnly, tabSize),
                     "reflow", List.of(width),
                     "untab", List.of(tabSize),
-                    "number", List.of(format, start, step));
+                    "number", List.of(format, start, step),
+                    "range", List.of(ranges));
             for (final var e : needs.entrySet()) {
                 final var action = e.getKey();
                 if (!actionsSet.contains(action)) {
@@ -244,6 +269,7 @@ public class SnipTransform implements Macro {
         final BlockConverter reflow;
         final BlockConverter numberLines;
         final BlockConverter untab;
+        final BlockConverter range;
 
         private static BlockConverter getConverter(final Processor processor, final String macroName) throws BadSyntax {
             return processor.getRegister().getMacro(macroName)
@@ -259,6 +285,7 @@ public class SnipTransform implements Macro {
             reflow = getConverter(processor, "reflow");
             numberLines = getConverter(processor, "numberLines");
             untab = getConverter(processor, "untab");
+            range = getConverter(processor, "range");
         }
     }
 
@@ -291,6 +318,10 @@ public class SnipTransform implements Macro {
                 case "untab":
                     macros.untab.convertTextBlock(sb, pos, params.tabSize);
                     break;
+                case "range":
+                    macros.range.convertTextBlock(sb, pos, params.ranges);
+                    break;
+
                 default:
                     throw new IllegalArgumentException("Unknown action: " + action + "This is an internal error, as illegal actions was already checked");
             }
