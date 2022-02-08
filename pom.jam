@@ -33,7 +33,7 @@
         {pluginManagement|
             {plugins|
                 {plugin|
-                    {GAV :org.apache.maven.plugins:maven-source-plugin:3.0.1}
+                    {GAV :org.apache.maven.plugins:maven-source-plugin:{SOURCE_PLUGIN_VERSION}}
                     {executions|
                         {execution|
                             {id|attach-sources}
@@ -76,10 +76,10 @@
                 }
 
                 {plugin|
-                    {GAV :org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M4}
+                    {GAV :org.apache.maven.plugins:maven-surefire-plugin:{SUREFIRE_PLUGIN_VERSION}}
                 }
                 {plugin|
-                      {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8}
+                      {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:{SONATYPE_PLUGIN_VERSION}}
                       {extensions :true}
                       {configuration|
                         <serverId>ossrh</serverId>
@@ -94,7 +94,7 @@
         {@for MODULE in (testsupport,api,core,tools,engine,extensions,scriptbasic,snippet,plantuml,debug,jamal,yaml,io,doclet,markdown,assertions)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
         {dependency :info.picocli:picocli:{PICOCLI_VERSION}}
-        {dependency|com.javax0|levenshtein|1.0.0}
+        {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
         }}
 
     {profiles|
