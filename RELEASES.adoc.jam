@@ -2,7 +2,10 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
-{%RELEASE/1.11.0-SNAPSHOT%}
+{%RELEASE/1.11.1-SNAPSHOT%}
+
+
+{%RELEASE/1.11.0%}
 
 * Jamal provides suggestion in case a macro name is misspelled.
 
@@ -52,6 +55,10 @@ For the user this means cleaner error report.
 * Maven extension can keep its own `extensions.xml` automatically up-to-date.
 
 * `https` include and import cache can be configured to evict entries.
+
+* macro `rot13`
+
+* improved error reporting
 
 {%RELEASE/1.10.4%}
 
