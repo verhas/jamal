@@ -2,7 +2,10 @@
 
 
 
-=== https://github.com/verhas/jamal/tree/1.11.0-SNAPSHOT[1.11.0-SNAPSHOT]
+=== https://github.com/verhas/jamal/tree/1.11.1-SNAPSHOT[1.11.1-SNAPSHOT]
+
+
+=== https://github.com/verhas/jamal/tree/1.11.0[1.11.0]
 
 * Jamal provides suggestion in case a macro name is misspelled.
 
@@ -52,6 +55,10 @@ For the user this means cleaner error report.
 * Maven extension can keep its own `extensions.xml` automatically up-to-date.
 
 * `https` include and import cache can be configured to evict entries.
+
+* macro `rot13`
+
+* improved error reporting
 
 === https://github.com/verhas/jamal/tree/1.10.4[1.10.4]
 

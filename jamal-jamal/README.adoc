@@ -24,7 +24,7 @@ To use this module you have to add the dependency to you Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-jamal</artifactId>
-    <version>1.11.0</version>
+    <version>1.11.1-SNAPSHOT</version>
 </dependency>
 
 ----
