@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal yaml</name>
     <artifactId>jamal-yaml</artifactId>
-    <version>1.11.0-SNAPSHOT</version>
+    <version>1.11.0</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.11.0-SNAPSHOT</version>
+        <version>1.11.0</version>
     </parent>
     <description>yaml module for Jamal</description>
     <build>
