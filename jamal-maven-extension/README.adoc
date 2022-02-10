@@ -94,19 +94,43 @@ The extension looks into the `.mvn` directory of the project.
 If there is an `extensions.jam` or `extensions.xml.jam` file in there, it will be used to generate and overwrite the `extensions.xml` file.
 Since the `extensions.xml` is small it may be pointless to maintain it that way, but the possibility exists.
 
-The Jamal project itself has the following `extensions.jam` file in the project's root directory:
+The Jamal project itself could have the following `extensions.jam` file in the project's root directory:
 
 [source]
 ----
-include::../.mvn/extensions.jam[]
+{@import [noCache] https://raw.githubusercontent.com/verhas/jamal/master/version.jim}
+{#thinXml
+extensions>
+  extension>
+    groupId>com.javax0.jamal
+    artifactId>jamal-maven-extension
+    version>{LAST_RELEASE}
+}
 ----
 
 This will always use the latest, usually development version of the extension and keeps the `extensions.xml` file up to date.
-When a new release is available it will be used after the first build.
+When a new release is available it will update the version in the `extensions.xml` and be used during the next build.
 The actually running build does not restart with the newer version.
 
 This feature does not work if the version configured in the `extensions.xml` file is older than 1.10.0.
 The feature was introduced in 1.10.0.
+
+[NOTE]
+====
+The actual `extensions.jam` does not use the option `noCache`.
+Using the option would download the latest version of the extension from the internet every time the build starts.
+This may be a significant impact on the build time.
+A better solution is to use cache eviction introduced in Jamal version 1.11.0.
+
+The file
+
+    ~/.jamal/cache/properties/com/githubusercontent/raw/verhas/jamal/master/version.jim
+
+is a properties file.
+Adding `ttl=1d` (time to live = one day) as a new property will check for a new `version.jim` once a day.
+In other occasions it will just use the cached file.
+====
+
 
 == Getting Rid of the Extension
 

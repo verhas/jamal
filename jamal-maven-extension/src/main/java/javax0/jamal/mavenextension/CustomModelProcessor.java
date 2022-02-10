@@ -47,12 +47,33 @@ public class CustomModelProcessor implements ModelProcessor {
 
     @Override
     public File locatePom(File projectDirectory) {
-        final var dotMvnDir = new File(projectDirectory, ".mvn");
-        if (dotMvnDir.exists()) {
-            jam2Xml(dotMvnDir, "extensions", true);
-        }
+
+        convertExtensionsJam(projectDirectory);
+
         jam2Xml(projectDirectory, "pom", false);
         return new File(projectDirectory, "pom.xml");
+    }
+
+    /**
+     * Asynchronously convert the extensions.jam file to extensions.xml.
+     * The advantage of the asynchronous conversion is that the conversion, especially when downloading web resources, does not slow down the compilation.
+     * Another side effect is the error report, which does happen if the extensions.jam has syntax errors but it does not stop the compilation.
+     * <p>
+     * The implementation creates a new thread.
+     * Since this task is started only once for a built, which is usually a few minutes typically, there is no need to use any executor service.
+     *
+     * @param projectDirectory is the root fo the project directory provided by Jamal
+     */
+    private void convertExtensionsJam(final File projectDirectory) {
+        final var t = new Thread(() -> {
+            final var dotMvnDir = new File(projectDirectory, ".mvn");
+            if (dotMvnDir.exists()) {
+                jam2Xml(dotMvnDir, "extensions", true);
+            }
+        });
+        t.setDaemon(false); // should finish before we exit the process
+        t.setName("extensions.jam-to-extensions.xml");
+        t.start();
     }
 
     private void jam2Xml(final File directory, final String sourceName, final boolean optional) {
@@ -63,7 +84,7 @@ public class CustomModelProcessor implements ModelProcessor {
                 if (optional) {
                     return;
                 } else {
-                    throw new RuntimeException("There is no 'pom.xml.jam' or 'pom.jam' file.");
+                    throw new RuntimeException("There is no '" + sourceName + ".xml.jam' or '" + sourceName + ".jam' file.");
                 }
             }
         }

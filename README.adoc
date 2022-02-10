@@ -238,7 +238,7 @@ Then you can issue the command:
 
 [source]
 ----
-mvn com.javax0.jamal:jamal-maven-plugin:1.0.2:jamal
+mvn com.javax0.jamal:jamal-maven-plugin:1.11.1-SNAPSHOT:jamal
 ----
 
 if you have a `pom.xml` file in your directory.
