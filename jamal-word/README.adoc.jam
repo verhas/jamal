@@ -1,0 +1,18 @@
+= Jamal Microsoft Word integration module
+
+
+== Dependency
+
+To use the module, you have to have the code on the classpath.
+This can be done adding
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-word</artifactId>
+    <version>{%VERSION%}</version>
+----
+
+to your Maven `pom.xml`.

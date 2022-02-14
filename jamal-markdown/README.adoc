@@ -10,7 +10,7 @@ This can be done adding
 
 [source,xml]
 ----
-    <name>jamal markdown</name>
+    <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-markdown</artifactId>
     <version>1.11.1-SNAPSHOT</version>
 ----

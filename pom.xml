@@ -30,6 +30,7 @@
         <module>jamal-doclet</module>
         <module>jamal-markdown</module>
         <module>jamal-assertions</module>
+        <module>jamal-word</module>
     </modules>
     <licenses>
         <license>
