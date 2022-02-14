@@ -16,33 +16,18 @@ public class Processor {
         final XWPFInput input = new XWPFInput(document);
         input.setStart(0, 0);
         try (final var processor = new javax0.jamal.engine.Processor()) {
-            while (input.paragraphEndIndex < document.getParagraphs().size() ||
-                    input.runEndIndex < document.getParagraphs().get(input.paragraphEndIndex).getRuns().size()) {
-                System.out.println("BEFORE PROCESSING:\n"+input.debugDoc());
+            while (!input.isExhausted()) {
+                //System.out.println("BEFORE PROCESSING:\n" + input.debugDoc());
                 final String processed = processor.process(input);
-                System.out.println("AFTER PROCESSING:\n"+input.debugDoc());
+                //System.out.println("AFTER PROCESSING:\n" + input.debugDoc());
                 input.purgeSource();
-                System.out.println("AFTER PURGE:\n"+input.debugDoc());
-                document.getParagraphs().get(input.paragraphStartIndex).getRuns().get(input.runStartIndex).setText(processed, 0);
-                System.out.println("AFTER REPLACE:\n"+input.debugDoc());
-                if (input.paragraphEndIndex >= document.getParagraphs().size() - 1 &&
-                        input.runEndIndex >= document.getParagraphs().get(input.paragraphEndIndex).getRuns().size() - 1) {
-                    break;
-                }
-                if (input.runEndIndex < document.getParagraphs().get(input.paragraphEndIndex).getRuns().size() - 1) {
-                    input.setStart(input.paragraphEndIndex, input.runEndIndex + 1);
-                } else {
-                    input.paragraphEndIndex++;
-                    while (input.paragraphEndIndex < document.getParagraphs().size()) {
-                        if (document.getParagraphs().get(input.paragraphEndIndex).getRuns().size() > 0) {
-                            input.setStart(input.paragraphEndIndex, 0);
-                            break;
-                        }
-                        input.paragraphEndIndex++;
-                    }
-                }
+                //System.out.println("AFTER PURGE:\n" + input.debugDoc());
+                input.insert(processed);
+                System.out.println("AFTER REPLACE:\n" + input.debugDoc());
+                input.step();
             }
         }
         document.write(Files.newOutputStream(Paths.get(outputFile)));
     }
+
 }
