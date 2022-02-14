@@ -31,6 +31,7 @@ public interface Macro extends Identified, ServiceLoaded {
 
     /**
      * Get an instance from all the classes that implement the interface {@code Macro}.
+     *
      * @return the list of instances
      */
     static List<Macro> getInstances() {
@@ -154,21 +155,21 @@ public interface Macro extends Identified, ServiceLoaded {
         final var close = processor.getRegister().close();
         var op = new PositionStack(input.getPosition());
         while (op.size() > 0) {// while there is any opened macro
-            if (input.length() == 0) {
+            if (input.isEmpty()) {
                 var head = output.substring(0, Math.min(40, output.length()));
                 final var nlPos = head.indexOf('\n');
                 if (nlPos != -1) {
                     head = head.substring(0, nlPos);
                 }
                 throw new BadSyntaxAt("Macro was not terminated in the file.\n" +
-                    head + "\n", op.pop());
+                        head + "\n", op.pop());
             }
 
             if (input.indexOf(open) == 0) {
                 int offset = open.length();
                 while (offset < input.length() && input.charAt(offset) == IDENT
-                    || input.charAt(offset) == POST_VALUATE
-                    || Character.isWhitespace(input.charAt(offset))) {
+                        || input.charAt(offset) == POST_VALUATE
+                        || Character.isWhitespace(input.charAt(offset))) {
                     offset++;
                 }
                 final var macro = getMacro(processor.getRegister(), input, offset);
@@ -199,7 +200,7 @@ public interface Macro extends Identified, ServiceLoaded {
                 }
             } else {
                 final var oIndex = input.indexOf(open);
-                final var cIndex = input.indexOf(close);
+                final var cIndex = input.indexOf(close, oIndex);
                 final int textEnd;
                 if (cIndex != -1 && (oIndex == -1 || cIndex < oIndex)) {
                     textEnd = cIndex;

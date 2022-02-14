@@ -48,6 +48,7 @@
 {@define OGNL_VERSION=3.3.2}                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 {@define SNAKEYAML_VERSION=1.30}                     -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
 {@define FLEXMARK_VERSION=0.62.2}                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
+{@define APACHE_POI_VERSION=5.2.0}                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 
 -- picocli is needed for the Jamal command line version
 {@define PICOCLI_VERSION=4.6.2}                      -- https://repo.maven.apache.org/maven2/info/picocli/picocli

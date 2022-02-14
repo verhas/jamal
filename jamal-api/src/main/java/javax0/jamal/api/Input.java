@@ -116,6 +116,27 @@ public interface Input extends CharSequence {
         return getSB().indexOf(str);
     }
 
+    default boolean isEmpty() {
+        return length() == 0;
+    }
+
+    /**
+     * Find the string {@code s} in the input, similar as {@link #indexOf(String)}, but if the string is not found
+     * before the index {@code before} then do not bother. The implementation may return {@code -1} or the position
+     * larger than {@code before} where the string is found. The implementation does not need to implement a consistent
+     * strategy. It may return -1 at one time and the real position larger than {@code before} at another time.
+     *
+     * @param s      the string to be found
+     * @param before is a hint. If {@code s} can be found before {@code before} then it is okay. If it
+     *               cannot be found then before the position the return value may be -1. In
+     * @return the position of the string {@code s} in the input or -1 if it is not found. The return value may be -1
+     * in case the string contains the string {@code s} but it is not found before {@code before} and {@code before}
+     * is not -1.
+     */
+    default int indexOf(String s, int before) {
+        return indexOf(s);
+    }
+
     /**
      * Proxy call to the underlying {@link StringBuilder#substring(int, int)}
      *
