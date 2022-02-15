@@ -4,6 +4,7 @@ import javax0.jamal.tools.Input;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.xmlbeans.XmlCursor;
 
 import java.util.List;
@@ -40,12 +41,14 @@ import java.util.List;
  */
 public class XWPFInput extends Input {
     final XWPFDocument document;
+    final XWPFTableCell cell;
     final List<XWPFParagraph> paragraphs;
 
-    public XWPFInput(XWPFDocument document) {
+    public XWPFInput(XWPFDocument document, XWPFTableCell cell, List<XWPFParagraph> paragraphs) {
         super();
         this.document = document;
-        paragraphs = document.getParagraphs();
+        this.cell = cell;
+        this.paragraphs = paragraphs;
     }
 
     int paragraphStartIndex;
@@ -157,7 +160,7 @@ public class XWPFInput extends Input {
 
     private void purgeStartOfParagraph() {
         if (runEndIndex == paragraphs.get(paragraphStartIndex + 1).getRuns().size() - 1) {
-            document.removeBodyElement(paragraphStartIndex + 1);
+            removeParagraph(paragraphStartIndex + 1);
         } else {
             for (int i = runEndIndex; i >= 0; i--) {
                 paragraphs.get(paragraphStartIndex + 1).removeRun(i);
@@ -238,7 +241,7 @@ public class XWPFInput extends Input {
         startRun.setText(lines[0], 0);
         if (lines.length > 1) {
             final XmlCursor cursor = getCursorAfterParagraph(paragraphStartIndex);
-            final var p = cursor == null ? document.createParagraph() : document.insertNewParagraph(cursor);
+            final var p = newParagraph(cursor);
 
             for (int i = runEndIndex + 1, j = 0; i < paragraphs.get(paragraphStartIndex).getRuns().size(); i++, j++) {
                 final var run = p.insertNewRun(j);
@@ -251,7 +254,7 @@ public class XWPFInput extends Input {
         }
         for (int i = 1; i < lines.length + (lastNl ? 0 : -1); i++) {
             final var cursor = getCursorAfterParagraph(paragraphStartIndex + i - 1);
-            final var p = cursor == null ? document.createParagraph() : document.insertNewParagraph(cursor);
+            final var p = newParagraph(cursor);
             final var run = p.insertNewRun(0);
             run.getCTR().set(startRun.getCTR());
             run.setText(lines[i], 0);
@@ -266,8 +269,23 @@ public class XWPFInput extends Input {
         }
     }
 
+    private XWPFParagraph newParagraph(final XmlCursor cursor) {
+        if (cursor == null) {
+            if (cell == null) {
+                return document.createParagraph();
+            } else {
+                return cell.addParagraph();
+            }
+        } else {
+            if (cell == null) {
+                return document.insertNewParagraph(cursor);
+            } else {
+                return cell.insertNewParagraph(cursor);
+            }
+        }
+    }
+
     private XmlCursor getCursorAfterParagraph(int paragraphIndex) {
-        final XmlCursor cursor;
         if (paragraphs.size() == paragraphIndex + 1) {
             return null;
         } else {
