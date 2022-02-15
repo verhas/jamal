@@ -8,6 +8,36 @@ import org.apache.xmlbeans.XmlCursor;
 
 import java.util.List;
 
+/**
+ * This class reads the characters from a Word document, and at the same time, it modifies the same document as the Jamal
+ * processing goes on.
+ * <p>
+ * The class implements the {@link javax0.jamal.api.Input} interface and as such it can be used as an input for the
+ * {@link javax0.jamal.api.Processor} implementation.
+ * <p>
+ * The trick in handling a Word document is that the document mixes text with formatting.
+ * Reading the text and then processing it with Jamal is not an option, as it would lose the formatting.
+ * <p>
+ * Jamal processing can be split into separate steps. It always starts at the beginning of the input and works towards the end.
+ * When a part is processed, Jamal is not returning.
+ * This way, the processing of a Word file can start at the beginning of a Word document and fetch as much text as necessary.
+ * <p>
+ * When the processing needs some characters not taken from the Word file yet, the input handling can fetch those characters automatically.
+ * It can happen when Jamal looks for a macro closing string or the first character after the macro opening string.
+ * When the processing is finished, the processor returns the processed string, but at the same time, there may be characters left in the document not processed.
+ * The input handling also knows where it started the processing and finished it.
+ * Before processing the remaining document, the XWPFProcessor replaces the processed part with the result.
+ * Following this approach, the document is replaced by the parts processed separately.
+ * The processing steps use the same processor objects.
+ * It means that all the macros remain valid.
+ * If you define a macro in the document, you can use it later.
+ * <p>
+ * When the macro result is replaced, the formatting at the start of the part is used.
+ * You cannot define a formatted text as the body of a macro.
+ * The formatting inside a macro gets lost.
+ * <p>
+ * It is also a limitation of this approach that you cannot use, at least as for now, deferred actions.
+ */
 public class XWPFInput extends Input {
     final XWPFDocument document;
     final List<XWPFParagraph> paragraphs;
@@ -106,23 +136,23 @@ public class XWPFInput extends Input {
     private void joinParagraphs() {
         if (paragraphStartIndex + 1 < paragraphs.size()) {
             final var paragraph = paragraphs.get(paragraphStartIndex);
-            final var runs = paragraph.getRuns();
-            final var nextLineRuns = paragraphs.get(paragraphStartIndex + 1).getRuns();
-            for (int i = 0; i < nextLineRuns.size(); i++) {
-                paragraph.insertNewRun(runs.size());
-                final var destinationRun = runs.get(runs.size() - 1);
-                final var sourceRun = nextLineRuns.get(i);
-                destinationRun.setText(sourceRun.getText(0), 0);
+            for (XWPFRun sourceRun : paragraphs.get(paragraphStartIndex + 1).getRuns()) {
+                final var destinationRun = paragraph.createRun();
                 destinationRun.getCTR().set(sourceRun.getCTR());
+                destinationRun.setText(sourceRun.getText(0), 0);
             }
-            document.removeBodyElement(paragraphStartIndex + 1);
+            removeParagraph(paragraphStartIndex + 1);
         }
     }
 
     private void removeParagraphs() {
         for (int i = paragraphEndIndex - 1; i > paragraphStartIndex; i--) {
-            document.removeBodyElement(i);
+            removeParagraph(i);
         }
+    }
+
+    private void removeParagraph(int i) {
+        document.removeBodyElement(document.getPosOfParagraph(paragraphs.get(i)));
     }
 
     private void purgeStartOfParagraph() {
@@ -152,9 +182,9 @@ public class XWPFInput extends Input {
         }
     }
 
-    public boolean isExhausted() {
-        return paragraphEndIndex >= paragraphs.size() - 1 &&
-                runEndIndex >= paragraphs.get(paragraphEndIndex).getRuns().size() - 1;
+    boolean notEmpty() {
+        return paragraphEndIndex < paragraphs.size() - 1 ||
+                runEndIndex < paragraphs.get(paragraphEndIndex).getRuns().size() - 1;
     }
 
     public String debugDoc() {
@@ -228,10 +258,9 @@ public class XWPFInput extends Input {
         }
         if (lines.length > 1 && !lastNl) {
             final var p = paragraphs.get(paragraphStartIndex + lines.length - 1);
-            p.insertNewRun(0);
-            final var run = p.getRuns().get(0);
-            run.setText(lines[lines.length - 1], 0);
+            final var run = p.insertNewRun(0);
             run.getCTR().set(startRun.getCTR());
+            run.setText(lines[lines.length - 1], 0);
             runEndIndex = 1;
             paragraphEndIndex = paragraphStartIndex + lines.length - 1;
         }
@@ -247,7 +276,7 @@ public class XWPFInput extends Input {
     }
 
     public void step() {
-        if (!isExhausted()) {
+        if (notEmpty()) {
             if (runEndIndex < paragraphs.get(paragraphEndIndex).getRuns().size() - 1) {
                 setStart(paragraphEndIndex, runEndIndex + 1);
             } else {

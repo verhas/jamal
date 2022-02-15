@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Processor {
+public class XWPFProcessor {
 
     public void process(final String inputFile, final String outputFile) throws IOException, BadSyntax {
         final Path msWordPath = Paths.get(inputFile);
@@ -16,12 +16,12 @@ public class Processor {
         final XWPFInput input = new XWPFInput(document);
         input.setStart(0, 0);
         try (final var processor = new javax0.jamal.engine.Processor()) {
-            while (!input.isExhausted()) {
-                //System.out.println("BEFORE PROCESSING:\n" + input.debugDoc());
+            while (input.notEmpty()) {
+                System.out.println("BEFORE PROCESSING:\n" + input.debugDoc());
                 final String processed = processor.process(input);
-                //System.out.println("AFTER PROCESSING:\n" + input.debugDoc());
+                System.out.println("AFTER PROCESSING:\n" + input.debugDoc());
                 input.purgeSource();
-                //System.out.println("AFTER PURGE:\n" + input.debugDoc());
+                System.out.println("AFTER PURGE:\n" + input.debugDoc());
                 input.insert(processed);
                 System.out.println("AFTER REPLACE:\n" + input.debugDoc());
                 input.step();
