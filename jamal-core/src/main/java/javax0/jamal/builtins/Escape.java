@@ -67,13 +67,13 @@ public class Escape implements Macro {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters.", in.getPosition());
         }
         InputHandler.skip(in, 1);
-        final var endOfEscape = in.indexOf("`");
+        final var endOfEscape = in.indexOf("`",-1);
         if (endOfEscape == -1) {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.", in.getPosition());
         }
         final var escapeSequence = "`" + in.subSequence(0, endOfEscape) + "`";
         InputHandler.skip(in, escapeSequence.length() - 1);
-        final var endOfString = in.indexOf(escapeSequence);
+        final var endOfString = in.indexOf(escapeSequence,-1);
         if (endOfString == -1) {
             throw new BadSyntaxAt("I cannot find the escape string at the end of the macro: " + escapeSequence, in.getPosition());
         }
@@ -131,20 +131,20 @@ public class Escape implements Macro {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters.", input.getPosition());
         }
         move(input, 1, output);
-        final var endOfEscape = input.indexOf("`");
+        final var endOfEscape = input.indexOf("`",-1);
         if (endOfEscape == -1) {
             throw new BadSyntaxAt("The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.", input.getPosition());
         }
         final var escapeSequence = "`" + input.subSequence(0, endOfEscape) + "`";
         move(input, escapeSequence.length() - 1, output);
-        final var endOfString = input.indexOf(escapeSequence);
+        final var endOfString = input.indexOf(escapeSequence,-1);
         if (endOfString == -1) {
             throw new BadSyntaxAt("I cannot find the escape string at the end of the macro: " + escapeSequence, input.getPosition());
         }
         move(input, endOfString, output);
         move(input, escapeSequence.length(), output);
         final var closeStr = processor.getRegister().close();
-        final var endOfEscapeMacro = input.indexOf(closeStr);
+        final var endOfEscapeMacro = input.indexOf(closeStr,-1);
         if (endOfEscapeMacro == -1) {
             throw new BadSyntaxAt("Escape macro is not closed", start);
         }

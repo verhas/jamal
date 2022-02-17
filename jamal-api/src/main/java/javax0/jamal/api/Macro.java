@@ -199,8 +199,9 @@ public interface Macro extends Identified, ServiceLoaded {
                     input.delete(close.length());
                 }
             } else {
-                final var oIndex = input.indexOf(open);
-                final var cIndex = input.indexOf(close, oIndex);
+                final var before = input.indexOf(open);
+                final var cIndex = input.indexOf(close, before);
+                final int oIndex = before == -1 ? input.indexOf(open) : before;
                 final int textEnd;
                 if (cIndex != -1 && (oIndex == -1 || cIndex < oIndex)) {
                     textEnd = cIndex;
