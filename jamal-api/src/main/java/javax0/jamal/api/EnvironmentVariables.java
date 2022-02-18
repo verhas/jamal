@@ -1,7 +1,12 @@
 package javax0.jamal.api;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * This class defined all the strings for the environment variables that Jamal uses in the engine or in the core
@@ -176,7 +181,7 @@ end snippet
     public static final String JAMAL_OPTIONS_ENV = "JAMAL_OPTIONS";
 
     /**
-     * Converts the environment variable name to the system property name during class initialization.
+     * Converts the environment variable name to the system property name.
      *
      * @param s the environment variable name
      * @return the system property name
@@ -186,11 +191,27 @@ end snippet
     }
 
     /**
+     * Converts the environment variable to a property name. It is the same as {@link #env2sys(String)}, but it
+     * chops off the leading `JAMAL_` prefix if there is any.
+     *
+     * @param s the environment variable name
+     * @return the property name
+     */
+    private static String env2prop(String s) {
+        return s.replace('_', '.').toLowerCase(Locale.ROOT).replaceAll("^jamal\\.", "");
+    }
+
+    /**
      * Get a configuration parameter. The name {@code env} is the name of the environment variable.
      * The method first looks at the system variables, to see if there is a value defined there and if there is none
-     * then it tries to read the environment variable. The name {@code env} is capital letters, words concatenated using
+     * then it tries to read the environment variable. If the configuration parameter is not defined in either place
+     * then it tries to use the value from the properties file {@code ~/.jamal.settings.properties} or
+     * {@code ~/.jamal/settings.xml}.
+     *
+     * The name {@code env} is capital letters, words concatenated using
      * {@code _}. The system variable name is the same as the environment variable name, but lower cased and using
-     * {@code .} instead of {@code _}.
+     * {@code .} instead of {@code _}. The property name is the same as the system variable name, but without the
+     * leading {@code jamal.} prefix if there was any in the queried configuration.
      *
      * @param env the name of the environment variable
      * @return the string value of the system property, or the environment variable value, or {@code empty} if not
@@ -198,7 +219,32 @@ end snippet
      */
     public static Optional<String> getenv(String env) {
         return Optional.ofNullable(System.getProperty(env2sys(env)))
-                .or(() -> Optional.ofNullable(System.getenv(env)));
+                .or(() -> Optional.ofNullable(System.getenv(env)))
+                .or(() -> getProperty(env2prop(env)));
+    }
+
+    private static Optional<String> getProperty(final String name) {
+        return Optional.ofNullable(PropertiesSingleton.INSTANCE.properties.getProperty(name));
+    }
+
+    private static class PropertiesSingleton {
+        private final Properties properties = new Properties();
+        public static final PropertiesSingleton INSTANCE = new PropertiesSingleton();
+
+        private PropertiesSingleton() {
+            try {
+                final var jamalDirectory = System.getProperty("user.home") + "/.jamal/";
+                final var jamalPFile = jamalDirectory + "settings.properties";
+                final var jamalXFile = jamalDirectory + "settings.xml";
+                if (Files.exists(Path.of(jamalPFile))) {
+                    properties.load(new FileInputStream(jamalPFile));
+                } else if (Files.isDirectory(Path.of(jamalXFile))) {
+                    properties.loadFromXML(new FileInputStream(jamalXFile));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void setenv(String env, String value) {

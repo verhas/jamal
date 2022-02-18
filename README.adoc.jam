@@ -1865,6 +1865,26 @@ Testing the value of the environment variable in an `{@if ... }` macro may be mi
 Starting with Jamal 1.9.0 it is possible to use `!` after the name of the variable.
 In this case the macro will throw exception when the environment variable is not defined.
 
+The macro does not only check the environment variables when looking for a configuration value.
+
+* First it looks at the Java system properties,
+* then it looks at the environment variables,
+* and finally tries to look up the configuration value from the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file.
+
+When looking up a Java system property the algorithm
+
+. converts the name of the property to lowercase, and then
+. replaces all `_` character with a dot `.` character.
+
+When looping up a property from the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file the algorithm also removes any `JAMAL_` or `jamal.` prefix from the property name.
+
+[NOTE]
+====
+This search algorithm tries to follow the naming of the Java system properties, environment and properties.
+Also, it makes it possible to define something globvally for the user, or only for the running shell or only for the running JVM.
+The more local configuration overrules the broader one using this algorithm.
+====
+
 [[import]]
 ==== {%macroChapter%}`import`
 {%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=352bd77a%}
