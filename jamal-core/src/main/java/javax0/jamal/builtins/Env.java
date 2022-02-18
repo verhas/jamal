@@ -1,6 +1,7 @@
 package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
@@ -48,7 +49,7 @@ public class Env implements Macro {
         } else {
             name = arg;
         }
-        final var value = System.getenv(name);
+        final var value = EnvironmentVariables.getenv(name).orElse(null);
         if (test) {
             return "" + (null != value);
         } else {
