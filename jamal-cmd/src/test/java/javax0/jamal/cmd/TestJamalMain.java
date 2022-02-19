@@ -1,7 +1,6 @@
 package javax0.jamal.cmd;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 public class TestJamalMain {
@@ -41,19 +42,46 @@ public class TestJamalMain {
     public void testHelpScreenIsDisplayed() throws BadSyntax {
         Assertions.assertEquals("Usage:", jamal("-h").substring(0, 6));
     }
+
     @Test
     @DisplayName("Command line displays version")
     public void testVersionScreenIsDisplayed() throws BadSyntax {
         Assertions.assertEquals("Jamal Version ", jamal("-vers").substring(0, 14));
     }
+
     @Test
-    @DisplayName("Command line converts a single file")
+    @DisplayName("Command line converts a single file with verbose output")
     public void testConvertSingleFile() throws Exception {
-        final var out = jamal("src/test/resources/test.jam","target/test-classes/test","--verbose").replaceAll("\\\\","/");
-        Assertions.assertTrue(Pattern.compile("Jamal .*/jamal-cmd/src/test/resources/test.jam -> .*/jamal-cmd/target/test-classes/test").matcher(out).find(),
-            () -> "out: "+out
+        final var out = jamal("src/test/resources/test.jam", "target/test-classes/test", "--verbose").replaceAll("\\\\", "/");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(Pattern.compile("Jamal .*/jamal-cmd/src/test/resources/test.jam -> .*/jamal-cmd/target/test-classes/test").matcher(out).find(),
+                        () -> "out: " + out),
+                () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test"))),
+                () -> Assertions.assertEquals("1", Files.readString(Paths.get("target/test-classes/test")))
         );
-        TestThat.theInput("{@include res:test}").results("1");
     }
 
+    @Test
+    @DisplayName("Command line converts multiple files with verbose output")
+    public void testConvertMultipleFiles() throws Exception {
+        final var out = jamal("-include=\\..*jam$", "-source=src/test/resources/multiple_files", "-target=target/test-classes/", "--verbose").replaceAll("\\\\", "/");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(Pattern.compile(
+                                "(:?Jamal .*/jamal-cmd/src/test/resources/multiple_files/test\\d.jam -> .*/jamal-cmd/target/test-classes/test\\d\n){3}"
+                        ).matcher(out).find(),
+                        () -> "out: " + out
+                ),
+                () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test1"))),
+                () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test2"))),
+                () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test3")))
+        );
+    }
+    @Test
+    @DisplayName("Command line converts a single docx file")
+    public void testConvertSingleDocFile() throws Exception {
+        final var out = jamal("src/test/resources/DOCX/test1.docx", "target/test-classes/test1.docx", "--docx").replaceAll("\\\\", "/");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test1.docx")))
+        );
+    }
 }

@@ -48,8 +48,8 @@
                     <configuration>
                       <programs>
                         <program>
-                          <mainClass>javax0.jamal.poi.word.Main</mainClass>
-                          <id>jamal_word</id>
+                          <mainClass>javax0.jamal.cmd.JamalMain</mainClass>
+                          <id>jamal</id>
                         </program>
                       </programs>
                     </configuration>
