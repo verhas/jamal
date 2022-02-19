@@ -108,7 +108,7 @@ public class JamalMain {
     }
 
     private static void executeJamal(final Path inputPath, CmdParser params) {
-        executeJamal(inputPath, calculateTargetFile(inputPath, params), params);
+        executeJamal(inputPath.toAbsolutePath(), calculateTargetFile(inputPath, params).toAbsolutePath(), params);
     }
 
     private static void executeJamal(final Path inputPath, final Path outputPath, CmdParser params) {
@@ -145,7 +145,9 @@ public class JamalMain {
         try {
             final var parent = output.getParent();
             if (parent != null) {
-                Files.createDirectories(parent);
+                if (!Files.exists(parent)) {
+                    Files.createDirectories(parent);
+                }
             }
         } catch (Exception e) {
             logException(e);
