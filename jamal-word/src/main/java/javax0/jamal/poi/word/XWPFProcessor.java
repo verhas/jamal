@@ -28,13 +28,24 @@ public class XWPFProcessor {
         this.processor = new javax0.jamal.engine.Processor();
     }
 
+    public XWPFProcessor(final String open, final String close) {
+        this.processor = new javax0.jamal.engine.Processor(open, close);
+    }
+
     public void process(final String inputFile, final String outputFile) throws IOException, BadSyntax {
-        pos = new Position(inputFile, 0, 0);
-        final Path msWordPath = Paths.get(inputFile);
-        document = new XWPFDocument(Files.newInputStream(msWordPath));
+        final Path inputPath = Paths.get(inputFile);
+        final Path outputPath = Paths.get(outputFile);
+        process(inputPath, outputPath);
+    }
+
+    public void process(final Path inputPath, final Path outputPath) throws IOException, BadSyntax {
+        pos = new Position(inputPath.toString(), 0, 0);
+        document = new XWPFDocument(Files.newInputStream(inputPath));
         try {
             process(null, document.getBodyElements());
-            document.write(Files.newOutputStream(Paths.get(outputFile)));
+            if (outputPath != null) {
+                document.write(Files.newOutputStream(outputPath));
+            }
         } finally {
             processor.close();
         }

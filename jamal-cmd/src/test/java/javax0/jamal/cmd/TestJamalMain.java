@@ -41,11 +41,15 @@ public class TestJamalMain {
     public void testHelpScreenIsDisplayed() throws BadSyntax {
         Assertions.assertEquals("Usage:", jamal("-h").substring(0, 6));
     }
-
+    @Test
+    @DisplayName("Command line displays version")
+    public void testVersionScreenIsDisplayed() throws BadSyntax {
+        Assertions.assertEquals("Jamal Version ", jamal("-vers").substring(0, 14));
+    }
     @Test
     @DisplayName("Command line converts a single file")
     public void testConvertSingleFile() throws Exception {
-        final var out = jamal("-f","src/test/resources/test.jam","target/test-classes/test","-v").replaceAll("\\\\","/");
+        final var out = jamal("src/test/resources/test.jam","target/test-classes/test","--verbose").replaceAll("\\\\","/");
         Assertions.assertTrue(Pattern.compile("Jamal .*/jamal-cmd/src/test/resources/test.jam -> .*/jamal-cmd/target/test-classes/test").matcher(out).find(),
             () -> "out: "+out
         );

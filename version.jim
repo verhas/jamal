@@ -35,6 +35,7 @@
 {@define SONATYPE_PLUGIN_VERSION=1.6.8}              -- https://repo.maven.apache.org/maven2/org/sonatype/plugins/nexus-staging-maven-plugin
 {@define SUREFIRE_PLUGIN_VERSION=3.0.0-M5}           -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
 {@define SOURCE_PLUGIN_VERSION=3.2.1}                -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
+{@define APPASSEMBLER_PLUGIN_VERSION=2.1.0}           -- https://repo.maven.apache.org/maven2/org/codehaus/mojo/appassembler-maven-plugin
 
 -- test dependency
 {@define JUPITER_VERSION=5.8.2}                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api

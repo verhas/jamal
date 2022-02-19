@@ -2,7 +2,6 @@ module jamal.cmd {
     requires jamal.api;
     requires jamal.engine;
     requires jamal.tools;
-    requires info.picocli;
-    opens javax0.jamal.cmd to info.picocli;
+    requires jamal.word;
     uses javax0.jamal.api.Macro;
 }

@@ -1,5 +1,6 @@
 
 module jamal.word {
+    exports javax0.jamal.poi.word;
     requires jamal.api;
     requires jamal.engine;
     requires org.apache.poi.ooxml;
