@@ -17,7 +17,7 @@ public class Resolve implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
-        Params.using(processor).keys(clone, copy).between("()").parse(in);
+        Params.using(processor).from(this).keys(clone, copy).between("()").parse(in);
 
         for (final var id : Arrays.stream(in.toString().split(",")).map(String::trim).collect(Collectors.toSet())) {
             final var yamlObject = getYaml(processor, id);

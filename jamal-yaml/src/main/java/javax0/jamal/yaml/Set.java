@@ -23,7 +23,7 @@ public class Set implements Macro, InnerScopeDependent {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
         final var from = holder("yamlDataSource", "from").orElseNull().asString();
-        Params.using(processor).keys(clone, copy, from).between("()").parse(in);
+        Params.using(processor).from(this).keys(clone, copy, from).between("()").parse(in);
 
         skipWhiteSpaces(in);
         final var id = fetchId(in);

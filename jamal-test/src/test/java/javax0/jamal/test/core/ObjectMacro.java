@@ -48,7 +48,7 @@ public class ObjectMacro implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var type = Params.holder(null, "type").asString();
-        Params.using(processor).keys(type).between("()").parse(in);
+        Params.using(processor).from(this).keys(type).between("()").parse(in);
         final Identified macro;
         switch (type.get()) {
             case "Array":

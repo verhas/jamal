@@ -21,7 +21,7 @@ public class Dump implements Macro, InnerScopeDependent {
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
-        Params.using(processor).keys(clone, copy).between("()").parse(input);
+        Params.using(processor).from(this).keys(clone, copy).between("()").parse(input);
 
         InputHandler.skipWhiteSpaces(input);
         final var id = InputHandler.fetchId(input);

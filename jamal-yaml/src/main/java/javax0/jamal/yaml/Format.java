@@ -39,7 +39,7 @@ public class Format implements Macro, InnerScopeDependent {
         // sets the desired width
         // end snippet
 
-        Params.using(processor).keys(
+        Params.using(processor).from(this).keys(
             allowUnicode, canonical, explicitEnd, explicitStart, prettyFlow,
             splitLines, defaultFlowStyle, defaultScalarStyle, lineBreak,
             indent, indicatorIndent, width

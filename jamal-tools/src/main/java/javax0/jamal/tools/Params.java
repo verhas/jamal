@@ -92,7 +92,7 @@ public class Params {
         boolean is() throws BadSyntax;
 
         boolean isPresent() throws BadSyntax;
-        
+
         String name();
 
         void setName(String id);
@@ -100,7 +100,7 @@ public class Params {
 
     private final Processor processor;
     private final Map<String, Param<?>> holders = new HashMap<>();
-    private String macroName = "undefined";
+    private String macroName = null;
     private Character terminal = '\n';
     private Character start = null;
 
@@ -165,6 +165,11 @@ public class Params {
     }
 
     public Params keys(Param<?>... holders) {
+        if (macroName == null) {
+            // this is only a warning, because the compilation process invokes previous versions that use the maro
+            // erroneously
+            System.err.println("The macro name has to be set calling 'from()' before calling the method 'keys()'");
+        }
         for (final var holder : holders) {
             for (final var key : holder.keys()) {
                 if (key != null && this.holders.containsKey(key)) {
@@ -232,7 +237,10 @@ public class Params {
      */
     public void parse(Input input) throws BadSyntax {
         try {
-            parse(input, (id, param) -> {holders.get(id).set(param); holders.get(id).setName(id);}, holders::containsKey);
+            parse(input, (id, param) -> {
+                holders.get(id).set(param);
+                holders.get(id).setName(id);
+            }, holders::containsKey);
         } catch (BadKey e) {
             final var suggestions = suggest(e.key, holders.keySet());
             throw throwExceptionWithSuggestions(suggestions, e);

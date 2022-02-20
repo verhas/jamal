@@ -46,7 +46,7 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
-        Params.using(processor).keys(clone, copy).between("()").parse(in);
+        Params.using(processor).from(this).keys(clone, copy).between("()").parse(in);
         // TODO create a new instance and defer closing to that one to be thread safe
         this.clone = clone.is();
         this.copy = copy.is();

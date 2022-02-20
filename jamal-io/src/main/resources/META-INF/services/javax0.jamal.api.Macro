@@ -3,3 +3,5 @@ javax0.jamal.io.Remove
 javax0.jamal.io.Mkdir
 javax0.jamal.io.Print
 javax0.jamal.io.Cwd
+javax0.jamal.io.OsName
+javax0.jamal.io.Exec

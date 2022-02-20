@@ -33,7 +33,7 @@ public class PlantUml implements Macro, InnerScopeDependent {
         final var root = Params.<String>holder("pu$folder", "folder").orElse("./");
         final var format = Params.<String>holder("pu$format", "format").orElse("SVG");
         final var template = Params.<String>holder("pu$template", "template").orElse("$file");
-        Params.using(processor).keys(root, format, template).between("()").parse(in);
+        Params.using(processor).from(this).keys(root, format, template).between("()").parse(in);
         final var fileName = InputHandler.fetch2EOL(in).trim();
         final var imageDir = root.get().endsWith("/") ? root.get() : root.get() + "/";
         final var absoluteFileName = FileTools.absolute(in.getReference(), imageDir + fileName);

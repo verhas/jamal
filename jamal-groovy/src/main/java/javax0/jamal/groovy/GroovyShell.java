@@ -6,14 +6,12 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.Params;
 
 public class GroovyShell implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var s = in.toString();
-        final var shell = Shell.getShell(in, processor);
+        final var shell = Shell.getShell(in, processor, this);
         final var inputDefinedScriptName = InputHandler.fetch2EOL(in).trim();
         final var scriptName = inputDefinedScriptName.length() == 0 ? "" : inputDefinedScriptName;
         try {

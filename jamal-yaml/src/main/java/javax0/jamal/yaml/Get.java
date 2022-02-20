@@ -19,7 +19,7 @@ public class Get implements Macro, InnerScopeDependent {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
         final var from = holder("yamlDataSource", "from").asString();
-        Params.using(processor).keys(clone, copy, from).between("()").parse(in);
+        Params.using(processor).from(this).keys(clone, copy, from).between("()").parse(in);
         final var fromId = Set.getFromId(in,from,this);
         skipWhiteSpaces(in);
         try {
