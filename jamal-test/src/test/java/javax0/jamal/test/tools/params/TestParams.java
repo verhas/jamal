@@ -464,7 +464,7 @@ public class TestParams {
         final var file = Params.<String>holder("", "file").asString();
         final var name = Params.<String>holder("", "name").asString();
         Assertions.assertThrows(IllegalArgumentException.class, () -> Params.using(null)
-                .tillEnd().keys(file, name));
+                .from(() -> this.getClass().getSimpleName()).tillEnd().keys(file, name));
     }
 
     @Test
@@ -587,7 +587,7 @@ public class TestParams {
     @DisplayName("Throws up for forbidden parameter while parsing")
     void testUnusedParameter() {
         final var processor = new Processor("{", "}");
-        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).keys().parse(Input.makeInput("margin")));
+        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).from(() -> this.getClass().getSimpleName()).keys().parse(Input.makeInput("margin")));
     }
 
     @Test
@@ -595,7 +595,7 @@ public class TestParams {
     void testUnterminatedString() {
         final var processor = new Processor("{", "}");
         final var margin = Params.<Integer>holder("margin");
-        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).keys(margin).parse(Input.makeInput("margin=\"")));
+        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).from(() -> this.getClass().getSimpleName()).keys(margin).parse(Input.makeInput("margin=\"")));
     }
 
     @Test
@@ -603,7 +603,7 @@ public class TestParams {
     void testUnterminatedMLString() {
         final var processor = new Processor("{", "}");
         final var margin = Params.<Integer>holder("margin").asInt();
-        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).keys(margin).parse(Input.makeInput("margin=\"\"\"")));
+        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).from(() -> this.getClass().getSimpleName()).keys(margin).parse(Input.makeInput("margin=\"\"\"")));
     }
 
     @Test
@@ -611,7 +611,7 @@ public class TestParams {
     void testUnterminatedLineString() {
         final var processor = new Processor("{", "}");
         final var margin = Params.<Integer>holder("margin").asInt();
-        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).keys(margin).parse(Input.makeInput("margin=\"\n\"")));
+        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).from(() -> this.getClass().getSimpleName()).keys(margin).parse(Input.makeInput("margin=\"\n\"")));
     }
 
     @Test
@@ -620,7 +620,7 @@ public class TestParams {
         final var processor = new Processor("{", "}");
         final var margin = Params.<Integer>holder("margin").asInt();
         final var left = Params.<String>holder("left");
-        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).keys(margin, left).parse(Input.makeInput("margin= left=5")));
+        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).from(() -> this.getClass().getSimpleName()).keys(margin, left).parse(Input.makeInput("margin= left=5")));
     }
 
     @Test
@@ -629,7 +629,7 @@ public class TestParams {
         final var processor = new Processor("{", "}");
         final var margin = Params.<Integer>holder("margin").asInt();
         final var left = Params.<String>holder("left");
-        Params.using(processor).keys(margin, left).parse(Input.makeInput("margin=5 left="));
+        Params.using(processor).from(() -> this.getClass().getSimpleName()).keys(margin, left).parse(Input.makeInput("margin=5 left="));
         Assertions.assertEquals("", left.get());
     }
 

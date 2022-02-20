@@ -43,7 +43,7 @@ public class RubyCloser implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var shell = Shell.getShell(in, processor);
+        final var shell = Shell.getShell(in, processor, this);
         final var closer = new Closer(shell, in.toString());
         processor.deferredClose(closer);
         return "";

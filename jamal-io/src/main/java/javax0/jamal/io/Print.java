@@ -15,7 +15,7 @@ public class Print implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var err = Params.holder("io:err", "err").asBoolean();
-        Params.using(processor).keys(err).between("()").parse(in);
+        Params.using(processor).from(this).keys(err).between("()").parse(in);
 
         final PrintStream out;
         if (err.is()) {

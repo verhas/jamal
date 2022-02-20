@@ -23,7 +23,7 @@ public class Add implements Macro, InnerScopeDependent {
         final var to = holder("yamlDataTarget", "to").asString();
         final var key = holder(null, "key").orElseNull();
         final var flatten = holder(null, "flat", "flatten").asBoolean();
-        Params.using(processor).keys(to, key, flatten).parse(in);
+        Params.using(processor).from(this).keys(to, key, flatten).parse(in);
         final var dotIndex = to.get().indexOf('.');
         final String id = getId(to, dotIndex);
         final Object expression = getOgnlExpression(in, to, dotIndex);

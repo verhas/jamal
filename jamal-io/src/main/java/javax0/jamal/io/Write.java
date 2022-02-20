@@ -22,13 +22,14 @@ public class Write implements Macro, InnerScopeDependent {
         final var file = Utils.getFile();
         final var append = Params.holder("io:append", "append").asBoolean();
         final var mkdir = Params.holder("io:mkdir", "mkdir").asBoolean();
-        Params.using(processor).keys(file, append, mkdir).between("()").parse(in);
+        Params.using(processor).from(this).keys(file, append, mkdir).between("()").parse(in);
 
         InputHandler.skipWhiteSpaces(in);
 
         final var fileName = Utils.getFile(file,in);
         final var f = new File(fileName);
         if (mkdir.is()) {
+            //noinspection ResultOfMethodCallIgnored
             f.getParentFile().mkdirs();
         }
         try( final var fos = new FileOutputStream(f, append.is());

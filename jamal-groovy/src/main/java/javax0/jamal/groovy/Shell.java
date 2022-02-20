@@ -5,6 +5,7 @@ import groovy.lang.GroovyShell;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
@@ -45,9 +46,9 @@ public class Shell implements Identified {
     // snippet shellNamingMacro
     public static final String GROOVY_SHELL_NAMING_MACRO = "groovyShell";
     // end snippet
-    public static Shell getShell(final Input in, final Processor processor) throws BadSyntax {
+    public static Shell getShell(final Input in, final Processor processor, final Macro macro) throws BadSyntax {
         final var id = Params.<String>holder(Shell.GROOVY_SHELL_NAMING_MACRO, "shell").orElse(Shell.DEFAULT_GROOVY_SHELL_NAME);
-        Params.using(processor).keys(id).between("()").parse(in);
+        Params.using(processor).from(macro).keys(id).between("()").parse(in);
         return getShell(processor, id.get());
     }
 

@@ -14,7 +14,7 @@ public class Mkdir implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var file = Utils.getFile();
         final var recursive = Utils.getRecursive();
-        Params.using(processor).keys(file, recursive).parse(in);
+        Params.using(processor).from(this).keys(file, recursive).parse(in);
 
         final var fileName = Utils.getFile(file, in);
 

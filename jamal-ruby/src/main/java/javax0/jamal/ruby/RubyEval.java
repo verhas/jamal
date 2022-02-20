@@ -9,7 +9,7 @@ import javax0.jamal.api.Processor;
 public class RubyEval implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         try {
-            final var shell = Shell.getShell(in, processor);
+            final var shell = Shell.getShell(in, processor, this);
             return "" + shell.evaluate(in.toString(), null);
         } catch (Exception e) {
             throw new BadSyntax("Error evaluating ruby script using eval", e);

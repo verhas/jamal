@@ -65,7 +65,7 @@ abstract class AbstractAssert implements Macro {
         Params.Param<Boolean> test = Params.<Boolean>holder("test", "boolean", "bool").asBoolean();
         //end snippet
 
-        Params.using(processor).between("()").from(this).keys(trim, not, test).parse(input);
+        Params.using(processor).from(this).between("()").keys(trim, not, test).parse(input);
         String[] parts = getParts(input, N, trim, this);
         if (negateIfNeeded(test(parts), not)) {
             return test.is() ? "true" : "";

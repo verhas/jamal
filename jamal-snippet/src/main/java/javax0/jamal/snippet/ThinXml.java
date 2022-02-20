@@ -102,7 +102,7 @@ public class ThinXml {
     /**
      * Convert a CDATA section from the thinXML to regular XML.
      * <p>
-     *
+     * <p>
      * The CDATA start should be on its own line, though it may be followed by characters that belong to the CDATA
      * section. The position of the {@code <![CDATA[} controls which opened tags are closed before the CDATA section.
      *
@@ -164,7 +164,7 @@ public class ThinXml {
         }
         tags.add(new Tag(column, tag, outTab));
         skipWhiteSpaces(in);
-        final var params = Params.using(null).endWith('>').fetchParameters(in);
+        final var params = Params.using(null).from(() -> this.getClass().getSimpleName()).endWith('>').fetchParameters(in);
         xml.append(spaces(outTab));
         xml.append("<").append(tag);
         convertAttributes(xml, params);
@@ -180,11 +180,11 @@ public class ThinXml {
     private void convertAttributes(StringBuilder xml, LinkedHashMap<String, String> params) {
         for (final var param : params.entrySet()) {
             xml.append(" ")
-                .append(param.getKey())
-                .append("=\"")
-                .append(param.getValue()
-                    .replaceAll("\"", "&quot;"))
-                .append("\"");
+                    .append(param.getKey())
+                    .append("=\"")
+                    .append(param.getValue()
+                            .replaceAll("\"", "&quot;"))
+                    .append("\"");
         }
     }
 
@@ -194,9 +194,9 @@ public class ThinXml {
                 xml.append(spaces(tags.get(tags.size() - 1).outTab));
             }
             xml.append("</")
-                .append(tags.remove(tags.size() - 1).tag)
-                .append(">")
-                .append("\n");
+                    .append(tags.remove(tags.size() - 1).tag)
+                    .append(">")
+                    .append("\n");
             tabClosed = true;
         }
         if (tags.size() > 0) {
@@ -207,9 +207,9 @@ public class ThinXml {
     private void closeLastTag(StringBuilder xml) {
         if (tags.size() > 0) {
             xml.append("</")
-                .append(tags.remove(tags.size() - 1).tag)
-                .append(">")
-                .append("\n");
+                    .append(tags.remove(tags.size() - 1).tag)
+                    .append(">")
+                    .append("\n");
             tabClosed = true;
         }
 
@@ -221,9 +221,9 @@ public class ThinXml {
                 xml.append(spaces(tags.get(tags.size() - 1).outTab));
             }
             xml.append("</")
-                .append(tags.remove(tags.size() - 1).tag)
-                .append(">")
-                .append("\n");
+                    .append(tags.remove(tags.size() - 1).tag)
+                    .append(">")
+                    .append("\n");
             tabClosed = true;
         }
     }

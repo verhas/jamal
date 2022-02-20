@@ -1902,7 +1902,7 @@ will result
 - Collect.java: 17,685 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,171 bytes
-- ThinXml.java: 8,678 bytes
+- ThinXml.java: 8,786 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
 - SnipLine.java: 691 bytes
