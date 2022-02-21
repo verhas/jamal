@@ -1946,7 +1946,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=6bb06ec1%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=42c38764%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
@@ -3784,7 +3784,7 @@ This is also a clear visual separation of core macros from other macros provided
 It simply fails when the number of files using Params is not the same as expected.
 And it already saved the consistency of this documentation many times.
 %}\
-{%#define nrCoreMacrosUsingParams={%@listDir (grep="Params.using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
+{%#define nrCoreMacrosUsingParams={%@listDir (grep="(?:Params|Scan).using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
 {%#define nrCoreMacrosUsingParamsDocumented=7%}\
 {%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
 ====

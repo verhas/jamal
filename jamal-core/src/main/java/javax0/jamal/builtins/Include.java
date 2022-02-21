@@ -8,6 +8,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import javax0.jamal.tools.Range;
 
 import static javax0.jamal.tools.FileTools.absolute;
@@ -40,8 +41,7 @@ public class Include implements Macro {
         final var verbatim = Params.<Boolean>holder("includeVerbatim", "verbatim").asBoolean();
         final var lines = Params.<Boolean>holder(null, "lines").asString();
         final var noCache = Params.<Boolean>holder(null, "noCache").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(verbatim, top, lines, noCache).parse(input);
-
+        Scan.using(processor).from(this).between("[]").keys(verbatim, top, lines, noCache).parse(input);
         position = repositionToTop(position, top);
 
         skipWhiteSpaces(input);

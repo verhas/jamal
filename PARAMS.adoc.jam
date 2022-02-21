@@ -1,19 +1,53 @@
 == Standard Built-In Parameter Parsing
+{%@define methodFormat=`$name()`%}\
 
-{%@define methodFormat=`$name()`%}
-In addition to the method `{%@java:method javax0.jamal.tools.InputHandler#getParts%}` there is another utility that the built-in macros can use.
-It is the class `{%@java:class javax0.jamal.tools.Params%}`.
-The class is a utility to parse some particular part of the whole input of the built-in macro, looking for parameters.
-This particular part is usually the first line of the input, but it can be the part between `(` and `)` or between other character pairs following the macro ID or the whole input.
-The built-in core macros have parameters that use `[` and `]` characters.
-At the time of the writing of this document, the macros `include` and `for` are using such parameters.
+Even though built-in macros are free to parse their input any way they want, there are support classes that ease this task.
+The advantages of using these classes are twofold.
+
+. These classes are fully tested, documented and easy to use saving development time and effort.
+
+. The macros are more coherent and easier to understand for the users when they follow similar patterns.
+
+[NOTE]
+====
+This document describes the format and use of the parameters of the built-in macros using these supporting classes.
+====
+
+The parameter parsing can scan the macro content from the start
+
+* to the end,
+
+* to a specific closing character, like new-line, or
+
+* to the end of the macro content.
+
+For example the built-in macro `include` has the follwoing two parameters among others:
+
+* `verbatim`, and
+* `lines`.
+
+Using these an `include` macro can be written as:
+
+[source]
+----
+{@include [verbatim lines=1..13] otherContent.txt}
+----
+
+In this case the parameters are enclosed between the `[` and `]` characters.
+The core built-in macros use these separator characters.
+{%#define nrCoreMacrosUsingParams={%@listDir (grep="(?:Params|Scan).using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
+Currently {%nrCoreMacrosUsingParams%} built-in core macros have parameters.
+
+Built-in macros in other packages are encouraged to use the `(` and `)` characters to enclose their parameters.
+When the macro does not need content other than the parameters the recommended way is to use the whole content for the parameters without any separator characters.
+Macros working on several lines, like `trimLines` usually use the first line of the content for parameters.
 
 === Introduction
 
 Some macros need configuration.
 For example, the `trimLines` macro in the snippet package can trim vertically if we instruct it.
 Similarly, the left trimming can go all to the left, but it may also leave some margin if we specify some margin.
-For this reason, this macro uses two parameters:
+For this reason, this macro uses the two parameters:
 
 * `trimVertical`, and
 
@@ -23,21 +57,16 @@ This macro reserves the first line of the input and trims and returns only the r
 The first line can contain parameters.
 
 Other macros parse the whole input for parameters.
-Some macros start parsing for parameters if the first non-whitespace character after the macro id is `(` and the parsing stops at the matching `)`.
 For example, the `snip:collect` macro collects snippets from files, and it does not convert anything from its input.
 This macro parses the whole input looking for parameters.
+Some macros start parsing for parameters if the first non-whitespace character after the macro id is `(` and the parsing stops at the matching `)`.
 
 The class `{%@java:class javax0.jamal.tools.Params%}` provides the tools to ease parameter parsing.
-Having a unified "standard" parsing has two advantages:
-
-* several macro implementations can use the same parsing class and methods, and
-
-* parsing follows the same rules; users do not need to learn different syntax formats.
 
 === Parameter Sources
 
-When a macro needs parameters and calls the methods of the class `{%@java:class javax0.jamal.tools.Params%}`, it looks at different sources for the parameters.
-First of all, it looks at the macro's input and tries to find the parameters there.
+When macros needs parameters using the support classes, they look at different sources for the parameters.
+First, they look at the macro's input and try to find the parameters there.
 The parameters are specified in the format
 
 [source,text]
@@ -58,43 +87,54 @@ When you use an undefined user-defined macro, and Jamal does not find the macro,
 In this case, this macro is not used.
 It is also an error if the macro used as the configuration has parameters unless the option `{@options lenient}` is specified.
 
-In the case of boolean parameters, the values `false`, `0`, or `no` are treated as false.
+The parameters have types.
+
+* In the case of boolean parameters, the values `false`, `0`, or `no` are treated as false.
 Everything else will result true.
 If a required boolean parameter is not present as a parameter, then the option of the same name is taken into account.
 The option is the one that you can set using the macro `{@options ...}`.
 For example, you can specify `{@options trimVertical}` if you want all uses of the macro `trimLine` to trim vertically.
-User-defined macros for a boolean parameter are not taken into account.
-All options are `false` by default; hence there are no mandatory boolean parameters.
+User-defined macros for a boolean parameter are NOT taken into account.
+All boolean options are `false` by default; hence there are no mandatory boolean parameters.
 If a boolean parameter is not defined in any way, then it will be `false`.
 
-Some parameters can have more than one value.
+* Parameters can be string types, and integer types.
+These can be defined in a parameter or as the value of a macro. as decribed above.
 
-Suppose the macro implementation does not define any default value. In that case, the parsing will error if the parameter is not defined, and there is also no user-defined macro for the parameter.
+* Some parameters can have more than one value.
+In that case the `name` of the parameter can appear more than once with multiple values assigned to it.
+
+Macros may decide if they define any default value for a parameter or not.
+In that case, the macro will error if the parameter is not defined, and there is also no user-defined macro for the parameter.
 
 The parameter names can have aliases.
-These are defined in the Java code of the built-in macro.
-These can be used inside the macro.
+These can only be used inside the macro as parameters.
 Alias names are not looked for as user-defined macros.
+In other words the "main" name of the parameter can also be defined as macro, the aliases not.
 
-For example, the core macro uses `$forsep` as a parameter, and it has an alias `separator`.
+The core macro uses `$forsep` as a parameter, and it has an alias `separator`.
 If neither of them is used in the macro, only the user-defined macro `$forsep` is used.
 If there is a `{@define separator=;}` in the code, it will not alter the execution of the `for` macro.
 In the macro, the names and the aliases are interchangeable.
 
-Some macros define parameters without a name.
-Technically the name of the parameter is `null`.
-In that case, there should be at least one alias.
-Aliases are never `null`.
-In this case, it is not possible to specify a value for this parameter using a user-defined variable or an option in the case of a boolean parameter.
+Macros can define parameters using only aliases.
+In that case there is no way to globally define a value for the parameter as a macro.
 
 Aliases are specific to the macro.
-Different macros may use the same option name for other purposes providing different, or the same aliases.
+Different macros may use the same parameter name for other purposes providing different, or the same aliases.
 It is up to the macro implementation what parameter names and what aliases they use.
 However, the parameter names and the aliases are unique in the realm of a single macro implementation.
 
 === Details
 
-The `value1, value2, ..., valueN` values are either _numeric_, _boolean_ or _string_ values.
+In the parameter definition
+
+[source,text]
+----
+name1=value1 name2=value2 ... nameN=valueN
+----
+
+the `value1, value2, ..., valueN` values are either _numeric_, _boolean_ or _string_ values.
 The type depends on what the macro awaits for the specific parameter.
 
 The values can be represented enclosed between `"`, `"""` or without any delimiter.
@@ -105,7 +145,7 @@ On the other hand, `name=Peter Verhas` is not valid.
 It has to be represented as `name="Peter Verhas"` because it contains a space.
 
 A string starting and ending with a `"` character must not contain a newline character.
-If you need multi-line strings, you can use the `\n` escape character or use a multi-line string.
+If you need multi-line strings, you can use the `\n` characters or use a multi-line string.
 A multi-line string starts and ends with `"""`, three quote characters.
 
 Some macros use only the first line for parameters.
@@ -126,7 +166,7 @@ text and it is
 multi-line
 """ paging=true skip="A" skip="DD" skip="3.145" \
 comment="this is still a parameter because of the \\ at the end of the previous line"
-this is the input the macro will use for its result; everything else till here is parameters
+this is the input the macro will use for its result; everything else until here are parameters
 }
 ----
 
@@ -136,21 +176,23 @@ If there is any parameter, which the macro does not handle, an error will occur.
 The macro also specifies the type of the parameter.
 If Jamal cannot convert the parameter value to the required type, an error will occur.
 
-* Numeric parameters should be an integer. They can be enclosed between `"` or `"""`.
+* Numeric parameters are integer. They can be enclosed between `"` or `"""`.
 
 * Boolean parameters are false if they are present as a parameter, and the string value is either `false`, `0`, or `no`.
 They are also false if they are not present as a parameter, and the name (not an alias) is also false as an option.
 A name is `false` as an option if the macro `{@options name}` was not invoked in the current or higher scope, or if the option was invoked in the form `{@options ~name}`.
 A boolean parameter can be set as `true` simply mentioning the name without `=` and any value.
+It is possible to specify value, which will set the parameter to be true unless the value is `false`, `0`, or `no`.
+It is recommended to use only the name, without any value assigned to it.
 
-As you can see in the example, parameters can have multiple values.
+As you can see in the example, some parameters can have multiple values.
 If there are multiple parameters defined, but the macro needs only one, an error will occur.
 If there is only one value defined, but the macro needs a list, it will get a one-element list.
 You cannot specify multiple values for such parameters using user-defined macros.
 Jamal will not add the global or locally defined user macro to the parameter list if the parameter is specified at least once on the input.
-If there are parameters, then those values are used, and the macro values are ignored.
+If there are parameters, then those, and only values are used; the macro values are ignored.
 
-Single line and multi-line strings have the same syntax as Java strings.
+Single line and multi-line strings have similar syntax as Java strings.
 You can use the same escape sequences.
 
 === Examples
