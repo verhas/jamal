@@ -27,7 +27,7 @@ public class TestWrite {
             .ignoreLineEnding()
             .results("" +
                 "this is the text into the\n" +
-                "file"
+                "file\n"
             );
         newErr.close();
         out.close();
