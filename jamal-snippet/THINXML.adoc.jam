@@ -1,5 +1,5 @@
 == ThinXML Format
-{%@snip:check file=./src/main/java/javax0/jamal/snippet/ThinXml.java hash="41ea8045"%}
+{%@snip:check file=./src/main/java/javax0/jamal/snippet/ThinXml.java hash="7e405c67"%}
 {%@import res:jamal.jim%}\
 {%@define sample(code)={%#define :lastCode={@xmlFormat (thin)}
 code%}[source]

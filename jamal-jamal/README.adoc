@@ -74,3 +74,4 @@ The sample codes one after the other are evaluated in the same processor.
 It means that macros, options or other similar constructs are usable in the consequent outputs.
 
 NOTE: The samples are only evaluated when the macro `{%output%}` is invoked.
+

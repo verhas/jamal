@@ -51,9 +51,7 @@ public class Include implements Macro {
             depth = getDepth(); // try macro may recover
             throw new BadSyntax("Include depth is too deep");
         }
-        var marker = new Marker("{@include " + fileName + "}", position);
         final String result;
-        processor.getRegister().push(marker);
         final var includedInput = getInput(fileName, position, noCache.is());
         if (lines.isPresent()) {
             Range.Lines.filter(includedInput.getSB(), lines.get());
@@ -61,9 +59,11 @@ public class Include implements Macro {
         if (verbatim.get()) {
             result = includedInput.toString();
         } else {
+            var marker = new Marker("{@include " + fileName + "}", position);
+            processor.getRegister().push(marker);
             result = processor.process(includedInput);
+            processor.getRegister().pop(marker);
         }
-        processor.getRegister().pop(marker);
         depth++;
         return result;
     }

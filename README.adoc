@@ -333,6 +333,7 @@ Usage: jamal [options] input output
   -dry-run                   run dry, do not write result to output file
   -docx                      treat the input as a docx, Microsoft Word file
 
+
 ----
 
 The command line can contain options and parameters.

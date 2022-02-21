@@ -490,6 +490,7 @@ When Jamal converts this document, the readmemacros.jim` inside the `jamal-groov
 The unit test code that invokes the Jamal processor to convert this document is the following:
 
 
+
 [source]
 ----
 final var processor = new Processor("{%", "%}");
@@ -550,5 +551,6 @@ NOTE: None of the sample codes in the source `README.adoc.jam` was manually copi
 
 This clearly demonstrates the power and flexibility of Jamal enhanced with the Groovy integration.
 If you like the idea, but Groovy is not your favourite scripting language have a look at the link:../jamal-ruby/README.adoc[Ruby Integration] documentation and give it a try.
+
 
 

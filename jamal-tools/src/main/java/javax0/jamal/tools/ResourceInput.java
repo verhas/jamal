@@ -19,9 +19,10 @@ class ResourceInput {
             if (is == null) {
                 throw new BindException("The resource file 'res:" + fileName + "' cannot be read.");
             }
-            final var writer = new StringWriter();
-            new InputStreamReader(is, StandardCharsets.UTF_8).transferTo(writer);
-            return writer.toString();
+            try (final var writer = new StringWriter()) {
+                new InputStreamReader(is, StandardCharsets.UTF_8).transferTo(writer);
+                return writer.toString();
+            }
         }
     }
 }

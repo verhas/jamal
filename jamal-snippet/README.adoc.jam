@@ -131,7 +131,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=7bb5d00b%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=e46e22d3%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -269,7 +269,7 @@ That collect macro should name the collection to avoid redefinition error.
 
 [[snip_properties]]
 ==== {%macroChapter%}`snip:properties`
-{%#snip:check file={%JAVA_DIR%}SnipProperties.java hash=f88021fb.8864c8c2.30fac6ca.948ec306.88e8e113.9af6d3cc.3865b3eb.b3db4158%}
+{%#snip:check file={%JAVA_DIR%}SnipProperties.java hash=0e8ee2e6%}
 This macro will load properties from a "properties" file or an "XML" file.
 The names of the properties will become the names of the snippets and the values of the snippets.
 
@@ -318,7 +318,7 @@ For example, the same properties file in XML format looks like the following:
 
 [[xml_define]]
 ==== {%macroChapter%}`xml:define`
-{%#snip:check file={%JAVA_DIR%}Xml.java hash=4e462c55.ab65fc4c.1277c829.27b4d92c.b0dfd654.7deca517.1accb4f2.163f7411%}
+{%#snip:check file={%JAVA_DIR%}Xml.java hash=b719699e%}
 This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
 The syntax of the command is:
 
@@ -350,7 +350,7 @@ The result is:
 
 [[snip_xml]]
 ==== {%macroChapter%}`snip:xml`
-{%#snip:check file={%JAVA_DIR%}SnipXml.java hash=47f34654.ce63f7d3.d15ad1b7.ed689f2a.0e4155e4.65a4bd2c.4c17c85c.2910695f%}
+{%#snip:check file={%JAVA_DIR%}SnipXml.java hash=46efff7e%}
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
 
@@ -379,7 +379,7 @@ which is the current version of the project as read from the `pom.xml` file.
 
 [[xml_insert]]
 ==== {%macroChapter%}`xml:insert`
-{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=2ca0b9b8%}
+{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=552fca42%}
 This macro can modify an XML formatted user defined macro inserting content into the XML document.
 It can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
 This latter use is for the case when the Jamal file processed creates an XML file.
@@ -470,7 +470,7 @@ The fifth insertion adds a dependency to the `dependencies` tag.
 
 [[snip_define]]
 ==== {%macroChapter%}`snip:define`
-{%#snip:check file={%JAVA_DIR%}Snippet.java hash=7ddbacd0.deab46d8.d9d276d2.f0495ae6.90315491.71f69d74.75e57f93.e2c31cd9%}
+{%#snip:check file={%JAVA_DIR%}Snippet.java hash=bb1669d8%}
 You can use this macro to define a snippet.
 Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
 For example,
@@ -489,13 +489,13 @@ will result
 
 [[snip_clear]]
 ==== {%macroChapter%}`snip:clear`
-{%#snip:check file={%JAVA_DIR%}Clear.java hash=2a4420f2.f4734010.108dbbf0.911c34bd.3bbd7a10.901e03e5.ac007a2d.f412830a%}
+{%#snip:check file={%JAVA_DIR%}Clear.java hash=afb3c251%}
 Calling this macro deletes all collected snippets from memory.
 The result of the macro is an empty string.
 
 [[snip]]
 ==== {%macroChapter%}`snip`
-{%#snip:check file={%JAVA_DIR%}Snip.java hash=2a00c759%}
+{%#snip:check file={%JAVA_DIR%}Snip.java hash=b63df3eb%}
 
 You can use the `snip` macro to insert one or more snippets into the output.
 There are three different ways to use the macro.
@@ -602,7 +602,7 @@ The whole text after the option till the macro closing string is interpreted as 
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=6ac93ea2%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=dfe0c0c9%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -739,7 +739,7 @@ When you are finished with the adhoc changing, however, you have to update the d
 
 [[snipList]]
 ==== {%macroChapter%}`snip:list`
-{%#snip:check file={%JAVA_DIR%}SnipList.java hash=4a56d72f%}
+{%#snip:check file={%JAVA_DIR%}SnipList.java hash=13381ed8%}
 This macro lists the defined snippets.
 {%parameterized%}
 
@@ -774,7 +774,7 @@ If all the parameters are missing, then the macro will list all the snippet name
 
 [[snipSave]]
 ==== {%macroChapter%}`snip:save`
-{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=983d5378.1ac8f71a%}
+{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=3c9742a0%}
 This macro saves all the collected snippets to a file.
 {%parameterized%}
 The file name must be specified by the parameter `output`.
@@ -854,7 +854,7 @@ It is saved as a `CDATA` section(s).
 
 [[snipLoad]]
 ==== {%macroChapter%}`snip:load`
-{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=cd86a711%}
+{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=260bd7df%}
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 {%parameterized%}
 The file's name has to be specified by the parameter `input`.
@@ -1029,7 +1029,7 @@ will be converted to
 
 [[range]]
 ==== {%macroChapter%}`range`
-{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=f43d9dfb%}
+{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=badd24b9%}
 
 This macro can filter lines of its input by a range of numbers.
 The syntax of the macro is:
@@ -1050,7 +1050,7 @@ The format and the meaning of the option `lines` is exactly the same as the opti
 
 [[rot13]]
 ==== {%macroChapter%}`rot13`
-{%#snip:check file={%JAVA_DIR%}Rot13.java hash=9ecfbae6%}
+{%#snip:check file={%JAVA_DIR%}Rot13.java hash=9acdfa2a%}
 
 This macro calculates the ROT13 transformation of the input.
 For example
@@ -1074,7 +1074,7 @@ The reader will not be able to read the answer, only when they put effort deciph
 
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=bdbd5924%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=59ddbbc5%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 {%parameterized%}
 
@@ -1142,7 +1142,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 ==== {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=faccbddf%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=1c64be06%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1201,7 +1201,7 @@ In this case only the comment lines remained that start with `//` at the start o
 
 [[skipLines]]
 ==== {%macroChapter%}`skipLines`
-{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=e64c41d4%}
+{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=70520e3f%}
 You can use this macro to skip lines from the snippet.
 {%parameterized%}
 
@@ -1266,7 +1266,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 
 [[replace]]
 ==== {%macroChapter%}`replace`
-{%#snip:check file={%JAVA_DIR%}Replace.java hash=72af7cd7%}
+{%#snip:check file={%JAVA_DIR%}Replace.java hash=f297657f%}
 The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
@@ -1307,7 +1307,7 @@ but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
 ==== {%macroChapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=feaed33e%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=c7986946%}
 This macro replaces strings in the input.
 {%parameterized%}
 
@@ -1352,7 +1352,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 ==== {%macroChapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=8ba066e1%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=b6694330%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -1453,7 +1453,7 @@ In this case we used the word `last` as an argument to the counter macro `c`, wh
 
 [[reflow]]
 ==== {%macroChapter%}`reflow`
-{%#snip:check file={%JAVA_DIR%}Reflow.java hash=d11bdcb8%}
+{%#snip:check file={%JAVA_DIR%}Reflow.java hash=8792b880%}
 This macro reflows the content.
 {%parameterized%}
 
@@ -1589,7 +1589,7 @@ The syntax of the macro is
 
 [[snipTransform]]
 ==== {%macroChapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=9ecdaa81%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=3a0f19d9%}
 
 The `snip:transform` macro integrates the functionality of the macros
 
@@ -1755,7 +1755,7 @@ The meaning and the interpretation of the parameters is the same as for the unde
 
 [[lineCount]]
 ==== {%macroChapter%}`lineCount`
-{%#snip:check file={%JAVA_DIR%}LineCount.java hash=abaa2711%}
+{%#snip:check file={%JAVA_DIR%}LineCount.java hash=b60124c5%}
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
 {%sample/
@@ -1771,7 +1771,7 @@ results
 
 [[listDir]]
 ==== {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=5a08f7ac%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=c1e2d72b%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
@@ -1957,7 +1957,7 @@ will result
 
 [[xmlFormat]]
 ==== {%macroChapter%}`xmlFormat`
-{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=fd479bae%}
+{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=713dbb28%}
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
 For example,
@@ -2089,7 +2089,7 @@ For more examples and detailed explanation of the thin XML format, see the <<./T
 
 [[date]]
 ==== {%macroChapter%}`date`
-{%#snip:check file={%JAVA_DIR%}DateMacro.java hash=920d8e03%}
+{%#snip:check file={%JAVA_DIR%}DateMacro.java hash=70155ebb%}
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
 
@@ -2106,7 +2106,7 @@ will result in the output
 
 [[format]]
 ==== {%macroChapter%}`format`
-{%#snip:check file={%JAVA_DIR%}Format.java hash=2ee18d86%}
+{%#snip:check file={%JAVA_DIR%}Format.java hash=4bb6050d%}
 You can use the macro `format` to format the arguments.
 {%standardInput%}
 
@@ -2152,7 +2152,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 [[case]]
 ==== {%macroChapter%}`case:lower`, `case:upper`, ...
-{%#snip:check file={%JAVA_DIR%}Case.java hash=2f951beb%}
+{%#snip:check file={%JAVA_DIR%}Case.java hash=1dbb1c57%}
 There are a few character case-changing macros implemented in the snippet package.
 These are:
 
@@ -2165,7 +2165,7 @@ These are:
 
 [[file]]
 ==== {%macroChapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=228815ff%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=9f5a26cd%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2212,7 +2212,7 @@ In the format you can use the following placeholders:
 
 [[directory]]
 ==== {%macroChapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=b8519137%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=9f5a26cd%}
 {%fileDirectory directory%}
 
 {%sample/
@@ -2244,7 +2244,7 @@ In the format you can use the following placeholders:
 
 [[Java]]
 ==== {%macroChapter%}Java Macros
-{%#snip:check file={%JAVA_DIR%}Java.java hash=42188e24%}
+{%#snip:check file={%JAVA_DIR%}Java.java hash=ec4e8058%}
 
 [[java:class]]
 ===== `java:class`
@@ -2452,7 +2452,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 [[String]]
 ==== {%macroChapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=4b8d5a64%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=da463d7c%}
 [[string:contains]]
 ===== `string:contains`
 
@@ -2602,7 +2602,7 @@ Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
 ==== {%macroChapter%}`snip:update`
-{%#snip:check file={%JAVA_DIR%}Update.java hash=c3fcf71f%}
+{%#snip:check file={%JAVA_DIR%}Update.java hash=a63a88ca%}
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
 

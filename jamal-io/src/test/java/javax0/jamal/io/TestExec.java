@@ -30,10 +30,12 @@ public class TestExec {
         System.setProperty("exec", "echo");
         Files.deleteIfExists(Paths.get("target/hello.txt"));
         TestThat.theInput("" +
-                        "{@io:exec command=EXEC argument=\"hello\" output=\"target/hello.txt\"}"
-                ).atPosition(".", 1, 1)
-                .results("");
-        Assertions.assertEquals("hello\n", Files.readString(Paths.get("target/hello.txt")));
+                        "{@io:exec command=EXEC argument=\"hello\" output=\"target/hello.txt\"}" +
+                        "{@include [verbatim] target/hello.txt}"
+                )
+                .ignoreLineEnding()
+                .atPosition(".", 1, 1)
+                .results("hello\n");
     }
 
     @Test

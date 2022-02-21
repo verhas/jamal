@@ -1887,7 +1887,7 @@ The more local configuration overrules the broader one using this algorithm.
 
 [[import]]
 ==== {%macroChapter%}`import`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=352bd77a%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=2c032a3b%}
 since 1.0.0 (core)
 
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
@@ -1946,7 +1946,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=3328a6f6%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=6bb06ec1%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
@@ -2501,7 +2501,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=7b846153%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=a8155615%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -3548,7 +3548,7 @@ Using a version before `1.6.4` in the `require` argument is an error.
 [[macro]]
 ==== {%macroChapter%}`macro`
 since 1.11.0
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=485eb67c%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=ad8b59b3%}
 
 The macro named `macro` is a special one that is needed only in rare cases.
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
