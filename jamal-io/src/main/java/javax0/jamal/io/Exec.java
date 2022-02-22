@@ -9,6 +9,7 @@ import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +26,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 
@@ -72,16 +74,16 @@ public class Exec implements Macro {
         final var envReset = Params.holder(null, "envReset", "reset").asBoolean();
         // This option can be used to reset the environment variables before the command is executed.
         // Without these option the command will inherit the environment variables of the Jamal process and the defined environment variables are added to the current list.
-        final var cwd = Params.holder(null, "directory", "cdw", "curdir", "cd").asString();
+        final var cwd = Params.holder(null, "directory", "cwd", "curdir", "cd").asString();
         // Set the current working directory for the command.
         // If this option is not provided then the current working directory of the Jamal process will be used.
-        final var async = Params.holder(null, "asynch", "asynchronous").asString();
+        final var async = Params.holder(null, "async", "asynch", "asynchronous").asString();
         // Using this option Jamal will not wait for the command to finish before continuing with the next macro.
         // In this case the output cannot be used as the result of the macro.
         // If this option is used the output of the macro will be empty string.
         // The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
         // This macro can later be used to wait for the process to finish.
-        final var wait = Params.holder(null, "wait", "waitMax").asInt();
+        final var wait = Params.holder(null, "wait", "waitMax", "timeOut").asInt();
         // This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
         // If the process does not finish in the specified time a BadSyntax exception will be thrown.
         // This option cannot be used together with the `async` option.
@@ -91,7 +93,7 @@ public class Exec implements Macro {
         final var force = Params.holder(null, "force", "forced").asBoolean();
         // This option instructs the macro to destroy the process forcibly.
         // This option can only be used together with the destroy option.
-        Params.using(processor).from(this).keys(osOnly, input, output, error, command, arguments,
+        Scan.using(processor).from(this).firstLine().keys(osOnly, input, output, error, command, arguments,
                 environment, envReset, cwd, async, wait, destroy, force).parse(in);
 
         if (wait.isPresent() && async.isPresent()) {
@@ -102,6 +104,10 @@ public class Exec implements Macro {
         }
         if (destroy.is() && !wait.isPresent()) {
             throw new BadSyntax("The `destroy` option can only be used together with the `wait` option.");
+        }
+
+        if (thisOsIsNotOk(osOnly)) {
+
         }
 
         ProcessBuilder pb = new ProcessBuilder();
@@ -146,16 +152,23 @@ public class Exec implements Macro {
         return result;
     }
 
-    private void waitForTheProcessToFinish(final Process process,
-                                           final Params.Param<Integer> wait,
-                                           final Params.Param<Boolean> destroy,
-                                           final Params.Param<Boolean> force) throws BadSyntax {
+    private static boolean thisOsIsNotOk(final Params.Param<Pattern> osOnly) throws BadSyntax {
+        if (osOnly.isPresent()) {
+            return !osOnly.get().matcher(System.getProperty("os.name")).find();
+        }
+        return false;
+    }
+
+    private static void waitForTheProcessToFinish(final Process process,
+                                                  final Params.Param<Integer> wait,
+                                                  final Params.Param<Boolean> destroy,
+                                                  final Params.Param<Boolean> force) throws BadSyntax {
         try {
             if (wait.isPresent()) {
                 process.waitFor(wait.get(), TimeUnit.MILLISECONDS);
                 if (process.isAlive()) {
                     destroyTheRunawayProcess(process, destroy, force);
-                    throw new BadSyntax(String.format("The process did not finish in the specified time, %d milliseconds.", wait.get()));
+                    throwTimeout(process.pid(), wait.get());
                 }
             } else {
                 process.waitFor();
@@ -165,18 +178,18 @@ public class Exec implements Macro {
         }
     }
 
-    private void waitForTheProcessToFinish(final Process process,
-                                           final Params.Param<Integer> wait,
-                                           final Params.Param<Boolean> destroy,
-                                           final Params.Param<Boolean> force,
-                                           final StringWriter sw) throws BadSyntax, InterruptedException {
+    private static void waitForTheProcessToFinish(final Process process,
+                                                  final Params.Param<Integer> wait,
+                                                  final Params.Param<Boolean> destroy,
+                                                  final Params.Param<Boolean> force,
+                                                  final StringWriter sw) throws BadSyntax, InterruptedException {
         final var outputCollector = asyncOutputCollector(process, sw::write);
         if (wait.isPresent()) {
             process.waitFor(wait.get(), TimeUnit.MILLISECONDS);
             if (process.isAlive()) {
                 outputCollector.cancel(true);
                 destroyTheRunawayProcess(process, destroy, force);
-                throw new BadSyntax(String.format("The process did not finish in the specified time, %d milliseconds.", wait.get()));
+                throwTimeout(process.pid(), wait.get());
             }
         } else {
             process.waitFor();
@@ -188,14 +201,19 @@ public class Exec implements Macro {
         }
     }
 
-    private Future<?> asyncOutputCollector(final Process process, final Consumer<String> consumer) {
+    private static void throwTimeout(final long pid, final int timeOut) throws BadSyntax {
+        throw new BadSyntax(
+                String.format("The process (pid=%d) did not finish in the specified time, %d milliseconds.", pid, timeOut));
+    }
+
+    private static Future<?> asyncOutputCollector(final Process process, final Consumer<String> consumer) {
         final var handler = new StreamHandler(process.getInputStream(), consumer);
         return Executors.newSingleThreadExecutor().submit(handler);
     }
 
-    private void destroyTheRunawayProcess(final Process process,
-                                          final Params.Param<Boolean> destroy,
-                                          final Params.Param<Boolean> force) throws BadSyntax {
+    private static void destroyTheRunawayProcess(final Process process,
+                                                 final Params.Param<Boolean> destroy,
+                                                 final Params.Param<Boolean> force) throws BadSyntax {
         if (destroy.is()) {
             if (force.is()) {
                 process.destroyForcibly();
@@ -205,7 +223,7 @@ public class Exec implements Macro {
         }
     }
 
-    private void feedInputFromMacro(final Input in, final Params.Param<String> input, final Process process) throws BadSyntax {
+    private static void feedInputFromMacro(final Input in, final Params.Param<String> input, final Process process) throws BadSyntax {
         if (!input.isPresent()) {
             try (OutputStream os = process.getOutputStream()) {
                 os.write(in.toString().getBytes(StandardCharsets.UTF_8));
@@ -215,7 +233,7 @@ public class Exec implements Macro {
         }
     }
 
-    private Process startProcess(final ProcessBuilder pb) throws BadSyntax {
+    private static Process startProcess(final ProcessBuilder pb) throws BadSyntax {
         try {
             return pb.start();
         } catch (IOException e) {
@@ -223,7 +241,7 @@ public class Exec implements Macro {
         }
     }
 
-    private void setEnvironment(final Params.Param<String> environment, final Params.Param<Boolean> envReset, final ProcessBuilder pb) throws BadSyntax {
+    private static void setEnvironment(final Params.Param<String> environment, final Params.Param<Boolean> envReset, final ProcessBuilder pb) throws BadSyntax {
         if (environment.isPresent()) {
             final var env = pb.environment();
             if (envReset.is()) {
@@ -242,13 +260,13 @@ public class Exec implements Macro {
         }
     }
 
-    private void setCWDIfPresent(final Input in, final Params.Param<String> cwd, final ProcessBuilder pb) throws BadSyntax {
+    private static void setCWDIfPresent(final Input in, final Params.Param<String> cwd, final ProcessBuilder pb) throws BadSyntax {
         if (cwd.isPresent()) {
             pb.directory(getFile(cwd.get(), in));
         }
     }
 
-    private void setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb) throws BadSyntax {
+    private static void setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb) throws BadSyntax {
         if (!command.isPresent()) {
             throw new BadSyntax("'command' for the macro 'exec' is mandatory.");
         }
@@ -262,7 +280,7 @@ public class Exec implements Macro {
         pb.command(cmd);
     }
 
-    private void redirectIfPresent(Params.Param<String> stream, Input in, Consumer<File> store) throws BadSyntax {
+    private static void redirectIfPresent(Params.Param<String> stream, Input in, Consumer<File> store) throws BadSyntax {
         if (stream.isPresent()) {
             store.accept(getFile(stream.get(), in));
         }
@@ -279,6 +297,50 @@ public class Exec implements Macro {
     @Override
     public String getId() {
         return "io:exec";
+    }
+
+    public static class WaitFor implements Macro {
+
+        @Override
+        public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+            final var osOnly = Params.holder(null, "osOnly", "os").asPattern();
+            // defines a pattern for the operating system's name.
+            // The execution will only start if the operating system's name matches the pattern.
+            // The pattern is a regular expression.
+            // The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
+            // It means that it is enough to provide a pattern that matches part of the OS name.
+            // For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
+            // If the pattern is not provided, the execution will start on all operating systems.
+            final var async = Params.holder(null, "async", "asynch", "asynchronous", "id", "name").asString();
+            // Using this option Jamal will not wait for the command to finish before continuing with the next macro.
+            // In this case the output cannot be used as the result of the macro.
+            // If this option is used the output of the macro will be empty string.
+            // The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
+            // This macro can later be used to wait for the process to finish.
+            final var wait = Params.holder(null, "wait", "waitMax", "timeOut").asInt();
+            // This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
+            // If the process does not finish in the specified time a BadSyntax exception will be thrown.
+            // This option cannot be used together with the `async` option.
+            final var destroy = Params.holder(null, "destroy", "kill").asBoolean();
+            // This option can be used to destroy the process if it has not finished within the specified time.
+            // This option can only be used together with the wait option.
+            final var force = Params.holder(null, "force", "forced").asBoolean();
+            // This option instructs the macro to destroy the process forcibly.
+            // This option can only be used together with the destroy option.
+            Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force).parse(in);
+            final var idMacro = processor.getRegister().getMacro(async.get());
+            if (!idMacro.isPresent() || !(idMacro.get() instanceof ProcessHolder)) {
+                throw new BadSyntax(String.format("Process id '%s' is not defined or is not a process name.", async.get()));
+            }
+            final var process = ((ProcessHolder) idMacro.get()).getObject();
+            waitForTheProcessToFinish(process, wait, destroy, force);
+            return "";
+        }
+
+        @Override
+        public String getId() {
+            return "io:waitFor";
+        }
     }
 
     private static class ProcessHolder implements Identified, ObjectHolder<Process> {
