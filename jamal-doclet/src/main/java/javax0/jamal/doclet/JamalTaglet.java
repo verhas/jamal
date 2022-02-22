@@ -53,7 +53,7 @@ public class JamalTaglet implements Taglet {
     @Override
     public Set<Location> getAllowedLocations() {
         return Set.of(Location.OVERVIEW, Location.MODULE, Location.PACKAGE,
-            Location.TYPE, Location.CONSTRUCTOR, Location.METHOD, Location.FIELD);
+                Location.TYPE, Location.CONSTRUCTOR, Location.METHOD, Location.FIELD);
     }
 
     /**
@@ -84,13 +84,13 @@ public class JamalTaglet implements Taglet {
 
     private void warning(String message) {
         if (reporter != null) {
-            reporter.print(Diagnostic.Kind.ERROR, message);
+            reporter.print(Diagnostic.Kind.ERROR, "[WARNING] " + message);
         }
     }
 
     private void note(String message) {
         if (reporter != null) {
-            reporter.print(Diagnostic.Kind.NOTE, message);
+            reporter.print(Diagnostic.Kind.NOTE, "[INFO] " + message);
         }
     }
 
@@ -130,7 +130,7 @@ public class JamalTaglet implements Taglet {
         if (sourceRoot == null) {
             warning("Option '" + JamalDoclet.SOURCE_ROOT_OPTION + "' is not defined. Macros using files will not work.");
         } else {
-            note("Option '" + JamalDoclet.SOURCE_ROOT_OPTION + "' is '" + sourceRoot + "'.");
+            note(String.format("Option '%s' is '%s'.", JamalDoclet.SOURCE_ROOT_OPTION, sourceRoot));
         }
     }
 
@@ -150,7 +150,7 @@ public class JamalTaglet implements Taglet {
         final var target = this.getClass().getDeclaredField(fieldName);
         target.setAccessible(true);
         target.set(this, source.get(doclet));
-        note("'" + fieldName + "' is " + source.get(doclet));
+        note(String.format("'%s' is %s", fieldName, source.get(doclet)));
     }
 
     private Map<String, String> memoize = new HashMap<>();
@@ -170,7 +170,7 @@ public class JamalTaglet implements Taglet {
     @Override
     public String toString(List<? extends DocTree> tags, Element element) {
         while (element.getKind() != ElementKind.CLASS &&
-            element.getEnclosingElement().getKind() == ElementKind.CLASS) {
+                element.getEnclosingElement().getKind() == ElementKind.CLASS) {
             element = element.getEnclosingElement();
         }
         final var sourceFile = sourceRoot + "/" + (element.toString().replaceAll("\\.", "/")) + ".java";
