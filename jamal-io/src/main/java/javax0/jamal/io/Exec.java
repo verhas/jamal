@@ -37,6 +37,7 @@ public class Exec implements Macro {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+        // snippet exec_options
         final var osOnly = Params.holder(null, "osOnly", "os").asPattern();
         // defines a pattern for the operating system's name.
         // The execution will only start if the operating system's name matches the pattern.
@@ -93,6 +94,7 @@ public class Exec implements Macro {
         final var force = Params.holder(null, "force", "forced").asBoolean();
         // This option instructs the macro to destroy the process forcibly.
         // This option can only be used together with the destroy option.
+        // end snippet
         Scan.using(processor).from(this).firstLine().keys(osOnly, input, output, error, command, arguments,
                 environment, envReset, cwd, async, wait, destroy, force).parse(in);
 
@@ -303,6 +305,7 @@ public class Exec implements Macro {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+            // snippet waitFor_options
             final var osOnly = Params.holder(null, "osOnly", "os").asPattern();
             // defines a pattern for the operating system's name.
             // The execution will only start if the operating system's name matches the pattern.
@@ -327,6 +330,7 @@ public class Exec implements Macro {
             final var force = Params.holder(null, "force", "forced").asBoolean();
             // This option instructs the macro to destroy the process forcibly.
             // This option can only be used together with the destroy option.
+            // end snippet
             Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force).parse(in);
             final var idMacro = processor.getRegister().getUserDefined(async.get());
             if (idMacro.isEmpty()) {

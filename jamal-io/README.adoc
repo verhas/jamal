@@ -136,3 +136,101 @@ The default is the standard output.
 
 Note that the option can be defined as a user defined macro or as an option using the `{@option ...}` macro.
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
+
+[[exec]]
+=== v. `io:exec`
+
+
+
+
+
+*  `osOnly`, `os`
+defines a pattern for the operating system's name.
+The execution will only start if the operating system's name matches the pattern.
+The pattern is a regular expression.
+The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
+It means that it is enough to provide a pattern that matches part of the OS name.
+For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
+If the pattern is not provided, the execution will start on all operating systems.
+*  `input`
+defines the file name to be used as standard input for the new process.
+If it is not provided then the content of the macro will be used as input.
+When an `input` is defined the content of the macro will be ignored.
+*  `output`
+defines the file name to be used as standard output for the new process.
+If it is not provided then the output will appear as the result of the macro.
+When an `output` is defined the result of the macro will be empty string.
+*  `error`
+defines the file name to be used as standard error for the new process.
+If it is not provided then the standard error will be used.
+*  `command`
+The name of the command to be executed.
+This is not the name of the shell script or any executable.
+For security reason every executable should be configured via a system property, environment variable or in the `~/.jamal.setup.properties` file.
+The command itself is the string value of the configuration property.
+*  `argument`, `arguments`
+The arguments to be passed to the command.
+This is a multivalued parameter.
+*  `environment`, `env`
+This option can specify the environment variables to be passed to the command.
+This option usually is a multi-line string, thus the use of the `"""` delimiter is recommended.
+Each line of the configuration parameter can be
+* empty, in which case the line is ignored
+* a comment starting with the `#` character, in which case the line is ignored
+* a `key=value` pair, in which case the key is the name of the environment variable and the value is the value of the variable.
+*  `envReset`, `reset`
+This option can be used to reset the environment variables before the command is executed.
+Without these option the command will inherit the environment variables of the Jamal process and the defined environment variables are added to the current list.
+*  `directory`, `cwd`, `curdir`, `cd`
+Set the current working directory for the command.
+If this option is not provided then the current working directory of the Jamal process will be used.
+*  `async`, `asynch`, `asynchronous`
+Using this option Jamal will not wait for the command to finish before continuing with the next macro.
+In this case the output cannot be used as the result of the macro.
+If this option is used the output of the macro will be empty string.
+The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
+This macro can later be used to wait for the process to finish.
+*  `wait`, `waitMax`, `timeOut`
+This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
+If the process does not finish in the specified time a BadSyntax exception will be thrown.
+This option cannot be used together with the `async` option.
+*  `destroy`, `kill`
+This option can be used to destroy the process if it has not finished within the specified time.
+This option can only be used together with the wait option.
+*  `force`, `forced`
+This option instructs the macro to destroy the process forcibly.
+This option can only be used together with the destroy option.
+
+
+
+[[waitFor]]
+=== vi. `io:waitFor`
+
+
+
+*  `osOnly`, `os`
+defines a pattern for the operating system's name.
+The execution will only start if the operating system's name matches the pattern.
+The pattern is a regular expression.
+The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
+It means that it is enough to provide a pattern that matches part of the OS name.
+For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
+If the pattern is not provided, the execution will start on all operating systems.
+*  `async`, `asynch`, `asynchronous`, `id`, `name`
+Using this option Jamal will not wait for the command to finish before continuing with the next macro.
+In this case the output cannot be used as the result of the macro.
+If this option is used the output of the macro will be empty string.
+The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
+This macro can later be used to wait for the process to finish.
+*  `wait`, `waitMax`, `timeOut`
+This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
+If the process does not finish in the specified time a BadSyntax exception will be thrown.
+This option cannot be used together with the `async` option.
+*  `destroy`, `kill`
+This option can be used to destroy the process if it has not finished within the specified time.
+This option can only be used together with the wait option.
+*  `force`, `forced`
+This option instructs the macro to destroy the process forcibly.
+This option can only be used together with the destroy option.
+
+

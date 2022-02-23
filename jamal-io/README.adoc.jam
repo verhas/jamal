@@ -128,3 +128,19 @@ There is one option.
 The default is the standard output.
 
 {%OPTIONS_NOTE%}
+
+{%chap exec%}
+
+{%@snip:collect from=src/main/java/javax0/jamal/io/Exec.java%}
+
+{%#eval {%`@comment%}
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%@snip exec_options%}
+%}%}
+
+{%chap waitFor%}
+
+{%#eval {%`@comment%}
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%@snip waitFor_options%}
+%}%}
