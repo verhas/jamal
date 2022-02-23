@@ -64,10 +64,11 @@ public class TestJamalMain {
     @Test
     @DisplayName("Command line converts multiple files with verbose output")
     public void testConvertMultipleFiles() throws Exception {
-        final var out = jamal("-include=\\..*jam$", "-source=src/test/resources/multiple_files", "-target=target/test-classes/", "--verbose").replaceAll("\\\\", "/");
+        final var out = jamal("-include=\\..*jam$", "-source=src/test/resources/multiple_files", "-target=target/test-classes/", "--verbose")
+                .replaceAll("\\\\", "/").replaceAll("\r","");
         Assertions.assertAll(
                 () -> Assertions.assertTrue(Pattern.compile(
-                                "(:?Jamal .*/jamal-cmd/src/test/resources/multiple_files/test\\d.jam -> .*/jamal-cmd/target/test-classes/test\\d\n){3}"
+                                "(:?Jamal .*?/jamal-cmd/src/test/resources/multiple_files/test\\d.jam -> .*?/jamal-cmd/target/test-classes/test\\d\n){3}"
                         ).matcher(out).find(),
                         () -> "out: " + out
                 ),

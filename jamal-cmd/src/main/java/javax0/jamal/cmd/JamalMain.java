@@ -179,7 +179,7 @@ public class JamalMain {
         final var from = params.get("from").orElse("\\.jam$");
         final var to = params.get("to").orElse("");
         final var inputFileName = inputFile.toString();
-        if (!inputFile.toString().startsWith(sourceDirectory)) {
+        if (!inputFile.toString().replaceAll("\\\\","/").startsWith(sourceDirectory)) {
             throw new IllegalArgumentException(
                     String.format("The input file '%s' is not in the source directory '%s'"
                             , inputFileName

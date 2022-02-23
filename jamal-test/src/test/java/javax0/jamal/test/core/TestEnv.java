@@ -1,5 +1,6 @@
 package javax0.jamal.test.core;
 
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,8 +15,8 @@ public class TestEnv {
     @Test
     @DisplayName("test that env returns the ... whatever it returns. we assume there is a JAVA_HOME and there is no CICA_HOME")
     void testEnv() throws Exception {
-        final var javaHome = System.getenv("JAVA_HOME");
-        final var cicaHome = System.getenv("CICA_HOME");
+        final var javaHome = EnvironmentVariables.getenv("JAVA_HOME").orElse(null);
+        final var cicaHome = EnvironmentVariables.getenv("CICA_HOME").orElse(null);
         Assertions.assertNull(cicaHome);
 
         TestThat.theInput(
@@ -24,7 +25,7 @@ public class TestEnv {
                 "JAVA_HOME {#if /{@env JAVA_HOME ?}/is defined/is not defined}\n" +
                 "{@env CICA_HOME}\n" +
                 "CICA_HOME {#if /{@env CICA_HOME ?}/is defined/is not defined}\n"
-        ).results(
+        ).ignoreLineEnding().results(
             javaHome + "\n" +
                 javaHome + "\n" +
                 "JAVA_HOME is defined\n" +
