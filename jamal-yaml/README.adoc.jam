@@ -711,7 +711,7 @@ In these example we will use the yaml structure:
 
 {%sample/
 {@yaml:define yaml=
-a: this is a é•
+a: this is a euuu
 b: this is b
 bb:
   h:

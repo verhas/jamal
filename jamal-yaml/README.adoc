@@ -943,7 +943,7 @@ In these example we will use the yaml structure:
 [source]
 ----
 {@yaml:define yaml=
-a: this is a é•
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -968,7 +968,7 @@ It prints as the following without specifying any format:
 
 [source]
 ----
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -998,7 +998,7 @@ h: [1, 2, 3]
 
 [source]
 ----
-a: this is a é•
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -1031,7 +1031,7 @@ The option `canonical` instructs snake yaml to output the structure in a canonic
 ---
 !!map {
   ? !!str "a"
-  : !!str "this is a \xe9\u2022",
+  : !!str "this is a euuu",
   ? !!str "b"
   : !!str "this is b",
   ? !!str "bb"
@@ -1076,7 +1076,7 @@ The option `explicitStart` and `explicitEnd` instructs snake yaml to output the 
 [source]
 ----
 ---
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -1107,7 +1107,7 @@ The option `prettyFlow` instructs snake yaml to output the yaml structure in pre
 
 [source]
 ----
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -1145,7 +1145,7 @@ For some reason it does not split the lines
 
 [source]
 ----
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -1181,11 +1181,11 @@ AUTO
 [source]
 ----
 FLOW
-{a: "this is a \xe9\u2022", b: this is b, bb: {h: {z: {t: t34 panzer}}}, c: [1, 2, "this is\n  a multi\nline\nstring with one fairly long line that will be split 0000000000 1111111111 2222222222 3333333333 4444444444 5555555555 66666666666\n"], k: 3, h: [1, 2, 3]}
+{a: this is a euuu, b: this is b, bb: {h: {z: {t: t34 panzer}}}, c: [1, 2, "this is\n  a multi\nline\nstring with one fairly long line that will be split 0000000000 1111111111 2222222222 3333333333 4444444444 5555555555 66666666666\n"], k: 3, h: [1, 2, 3]}
 
 
 BLOCK
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -1207,7 +1207,7 @@ h:
 
 
 AUTO
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -1249,7 +1249,7 @@ PLAIN
 [source]
 ----
 DOUBLE_QUOTED
-"a": "this is a \xe9\u2022"
+"a": "this is a euuu"
 "b": "this is b"
 "bb":
   "h":
@@ -1267,7 +1267,7 @@ DOUBLE_QUOTED
 
 
 SINGLE_QUOTED
-'a': "this is a \xe9\u2022"
+'a': 'this is a euuu'
 'b': 'this is b'
 'bb':
   'h':
@@ -1285,7 +1285,8 @@ SINGLE_QUOTED
 
 
 LITERAL
-"a": "this is a \xe9\u2022"
+"a": |-
+  this is a euuu
 "b": |-
   this is b
 "bb":
@@ -1315,7 +1316,8 @@ LITERAL
 
 
 FOLDED
-"a": "this is a \xe9\u2022"
+"a": >-
+  this is a euuu
 "b": >-
   this is b
 "bb":
@@ -1346,7 +1348,7 @@ FOLDED
 
 
 PLAIN
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:
@@ -1374,7 +1376,7 @@ h: [1, 2, 3]
 
 [source]
 ----
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
      h:
@@ -1402,7 +1404,7 @@ h: [1, 2, 3]
 
 [source]
 ----
-a: "this is a \xe9\u2022"
+a: this is a euuu
 b: this is b
 bb:
   h:

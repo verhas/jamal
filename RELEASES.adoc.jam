@@ -336,7 +336,7 @@ The built-in macro can now depend on the inner scope defined user-defined macros
 
 {%RELEASE/v1.0.2%}
 
-This release introduces macros `for`, ˛`if`, `use` and supports trace creation.
+This release introduces macros `for`, `if`, `use` and supports trace creation.
 At the same time it fixes several bugs.
 
 

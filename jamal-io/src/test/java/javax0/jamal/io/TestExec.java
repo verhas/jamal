@@ -21,21 +21,29 @@ public class TestExec {
     @Test
     @DisplayName("Executing 'java -version' will print out the Java version to the console.")
     void test() throws Exception {
+        // tag::java_echo_version[]
         System.setProperty("exec", "java");
+        // end::java_echo_version[]
         TestThat.theInput("" +
+                // tag::java_echo_version[]
                 "{@io:exec command=EXEC argument=\"-version\"}"
+                // end::java_echo_version[]
         ).results("");
     }
 
     @Test
     @DisplayName("Executing 'echo hello' print out 'hello' to file")
     void testOutputToFile() throws Exception {
+        // tag::pwd[]
         System.setProperty("exec", "pwd");
+        // end::pwd[]
         Files.deleteIfExists(Paths.get("target/hallo.txt"));
         Assertions.assertTrue(
                 TestThat.theInput("" +
+        // tag::pwd[]
                         "{@io:exec command=EXEC cwd=target output=\"target/hallo.txt\"}" +
                         "{@include [verbatim] target/hallo.txt}"
+        // end::pwd[]
                 )
                 .ignoreLineEnding()
                 .atPosition(".", 1, 1)
@@ -45,11 +53,15 @@ public class TestExec {
     @Test
     @DisplayName("Executing 'cat' print out 'macro text' as the macro result")
     void testOutputAndInput() throws Exception {
+        // tag::cat[]
         System.setProperty("exec", "cat");
+        // end::cat[]
         Files.deleteIfExists(Paths.get("target/catoutput.txt"));
         TestThat.theInput("" +
+                // tag::cat[]
                         "{@io:exec command=EXEC output=\"target/catoutput.txt\"\n" +
                         "hello, this is the text for the file}"
+                // end::cat[]
                 ).atPosition(".", 1, 1)
                 .results("");
         Assertions.assertEquals("hello, this is the text for the file", Files.readString(Paths.get("target/catoutput.txt")));
@@ -58,9 +70,13 @@ public class TestExec {
     @Test
     @DisplayName("Executing 'echo hello' print out 'hello' as the macro result")
     void testOutput() throws Exception {
+        // tag::echo[]
         System.setProperty("exec", "echo");
+        // end::echo[]
         TestThat.theInput("" +
+                // tag::echo[]
                         "{@io:exec command=EXEC argument=\"hello\"}"
+                // end::echo[]
                 ).atPosition(".", 1, 1)
                 .results("hello");
     }
@@ -68,7 +84,9 @@ public class TestExec {
     @Test
     @DisplayName("Executing 'sleep 1; echo hello' print out 'hello' as the macro result only when synchronous")
     void testOutputAsync() throws Exception {
+        // tag::sleep[]
         System.setProperty("exec", "sh");
+        // end::sleep[]
         Files.write(Paths.get("target/async.sh"), "sleep 1\necho hello".getBytes(StandardCharsets.UTF_8));
         TestThat.theInput("" +
                         "{@io:exec command=EXEC argument=target/async.sh}"
@@ -76,7 +94,9 @@ public class TestExec {
                 .results("hello");
         final var start = System.currentTimeMillis();
         TestThat.theInput("" +
+                // tag::sleep[]
                         "{@io:exec asynch=PROC001 command=EXEC argument=target/async.sh}"
+                // end::sleep[]
                 ).atPosition(".", 1, 1)
                 .results("");
         final var runTime = System.currentTimeMillis() - start;

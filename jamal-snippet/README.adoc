@@ -2022,7 +2022,7 @@ The following parameters will add the action implicitly to the list:
 * `kill` will add the action `kill`
 * `keep` will add the action `kill`
 * `skip` will add the action `skip`
-* `lines`, `range˛ or `ranges` will add the action `range`
+* `lines`, `range` or `ranges` will add the action `range`
 * `replace` will add the action `replace`
 * `tab` or `tabSize` will add the action `untab`
 
@@ -2552,7 +2552,7 @@ will result in the output
 
 [source]
 ----
-2022-02-21 20:43:44
+2022-02-23 18:23:21
 ----
 
 

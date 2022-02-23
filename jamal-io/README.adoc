@@ -32,9 +32,13 @@ Following that, you can use the macros
 . <<remove,`io:remove`>>
 . <<mkdir,`io:mkdir`>>
 . <<print,`io:print`>>
+. <<exec,`io:exec`>>
+. <<waitFor,`io:waitFor`>>
 
 
 macros.
+
+
 
 == Macros implemented in the package
 
@@ -142,6 +146,42 @@ The aliases can only be used on the macro itself after the name of the macro bet
 
 
 
+This macro can start an external program.
+The typical use is to start an external document handling program, like GraphWiz, which cannot be integrated in-process.
+The format of the macro is
+
+[source]
+----
+{@io:exec options
+input text}
+----
+
+The first line of the macro following the name of the macro contains the options.
+The rest of the macro will be used as the input text to the program, and Jamal will feed it into the standard input of the program.
+
+Note that it is not possible to execute an arbitrary program from Jamal.
+Anything you want to execute as a separate process has to be configured in the system.
+For security reason, the command specification is a symbolic name.
+The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+The recommended way to configure the executable is to use the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+
+For example, if you want to execute the GraphWiz program, you can configure it in the `~/.jamal/setup.properties` file as:
+
+[source]
+----
+GraphWiz=/opt/local/bin/graphviz/bin/dot
+----
+
+After this you can execute the macro
+
+[source]
+----
+{@io.exec command=GraphWiz}
+----
+
+This will start the program without any argument, defined timeout or input text.
+
+The options of the macro are defined as follows:
 
 
 *  `osOnly`, `os`
@@ -200,6 +240,123 @@ This option can only be used together with the wait option.
 *  `force`, `forced`
 This option instructs the macro to destroy the process forcibly.
 This option can only be used together with the destroy option.
+
+
+
+Note that all these options are technically aliases.
+It means that you cannot use a user defined macro to specify their values.
+They all have to be specified in the first line of the macro.
+
+}
+
+
+
+==== Examples
+
+In the followings we will list some examples of the use of the macro `exec`.
+These examples are collected from the integration test file `src/test/java/javax0/jamal/io/TestExec.java`.
+The first line of the examples is the definition of the command in the format `symbol -> value`.
+The integration test sets these values as Java system properties.
+The rest of the lines contain the macro as it appears in the test code.
+
+[NOTE]
+====
+When Jamal looks for some configuration it looks at the
+
+* system properties
+
+* environment variables
+
+* `~/.jamal.setup.(properties|xml)`
+
+whichever it finds first.
+The key given is used as is in the case of the environment variables.
+For example `JAVA_HOME` is used as is.
+However, when the code looks at the system properties, it looks for the key `java.home`.
+The transformation is to contert to lower case and replace the underscore characters with dot.
+In the configuration file the key is also lowe case and the underscore characters are replaced with dot but if the key has a `jamal.` prefix it is also removed.
+This is the reason why the sample code defines `exec` in lower case and `EXEC` in upper case in the macro.
+====
+
+This example starts java to echo the version of the installed and used Java.
+[source]
+----
+exec -> java
+{@io:exec command=EXEC argument="-version"}
+
+
+----
+
+
+This example will print the current working directory.
+Because the current working directory is changed by the option `cwd=target` the result will be this directory.
+Note, however, that changing the working directory for the new process does not effect the parameters of the macro.
+The other parameters, like `output` still have to define the file names absolute, or relative to the file containing the macro.
+
+[source]
+----
+exec -> pwd
+{@io:exec command=EXEC cwd=target output="target/hallo.txt"} 
+{@include [verbatim] target/hallo.txt}
+
+
+----
+
+The following example calls the command `cat` which copies the standard input to the standard output.
+The standard input is not defined in the macro, therefore the text after the first line is used.
+The output is redirected into a file.
+The file will contain the text from the macro.
+
+[source]
+----
+exec -> cat
+{@io:exec command=EXEC output="target/catoutput.txt"\n 
+hello, this is the text for the file}
+
+
+----
+
+[NOTE]
+====
+This is a system dependent and rather slow way to write something into a file.
+The `io` module provides a more efficient way to write into a file.
+====
+
+The next example calls the `echo` program that prints the argument to the standard output.
+Since no output file is defined the output is the result of the macro.
+
+[source]
+----
+exec -> echo
+{@io:exec command=EXEC argument="hello"}
+
+
+----
+
+The next sample calls a shell script.
+The content of the schellscript is
+
+[source]
+----
+sleep 1
+echo hello
+----
+
+The command is invoked asynchronously.
+It means that the macro does not wait for the completion of the process.
+The output of the process is not redirected to a file, but because it is asynchronous the output is thrown away.
+The result of the macro is empty string.
+The option async defines a name for the process, `PROC001`.
+This name can later be used to reference the process in the macro `waitFor`.
+In this example we do not wait for the process to finish, not even later.
+
+[source]
+----
+exec -> sh
+{@io:exec asynch=PROC001 command=EXEC argument=target/async.sh}
+
+
+----
 
 
 

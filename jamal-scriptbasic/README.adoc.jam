@@ -79,7 +79,7 @@ in your Jamal file. It will let you write things, like
 ----
 
 This will evaluate the expression and result the value of the expression.
-For more complex code you can use the macro `basic`, which is essentially same as the buiét-in macro of the same name.
+For more complex code you can use the macro `basic`, which is essentially same as the built-in macro of the same name.
 
 to execute a whole BASIC program and get the output into the Jamal output.
 

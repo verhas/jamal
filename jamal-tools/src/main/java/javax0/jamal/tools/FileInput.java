@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class FileInput {
 
@@ -15,11 +16,15 @@ public class FileInput {
      * @throws IOException if the file cannot be read
      */
     static String getInput(String fileName) throws IOException {
-        return Files.readString(Paths.get(fileName), StandardCharsets.UTF_8)
-                .chars()
-                .filter(c -> c != '\r')
-                .mapToObj(c -> (char) c)
-                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-                .toString();
+        if (Objects.equals(System.lineSeparator(), "\n")) {
+            return Files.readString(Paths.get(fileName), StandardCharsets.UTF_8);
+        } else {
+            return Files.readString(Paths.get(fileName), StandardCharsets.UTF_8)
+                    .chars()
+                    .filter(c -> c != '\r')
+                    .mapToObj(c -> (char) c)
+                    .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                    .toString();
+        }
     }
 }
