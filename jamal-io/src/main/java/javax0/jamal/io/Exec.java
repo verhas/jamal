@@ -107,7 +107,7 @@ public class Exec implements Macro {
         }
 
         if (thisOsIsNotOk(osOnly)) {
-
+            return "";
         }
 
         ProcessBuilder pb = new ProcessBuilder();
@@ -328,9 +328,12 @@ public class Exec implements Macro {
             // This option instructs the macro to destroy the process forcibly.
             // This option can only be used together with the destroy option.
             Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force).parse(in);
-            final var idMacro = processor.getRegister().getMacro(async.get());
-            if (!idMacro.isPresent() || !(idMacro.get() instanceof ProcessHolder)) {
-                throw new BadSyntax(String.format("Process id '%s' is not defined or is not a process name.", async.get()));
+            final var idMacro = processor.getRegister().getUserDefined(async.get());
+            if (idMacro.isEmpty()) {
+                throw new BadSyntax(String.format("Process id '%s' is not defined.", async.get()));
+            }
+            if (!(idMacro.get() instanceof ProcessHolder)) {
+                throw new BadSyntax(String.format("Process id '%s' is not a process name.", async.get()));
             }
             final var process = ((ProcessHolder) idMacro.get()).getObject();
             waitForTheProcessToFinish(process, wait, destroy, force);
