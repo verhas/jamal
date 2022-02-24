@@ -39,13 +39,13 @@ public class Exec implements Macro {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         // snippet exec_options
         final var osOnly = Params.holder(null, "osOnly", "os").asPattern();
-        // defines a pattern for the operating system's name.
+        // {%@define osOnly=defines a pattern for the operating system's name.
         // The execution will only start if the operating system's name matches the pattern.
         // The pattern is a regular expression.
         // The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
         // It means that it is enough to provide a pattern that matches part of the OS name.
         // For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
-        // If the pattern is not provided, the execution will start on all operating systems.
+        // If the pattern is not provided, the execution will start on all operating systems.%}{%osOnly%}
         final var input = Params.holder(null, "input").asString();
         // defines the file name to be used as standard input for the new process.
         // If it is not provided then the content of the macro will be used as input.
@@ -85,15 +85,15 @@ public class Exec implements Macro {
         // The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
         // This macro can later be used to wait for the process to finish.
         final var wait = Params.holder(null, "wait", "waitMax", "timeOut").asInt();
-        // This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
-        // If the process does not finish in the specified time a BadSyntax exception will be thrown.
+        // {%@define wait=This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
+        // If the process does not finish in the specified time a BadSyntax exception will be thrown.%}{%wait%}
         // This option cannot be used together with the `async` option.
         final var destroy = Params.holder(null, "destroy", "kill").asBoolean();
-        // This option can be used to destroy the process if it has not finished within the specified time.
-        // This option can only be used together with the wait option.
+        // {%@define destroy=This option can be used to destroy the process if it has not finished within the specified time.
+        // This option can only be used together with the wait option.%}{%destroy%}
         final var force = Params.holder(null, "force", "forced").asBoolean();
-        // This option instructs the macro to destroy the process forcibly.
-        // This option can only be used together with the destroy option.
+        // {%@define force=This option instructs the macro to destroy the process forcibly.
+        // This option can only be used together with the destroy option.%}{%force%}
         // end snippet
         Scan.using(processor).from(this).firstLine().keys(osOnly, input, output, error, command, arguments,
                 environment, envReset, cwd, async, wait, destroy, force).parse(in);
@@ -307,29 +307,19 @@ public class Exec implements Macro {
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             // snippet waitFor_options
             final var osOnly = Params.holder(null, "osOnly", "os").asPattern();
-            // defines a pattern for the operating system's name.
-            // The execution will only start if the operating system's name matches the pattern.
-            // The pattern is a regular expression.
-            // The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
-            // It means that it is enough to provide a pattern that matches part of the OS name.
-            // For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
-            // If the pattern is not provided, the execution will start on all operating systems.
+            // {%osOnly%}
             final var async = Params.holder(null, "async", "asynch", "asynchronous", "id", "name").asString();
-            // Using this option Jamal will not wait for the command to finish before continuing with the next macro.
-            // In this case the output cannot be used as the result of the macro.
-            // If this option is used the output of the macro will be empty string.
-            // The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
-            // This macro can later be used to wait for the process to finish.
+            // This option should refer to the name, which was specified in the macro `io:exec`.
+            // The macro will wait for the process that was started with this name to finish.
+            // Note that this option has two extra aliases, that do not exist in the macro `exec`.
+            // These are `id` and `name`.
             final var wait = Params.holder(null, "wait", "waitMax", "timeOut").asInt();
-            // This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
-            // If the process does not finish in the specified time a BadSyntax exception will be thrown.
-            // This option cannot be used together with the `async` option.
+            // {%wait%}
+            // If this option is not present the macro will wait for the process to finish without time limit.
             final var destroy = Params.holder(null, "destroy", "kill").asBoolean();
-            // This option can be used to destroy the process if it has not finished within the specified time.
-            // This option can only be used together with the wait option.
+            // {%destroy%}
             final var force = Params.holder(null, "force", "forced").asBoolean();
-            // This option instructs the macro to destroy the process forcibly.
-            // This option can only be used together with the destroy option.
+            // {%force%}
             // end snippet
             Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force).parse(in);
             final var idMacro = processor.getRegister().getUserDefined(async.get());

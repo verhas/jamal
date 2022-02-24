@@ -121,9 +121,13 @@ public class TestExec {
     @Test
     @DisplayName("Executing 'sleep 1000; and waiting only 1000 milliseconds throws error, destroy the process")
     void testTimeOutDestroy() throws Exception {
+        // tag::timeout[]
         System.setProperty("exec", "sleep");
+        // end::timeout[]
         TestThat.theInput("" +
+                // tag::timeout[]
                 "{@io:exec command=EXEC argument=1000 wait=1000 destroy}"
+                // end::timeout[]
         ).throwsBadSyntax("The process \\(pid=\\d+\\) did not finish in the specified time, 1000 milliseconds.");
     }
 
@@ -148,27 +152,39 @@ public class TestExec {
     @Test
     @DisplayName("Setting environment variables")
     void testEnvironmentSet() throws Exception {
+        // tag::env[]
         System.setProperty("exec", "printenv");
+        // end::env[]
         TestThat.theInput("" +
+                // tag::env[]
                 "{@io:exec command=EXEC argument=AAA env=\"AAA=BABA\\n\\n #  oooh my\\n\"}"
+                // end::env[]
         ).results("BABA");
     }
 
     @Test
     @DisplayName("Resetting environment variables")
     void testEnvironmentReset() throws Exception {
+        // tag::env_reset[]
         System.setProperty("exec", "printenv");
+        // end::env_reset[]
         TestThat.theInput("" +
+                // tag::env_reset[]
                 "{@io:exec command=EXEC argument=JAVA_HOME envReset env=\"AAA=BABA\"}"
+                // end::env_reset[]
         ).results("");
     }
 
     @Test
-    @DisplayName("Executing 'sleep 11; async, and waiting only 1000 milliseconds throws error")
+    @DisplayName("Executing 'sleep 1; async, and waiting only 1000 milliseconds throws error")
     void testWaitFor() throws Exception {
+        // tag::wait_for[]
         System.setProperty("exec", "sleep");
+        // end::wait_for[]
         TestThat.theInput("" +
+                // tag::wait_for[]
                 "{@io:exec command=EXEC argument=1 asynch=PRG001}{@io:waitFor id=PRG001}"
+                // end::wait_for[]
         ).results("");
     }
 
@@ -194,9 +210,13 @@ public class TestExec {
         @Test
         @DisplayName("Executing 'sleep 10; async, and waiting only 1000 milliseconds throws error")
         void testTimeOutWithWait() throws Exception {
+            // tag::wait_for_timeout[]
             System.setProperty("exec", "sleep");
+            // end::wait_for_timeout[]
             TestThat.theInput("" +
+                    // tag::wait_for_timeout[]
                     "{@io:exec command=EXEC argument=10 asynch=PRG001}{@io:waitFor id=PRG001 timeOut=1000 destroy}"
+                    // end::wait_for_timeout[]
             ).throwsBadSyntax("The process \\(pid=\\d+\\) did not finish in the specified time, 1000 milliseconds.");
         }
 

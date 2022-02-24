@@ -178,9 +178,10 @@ The options of the macro are defined as follows:
 {%@snip exec_options%}
 %}%}
 
+{%@define ALIAS$ONLY=
 Note that all these options are technically aliases.
 It means that you cannot use a user defined macro to specify their values.
-They all have to be specified in the first line of the macro.
+They all have to be specified in the first line of the macro.%}{%ALIAS$ONLY%}
 
 {%@snip:collect asciidoc from=src/test/java/javax0/jamal/io/TestExec.java%}}
 
@@ -191,7 +192,8 @@ They all have to be specified in the first line of the macro.
                 replace="~([^\\\\])\"~$1~" \
                 replace="~^\"~~" \
                 replace="~\\+$~~" \
-                replace="~\\\\\"~\"~"
+                replace="~\\\\\"~\"~" \
+                replace="~\\\\n~\\n~"
 {%@snip $x%}
 %}
 ----%}
@@ -225,6 +227,7 @@ This is the reason why the sample code defines `exec` in lower case and `EXEC` i
 
 This example starts java to echo the version of the installed and used Java.
 {%example java_echo_version%}
+{%@snip:check id=java_echo_version hashCode=26ad2559%}
 
 
 This example will print the current working directory.
@@ -233,6 +236,7 @@ Note, however, that changing the working directory for the new process does not 
 The other parameters, like `output` still have to define the file names absolute, or relative to the file containing the macro.
 
 {%example pwd%}
+{%@snip:check id=pwd hashCode=10149685%}
 
 The following example calls the command `cat` which copies the standard input to the standard output.
 The standard input is not defined in the macro, therefore the text after the first line is used.
@@ -240,6 +244,7 @@ The output is redirected into a file.
 The file will contain the text from the macro.
 
 {%example cat%}
+{%@snip:check id=cat hashCode=c679a2f1%}
 
 [NOTE]
 ====
@@ -251,6 +256,7 @@ The next example calls the `echo` program that prints the argument to the standa
 Since no output file is defined the output is the result of the macro.
 
 {%example echo%}
+{%@snip:check id=echo hashCode=df355a0a%}
 
 The next sample calls a shell script.
 The content of the schellscript is
@@ -263,7 +269,7 @@ echo hello
 
 The command is invoked asynchronously.
 It means that the macro does not wait for the completion of the process.
-The output of the process is not redirected to a file, but because it is asynchronous the output is thrown away.
+The output of the process is not redirected to a file, and because it is asynchronous the output is thrown away.
 The result of the macro is empty string.
 The option async defines a name for the process, `PROC001`.
 This name can later be used to reference the process in the macro `waitFor`.
@@ -273,9 +279,62 @@ In this example we do not wait for the process to finish, not even later.
 {%@snip:check id=sleep hashCode=06f322bc%}
 
 
+The next example calls the `sleep` program that sleeps for 1000 of seconds.
+We start the process in a synchronous mode and we wait for it 1000 milliseconds.
+Note that the `argument` to the proces, sleep is `1000` and the timeout value is also `1000`.
+However, the program `sleep` interprets the argument in seconds, while the option `wait` is milliseconds.
+Evidently the wait time will timeout and after that Jamal will stop the external process.
+
+{%example timeout%}
+{%@snip:check id=timeout hashCode=6ed4e82c%}
+
+
+This example is a demo setting the environment variables.
+The external program prints out the environment variable `AAA`.
+The macro sets the environment variable `AAA` to `BBB`.
+The example shows a multipline example of environment variable setting demonstrating empty line and a comment line as well.
+The new value is added to the existing envrionment variables that the new process inherits from the Jamal executing process.
+
+{%example env%}
+{%@snip:check id=env hashCode=d645bcfb%}
+
+This exaple is similar to the previous one,but it resets the environment variables.
+The environment printout in the new process will print the value of the environment varianle `JAVA_HOME`.
+This environment variable should be defined in the environment where Jamal runs because Jamal is written in Java.
+On the other hand the external program will see this environment variable as undefined and the output of `printenv` is an empty string.
+
+{%example env_reset%}
+{%@snip:check id=env_reset hashCode=cbb3ba3b%}
+
+
+
 {%chap waitFor%}
+
+This macro can be used to wait for the completion of a proces started earlier asynchronously.
+A document may start some external process at an earlier point and needs the result only later.
+While the external processess runs the document processing can go on and the wait for the result when it is needed.
+The output of the external process cannot be collected from the result of the `exec` macro.
+Output of asynchronously started external processes do not appear as the result of the macro.
+In this case the output is typically redirected to a file and the result can be collected from the file after the `waitFor` was processed.
+
+The macro `waitFor` uses a subset of the options of the `exec` macro.{%ALIAS$ONLY%}
 
 {%#eval {%`@comment%}
 {%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
 {%@snip waitFor_options%}
 %}%}
+
+{%section Examples%}
+
+The following example starts a one-second sleep as a separate process asynchronous.
+After that in the next macro it waits for the process to finish.
+
+{%example wait_for%}
+{%@snip:check id=wait_for hashCode=0c4852d2%}
+
+The next example starts a ten-second sleep asynchronously.
+After that in the next macro it waits for the process to finish with a one seond timeout value (1000ms).
+It eventually will not finish during this time and then the macro will terminate the external process.
+
+{%example wait_for_timeout%}
+{%@snip:check id=wait_for_timeout hashCode=5a7b1bf4%}

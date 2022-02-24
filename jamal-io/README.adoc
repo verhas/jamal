@@ -243,6 +243,7 @@ This option can only be used together with the destroy option.
 
 
 
+
 Note that all these options are technically aliases.
 It means that you cannot use a user defined macro to specify their values.
 They all have to be specified in the first line of the macro.
@@ -288,6 +289,7 @@ exec -> java
 ----
 
 
+
 This example will print the current working directory.
 Because the current working directory is changed by the option `cwd=target` the result will be this directory.
 Note, however, that changing the working directory for the new process does not effect the parameters of the macro.
@@ -302,6 +304,7 @@ exec -> pwd
 
 ----
 
+
 The following example calls the command `cat` which copies the standard input to the standard output.
 The standard input is not defined in the macro, therefore the text after the first line is used.
 The output is redirected into a file.
@@ -310,11 +313,12 @@ The file will contain the text from the macro.
 [source]
 ----
 exec -> cat
-{@io:exec command=EXEC output="target/catoutput.txt"\n 
+{@io:exec command=EXEC output="target/catoutput.txt"n 
 hello, this is the text for the file}
 
 
 ----
+
 
 [NOTE]
 ====
@@ -333,6 +337,7 @@ exec -> echo
 
 ----
 
+
 The next sample calls a shell script.
 The content of the schellscript is
 
@@ -344,7 +349,7 @@ echo hello
 
 The command is invoked asynchronously.
 It means that the macro does not wait for the completion of the process.
-The output of the process is not redirected to a file, but because it is asynchronous the output is thrown away.
+The output of the process is not redirected to a file, and because it is asynchronous the output is thrown away.
 The result of the macro is empty string.
 The option async defines a name for the process, `PROC001`.
 This name can later be used to reference the process in the macro `waitFor`.
@@ -360,9 +365,68 @@ exec -> sh
 
 
 
+The next example calls the `sleep` program that sleeps for 1000 of seconds.
+We start the process in a synchronous mode and we wait for it 1000 milliseconds.
+Note that the `argument` to the proces, sleep is `1000` and the timeout value is also `1000`.
+However, the program `sleep` interprets the argument in seconds, while the option `wait` is milliseconds.
+Evidently the wait time will timeout and after that Jamal will stop the external process.
+
+[source]
+----
+exec -> sleep
+{@io:exec command=EXEC argument=1000 wait=1000 destroy}
+
+
+----
+
+
+
+This example is a demo setting the environment variables.
+The external program prints out the environment variable `AAA`.
+The macro sets the environment variable `AAA` to `BBB`.
+The example shows a multipline example of environment variable setting demonstrating empty line and a comment line as well.
+The new value is added to the existing envrionment variables that the new process inherits from the Jamal executing process.
+
+[source]
+----
+exec -> printenv
+{@io:exec command=EXEC argument=AAA env="AAA=BABA\n\n #  oooh my\n"}
+
+
+----
+
+
+This exaple is similar to the previous one,but it resets the environment variables.
+The environment printout in the new process will print the value of the environment varianle `JAVA_HOME`.
+This environment variable should be defined in the environment where Jamal runs because Jamal is written in Java.
+On the other hand the external program will see this environment variable as undefined and the output of `printenv` is an empty string.
+
+[source]
+----
+exec -> printenv
+{@io:exec command=EXEC argument=JAVA_HOME envReset env="AAA=BABA"}
+
+
+----
+
+
+
+
 [[waitFor]]
 === vi. `io:waitFor`
 
+
+This macro can be used to wait for the completion of a proces started earlier asynchronously.
+A document may start some external process at an earlier point and needs the result only later.
+While the external processess runs the document processing can go on and the wait for the result when it is needed.
+The output of the external process cannot be collected from the result of the `exec` macro.
+Output of asynchronously started external processes do not appear as the result of the macro.
+In this case the output is typically redirected to a file and the result can be collected from the file after the `waitFor` was processed.
+
+The macro `waitFor` uses a subset of the options of the `exec` macro.
+Note that all these options are technically aliases.
+It means that you cannot use a user defined macro to specify their values.
+They all have to be specified in the first line of the macro.
 
 
 *  `osOnly`, `os`
@@ -374,15 +438,14 @@ It means that it is enough to provide a pattern that matches part of the OS name
 For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
 If the pattern is not provided, the execution will start on all operating systems.
 *  `async`, `asynch`, `asynchronous`, `id`, `name`
-Using this option Jamal will not wait for the command to finish before continuing with the next macro.
-In this case the output cannot be used as the result of the macro.
-If this option is used the output of the macro will be empty string.
-The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
-This macro can later be used to wait for the process to finish.
+This option should refer to the name, which was specified in the macro `io:exec`.
+The macro will wait for the process that was started with this name to finish.
+Note that this option has two extra aliases, that do not exist in the macro `exec`.
+These are `id` and `name`.
 *  `wait`, `waitMax`, `timeOut`
 This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
 If the process does not finish in the specified time a BadSyntax exception will be thrown.
-This option cannot be used together with the `async` option.
+If this option is not present the macro will wait for the process to finish without time limit.
 *  `destroy`, `kill`
 This option can be used to destroy the process if it has not finished within the specified time.
 This option can only be used together with the wait option.
@@ -390,4 +453,31 @@ This option can only be used together with the wait option.
 This option instructs the macro to destroy the process forcibly.
 This option can only be used together with the destroy option.
 
+
+
+==== Examples
+
+The following example starts a one-second sleep as a separate process asynchronous.
+After that in the next macro it waits for the process to finish.
+
+[source]
+----
+exec -> sleep
+{@io:exec command=EXEC argument=1 asynch=PRG001}{@io:waitFor id=PRG001}
+
+
+----
+
+
+The next example starts a ten-second sleep asynchronously.
+After that in the next macro it waits for the process to finish with a one seond timeout value (1000ms).
+It eventually will not finish during this time and then the macro will terminate the external process.
+
+[source]
+----
+exec -> sleep
+{@io:exec command=EXEC argument=10 asynch=PRG001}{@io:waitFor id=PRG001 timeOut=1000 destroy}
+
+
+----
 
