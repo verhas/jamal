@@ -51,9 +51,6 @@
 {@define FLEXMARK_VERSION=0.62.2}                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
 {@define APACHE_POI_VERSION=5.2.0}                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 
--- picocli is needed for the Jamal command line version
-{@define PICOCLI_VERSION=4.6.2}                      -- https://repo.maven.apache.org/maven2/info/picocli/picocli
-
 -- dependencies needed for the Maven extension (not the plugin)
 {@define MAVEN_CORE_VERSION=3.8.4}                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
 {@define PLEXUS_COMPONENT_METADATA_VERSION=2.1.1}    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata

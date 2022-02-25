@@ -264,11 +264,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>info.picocli</groupId>
-                <artifactId>picocli</artifactId>
-                <version>4.6.2</version>
-            </dependency>
-            <dependency>
                 <groupId>com.javax0</groupId>
                 <artifactId>levenshtein</artifactId>
                 <version>1.0.0</version>

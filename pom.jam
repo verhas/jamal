@@ -93,7 +93,6 @@
     {dependencyManagement|{dependencies|
         {@for MODULE in (testsupport,api,core,tools,engine,extensions,scriptbasic,snippet,plantuml,debug,jamal,yaml,io,doclet,markdown,assertions,word)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
-        {dependency :info.picocli:picocli:{PICOCLI_VERSION}}
         {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
         }}
 

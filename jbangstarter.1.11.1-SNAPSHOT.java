@@ -1,6 +1,5 @@
 ///usr/bin/env jbang \"$0\" \"$@\" ; exit $?
 //JAVA 11+
-//DEPS info.picocli:picocli:4.6.2
 //DEPS com.javax0.jamal:jamal-engine:1.11.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-api:1.11.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-tools:1.11.1-SNAPSHOT

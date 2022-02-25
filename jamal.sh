@@ -20,23 +20,6 @@ for MODULE in $MODULES ; do
   fi
 done
 
-PICOCLI_VERSION=4.6.2
-PICOCLI=info/picocli/picocli/$PICOCLI_VERSION/picocli-$PICOCLI_VERSION.jar
-
-if ! test -f $REPO/$PICOCLI; then
-  if command -v wget &>/dev/null; then
-    wget --no-check-certificate $CENTRAL/$PICOCLI -O $REPO/$PICOCLI
-  else
-    if command -v curl &>/dev/null; then
-      curl $CENTRAL/$PICOCLI -o $REPO/$PICOCLI
-    else
-      echo "There is no curl nor wget available"
-      exit -1
-    fi
-  fi
-fi
-
-CLASSPATH=$REPO/$PICOCLI
 for MODULE in $MODULES ; do
   CLASSPATH=$CLASSPATH:$REPO_JAMAL/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
 done
