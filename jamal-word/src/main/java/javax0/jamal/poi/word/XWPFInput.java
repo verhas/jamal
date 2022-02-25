@@ -127,7 +127,6 @@ public class XWPFInput extends Input {
 
         paragraphEndIndex = paragraphStartIndex;
         runEndIndex = runStartIndex;
-        sb.setLength(0);
         if (paragraphStartIndex < paragraphs.size() && paragraphs.get(paragraphStartIndex).getRuns().size() > runIndex) {
             final var text = paragraphs.get(paragraphStartIndex).getRuns().get(runIndex).getText(0);
             sb.append(text == null ? "" : text);
@@ -206,7 +205,7 @@ public class XWPFInput extends Input {
     public int indexOf(String s, int before) {
         if (before == -1) {
             int index = indexOf(s);
-            while (index == -1 && !(paragraphEndIndex == paragraphs.size() - 1 && runEndIndex == paragraphs.get(paragraphEndIndex).getRuns().size() - 1)) {
+            while (index == -1 && thereAreMOreRuns()) {
                 appendOneRun();
                 index = indexOf(s);
             }
@@ -214,6 +213,49 @@ public class XWPFInput extends Input {
         } else {
             return indexOf(s);
         }
+    }
+
+    /**
+     * This implementation of {@link javax0.jamal.api.Input#indexOf(String)} takes care of the fact that whenever
+     * something is calling this method it may be an error if the string is not found.
+     * It is not always the case, but whenever the code is looking for the macro opening or closing string it is.
+     * A typical example is, when the string buffer contains
+     *
+     * <pre>{@code
+     *     <%@define j/Jama%><
+     * }</pre>
+     * <p>
+     * when {@code <%} is the macro opening, and {@code %>} is the macro closing string.
+     * <p>
+     * In this case the next character in the doc file may be {@code %}.
+     * In that case default implementation returns {@code -1}, which is not correct. That would lead to the
+     * evaluation of the {@code <%j%>} as pure text instead of interpreting it as a macro. The actual flow would be
+     * interpreting {@code <} as a normal character at the end of the string buffer, closing the processor and then the
+     * {@link XWPFProcessor} would restart the processor again an star the processing with the characters {@code %j%>},
+     * which, again, is just normal, non-macro character sequence.
+     * <p>
+     * To handle this situation this implementation appends new runs to the buffer so long as long
+     * <ul>
+     *     <li>the buffer is shorter than the searched string,</li>
+     *     <li>there is something to append, in other words the doc file still has characters left,</li>
+     *     <li>the searched string {@code str} starts with the characters, which are already in the buffer.</li>
+     * </ul>
+     * <p>
+     *
+     * @param str the string we are looking for
+     * @return the index of the string in the buffer, or {@code -1} if the string is not in the buffer or at the
+     * document, as described above.
+     */
+    @Override
+    public int indexOf(String str) {
+        while (sb.length() < str.length() && thereAreMOreRuns() && str.startsWith(sb.toString())) {
+            appendOneRun();
+        }
+        return sb.indexOf(str);
+    }
+
+    private boolean thereAreMOreRuns() {
+        return !(paragraphEndIndex == paragraphs.size() - 1 && runEndIndex == paragraphs.get(paragraphEndIndex).getRuns().size() - 1);
     }
 
     /**

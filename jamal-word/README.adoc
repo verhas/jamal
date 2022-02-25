@@ -81,14 +81,12 @@ The module can be used in two ways.
 
 To use the module, you have to have the code on the classpath.
 This can be done adding
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
 
 [source,xml]
 ----
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-word</artifactId>
-    <version>{%VERSION%}</version>
+    <version>1.11.1-SNAPSHOT</version>
 ----
 
 to your Maven `pom.xml`.

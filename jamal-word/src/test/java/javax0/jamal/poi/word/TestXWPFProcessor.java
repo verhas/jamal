@@ -9,6 +9,12 @@ public class TestXWPFProcessor {
         final var sut = new XWPFProcessor();
         sut.process("src/test/resources/sample.docx", "src/test/resources/sampleConverted.docx");
     }
+
+    @Test
+    void testDemo() throws Exception {
+        final var sut = new XWPFProcessor("{%", "%}");
+        sut.process("src/test/resources/demo.docx", "src/test/resources/demoConverted.docx");
+    }
 }
 
 

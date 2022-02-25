@@ -877,7 +877,10 @@ public class Processor implements javax0.jamal.api.Processor {
      * Closers registered during closing are ignored.
      *
      * @param result the final state of the macro processing before the closers were started.
-     * @throws BadSyntax
+     * @throws BadSyntax if any of the closers throws an exception then the exception is caught and rethrown.
+     * If there is only one exception then it is rethrown.
+     * If there are more than one exception then the exception is wrapped in a new {@link BadSyntax} exception
+     * containing the collected exceptions as suppressed exceptions.
      */
     private void closeProcess(final Input result) throws BadSyntax {
         if (currentlyClosing) {
