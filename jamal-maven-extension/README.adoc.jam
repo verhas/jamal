@@ -100,14 +100,9 @@ mvn -Djamalize=true com.javax0.jamal:jamal-maven-plugin:{%VERSION%}:jamal
 
 from the top level project directory.
 
-The plugin will scan all the directories from the current and below and add the `.mvn/extensions.xml` files to the project directories.
-The plugin will consider every directory to be a project directory that has a
+The plugin will scan all the directories from the current and below and if there is only a `pom.xml` in the project directory, but no `pom.jam` nor `pom.xml.jam` then the plugin will copy the `pom.xml` to `pom.jam`.
 
-* `pom.xml`,
-* `pom.jam`, or
-* `pom.xml.jam` in it.
-
-If there is only a `pom.xml` in the project directory, but no `pom.jam` nor `pom.xml.jam` then the plugin will copy the `pom.xml` to `pom.jam`.
+It is enough to have a single `.mvn` directory at the top level in the project.
 
 == Updating Your Project
 
@@ -115,6 +110,7 @@ When you want to use a new version of the Jamal Maven Extension simply edit the 
 
 == Using Jamal to maintain `extensions.xml`
 
+You can use the extension itself to maintain the `extensions.xml` file.
 The extension looks into the `.mvn` directory of the project.
 If there is an `extensions.jam` or `extensions.xml.jam` file in there, it will be used to generate and overwrite the `extensions.xml` file.
 Since the `extensions.xml` is small it may be pointless to maintain it that way, but the possibility exists.
@@ -133,7 +129,8 @@ extensions>
 }
 ----
 
-This will always use the latest, usually development version of the extension and keeps the `extensions.xml` file up to date.
+This will always use the latest release version of the extension and keeps the `extensions.xml` file up to date.
+If you use `{VERSION}` instead of `{LAST_RELEASE}` in the `extensions.jam` file, the extension will use the actual, possibly development SNAPSHOT version of the project.
 When a new release is available it will update the version in the `extensions.xml` and be used during the next build.
 The actually running build does not restart with the newer version.
 
@@ -142,9 +139,9 @@ The feature was introduced in 1.10.0.
 
 [NOTE]
 ====
-The actual `extensions.jam` does not use the option `noCache`.
+The actual `extensions.jam` if Jamal itself does not use the option `noCache`.
 Using the option would download the latest version of the extension from the internet every time the build starts.
-This may be a significant impact on the build time.
+This may impose significant impact on the build time.
 A better solution is to use cache eviction introduced in Jamal version 1.11.0.
 
 The file
@@ -155,7 +152,6 @@ is a properties file.
 Adding `ttl=1d` (time to live = one day) as a new property will check for a new `version.jim` once a day.
 In other occasions it will just use the cached file.
 ====
-
 
 == Getting Rid of the Extension
 

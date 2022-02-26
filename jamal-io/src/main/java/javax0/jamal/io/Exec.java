@@ -94,9 +94,12 @@ public class Exec implements Macro {
         final var force = Params.holder(null, "force", "forced").asBoolean();
         // {%@define force=This option instructs the macro to destroy the process forcibly.
         // This option can only be used together with the destroy option.%}{%force%}
+        final var optional = Params.holder(null, "optional").asBoolean();
+        // This option tells the macro to skip the execution of the command is not configured.
+        // Note that this option is a courtesy option, in the sense that it can be replaced using an `if` macro testing the existence of the command and invoking it only if the command is configured.
         // end snippet
         Scan.using(processor).from(this).firstLine().keys(osOnly, input, output, error, command, arguments,
-                environment, envReset, cwd, async, wait, destroy, force).parse(in);
+                environment, envReset, cwd, async, wait, destroy, force, optional).parse(in);
 
         if (wait.isPresent() && async.isPresent()) {
             throw new BadSyntax("The `wait` and `async` options cannot be used together.");
@@ -113,6 +116,9 @@ public class Exec implements Macro {
         }
 
         ProcessBuilder pb = new ProcessBuilder();
+        if( setCommand(command, arguments, pb, optional) ){
+            return "";
+        }
 
         redirectIfPresent(input, in, pb::redirectInput);
         redirectIfPresent(output, in, pb::redirectOutput);
@@ -121,7 +127,6 @@ public class Exec implements Macro {
             pb.redirectError(INHERIT);
         }
 
-        setCommand(command, arguments, pb);
         setCWDIfPresent(in, cwd, pb);
         setEnvironment(environment, envReset, pb);
 
@@ -268,18 +273,31 @@ public class Exec implements Macro {
         }
     }
 
-    private static void setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb) throws BadSyntax {
+    /**
+     * Sets the command in the process builder.
+     * @param command the parameter with the symbolic name of the command as it is configured in the environment.
+     * @param arguments the arguments to the command.
+     * @param pb the process builder to set the command in.
+     * @param optional option to ignore error in case the command is not configured in the environment.
+     * @return {@code true} if the command is optional, and was not configured.
+     * @throws BadSyntax if the command is not configured in the environment and is not optional or the parameter is missing.
+     */
+    private static boolean setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final Params.Param<Boolean> optional) throws BadSyntax {
         if (!command.isPresent()) {
             throw new BadSyntax("'command' for the macro 'exec' is mandatory.");
         }
         final var executable = EnvironmentVariables.getenv(command.get());
         if (executable.isEmpty()) {
+            if( optional.is() ){
+                return true;
+            }
             throw new BadSyntax(String.format("The command '%s' is not defined in the environment.", command.get()));
         }
         final var cmd = new ArrayList<String>();
         cmd.add(executable.get());
         cmd.addAll(arguments.get());
         pb.command(cmd);
+        return false;
     }
 
     private static void redirectIfPresent(Params.Param<String> stream, Input in, Consumer<File> store) throws BadSyntax {

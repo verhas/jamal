@@ -240,6 +240,8 @@ This option can only be used together with the wait option.
 *  `force`, `forced`
 This option instructs the macro to destroy the process forcibly.
 This option can only be used together with the destroy option.
+*  `optional`
+This option tells the macro to skip the execution of the command is not configured.
 
 
 

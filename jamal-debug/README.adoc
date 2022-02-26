@@ -22,6 +22,13 @@ Alternatively you can specify the environment variable `JAMAL_DEBUG` to be `http
 The port is the one you specified in the debug option.
 You are free to choose any port that is not used by other programs.
 
+=== How to Use the Jamal debugger
+
+The actual use of the Jamal debugger is not documented in a textual way.
+From the user point of view it is a straightorward to use web application.
+The rest of this documentation describes how the debugger works inside Jamal.
+It is a more architectural description than a users' guide.
+
 === How Jamal debugger works
 
 When the application creates a Processor, it looks at the environment variable `JAMAL_DEBUG`.
