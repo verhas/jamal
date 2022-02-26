@@ -31,7 +31,7 @@ That means it does not get interpreted.
 It is like copying the file's content and surrounding it with an ident macro.
 After that, `killLines` keeps only the lines that match the pattern.
 Essentially, the lines having `JAMAL_`something`_ENV` or `JAMAL_`something`_SYS` defined on it remain.
-The `replaceLines` macro replaces these lines to Jamal define macros.
+The `replaceLines` macro converts these lines to Jamal define macros.
 Each define uses the variable's name and assigns to it the value of the variable.
 Note that it also works for the system properties calculated during class initialization.
 We use the `ident` macro to protect the replace string's macros from being executed/evaluated immediately.

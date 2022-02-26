@@ -32,7 +32,7 @@ image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.sv
 
 {%#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/
 NOTE: This is the latest development documentation.
-This is a SNAPSHOT version.
+This is a SNAPSHOT version ({%VERSION%}).
 To see the documentation of a release you have to follow the link in the documentation link:{%@file RELEASES.adoc%}[`RELEASES.adoc`]
 %}
 
@@ -41,6 +41,7 @@ The first version of Jamal was developed 20 years ago in Perl.
 It was used in many projects to simplify build-scripts maintenance, content text, and many other things.
 The old Perl version is still in use for the build chain maintenance of the ScriptBasic scripting language, which is used in many industrial products.
 This version of Jamal is a complete rewrite of the original processor in Java.
+The Java version development started in 2018.
 Jamal leverages on the programming language's features, and the twenty years of experience of using the old version.
 In this documentation, the term "Jamal" refers to the Java implementation of the macro language.
 
@@ -56,11 +57,13 @@ That way, it enables the maintainer of the text to
 * support consistency with the documented external system(s).
 
 Jamal design is to be transparent and applicable to any target text file and format.
-It uses special start and stop strings for the macros and all other text is coped to the output.
+It uses special start and stop strings for the macros and all other text is copied to the output.
 The start and stop string are not hardwired, can be configured and even dynamically changed in the input.
 Jamal can create your file from a Jamal source file no matter any particular need to keep new lines, spacing, or special characters.
 That way, Jamal can be applied as a universal, programmable preprocessor to any text file type.
-The types include document formats, like Markdown, AsciiDoc, HTML, and textual data description formats, like JSON, YAML, XML, or even programming languages.
+The types include document formats, like Markdown, AsciiDoc, HTML, Microsoft Word Docx, and textual data description formats, like JSON, YAML, XML, or even programming languages.
+In addition to text files Jamal macros can also be used in DOCX format Microsoft Word files and processed creating an output file.
+This way Jamal can be used as a template engine for creating Microsoft Word documents.
 
 The source text
 
@@ -77,6 +80,8 @@ The source text
 * works with yaml, XML data,
 
 * import documentation and code snippets from the documented application or over the network,
+
+* execute external programs configured a secure way (e.g.: Graphviz),
 
 * can create PlantUML diagrams, and
 
@@ -147,7 +152,8 @@ image::jamaldebugger2559x1089.png[]
 === Applications, Embedding
 
 * <<./jamal-doclet/README.adoc#,Jamal Doclet Documentation>>, How to use Jamal in JavaDoc
-* <<./jamal-maven/README.md#,Jamal Maven Plugin README>>, How to use Jamal as a Maven plugin
+* <<./jamal-maven-plugin/README.adoc#,Jamal Maven Plugin README>>, How to use Jamal as a Maven plugin
+* <<./jamal-maven-extension/README.adoc#,Jamal Maven Extension README>>, How to use Jamal as a Maven extension
 
 === Programming Language Modules
 
