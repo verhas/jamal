@@ -227,7 +227,7 @@ This is the reason why the sample code defines `exec` in lower case and `EXEC` i
 
 This example starts java to echo the version of the installed and used Java.
 {%example java_echo_version%}
-{%@snip:check id=java_echo_version hashCode=26ad2559%}
+{%@snip:check id=java_echo_version hashCode=5dd285e7%}
 
 
 This example will print the current working directory.
@@ -236,7 +236,7 @@ Note, however, that changing the working directory for the new process does not 
 The other parameters, like `output` still have to define the file names absolute, or relative to the file containing the macro.
 
 {%example pwd%}
-{%@snip:check id=pwd hashCode=10149685%}
+{%@snip:check id=pwd hashCode=2cd327ee%}
 
 The following example calls the command `cat` which copies the standard input to the standard output.
 The standard input is not defined in the macro, therefore the text after the first line is used.
@@ -244,7 +244,7 @@ The output is redirected into a file.
 The file will contain the text from the macro.
 
 {%example cat%}
-{%@snip:check id=cat hashCode=c679a2f1%}
+{%@snip:check id=cat hashCode=2fd3a48a%}
 
 [NOTE]
 ====
@@ -256,7 +256,7 @@ The next example calls the `echo` program that prints the argument to the standa
 Since no output file is defined the output is the result of the macro.
 
 {%example echo%}
-{%@snip:check id=echo hashCode=df355a0a%}
+{%@snip:check id=echo hashCode=7308b610%}
 
 The next sample calls a shell script.
 The content of the schellscript is
@@ -276,7 +276,7 @@ This name can later be used to reference the process in the macro `waitFor`.
 In this example we do not wait for the process to finish, not even later.
 
 {%example sleep%}
-{%@snip:check id=sleep hashCode=06f322bc%}
+{%@snip:check id=sleep hashCode=d1e75f76%}
 
 
 The next example calls the `sleep` program that sleeps for 1000 of seconds.
@@ -286,7 +286,7 @@ However, the program `sleep` interprets the argument in seconds, while the optio
 Evidently the wait time will timeout and after that Jamal will stop the external process.
 
 {%example timeout%}
-{%@snip:check id=timeout hashCode=6ed4e82c%}
+{%@snip:check id=timeout hashCode=09e22dc9%}
 
 
 This example is a demo setting the environment variables.
@@ -296,7 +296,7 @@ The example shows a multipline example of environment variable setting demonstra
 The new value is added to the existing envrionment variables that the new process inherits from the Jamal executing process.
 
 {%example env%}
-{%@snip:check id=env hashCode=d645bcfb%}
+{%@snip:check id=env hashCode=463a322a%}
 
 This exaple is similar to the previous one,but it resets the environment variables.
 The environment printout in the new process will print the value of the environment varianle `JAVA_HOME`.
@@ -304,9 +304,37 @@ This environment variable should be defined in the environment where Jamal runs 
 On the other hand the external program will see this environment variable as undefined and the output of `printenv` is an empty string.
 
 {%example env_reset%}
-{%@snip:check id=env_reset hashCode=cbb3ba3b%}
+{%@snip:check id=env_reset hashCode=881c2bca%}
 
+The next example shows how to use the option `optional`.
+This option tells the macro `exec` not to bother when the command is not configured in the Jamal environment.
+It can come handy in a few situations.
+For example you want to use Graphviz to create some nice looking diagrams.
+Some macros extract the Graphviz dot file from the document and then use Graphviz to create the image.
+The Jamal processing of the document runs as part of the unit test to ensure that the documentation just as well as the tests are correct and up-to-date.
 
+In this setup you may face the issue that Graphviz is not installed on the continous intergration server.
+The lack of the application will break the build, since Jamal cannot run the external process.
+As a workaround you can add the output of Graphviz to the source control and use the option `optional`.
+When you build your code on your local system Graphiz is available, configured in your `~/.jamal/setup.properties` and works.
+Whenever you change the graph description in your documentation file, the SVG or PNG of the graph will follow during the build.
+When the code is comitted to the CVS server the integration server kicks-in, runs the build.
+The build will see that the Graphviz application is not configured and will ignore the external process.
+
+The example tries to run an external command, which were configured under the symbolic name `abrakadabra`.
+It is not configured.
+
+{%example undefined_command_optional%}
+{%@snip:check id=undefined_command_optional hashCode=25a2ec35%}
+
+The next example is the extension of the previous one.
+This time we want to run the non-existent `abrakadabra` asynchronously, hence the `asynch=PRG001` option.
+Technically the name identifies a user defined macro.
+However, it results an error if you want to use it as a normal user defined macro.
+The test checks that the error message belongs to this case and not to the use of an undefined macro.
+
+{%example undefined_command_optional_defines%}
+{%@snip:check id=undefined_command_optional_defines hashCode=7a15f8ca%}
 
 {%chap waitFor%}
 
@@ -330,11 +358,11 @@ The following example starts a one-second sleep as a separate process asynchrono
 After that in the next macro it waits for the process to finish.
 
 {%example wait_for%}
-{%@snip:check id=wait_for hashCode=0c4852d2%}
+{%@snip:check id=wait_for hashCode=3eddbd98%}
 
 The next example starts a ten-second sleep asynchronously.
 After that in the next macro it waits for the process to finish with a one seond timeout value (1000ms).
 It eventually will not finish during this time and then the macro will terminate the external process.
 
 {%example wait_for_timeout%}
-{%@snip:check id=wait_for_timeout hashCode=5a7b1bf4%}
+{%@snip:check id=wait_for_timeout hashCode=36ac6e7a%}

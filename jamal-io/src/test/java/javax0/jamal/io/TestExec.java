@@ -25,8 +25,8 @@ public class TestExec {
         System.setProperty("exec", "java");
         // end::java_echo_version[]
         TestThat.theInput("" +
-                // tag::java_echo_version[]
-                "{@io:exec command=EXEC argument=\"-version\"}"
+                        // tag::java_echo_version[]
+                        "{@io:exec command=EXEC argument=\"-version\"}"
                 // end::java_echo_version[]
         ).results("");
     }
@@ -40,14 +40,14 @@ public class TestExec {
         Files.deleteIfExists(Paths.get("target/hallo.txt"));
         Assertions.assertTrue(
                 TestThat.theInput("" +
-        // tag::pwd[]
-                        "{@io:exec command=EXEC cwd=target output=\"target/hallo.txt\"}" +
-                        "{@include [verbatim] target/hallo.txt}"
-        // end::pwd[]
-                )
-                .ignoreLineEnding()
-                .atPosition(".", 1, 1)
-                .results().endsWith("/target\n"));
+                                        // tag::pwd[]
+                                        "{@io:exec command=EXEC cwd=target output=\"target/hallo.txt\"}" +
+                                        "{@include [verbatim] target/hallo.txt}"
+                                // end::pwd[]
+                        )
+                        .ignoreLineEnding()
+                        .atPosition(".", 1, 1)
+                        .results().endsWith("/target\n"));
     }
 
     @Test
@@ -58,10 +58,10 @@ public class TestExec {
         // end::cat[]
         Files.deleteIfExists(Paths.get("target/catoutput.txt"));
         TestThat.theInput("" +
-                // tag::cat[]
-                        "{@io:exec command=EXEC output=\"target/catoutput.txt\"\n" +
-                        "hello, this is the text for the file}"
-                // end::cat[]
+                                // tag::cat[]
+                                "{@io:exec command=EXEC output=\"target/catoutput.txt\"\n" +
+                                "hello, this is the text for the file}"
+                        // end::cat[]
                 ).atPosition(".", 1, 1)
                 .results("");
         Assertions.assertEquals("hello, this is the text for the file", Files.readString(Paths.get("target/catoutput.txt")));
@@ -74,9 +74,9 @@ public class TestExec {
         System.setProperty("exec", "echo");
         // end::echo[]
         TestThat.theInput("" +
-                // tag::echo[]
-                        "{@io:exec command=EXEC argument=\"hello\"}"
-                // end::echo[]
+                                // tag::echo[]
+                                "{@io:exec command=EXEC argument=\"hello\"}"
+                        // end::echo[]
                 ).atPosition(".", 1, 1)
                 .results("hello");
     }
@@ -94,9 +94,9 @@ public class TestExec {
                 .results("hello");
         final var start = System.currentTimeMillis();
         TestThat.theInput("" +
-                // tag::sleep[]
-                        "{@io:exec asynch=PROC001 command=EXEC argument=target/async.sh}"
-                // end::sleep[]
+                                // tag::sleep[]
+                                "{@io:exec asynch=PROC001 command=EXEC argument=target/async.sh}"
+                        // end::sleep[]
                 ).atPosition(".", 1, 1)
                 .results("");
         final var runTime = System.currentTimeMillis() - start;
@@ -125,8 +125,8 @@ public class TestExec {
         System.setProperty("exec", "sleep");
         // end::timeout[]
         TestThat.theInput("" +
-                // tag::timeout[]
-                "{@io:exec command=EXEC argument=1000 wait=1000 destroy}"
+                        // tag::timeout[]
+                        "{@io:exec command=EXEC argument=1000 wait=1000 destroy}"
                 // end::timeout[]
         ).throwsBadSyntax("The process \\(pid=\\d+\\) did not finish in the specified time, 1000 milliseconds.");
     }
@@ -156,8 +156,8 @@ public class TestExec {
         System.setProperty("exec", "printenv");
         // end::env[]
         TestThat.theInput("" +
-                // tag::env[]
-                "{@io:exec command=EXEC argument=AAA env=\"AAA=BABA\\n\\n #  oooh my\\n\"}"
+                        // tag::env[]
+                        "{@io:exec command=EXEC argument=AAA env=\"AAA=BABA\\n\\n #  oooh my\\n\"}"
                 // end::env[]
         ).results("BABA");
     }
@@ -169,8 +169,8 @@ public class TestExec {
         System.setProperty("exec", "printenv");
         // end::env_reset[]
         TestThat.theInput("" +
-                // tag::env_reset[]
-                "{@io:exec command=EXEC argument=JAVA_HOME envReset env=\"AAA=BABA\"}"
+                        // tag::env_reset[]
+                        "{@io:exec command=EXEC argument=JAVA_HOME envReset env=\"AAA=BABA\"}"
                 // end::env_reset[]
         ).results("");
     }
@@ -182,8 +182,8 @@ public class TestExec {
         System.setProperty("exec", "sleep");
         // end::wait_for[]
         TestThat.theInput("" +
-                // tag::wait_for[]
-                "{@io:exec command=EXEC argument=1 asynch=PRG001}{@io:waitFor id=PRG001}"
+                        // tag::wait_for[]
+                        "{@io:exec command=EXEC argument=1 asynch=PRG001}{@io:waitFor id=PRG001}"
                 // end::wait_for[]
         ).results("");
     }
@@ -194,6 +194,27 @@ public class TestExec {
         TestThat.theInput("" +
                 "{@io:exec command=abrakadabra os=abrakadabra}"
         ).results("");
+    }
+
+    @Test
+    @DisplayName("Command specified but not defined does not throw exception when optional")
+    void testUndefinedCommandOptional() throws Exception {
+        TestThat.theInput("" +
+                        // tag::undefined_command_optional[]
+                        "{@io:exec command=abrakadabra optional}"
+                //end::undefined_command_optional[]
+        ).results("");
+    }
+
+    @Test
+    @DisplayName("Optional command still defines the process id as a macro")
+    void testUndefinedCommandOptionalDefines() throws Exception {
+        TestThat.theInput("" +
+                        // tag::undefined_command_optional_defines[]
+                        // using PRG001 as a macro will throw an exception, but not undefined macro
+                        "{@io:exec command=abrakadabra optional async=PRG001}{PRG001}"
+                //end::undefined_command_optional_defines[]
+        ).results("");//.throwsBadSyntax("'PRG001' is a process reference and must not be used as a user defined macro\\.");
     }
 
     @Nested
@@ -214,8 +235,8 @@ public class TestExec {
             System.setProperty("exec", "sleep");
             // end::wait_for_timeout[]
             TestThat.theInput("" +
-                    // tag::wait_for_timeout[]
-                    "{@io:exec command=EXEC argument=10 asynch=PRG001}{@io:waitFor id=PRG001 timeOut=1000 destroy}"
+                            // tag::wait_for_timeout[]
+                            "{@io:exec command=EXEC argument=10 asynch=PRG001}{@io:waitFor id=PRG001 timeOut=1000 destroy}"
                     // end::wait_for_timeout[]
             ).throwsBadSyntax("The process \\(pid=\\d+\\) did not finish in the specified time, 1000 milliseconds.");
         }
@@ -304,9 +325,19 @@ public class TestExec {
         @Test
         @DisplayName("Invalid output")
         void testInvalidOutput() throws Exception {
+            System.setProperty("exec", "sleep");
             TestThat.theInput("" +
-                    "{@io:exec command=abrakadabra output=res:oma.txt}"
+                    "{@io:exec command=exec output=res:oma.txt}"
             ).throwsBadSyntax("The file 'res:oma\\.txt' cannot be used as input, output or error");
+        }
+
+        @Test
+        @DisplayName("Invalid output")
+        void testErroneousUseOfProcessIdMacro() throws Exception {
+            System.setProperty("exec", "sleep");
+            TestThat.theInput("" +
+                    "{@io:exec command=exec argument=1 asynch=PROC001}{PROC001}"
+            ).throwsBadSyntax("'PROC001' is a process reference and must not be used as a user defined macro\\.");
         }
     }
 }

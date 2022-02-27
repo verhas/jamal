@@ -230,6 +230,11 @@ In this case the output cannot be used as the result of the macro.
 If this option is used the output of the macro will be empty string.
 The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
 This macro can later be used to wait for the process to finish.
+Although technically the name is a user defined macro, you cannot use it as a conventional user defined macro.
+It does not have any `value` and whenever the code would evaluate the macro it will result an error.
+Similarly, the name MUST NOT be defined as a user defined macro at the time the `exec` macro is evaluated.
+The exec macro handles the name as the core built-in macro `define` when a `!` is used after the macro name.
+If there is a user defined macro of the same name on the same level, an error will occur.
 *  `wait`, `waitMax`, `timeOut`
 This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
 If the process does not finish in the specified time a BadSyntax exception will be thrown.
@@ -242,6 +247,8 @@ This option instructs the macro to destroy the process forcibly.
 This option can only be used together with the destroy option.
 *  `optional`
 This option tells the macro to skip the execution of the command is not configured.
+If the macro uses the option `asynch` the process id will still be defined without a process.
+Any `io:waitFor` macro waiting for this process should also use the `optional` option.
 
 
 
@@ -412,6 +419,45 @@ exec -> printenv
 ----
 
 
+The next example shows how to use the option `optional`.
+This option tells the macro `exec` not to bother when the command is not configured in the Jamal environment.
+It can come handy in a few situations.
+For example you want to use Graphviz to create some nice looking diagrams.
+Some macros extract the Graphviz dot file from the document and then use Graphviz to create the image.
+The Jamal processing of the document runs as part of the unit test to ensure that the documentation just as well as the tests are correct and up-to-date.
+
+In this setup you may face the issue that Graphviz is not installed on the continous intergration server.
+The lack of the application will break the build, since Jamal cannot run the external process.
+As a workaround you can add the output of Graphviz to the source control and use the option `optional`.
+When you build your code on your local system Graphiz is available, configured in your `~/.jamal/setup.properties` and works.
+Whenever you change the graph description in your documentation file, the SVG or PNG of the graph will follow during the build.
+When the code is comitted to the CVS server the integration server kicks-in, runs the build.
+The build will see that the Graphviz application is not configured and will ignore the external process.
+
+The example tries to run an external command, which were configured under the symbolic name `abrakadabra`.
+It is not configured.
+
+[source]
+----
+{@io:exec command=abrakadabra optional}
+
+
+----
+
+
+The next example is the extension of the previous one.
+This time we want to run the non-existent `abrakadabra` asynchronously, hence the `asynch=PRG001` option.
+Technically the name identifies a user defined macro.
+However, it results an error if you want to use it as a normal user defined macro.
+The test checks that the error message belongs to this case and not to the use of an undefined macro.
+
+[source]
+----
+// using PRG001 as a macro will throw an exception, but not undefined macro
+{@io:exec command=abrakadabra optional async=PRG001}{PRG001}
+
+
+----
 
 
 [[waitFor]]
@@ -454,6 +500,9 @@ This option can only be used together with the wait option.
 *  `force`, `forced`
 This option instructs the macro to destroy the process forcibly.
 This option can only be used together with the destroy option.
+*  `optional`
+Use this option if the process was started with the `optional` option.
+Using this option will not try to wait for a process, which was not started at the first place.
 
 
 

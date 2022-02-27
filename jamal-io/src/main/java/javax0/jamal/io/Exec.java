@@ -2,11 +2,11 @@ package javax0.jamal.io;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
+import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
@@ -84,6 +84,11 @@ public class Exec implements Macro {
         // If this option is used the output of the macro will be empty string.
         // The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
         // This macro can later be used to wait for the process to finish.
+        // Although technically the name is a user defined macro, you cannot use it as a conventional user defined macro.
+        // It does not have any "value" and whenever the code would evaluate the macro it will result an error.
+        // Similarly, the name MUST NOT be defined as a user defined macro at the time the `exec` macro is evaluated.
+        // The exec macro handles the name as the core built-in macro `define` when a `!` is used after the macro name.
+        // If there is a user defined macro of the same name on the same level, an error will occur.
         final var wait = Params.holder(null, "wait", "waitMax", "timeOut").asInt();
         // {%@define wait=This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
         // If the process does not finish in the specified time a BadSyntax exception will be thrown.%}{%wait%}
@@ -96,7 +101,8 @@ public class Exec implements Macro {
         // This option can only be used together with the destroy option.%}{%force%}
         final var optional = Params.holder(null, "optional").asBoolean();
         // This option tells the macro to skip the execution of the command is not configured.
-        // Note that this option is a courtesy option, in the sense that it can be replaced using an `if` macro testing the existence of the command and invoking it only if the command is configured.
+        // If the macro uses the option `asynch` the process id will still be defined without a process.
+        // Any `io:waitFor` macro waiting for this process should also use the `optional` option.
         // end snippet
         Scan.using(processor).from(this).firstLine().keys(osOnly, input, output, error, command, arguments,
                 environment, envReset, cwd, async, wait, destroy, force, optional).parse(in);
@@ -116,7 +122,10 @@ public class Exec implements Macro {
         }
 
         ProcessBuilder pb = new ProcessBuilder();
-        if( setCommand(command, arguments, pb, optional) ){
+        if (setCommand(command, arguments, pb, optional)) {
+            if (async.isPresent()) {
+                defineProcessNameHolderMacro(processor,async.get(),null);
+            }
             return "";
         }
 
@@ -138,7 +147,7 @@ public class Exec implements Macro {
         if (output.isPresent()) {
             result = "";
             if (async.isPresent()) {
-                processor.define(new ProcessHolder(async.get(), process));
+                defineProcessNameHolderMacro(processor, async.get(), process);
             } else {
                 waitForTheProcessToFinish(process, wait, destroy, force);
             }
@@ -146,7 +155,7 @@ public class Exec implements Macro {
             if (async.isPresent()) {
                 result = "";
                 asyncOutputCollector(process, DEV_NULL);
-                processor.define(new ProcessHolder(async.get(), process));
+                defineProcessNameHolderMacro(processor, async.get(), process);
             } else {
                 try (final var sw = new StringWriter()) {
                     waitForTheProcessToFinish(process, wait, destroy, force, sw);
@@ -157,6 +166,14 @@ public class Exec implements Macro {
             }
         }
         return result;
+    }
+
+    private void defineProcessNameHolderMacro(final Processor processor, final String id, final Process process) throws BadSyntax {
+        final var existing = processor.getRegister().getUserDefined(id);
+        if( existing.isPresent() ){
+            throw new BadSyntax(String.format("The name `%s` is already used as a user defined macro .", id));
+        }
+        processor.define(new ProcessHolder(id, process));
     }
 
     private static boolean thisOsIsNotOk(final Params.Param<Pattern> osOnly) throws BadSyntax {
@@ -275,10 +292,11 @@ public class Exec implements Macro {
 
     /**
      * Sets the command in the process builder.
-     * @param command the parameter with the symbolic name of the command as it is configured in the environment.
+     *
+     * @param command   the parameter with the symbolic name of the command as it is configured in the environment.
      * @param arguments the arguments to the command.
-     * @param pb the process builder to set the command in.
-     * @param optional option to ignore error in case the command is not configured in the environment.
+     * @param pb        the process builder to set the command in.
+     * @param optional  option to ignore error in case the command is not configured in the environment.
      * @return {@code true} if the command is optional, and was not configured.
      * @throws BadSyntax if the command is not configured in the environment and is not optional or the parameter is missing.
      */
@@ -288,7 +306,7 @@ public class Exec implements Macro {
         }
         final var executable = EnvironmentVariables.getenv(command.get());
         if (executable.isEmpty()) {
-            if( optional.is() ){
+            if (optional.is()) {
                 return true;
             }
             throw new BadSyntax(String.format("The command '%s' is not defined in the environment.", command.get()));
@@ -338,8 +356,11 @@ public class Exec implements Macro {
             // {%destroy%}
             final var force = Params.holder(null, "force", "forced").asBoolean();
             // {%force%}
+            final var optional = Params.holder(null, "optional").asBoolean();
+            // Use this option if the process was started with the `optional` option.
+            // Using this option will not try to wait for a process, which was not started at the first place.
             // end snippet
-            Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force).parse(in);
+            Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force, optional).parse(in);
             final var idMacro = processor.getRegister().getUserDefined(async.get());
             if (idMacro.isEmpty()) {
                 throw new BadSyntax(String.format("Process id '%s' is not defined.", async.get()));
@@ -348,6 +369,9 @@ public class Exec implements Macro {
                 throw new BadSyntax(String.format("Process id '%s' is not a process name.", async.get()));
             }
             final var process = ((ProcessHolder) idMacro.get()).getObject();
+            if (process == null || optional.is()) {
+                return "";
+            }
             waitForTheProcessToFinish(process, wait, destroy, force);
             return "";
         }
@@ -358,7 +382,7 @@ public class Exec implements Macro {
         }
     }
 
-    private static class ProcessHolder implements Identified, ObjectHolder<Process> {
+    private static class ProcessHolder implements UserDefinedMacro, ObjectHolder<Process> {
         private final String id;
         private final Process process;
 
@@ -375,6 +399,16 @@ public class Exec implements Macro {
         @Override
         public Process getObject() {
             return process;
+        }
+
+        @Override
+        public String evaluate(final String... parameters) throws BadSyntax {
+            throw new BadSyntax(String.format("'%s' is a process reference and must not be used as a user defined macro.", id));
+        }
+
+        @Override
+        public int expectedNumberOfArguments() {
+            return -1;
         }
     }
 
