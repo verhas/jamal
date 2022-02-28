@@ -217,6 +217,42 @@ public class TestExec {
         ).results("");//.throwsBadSyntax("'PRG001' is a process reference and must not be used as a user defined macro\\.");
     }
 
+    @Test
+    @DisplayName("Start graphviz for real")
+    void testGraphviz() throws Exception {
+        System.setProperty("graphviz", "/usr/local/bin/dot");
+        TestThat.theInput("" +
+                "{@io:exec command=graphviz argument=-Tsvg argument=-o argument=target/a-b.svg\n" +
+                "digraph {\n" +
+                "    a -> b\n" +
+                "    a -> c \n" +
+                "    a -> d\n" +
+                "    a -> e\n" +
+                "    d -> b\n" +
+                "    d -> c\n" +
+                "    c -> e\n" +
+                "    k -> h\n" +
+                "    d -> e\n" +
+                "    b -> c \n" +
+                "    b -> d\n" +
+                "    b -> e\n" +
+                "    f -> c \n" +
+                "    b -> e\n" +
+                "    f -> c\n" +
+                "    f -> k\n" +
+                "    f -> d\n" +
+                "    f -> e\n" +
+                "    f -> f\n" +
+                "    f -> f\n" +
+                "    f -> f\n" +
+                "    f -> f\n" +
+                "    f -> f\n" +
+                "    f -> f\n" +
+                "    }\n" +
+                "}"
+        ).results("");
+    }
+
     @Nested
     class TestFailures {
         @Test

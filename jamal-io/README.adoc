@@ -147,7 +147,7 @@ The aliases can only be used on the macro itself after the name of the macro bet
 
 
 This macro can start an external program.
-The typical use is to start an external document handling program, like GraphWiz, which cannot be integrated in-process.
+The typical use is to start an external document handling program, like Graphviz, which cannot be integrated in-process.
 The format of the macro is
 
 [source]
@@ -165,18 +165,18 @@ For security reason, the command specification is a symbolic name.
 The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
 The recommended way to configure the executable is to use the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
 
-For example, if you want to execute the GraphWiz program, you can configure it in the `~/.jamal/setup.properties` file as:
+For example, if you want to execute the Graphviz program, you can configure it in the `~/.jamal/setup.properties` file as:
 
 [source]
 ----
-GraphWiz=/opt/local/bin/graphviz/bin/dot
+Graphviz=/usr/local/bin/dot
 ----
 
 After this you can execute the macro
 
 [source]
 ----
-{@io.exec command=GraphWiz}
+{@io.exec command=Graphviz}
 ----
 
 This will start the program without any argument, defined timeout or input text.
