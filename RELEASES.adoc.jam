@@ -2,8 +2,23 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
-{%RELEASE/1.11.1-SNAPSHOT%}
+{%RELEASE/1.11.1%}
 
+* Fully reworked command line interface
+
+* Jamal macros can be used in Microsoft Word documents
+
+* Io module implements `io:exec` and `io:waitFor` macros to start external processes
+
+* `extension.xml` generation in Maven extension runs in a separate thread, so it does not delay the build
+
+* `~/.jamal/serrings.(properties|xml)` can be used to configure Jamal in addition to system properties and environment variables
+
+* Use of the external library picocli was eliminated
+
+* File input converts `\r\n` to `\n` on Windows.
+
+* Graphviz example was added to the integration tests, runs only on properly configured systems, it needs Graphviz installed eventually.
 
 {%RELEASE/1.11.0%}
 
