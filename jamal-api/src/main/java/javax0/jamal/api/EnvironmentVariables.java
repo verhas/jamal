@@ -227,6 +227,10 @@ end snippet
         return Optional.ofNullable(PropertiesSingleton.INSTANCE.properties.getProperty(name));
     }
 
+    public static Properties getProperties() {
+        return PropertiesSingleton.INSTANCE.properties;
+    }
+
     private static class PropertiesSingleton {
         private final Properties properties = new Properties();
         public static final PropertiesSingleton INSTANCE = new PropertiesSingleton();

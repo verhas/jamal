@@ -44,7 +44,9 @@ public class JamalMain {
             "dry-dry-run",
             "dry-run",
             "docx",
-            "help");
+            "help",
+            "shcnf"
+    );
 
     public static void main(String[] args) {
         final var params = CmdParser.parse(args, parameters);
@@ -54,9 +56,14 @@ public class JamalMain {
             System.out.printf("Jamal Version %s", version.getProperty("version"));
             return;
         }
+        if (params.get("shcnf").isPresent()) {
+            EnvironmentVariables.getProperties().forEach((k, v) -> System.out.printf("%s=%s\n", k, v));
+            return;
+        }
         if (params.get("help").isPresent()) {
             System.out.println("Usage: jamal [options] input output\n" +
                     "  -help                      help\n" +
+                    "  -shcnf                     show the configuration values from ~/.jamal/setup.(properties|xml)\n" +
                     "  -version                   display version\n" +
                     "  -verbose                   print out the conversions\n" +
                     "  -open=<macroOpen>          the macro opening string\n" +

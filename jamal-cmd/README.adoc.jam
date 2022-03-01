@@ -20,6 +20,8 @@ The options are the followings:
 
 * `-help` displays a help text and then the application quits.
 
+* `-shcnf` prints out the configuration values, which are in the file `~/.jamal/settings.(properties|xml)` file.
+
 * `-version` displays the version of Jamal currently running and then the application quits.
 
 * `-verbose` instructs the application to print out the individual file conversions.

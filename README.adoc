@@ -323,6 +323,7 @@ If you use a simple option `help`, then Jamal will print out a short screen that
 ----
 Usage: jamal [options] input output
   -help                      help
+  -shcnf                     show the configuration values from ~/.jamal/setup.(properties|xml)
   -version                   display version
   -verbose                   print out the conversions
   -open=<macroOpen>          the macro opening string

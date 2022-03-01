@@ -220,7 +220,8 @@ public class TestExec {
     @Test
     @DisplayName("Start graphviz for real")
     void testGraphviz() throws Exception {
-        System.setProperty("graphviz", "/usr/local/bin/dot");
+        // configured in ~/.jamal/settings.properties
+        //System.setProperty("graphviz", "/usr/local/bin/dot");
         TestThat.theInput("" +
                 "{@io:exec command=graphviz argument=-Tsvg argument=-o argument=target/a-b.svg\n" +
                 "digraph {\n" +
