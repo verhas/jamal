@@ -4,7 +4,7 @@
 
 === https://github.com/verhas/jamal/tree/1.11.1[1.11.1]
 
-* Fully reworked command line interface
+* Fully reworked command-line interface
 
 * Jamal macros can be used in Microsoft Word documents
 
@@ -12,7 +12,7 @@
 
 * `extension.xml` generation in Maven extension runs in a separate thread, so it does not delay the build
 
-* `~/.jamal/serrings.(properties|xml)` can be used to configure Jamal in addition to system properties and environment variables
+* `~/.jamal/settings.(properties|xml)` can be used to configure Jamal in addition to system properties and environment variables
 
 * Use of the external library picocli was eliminated
 
