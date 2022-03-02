@@ -75,7 +75,7 @@ The module can be used in two ways.
 * Use the command line version of the Jamal using the `--docx` option.
 * Call the exported XWPFProcessor API.
 
-For more information how to use the command line version refer to the <<../jamal-cmd/README.adoc,Jamal Command Line>> document.
+For more information how to use the command line version refer to the <<../jamal-cmd/README.adoc#,Jamal Command Line>> document.
 
 To invoke the exported API you have to have the module on the classpath.
 The Maven dependency is defined in the next section.

@@ -170,6 +170,7 @@ image::jamaldebugger2559x1089.png[]
 * <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
 * <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
 * <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files
+* <<./jamal-word/README.adoc#,DOCX Word Processing README>>, describes the Jamal Microsoft Word Processing module and the macros that are specific to DOCX processing
 
 === Test Support
 
