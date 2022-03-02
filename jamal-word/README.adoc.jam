@@ -68,7 +68,6 @@ In case of complex macros there is no clear mapping between the input and the ou
 Without a mapping between the characters of the input and the output there is no way to copy the formatting.
 ====
 
-
 == Using the module
 
 The module can be used in two ways.
@@ -76,6 +75,17 @@ The module can be used in two ways.
 * Use the command line version of the Jamal using the `--docx` option.
 * Call the exported XWPFProcessor API.
 
+For more information how to use the command line version refer to the <<../jamal-cmd/README.adoc,Jamal Command Line>> document.
+
+To invoke the exported API you have to have the module on the classpath.
+The Maven dependency is defined in the next section.
+
+The API call is very simple.
+It is the following:
+
+   new XWPFProcessor().process("input.docx", "output.docx");
+
+The program will read the file `input.docx` and write the result to `output.docx`.
 
 == Dependency
 
@@ -92,3 +102,46 @@ This can be done adding
 ----
 
 to your Maven `pom.xml`.
+
+== Macros Implemented in the Module
+
+The module implements the following macros:
+
+=== `docx:readOnly`
+
+If the input DOCX file contains this macro the output DOCX file will be read only, and optionally protected by a password.
+The syntax of the macro is:
+
+  {@docx:readOnly [password=password algorithm=algorithm]}
+
+If a password is defined, then an algorithm should also and the other way around.
+The algorithm is used to encrypt the password.
+There is no default algorithm.
+The algorithms should be specified by the ECMA standard name of the algorithm.
+
+The algorithm names are:
+
+* `SHA1`
+* `SHA256`
+* `SHA384`
+* `SHA512`
+* `MD5`
+* `MD2`
+* `MD4`
+* `RIPEMD-128`
+* `RIPEMD-160`
+* `WHIRLPOOL`
+* `SHA224`
+* `RIPEMD-256`
+
+The list of algorithms may change in the future.
+To see the actual list of algorithms specify an invalid algorithm.
+The error will list all the currently available algorithms.
+
+If there is no algorithm defined the user can simply switch off the read only protection without any password.
+If there is a password the user has to enter the password to switch off the read only protection.
+Note, however, that this protection can be circumvented easily using some other software.
+
+If this macro is invoked during the conversion of a normal text document an error will happen.
+It is also an error to invoke this macro more than once in the same document.
+

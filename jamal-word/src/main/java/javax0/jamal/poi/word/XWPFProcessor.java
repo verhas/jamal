@@ -21,15 +21,21 @@ import java.util.List;
 public class XWPFProcessor {
 
     final Processor processor;
+    final XWPFContext xwpfContext;
     Position pos;
     XWPFDocument document;
 
     public XWPFProcessor() {
-        this.processor = new javax0.jamal.engine.Processor();
+        this("{", "}");
     }
 
     public XWPFProcessor(final String open, final String close) {
-        this.processor = new javax0.jamal.engine.Processor(open, close);
+        xwpfContext = new XWPFContext();
+        this.processor = new Processor(open, close, xwpfContext);
+    }
+
+    public javax0.jamal.api.Processor getProcessor() {
+        return processor;
     }
 
     public void process(final String inputFile, final String outputFile) throws IOException, BadSyntax {
@@ -43,6 +49,13 @@ public class XWPFProcessor {
         document = new XWPFDocument(Files.newInputStream(inputPath));
         try {
             process(null, document.getBodyElements());
+            if (xwpfContext.readOnly) {
+                if (xwpfContext.password != null) {
+                    document.enforceReadonlyProtection(xwpfContext.password, xwpfContext.hashAlgorithm);
+                } else {
+                    document.enforceReadonlyProtection();
+                }
+            }
             if (outputPath != null) {
                 document.write(Files.newOutputStream(outputPath));
             }

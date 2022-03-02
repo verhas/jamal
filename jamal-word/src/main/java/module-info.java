@@ -1,3 +1,4 @@
+import javax0.jamal.poi.word.MacroDocxReadOnly;
 
 module jamal.word {
     exports javax0.jamal.poi.word;
@@ -6,4 +7,5 @@ module jamal.word {
     requires org.apache.poi.ooxml;
     requires jamal.tools;
     requires org.apache.logging.log4j;
+    provides javax0.jamal.api.Macro with MacroDocxReadOnly;
 }
