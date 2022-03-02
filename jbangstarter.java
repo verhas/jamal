@@ -5,6 +5,7 @@
 //DEPS com.javax0.jamal:jamal-tools:1.11.1
 //DEPS com.javax0.jamal:jamal-core:1.11.1
 //DEPS com.javax0.jamal:jamal-cmd:1.11.1
+//DEPS com.javax0.jamal:jamal-word:1.11.1
 //DEPS com.javax0.jamal:jamal-snippet:1.11.1
 //DEPS com.javax0.jamal:jamal-scriptbasic:1.11.1
 //DEPS com.javax0.jamal:jamal-groovy:1.11.1

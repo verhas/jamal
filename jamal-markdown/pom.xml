@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal markdown</name>
     <artifactId>jamal-markdown</artifactId>
-    <version>1.11.1</version>
+    <version>1.11.2-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.11.1</version>
+        <version>1.11.2-SNAPSHOT</version>
     </parent>
     <description>Markdown module for Jamal</description>
     <build>
