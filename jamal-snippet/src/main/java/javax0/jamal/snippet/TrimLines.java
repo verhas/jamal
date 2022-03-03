@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 /**
  * Take the argument of the macro and removes N spaces from the start of each line so that there is at least one line
@@ -28,7 +29,7 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
         final var margin = Params.<Integer>holder("margin").orElseInt(0);
         final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
         final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
-        Params.using(processor).from(this).keys(margin, trimVertical, verticalTrimOnly).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(margin, trimVertical, verticalTrimOnly).parse(in);
         //end snippet
         final var sb = in.getSB();
         convertTextBlock(sb, in.getPosition(), margin, trimVertical, verticalTrimOnly);

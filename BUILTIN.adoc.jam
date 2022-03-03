@@ -541,7 +541,7 @@ For example
 
 will first evaluate the `define` macro resulting `margin` to become a user defined macro with the value `1`.
 After that the `snip` macro will be evaluated and that way replaced with the snippet named `sampleText`.
-Only when it is done starts the execution of thge macro `trimLines` that will shift the lines left or right with spaces so that there will exacly be ne space on the leftmost line.
+Only when it is done starts the execution of the macro `trimLines` that will shift the lines left or right with spaces so that there will exactly be one space on the leftmost line.
 
 The macro `margin` is defined in a local scope.
 The scope starts with the opening `{` character of the macro `trimLines` and ends with the closing `}`.
@@ -567,35 +567,57 @@ The first few lines of the method {%@java:method javax0.jamal.snippet.TrimLines#
         final var margin = Params.<Integer>holder("margin").orElseInt(0);
         final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
         final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
-        Params.using(processor).from(this).keys(margin, trimVertical, verticalTrimOnly).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(margin, trimVertical, verticalTrimOnly).parse(in);
 %}
 ----
 
-It creates a {%@java:class javax0.jamal.tools.MacroReader%}, which is a helper object.
-It can help to "evaluate" user defined macros that have no parameters.
-In case of those macros the evaluation simply means that the content of the macro is returned.
-`trimLines` uses the macro `margin` to get the margin parameter.
-It also queries the boolean value of the option `trimVertical`.
+It uses the {%@java:class javax0.jamal.tools.Params%} class to parse the parameters.
+This utility class parses the content of the macro.
+In this case it parses only the first line and scans for the parameters `margin`, `trimVertical` and so on.
+When a parameter is not defined in the macro then the class tries to use the value of the macro with the same name.
+Thus, the value of the variable `margin` will be a configuration parameter holding the integer value 1.
 
-NOTE: The options are stored in `OptionsStore` objects.
-This class implements the `Identified` interface and are stored in the same register where the user defined macros.
-The name returned by `getId()` for these objects is ``options`.
-Storing it in the registry has the advantage that this way options are scoped exactly as user defined macros.
-If you say `{@options trimVertical}` inside a `{@trimLines ...}` it will have no effect outside of the execution of that `trimLine`.
+[NOTE]
+====
+In earlier version of Jamal there was no utility class to support the parsing of the parameters.
+The first approach to configure a macro was to define a user defined macro without any parameter of a given name.
+Later the {%@java:class javax0.jamal.tools.Params%} was developed and it kept the functionality to fall back to macro definitions in case the parameter was not defined.
+====
 
-Using user defined macros as parameters has several advantages and also some disadvantages.
-When implementing a macro it is always a design decision how the macro should be constructed.
-Some macro can be configured with parameters that the macro implementation parses.
-The advantage of this approach is that this is simple and short when used.
+The macros created before the class {%@java:class javax0.jamal.tools.Params%} had no other choice but use macros for configuration.
+These macros supported the local scope of the macro implementing the signal interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
+With the availability of parameter parsing there is no need to define a configuration user defined macro inside the build.in macro body.
+Instead, you can simply use the configuration parameters in the macro body.
+Newer macros developed after parameter parsing do not implement the interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
 
-Other macros can rely on user defined macro values.
-The advantage of this approach is that the user may define these parameters global for the whole processing or for a larger scope.
-For exaple `trimLine` could process and parese the first line of the macro for parameters to see if there is a `trimVertical=true` parameter,
-This parameter, however, in this case should have been provided for each and every macro.
-Defining `trimVertical` globally will instruct all use of `trimLines` to trim vertical.
+There is a use to still define a parameter as a macro though.
+It is the case when the parameter should be defined for a larger scope and you do not want to copy the parameter `key=value` to each use of the macro.
+In that case you can write `{@define key=value}` before the first use of the built-in macro.
 
-Macros that rely on user defined macros or options as parameters should implement the interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
-Macros that do not rely on those, should not.
+The parameter parsing allows the use of aliases.
+The example macro above uses both `verticalTrimOnly`, and `vtrimOnly`.
+Any of them can be used to define that the trimming is vertical only.
+They are aliases.
+However, only the first one, `verticalTrimOnly`, is considered as a macro name when the parameter is not defined.
+
+Some built-in macros list the names of the parameters starting with `null`.
+It means that the parameter has no name, only aliases.
+Such parameters cannot be defined using a user defined macro.
+
+[NOTE]
+====
+Boolean parameters cannot be defined using user defined macros.
+They always have a default value of false if not defined in the macro body.
+The default value can be altered if they are defined in an `options` macro.
+If you say `{@options trimVertical}` then the default value of `trimVertical` is changed to true.
+
+Technically the options are stored in the same (identifier,value) store where the user defined macros.
+The consequence is that you cannot use the same name for an option and for a user defined macro.
+The options, however, are not user defined macros.
+====
+
+Macros that rely on user defined macros or options as parameters defined _inside_ should implement the interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
+It is recommended not to implement this interface anymore.
 
 === Creating User Defined Macros
 
