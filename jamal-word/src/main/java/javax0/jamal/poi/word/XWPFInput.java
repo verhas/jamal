@@ -255,7 +255,7 @@ public class XWPFInput extends Input {
     }
 
     private boolean thereAreMOreRuns() {
-        return !(paragraphEndIndex == paragraphs.size() - 1 && runEndIndex == paragraphs.get(paragraphEndIndex).getRuns().size() - 1);
+        return !(paragraphEndIndex == paragraphs.size() - 1 && runEndIndex >= paragraphs.get(paragraphEndIndex).getRuns().size() - 1);
     }
 
     /**
@@ -273,11 +273,11 @@ public class XWPFInput extends Input {
      */
     private void appendOneRun() {
         final var endRuns = paragraphs.get(paragraphEndIndex).getRuns();
-        while (runEndIndex <= endRuns.size() && endRuns.get(runEndIndex).getText(0) == null) {
+        runEndIndex++;
+        while (runEndIndex < endRuns.size() && endRuns.get(runEndIndex).getText(0) == null) {
             runEndIndex++;
         }
-        if (runEndIndex + 1 < endRuns.size()) {
-            runEndIndex++;
+        if (runEndIndex < endRuns.size()) {
             sb.append(endRuns.get(runEndIndex).getText(0));
         } else while (paragraphEndIndex + 1 < paragraphs.size()) {
             paragraphEndIndex++;

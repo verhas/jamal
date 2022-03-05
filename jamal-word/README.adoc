@@ -105,18 +105,45 @@ to your Maven `pom.xml`.
 
 The module implements the following macros:
 
-=== `docx:readOnly`
 
-If the input DOCX file contains this macro the output DOCX file will be read only, and optionally protected by a password.
-The syntax of the macro is:
 
-  {@docx:readOnly [password=password algorithm=algorithm]}
 
-If a password is defined, then an algorithm should also and the other way around.
-The algorithm is used to encrypt the password.
-There is no default algorithm.
-The algorithms should be specified by the ECMA standard name of the algorithm.
 
+
+
+
+  
+=== `docx::protect`
+
+
+Using this macro you can set the protection of a document.
+The syntax of the macro is
+
+[source]
+----
+  {@docx:protect [password=XXX algorithm=YYY] (trackChanges|readOnly|forms|comments) }
+----
+
+You can set a password and an encoding algorithm using the options `password` and `algorithm`.
+If these options are not present, then the user can switch the protection off.
+When you specify the password and the algorithm then the user can switch off the protection only if they know the password.
+
+The options `trackChanges`, `readOnly`, `forms`, and `comments` are mutually exclusive.
+Exactly one of them has to be specified.
+
+
+    
+  
+
+
+  `pass`, `password`
+This option specifies the password needed to switch off the protection.
+If option is not specified then the user can switch off the protection with just a few mouse clicks.
+
+* `alg`, `algo`, `algorithm`
+This option specifies the algorithm used to encode the password.
+The name of the algorithm is the official ECMA name of the algorithm.
+Any of the algorithms can be used implemented by the DOCX format and supported by the underlying Apache POI library.
 The algorithm names are:
 
 * `SHA1`
@@ -136,10 +163,47 @@ The list of algorithms may change in the future.
 To see the actual list of algorithms specify an invalid algorithm.
 The error will list all the currently available algorithms.
 
-If there is no algorithm defined the user can simply switch off the read only protection without any password.
-If there is a password the user has to enter the password to switch off the read only protection.
-Note, however, that this protection can be circumvented easily using some other software.
+* `track`, `trackChanges`
+Specify the protection level so that the document can be changed without changing the state of change tracking.
+Reasonably you want to have the tracking switched on.
+To do that you can switch it on in the source document or use the `docx:trackChanges` macro without the `off` option.
 
-If this macro is invoked during the conversion of a normal text document an error will happen.
-It is also an error to invoke this macro more than once in the same document.
+* `read`, `readOnly`, `readonly`
+Specify the protection level so that the document is read only.
+
+* `comments`
+Specify the protection level so that the user can edit only the comments.
+
+* `forms`
+Specify the protection level so that the user can edit only the forms of the document.
+
+    
+  
+
+
+
+  
+=== `docx::trackChanges`
+
+
+This macro can switch on or off the track changes in the output document.
+The syntax of the macro is
+
+[source]
+----
+  {@docx::trackChanges}
+----
+
+or
+
+[source]
+----
+  {@docx::trackChanges off}
+----
+
+Note that you can also set the protection of the output document so that the change tracking cannot be switched off.
+
+
+    
+  
 

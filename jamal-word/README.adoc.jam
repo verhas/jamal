@@ -107,41 +107,29 @@ to your Maven `pom.xml`.
 
 The module implements the following macros:
 
-=== `docx:readOnly`
+{%@define macro($x)=
+=== `$x`
+%}
 
-If the input DOCX file contains this macro the output DOCX file will be read only, and optionally protected by a password.
-The syntax of the macro is:
+{%@define head($x)=
+  {%#eval
+    {%#snip:transform replace=/^\s+\*\s?//
+      {%@snip $x%}
+    %}
+  %}
+%}
+{%@define options($x)=
+  {%#eval
+    {%#snip:transform replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*)\".*~\n* `$1`~" \
+    replace="~\",\\s+\"~`, `" \
+    replace="~.*//\\s*~~"
+      {%@snip $x_options%}
+    %}
+  %}
+%}
+{%@snip:collect asciidoc from=src/main/java/javax0/jamal/poi/word%}
 
-  {@docx:readOnly [password=password algorithm=algorithm]}
+{%head protect%}
+{%options protect%}
 
-If a password is defined, then an algorithm should also and the other way around.
-The algorithm is used to encrypt the password.
-There is no default algorithm.
-The algorithms should be specified by the ECMA standard name of the algorithm.
-
-The algorithm names are:
-
-* `SHA1`
-* `SHA256`
-* `SHA384`
-* `SHA512`
-* `MD5`
-* `MD2`
-* `MD4`
-* `RIPEMD-128`
-* `RIPEMD-160`
-* `WHIRLPOOL`
-* `SHA224`
-* `RIPEMD-256`
-
-The list of algorithms may change in the future.
-To see the actual list of algorithms specify an invalid algorithm.
-The error will list all the currently available algorithms.
-
-If there is no algorithm defined the user can simply switch off the read only protection without any password.
-If there is a password the user has to enter the password to switch off the read only protection.
-Note, however, that this protection can be circumvented easily using some other software.
-
-If this macro is invoked during the conversion of a normal text document an error will happen.
-It is also an error to invoke this macro more than once in the same document.
-
+{%head trackChanges%}

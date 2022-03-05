@@ -49,12 +49,9 @@ public class XWPFProcessor {
         document = new XWPFDocument(Files.newInputStream(inputPath));
         try {
             process(null, document.getBodyElements());
-            if (xwpfContext.readOnly) {
-                if (xwpfContext.password != null) {
-                    document.enforceReadonlyProtection(xwpfContext.password, xwpfContext.hashAlgorithm);
-                } else {
-                    document.enforceReadonlyProtection();
-                }
+            for( final var terminal : xwpfContext.getTerminals() ){
+                terminal.setDocument(document);
+                terminal.process();
             }
             if (outputPath != null) {
                 document.write(Files.newOutputStream(outputPath));
@@ -127,6 +124,12 @@ public class XWPFProcessor {
         while (!input.empty()) {
             DebugTool.debugDoc("BEFORE PROCESSING:\n", input);
             final String processed = processor.process(input);
+            for( final var intermediary : xwpfContext.getIntermediaries() ){
+                intermediary.setParagraphStartIndex(input.paragraphStartIndex);
+                intermediary.setRunStartIndex(input.runStartIndex);
+                intermediary.setDocument(document);
+                intermediary.process();
+            }
             DebugTool.debugDoc("AFTER PROCESSING:\n", input);
             input.purgeSource();
             DebugTool.debugDoc("AFTER PURGE:\n", input);
