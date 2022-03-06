@@ -901,7 +901,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=f1c274c0%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=d5e23797%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1901,7 +1901,7 @@ will result
 - FilesMacro.java: 5,196 bytes
 - Collect.java: 17,685 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 4,171 bytes
+- TrimLines.java: 4,213 bytes
 - ThinXml.java: 8,786 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes

@@ -2270,7 +2270,7 @@ will result
 - FilesMacro.java: 5,196 bytes
 - Collect.java: 17,685 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 4,171 bytes
+- TrimLines.java: 4,213 bytes
 - ThinXml.java: 8,786 bytes
 - LineCount.java: 604 bytes
 - Replace.java: 1,775 bytes
@@ -2552,7 +2552,7 @@ will result in the output
 
 [source]
 ----
-2022-03-02 17:50:20
+2022-03-05 20:11:47
 ----
 
 
