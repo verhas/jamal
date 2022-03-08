@@ -8,6 +8,18 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The implemented Context interface is only a signal interface without any methods or constants.
+ * The classes, like this, which are used by embedding applications can implement this interface.
+ * The embedding application can put information into the context object and the macros can retrieve it from there.
+ * When the processing finishes the information flow can be reversed.
+ * The embedding application can read the information macros created.
+ *
+ * This implementation of the Context interface is used by the {@link XWPFProcessor} class.
+ *
+ * The DOCX macros cannot perform actions on the Word document directly.
+ * Macros have access only to the input and the
+ */
 public class XWPFContext implements Context {
     public interface DocxCallBack {
         default void setDocument(XWPFDocument document) {
@@ -30,13 +42,12 @@ public class XWPFContext implements Context {
     private List<DocxTerminalCallBack> terminals = new ArrayList<>();
     private List<DocxIntermediaryCallBack> intermediaries = new ArrayList<>();
 
-    public void register(DocxCallBack callback) {
-        if (callback instanceof DocxTerminalCallBack) {
-            terminals.add((DocxTerminalCallBack) callback);
-        }
-        if (callback instanceof DocxIntermediaryCallBack) {
-            intermediaries.add((DocxIntermediaryCallBack) callback);
-        }
+    public void register(DocxIntermediaryCallBack callback) {
+        intermediaries.add(callback);
+    }
+
+    public void register(DocxTerminalCallBack callback) {
+        terminals.add(callback);
     }
 
     public List<DocxTerminalCallBack> getTerminals() {
@@ -58,7 +69,7 @@ public class XWPFContext implements Context {
      */
     Context parent;
 
-    public Context getContex() {
+    public Context getContext() {
         return parent;
     }
 
