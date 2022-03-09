@@ -14,11 +14,22 @@ import java.util.List;
  * The embedding application can put information into the context object and the macros can retrieve it from there.
  * When the processing finishes the information flow can be reversed.
  * The embedding application can read the information macros created.
- *
+ * <p>
  * This implementation of the Context interface is used by the {@link XWPFProcessor} class.
- *
+ * <p>
  * The DOCX macros cannot perform actions on the Word document directly.
- * Macros have access only to the input and the
+ * Macros have access only to the input and the processor.
+ * Because of that they cannot directly modify the document structure.
+ * The recommended way to modify the document is to register a callback function.
+ * This call-back is invoked by the processor later when no macro execution is performed.
+ * That way the document is not concurrently modified by the macros and the processor at the same time.
+ * <p>
+ * There are two ways to register a callback function.
+ * One is to register a terminal call back.
+ * Terminal call backs are invoked when the processing of the document is finished.
+ *
+ * The other way is to register an intermediary callback.
+ * This call-back is invoked by the processor between macro executions.
  */
 public class XWPFContext implements Context {
     public interface DocxCallBack {

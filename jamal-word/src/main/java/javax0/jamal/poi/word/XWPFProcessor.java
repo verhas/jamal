@@ -18,6 +18,73 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Processes macros in a Word document.
+ *
+ * Word documents have to be processed in a special way.
+ * The general model of Jamal is that the input and the output of the processor is text.
+ * A Word document, however, contains textual information with formatting interleaved.
+ * This processor processes the Word document in several steps to process the macros in the text and at the same time keep the formatting intact.
+ *
+ * This processor creates a single underlying Jamal processor and uses it many times.
+ * It starts the processing of the Word document and fetches as many characters as minimally needed to finish one stage of the processing.
+ * To do this there is a special implementation of the {@link javax0.jamal.api.Input} interface.
+ * The implementation is {@link XWPFInput}.
+ *
+ * When a stage is finished the processor starts again for the rest of the document.
+ *
+ * The Word document internal structure is following:
+ *
+ * <ul>
+ *     <li> A document is a list of body elements.</li>
+ *     <li> A body element can be a paragraph or a table.</li>
+ *     <li> The other type of body elements are not handled by this processor and are left intact.</li>
+ *     <li> A table contains cells and the cells contain body elements recursively.</li>
+ *     <li> A paragraph contains "runs".</li>
+ *     <li> A run is a minimal amount of text that has the same character formatting.</li>
+ *     <li> Paragraphs also have formatting, like indentation, but not character formatting.</li>
+ * </ul>
+ *
+ * Note that this is a very simplified model.
+ * The actual structure of a Word document is more complex, but for the understanding of the inner working of this processor it is sufficient.
+ *
+ * During the processing there are two different type of stages.
+ *
+ * <ol>
+ *     <li>A stage that contains only text and no macros.
+ *     <li>A stage that contains macros and text.
+ * </ol>
+ *
+ * Every stage processes at least one run.
+ * A stage must fetch more characters when there are opened and not yet closed macros.
+ * In situations like that the input handler {@link XWPFInput} will fetch more runs.
+ * When the stage sees that all the macros are closed it will stop fetching more characters.
+ * More precisely, the input will tell that there are no more characters, even though there are more runs.
+ * That way the stage finishes.
+ *
+ * The input will fetch no more run if it has reached the end of the document or if it has reached the end of the current paragraph and the next body element is a table.
+ * If the stage has not finished at this point an error will occur.
+ *
+ * From the user point of view it means that all macros should be closed
+ *
+ * <ul>
+ *     <li>before the end of the document,</li>
+ *     <li>before the next table,</li>
+ *     <li>withing the cell of a table.</li>
+ * </ul>
+ *
+ * After a stage has finished, the processor will start again for the next stage.
+ * It means that it has the same state, all defined macros, options, user defined macros and so on.
+ *
+ * That way a stage processes at least one top-level macro (a macro, which is not inside any other macro).
+ * Since the input fetches one run at a time, it may happen that one run contains the end of the macro closing string and at the same time the start of the next macro opening string.
+ * In that case the stage will not stop, because it means that the input has an already opened next macro.
+ * That is why a stage processes <em>at least</em> one top-level macro.
+ *
+ * When a stage has finished the processor invokes the call-back objects, which were registered by the evaluated macros through the {@link XWPFContext#register(XWPFContext.DocxIntermediaryCallBack)} method.
+ * The call-back objects are invoked in the order of their registration.
+ *
+ */
 public class XWPFProcessor {
 
     final Processor processor;
