@@ -23,11 +23,11 @@ project>
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>1.11.2
+  version>1.11.3-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
-    version>1.11.2
+    version>1.11.3-SNAPSHOT
     relativePath>../jamal-parent
 ----
 
@@ -42,11 +42,11 @@ It is the same as the standard XML in the following way:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.11.2</version>
+        <version>1.11.3-SNAPSHOT</version>
         <relativePath>../jamal-parent</relativePath>
     </parent>
 </project>
@@ -70,11 +70,11 @@ project>
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
-    version>1.11.2
+    version>1.11.3-SNAPSHOT
     relativePath>../jamal-parent
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>1.11.2
+  version>1.11.3-SNAPSHOT
 ----
 
 we get the following:
@@ -89,12 +89,12 @@ we get the following:
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.11.2</version>
+        <version>1.11.3-SNAPSHOT</version>
         <relativePath>../jamal-parent</relativePath>
     </parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3-SNAPSHOT</version>
 </project>
 ----
 
@@ -113,11 +113,11 @@ project>
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
-    version>1.11.2
+    version>1.11.3-SNAPSHOT
     relativePath>../jamal-parent
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>1.11.2
+  version>1.11.3-SNAPSHOT
 ----
 
 we get the following:
@@ -136,12 +136,12 @@ we get the following:
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.11.2</version>
+        <version>1.11.3-SNAPSHOT</version>
         <relativePath>../jamal-parent</relativePath>
     </parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3-SNAPSHOT</version>
 </project>
 ----
 
@@ -164,7 +164,7 @@ project>
     relativePath>../jamal-parent
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>1.11.2
+  version>1.11.3-SNAPSHOT
 ----
 
 will be
@@ -190,7 +190,7 @@ will be
     <relativePath>../jamal-parent</relativePath>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3-SNAPSHOT</version>
 </project>
 ----
 
@@ -312,7 +312,7 @@ project name="prohibited" note="real POM XML does not have attributes">
     groupId value="com.java0.jamal">
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>1.11.2
+  version>1.11.3-SNAPSHOT
 ----
 
 All the tags will have attributes surrounded with `"` characters in the output.
@@ -330,7 +330,7 @@ All the tags will have attributes surrounded with `"` characters in the output.
     </parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3-SNAPSHOT</version>
 </project>
 ----
 

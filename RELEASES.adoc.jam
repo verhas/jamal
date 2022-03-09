@@ -2,6 +2,13 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
+{%RELEASE/1.11.2%}
+
+* Bug fix release. The `jamal-word` module has now fixed a bug that caused index out of range error in some cases.
+The bug manifested if the word document contained a 'run' that contained no text in it.
+
+* Some experimental `docx:` macros are also included in this release to control the generated output docx file to be protected from editing and to force track changes.
+
 {%RELEASE/1.11.1%}
 
 * Fully reworked command-line interface

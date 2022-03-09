@@ -4,11 +4,11 @@
     <name>jamal command line</name>
     <packaging>jar</packaging>
     <artifactId>jamal-cmd</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.11.2</version>
+        <version>1.11.3-SNAPSHOT</version>
     </parent>
     <description>Jamal macro library command line interface</description>
     <build>
