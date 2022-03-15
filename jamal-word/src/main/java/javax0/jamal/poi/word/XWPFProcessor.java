@@ -191,24 +191,25 @@ public class XWPFProcessor {
         while (!input.empty()) {
             DebugTool.debugDoc("BEFORE PROCESSING:\n", input);
             final String processed = processor.process(input);
-            for( final var intermediary : xwpfContext.getIntermediaries() ){
-                intermediary.setParagraphStartIndex(input.paragraphStartIndex);
-                intermediary.setRunStartIndex(input.runStartIndex);
-                intermediary.setDocument(document);
-                intermediary.process();
-            }
             DebugTool.debugDoc("AFTER PROCESSING:\n", input);
             input.purgeSource();
             DebugTool.debugDoc("AFTER PURGE:\n", input);
             input.insert(processed);
             DebugTool.debugDoc("AFTER REPLACE:\n", input);
+            for( final var intermediary : xwpfContext.getIntermediaries() ){
+                intermediary.setParagraphStartIndex(input.paragraphStartIndex);
+                intermediary.setRunStartIndex(input.runStartIndex);
+                intermediary.setParagraphs(paragraphs);
+                intermediary.setDocument(document);
+                intermediary.process();
+            }
             input.step();
         }
     }
 
     /**
      * Add the {@code bodyElement} to the {@code paragraphs} cast to be a {@link XWPFParagraph} and fetch more
-     * {@link IBodyElement}s so long as long there is any and they are paragraphs.
+     * {@link IBodyElement}s so long as long there is any, and they are paragraphs.
      * <p>
      * If there is a non-paragraph body element then it is not added to the list and the already fetched non-paragraph
      * {@code bodyElement} is returned. If there is no more body element {@code null} is returned.

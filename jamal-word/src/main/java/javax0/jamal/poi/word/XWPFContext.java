@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Context;
 import javax0.jamal.api.Processor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
  * There are two ways to register a callback function.
  * One is to register a terminal call back.
  * Terminal call backs are invoked when the processing of the document is finished.
- *
+ * <p>
  * The other way is to register an intermediary callback.
  * This call-back is invoked by the processor between macro executions.
  */
@@ -36,17 +37,20 @@ public class XWPFContext implements Context {
         default void setDocument(XWPFDocument document) {
         }
 
-        void process();
+        void process() throws BadSyntax;
     }
 
     public interface DocxTerminalCallBack extends DocxCallBack {
     }
 
     public interface DocxIntermediaryCallBack extends DocxCallBack {
-        default void setParagraphStartIndex(int paragraphStartIndex) {
+        default void setParagraphStartIndex(final int paragraphStartIndex) {
         }
 
-        default void setRunStartIndex(int runStartIndex) {
+        default void setParagraphs(final List<XWPFParagraph> paragraphs) {
+        }
+
+        default void setRunStartIndex(final int runStartIndex) {
         }
     }
 
