@@ -49,6 +49,6 @@ public class DebugTool {
             }
             sb.append("\n");
         }
-        System.out.println(prefix + sb);
+        //System.out.println(prefix + sb);
     }
 }

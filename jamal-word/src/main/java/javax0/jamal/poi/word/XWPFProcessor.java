@@ -203,7 +203,9 @@ public class XWPFProcessor {
                 intermediary.setDocument(document);
                 intermediary.process();
             }
+            DebugTool.debugDoc("AFTER INTERMEDIARIES:\n", input);
             input.step();
+            DebugTool.debugDoc("AFTER STEP:\n", input);
         }
     }
 

@@ -30,7 +30,7 @@ public class ConcurrentIterator<T> implements Iterator<T> {
                     return;
                 }
             }
-            throw new ConcurrentModificationException(String.format("%s is not found in the list", lastReturned.toString()));
+            throw new ConcurrentModificationException(String.format("%s is not found in the list", lastReturned));
         }
     }
 
@@ -43,6 +43,6 @@ public class ConcurrentIterator<T> implements Iterator<T> {
     @Override
     public T next() {
         checkConcurrentModification();
-        return list.get(index++);
+        return lastReturned = list.get(index++);
     }
 }
