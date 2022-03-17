@@ -4,24 +4,50 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import java.util.List;
 
 public class DebugTool {
     private static final Logger LOGGER = LogManager.getLogger(DebugTool.class);
+    private static int counter = 0;
 
     public static void debugDoc(final String prefix, final XWPFInput input) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < input.paragraphs.size(); i++) {
-            final String paragraphSString = input.paragraphStartIndex == i ? "S*" : "  ";
-            final String paragraphEString = input.paragraphEndIndex == i ? "E*" : "  ";
+        counter++;
+        StringBuilder sb = new StringBuilder("" + counter + ": ");
+        final var SP = input.paragraphs.get(input.paragraphStartIndex);
+        final var EP = input.paragraphs.get(input.paragraphEndIndex);
+        for (int i = 0; i < input.document.getBodyElements().size(); i++) {
+            final var element = input.document.getBodyElements().get(i);
+            final String paragraphSString = element == SP ? "S*" : "  ";
+            final String paragraphEString = element == EP ? "E*" : "  ";
             sb.append(paragraphSString).append(paragraphEString).append("(").append(i).append(":");
-            for (int j = 0; j < input.paragraphs.get(i).getRuns().size(); j++) {
-                final String runSString = input.runStartIndex == j && input.paragraphStartIndex == i ? "S*" : "";
-                final String runEString = input.runEndIndex == j && input.paragraphEndIndex == i ? "E*" : "";
-                sb.append(runSString).append(runEString).append("[").append(j).append(":");
-                sb.append(input.paragraphs.get(i).getRuns().get(j).getText(0));
-                sb.append("]");
+            if (element instanceof XWPFParagraph) {
+                final XWPFParagraph paragraph = (XWPFParagraph) element;
+                for (int j = 0; j < paragraph.getRuns().size(); j++) {
+                    final String runSString = input.runStartIndex == j && element == SP ? "S*" : "";
+                    final String runEString = input.runEndIndex == j && element == EP ? "E*" : "";
+                    sb.append(runSString).append(runEString).append("[").append(j).append(":");
+                    sb.append(paragraph.getRuns().get(j).getText(0));
+                    sb.append("]");
+                }
+            } else if (element instanceof XWPFTable) {
+                final XWPFTable table = (XWPFTable) element;
+                sb.append("[").append(""+table.getRows().size()).append(",").append(""+table.getRows().get(0).getTableCells().size()).append("]");
+                for (int j = 0; j < table.getRows().size(); j++) {
+                    final var row = table.getRows().get(j);
+                    sb.append("|| ");
+                    for (int k = 0; k < row.getTableCells().size(); k++) {
+                        final var cell = row.getTableCells().get(k);
+                        final String cellSString = cell.getText();
+                        sb.append(cellSString).append("|");
+                    }
+                    sb.append("|");
+                    if( j < table.getRows().size() - 1 ) {
+                        sb.append("\n");
+                    }
+                }
+
             }
             sb.append(")\n");
         }

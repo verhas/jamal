@@ -17,22 +17,23 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Processes macros in a Word document.
- *
+ * <p>
  * Word documents have to be processed in a special way.
  * The general model of Jamal is that the input and the output of the processor is text.
  * A Word document, however, contains textual information with formatting interleaved.
  * This processor processes the Word document in several steps to process the macros in the text and at the same time keep the formatting intact.
- *
+ * <p>
  * This processor creates a single underlying Jamal processor and uses it many times.
  * It starts the processing of the Word document and fetches as many characters as minimally needed to finish one stage of the processing.
  * To do this there is a special implementation of the {@link javax0.jamal.api.Input} interface.
  * The implementation is {@link XWPFInput}.
- *
+ * <p>
  * When a stage is finished the processor starts again for the rest of the document.
- *
+ * <p>
  * The Word document internal structure is following:
  *
  * <ul>
@@ -44,27 +45,27 @@ import java.util.List;
  *     <li> A run is a minimal amount of text that has the same character formatting.</li>
  *     <li> Paragraphs also have formatting, like indentation, but not character formatting.</li>
  * </ul>
- *
+ * <p>
  * Note that this is a very simplified model.
  * The actual structure of a Word document is more complex, but for the understanding of the inner working of this processor it is sufficient.
- *
+ * <p>
  * During the processing there are two different type of stages.
  *
  * <ol>
  *     <li>A stage that contains only text and no macros.
  *     <li>A stage that contains macros and text.
  * </ol>
- *
+ * <p>
  * Every stage processes at least one run.
  * A stage must fetch more characters when there are opened and not yet closed macros.
  * In situations like that the input handler {@link XWPFInput} will fetch more runs.
  * When the stage sees that all the macros are closed it will stop fetching more characters.
  * More precisely, the input will tell that there are no more characters, even though there are more runs.
  * That way the stage finishes.
- *
+ * <p>
  * The input will fetch no more run if it has reached the end of the document or if it has reached the end of the current paragraph and the next body element is a table.
  * If the stage has not finished at this point an error will occur.
- *
+ * <p>
  * From the user point of view it means that all macros should be closed
  *
  * <ul>
@@ -72,18 +73,17 @@ import java.util.List;
  *     <li>before the next table,</li>
  *     <li>withing the cell of a table.</li>
  * </ul>
- *
+ * <p>
  * After a stage has finished, the processor will start again for the next stage.
  * It means that it has the same state, all defined macros, options, user defined macros and so on.
- *
+ * <p>
  * That way a stage processes at least one top-level macro (a macro, which is not inside any other macro).
  * Since the input fetches one run at a time, it may happen that one run contains the end of the macro closing string and at the same time the start of the next macro opening string.
  * In that case the stage will not stop, because it means that the input has an already opened next macro.
  * That is why a stage processes <em>at least</em> one top-level macro.
- *
+ * <p>
  * When a stage has finished the processor invokes the call-back objects, which were registered by the evaluated macros through the {@link XWPFContext#register(XWPFContext.DocxIntermediaryCallBack)} method.
  * The call-back objects are invoked in the order of their registration.
- *
  */
 public class XWPFProcessor {
 
@@ -116,7 +116,7 @@ public class XWPFProcessor {
         document = new XWPFDocument(Files.newInputStream(inputPath));
         try {
             process(null, document.getBodyElements());
-            for( final var terminal : xwpfContext.getTerminals() ){
+            for (final var terminal : xwpfContext.getTerminals()) {
                 terminal.setDocument(document);
                 terminal.process();
             }
@@ -142,9 +142,9 @@ public class XWPFProcessor {
      */
     private void process(XWPFTableCell topCell, List<IBodyElement> bodyElements) throws BadSyntax {
 
-        Iterator<IBodyElement> iterator = new ConcurrentIterator<>(bodyElements);
+        final var iterator = new ConcurrentIterator<>(bodyElements);
         var bodyElement = iterator.next();
-        while (true) {
+        while (bodyElement != null) {
             if (bodyElement instanceof XWPFTable) {
                 final XWPFTable table = (XWPFTable) bodyElement;
                 for (final XWPFTableRow row : table.getRows()) {
@@ -153,18 +153,12 @@ public class XWPFProcessor {
                         process(cell, cellBodyElements);
                     }
                 }
-                if (iterator.hasNext()) {
-                    bodyElement = iterator.next();
-                } else {
-                    break;
-                }
+                bodyElement = iterator.next();
             } else if (bodyElement instanceof XWPFParagraph) {
                 final var paragraphs = new ArrayList<XWPFParagraph>();
-                bodyElement = collectsParagraphs(iterator, bodyElement, paragraphs);
-                processParagraphs(topCell, paragraphs);
-                if (bodyElement == null) {
-                    break;
-                }
+                collectsParagraphs(iterator, bodyElement, paragraphs);
+                processParagraphs(topCell, paragraphs, iterator);
+                bodyElement = iterator.get();
             }
         }
     }
@@ -185,7 +179,7 @@ public class XWPFProcessor {
      * @param paragraphs the paragraphs to be processed
      * @throws BadSyntax if the processing throws a bad syntax exception
      */
-    private void processParagraphs(final XWPFTableCell cell, final List<XWPFParagraph> paragraphs) throws BadSyntax {
+    private void processParagraphs(final XWPFTableCell cell, final List<XWPFParagraph> paragraphs, final Consumer<IBodyElement> iterator) throws BadSyntax {
         final XWPFInput input = new XWPFInput(document, cell, paragraphs, pos);
         input.setStart(0, 0);
         while (!input.empty()) {
@@ -196,7 +190,8 @@ public class XWPFProcessor {
             DebugTool.debugDoc("AFTER PURGE:\n", input);
             input.insert(processed);
             DebugTool.debugDoc("AFTER REPLACE:\n", input);
-            for( final var intermediary : xwpfContext.getIntermediaries() ){
+            for (final var intermediary : xwpfContext.getIntermediaries()) {
+                intermediary.setPosition(iterator);
                 intermediary.setParagraphStartIndex(input.paragraphStartIndex);
                 intermediary.setRunStartIndex(input.runStartIndex);
                 intermediary.setParagraphs(paragraphs);
@@ -222,16 +217,10 @@ public class XWPFProcessor {
      * @param paragraphs  the list of paragraphs where the paragraph body elements are collected
      * @return the first not collected body element or {@code null} if there is no more body element.
      */
-    private IBodyElement collectsParagraphs(final Iterator<IBodyElement> iterator, IBodyElement bodyElement, final List<XWPFParagraph> paragraphs) {
+    private void collectsParagraphs(final Iterator<IBodyElement> iterator, IBodyElement bodyElement, final List<XWPFParagraph> paragraphs) {
         paragraphs.add((XWPFParagraph) bodyElement);
-        while (iterator.hasNext()) {
-            bodyElement = iterator.next();
-            if (bodyElement instanceof XWPFParagraph) {
-                paragraphs.add((XWPFParagraph) bodyElement);
-            } else {
-                return bodyElement;
-            }
+        while (iterator.hasNext() && (bodyElement = iterator.next()) instanceof XWPFParagraph) {
+            paragraphs.add((XWPFParagraph) bodyElement);
         }
-        return null;
     }
 }

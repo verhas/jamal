@@ -3,11 +3,13 @@ package javax0.jamal.poi.word;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Context;
 import javax0.jamal.api.Processor;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * The implemented Context interface is only a signal interface without any methods or constants.
@@ -51,6 +53,8 @@ public class XWPFContext implements Context {
         }
 
         default void setRunStartIndex(final int runStartIndex) {
+        }
+        default void setPosition(final Consumer<IBodyElement> positionSetter) {
         }
     }
 
