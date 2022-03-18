@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -28,7 +29,6 @@ public class MacroDocxInclude implements Macro {
     private static class CallBack implements XWPFContext.DocxIntermediaryCallBack {
         List<XWPFParagraph> paragraphs;
         private int paragraphStartIndex;
-        private int runStartIndex;
         private XWPFDocument document;
         private Consumer<IBodyElement> positionSetter;
         private final File file;
@@ -55,11 +55,6 @@ public class MacroDocxInclude implements Macro {
         @Override
         public void setParagraphStartIndex(int paragraphStartIndex) {
             this.paragraphStartIndex = paragraphStartIndex;
-        }
-
-        @Override
-        public void setRunStartIndex(int runStartIndex) {
-            this.runStartIndex = runStartIndex;
         }
 
         @Override
@@ -109,28 +104,35 @@ public class MacroDocxInclude implements Macro {
         private void copyParagraph(final XWPFParagraph source, final XWPFParagraph target) {
             target.getCTP().set(source.getCTP().copy());
             target.getCTP().getRList().clear();
-            for (final var run : source.getRuns()) {
+            for (final var sourceRun : source.getRuns()) {
                 final var r = target.getCTP().addNewR();
-                r.set(run.getCTR());
-                target.addRun(new XWPFRun(r, (IRunBody) target));
+                r.set(sourceRun.getCTR());
+                final var targetRun = new XWPFRun(r, (IRunBody) target);
+                target.addRun(targetRun);
+                copyPictures(sourceRun, targetRun);
             }
         }
 
-        private void copyParagraph1(XWPFParagraph source, XWPFParagraph target) {
-            target.getCTP().setPPr(source.getCTP().getPPr());
-            for (int i = 0; i < source.getRuns().size(); i++) {
-                XWPFRun run = source.getRuns().get(i);
-                XWPFRun targetRun = target.createRun();
-                //copy formatting
-                targetRun.getCTR().setRPr(run.getCTR().getRPr());
-                //no images just copy text
-                targetRun.setText(run.getText(0));
+        private void copyPictures(final XWPFRun source, final XWPFRun target) {
+            for (int i = 0; i < source.getEmbeddedPictures().size(); i++) {
+                final var sourcePicture = source.getEmbeddedPictures().get(i);
+                final var targetPicture = target.getEmbeddedPictures().get(i);
+                final var pictureData = sourcePicture.getPictureData();
+                final String pictureId;
+                try {
+                    pictureId = document.addPictureData(pictureData.getData(), pictureData.getPictureType());
+                } catch (InvalidFormatException e) {
+                    // must not happen as it is copied from another file
+                    continue;
+                }
+                targetPicture.getCTPicture().getBlipFill().getBlip().setEmbed(pictureId);
             }
         }
 
         private void copyTable(XWPFTable source, XWPFTable target) {
             copyTable(source, target, true);
         }
+
         private void copyTable(XWPFTable source, XWPFTable target, final boolean deleteFirstRow) {
             target.getCTTbl().setTblPr(source.getCTTbl().getTblPr());
             target.getCTTbl().setTblGrid(source.getCTTbl().getTblGrid());
@@ -155,7 +157,7 @@ public class MacroDocxInclude implements Macro {
                             XWPFTable targetTable = targetCell.insertNewTbl(cursor);
                             cursor.toNextToken();
                             XWPFTable table = (XWPFTable) elem;
-                            copyTable(table, targetTable,false);
+                            copyTable(table, targetTable, false);
                         }
                     }
                     //newly created cell has one default paragraph we need to remove
