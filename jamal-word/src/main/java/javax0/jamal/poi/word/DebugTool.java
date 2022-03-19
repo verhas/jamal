@@ -31,6 +31,12 @@ public class DebugTool {
                     sb.append(paragraph.getRuns().get(j).getText(0));
                     sb.append("]");
                 }
+                if( input.runStartIndex >= paragraph.getRuns().size() && (element == SP || element == EP)) {
+                    sb.append("... [S").append(input.runStartIndex).append(":]");
+                }
+                if( input.runEndIndex >= paragraph.getRuns().size() && (element == SP || element == EP)) {
+                    sb.append("... [E").append(input.runEndIndex).append(":]");
+                }
             } else if (element instanceof XWPFTable) {
                 final XWPFTable table = (XWPFTable) element;
                 sb.append("[").append(""+table.getRows().size()).append(",").append(""+table.getRows().get(0).getTableCells().size()).append("]");
@@ -51,7 +57,7 @@ public class DebugTool {
             }
             sb.append(")\n");
         }
-        //System.out.println(prefix + sb);
+        System.out.println(prefix + sb);
     }
 
     public static void debugDoc(final String prefix, final XWPFDocument input, List<XWPFParagraph> paragraphs) {

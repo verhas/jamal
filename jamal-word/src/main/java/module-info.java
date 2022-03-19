@@ -1,4 +1,5 @@
 import javax0.jamal.poi.word.MacroDocxInclude;
+import javax0.jamal.poi.word.MacroDocxPicture;
 import javax0.jamal.poi.word.MacroDocxProtect;
 import javax0.jamal.poi.word.MacroDocxText;
 import javax0.jamal.poi.word.MacroDocxTrackRevisions;
@@ -10,5 +11,6 @@ module jamal.word {
     requires org.apache.poi.ooxml;
     requires jamal.tools;
     requires org.apache.logging.log4j;
-    provides javax0.jamal.api.Macro with MacroDocxProtect, MacroDocxTrackRevisions, MacroDocxText, MacroDocxInclude;
+    requires java.desktop;
+    provides javax0.jamal.api.Macro with MacroDocxProtect, MacroDocxTrackRevisions, MacroDocxText, MacroDocxInclude, MacroDocxPicture;
 }

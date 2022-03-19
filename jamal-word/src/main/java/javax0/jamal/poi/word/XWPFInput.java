@@ -118,22 +118,55 @@ public class XWPFInput extends Input {
         paragraphStartIndex = paragraphIndex;
         runStartIndex = runIndex;
 
-        if (paragraphs.get(paragraphStartIndex).getRuns().size() == runStartIndex && paragraphStartIndex < paragraphs.size() - 1) {
+        // if the runIndex is pointing already AFTER the last non-empty run then go to the start of the next paragraph
+        // if there is next paragraph
+        if (isEmptyAfter(paragraphs.get(paragraphStartIndex), runStartIndex) && paragraphStartIndex < paragraphs.size() - 1) {
+            paragraphStartIndex++;
             runStartIndex = 0;
         }
+
+        // skip empty paragraphs
         while (isEmpty(paragraphs.get(paragraphStartIndex)) && paragraphStartIndex < paragraphs.size() - 1) {
             paragraphStartIndex++;
+            runStartIndex = 0;
         }
 
         paragraphEndIndex = paragraphStartIndex;
         runEndIndex = runStartIndex;
-        if (paragraphStartIndex < paragraphs.size() && paragraphs.get(paragraphStartIndex).getRuns().size() > runIndex) {
-            final var text = paragraphs.get(paragraphStartIndex).getRuns().get(runIndex).getText(0);
+        if (paragraphStartIndex < paragraphs.size() && runStartIndex < paragraphs.get(paragraphStartIndex).getRuns().size()) {
+            final var text = paragraphs.get(paragraphStartIndex).getRuns().get(runStartIndex).getText(0);
             sb.append(text == null ? "" : text);
         }
     }
 
-    private static boolean isEmpty(XWPFParagraph paragraph) {
+    /**
+     * @param paragraph the paragraph to check
+     * @param runIndex  the first run to check for emptyness
+     * @return {@code true} if the paragraph is empty including and following the run {@code runIndex}, {@code false}
+     * otherwise. It also returns {@code true} if the index is after the last run.
+     */
+    private static boolean isEmptyAfter(final XWPFParagraph paragraph, final int runIndex) {
+        if (paragraph.getRuns().size() == 0) {
+            return true;
+        }
+        if (runIndex >= paragraph.getRuns().size()) {
+            return true;
+        }
+        for (int i = runIndex; i < paragraph.getRuns().size(); i++) {
+            final var run = paragraph.getRuns().get(i);
+            if (run.getText(0) != null && run.getText(0).length() > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * @param paragraph to check if it is empty
+     * @return {@code true} if the paragraph is empty, {@code false} otherwise.
+     */
+    private static boolean isEmpty(final XWPFParagraph paragraph) {
         if (paragraph.getRuns().size() == 0) {
             return true;
         }
@@ -464,7 +497,7 @@ public class XWPFInput extends Input {
         final var lastNl = text.lastIndexOf('\n') == text.length() - 1;
         final var startParagraph = paragraphs.get(paragraphStartIndex);
         final var startRuns = startParagraph.getRuns();
-        final var startRun = startParagraph.getRuns().get(runStartIndex);
+        final var startRun = startRuns.get(runStartIndex);
         final var lines = text.split("\n");
         startRun.setText(lines[0], 0);
         if (lines.length > 1) {
