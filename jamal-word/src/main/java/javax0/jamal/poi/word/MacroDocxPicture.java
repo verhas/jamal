@@ -126,12 +126,50 @@ public class MacroDocxPicture implements Macro {
             return OptionalInt.empty();
         }
     }
-
+    /*
+     *
+     * tag::picture[]
+     * {%macro docx::picture%}
+     *
+     * Using this macro you can include a picture into a document.
+     * The syntax of the macro is
+     *
+     * [source]
+     * ----
+     *   {@docx:picture [options] file_name}
+     * ----
+     * The file name can be absolute or relative to the processed file.
+     * The macro will copy the content of the picture file and insert the picture into the document at the place where the macro is in the source document.
+     *
+     * Inserting a picture into a document using a macro may seem to be counterintuitive.
+     * This is a functionality supported by the WYSIWYG functionality of Word.
+     * There are two reasons why you may decide to use the macro instead.
+     *
+     * . When the external picture is defined by the macro it is read and inserted into the target document by the time the macro processing is executed.
+     * If the picture is not final, and may change during the lifecycle of the documentation the macro will always include the latest version.
+     *
+     * . The processing may have different options for the picture and the actual picture may be selected from a set during the macro execution.
+     * In this case it makes perfect sense to use the macro.
+     *
+     * If not for these cases then just insert the picture into the document using the Word built-in functionality.
+     * The options that can modify the behavior of the picture handling are:
+     * end::picture[]
+     */
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+        // tag::picture_options[]
         final var width = Params.<Integer>holder(null, "width").asInt();
+        // can define the width of the picture.
+        // The default value is the actual width of the picture, or a scaled width in case the height is defined and the picture is not distorted.
         final var height = Params.<Integer>holder(null, "height").asInt();
+        // can define the height of the picture.
+        // The default value is the actual height of the picture, or a scaled height in case the width is defined and the picture is not distorted.
         final var distorted = Params.<Boolean>holder(null, "distort", "distorted").asBoolean();
+        // can define if the picture is distorted or not.
+        // If a picture is not distorted and only one of the `width` and `height` is defined, the non-defined parameter will be calculated.
+        // In this case the picture aspect ratio is preserved.
+        // When this option is used and either `width` or `height` is defined, the other parameter will keep the value given by the picture itself.ß
+        // end::picture_options[]
         Scan.using(processor).from(this).between("()").keys(width, height, distorted).parse(in);
         var fileName = FileTools.absolute(in.getReference(), in.toString().trim());
         final var context = XWPFContext.getXWPFContext(processor);

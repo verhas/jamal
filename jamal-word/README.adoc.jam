@@ -1,8 +1,125 @@
 = Jamal Microsoft Word integration module
 
-This module supports the use of Jamal macros in Microsoft Word documents (docx format files only).
+This module supports the use of Jamal macros in Microsoft Word documents (docx format files).
 The macros can be embedded into the text of the Word document and the output will be another word document with the macros processed.
-During the processing the text formatting will be preserved as much as it is possible.
+During the processing the text formatting will be preserved and the macros will be evaluated.
+
+image::logo-ish.png[align=center]
+
+That way you can use the macros that you would use to create a maintainable documentation in a Word document.
+You are not limited to a textual format like Markdown or Asciidoc.
+You can mix the best of the two words (put intended).
+Your documentation can be maintained ina WYSIWYG editor, Microsoft Word and the same time you can keep the documentation semantic.
+
+Using macros you can eliminate
+
+* copying and pasting sample code from the documented system,
+* manually maintaining configuration parameters,
+* manual checking of the document up-to-date status,
+* cross-referencing the different documentation parts.
+
+All these tasks can be automated exactly the same way as the format was asciidoc, markdown or any other textual format.
+There is no limitation in the DOCX module for the usable macros.
+You can use any, the same way as you would use them for a textual document.
+In addition to the general macros, which are documented in their library README documentation, there are DOCX format specific macros.
+Using these you can programmatically change some properties of the document, like
+
+* switch on track changes in the output document,
+* restrict editing,
+* password protect the output document,
+* include other docx file keeping all the formatting,
+* insert a picture using macros programmatically.
+
+The set of the available macros is constantly increasing and follows the demand.
+If you have any idea, or need, create a github ticket, requesting the feature.
+
+The DOCX specific macros are documented in this document below.
+
+In the following chapters we discuss how the Jamal processor is used to process word documents.
+
+The section _Using the Module_ describes how you can start Jamal to process Word documents.
+
+The section _Dependency_ is a reference to the Maven coordinates you may need in case you want to use the module embedded into your application.
+
+The section _Macros..._ documents all the `docx:...` macros available in the module.
+
+The last section discusses some Jamal Word specialities.
+Jamal is essentially a text processor and special techniques are applied to process formatted text.
+In 99% of the cases you do not need to care about the details of the processing.
+In the remaining 1%, however, you may see some unexpected behavior, which can be explained understanding htese special techniques. These are detailed in _Jamal MS Word Specialities_.
+
+== Using the Module
+
+The module can be used in two ways.
+
+* Use the command line version of the Jamal using the `--docx` option.
+* Call the exported XWPFProcessor API.
+
+For more information how to use the command line version refer to the <<../jamal-cmd/README.adoc#,Jamal Command Line>> document.
+
+To invoke the exported API you have to have the module on the classpath.
+The Maven dependency is defined in the next section.
+
+The API call is very simple.
+It is the following:
+
+   new XWPFProcessor().process("input.docx", "output.docx");
+
+The program will read the file `input.docx` and write the result to `output.docx`.
+
+== Dependency
+
+To use the module, you have to have the code on the classpath.
+This can be done adding
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-word</artifactId>
+    <version>{%VERSION%}</version>
+----
+
+to your Maven `pom.xml`.
+
+== Macros Implemented in the Module
+
+The module implements the following macros:
+
+{%@define macro($x)=
+=== `$x`
+%}
+
+{%@define head($x)=
+  {%#eval
+    {%#snip:transform replace=/^\s+\*\s?//
+      {%@snip $x%}
+    %}
+  %}
+%}
+{%@define options($x)=
+  {%#eval/jamal
+    {%#snip:transform replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*)\".*~\n* `$1`~" \
+    replace="~\",\\s+\"~`, `" \
+    replace="~.*//\\s*~~"
+      {%@snip $x_options%}
+    %}
+  %}
+%}
+{%@snip:collect asciidoc from=src/main/java/javax0/jamal/poi/word%}
+
+{%head protect%}
+{%options protect%}
+
+{%head trackChanges%}
+
+{%head include%}
+
+{%head picture%}
+{%options picture%}
+
+== Jamal MS Word Specialities
 
 The module uses special techniques to invoke the Jamal processor.
 Jamal is a text processor.
@@ -68,68 +185,3 @@ In case of complex macros there is no clear mapping between the input and the ou
 Without a mapping between the characters of the input and the output there is no way to copy the formatting.
 ====
 
-== Using the module
-
-The module can be used in two ways.
-
-* Use the command line version of the Jamal using the `--docx` option.
-* Call the exported XWPFProcessor API.
-
-For more information how to use the command line version refer to the <<../jamal-cmd/README.adoc#,Jamal Command Line>> document.
-
-To invoke the exported API you have to have the module on the classpath.
-The Maven dependency is defined in the next section.
-
-The API call is very simple.
-It is the following:
-
-   new XWPFProcessor().process("input.docx", "output.docx");
-
-The program will read the file `input.docx` and write the result to `output.docx`.
-
-== Dependency
-
-To use the module, you have to have the code on the classpath.
-This can be done adding
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
-
-[source,xml]
-----
-    <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-word</artifactId>
-    <version>{%VERSION%}</version>
-----
-
-to your Maven `pom.xml`.
-
-== Macros Implemented in the Module
-
-The module implements the following macros:
-
-{%@define macro($x)=
-=== `$x`
-%}
-
-{%@define head($x)=
-  {%#eval
-    {%#snip:transform replace=/^\s+\*\s?//
-      {%@snip $x%}
-    %}
-  %}
-%}
-{%@define options($x)=
-  {%#eval
-    {%#snip:transform replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*)\".*~\n* `$1`~" \
-    replace="~\",\\s+\"~`, `" \
-    replace="~.*//\\s*~~"
-      {%@snip $x_options%}
-    %}
-  %}
-%}
-{%@snip:collect asciidoc from=src/main/java/javax0/jamal/poi/word%}
-
-{%head protect%}
-{%options protect%}
-
-{%head trackChanges%}

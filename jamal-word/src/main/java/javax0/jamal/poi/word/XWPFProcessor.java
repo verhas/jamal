@@ -112,17 +112,23 @@ public class XWPFProcessor {
     }
 
     public void process(final Path inputPath, final Path outputPath) throws IOException, BadSyntax {
-        pos = new Position(inputPath.toString(), 0, 0);
         document = new XWPFDocument(Files.newInputStream(inputPath));
+        pos = new Position(inputPath.toString(), 0, 0);
+        final var out = process(document, inputPath);
+        if (outputPath != null) {
+            out.write(Files.newOutputStream(outputPath));
+        }
+    }
+
+    public XWPFDocument process(final XWPFDocument document, final Path inputPath) throws IOException, BadSyntax {
+        pos = new Position(inputPath.toString(), 0, 0);
         try {
             process(null, document.getBodyElements());
             for (final var terminal : xwpfContext.getTerminals()) {
                 terminal.setDocument(document);
                 terminal.process();
             }
-            if (outputPath != null) {
-                document.write(Files.newOutputStream(outputPath));
-            }
+            return document;
         } finally {
             processor.close();
         }

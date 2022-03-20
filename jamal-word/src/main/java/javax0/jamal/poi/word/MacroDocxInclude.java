@@ -96,6 +96,25 @@ public class MacroDocxInclude implements Macro {
 
     }
 
+    /*
+     *
+     * tag::include[]
+     * {%macro docx::include%}
+     *
+     * Using this macro you can include the formatted content of another docx file into the currently processed one.
+     * The syntax of the macro is
+     *
+     * [source]
+     * ----
+     *   {@docx:include file_name}
+     * ----
+     * The file name can be absolute or relative to the processed file.
+     * The macro will copy the content of the included file into the current file.
+     * After that the copied parts will be processed by Jamal the same way as they had been in the document before.
+     * This means that including a file from an already included file should use a file name relative to the top level document and not the included one.
+     *
+     * end::include[]
+     */
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var position = in.getPosition();
