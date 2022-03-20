@@ -57,7 +57,7 @@ public class DebugTool {
             }
             sb.append(")\n");
         }
-        System.out.println(prefix + sb);
+//        System.out.println(prefix + sb);
     }
 
     public static void debugDoc(final String prefix, final XWPFDocument input, List<XWPFParagraph> paragraphs) {
