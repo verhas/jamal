@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-705 269 709 334" width="709" height="334">
+  <defs/>
+  <g id="Canvas_2" fill-opacity="1" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill="none">
+    <title>Canvas 2</title>
+    <rect fill="white" x="-705" y="269" width="709" height="334"/>
+    <g id="Canvas_2_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <path d="M -684.2988 421 L -514.06836 421 C -503.8511 421 -495.56836 429.28273 -495.56836 439.5 L -495.56836 439.5 C -495.56836 449.71727 -503.8511 458 -514.06836 458 L -684.2988 458 C -694.5161 458 -702.7988 449.71727 -702.7988 439.5 L -702.7988 439.5 C -702.7988 429.28273 -694.5161 421 -684.2988 421 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-692.7988 426)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Issue Tracker</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <path d="M -480.5 271 L -281.46484 271 C -271.24758 271 -262.96484 279.28273 -262.96484 289.5 L -262.96484 289.5 C -262.96484 299.71727 -271.24758 308 -281.46484 308 L -480.5 308 C -490.71727 308 -499 299.71727 -499 289.5 L -499 289.5 C -499 279.28273 -490.71727 271 -480.5 271 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-489 276)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Version Control</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <path d="M -595.5 550 L -439.6719 550 C -429.4546 550 -421.1719 558.2827 -421.1719 568.5 L -421.1719 568.5 C -421.1719 578.7173 -429.4546 587 -439.6719 587 L -595.5 587 C -605.7173 587 -614 578.7173 -614 568.5 L -614 568.5 C -614 558.2827 -605.7173 550 -595.5 550 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-604 555)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Right Format</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <path d="M -225.5 333 L -26.464844 333 C -16.247576 333 -7.964844 341.28273 -7.964844 351.5 L -7.964844 351.5 C -7.964844 361.71727 -16.247576 370 -26.464844 370 L -225.5 370 C -235.71727 370 -244 361.71727 -244 351.5 L -244 351.5 C -244 341.28273 -235.71727 333 -225.5 333 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-234 338)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Document Review</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <path d="M -325.5 564 L -140.86719 564 C -130.64992 564 -122.36719 572.2827 -122.36719 582.5 L -122.36719 582.5 C -122.36719 592.7173 -130.64992 601 -140.86719 601 L -325.5 601 C -335.71727 601 -344 592.7173 -344 582.5 L -344 582.5 C -344 572.2827 -335.71727 564 -325.5 564 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-334 569)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Automated Test</tspan>
+        </text>
+      </g>
+      <g id="Graphic_7">
+        <circle cx="-365.5" cy="442" r="84.5001350227103" fill="#b1001b"/>
+        <circle cx="-365.5" cy="442" r="84.5001350227103" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+      </g>
+      <g id="Graphic_8">
+        <path d="M -216.5 445 L -17.464844 445 C -7.247576 445 1.0351562 453.28273 1.0351562 463.5 L 1.0351562 463.5 C 1.0351562 473.71727 -7.247576 482 -17.464844 482 L -216.5 482 C -226.71727 482 -235 473.71727 -235 463.5 L -235 463.5 C -235 453.28273 -226.71727 445 -216.5 445 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-225 450)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Automated Build</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

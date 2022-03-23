@@ -1,0 +1,52 @@
+{%@comment
+
+It is an article published on javax0.wordpress.com
+
+Docs as Code is not Enough
+
+https://www.linode.com/blog/linode/docs-as-code-at-linode/
+https://docs-as-co.de/
+https://jbake.org/
+
+https://docs.errata.ai/vale/about
+https://www.writethedocs.org/guide/docs-as-code/
+https://www.youtube.com/watch?v=FQ7DkPOw3Cc
+
+%}
+{%@import https://raw.githubusercontent.com/central7/wordpress/main/wp.jim%}
+{%@define svg($x)=<img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/articleimages/$x.svg"/>%}
+
+<h1>Docs as Code</h1>
+<h2>it is the first step to the right direction</h2>
+
+The approach to treat your documentation the same way as program code is a step into the right directions, but it is far from the state of the art.
+The practice is detailed on many web sites that advocate the use of docs-as-code (DAC).
+For example the <a href="https://www.writethedocs.org/guide/docs-as-code/">Write the Docs</a> community has a great article on docs-as-code.
+The article lists
+
+<ul>
+  <li>Issue Trackers</li>
+  <li>Version Control (Git)</li>
+  <li>Plain Text Markup (Markdown, reStructuredText, Asciidoc)</li>
+  <li>Code Reviews</li>
+  <li>Automated Tests</li>
+</ul>
+
+as required tools to this approach.
+Another example is <a href="https://docs-as-co.de/">docs-as-code</a>, which is a toolset for documentation maintenance.
+They write
+
+<blockquote>
+With docs-as-code, you treat your documentation in the same way as your code.
+
+You use…
+
+your IDE to write it
+your version control system to store and version it
+your test-runner to test it
+your build system to build and deploy it"
+</blockquote>
+
+This is very much the same as the approach of <a href="https://www.writethedocs.org/guide/docs-as-code/">Write the Docs</a>.
+
+They utilize <a href="https://jbake.org/">jBake</a>, which is an automation tool converting your source documentation to a final version.

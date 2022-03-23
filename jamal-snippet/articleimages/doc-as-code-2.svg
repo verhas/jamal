@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="-932 -110 1115 271" width="1115" height="271">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="#b1001c">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_3" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -3 7 6" markerWidth="7" markerHeight="6" color="#b1001c">
+      <g>
+        <path d="M 4.8 0 L 0 -1.8 L 0 1.8 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 0 M 0 -3 L 8 0 L 0 3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="Canvas_3" fill-opacity="1" stroke-dasharray="none" fill="none" stroke="none" stroke-opacity="1">
+    <title>Canvas 3</title>
+    <rect fill="white" x="-932" y="-110" width="1115" height="271"/>
+    <g id="Canvas_3_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <path d="M -605.1152 39.34088 L -334.06836 39.34088 C -323.8511 39.34088 -315.56836 47.623613 -315.56836 57.84088 L -315.56836 57.84088 C -315.56836 68.05815 -323.8511 76.34088 -334.06836 76.34088 L -605.1152 76.34088 C -615.3325 76.34088 -623.6152 68.05815 -623.6152 57.84088 L -623.6152 57.84088 C -623.6152 47.623613 -615.3325 39.34088 -605.1152 39.34088 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-613.6152 44.34088)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Document Source Code</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <path d="M -911.3039 110.68176 L -669.06176 110.68176 C -658.8445 110.68176 -650.56176 118.9645 -650.56176 129.18176 L -650.56176 129.18176 C -650.56176 139.39903 -658.8445 147.68176 -669.06176 147.68176 L -911.3039 147.68176 C -921.5212 147.68176 -929.8039 139.39903 -929.8039 129.18176 L -929.8039 129.18176 C -929.8039 118.9645 -921.5212 110.68176 -911.3039 110.68176 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-919.8039 115.68176)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">System to Document</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <path d="M -853.6946 -32 L -669.06176 -32 C -658.8445 -32 -650.56176 -23.717268 -650.56176 -13.5 L -650.56176 -13.5 C -650.56176 -3.282732 -658.8445 5 -669.06176 5 L -853.6946 5 C -863.9118 5 -872.1946 -3.282732 -872.1946 -13.5 L -872.1946 -13.5 C -872.1946 -23.717268 -863.9118 -32 -853.6946 -32 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-862.1946 -27)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Documentarians</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <path d="M 63.5 44.776 L 161.71875 44.776 C 171.93602 44.776 180.21875 53.05873 180.21875 63.276 L 180.21875 63.276 C 180.21875 73.49327 171.93602 81.776 161.71875 81.776 L 63.5 81.776 C 53.28273 81.776 45 73.49327 45 63.276 L 45 63.276 C 45 53.05873 53.28273 44.776 63.5 44.776 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(55 49.776)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Document</tspan>
+        </text>
+      </g>
+      <g id="Line_7">
+        <path d="M -753.6556 108.68176 C -731.4949 98.31322 -699.0893 85.92951 -656 76.34088 C -647.8706 74.53186 -639.70315 72.898465 -631.5695 71.42375" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_8">
+        <line x1="-677.53254" y1="7" x2="-563.05415" y2="34.98962" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_9">
+        <line x1="-313.72793" y1="60.41115" x2="-253.89865" y2="61.39776" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_11">
+        <text transform="translate(-713.768 61)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="0" y="15">data</tspan>
+        </text>
+      </g>
+      <g id="Graphic_13">
+        <path d="M -180.8 27.276 L -99.2 27.276 L -38 48.876 L -38 77.676 L -99.2 99.276 L -180.8 99.276 L -242 77.676 L -242 48.876 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-237 49.776)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="46.591797" y="22">Process</tspan>
+        </text>
+      </g>
+      <g id="Line_15">
+        <line x1="-36" y1="63.276" x2="33.1" y2="63.276" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_16">
+        <text transform="translate(-632.2489 -48.05356)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="7531753e-19" y="15">language,</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="3.256" y="33.448">structure</tspan>
+        </text>
+      </g>
+      <g id="Graphic_17">
+        <text transform="translate(-178.536 75.828)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="5684342e-20" y="15">automated</tspan>
+        </text>
+      </g>
+    </g>
+    <g id="Canvas_3_Layer_4">
+      <title>Layer 4</title>
+      <g id="Line_10">
+        <path d="M -652.0398 140.60935 C -546.0837 147.6947 -400.7164 153.61457 -296 143 C -222.99003 135.59935 -183.34878 121.54048 -162.09414 107.2642" marker-end="url(#FilledArrow_Marker_2)" stroke="#b1001c" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_18">
+        <path d="M -169.91986 25.276 C -208.37548 -16.831334 -284.30057 -80.704455 -400 -95 C -517.764 -109.55064 -639.6895 -68.161355 -707.5079 -39.164086" marker-end="url(#FilledArrow_Marker_3)" stroke="#b1001c" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Graphic_19">
+        <rect x="-494" y="-110" width="138.336" height="28.447998" fill="white"/>
+        <text transform="translate(-489 -105)" fill="#b1001c">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="#b1001c" x="0" y="15">unit test feedback</tspan>
+        </text>
+      </g>
+      <g id="Graphic_21">
+        <rect x="-344" y="132" width="41.712" height="28.447998" fill="white"/>
+        <text transform="translate(-339 137)" fill="#b1001c">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="#b1001c" x="0" y="15">data</tspan>
+        </text>
+      </g>
+      <g id="Line_23">
+        <path d="M -655.2938 113.99294 C -631.1077 110.33377 -606.21946 105.95278 -583 100.78577 C -554.649 94.47684 -532.9473 87.92213 -516.5062 81.88981" marker-end="url(#FilledArrow_Marker_2)" stroke="#b1001c" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_24">
+        <path d="M -490 106 C -490 106 -464.27114 99.2861 -417 110.68176 C -393.69363 116.30023 -370.5541 125.01825 -353.08228 132.41368" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8.0,5.0" stroke-width="1"/>
+      </g>
+      <g id="Graphic_25">
+        <text transform="translate(-425 94)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="0" y="13">control</tspan>
+        </text>
+      </g>
+      <g id="Graphic_26">
+        <text transform="translate(-632.2489 -7)" fill="#b1001c">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="#b1001c" x="0" y="15">meta document</tspan>
+        </text>
+      </g>
+      <g id="Graphic_22">
+        <title>Rectangle</title>
+        <rect x="-608" y="86.944" width="82.032" height="28.447998" fill="white"/>
+        <text transform="translate(-603 91.944)" fill="#b1001c">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="#b1001c" x="0" y="15">meta data</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
