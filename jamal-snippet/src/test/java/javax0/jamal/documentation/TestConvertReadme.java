@@ -12,6 +12,11 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertSnippetArticle2() throws Exception {
+        DocumentConverter.convert("./ARTICLE2.wp.jam");
+    }
+
+    @Test
     void convertWritingBuiltIn() throws Exception {
         DocumentConverter.convert("../BUILTIN.adoc.jam");
     }
@@ -45,6 +50,7 @@ public class TestConvertReadme {
     void convertCmdReadme() throws Exception {
         DocumentConverter.convert("../jamal-cmd/README.adoc.jam");
     }
+
     @Test
     void convertDebugReadme() throws Exception {
         DocumentConverter.convert("../jamal-debug/README.adoc.jam");

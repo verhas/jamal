@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="-141 845 509 156" width="509" height="156">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 8 8" markerWidth="8" markerHeight="8" color="black">
+      <g>
+        <path d="M 5.4506667 0 L 0 -2.044 L 0 2.044 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="Canvas_5" fill-opacity="1" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill="none">
+    <title>Canvas 5</title>
+    <rect fill="white" x="-141" y="845" width="509" height="156"/>
+    <g id="Canvas_5_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_6">
+        <path d="M -105.5 874 L 35.92578 874 C 46.14305 874 54.42578 882.2827 54.42578 892.5 L 54.42578 892.5 C 54.42578 902.7173 46.14305 911 35.92578 911 L -105.5 911 C -115.71727 911 -124 902.7173 -124 892.5 L -124 892.5 C -124 882.2827 -115.71727 874 -105.5 874 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-114 879)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Requirement</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <path d="M 205.5 918.5 L 346.9258 918.5 C 357.14305 918.5 365.4258 926.7827 365.4258 937 L 365.4258 937 C 365.4258 947.2173 357.14305 955.5 346.9258 955.5 L 205.5 955.5 C 195.28273 955.5 187 947.2173 187 937 L 187 937 C 187 926.7827 195.28273 918.5 205.5 918.5 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(197 923.5)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Application</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <path d="M -119.90234 962 L 50.328125 962 C 60.54539 962 68.828125 970.2827 68.828125 980.5 L 68.828125 980.5 C 68.828125 990.7173 60.54539 999 50.328125 999 L -119.90234 999 C -130.11961 999 -138.40234 990.7173 -138.40234 980.5 L -138.40234 980.5 C -138.40234 970.2827 -130.11961 962 -119.90234 962 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(-128.40234 967)" fill="black">
+          <tspan font-family="Andale Mono" font-size="24" fill="black" x="0" y="22">Documentation</tspan>
+        </text>
+      </g>
+      <g id="Line_3">
+        <line x1="52.21447" y1="904.9488" x2="168.37156" y2="921.5693" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_2">
+        <line x1="189.02067" y1="949.1957" x2="86.15244" y2="963.584" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_7">
+        <text transform="translate(-60.57911 850.552)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="0" y="15">Human</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <text transform="translate(245.6849 850.552)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" fill="black" x="24868996e-20" y="15">Machine</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

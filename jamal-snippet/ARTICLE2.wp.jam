@@ -49,4 +49,35 @@ your build system to build and deploy it"
 
 This is very much the same as the approach of <a href="https://www.writethedocs.org/guide/docs-as-code/">Write the Docs</a>.
 
+{%svg docs-as-code-3%}
+
+You have to have your documents in a format supported by the DAC tools.
+Use version control, document review, automated build, issue tracker and automated tests.
+It is very much the same approach that we are using in code development.
+
+Essentially it is a copy of the professional software development process' coding part.
+Documentation, however, is not coding.
+While it is absolutely a good idea to reuse some parts of the coding methodology technics, there is more to it.
+
+{%svg docs-as-code-4%}
+
+Coding is a transformation process converting a documentation, namely the requirement documentation into code.
+The requirement documentation may not be a documentation in the classical sense.
+It may be some note, a list of wishes on a jot of paper.
+Still, the essence is to convert some human affine into machine affine.
+There are techniques that try to support this process, but most of these techniques died when in production.
+For example creating the documentation as UML and to make it so precise that the code generation is automatic afterwards is not feasible.
+It could be done in principle, but the cost of the effort is too high.
+It is cheaper to create the code rather than a documentation that defines the functionality with mathematical precision.
+
+Documenting an application is exactly the opposite direction.
+
+{%svg docs-as-code-5%}
+
+Something that failed in one direction does not necessarily fail when we try to go the other direction.
+You may not be able to jump from the river on to the bridge, but the other way is very much possible.
+
+When creating the program documentation our source is a precide description of the functionality we want to document.
+In this case we already have the precision, which was not feasible to have for the other way around.
+
 They utilize <a href="https://jbake.org/">jBake</a>, which is an automation tool converting your source documentation to a final version.

@@ -1,0 +1,49 @@
+
+
+
+
+<h1>Docs as Code</h1>
+<h2>it is the first step to the right direction</h2>
+
+The approach to treat your documentation the same way as program code is a step into the right directions, but it is far from the state of the art.
+The practice is detailed on many web sites that advocate the use of docs-as-code (DAC).
+For example the <a href="https://www.writethedocs.org/guide/docs-as-code/">Write the Docs</a> community has a great article on docs-as-code.
+The article lists
+
+<ul>
+  <li>Issue Trackers</li>
+  <li>Version Control (Git)</li>
+  <li>Plain Text Markup (Markdown, reStructuredText, Asciidoc)</li>
+  <li>Code Reviews</li>
+  <li>Automated Tests</li>
+</ul>
+
+as required tools to this approach.
+Another example is <a href="https://docs-as-co.de/">docs-as-code</a>, which is a toolset for documentation maintenance.
+They write
+
+<blockquote>
+With docs-as-code, you treat your documentation in the same way as your code.
+
+You use…
+
+your IDE to write it
+your version control system to store and version it
+your test-runner to test it
+your build system to build and deploy it"
+</blockquote>
+
+This is very much the same as the approach of <a href="https://www.writethedocs.org/guide/docs-as-code/">Write the Docs</a>.
+
+<img src="https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/articleimages/docs-as-code-3.svg"/>
+
+You have to have your documents in a format supported by the DAC tools.
+Use version control, document review, automated build, issue tracker and automated tests.
+Very much the same approach that we are using in code development.
+
+It is a copy of the professional software development process' coding part.
+Documentation, however, is not coding.
+While it is absolutely a good idea to reuse the coding methodology technics, whichever is applicable, there is more to documentation.
+
+
+They utilize <a href="https://jbake.org/">jBake</a>, which is an automation tool converting your source documentation to a final version.
