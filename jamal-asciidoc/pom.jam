@@ -1,0 +1,45 @@
+{#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{project jamal asciidoc}
+    {GAV ::jamal-asciidoc:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description Asciidoc preprocessor extension}
+
+    {@define openForTests={opens/asciidoc/asciidoc}
+    }
+    {build|{plugins|
+      {@include ../plugins.jim}
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>dist</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/bin.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+          }}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+       {@for MODULE in (engine,api,tools,core,extensions,snippet,test,scriptbasic,groovy,ruby,plantuml,debug,jamal,yaml,io,assertions)=
+         {dependency|{GROUPID}|jamal-MODULE|}}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE||test}}
+      {dependency |org.asciidoctor|asciidoctorj-api|{ASCIIDOCTORJ_VERSION}|provided}
+      {dependency |org.asciidoctor|asciidoctorj|{ASCIIDOCTORJ_VERSION}|provided}
+    }
+
+{end project}

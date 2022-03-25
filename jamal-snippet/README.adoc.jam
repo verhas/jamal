@@ -2657,5 +2657,3 @@ header and
    ----
 
 footer when the snippets are code samples in an asciidoc file.
-
-{%@snip:update%}

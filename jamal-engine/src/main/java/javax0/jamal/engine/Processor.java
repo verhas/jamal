@@ -60,7 +60,7 @@ public class Processor implements javax0.jamal.api.Processor {
     final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
     final private TraceRecordFactory traceRecordFactory = new TraceRecordFactory();
     final private StackLimiter limiter = new StackLimiter();
-    final private JShellEngine shellEngine = new JShellEngine();
+    final private JShellEngine shellEngine = getEngine();
     final private Map<AutoCloseable, AutoCloseable> openResources = new LinkedHashMap<>();
     private final Context context;
     private final Debugger debugger;
@@ -853,7 +853,9 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public void close() {
-        shellEngine.close();
+        if (shellEngine != null) {
+            shellEngine.close();
+        }
         debugger.close();
     }
 
@@ -878,9 +880,9 @@ public class Processor implements javax0.jamal.api.Processor {
      *
      * @param result the final state of the macro processing before the closers were started.
      * @throws BadSyntax if any of the closers throws an exception then the exception is caught and rethrown.
-     * If there is only one exception then it is rethrown.
-     * If there are more than one exception then the exception is wrapped in a new {@link BadSyntax} exception
-     * containing the collected exceptions as suppressed exceptions.
+     *                   If there is only one exception then it is rethrown.
+     *                   If there are more than one exception then the exception is wrapped in a new {@link BadSyntax} exception
+     *                   containing the collected exceptions as suppressed exceptions.
      */
     private void closeProcess(final Input result) throws BadSyntax {
         if (currentlyClosing) {
@@ -913,11 +915,11 @@ public class Processor implements javax0.jamal.api.Processor {
             final var sb = new StringBuilder();
             sb.append("There ").append(nrOfExceptions == 1 ? "was" : "were").append(" ").append(nrOfExceptions).append(" syntax error").append(nrOfExceptions == 1 ? "" : "s").append(" processing the Jamal input:\n");
             int j = 1;
-            for (int i = exArr.length-1; i >= 0 ; i--) {
+            for (int i = exArr.length - 1; i >= 0; i--) {
                 sb.append(j++).append(". ").append(exArr[i].getMessage()).append("\n");
             }
             final var exception = new BadSyntax(sb.toString());
-            for (int i = exArr.length-1; i >= 0 ; i--) {
+            for (int i = exArr.length - 1; i >= 0; i--) {
                 exception.addSuppressed(exArr[i]);
             }
             throw exception;
@@ -952,6 +954,14 @@ public class Processor implements javax0.jamal.api.Processor {
             openResources.put(closer, closer);
         }
         return openResources.get(closer);
+    }
+
+    private static JShellEngine getEngine() {
+        try {
+            return new JShellEngine();
+        } catch (NoClassDefFoundError e) {
+            return null;
+        }
     }
 
     private interface Runnable {

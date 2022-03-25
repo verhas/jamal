@@ -2552,7 +2552,7 @@ will result in the output
 
 [source]
 ----
-2022-03-22 19:06:08
+2022-03-25 21:41:21
 ----
 
 
@@ -3144,5 +3144,3 @@ header and
    ----
 
 footer when the snippets are code samples in an asciidoc file.
-
-
