@@ -46,6 +46,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         boolean log = false;
         if (matcher.find()) {
             final var options = List.of(matcher.group(1).split("\\s+"));
+            // snippet OPTIONS
             if (options.contains("off")) {
                 reader.restoreLines(lines);
                 return;
@@ -56,6 +57,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             if (options.contains("log")) {
                 log = true;
             }
+            // end snippet
         }
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
         final var processor = useDefaultSeparators ? new Processor() : new Processor("{%", "%}");
@@ -103,15 +105,15 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             final var outputFile = new File(outputFileName);
             try (final var writer = new BufferedWriter(new FileWriter(outputFile))) {
                 for (String newLine : newLines) {
-                    writer.write(newLine);
+                    writer.write(newLine+"\n");
                 }
             } catch (Exception e) {
                 e.printStackTrace(); // there is not much we can do here
             }
             if (log) {
                 final var logFile = new File(outputFileName + ".log");
-                try (final var writer = new BufferedWriter(new FileWriter(logFile))) {
-                    writer.write("[INFO] " + LocalDateTime.now() + " saved");
+                try (final var writer = new BufferedWriter(new FileWriter(logFile,true))) {
+                    writer.write("[INFO] " + LocalDateTime.now() + " saved\n");
                 } catch (Exception e) {
                     e.printStackTrace(); // there is not much we can do here
                 }

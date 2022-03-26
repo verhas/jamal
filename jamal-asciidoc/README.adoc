@@ -1,5 +1,4 @@
 = Jamal AsciiDoc Extension
-
 Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]
@@ -85,23 +84,63 @@ If you want to use `{` and `}` as macro opening and closing strings then start y
 When the first two characters of the document are `{@` then the macro opening and closing strings will be `{` and `}`.
 This is what the core built-in macro `import` also does.
 
-Sometimes you may want to switch off the Jamal preprocessor for a specific document.
-To do that create a first line that contains `@comment off`.
-It typically will be
+=== Options
+
+You can alter the auxiliary functions of the extension using options.
+You can place these options into the first line of the document into a comment.
 
 [source]
 ----
-{@comment off}
+{@comment off nosave log}
 ----
 
 or
 
 [source]
 ----
-{%@comment off%}
+{%@comment off nosave log%}
 ----
 
-If you want to switch on the preprocessor again then remove the `@comment off` line.
+You can place any of the currently available options listed in the above example separated by spaces in any order.
+
+==== off
+
+Sometimes you may want to switch off the Jamal preprocessor for a specific document.
+The output of the preprocessing will be the same as the input.
+This way the asciidoc rendering will not be affected by the preprocessing.
+
+==== nosave
+
+By default, the extension saves the preprocessed document in the `.adoc` file.
+It is assumed that if you have a file named `xxxx.adoc.jam` then your `xxxx.adoc` file is generated.
+
+Use this option to switch off this file writing.
+It may be needed on some older machines, or in case of big documents to improve performance.
+
+==== log
+
+You may be interested how many times and when the output file was regenerated.
+To get that information you can use the option `log` as
+
+[soure]
+----
+{@comment log}
+----
+
+in the first line of the document.
+This will instruct the extension to append a line like
+
+[soure]
+----
+[INFO] 2022-03-26T12:14:49.303437 saved
+----
+
+to the log file.
+The name of the log file is the same as the output file with the extension `.log` appended.
+For example, if you edit the file `README.adoc.jam` then the output file will be `README.adoc` and the log file will be `README.adoc.log`.
+
+This log file can grow easily and become fat.
+Feel free to delete the log file.
 
 == Modules
 
@@ -155,4 +194,3 @@ It will also insert the same admonition at the line where the error is as well a
 The error message at the end of the document is followed by a source block including the full stack trace.
 
 This way it may be easier to find the error in the document and still see some preview while the input is erroneous.
-
