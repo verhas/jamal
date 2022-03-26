@@ -1,5 +1,9 @@
 = Jamal AsciiDoc Extension
 
+Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
+
+image:images/splash.png[width=100%]
+
 This document is the readme file for the Jamal Asciidoc extension version `1.11.3-SNAPSHOT`.
 
 == Introduction
@@ -32,8 +36,72 @@ It works only with the Asciidoc plugin in IntelliJ.
 
 To use the plugin together with the IntelliJ Asciidoc plugin you need  the file `jamal-asciidoc-1.11.3-SNAPSHOT-jamal-asciidoc-distribution.zip`.
 Extract the content of this zip file into your projects `.asciidoctor/lib` folder.
-Restart IntelliJ and when it asks about the plugin say that you trust this plugin.
+
+Restart IntelliJ.
+As soon as you open a file configured as Asciidoc and has the extension `.jam` it will ask you
+
+image::images/trust.png[]
+
+__This project contains Asciidoctor Extensions in .asciidoctor/lib that can be executed to render the preview. As this Ruby code runs as your local user, don't run this code unchecked.__
+
+then select the first line that says
+
+__I've checked the code and trust it, enable them!__
+
+[NOTE]
+====
+Do not believe all that the message says.
+This is not Ruby code.
+This extension is written in Java.
+However, using the Jamal Ruby extension you may end up executing some Ruby code in your Asciidoc document.
+But only if you want.
+====
+
+Open the Preferences window of IntelliJ and select `File Types`.
+Under the recognized file types select `AsciiDoc files`.
+Under the `File name patterns:` click on the plus sign and add `*.adoc.jam`.
+
+image::images/intellij-configure-file-types.png[width=100%]
+
+This will associate the Asciidoctor plugin with the files that have `.adoc.jam` extension.
+The Jamal extension does not start the processing when you look at files that do not have the `.jam` ending.
+
 Start editing the `.adoc.jam` file and have a look at the right pane at the rendered document.
+
+== Usage
+
+After the installation you can open any file that has the extension `.adoc.jam` and have a look at the right pane at the rendered document.
+
+The default macro opening and closing strings are {% and %}.
+This is the usual convention when editing Asciidoc files with Jamal preprocessor.
+The reason for this is, because these document many times include sample code snippets that frequently may have `{` and `}` in them.
+If you want to use `{` and `}` as macro opening and closing strings then start your file with the line
+
+[source]
+----
+{@comment }
+----
+
+When the first two characters of the document are `{@` then the macro opening and closing strings will be `{` and `}`.
+This is what the core built-in macro `import` also does.
+
+Sometimes you may want to switch off the Jamal preprocessor for a specific document.
+To do that create a first line that contains `@comment off`.
+It typically will be
+
+[source]
+----
+{@comment off}
+----
+
+or
+
+[source]
+----
+{%@comment off%}
+----
+
+If you want to switch on the preprocessor again then remove the `@comment off` line.
 
 == Modules
 
