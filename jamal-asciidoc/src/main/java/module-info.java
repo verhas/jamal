@@ -7,5 +7,7 @@ module jamal.markdown {
     requires jamal.engine;
     requires asciidoctorj.api;
     requires asciidoctorj;
+    requires jdk.jshell;
+    requires java.xml;
     provides ExtensionRegistry with javax0.jamal.asciidoc.JamalPreprocessor;
 }

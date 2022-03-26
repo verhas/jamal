@@ -32,6 +32,8 @@ The original file, however, contains
 
 [source,xml]
 ----
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
@@ -2552,7 +2554,7 @@ will result in the output
 
 [source]
 ----
-2022-03-25 21:41:21
+2022-03-26 04:39:09
 ----
 
 

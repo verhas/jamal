@@ -40,13 +40,13 @@ The original file, however, contains
 
 [source,xml]
 ----
-{{%@ident%}%@snip:xml pom=pom.xml%{%@ident%}}\
-{{%@ident%}%#define VERSION={{%@ident%}%pom /project/version/text()%{%@ident%}}%{%@ident%}}\
+{%@escape* ``{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>{%@escape* ``{%VERSION%}``%}</version>
-</dependency>
+    <version>{%VERSION%}</version>
+</dependency>``%}
 ----
 
 The Jamal Snippet macros help you automate to insert actual, and transformed values, text fragments from

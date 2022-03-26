@@ -2,6 +2,7 @@ package javax0.jamal.asciidoc;
 
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
+import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.Input;
 import org.asciidoctor.Asciidoctor;
@@ -27,25 +28,33 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     @Override
     public void process(Document document, PreprocessorReader reader) {
 
-        final var lines = reader.readLines();
-        final var processor = new Processor("{%", "%}");
         final var fileName = reader.getFile();
         if( ! fileName.endsWith(".jam")) {
+            return;
+        }
+        final var lines = reader.readLines();
+        final var in = lines.get(0);
+        if( in.trim().contains("@comment off")) {
             reader.restoreLines(lines);
             return;
         }
-        final var input = Input.makeInput(String.join("\n", lines), new Position(reader.getFile(), 0, 0));
+        final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
+        final var processor = useDefaultSeparators ? new Processor() : new Processor("{%", "%}");
+        final var input = Input.makeInput(String.join("\n", lines), new Position(fileName, 0, 0));
         String result = null;
         Position position = new Position("", 0, 0);
         String errorMessage = null;
+        Exception exception = null;
         try {
             result = processor.process(input);
         } catch (BadSyntaxAt bs) {
             position = bs.getPosition();
             errorMessage = bs.getMessage();
+            exception = bs;
         } catch (Exception bs) {
             position = new Position("", 0);
             errorMessage = bs.getMessage();
+            exception = bs;
         }
 
         final List<String> newLines;
@@ -62,6 +71,13 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             for (; i < lines.size(); i++) {
                 newLines.add(lines.get(i));
             }
+        }
+        appendError(errorMessage, newLines);
+        if(exception != null) {
+            newLines.add("[source]");
+            newLines.add("----");
+            newLines.addAll(List.of(new ExceptionDumper().dump(exception).toString().split("\n")));
+            newLines.add("----");
         }
         reader.restoreLines(newLines);
     }

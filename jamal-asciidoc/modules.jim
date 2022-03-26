@@ -1,0 +1,9 @@
+{@comment
+
+This file defines all the Jamal modules containing macros that the AsciiDoc plugin depends on.
+This dependency is needed by the maven assembly plugin.
+
+This is a separate file, because this file is also included by the README.adoc.jam file.
+
+}
+{@define JAMAL_MODULES=extensions,snippet,test,scriptbasic,groovy,ruby,plantuml,debug,jamal,yaml,io,assertions}

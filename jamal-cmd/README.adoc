@@ -1,4 +1,4 @@
-\ = Jamal Command Line
+= Jamal Command Line
 
 With the command line version you can start Jamal to convert a single file or to traverse a directory structure.
 To convert a single file you simply have to specify the input and the output file:

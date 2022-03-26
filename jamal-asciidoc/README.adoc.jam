@@ -1,0 +1,138 @@
+= Jamal AsciiDoc Extension
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
+
+image:images/splash.png[width=100%]
+
+This document is the readme file for the Jamal Asciidoc extension version `{%VERSION%}`.
+
+== Introduction
+
+This Jamal module provides a extension for Asciidoc.
+The extension is a preprocessor extension reading the input of the asciidoc document before the actual transformation of Asciidoc happens.
+Using this extension you can configure your asciidoc converted to invoke the Jamal preprocessing as part of the asciidoc conversion.
+
+The major use case is using the extension together with the IntelliJ IDEA plugin for Asciidoc.
+Installing this extension you can see the rendered and Jamal preprocessed Asciidoc result on the right editor pane while editing your `.adoc.jam` file.
+
+It is not intended to be used as an exclusive way to execute Jamal when processing Asciidoc.
+
+Maintaining a separate `.adoc.jam` and the generated `.adoc` file is the good solution.
+For example, when you maintain your project on GitHub the `.adoc` file is rendered by the platform on the file.
+This can only be done if you have the Jamal preprocessed and generated `.adoc` file uploaded to GitHub.
+
+== Installation with IntelliJ IDEA
+
+[NOTE]
+====
+Asciidoc plugin is a plugin into IntelliJ.
+The code in this module is not an IntelliJ plugin.
+It is an extension to Asciidoctor, which itself is an IntelliJ plugin.
+This way this extension is an extension of a plugin.
+You cannot install this extension as a separate plugin to IntelliJ.
+It works only with the Asciidoc plugin in IntelliJ.
+====
+
+{%@define INSTALL_FOLDER=`.asciidoctor/lib`%}
+To use the plugin together with the IntelliJ Asciidoc plugin you need  the file `jamal-asciidoc-{%VERSION%}-jamal-asciidoc-distribution.zip`.
+Extract the content of this zip file into your projects {%INSTALL_FOLDER%} folder.
+
+Restart IntelliJ.
+As soon as you open a file configured as Asciidoc and has the extension `.jam` it will ask you
+
+image::images/trust.png[]
+
+__This project contains Asciidoctor Extensions in .asciidoctor/lib that can be executed to render the preview. As this Ruby code runs as your local user, don't run this code unchecked.__
+
+then select the first line that says
+
+__I've checked the code and trust it, enable them!__
+
+[NOTE]
+====
+Do not believe all that the message says.
+This is not Ruby code.
+This extension is written in Java.
+However, using the Jamal Ruby extension you may end up executing some Ruby code in your Asciidoc document.
+But only if you want.
+====
+
+Open the Preferences window of IntelliJ and select `File Types`.
+Under the recognized file types select `AsciiDoc files`.
+Under the `File name patterns:` click on the plus sign and add `*.adoc.jam`.
+
+image::images/intellij-configure-file-types.png[width=100%]
+
+This will associate the Asciidoctor plugin with the files that have `.adoc.jam` extension.
+The Jamal extension does not start the processing when you look at files that do not have the `.jam` ending.
+
+Start editing the `.adoc.jam` file and have a look at the right pane at the rendered document.
+
+== Usage
+
+After the installation you can open any file that has the extension `.adoc.jam` and have a look at the right pane at the rendered document.
+
+The default macro opening and closing strings are {%@escape* ``{%``%} and {%@escape* ``%}``%}.
+This is the usual convention when editing Asciidoc files with Jamal preprocessor.
+The reason for this is, because these document many times include sample code snippets that frequently may have `{` and `}` in them.
+If you want to use `{` and `}` as macro opening and closing strings then start your file with the line
+
+[source]
+----
+{@comment }
+----
+
+When the first two characters of the document are `{@` then the macro opening and closing strings will be `{` and `}`.
+This is what the core built-in macro `import` also does.
+
+Sometimes you may want to switch off the Jamal preprocessor for a specific document.
+To do that create a first line that contains `@comment off`.
+It typically will be
+
+[source]
+----
+{@comment off}
+----
+
+or
+
+[source]
+----
+{%@escape* ``{%@comment off%}``%}
+----
+
+If you want to switch on the preprocessor again then remove the `@comment off` line.
+
+== Modules
+
+When using Jamal you probably want to use extra built-in macros in addition to the core module's.
+The ZIP file you extracted to the {%INSTALL_FOLDER%} folder contains the following modules:
+
+{%@import modules.jim%}
+{%@for [evalist] MODULE in ({%JAMAL_MODULES%})=
+* `jamal-MODULE`
+%}
+
+This is essentially all the macro modules that come with Jamal by default.
+If you want to use additional modules all you have to do is copying the `.jar` files to the {%INSTALL_FOLDER%} folder.
+The IntelliJ Asciidoc plugin will automatically load the modules.
+
+== Error Handling
+
+When the asciidoc conversion finds an error in the document it still renders the document and creates a preview.
+This can be done because asciidoc is a format where the cohesion between the different parts is not too strong.
+If there is an error at some point  in the code the rest of the document may still be rendered and will look the same.
+
+Jamal, on the other hand, is a complex macro language.
+It is very likely that it is not possible to reasonably process the input after some error.
+If there is an error in the input, the Jamal processor will not produce an output.
+As a most usable approach the extension will result the input without preprocessing but enriched with error messages.
+
+The extension will insert the error message given by the Jamal processor to the start of the document as a WARNING admonition.
+It will also insert the same admonition at the line where the error is as well as, at the end of the document.
+The error message at the end of the document is followed by a source block including the full stack trace.
+
+This way it may be easier to find the error in the document and still see some preview while the input is erroneous.
+
