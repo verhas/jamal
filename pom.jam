@@ -94,6 +94,7 @@
         {@for MODULE in (testsupport,api,core,tools,engine,extensions,scriptbasic,snippet,plantuml,debug,jamal,yaml,io,doclet,markdown,assertions,word,asciidoc,test,groovy,ruby)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
         {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
+        {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}}
         }}
 
     {profiles|

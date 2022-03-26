@@ -9,28 +9,24 @@
 
     {@define openForTests={opens/asciidoc/asciidoc}
     }
-    {build|{plugins|
-      {@include ../plugins.jim}
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version>
-        <executions>
-          <execution>
-            <id>dist</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <descriptors>
-                <descriptor>src/main/assembly/bin.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-          }}
+    {build|
+      {plugins|
+        {plugin|
+          {GAV :org.apache.maven.plugins:maven-assembly-plugin:{MAVEN_ASSEMBLY_PLUGIN_VERSION}}
+          {executions|{execution|
+              {id dist}
+              {phase package}
+              {goals|{goal single}}
+              {configuration|
+               <descriptors>
+                 <descriptor>src/main/assembly/bin.xml</descriptor>
+               </descriptors>
+               }
+           }}
+        }
+        {@include ../plugins.jim}
+      }
+    }
 
     {dependencies
        {@for [evalist] MODULE in (engine,api,tools,core,{JAMAL_MODULES})=
@@ -39,6 +35,7 @@
           {dependency|org.junit.jupiter|junit-jupiter-MODULE||test}}
       {dependency |org.asciidoctor|asciidoctorj-api|{ASCIIDOCTORJ_VERSION}|provided}
       {dependency |org.asciidoctor|asciidoctorj|{ASCIIDOCTORJ_VERSION}|provided}
+      {dependency |org.mockito|mockito-core|{MOCKITO_VERSION}|test}
     }
 
 {end project}

@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Utility class to print out an exception stack trace and cause stack trace and suppressed exceptions.
  */
-public class ExceptionDumper {
+class ExceptionDumper {
 
     /**
      * Create an exception report.

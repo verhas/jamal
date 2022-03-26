@@ -289,6 +289,11 @@
                 <artifactId>levenshtein</artifactId>
                 <version>1.0.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>4.4.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <profiles>

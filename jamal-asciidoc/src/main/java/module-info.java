@@ -1,6 +1,6 @@
 import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 
-module jamal.markdown {
+module jamal.asciidoc {
     exports javax0.jamal.asciidoc;
     requires jamal.api;
     requires jamal.tools;
