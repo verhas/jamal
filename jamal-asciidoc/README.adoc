@@ -7,18 +7,20 @@ This document is the readme file for the Jamal Asciidoc extension version `1.11.
 
 == Introduction
 
-This Jamal module provides a extension for Asciidoc.
-The extension is a preprocessor extension reading the input of the asciidoc document before the actual transformation of Asciidoc happens.
-Using this extension you can configure your asciidoc converted to invoke the Jamal preprocessing as part of the asciidoc conversion.
 
-The major use case is using the extension together with the IntelliJ IDEA plugin for Asciidoc.
-Installing this extension you can see the rendered and Jamal preprocessed Asciidoc result on the right editor pane while editing your `.adoc.jam` file.
+
+This Jamal module provides an extension for Asciidoc.
+The extension is a preprocessor extension reading the input of the Asciidoc document before the actual transformation of Asciidoc happens.
+Using this extension, you can configure your Asciidoc converted to invoke the Jamal preprocessing as part of the Asciidoc conversion.
+
+The primary use case is using the extension with the IntelliJ IDEA plugin for Asciidoc.
+Installing this extension, you can see the rendered and Jamal preprocessed Asciidoc result on the right editor pane while editing your `.adoc.jam` file.
 
 It is not intended to be used as an exclusive way to execute Jamal when processing Asciidoc.
 
-Maintaining a separate `.adoc.jam` and the generated `.adoc` file is the good solution.
-For example, when you maintain your project on GitHub the `.adoc` file is rendered by the platform on the file.
-This can only be done if you have the Jamal preprocessed and generated `.adoc` file uploaded to GitHub.
+Maintaining a separate `.adoc.jam` and the generated `.adoc` file is a good solution.
+For example, when you maintain your project on GitHub, the `.adoc` file is rendered by the platform on the file.
+You can only do it if you have the Jamal preprocessed and generated `.adoc` file uploaded to GitHub.
 
 == Installation with IntelliJ IDEA
 
@@ -27,17 +29,17 @@ This can only be done if you have the Jamal preprocessed and generated `.adoc` f
 Asciidoc plugin is a plugin into IntelliJ.
 The code in this module is not an IntelliJ plugin.
 It is an extension to Asciidoctor, which itself is an IntelliJ plugin.
-This way this extension is an extension of a plugin.
+This way, this extension is an extension of a plugin.
 You cannot install this extension as a separate plugin to IntelliJ.
 It works only with the Asciidoc plugin in IntelliJ.
 ====
 
 
-To use the plugin together with the IntelliJ Asciidoc plugin you need  the file `jamal-asciidoc-1.11.3-SNAPSHOT-jamal-asciidoc-distribution.zip`.
-Extract the content of this zip file into your projects `.asciidoctor/lib` folder.
+To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-Asciidoc-1.11.3-SNAPSHOT-jamal-Asciidoc-distribution.zip`.
+Extract the content of this zip file into your projects `.Asciidoctor/lib` folder.
 
 Restart IntelliJ.
-As soon as you open a file configured as Asciidoc and has the extension `.jam` it will ask you
+As soon as you open a file configured as Asciidoc and has the extension `.jam`, it will ask you:
 
 image::images/trust.png[]
 
@@ -50,44 +52,73 @@ __I've checked the code and trust it, enable them!__
 [NOTE]
 ====
 Do not believe all that the message says.
-This is not Ruby code.
+It is not Ruby code.
 This extension is written in Java.
-However, using the Jamal Ruby extension you may end up executing some Ruby code in your Asciidoc document.
+However, using the Jamal Ruby extension, you may execute some Ruby code in your Asciidoc document.
 But only if you want.
 ====
 
 Open the Preferences window of IntelliJ and select `File Types`.
-Under the recognized file types select `AsciiDoc files`.
+Under the recognized file types, select `AsciiDoc files`.
 Under the `File name patterns:` click on the plus sign and add `*.adoc.jam`.
 
 image::images/intellij-configure-file-types.png[width=100%]
 
-This will associate the Asciidoctor plugin with the files that have `.adoc.jam` extension.
+It will associate the Asciidoctor plugin with the files with the `.adoc.jam` extension.
 The Jamal extension does not start the processing when you look at files that do not have the `.jam` ending.
 
-Start editing the `.adoc.jam` file and have a look at the right pane at the rendered document.
+Start editing the `.adoc.jam` file and look at the right pane at the rendered document.
 
 == Usage
 
-After the installation you can open any file that has the extension `.adoc.jam` and have a look at the right pane at the rendered document.
+After the installation, you can open any file that has the extension `.adoc.jam` and have a look at the right pane at the rendered document.
 
 The default macro opening and closing strings are {% and %}.
-This is the usual convention when editing Asciidoc files with Jamal preprocessor.
-The reason for this is, because these document many times include sample code snippets that frequently may have `{` and `}` in them.
-If you want to use `{` and `}` as macro opening and closing strings then start your file with the line
+It is the usual convention when editing Asciidoc files with Jamal preprocessor.
+The reason for this is because these documents many times include sample code snippets that frequently may have `{` and `}` in them.
+If you want to use `{` and `}` as macro opening and closing strings, then start your file with the line:
 
 [source]
 ----
 {@comment }
 ----
 
-When the first two characters of the document are `{@` then the macro opening and closing strings will be `{` and `}`.
-This is what the core built-in macro `import` also does.
+When the first two characters of the document are `{@`, then the macro opening and closing strings will be `{` and `}`.
+It is what the core built-in macro `import` also does.
+
+=== Configuration
+
+You can configure the extension using the Jamal built-in configuration mechanism, which uses
+
+* environment variables,
+* system variables, or
+* properties files.
+
+The configuration uses the exact mechanism that Jamal uses when searching for configuration options.
+The search order and key name translations are described in the documentation of the macro link:../README.adoc#env[`env`].
+
+When looking for a configuration value `X_Y_Z`, then the following search order is used:
+
+* First, the code looks at the Java system properties for `x.y.z`.
+* If there is no system property with that name, it looks at the environment variable `X_Y_Z`.
+* Finally, it tries to look up the configuration value `x.y.z` from the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file.
+
+The following configuration values are supported:
+
+* `ASCIIDOC_EXTENSION_OPEN` can define the macro opening string. The default value is {%.
+* `ASCIIDOC_EXTENSION_CLOSE` can define the macro closing string. The default value is %}.
+* `ASCIIDOC_EXTENSION_NOSAVE` can be `true` or `false`, and it defines whether the extension should save the rendered document to the file system.
+The default value is `false`, meaning that the rendered document is saved to the file system.
+* `ASCIIDOC_EXTENSION_LOG` can be `true` or `false`, defining whether the extension should log the rendering.
+The default value is `false`, meaning no logging by default.
+
+Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file.
 
 === Options
 
 You can alter the auxiliary functions of the extension using options.
-You can place these options into the first line of the document into a comment.
+You can place these options into the document's first line into a comment.
+If an option is defined for something controllable by configuration, then the option will take precedence.
 
 [source]
 ----
@@ -101,26 +132,26 @@ or
 {%@comment off nosave log%}
 ----
 
-You can place any of the currently available options listed in the above example separated by spaces in any order.
+You can place any of the options listed in the above example separated by spaces in any order.
 
 ==== off
 
 Sometimes you may want to switch off the Jamal preprocessor for a specific document.
 The output of the preprocessing will be the same as the input.
-This way the asciidoc rendering will not be affected by the preprocessing.
+This way, the Asciidoc rendering will not be affected by the preprocessing.
 
 ==== nosave
 
-By default, the extension saves the preprocessed document in the `.adoc` file.
-It is assumed that if you have a file named `xxxx.adoc.jam` then your `xxxx.adoc` file is generated.
+The extension saves the preprocessed document in the `.adoc` file by default.
+It is assumed that if you have a file named `xxxx.adoc.jam`, then your `xxxx.adoc` file is generated.
 
 Use this option to switch off this file writing.
-It may be needed on some older machines, or in case of big documents to improve performance.
+You may need it on some older machines or in the case of extensive documents to improve performance.
 
 ==== log
 
-You may be interested how many times and when the output file was regenerated.
-To get that information you can use the option `log` as
+You may be interested in how many times and when the extension regenerated the output file.
+To get that information, you can use the option `log` as
 
 [soure]
 ----
@@ -128,7 +159,7 @@ To get that information you can use the option `log` as
 ----
 
 in the first line of the document.
-This will instruct the extension to append a line like
+It will instruct the extension to append a line like
 
 [soure]
 ----
@@ -136,16 +167,16 @@ This will instruct the extension to append a line like
 ----
 
 to the log file.
-The name of the log file is the same as the output file with the extension `.log` appended.
-For example, if you edit the file `README.adoc.jam` then the output file will be `README.adoc` and the log file will be `README.adoc.log`.
+The log file's name is the same as the output file with the extension `.log` appended.
+For example, if you edit the file `README.adoc.jam`, the output file will be `README.adoc`, and the log file will be `README.adoc.log`.
 
-This log file can grow easily and become fat.
+This log file can overgrow and become fat.
 Feel free to delete the log file.
 
 == Modules
 
-When using Jamal you probably want to use extra built-in macros in addition to the core module's.
-The ZIP file you extracted to the `.asciidoctor/lib` folder contains the following modules:
+When using Jamal, you probably want to use extra built-in macros in addition to the core modules.
+The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the following modules:
 
 
 
@@ -174,23 +205,23 @@ The ZIP file you extracted to the `.asciidoctor/lib` folder contains the followi
 * `jamal-assertions`
 
 
-This is essentially all the macro modules that come with Jamal by default.
-If you want to use additional modules all you have to do is copying the `.jar` files to the `.asciidoctor/lib` folder.
+It is essentially all the macro modules that come with Jamal by default.
+If you want to use additional modules, all you have to do is copy the `.jar` files to the `.Asciidoctor/lib` folder.
 The IntelliJ Asciidoc plugin will automatically load the modules.
 
 == Error Handling
 
-When the asciidoc conversion finds an error in the document it still renders the document and creates a preview.
-This can be done because asciidoc is a format where the cohesion between the different parts is not too strong.
-If there is an error at some point  in the code the rest of the document may still be rendered and will look the same.
+When the Asciidoc conversion finds an error in the document, it still renders the document and creates a preview.
+You can do it because Asciidoc is a format where the cohesion between the different parts is not too strong.
+If there is an error in the code, the rest of the document may still be rendered and look the same.
 
 Jamal, on the other hand, is a complex macro language.
-It is very likely that it is not possible to reasonably process the input after some error.
+Likely, it is not possible to reasonably process the input after some error.
 If there is an error in the input, the Jamal processor will not produce an output.
-As a most usable approach the extension will result the input without preprocessing but enriched with error messages.
+As a most functional approach, the extension will result in the input without preprocessing but enriched with error messages.
 
-The extension will insert the error message given by the Jamal processor to the start of the document as a WARNING admonition.
-It will also insert the same admonition at the line where the error is as well as, at the end of the document.
-The error message at the end of the document is followed by a source block including the full stack trace.
+The extension will insert the error message given by the Jamal processor to the document's start as a WARNING admonition.
+It will also insert the same admonition at the line where the error is and at the end of the document.
+The error message at the end of the document is followed by a source block, including the full stack trace.
 
-This way it may be easier to find the error in the document and still see some preview while the input is erroneous.
+This way, it may be easier to find the error in the document and still see some preview while the input is erroneous.

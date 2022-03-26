@@ -38,12 +38,12 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             return;
         }
         final var lines = reader.readLines();
-        final var in = lines.get(0).trim();
+        final var in = lines.size() > 0 ? lines.get(0).trim() : "";
         final var matcher = Pattern.compile("@comment\\s+([\\w\\s\\d]*)").matcher(in);
         // save the converted text from `xxx.adoc.jam` --> `xxx.adoc` by default
-        boolean save = true;
+        boolean save = !Configuration.INSTANCE.nosave;
         // by default, we do not write log file
-        boolean log = false;
+        boolean log = Configuration.INSTANCE.log;
         if (matcher.find()) {
             final var options = List.of(matcher.group(1).split("\\s+"));
             // snippet OPTIONS
@@ -60,7 +60,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             // end snippet
         }
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
-        final var processor = useDefaultSeparators ? new Processor() : new Processor("{%", "%}");
+        final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
         final var input = Input.makeInput(String.join("\n", lines), new Position(fileName, 0, 0));
         String result = null;
         Position position = new Position("", 0, 0);
@@ -105,14 +105,14 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             final var outputFile = new File(outputFileName);
             try (final var writer = new BufferedWriter(new FileWriter(outputFile))) {
                 for (String newLine : newLines) {
-                    writer.write(newLine+"\n");
+                    writer.write(newLine + "\n");
                 }
             } catch (Exception e) {
                 e.printStackTrace(); // there is not much we can do here
             }
             if (log) {
                 final var logFile = new File(outputFileName + ".log");
-                try (final var writer = new BufferedWriter(new FileWriter(logFile,true))) {
+                try (final var writer = new BufferedWriter(new FileWriter(logFile, true))) {
                     writer.write("[INFO] " + LocalDateTime.now() + " saved\n");
                 } catch (Exception e) {
                     e.printStackTrace(); // there is not much we can do here
