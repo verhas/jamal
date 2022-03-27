@@ -8,7 +8,7 @@ import javax0.jamal.api.Processor;
 
 public class LineCount implements Macro, InnerScopeDependent {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         int count = 0;
         for (final var ch : in.toString().toCharArray()) {
             if (ch == '\n') count++;

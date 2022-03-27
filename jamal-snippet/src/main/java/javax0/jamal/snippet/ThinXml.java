@@ -21,7 +21,7 @@ public class ThinXml {
     /**
      * The tab size in spaces for the generated XML. This is not fascinating since the resulting XML is formatted.
      */
-    private int tabSize = 4;
+    private final int tabSize = 4;
     boolean tabClosed = true;
 
     public ThinXml(final String thinXml) {

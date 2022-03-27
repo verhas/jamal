@@ -120,7 +120,7 @@ public class XWPFProcessor {
         }
     }
 
-    public XWPFDocument process(final XWPFDocument document, final Path inputPath) throws IOException, BadSyntax {
+    public XWPFDocument process(final XWPFDocument document, final Path inputPath) throws BadSyntax {
         pos = new Position(inputPath.toString(), 0, 0);
         try {
             process(null, document.getBodyElements());

@@ -5,12 +5,10 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -33,7 +31,7 @@ public class Write implements Macro, InnerScopeDependent {
             f.getParentFile().mkdirs();
         }
         try( final var fos = new FileOutputStream(f, append.is());
-             final var stream = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+             final var stream = new OutputStreamWriter(fos, StandardCharsets.UTF_8)
         ){
             stream.append(in);
         } catch (IOException ioException) {

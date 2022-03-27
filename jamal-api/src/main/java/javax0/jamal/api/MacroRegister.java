@@ -223,7 +223,7 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      * therefore may need the values of the user defined macros which are inside the macro (so they are essentially
      * {@link InnerScopeDependent}, but may also define user defined macros, like {@code Eval}.
      *
-     * @throws BadSyntax
+     * @throws BadSyntax when there is an error
      */
     void lock() throws BadSyntax;
 }

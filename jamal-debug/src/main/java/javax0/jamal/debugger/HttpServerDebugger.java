@@ -86,8 +86,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
      */
     private static class Task {
         boolean taskCancelled = false;
-        CountDownLatch waitForIt = new CountDownLatch(1);
-        CountDownLatch ack = new CountDownLatch(1);
+        final CountDownLatch waitForIt = new CountDownLatch(1);
+        final CountDownLatch ack = new CountDownLatch(1);
         final Command command;
         String messageBuffer;
         int status = 200;

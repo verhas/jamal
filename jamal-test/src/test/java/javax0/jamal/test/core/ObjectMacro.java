@@ -11,7 +11,6 @@ import javax0.jamal.tools.Params;
 
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 public class ObjectMacro implements Macro {
@@ -25,7 +24,7 @@ public class ObjectMacro implements Macro {
         }
 
         @Override
-        public String evaluate(String... parameters) throws BadSyntax {
+        public String evaluate(String... parameters) {
             return "";
         }
 

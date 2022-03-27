@@ -453,9 +453,8 @@ public class InputHandler {
      *
      * @param input to be split up
      * @return the list of the strings created from the input
-     * @throws BadSyntaxAt if the separator character is letter or digit
      */
-    public static String[] getParts(Input input) throws BadSyntaxAt {
+    public static String[] getParts(Input input) {
         return getParts(input, -1);
     }
 

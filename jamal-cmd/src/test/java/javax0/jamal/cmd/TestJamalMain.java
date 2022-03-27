@@ -39,19 +39,19 @@ public class TestJamalMain {
 
     @Test
     @DisplayName("Command line displays help screen")
-    public void testHelpScreenIsDisplayed() throws BadSyntax {
+    public void testHelpScreenIsDisplayed() {
         Assertions.assertEquals("Usage:", jamal("-h").substring(0, 6));
     }
 
     @Test
     @DisplayName("Command line displays version")
-    public void testVersionScreenIsDisplayed() throws BadSyntax {
+    public void testVersionScreenIsDisplayed() {
         Assertions.assertEquals("Jamal Version ", jamal("-vers").substring(0, 14));
     }
 
     @Test
     @DisplayName("Command line converts a single file with verbose output")
-    public void testConvertSingleFile() throws Exception {
+    public void testConvertSingleFile() {
         final var out = jamal("src/test/resources/test.jam", "target/test-classes/test", "--verbose").replaceAll("\\\\", "/");
         Assertions.assertAll(
                 () -> Assertions.assertTrue(Pattern.compile("Jamal .*/jamal-cmd/src/test/resources/test.jam -> .*/jamal-cmd/target/test-classes/test").matcher(out).find(),
@@ -63,7 +63,7 @@ public class TestJamalMain {
 
     @Test
     @DisplayName("Command line converts multiple files with verbose output")
-    public void testConvertMultipleFiles() throws Exception {
+    public void testConvertMultipleFiles() {
         final var out = jamal("-include=\\..*jam$", "-source=src/test/resources/multiple_files", "-target=target/test-classes/", "--verbose")
                 .replaceAll("\\\\", "/").replaceAll("\r","");
         Assertions.assertAll(
@@ -79,7 +79,7 @@ public class TestJamalMain {
     }
     @Test
     @DisplayName("Command line converts a single docx file")
-    public void testConvertSingleDocFile() throws Exception {
+    public void testConvertSingleDocFile() {
         final var out = jamal("src/test/resources/DOCX/test1.docx", "target/test-classes/test1.docx", "--docx").replaceAll("\\\\", "/");
         Assertions.assertAll(
                 () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test1.docx")))

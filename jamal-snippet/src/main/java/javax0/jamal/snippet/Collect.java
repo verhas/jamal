@@ -148,7 +148,7 @@ public class Collect implements Macro, InnerScopeDependent {
     }
 
     private static class SnippetAccumulator {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         final String id;
         final int startLine;
         boolean isOpen = true;
@@ -167,8 +167,8 @@ public class Collect implements Macro, InnerScopeDependent {
         }
     }
 
-    private static Pattern ASCIIDOC_START = Pattern.compile("tag::([\\w\\d_$]+)\\[.*?\\]");
-    private static Pattern ASCIIDOC_STOP = Pattern.compile("end::([\\w\\d_$]+)\\[.*?\\]");
+    private static final Pattern ASCIIDOC_START = Pattern.compile("tag::([\\w\\d_$]+)\\[.*?]");
+    private static final Pattern ASCIIDOC_STOP = Pattern.compile("end::([\\w\\d_$]+)\\[.*?]");
 
     /**
      * Harvest snippets from a file where the snippets are defined using the ASCIIDOC tag syntax.
@@ -179,7 +179,7 @@ public class Collect implements Macro, InnerScopeDependent {
      * @param pos     the position to store the snippets at
      * @param prefix  the prefix to use for the snippet names
      * @param postfix the postfix to use for the snippet names
-     * @throws BadSyntax
+     * @throws BadSyntax when there is an error
      */
     private void harvestAsciiDoc(final String file,
                                  final SnippetStore store,

@@ -26,7 +26,7 @@ public class MacroQualifier {
     public final Macro macro;
     public int postEvalCount;
     public final Processor processor;
-    private final String NOT_USED = null;
+    private static final String NOT_USED = null;
 
 
     public MacroQualifier(Processor processor, Input input, int postEvalCount) throws BadSyntax {

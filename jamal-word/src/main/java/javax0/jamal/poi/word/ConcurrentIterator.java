@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  */
 public class ConcurrentIterator<T> implements Iterator<T>, Consumer<T>, Supplier<T> {
     private int index;
-    private List<T> list;
+    private final List<T> list;
     private T lastReturned;
 
 

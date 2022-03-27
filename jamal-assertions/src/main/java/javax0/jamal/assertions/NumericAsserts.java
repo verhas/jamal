@@ -106,7 +106,7 @@ public abstract class NumericAsserts extends AbstractAssert {
         }
 
         @Override
-        protected boolean test(String[] parts) throws BadSyntax {
+        protected boolean test(String[] parts) {
             try {
                 Double.parseDouble(parts[0]);
             } catch (NumberFormatException nfe) {
@@ -122,7 +122,7 @@ public abstract class NumericAsserts extends AbstractAssert {
         }
 
         @Override
-        protected boolean test(String[] parts) throws BadSyntax {
+        protected boolean test(String[] parts) {
             try {
                 Integer.parseInt(parts[0]);
             } catch (NumberFormatException nfe) {

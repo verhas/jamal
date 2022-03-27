@@ -6,7 +6,6 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.Params;
@@ -38,8 +37,8 @@ public class Defer implements Macro, InnerScopeDependent {
          * @param input      of the deferred macro. Note that this is not the result of the processing. The input of the
          *                   processing, a.k.a. the result of the Jamal execution is available in the macro {@code $input}
          *                   macro.
-         * @param inputName
-         * @param outputName
+         * @param inputName the name of the macro containing the input to the deferred macro.
+         * @param outputName the name of the macro where the result of the deferred macro will be stored.
          */
         private DeferredCloser(Input input, String inputName, String outputName) {
             // store a copy of the input of the macro

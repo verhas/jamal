@@ -13,7 +13,7 @@ import javax0.jamal.api.Processor;
 public class StatefulBadMacro implements Macro {
     private int state;
     @Override
-    public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+    public String evaluate(final Input in, final Processor processor) {
         state++;
         return ""+state;
     }

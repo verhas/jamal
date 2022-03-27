@@ -307,7 +307,7 @@ public class TestProcessor {
 
         @Override
         public void set(javax0.jamal.api.Processor input) {
-            this.processor = processor;
+            this.processor = input;
         }
 
         @Override

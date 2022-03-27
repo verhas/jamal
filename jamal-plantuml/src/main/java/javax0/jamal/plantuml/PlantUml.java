@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class PlantUml implements Macro, InnerScopeDependent {
     private static class Trie {
-        static IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+        static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                 "$file"
         );
     }

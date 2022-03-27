@@ -10,12 +10,8 @@ public class TestInputHandler {
     private void assertSplit(String input, String... expected) {
         var in = new Input(input);
         final String[] result;
-        try {
-            result = InputHandler.getParts(in);
-        } catch (BadSyntaxAt badSyntaxAt) {
-            // means the test is wrong
-            throw new RuntimeException(badSyntaxAt);
-        }
+        result = InputHandler.getParts(in);
+
         Assertions.assertArrayEquals(expected, result);
 
     }

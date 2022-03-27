@@ -1,7 +1,5 @@
 package javax0.jamal.asciidoc;
 
-import javax0.jamal.api.BadSyntaxAt;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;

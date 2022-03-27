@@ -60,7 +60,7 @@ public class Update implements Macro, InnerScopeDependent {
         final Pattern start;
         final Pattern stop;
 
-        private State(SnippetStore snippets, Processor processor, String head, String tail, Pattern start, Pattern stop) throws BadSyntax {
+        private State(SnippetStore snippets, Processor processor, String head, String tail, Pattern start, Pattern stop) {
             this.snippets = snippets;
             this.head = head;
             this.tail = tail;

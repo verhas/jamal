@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class Param<K> implements Params.Param<K> {
     final public String[] key;
     private String name;
-    List<String> value = new ArrayList<>();
+    final List<String> value = new ArrayList<>();
     private Processor processor;
     private String macroName;
     private String defaultValue = null;
@@ -121,14 +121,14 @@ public class Param<K> implements Params.Param<K> {
     }
 
     @Override
-    public <K> Param<List<K>> asList(Class<K> k) {
+    public <KK> Param<List<KK>> asList(Class<KK> k) {
         stringNeeded = false;
         if (k == Integer.class) {
             this.converter = s -> getIntList();
         } else {
             this.converter = s -> getList();
         }
-        return (Param<List<K>>) this;
+        return (Param<List<KK>>) this;
     }
 
     @Override

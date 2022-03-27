@@ -2289,38 +2289,38 @@ will result
 - NumberLines.java: 2,756 bytes
 - RangeMacro.java: 1,240 bytes
 - Untab.java: 2,285 bytes
-- DateMacro.java: 613 bytes
+- DateMacro.java: 578 bytes
 - Format.java: 930 bytes
-- Update.java: 3,754 bytes
+- Update.java: 3,737 bytes
 - SnipTransform.java: 16,201 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 17,685 bytes
+- Collect.java: 17,726 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 4,213 bytes
-- ThinXml.java: 8,786 bytes
-- LineCount.java: 604 bytes
-- Replace.java: 1,775 bytes
+- TrimLines.java: 4,196 bytes
+- ThinXml.java: 8,792 bytes
+- LineCount.java: 587 bytes
+- Replace.java: 1,735 bytes
 - SnipLine.java: 691 bytes
 - SnipXml.java: 1,489 bytes
 - ThinXmlMacro.java: 585 bytes
-- BlockConverter.java: 1,822 bytes
+- BlockConverter.java: 1,858 bytes
 - Counter.java: 3,691 bytes
 - StringMacros.java: 6,429 bytes
-- Clear.java: 434 bytes
+- Clear.java: 399 bytes
 - KillLines.java: 1,659 bytes
 - SnipLoad.java: 3,530 bytes
-- Rot13.java: 907 bytes
-- SnippetStore.java: 10,730 bytes
+- Rot13.java: 890 bytes
+- SnippetStore.java: 10,713 bytes
 - ListDir.java: 5,583 bytes
 - XmlFormat.java: 3,514 bytes
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,177 bytes
 - SnipProperties.java: 1,485 bytes
-- Xml.java: 1,543 bytes
+- Xml.java: 1,509 bytes
 - CounterMacro.java: 1,811 bytes
 - SnipList.java: 1,260 bytes
-- XmlDocument.java: 5,656 bytes
-- Java.java: 10,404 bytes
+- XmlDocument.java: 5,533 bytes
+- Java.java: 10,411 bytes
 - ReplaceLines.java: 2,982 bytes
 - SkipLines.java: 2,720 bytes
 - SnipCheck.java: 5,906 bytes
@@ -2578,7 +2578,7 @@ will result in the output
 
 [source]
 ----
-2022-03-27 18:03:01
+2022-03-28 00:34:22
 ----
 
 

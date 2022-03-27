@@ -21,7 +21,7 @@ public interface BlockConverter {
      * @param sb     the input and also the store for the output
      * @param pos    the position where the input starts
      * @param params the parameters for the processing. It is different for every block converter macro.
-     * @throws BadSyntax
+     * @throws BadSyntax when the underlying macro throws up
      */
     void convertTextBlock(StringBuilder sb, Position pos, Params.Param<?>... params) throws BadSyntax;
 

@@ -133,19 +133,15 @@ public class FileTools {
 
     static {
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_DEV_PATH_ENV).ifPresent(devPath -> {
-            try {
-                final String[] paths;
-                paths = InputHandler.getParts(makeInput(devPath));
-                for (String path : paths) {
-                    final var parts = path.split("=", 2);
-                    if (parts.length == 2) {
-                        devPaths.put(parts[0], parts[1]);
-                    } else {
-                        throw new RuntimeException("Invalid dev path: " + path);
-                    }
+            final String[] paths;
+            paths = InputHandler.getParts(makeInput(devPath));
+            for (String path : paths) {
+                final var parts = path.split("=", 2);
+                if (parts.length == 2) {
+                    devPaths.put(parts[0], parts[1]);
+                } else {
+                    throw new RuntimeException("Invalid dev path: " + path);
                 }
-            } catch (BadSyntaxAt e) {
-                throw new RuntimeException(e);
             }
         });
     }

@@ -102,9 +102,9 @@ public class If implements Macro {
 
     private boolean compare(List<Integer> number, boolean and, Predicate<Integer> p) {
         if (and) {
-            return number.stream().allMatch(p::test);
+            return number.stream().allMatch(p);
         } else {
-            return number.stream().anyMatch(p::test);
+            return number.stream().anyMatch(p);
         }
     }
 

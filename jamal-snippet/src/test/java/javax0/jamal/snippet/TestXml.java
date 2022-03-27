@@ -1,12 +1,8 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
-import javax0.jamal.tools.HexDumper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.nio.charset.StandardCharsets;
 
 public class TestXml {
 

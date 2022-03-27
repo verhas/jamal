@@ -348,7 +348,7 @@ public class Params {
         skip(input, 1);
     }
 
-    public void parse() throws BadSyntax {
+    public void parse() {
         for (final var holder : holders.values()) {
             holder.inject(processor, macroName);
         }

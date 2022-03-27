@@ -26,7 +26,7 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
 public interface Macro extends Identified, ServiceLoaded {
 
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Stateful {
+    @interface Stateful {
     }
 
     /**

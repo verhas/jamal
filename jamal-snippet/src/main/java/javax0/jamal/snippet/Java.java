@@ -22,7 +22,7 @@ public class Java {
 
     public static class ClassMacro implements Macro, InnerScopeDependent {
         private static class Trie {
-            static IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+            static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // snippet classFormats
                     "$simpleName",
                     "$name",
@@ -61,7 +61,7 @@ public class Java {
 
     public static class FieldMacro implements Macro, InnerScopeDependent {
         private static class Trie {
-            static IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+            static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // OTFDC -> of the field's defining class
                     // OTF -> of the field
                     // snippet fieldFormats
@@ -133,7 +133,7 @@ public class Java {
 
     public static class MethodMacro implements Macro, InnerScopeDependent {
         private static class Trie {
-            static IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+            static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // OTMDC -> of the method's defining class
                     // OTM -> of the method
                     // snippet methodFormats
@@ -220,7 +220,7 @@ public class Java {
         } else {
             final var parts = InputHandler.getParts(in, 2);
             if (parts.length < 2) {
-                throw new BadSyntaxAt("Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in.toString() + "'", in.getPosition());
+                throw new BadSyntaxAt("Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in + "'", in.getPosition());
             }
             className = parts[0];
             fieldName = parts[1];

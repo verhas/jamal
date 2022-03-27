@@ -460,7 +460,7 @@ public class TestParams {
 
     @Test
     @DisplayName("When multiple holders use the same key it throws Illegal Argument Exception")
-    void testMultipleKeyUseError() throws Exception {
+    void testMultipleKeyUseError() {
         final var file = Params.<String>holder("", "file").asString();
         final var name = Params.<String>holder("", "name").asString();
         Assertions.assertThrows(IllegalArgumentException.class, () -> Params.using(null)

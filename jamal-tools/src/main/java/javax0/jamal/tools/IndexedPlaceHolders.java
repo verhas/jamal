@@ -117,6 +117,6 @@ public class IndexedPlaceHolders {
     }
 
     public String format(final String original, final String... values) throws Exception {
-        return format(original, Arrays.stream(values).map(s -> value(s)).toArray(Value[]::new));
+        return format(original, Arrays.stream(values).map(IndexedPlaceHolders::value).toArray(Value[]::new));
     }
 }

@@ -6,8 +6,6 @@ import javax0.jamal.engine.DebuggerStub;
 import javax0.jamal.engine.NullDebugger;
 import javax0.jamal.engine.Processor;
 
-import java.util.Optional;
-
 /**
  * The debugger factory finds and instantiates a debugger for the given processor. To perform this task the code looks
  * at the system property, or the environment variable {@link EnvironmentVariables#JAMAL_DEBUG_ENV}.
@@ -58,7 +56,9 @@ public class DebuggerFactory {
         if (!unique) {
             throw new IllegalArgumentException("There are two or more equal minimum affinity debuggers.");
         }
-
+        if (selected == null) {
+            throw new IllegalArgumentException("There is no debugger that can handle the given configuration string.");
+        }
         try {
             selected.init(new DebuggerStub(processor));
         } catch (IllegalArgumentException iae) {

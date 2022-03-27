@@ -66,7 +66,7 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
         }
     }
 
-    private static void trimHorizontal(StringBuilder sb, int requestedMargin) throws BadSyntax {
+    private static void trimHorizontal(StringBuilder sb, int requestedMargin) {
         final int margin = calculateMargin(sb, requestedMargin);
         doTrimming(sb, margin);
     }

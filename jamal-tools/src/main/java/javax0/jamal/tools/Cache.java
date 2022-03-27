@@ -64,8 +64,7 @@ public class Cache {
                 return false;
             }
             final var write = getProperty("write");
-            var b= expiration(ttl, write) < System.currentTimeMillis();
-            return b;
+            return expiration(ttl, write) < System.currentTimeMillis();
         }
 
         private long expiration(final String ttl, final String write) {
@@ -237,7 +236,7 @@ public class Cache {
 
     static final Entry NO_CACHE = new Entry(NonexistentFile.INSTANCE, NonexistentFile.INSTANCE);
 
-    private static File CACHE_ROOT_DIRECTORY = new File(
+    private /*non-final for test*/ static File CACHE_ROOT_DIRECTORY = new File(
             EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_HTTPS_CACHE_ENV)
                     .or(() -> Optional.of(DEFAULT_CACHE_ROOT)).map(FileTools::adjustedFileName).get());
 

@@ -12,7 +12,7 @@ public class Rot13 implements Macro {
     private static final String target = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
 
     @Override
-    public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+    public String evaluate(final Input in, final Processor processor) {
         InputHandler.skipWhiteSpaces(in);
         final StringBuilder sb = new StringBuilder(in.toString());
         for (int i = 0; i < sb.length(); i++) {

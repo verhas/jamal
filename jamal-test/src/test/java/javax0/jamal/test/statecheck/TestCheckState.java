@@ -11,11 +11,9 @@ public class TestCheckState {
 
     @Test
     @DisplayName("Statelessness is checked on macro load and throws runtime exception")
-    void testCheckState() throws Exception {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            TestThat.theInput("{@use javax0.jamal.test.examples.StatefulBadMacro as macro}")
-                    .results("");
-        });
+    void testCheckState() {
+        Assertions.assertThrows(RuntimeException.class, () -> TestThat.theInput("{@use javax0.jamal.test.examples.StatefulBadMacro as macro}")
+                .results(""));
     }
 
     /**
@@ -47,11 +45,9 @@ public class TestCheckState {
 
     @Test
     @DisplayName("Statefulness check cannot be captured with the macro 'try'.")
-    void testCheckStateInTry() throws Exception {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            TestThat.theInput("{@try {@use javax0.jamal.test.examples.StatefulBadMacro as macro}}")
-                    .results("");
-        });
+    void testCheckStateInTry() {
+        Assertions.assertThrows(RuntimeException.class, () -> TestThat.theInput("{@try {@use javax0.jamal.test.examples.StatefulBadMacro as macro}}")
+                .results(""));
     }
 
     @Test
@@ -66,11 +62,9 @@ public class TestCheckState {
 
     @Test
     @DisplayName("Statelessness is checked on global macro load and throws runtime exception")
-    void testCheckStateForGLobal() throws Exception {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            TestThat.theInput("{@use global javax0.jamal.test.examples.StatefulBadMacro as macro}")
-                    .results("");
-        });
+    void testCheckStateForGLobal() {
+        Assertions.assertThrows(RuntimeException.class, () -> TestThat.theInput("{@use global javax0.jamal.test.examples.StatefulBadMacro as macro}")
+                .results(""));
     }
 
     @Test

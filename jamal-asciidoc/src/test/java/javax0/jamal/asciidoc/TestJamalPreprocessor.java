@@ -119,7 +119,7 @@ public class TestJamalPreprocessor {
         PreprocessorReader reader = Mockito.mock(PreprocessorReader.class);
         Mockito.when(reader.getFile()).thenReturn(TEST_INPUT);
         Mockito.when(reader.readLines()).thenReturn(List.of(input.split("\n")));
-        final var response = ArgumentCaptor.forClass(List.class);
+        final var response = (ArgumentCaptor<List<String>>)(ArgumentCaptor<?>)ArgumentCaptor.forClass(List.class);
         sut.process(document, reader);
         Mockito.verify(reader).restoreLines(response.capture());
         final var actual = String.join("\n", response.getValue());

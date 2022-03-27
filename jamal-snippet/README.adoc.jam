@@ -131,7 +131,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=e46e22d3%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=624b330b%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -318,7 +318,7 @@ For example, the same properties file in XML format looks like the following:
 
 [[xml_define]]
 ==== {%macroChapter%}`xml:define`
-{%#snip:check file={%JAVA_DIR%}Xml.java hash=b719699e%}
+{%#snip:check file={%JAVA_DIR%}Xml.java hash=7f15bda3%}
 This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
 The syntax of the command is:
 
@@ -489,7 +489,7 @@ will result
 
 [[snip_clear]]
 ==== {%macroChapter%}`snip:clear`
-{%#snip:check file={%JAVA_DIR%}Clear.java hash=afb3c251%}
+{%#snip:check file={%JAVA_DIR%}Clear.java hash=060e1237%}
 Calling this macro deletes all collected snippets from memory.
 The result of the macro is an empty string.
 
@@ -925,7 +925,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=d5e23797%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=19291468%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1074,7 +1074,7 @@ The format and the meaning of the option `lines` is exactly the same as the opti
 
 [[rot13]]
 ==== {%macroChapter%}`rot13`
-{%#snip:check file={%JAVA_DIR%}Rot13.java hash=9acdfa2a%}
+{%#snip:check file={%JAVA_DIR%}Rot13.java hash=d447d6b4.4689689d%}
 
 This macro calculates the ROT13 transformation of the input.
 For example
@@ -1290,7 +1290,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 
 [[replace]]
 ==== {%macroChapter%}`replace`
-{%#snip:check file={%JAVA_DIR%}Replace.java hash=f297657f%}
+{%#snip:check file={%JAVA_DIR%}Replace.java hash=ae34c02e%}
 The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
@@ -1779,7 +1779,7 @@ The meaning and the interpretation of the parameters is the same as for the unde
 
 [[lineCount]]
 ==== {%macroChapter%}`lineCount`
-{%#snip:check file={%JAVA_DIR%}LineCount.java hash=b60124c5%}
+{%#snip:check file={%JAVA_DIR%}LineCount.java hash=7dea916d%}
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
 {%sample/
@@ -2113,7 +2113,7 @@ For more examples and detailed explanation of the thin XML format, see the <<./T
 
 [[date]]
 ==== {%macroChapter%}`date`
-{%#snip:check file={%JAVA_DIR%}DateMacro.java hash=70155ebb%}
+{%#snip:check file={%JAVA_DIR%}DateMacro.java hash=e3b4a8a8.31ed301c%}
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
 
@@ -2268,7 +2268,7 @@ In the format you can use the following placeholders:
 
 [[Java]]
 ==== {%macroChapter%}Java Macros
-{%#snip:check file={%JAVA_DIR%}Java.java hash=ec4e8058%}
+{%#snip:check file={%JAVA_DIR%}Java.java hash=08dd053e%}
 
 [[java:class]]
 ===== `java:class`
@@ -2626,7 +2626,7 @@ Using either `left` or `right` without trim is an error.
 
 [[snip_update]]
 ==== {%macroChapter%}`snip:update`
-{%#snip:check file={%JAVA_DIR%}Update.java hash=a63a88ca%}
+{%#snip:check file={%JAVA_DIR%}Update.java hash=8cc94871%}
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
 

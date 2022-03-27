@@ -86,12 +86,7 @@ public class Processor implements javax0.jamal.api.Processor {
         this.context = context;
         optionsStore = OptionsStore.getInstance(this);
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s -> {
-            try {
-                optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))));
-            } catch (BadSyntaxAt e) {
-                throw new IllegalArgumentException("The environment variable '"
-                        + EnvironmentVariables.JAMAL_OPTIONS_ENV + "' is malformed.", e);
-            }
+            optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))));
         });
         try {
             macros.separators(macroOpen, macroClose);

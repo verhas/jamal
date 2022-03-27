@@ -7,7 +7,7 @@ public class Trie {
     private static final int OFFSET = '!';
 
     public interface ThrowingStringSupplier {
-        String get() throws Exception;
+        String get();
     }
 
     private static class Node {

@@ -1,9 +1,7 @@
 package javax0.jamal.api;
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.ServiceLoader;
 
 /**
  * Debuggers should implement this interface in order to be loadable via the service loader. Also debugger classes

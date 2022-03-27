@@ -519,7 +519,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      * Finally, all remaining (not removed) built-in macros that implement the {@link Stackable} interface are invoked
      * calling the method {@link Stackable#pop()}.
      *
-     * @throws BadSyntax
+     * @throws BadSyntax when there is an error
      */
     private void popStackOneLevel() throws BadSyntax {
         if (scopeStack.size() > 0) {

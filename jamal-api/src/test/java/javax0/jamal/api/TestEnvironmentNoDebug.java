@@ -33,7 +33,7 @@ public class TestEnvironmentNoDebug {
 
     @Test
     @DisplayName("EnvironmentVariables.getenv() reads the ~/.jamal/setting.properties file")
-    void testProperties() throws Exception {
+    void testProperties() {
         final var jamalDirectory = System.getProperty("user.home") + "/.jamal/";
         final var jamalPFile = jamalDirectory + "settings.properties";
         Assumptions.assumeTrue(new File(jamalPFile).exists());

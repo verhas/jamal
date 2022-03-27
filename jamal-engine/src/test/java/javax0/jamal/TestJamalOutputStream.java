@@ -33,6 +33,6 @@ public class TestJamalOutputStream {
         sut.write(("" +
                 "Hello, {name}!"
         ).getBytes(StandardCharsets.UTF_8));
-        Assertions.assertThrows(IOException.class, () -> sut.close());
+        Assertions.assertThrows(IOException.class, sut::close);
     }
 }

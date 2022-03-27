@@ -9,7 +9,7 @@ public class TestGenericTrie {
 
     @Test
     @DisplayName("Finds a single element put in as string")
-    void testGet() throws Exception {
+    void testGet() {
         final var sut = new GenericTrie<Integer>();
         sut.put("a", 13);
         Assertions.assertEquals((Integer) 13, sut.get("a"));
@@ -17,7 +17,7 @@ public class TestGenericTrie {
 
     @Test
     @DisplayName("Null values can also be inserted")
-    void testNull() throws Exception {
+    void testNull() {
         final var sut = new GenericTrie<Integer>();
         sut.put("a", null);
         Assertions.assertNull(sut.get("a"));
@@ -25,7 +25,7 @@ public class TestGenericTrie {
 
     @Test
     @DisplayName("get() return null for non-existent key")
-    void testNotFind() throws Exception {
+    void testNotFind() {
         final var sut = new GenericTrie<Integer>();
         sut.put("a", 13);
         Assertions.assertNull(sut.get("b"));
@@ -45,7 +45,7 @@ public class TestGenericTrie {
 
     @Test
     @DisplayName("The map stores and finds example keys")
-    void testMultipleExamples() throws Exception {
+    void testMultipleExamples() {
         final var sut = new GenericTrie<Integer>();
         sut.put("a", 1);
         sut.put("ba", 1);
@@ -75,14 +75,14 @@ public class TestGenericTrie {
     @DisplayName("Throws exception when key prefix each other even when the values are null")
     void testThrowsForPrefixForNullValues() {
         final var sut = new GenericTrie<String>();
-        sut.put("bca", (String) null);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bcad", (String) null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bc", (String) null));
+        sut.put("bca", null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bcad", null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> sut.put("bc", null));
     }
 
     @Test
     @DisplayName("The map stores and finds example keys")
-    void testFind() throws Exception {
+    void testFind() {
         final var sut = new GenericTrie<String>();
         sut.put("a", "a");
         sut.put("ba", "ba");

@@ -9,7 +9,7 @@ import org.yaml.snakeyaml.DumperOptions;
 public class YamlDumperOptions implements Identified, ObjectHolder<DumperOptions> {
     public static final String DUMPER_OPTIONS_MACRO_ID = "`yaml_dumper_options";
 
-    private DumperOptions options = new DumperOptions();
+    private final DumperOptions options = new DumperOptions();
 
     @Override
     public String getId() {
@@ -27,7 +27,7 @@ public class YamlDumperOptions implements Identified, ObjectHolder<DumperOptions
         return options;
     }
 
-    public static YamlDumperOptions get(Processor processor) throws BadSyntax {
+    public static YamlDumperOptions get(Processor processor) {
         return (YamlDumperOptions)processor.getRegister().getUserDefined(DUMPER_OPTIONS_MACRO_ID).orElse(null);
     }
 

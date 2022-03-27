@@ -153,7 +153,7 @@ public class JamalTaglet implements Taglet {
         note(String.format("'%s' is %s", fieldName, source.get(doclet)));
     }
 
-    private Map<String, String> memoize = new HashMap<>();
+    private final Map<String, String> memoize = new HashMap<>();
 
     /**
      * Convert the tags processing using Jamal. First the elements of the {@code tags} are copied together and then they

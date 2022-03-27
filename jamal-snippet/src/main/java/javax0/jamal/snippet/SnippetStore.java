@@ -169,7 +169,7 @@ public class SnippetStore implements Identified {
         return fetchSnippet(id).text;
     }
 
-    public String snippet(final Pattern pattern) throws BadSyntax {
+    public String snippet(final Pattern pattern) {
         final var snipSet = new TreeSet<String>();
         for(final var entry : snippets.entrySet()) {
             if(pattern.matcher(entry.getKey()).find()) {
