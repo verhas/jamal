@@ -631,6 +631,12 @@ There are three different ways to use the macro.
 
 . insert multiple snippets into the output.
 
+In all of these cases the option `hash` or `hashCode` can be used to perform a consistency check.
+It works exactly the same way as in the macro <<snip_check,`snip:check`>>.
+The possibility to have this option eliminates the need to use the `snip` and the `snip:check` macros together.
+Note, however, that it is not possible to check against the number of the lines in the snippet.
+You can check only the hash code.
+
 ==== Use one snippet
 
 The syntax for the first case is
@@ -687,6 +693,9 @@ and the Jamal code
 
 to gauge out the string `:rubyShell` from the source code.
 
+When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole snippet is calculated.
+If there is any change in the snippet, even outside the first line, the hash code will be different and the snippet inclusion will purposefully fail.
+
 ==== Multiple Snippets
 
 The third use is to insert multiple snippets into the output. (starting from Jamal 1.11.0)
@@ -724,6 +733,21 @@ You may remember this technique from 40 years ago when BASIC program lines had t
 
 When used with the option `poly`, it is impossible to use any comment following the regular expression.
 The whole text after the option till the macro closing string is interpreted as part of the regular expression.
+
+When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole text containing the snippets concatenated is calculated.
+If there is
+
+* any change in any of the snippets, or there is
+
+* a new snippet included into the set,
+
+* a snippet was deleted or renamed and is not included into the set any more,
+
+* or in case the ordering of the snippets change,
+
+* for any reason the concatenated set of snippets changes,
+
+then snippet inclusion will purposefully fail.
 
 [[snip_check]]
 ==== ix.`snip:check`
@@ -2259,7 +2283,7 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 1,440 bytes
-- Snip.java: 2,738 bytes
+- Snip.java: 4,320 bytes
 - SnipSave.java: 4,856 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,756 bytes
@@ -2299,7 +2323,7 @@ will result
 - Java.java: 10,404 bytes
 - ReplaceLines.java: 2,982 bytes
 - SkipLines.java: 2,720 bytes
-- SnipCheck.java: 5,866 bytes
+- SnipCheck.java: 5,906 bytes
 - Reflow.java: 1,981 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -2554,7 +2578,7 @@ will result in the output
 
 [source]
 ----
-2022-03-26 21:25:35
+2022-03-27 15:01:35
 ----
 
 

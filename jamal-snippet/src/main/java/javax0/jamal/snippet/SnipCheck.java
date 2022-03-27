@@ -15,7 +15,7 @@ import java.util.Locale;
 public class SnipCheck implements Macro {
 
     // snipline SnipCheck_MIN_LINE
-    private static final int MIN_LENGTH = 6;
+    public static final int MIN_LENGTH = 6;
     // snipline SnipCheck_JAMAL_SNIPPET_CHECK
     public static final String JAMAL_SNIPPET_CHECK = "JAMAL_SNIPPET_CHECK";
 
@@ -37,48 +37,51 @@ public class SnipCheck implements Macro {
         final String snippet = getSnippetContent(in, processor, id, fileName, message);
 
         if (hashString.isPresent()) {
-            return checkHashString(hashString, id, fileName, message, snippet);
+            checkHashString(hashString, id, fileName, message, snippet);
+            return "";
         }
 
         if (lines.isPresent()) {
-            return checkLineCount(lines, id, fileName, message, snippet);
+            checkLineCount(lines, id, fileName, message, snippet);
+            return "";
         }
         throw new BadSyntax("Neither lines, nor hash is checked in " + getId() + "'" + message.get() + "'");
     }
 
-    private String checkLineCount(Params.Param<Integer> lines, Params.Param<String> id, Params.Param<String> fileName, Params.Param<String> message, String snippet) throws BadSyntax {
-        final var lastNl = snippet.charAt(snippet.length() - 1) == '\n' ? 0 : 1 ;
+    private void checkLineCount(Params.Param<Integer> lines, Params.Param<String> id, Params.Param<String> fileName, Params.Param<String> message, String snippet) throws BadSyntax {
+        final var lastNl = snippet.charAt(snippet.length() - 1) == '\n' ? 0 : 1;
         final var newlines = snippet.replaceAll("[^\\n]", "").length() + lastNl;
         if (newlines == lines.get()) {
-            return "";
+            return;
         }
         throw new BadSyntax("The " + getIdString(id, fileName) + " has " + newlines + " lines and not " + lines.get() + ".\n" + "'" + message.get() + "'");
     }
 
-    private String checkHashString(Params.Param<String> hashString,
-                                   Params.Param<String> id,
-                                   Params.Param<String> fileName,
-                                   Params.Param<String> message,
-                                   String snippet) throws BadSyntax {
+    private void checkHashString(Params.Param<String> hashString,
+                                 Params.Param<String> id,
+                                 Params.Param<String> fileName,
+                                 Params.Param<String> message,
+                                 String snippet) throws BadSyntax {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(snippet));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < MIN_LENGTH) {
             if (hashStringCalculated.contains(hash)) {
                 throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) + "'. '" +
-                    hashString.get() + "' is too short, you need at least " + MIN_LENGTH +
-                    " characters.\n" + "'" + message.get() + "'");
+                        hashString.get() + "' is too short, you need at least " + MIN_LENGTH +
+                        " characters.\n" + "'" + message.get() + "'");
             } else {
                 throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) + "', not '" +
-                    hashString.get() + "', which is too short anyway, you need at least " + MIN_LENGTH +
-                    " characters.\n" + "'" + message.get() + "'");
+                        hashString.get() + "', which is too short anyway, you need at least " + MIN_LENGTH +
+                        " characters.\n" + "'" + message.get() + "'");
             }
         }
         if (hashStringCalculated.contains(hash)) {
-            return "";
-        }if(message.isPresent()) {
+            return;
+        }
+        if (message.isPresent()) {
             throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) +
                     "' does not contain '" + hashString.get() + "'.\n" + "'" + message.get() + "'");
-        }else{
+        } else {
             throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) +
                     "' does not contain '" + hashString.get() + "'.");
         }

@@ -12,16 +12,16 @@ public class TestSnippet {
     @DisplayName("Snippets can be defined and then used in snip macro")
     void testSnippetDefinition() throws Exception {
         TestThat.theInput("{@snip:define snippet1=    \n" +
-            "this is the content of the snippet\n" +
-            "this is the content of the snippet\n" +
-            "this is the content of the snippet\n" +
-            "this is the content of the snippet\n" +
-            "}{@snip snippet1 this is ignored\n" +
-            "a way ignored}").results(
-            "this is the content of the snippet\n" +
                 "this is the content of the snippet\n" +
                 "this is the content of the snippet\n" +
-                "this is the content of the snippet\n");
+                "this is the content of the snippet\n" +
+                "this is the content of the snippet\n" +
+                "}{@snip snippet1 this is ignored\n" +
+                "a way ignored}").results(
+                "this is the content of the snippet\n" +
+                        "this is the content of the snippet\n" +
+                        "this is the content of the snippet\n" +
+                        "this is the content of the snippet\n");
     }
 
 
@@ -29,9 +29,27 @@ public class TestSnippet {
     @DisplayName("Snippets can be checked for change")
     void testSnippetCheck1() throws Exception {
         TestThat.theInput("{@snip:define snippet1=    \n" +
-                "this is the content of the snippet}" +
-                "{@snip:check hash=b0a2c1555ec779acfdfd3d09190921adcd4a8efdbe536993cf48112a7d47ee01 id=snippet1}")
-            .results("");
+                        "this is the content of the snippet}" +
+                        "{@snip:check hash=b0a2c1555ec779acfdfd3d09190921adcd4a8efdbe536993cf48112a7d47ee01 id=snippet1}")
+                .results("");
+    }
+
+    @Test
+    @DisplayName("Snippets can be checked for change when used")
+    void testSnippetWithHash1() throws Exception {
+        TestThat.theInput("{@snip:define snippet1=    \n" +
+                        "this is the content of the snippet}" +
+                        "{@snip (hash=b0a2c1555ec779acfdfd3d09190921adcd4a8efdbe536993cf48112a7d47ee01) snippet1}")
+                .results("this is the content of the snippet");
+    }
+
+    @Test
+    @DisplayName("Snippets can be checked for change when used and fails even when one character is changed")
+    void testSnippetWithHash2() throws Exception {
+        TestThat.theInput("{@snip:define snippet1=    \n" +
+                        "thjs is the content of the snippet}" +
+                        "{@snip (hash=47ee01) snippet1}")
+                .throwsBadSyntax(".*The snippet1 hash is '[a-f0-9\\.]{71}' does not contain '47ee01'\\..*");
     }
 
     private static final String JAMAL_SNIPPET_CHECK = "jamal.snippet.check";
@@ -42,9 +60,9 @@ public class TestSnippet {
         final var save = System.getProperty(JAMAL_SNIPPET_CHECK);
         System.setProperty(JAMAL_SNIPPET_CHECK, "true");
         TestThat.theInput("{@snip:define snippet1=    \n" +
-                "thjs is the content of the snippet}" +
-                "{@snip:check hash=47ee01 id=snippet1}")
-            .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}' does not contain '47ee01'\\..*");
+                        "thjs is the content of the snippet}" +
+                        "{@snip:check hash=47ee01 id=snippet1}")
+                .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}' does not contain '47ee01'\\..*");
         if (save == null) {
             System.clearProperty(JAMAL_SNIPPET_CHECK);
         } else {
@@ -56,9 +74,9 @@ public class TestSnippet {
     @DisplayName("Snippets check works with any postfix that is at least 6 characters")
     void testSnippetCheck3() throws Exception {
         TestThat.theInput("{@snip:define snippet1=    \n" +
-                "this is the content of the snippet}" +
-                "{@snip:check hash=47ee01 id=snippet1}")
-            .results("");
+                        "this is the content of the snippet}" +
+                        "{@snip:check hash=47ee01 id=snippet1}")
+                .results("");
     }
 
     @Test
@@ -67,9 +85,9 @@ public class TestSnippet {
         final var save = System.getProperty(JAMAL_SNIPPET_CHECK);
         System.setProperty(JAMAL_SNIPPET_CHECK, "true");
         TestThat.theInput("{@snip:define snippet1=    \n" +
-                "this is the content of the snippet}" +
-                "{@snip:check hash=\"\" id=snippet1}")
-            .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}'\\..*");
+                        "this is the content of the snippet}" +
+                        "{@snip:check hash=\"\" id=snippet1}")
+                .throwsBadSyntax(".*The id\\(snippet1\\) hash is '[a-f0-9\\.]{71}'\\..*");
         if (save == null) {
             System.clearProperty(JAMAL_SNIPPET_CHECK);
         } else {
@@ -81,50 +99,50 @@ public class TestSnippet {
     @DisplayName("Snippets can be used partially with regex")
     void testSnippetPartUse() throws Exception {
         TestThat.theInput("{@snip:define snippet=abra kadabra\n" +
-                "this is the content of the snippet}{@snip snippet /abra\\s*(.*)/}")
-            .results("kadabra");
+                        "this is the content of the snippet}{@snip snippet /abra\\s*(.*)/}")
+                .results("kadabra");
     }
 
     @Test
     @DisplayName("Empty snippets can be used partially with regex")
     void testEmptySnippetPartUse() throws Exception {
         TestThat.theInput("{@snip:define snippet=}{@snip snippet /\\s*(.*)/}")
-            .results("");
+                .results("");
     }
 
     @Test
     @DisplayName("Throws exception when a regular expression is not found")
     void testRegexNotFound() throws Exception {
         TestThat.theInput("{@snip:define snippet=ziba}{@snip snippet /dsd\\s*(.*)/}")
-            .throwsBadSyntax();
+                .throwsBadSyntax();
     }
 
     @Test
     @DisplayName("Throws exception when a regular expression is erroneous")
     void testRegexBad() throws Exception {
         TestThat.theInput("{@snip:define snippet=ziba}{@snip snippet /dsd\\s*(.*/}")
-            .throwsBadSyntax();
+                .throwsBadSyntax();
     }
 
     @Test
     @DisplayName("Snippet with bad regex")
     void testRegexNoCapturingGroup() throws Exception {
         TestThat.theInput("{@snip:define snippet=z}{@snip snippet /\\s*.*/}")
-            .throwsBadSyntax();
+                .throwsBadSyntax();
     }
 
     @Test
     @DisplayName("Snippet definition with no value")
     void testSnipNoValue() throws Exception {
         TestThat.theInput("{@snip:define snippet}")
-            .throwsBadSyntax();
+                .throwsBadSyntax();
     }
 
     @Test
     @DisplayName("Snippet cannot be redefined")
     void testNoRedefine() throws Exception {
         TestThat.theInput("{@snip:define a=1}{@snip:define a=1}")
-            .throwsBadSyntax();
+                .throwsBadSyntax();
     }
 
     @Test
@@ -133,7 +151,7 @@ public class TestSnippet {
         final var test = TestThat.theInput("{@snip:define a=1}{@snip a}");
         // simulate collection of accidental snippet, which is not closed in a file
         SnippetStore.getInstance(test.getProcessor())
-            .snippet("a", "1", new Position("a"), new BadSyntaxAt("test bad syntax exception", null));
+                .snippet("a", "1", new Position("a"), new BadSyntaxAt("test bad syntax exception", null));
         // executing the code will redefine the snippet
         test.results("1");
     }
@@ -144,9 +162,9 @@ public class TestSnippet {
         final var test = TestThat.theInput("{@snip a}");
         // simulate collection of accidental snippet, which is not closed in a file
         SnippetStore.getInstance(test.getProcessor())
-            .snippet("a", "1", new Position("a"), new BadSyntaxAt("test bad syntax exception", null));
+                .snippet("a", "1", new Position("a"), new BadSyntaxAt("test bad syntax exception", null));
         SnippetStore.getInstance(test.getProcessor())
-            .snippet("a", "2", new Position("a"), new BadSyntaxAt("test bad syntax exception", null));
+                .snippet("a", "2", new Position("a"), new BadSyntaxAt("test bad syntax exception", null));
         // executing the code will redefine the snippet
         test.throwsBadSyntax();
     }
@@ -157,10 +175,10 @@ public class TestSnippet {
         final var test = TestThat.theInput("{@snip a}");
         // simulate normally collected snippet, no error during collection
         SnippetStore.getInstance(test.getProcessor())
-            .snippet("a", "1", new Position("a"));
+                .snippet("a", "1", new Position("a"));
         // simulate collection of accidental snippet, which is not closed in a file
         SnippetStore.getInstance(test.getProcessor())
-            .snippet("a", "3", new Position("a"), new BadSyntaxAt("test bad syntax exception", new Position("")));
+                .snippet("a", "3", new Position("a"), new BadSyntaxAt("test bad syntax exception", new Position("")));
         test.results("1");
     }
 
@@ -168,8 +186,8 @@ public class TestSnippet {
     @DisplayName("Throws exception when the regular expression is nor closed after the snippet")
     void testSnippetPartUseBad() throws Exception {
         TestThat.theInput("{@snip:define snippet=abra kadabra\n" +
-                "this is the content of the snippet}{@snip snippet /abra\\s*(.*)}")
-            .throwsBadSyntax();
+                        "this is the content of the snippet}{@snip snippet /abra\\s*(.*)}")
+                .throwsBadSyntax();
     }
 
     @Test

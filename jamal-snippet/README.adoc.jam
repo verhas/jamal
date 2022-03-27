@@ -495,7 +495,7 @@ The result of the macro is an empty string.
 
 [[snip]]
 ==== {%macroChapter%}`snip`
-{%#snip:check file={%JAVA_DIR%}Snip.java hash=b63df3eb%}
+{%#snip:check file={%JAVA_DIR%}Snip.java hash=cffd8697%}
 
 You can use the `snip` macro to insert one or more snippets into the output.
 There are three different ways to use the macro.
@@ -505,6 +505,12 @@ There are three different ways to use the macro.
 . insert a part of the first line of a snippet into the output
 
 . insert multiple snippets into the output.
+
+In all of these cases the option `hash` or `hashCode` can be used to perform a consistency check.
+It works exactly the same way as in the macro <<snip_check,`snip:check`>>.
+The possibility to have this option eliminates the need to use the `snip` and the `snip:check` macros together.
+Note, however, that it is not possible to check against the number of the lines in the snippet.
+You can check only the hash code.
 
 ==== Use one snippet
 
@@ -562,6 +568,9 @@ and the Jamal code
 
 to gauge out the string `:rubyShell` from the source code.
 
+When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole snippet is calculated.
+If there is any change in the snippet, even outside the first line, the hash code will be different and the snippet inclusion will purposefully fail.
+
 ==== Multiple Snippets
 
 The third use is to insert multiple snippets into the output. (starting from Jamal 1.11.0)
@@ -600,9 +609,24 @@ You may remember this technique from 40 years ago when BASIC program lines had t
 When used with the option `poly`, it is impossible to use any comment following the regular expression.
 The whole text after the option till the macro closing string is interpreted as part of the regular expression.
 
+When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole text containing the snippets concatenated is calculated.
+If there is
+
+* any change in any of the snippets, or there is
+
+* a new snippet included into the set,
+
+* a snippet was deleted or renamed and is not included into the set any more,
+
+* or in case the ordering of the snippets change,
+
+* for any reason the concatenated set of snippets changes,
+
+then snippet inclusion will purposefully fail.
+
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=dfe0c0c9%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=237e0f97%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.

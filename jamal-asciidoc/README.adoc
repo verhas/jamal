@@ -161,7 +161,6 @@ To get that information, you can use the option `log` as
 in the first line of the document.
 It will instruct the extension to append a line like
 
-[soure]
 ----
 [INFO] 2022-03-26T12:14:49.303437 saved
 ----
