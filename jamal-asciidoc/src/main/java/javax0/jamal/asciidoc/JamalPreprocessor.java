@@ -44,6 +44,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         boolean save = !Configuration.INSTANCE.nosave;
         // by default, we do not write log file
         boolean log = Configuration.INSTANCE.log;
+        boolean external = Configuration.INSTANCE.external;
         if (matcher.find()) {
             final var options = List.of(matcher.group(1).split("\\s+"));
             // snippet OPTIONS
@@ -57,9 +58,17 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             if (options.contains("log")) {
                 log = true;
             }
+            if (options.contains("external")) {
+                external = true;
+            }
             // end snippet
         }
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
+        if (external) {
+            reader.restoreLines(JamalExecutor.execute(fileName));
+            return;
+        }
+
         final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
         final var input = Input.makeInput(String.join("\n", lines), new Position(fileName, 0, 0));
         String result = null;

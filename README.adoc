@@ -135,6 +135,7 @@ image::jamaldebugger2559x1089.png[]
 
 === Applications, Embedding
 
+* <<./jamal-asciidoc/README.adoc#,Jamal Asciidoc Documentation>>, How to configure and use Jamal to edit Asciidoc files using IntelliJ WYSIWYG editor.
 * <<./jamal-doclet/README.adoc#,Jamal Doclet Documentation>>, How to use Jamal in JavaDoc
 * <<./jamal-maven-plugin/README.adoc#,Jamal Maven Plugin README>>, How to use Jamal as a Maven plugin
 * <<./jamal-maven-extension/README.adoc#,Jamal Maven Extension README>>, How to use Jamal as a Maven extension
@@ -154,6 +155,7 @@ image::jamaldebugger2559x1089.png[]
 * <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
 * <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
 * <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files
+* <<./jamal-assertions/README.adoc#,Jamal Assertions Module README>>, contains macros to make assertions to ensure the consistency of your documentation
 * <<./jamal-word/README.adoc#,DOCX Word Processing README>>, describes the Jamal Microsoft Word Processing module and the macros that are specific to DOCX processing
 
 === Test Support

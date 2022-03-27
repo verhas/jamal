@@ -70,10 +70,14 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
     public String evaluate(final String... parameters) throws BadSyntax {
         final var adjustedValues = argumentHandler.adjustActualValues(parameters, optionsStore.is(Processor.LENIENT));
         if (isJShell) {
-            for (int i = 0; i < argumentHandler.parameters.length; i++) {
-                ScriptingTools.populateJShell(processor.getJShellEngine(), argumentHandler.parameters[i], adjustedValues[i]);
+            final var shell = processor.getJShellEngine();
+            if (shell == null) {
+                throw new BadSyntax("The JShell engine is not available");
             }
-            return processor.getJShellEngine().evaluate(content);
+            for (int i = 0; i < argumentHandler.parameters.length; i++) {
+                ScriptingTools.populateJShell(shell, argumentHandler.parameters[i], adjustedValues[i]);
+            }
+            return shell.evaluate(content);
         } else {
             final var engine = getEngine(scriptType);
             for (int i = 0; i < argumentHandler.parameters.length; i++) {

@@ -111,6 +111,10 @@ The following configuration values are supported:
 The default value is `false`, meaning that the rendered document is saved to the file system.
 * `ASCIIDOC_EXTENSION_LOG` can be `true` or `false`, defining whether the extension should log the rendering.
 The default value is `false`, meaning no logging by default.
+* `ASCIIDOC_EXTENSION_EXTERNAL` can instruct the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+The external command to be executed can be configured using the next, `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` configuration.
+Note that starting an external process may need significant resource and may significantly slow down the rendering.
+* `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` can specify the command to execute when the preprocessing is done using an external process.
 
 Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file.
 
@@ -172,6 +176,11 @@ For example, if you edit the file `README.adoc.jam`, the output file will be `RE
 This log file can overgrow and become fat.
 Feel free to delete the log file.
 
+==== external
+
+In some cases you may need to execute the rendering using an external process.
+This option instructs the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+
 == Modules
 
 When using Jamal, you probably want to use extra built-in macros in addition to the core modules.
@@ -224,3 +233,44 @@ It will also insert the same admonition at the line where the error is and at th
 The error message at the end of the document is followed by a source block, including the full stack trace.
 
 This way, it may be easier to find the error in the document and still see some preview while the input is erroneous.
+
+== Executing External Jamal
+
+It is possible to run Jamal as an external process and get the output of the preprocessing.
+To do that you should configure the external command to execute.
+The configuration key is `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND`.
+When it is configured in a properties file you should use `asciidoc.extension.external.command`.
+
+For example, the configuration file `~/.jamal/settings.properties` contains the following line on the development machine:
+
+[source]
+----
+asciidoc.extension.external.command=/Users/verhasp/.jbang/bin/jbang jamal@verhas -open=\{% -close=%\} $1 $2
+----
+
+As you can see, I use `jbang` to execute Jamal as an external command.
+It is also to note that the `PATH` environment variable may not be available and for this reason the full path is specified.
+
+When executing the external command the placeholder `$1` will be replaced by the input file name and `$2` by the output file name.
+The output file name is the same as the input file name without the `.jam` extension.
+The extension checks the options in the first line of the document, but in case the execution is done externally the options are ignored, except the `external` option.
+
+[NOTE]
+====
+This option was developed as a last resort.
+For example, during the development the Java JDK used by IntelliJ and hence used to execute Jamal could not find the JShell engine.
+With this option the main README can also be edited WYSIWYG style.
+====
+
+[NOTE]
+====
+You may recognize that using this option you can execute any external command.
+Keep your `~/.jamal/settings.properties` file secure.
+Configure the external command to execute only if you have no other way to use the extension.
+====
+
+
+
+
+
+

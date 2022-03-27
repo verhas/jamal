@@ -551,6 +551,3 @@ results
 8. ERROR: 3.14 is not a not numeric
 9. ERROR: three is an int, not a not int, and thus a numeric
 ----
-
-
-
