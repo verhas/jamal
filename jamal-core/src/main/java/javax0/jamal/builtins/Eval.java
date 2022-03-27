@@ -54,7 +54,11 @@ public class Eval implements Macro, InnerScopeDependent {
             case "jamal":
                 return processor.process(input);
             case "JShell":
-                return processor.getJShellEngine().evaluate(input.toString());
+                final var shell = processor.getJShellEngine();
+                if( shell == null ) {
+                    throw new BadSyntax("JShell engine is not available");
+                }
+                return shell.evaluate(input.toString());
             default:
                 var engine = getEngine(scriptType);
                 try {
