@@ -90,7 +90,7 @@ When the first two characters of the document are `{@`, then the macro opening a
 It is what the core built-in macro `import` also does.
 
 === Configuration
-{%@snip:check file=src/main/java/javax0/jamal/Asciidoc/Configuration.java hash=94ea1438%}
+{%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=94ea1438%}
 You can configure the extension using the Jamal built-in configuration mechanism, which uses
 
 * environment variables,
