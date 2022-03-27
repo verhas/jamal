@@ -91,7 +91,7 @@ public class TestJamalPreprocessor {
     }
 
     private static void assertStartsWith(final String expected, final String actual) {
-        Assertions.assertEquals(expected, actual.substring(0, Math.min(expected.length(), actual.length())));
+        Assertions.assertEquals(expected, actual.replaceAll("\r\n","\n").substring(0, Math.min(expected.length(), actual.length())));
     }
 
 
