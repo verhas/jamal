@@ -2294,7 +2294,7 @@ will result
 - Update.java: 3,737 bytes
 - SnipTransform.java: 16,201 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 17,726 bytes
+- Collect.java: 17,722 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,196 bytes
 - ThinXml.java: 8,792 bytes
@@ -2578,7 +2578,7 @@ will result in the output
 
 [source]
 ----
-2022-03-28 00:34:22
+2022-03-28 22:45:40
 ----
 
 

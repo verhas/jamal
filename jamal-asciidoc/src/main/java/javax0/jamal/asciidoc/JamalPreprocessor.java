@@ -65,7 +65,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         }
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
         if (external) {
-            reader.restoreLines(JamalExecutor.execute(fileName));
+            reader.restoreLines(JamalExecutor.execute(fileName,lines));
             return;
         }
 

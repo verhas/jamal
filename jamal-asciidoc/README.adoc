@@ -1,4 +1,5 @@
 = Jamal AsciiDoc Extension
+
 Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]

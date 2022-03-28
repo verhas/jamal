@@ -1,7 +1,7 @@
 = Jamal AsciiDoc Extension
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-{%@snip:collect from="src/main/java/"%}\
+{%@snip:collect from="src/main/java/"%}
 Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]

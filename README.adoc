@@ -105,13 +105,13 @@ Jamal macros can check that the files, classes, methods or fields exist and in c
 Whenever the source changes the output will automatically change when Jamal runs.
 
 * Jamal can collect and transform documentation text form different sources.
-You can put some of the documentation into the source code right at the place where the functionality is implemented.
+You can put some documentation into the source code right at the place where the functionality is implemented.
 You have less chance forgetting the documentation update related to that feature whenever it changes.
 Jamal will fetch the documentation from the file, transform it to fit the output format and generate up-to-date compiled documentation.
 
 * You can embed Plant UML diagram text definition into your documentation source.
 The Plant UML macro extension will generate the diagrams and create the image reference into the output document.
-Some document format support embedding Plant UML.
+Some documents format support embedding Plant UML.
 Using Jamal you can embed Plant UML into any textual documentation format.
 Because the diagram description is part of a Jamal macro processed source you can use Jamal macros in the diagrams.
 That way you are not limited by the macro features supported by Plant UML.
