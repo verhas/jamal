@@ -8,6 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -37,7 +38,7 @@ public class XmlInsert implements Macro {
         final var needed = Params.<Boolean>holder("ifneeded", "optional").asBoolean();
         final var tabsize = Params.holder("tabsize").orElseInt(4);
         skipWhiteSpaces(in);
-        Params.using(processor).from(this).between("()").keys(xpath, into,  needed, tabsize).parse(in);
+        Scan.using(processor).from(this).between("()").keys(xpath, into,  needed, tabsize).parse(in);
         skipWhiteSpaces(in);
         final var xml = in.toString();
         if (!xpath.isPresent()) {

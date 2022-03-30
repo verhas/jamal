@@ -11,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class TestJamalPreprocessor {
@@ -25,6 +26,16 @@ public class TestJamalPreprocessor {
         new File(TEST_OUTPUT).delete();
         //noinspection ResultOfMethodCallIgnored
         new File(LOG_OUTPUT).delete();
+    }
+
+    @Test
+    @DisplayName("Test SEDding")
+    void testSedding() throws FileNotFoundException {
+        System.out.println(process("{%@snip:define aaa=kkk%}" +
+                "{%@snip:check id=aaa hash=04144214412%}" +
+                "{%@snip:check id=aaa hash=010101010101%}" +
+                "{%@snip:check id=aaa hash=13546633223344422232.brakadabra%}"
+        ));
     }
 
     @Test

@@ -8,6 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -28,7 +29,7 @@ public class Update implements Macro, InnerScopeDependent {
                 "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$").asPattern();
         final var stop = Params.<Pattern>holder("stop").orElse(
             "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$").asPattern();
-        Params.using(processor).from(this).keys(head, tail, start, stop).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(head, tail, start, stop).parse(in);
 
         final var snippets = SnippetStore.getInstance(processor);
         final var state = new State(snippets, processor, head.get(), tail.get(), start.get(), stop.get());

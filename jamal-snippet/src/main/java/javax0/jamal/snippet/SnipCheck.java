@@ -4,11 +4,13 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
+import javax0.jamal.tools.Scan;
 
 import java.util.Locale;
 
@@ -24,12 +26,13 @@ public class SnipCheck implements Macro {
         if (EnvironmentVariables.getenv(JAMAL_SNIPPET_CHECK).filter(s -> s.equals("false")).isPresent()) {
             return "";
         }
+        final var pos = in.getPosition();
         final var hashString = Params.<String>holder("hash", "hashCode").orElse("");
         final var lines = Params.<String>holder("lines").asInt();
         final var id = Params.<String>holder("id");
         final var fileName = Params.<String>holder("file", "files");
         final var message = Params.<String>holder("message").orElse("");
-        Params.using(processor).from(this).tillEnd().keys(hashString, lines, id, fileName, message).parse(in);
+        Scan.using(processor).from(this).tillEnd().keys(hashString, lines, id, fileName, message).parse(in);
         if (lines.isPresent() && hashString.isPresent()) {
             throw new BadSyntax("You cannot specify 'lines' and 'hash' the same time for snip:check");
         }
@@ -37,7 +40,7 @@ public class SnipCheck implements Macro {
         final String snippet = getSnippetContent(in, processor, id, fileName, message);
 
         if (hashString.isPresent()) {
-            checkHashString(hashString, id, fileName, message, snippet);
+            checkHashString(hashString, id, fileName, message, snippet,pos);
             return "";
         }
 
@@ -57,11 +60,12 @@ public class SnipCheck implements Macro {
         throw new BadSyntax("The " + getIdString(id, fileName) + " has " + newlines + " lines and not " + lines.get() + ".\n" + "'" + message.get() + "'");
     }
 
-    private void checkHashString(Params.Param<String> hashString,
-                                 Params.Param<String> id,
-                                 Params.Param<String> fileName,
-                                 Params.Param<String> message,
-                                 String snippet) throws BadSyntax {
+    private void checkHashString(final Params.Param<String> hashString,
+                                 final Params.Param<String> id,
+                                 final Params.Param<String> fileName,
+                                 final Params.Param<String> message,
+                                 final String snippet,
+                                 final Position pos) throws BadSyntax {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(snippet));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < MIN_LENGTH) {
@@ -79,11 +83,9 @@ public class SnipCheck implements Macro {
             return;
         }
         if (message.isPresent()) {
-            throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) +
-                    "' does not contain '" + hashString.get() + "'.\n" + "'" + message.get() + "'");
+            throw new SnipCheckFailed(getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), message.get(), pos);
         } else {
-            throw new BadSyntax("The " + getIdString(id, fileName) + " hash is '" + doted(hashStringCalculated) +
-                    "' does not contain '" + hashString.get() + "'.");
+            throw new SnipCheckFailed(getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), null, pos);
         }
     }
 

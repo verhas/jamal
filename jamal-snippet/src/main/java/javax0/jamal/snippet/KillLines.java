@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.regex.Pattern;
 
@@ -15,7 +16,7 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var pattern = Params.holder("kill", "pattern").orElse("^\\s*$").asPattern();
         final var keep = Params.<Boolean>holder("keep").asBoolean();
-        Params.using(processor).from(this).keys(pattern, keep).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(pattern, keep).parse(in);
 
         convertTextBlock(in.getSB(), in.getPosition(), pattern, keep);
         return in.toString();

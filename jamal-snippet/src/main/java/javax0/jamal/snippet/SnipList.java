@@ -5,7 +5,7 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.stream.Collectors;
 
@@ -18,7 +18,7 @@ public class SnipList implements Macro, InnerScopeDependent {
         final var fnRegex = holder("file", "fileName").orElse("").asString();
         final var textRegex = holder("text", "contains").orElse("").asString();
         final var listSeparator = holder("listSeparator").orElse(",").asString();
-        Params.using(processor).from(this).keys(idRegex, fnRegex, textRegex, listSeparator).tillEnd().parse(in);
+        Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, listSeparator).parse(in);
         final var store = SnippetStore.getInstance(processor);
         return String.join(listSeparator.get(),
             store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())

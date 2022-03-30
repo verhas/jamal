@@ -7,6 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.tools.InputHandler.convertGlobal;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
@@ -20,7 +21,7 @@ public class CounterMacro implements Macro, InnerScopeDependent {
         final var start = Params.<Integer>holder("start").orElseInt(1);
         final var step = Params.<Integer>holder("step").orElseInt(1);
         skipWhiteSpaces(input);
-        Params.using(processor).from(this).keys(format, start, step, id).parse(input);
+        Scan.using(processor).from(this).firstLine().keys(format, start, step, id).parse(input);
         skipWhiteSpaces(input);
         if (input.length() > 0) {
             throw new BadSyntaxAt("There are extra characters after the counter definition", input.getPosition());

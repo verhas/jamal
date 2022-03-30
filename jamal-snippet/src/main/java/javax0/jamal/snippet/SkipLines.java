@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -17,7 +18,7 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var skipStart = Params.<Pattern>holder("skip").orElse("skip").asPattern();
         final var skipEnd = Params.<Pattern>holder("endSkip").orElse("end\\s+skip").asPattern();
-        Params.using(processor).from(this).keys(skipEnd, skipStart).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(skipEnd, skipStart).parse(in);
 
         convertTextBlock(in.getSB(), in.getPosition(), skipStart, skipEnd);
         return in.toString();

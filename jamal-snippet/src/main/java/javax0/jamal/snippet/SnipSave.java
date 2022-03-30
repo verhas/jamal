@@ -9,6 +9,7 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
+import javax0.jamal.tools.Scan;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,7 +42,7 @@ public class SnipSave implements Macro, InnerScopeDependent {
         final var output = holder("output").orElse("").asString();
         final var format = holder("format").orElse("XML").asString();
         final var tab = holder("tab", "tabSize").orElseInt(4);
-        Params.using(processor).from(this).keys(idRegex, fnRegex, textRegex, output, format, tab).tillEnd().parse(in);
+        Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, output, format, tab).parse(in);
         if (!"XML".equals(format.get())) {
             throw new BadSyntax("The only supported format is XML");
         }

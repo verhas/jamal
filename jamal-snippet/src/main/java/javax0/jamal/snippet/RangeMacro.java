@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.regex.Pattern;
 
@@ -14,7 +15,7 @@ public class RangeMacro implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var ranges = Params.<Pattern>holder(null, "range", "ranges", "lines").asString();
-        Params.using(processor).from(this).keys(ranges).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(ranges).parse(in);
 
         convertTextBlock(in.getSB(), in.getPosition(), ranges);
         return in.toString();

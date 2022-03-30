@@ -8,7 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class ListDir implements Macro, InnerScopeDependent {
         final var maxDepth = holder("maxDepth").orElseInt(Integer.MAX_VALUE);
         final var isFollowSymlinks = holder("followSymlinks").asBoolean();
         final var countOnly = holder("countOnly").asBoolean();
-        Params.using(processor).from(this).between("()")
+        Scan.using(processor).from(this).between("()")
                 .keys(format, maxDepth, isFollowSymlinks, separator, grep, glob, countOnly).parse(in);
 
         final FileVisitOption[] options;

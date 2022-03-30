@@ -1,5 +1,7 @@
 package javax0.jamal.asciidoc;
 
+import javax0.jamal.snippet.SnipCheckFailed;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,15 +24,20 @@ class ExceptionDumper {
         final var me = new ExceptionDumper();
         me.output.append(t.getMessage()).append('\n');
         me.dumpIt(t, false);
+        me.output.append("sed '" + me.sedCommand + "'");
         return me.output;
     }
 
+    final StringBuilder sedCommand = new StringBuilder();
     final StringBuilder output = new StringBuilder();
     final Set<Throwable> processed = new HashSet<>();
 
     private void dumpIt(Throwable t, boolean printMessage) {
         if (t == null || processed.contains(t)) {
             return;
+        }
+        if (t instanceof SnipCheckFailed) {
+            sedCommand.append(((SnipCheckFailed) t).sed()).append(";");
         }
         processed.add(t);
         if (printMessage) {

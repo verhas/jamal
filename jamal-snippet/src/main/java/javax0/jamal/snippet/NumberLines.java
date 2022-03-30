@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.IllegalFormatException;
 
@@ -55,7 +56,7 @@ public class NumberLines implements Macro, InnerScopeDependent, BlockConverter {
         final var format = holder("format").orElse("%d. ").asString();
         final var start = holder("start").orElseInt(1);
         final var step = holder("step").orElseInt(1);
-        Params.using(processor).from(this).keys(format, start, step).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(format, start, step).parse(in);
 
         convertTextBlock(in.getSB(),in.getPosition(),format,start,step);
         return in.toString();

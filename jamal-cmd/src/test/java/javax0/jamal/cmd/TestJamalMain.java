@@ -1,6 +1,5 @@
 package javax0.jamal.cmd;
 
-import javax0.jamal.api.BadSyntax;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -6,7 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
@@ -21,7 +21,7 @@ public class StringMacros {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var regex = holder(null, "regex").asBoolean();
             final var text = holder(null, "text", "string").asString();
-            Params.using(processor).from(this).between("()").keys(regex, text).parse(in);
+            Scan.using(processor).from(this).between("()").keys(regex, text).parse(in);
             if (regex.is()) {
                 return "" + Pattern.compile(text.get()).matcher(in.toString()).find();
             } else {
@@ -105,7 +105,7 @@ public class StringMacros {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var ignoreCase = holder("ignoreCase").asBoolean();
-            Params.using(processor).from(this).between("()").keys(ignoreCase).parse(in);
+            Scan.using(processor).from(this).between("()").keys(ignoreCase).parse(in);
             String[] parts = InputHandler.getParts(in,2);
             if (parts.length != 2) {
                 throw new BadSyntax(getId() + " needs two parts");
@@ -142,7 +142,7 @@ public class StringMacros {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var begin = holder(null, "begin").orElseInt(0);
             final var end = holder(null, "end").asInt();
-            Params.using(processor).from(this).between("()").keys(begin, end).parse(in);
+            Scan.using(processor).from(this).between("()").keys(begin, end).parse(in);
             String[] parts = InputHandler.getParts(in,1);
             if( parts.length != 1 ) {
                 throw new BadSyntax("The string:substring macro expects exactly one argument");
@@ -165,7 +165,7 @@ public class StringMacros {
             final var trim = holder(null, "trim").asBoolean();
             final var left = holder(null, "left").asBoolean();
             final var right = holder(null, "right").asBoolean();
-            Params.using(processor).from(this).between("()").keys(trim, left, right).parse(in);
+            Scan.using(processor).from(this).between("()").keys(trim, left, right).parse(in);
             if ((left.is() || right.is()) && !trim.is()) {
                 throw new BadSyntax("You cannot use 'left' or 'right' on 'string:length' without trim");
             }

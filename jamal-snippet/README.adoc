@@ -2188,6 +2188,7 @@ will result
 - LineCount.java
 - Replace.java
 - SnipLine.java
+- SnipCheckFailed.java
 - SnipXml.java
 - ThinXmlMacro.java
 - BlockConverter.java
@@ -2282,49 +2283,50 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,440 bytes
-- Snip.java: 4,320 bytes
-- SnipSave.java: 4,856 bytes
+- snippet: 1,472 bytes
+- Snip.java: 4,442 bytes
+- SnipSave.java: 4,886 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,756 bytes
-- RangeMacro.java: 1,240 bytes
-- Untab.java: 2,285 bytes
+- NumberLines.java: 2,798 bytes
+- RangeMacro.java: 1,282 bytes
+- Untab.java: 2,327 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
-- Update.java: 3,737 bytes
-- SnipTransform.java: 16,201 bytes
-- FilesMacro.java: 5,196 bytes
+- Update.java: 3,779 bytes
+- SnipTransform.java: 16,264 bytes
+- FilesMacro.java: 5,190 bytes
 - Collect.java: 17,752 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,196 bytes
 - ThinXml.java: 8,792 bytes
-- LineCount.java: 587 bytes
-- Replace.java: 1,735 bytes
+- LineCount.java: 552 bytes
+- Replace.java: 1,731 bytes
 - SnipLine.java: 691 bytes
+- SnipCheckFailed.java: 719 bytes
 - SnipXml.java: 1,489 bytes
 - ThinXmlMacro.java: 585 bytes
 - BlockConverter.java: 1,858 bytes
 - Counter.java: 3,691 bytes
-- StringMacros.java: 6,429 bytes
+- StringMacros.java: 6,419 bytes
 - Clear.java: 399 bytes
-- KillLines.java: 1,659 bytes
-- SnipLoad.java: 3,530 bytes
-- Rot13.java: 890 bytes
+- KillLines.java: 1,701 bytes
+- SnipLoad.java: 3,526 bytes
+- Rot13.java: 855 bytes
 - SnippetStore.java: 10,713 bytes
-- ListDir.java: 5,583 bytes
-- XmlFormat.java: 3,514 bytes
+- ListDir.java: 5,579 bytes
+- XmlFormat.java: 3,544 bytes
 - SnippetXmlReader.java: 6,607 bytes
-- XmlInsert.java: 6,177 bytes
+- XmlInsert.java: 6,207 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,509 bytes
-- CounterMacro.java: 1,811 bytes
-- SnipList.java: 1,260 bytes
+- CounterMacro.java: 1,853 bytes
+- SnipList.java: 1,256 bytes
 - XmlDocument.java: 5,533 bytes
-- Java.java: 10,411 bytes
-- ReplaceLines.java: 2,982 bytes
-- SkipLines.java: 2,720 bytes
-- SnipCheck.java: 5,906 bytes
-- Reflow.java: 1,981 bytes
+- Java.java: 10,437 bytes
+- ReplaceLines.java: 3,024 bytes
+- SkipLines.java: 2,762 bytes
+- SnipCheck.java: 5,956 bytes
+- Reflow.java: 2,023 bytes
 - Snippet.java: 1,088 bytes
 ----
 
@@ -2578,7 +2580,7 @@ will result in the output
 
 [source]
 ----
-2022-03-30 10:46:52
+2022-03-30 13:47:10
 ----
 
 

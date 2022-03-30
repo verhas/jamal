@@ -6,7 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.tools.Params.holder;
 
@@ -14,7 +14,7 @@ public class Replace implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var isRegex = holder("regex").asBoolean();
-        Params.using(processor).from(this).keys(isRegex).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(isRegex).parse(in);
         InputHandler.skipWhiteSpaces(in);
         final var parts = InputHandler.getParts(in);
         if (parts.length < 2) {

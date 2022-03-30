@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.Collections;
 
@@ -26,7 +27,7 @@ public class Untab implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var tabSize = Params.<Integer>holder("tabSize", "tab", "size").orElseInt(8);
-        Params.using(processor).from(this).keys(tabSize).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(tabSize).parse(in);
         final var sb = in.getSB();
         convertTextBlock(sb, in.getPosition(), tabSize);
         return sb.toString();

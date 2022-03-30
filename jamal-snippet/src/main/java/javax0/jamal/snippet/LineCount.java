@@ -1,6 +1,5 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;

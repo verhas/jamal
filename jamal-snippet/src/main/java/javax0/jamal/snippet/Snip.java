@@ -3,11 +3,13 @@ package javax0.jamal.snippet;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
+import javax0.jamal.tools.Scan;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -21,9 +23,10 @@ public class Snip implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var pos = in.getPosition();
         final var poly = Params.holder(null, "poly").asBoolean();
         final var hashString = Params.<String>holder("hash", "hashCode").orElse(null);
-        Params.using(processor).from(this).between("()").keys(poly,hashString).parse(in);
+        Scan.using(processor).from(this).between("()").keys(poly, hashString).parse(in);
         skipWhiteSpaces(in);
         final String id;
         final String text;
@@ -35,8 +38,8 @@ public class Snip implements Macro {
             skipWhiteSpaces(in);
             text = SnippetStore.getInstance(processor).snippet(id);
         }
-        if(hashString.isPresent()) {
-            checkHashString(hashString,id,text);
+        if (hashString.isPresent()) {
+            checkHashString(hashString, id, text, pos);
         }
         if (!poly.is() && firstCharIs(in, '/')) {
             skip(in, 1);
@@ -63,7 +66,7 @@ public class Snip implements Macro {
                     throw new BadSyntax("The regular expression /" + regex + "/ cannot be found in the line '" + lines[0] + "'");
                 }
             } catch (PatternSyntaxException e) {
-                throw new BadSyntax("The evaluating the regular expression /" + regex + "/ on the line '" + lines[0] + "' resulted an exception: "+e.getMessage(), e);
+                throw new BadSyntax("The evaluating the regular expression /" + regex + "/ on the line '" + lines[0] + "' resulted an exception: " + e.getMessage(), e);
             }
         } else {
             // the rest of the input is ignored
@@ -72,8 +75,9 @@ public class Snip implements Macro {
     }
 
     private static void checkHashString(Params.Param<String> hashString,
-                                  String id,
-                                  String text) throws BadSyntax {
+                                        String id,
+                                        String text,
+                                        Position pos) throws BadSyntax {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(text));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < SnipCheck.MIN_LENGTH) {
@@ -83,13 +87,12 @@ public class Snip implements Macro {
                         " characters.\n");
             } else {
                 throw new BadSyntax("The " + id + " hash is '" + SnipCheck.doted(hashStringCalculated) + "', not '" +
-                        hashString.get() + "', which is too short anyway, you need at least " +SnipCheck.MIN_LENGTH +
-                        " characters.\n" );
+                        hashString.get() + "', which is too short anyway, you need at least " + SnipCheck.MIN_LENGTH +
+                        " characters.\n");
             }
         }
         if (!hashStringCalculated.contains(hash)) {
-            throw new BadSyntax("The " + id + " hash is '" + SnipCheck.doted(hashStringCalculated) +
-                    "' does not contain '" + hashString.get() + "'.");
+            throw new SnipCheckFailed(id, SnipCheck.doted(hashStringCalculated), hashString.get(), null, pos);
         }
     }
 }

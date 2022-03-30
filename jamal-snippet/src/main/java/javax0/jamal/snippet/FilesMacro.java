@@ -8,7 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -26,7 +26,7 @@ public class FilesMacro {
      */
     public static class Directory implements Macro, InnerScopeDependent {
         private static class Trie {
-             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+            static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // snippet dirMacroFormatPlaceholders
                     "$name", // gives the name of the directory as was specified on the macro
                     "$absolutePath",  // gives the name of the directory as was specified on the macro
@@ -35,11 +35,12 @@ public class FilesMacro {
                     // end snippet
             );
         }
+
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var format = holder("directoryFormat", "format").orElse("$name").asString();
             final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Params.using(processor).from(this).between("()").keys(format, root).parse(in);
+            Scan.using(processor).from(this).between("()").keys(format, root).parse(in);
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
             final var dir = new File(dirName.length() > 0 ? dirName : ".");
@@ -86,7 +87,7 @@ public class FilesMacro {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var format = holder("fileFormat", "format").orElse("$name").asString();
             final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Params.using(processor).from(this).between("()").keys(format, root).parse(in);
+            Scan.using(processor).from(this).between("()").keys(format, root).parse(in);
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
             final var file = new File(fileName);

@@ -9,5 +9,6 @@ module jamal.asciidoc {
     requires asciidoctorj;
     requires jdk.jshell;
     requires java.xml;
+    requires jamal.snippet;
     provides ExtensionRegistry with javax0.jamal.asciidoc.JamalPreprocessor;
 }

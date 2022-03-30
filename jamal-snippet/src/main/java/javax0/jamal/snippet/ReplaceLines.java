@@ -9,6 +9,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.tools.Params.holder;
 
@@ -18,7 +19,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter 
         final var replace = holder("replace").asList(String.class);
         // throw BadSyntax if there was nothing changed
         final var detectNoChange = holder("detectNoChange").asBoolean();
-        Params.using(processor).from(this).keys(replace, detectNoChange).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(replace, detectNoChange).parse(in);
 
         final var lines = in.toString().split("\n", -1);
         convertTextBlock(in.getSB(), in.getPosition(), replace, detectNoChange);

@@ -8,6 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -26,7 +27,7 @@ public class XmlFormat implements Macro, InnerScopeDependent {
         final var tabsize = Params.holder("tabsize").orElseInt(4);
         final var thin = Params.holder(null, "thin").asBoolean();
         final var wrong = Params.holder(null, "wrong").asBoolean();
-        Params.using(processor).from(this).between("()").keys(tabsize, thin, wrong).parse(in);
+        Scan.using(processor).from(this).between("()").keys(tabsize, thin, wrong).parse(in);
 
 
         InputHandler.skipWhiteSpaces(in);

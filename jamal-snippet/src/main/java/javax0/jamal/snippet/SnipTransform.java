@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,8 +82,9 @@ public class SnipTransform implements Macro {
 
         Parameters(final Input in, final Processor processor) throws BadSyntax {
             // there is no '(' and ')' around the parameters
-            Params.using(processor)
+            Scan.using(processor)
                     .from(SnipTransform.this)
+                    .firstLine()
                     .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange,
                             skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize, ranges)
                     .parse(in);

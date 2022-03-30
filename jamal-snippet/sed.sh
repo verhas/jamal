@@ -1,0 +1,1 @@
+cat README.adoc.jam |sed 's/99037cf1/7ec49130/g;s/4b4435a2/07467e4e/g;s/17c25b99/23ca72c9/g;'

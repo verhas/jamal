@@ -7,7 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -26,7 +26,7 @@ public class SnipLoad implements Macro, InnerScopeDependent {
         final var textRegex = holder("text", "contains").orElse("").asString();
         final var input = holder("input").orElse("").asString();
         final var format = holder("format").orElse("XML").asString();
-        Params.using(processor).from(this).keys(idRegex, fnRegex, textRegex, input, format).tillEnd().parse(in);
+        Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, input, format).parse(in);
         if (!"XML".equals(format.get())) {
             throw new BadSyntax("The only supported format is XML");
         }
