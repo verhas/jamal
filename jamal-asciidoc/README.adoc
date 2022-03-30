@@ -4,7 +4,7 @@ Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]
 
-This document is the readme file for the Jamal Asciidoc extension version `1.11.3-SNAPSHOT`.
+This document is the readme file for the Jamal Asciidoc extension version `1.12.0`.
 
 == Introduction
 
@@ -36,7 +36,7 @@ It works only with the Asciidoc plugin in IntelliJ.
 ====
 
 
-To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-Asciidoc-1.11.3-SNAPSHOT-jamal-Asciidoc-distribution.zip`.
+To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-Asciidoc-1.12.0-jamal-Asciidoc-distribution.zip`.
 Extract the content of this zip file into your projects `.Asciidoctor/lib` folder.
 
 Restart IntelliJ.

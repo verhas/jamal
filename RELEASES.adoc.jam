@@ -2,7 +2,7 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
-{%RELEASE/1.11.3%}
+{%RELEASE/1.12.0%}
 
 * It is possible to include a Word doc file into another word doc file using the `docx:include` macro.
 

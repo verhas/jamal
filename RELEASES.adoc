@@ -2,7 +2,7 @@
 
 
 
-=== https://github.com/verhas/jamal/tree/1.11.3[1.11.3]
+=== https://github.com/verhas/jamal/tree/1.12.0[1.12.0]
 
 * It is possible to include a Word doc file into another word doc file using the `docx:include` macro.
 
