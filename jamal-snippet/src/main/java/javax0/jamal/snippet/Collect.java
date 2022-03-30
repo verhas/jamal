@@ -9,6 +9,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +99,7 @@ public class Collect implements Macro, InnerScopeDependent {
         // Better do not mix binary files with ASCII files.
         // Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.
         // end snippet
-        Params.using(processor).from(this)
+        Scan.using(processor).from(this)
                 .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName, prefix, postfix, asciidoc, ignoreIOEx).parse(in);
 
         final var store = SnippetStore.getInstance(processor);

@@ -45,7 +45,7 @@ The Java version development started in 2018.
 Jamal leverages on the programming language's features, and the twenty years of experience of using the old version.
 In this documentation, the term "Jamal" refers to the Java implementation of the macro language.
 
-image::text2text.svg[]
+image::text2text.png[align=center]
 
 Jamal's basic concept is to transform a source text to a target text enabling programmatic constructs in the source text.
 That way, it enables the maintainer of the text to

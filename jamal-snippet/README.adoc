@@ -1871,7 +1871,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 46.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 47.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2294,7 +2294,7 @@ will result
 - Update.java: 3,737 bytes
 - SnipTransform.java: 16,201 bytes
 - FilesMacro.java: 5,196 bytes
-- Collect.java: 17,722 bytes
+- Collect.java: 17,752 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 4,196 bytes
 - ThinXml.java: 8,792 bytes
@@ -2578,7 +2578,7 @@ will result in the output
 
 [source]
 ----
-2022-03-28 22:45:40
+2022-03-30 10:46:52
 ----
 
 

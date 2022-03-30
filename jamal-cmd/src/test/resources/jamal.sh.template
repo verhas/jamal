@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 {#import {ROOT}/version.jim}\
-MODULES="api engine core tools cmd"
+MODULES="api engine core tools cmd word snippet scriptbasic groovy ruby plantuml debug jamal yaml io assertions jamal"
 REPO=$HOME/.m2/repository
 REPO_JAMAL=$REPO/com/javax0/jamal
 VERSION={VERSION}
