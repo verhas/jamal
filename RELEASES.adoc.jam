@@ -2,6 +2,20 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
+{%RELEASE/1.11.3%}
+
+* It is possible to include a Word doc file into another word doc file using the `docx:include` macro.
+
+* You can insert a picture into a Word document using a Jamal macro.
+Since picture insertion is a basic function of Microsoft Word this functionality is to be used for special purposes only.
+
+* The macro `snip` can also check if a snippet has changed using the `hash` parameter.
+There is no need to invoke a separate `snip:check` macro.
+
+* There is an Asciidoctor extension, which can be used in IntelliJ to edit Jamal extended Asciidoc in a WYSIWYG way.
+
+* The Asciidoctor extension emits a `sed` command at the end of the error report, just in case and to help the lazy.
+
 {%RELEASE/1.11.2%}
 
 * Bug fix release. The `jamal-word` module has now fixed a bug that caused index out of range error in some cases.

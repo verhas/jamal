@@ -763,7 +763,7 @@ When you are finished with the adhoc changing, however, you have to update the d
 
 [[snipList]]
 ==== {%macroChapter%}`snip:list`
-{%#snip:check file={%JAVA_DIR%}SnipList.java hash=1c9537f8%}
+{%#snip:check file={%JAVA_DIR%}SnipList.java hash=9298f82f%}
 This macro lists the defined snippets.
 {%parameterized%}
 

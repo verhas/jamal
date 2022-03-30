@@ -2320,7 +2320,7 @@ will result
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,509 bytes
 - CounterMacro.java: 1,853 bytes
-- SnipList.java: 1,256 bytes
+- SnipList.java: 1,222 bytes
 - XmlDocument.java: 5,533 bytes
 - Java.java: 10,437 bytes
 - ReplaceLines.java: 3,024 bytes
@@ -2580,7 +2580,7 @@ will result in the output
 
 [source]
 ----
-2022-03-30 13:47:10
+2022-03-30 14:02:01
 ----
 
 

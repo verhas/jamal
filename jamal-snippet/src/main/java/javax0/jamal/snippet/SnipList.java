@@ -20,10 +20,9 @@ public class SnipList implements Macro, InnerScopeDependent {
         final var listSeparator = holder("listSeparator").orElse(",").asString();
         Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, listSeparator).parse(in);
         final var store = SnippetStore.getInstance(processor);
-        return String.join(listSeparator.get(),
-            store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())
-                .map(s -> s.id)
-                .collect(Collectors.toList()));
+        return store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())
+            .map(s -> s.id)
+            .collect(Collectors.joining(listSeparator.get()));
     }
 
     @Override
