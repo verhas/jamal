@@ -47,15 +47,15 @@ It works only with the Asciidoc plugin in IntelliJ.
 To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip`.
 
 You can download this file from the central Maven repository using the URLs:
-{%#define DL=https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/{%V%}/jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip%}\
+{%#define DL=https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/{%V%}/jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip%}{%@define URL($x)=$x[``$x``]%}
 
-[source]
-----
-{%DL%}
-{%DL%}.asc
-{%DL%}.md5
-{%DL%}.sha1
-----
+{%URL {%DL%}%}
+
+{%URL {%DL%}.asc%}
+
+{%URL {%DL%}.md5%}
+
+{%URL {%DL%}.sha1%}
 
 The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files are standard checksum files to check the integrity of the archive.
 
