@@ -36,9 +36,29 @@ This way, this extension is an extension of a plugin.
 You cannot install this extension as a separate plugin to IntelliJ.
 It works only with the Asciidoc plugin in IntelliJ.
 ====
+{%#snip:define LAST_RELEASE=
+{%#killLines pattern=".*LAST_RELEASE.*" keep
+{%@include [verbatim] ../version.jim%}%}%}\
+{%#define LAST_RELEASE={%@snip LAST_RELEASE /([\d.]+)/%}%}\
+{%!#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/{%`#define V={%LAST_RELEASE%}%}%}\
+{%!#if [not]/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/{%`#define V={%VERSION%}%}%}\
 
 {%@define INSTALL_FOLDER=`.Asciidoctor/lib`%}
-To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-Asciidoc-{%VERSION%}-jamal-Asciidoc-distribution.zip`.
+To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip`.
+
+You can download this file from the central Maven repository using the URLs:
+{%#define DL=https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/{%V%}/jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip%}\
+
+[source]
+----
+{%DL%}
+{%DL%}.asc
+{%DL%}.md5
+{%DL%}.sha1
+----
+
+The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files are standard checksum files to check the integrity of the archive.
+
 Extract the content of this zip file into your projects {%INSTALL_FOLDER%} folder.
 
 Restart IntelliJ.
