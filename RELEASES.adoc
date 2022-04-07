@@ -16,6 +16,11 @@ There is no need to invoke a separate `snip:check` macro.
 
 * The Asciidoctor extension emits a `sed` command at the end of the error report, just in case and to help the lazy.
 
+=== https://github.com/verhas/jamal/tree/1.11.3[1.11.3]
+
+Technical release, must not be used.
+It is not present on GitHub only in Maven central.
+
 === https://github.com/verhas/jamal/tree/1.11.2[1.11.2]
 
 * Bug fix release. The `jamal-word` module has now fixed a bug that caused index out of range error in some cases.

@@ -3,10 +3,12 @@ package javax0.jamal.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -35,11 +37,22 @@ public interface ServiceLoaded {
         services.iterator().forEachRemaining(list::add);
         if (list.size() == 0) {
             try {
+                final var classes = new HashSet<Class<T>>(); // different classloaders in the hierarchy may load the same file more than once
                 for (final var is : loadResources("META-INF/services/" + klass.getName(), ServiceLoaded.class.getClassLoader())) {
                     for (final var className : new String(is.readAllBytes(), StandardCharsets.UTF_8).split("\n")) {
                         try {
-                            final var instance = (T) Class.forName(className).getConstructor().newInstance();
-                            list.add(instance);
+                            final var providerKlass = (Class<T>)Class.forName(className);
+                            if( !classes.contains(providerKlass)) {
+                                classes.add(providerKlass);
+                                final Method providerMethod = getProvider(providerKlass);
+                                final T instance;
+                                if (providerMethod == null) {
+                                    instance = (T) providerKlass.getConstructor().newInstance();
+                                } else {
+                                    instance = (T) providerMethod.invoke(null);
+                                }
+                                list.add(instance);
+                            }
                         } catch (ClassCastException |
                             ClassNotFoundException |
                             NoSuchMethodException |
@@ -57,6 +70,14 @@ public interface ServiceLoaded {
         return list;
     }
 
+
+    private static <T> Method getProvider(Class<T> klass){
+        try {
+            return klass.getDeclaredMethod("provider");
+        }catch(NoClassDefFoundError | NoSuchMethodException e){
+            return null;
+        }
+    }
 
     static List<InputStream> loadResources(String name, ClassLoader classLoader) throws IOException {
         final List<InputStream> list = new ArrayList<>();

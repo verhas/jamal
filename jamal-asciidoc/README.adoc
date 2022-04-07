@@ -283,3 +283,9 @@ You may recognize that using this option you can execute any external command.
 Keep your `~/.jamal/settings.properties` file secure.
 Configure the external command to execute only if you have no other way to use the extension.
 ====
+
+
+
+
+
+
