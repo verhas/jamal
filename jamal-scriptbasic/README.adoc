@@ -2,7 +2,7 @@
 
 
 Using this integration module you can mix Jamal macro text with ScriptBasic code snippets.
-To use this module you have to add the dependency to you Maven project, as:
+To use this module you have to add the dependency to your Maven project, as:
 
 
 [source,xml]
@@ -15,8 +15,16 @@ To use this module you have to add the dependency to you Maven project, as:
 
 ----
 
-This library has one single macro, `basic`.
-Using this macro you can embed BASIC programs into your Jamal file, as
+The library is also included in the command line version, therefore you can use the macros of this library when you process a Jamal file using the command line tools.
+The same is true for the Asciidoctor preprocessor integration.
+When you are editing your Asciidoc files with Jamal preprocessing in IntelliJ or in some other WYSIWYG editor configured to use Jamal then you can use BASIC commands.
+
+This library has one single built-in macro, `basic`.
+Using this macro you can embed BASIC programs into your Jamal file.
+Usually you will not use the macro directly.
+Instead, you can invoke the user-defined macros from the resource file `scriptbasic.jim` as demonstrated in the following example:
+
+
 
 
 [source]
@@ -71,14 +79,10 @@ in your Jamal file. It will let you write things, like
 ----
 
 This will evaluate the expression and result the value of the expression.
-For more complex code you can use the macro `basic`, which is essentially same as the built-in macro of the same name.
-
-to execute a whole BASIC program and get the output into the Jamal output.
+For more complex code you can use the macro `basic`, to execute a whole BASIC program and get the output into the Jamal output.
 
 Note that you can also mix Jamal into the BASIC.
 It was demonstrated in the example above.
-The macro invocation `{#basic ...}` was using the `#` character, therefore the content is evaluated before it is passed to the built-in macro `basic`.
+The macro invocation `{\#basic ...}` was using the `#` character, therefore the content is evaluated before it is passed to the built-in macro `basic`.
 That way the macros `{start}` and `{end}` are evaluated first.
 The BASIC interpreter already gets `for i=1 to 13`.
-
-
