@@ -1,0 +1,130 @@
+= Modules of the Jamal Project
+:toc:
+
+
+== Module Categories
+The different modules fall into one of the four categories:
+
+. __core__ belongs to the core of Jamal, and it is an essential part of the Jamal macro processor
+
+. __embed__ is a module, which uses Jamal and makes it possible to use Jamal in some specific environment.
+Such a module may or may not contain macros.
+If it does, the macros are specific to the embedding environment.
+
+. __macro__ is a package containing macro implementations.
+Jamal comes with a limited set of built-in macros.
+Specific features are suppoerted by macros implemented in macro libraries.
+To use those libraries they hasve to be on the module path or on the class path.
+
+
+. __debugger__ is the module implementing the debugger interface of Jamal.
+There can be several modules implementing this interface.
+Currently there are two.
+One provides a TCP interface for an external debugger.
+This implementation is for reference purposes, and it is not feature complete.
+The other implementation provides a REST interface towards a debugger client and it also contains a REACT.js based client.
+
+== <<jamal-api/README.adoc, API>> ^_core_^
+`jamal-api` contains interfaces that the Jamal macros and the processing implements.
+Some of the interfaces implement some default methods.
+This module contains the `BadSyntax` and `BadSyntaxAt` exception classes, which are thrown when there is some error in the processing.
+
+== <<jamal-asciidoc/README.adoc, ASCIIDOC>> ^_embed_^
+`jamal-asciidoc` is an ASCIIDOCTOR preprocessor preprocessing the text input using Jamal.
+The primary use of this module is to install it into WYSIWYG editors that support asciidoctor.
+For example, you can use Jamal via this module in IntelliJ.
+
+== <<jamal-assertions/README.adoc, ASSERTIONS>> ^_macro_^
+Contains macros that can be used to perform assertions.
+An assertion is usually a constraint checking some string values.
+When the assertion fails the processing will give an error.
+You can use assertions to enforce document consistency.
+
+== <<jamal-cmd/README.adoc, CMD>> ^_embed_^
+This module is the command line version of Jamal.
+This module has a `public static void main()`, a shell script to start Jamal.
+The module also support jbang to start Jamal.
+The module has dependency for ALL the macro modules so that you can use any macro in your files.
+In addition to that it incorporates the word module to process Microsoft Word documents from the command line.
+
+== <<jamal-core/README.adoc, CORE>> ^_macro_^
+Implements the core built-in macros.
+
+== <<jamal-debug/README.adoc, DEBUG>> ^_debugger_^
+This module implements two debuggers.
+The Jamal engine does not contain a debugger itself.
+The engine has an SPI that the debuggers can implement and hook into the evaluation process.
+This module implements a TCP based debugger for reference purposes and one with a REST interface.
+The TCP implementation is not feature complete and serves reference purposes as a simple implementation of the SPI.
+The REST implementation includes a REACT.js based web client, and it is a fully usable debugger.
+
+== <<jamal-debug-ui/README.adoc, DEBUG-UI>> ^_debugger_^
+This is the REACT.js based ui for the debugger.
+
+== <<jamal-doclet/README.adoc, DOCLET>> ^_embed_^
+With this module you can use Jamal macros in your JavaDoc documentation.
+
+== <<jamal-engine/README.adoc, ENGINE>> ^_core_^
+Jamal core functionality implementation.
+
+== <<jamal-extensions/README.adoc, EXTENSIONS>> ^_macro_^
+Experimental macros, nothing is guaranteed.
+Usually macros in this module get into their own modules later.
+
+== <<jamal-groovy/README.adoc, GROOVY>> ^_macro_^
+
+Use Groovy code in your macros using the macros implemented in this module.
+
+== <<jamal-io/README.adoc, IO>> ^_macro_^
+This module implements macros that can read and write files and can start external processes.
+There is a special security consideration for this module and how you MUST configure the external processes to run.
+
+== <<jamal-jamal/README.adoc, JAMAL>> ^_macro_^
+Special macros to embed Jamal into Jamal.
+This is a module used mainly to demonstrate how Jamal works and to have Jamal macros as examples in a Jamal processed file.
+
+== <<jamal-markdown/README.adoc, MARKDOWN>> ^_macro_^
+A macro that processes its input as markdown and results the HTML output.
+The main purpose of this macro package is to use it together with the JavaDoc embedding.
+
+== <<jamal-maven-extension/README.adoc, MAVEN-EXTENSION>> ^_embed_^
+This module implements a Maven extension (not a plugin, that is the next module).
+With this you can use the Maven build tool controlled by a `pom.jam` file, which is a `pom.xml` file possibly extended with Jamal macros.
+
+== <<jamal-maven-plugin/README.adoc, MAVEN-PLUGIN>> ^_embed_^
+This module implements a maven plugin, so you can start Jamal processing from inside a build process.
+
+== <<jamal-plantuml/README.adoc, PLANTUML>> ^_macro_^
+This module implements a macro that invokes PlantUML, generates the graphical file from the source code that you can reference as an image from your documentation.
+
+== <<jamal-ruby/README.adoc, RUBY>> ^_macro_^
+
+Use Ruby code in your macros using the macros implemented in this module.
+
+== <<jamal-scriptbasic/README.adoc, SCRIPTBASIC>> ^_macro_^
+
+Use BASIC code in your macros using the macros implemented in this module.
+
+== <<jamal-snippet/README.adoc, SNIPPET>> ^_macro_^
+This module implements macros to help document programs.
+It includes advanced snippet handling, text transformation, text assertions and many other features.
+
+== <<jamal-test/README.adoc, TEST>> ^_core_^
+This module contains only test code.
+During the build these integration tests check the consistency of the application.
+
+== <<jamal-testsupport/README.adoc, TESTSUPPORT>> ^_core_^
+This module contains classes that you can use to write unit tests to check the implementation of some macros.
+
+== <<jamal-tools/README.adoc, TOOLS>> ^_core_^
+This module implements some auxiliary classes for the engine.
+It could be part of the engine.
+
+== <<jamal-word/README.adoc, WORD>> ^_embed_^
+This implementation can read DOCX format files, process the Jamal macros and generate DOCX output.
+This module is included in the command line version, thus you can convert Microsoft Word documents from the command line version of Jamal.
+
+== <<jamal-yaml/README.adoc, YAML>> ^_macro_^
+This module implements macros that support the reading and processing of YAML format data.
+It may be useful when you have to maintain large YAML data files.
+Using these macros you can split up a Yaml file into smaller pieces and use macros to simplify repetitive parts.
