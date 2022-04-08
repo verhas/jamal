@@ -109,22 +109,22 @@ public interface Macro extends Identified, ServiceLoaded {
      * <p>
      * The processing will call {@link #fetch(Processor, Input) fetch()} for the macro {@code comment} and that will
      * return
-     * <pre>
+     * <pre>{@code
      * @comment {%@define a=1%}
-     * </pre>
+     * }</pre>
      * <p>
      * During this the recursive call will call {@code prefecth()} when processing the macro {@code define}. This method
      * will return
      *
-     * <pre>
-     * @define a=1%}
+     * <pre>{@code
+     * @define a=1%}}
      * </pre>
      * <p>
      * The return value of this method is used by the processor to build up the higher level, embedding macros that will
      * then be evaluated. On the other hand the macro {@link #fetch(Processor, Input) fetch()} is invoked when the macro
      * itself is evaluated.
      * <p>
-     * The default implementation of this method invoked {@link #fetch(Processor, Input) fetch()} and then appends the
+     * The default implementation of this method invokes {@link #fetch(Processor, Input) fetch()} and then appends the
      * current macro closing string.
      *
      * @param processor the processor that executes the macro. See {@link Processor}
@@ -140,7 +140,8 @@ public interface Macro extends Identified, ServiceLoaded {
 
     /**
      * Same as {@link #prefetch(Processor, Input) prefetch()} but the returned string does not contain the closing
-     * string.
+     * string. It is also invoked at different points of macro content fetching. For details have a look at the
+     * documentation of the method {@link #prefetch(Processor, Input) prefetch()}.
      *
      * @param processor the processor that executes the macro. See {@link Processor}
      * @param input     the input that is the "parameter" to the built-in macro. The position of the input is right
