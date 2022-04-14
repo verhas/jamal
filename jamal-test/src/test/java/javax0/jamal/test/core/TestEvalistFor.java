@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -34,7 +33,7 @@ public class TestEvalistFor {
                         "* 19\n" +
                         "\n" +
                         "\n",
-        new String(Files.readAllBytes(Paths.get(DocumentConverter.getRoot() + "/jamal-test/src/test/resources/import/evalistfor"))));
+                new String(Files.readAllBytes(Paths.get(DocumentConverter.getRoot() + "/jamal-test/src/test/resources/import/evalistfor"))));
         new File(DocumentConverter.getRoot() + "/jamal-test/src/test/resources/import/evalistfor").delete();
     }
 }
