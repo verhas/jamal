@@ -1,0 +1,6 @@
+bear
+zebra
+snake
+dog
+cat
+cat

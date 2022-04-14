@@ -6,6 +6,7 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.ObjectHolder;
+import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
@@ -44,6 +45,7 @@ public class For implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
+        Position pos = input.getPosition();
         final var it = new For();
         it.processor = processor;
         it.separator = Params.<String>holder("$forsep", "separator").orElse(",");
@@ -61,15 +63,15 @@ public class For implements Macro, InnerScopeDependent {
         final String[][] valueMatrix;
         switch (checkKeyword(input)) {
             case IN:
-                valueMatrix = it.getValueMatrix(input, variables);
+                valueMatrix = it.getValueMatrix(input, variables,pos);
                 break;
             case FROM:
                 final var source = fetchId(input);
                 final var sourceObject = processor.getRegister().getUserDefined(source)
-                    .filter(m -> m instanceof ObjectHolder<?>)
-                    .map(m -> (ObjectHolder<?>) m)
-                    .map(ObjectHolder::getObject)
-                    .orElseThrow(() -> new BadSyntax(format("The user defined macro '%s' does not exist or cannot be used as data source for a 'for' loop.", source)));
+                        .filter(m -> m instanceof ObjectHolder<?>)
+                        .map(m -> (ObjectHolder<?>) m)
+                        .map(ObjectHolder::getObject)
+                        .orElseThrow(() -> new BadSyntax(format("The user defined macro '%s' does not exist or cannot be used as data source for a 'for' loop.", source)));
                 valueMatrix = it.getValueMatrix(sourceObject, variables.length);
                 break;
             default:
@@ -156,25 +158,27 @@ public class For implements Macro, InnerScopeDependent {
     private List<?> map2KeyValueLists(Map<?, ?> map) {
         List<?> valueList;
         valueList = map.entrySet()
-            .stream()
-            .map(e -> List.of(nullToEmpty(e.getKey()), nullToEmpty(e.getValue())))
-            .collect(Collectors.toList());
+                .stream()
+                .map(e -> List.of(nullToEmpty(e.getKey()), nullToEmpty(e.getValue())))
+                .collect(Collectors.toList());
         return valueList;
     }
 
-    private String[][] getValueMatrix(Input input, String[] variables) throws BadSyntax {
+    private String[][] getValueMatrix(Input input, String[] variables, Position pos) throws BadSyntax {
         if (firstCharIs(input, '(')) {
-            return createValueMatrixFromString(getValuesStringFromSimpleList(input), variables);
+            return createValueMatrixFromString(getValuesStringFromSimpleList(input), variables, pos);
         } else if (firstCharIs(input, '`')) {
-            return createValueMatrixFromString(getValuesStringFromStringTerminatedList(input), variables);
+            return createValueMatrixFromString(getValuesStringFromStringTerminatedList(input), variables, pos);
         } else {
             throw new BadSyntaxAt("for macro has bad syntax '" + input + "'", input.getPosition());
         }
     }
 
-    private String[][] createValueMatrixFromString(String valuesString, String[] variables) throws BadSyntax {
+    private String[][] createValueMatrixFromString(String valuesString,
+                                                   String[] variables,
+                                                   Position pos) throws BadSyntax {
         if (this.evalValueList.is()) {
-            valuesString = processor.process(javax0.jamal.tools.Input.makeInput(valuesString));
+            valuesString = processor.process(javax0.jamal.tools.Input.makeInput(valuesString, pos));
         }
         final String[] valueArray = valuesString.split(separator.get(), -1);
 
@@ -185,7 +189,7 @@ public class For implements Macro, InnerScopeDependent {
                 final String[] values = value.split(subSeparator.get(), -1);
                 if (!lenient.is() && values.length != variables.length) {
                     throw new BadSyntax("number of the values does not match the number of the parameters\n" +
-                        String.join(",", variables) + "\n" + value);
+                            String.join(",", variables) + "\n" + value);
                 }
                 if (trim.is()) {
                     for (int i = 0; i < values.length; i++) {

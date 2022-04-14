@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Execute Jamal as a n external process as it is configured in the environment, the system variables or in the Jamal
+ * configuration.
+ */
 public class JamalExecutor {
 
     public static synchronized List<String> execute(String inputFileName, List<String> lines) {

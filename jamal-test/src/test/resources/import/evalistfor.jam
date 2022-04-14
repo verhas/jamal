@@ -1,0 +1,3 @@
+{%@for [separator="\n" skipEmpty evalist] ^i in ({%@include [verbatim] lineNumbers.txt%})=* ^i
+%}
+
