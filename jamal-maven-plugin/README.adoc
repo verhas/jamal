@@ -4,19 +4,19 @@ Jamal maven plugin is a Maven plugin that executes Jamal for several files in th
 You can use the plugin even without any Maven project, just executing the command line
 
 ----
-mvn com.javax0.jamal:jamal-maven-plugin:1.12.1-SNAPSHOT:jamal
+mvn com.javax0.jamal:jamal-maven-plugin:1.12.1:jamal
 ----
 
 As an example, you can use the following command line to create the `pom.xml` file(s) from the `pom.xml.jam` files in the root directory and recursively under the modules directories.
 
 ----
-mvn  -DfilePattern=.*pom\.xml\.jam$ com.javax0.jamal:jamal-maven-plugin:1.12.1-SNAPSHOT:jamal
+mvn  -DfilePattern=.*pom\.xml\.jam$ com.javax0.jamal:jamal-maven-plugin:1.12.1:jamal
 ----
 
 You can download the `null.pom` file from `https://raw.githubusercontent.com/verhas/jamal/master/null.pom` to add it to the actual project and use the `-f null.pom` so that you can run the command even when the `pom.xml` does not exist or even was ruined because you made some mistake editing the `pom.xml.jam`.
 
 ----
-mvn  -f null.pom -DfilePattern=.*pom\.xml\.jam$ com.javax0.jamal:jamal-maven-plugin:1.12.1-SNAPSHOT:jamal
+mvn  -f null.pom -DfilePattern=.*pom\.xml\.jam$ com.javax0.jamal:jamal-maven-plugin:1.12.1:jamal
 ----
 
 Another possibility is to download the `genpom.xml` file from `https://raw.githubusercontent.com/verhas/jamal/master/genpom.xml` and use this in the command line:
@@ -44,7 +44,7 @@ If you have an actual Maven project, then you can configure the plugin in the `p
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.12.1-SNAPSHOT</version>
+    <version>1.12.1</version>
     <configuration>
         <transformFrom>\.jam$</transformFrom>
         <transformTo>.jamo</transformTo>

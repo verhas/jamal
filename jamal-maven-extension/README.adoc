@@ -25,7 +25,7 @@ This directory will contain the file `extensions.xml` with the content:
     <extension>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-maven-extension</artifactId>
-        <version>1.12.1-SNAPSHOT</version>
+        <version>1.12.1</version>
     </extension>
 </extensions>
 ---
@@ -70,7 +70,7 @@ To automate this, the Jamal Maven plugin can be started with the command line
 
 [source]
 ----
-mvn -Djamalize=true com.javax0.jamal:jamal-maven-plugin:1.12.1-SNAPSHOT:jamal
+mvn -Djamalize=true com.javax0.jamal:jamal-maven-plugin:1.12.1:jamal
 ----
 
 from the top level project directory.
