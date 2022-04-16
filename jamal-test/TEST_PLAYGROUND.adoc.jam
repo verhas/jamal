@@ -1,5 +1,5 @@
 {@comment}
-{#for [separator="\n" skipEmpty] $i in `--FILE INCLUDE BOUNDARY`
+{@for [separator="\n" skipEmpty evalist] $i in `--FILE INCLUDE BOUNDARY`
 {@include [verbatim] animals.txt}
 `--FILE INCLUDE BOUNDARY`=* $i
 }

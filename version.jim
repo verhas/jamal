@@ -2,9 +2,9 @@
 
 
 
-{@define VERSION=1.12.1}
+{@define VERSION=1.12.2-SNAPSHOT}
                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
-{@define LAST_RELEASE=1.12.0}
+{@define LAST_RELEASE=1.12.1}
 
 
 
@@ -36,6 +36,7 @@
 {@define MAVEN_ASSEMBLY_PLUGIN_VERSION=3.3.0}        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/
 {@define MAVEN_PLUGIN_API=3.8.5}                     -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/
 {@define MAVEN_PLUGIN_ANNOTATIONS=3.6.4}             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-annotations/
+{@define MAVEN_PLUGIN_PLUGIN_VERSION=3.6.4}          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin
 {@define SONATYPE_PLUGIN_VERSION=1.6.9}              -- https://repo.maven.apache.org/maven2/org/sonatype/plugins/nexus-staging-maven-plugin
 {@define SUREFIRE_PLUGIN_VERSION=3.0.0-M5}           -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
 {@define SOURCE_PLUGIN_VERSION=3.2.1}                -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
@@ -56,6 +57,7 @@
 {@define APACHE_POI_VERSION=5.2.2}                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 {@define ASCIIDOCTORJ_VERSION=2.5.3}                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
 {@define MOCKITO_VERSION=4.4.0}                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
+{@define JSCRIPTBASIC_VERSION=2.1.1}                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
 
 -- dependencies needed for the Maven extension (not the plugin)
 {@define MAVEN_CORE_VERSION=3.8.4}                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core

@@ -15,7 +15,7 @@
       {dependency :{GROUPID}:jamal-engine:{VERSION}:test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
-      {dependency :com.scriptbasic:jscriptbasic:2.1.1}
+      {dependency :com.scriptbasic:jscriptbasic:{JSCRIPTBASIC_VERSION}}
     }
 
 {end project}

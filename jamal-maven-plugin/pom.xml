@@ -4,11 +4,11 @@
     <name>jamal maven plugin</name>
     <packaging>maven-plugin</packaging>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>1.12.1</version>
+    <version>1.12.2-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.1</version>
+        <version>1.12.2-SNAPSHOT</version>
     </parent>
     <description>Jamal macro library maven plugin</description>
     <build>
@@ -16,7 +16,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.4</version>
                 <configuration>
                     <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
