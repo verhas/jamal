@@ -39,7 +39,7 @@ public interface ServiceLoaded {
             try {
                 final var classes = new HashSet<Class<T>>(); // different classloaders in the hierarchy may load the same file more than once
                 for (final var is : loadResources("META-INF/services/" + klass.getName(), ServiceLoaded.class.getClassLoader())) {
-                    for (final var className : new String(is.readAllBytes(), StandardCharsets.UTF_8).split("\n")) {
+                    for (final var className : new String(is.readAllBytes(), StandardCharsets.UTF_8).split("[\n\r]+")) {
                         try {
                             final var providerKlass = (Class<T>)Class.forName(className);
                             if( !classes.contains(providerKlass)) {
