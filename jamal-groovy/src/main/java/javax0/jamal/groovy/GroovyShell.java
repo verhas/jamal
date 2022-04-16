@@ -10,7 +10,6 @@ import javax0.jamal.tools.InputHandler;
 public class GroovyShell implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var s = in.toString();
         final var shell = Shell.getShell(in, processor, this);
         final var inputDefinedScriptName = InputHandler.fetch2EOL(in).trim();
         final var scriptName = inputDefinedScriptName.length() == 0 ? "" : inputDefinedScriptName;

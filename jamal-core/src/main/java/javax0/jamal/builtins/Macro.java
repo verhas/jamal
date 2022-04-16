@@ -47,7 +47,7 @@ public class Macro implements javax0.jamal.api.Macro {
     private static final Input EMPTY_INPUT = javax0.jamal.tools.Input.makeInput();
 
     private String getBuitIn(final Input input, final Processor processor, final boolean global, final Params.Param<String> alias) throws BadSyntax {
-        final var macro = getMacro(input, processor, global, javax0.jamal.api.Macro.class, processor.getRegister()::getMacro);
+        final var macro = getMacro(input, global, javax0.jamal.api.Macro.class, processor.getRegister()::getMacro);
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, macro);
         }
@@ -59,7 +59,7 @@ public class Macro implements javax0.jamal.api.Macro {
     }
 
     private String getUserDefined(final Input input, final Processor processor, final boolean global, final Params.Param<String> alias) throws BadSyntax {
-        final var macro = getMacro(input, processor, global, UserDefinedMacro.class,
+        final var macro = getMacro(input, global, UserDefinedMacro.class,
                 id -> processor.getRegister().getUserDefined(id,Identified.DEFAULT_MACRO));
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, (Identified) macro);
@@ -108,7 +108,7 @@ public class Macro implements javax0.jamal.api.Macro {
         return macroName;
     }
 
-    private <T> T getMacro(final Input input, final Processor processor, final boolean global, final Class<T> klass, final Function<String, Optional<T>> get) {
+    private <T> T getMacro(final Input input, final boolean global, final Class<T> klass, final Function<String, Optional<T>> get) {
         final String macroName = getMacroName(global, input);
         return get.apply(macroName)
                 .filter(klass::isInstance)

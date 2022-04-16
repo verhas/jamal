@@ -58,7 +58,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("Parsing simple parameters, string and integer")
@@ -94,7 +94,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("Parsing simple parameters just present without value")
@@ -125,7 +125,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("Parsing parameters and one comes from user defined macro")
@@ -161,7 +161,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("Parsing parameters and one comes from user defined macro")
@@ -228,7 +228,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("Line can be continued with trailing \\")
@@ -264,7 +264,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("A multi-line can present on a single line")
@@ -296,7 +296,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("A multi-line can present on a multi line")
@@ -332,7 +332,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("single-valued parameter returns in a list")
@@ -361,7 +361,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("A multi-valued parameter returns in a list")
@@ -534,7 +534,7 @@ public class TestParams {
      * <p>
      * end snippet
      *
-     * @throws Exception
+     * @throws Exception test fails
      */
     @Test
     @DisplayName("Boolean parameters defined in different ways")

@@ -143,8 +143,8 @@ public class DocumentConverter {
      * If the project is not in a git repository or in a project that does not have an {@code .mvn} directory then a
      * {@code ROOT.dir} placeholder has to be created in the root directory.
      *
-     * @return
-     * @throws IOException
+     * @return the absolute path to the root directory of the project
+     * @throws IOException when there is some error traversing the directories
      */
     public static String getRoot() throws IOException {
         final var dirs = Stream.of("ROOT.dir", ".git", ".mvn")

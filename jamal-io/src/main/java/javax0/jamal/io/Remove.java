@@ -53,7 +53,7 @@ public class Remove implements Macro, InnerScopeDependent {
     }
 
     private static boolean remove(final File f, final StringBuilder errors, final StringBuilder fileList) {
-        fileList.append(f.getAbsoluteFile() + "\n");
+        fileList.append(f.getAbsoluteFile()).append("\n");
         try {
             Files.delete(f.toPath());
             return true;

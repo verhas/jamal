@@ -85,9 +85,9 @@ public class Processor implements javax0.jamal.api.Processor {
     public Processor(String macroOpen, String macroClose, Context context) {
         this.context = context;
         optionsStore = OptionsStore.getInstance(this);
-        EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s -> {
-            optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))));
-        });
+        EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s ->
+                optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))))
+        );
         try {
             macros.separators(macroOpen, macroClose);
         } catch (BadSyntax badSyntax) {

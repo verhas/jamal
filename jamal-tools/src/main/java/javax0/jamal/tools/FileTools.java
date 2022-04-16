@@ -66,8 +66,8 @@ public class FileTools {
     }
 
     /**
-     * Same as {@link #getInput(String)} but this metjod also specifies the parent position. It is usually the file
-     * that includes or imports the file that is being read.
+     * Same as {@link #getInput(String)} but this method also specifies the parent position. It is usually the file
+     * that includes or imports the other file that is being read.
      *
      * @param fileName the name of the file to be read
      * @param parent   the parent/including/importing file position

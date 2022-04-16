@@ -221,7 +221,6 @@ public class XWPFProcessor {
      * @param bodyElement the last body element that was fetched during the last collection or the first paragraph
      *                    after a table or some other non-paragraph body element.
      * @param paragraphs  the list of paragraphs where the paragraph body elements are collected
-     * @return the first not collected body element or {@code null} if there is no more body element.
      */
     private void collectsParagraphs(final Iterator<IBodyElement> iterator, IBodyElement bodyElement, final List<XWPFParagraph> paragraphs) {
         paragraphs.add((XWPFParagraph) bodyElement);

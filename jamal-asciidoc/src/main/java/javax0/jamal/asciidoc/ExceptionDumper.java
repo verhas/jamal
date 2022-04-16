@@ -24,7 +24,7 @@ class ExceptionDumper {
         final var me = new ExceptionDumper();
         me.output.append(t.getMessage()).append('\n');
         me.dumpIt(t, false);
-        me.output.append("sed '" + me.sedCommand + "'");
+        me.output.append("sed '").append(me.sedCommand).append("'");
         return me.output;
     }
 

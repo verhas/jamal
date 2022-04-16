@@ -39,7 +39,7 @@ public class DebugTool {
                 }
             } else if (element instanceof XWPFTable) {
                 final XWPFTable table = (XWPFTable) element;
-                sb.append("[").append("").append(table.getRows().size()).append(",").append("").append(table.getRows().get(0).getTableCells().size()).append("]");
+                sb.append("[").append(table.getRows().size()).append(",").append(table.getRows().get(0).getTableCells().size()).append("]");
                 for (int j = 0; j < table.getRows().size(); j++) {
                     final var row = table.getRows().get(j);
                     sb.append("|| ");

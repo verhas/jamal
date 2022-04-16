@@ -195,7 +195,8 @@ public class Cache {
          * @param content to be saved into the cache file
          * @param maps    contains the key value pairs that will be saved into the cache properties file
          */
-        public void save(String content, Map<String, String>... maps) {
+        @SafeVarargs
+        public final void save(String content, Map<String, String>... maps) {
             if (cacheExists()) {
                 try {
                     assertPropertiesAreLoaded();

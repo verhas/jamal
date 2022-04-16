@@ -26,7 +26,7 @@ class Jamalizer {
      * If neither {@code pom.xml.jam}, nor {@code pom.jam} exists in the directory then create a new {@code pom.jam}
      * copying the existing {@code pom.xml} to {@code pom.jam}.
      * @param p the project directory
-     * @throws IOException
+     * @throws IOException when there is an error reading and writing some file
      */
     private void createNewPomJam(Path p) throws IOException {
         final var pom = Paths.get(p.toString(), "pom.xml");
@@ -41,7 +41,7 @@ class Jamalizer {
      * Create the {@code extensions.xml} file in the new {@code .mvn} directory.
      * @param p the {@code .mvn} directory where the new file will be created
      *
-     * @throws IOException
+     * @throws IOException when there is an error reading and writing some file
      */
     private void writeExtensionsFile(Path p) throws IOException {
         final var extensionsFile = Paths.get(p.toString(), "extensions.xml");
@@ -62,7 +62,7 @@ class Jamalizer {
      * Create the {@code .mvn} directory if it is not there yet
      * @param p the project directory
      * @return the new directory, or the one that already existed
-     * @throws IOException
+     * @throws IOException when there is an error reading and writing some file
      */
     private Path createMvnDir(Path p) throws IOException {
         final var newDir = Paths.get(p.toString(), ".mvn");

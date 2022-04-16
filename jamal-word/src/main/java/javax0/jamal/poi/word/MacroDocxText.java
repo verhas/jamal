@@ -4,7 +4,6 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.util.List;
@@ -13,7 +12,6 @@ public class MacroDocxText implements Macro {
 
 
     private static class CallBack implements XWPFContext.DocxIntermediaryCallBack {
-        private XWPFDocument document;
         List<XWPFParagraph> paragraphs;
         private int paragraphStartIndex;
         private int runStartIndex;
@@ -28,11 +26,6 @@ public class MacroDocxText implements Macro {
         @Override
         public void setParagraphs(final List<XWPFParagraph> paragraphs) {
             this.paragraphs = paragraphs;
-        }
-
-        @Override
-        public void setDocument(final XWPFDocument document) {
-            this.document = document;
         }
 
         @Override

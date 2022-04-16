@@ -132,7 +132,7 @@ public interface Macro extends Identified, ServiceLoaded {
      *                  after the macro opening string. The method copies this to the return value including the macro
      *                  closing string.
      * @return the macro body including the closing string (but not the opening string)
-     * @throws BadSyntaxAt
+     * @throws BadSyntaxAt when the prefetch cannot be done, for example some macros are not terminated withing the file
      */
     default String prefetch(Processor processor, Input input) throws BadSyntaxAt {
         return fetch(processor, input) + processor.getRegister().close();
@@ -148,7 +148,7 @@ public interface Macro extends Identified, ServiceLoaded {
      *                  after the macro opening string. The method moved this to the return value. The result does not
      *                  contain the closing macro closing string, but the it is removed from the input.
      * @return the macro body without the opening or closing string
-     * @throws BadSyntaxAt
+     * @throws BadSyntaxAt when the fetch cannot be performed, for example a macro is not terminated
      */
     default String fetch(Processor processor, Input input) throws BadSyntaxAt {
         final var output = new StringBuilder();

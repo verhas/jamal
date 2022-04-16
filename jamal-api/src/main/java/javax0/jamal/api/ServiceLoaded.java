@@ -47,7 +47,7 @@ public interface ServiceLoaded {
                                 final Method providerMethod = getProvider(providerKlass);
                                 final T instance;
                                 if (providerMethod == null) {
-                                    instance = (T) providerKlass.getConstructor().newInstance();
+                                    instance = providerKlass.getConstructor().newInstance();
                                 } else {
                                     instance = (T) providerMethod.invoke(null);
                                 }

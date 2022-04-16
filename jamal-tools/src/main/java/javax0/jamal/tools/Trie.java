@@ -22,7 +22,7 @@ public class Trie {
         public final int end;
         public final String value;
 
-        private Result(int start, int end, Node node) throws Exception {
+        private Result(int start, int end, Node node) {
             this.start = start;
             this.end = end;
             if (node.value == null && node.supplier != null) {

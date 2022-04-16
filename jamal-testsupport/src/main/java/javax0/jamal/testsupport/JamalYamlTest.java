@@ -28,7 +28,7 @@ public class JamalYamlTest {
     public static final String __ON__ = "__ON__";
     public static final String __SKIP__ = "__SKIP__";
 
-    public static JamalTests factory(String... testFiles) {
+    public static JamalTests<?> factory(String... testFiles) {
         final var klass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
 
         if (testFiles == null || testFiles.length == 0) {

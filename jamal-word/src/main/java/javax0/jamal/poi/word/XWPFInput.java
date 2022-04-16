@@ -469,7 +469,7 @@ public class XWPFInput extends Input {
      * <p>
      * This method removes the paragraph from the document as well as from the list of the paragraphs.
      *
-     * @param i
+     * @param i the index of the paragraph to be removed
      */
     private void removeParagraph(int i) {
         document.removeBodyElement(document.getPosOfParagraph(paragraphs.get(i)));
