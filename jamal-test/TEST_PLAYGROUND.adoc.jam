@@ -1,5 +1,4 @@
 {@comment}
-{@for [separator="\n" skipEmpty evalist] $i in `--FILE INCLUDE BOUNDARY`
-{@include [verbatim] animals.txt}
-`--FILE INCLUDE BOUNDARY`=* $i
-}
+{@define a=a,),(,/}
+{@for [evalist] a in ({a})= a }
+{#for a in `nyihaa`{a}`nyihaa`= a }
