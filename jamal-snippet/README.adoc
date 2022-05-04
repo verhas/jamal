@@ -612,6 +612,33 @@ It is the snippet, which is defined inside the file and not collected from an ex
 ----
 
 
+Snippets are typically contain several lines and the leading spaces may be important.
+To accommodate this when you define a snippet using this macro the spaces following the `=` sign up to, and including the new line will be skipped.
+As you can see in the example above there is no new line before the sentence `It is the...`.
+It is recommended to have a new line after the `=` character and start the snippet content on the next line.
+If you start the snippet right after the ``=` character then the spaces between the first non-space characted and the `=` sign will be skipped.
+For example:
+
+[source]
+----
+{@snip:define mySnippet1=     It is the snippet,
+which is defined inside the file and not collected from an external file.
+}
+{@snip mySnippet1
+is used here, and then the rest of the text is ignored}
+----
+
+will result
+
+[source]
+----
+It is the snippet,
+which is defined inside the file and not collected from an external file.
+----
+
+
+As you can see there are no spaces before the characters `It is the...`.
+
 [[snip_clear]]
 ==== vii.`snip:clear`
 
@@ -636,6 +663,9 @@ It works exactly the same way as in the macro <<snip_check,`snip:check`>>.
 The possibility to have this option eliminates the need to use the `snip` and the `snip:check` macros together.
 Note, however, that it is not possible to check against the number of the lines in the snippet.
 You can check only the hash code.
+
+You can also use any of the options of the macro <<snipTransform,`snip:transform`>>.
+The macro `snip` will automatically apply the transformations calling the macro `snip:transform`.
 
 ==== Use one snippet
 
@@ -2008,7 +2038,7 @@ It is not possible to invoke one action more than once.
 Any syntax allowing the separation of the parameters of one execution from another would be complex and probably hard to read.
 
 Some actions have parameters that are the same as the name of the action.
-These are `skip`, `range`, `kill` and `replace`.
+These are `skip`, `range`, `kill`, `trim` and `replace`.
 When one of these parameters is specified there may not be a need to specify the action separately.
 It is evident that
 
@@ -2051,6 +2081,7 @@ The following parameters will add the action implicitly to the list:
 * `lines`, `range` or `ranges` will add the action `range`
 * `replace` will add the action `replace`
 * `tab` or `tabSize` will add the action `untab`
+* `trim` will add the action `trim`
 
 If an action is already in the list (they are present in the parameter `actions`) they are not added again.
 Also, their position remains as specified in the parameter `actions`.
@@ -2284,7 +2315,7 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 1,472 bytes
-- Snip.java: 4,442 bytes
+- Snip.java: 5,063 bytes
 - SnipSave.java: 4,886 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,798 bytes
@@ -2293,11 +2324,11 @@ will result
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
 - Update.java: 3,779 bytes
-- SnipTransform.java: 16,264 bytes
+- SnipTransform.java: 17,339 bytes
 - FilesMacro.java: 5,190 bytes
 - Collect.java: 17,752 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 4,196 bytes
+- TrimLines.java: 5,370 bytes
 - ThinXml.java: 8,792 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,731 bytes
@@ -2580,7 +2611,7 @@ will result in the output
 
 [source]
 ----
-2022-04-16 21:19:44
+2022-05-04 17:06:52
 ----
 
 
