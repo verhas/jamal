@@ -13,13 +13,7 @@ To use the Jamal debugger, start it so that the
 * Debugger module is on the classpath, or on the module path, e.g.: use `jbang`.
 When Jamal starts with jbang, it automatically puts a lot of modules including the debugger on the classpath.
 
-* Start Jamal in a way that it looks for debugger modules and uses it, e.g. use the option
-
-+
-                   jbang jamal@verhas --debug=http:8080
-
-+
-with jbang.
+* Start Jamal in a way that it looks for debugger modules and uses it, e.g. use the option `jbang jamal@verhas --debug=http:8080` with jbang.
 
 +
 Alternatively you can specify the environment variable `JAMAL_DEBUG` to be `http:8080`.
