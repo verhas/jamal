@@ -47,6 +47,11 @@ public class Scan {
             return this;
         }
 
+        public ScanInterfaces.AfterKeys keys(Params.ExtraParams extraParams, Params.Param<?>... holders) {
+            params.keys(extraParams, holders);
+            return this;
+        }
+
         public ScanInterfaces.AfterKeys keys(Params.Param<?>... holders) {
             params.keys(holders);
             return this;

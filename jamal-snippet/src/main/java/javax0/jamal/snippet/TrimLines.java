@@ -39,16 +39,39 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
     @Override
     public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(3, params);
-        final var margin = params[0].asInt();
+        final var margin = params[0];
         final var trimVertical = params[1].asBoolean();
         final var verticalTrimOnly = params[2].asBoolean();
 
+        final int spacesOnLeft = getMargin(margin);
+
         if (!verticalTrimOnly.is()) {
-            trimHorizontal(sb, margin.get());
+            trimHorizontal(sb, spacesOnLeft);
         }
         if (trimVertical.is() || verticalTrimOnly.is()) {
             trimVertical(sb);
         }
+    }
+
+    /**
+     * Get the margin value. Margin value is usually a simple integer. In some cases, however, it can be specified using
+     * the alias `trim`. When there is no number specified then the trimming is done to zero space on the left.
+     *
+     * This method simply looks at how margin was defined. If it was defined using the alias {@code trim} and the value
+     * is "true", which usually means that the key-word {@code trim} was standing without any value then the value is
+     * zero. In all other cases the string value of the parameter is parsed as an int.
+     *
+     * Note that you can also write {@code trim=true}, which will also mean zero margin.
+     *
+     * @param margin the parameter holder specifying the value of the margin
+     * @return the int value of the margin.
+     * @throws BadSyntax if there is a value specified and it is not an integer
+     */
+    private int getMargin(final Params.Param<?> margin) throws BadSyntax {
+        return "trim".equals(margin.name()) &&
+                "true".equals(margin.asString().get()) ?
+                0 :
+                margin.asInt().get();
     }
 
 

@@ -18,24 +18,24 @@ public class TestSnippets {
     @DisplayName("Finds all files and collects all snippets and inserts them into the output")
     void testSimpleCase() throws Exception {
         TestThat.theInput("{@include " + RESOURCE_ROOT + "/test1.jam}")
-            .results("\n" +
-                "First snippet This is a one line snippet\n" +
-                "\n" +
-                "2. snippet This is a multi line snippet,\n" +
-                "the second\n" +
-                "  snippet, still from SnippetSource-1.txt\n" +
-                "\n" +
-                "\n" +
-                "Next file\n" +
-                "\n" +
-                "First snippet This is a one line snippet\n" +
-                "\n" +
-                "Second snippet This is a multi line snippet,\n" +
-                "the second\n" +
-                "  snippet, still from SnippetSource-1.txt\n" +
-                "\n" +
-                "\n" +
-                "and this is the end");
+                .results("\n" +
+                        "First snippet This is a one line snippet\n" +
+                        "\n" +
+                        "2. snippet This is a multi line snippet,\n" +
+                        "the second\n" +
+                        "  snippet, still from SnippetSource-1.txt\n" +
+                        "\n" +
+                        "\n" +
+                        "Next file\n" +
+                        "\n" +
+                        "First snippet This is a one line snippet\n" +
+                        "\n" +
+                        "Second snippet This is a multi line snippet,\n" +
+                        "the second\n" +
+                        "  snippet, still from SnippetSource-1.txt\n" +
+                        "\n" +
+                        "\n" +
+                        "and this is the end");
     }
 
     @Test
@@ -65,60 +65,60 @@ public class TestSnippets {
     @DisplayName("Finds files that match the 'include' and collects all snippets and inserts them into the output")
     void testSimpleCaseWithInclude() throws Exception {
         TestThat.theInput("{@include " + RESOURCE_ROOT + "/test2.jam}")
-            .results("\n" +
-                "First snippet This is a one line snippet\n" +
-                "\n" +
-                "2. snippet This is a multi line snippet,\n" +
-                "the second\n" +
-                "  snippet, still from SnippetSource-1.txt\n" +
-                "\n" +
-                "\n" +
-                "Next file\n" +
-                "Snippet 'second_file_first$snippet' is not defined\n" +
-                "and this is the end");
+                .results("\n" +
+                        "First snippet This is a one line snippet\n" +
+                        "\n" +
+                        "2. snippet This is a multi line snippet,\n" +
+                        "the second\n" +
+                        "  snippet, still from SnippetSource-1.txt\n" +
+                        "\n" +
+                        "\n" +
+                        "Next file\n" +
+                        "Snippet 'second_file_first$snippet' is not defined\n" +
+                        "and this is the end");
     }
 
     @Test
     @DisplayName("Finds files that does not match the 'exclude' and collects all snippets and inserts them into the output")
     void testSimpleCaseWithExclude() throws Exception {
         TestThat.theInput("{@include " + RESOURCE_ROOT + "/test3.jam}")
-            .results("\n" +
-                "First snippet This is a one line snippet\n\n" +
-                "2. snippet This is a multi line snippet,\n" +
-                "the second\n" +
-                "  snippet, still from SnippetSource-1.txt\n" +
-                "\n\n" +
-                "Next file\n" +
-                "Snippet 'second_file_first$snippet' is not defined\n" +
-                "and this is the end");
+                .results("\n" +
+                        "First snippet This is a one line snippet\n\n" +
+                        "2. snippet This is a multi line snippet,\n" +
+                        "the second\n" +
+                        "  snippet, still from SnippetSource-1.txt\n" +
+                        "\n\n" +
+                        "Next file\n" +
+                        "Snippet 'second_file_first$snippet' is not defined\n" +
+                        "and this is the end");
     }
 
     @Test
     @DisplayName("Finds files that does not match the 'exclude' and collects all snippets and inserts them into the output")
     void testPropertySnippets() throws Exception {
         TestThat.theInput("{@snip:properties " + RESOURCE_ROOT + "/testproperties.properties}\n" +
-                "{@snip a}\n" +
-                "{@snip b}\n" +
-                "{@snip c}"
-            )
-            .results("\n" +
-                "letter a\n" +
-                "letter b\n" +
-                "letter c");
+                        "{@snip a}\n" +
+                        "{@snip b}\n" +
+                        "{@snip c}"
+                )
+                .results("\n" +
+                        "letter a\n" +
+                        "letter b\n" +
+                        "letter c");
     }
 
     @Test
     @DisplayName("Finds files that does not match the 'exclude' and collects all snippets and inserts them into the output")
     void testPropertySnippetsFromXml() throws Exception {
         TestThat.theInput("{@snip:properties " + RESOURCE_ROOT + "/testproperties.xml}\n" +
-                "{@snip a}\n" +
-                "{@snip b}\n" +
-                "{@snip c}"
-            )
-            .results("\n" +
-                "letter a\n" +
-                "letter b\n" +
-                "letter c");
+                        "{@snip a}\n" +
+                        "{@snip b}\n" +
+                        "{@snip c}"
+                )
+                .results("\n" +
+                        "letter a\n" +
+                        "letter b\n" +
+                        "letter c");
     }
 
     @Test
@@ -132,6 +132,31 @@ public class TestSnippets {
                 "snip 0200\n" +
                 "snip 0300\n"
         );
+    }
+
+    @Test
+    @DisplayName("Snippet can be trimmed directly")
+    void testSnipTransformTrim() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:define SNIPPET=\n" +
+                " al\n" + // one space
+                "  ma\n" + // two spaces
+                "}{@snip (trim) SNIPPET}"
+        ).results("" +
+                "al\n" + // no spaces
+                " ma\n"); // one space
+    }
+
+    @Test
+    @DisplayName("Snippet can kill lines directly")
+    void testSnipTransformKill() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:define SNIPPET=\n" +
+                " al\n" + // one space
+                "  ma\n" + // two spaces
+                "}{@snip (kill=m) SNIPPET}"
+        ).results("" +
+                " al\n"); // one space
     }
 
 }

@@ -25,6 +25,23 @@ public class TestSnipTransform {
     }
 
     @Test
+    @DisplayName("snip:transform - trim can be used as a parameter specifying the margins")
+    void testTrimWithoutAction() throws Exception {
+        TestThat.theInput(""
+                + "{@snip:transform actions=kill trim=3\n"
+                + "       \n" // empty line will be killed by default
+                + "       papirus mapirus\n"
+                + "         tabbed in hamarin\n"
+                + "       \n" // empty line will be killed by default
+                + "       tabbed in hamarine\n"
+                + "}"
+        ).results(""
+                + "   papirus mapirus\n" +
+                "     tabbed in hamarin\n" +
+                "   tabbed in hamarine\n");
+    }
+
+    @Test
     @DisplayName("snip:transform - throw using parameter without action")
     void testThrowsWhenActionIsNotDefined() throws Exception {
         TestThat.theInput(""
@@ -489,7 +506,7 @@ public class TestSnipTransform {
         @Test
         @DisplayName("Replaces the tabs properly")
         void replacesTabs() throws Exception {
-            TestThat.theInput("{@snip:transform action=trim tab=8\n" +
+            TestThat.theInput("{@snip:transform action=trim tabSize=8\n" +
                             "..\t.\t.}"
                     //          01234567890123456
             ).results("..      .       .");

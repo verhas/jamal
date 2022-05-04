@@ -26,51 +26,61 @@ public class Snip implements Macro {
         final var pos = in.getPosition();
         final var poly = Params.holder(null, "poly").asBoolean();
         final var hashString = Params.<String>holder("hash", "hashCode").orElse(null);
-        Scan.using(processor).from(this).between("()").keys(poly, hashString).parse(in);
+        final var extraParams = new Params.ExtraParams();
+        Scan.using(processor).from(this).between("()").keys(extraParams, poly, hashString).parse(in);
+
+        final var transformer = processor.getRegister().getMacro("snip:transform")
+                .filter(m -> m instanceof SnipTransform).map(m -> (SnipTransform) m)
+                .orElseThrow(() -> new BadSyntax("The macro 'snip:transform' is not registered"));
+
         skipWhiteSpaces(in);
         final String id;
         final String text;
         if (poly.is()) {
             id = in.toString();
             text = SnippetStore.getInstance(processor).snippet(Pattern.compile(id));
+            checkHashString(hashString, id, text, pos);
+            return transformer.evaluate(extraParams, javax0.jamal.tools.Input.makeInput(text,pos),processor);
         } else {
             id = InputHandler.fetchId(in);
             skipWhiteSpaces(in);
             text = SnippetStore.getInstance(processor).snippet(id);
-        }
-        if (hashString.isPresent()) {
             checkHashString(hashString, id, text, pos);
+
+            if (firstCharIs(in, '/')) {
+                return getRegexMatchedFromTheFirstLine(in, text);
+            } else {
+                return transformer.evaluate(extraParams, javax0.jamal.tools.Input.makeInput(text,pos),processor);
+            }
         }
-        if (!poly.is() && firstCharIs(in, '/')) {
-            skip(in, 1);
-            final var regexPart = in.toString();
-            final var lastIndex = regexPart.lastIndexOf('/');
-            if (lastIndex == -1) {
-                throw new BadSyntax("The regular expression following the snippet ID should be enclosed between '/' characters");
+    }
+
+    private String getRegexMatchedFromTheFirstLine(final Input in, final String text) throws BadSyntax {
+        skip(in, 1);
+        final var regexPart = in.toString();
+        final var lastIndex = regexPart.lastIndexOf('/');
+        if (lastIndex == -1) {
+            throw new BadSyntax("The regular expression following the snippet ID should be enclosed between '/' characters");
+        }
+        final var lines = text.split("\n");
+        final var regex = regexPart.substring(0, lastIndex);
+        try {
+            if (lines.length == 0 || lines[0].length() == 0) {
+                return "";
             }
-            final var lines = text.split("\n");
-            final var regex = regexPart.substring(0, lastIndex);
-            try {
-                if (lines.length == 0 || lines[0].length() == 0) {
-                    return ""; // snippet is empty
-                }
-                final var pattern = Pattern.compile(regex);
-                final var matcher = pattern.matcher(lines[0]);
-                if (matcher.find()) {
-                    if (matcher.groupCount() > 0) {
-                        return matcher.group(1);
-                    } else {
-                        throw new BadSyntax("The regular expression /" + regex + "/ does not contain capturing group.");
-                    }
+            final var pattern = Pattern.compile(regex);
+            final var matcher = pattern.matcher(lines[0]);
+            if (matcher.find()) {
+                if (matcher.groupCount() > 0) {
+                    return matcher.group(1);
                 } else {
-                    throw new BadSyntax("The regular expression /" + regex + "/ cannot be found in the line '" + lines[0] + "'");
+                    throw new BadSyntax("The regular expression /" + regex + "/ does not contain capturing group.");
                 }
-            } catch (PatternSyntaxException e) {
-                throw new BadSyntax("The evaluating the regular expression /" + regex + "/ on the line '" + lines[0] + "' resulted an exception: " + e.getMessage(), e);
+            } else {
+                throw new BadSyntax("The regular expression /" + regex + "/ cannot be found in the line '" + lines[0] + "'");
             }
-        } else {
-            // the rest of the input is ignored
-            return text;
+        } catch (PatternSyntaxException e) {
+            throw new BadSyntax("The evaluating the regular expression /" + regex + "/ on the line '" + lines[0] + "' resulted an exception: " + e.getMessage(), e);
         }
     }
 
@@ -78,6 +88,9 @@ public class Snip implements Macro {
                                         String id,
                                         String text,
                                         Position pos) throws BadSyntax {
+        if (!hashString.isPresent()) {
+            return;
+        }
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(text));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < SnipCheck.MIN_LENGTH) {

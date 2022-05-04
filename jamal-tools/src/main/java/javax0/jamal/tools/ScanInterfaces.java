@@ -27,6 +27,7 @@ public class ScanInterfaces {
     }
 
     public interface DelimitersDefined {
+        AfterKeys keys(Params.ExtraParams extraParams, Params.Param<?>... holders);
         AfterKeys keys(Params.Param<?>... holders);
     }
 

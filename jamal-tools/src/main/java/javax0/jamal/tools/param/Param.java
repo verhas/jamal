@@ -31,6 +31,16 @@ public class Param<K> implements Params.Param<K> {
     private boolean stringNeeded = true;
 
     @Override
+    public void copy(Params.Param<?> p){
+        Param<K> it = (Param<K>)p;
+        name = it.name;
+        value.clear();
+        value.addAll(it.value);
+        defaultValue = it.defaultValue;
+        mandatory = it.mandatory;
+    }
+
+    @Override
     public String[] keys() {
         return key;
     }
@@ -75,6 +85,7 @@ public class Param<K> implements Params.Param<K> {
 
     @Override
     public Param<K> as(Function<String, K> converter) {
+        this.calculated = false;
         this.converter = converter::apply;
         return this;
     }
@@ -85,23 +96,27 @@ public class Param<K> implements Params.Param<K> {
 
     @Override
     public <H> Param<H> asType(Class<H> klass) {
+        this.calculated = false;
         return (Param<H>) this;
     }
 
     @Override
     public <Z> Param<Z> as(Class<Z> klass, Function<String, Z> converter) {
+        this.calculated = false;
         this.converter = converter::apply;
         return (Param<Z>) this;
     }
 
     @Override
     public Param<Integer> asInt() {
+        this.calculated = false;
         this.converter = s -> getInt();
         return (Param<Integer>) this;
     }
 
     @Override
     public Param<Boolean> asBoolean() {
+        this.calculated = false;
         stringNeeded = false;
         this.converter = s -> getBoolean();
         return (Param<Boolean>) this;
@@ -109,12 +124,14 @@ public class Param<K> implements Params.Param<K> {
 
     @Override
     public Param<String> asString() {
+        this.calculated = false;
         this.converter = s -> s;
         return (Param<String>) this;
     }
 
     @Override
     public Param<List<?>> asList() {
+        this.calculated = false;
         stringNeeded = false;
         this.converter = s -> getList();
         return (Param<List<?>>) this;
@@ -122,6 +139,7 @@ public class Param<K> implements Params.Param<K> {
 
     @Override
     public <KK> Param<List<KK>> asList(Class<KK> k) {
+        this.calculated = false;
         stringNeeded = false;
         if (k == Integer.class) {
             this.converter = s -> getIntList();

@@ -56,8 +56,15 @@ import static javax0.jamal.tools.InputHandler.startsWith;
  * If a key is present on the input then the user defined macro of the same name is not used as value source.
  */
 public class Params {
+    public static class ExtraParams {
+        private final Map<String, Param<?>> params = new HashMap<>();
+        ;
+    }
+
     public interface Param<T> {
         String[] keys();
+
+        void copy(Param<?> p);
 
         void inject(Processor processor, String macroName);
 
@@ -93,15 +100,35 @@ public class Params {
 
         boolean isPresent() throws BadSyntax;
 
+        /**
+         * @return the name, which was actually used for the parameter. It is the same string as the name of the
+         * parameter or one of the aliases.
+         * <p>
+         * If the parameter is multi-values then the name used the last time will be returned.
+         */
         String name();
 
+        /**
+         * Set the name of the parameter, which was used. This is the original name of the parameter or one of the
+         * aliases. This value can be queried later calling {@link #name()}.
+         *
+         * @param id the string that was used as the parameter name/id
+         */
         void setName(String id);
     }
 
     private final Processor processor;
     private final Map<String, Param<?>> holders = new HashMap<>();
+    private ExtraParams extraParams = null;
     private String macroName = null;
+    // The character that signals the end of the parameters
+    // by default it is `\n` which means that the parameters are occupying the first line
+    // new-line, when processing parameters can also be escaped
+    // many times this character is ')', for core macros ']'
     private Character terminal = '\n';
+    // The character that starts the parameters
+    // by default there is no such character, parameters just start on the input
+    // in some cases this is '(', for core macros it is '['
     private Character start = null;
 
     private static class BadKey extends BadSyntax {
@@ -164,6 +191,28 @@ public class Params {
         return this;
     }
 
+    /**
+     * Specify the parameter holders and also an extra parameter holders in case there is a parameter, which is not used
+     * by this macro. These extra parameters may be passed to another marco that this macro may invoke and then that
+     * macro, instead of the {@link #parse(Input)} method will invoke the {@link #parse(ExtraParams)} methods.
+     *
+     * @param extraParams the holder for the extra parameters. It has to be a variable, as it will be passed on to the
+     *                    next macro in the chain. It can be created as {@code new Params.ExtraParams()}
+     * @param holders     the parameter holders
+     * @return {@code this}
+     */
+    public Params keys(ExtraParams extraParams, Param<?>... holders) {
+        this.extraParams = extraParams;
+        return keys(holders);
+    }
+
+    /**
+     * Specify the parameter holders. When the parsing works it stores the values parsed into these parameter holders.
+     * When there is a parameter for which there is no holder an error occurs.
+     *
+     * @param holders the parameter holders
+     * @return {@code this}
+     */
     public Params keys(Param<?>... holders) {
         for (final var holder : holders) {
             for (final var key : holder.keys()) {
@@ -232,13 +281,44 @@ public class Params {
      */
     public void parse(Input input) throws BadSyntax {
         try {
-            parse(input, (id, param) -> {
-                holders.get(id).set(param);
-                holders.get(id).setName(id);
-            }, holders::containsKey);
+            if (extraParams == null) {
+                parse(input, (id, param) -> {
+                    holders.get(id).set(param);
+                    holders.get(id).setName(id);
+                }, holders::containsKey);
+            } else {
+                parse(input, (id, param) -> {
+                    getHolder(id).set(param);
+                    getHolder(id).setName(id);
+                }, (id) -> true);
+
+            }
         } catch (BadKey e) {
             final var suggestions = suggest(e.key, holders.keySet());
             throw throwExceptionWithSuggestions(suggestions, e);
+        }
+    }
+
+    private Params.Param<?> getHolder(final String id) {
+        return holders.computeIfAbsent(id,
+                (xId -> extraParams.params.computeIfAbsent(xId,
+                        javax0.jamal.tools.param.Param::new)));
+    }
+
+    public void parse(ExtraParams extraParams) throws BadSyntax {
+        parse();
+        for (final var e : extraParams.params.entrySet()) {
+            final var id = e.getKey();
+            if (!holders.containsKey(id)) {
+                if (this.extraParams != null) {
+                    getHolder(id).copy(e.getValue());
+                } else {
+                    final var suggestions = suggest(id, holders.keySet());
+                    throw throwExceptionWithSuggestions(suggestions,
+                            new BadKey(e.getKey(), "The key '" + id + "' is not used by the macro '" + macroName + "'."));
+                }
+            }
+            holders.get(e.getKey()).copy(e.getValue());
         }
     }
 
@@ -354,6 +434,16 @@ public class Params {
         }
     }
 
+    /**
+     * Skip all the characters for which the {@code skipper} predicate returns true.
+     * If the next character after all the skipped characters are {@code \} and {@code \n} (escaped new line) then
+     * step over these and start the skipping again.
+     * <p>
+     * Skipping a character means deleting it from the front of theinput.
+     *
+     * @param input   to input to delete the characters from
+     * @param skipper the predicate deciding if a chavater is to be skipped or not
+     */
     private static void skipper(Input input, Predicate<Input> skipper) {
         while (true) {
             while (skipper.test(input)) {

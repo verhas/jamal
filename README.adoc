@@ -2168,7 +2168,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-18.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
 ----
 
 
@@ -4055,7 +4055,7 @@ will result
 
 [source]
 ----
-The current version 1.11.1 is older than the required version. It has to be newer.
+The current version 1.12.2-SNAPSHOT is older than the required version. It has to be newer.
 ----
 
 

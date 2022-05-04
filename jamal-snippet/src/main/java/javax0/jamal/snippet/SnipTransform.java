@@ -46,9 +46,10 @@ import java.util.stream.Collectors;
  */
 public class SnipTransform implements Macro {
     private static final Set<String> knownActions = Set.of("kill", "skip", "replace", "trim", "reflow", "number", "untab", "range");
-    private static final Map<String,String> actionAliases = Map.of(
-            "ranges","range"
+    private static final Map<String, String> actionAliases = Map.of(
+            "ranges", "range"
     );
+
     /**
      * Parse the input for parameters and store the parameters. The input is parsed in the constructor and then the
      * parameter set is checked for consistency as well as implicit actions are added.
@@ -72,7 +73,7 @@ public class SnipTransform implements Macro {
         final Params.Param<Pattern> skipStart = Params.<Pattern>holder(null, "skip").orElse("skip").asPattern();
         final Params.Param<Pattern> skipEnd = Params.<Pattern>holder(null, "endSkip").orElse("end\\s+skip").asPattern();
         // parameters for trim
-        final Params.Param<Integer> margin = Params.<Integer>holder(null, "margin").orElseInt(0);
+        final Params.Param<Integer> margin = Params.<Integer>holder(null, "margin", "trim").orElseInt(0);
         final Params.Param<Boolean> trimVertical = Params.<Boolean>holder(null, "trimVertical").asBoolean();
         final Params.Param<Boolean> verticalTrimOnly = Params.<Boolean>holder(null, "verticalTrimOnly", "vtrimOnly").asBoolean();
         final Params.Param<Integer> tabSize = Params.<Integer>holder("tabSize", "tab").asInt();
@@ -80,14 +81,31 @@ public class SnipTransform implements Macro {
         final Params.Param<String> ranges = Params.holder(null, "range", "ranges", "lines").asString();
         final Set<String> actionsSet;
 
+        private void parse(final Params.ExtraParams extraParams, final Input in, final Processor processor) throws BadSyntax {
+            if (extraParams == null) {
+                // there is no '(' and ')' around the parameters
+                Scan.using(processor)
+                        .from(SnipTransform.this)
+                        .firstLine()
+                        .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange,
+                                skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize, ranges)
+                        .parse(in);
+            } else {
+                Params.using(processor)
+                        .from(SnipTransform.this)
+                        .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange,
+                                skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize, ranges)
+                        .parse(extraParams);
+            }
+
+        }
+
         Parameters(final Input in, final Processor processor) throws BadSyntax {
-            // there is no '(' and ')' around the parameters
-            Scan.using(processor)
-                    .from(SnipTransform.this)
-                    .firstLine()
-                    .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange,
-                            skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize, ranges)
-                    .parse(in);
+            this(null, in, processor);
+        }
+
+        Parameters(final Params.ExtraParams extraParams, final Input in, final Processor processor) throws BadSyntax {
+            parse(extraParams, in, processor);
 
             actionsSet = getOrderedActionSet();
 
@@ -118,12 +136,13 @@ public class SnipTransform implements Macro {
 
         /**
          * Replace the elements in the action list if they are aliases with the real action.
+         *
          * @param actionsList the list of actions optionally containing aliases
          */
         private void unaliasActions(final List<String> actionsList) {
-            for(final var alias : actionAliases.keySet()) {
+            for (final var alias : actionAliases.keySet()) {
                 final var aliasIndex = actionsList.indexOf(alias);
-                if( aliasIndex != -1 ) {
+                if (aliasIndex != -1) {
                     actionsList.set(aliasIndex, actionAliases.get(alias));
                 }
             }
@@ -207,7 +226,8 @@ public class SnipTransform implements Macro {
                     action("lines", ranges, "range"),
                     action("replace", replace),
                     action("tab", tabSize, "untab"),
-                    action("tabSize", tabSize, "untab")
+                    action("tabSize", tabSize, "untab"),
+                    action("trim", margin, "trim")
             )) {
                 if (a.param.isPresent() && a.param.name().equals(a.name)) {
                     actionsSet.add(a.action);
@@ -293,7 +313,11 @@ public class SnipTransform implements Macro {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var params = new Parameters(in, processor);
+        return evaluate(null, in, processor);
+    }
+
+    public String evaluate(final Params.ExtraParams extraParams, final Input in, final Processor processor) throws BadSyntax {
+        final var params = new Parameters(extraParams, in, processor);
         final var macros = new UnderlyingMacros(processor);
         final var sb = in.getSB();
         final var pos = in.getPosition();
