@@ -487,6 +487,27 @@ will result
 
 {%output%}
 
+Snippets are typically contain several lines and the leading spaces may be important.
+To accommodate this when you define a snippet using this macro the spaces following the `=` sign up to, and including the new line will be skipped.
+As you can see in the example above there is no new line before the sentence `It is the...`.
+It is recommended to have a new line after the `=` character and start the snippet content on the next line.
+If you start the snippet right after the ``=` character then the spaces between the first non-space characted and the `=` sign will be skipped.
+For example:
+
+{%sample/
+{@snip:define mySnippet1=     It is the snippet,
+which is defined inside the file and not collected from an external file.
+}
+{@snip mySnippet1
+is used here, and then the rest of the text is ignored}
+%}
+
+will result
+
+{%output%}
+
+As you can see there are no spaces before the characters `It is the...`.
+
 [[snip_clear]]
 ==== {%macroChapter%}`snip:clear`
 {%#snip:check file={%JAVA_DIR%}Clear.java hash=060e1237%}
@@ -495,7 +516,7 @@ The result of the macro is an empty string.
 
 [[snip]]
 ==== {%macroChapter%}`snip`
-{%#snip:check file={%JAVA_DIR%}Snip.java hash=a950c5d7%}
+{%#snip:check file={%JAVA_DIR%}Snip.java hash=dc4499fa%}
 
 You can use the `snip` macro to insert one or more snippets into the output.
 There are three different ways to use the macro.
@@ -511,6 +532,9 @@ It works exactly the same way as in the macro <<snip_check,`snip:check`>>.
 The possibility to have this option eliminates the need to use the `snip` and the `snip:check` macros together.
 Note, however, that it is not possible to check against the number of the lines in the snippet.
 You can check only the hash code.
+
+You can also use any of the options of the macro <<snipTransform,`snip:transform`>>.
+The macro `snip` will automatically apply the transformations calling the macro `snip:transform`.
 
 ==== Use one snippet
 
@@ -925,7 +949,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=19291468%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=c8ce52d1%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1613,7 +1637,7 @@ The syntax of the macro is
 
 [[snipTransform]]
 ==== {%macroChapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=56af0a5a%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=6cfb2464%}
 
 The `snip:transform` macro integrates the functionality of the macros
 
@@ -1690,7 +1714,7 @@ It is not possible to invoke one action more than once.
 Any syntax allowing the separation of the parameters of one execution from another would be complex and probably hard to read.
 
 Some actions have parameters that are the same as the name of the action.
-These are `skip`, `range`, `kill` and `replace`.
+These are `skip`, `range`, `kill`, `trim` and `replace`.
 When one of these parameters is specified there may not be a need to specify the action separately.
 It is evident that
 
@@ -1725,6 +1749,7 @@ The following parameters will add the action implicitly to the list:
 * `lines`, `range` or `ranges` will add the action `range`
 * `replace` will add the action `replace`
 * `tab` or `tabSize` will add the action `untab`
+* `trim` will add the action `trim`
 
 If an action is already in the list (they are present in the parameter `actions`) they are not added again.
 Also, their position remains as specified in the parameter `actions`.
