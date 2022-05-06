@@ -55,6 +55,7 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-snippet</artifactId>
+            <version>1.12.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

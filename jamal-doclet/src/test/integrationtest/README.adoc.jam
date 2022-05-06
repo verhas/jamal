@@ -1,0 +1,35 @@
+= Jamal Doclet Integration Test
+
+This project is not published as part of the Jamal project.
+The files in this project are to be used manually to test the Jamal Javadoc implementation.
+
+Jamal itself is using Jamal Doclet, but that is not sufficient for the testing.
+To avoid circular dependencies the Jamal source uses the last released version of the doclet.
+Testing an already published release is pointless.
+
+To use this integration test project first ensure that you have the developed SNAPSHOT version installed.
+This is usually done executing
+
+    mvn clean install
+
+in the root project folder.
+
+After that you can
+
+    cd jamal-doclet/src/test/integrationtest
+
+and execute the same
+
+    mvn clean install
+
+command.
+When it has finished, you can have a look at the files
+
+    target/apidocs/
+
+To see the JavaDoc you should open the
+
+    target/apidocs/index.html
+
+file and check that the pages are OK.
+There is no automation at the moment for the execution of the test and for the assertions for the test result.

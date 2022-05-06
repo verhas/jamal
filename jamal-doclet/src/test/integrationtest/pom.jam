@@ -1,0 +1,57 @@
+{#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../../../../version.jim}
+{@define taglets($x)=<taglets>$x</taglets>}
+{@define taglet($x)=<taglet>$x</taglet>}
+{@define tagletArtifacts($x)=<tagletArtifacts>$x</tagletArtifacts>}
+{@define tagletArtifact($x)=<tagletArtifact>$x</tagletArtifact>}
+{@define tagletClass($x)=<tagletClass>$x</tagletClass>}
+{@define additionalOptions($x)=<additionalOptions>$x</additionalOptions>}
+{@define additionalOption($x)=<additionalOption>$x</additionalOption>}
+{@define docletArtifact($x)=<docletArtifact>$x</docletArtifact>}
+{@define doclet($x)=<doclet>$x</doclet>}
+{@define doclint($x)=<doclint>$x</doclint>}
+
+{project jamal doclet integration test}
+    {GAV :{GROUPID}:jamal-doclet-integration-test:{VERSION}}
+    {description integration test module for Jamal Doclet}
+
+    {build|{plugins|
+        {plugin|
+            {GAV :org.apache.maven.plugins:maven-compiler-plugin:{MAVEN_COMPILER_PLUGIN_VERSION}}
+            <configuration>
+                <source>{JAVA_SOURCE}</source>
+                <target>{JAVA_TARGET}</target>
+                <release>{JAVA_RELEASE}</release>
+            </configuration>
+        }
+        <!-- snippet plugin_doclet -->
+        {plugin|
+            {GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
+            {configuration|
+                {detectOfflineLinks false}
+                {doclint none}
+                {doclet javax0.jamal.doclet.JamalDoclet}
+                {docletArtifact {GAV :com.javax0.jamal:jamal-doclet:{VERSION}}}
+                {additionalOptions
+                    {additionalOption |--source-root}
+                    {additionalOption {@escape* ``${project.build.sourceDirectory}``}}
+                }
+                {taglets|
+                    {taglet|
+                        {tagletClass javax0.jamal.doclet.JamalTaglet}
+                        {tagletArtifact {GAV :com.javax0.jamal:jamal-doclet:{VERSION}}}
+                    }
+                    {tagletArtifacts
+                        {tagletArtifact {GAV :com.javax0.jamal:jamal-snippet:{VERSION}}}
+                    }
+                }
+            }
+            {executions|{execution|
+                    {id|attach-javadocs}
+                    {goals|{goal|jar}}}}
+        }
+        <!-- end snippet -->
+    }}
+
+{end project}

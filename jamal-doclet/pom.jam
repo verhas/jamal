@@ -12,7 +12,7 @@
     {dependencies
        {@for MODULE in (api,tools,engine,core)=
          {dependency|{GROUPID}|jamal-MODULE}}
-         {dependency :{GROUPID}:jamal-snippet::test}
+         {dependency :{GROUPID}:jamal-snippet:{LAST_RELEASE}:test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
     }

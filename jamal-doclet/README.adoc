@@ -1,15 +1,35 @@
-== Jamal Taglet
+== Jamal Doclet/Taglet
 
 
-This library can be used to process Jamal macros in JavaDoc comments.
-In order to do that you have to configure the JavaDoc to use the Jamal doclet.
+This library can be used to extend your JavaDoc documents to include Jamal macros.
+That way you can
 
-JamalDoclet is an extension of the `StandardDoclet` defined in the JDK.
-It adds simple functionality to the standard built-in doclet handling the JamalDoclet specific options.
+* include code snippets into your API documentation right from your actual developed code,
+* reference constant values in your Java code, and
+** from any other source file
+* move repeated text appearing at many locations into macro files and reference only the macros in the JavaDoc,
+* and many other things that Jamal can do for you.
 
-The Jamal processing is implemented as a Taglet.
-This tag can be used as an inline as well as a block tag.
+[NOTE]
+====
+Starting with Java 18 you can define code snippets in your JavaDoc files without any extension.
+This possibility will probably be developed in the future and become mor and more usable.
+As for the release Java 18 the feature seems to be experimental, and it is not really handy.
 
+Using Jamal JavaDoc extensions you can do more and easier than with the built-in feature.
+You can also use Jamal with Java version 11 and later.
+====
+
+Technically the library is a Doclet and a Taglet.
+The Doclet part implements the handling of the configuration options that are needed by Jamal.
+For example, you can configure the macro start and end strings as well as you specify the project root directory (read more about it later).
+
+* JamalDoclet is an extension of the `StandardDoclet` defined in the JDK.
+* The Jamal processing is implemented as a Taglet.
+
+The tag `jamal` can be used as an inline tag as well as a block tag.
+
+The following example, where the tag is between `{` and `}` characters is an inline tag:
 [source]
 ----
 /**
@@ -18,7 +38,7 @@ This tag can be used as an inline as well as a block tag.
  */
 ----
 
-format is the so- called inline format, while
+The following example, where the tag is on a line without `{` preceeding it or `}` closing it is a block tag:
 
 [source]
 ----
@@ -31,49 +51,195 @@ format is the so- called inline format, while
  */
 ----
 
-is a block tag, that starts at the beginning of a line and lasts till the next block tag.
+It starts at the beginning of a line and lasts till the next block tag.
+
+=== Using with Maven
+
+To use the Jamal doclet and taglet with Jamal you have to configure it in the `pom.xml` file.
+This configuration will tell the Maven JavaDoc plugin to use the Jamal doclet and taglet instead of the standard one.
+
+The following is a sample configuration used in the manual integration test of JamalDoclet.
+
+[source, xml, title=JamalDoclet Maven Configuration]
+----
+ 1. <plugin>
+ 2.     <groupId>org.apache.maven.plugins</groupId>
+ 3.     <artifactId>maven-javadoc-plugin</artifactId>
+ 4.     <version>3.3.1</version>
+ 5.     <configuration>
+ 6.         <detectOfflineLinks>false</detectOfflineLinks>
+ 7.         <doclint>none</doclint>
+ 8.         <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
+ 9.         <docletArtifact>
+10.             <groupId>com.javax0.jamal</groupId>
+11.             <artifactId>jamal-doclet</artifactId>
+12.             <version>1.12.2-SNAPSHOT</version>
+13.         </docletArtifact>
+14.         <additionalOptions>
+15.             <additionalOption>--source-root</additionalOption>
+16.             <additionalOption>${project.build.sourceDirectory}</additionalOption>
+17.         </additionalOptions>
+18.         <taglets>
+19.             <taglet>
+20.                 <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+21.                 <tagletArtifact>
+22.                     <groupId>com.javax0.jamal</groupId>
+23.                     <artifactId>jamal-doclet</artifactId>
+24.                     <version>1.12.2-SNAPSHOT</version>
+25.                 </tagletArtifact>
+26.             </taglet>
+27.             <tagletArtifacts>
+28.                 <tagletArtifact>
+29.                     <groupId>com.javax0.jamal</groupId>
+30.                     <artifactId>jamal-snippet</artifactId>
+31.                     <version>1.12.2-SNAPSHOT</version>
+32.                 </tagletArtifact>
+33.             </tagletArtifacts>
+34.         </taglets>
+35.     </configuration>
+36.     <executions>
+37.         <execution>
+38.             <id>attach-javadocs</id>
+39.             <goals>
+40.                 <goal>jar</goal>
+41.             </goals>
+42.         </execution>
+43.     </executions>
+44. </plugin>
+
+----
+
+
+The tag `doclet` (line 8.) defines the Java class implementing the doclet.
+It has to be as it is shown in the example.
+
+The lines 9-13 define the `docletArtifact`.
+This is the Maven coordinate of the library.
+It is used by Maven to find the library that contains the class defined above.
+The version in this documentation is generated automatically using Jamal, therefore it has to be the actual latest version.
+If you see it is a `-SNAPSHOT` version then you are reading the development branch.
+Have a look at the released versions and use the latest release.
+
+NOTE: Versions prior 1.12.2 were misconfigured and could not use the snippet library.
+
+`additionalOptions` on the lines 14-17 define extra options that the doclet uses.
+These are detailed in the next section.
+In this sample you can only see the option `--source-root`, which you probably need to configure.
+Using Maven properties you can safely define this parameter exactly as it is shown here.
+
+The lines 18-34 define the Jamal taglet.
+This configuration contains two main parts:
+
+* `taglet`, and
+* `tagletArtifacts`.
+
+The `taglet` configuration defines the `tagletClass` and the `tagletArtifact`.
+This is similar to `doclet` (which is not called `docletClass` although that would have been the consistent name) and `docletArtifact`.
+The `tagletClass` is exactly as you can see it above on line 20.
+The `tagletArtifact` defines on lines 28-32 has to be the same as the `docletArtifact`.
+The taglet is implemented in the same library as the doclet.
+Use a single version of the library.
+Do not use different versions on the lines 12 and 24.
+
+The configuration of `tagletArtifacts` (plural) tag can contain several ``tagletArtifact`` (singlar) tags.
+This part can specify the Maven coordinates for the libraries the taglet uses but does not directly depend on.
+The library `tagletArtifact` defined on the lines 21-25 is a Maven artifact and has its own dependencies as defined in the `pom.xml` file of the library itself.
+For example, the artifact `com.javax0.jamal:jamal-doclet:1.12.2-SNAPSHOT` depends on `com.javax0.jamal:jamal-api:1.12.2-SNAPSHOT`, and some other libraries.
+You do not need to list these as extra artifacts, Maven will fetch them automatically.
+
+On the other hand a taglet may have `provided` or dynamically loaded additional dependencies.
+You can define these in the `tagletArtifacts` section.
+Jamal taglet is a taglet that can use dynamically loaded additional dependencies.
+
+The built-in macros of Jamal are loaded by the core Jamal processor using the Java service loader.
+The core macros are direct dependencies of Jamal, therefore they are on the classpath automatically.
+Other macros, however, like the snippet handling macros are extra libraries.
+If you want to use them you have to ensure that the library is on the classpath (or rather on the module path) of Jamal.
+
+In the case of a JavaDoc taglet implementation this can be achieved specifying the Maven coordinate of the macro library.
+The example above specifies the `com.javax0.jamal:jamal-snippet:1.12.2-SNAPSHOT` library.
+This will load the library and automatically all the dependencies it needs.
+
+[NOTE]
+====
+You can use several of the Jamal libraries, which are part of the Jamal project, or Jamal libraries developed elsewhere.
+When using libraries of the Jamal project it is recommended to use the latest, or at least the same version as the doclet.
+The libraries have new releases with every release of Maven, even if there was no change in the library.
+The libraries are tested to work with the version of Jamal that has the same version.
+
+The Jamal libraries include
+
+* `jamal-extensions`
+* `jamal-snippet`
+* `jamal-scriptbasic`
+* `jamal-groovy`
+* `jamal-ruby`
+* `jamal-plantuml`
+* `jamal-debug`
+* `jamal-jamal`
+* `jamal-yaml`
+* `jamal-io`
+* `jamal-doclet`
+* `jamal-markdown`
+* `jamal-assertions`
+
+If you want to use any of those you should add
+
+  <tagletArtifact>
+      <groupId>com.javax0.jamal</groupId>
+      <artifactId>jamal-snippet</artifactId>
+      <version>1.12.2-SNAPSHOT</version>
+  </tagletArtifact>
+
+to the `tagletArtifacts` (plural) section.
+====
+
+The rest of the lines from 35 is the standard plugin configuration detailed in the Maven documentation.
 
 === Configuration options
 
+The lines 14-17 in the example above define one extra option.
+There are multiple options that you can configure fot the Jamal doclet.
+In this section we define each of these options one by one.
+
 * `--source-root` can defined the source root.
-It has to be specified to reliably use macros that try to open other files.
-These are the `import` and `include` macros from the core macros, but there are many other macros in other packages.
+
++
+Source root has to be specified to reliably use macros that try to open other files.
+These are the `import` and `include` macros from the core library, but there are many other macros in other packages.
 Notable most of the snippet handling very much relies on the input file name.
 If this option is set then the taglet can calculate the location of the Java source file.
 That way other files can be found using relative file name.
 Failing to set this option properly the relative file names will be calculated from the current working directory.
-The current working directory is not guaranteed, may occasionally be different in different installation.
-Without this option the `res:` and `http:` files can reliably be used as well as files specified using the absolute file name.
-When using Maven, specify this option as
+The current working directory is not guaranteed, may occasionally be different in different installations.
+Without this option the `res:` and `http:` files can reliably be used as well as files specified using absolute file names.
+When using Maven, specify this option as displayed on the example above
 
-[source]
++
+[source, xml, title=configuring source root]
 ----
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-javadoc-plugin</artifactId>
-    <version> ... </version>
-    <configuration>
-        <doclet>javax0.jamal.doclet.JamalDoclet</doclet><debug/>
-        <docletArtifact>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-doclet</artifactId>
-            <version>1.12.2-SNAPSHOT</version>
-        </docletArtifact>
-        <additionalOptions>
-            <additionalOption>--source-root</additionalOption>
-            <additionalOption>${project.build.sourceDirectory}</additionalOption>
-        </additionalOptions>
-    </configuration>
-<plugin>
+14.         <additionalOptions>
+15.             <additionalOption>--source-root</additionalOption>
+16.             <additionalOption>${project.build.sourceDirectory}</additionalOption>
+17.         </additionalOptions>
+
 ----
+
 
 * `--macro-open` can specify the macro opening string.
-The default value is `{`.
 
++
+The default value is `{`.
+Use this option only in special cases.
+Using the default `{` and `}` characters will make the macros `{@code ...}` and `{@link ...}` compatible looking with the original Javadoc tags. For more information about these read below.
 
 * `--macro-close` can specify the macro closing string.
+
++
 The default value is `}`.
-This is not recommended altering this, because this macro opening string harmonizes with the inline taglet uses.
+Use this option only in special cases.
+Using the default `{` and `}` characters will make the macros `{@code ...}` and `{@link ...}` compatible looking with the original Javadoc tags. For more information about these read below.
+
 
 [NOTE]
 ====
@@ -89,66 +255,13 @@ Note, however, that the implementation of `{@link ..}` is very rudimentary and d
 If you have to rely on the proper links then close the Jamal inline tag before the link, and open a new one after it.
 ====
 
-In this document we will describe how to configure the `javadoc` command line tool to use JamalDoclet and also the modifications needed in a `pom.xml`.
-
-=== Maven configuration
-
-To use the JamalDoclet you should configure the JavaDoc plugin to use the Jamal doclet.
-It can be done using the following configuration
-
-[source, xml]
-----
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-javadoc-plugin</artifactId>
-  <version>3.2.0</version>
-  <configuration>
-    <doclet>javax0.jamal.doclet.JamalDoclet</doclet>   <!-- this is the class name of the doclet -->
-    <docletArtifact>                                   <!-- you have to specify where Maven finds -->
-      <groupId>com.javax0.jamal</groupId>              <!-- this doclet -->
-      <artifactId>jamal-doclet</artifactId>
-      <version>1.12.2-SNAPSHOT</version>
-    </docletArtifact>
-    <additionalOptions>                                        <!-- these are the options for -->
-      <additionalOption>--source-root</additionalOption>       <!--- the Jamal doclet -->
-      <additionalOption>${project.build.sourceDirectory}</additionalOption>
-
-      <!-- DO NOT USE THESE OPTIONS ONLY IF YOU MUST -->
-      <additionalOption>--macro-open</additionalOption>
-      <additionalOption>[%</additionalOption>
-      <additionalOption>--macro-close</additionalOption>
-      <additionalOption>%]</additionalOption>
-      <!-- DO NOT USE THESE OPTIONS ONLY IF YOU MUST -->
-
-    </additionalOptions>
-
-    <!-- you have to define the taglet class and artifact where Maven finds it -->
-    <taglets>
-      <taglet>
-        <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
-        <tagletArtifact>
-          <groupId>com.javax0.jamal</groupId>
-          <artifactId>jamal-doclet</artifactId>
-          <version>1.12.2-SNAPSHOT</version>
-        </tagletArtifact>
-      </taglet>
-      <!-- If you intend to use other macrolibraries you have to add here as taglet artifacts. -->
-      <tagletArtifacts>
-        <tagletArtifact>
-          <groupId>com.javax0.jamal</groupId>
-          <artifactId>jamal-snippet</artifactId>
-          <version>1.12.2-SNAPSHOT</version>
-        </tagletArtifact>
-      </tagletArtifacts>
-    </taglets>
-  </configuration>
-</plugin>
-----
-
 === Command Line `javadoc` configuration
 
-Please read the documentation of Javadoc command line tool.
-Here is the `options` file that Maven generates if you specify the `<debug>` configuration option for maven Javadoc plugin.
+In this section we describe the use of the doclet through the command line tool.
+Because the majority of the use cases will be using the tool via Maven this section is less detailed.
+Please, also read the documentation of Javadoc command line tool.
+
+Here is the `options` file that Maven generates if you specify the `<debug>` configuration option for the Maven Javadoc plugin.
 The important options are:
 
 * `-taglet 'javax0.jamal.doclet.JamalTaglet'`
