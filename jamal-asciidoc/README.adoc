@@ -227,6 +227,8 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-assertions`
 
+* `jamal-markdown`
+
 
 It is essentially all the macro modules that come with Jamal by default.
 If you want to use additional modules, all you have to do is copy the `.jar` files to the `.Asciidoctor/lib` folder.

@@ -1,0 +1,41 @@
+= Jamal All Dependencies
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+{%@import modules.jim%}
+This module contains no code.
+It can be used as a Maven dependency when there is a need to use all Jamal modules.
+It can be a convenience supporting some laziness, but in some cases it may be a necessity.
+
+The trigger to create this module was to make it possible to use the different macro libraries in the doclet version of Jamal.
+When you want to include Jamal macros in your JavaDoc using Maven, you have to configure your Maven javadoc plugin to use the Jamal Doclet and Taglet.
+The doclet module has a limited dependency including only the Jamal core library in addition to the JARs that contain the engine.
+Although it seems to be reasonable to configure the other libraries as taglet libraries it does not work.
+
+The solution is to have a JAR project that has all the needed dependencies and add it to your POM as the following:
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-all</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+This will add the following dependencies to your project:
+
+{%@for [evalist]MODULE in ({%MODULES%})=
+* `jamal-MODULE`
+%}
+
+[NOTE]
+====
+Note that this list is maintained automatically using Jamal.
+The Jamal Maven extension works with the `pom.jam` file.
+This file imports the definition of the module list from `modules.jim`.
+Jamal creates the `README.adoc` file, from `README.adoc.jam`.
+If you can see the list of the modules above then you read the AsciiDoc version.
+If you read the `README.asdoc.jam` then you can see the Jamal macros that include the `modules.jim` file also used by the POM.
+
+This ensures that there is no manual editing of the list of the modules separately for the documentation.
+If the list of the modules changes in the project it will automatically change in the documentation as well.
+====

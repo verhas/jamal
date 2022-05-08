@@ -1,18 +1,16 @@
 {#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
 {@import ../version.jim}
-{project jamal doclet}
-    {GAV ::jamal-doclet:{VERSION}}
+{@import modules.jim}
+{project jamal all}
+    {GAV ::jamal-all:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
-    {description doclet module for Jamal}
+    {description empty jar with dependencies on all macro libraries}
 
-    {@define openForTests={opens/doclet/doclet}}
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies
-       {@for MODULE in (api,tools,engine,core)=
+       {@for [evalist] MODULE in ({MODULES})=
          {dependency|{GROUPID}|jamal-MODULE}}
-      {@for MODULE in (api,engine)=
-          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
     }
 {end project}

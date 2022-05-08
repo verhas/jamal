@@ -41,17 +41,10 @@
                             <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
                             <tagletArtifact>
                                 <groupId>com.javax0.jamal</groupId>
-                                <artifactId>jamal-doclet</artifactId>
+                                <artifactId>jamal-all</artifactId>
                                 <version>1.12.2-SNAPSHOT</version>
                             </tagletArtifact>
                         </taglet>
-                        <tagletArtifacts>
-                            <tagletArtifact>
-                                <groupId>com.javax0.jamal</groupId>
-                                <artifactId>jamal-snippet</artifactId>
-                                <version>1.12.2-SNAPSHOT</version>
-                            </tagletArtifact>
-                        </tagletArtifacts>
                     </taglets>
                 </configuration>
                 <executions>

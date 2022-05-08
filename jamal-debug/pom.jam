@@ -6,7 +6,7 @@
     {parent :{GROUPID}:jamal-parent}
     {description Debugger module for Jamal}
 
-    {@define openForTests={opens/debug/debug}
+    {@define openForTests={opens/debug/debugger}
     }
     {build|{plugins| {@include ../plugins.jim}}}
 

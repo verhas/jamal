@@ -16,9 +16,10 @@ public class Main {
      *
      * The following is the actual code of the method collected by jamal as a s{@comment}nippet and inserted into the JavaDoc by
      * the Jamal doclet.
-     * <pre>
+     * {#md
+     * ```
      * {@snip testSnippet}
-     * </pre>
+     * ```}
      */
     // snippet testSnippet
     public void testSnippet(){

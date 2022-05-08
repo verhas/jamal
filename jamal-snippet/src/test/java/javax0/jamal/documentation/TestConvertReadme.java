@@ -52,6 +52,16 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertDocletReadme() throws Exception {
+        DocumentConverter.convert("../jamal-doclet/README.adoc.jam");
+    }
+
+    @Test
+    void convertAllReadme() throws Exception {
+        DocumentConverter.convert("../jamal-all/README.adoc.jam");
+    }
+
+    @Test
     void convertCmdReadme() throws Exception {
         DocumentConverter.convert("../jamal-cmd/README.adoc.jam");
     }

@@ -6,7 +6,7 @@
     <artifactId>pom-xml-file-builder</artifactId>
     <version>1.0.0</version>
     <properties>
-        <jamalVersion>1.10.0-SNAPSHOT</jamalVersion>
+        <jamalVersion>1.12.2-SNAPSHOT</jamalVersion>
     </properties>
     <build>
         <defaultGoal>clean</defaultGoal>
@@ -26,7 +26,7 @@
                             <formatOutput>true</formatOutput>
                             <transformFrom>\.jam$</transformFrom>
                             <transformTo/>
-                            <filePattern>.*pom\.xml\.jam$</filePattern>
+                            <filePattern>.*pom\.jam$</filePattern>
                             <exclude>target|\.iml$|\.java$|\.xml$</exclude>
                             <sourceDirectory>.</sourceDirectory>
                             <targetDirectory>.</targetDirectory>

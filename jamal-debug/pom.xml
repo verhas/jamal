@@ -29,7 +29,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                --add-opens jamal.debug/javax0.jamal.debug=ALL-UNNAMED
+                --add-opens jamal.debug/javax0.jamal.debugger=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>
