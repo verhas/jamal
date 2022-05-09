@@ -22,49 +22,47 @@ The solution is to have a JAR project that has all the needed dependencies and a
 This will add the following dependencies to your project:
 
 
-* `jamal-api`
-
-* `jamal-asciidoc`
-
-* `jamal-assertions`
-
-* `jamal-cmd`
-
-* `jamal-core`
-
-* `jamal-debug`
-
-* `jamal-doclet`
-
 * `jamal-engine`
 
-* `jamal-extensions`
-
-* `jamal-groovy`
-
-* `jamal-io`
-
-* `jamal-jamal`
-
-* `jamal-markdown`
-
-* `jamal-plantuml`
-
-* `jamal-ruby`
-
-* `jamal-scriptbasic`
-
-* `jamal-snippet`
-
-* `jamal-test`
-
-* `jamal-testsupport`
+* `jamal-api`
 
 * `jamal-tools`
 
-* `jamal-word`
+* `jamal-core`
+
+* `jamal-snippet`
+
+* `jamal-scriptbasic`
+
+* `jamal-groovy`
+
+* `jamal-ruby`
+
+* `jamal-plantuml`
+
+* `jamal-jamal`
 
 * `jamal-yaml`
+
+* `jamal-io`
+
+* `jamal-markdown`
+
+* `jamal-assertions`
+
+* `jamal-word`
+
+* `jamal-asciidoc`
+
+* `jamal-maven-plugin`
+
+* `jamal-maven-extension`
+
+* `jamal-cmd`
+
+* `jamal-doclet`
+
+* `jamal-debug`
 
 
 [NOTE]

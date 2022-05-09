@@ -1,1 +1,0 @@
-{@define MODULES=api,asciidoc,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,markdown,plantuml,ruby,scriptbasic,snippet,test,testsupport,tools,word,yaml}

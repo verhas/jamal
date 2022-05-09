@@ -1,5 +1,6 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {@import version.jim}
+{@import modules.jim}
 {@define taglets($x)=<taglets>$x</taglets>}
 {@define taglet($x)=<taglet>$x</taglet>}
 {@define tagletArtifacts($x)=<tagletArtifacts>$x</tagletArtifacts>}
@@ -15,7 +16,7 @@
     {packaging pom}
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
     {description Jamal macro library to process text files}
-    {modules jamal-engine,jamal-api,jamal-tools,jamal-core,jamal-extensions,jamal-maven-plugin,jamal-maven-extension,jamal-testsupport,jamal-cmd,jamal-snippet,jamal-test,jamal-scriptbasic,jamal-groovy,jamal-ruby,jamal-plantuml,jamal-debug,jamal-jamal,jamal-yaml,jamal-io,jamal-doclet,jamal-markdown,jamal-assertions,jamal-word,jamal-asciidoc,jamal-all}
+    {modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions)=jamal-$M,}jamal-all}
     {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
     {github|verhas|jamal}
@@ -88,7 +89,7 @@
         }
     }
     {dependencyManagement|{dependencies|
-        {@for MODULE in (testsupport,api,core,cmd,tools,engine,extensions,scriptbasic,snippet,plantuml,debug,jamal,yaml,io,doclet,markdown,assertions,word,asciidoc,test,groovy,ruby)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
+        {@for [evalist] MODULE in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,all)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
         {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
         {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}}

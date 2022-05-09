@@ -1,0 +1,9 @@
+{@comment Definition and list of all the modules}
+{#define modules:CORE=engine,api,tools,core}
+{#define modules:TESTSUPPORT=testsupport}
+{#define modules:TEST=test}
+{#define modules:DEBUG=debug}
+{#define modules:CORE_TEST={modules:CORE},{modules:TESTSUPPORT}}
+{#define modules:EMBED=maven-plugin,maven-extension,cmd,doclet}
+{#define modules:MACROS=snippet,scriptbasic,groovy,ruby,plantuml,jamal,yaml,io,markdown,assertions,word,asciidoc}
+{#define modules:ALL={modules:CORE},{modules:MACROS},{modules:EMBED},{modules:DEBUG}}

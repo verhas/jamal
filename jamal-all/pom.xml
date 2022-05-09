@@ -33,79 +33,11 @@
     <dependencies>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-asciidoc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-assertions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-cmd</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-debug</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-doclet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-extensions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-jamal</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-markdown</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-plantuml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-ruby</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-scriptbasic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-snippet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-testsupport</artifactId>
+            <artifactId>jamal-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
@@ -113,11 +45,75 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-word</artifactId>
+            <artifactId>jamal-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-snippet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-scriptbasic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-groovy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-ruby</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-plantuml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-jamal</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-markdown</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-assertions</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-word</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-asciidoc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-maven-plugin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-maven-extension</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-cmd</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-doclet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-debug</artifactId>
         </dependency>
     </dependencies>
 </project>
