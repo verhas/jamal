@@ -2,7 +2,7 @@
 
 
 
-{@define VERSION=1.12.2-SNAPSHOT}
+{@define VERSION=1.12.2}
                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 {@define LAST_RELEASE=1.12.1}
 

@@ -34,7 +34,7 @@ This version currently is
 
 [source]
 ----
-1.12.2-SNAPSHOT
+1.12.2
 ----
 
 
@@ -99,7 +99,7 @@ To do it as a Maven dependency use the following Maven coordinates:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-assertions</artifactId>
-    <version>1.12.2-SNAPSHOT</version>
+    <version>1.12.2</version>
 </dependency>
 ----
 
