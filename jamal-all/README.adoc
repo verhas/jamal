@@ -15,7 +15,7 @@ The solution is to have a JAR project that has all the needed dependencies and a
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-all</artifactId>
-    <version>1.12.2</version>
+    <version>1.12.3-SNAPSHOT</version>
 </dependency>
 ----
 

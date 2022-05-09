@@ -4,7 +4,7 @@ Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]
 
-This document is the readme file for the Jamal Asciidoc extension version `1.12.2`.
+This document is the readme file for the Jamal Asciidoc extension version `1.12.3-SNAPSHOT`.
 
 == Introduction
 

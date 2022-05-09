@@ -2,7 +2,7 @@
 MODULES="api engine core tools cmd word snippet scriptbasic groovy ruby plantuml debug jamal yaml io assertions jamal"
 REPO=$HOME/.m2/repository
 REPO_JAMAL=$REPO/com/javax0/jamal
-VERSION=1.12.2
+VERSION=1.12.3-SNAPSHOT
 CENTRAL=https://repo1.maven.org/maven2
 
 for MODULE in $MODULES ; do
