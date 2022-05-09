@@ -113,13 +113,6 @@
                                     <version>1.12.1</version>
                                 </tagletArtifact>
                             </taglet>
-                            <tagletArtifacts>
-                                <tagletArtifact>
-                                    <groupId>com.javax0.jamal</groupId>
-                                    <artifactId>jamal-io</artifactId>
-                                    <version>1.12.1</version>
-                                </tagletArtifact>
-                            </tagletArtifacts>
                         </taglets>
                     </configuration>
                     <executions>

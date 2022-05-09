@@ -64,7 +64,7 @@ The following is a sample configuration used in the manual integration test of J
 
 [source, xml, title=JamalDoclet Maven Configuration]
 ----
-{%#snip:transform actions=trim,number format="%2d. " replace=/jamal-all/jamal-doclet/
+{%#snip:transform actions=trim,number format="%2d. "
 {%@snip plugin_doclet%}%}
 ----
 
@@ -80,7 +80,7 @@ The version in this documentation is generated automatically using Jamal, theref
 If you see it is a `-SNAPSHOT` version then you are reading the development branch.
 Have a look at the released versions and use the latest release.
 
-NOTE: Versions prior 1.12.2 were misconfigured and could not use the snippet library, nor any other library using the Maven JavaDoc plugin.
+NOTE: Versions prior 1.12.2 had a misconfiguration and could not use the snippet library, nor any other library using the Maven JavaDoc plugin.
 
 `additionalOptions` on the lines 14-17 define extra options that the doclet uses.
 These are detailed in the next section.
@@ -89,14 +89,14 @@ Using Maven properties you can safely define this parameter exactly as it is sho
 
 The lines 18-27 define the Jamal taglet.
 The `taglet` configuration defines the `tagletClass` and the `tagletArtifact`.
-This is similar to `doclet` (which is not called `docletClass` although that would have been the consistent name) and `docletArtifact`.
+This is similar to `doclet`, and `docletArtifact`.
 The `tagletClass` is exactly as you can see it above on line 20.
 The `tagletArtifact` defined on lines 21-25 can be the same as the `docletArtifact`.
 The taglet is implemented in the same library as the doclet.
 Use a single version of the library.
 Do not use different versions on the lines 12 and 24.
 
-It is also possible to specify `jamal-all` on line 23.
+It is also possible to specify `jamal-all` on line 23, as you can see in the example above.
 
 When you specify the taglet library as `jamal-doclet` then you will be able to use only the core macros.
 The reason for this is that the doclet module does not depend on other, extra modules like PlantUML.

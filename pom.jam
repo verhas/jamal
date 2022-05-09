@@ -57,9 +57,6 @@
                                 {tagletClass javax0.jamal.doclet.JamalTaglet}
                                 {tagletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}}
                             }
-                            {tagletArtifacts
-                                {tagletArtifact {GAV :com.javax0.jamal:jamal-io:{LAST_RELEASE}}}
-                            }
                         }
                     }
                     {executions|{execution|
