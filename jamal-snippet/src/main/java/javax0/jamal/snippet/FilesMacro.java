@@ -12,6 +12,8 @@ import javax0.jamal.tools.Scan;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.IndexedPlaceHolders.value;
 import static javax0.jamal.tools.Params.holder;
@@ -77,8 +79,20 @@ public class FilesMacro {
                     "$name", // gives the name of the file as was specified on the macro
                     "$absolutePath", // the absolute path to the file
                     "$parent", // the parent directory where the file is
-                    "$simpleName",  // the name of the file without the path
-                    "$canonicalPath" // the canonical path
+                    "$simpleName", // the name of the file without the path
+                    "$canonicalPath", // the canonical path
+                    "$bareNaked", // the file name without the extensions
+                    "$naked1", // the file name without the last extension
+                    "$naked2", // the file name without the last 2 extensions
+                    "$naked3", // the file name without the last 3 extensions
+                    "$naked4", // the file name without the last 4 extensions
+                    "$naked5", // the file name without the last 5 extensions
+                    "$extensions", // the file name extensions
+                    "$extension1", // the file name last extension
+                    "$extension2", // the file name last 2 extensions
+                    "$extension3", // the file name last 3 extensions
+                    "$extension4", // the file name last 4 extensions
+                    "$extension5"  // the file name last 5 extensions
                     // end snippet
             );
         }
@@ -99,12 +113,86 @@ public class FilesMacro {
             }
 
             try {
-                return Trie.formatter.format(format.get(), value(name), value(file.getAbsolutePath()), value(file.getParent()), value(file::getName), value(file::getCanonicalPath));
+                return Trie.formatter.format(format.get(),
+                        value(name),
+                        value(file.getAbsolutePath()),
+                        value(file.getParent()),
+                        value(file::getName),
+                        value(file::getCanonicalPath),
+                        value(new FileClosure(file, 0)::nakedFileName),
+                        value(new FileClosure(file, 1)::nakedFileNameN),
+                        value(new FileClosure(file, 2)::nakedFileNameN),
+                        value(new FileClosure(file, 3)::nakedFileNameN),
+                        value(new FileClosure(file, 4)::nakedFileNameN),
+                        value(new FileClosure(file, 5)::nakedFileNameN),
+                        value(new FileClosure(file, 0)::extensions),
+                        value(new FileClosure(file, 1)::extensionsN),
+                        value(new FileClosure(file, 2)::extensionsN),
+                        value(new FileClosure(file, 3)::extensionsN),
+                        value(new FileClosure(file, 4)::extensionsN),
+                        value(new FileClosure(file, 5)::extensionsN)
+                );
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + fileName
                         + "'cannot be formatted using the given format '"
                         + format + "'", in.getPosition(), e);
+            }
+        }
+
+        private static class FileClosure {
+            final File f;
+            final int i;
+
+            private FileClosure(final File f, final int i) {
+                this.f = f;
+                this.i = i;
+            }
+
+            /**
+             * Return the file name omitting the last {@code i} extensions.
+             * If there are less than {@code i} extensions then return the file name without extension.
+             *
+             * @return the file name without the extensions
+             */
+            private String nakedFileNameN() {
+                final var nameParts = f.getName().split("\\.");
+                final var needed = nameParts.length - i;
+                if (needed < 1) {
+                    return nameParts[0];
+                } else {
+                    return Arrays.stream(nameParts).limit(needed).collect(Collectors.joining("."));
+                }
+            }
+
+            /**
+             * Calculate the file name without any extensions.
+             *
+             * @return the file name without the extensions.
+             */
+            private String nakedFileName() {
+                return f.getName().split("\\.")[0];
+            }
+
+            /**
+             * Return the file name omitting the last {@code i} extensions.
+             * If there are less than {@code i} extensions then return the file name without extension.
+             *
+             * @return the file name without the extensions
+             */
+            private String extensionsN() {
+                final var nameParts = f.getName().split("\\.");
+                final var skip = i >= nameParts.length ? 1 : nameParts.length - i;
+                return Arrays.stream(nameParts).skip(skip).collect(Collectors.joining("."));
+            }
+
+            /**
+             * get the extensions of the file
+             *
+             * @return all the extensions of the file name
+             */
+            private String extensions() {
+                return Arrays.stream(f.getName().split("\\.")).skip(1).collect(Collectors.joining("."));
             }
         }
 

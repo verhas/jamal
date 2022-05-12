@@ -92,7 +92,6 @@ The module implements the following macros:
 
 
 
-  
 === `docx::protect`
 
 
@@ -112,11 +111,7 @@ The options `trackChanges`, `readOnly`, `forms`, and `comments` are mutually exc
 Exactly one of them has to be specified.
 
 
-    
-  
-
-
-  * `pass`, `password`
+* `pass`, `password`
 This option specifies the password needed to switch off the protection.
 If option is not specified then the user can switch off the protection with just a few mouse clicks.
 
@@ -157,12 +152,8 @@ Specify the protection level so that the user can edit only the comments.
 * `forms`
 Specify the protection level so that the user can edit only the forms of the document.
 
-    
-  
 
 
-
-  
 === `docx::trackChanges`
 
 
@@ -184,12 +175,8 @@ or
 Note that you can also set the protection of the output document so that the change tracking cannot be switched off.
 
 
-    
-  
 
 
-
-  
 === `docx::include`
 
 
@@ -206,12 +193,8 @@ After that the copied parts will be processed by Jamal the same way as they had 
 This means that including a file from an already included file should use a file name relative to the top level document and not the included one.
 
 
-    
-  
 
 
-
-  
 === `docx::picture`
 
 
@@ -238,11 +221,7 @@ In this case it makes perfect sense to use the macro.
 If not for these cases then just insert the picture into the document using the Word built-in functionality.
 The options that can modify the behavior of the picture handling are:
 
-    
-  
-
-
-  * `width`
+* `width`
 can define the width of the picture.
 The default value is the actual width of the picture, or a scaled width in case the height is defined and the picture is not distorted.
 
@@ -255,9 +234,6 @@ can define if the picture is distorted or not.
 If a picture is not distorted and only one of the `width` and `height` is defined, the non-defined parameter will be calculated.
 In this case the picture aspect ratio is preserved.
 When this option is used and either `width` or `height` is defined, the other parameter will keep the value given by the picture itself.ß
-
-    
-  
 
 
 == Jamal MS Word Specialities

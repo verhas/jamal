@@ -91,22 +91,11 @@ The module implements the following macros:
 === `$x`
 %}
 
-{%@define head($x)=
-  {%#eval
-    {%#snip:transform replace=/^\s+\*\s?//
-      {%@snip $x%}
-    %}
-  %}
-%}
-{%@define options($x)=
-  {%#eval/jamal
-    {%#snip:transform replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*)\".*~\n* `$1`~" \
-    replace="~\",\\s+\"~`, `" \
-    replace="~.*//\\s*~~"
-      {%@snip $x_options%}
-    %}
-  %}
-%}
+{%@define head($x)={%#eval{%#snip (replace=/^\s+\*\s?//) $x%}%}%}
+{%@define options($x)={%#eval/jamal
+{%#snip (replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*)\".*~\n* `$1`~"
+         replace="~\",\\s+\"~`, `"
+         replace="~.*//\\s*~~") $x_options%}%}%}
 {%@snip:collect asciidoc from=src/main/java/javax0/jamal/poi/word%}
 
 {%head protect%}

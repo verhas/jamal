@@ -1059,16 +1059,14 @@ For example:
 [source,text]
 ----
 {%@define TRANSFORMATIONS=actions=replace,trim replace="/\"//" replace=/\\n// replace=/\+//%}
-{%#snip:transform {%TRANSFORMATIONS%}
-{%@snip untabSample%}%}
+{%#snip ({%TRANSFORMATIONS%}) untabSample%}
 ----
 
 will be converted to
 
 [source,text]
 ----
-{%#snip:transform {%TRANSFORMATIONS%}
-{%@snip untabSampleOutput%}%}
+{%#snip ({%TRANSFORMATIONS%}) untabSampleOutput%}
 ----
 
 
@@ -2214,7 +2212,7 @@ These are:
 
 [[file]]
 ==== {%macroChapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=e2e5270e%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=cd9d2f2f%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2248,8 +2246,7 @@ When Jamal processes this file it will generate `README.adoc`.
 In the format you can use the following placeholders:
 {%@comment the two replaces are executed from left to right. The first one puts a ! after the `xxx` name, and the second one finds it.%}
 {%#snip:define fileMacroFormatPlaceholdersFormatted=
-{%#snip:transform replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||"
-{%@snip fileMacroFormatPlaceholders %}%}%}
+{%@snip (replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||") fileMacroFormatPlaceholders %}%}
 
 {%@snip fileMacroFormatPlaceholdersFormatted
 * `$name` gives the name of the file as was specified on the macro
@@ -2261,7 +2258,7 @@ In the format you can use the following placeholders:
 
 [[directory]]
 ==== {%macroChapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=e2e5270e%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=cd9d2f2f%}
 {%fileDirectory directory%}
 
 {%sample/
@@ -2280,8 +2277,7 @@ This file is in the directory `../jamal-snippet`.
 
 In the format you can use the following placeholders:
 {%#snip:define dirMacroFormatPlaceholdersFormatted=
-{%#snip:transform replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||"
-{%@snip dirMacroFormatPlaceholders %}%}%}
+{%@snip (replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||") dirMacroFormatPlaceholders %}%}
 
 {%@snip dirMacroFormatPlaceholdersFormatted
 * `$name` gives the name of the directory as was specified on the macro

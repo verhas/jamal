@@ -64,8 +64,7 @@ The following is a sample configuration used in the manual integration test of J
 
 [source, xml, title=JamalDoclet Maven Configuration]
 ----
-{%#snip:transform actions=trim,number format="%2d. "
-{%@snip plugin_doclet%}%}
+{%@snip (actions=trim,number format="%2d. ") plugin_doclet%}
 ----
 
 
@@ -129,8 +128,7 @@ When using Maven, specify this option as displayed on the example above
 +
 [source, xml, title=configuring source root]
 ----
-{%#snip:transform actions=trim,number,range format="%2d. " lines=14..17
-{%@snip plugin_doclet%}%}
+{%@snip (actions=trim,number,range format="%2d. " lines=14..17) plugin_doclet%}
 ----
 
 This will ensure that the doclet and the taglet will know where the source root is.

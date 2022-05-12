@@ -2325,7 +2325,7 @@ will result
 - Format.java: 930 bytes
 - Update.java: 3,779 bytes
 - SnipTransform.java: 17,339 bytes
-- FilesMacro.java: 5,190 bytes
+- FilesMacro.java: 9,221 bytes
 - Collect.java: 17,752 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 5,370 bytes
@@ -2611,7 +2611,7 @@ will result in the output
 
 [source]
 ----
-2022-05-09 17:43:42
+2022-05-12 14:43:32
 ----
 
 
@@ -2719,6 +2719,18 @@ In the format you can use the following placeholders:
 * `$parent` the parent directory where the file is
 * `$simpleName` the name of the file without the path
 * `$canonicalPath` the canonical path
+* `$bareNaked` the file name without the extensions
+* `$naked1` the file name without the last extension
+* `$naked2` the file name without the last 2 extensions
+* `$naked3` the file name without the last 3 extensions
+* `$naked4` the file name without the last 4 extensions
+* `$naked5` the file name without the last 5 extensions
+* `$extensions` the file name extensions
+* `$extension1` the file name last extension
+* `$extension2` the file name last 2 extensions
+* `$extension3` the file name last 3 extensions
+* `$extension4` the file name last 4 extensions
+* `$extension5` the file name last 5 extensions
 
 
 [[directory]]
