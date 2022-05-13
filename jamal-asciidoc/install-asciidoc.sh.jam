@@ -1,0 +1,19 @@
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+{%@comment
+
+The shell script converted from this file will compile this module and then install the resulting JAR files into the
+asciidoctor plugin directory. If there is any error then the original files will be reinstalled.
+
+This way the internal working of the AciiDoctor plugin can manually tested and the developers can use the latest
+development version.
+
+Do not forget to restart IntelliJ after running this script.
+
+%}\
+#!/usr/bin/env bash
+mvn clean install
+pushd ../.asciidoctor/lib
+rm -f *
+unzip ~/.m2/repository/com/javax0/jamal/jamal-asciidoc/{%VERSION%}/jamal-asciidoc-{%VERSION%}-jamal-asciidoc-distribution.zip >/dev/null
+popd

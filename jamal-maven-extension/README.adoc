@@ -229,3 +229,5 @@ For further information read the link:../jamal-extensions/README.adoc[documentat
 This module does not provide any macro, but it has to be on the classpath to start the debugger.
 A brief introduction is described above on how to start the Jamal processing when compiling a `pom.xml.jam.
 For further information read the link:../jamal-debug/README.adoc[documentation] of the module.
+
+

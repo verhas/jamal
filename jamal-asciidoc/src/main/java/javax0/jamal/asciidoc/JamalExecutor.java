@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Execute Jamal as a n external process as it is configured in the environment, the system variables or in the Jamal
+ * Execute Jamal as an external process as it is configured in the environment, the system variables or in the Jamal
  * configuration.
  */
 public class JamalExecutor {

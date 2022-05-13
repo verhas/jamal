@@ -271,8 +271,46 @@ Keep your `~/.jamal/settings.properties` file secure.
 Configure the external command to execute only if you have no other way to use the extension.
 ====
 
+== Cache
 
+The IntelliJ plugin AsciiDoctor renderer seems to run multiple times even when the file does not change.
+Asciidoc rendering may not be cheap, but Jamal processing and the rendering can be really expensive.
+Please note, that Jamal is almost a full programming language, and you can create fairly complex structures.
+However, Jamal processing is supposed to be idempotent.
+If you have the same source you are supposed to get the same output.
 
+[NOTE]
+====
+If you want to see how many times and when the preprocessor was executed switch on the logging.
+You will see in the log file something like the following:
 
+[source,text]
+----
+2022-05-13T16:21:21.993262 [993:3989:5E7D6DDB]ApplicationImpl pooled thread 364 started
+2022-05-13T16:21:21.997498 [993:3989:5E7D6DDB]ApplicationImpl pooled thread 364 md5 Ei3ZRs4l2zH8J19bzE1KWQ==
+2022-05-13T16:21:22.009581 [993:3989:5E7D6DDB]ApplicationImpl pooled thread 364 saved
+2022-05-13T16:21:22.255684 [994:3990:75BA8F1E]Alarm Pool started
+2022-05-13T16:21:22.258885 [994:3990:75BA8F1E]Alarm Pool md5 Ei3ZRs4l2zH8J19bzE1KWQ==
+2022-05-13T16:21:22.259281 [994:3990:75BA8F1E]Alarm Pool restored
+2022-05-13T16:21:22.268355 [994:3990:75BA8F1E]Alarm Pool saved
+----
 
+The log shows you
 
+* the time when the preprocessor was started
+* a counter (993 and 994 in this example), which starts from zero when you start IntelliJ and increments for every preprocessor invocation
+* the thread identifier executing the preprocessor
+* the hash code of the preprocessor object (you can see that the plugin creates a new preprocessor object for every execution, it is okay)
+* `started` the preprocessor _start_
+* `saved` the preprocessor _end_, when it saves the result back into the Asciidoctor source
+* the md5 fingerprint of the input
+* `restored` when the fingerprint shows that the input did not change since the last run
+
+The logging is a troubleshooting feature and there is no guarantee that this document follows the changes of the logging format.
+====
+
+The Jamal Asciidoctor preprocessor stores the result of the last processing (in memory) and if it sees the same input next time it just returns the already calculated output.
+The last result is really the last result, even when you keep multiple `.adoc.jam` files in your IntelliJ open.
+Editing one of the files will overwrite in the memory the last result form the other file.
+This, however, affects only the speed.
+The resulting output files, which the preprocessor saves by default, or the rendering results are never affected by this caching.
