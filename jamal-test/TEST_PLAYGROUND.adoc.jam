@@ -1,4 +1,1 @@
 {@comment}
-{@define a=a,),(,/}
-{@for [evalist] a in ({a})= a }
-{#for a in `nyihaa`{a}`nyihaa`= a }

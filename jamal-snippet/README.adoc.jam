@@ -1398,7 +1398,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 ==== {%macroChapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=23ca72c9%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=003e11ec%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -1496,6 +1496,28 @@ will have the same output:
 {%output%}
 
 In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without increment.
+
+Sometimes you want to refer to a value of the counter much later, when the counter was already increased multiple times.
+In that case you can still use the `define` as used above, but the macro counter also gives a shortcut to do that.
+If you write
+
+{%sample/
+{@counter:define id=m}{m} {m -> secondChapter} {m} {m} is still {secondChapter}
+%}
+
+will result
+
+{%output%}
+
+The user defined macro `m`, which is a counter interprets the argument and create a new user defined macro named `secondChapter`.
+The value of this user defined macro will be the same as the actual value of the counter.
+
+[NOTE]
+====
+The `-` character before the `>` is a macro parameter separator, and the macro itself checks only the `>` character.
+It means that you can use `.>`, `+>` or `/>` or any other non-alphanumeric first character in front of the `>`.
+It is revcommended to use the `-` ot `=` fore readability reasons.
+====
 
 [[reflow]]
 ==== {%macroChapter%}`reflow`
@@ -2245,15 +2267,11 @@ When Jamal processes this file it will generate `README.adoc`.
 
 In the format you can use the following placeholders:
 {%@comment the two replaces are executed from left to right. The first one puts a ! after the `xxx` name, and the second one finds it.%}
-{%#snip:define fileMacroFormatPlaceholdersFormatted=
-{%@snip (replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||") fileMacroFormatPlaceholders %}%}
 
-{%@snip fileMacroFormatPlaceholdersFormatted
-* `$name` gives the name of the file as was specified on the macro
-* `$absolutePath` the absolute path to the file
-* `$parent` the parent directory where the file is
-* `$simpleName` the name of the file without the path
-* `$canonicalPath` the canonical path
+{%@snip (replace="|^.*?\"(.*?)\"|* `$1`! <- this is found and replaced by the second 'replace'|"
+         replace="|!.*?//||")
+
+         fileMacroFormatPlaceholders
 %}
 
 [[directory]]

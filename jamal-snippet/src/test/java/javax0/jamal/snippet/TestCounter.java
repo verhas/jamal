@@ -9,8 +9,15 @@ public class TestCounter {
     @Test
     @DisplayName("Counter works")
     void testCounter() throws Exception {
-        TestThat.theInput("{@counter:define id=f}{f}. {f}. {f}. {f}. {f}. {f}."
-        ).results("1. 2. 3. 4. 5. 6.");
+        TestThat.theInput("{@counter:define id=f}{f}. {f}. {f}. {f}. {f}. {f last}. {f}."
+        ).results("1. 2. 3. 4. 5. 5. 6.");
+    }
+
+    @Test
+    @DisplayName("Test save")
+    void testCounter1() throws Exception {
+        TestThat.theInput("{@counter:define id=f}{f -> aba}. {aba}. {f}. {f}. {f}. {f last}. {f}."
+        ).results("1. 1. 2. 3. 4. 4. 5.");
     }
 
     @Test

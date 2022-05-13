@@ -10,7 +10,7 @@ The assertions can check that the gathered information is consistent.
 
 
 
-== i.Example
+== i. Example
 
 For example, the macro
 
@@ -43,7 +43,7 @@ If we create an assertion that this version is in the `1.xxx` range, we can writ
 [source]
 ----
 here we have an assertion
-{#assert:startsWith /{pom //project/version}/1./ERROR: we are not in the 1.xxx range any more}
+{#assert:startsWith /{pom //project/version}/1./ERROR: we are not in the 1.xxx range anymore}
 assertion was okay
 ----
 
@@ -77,17 +77,20 @@ if the assertion was not okay, the macro try! displays the error message
 
 
 [NOTE]
-----
+====
 This document uses the `try` macro with the `!` mark after it.
 This macro with the `!` evaluates its content and then results in the error message if there was an error.
 If you are not familiar with the use of this macro, please consult the link:../README.adoc[Jamal main documentation].
-----
 
-Checking documentation consistency can be done in many different ways.
+We use this macro in the samples to demonstrate the situation when an error happens.
+The samples in this documentation are executed when Jamal processes the document.
+====
+
+Checking documentation consistency can be done in many ways.
 The one we have shown in this section is only a single example.
 The assertion package helps consistency checks.
 
-== ii.Use
+== ii. Use
 
 The macro package is defined in a jar file as a Java module.
 The macros are automatically loaded using the service loader.
@@ -103,17 +106,29 @@ To do it as a Maven dependency use the following Maven coordinates:
 </dependency>
 ----
 
-== iii.Assertions Formats and Options
+When you start Jamal
+
+* from the command line using jbang,
+
+* from IntelliJ AsciiDoctor editor,
+
+* in JavaDoc configuring `jamal-all` as dependency,
+
+* in a `pom.jam` or `pom.xml.jam` file using the Jamal Maven extension
+
+then the library and the macros are included and are usable without any further configuration.
+
+== iii. Assertions Formats and Options
 
 All assertions have the same options and the same syntax.
-If any, the options follow the macro's name between `(` and `)` characters.
+The options follow the macro's name between `(` and `)` characters.
 The rest of the macro is the parameters.
 The parameters are parsed using the link:../PARAMS.adoc[Standard Built-In Parameter Parsing].
 The different assertions can have different number of parameters.
 The last parameter is always optional.
-If it is present, it specifies the error message for the case the assertion fails.
+If it is present, it specifies the error message for the failing assertion.
 
-For example, let us look at the sample we have already visited in the previous section.
+Let us look at the sample we have already visited in the previous section.
 
 [source]
 ----
@@ -127,11 +142,12 @@ In this example, we want an error when the version does NOT start with `1.` thus
 All the assertions interpret three options.
 These are
 
-* `trim` with the alias `strip`, and
-* `not` with the alias `negate`.
+* `trim` with the alias `strip`,
+* `not` with the alias `negate`, and
 * `test` with aliases `boolean` and `bool`.
 
 The option names and the aliases are equivalent; you can use the one that fits your taste.
+
 The first option `trim` tells the assertion that the parameters should be stripped before evaluating the assertion.
 This process will remove all white space from the start and the end of the parameters.
 
@@ -139,10 +155,9 @@ The second option, `negate` reverses the outcome of the assertion.
 
 The option `test` will modify the behavior of the macro.
 When this option is used the assertion will not fail if the assertion is false.
-Instead the return value of the assertion will be the literal string `true` or `false`.
+Instead, the return value of the assertion will be the literal string `true` or `false`.
 
-
-== iv.Macros Implemented in the Package
+== iv. Macros Implemented in the Package
 
 
 

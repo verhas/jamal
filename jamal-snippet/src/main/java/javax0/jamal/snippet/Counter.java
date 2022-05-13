@@ -3,8 +3,12 @@ package javax0.jamal.snippet;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
+import javax0.jamal.api.Processor;
 
 import java.util.IllegalFormatException;
+
+import static javax0.jamal.tools.InputHandler.convertGlobal;
+import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 
 public class Counter implements Identified, Evaluable {
     final String id;
@@ -12,13 +16,15 @@ public class Counter implements Identified, Evaluable {
     int lastValue;
     final int step;
     final String format;
+    final Processor processor;
 
-    public Counter(String id, int start, int step, String format) {
+    public Counter(String id, int start, int step, String format, final Processor processor) {
         this.id = id;
         this.step = step;
         this.value = start;
         this.lastValue = start;
         this.format = format;
+        this.processor = processor;
     }
 
     private static final String alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -27,13 +33,33 @@ public class Counter implements Identified, Evaluable {
     @Override
     public String evaluate(String... parameters) throws BadSyntax {
         final String s;
-        if (parameters.length > 0 && parameters[0].equals("last")) {
-            s = formatValue(lastValue);
+        if (parameters.length > 0) {
+            if (parameters[0].equals("last")) {
+                s = formatValue(lastValue);
+            } else if (parameters[0].length() > 0 && parameters[0].charAt(0) == '>') {
+                s = getAndIncrease();
+                final var id = parameters[0].substring(1).trim();
+                final var macro = processor.newUserDefinedMacro(convertGlobal(id), s, true, new String[0]);
+                if (isGlobalMacro(id)) {
+                    processor.defineGlobal(macro);
+                } else {
+                    processor.define(macro);
+                }
+                processor.getRegister().export(id);
+            } else {
+                s = getAndIncrease();
+            }
         } else {
-            s = formatValue(value);
-            lastValue = value;
-            value += step;
+            s = getAndIncrease();
         }
+        return s;
+    }
+
+    private String getAndIncrease() throws BadSyntax {
+        final String s;
+        s = formatValue(value);
+        lastValue = value;
+        value += step;
         return s;
     }
 
@@ -49,13 +75,13 @@ public class Counter implements Identified, Evaluable {
                 throw new BadSyntax("Counter '" + id + "' grew too big to be formatted as a letter");
             } else {
                 s = s.replace("$alpha", alphabet.substring(value - 1, value))
-                    .replace("$ALPHA", ALPHABET.substring(value - 1, value));
+                        .replace("$ALPHA", ALPHABET.substring(value - 1, value));
             }
         }
         if (s.contains("$roman") || s.contains(("$ROMAN"))) {
             final var roman = toRoman(value, id);
             s = s.replace("$ROMAN", roman)
-                .replace("$roman", roman.toLowerCase());
+                    .replace("$roman", roman.toLowerCase());
         }
         return s;
     }

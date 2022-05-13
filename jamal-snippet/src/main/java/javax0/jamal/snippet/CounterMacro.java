@@ -29,10 +29,10 @@ public class CounterMacro implements Macro, InnerScopeDependent {
 
         final Counter counter;
         if (isGlobalMacro(id.get())) {
-            counter = new Counter(convertGlobal(id.get()), start.get(), step.get(), format.get());
+            counter = new Counter(convertGlobal(id.get()), start.get(), step.get(), format.get(), processor);
             processor.defineGlobal(counter);
         } else {
-            counter = new Counter(id.get(), start.get(), step.get(), format.get());
+            counter = new Counter(id.get(), start.get(), step.get(), format.get(), processor);
             processor.define(counter);
             // it has to be exported because it is inner scope dependent
             processor.getRegister().export(counter.getId());

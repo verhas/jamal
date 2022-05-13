@@ -194,43 +194,43 @@ The dependencies configured are the followings:
 {%@counter:define start=0 id=depCounter%}
 {%@define further($MODULE)=For further information read the link:../jamal-$MODULE/README.adoc[documentation] of the module.%}
 
-=== {%#comment {%depCounter%}%} `engine`
+=== {%#block {%depCounter%}%} `engine`
 This module is the Jamal execution engine.
 It is needed to execute Jamal.
 The module does not provide macros.
 
-=== {%#comment {%depCounter%}%} `groovy`
+=== {%#block {%depCounter%}%} `groovy`
 This module provides macros that allow embedding Groovy code into the `pom.xml.jam` file.
 {%further groovy%}
 
-=== {%#comment {%depCounter%}%} `ruby`
+=== {%#block {%depCounter%}%} `ruby`
 This module provides macros that allow embedding Ruby code into the `pom.xml.jam` file.
 {%further ruby%}
 
-=== {%#comment {%depCounter%}%} `scriptbasic`
+=== {%#block {%depCounter%}%} `scriptbasic`
 This module provides macros that allow embedding ScriptBasic code into the `pom.xml.jam` file.
 {%further scriptbasic%}
 
-=== {%#comment {%depCounter%}%} `snippet`
+=== {%#block {%depCounter%}%} `snippet`
 This module provides snippet macros.
 {%further snippet%}
 
-=== {%#comment {%depCounter%}%} `plantuml`
+=== {%#block {%depCounter%}%} `plantuml`
 This module lets you embed PlantUML diagrams into your `pom.xml.jam` file.
 I do not think that you would need anything like this, but if you need, there is no way to put it on the classpath other than listed here as a dependency.
 {%further plantuml%}
 
-=== {%#comment {%depCounter%}%} `io`
+=== {%#block {%depCounter%}%} `io`
 This module provides macros that can help you read text from files and write text to external files.
 {%further io%}
 
-=== {%#comment {%depCounter%}%} `markdown`
+=== {%#block {%depCounter%}%} `markdown`
 This module lets you convert Markdown to HTML.
 This module is mainly practical when you embed Jamal macros in a JavaDoc and use the Jamal doclet extension.
 I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
 {%further markdown%}
 
-=== {%#comment {%depCounter%}%} `yaml`
+=== {%#block {%depCounter%}%} `yaml`
 This module provides macros that can read, write and manipulate YAML data.
 This macro package may be handy if you use macros that build up the POM structure in memory as a YAML structure.
 There is a macro that can convert the built-up YAML structure as XML.
@@ -241,16 +241,16 @@ If you want to do anything like that, the in-memory Yaml structures these macros
 
 {%further yaml%}
 
-=== {%#comment {%depCounter%}%} `assertions`
+=== {%#block {%depCounter%}%} `assertions`
 This module gives you assertion macros that can fail if certain conditions are not met.
 {%further assertions%}
 
-=== {%#comment {%depCounter%}%} `extensions`
+=== {%#block {%depCounter%}%} `extensions`
 It is an extension module with experimental macros.
 The macros in this package are not supported and may change incompatible ways from version to version.
 {%further extensions%}
 
-=== {%#comment {%depCounter%}%} `debug`
+=== {%#block {%depCounter%}%} `debug`
 This module does not provide any macro, but it has to be on the classpath to start the debugger.
 A brief introduction is described above on how to start the Jamal processing when compiling a `pom.xml.jam.
 {%further debug%}

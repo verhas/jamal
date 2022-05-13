@@ -11,14 +11,14 @@ The assertions can check that the gathered information is consistent.
 
 {%#counter:define id=macroChapter format=$roman. %}
 
-== {%macroChapter%}Example
+== {%macroChapter%} Example
 
 For example, the macro
 
 {%sample/
 {@snip:xml pom=pom.xml}
 %}
-{%#comment {%output%}%}
+{%#block {%output%} is needed to execute the sample macro because we use later the `pom` macro%}
 
 reads the `pom.xml` file from the same directory where the document is.
 It stores the XML in the memory, and you can query it via the `pom` macro afterward.
@@ -37,7 +37,7 @@ If we create an assertion that this version is in the `1.xxx` range, we can writ
 {%@define MAJOR_VERSION=1.%}
 {%sample/
 here we have an assertion
-{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are not in the 1.xxx range any more}
+{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are not in the 1.xxx range anymore}
 assertion was okay
 %}
 
@@ -59,17 +59,20 @@ which results
 {%output%}
 
 [NOTE]
-----
+====
 This document uses the `try` macro with the `!` mark after it.
 This macro with the `!` evaluates its content and then results in the error message if there was an error.
 If you are not familiar with the use of this macro, please consult the link:../README.adoc[Jamal main documentation].
-----
 
-Checking documentation consistency can be done in many different ways.
+We use this macro in the samples to demonstrate the situation when an error happens.
+The samples in this documentation are executed when Jamal processes the document.
+====
+
+Checking documentation consistency can be done in many ways.
 The one we have shown in this section is only a single example.
 The assertion package helps consistency checks.
 
-== {%macroChapter%}Use
+== {%macroChapter%} Use
 
 The macro package is defined in a jar file as a Java module.
 The macros are automatically loaded using the service loader.
@@ -87,17 +90,29 @@ To do it as a Maven dependency use the following Maven coordinates:
 </dependency>
 ----
 
-== {%macroChapter%}Assertions Formats and Options
+When you start Jamal
+
+* from the command line using jbang,
+
+* from IntelliJ AsciiDoctor editor,
+
+* in JavaDoc configuring `jamal-all` as dependency,
+
+* in a `pom.jam` or `pom.xml.jam` file using the Jamal Maven extension
+
+then the library and the macros are included and are usable without any further configuration.
+
+== {%macroChapter%} Assertions Formats and Options
 
 All assertions have the same options and the same syntax.
-If any, the options follow the macro's name between `(` and `)` characters.
+The options follow the macro's name between `(` and `)` characters.
 The rest of the macro is the parameters.
 The parameters are parsed using the link:../PARAMS.adoc[Standard Built-In Parameter Parsing].
 The different assertions can have different number of parameters.
 The last parameter is always optional.
-If it is present, it specifies the error message for the case the assertion fails.
+If it is present, it specifies the error message for the failing assertion.
 
-For example, let us look at the sample we have already visited in the previous section.
+Let us look at the sample we have already visited in the previous section.
 
 {%sample/
 {#assert:startsWith (not) /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are still in the 1.xxx range}
@@ -110,11 +125,12 @@ In this example, we want an error when the version does NOT start with `{%MAJOR_
 All the assertions interpret three options.{%@snip:check lines=3 id=Assertion_params%}
 These are
 
-* `trim` with the alias `strip`, and
-* `not` with the alias `negate`.
+* `trim` with the alias `strip`,
+* `not` with the alias `negate`, and
 * `test` with aliases `boolean` and `bool`.
 
 The option names and the aliases are equivalent; you can use the one that fits your taste.
+
 The first option `trim` tells the assertion that the parameters should be stripped before evaluating the assertion.
 This process will remove all white space from the start and the end of the parameters.
 
@@ -122,16 +138,16 @@ The second option, `negate` reverses the outcome of the assertion.
 
 The option `test` will modify the behavior of the macro.
 When this option is used the assertion will not fail if the assertion is false.
-Instead the return value of the assertion will be the literal string `true` or `false`.
+Instead, the return value of the assertion will be the literal string `true` or `false`.
 
-{%#define MACROS_CHAPTER={%macroChapter%}%}
-== {%MACROS_CHAPTER%}Macros Implemented in the Package
+== {%macroChapter=>MACROS_CHAPTER%} Macros Implemented in the Package
 {%#counter:define format="$alpha. " id=macroSection%}
 {%#counter:define id=macroCounter start=0%}
-{%@define MAC($title)={%#comment {%macroCounter%}%}\
-=== {%MACROS_CHAPTER%}{%macroSection%} `$title`%}
+{%@define MAC($title)={%#comment
+{%macroCounter%} let's count the number of macros, but do not put the number to the document%}\
+=== {%MACROS_CHAPTER%}{%macroSection%} `assert:$title`%}
 
-{%MAC assert:contains%}
+{%MAC contains%}
 Asserts that the first argument contains the second argument.
 
 Example
@@ -148,7 +164,7 @@ results
 
 {%output%}
 
-{%MAC assert:empty%}
+{%MAC empty%}
 
 Asserts that the first argument is a zero-length string.
 Note that there is no `assert:blank` assertion.
@@ -169,7 +185,7 @@ results
 
 {%output%}
 
-{%MAC assert:startsWith%}
+{%MAC startsWith%}
 
 Asserts that the first argument starts with the second argument.
 
@@ -186,7 +202,7 @@ results
 
 {%output%}
 
-{%MAC assert:endWith%}
+{%MAC endWith%}
 
 Asserts that the first argument ends with the second argument.
 
@@ -203,7 +219,7 @@ results
 
 {%output%}
 
-{%MAC assert:equals%}
+{%MAC equals%}
 
 Asserts that the first and the second arguments are equal strings.
 
@@ -221,7 +237,7 @@ results
 
 {%output%}
 
-{%MAC assert:fail%}
+{%MAC fail%}
 
 This assertion has only one optional argument, the message.
 If this macro is evaluated, it will always result in an error.
@@ -243,7 +259,7 @@ results
 {%#define NUMERIC=This assertion interprets the first two arguments as integer values.%}
 {%#define NUM2($iswhat)={%NUMERIC%}
 It checks that the first argument is $iswhat than the second.%}
-{%MAC assert:greater%}
+{%MAC greater%}
 {%NUM2 greater%}
 
 Example
@@ -263,7 +279,7 @@ ERROR: {@try! {@assert:greater /-6/-3/this is numeric comparison, negative numbe
 results
 
 {%output%}
-{%MAC assert:greaterOrEqual%}
+{%MAC greaterOrEqual%}
 {%NUM2 greater or equal%}
 
 Example
@@ -285,7 +301,7 @@ results
 {%output%}
 
 
-{%MAC assert:less%}
+{%MAC less%}
 {%NUM2 less%}
 
 Example
@@ -306,7 +322,7 @@ results
 
 {%output%}
 
-{%MAC assert:lessOrEqual%}
+{%MAC lessOrEqual%}
 {%NUM2 less or equal%}
 
 Example
@@ -327,7 +343,7 @@ results
 
 {%output%}
 
-{%MAC assert:intEquals%}
+{%MAC intEquals%}
 {%NUMERIC%}
 It checks that the two arguments are equal as integer numbers.
 
@@ -348,7 +364,7 @@ results
 
 {%output%}
 
-{%MAC assert:int%}
+{%MAC int%}
 This macro checks that the first argument can be interpreted as an integer number.
 
 Example
@@ -367,7 +383,7 @@ results
 
 {%output%}
 
-{%MAC assert:numeric%}
+{%MAC numeric%}
 This macro checks that the first argument can be interpreted as a numeric (possibly floating-point) number.
 
 {%sample/{%#numberLines format="%d. "

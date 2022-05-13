@@ -1467,7 +1467,7 @@ In the following sample code, you can see some complex examples that demonstrate
 {withparams/%66h/%66h/zazu} <- %66h is not replaced to zazu in the parameters
 {@define? withparams(a,b,c)=abc}here 'withparams' is not redefined
 {withparams|a|b|c}
-{#comment {@define x=local}{@define :x=global} {#define :y=here we are {x}}}
+{#block {@define x=local}{@define :x=global} {#define :y=here we are {x}}}
 {y}
 here we are {x}
 ----

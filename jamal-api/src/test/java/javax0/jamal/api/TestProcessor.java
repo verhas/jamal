@@ -31,7 +31,7 @@ public class TestProcessor {
     }
 
     @Test
-    @DisplayName("Test that there is a Jamal version, parsable and it is later than 1.6.3 (after which 'reqiure' was introduced)")
+    @DisplayName("Test that there is a Jamal version, parsable and it is later than 1.6.3 (after which 'require' was introduced)")
     void testCurrentJamalVersion() {
         final var currentVersion = Processor.jamalVersion();
         final var latestReleaseWithoutRequire = Processor.jamalVersion("1.6.3");

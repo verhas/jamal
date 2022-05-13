@@ -1299,7 +1299,7 @@ In the following sample code, you can see some complex examples that demonstrate
 {withparams/%66h/%66h/zazu} <- %66h is not replaced to zazu in the parameters
 {@define? withparams(a,b,c)=abc}here 'withparams' is not redefined
 {withparams|a|b|c}
-{#comment {@define x=local}{@define :x=global} {#define :y=here we are {x}}}
+{#block {@define x=local}{@define :x=global} {#define :y=here we are {x}}}
 {y}
 here we are {x}
 %}
@@ -2438,7 +2438,7 @@ will result
 
 Sometimes the values for the `for` loop come from some macro.
 In that case the `for` macro should start with the `#` character, otherwise the macro will not be evaluated to the list of values.
-For example: {%#comment{%sample/{@undefine x}{@undefine y}{@undefine z}%}{%output%}%}
+For example: {%#block{%sample/{@undefine x}{@undefine y}{@undefine z}%}{%output%}%}
 
 {%sample/
 {@define list=x,y,z}{@for z in ({list})={@define z=zz}}{?x}{?y}{?z}
@@ -2631,7 +2631,7 @@ This will result the desired
 The following examples show a few cases, as demonstrations:
 
 {%@define specialSearchString=avraka kedabra%}
-{%#comment since we use # in front of 'comment' the sample will be evaluated, but in this case we are only interested
+{%#block since we use # in front of 'block' the sample will be evaluated, but in this case we are only interested
            in the output and not the source code. Note that this sample also checks that the macros work the way as
            they are expected, that way this sample is also a simple integration test of the macro 'if'
 {%sample/

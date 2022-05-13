@@ -1724,6 +1724,33 @@ will have the same output:
 
 In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without increment.
 
+Sometimes you want to refer to a value of the counter much later, when the counter was already increased multiple times.
+In that case you can still use the `define` as used above, but the macro counter also gives a shortcut to do that.
+If you write
+
+[source]
+----
+{@counter:define id=m}{m} {m -> secondChapter} {m} {m} is still {secondChapter}
+----
+
+will result
+
+[source]
+----
+1 2 3 4 is still 2
+----
+
+
+The user defined macro `m`, which is a counter interprets the argument and create a new user defined macro named `secondChapter`.
+The value of this user defined macro will be the same as the actual value of the counter.
+
+[NOTE]
+====
+The `-` character before the `>` is a macro parameter separator, and the macro itself checks only the `>` character.
+It means that you can use `.>`, `+>` or `/>` or any other non-alphanumeric first character in front of the `>`.
+It is revcommended to use the `-` ot `=` fore readability reasons.
+====
+
 [[reflow]]
 ==== xxiii.`reflow`
 
@@ -2337,7 +2364,7 @@ will result
 - SnipXml.java: 1,489 bytes
 - ThinXmlMacro.java: 585 bytes
 - BlockConverter.java: 1,858 bytes
-- Counter.java: 3,691 bytes
+- Counter.java: 4,701 bytes
 - StringMacros.java: 6,419 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,701 bytes
@@ -2350,7 +2377,7 @@ will result
 - XmlInsert.java: 6,207 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 1,509 bytes
-- CounterMacro.java: 1,853 bytes
+- CounterMacro.java: 1,875 bytes
 - SnipList.java: 1,222 bytes
 - XmlDocument.java: 5,533 bytes
 - Java.java: 10,437 bytes
@@ -2611,7 +2638,7 @@ will result in the output
 
 [source]
 ----
-2022-05-12 14:43:32
+2022-05-12 18:35:19
 ----
 
 
@@ -2711,7 +2738,6 @@ When Jamal processes this file it will generate `README.adoc`.
 
 
 In the format you can use the following placeholders:
-
 
 
 * `$name` gives the name of the file as was specified on the macro

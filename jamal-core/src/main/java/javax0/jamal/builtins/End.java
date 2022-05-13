@@ -6,6 +6,10 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.NamedMarker;
 
+/**
+ * End a scope started with the macro {@link Begin}. The input of the macro is used to identify the scope and
+ * it has to be the same, which was used in the macro {@link Begin}.
+ */
 public class End implements Macro {
 
     @Override

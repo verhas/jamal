@@ -7,7 +7,8 @@ This file is processed by the test javax0.jamal.documentation. TestConvertReadme
 %}{%@import res:jamal.jim%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-
+{%@define classFormat=`$canonicalName`%}{%@define methodFormat=`$name()`%}\
+{%#define UDM={%@java:class javax0.jamal.api.UserDefinedMacro%}%}
 This glossary collects the terminologies that we use in Jamal.
 
 Macro Start String:: The string that starts a macro.
@@ -24,16 +25,17 @@ Built-in Macro:: A built-in macro is a macro implemented in Java.
 The built-in macro is the opposite of a __user-defined__ macro.
 Built-in macros are defined in Jamal's __core__ package and other packages.
 
-User-Defined Macro:: A macro, defined using Jamal macro source.
+User-Defined Macro:: A macro, (usually) defined using Jamal macro source.
 The most common user-defined macro is created using the built-in core (see *Core*) macro `define`.
-A user defined macro defined using `define` inside Jamal is an instance of the class {%@java:class (format=`$name`) javax0.jamal.engine.UserDefinedMacro%}.
-This class implements the interface {%@java:class (format=`$name`) javax0.jamal.api.UserDefinedMacro%}.
+A user defined macro defined using `define` inside Jamal is an instance of the class {%@java:class javax0.jamal.engine.UserDefinedMacro%}.
+This class implements the interface {%UDM%}.
 Any class implementing this interface can be a user-defined macro.
-The significant difference between the implementation of built-in macros and user-defined macros is that built-in macros are service objects and user-defined macro classes are not.
+The significant difference between the implementation of built-in macros and user-defined macros is that built-in macros are service objects.
+User-defined macro classes are not.
 There is usually only one instance per processor for each built-in macro class, and these instances are supposed to be stateless.
 User-defined macro classes are instantiated many times and may contain a state.
-The instance of the class {%@java:class (format=`$name`) javax0.jamal.engine.UserDefinedMacro%} is created by the built in macro `define`.
-Other built-in macros can create instances of different classes, so long as long they implement the {%@java:class (format=`$name`) javax0.jamal.api.UserDefinedMacro%} interface.
+The instance of the class {%@java:class javax0.jamal.engine.UserDefinedMacro%} is created by the built-in macro `define`.
+Other built-in macros can create instances of different classes, so long as long they implement the {%UDM%} interface.
 
 Core:: The core package defines __built-in__ macros, which are essential for the use of Jamal.
 Some of these macros are directly tied to the source parsing process.
@@ -53,13 +55,15 @@ Scopes are stacked into each other.
 A scope can be
 
 * *active* the scope that is currently active.
-All macro definitions are created in this scope.
+All new macro definitions are created in this scope.
 
-* *locked* when the macros in the scope are available, but new macros are already defined in the scope above.
+* *locked* when the macros in the scope are available, but new macros are already defined in the scope one level above.
 A scope gets into a locked state when the scope is created to evaluate the parameters of a user-defined macro.
 The macros defined here are also available for evaluating the macro itself, but any new macro definition will go to the scope above.
 
 * *ended* when the scope has ended, the references to any macro are deleted and will be GC-ed.
+
+In addition to these three states we also use the terminology "__export scope__" and "__global scope__".
 
 * *export* scope is one level above the current scope.
 When a macro defined in the _active_ scope is exported, the macro is moved to this scope.
@@ -68,20 +72,25 @@ When a macro defined in the _active_ scope is exported, the macro is moved to th
 It is opened automatically when the processor starts.
 Global macros are defined in this scope.
 
-{%@define classFormat=`$name`%}{%@define methodFormat=`$name()`%}\
+.
 
 Inner Scope Dependent:: A built-in macro is "inner scope dependent" if it has to execute in the scope that was opened when the evaluation of the macro parameter started.
 Inner scope dependent built-in macros have to implement the interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
 Inner scope dependent macros can define user-defined macros, but the scope of these macros ends when the method {%@java:method javax0.jamal.api.Macro::evaluate%} returns.
+To create longer living user defined macros, inner scope dependent build-in macros can programmatically export the user defined macros they create.
 If an inner scope dependent built-in macro wants to define a macro usable in the scope where the macro is used, it has to export the user-defined macro.
 
 Closer:: Is an instance of a class implementing the `AutoCloseable` interface and registered in the processor calling {%@java:method javax0.jamal.api.Processor#deferredClose%}.
 This object has to be registered into the processor object during the execution of Jamal.
-Some built-in macros can do it.
+Some built-in macros create closer objects and register them.
 The processor invokes the method `close()` when the processing of the Jamal input has finished.
 The closer class may also implement {%@java:class javax0.jamal.api.Closer$ProcessorAware%} or {%@java:class javax0.jamal.api.Closer$OutputAware%} interfaces.
 It will make the processor inject the processor object or the result into the closer object before invoking `close()`.
 This way, a closer can modify the final output after all the Jamal macro processing has finished.
+
++
+The core built-in macro `defer` uses this functionality.
+It stores the input of the macro in a new closer object and the closer object evaluates it at the end.
 
 Accidental Snippet:: An Accidental Snippet is a snippet in some file that starts in a line containing the characters `snippet` followed by an identifier, but which was not meant to be a snippet.
 For example, some comments may mention something like `a snippet is...`.
@@ -90,5 +99,5 @@ Accidental snippets are better avoided, and it is almost always possible.
 If you cannot avoid it, then you should use different snippet start and end regular expressions.
 You can define these as the `snip:collect` macro parameters.
 
-Maco Input:: The input of a macro is the text that follows the macro name and lasts to the macro end string.
+Maco Input:: The input of a macro is the text that follows the macro name and lasts to the macro closing.
 For example the `{@trimLine {%@define TITMI=this is the macro input%}{%TITMI%}}` has the text `{%TITMI%}` as macro input.
