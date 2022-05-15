@@ -276,10 +276,11 @@ The extension checks the options in the first line of the document, but in case 
 ====
 This option was developed as a last resort.
 For example, during the development the Java JDK used by IntelliJ and hence used to execute Jamal could not find the JShell engine.
+The main README uses the JShell engine when it discusses the feature.
 With this option the main README can also be edited WYSIWYG style.
 ====
 
-[NOTE]
+[WARNING]
 ====
 You may recognize that using this option you can execute any external command.
 Keep your `~/.jamal/settings.properties` file secure.

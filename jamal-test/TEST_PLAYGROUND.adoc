@@ -1,1 +1,30 @@
 
+
+[source]
+----
+{#define JAMAL_CONNECT_TIMEOUT_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_CONNECT_TIMEOUT_ENV}}
+{#define JAMAL_READ_TIMEOUT_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_READ_TIMEOUT_ENV}}
+{#define JAMAL_TRACE_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_TRACE_ENV}}
+{#define JAMAL_STACK_LIMIT_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_STACK_LIMIT_ENV}}
+{#define JAMAL_CHECKSTATE_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_CHECKSTATE_ENV}}
+{#define JAMAL_DEBUG_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_DEBUG_ENV}}
+{#define JAMAL_INCLUDE_DEPTH_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_INCLUDE_DEPTH_ENV}}
+{#define JAMAL_HTTPS_CACHE_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_HTTPS_CACHE_ENV}}
+{#define JAMAL_DEV_PATH_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_DEV_PATH_ENV}}
+{#define JAMAL_OPTIONS_ENV={@java:field (format=`$value`)javax0.jamal.api.EnvironmentVariables#JAMAL_OPTIONS_ENV}}
+
+----
+
+
+
+
+
+
+
+
+
+
+
+
+
+`JAMAL_DEV_PATH`

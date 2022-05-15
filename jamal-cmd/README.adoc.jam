@@ -1,8 +1,17 @@
 {%@import res:jamal.jim%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
+{%@snip:collect from=./src/main/java/javax0/jamal/cmd%}
 = Jamal Command Line
 
+{%@comment
+Note that this is also a kind of unit test for the source code checking that all options are documented
+on the help screen and also no option is documented that does not exist
+
+%}\
+{%#define NR_OF_OPTIONS={%#lineCount{%@snip command_options%}%}%}
+{%#define NR_OF_HELP_LINES={%#lineCount{%@snip command_options_help%}%}%}
+{%#assert:intEquals (trim)/{%NR_OF_OPTIONS%}/{%NR_OF_HELP_LINES%}/The number of options in the source code is not the same as the number of help display lines%}
 With the command line version you can start Jamal to convert a single file or to traverse a directory structure.
 To convert a single file you simply have to specify the input and the output file:
 
@@ -18,61 +27,67 @@ In this case the `=` signals already that the parameter is an option.
 In this case the leading `-` or `--` is optional.
 
 The options are the followings:
+{%@counter:define id=optionCounter start=0%}{%@define OPT($x)=* `-$x` {%#comment {%optionCounter%}%}%}
+{%OPT help%} displays a help text and then the application quits.
 
-* `-help` displays a help text and then the application quits.
+{%OPT shcnf` prints out the configuration values, which are in the file `~/.jamal/settings.(properties|xml)%} file.
 
-* `-shcnf` prints out the configuration values, which are in the file `~/.jamal/settings.(properties|xml)` file.
+{%OPT version%} displays the version of Jamal currently running and then the application quits.
 
-* `-version` displays the version of Jamal currently running and then the application quits.
-
-* `-verbose` instructs the application to print out the individual file conversions.
+{%OPT verbose%} instructs the application to print out the individual file conversions.
 This is useful, when the application is started to convert multiple files in a directory structure.
 
-* `-open=<macroOpen>` can specify the macro opening string.
+{%OPT open=<macroOpen>%} can specify the macro opening string.
 The default string is `{`.
 
-* `-close=<macroClose>` can specify the macro closing string.
+{%OPT close=<macroClose>%} can specify the macro closing string.
 The default string is `}`.
 
-* `-depth=<depth>` can specify the maximum traversal depth while scanning the directories for files to convert.
+{%OPT depth=<depth>%} can specify the maximum traversal depth while scanning the directories for files to convert.
 The default value is `Integer.MAX_VALUE`, which is practically infinite.
 
-* `-debug=<debug>` using this option you can specify the debugger connection string.
+{%OPT debug=<debug>%} using this option you can specify the debugger connection string.
 It usually should be `http:8080`.
 Specifying the debugger connection string to start Jamal is debug mode, however, is not enough.
 A debugger implementation capable interpreting the connection string has to be on the classpath.
 The command line version does not do that by default.
 The recommended mode is to use `jbang` to start the application.
 
-* `-dry-run` run dry, do not write result to output file.
+{%OPT dry-run%} run dry, do not write result to output file.
 This can be interesting to see if the conversion is correct.
 
-* `-dry-dry-run` run dry, do not execute Jamal.
+{%OPT dry-dry-run%} run dry, do not execute Jamal.
 This can be interesting with the option `-verbose` to see the individual file conversions.
 
 The following options control the directory parsing.
 If any of the following options are used, Jamal will collect the files from the source directory and process them.
 In this case any command line parameter, like input and output file names are ignored.
 
-* `-include=<include>` this option can define a regular expression for the file name to include into the processing.
+{%OPT include=<include>%} this option can define a regular expression for the file name to include into the processing.
 The default value is `\\.jam$`, wich means every file that has a `.jam` extension.
 A file is processed if the name of the file matches the 'include' regular expression and does not match the 'exclude' regular expression.
 
-* `-exclude=<exclude>` file name regex pattern to exclude from the processing.
+{%OPT exclude=<exclude>%} file name regex pattern to exclude from the processing.
 A file will not be processed if the name of the file matches the 'exclude' regular expression, even if the 'include' regular expression matches.
 If the option is not used, no files will be explicitly excluded.
 
-* `-source=<sourceDirectory>` source directory to start the processing.
+{%OPT source=<sourceDirectory>%} source directory to start the processing.
 The default value is the current working directory.
 
-* `-target=<targetDirectory>` target directory to create the output.
+{%OPT target=<targetDirectory>%} target directory to create the output.
 The default value is the current working directory.
 
-* `-from=<regex>` pattern for the file name transformation.
+{%OPT from=<regex>%} pattern for the file name transformation.
 When a file is processed, the output file name is calculated using a `replaceAll` operation.
 The `regex` is used as the pattern and the replacement is the value of the option `to`.
 
-* `-to=<replacement>` replacement for the file name transformation.
+{%OPT to=<replacement>%} replacement for the file name transformation.
 See also the option `-from`.
+
+{%OPT docx%} process the input as a DOCX, Microsoft Word file and also generate a Microsof Word document on the output.
+
+{%OPT shcnf%} show the configuration values from the `~/.jamal/setup.properties`, or from the `~/.jamal/setup.xml` file, whichever exists.
+
+{%#assert:intEquals/{%optionCounter last%}/{%NR_OF_OPTIONS%}/There is a discrepancy between the number of optioins documented ({%optionCounter last%}) and the number of options ({%NR_OF_OPTIONS%})%}
 
 

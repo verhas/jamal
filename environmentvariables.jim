@@ -35,7 +35,8 @@ The `replaceLines` macro converts these lines to Jamal define macros.
 Each define uses the variable's name and assigns to it the value of the variable.
 Note that it also works for the system properties calculated during class initialization.
 We use the `ident` macro to protect the replace string's macros from being executed/evaluated immediately.
-It is a series of `define` macros, which should be evaluated to have the desired effect.
+It is a series of `define` macros, which should be evaluated afterwards to have the desired effect.
+
 So the steps in short:
 
 1. include the file verbatim

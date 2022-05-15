@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public class JamalMain {
 
     final static Set<String> parameters = Set.of(
+            // snippet command_options
             "version",
             "verbose",
             "debug",
@@ -39,13 +40,15 @@ public class JamalMain {
             "exclude",
             "source",
             "target",
-            "from", "to",
+            "from",
+            "to",
             "depth",
             "dry-dry-run",
             "dry-run",
             "docx",
             "help",
             "shcnf"
+            // end snippet
     );
 
     public static void main(String[] args) {
@@ -62,6 +65,7 @@ public class JamalMain {
         }
         if (params.get("help").isPresent()) {
             System.out.println("Usage: jamal [options] input output\n" +
+                    // snippet command_options_help
                     "  -help                      help\n" +
                     "  -shcnf                     show the configuration values from ~/.jamal/setup.(properties|xml)\n" +
                     "  -version                   display version\n" +
@@ -79,6 +83,7 @@ public class JamalMain {
                     "  -dry-dry-run               run dry, do not execute Jamal\n" +
                     "  -dry-run                   run dry, do not write result to output file\n" +
                     "  -docx                      treat the input as a docx, Microsoft Word file\n" +
+                    // end snippet
                     "");
             return;
         }
