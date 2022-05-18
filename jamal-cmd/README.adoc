@@ -82,3 +82,7 @@ See also the option `-from`.
 * `-docx`  process the input as a DOCX, Microsoft Word file and also generate a Microsof Word document on the output.
 
 * `-shcnf`  show the configuration values from the `~/.jamal/setup.properties`, or from the `~/.jamal/setup.xml` file, whichever exists.
+
+
+
+

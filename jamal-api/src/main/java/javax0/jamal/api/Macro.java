@@ -228,7 +228,7 @@ public interface Macro extends Identified, ServiceLoaded {
                 offset++;
             }
             int i = offset;
-            if (input.length() > 0 && validId1stChar(input.charAt(offset))) {
+            if (input.length() > offset && validId1stChar(input.charAt(offset))) {
                 while (input.length() > i && validIdChar(input.charAt(i))) {
                     i++;
                 }

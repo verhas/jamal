@@ -1,16 +1,3 @@
-{@comment}
+= Title
 
-[source]
-----
-{#replaceLines {@ident replace="/.*public\\s+static\\s+final\\s+String\\s+(\\w+)\\s*=\\s*.*;/{#define $1={@java:field (format=`\\$value`)javax0.jamal.api.EnvironmentVariables#$1}}/"}
-{#killLines keep pattern="^.*JAMAL_.*_ENV\\s*=.*$"
-{@include [verbatim] ../jamal-api/src/main/java/javax0/jamal/api/EnvironmentVariables.java}
-}}
-----
-
-{#eval {#replaceLines {@ident replace="/.*public\\s+static\\s+final\\s+String\\s+(\\w+)\\s*=\\s*.*;/{#define $1={@java:field (format=`\\$value`)javax0.jamal.api.EnvironmentVariables#$1}}/"}
-{#killLines keep pattern="^.*JAMAL_.*_ENV\\s*=.*$"
-{@include [verbatim] ../jamal-api/src/main/java/javax0/jamal/api/EnvironmentVariables.java}
-}}}
-
-{JAMAL_DEV_PATH_ENV}
+{%@
