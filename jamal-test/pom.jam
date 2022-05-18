@@ -13,6 +13,7 @@
                           {opens/test/test.tools.junit}
                           {opens/test/test.examples}
                           {opens/test/test.statecheck}
+                          {opens/test/test.devpath}
                           {opens/engine/engine}}
 
     {build {plugins  {@include ../plugins.jim}}}

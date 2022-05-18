@@ -93,3 +93,17 @@ You can define these as the `snip:collect` macro parameters.
 
 Maco Input:: The input of a macro is the text that follows the macro name and lasts to the macro closing.
 For example the `{@trimLine this is the macro input}` has the text `this is the macro input` as macro input.
+
+Macro Option, Macro Parameter:: These two things have the same meaning and both are used in the documentation.
+Built-in macros can use the option parsing routines for the syntax analysis of the input of the macro.
+In that case options can be defined at the start of the input between `(` and `)` (or some other) characters.
+The options usually have the format `name=value`.
+Core macros use `[` and `]` as option start and end characters.
+
+Standard Built-In Parameter/Option Parsing:: It means parsing the Macro Options.
+There is API support for the options parsing.
+
+Standard Built-In Macro Argument Splitting:: The standard way a built-in macro can parse the Macro Input in case it does not need to implement its syntax analysis.
+Using the standard way makes the macros more uniform.
+The core macro `if` uses the Standard Built-In Macro Argument Splitting.
+

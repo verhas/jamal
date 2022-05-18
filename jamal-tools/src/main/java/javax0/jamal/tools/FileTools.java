@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -134,8 +135,20 @@ public class FileTools {
     static {
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_DEV_PATH_ENV).ifPresent(devPath -> {
             final String[] paths;
-            paths = InputHandler.getParts(makeInput(devPath));
+            if (new File(devPath).exists()) {
+                try {
+                    paths = Files.readString(Paths.get(devPath), StandardCharsets.UTF_8).split("\n", -1);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                paths = InputHandler.getParts(makeInput(devPath));
+            }
             for (String path : paths) {
+                // skip empty and comment lines in case we read from file
+                if( path.trim().length() == 0 || path.trim().startsWith("#")){
+                    continue;
+                }
                 final var parts = path.split("=", 2);
                 if (parts.length == 2) {
                     devPaths.put(parts[0], parts[1]);

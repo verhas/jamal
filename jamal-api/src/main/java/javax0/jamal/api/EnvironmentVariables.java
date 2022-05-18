@@ -27,6 +27,7 @@ snippet JAMAL_CONNECT_TIMEOUT_documentation
 {%@define E===== %}
 {%E%}{%JAMAL_CONNECT_TIMEOUT_ENV%}
 This variable can define the connection timeout value for the web download in millisecond as unit.
+Jamal can download resources when the name of a file starts with the prefix `https://`.
 
 The default value for the timeouts is 5000, meaning five seconds.
 
@@ -50,7 +51,7 @@ snippet JAMAL_TRACE_documentation
 
 {%E%}{%JAMAL_TRACE_ENV%}
 This environment variable defines the name of the trace file.
-When a trace file is defined the evaluation and all the partial evaluations are appended to this file during processing.
+When a trace file is defined the evaluation and all the partial evaluations are logged to this file during processing.
 This file can grow very fast, and it is not purged or deleted by Jamal.
 end snippet
 */
@@ -73,7 +74,7 @@ This is a reasonable limit.
 * At the same time, most Java implementations can handle this dept.
 
 This limit may be too much in your environment.
-Jamal may still throw StackOverflowError.
+Jamal may still throw a `StackOverflowError`.
 In this case set this to a smaller value.
 It may also happen that you deliberately create complex recursive macros.
 In that case this limit may be too small.
@@ -104,7 +105,7 @@ snippet JAMAL_DEBUG_documentation
 This environment variable can switch on debugging of Jamal.
 To use the debugger this variable has to set to a value, which is recognized by a debugger on the classpath.
 The web based debugger recognizes the `http:port` format variables.
-Set this variable to `http:8080`, put the `jamal-debug` module on the classpath and after starting Jamal processing open your browser at `http://localhost:8080.
+Set this variable to `http:8080`, put the `jamal-debug` module on the classpath and after starting Jamal processing open your browser at `http://localhost:8080`.
 The debugger and the use of it is detailed in a separate section.
 end snippet
 */
@@ -123,6 +124,11 @@ end snippet
 snippet JAMAL_HTTPS_CACHE_documentation
 
 {%E%}{%JAMAL_HTTPS_CACHE_ENV%}
+This variable can be set to point to a directory for cache files.
+When Jamal downloads web resources it stores them in a cache directory is the directory exists.
+Jamal creates subdirectories under the cache directory, but the cache directory itself has to be created manually.
+
+The default location for the cache files is `~/.jamal/cache/`.
 end snippet
 */
     public static final String JAMAL_HTTPS_CACHE_ENV = "JAMAL_HTTPS_CACHE";
@@ -133,7 +139,7 @@ snippet JAMAL_DEV_PATH_documentation
 This environment variable can define replacements for files.
 
 The aim of this feature is to use a local file during development, and still refer to it using the `https://` URL, which will be the production URL.
-You want to run tests without pushing the file to a repository, but at the same time you do not want your code to refer to a dev location to be changed before releasing.
+You want to run tests without pushing the file to a repository, but at the same time you do not want your code to refer to a dev location to be changed before releasing.11
 
 Only absolute file names can be replaced.
 
@@ -149,6 +155,11 @@ export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.
 The environment value is a list of `=` separated pairs.
 The list is parsed using the standard `InputHandler.getParts(Input)` method.
 This is the reason why the first character in the example is the separator `|`
+
+An alternative use is to specify an existing text file in this variable.
+In that case the file will be read by Jamal, and the individual lines will be interpreted as `key=value` pairs.
+Comment lines starting with `#` and empty lines are ignored.
+
 end snippet
 */
     public static final String JAMAL_DEV_PATH_ENV = "JAMAL_DEV_PATH";

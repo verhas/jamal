@@ -2974,15 +2974,15 @@ When you specify more than one `equals`, `lessThan`, or `greaterThan` option the
 This is the default behaviour, so this option is not needed.
 Setting `or=false` has no effect and is not the same as using the option `and`.
 This option is included only to add readability if needed.
-* `and` after the evaluation of multiple tests.
-When this option is used the test is true if all of the tests are true.
-This option cannot be used together with the option `or` and is also needs multiple numeric options.
+* `and` can be used with the numerical options when more than one test is needed.
+When you specify more than one `equals`, `lessThan`, or `greaterThan` option test is true if all the tests are true.
+This option cannot be used together with the option `or` and it also needs multiple numeric options.
 
 Note that the options `and` and `or` are simple boolean options.
 They can appear only once in the list of the macro options.
 You cannot write `{@if [equals=3 or equals=4 or equals=6] /9/a/b}`.
 It is recommended to use the `or` or the `and` option following the first numeric option.
-For example, {@if [lessThan=7 and greaterThan=2] /6/it is in (2,7)/out of range}`.
+For example, `{@if [lessThan=7 and greaterThan=2] /6/it is in (2,7)/out of range}` .
 If you feel it is more readable you can put these options at any place in the list.
 
 The following options will do numerical comparison.
@@ -4096,7 +4096,7 @@ For example
 
 [source]
 ----
-{@macro [alias]my.weird.macro}/1/2/3}
+{{@macro [alias]my.weird.macro}/1/2/3}
 ----
 
 will evaluate the macro `my.weird.macro` with the arguments `1` and `2` and `3`.
@@ -4106,7 +4106,7 @@ If the automatically generated alias is `_1` then the above example will evaluat
 
 [source]
 ----
-_1/1/2/3}
+{_1/1/2/3}
 ----
 
 and the macro at this point will be the same user defined macro, which is named `my.weird.macro`.
@@ -4119,14 +4119,14 @@ In this case the format is:
 
 [source]
 ----
-#block {@macro [alias=my_weird_macro]my.weird.macro}}
+{#block {@macro [alias=my_weird_macro]my.weird.macro}}
 ----
 
 After this you can write
 
 [source]
 ----
-my_weird_macro /1/2/3}
+{my_weird_macro /1/2/3}
 ----
 
 When the name of the alias is given and not generated the name is exported and can be used later.
@@ -4171,7 +4171,7 @@ For example
 
 [source]
 ----
-{@macro [alias]my.weird.macro}/1/2/3}
+{{@macro [alias]my.weird.macro}/1/2/3}
 ----
 
 will evaluate the macro `my.weird.macro` with the arguments `1` and `2` and `3`.
@@ -4181,10 +4181,10 @@ If the automatically generated alias is `_1`, then the above example will evalua
 
 [source]
 ----
-_1/1/2/3}
+{_1/1/2/3}
 ----
 
-and the macro at this point will be the same user-defined macro, which is named `my.weird.macro`.
+The macro `_1` at this point will be the same user-defined macro, as the one named `my.weird.macro`.
 The automatically generated macro has the format `_n` where `nnn` is a number usually starting with 1 and increasing by one for each macro.
 If it happens to be defined, then the counting skips the number.
 This alias has scope inside the user-defined macro use, and it is not exported from there.
@@ -4194,14 +4194,14 @@ In this case the format is:
 
 [source]
 ----
-#block {@macro [alias=my_weird_macro]my.weird.macro}}
+{#block {@macro [alias=my_weird_macro]my.weird.macro}}
 ----
 
 After this, you can write
 
 [source]
 ----
-my_weird_macro /1/2/3}
+{my_weird_macro /1/2/3}
 ----
 
 When the alias' name is given and not generated, the name is exported and can be used later.
@@ -4223,7 +4223,7 @@ However, there is no point in using an alias that you cannot use later as a Jama
 
 `macro` behaves similar to the normal use of the macros when the macro is not defined.
 If an alias is to be created, `macro` will create the alias and return it even when the original macro is undefined.
-If this returned name is used later an exception may occur.
+If this returned name is used later, an exception may occur.
 This is the same for user-defined macros and built-in macros as well.
 Note, however, that undefined user-defined macros may revert to the macro `default` if present.
 There is no such fallback for built-in macros.
@@ -4231,36 +4231,36 @@ There is no such fallback for built-in macros.
 When `macro` tries to evaluate an undefined original macro, it will revert to the `default` in case of a user-defined macro, or will result an error if the macro is built-in.
 
 You can use this macro to create aliases for standard macros with proper names.
+It is not a requirement to alias a macro that has a non-identifier string as a name.
 
 The macro `macro` can invoke weirdly named built-in macros directly or create aliases for them.
 To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `built in`.
 The behavior will be the same as for user-defined macros.
 If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
 
-You can use this macro to create aliases for ordinary macros that have proper names.
-
-The macro `macro` can be used to invoke weirdly named built-in macros directly or to create aliases for them.
-To do that the parameter `type` has to be set to `builtin`, `built-in` or `built in`.
-The behavior will be the same as for user defined macros.
-If you want to emphasize that you use the macro for user defined macros you can set the parameter `type` to `userdefined`, `user-defined` or `user defined`.
-
-
 [[argsplit]]
 === 4. Standard Built-In Macro Argument Splitting
 
-The built-in macros access their input as one single string.
-Technically the input parameter of the method `evaluate()` is not a string but for now we can assume it is something like a string.
-The Java code of the macro is free to interpret this string the way it wants.
-Different macros implement different syntax analysis and later their behaviour based on the syntax of the input.
+This section contains the description of the Standard Built-in Macro Argument splitting.
+The text describes the syntax used by some of the built-in macros, which do not implement their syntax parsing.
+It is essential when you use these macros, for example, the core `if macro.
+The text also mentions some Java internals that may be valuable if you intend to develop your built-in macros.
 
-To manage the input and to easy the format analysis and interpretation of the input there is a utility class named `InputHandler`.
+A built-in macro accesses the input as one single string.
+Technically the input parameter of the method `evaluate()` is not a string.
+It is an instance of the class `Input` implementing the Java interface `CharSequence`.
+That way, we can think of it as a string.
+The Java code of the macro is free to interpret this string the way it wants.
+Different macros implement their syntax analysis differently.
+
+To manage the input and ease the format analysis and interpretation of the input, there is a utility class named `InputHandler`.
 This class defines a method named `getParts()` which does a simple analysis.
-It splits up the input into an array of strings in a "standard" way.
+It splits the input into an array of strings in a "standard" way.
 
 This method is used, for example, by the implementation of the `if` built-in macro.
-When there is no special requirement for a macro it is recommended to use this method.
+I recommend using this method when there is no special requirement for a macro.
 Using this method provides a concise way for macro argument separation.
-The way it splits the arguments is defined here so that the extension documentations can refer to this section.
+The way it splits the arguments is defined here so that the extension documentation can refer to this section.
 
 The splitting offers three syntax variations:
 
@@ -4292,7 +4292,7 @@ Backtick was selected during the design of the syntax to enclose the regular exp
 In case you need one inside the regular expression then you have to simply double it, and the parsing will single it back.
 
 [[parparsing]]
-=== 5. Standard Built-In Parameter Parsing
+=== 5. Standard Built-In Parameter/Option Parsing
 
 
 In addition to the method ``getParts()`` there is another utility that the built-in macros can use.
@@ -4330,6 +4330,7 @@ The following sections describe the individual environment variables.
 
 ==== `JAMAL_CONNECT_TIMEOUT`
 This variable can define the connection timeout value for the web download in millisecond as unit.
+Jamal can download resources when the name of a file starts with the prefix `https://`.
 
 The default value for the timeouts is 5000, meaning five seconds.
 
@@ -4343,7 +4344,7 @@ The default value for the timeouts is 5000, meaning five seconds.
 
 ==== `JAMAL_TRACE`
 This environment variable defines the name of the trace file.
-When a trace file is defined the evaluation and all the partial evaluations are appended to this file during processing.
+When a trace file is defined the evaluation and all the partial evaluations are logged to this file during processing.
 This file can grow very fast, and it is not purged or deleted by Jamal.
 
 ==== `JAMAL_STACK_LIMIT`
@@ -4361,7 +4362,7 @@ This is a reasonable limit.
 * At the same time, most Java implementations can handle this dept.
 
 This limit may be too much in your environment.
-Jamal may still throw StackOverflowError.
+Jamal may still throw a `StackOverflowError`.
 In this case set this to a smaller value.
 It may also happen that you deliberately create complex recursive macros.
 In that case this limit may be too small.
@@ -4382,7 +4383,7 @@ It may be needed if you want to use an older, prior 1.8.0 library or a library t
 This environment variable can switch on debugging of Jamal.
 To use the debugger this variable has to set to a value, which is recognized by a debugger on the classpath.
 The web based debugger recognizes the `http:port` format variables.
-Set this variable to `http:8080`, put the `jamal-debug` module on the classpath and after starting Jamal processing open your browser at `http://localhost:8080.
+Set this variable to `http:8080`, put the `jamal-debug` module on the classpath and after starting Jamal processing open your browser at `http://localhost:8080`.
 The debugger and the use of it is detailed in a separate section.
 
 ==== `JAMAL_INCLUDE_DEPTH`
@@ -4391,12 +4392,17 @@ This variable can set the maximum number of file include nesting.
 The default value is 100.
 
 ==== `JAMAL_HTTPS_CACHE`
+This variable can be set to point to a directory for cache files.
+When Jamal downloads web resources it stores them in a cache directory is the directory exists.
+Jamal creates subdirectories under the cache directory, but the cache directory itself has to be created manually.
+
+The default location for the cache files is `~/.jamal/cache/`.
 
 ==== `JAMAL_DEV_PATH`
 This environment variable can define replacements for files.
 
 The aim of this feature is to use a local file during development, and still refer to it using the `https://` URL, which will be the production URL.
-You want to run tests without pushing the file to a repository, but at the same time you do not want your code to refer to a dev location to be changed before releasing.
+You want to run tests without pushing the file to a repository, but at the same time you do not want your code to refer to a dev location to be changed before releasing.11
 
 Only absolute file names can be replaced.
 
@@ -4412,6 +4418,11 @@ export JAMAL_DEV_PATH=\|https://raw.githubusercontent.com/central7/pom/main/pom.
 The environment value is a list of `=` separated pairs.
 The list is parsed using the standard `InputHandler.getParts(Input)` method.
 This is the reason why the first character in the example is the separator `|`
+
+An alternative use is to specify an existing text file in this variable.
+In that case the file will be read by Jamal, and the individual lines will be interpreted as `key=value` pairs.
+Comment lines starting with `#` and empty lines are ignored.
+
 
 ==== `JAMAL_OPTIONS`
 

@@ -1,0 +1,4 @@
+
+# this is a comment line       
+/Users/verhasp/github/jamal/jamal-test/src/test/resources/devpath/devre.in=/Users/verhasp/github/jamal/jamal-test/src/test/resources/devpath/devre.re
+

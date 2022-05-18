@@ -43,6 +43,12 @@ public class If implements Macro {
         // end snippet
         private final List<Params.Param<List<Integer>>> numericOptions = List.of(lessThan, greaterThan, equals);
 
+        /**
+         * Check that the options are used in a consistent manner and the user is not using options together which
+         * should not be used together.
+         *
+         * @throws BadSyntax if the options are used in an inconsistent way
+         */
         void assertConsistency() throws BadSyntax {
             if (and.is() && or.is()) {
                 throw new BadSyntax("You cannot have both 'and' and 'or' options in an 'if' macro.");
@@ -91,7 +97,6 @@ public class If implements Macro {
         if (parts.length < 1) {
             throw new BadSyntaxAt("Macro 'if' needs 1, 2 or 3 arguments", pos);
         }
-
 
         if (opt.not.is() != isTrue(parts[0], opt)) {
             return parts.length > 1 ? parts[1] : "";
