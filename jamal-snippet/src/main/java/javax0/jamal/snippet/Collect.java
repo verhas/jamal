@@ -110,9 +110,9 @@ public class Collect implements Macro, InnerScopeDependent {
         final var fromFile = new File(fn);
         if (FileTools.isRemote(fn) || fromFile.isFile()) {
             if (asciidoc.is()) {
-                harvestAsciiDoc(fn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is());
+                harvestAsciiDoc(fn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             } else {
-                harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is());
+                harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             }
         } else {
             try {
@@ -128,7 +128,8 @@ public class Collect implements Macro, InnerScopeDependent {
                                 pos,
                                 prefix.get(),
                                 postfix.get(),
-                                ignoreIOEx.is());
+                                ignoreIOEx.is(),
+                                processor);
                     } else {
                         harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(),
                                 store,
@@ -138,7 +139,8 @@ public class Collect implements Macro, InnerScopeDependent {
                                 pos,
                                 prefix.get(),
                                 postfix.get()
-                                , ignoreIOEx.is());
+                                , ignoreIOEx.is(),
+                                processor);
                     }
                 }
             } catch (IOException | UncheckedIOException e) {
@@ -187,9 +189,10 @@ public class Collect implements Macro, InnerScopeDependent {
                                  final Position pos,
                                  final String prefix,
                                  final String postfix,
-                                 boolean ignoreIOEx) throws BadSyntax {
+                                 boolean ignoreIOEx,
+                                 Processor processor) throws BadSyntax {
         final var openedSnippets = new HashMap<String, SnippetAccumulator>();
-        final String[] lines = getFileContent(file, ignoreIOEx);
+        final String[] lines = getFileContent(file, ignoreIOEx, processor);
         List<BadSyntax> errors = new ArrayList<>();
         for (int lineNr = 0; lineNr < lines.length; lineNr++) {
             String line = lines[lineNr];
@@ -257,11 +260,12 @@ public class Collect implements Macro, InnerScopeDependent {
                                  final Position pos,
                                  final String prefix,
                                  final String postfix,
-                                 boolean ignoreIOEx) throws BadSyntax {
+                                 boolean ignoreIOEx,
+                                 Processor processor) throws BadSyntax {
         var state = State.OUT;
         String id = "";
         StringBuilder text = new StringBuilder();
-        final String[] lines = getFileContent(file, ignoreIOEx);
+        final String[] lines = getFileContent(file, ignoreIOEx, processor);
         int startLine = 0;
         List<BadSyntax> errors = new ArrayList<>();
         for (int lineNr = 0; lineNr < lines.length; lineNr++) {
@@ -319,13 +323,13 @@ public class Collect implements Macro, InnerScopeDependent {
      * @return the lines of the file
      * @throws BadSyntax if the file cannot be read
      */
-    private String[] getFileContent(final String file, final boolean ignoreIOEx) throws BadSyntax {
+    private String[] getFileContent(final String file, final boolean ignoreIOEx, final Processor processor) throws BadSyntax {
         try {
-            return FileTools.getFileContent(file).split("\n", -1);
-        }catch (BadSyntax e) {
-            if( ignoreIOEx ) {
+            return FileTools.getFileContent(file, processor).split("\n", -1);
+        } catch (BadSyntax e) {
+            if (ignoreIOEx) {
                 return new String[0];
-            }else{
+            } else {
                 throw e;
             }
         }

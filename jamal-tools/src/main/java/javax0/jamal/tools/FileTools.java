@@ -5,6 +5,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
+import javax0.jamal.api.Processor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -55,46 +56,60 @@ public class FileTools {
      *                 that is on the classpath. If the file name starts with {@code https:} then the string is treated
      *                 as an URL. In that case the UTL is fetched and if there is a cache directory configured it will
      *                 be loaded from the cache.
+     * @param processor is used to invoke the callback hooks registered for file access
      * @return the input containing the content of the file.
      * @throws BadSyntaxAt if the file cannot be read.
      */
-    public static Input getInput(final String fileName) throws BadSyntax {
-        return getInput(fileName, false);
+    public static Input getInput(final String fileName, final Processor processor) throws BadSyntax {
+        return getInput(fileName, false, processor);
     }
 
-    public static Input getInput(final String fileName, final boolean noCache) throws BadSyntax {
-        return makeInput(getFileContent(fileName, noCache), new Position(fileName));
+    public static Input getInput(final String fileName, final boolean noCache, Processor processor) throws BadSyntax {
+        return makeInput(getFileContent(fileName, noCache, processor), new Position(fileName));
     }
 
     /**
-     * Same as {@link #getInput(String)} but this method also specifies the parent position. It is usually the file
+     * Same as {@link #getInput(String,Processor)} but this method also specifies the parent position. It is usually the file
      * that includes or imports the other file that is being read.
      *
      * @param fileName the name of the file to be read
      * @param parent   the parent/including/importing file position
+     * @param processor is used to invoke the callback hooks registered for file access
      * @return the input containing the content of the file.
      * @throws BadSyntaxAt if the file cannot be read.
      */
-    public static Input getInput(String fileName, Position parent) throws BadSyntax {
-        return getInput(fileName, parent, false);
+    public static Input getInput(String fileName, Position parent, final Processor processor) throws BadSyntax {
+        return getInput(fileName, parent, false, processor);
     }
 
-    public static Input getInput(String fileName, Position parent, final boolean noCache) throws BadSyntax {
-        return makeInput(getFileContent(fileName, noCache), new Position(fileName, 1, 1, parent));
+    public static Input getInput(String fileName, Position parent, final boolean noCache, final Processor processor) throws BadSyntax {
+        return makeInput(getFileContent(fileName, noCache, processor), new Position(fileName, 1, 1, parent));
     }
 
     /**
      * Get the content of the file.
      *
      * @param fileName the name of the file.
+     * @param processor is used to invoke the callback hooks registered for file access
      * @return the content of the file
      * @throws BadSyntax if the file cannot be read
      */
-    public static String getFileContent(String fileName) throws BadSyntax {
-        return getFileContent(fileName, false);
+    public static String getFileContent(String fileName, Processor processor) throws BadSyntax {
+        return getFileContent(fileName, false, processor);
     }
 
-    public static String getFileContent(final String fileName, final boolean noCache) throws BadSyntax {
+    /**
+     * Get the content of the file either reading it or from the cache. The cache is only consulted when the file is
+     * a {@code http://} prefixed resource.
+     *
+     * @param fileName the name of the file.
+     * @param noCache do not read the cache if this parameter is {@code true}. If there is cache configured the content
+     *                is still saved into the cache. It is only teh reading controlled by the parameter.
+     * @param processor is used to invoke the callback hooks registered for file access
+     * @return the content of the file
+     * @throws BadSyntax if the file cannot be read
+     */
+    public static String getFileContent(final String fileName, final boolean noCache, final Processor processor) throws BadSyntax {
         try {
             if (fileName.startsWith(RESOURCE_PREFIX)) {
                 return ResourceInput.getInput(fileName.substring(RESOURCE_PREFIX_LENGTH));
@@ -146,7 +161,7 @@ public class FileTools {
             }
             for (String path : paths) {
                 // skip empty and comment lines in case we read from file
-                if( path.trim().length() == 0 || path.trim().startsWith("#")){
+                if (path.trim().length() == 0 || path.trim().startsWith("#")) {
                     continue;
                 }
                 final var parts = path.split("=", 2);

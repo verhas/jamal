@@ -30,7 +30,7 @@ public class FileMacros {
             var reference = in.getReference();
             final String inputFileName = in.toString().trim();
             final String fileName = getAbsoluteFileName(in, reference, inputFileName);
-            return getFileContent(fileName);
+            return getFileContent(fileName,processor);
         }
     }
 

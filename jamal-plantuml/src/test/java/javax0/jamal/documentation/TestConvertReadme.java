@@ -16,8 +16,8 @@ public class TestConvertReadme {
     }
 
     private static void generateAdoc(final String directory, final String fileName, final String ext) throws Exception {
-        final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam");
         final var processor = new Processor("{%", "%}");
+        final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
         final var result = processor.process(in);
         FileTools.writeFileContent(directory + "/" + fileName + "." + ext, result);
     }

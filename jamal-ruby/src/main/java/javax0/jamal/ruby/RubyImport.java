@@ -11,13 +11,13 @@ import javax0.jamal.tools.InputHandler;
 public class RubyImport implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var shell = Shell.getShell(in,processor, this);
+        final var shell = Shell.getShell(in, processor, this);
         final var scriptName = InputHandler.fetch2EOL(in).trim();
         final Input script;
-        if( scriptName.length() > 0 ) {
+        if (scriptName.length() > 0) {
             final var fileName = FileTools.absolute(in.getReference(), scriptName);
-            script = FileTools.getInput(fileName);
-        }else{
+            script = FileTools.getInput(fileName, processor);
+        } else {
             script = in;
         }
         script.getSB().append("\n''");

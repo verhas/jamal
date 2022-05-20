@@ -16,7 +16,7 @@ public class GroovyImport implements Macro, InnerScopeDependent {
         final Input script;
         if (scriptName.length() > 0) {
             final var fileName = FileTools.absolute(in.getReference(), scriptName);
-            script = FileTools.getInput(fileName);
+            script = FileTools.getInput(fileName, processor);
         } else {
             script = in;
         }

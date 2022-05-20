@@ -85,7 +85,7 @@ public class Import implements Stackable {
         var fileName = absolute(reference, input.toString().trim());
         if (wasNotImported(fileName)) {
             importedAlready.get(importedAlready.size() - 1).add(fileName);
-            final var in = getInput(fileName, position, noCache.is());
+            final var in = getInput(fileName, position, noCache.is(), processor);
             final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
             final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
             final var marker = processor.getRegister().test();

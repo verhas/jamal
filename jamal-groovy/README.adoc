@@ -494,8 +494,9 @@ The unit test code that invokes the Jamal processor to convert this document is 
 [source]
 ----
 final var processor = new Processor("{%", "%}");
-final var shell = Shell.getShell(processor,Shell.DEFAULT_GROOVY_SHELL_NAME);
-shell.property("processor",new Processor("{", "}"));
+final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
+final var shell = Shell.getShell(processor, Shell.DEFAULT_GROOVY_SHELL_NAME);
+shell.property("processor", new Processor("{", "}"));
 processor.defineGlobal(shell);
 final var result = processor.process(in);
 ----

@@ -31,13 +31,13 @@ public class SnipLoad implements Macro, InnerScopeDependent {
             throw new BadSyntax("The only supported format is XML");
         }
         final var store = SnippetStore.getInstance(processor);
-        final var is = new ByteArrayInputStream(FileTools.getFileContent(FileTools.absolute(ref, input.get())).getBytes(StandardCharsets.UTF_8));
+        final var is = new ByteArrayInputStream(FileTools.getFileContent(FileTools.absolute(ref, input.get()), processor).getBytes(StandardCharsets.UTF_8));
         SnippetXmlReader.getSnippetsFromXml(is,
-            (id, content, position) -> storeSnippet(store,
-                convertRegex(idRegex.get()),
-                convertRegex(fnRegex.get()),
-                convertRegex(textRegex.get()),
-                id, content, position)
+                (id, content, position) -> storeSnippet(store,
+                        convertRegex(idRegex.get()),
+                        convertRegex(fnRegex.get()),
+                        convertRegex(textRegex.get()),
+                        id, content, position)
         );
         return "";
     }

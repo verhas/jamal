@@ -92,7 +92,7 @@ public class CustomModelProcessor implements ModelProcessor {
         final String fileName = jamFile.getAbsolutePath();
         final String xml;
         try {
-            xml = processor.process(FileTools.getInput(fileName));
+            xml = processor.process(FileTools.getInput(fileName,processor));
         } catch (BadSyntax e) {
             throw new RuntimeException("Jamal error processing the file " + fileName + "\n" + dumpException(e), e);
         }

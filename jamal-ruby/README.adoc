@@ -560,6 +560,7 @@ The unit test code that invokes the Jamal processor to convert this document is 
 [source,java]
 ----
 final var processor = new Processor("{%", "%}");
+final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
 final var shell = Shell.getShell(processor, Shell.DEFAULT_RUBY_SHELL_NAME);
 shell.property("$processor", new MyProcessor());
 processor.defineGlobal(shell);

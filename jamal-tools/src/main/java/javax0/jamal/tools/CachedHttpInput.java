@@ -39,6 +39,15 @@ class CachedHttpInput {
         return getInput(urlString, false);
     }
 
+    /**
+     * Get the content of the URL downloading it or from the cache.
+     *
+     * @param urlString the URL
+     * @param noCache do not read the cache if this parameter is {@code true}. If there is cache configured the content
+     *                is still saved into the cache. It is only teh reading controlled by the parameter.
+     * @return the content of the file in a String Builder.
+     * @throws IOException if the file/URL cannot be read
+     */
     public static StringBuilder getInput(final String urlString, final boolean noCache) throws IOException {
         final var url = new URL(urlString);
         final var entry = Cache.getEntry(url);

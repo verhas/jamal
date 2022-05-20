@@ -52,8 +52,8 @@ public class DocumentConverter {
      * @throws Exception if the file does not exist, cannot be read, cannot be processed by Jamal (syntax error)
      */
     public static void convert(final String file) throws Exception {
-        final var in = FileTools.getInput(file);
         final var processor = new Processor("{%", "%}");
+        final var in = FileTools.getInput(file,processor);
         final var result = processor.process(in);
         final var output = file.substring(0, file.length() - ".jam".length());
         FileTools.writeFileContent(output, result);

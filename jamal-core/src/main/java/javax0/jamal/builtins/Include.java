@@ -52,7 +52,7 @@ public class Include implements Macro {
             throw new BadSyntax("Include depth is too deep");
         }
         final String result;
-        final var includedInput = getInput(fileName, position, noCache.is());
+        final var includedInput = getInput(fileName, position, noCache.is(), processor);
         if (lines.isPresent()) {
             Range.Lines.filter(includedInput.getSB(), lines.get());
         }

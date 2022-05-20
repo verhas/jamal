@@ -34,7 +34,7 @@
         {pluginManagement|
             {plugins|
                 {plugin|
-                    {GAV :org.apache.maven.plugins:maven-source-plugin:{SOURCE_PLUGIN_VERSION}}
+                    {GAV :org.apache.maven.plugins:maven-source-plugin:{MAVEN_SOURCE_PLUGIN_VERSION}}
                     {executions|
                         {execution|
                             {id|attach-sources}

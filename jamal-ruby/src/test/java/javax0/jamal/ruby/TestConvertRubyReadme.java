@@ -26,9 +26,9 @@ public class TestConvertRubyReadme {
     // end snippet
 
     private static void generateDoc(final String directory, final String fileName, final String ext) throws Exception {
-        final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam");
         // snippet Ruby_Jamal_Doc_Execution
         final var processor = new Processor("{%", "%}");
+        final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
         final var shell = Shell.getShell(processor, Shell.DEFAULT_RUBY_SHELL_NAME);
         shell.property("$processor", new MyProcessor());
         processor.defineGlobal(shell);

@@ -2353,7 +2353,7 @@ will result
 - Update.java: 3,779 bytes
 - SnipTransform.java: 17,339 bytes
 - FilesMacro.java: 9,221 bytes
-- Collect.java: 17,752 bytes
+- Collect.java: 18,030 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 5,370 bytes
 - ThinXml.java: 8,792 bytes
@@ -2368,7 +2368,7 @@ will result
 - StringMacros.java: 6,419 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,701 bytes
-- SnipLoad.java: 3,526 bytes
+- SnipLoad.java: 3,573 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 10,713 bytes
 - ListDir.java: 5,579 bytes
@@ -2383,7 +2383,7 @@ will result
 - Java.java: 10,437 bytes
 - ReplaceLines.java: 3,024 bytes
 - SkipLines.java: 2,762 bytes
-- SnipCheck.java: 5,956 bytes
+- SnipCheck.java: 5,968 bytes
 - Reflow.java: 2,023 bytes
 - Snippet.java: 1,088 bytes
 ----
@@ -2638,7 +2638,7 @@ will result in the output
 
 [source]
 ----
-2022-05-18 21:08:58
+2022-05-20 11:14:26
 ----
 
 

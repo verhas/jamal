@@ -1,11 +1,13 @@
 package javax0.jamal.cmd;
 
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,11 +20,9 @@ public class TestCreateStarters {
 
     @Test
     void testCreateTheJBangStarterFile() throws Exception {
+        final var versionString = getVersionString();
         final var root = getRoot();
-        final var content = TestThat.theInput("{@include res:jbang.template}").define("ROOT", root).results();
-        final var version = new Properties();
-        Processor.jamalVersion(version);
-        final var versionString = version.getProperty("version");
+        final var content = getContent("{@include res:jbang.template}", root, versionString);
 
         if (!versionString.contains("-")) {
             Files.write(Paths.get(root + "/" + "jbangstarter.java"), content.getBytes(StandardCharsets.UTF_8),
@@ -34,16 +34,27 @@ public class TestCreateStarters {
 
     @Test
     void testCreateJamalSh() throws Exception {
+        final var versionString = getVersionString();
         final var root = getRoot();
-        final var content = TestThat.theInput("{@include res:jamal.sh.template}").define("ROOT", root).results();
-        final var version = new Properties();
-        Processor.jamalVersion(version);
-        final var versionString = version.getProperty("version");
+        final var content = getContent("{@include res:jamal.sh.template}", root, versionString);
 
         Files.write(Paths.get(root + "/" + "jamal.sh"), content.getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         Files.write(Paths.get(root + "/" + "jamal." + versionString + ".sh"), content.getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+    }
+
+    private String getContent(final String input, final String root, final String versionString) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, BadSyntax {
+        return TestThat.theInput(input)
+                .define("ROOT", root)
+                .define("VERSION", versionString)
+                .results();
+    }
+
+    private String getVersionString() {
+        final var version = new Properties();
+        Processor.jamalVersion(version);
+        return version.getProperty("version");
     }
 
     @Test

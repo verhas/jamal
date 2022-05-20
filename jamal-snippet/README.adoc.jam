@@ -131,7 +131,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=fd3b74aa%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=aee77b13%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -650,7 +650,7 @@ then snippet inclusion will purposefully fail.
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=0a096474%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=d71614a8%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -902,7 +902,7 @@ It is saved as a `CDATA` section(s).
 
 [[snipLoad]]
 ==== {%macroChapter%}`snip:load`
-{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=068f541e%}
+{%#snip:check file={%JAVA_DIR%}SnipLoad.java hash=d4ab8d81%}
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 {%parameterized%}
 The file's name has to be specified by the parameter `input`.

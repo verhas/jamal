@@ -1900,7 +1900,7 @@ The more local configuration overrules the broader one using this algorithm.
 
 [[import]]
 ==== {%macroChapter%}`import`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=2c032a3b%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=adc10756%}
 since 1.0.0 (core)
 
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
@@ -1959,7 +1959,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=42c38764%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=70dd5132%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines

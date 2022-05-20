@@ -40,7 +40,7 @@ public class SnipCheck implements Macro {
         final String snippet = getSnippetContent(in, processor, id, fileName, message);
 
         if (hashString.isPresent()) {
-            checkHashString(hashString, id, fileName, message, snippet,pos);
+            checkHashString(hashString, id, fileName, message, snippet, pos);
             return "";
         }
 
@@ -114,7 +114,7 @@ public class SnipCheck implements Macro {
             var reference = in.getReference();
             for (final var fileName : fileNames.get().split(",")) {
                 var absoluteFileName = FileTools.absolute(reference, fileName.trim());
-                snippet.append(FileTools.getInput(absoluteFileName));
+                snippet.append(FileTools.getInput(absoluteFileName, processor));
             }
         }
         if (!id.isPresent() && !fileNames.isPresent()) {
