@@ -53,10 +53,10 @@ public class DocumentConverter {
      */
     public static void convert(final String file) throws Exception {
         final var processor = new Processor("{%", "%}");
-        final var in = FileTools.getInput(file,processor);
+        final var in = FileTools.getInput(file, processor);
         final var result = processor.process(in);
         final var output = file.substring(0, file.length() - ".jam".length());
-        FileTools.writeFileContent(output, result);
+        FileTools.writeFileContent(output, result, processor);
     }
 
     private static class Includes {

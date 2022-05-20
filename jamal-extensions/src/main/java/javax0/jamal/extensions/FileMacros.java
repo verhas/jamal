@@ -59,7 +59,7 @@ public class FileMacros {
             var inputFileName = parts[0];
             var content = parts[1];
             final String fileName = getAbsoluteFileName(in, reference, inputFileName);
-            writeFileContent(fileName, content);
+            writeFileContent(fileName, content,processor);
             return "";
         }
     }

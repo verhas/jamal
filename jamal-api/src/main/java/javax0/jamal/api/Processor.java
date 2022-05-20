@@ -1,8 +1,10 @@
 package javax0.jamal.api;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -167,6 +169,124 @@ public interface Processor extends AutoCloseable {
      * @return the context object the embedding application set or {@code null} in case the context object was not set.
      */
     Context getContext();
+
+    /**
+     * IOHookResult is the type of the object returned by an IO Hook object {@link FileReader#read(String)} or
+     * {@link FileWriter#write(String, String)} method.
+     */
+    interface IOHookResult {
+        enum Type {
+            IGNORE, // the reader does not care
+            REDIRECT, // reader identified the final file name, get() returns the name
+            DONE // reader was reading the file, get() returns the content
+        }
+
+        /**
+         * Get the type of the result.
+         *
+         * @return the result type.
+         */
+        Type type();
+
+        /**
+         * Get the result of the reader.
+         *
+         * @return the name of the file to read/write in case of REDIRECT or
+         * the content of the file in case the result is DONE and the hook was reading.
+         * In any other cases the method will throw {@link IllegalStateException}.
+         */
+        String get();
+
+        /**
+         * A singleton instance to be returned by FileReader implementations when the file reading is ignored by the
+         * hook.
+         */
+        IOHookResult IGNORE = new IOHookResult() {
+            @Override
+            public Type type() {
+                return Type.IGNORE;
+            }
+
+            @Override
+            public String get() {
+                throw new IllegalStateException("IO hook result was IGNORE, nothing to \"get()\".");
+            }
+        };
+    }
+
+    class IOHookResultImpl implements IOHookResult {
+        private final Type type;
+        private final String content;
+
+        public IOHookResultImpl(final Type type, final String content) {
+            this.type = type;
+            this.content = content;
+        }
+
+        @Override
+        public Type type() {
+            return type;
+        }
+
+        @Override
+        public String get() {
+            return content;
+        }
+    }
+
+    class IOHookResultDone extends IOHookResultImpl {
+        public IOHookResultDone(final String content) {
+            super(Type.DONE, content);
+        }
+        public IOHookResultDone() {
+            super(Type.DONE, null);
+        }
+    }
+
+    /**
+     * Use {@code IOHookResultRedirect("fileName)} to redirect the file reading or writing to a different file.
+     */
+    class IOHookResultRedirect extends IOHookResultImpl {
+        public IOHookResultRedirect(final String content) {
+            super(Type.REDIRECT, content);
+        }
+    }
+
+    /**
+     * A file writer can be set to work with a processor to intercept any file writing operations the macros may make.
+     * If the writer is set into the processor via the {@link #setFileWriter(FileWriter)} it will be invoked whenever
+     * a macro wants to write a file. It can be used to implement a special file system or file mapping.
+     */
+    @FunctionalInterface
+    interface FileWriter {
+        /**
+         * Tries to write the file, decides on redirect or do nothing.
+         *
+         * @param fileName the original name of the file
+         * @return the structure containing the result, which is nothing, or final name
+         */
+        IOHookResult write(final String fileName, final String content);
+    }
+
+    void setFileWriter(FileWriter fileWriter);
+
+    Optional<FileWriter> getFileWriter();
+
+    @FunctionalInterface
+    interface FileReader {
+        /**
+         * Tries to read the file, decides on redirect or do nothing.
+         *
+         * @param fileName the original name of the file
+         * @return the structure containing the result, which is nothing, the final name of the file or the content of
+         * the file
+         */
+        IOHookResult read(final String fileName);
+    }
+
+    void setFileReader(FileReader fileReader);
+
+    Optional<FileReader> getFileReader();
 
     /**
      * @param id the identifier of the user defined macro

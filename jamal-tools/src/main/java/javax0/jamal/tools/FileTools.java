@@ -50,12 +50,12 @@ public class FileTools {
      * <p>
      * There is no way to download a resource using the {@code http} protocol.
      *
-     * @param fileName the name of the file. This is used to open and read the file as well as reference file name in
-     *                 the input. When the file name starts with the characters {@code res:} then the rest of the string
-     *                 is treated as the name of a Java resource. That way Jamal can load a Java resource from some JAR
-     *                 that is on the classpath. If the file name starts with {@code https:} then the string is treated
-     *                 as an URL. In that case the UTL is fetched and if there is a cache directory configured it will
-     *                 be loaded from the cache.
+     * @param fileName  the name of the file. This is used to open and read the file as well as reference file name in
+     *                  the input. When the file name starts with the characters {@code res:} then the rest of the string
+     *                  is treated as the name of a Java resource. That way Jamal can load a Java resource from some JAR
+     *                  that is on the classpath. If the file name starts with {@code https:} then the string is treated
+     *                  as an URL. In that case the UTL is fetched and if there is a cache directory configured it will
+     *                  be loaded from the cache.
      * @param processor is used to invoke the callback hooks registered for file access
      * @return the input containing the content of the file.
      * @throws BadSyntaxAt if the file cannot be read.
@@ -69,11 +69,11 @@ public class FileTools {
     }
 
     /**
-     * Same as {@link #getInput(String,Processor)} but this method also specifies the parent position. It is usually the file
+     * Same as {@link #getInput(String, Processor)} but this method also specifies the parent position. It is usually the file
      * that includes or imports the other file that is being read.
      *
-     * @param fileName the name of the file to be read
-     * @param parent   the parent/including/importing file position
+     * @param fileName  the name of the file to be read
+     * @param parent    the parent/including/importing file position
      * @param processor is used to invoke the callback hooks registered for file access
      * @return the input containing the content of the file.
      * @throws BadSyntaxAt if the file cannot be read.
@@ -89,7 +89,7 @@ public class FileTools {
     /**
      * Get the content of the file.
      *
-     * @param fileName the name of the file.
+     * @param fileName  the name of the file.
      * @param processor is used to invoke the callback hooks registered for file access
      * @return the content of the file
      * @throws BadSyntax if the file cannot be read
@@ -102,37 +102,60 @@ public class FileTools {
      * Get the content of the file either reading it or from the cache. The cache is only consulted when the file is
      * a {@code http://} prefixed resource.
      *
-     * @param fileName the name of the file.
-     * @param noCache do not read the cache if this parameter is {@code true}. If there is cache configured the content
-     *                is still saved into the cache. It is only teh reading controlled by the parameter.
+     * @param fileName  the name of the file.
+     * @param noCache   do not read the cache if this parameter is {@code true}. If there is cache configured the content
+     *                  is still saved into the cache. It is only teh reading controlled by the parameter.
      * @param processor is used to invoke the callback hooks registered for file access
      * @return the content of the file
      * @throws BadSyntax if the file cannot be read
      */
     public static String getFileContent(final String fileName, final boolean noCache, final Processor processor) throws BadSyntax {
+        final String finalFileName;
+        final var res = processor.getFileReader().map(s -> s.read(fileName)).orElse(Processor.IOHookResult.IGNORE);
+        switch (res.type()) {
+            case DONE:
+                return res.get();
+            case REDIRECT:
+                return getFileContent(res.get(),noCache,processor);
+            default:
+                finalFileName = fileName;
+                break;
+        }
         try {
-            if (fileName.startsWith(RESOURCE_PREFIX)) {
-                return ResourceInput.getInput(fileName.substring(RESOURCE_PREFIX_LENGTH));
+            if (finalFileName.startsWith(RESOURCE_PREFIX)) {
+                return ResourceInput.getInput(finalFileName.substring(RESOURCE_PREFIX_LENGTH));
             }
-            if (fileName.startsWith(HTTPS_PREFIX)) {
-                return CachedHttpInput.getInput(fileName, noCache).toString();
+            if (finalFileName.startsWith(HTTPS_PREFIX)) {
+                return CachedHttpInput.getInput(finalFileName, noCache).toString();
             } else {
-                return FileInput.getInput(fileName);
+                return FileInput.getInput(finalFileName);
             }
         } catch (IOException | UncheckedIOException e) {
-            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
+            throw new BadSyntax("Cannot get the content of the file '" + finalFileName + "'", e);
         }
     }
 
-    public static void writeFileContent(String fileName, String content) throws BadSyntax {
+    public static void writeFileContent(String fileName, String content, final Processor processor) throws BadSyntax {
+        final String finalFileName;
+        final var res = processor.getFileWriter().map(s -> s.write(fileName, content)).orElse(Processor.IOHookResult.IGNORE);
+        switch (res.type()) {
+            case DONE:
+                return;
+            case REDIRECT:
+                writeFileContent(res.get(),content,processor);
+                return;
+            default:
+                finalFileName = fileName;
+                break;
+        }
         try {
-            if (fileName.startsWith(RESOURCE_PREFIX)) {
+            if (finalFileName.startsWith(RESOURCE_PREFIX)) {
                 throw new BadSyntax("Cannot write into a resource.");
             }
-            if (fileName.startsWith(HTTPS_PREFIX)) {
+            if (finalFileName.startsWith(HTTPS_PREFIX)) {
                 throw new BadSyntax("Cannot write into a web resource.");
             } else {
-                File file = new File(fileName);
+                File file = new File(finalFileName);
                 if (file.getParentFile() != null) {
                     file.getParentFile().mkdirs();
                 }
@@ -141,7 +164,7 @@ public class FileTools {
                 }
             }
         } catch (IOException e) {
-            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
+            throw new BadSyntax("Cannot get the content of the file '" + finalFileName + "'", e);
         }
     }
 

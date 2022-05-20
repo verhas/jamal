@@ -19,7 +19,7 @@ public class TestConvertReadme {
         final var processor = new Processor("{%", "%}");
         final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
         final var result = processor.process(in);
-        FileTools.writeFileContent(directory + "/" + fileName + "." + ext, result);
+        FileTools.writeFileContent(directory + "/" + fileName + "." + ext, result,processor );
     }
 
     @Test

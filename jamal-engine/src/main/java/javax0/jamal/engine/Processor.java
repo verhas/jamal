@@ -959,6 +959,26 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
+    @Override
+    public Optional<FileWriter> getFileWriter() {
+        return Optional.ofNullable(fileWriter);
+    }
+
+    @Override
+    public void setFileWriter(final FileWriter fileWriter) {
+        this.fileWriter = fileWriter;
+    }
+
+    @Override
+    public Optional<FileReader> getFileReader() {
+        return Optional.ofNullable(fileReader);
+    }
+
+    @Override
+    public void setFileReader(final FileReader fileReader) {
+        this.fileReader = fileReader;
+    }
+
     private interface Runnable {
         void run() throws BadSyntax;
     }
@@ -966,4 +986,9 @@ public class Processor implements javax0.jamal.api.Processor {
     private interface ThrowingStringSupplier {
         String get() throws BadSyntax;
     }
+
+    private FileReader fileReader = null;
+    private FileWriter fileWriter = null;
+
+
 }

@@ -22,7 +22,7 @@ public class TestConvertGroovyReadme {
         processor.defineGlobal(shell);
         final var result = processor.process(in);
         // end snippet
-        FileTools.writeFileContent(directory + "/" + fileName + "." + ext, result);
+        FileTools.writeFileContent(directory + "/" + fileName + "." + ext, result,processor );
     }
 
 
