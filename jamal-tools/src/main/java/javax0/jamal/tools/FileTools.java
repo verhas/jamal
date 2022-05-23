@@ -111,25 +111,29 @@ public class FileTools {
      */
     public static String getFileContent(final String fileName, final boolean noCache, final Processor processor) throws BadSyntax {
         final String finalFileName;
-        final var res = processor.getFileReader().map(s -> s.read(fileName)).orElse(Processor.IOHookResult.IGNORE);
+        final var res = processor.getFileReader().map(reader -> reader.read(fileName)).orElse(Processor.IOHookResult.IGNORE);
         switch (res.type()) {
             case DONE:
                 return res.get();
             case REDIRECT:
-                return getFileContent(res.get(),noCache,processor);
+                final var content = getFileContent(res.get(), noCache, processor);
+                processor.getFileReader().ifPresent(reader -> reader.set(fileName, content));
+                return content;
             default:
                 finalFileName = fileName;
                 break;
         }
         try {
+            final String content;
             if (finalFileName.startsWith(RESOURCE_PREFIX)) {
-                return ResourceInput.getInput(finalFileName.substring(RESOURCE_PREFIX_LENGTH));
-            }
-            if (finalFileName.startsWith(HTTPS_PREFIX)) {
-                return CachedHttpInput.getInput(finalFileName, noCache).toString();
+                content = ResourceInput.getInput(finalFileName.substring(RESOURCE_PREFIX_LENGTH));
+            } else if (finalFileName.startsWith(HTTPS_PREFIX)) {
+                content = CachedHttpInput.getInput(finalFileName, noCache).toString();
             } else {
-                return FileInput.getInput(finalFileName);
+                content = FileInput.getInput(finalFileName);
             }
+            processor.getFileReader().ifPresent(reader -> reader.set(fileName, content));
+            return content;
         } catch (IOException | UncheckedIOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + finalFileName + "'", e);
         }
@@ -142,7 +146,7 @@ public class FileTools {
             case DONE:
                 return;
             case REDIRECT:
-                writeFileContent(res.get(),content,processor);
+                writeFileContent(res.get(), content, processor);
                 return;
             default:
                 finalFileName = fileName;

@@ -23,11 +23,20 @@ public class TestIOHooks {
                         "dd/f3", "{@include ../f2}"
                 ));
 
+        final Map<String,String> written = new HashMap<>();
+        @Override
+        public void set(final String fileName, final String content){
+            written.put(fileName,content);
+        }
+
         @Override
         public javax0.jamal.api.Processor.IOHookResult read(final String fileName) {
             if (fileName.equals("f1")) {
                 return new javax0.jamal.api.Processor.IOHookResultRedirect("f0");
             }
+            // we have to do it, no call to
+            // 'set()' when the reader was reading it in
+            written.put(fileName,mockFileSystem.get(fileName));
             return new javax0.jamal.api.Processor.IOHookResultDone(mockFileSystem.get(fileName));
         }
 
@@ -64,5 +73,6 @@ public class TestIOHooks {
         final var s = processor.process("{@use javax0.jamal.test.examples.TestIOHooks.Write}{@include dd/f3}{@write/yayy/this is what we will write}");
         Assertions.assertEquals("file 1", s);
         Assertions.assertEquals("this is what we will write",mockIO.get("SNAFU"));
+        Assertions.assertEquals(4, mockIO.written.size());
     }
 }
