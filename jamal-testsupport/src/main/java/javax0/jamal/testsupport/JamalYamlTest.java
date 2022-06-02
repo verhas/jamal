@@ -74,7 +74,7 @@ public class JamalYamlTest {
         if (dynamicTests.size() > 0) {
             return dynamicTests;
         }
-        final StringBuffer sb = readFileContent(testFile, is, dynamicTests);
+        final StringBuilder sb = readFileContent(testFile, is, dynamicTests);
         if (dynamicTests.size() > 0) {
             return dynamicTests;
         }
@@ -122,7 +122,7 @@ public class JamalYamlTest {
         return null;
     }
 
-    private String process(String testFile, StringBuffer sb, JamalTests<DynamicNode> dynamicTests) {
+    private String process(String testFile, StringBuilder sb, JamalTests<DynamicNode> dynamicTests) {
         final var processor = new Processor("{%", "%}");
         final String processed;
         try {
@@ -134,8 +134,8 @@ public class JamalYamlTest {
         return null;
     }
 
-    private StringBuffer readFileContent(String testFile, InputStream is, JamalTests<DynamicNode> dynamicTests) {
-        final var sb = new StringBuffer();
+    private StringBuilder readFileContent(String testFile, InputStream is, JamalTests<DynamicNode> dynamicTests) {
+        final var sb = new StringBuilder();
         try (InputStreamReader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
              BufferedReader reader = new BufferedReader(isReader)) {
             String str;

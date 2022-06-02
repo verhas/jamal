@@ -2,5 +2,5 @@ bear
 zebra
 snake
 dog
-cat)
+kitty
 donkey

@@ -110,7 +110,7 @@ When the first two characters of the document are `{@`, then the macro opening a
 It is what the core built-in macro `import` also does.
 
 === Configuration
-{%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=94ea1438%}
+{%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=225ec816.402554d9%}
 You can configure the extension using the Jamal built-in configuration mechanism, which uses
 
 * environment variables,
@@ -138,11 +138,13 @@ The default value is `false`, meaning no logging by default.
 The external command to be executed can be configured using the next, `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` configuration.
 Note that starting an external process may need significant resource and may significantly slow down the rendering.
 * `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` can specify the command to execute when the preprocessing is done using an external process.
+* `ASCIIDOC_EXTENSION_NO_DEPENDENCIES` can be `true` or `false` defining whether the extension should consider the included files change when caching.
+The option is `false` by default, which means that the caching examines all the included, imported and other files that were used during the processing.
 
 Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file.
 
 === Options
-{%@snip:check id=OPTIONS hash=c19887a9%}\
+{%@snip:check id=OPTIONS hash=10800ea7.439a5528.98ca9c47%}\
 
 You can alter the auxiliary functions of the extension using options.
 You can place these options into the document's first line into a comment.
@@ -204,6 +206,20 @@ Feel free to delete the log file.
 
 In some cases you may need to execute the rendering using an external process.
 This option instructs the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+
+==== noDependencies
+
+It defines that the preprocessor should not consider the included, imported or any other way used files when deciding about the cached result of the rendering.
+
+The IntelliJ Asciidoctor plugin invokes the rendering and the preprocessor in it many times, even when the documentum has not changed.
+To ease the burden on the processor the Jamal preprocessor keeps the last execution's result in memory.
+When there was no change in any of the files that the processing used then the canned result is returned.
+When this option is used then only the edited file is consulted and the other files included, imported or any other way used are not considered.
+It means that the file on the screen may not update when one of the included files change.
+In that case you have to change the edited file, for example inserting and deleting a space.
+
+This option may be needed when the rendered file reads a lot of other files, using snippets, includes and imports.
+This option saves some CPU time when these files do not change.
 
 == Modules
 

@@ -15,16 +15,12 @@ import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -50,19 +46,6 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     private static int runCounter = 0;
 
     /**
-     * A instance of this class holds the cached value of the last run
-     */
-    private static class Cache {
-        final String md5;
-        final List<String> newLines;
-
-        private Cache(final String md5, final List<String> newLines) {
-            this.md5 = md5;
-            this.newLines = newLines;
-        }
-    }
-
-    /**
      * This is the reference that holds the last run.
      * <p>
      * The ASCIIDOCTOR plugin invokes the rendering many times (two or three sometimes) even, when the source has not
@@ -73,7 +56,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * execution. If the MD5 signature of the input is the same as the last execution then we just return whatever
      * the return value was during the last execution. There is no reason to store more than one item.
      */
-    private static final AtomicReference<Cache> cache = new AtomicReference<>(new Cache(null, null));
+    private static final AtomicReference<ProcessingCache> cache = new AtomicReference<>(new ProcessingCache(null, null, null));
 
     @Override
     public void process(Document document, PreprocessorReader reader) {
@@ -91,6 +74,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         // by default, we do not write log file
         boolean log = Configuration.INSTANCE.log;
         boolean external = Configuration.INSTANCE.external;
+        boolean noDependencies = Configuration.INSTANCE.noDependencies;
         if (matcher.find()) {
             final var options = List.of(matcher.group(1).split("\\s+"));
             // snippet OPTIONS
@@ -107,32 +91,30 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             if (options.contains("external")) {
                 external = true;
             }
+            if (options.contains("noDependencies")) {
+                noDependencies = true;
+            }
             // end snippet
         }
         final var outputFileName = fileName.substring(0, fileName.length() - 4);
         logInfo(log, outputFileName, "started", runCounter, startTime);
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
         final var text = String.join("\n", lines);
-        String md5;
-        try {
-            final var digester = MessageDigest.getInstance("MD5");
-            digester.update(text.getBytes(StandardCharsets.UTF_8));
-            md5 = Base64.getEncoder().encodeToString(digester.digest());
-        } catch (NoSuchAlgorithmException e) {
-            // should not happen
-            md5 = null;
-        }
+        final String md5 = Md5Calculator.md5(text);
         logInfo(log, outputFileName, "md5 " + md5, runCounter, LocalDateTime.now());
         final var myCache = cache.get();
+        final var cachingFileReader = new CachingFileReader(noDependencies);
         final List<String> newLines;
-        if (myCache.md5 != null && myCache.md5.equals(md5)) {
+        if (myCache.isTheSame(md5)) {
             newLines = myCache.newLines;
+            cachingFileReader.readFiles.putAll(myCache.readFiles);
             logInfo(log, outputFileName, "restored", runCounter, LocalDateTime.now());
         } else {
             if (external) {
                 newLines = JamalExecutor.execute(fileName, lines);
             } else {
                 final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
+                processor.setFileReader(cachingFileReader);
                 final var input = Input.makeInput(text, new Position(fileName, 0, 0));
                 final var r = process(processor, input);
                 newLines = postProcess(lines, r);
@@ -148,9 +130,12 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             } catch (Exception e) {
                 e.printStackTrace(); // there is not much we can do here
             }
-            logInfo(log, outputFileName, "saved", runCounter, LocalDateTime.now());
+            if (log) {
+                logInfo(outputFileName, "saved", runCounter, LocalDateTime.now());
+                logInfo(outputFileName, "dependencies\n" + cachingFileReader.list(), runCounter, LocalDateTime.now());
+            }
         }
-        cache.set(new Cache(md5, newLines));
+        cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
         reader.restoreLines(newLines);
     }
 
@@ -196,12 +181,22 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         return r;
     }
 
+    private void logInfo(final String outputFileName, final String message, final int instance, final LocalDateTime when) {
+        logInfo(true, outputFileName, message, instance, when);
+    }
+
     private void logInfo(final boolean log, final String outputFileName, final String message, final int instance, final LocalDateTime when) {
         if (log) {
             try {
-                Files.writeString(Paths.get(outputFileName + ".log"), "" + when + " [" + instance + ":" + Thread.currentThread().getId()
-                        + ":" + String.format("%08X", this.hashCode())
-                        + "]" + Thread.currentThread().getName() + " " + message + "\n", StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+                Files.writeString(Paths.get(outputFileName + ".log"),
+                        String.format("%s [%d:%d:%s:%08X] %s\n",
+                                when,
+                                instance,
+                                Thread.currentThread().getId(),
+                                Thread.currentThread().getName(),
+                                this.hashCode(),
+                                message),
+                        StandardOpenOption.APPEND, StandardOpenOption.CREATE);
             } catch (Exception e) {
                 e.printStackTrace(); // there is not much we can do here
             }
