@@ -54,6 +54,8 @@ This will add the following dependencies to your project:
 
 * `jamal-asciidoc`
 
+* `jamal-mock`
+
 * `jamal-maven-plugin`
 
 * `jamal-maven-extension`

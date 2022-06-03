@@ -277,6 +277,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     @Override
+    public Optional<Macro> getMacroLocal(String alias) {
+        return Optional.ofNullable(writableScope().macros.get(alias));
+    }
+
+    @Override
     public void global(final Identified macro) {
        global(macro,macro.getId());
     }

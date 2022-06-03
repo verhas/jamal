@@ -1,0 +1,22 @@
+{#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{project jamal mock}
+    {GAV ::jamal-mock:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description mock module for Jamal}
+
+    {@define openForTests={opens/mock/mock}}
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+      {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
+      {dependency |{GROUPID}|jamal-snippet|{VERSION}|test}
+      {dependency|{GROUPID}|jamal-jamal||test}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
+    }
+
+{end project}

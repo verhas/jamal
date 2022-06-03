@@ -1,0 +1,39 @@
+"Simple Mock":
+  Input: "{@mock (macro=w)this is w}{@w anything here}"
+  Output: "this is w"
+
+"Mock with multiple result":
+  Input: "{@mock (macro=w)1}{@mock (macro=w)2}{@w}{@w}"
+  Output: "12"
+
+"Mock Hiding Existing Macro":
+  Input: "{@mock (macro=comment)this is w}{@comment anything here}"
+  Output: "this is w"
+
+"Multiple mocks":
+  Input: "{@mock (macro=w)1}{@mock (macro=h)2}{@w}{@h}"
+  Output: "12"
+
+"Multiple mocks multiple results":
+  Input: "{@mock (macro=w)1}{@mock (macro=w)3}{@mock (macro=h)2}{@mock (macro=h)4}{@w}{@h}{@w}{@h}"
+  Output: "1234"
+
+"Mock exhausting":
+  Input: "{@mock (macro=w)this is w}{@w}{@w}"
+  Throws: Mock w has exhausted after 1 uses.*
+
+"Can't add new response after an infinite response":
+  Input: "{@mock (macro=w infinite)}{@mock (macro=w)}"
+  Throws: You cannot add a new mock response after an infinite one.*
+
+"Infinite mock is not exhausting":
+  Input: "{@mock (macro=w infinite)1}{@w}{@w}"
+  Output: "11"
+
+"Repeated mock":
+  Input: "{@mock (macro=w repeat=2)1}{@w}{@w}{@mock (macro=w repeat=2)2}{@w}"
+  Output: "112"
+
+"Selective mock with patterns":
+  Input: "{@mock (macro=w infinite when=\".*bee.*\")bee}{@mock (macro=w repeat=2 when=\".*apple.*\")apple}{@w this is an apple} {@w this is a bee}"
+  Output: "apple bee"

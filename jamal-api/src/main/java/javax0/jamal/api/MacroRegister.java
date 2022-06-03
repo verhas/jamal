@@ -20,6 +20,19 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     Optional<Macro> getMacro(String id);
 
     /**
+     * Get a macro from the currently active local (writable) scope. That way a macro can define another macro if it is
+     * not defined yet in the current scope or use the existing one in case the macro is already defined in the
+     * current scope.
+     *
+     * @param id the identifier of the macro
+     * @return the optional macro. It will return empty in case there is a macro defined with the given name, but not in
+     * the currently writable level (higher level or the one level below).
+     */
+    default Optional<Macro> getMacroLocal(String id){
+        return Optional.empty();
+    }
+
+    /**
      * Get a user defined macro based on the id of the macro.
      *
      * @param id  the identifier (name) of the macro

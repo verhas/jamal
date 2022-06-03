@@ -24,6 +24,7 @@
         <module>jamal-assertions</module>
         <module>jamal-word</module>
         <module>jamal-asciidoc</module>
+        <module>jamal-mock</module>
         <module>jamal-maven-plugin</module>
         <module>jamal-maven-extension</module>
         <module>jamal-cmd</module>
@@ -233,6 +234,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-asciidoc</artifactId>
+                <version>1.12.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-mock</artifactId>
                 <version>1.12.3-SNAPSHOT</version>
             </dependency>
             <dependency>

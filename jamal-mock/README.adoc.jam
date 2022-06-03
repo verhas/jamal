@@ -1,0 +1,99 @@
+= Jamal Mock module
+
+{%@import res:jamal.jim%}\
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}\
+
+Using this module, you can mock built-in macros.
+The reason to mock a built-in macro is mainly for testing purposes.
+When you develop a macro package the built-in macros collecting information from different sources
+
+* may not be available at all in the test environment
+
+* may function differently,
+
+* may be expensive to set up an environment where these built-in macros function as needed for the test.
+
+The primary goal developing this module was to provide mocking possibility for the Java::Geci macros.
+That way you can develop the code generator templates in IntelliJ using the Asciidoc plugin.
+When the built-in macros of Java::Geci are mocked you can see the generated code in the WYSIWYG editor.
+
+To use this module, you have to add the dependency to your Maven project, as:
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-mock</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+== Macros in this library
+{%@define EXAMPLE($Y,$X)=
+
+[title=$Y]
+====
+{%sample/$X%}
+outputs
+{%output%}
+====
+%}
+
+
+=== `mock`
+
+Mock can be used to create a mock for a built-in macro.
+The actual macro may or may not exist prior.
+It will be created by the `mock` macro and defined in the current scope overriding the existing macro or shadowing any defined on higher scopes.
+Any built-in macro can be mocked, even core macros like `if`, `import`, `comment`.
+
+The reason to mick a built-in macro is to test some macro code in a test environment where the original macro is not available or does not have its environment to function properly.
+
+The use of the macro is simple.
+You have to define the name of the macro you want to mock and the output.
+{%EXAMPLE/simple mock/
+{@mock (macro=w)ajaja}{@w}
+%}
+
+
+The mocks are only available on the current scope.
+
+{%EXAMPLE/mock locality/
+{#ident {@mock (macro=comment)comment is overridden}{@comment}}{@comment is not overridden here}
+%}
+
+You can also define multiple responses for a single mock.
+These responses will be used in the other they are defined.
+
+{%EXAMPLE/repeated mock/
+{@mock (macro=w)1}{@mock (macro=w)2}{@w}{@w}
+%}
+
+If you use a mock more times it has defined values it will result syntax error.
+
+{%EXAMPLE/mock exhausted/
+{@try! {@mock (macro=z)1}{@z}{@z}}
+%}
+
+If you want to use a mock multiple times resulting the same value you can use the `repeat` option.
+
+{%EXAMPLE/mock repeated/
+{@mock (macro=w repeat=2)1}{@w}{@w}
+%}
+
+In addition to the repeat option it is also possible to use the `infinite` option meaning: repeat as many times as needed.
+
+{%EXAMPLE/mock infinite/
+{@mock (macro=w infinite)1}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}
+%}
+
+You can also define multiple mocks for the same macro and give a regular expression to each.
+When the regular expression matches the input of the macro the one will be used.
+If there are more than one mock that would match the input then the one first defined and not exhausted yet are used.
+
+{%EXAMPLE/mock infinite/
+{@mock (macro=q when=".*bee.*")bee}{@mock (macro=q when=".*apple.*")apple}{@q this is an apple and} {@q there is a bee}
+%}
+

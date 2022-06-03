@@ -2,6 +2,35 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
+{%RELEASE/1.12.3-SNAPSHOT%}
+
+* `file` macro in snippet package now has formatting placeholders `bareNaked` and `nakedN` as well as `extensions` and `extensionN` with the possible `N` values being 1,2,3,4, and 5.
+
+* the macro `counter` can save its actual value using `->` .
+This is a shortcut to a series of macros.
+
+* The asciidoctor preprocessor caches the result of the last run and executes Jamal only when the  input changes.
+It also takes the included and imported files into account.
+
+* a bug in the core of the processing engine that caused in some rare cases over indexing exception
+
+* the environment variable `JAMAL_DEV_PATH` now can point to a file instead of containing the replacements directly
+
+* Macros reading and writing a file can go through a hook that the embedding application can provide.
+It is used by the asciidoctor implementation to list all the files read during the processing.
+
+* Jamal mock is implemented
+
+{%RELEASE/1.12.2%}
+
+* Doclet is fixed. It can use all modules.
+
+* `snip` macro itself can transform, there is no need for an extra `snip:transform` macro around it
+
+{%RELEASE/1.12.1%}
+
+* When the macro `for` was used with the option `evalist` the list could not include file using a relative file name because the evaluation was done by the processor on an input that had no file reference. This is a bugfix release.
+
 {%RELEASE/1.12.0%}
 
 * It is possible to include a Word doc file into another word doc file using the `docx:include` macro.
