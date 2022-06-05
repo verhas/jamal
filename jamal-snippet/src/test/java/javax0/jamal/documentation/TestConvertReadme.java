@@ -47,6 +47,11 @@ public class TestConvertReadme {
     }
 
     @Test
+    void convertVideo() throws Exception {
+        DocumentConverter.convert("../VIDEO.adoc.jam");
+    }
+
+    @Test
     void convertAsciiDocReadme() throws Exception {
         DocumentConverter.convert("../jamal-asciidoc/README.adoc.jam");
     }

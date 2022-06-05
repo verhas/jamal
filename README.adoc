@@ -151,6 +151,7 @@ image::jamaldebugger2559x1089.png[]
 * <<./jamal-io/README.adoc#,Io Module README>>, How to read and write external files from Jamal macros
 * <<./jamal-jamal/README.adoc#,Jamal Jamal Module README>>, How to use Jamal inside Jamal as an embedded language
 * <<./jamal-markdown/README.adoc#,Jamal Markdown Module README>>, Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
+* <<./jamal-mmock/README.adoc#,Jamal Mock Module README>>, Mock built-in macros to test macros that are to run in a specific environment
 * <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
 * <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
 * <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files

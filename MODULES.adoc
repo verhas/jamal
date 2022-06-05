@@ -94,6 +94,10 @@ With this you can use the Maven build tool controlled by a `pom.jam` file, which
 == https://github.com/verhas/jamal/blob/master/jamal-maven-plugin/README.adoc[MAVEN-PLUGIN] ^_embed_^
 This module implements a maven plugin, so you can start Jamal processing from inside a build process.
 
+== https://github.com/verhas/jamal/blob/master/jamal-mock/README.adoc[MOCK] ^_macro_^
+This module implements the macro `mock` to mock some built-in macros in a test environment where the given macro may not be available or behaves differently.
+Using `mock` you can create tests for your macro packages.
+
 == https://github.com/verhas/jamal/blob/master/jamal-plantuml/README.adoc[PLANTUML] ^_macro_^
 This module implements a macro that invokes PlantUML, generates the graphical file from the source code that you can reference as an image from your documentation.
 

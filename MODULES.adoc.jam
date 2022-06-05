@@ -94,6 +94,10 @@ With this you can use the Maven build tool controlled by a `pom.jam` file, which
 {chapter :maven-plugin:embed}
 This module implements a maven plugin, so you can start Jamal processing from inside a build process.
 
+{chapter :mock:macro}
+This module implements the macro `mock` to mock some built-in macros in a test environment where the given macro may not be available or behaves differently.
+Using `mock` you can create tests for your macro packages.
+
 {chapter :plantuml:macro}
 This module implements a macro that invokes PlantUML, generates the graphical file from the source code that you can reference as an image from your documentation.
 
