@@ -1,0 +1,45 @@
+== Demo file
+
+This is a simple demonstration file that shows how you can use mocks when testing Java::Geci macros.
+
+[source]
+----
+{%@mock (macro=import when=".*geci.jim")%}
+
+{%@define simpleName($class)={%#replace (regex)|$class|.*\.(.*)|$1%}%}\
+{%@define argsep(:argsep)={%@define $argsep=:argsep%}%}\
+{%@define exsep(:exsep)={%@define $exsep=:exsep%}%}\
+{%@define setter(name)=set{%`#cap name%}%}\
+{%@define getter(name,type)={%`#if/{%#equals/{%#replace type B b%}/boolean%}/is/get%}{%`@cap name%}%}\
+{%@define isPrivate(:x)={%@contains private :x%}%}\
+{%@define isProtected(:x)={%@contains protected :x%}%}\
+{%@define isPublic(:x)={%@contains public :x%}%}\
+{%@define isFinal(:x)={%@contains final :x%}%}\
+{%@define isStatic(:x)={%@contains static :x%}%}\
+{%@define isSynchronized(:x)={%@contains synchronized :x%}%}\
+{%@define isStrict(:x)={%@contains strictfp :x%}%}\
+{%@define isAbstract(:x)={%@contains abstract :x%}%}\
+{%@define isVolatile(:x)={%@contains volatile :x%}%}\
+{%@define isTransient(:x)={%@contains transient :x%}%}\
+{%@define beginCode(:x)=//<editor-fold desc=":x">%}\
+{%@define endCode()=//</editor-fold>%}\
+
+{%@import unittestproxy.jim%}\
+{%@mock (macro=methods)pm1|String|a:b|,pm2|int|a21:a22|e2,m3|t3|a31:a32:a33:a34|%}\
+{%@mock (macro=methods)m1|t1|a11:a12|e1,m2|t2|a21:a22|e2,m3|t3|a31:a32:a33:a34|%}\
+{%@mock (macro=fields)f1|t1,f2|t2%}\
+{%@mock (macro=fields)f1|t1,f2|t2%}\
+{%@mock (macro=fields)f1|t1,f2|t2%}\
+{%@mock (macro=fields)f1|t1,f2|t2%}\
+{%@mock (macro=argList )int a, int b%}\
+{%@mock (macro=argList infinite) int a1, int a2%}\
+{%!@for F in (F1,F2,F1,F2,F1,F2,F1,F2)={%@mock (macro=cap)F%}%}\
+{%@mock (macro=equals) true%}\
+{%@mock (macro=equals) fasle%}\
+{%@mock (macro=equals) true%}\
+{%@mock (macro=equals) false%}\
+{%@mock (macro=classList infinite),int.class,String.class%}\
+{%@mock (macro=callArgs infinite) int a1, int a2%}\
+{%@mock (macro=ifNotVoid infinite) return %}\
+{%proxy com.javax0.jamal.TestedClass%}\
+----

@@ -1,7 +1,7 @@
 = Jamal Mock module
 
 {%@import res:jamal.jim%}\
-{%#counter:define id=macroChapter {%@define format=$roman. %}%}\
+{%@snip:collect from="./src/main/java"%}
 
 Using this module, you can mock built-in macros.
 The reason to mock a built-in macro is mainly for testing purposes.
@@ -57,7 +57,7 @@ You have to define the name of the macro you want to mock and the output.
 {@mock (macro=w)ajaja}{@w}
 %}
 
-
+You can override existing macros, even the core built-in ones.
 The mocks are only available on the current scope.
 
 {%EXAMPLE/mock locality/
@@ -68,7 +68,7 @@ You can also define multiple responses for a single mock.
 These responses will be used in the other they are defined.
 
 {%EXAMPLE/repeated mock/
-{@mock (macro=w)1}{@mock (macro=w)2}{@w}{@w}
+{@mock (macro=ww)1}{@mock (macro=ww)2}{@ww}{@ww}
 %}
 
 If you use a mock more times it has defined values it will result syntax error.
@@ -77,16 +77,24 @@ If you use a mock more times it has defined values it will result syntax error.
 {@try! {@mock (macro=z)1}{@z}{@z}}
 %}
 
+Exhausted mock shadowing a defined built-in macro will not throw an exception though.
+It will simply use the original macro.
+{%EXAMPLE/mock exhausted/
+{@mock (macro=ident)exhausted}\
+{@mock (macro=ident)macros}\
+{@ident whatever is here, mocked} {@ident second time also mocked} {@ident are not mocked anymore}
+%}
+
 If you want to use a mock multiple times resulting the same value you can use the `repeat` option.
 
 {%EXAMPLE/mock repeated/
-{@mock (macro=w repeat=2)1}{@w}{@w}
+{@mock (macro=w repeat=2)A}{@w}{@w}
 %}
 
 In addition to the repeat option it is also possible to use the `infinite` option meaning: repeat as many times as needed.
 
 {%EXAMPLE/mock infinite/
-{@mock (macro=w infinite)1}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}
+{@mock (macro=w infinite)X}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}
 %}
 
 You can also define multiple mocks for the same macro and give a regular expression to each.
@@ -94,6 +102,44 @@ When the regular expression matches the input of the macro the one will be used.
 If there are more than one mock that would match the input then the one first defined and not exhausted yet are used.
 
 {%EXAMPLE/mock infinite/
-{@mock (macro=q when=".*bee.*")bee}{@mock (macro=q when=".*apple.*")apple}{@q this is an apple and} {@q there is a bee}
+{@mock (macro=q when=".*bee.*")bee}{@comment defined first, but used second}
+{@mock (macro=q when=".*apple.*")apple}
+{@q this is an apple and}
+{@q there is a bee}
 %}
+
+In the next section we will describe all these options in details (reference) and also the formal argument how a mock response is selected.
+
+==== Options of `mock`
+
+{%@snip (
+replace="/.*?\"(.*?)\",\\s\"(.*?)\",\\s\"(.*?)\".*\\|/* `$1` (aliases `$2`, `$3`)"
+replace="/.*?\"(.*?)\",\\s\"(.*?)\".*\\|/* `$1` (alias `$2`)"
+replace="/.*?\"(.*?)\".*\\|/* `$1`"
+replace="/.*\\|/"
+) mock_options
+%}
+
+When the mock macro is used the input of the macro least the options between the `(` and `)` characters will be used as a response.
+A new use of the `mock` macro for the same `macro` name will add a new response to the mock.
+The responses are used in the order they are defined.
+
+Every mock response has a counter and a regular expression selector.
+
+* The counter starts from one unless the option `repeat` specifies a different number or the option `infinite` is used.
+In case the mock response is set to `infinite` the counter starts from "infinite".
+
+* The regular expression selector can be defined using the option `when`.
+The response will only be used when the input of the macro mocked matches the regular expression.
+The regular expression should match the whole input and not only part of it.
+If you want to match only a part of it, you should use a regular expression that starts and ends with the `.*` pattern fragment.
+
++
+The default pattern matches every use.
+
+When a mock response is needed the selection algorithm starts from the first response defined and progresses towards the last.
+It will select the response whose regular expression selector matches the input of the macro and the counter has not reached zero.
+When a response is selected the counter is decreased.
+
+It is an error specifying a new response for a macro following an infinitely repeatable response without selector.
 

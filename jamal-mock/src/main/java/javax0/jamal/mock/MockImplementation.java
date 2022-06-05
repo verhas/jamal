@@ -19,8 +19,9 @@ public class MockImplementation implements Macro {
     private final String id;
     private final List<Response> responses = new ArrayList<>();
     private int counter = 0;
+    private final Macro shadowedMacro;
 
-    private class Response {
+    private static class Response {
         final String text;
         final boolean inputCheck;
         final Pattern inputPattern;
@@ -59,8 +60,9 @@ public class MockImplementation implements Macro {
         return Optional.empty();
     }
 
-    public MockImplementation(final String id) {
+    public MockImplementation(final String id, final Macro shadowedMacro) {
         this.id = id;
+        this.shadowedMacro = shadowedMacro;
     }
 
     void response(final String text, final boolean inputCheck, final Pattern inputPattern, final boolean infinite, final int repeat) throws BadSyntax {
@@ -74,7 +76,10 @@ public class MockImplementation implements Macro {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var result = get(in);
         if (result.isEmpty()) {
-            throw new BadSyntax(String.format("Mock %s has exhausted after %d uses.", id, counter));
+            if( shadowedMacro == null ) {
+                throw new BadSyntax(String.format("Mock %s has exhausted after %d uses.", id, counter));
+            }
+            return shadowedMacro.evaluate(in,processor);
         }
         counter++;
         return result.get();

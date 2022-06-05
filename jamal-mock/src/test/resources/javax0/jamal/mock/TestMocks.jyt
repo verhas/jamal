@@ -26,6 +26,14 @@
   Input: "{@mock (macro=w infinite)}{@mock (macro=w)}"
   Throws: You cannot add a new mock response after an infinite one.*
 
+"Can't infinite and repeat":
+  Input: "{@mock (macro=w repeat=3 infinite)}{@mock (macro=w)}"
+  Throws: You cannot use options 'repeat' and 'infinite' at the same time.*
+
+"Can't repeat negative":
+  Input: "{@mock (macro=w repeat=-3)}{@mock (macro=w)}"
+  Throws: The option 'repeat' should be non-negative.*
+
 "Infinite mock is not exhausting":
   Input: "{@mock (macro=w infinite)1}{@w}{@w}"
   Output: "11"
@@ -37,3 +45,7 @@
 "Selective mock with patterns":
   Input: "{@mock (macro=w infinite when=\".*bee.*\")bee}{@mock (macro=w repeat=2 when=\".*apple.*\")apple}{@w this is an apple} {@w this is a bee}"
   Output: "apple bee"
+
+"Shadowed macro uses the shadow when exhausted":
+  Input: "{@mock (macro=ident infinite when=\".*bee.*\")bee}{@mock (macro=ident repeat=2 when=\".*apple.*\")apple}{@ident this is an apple} {@ident this is a bee} {@ident is a tree}"
+  Output: "apple bee is a tree"

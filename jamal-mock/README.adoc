@@ -1,6 +1,7 @@
 = Jamal Mock module
 
 
+
 Using this module, you can mock built-in macros.
 The reason to mock a built-in macro is mainly for testing purposes.
 When you develop a macro package the built-in macros collecting information from different sources
@@ -58,7 +59,7 @@ ajaja
 ====
 
 
-
+You can override existing macros, even the core built-in ones.
 The mocks are only available on the current scope.
 
 
@@ -87,7 +88,7 @@ These responses will be used in the other they are defined.
 ====
 [source]
 ----
-{@mock (macro=w)1}{@mock (macro=w)2}{@w}{@w}
+{@mock (macro=ww)1}{@mock (macro=ww)2}{@ww}{@ww}
 ----
 outputs
 [source]
@@ -117,6 +118,27 @@ Mock z has exhausted after 1 uses.
 ====
 
 
+Exhausted mock shadowing a defined built-in macro will not throw an exception though.
+It will simply use the original macro.
+
+
+[title=mock exhausted]
+====
+[source]
+----
+{@mock (macro=ident)exhausted}\
+{@mock (macro=ident)macros}\
+{@ident whatever is here, mocked} {@ident second time also mocked} {@ident are not mocked anymore}
+----
+outputs
+[source]
+----
+exhausted macros are not mocked anymore
+----
+
+====
+
+
 If you want to use a mock multiple times resulting the same value you can use the `repeat` option.
 
 
@@ -125,12 +147,12 @@ If you want to use a mock multiple times resulting the same value you can use th
 ====
 [source]
 ----
-{@mock (macro=w repeat=2)1}{@w}{@w}
+{@mock (macro=w repeat=2)A}{@w}{@w}
 ----
 outputs
 [source]
 ----
-11
+AA
 ----
 
 ====
@@ -144,12 +166,12 @@ In addition to the repeat option it is also possible to use the `infinite` optio
 ====
 [source]
 ----
-{@mock (macro=w infinite)1}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}
+{@mock (macro=w infinite)X}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}
 ----
 outputs
 [source]
 ----
-111111111
+XXXXXXXXX
 ----
 
 ====
@@ -165,12 +187,58 @@ If there are more than one mock that would match the input then the one first de
 ====
 [source]
 ----
-{@mock (macro=q when=".*bee.*")bee}{@mock (macro=q when=".*apple.*")apple}{@q this is an apple and} {@q there is a bee}
+{@mock (macro=q when=".*bee.*")bee}{@comment defined first, but used second}
+{@mock (macro=q when=".*apple.*")apple}
+{@q this is an apple and}
+{@q there is a bee}
 ----
 outputs
 [source]
 ----
-apple bee
+apple
+bee
 ----
 
 ====
+
+
+In the next section we will describe all these options in details (reference) and also the formal argument how a mock response is selected.
+
+==== Options of `mock`
+
+* `macro` (alias `id`) the identifier of the macro.
+This option is mandatory and has to define the identifier of the macro to be mocked.
+* `when` regular expression when to apply the mock.
+This option is not mandatory.
+In case it is specified, the mock response will only be used when the input of the macro matches the regular expression specified.
+If the option is missing the mock response will always be matched and used when it gets activated regardless of the input of the macro.
+* `repeat` (alias `times`) how many times the mock can be used.
+Can specify how many times the mock can be used.
+It is an error to use a negative number.
+You can use zero to switch off the mock response in your text temporarily without deleting it.
+* `inf` (aliases `infinite`, `forever`) if the mock be used infinite number of times.
+Can be used to specify that the mock response can be used unlimited number of times.
+
+
+When the mock macro is used the input of the macro least the options between the `(` and `)` characters will be used as a response.
+A new use of the `mock` macro for the same `macro` name will add a new response to the mock.
+The responses are used in the order they are defined.
+
+Every mock response has a counter and a regular expression selector.
+
+* The counter starts from one unless the option `repeat` specifies a different number or the option `infinite` is used.
+In case the mock response is set to `infinite` the counter starts from "infinite".
+
+* The regular expression selector can be defined using the option `when`.
+The response will only be used when the input of the macro mocked matches the regular expression.
+The regular expression should match the whole input and not only part of it.
+If you want to match only a part of it, you should use a regular expression that starts and ends with the `.*` pattern fragment.
+
++
+The default pattern matches every use.
+
+When a mock response is needed the selection algorithm starts from the first response defined and progresses towards the last.
+It will select the response whose regular expression selector matches the input of the macro and the counter has not reached zero.
+When a response is selected the counter is decreased.
+
+It is an error specifying a new response for a macro following an infinitely repeatable response without selector.

@@ -409,6 +409,7 @@ public class Params {
             if (terminal != null && firstCharIs(input, terminal)) {
                 break;
             }
+            skipSpacesAndEscapedTerminal(input);
             final var id = fetchId(input);
             if (!valid.test(id)) {
                 throw new BadKey(id, "The key '" + id + "' is not used by the macro '" + macroName + "'.");

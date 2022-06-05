@@ -1,0 +1,90 @@
+== Demo file
+
+This is a simple demonstration file that shows how you can use mocks when testing Java::Geci macros.
+
+[source]
+----
+
+
+
+
+    private static class TestedClass {
+        private final com.javax0.jamal.TestedClass sut = new com.javax0.jamal.TestedClass();
+    
+        private String pm1(int a, int b) throws Exceptions {
+            Method m = sut.getClass().getDeclaredMethod("pm1",int.class,String.class);
+            m.setAccessible(true);
+            m.invoke(sut int a1, int a2);
+            }
+    
+        private int pm2( int a1, int a2) throws Exceptions {
+            Method m = sut.getClass().getDeclaredMethod("pm2",int.class,String.class);
+            m.setAccessible(true);
+            m.invoke(sut int a1, int a2);
+            }
+    
+        private t3 m3( int a1, int a2) throws Exceptions {
+            Method m = sut.getClass().getDeclaredMethod("m3",int.class,String.class);
+            m.setAccessible(true);
+            m.invoke(sut int a1, int a2);
+            }
+    
+    
+        private t1 m1( int a1, int a2) throws e1 {
+             return sut.m1( int a1, int a2);
+            }
+    
+        private t2 m2( int a1, int a2) throws e2 {
+             return sut.m2( int a1, int a2);
+            }
+    
+        private t3 m3( int a1, int a2)  {
+             return sut.m3( int a1, int a2);
+            }
+    
+    
+        private void setF1(t1 f1) throws Exception {
+            Field f = sut.getClass().getDeclaredField("f1");
+            f.setAccessible(true);
+            f.set(sut,f1);
+            }
+    
+        private void setF2(t2 f2) throws Exception {
+            Field f = sut.getClass().getDeclaredField("f2");
+            f.setAccessible(true);
+            f.set(sut,f2);
+            }
+    
+    
+        private t1 isF1() throws Exception {
+            Field f = sut.getClass().getDeclaredField("f1");
+            f.setAccessible(true);
+            return (t1)f.get(sut);
+            }
+    
+        private t2 isF2() throws Exception {
+            Field f = sut.getClass().getDeclaredField("f2");
+            f.setAccessible(true);
+            return (t2)f.get(sut);
+            }
+    
+    
+        private void setF1(t1 f1) {
+            sut.f1 = f1;
+            }
+    
+        private void setF2(t2 f2) {
+            sut.f2 = f2;
+            }
+    
+    
+        private t1 isF1() {
+            return sut.f1;
+            }
+    
+        private t2 getF2() {
+            return sut.f2;
+            }
+    
+    }
+----
