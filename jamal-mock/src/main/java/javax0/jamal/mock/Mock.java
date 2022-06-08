@@ -3,6 +3,7 @@ package javax0.jamal.mock;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.MacroRegister;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 
@@ -34,20 +35,47 @@ public class Mock implements Macro {
         if(repeat.isPresent() && repeat.get() < 0 ){
             throw new BadSyntax("The option 'repeat' should be non-negative.");
         }
+        final Pattern inputCheck = when.isPresent() ? Pattern.compile(when.get()) : null;
 
         final var register = processor.getRegister();
-        final var macro = register.getMacroLocal(id.get())
-                .filter(m -> m instanceof MockImplementation).map(m -> (MockImplementation) m);
-        final MockImplementation mock;
-        if (macro.isPresent()) {
-            mock = macro.get();
-        } else {
-            final Optional<Macro> shadowedMacro = register.getMacro(id.get());
-            mock = new MockImplementation(id.get(), shadowedMacro.orElse(null));
-            register.define(mock);
-        }
-        final Pattern inputCheck = when.isPresent() ? Pattern.compile(when.get()) : null;
+        final MockImplementation mock = getMockImplementation(id.get(), register);
         mock.response(in.toString(), when.isPresent(), inputCheck, infinite.is(), repeat.get());
         return "";
+    }
+
+    /**
+     * Get an already existing mock implementation to add the new response to, or create a new one if no prior exists.
+     * If the mock implementation is newly created it will also be registered in the macro register, so that Jamal
+     * will find it by the id when it is used. If the macro shadowed existed and is on the same scope as the mock, then
+     * it will be overwritten by the mock. When the mock exhaust Jamal still invokes the mock implementation and that
+     * code calls the original macro, which is not in the register anymore.
+     *
+     * @param id the identifier of the macro to be mocked
+     * @param register the macro register
+     * @return the already existing mock or a newly created one
+     * @throws BadSyntax if the existing mock cannot be get due to some error
+     */
+    private MockImplementation getMockImplementation(final String id, final MacroRegister register) throws BadSyntax {
+        final var existingMock = getExistingMockIfExists(id, register);
+        final MockImplementation mock;
+        if (existingMock.isPresent()) {
+            mock = existingMock.get();
+        } else {
+            mock = new MockImplementation(id, register.getMacro(id).orElse(null));
+            register.define(mock);
+        } return mock;
+    }
+
+    /**
+     * Get an existing mock implementation or return empty if one with the given id does not exist.
+     *
+     * @param id the identifier of the macro to be mocked and thus the id of the mock.
+     * @param register the macro register where we look for the already existing mock.
+     * @return the mock implementation macro or empty
+     * @throws BadSyntax if the existing mock cannot be get due to some error
+     */
+    private Optional<MockImplementation> getExistingMockIfExists(final String id, final MacroRegister register) throws BadSyntax {
+        return register.getMacroLocal(id)
+                .filter(m -> m instanceof MockImplementation).map(m -> (MockImplementation) m);
     }
 }
