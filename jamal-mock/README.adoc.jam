@@ -49,7 +49,7 @@ The actual macro may or may not exist prior.
 It will be created by the `mock` macro and defined in the current scope overriding the existing macro or shadowing any defined on higher scopes.
 Any built-in macro can be mocked, even core macros like `if`, `import`, `comment`.
 
-The reason to mick a built-in macro is to test some macro code in a test environment where the original macro is not available or does not have its environment to function properly.
+The reason to mock a built-in macro is to test some macro code in a test environment where the original macro is not available or does not have its environment to function properly.
 
 The use of the macro is simple.
 You have to define the name of the macro you want to mock and the output.
@@ -142,4 +142,16 @@ It will select the response whose regular expression selector matches the input 
 When a response is selected the counter is decreased.
 
 It is an error specifying a new response for a macro following an infinitely repeatable response without selector.
+
+== Mocking mock
+
+As an extreme, though not practical use you can mock the macro `mock` itself.
+The example below mocks the macro `mock`, then it is used, therefore the macro `ident` is not mocked.
+After that the macro `comment` is mocked again, as the mocking of `mock` is exhausted.
+
+{%EXAMPLE/Mocking `mock`/
+{@mock (macro=mock)mock the mock once}{@mock (macro=ident)}{@mock (macro=comment)this is a comment}
+{#ident not mocked}
+{#comment mocked, does not matter what I write here}
+%}
 

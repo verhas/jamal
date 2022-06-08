@@ -29,6 +29,14 @@ link:https://youtu.be/b6uBseiZlQg[Watch It on Youtube] (2022-05-19)
 How to install the latest release of Jamal to be used with AsciiDoctor IntelliJ plugin.
 
 
+=== Adding version information to the README file of JUnit Pioneer
+
+
+link:https://youtu.be/bMCsUYRp-Ts[Watch It on Youtube] (2022-06-06) 
+
+How to install the latest release of Jamal to be used with AsciiDoctor IntelliJ plugin.
+
+
 === Jamal Basics
 
 PLANNED 
