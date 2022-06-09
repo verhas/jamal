@@ -29,11 +29,15 @@ public class Mock implements Macro {
         // end snippet
         Params.using(processor).from(this).between("()").keys(id, when, repeat, infinite).parse(in);
 
-        if(repeat.isPresent() && infinite.isPresent()){
+        if (repeat.isPresent() && infinite.isPresent()) {
             throw new BadSyntax("You cannot use options 'repeat' and 'infinite' at the same time.");
         }
-        if(repeat.isPresent() && repeat.get() < 0 ){
-            throw new BadSyntax("The option 'repeat' should be non-negative.");
+        if (repeat.isPresent() && repeat.get() <= 0) {
+            if (repeat.get() < 0) {
+                throw new BadSyntax("The option 'repeat' should be non-negative.");
+            } else {
+                processor.logger().log(System.Logger.Level.WARNING, in.getPosition(), "Repeat is zero.");
+            }
         }
         final Pattern inputCheck = when.isPresent() ? Pattern.compile(when.get()) : null;
 
@@ -50,7 +54,7 @@ public class Mock implements Macro {
      * it will be overwritten by the mock. When the mock exhaust Jamal still invokes the mock implementation and that
      * code calls the original macro, which is not in the register anymore.
      *
-     * @param id the identifier of the macro to be mocked
+     * @param id       the identifier of the macro to be mocked
      * @param register the macro register
      * @return the already existing mock or a newly created one
      * @throws BadSyntax if the existing mock cannot be get due to some error
@@ -63,13 +67,14 @@ public class Mock implements Macro {
         } else {
             mock = new MockImplementation(id, register.getMacro(id).orElse(null));
             register.define(mock);
-        } return mock;
+        }
+        return mock;
     }
 
     /**
      * Get an existing mock implementation or return empty if one with the given id does not exist.
      *
-     * @param id the identifier of the macro to be mocked and thus the id of the mock.
+     * @param id       the identifier of the macro to be mocked and thus the id of the mock.
      * @param register the macro register where we look for the already existing mock.
      * @return the mock implementation macro or empty
      * @throws BadSyntax if the existing mock cannot be get due to some error

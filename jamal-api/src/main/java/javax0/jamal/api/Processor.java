@@ -1,6 +1,5 @@
 package javax0.jamal.api;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -171,6 +170,29 @@ public interface Processor extends AutoCloseable {
     Context getContext();
 
     /**
+     * A very simple functional interface that the embedding applications can implement, provide to accommodate log
+     * messages from the Jama processing.
+     */
+    @FunctionalInterface
+    interface Logger {
+        void log(final System.Logger.Level level, final Position pos, final String format, final String... params);
+    }
+
+    /**
+     *
+     * @return the logger implementation that was set by the embedding application. There is no method to set the logger
+     * object, just as there is no metjod to set the context. Both of these objects are application specific and as the
+     * embedding applications are using a specific implementation of this interface they will use the one that provides
+     * the possibility to set the logger (context, {@link #getContext}).
+     *
+     * The default implementation returns a null logger that just does not log.
+     */
+    default Logger logger() {
+        return (level, pos, format, params) -> {
+        };
+    }
+
+    /**
      * IOHookResult is the type of the object returned by an IO Hook object {@link FileReader#read(String)} or
      * {@link FileWriter#write(String, String)} method.
      */
@@ -238,6 +260,7 @@ public interface Processor extends AutoCloseable {
         public IOHookResultDone(final String content) {
             super(Type.DONE, content);
         }
+
         public IOHookResultDone() {
             super(Type.DONE, null);
         }
@@ -267,6 +290,7 @@ public interface Processor extends AutoCloseable {
          */
         IOHookResult write(final String fileName, final String content);
     }
+
     void setFileWriter(FileWriter fileWriter);
 
     Optional<FileWriter> getFileWriter();
@@ -288,7 +312,7 @@ public interface Processor extends AutoCloseable {
          * {@link IOHookResult.Type#IGNORE} after reading the file. When the result is {@link IOHookResult.Type#DONE}
          * the method is not invoked because in that case the reader already had access to the content, it does not
          * need to get it again.
-         *
+         * <p>
          * Note that the processor may invoke this method for the same file multiple times. This happens when the file
          * is redirected. For example
          *
@@ -302,12 +326,12 @@ public interface Processor extends AutoCloseable {
          *     <li>The processor calls the read hook {@link #set(String, String) set("f2", "...")} with the content</li>
          * </ul>
          *
-         *
          * @param fileName the name of the file, which was passed to the {@link #read(String)} method (not the altered
          *                 name returned).
-         * @param content the content of the file, which was read by the processor.
+         * @param content  the content of the file, which was read by the processor.
          */
-        default void set(final String fileName, final String content){}
+        default void set(final String fileName, final String content) {
+        }
     }
 
     void setFileReader(FileReader fileReader);

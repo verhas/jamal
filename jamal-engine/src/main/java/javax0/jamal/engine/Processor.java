@@ -132,6 +132,17 @@ public class Processor implements javax0.jamal.api.Processor {
         return process(javax0.jamal.tools.Input.makeInput(input));
     }
 
+    public void setLogger(final Logger logger) {
+        this.logger = logger;
+    }
+
+    private Logger logger = javax0.jamal.api.Processor.super.logger();
+
+    @Override
+    public Logger logger(){
+        return logger;
+    }
+
     @Override
     public String process(final Input input) throws BadSyntax {
         limiter.up();
