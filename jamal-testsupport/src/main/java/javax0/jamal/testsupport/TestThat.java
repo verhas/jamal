@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -70,9 +71,20 @@ public class TestThat implements AutoCloseable {
         this.klass = klass;
     }
 
+    private final List<String> logItems = new ArrayList<>();
+
+    private void log(final System.Logger.Level level, final Position pos, final String format, final String... params) {
+        logItems.add("[" + level.getName() + "] " + new BadSyntaxAt(String.format(format, (Object[]) params), pos).getMessage());
+    }
+
+    public List<String> getLogs() {
+        return logItems;
+    }
+
     public Processor getProcessor() {
         if (processor == null) {
             processor = new Processor(macroOpen, macroClose);
+            processor.setLogger(this::log);
         }
         return processor;
     }
@@ -135,11 +147,11 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     public String results() throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException,
-        BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
         var in = new javax0.jamal.tools.Input(input, pos);
         if (klass != null) {
             Macro sut = createSut();
@@ -161,11 +173,11 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     private String resultsClose() throws
-        InvocationTargetException,
-        NoSuchMethodException,
-        InstantiationException,
-        IllegalAccessException,
-        BadSyntax {
+            InvocationTargetException,
+            NoSuchMethodException,
+            InstantiationException,
+            IllegalAccessException,
+            BadSyntax {
         final var output = results();
         close();
         return output;
@@ -183,15 +195,15 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     public void results(String expected) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException,
-        BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
         final var result = resultsClose();
         if (dumpYaml) {
             var title = getTitle();
-            if (title == null || title.length() == 0 ){
+            if (title.length() == 0) {
                 title = input + " -> " + result;
             }
             System.out.println(yamlStringify(title) + ":");
@@ -224,15 +236,15 @@ public class TestThat implements AutoCloseable {
             var fileNames = new ArrayList<String>();
             var lineNumbers = new ArrayList<String>();
             StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).forEach(
-                f -> {
-                    methodNames.add(f.getMethodName());
-                    classes.add(f.getClassName());
-                    fileNames.add(f.getFileName());
-                    lineNumbers.add("" + f.getLineNumber());
-                }
+                    f -> {
+                        methodNames.add(f.getMethodName());
+                        classes.add(f.getClassName());
+                        fileNames.add(f.getFileName());
+                        lineNumbers.add("" + f.getLineNumber());
+                    }
             );
             return Class.forName(classes.get(2)).getDeclaredMethod(methodNames.get(2))
-                .getAnnotation(DisplayName.class).value() + " " + fileNames.get(2) + ":" + lineNumbers.get(2);
+                    .getAnnotation(DisplayName.class).value() + " " + fileNames.get(2) + ":" + lineNumbers.get(2);
         } catch (Exception e) {
             return "";
         }
@@ -251,11 +263,11 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     public void resultsBin(String expected) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException,
-        BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
         Assertions.assertEquals(HexDumper.encode(expected.getBytes(StandardCharsets.UTF_8)), HexDumper.encode(resultsClose().getBytes(StandardCharsets.UTF_8)));
     }
 
@@ -271,11 +283,11 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
      */
     public void matches(String expected) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException,
-        BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
         Assertions.assertTrue(Pattern.compile(expected).matcher(resultsClose()).matches());
     }
 
@@ -291,10 +303,10 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntax                 see {@link #throwsUp(Class, String)}
      */
     public void throwsUp(Class<? extends Throwable> throwable) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException, BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException, BadSyntax {
         throwsUp(throwable, null);
     }
 
@@ -327,10 +339,10 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntax                 if the evaluation throws BadSyntax but some other type is expected
      */
     public void throwsUp(Class<? extends Throwable> throwable, String regex) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException, BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException, BadSyntax {
         try {
             results();
             Assertions.fail("The evaluation did not throw an exception");
@@ -342,9 +354,9 @@ public class TestThat implements AutoCloseable {
                         return;
                     }
                     Assertions.fail("The evaluation did throw an exception but " +
-                        "the exception message did not match the pattern '" + regex + "'\n" +
-                        "Possible patterns are:\n" +
-                        String.join("\n", collect(t)), t);
+                            "the exception message did not match the pattern '" + regex + "'\n" +
+                            "Possible patterns are:\n" +
+                            String.join("\n", collect(t)), t);
                 }
             } else {
                 throw t;
@@ -386,10 +398,10 @@ public class TestThat implements AutoCloseable {
      */
     private static boolean matches(final Pattern pattern, final Throwable t) {
         return t != null &&
-            (matches(pattern, t.getMessage())
-                || (t != t.getCause() && matches(pattern, t.getCause()))
-                || Arrays.stream(t.getSuppressed()).anyMatch(sup -> sup != t && matches(pattern, sup)))
-            ;
+                (matches(pattern, t.getMessage())
+                        || (t != t.getCause() && matches(pattern, t.getCause()))
+                        || Arrays.stream(t.getSuppressed()).anyMatch(sup -> sup != t && matches(pattern, sup)))
+                ;
     }
 
     /**
@@ -415,10 +427,10 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntax                 see {@link #throwsBadSyntax(String)}
      */
     public void throwsBadSyntax() throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException, BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException, BadSyntax {
         throwsBadSyntax(null);
     }
 
@@ -433,10 +445,10 @@ public class TestThat implements AutoCloseable {
      * @throws BadSyntax                 never happens
      */
     public void throwsBadSyntax(String regex) throws
-        NoSuchMethodException,
-        IllegalAccessException,
-        InstantiationException,
-        InvocationTargetException, BadSyntax {
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException, BadSyntax {
         if (dumpYaml) {
             final var title = getTitle();
             System.out.println(yamlStringify(title) + ":");
