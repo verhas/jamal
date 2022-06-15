@@ -36,16 +36,19 @@ When you start Maven, it will read the `pom.xml.jam` or `pom.jam` file, convert 
 [NOTE]
 ====
 The actual process is the following.
-When a user invokes Maven, it looks at the `extensions.xml` file and sees that the Jamal Maven Extension is configured there.
+When a user invokes Maven, it looks at the `.mvn/extensions.xml` file and it sees that the Jamal Maven Extension is configured there.
 It loads the Jamal Maven Extension and invokes it to locate the POM file.
-This call assumes that the file is already there, and at this point, the extension is supposed to find it.
-The extension, however, reads the `pom.xml.jam` or `pom.jam` file and processes it.
+This call assumes that the POM file is already there, and at this point, the extension is supposed to find it.
+The Jamal Maven Extension cheats a bit.
+First it reads the Jamal source files, and it creates the `pom.xml` file.
 The processing includes the resolution of all the macros and the formatting of the final XML result.
 When the extension is done with this step, it writes the `pom.xml` file and returns the file reference as a Java `File` object.
 
 Maven later asks for the extension to load the project object model from this file.
 The extension knows at this point that the generated `pom.xml` file is a standard XML formatted pom, and it simply asks the standard Maven Platform Reader to read it.
 When the Maven Platform Reader returns with the object model, the extension passes it back to Maven, and the rest is standard Maven business as usual.
+
+NOTE: This way you can have the `pom.xml` file and the implementation of the extension was simpler.
 
 image::{%@plantuml call-sequence.svg
 @startuml
@@ -139,7 +142,7 @@ The feature was introduced in 1.10.0.
 
 [NOTE]
 ====
-The actual `extensions.jam` if Jamal itself does not use the option `noCache`.
+Jamal's actual `extensions.jam` does not use the option `noCache`.
 Using the option would download the latest version of the extension from the internet every time the build starts.
 This may impose significant impact on the build time.
 A better solution is to use cache eviction introduced in Jamal version 1.11.0.
@@ -154,6 +157,8 @@ In other occasions it will just use the cached file.
 ====
 
 == Getting Rid of the Extension
+
+NOTE: Remove the `.mv` directory and the Jamal source files, while keeping the generated `pom.xml` files.
 
 It may happen that, for some reason, you want to get rid of the extension.
 The reasons can be various.
@@ -193,6 +198,15 @@ When Maven loads the Jamal Maven Extension, it recursively loads the dependencie
 The dependencies configured are the followings:
 {%@counter:define start=0 id=depCounter%}
 {%@define further($MODULE)=For further information read the link:../jamal-$MODULE/README.adoc[documentation] of the module.%}
+
+=== {%#block {%depCounter%}%} `api`
+This module contains the interfaces that are used all over in Jamal.
+
+=== {%#block {%depCounter%}%} `tools`
+This module contains the tools that are used in Jamal.
+
+=== {%#block {%depCounter%}%} `core`
+This module contains the core built-in macros.
 
 === {%#block {%depCounter%}%} `engine`
 This module is the Jamal execution engine.
@@ -255,5 +269,9 @@ This module does not provide any macro, but it has to be on the classpath to sta
 A brief introduction is described above on how to start the Jamal processing when compiling a `pom.xml.jam.
 {%further debug%}
 
+=== {%#block {%depCounter%}%} `mock`
+This module provides a macro to mock the behavior of built-in macros.
+This is mainly when debugging or testing the functionality of some macro packages.
+{%further mock%}
 
 {%#assert:equals /{%dependencies%}/{%depCounter%}/Not all dependencies are documented or some documented dependency is not there any more%}

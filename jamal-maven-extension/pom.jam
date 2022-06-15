@@ -1,5 +1,6 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {@import ../version.jim}
+{@import ../modules.jim}
 {project jamal maven extension}
     {GAV ::jamal-maven-extension:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
@@ -23,7 +24,7 @@
 
 
     {dependencies#
-        {#for MODULE in (engine,extensions,groovy,ruby,snippet,scriptbasic,plantuml,io,markdown,yaml,assertions,debug)=
+        {#for MODULE in ({modules:CORE},{modules:MACROS})=
             {dependency|{GROUPID}|jamal-MODULE|{VERSION}}}
         {#for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}

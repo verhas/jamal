@@ -1,5 +1,6 @@
 package javax0.jamal.maven;
 
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
@@ -125,6 +126,7 @@ public class JamalMojo extends AbstractMojo {
                 log.debug("Jamal output for the file is " + qq(output.toString()));
                 final String result;
                 try (final var processor = new Processor(macroOpen, macroClose)) {
+                    processor.setLogger(this::log);
                     if ("true".equals(formatOutput)) {
                         result = formatOutput(output, processor.process(createInput(inputPath)));
                     } else {
@@ -244,6 +246,19 @@ public class JamalMojo extends AbstractMojo {
 
     private String qq(String s) {
         return "'" + s + "'";
+    }
+
+    private void log(final System.Logger.Level level, final Position pos, final String format, final String... params) {
+        final var log = getLog();
+        final var msg = String.format(format, (Object[]) params) + (pos == null ? "" : " at ") + BadSyntaxAt.posFormat(pos);
+        switch(level){
+            case DEBUG: log.debug(msg); break;
+            case INFO: log.info(msg); break;
+            case TRACE: log.info(msg); break;
+            case WARNING: log.warn(msg); break;
+            case ERROR: log.error(msg); break;
+            default: log.info(msg); break;
+        }
     }
 
     private void logParameters() {

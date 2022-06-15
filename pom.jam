@@ -72,6 +72,12 @@
                         <release>{JAVA_RELEASE}</release>
                     </configuration>
                 }
+                {plugin|
+                    {GAV :org.apache.maven.plugins:maven-dependency-plugin:{MAVEN_DEPENDENCY_PLUGIN_VERSION}}
+                    {executions|{execution|
+                            {id|collect}
+                            {goals|{goal|collect}}}}
+                }
 
                 {plugin|
                     {GAV :org.apache.maven.plugins:maven-surefire-plugin:{SUREFIRE_PLUGIN_VERSION}}

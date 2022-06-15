@@ -52,8 +52,6 @@ This will add the following dependencies to your project:
 
 * `jamal-word`
 
-* `jamal-asciidoc`
-
 * `jamal-mock`
 
 * `jamal-maven-plugin`
@@ -63,6 +61,8 @@ This will add the following dependencies to your project:
 * `jamal-cmd`
 
 * `jamal-doclet`
+
+* `jamal-asciidoc`
 
 * `jamal-debug`
 

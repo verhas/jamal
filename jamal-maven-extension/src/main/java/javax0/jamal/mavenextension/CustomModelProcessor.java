@@ -89,6 +89,7 @@ public class CustomModelProcessor implements ModelProcessor {
             }
         }
         Processor processor = new javax0.jamal.engine.Processor();
+
         final String fileName = jamFile.getAbsolutePath();
         final String xml;
         try {

@@ -46,7 +46,7 @@ public class BadSyntaxAt extends BadSyntax {
         this.pos = pos;
     }
 
-    private static String posFormat(Position pos) {
+    public static String posFormat(Position pos) {
         if (pos == null) {
             return "";
         } else {

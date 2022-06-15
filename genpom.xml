@@ -6,7 +6,7 @@
     <artifactId>pom-xml-file-builder</artifactId>
     <version>1.0.0</version>
     <properties>
-        <jamalVersion>1.12.2-SNAPSHOT</jamalVersion>
+        <jamalVersion>1.12.3-SNAPSHOT</jamalVersion>
     </properties>
     <build>
         <defaultGoal>clean</defaultGoal>
@@ -36,6 +36,11 @@
                     </execution>
                 </executions>
                 <dependencies>
+                    <dependency>
+                        <groupId>com.javax0.jamal</groupId>
+                        <artifactId>jamal-snippet</artifactId>
+                        <version>${jamalVersion}</version>
+                    </dependency>
                     <dependency>
                         <groupId>com.javax0.jamal</groupId>
                         <artifactId>jamal-yaml</artifactId>

@@ -1,4 +1,3 @@
-{@try {@xmlFormat}}
 
 
 
@@ -49,6 +48,7 @@ SONATYPE_PLUGIN_VERSION=1.6.13             -- https://repo.maven.apache.org/mave
 SUREFIRE_PLUGIN_VERSION=3.0.0-M5           -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
 MAVEN_SOURCE_PLUGIN_VERSION=3.2.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
 APPASSEMBLER_PLUGIN_VERSION=2.1.0          -- https://repo.maven.apache.org/maven2/org/codehaus/mojo/appassembler-maven-plugin
+MAVEN_DEPENDENCY_PLUGIN_VERSION=3.0.0              -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-dependency-plugin
 
 -- test dependency
 JUPITER_VERSION=5.8.2                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
