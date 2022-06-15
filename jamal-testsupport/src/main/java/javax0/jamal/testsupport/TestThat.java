@@ -74,7 +74,7 @@ public class TestThat implements AutoCloseable {
     private final List<String> logItems = new ArrayList<>();
 
     private void log(final System.Logger.Level level, final Position pos, final String format, final String... params) {
-        logItems.add("[" + level.getName() + "] " + new BadSyntaxAt(String.format(format, (Object[]) params), pos).getMessage());
+        logItems.add("[" + level.getName() + "] " + String.format(format, (Object[]) params) + (pos == null ? "" : " at ") + BadSyntaxAt.posFormat(pos));
     }
 
     public List<String> getLogs() {

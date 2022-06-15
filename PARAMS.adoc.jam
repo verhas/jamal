@@ -99,7 +99,7 @@ All boolean options are `false` by default; hence there are no mandatory boolean
 If a boolean parameter is not defined in any way, then it will be `false`.
 
 * Parameters can be string types, and integer types.
-These can be defined in a parameter or as the value of a macro. as decribed above.
+These can be defined in a parameter or as the value of a macro, as described above.
 
 * Some parameters can have more than one value.
 In that case the `name` of the parameter can appear more than once with multiple values assigned to it.

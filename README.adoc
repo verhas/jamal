@@ -195,6 +195,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<escape,`escape`>>
 .. <<require,`require`>>
 .. <<macro,`macro`>>
+.. <<nullmacro,`no-name macro`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
 . <<JamalENV,Jamal Environment Variables>>
@@ -2169,7 +2170,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-18.jdk/Contents/Home
 ----
 
 
@@ -4239,12 +4240,53 @@ To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `bui
 The behavior will be the same as for user-defined macros.
 If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
 
+[[nullmacro]]
+=== 4. Special NoName User Defined Macro
+
+There is a special user defined macro that has no name.
+It is automatically created by Jamal every time it is needed.
+This user defined macro is used whenever the macro closing string follows the macro opening string directly.
+It can be used when you want to insert the macro opening string into the text but you do not want it to be interpreted as a macro opening.
+For example the following input
+
+[source]
+----
+{}
+----
+
+will result in the following output:
+
+[source]
+----
+{
+----
+
+
+If you use this macro inside another macro then the result will be evaluated after the macro itself was evaluated.
+For example
+
+[source]
+----
+{@define z={} this is an opening}
+{@try!{!z}}
+----
+
+will result in the following output:
+
+[source]
+----
+Macro was not terminated in the file.
+this is an opening
+----
+
+
+
 [[argsplit]]
-=== 4. Standard Built-In Macro Argument Splitting
+=== 5. Standard Built-In Macro Argument Splitting
 
 This section contains the description of the Standard Built-in Macro Argument splitting.
 The text describes the syntax used by some of the built-in macros, which do not implement their syntax parsing.
-It is essential when you use these macros, for example, the core `if macro.
+It is essential when you use these macros, for example, the core `if` macro.
 The text also mentions some Java internals that may be valuable if you intend to develop your built-in macros.
 
 A built-in macro accesses the input as one single string.
@@ -4293,7 +4335,7 @@ Backtick was selected during the design of the syntax to enclose the regular exp
 In case you need one inside the regular expression then you have to simply double it, and the parsing will single it back.
 
 [[parparsing]]
-=== 5. Standard Built-In Parameter/Option Parsing
+=== 6. Standard Built-In Parameter/Option Parsing
 
 
 In addition to the method ``getParts()`` there is another utility that the built-in macros can use.
@@ -4317,7 +4359,7 @@ The documentation of the parameter handling in these macros is not part of this 
 It can be found in the separate link:PARAMS.adoc[PARAMS] document.
 
 [[JamalENV]]
-=== 6. Jamal Environment Variables
+=== 7. Jamal Environment Variables
 
 You do not need to configure Jamal.
 The environment variables that you may set to modify the behavior of Jamal are documented in this section.
@@ -4449,7 +4491,7 @@ Both approaches work.
 
 
 [[httpsres]]
-=== 7. Resource Files and Web Resources
+=== 8. Resource Files and Web Resources
 
 When the macros `import` or `include` reference a file with a name that starts with either
 
@@ -4572,7 +4614,7 @@ The proxy setting can be configured using standard Java system properties.
 For more information see the JavaDoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
 
 [[error_messages]]
-=== 8. Error Messages
+=== 9. Error Messages
 
 When there is a processing error then Jamal throws a Java exception.
 The message of the exception contains at the end the location of the error.
@@ -4592,7 +4634,7 @@ If the include/import hierarchy is deeper then the location is also given in sev
 In some cases the hierarchy is created in the error message inside a single file to help locating the error.
 
 [[snippet]]
-=== 9. Snippet Handling
+=== 10. Snippet Handling
 
 Snipetts are text fragments from the source code or from other text files that are to be included into the documentation as samples.
 Jamal Snippet handling macros can automate the copiing of such lines, but they can do more.
@@ -4602,7 +4644,7 @@ The snippet handling macros are documented in the link:jamal-snippet/README.adoc
 These macros include also date handling, run-time checking of existence of referenced files, directores, classes, methods and so on.
 
 [[Groovy]]
-=== 10. Groovy Integration
+=== 11. Groovy Integration
 
 
 The Groovy language integration lets you include Groovy code fragments into your document.
@@ -4612,7 +4654,7 @@ The integration and how to use the module macros are described in the link:jamal
 
 
 [[Ruby]]
-=== 11. Ruby Integration
+=== 12. Ruby Integration
 
 The Ruby language integration lets you include Ruby code fragments into your document.
 These scripts are executed during the file processing, and can programmatically calculate the macro outputs.
@@ -4621,19 +4663,19 @@ The integration and how to use the module macros are described in the link:jamal
 
 
 [[Yaml]]
-=== 12. Yaml Integration
+=== 13. Yaml Integration
 
 The Yaml module can be used to simplify the maintenance of Yaml files using macros and splitting up the Yaml files into smaller chunks.
-The documentation of the module is jamal-yaml/README.adoc[Yaml readme]
+The documentation of the module is link:jamal-yaml/README.adoc[Yaml readme]
 
 [[IO]]
-=== 13. IO Module
+=== 14. IO Module
 
 The Io module can be used to write text into separate files during the processing of a Jamal input file.
-The documentation of the module is jamal-io/README.adoc[Io readme]
+The documentation of the module is link:jamal-io/README.adoc[Io readme]
 
 [[JamalAPI]]
-=== 14. Jamal API
+=== 15. Jamal API
 
 Embedding Jamal into an application is very simple.
 You need the Jamal libraries on your classpath.
@@ -4719,7 +4761,7 @@ These macros eventually cannot have arguments.
 This is a simplified interface to access the functionality of Jamal.
 
 [[javadoc]]
-=== 15. JavaDoc and API
+=== 16. JavaDoc and API
 
 The current and past versions of the JavaDoc can be read online at the address:
 
@@ -4821,7 +4863,7 @@ The two static methods `include()` and `exclude()` can be used to create these a
 
 
 [[documentmaintenance]]
-=== 16. Maintenance of this document
+=== 17. Maintenance of this document
 
 The source of this document is `README.adoc.jam`.
 The Jamal conversion uses the snippet macros and some core built-in macros.

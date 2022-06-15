@@ -1,3 +1,4 @@
+{#import {ROOT}/version.jim}\
 ///usr/bin/env jbang \"$0\" \"$@\" ; exit $?
 //JAVA 11+
 {!@for $module in (engine,api,tools,core,cmd,word,snippet,scriptbasic,groovy,ruby,plantuml,debug,jamal,yaml,io,assertions)=//DEPS com.javax0.jamal:jamal-$module:{VERSION}

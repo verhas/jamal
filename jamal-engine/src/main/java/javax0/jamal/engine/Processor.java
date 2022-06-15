@@ -139,7 +139,7 @@ public class Processor implements javax0.jamal.api.Processor {
     private Logger logger = javax0.jamal.api.Processor.super.logger();
 
     @Override
-    public Logger logger(){
+    public Logger logger() {
         return logger;
     }
 
@@ -456,7 +456,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @throws BadSyntax if the macro is not defined and is not preceded by a {@code ?} character or when some other
      *                   syntax error is detected.
      */
-    private String evalUserDefinedMacro(final Input input, final TraceRecord tr, MacroQualifier qualifier)
+    private String evalUserDefinedMacro(final Input input, final TraceRecord tr, final MacroQualifier qualifier)
             throws BadSyntax {
         var pos = input.getPosition();
         skipWhiteSpaces(input);
@@ -468,15 +468,16 @@ public class Processor implements javax0.jamal.api.Processor {
 
         final String id = fetchId(evaluatedInput);
         qualifier.macroId = id;
-        if (id.length() == 0) {
-            throw new BadSyntaxAt("Zero length user defined macro name was found.", pos);
-        }
         skipWhiteSpaces(evaluatedInput);
         final Optional<Identified> identifiedOpt;
-        if (reportUndef || !optionsStore.is(NO_UNDEFAULT)) {
-            identifiedOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO);
+        if (id.length() == 0) {
+            identifiedOpt = Optional.of( new NullMacro(qualifier.processor));
         } else {
-            identifiedOpt = macros.getUserDefined(id);
+            if (reportUndef || !optionsStore.is(NO_UNDEFAULT)) {
+                identifiedOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO);
+            } else {
+                identifiedOpt = macros.getUserDefined(id);
+            }
         }
         final Optional<Evaluable> udMacroOpt = identifiedOpt
                 .filter(ud -> ud instanceof Evaluable)

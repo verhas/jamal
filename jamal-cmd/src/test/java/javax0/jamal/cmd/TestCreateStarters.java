@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Properties;
+import javax0.jamal.snippet.XmlDocument;
 
 import static javax0.jamal.DocumentConverter.getRoot;
 
@@ -47,7 +48,6 @@ public class TestCreateStarters {
     private String getContent(final String input, final String root, final String versionString) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, BadSyntax {
         return TestThat.theInput(input)
                 .define("ROOT", root)
-                .define("VERSION", versionString)
                 .results();
     }
 

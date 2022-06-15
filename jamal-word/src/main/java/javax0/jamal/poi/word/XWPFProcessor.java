@@ -101,6 +101,10 @@ public class XWPFProcessor {
         this.processor = new Processor(open, close, xwpfContext);
     }
 
+    public void setLogger(final Processor.Logger logger) {
+        processor.setLogger(logger);
+    }
+
     public javax0.jamal.api.Processor getProcessor() {
         return processor;
     }

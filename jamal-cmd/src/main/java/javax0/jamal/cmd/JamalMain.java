@@ -1,5 +1,6 @@
 package javax0.jamal.cmd;
 
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
@@ -119,6 +120,13 @@ public class JamalMain {
         }
     }
 
+    private static final System.Logger LOGGER = System.getLogger("JAMAL");
+
+    private static void log(final System.Logger.Level level, final Position pos, final String format, final String... params) {
+        final var msg = String.format(format, (Object[]) params) + (pos == null ? "" : " at ") + BadSyntaxAt.posFormat(pos);
+        LOGGER.log(level, msg);
+    }
+
     private static void executeJamal(final Path inputPath, CmdParser params) {
         executeJamal(inputPath.toAbsolutePath(), calculateTargetFile(inputPath, params).toAbsolutePath(), params);
     }
@@ -135,10 +143,12 @@ public class JamalMain {
             if (!drydry) {
                 if (params.get("docx").isPresent()) {
                     final var processor = new XWPFProcessor(macroOpen, macroClose);
+                    processor.setLogger(JamalMain::log);
                     processor.process(inputPath, dry ? null : outputPath);
                 } else {
                     final String result;
                     try (final var processor = new Processor(macroOpen, macroClose)) {
+                        processor.setLogger(JamalMain::log);
                         result = processor.process(createInput(inputPath));
                     }
                     if (!dry) {

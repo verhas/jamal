@@ -1,5 +1,6 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {@import ../version.jim}
+{@import ../modules.jim}
 {project jamal command line}
     {packaging jar}
     {GAV ::jamal-cmd:{VERSION}}
@@ -54,11 +55,17 @@
                       </programs>
                     </configuration>
             }
+            {plugin|{GAV :org.apache.maven.plugins:maven-dependency-plugin:}
+              {configuration|
+                <outputFile>./target/dependencies.txt</outputFile>
+                <includeScope>compile</includeScope>
+              }
+            }
         }
     }
 
     {dependencies#
-        {#for MODULE in (engine,word)=
+        {#for MODULE in ({modules:CORE},{modules:MACROS})=
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency :{GROUPID}:jamal-testsupport}
         {#for MODULE in (api,engine)=

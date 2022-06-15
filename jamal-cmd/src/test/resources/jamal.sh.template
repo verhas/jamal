@@ -1,27 +1,36 @@
 #!/usr/bin/env bash
-MODULES="api engine core tools cmd word snippet scriptbasic groovy ruby plantuml debug jamal yaml io assertions jamal"
-REPO=$HOME/.m2/repository
-REPO_JAMAL=$REPO/com/javax0/jamal
-VERSION={VERSION}
-CENTRAL=https://repo1.maven.org/maven2
+{#import {ROOT}/version.jim}
+{@define REPO=$HOME/.m2/repository}
+{@define CENTRAL=https://repo1.maven.org/maven2}
+CLASSPATH=""
 
-for MODULE in $MODULES ; do
-  if ! test -f $REPO_JAMAL/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar; then
+function download() {}
+  DIR=${}1//\.//}
+  if ! test -f {REPO}/$DIR/$2/$3/$2-$3.jar; then
+    echo "downloading {CENTRAL}/$DIR/$2/$3/jamal-$2-$3.jar"
+    mkdir -p {REPO}/$DIR/$2/$3
     if command -v wget &>/dev/null; then
-      wget --no-check-certificate $CENTRAL/com/javax0/jamal/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar -O $REPO_JAMAL/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
+      wget --no-check-certificate {CENTRAL}/$DIR/$2/$3/$2-$3.jar -O {REPO}/$DIR/$2/$3/$2-$3.jar
     else
       if command -v curl &>/dev/null; then
-        curl $CENTRAL/com/javax0/jamal/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar -o $REPO_JAMAL/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
+        curl {CENTRAL}/$DIR/$2/$3/jamal-$2-$3.jar -o {REPO}/$DIR/$2/$3/$2-$3.jar
       else
         echo "There is no curl nor wget available"
-        exit -1
+        exit 255
       fi
     fi
   fi
-done
+CLASSPATH=$CLASSPATH:{REPO}/$DIR/$2/$3/$2-$3.jar
+}
 
-for MODULE in $MODULES ; do
-  CLASSPATH=$CLASSPATH:$REPO_JAMAL/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
-done
+download "com/javax0/jamal" "jamal-cmd" "{VERSION}"
+{@comment
+The following lines include the file dependencies.txt created by the dependency plugin
+and stra
+}
 
-java -cp $CLASSPATH javax0.jamal.cmd.JamalMain $*
+{#replaceLines replace="/^\\s*(.*?):(.*?):jar:(.*?):compile$/download \"$1\" \"$2\" \"$3\"" replace="/^\\s*//"
+  {#killLines keep pattern=compile
+    {#include [verbatim] {ROOT}/jamal-cmd/target/dependencies.txt}}}
+
+java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain $*

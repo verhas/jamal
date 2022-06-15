@@ -1,4 +1,4 @@
-{%@comment external%}\
+{%@comment external noCache%}\
 :imagesdir: images
 == image:logo.svg[width=100px] Jamal Macro Language
 
@@ -211,6 +211,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<escape,`escape`>>
 .. <<require,`require`>>
 .. <<macro,`macro`>>
+.. <<nullmacro,`no-name macro`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
 . <<JamalENV,Jamal Environment Variables>>
@@ -3736,12 +3737,49 @@ To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `bui
 The behavior will be the same as for user-defined macros.
 If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
 
+[[nullmacro]]
+=== {%chapter%}Special NoName User Defined Macro
+
+There is a special user defined macro that has no name.
+It is automatically created by Jamal every time it is needed.
+This user defined macro is used whenever the macro closing string follows the macro opening string directly.
+It can be used when you want to insert the macro opening string into the text but you do not want it to be interpreted as a macro opening.
+For example the following input
+
+{%sample/
+{}
+%}
+
+will result in the following output:
+
+{%output%}
+
+If you use this macro inside another macro then the result will be evaluated after the macro itself was evaluated.
+For example
+
+{%sample/
+{@define z={} this is an opening}
+{@try!{!z}}
+%}
+
+will result in the following output:
+
+{%output%}
+
+The recommendation is to use this macro only on the top level instead of the longer
+
+{%sample/
+{@escape ``{``}
+%}
+
+Also, the macro closing string can be used without any escaping on the top level.
+
 [[argsplit]]
 === {%chapter%}Standard Built-In Macro Argument Splitting
 
 This section contains the description of the Standard Built-in Macro Argument splitting.
 The text describes the syntax used by some of the built-in macros, which do not implement their syntax parsing.
-It is essential when you use these macros, for example, the core `if macro.
+It is essential when you use these macros, for example, the core `if` macro.
 The text also mentions some Java internals that may be valuable if you intend to develop your built-in macros.
 
 A built-in macro accesses the input as one single string.
@@ -4006,13 +4044,13 @@ The integration and how to use the module macros are described in the link:{%@fi
 === {%chapter%}Yaml Integration
 
 The Yaml module can be used to simplify the maintenance of Yaml files using macros and splitting up the Yaml files into smaller chunks.
-The documentation of the module is {%@file jamal-yaml/README.adoc%}[Yaml readme]
+The documentation of the module is link:{%@file jamal-yaml/README.adoc%}[Yaml readme]
 
 [[IO]]
 === {%chapter%}IO Module
 
 The Io module can be used to write text into separate files during the processing of a Jamal input file.
-The documentation of the module is {%@file jamal-io/README.adoc%}[Io readme]
+The documentation of the module is link:{%@file jamal-io/README.adoc%}[Io readme]
 
 [[JamalAPI]]
 === {%chapter%}Jamal API
