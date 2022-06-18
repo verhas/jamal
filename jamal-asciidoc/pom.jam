@@ -35,7 +35,7 @@
           {dependency|org.junit.jupiter|junit-jupiter-MODULE||test}}
       {dependency |org.asciidoctor|asciidoctorj-api|{ASCIIDOCTORJ_VERSION}|provided}
       {dependency |org.asciidoctor|asciidoctorj|{ASCIIDOCTORJ_VERSION}|provided}
-      {dependency |org.mockito|mockito-core|{MOCKITO_VERSION}|test}
+      {dependency |org.mockito|mockito-core|{MOCKITO_VERSION}}
     }
 
 {end project}

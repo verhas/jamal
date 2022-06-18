@@ -2170,7 +2170,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-18.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
 ----
 
 
@@ -4280,6 +4280,14 @@ this is an opening
 ----
 
 
+The recommendation is to use this macro only on the top level instead of the longer
+
+[source]
+----
+{@escape ``{``}
+----
+
+Also, the macro closing string can be used without any escaping on the top level.
 
 [[argsplit]]
 === 5. Standard Built-In Macro Argument Splitting

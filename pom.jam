@@ -98,7 +98,7 @@
         {@for [evalist] MODULE in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,all)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
         {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
-        {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}}
+        {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}|test}
         }}
 
     {profiles|
