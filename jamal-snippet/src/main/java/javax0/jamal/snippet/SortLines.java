@@ -20,4 +20,8 @@ public class SortLines implements Macro {
 		return String.join("\n", lines) + (endsWithNewline ? "\n" : "");
 	}
 
+	@Override
+	public String getId() {
+		return "sortLines";
+	}
 }

@@ -10,7 +10,7 @@ public class TestSortLines {
 	@DisplayName("sortLines - simple sorting")
 	void testSortLines() throws Exception {
 		TestThat.theInput(""
-				+ "{@sortlines b\n"
+				+ "{@sortLines b\n"
 				+ "a\n"
 				+ "d\n"
 				+ "c}"
@@ -24,7 +24,7 @@ public class TestSortLines {
 	@DisplayName("sortLines - preserves newline at the end")
 	void testSortLinesPreservesNewline() throws Exception {
 		TestThat.theInput(""
-				+ "{@sortlines b\n"
+				+ "{@sortLines b\n"
 				+ "a\n"
 				+ "d\n"
 				+ "c\n"
