@@ -1,24 +1,8 @@
+-- This file defines the version of the project mas well as many other versions used all over the project.
+-- The central location of all the versions make maintenance easier.
+-- The version defined here can be used by the Jamal Maven Extension to use to refer to the parent project from the modules.
 
-
-
-{@define VERSION=1.12.3-SNAPSHOT}
-                    -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
-{@define LAST_RELEASE=1.12.2}
-
-
-
-
--- This file defines the version of the project.
--- This is more effective than defining the project version in a maven property because that cannot be used to reference the parent.
-
--- the project groupId. It has to start with com. and a registered domain name or else it cannot get into maven central
-{@define GROUPID=com.javax0.jamal}
-
--- module names are jamal.XXX
-{@define MODULE_PREFIX=jamal.}
--- package names are less restrictive and it is not likely that anyone else would use javax0 as top level package
-{@define PACKAGE_PREFIX=javax0.jamal.}
-
+-- define the macro that uses its lines to define the versions of the modules
 {@define VERSIONS($x)=
 {!!@for [separator="\n" subseparator="=" skipForEmpty lenient evalist] ($ID,$VERSION) in `VERSION_LINES`
 {@replaceLines replace="/\\s*--.*/"
@@ -27,6 +11,15 @@ $x
 `VERSION_LINES`={@if [not blank] /$ID/{@define $ID=$VERSION}}}}}
 
 {VERSIONS
+
+VERSION=1.12.3-SNAPSHOT                    -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+LAST_RELEASE=1.12.2
+
+GROUPID=com.javax0.jamal                   -- the project groupId.
+
+MODULE_PREFIX=jamal.                       -- module names are jamal.XXX
+PACKAGE_PREFIX=javax0.jamal.               -- package names are less restrictive and it is not likely that anyone else would use javax0 as top level package
+
 JAVA_RELEASE=11
 JAVA_SOURCE=17
 JAVA_TARGET=11
@@ -71,4 +64,3 @@ JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/mave
 MAVEN_CORE_VERSION=3.8.6                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
 PLEXUS_COMPONENT_METADATA_VERSION=2.1.1    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata
 }
-
