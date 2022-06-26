@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import Input from "./components/Input";
 import TabPanel from "./components/TabPanel";
 import SimpleTextInput from "./components/SimpleTextInput";
@@ -18,7 +18,7 @@ import BuiltInMacrosDisplay from "./components/BuiltInMacrosDisplay";
 import UserDefinedMacrosDisplay from "./components/UserDefinedMacrosDisplay";
 import initState, {state} from "./utils/GlobalState"
 import loadSource from "./utils/LoadSource";
-import {evaluate, run, stepInto, fetch, step, stepOut, quit} from "./utils/DebugCommands"
+import {evaluate, fetch, quit, run, step, stepInto, stepOut} from "./utils/DebugCommands"
 import Button from "./components/Button";
 import "./App.css";
 import LevelDisplay from "./components/LevelDisplay";
