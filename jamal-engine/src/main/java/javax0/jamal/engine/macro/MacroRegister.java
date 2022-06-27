@@ -2,12 +2,14 @@ package javax0.jamal.engine.macro;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Counted;
 import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Delimiters;
 import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
+import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.InputHandler;
 import javax0.levenshtein.Levenshtein;
@@ -127,13 +129,16 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      */
     private final boolean checkState;
 
+    private final Processor processor;
+
     /**
      * At the creation of the register we start with a new macro evaluation level, which is the top level.
      * <p>
      * The constructor also reads the environment variable {@link EnvironmentVariables#JAMAL_CHECKSTATE_ENV} when no
      * system property is given, and based on that sets the global {@link #checkState} field.
      */
-    public MacroRegister() {
+    public MacroRegister(Processor processor) {
+        this.processor = processor;
         try {
             push(null);
         } catch (BadSyntax badSyntax) {
@@ -237,12 +242,20 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      */
     private <T> Optional<T> stackGet(Function<Scope, Map<String, T>> field, String id) {
         final int end = scopeStack.size() - 1;
-        return IntStream.range(TOP_LEVEL, scopeStack.size()).sequential()
-                .mapToObj(i -> scopeStack.get(end - i))
-                .map(field)
-                .filter(map -> map.containsKey(id))
-                .map(map -> map.get(id))
-                .findFirst();
+        return IntStream.range(TOP_LEVEL, scopeStack.size()).sequential().mapToObj(i -> scopeStack.get(end - i)).map(field).filter(map -> map.containsKey(id)).map(map -> map.get(id)).findFirst();
+    }
+
+    /**
+     * Count the object if it is present and a counted object (a.k.a. implements the {@link Counted} interface.
+     *
+     * @param r the object to count, optional
+     */
+    private <K> Optional<K> count(Optional<K> r) {
+        if (r.isPresent() && r.get() instanceof Counted) {
+            final Counted counted = (Counted) r.get();
+            counted.count();
+        }
+        return r;
     }
 
     /**
@@ -258,33 +271,38 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     @Override
     public <T extends Identified> Optional<T> getUserDefined(String id) {
         Objects.requireNonNull(id);
+        final Optional<T> result;
         if (InputHandler.isGlobalMacro(id)) {
             //noinspection unchecked
-            return Optional.ofNullable((T) scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
+            result = Optional.ofNullable((T) scopeStack.get(TOP_LEVEL).udMacros.get(InputHandler.convertGlobal(id)));
         } else {
             //noinspection unchecked
-            return (Optional<T>) stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getUdMacros, id);
+            result = (Optional<T>) stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getUdMacros, id);
         }
+        return count(result);
     }
 
     @Override
     public Optional<Macro> getMacro(String id) {
+        final Optional<Macro> result;
         if (InputHandler.isGlobalMacro(id)) {
-            return Optional.ofNullable(scopeStack.get(TOP_LEVEL).macros.get(InputHandler.convertGlobal(id)));
+            result = Optional.ofNullable(scopeStack.get(TOP_LEVEL).macros.get(InputHandler.convertGlobal(id)));
         } else {
-            return stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getMacros, id);
+            result = stackGet(javax0.jamal.engine.macro.MacroRegister.Scope::getMacros, id);
         }
+        return count(result);
     }
 
     @Override
     public Optional<Macro> getMacroLocal(String alias) {
-        return Optional.ofNullable(writableScope().macros.get(alias));
+        return count(Optional.ofNullable(writableScope().macros.get(alias)));
     }
 
     @Override
     public void global(final Identified macro) {
-       global(macro,macro.getId());
+        global(macro, macro.getId());
     }
+
     @Override
     public void global(final Identified macro, final String alias) {
         scopeStack.get(TOP_LEVEL).udMacros.put(alias, macro);
@@ -393,10 +411,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     private void throwRTE(final Class<? extends Macro> klass, final Class<?> k, final Field field) {
-        throw new RuntimeException(String.format("The macro class '%1$s' is not stateless, %2$s has non-final, non-static field%3$s.",
-                klass.getName(),
-                (k == klass ? "it " : "parent class " + k.getName()),
-                (field == null ? "" : (" '" + field.getName() + "'"))));
+        throw new RuntimeException(String.format("The macro class '%1$s' is not stateless, %2$s has non-final, non-static field%3$s.", klass.getName(), (k == klass ? "it " : "parent class " + k.getName()), (field == null ? "" : (" '" + field.getName() + "'"))));
     }
 
     @Override
@@ -516,7 +531,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      * <p>
      * Note that the processor or the input will NOT be injected even if the macro implements one of the
      * {@code Closer.*Aware} interfaces. That is because macros are generally stateless and as such, injecting to a
-     * macro object (either built-in or user defined) is not really possible.
+     * macro object (either built-in or user defined) is not possible.
      * <p>
      * The marker of the removed scope is added to the {@code poppedMarkers} list. This is used to create better error
      * messages later on.
@@ -537,6 +552,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                         throw new BadSyntax("Closing AutoCloseable macro '" + macro.getId() + "' caused exception.", e);
                     }
                 }
+                if (macro instanceof Counted) {
+                    if (((Counted) macro).counted() == 0) {
+                        processor.logger().log(System.Logger.Level.WARNING, null, "Built-in macro %s was declared but not used.", macro.getId());
+                    }
+                }
             }
             for (final var macro : removedScope.getUdMacros().values()) {
                 if (macro instanceof AutoCloseable) {
@@ -544,6 +564,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                         ((AutoCloseable) macro).close();
                     } catch (Exception e) {
                         throw new BadSyntax("Closing AutoCloseable user defined macro '" + macro.getId() + "' caused exception.", e);
+                    }
+                }
+                if (macro instanceof Counted) {
+                    if (((Counted) macro).counted() == 0) {
+                        processor.logger().log(System.Logger.Level.WARNING, null, "User defined macro %s was declared but not used.", macro.getId());
                     }
                 }
             }

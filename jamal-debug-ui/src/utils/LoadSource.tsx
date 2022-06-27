@@ -2,7 +2,7 @@ import debug from "./Debug";
 import {AxiosError, AxiosResponse} from "axios";
 import {state} from "./GlobalState";
 import type Data from '../server/Data';
-import {RUN_WAIT, RUN_RESPONSE_CODE, DISCONNECTED, RUN, REFRESH_MESSAGE_DELAY} from "../Constants";
+import {DISCONNECTED, REFRESH_MESSAGE_DELAY, RUN, RUN_RESPONSE_CODE, RUN_WAIT} from "../Constants";
 
 const loadSource = () => {
     debug.all("level&errors&input&output&inputBefore&processing&macros&userDefined&state&output&version")

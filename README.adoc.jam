@@ -1961,7 +1961,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=70dd5132%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=44b37659%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines

@@ -54,6 +54,10 @@ Test a simple for loop with separator redefinition and trimmed:
   Input: "{@for [separator=; trim] x in (a; b; c; d)=x is either a, b, c or d\n}"
   Output: {%@yaml:ref output%}
 
+Test a simple for loop with sep redefinition and trimmed:
+  Input: "{@for [sep=; trim] x in (a; b; c; d)=x is either a, b, c or d\n}"
+  Output: {%@yaml:ref output%}
+
 Test a simple for loop with back-ticked separator:
   Input: "{@define $forsep=;}{@for x in `)))`a);b);c);d)`)))`=x is either a, b, c or d\n}"
   Output: |

@@ -57,7 +57,7 @@ public class Processor implements javax0.jamal.api.Processor {
     private static final String[] ZERO_STRING_ARRAY = new String[0];
     private static final Input[] ZERO_INPUT_ARRAY = new Input[0];
     final Deque<BadSyntax> exceptions = new ArrayDeque<>();
-    final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister();
+    final private MacroRegister macros = new javax0.jamal.engine.macro.MacroRegister(this);
     final private TraceRecordFactory traceRecordFactory = new TraceRecordFactory();
     final private StackLimiter limiter = new StackLimiter();
     final private JShellEngine shellEngine = getEngine();
