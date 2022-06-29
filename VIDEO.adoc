@@ -2,7 +2,7 @@
 
 The videos help you jumpstart using Jamal.
 They cover introduction and basic features as well as more complex topics.
-The cideos are published on Youtube:
+The videos are published on YouTube:
 
 link:https://www.youtube.com/channel/UCpUOu9zcCUdwAj0H3YzQa3A[YT channel]
 
@@ -16,7 +16,7 @@ image:./images/yt_channel.png[width=50%]
 === Intro
 
 
-link:https://youtu.be/PpSOpRa_738[Watch It on Youtube] (2022-05-18) 
+link:https://youtu.be/PpSOpRa_738[Watch It on YouTube] (2022-05-18)
 
 General introduction to Jamal, possibilities, what it is good for, and I also talk about the planned videos.
 
@@ -24,7 +24,7 @@ General introduction to Jamal, possibilities, what it is good for, and I also ta
 === Installing Jamal for IntelliJ and AsciiDoctor
 
 
-link:https://youtu.be/b6uBseiZlQg[Watch It on Youtube] (2022-05-19) 
+link:https://youtu.be/b6uBseiZlQg[Watch It on YouTube] (2022-05-19)
 
 How to install the latest release of Jamal to be used with AsciiDoctor IntelliJ plugin.
 

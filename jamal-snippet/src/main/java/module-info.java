@@ -30,7 +30,7 @@ import javax0.jamal.snippet.SnipSave;
 import javax0.jamal.snippet.SnipTransform;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
-import javax0.jamal.snippet.SortLines;
+import javax0.jamal.snippet.Sort;
 import javax0.jamal.snippet.StringMacros.Contains;
 import javax0.jamal.snippet.StringMacros.EndsWith;
 import javax0.jamal.snippet.StringMacros.Equals;
@@ -97,7 +97,7 @@ module jamal.snippet {
             StartsWith,
             Reverse,
             EndsWith,
-            SortLines,
+			Sort,
             SnipLine,
             SnipFile,
             Untab,
