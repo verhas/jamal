@@ -97,7 +97,7 @@ module jamal.snippet {
             StartsWith,
             Reverse,
             EndsWith,
-			Sort,
+            Sort,
             SnipLine,
             SnipFile,
             Untab,

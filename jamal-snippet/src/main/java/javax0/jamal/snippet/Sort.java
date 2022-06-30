@@ -5,6 +5,7 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
 
+import java.math.BigDecimal;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Function;
@@ -15,120 +16,107 @@ import static java.util.stream.Collectors.toList;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.Params.holder;
 
-public class Sort implements Macro, InnerScopeDependent {
+public class Sort implements Macro {
 
-	@Override
-	public String evaluate(Input in, Processor processor) throws BadSyntax {
-		final var separator = holder("separator").orElse("\n").asPattern();
-		final var join = holder("join").orElse("\n").asString();
-		final var locale = holder("locale").asString();
-		final var columns = holder("columns").asString();
-		final var pattern = holder("pattern").asPattern();
-		final var numeric = holder("numeric").asBoolean();
-		final var reverse = holder("reverse").asBoolean();
-		Scan.using(processor)
-				.from(this)
-				.firstLine()
-				.keys(separator, join, locale, columns, pattern, numeric, reverse)
-				.parse(in);
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var separator = holder("separator").orElse("\n").asPattern();
+        final var join = holder("join").orElse("\n").asString();
+        final var locale = holder("locale").asString();
+        final var columns = holder("columns").asString();
+        final var pattern = holder("pattern").asPattern();
+        final var numeric = holder("numeric").asBoolean();
+        final var reverse = holder("reverse").asBoolean();
+        Scan.using(processor)
+                .from(this)
+                .firstLine()
+                .keys(separator, join, locale, columns, pattern, numeric, reverse)
+                .parse(in);
+        Collator collator = Collator.getInstance(getLocaleFromParam(locale));
 
-		if (pattern.isPresent() && columns.isPresent()) {
-			throw new BadSyntax("Can not use both options 'pattern' and 'columns' together.");
-		}
+        if (pattern.isPresent() && columns.isPresent()) {
+            throw new BadSyntax(String.format("Can not use both options '%s' and 'columns' %s.", pattern.name(), columns.name()));
+        }
 
-		skipWhiteSpaces(in);
-		Stream<LineHolder> lines = new ArrayList<>(Arrays.asList(in.toString().split(separator.get().pattern(), -1)))
-				.stream()
-				.map(s -> new LineHolder(s, s));
-		if (columns.isPresent()) {
-			String[] columnParts = splitColumns(columns);
-			int begin = safeParse(columnParts[0]);
-			int end = safeParse(columnParts[1]);
-			lines = lines.map(line -> new LineHolder(line.original, line.original.substring(begin-1, end-1)));
-		}
-		if (pattern.isPresent()) {
-			Pattern p = pattern.get();
-			lines = lines.map(findMatches(p));
-		}
-		if (numeric.is()) {
-			lines = lines
-					.map(line -> new IntLineHolder(line.original, Integer.parseInt(line.extracted)))
-					.sorted(Comparator.comparingInt(IntLineHolder::value))
-					.map(intLine -> new LineHolder(intLine.original, String.valueOf(intLine.value)));
-		} else {
-			if (locale.isPresent()) {
-				Locale language = Locale.forLanguageTag(locale.get());
-				lines = lines.sorted(Comparator.comparing(LineHolder::extracted, Collator.getInstance(language)));
-			} else {
-				lines = lines.sorted(Comparator.comparing(LineHolder::extracted));
-			}
-		}
-		List<String> values = lines.map(LineHolder::original).collect(toList());
-		if (reverse.is()) {
-			Collections.reverse(values);
-		}
-		return String.join(join.get(), values);
-	}
+        skipWhiteSpaces(in);
+        Stream<LineHolder<String>> lines = new ArrayList<>(Arrays.asList(in.toString().split(separator.get().pattern(), -1)))
+                .stream()
+                .map(s -> new LineHolder<>(s, s));
+        if (columns.isPresent()) {
+            String[] columnParts = splitColumns(columns);
+            int begin = safeParse(columnParts[0]);
+            int end = safeParse(columnParts[1]);
+            lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(begin-1, end-1)));
+        }
+        lines = lines.map(findMatches(pattern));
+        if (numeric.is()) {
+            lines = lines
+                    .map(line -> new LineHolder<>(line.original, new BigDecimal(line.key)))
+                    .sorted(Comparator.comparing(LineHolder::key))
+                    .map(intLine -> new LineHolder<>(intLine.original, intLine.key.toPlainString()));
+        } else {
+            lines = lines.sorted(Comparator.comparing(LineHolder::key, collator));
+        }
+        List<String> values = lines.map(LineHolder::original).collect(toList());
+        if (reverse.is()) {
+            Collections.reverse(values);
+        }
+        return String.join(join.get(), values);
+    }
 
-	private Function<LineHolder, LineHolder> findMatches(Pattern p) {
-		return line -> {
-			var matcher = p.matcher(line.original);
-			matcher.find();
-			return new LineHolder(line.original, matcher.group());
-		};
-	}
+    private Locale getLocaleFromParam(Params.Param<String> locale) throws BadSyntax {
+        if (locale.isPresent()) {
+            return Locale.forLanguageTag(locale.get());
+        } else {
+            return Locale.forLanguageTag("en-US.UTF-8");
+        }
+    }
 
-	private int safeParse(String number) throws BadSyntax {
-		try {
-			return Integer.parseInt(number);
-		} catch (NumberFormatException exception) {
-			throw new BadSyntax("Could not parse options 'columns' because of an exception.", exception);
-		}
-	}
+    private Function<LineHolder<String>, LineHolder<String>> findMatches(Params.Param<Pattern> pattern) throws BadSyntax {
+        if (!pattern.isPresent()) {
+            return Function.identity();
+        }
+        Pattern p = pattern.get();
+        return line -> {
+            var matcher = p.matcher(line.original);
+            matcher.find();
+            return new LineHolder<>(line.original, matcher.group());
+        };
+    }
 
-	private String[] splitColumns(Params.Param<String> columns) throws BadSyntax {
-		String[] parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(columns.get()));
-		if (parts.length != 2) {
-			throw new BadSyntax("Expected exactly 2 parameters for option 'columns', got " + parts.length);
-		}
-		return parts;
-	}
+    private int safeParse(String number) throws BadSyntax {
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException exception) {
+            throw new BadSyntax("Could not parse options 'columns' because of an exception.", exception);
+        }
+    }
 
-	private static class LineHolder {
-		private final String original;
-		private final String extracted;
+    private String[] splitColumns(Params.Param<String> columns) throws BadSyntax {
+        String[] parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(columns.get()));
+        if (parts.length != 2) {
+            throw new BadSyntax(String.format("Expected exactly 2 parameters for option '%s', got %d", columns.name(), parts.length));
+        }
+        return parts;
+    }
 
-		LineHolder(String original, String extracted) {
-			this.original = original;
-			this.extracted = extracted;
-		}
+    private static class LineHolder<KEY extends Comparable<KEY>> {
+        private final String original;
+        private final KEY key;
 
-		LineHolder(String value) {
-			this.original = value;
-			this.extracted = value;
-		}
+        LineHolder(String original, KEY key) {
+            this.original = original;
+            this.key = key;
+        }
 
-		public String original() {
-			return original;
-		}
+        public String original() {
+            return original;
+        }
 
-		public String extracted() {
-			return extracted;
-		}
+        public KEY key() {
+            return key;
+        }
 
-	}
+    }
 
-	private static class IntLineHolder {
-		private final String original;
-		private final int value;
-
-		IntLineHolder(String original, int value) {
-			this.original = original;
-			this.value = value;
-		}
-
-		int value() {
-			return value;
-		}
-	}
 }
