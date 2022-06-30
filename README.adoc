@@ -2170,7 +2170,7 @@ is
 
 [source]
 ----
-/usr/local/Cellar/openjdk/17.0.1/libexec/openjdk.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
 ----
 
 
