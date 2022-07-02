@@ -809,6 +809,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.6.4 `default` as special macro
 * since 1.7.4 `default` macro first argument, macro can be defined to evaluate verbatim
 * since 1.7.6 optional and extra ignored arguments
+* since 1.12.3 options can also be used to define optional, failing, pure and verbatim macros
 
 ===== Define basics
 
@@ -909,7 +910,7 @@ Assume that there is an argument `a` with an actual parameter value `oneA`.
 There is another argument named `aa` with an actual value `twoAs`.
 In this case the occurrences of `aa` in the body could be replaced to `twoAs` or `oneAoneA`.
 
-Although Jamal could define some rule, like left-to-right, or right-to-left, or longer-first evaluation these could still lead to hard to read situations.
+Although Jamal could define some rule, like left-to-right, or right-to-left, or longer-first evaluation these could still lead to a hard-to-read situations.
 Jamal suffers from hard to read situations already without this extra headache.
 To avoid that Jamal does not allow you `a` and `aa` as argument names to a macro definition the same time.
 
@@ -1294,9 +1295,6 @@ DEFAULTDEFAULTDEFAULT
 ----
 
 
-
-
-
 The parameters stand after the name of the macro separated by a separator character.
 The first non-whitespace and non-alphanumeric character after the name of the macro is the separator character.
 It can be `/` as in the examples below, but it can also be any non-alphanumeric character.
@@ -1631,6 +1629,27 @@ resulting in
 Appending `...` after some other argument, which is not the last one or using `...` prefix on more than one argument is an error.
 It is also an error to add `...` postfix after the first argument when the macro has one argument.
 One argument macros are treated in a special way and all the text following the macro will be treated as a single argument, thus it is meaningless to use `...` after a single argument.
+
+===== Options
+
+Following the version 1.12.3 the macro `define` can be used with the options
+
+* `verbatim`,
+* `optional` (alias `ifNotDefined`),
+* `fail` (aliases `noRedefine`, `noRedef`, `failIfDefined`), and
+* `pure`
+
+These can be used instead of the modifying characters `~`, `?`, `!` and `:` respectively.
+You cannot use them together with the modifying character, but you can use one of the modifying character and the other option, unless they are mutually exclusive (`?` and `!`).
+
+n addition to that you can use the option
+
+* `global`
+
+to define a global macro, even if the macro does not have a `:` in the name.
+Using the option as `global=false`, however, will not make a macro containing `:` local.
+This option can be used together with the name containing `:`.
+
 
 [[undefine]]
 ==== v. `undefine`
@@ -4357,7 +4376,7 @@ The core macros use the `[` and `]` characters to enclose the parameters.
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, and `defer` also use the `[` and the `]` characters.
+To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, `define` and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 
 ====
