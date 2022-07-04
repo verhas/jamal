@@ -2,7 +2,7 @@
 
 The videos help you jumpstart using Jamal.
 They cover introduction and basic features as well as more complex topics.
-The cideos are published on Youtube:
+The videos are published on YouTube:
 
 link:https://www.youtube.com/channel/UCpUOu9zcCUdwAj0H3YzQa3A[YT channel]
 
@@ -14,7 +14,7 @@ image:./images/yt_channel.png[width=50%]
 === $title
 
 {%#if [not empty]|$ytId|
-link:https://youtu.be/$ytId[Watch It on Youtube] ($date)|PLANNED%} %}
+link:https://youtu.be/$ytId[Watch it on YouTube] ($date)|PLANNED%} %}
 
 {%video/Intro/PpSOpRa_738/2022-05-18%}
 
