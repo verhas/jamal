@@ -86,7 +86,7 @@ class TestSort {
     @DisplayName("sort - sort based on columns")
     void testSortWithColumns() throws Exception {
         TestThat.theInput(""
-                + "{@sort columns=/3/5\n"
+                + "{@sort columns=2..4\n"
                 + "zzabzzaa\n"
                 + "zzaadd\n"
                 + "zzcazzzzbb\n"
@@ -157,6 +157,19 @@ class TestSort {
                     + "c"
                     + "}"
             ).throwsBadSyntax("There was an exception converting the parameter 'pattern'.*");
+        }
+
+        @Test
+        @DisplayName("pattern that can't compile is bad syntax")
+        void cantSortWithBadColumns() throws Exception {
+            TestThat.theInput(""
+                    + "{#sort columns=2..4,5..6\n"
+                    + "aaaaaaaaaab\n"
+                    + "aaaaaaaaaaa\n"
+                    + "aaaaaaaaaad\n"
+                    + "aaaaaaaaaac"
+                    + "}"
+            ).throwsBadSyntax("The option '.*' can only have a single range value!");
         }
 
     }

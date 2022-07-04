@@ -3,6 +3,7 @@ package javax0.jamal.snippet;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scan;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.Params.holder;
@@ -35,7 +37,7 @@ public class Sort implements Macro {
         Collator collator = Collator.getInstance(getLocaleFromParam(locale));
 
         if (pattern.isPresent() && columns.isPresent()) {
-            throw new BadSyntax(String.format("Can not use both options '%s' and 'columns' %s.", pattern.name(), columns.name()));
+            throw new BadSyntax(format("Can not use both options '%s' and '%s' together.", pattern.name(), columns.name()));
         }
 
         skipWhiteSpaces(in);
@@ -43,10 +45,12 @@ public class Sort implements Macro {
                 .stream()
                 .map(s -> new LineHolder<>(s, s));
         if (columns.isPresent()) {
-            String[] columnParts = splitColumns(columns);
-            int begin = safeParse(columnParts[0]);
-            int end = safeParse(columnParts[1]);
-            lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(begin-1, end-1)));
+            List<Range> ranges = Range.calculateFrom(columns.get(), -1);
+            if (ranges.size() != 1) {
+                throw new BadSyntax(format("The option '%s' can only have a single range value!", columns.name()));
+            }
+            Range range = ranges.get(0);
+            lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from, range.to)));
         }
         lines = lines.map(findMatches(pattern));
         if (numeric.is()) {
@@ -95,7 +99,7 @@ public class Sort implements Macro {
     private String[] splitColumns(Params.Param<String> columns) throws BadSyntax {
         String[] parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(columns.get()));
         if (parts.length != 2) {
-            throw new BadSyntax(String.format("Expected exactly 2 parameters for option '%s', got %d", columns.name(), parts.length));
+            throw new BadSyntax(format("Expected exactly 2 parameters for option '%s', got %d", columns.name(), parts.length));
         }
         return parts;
     }
