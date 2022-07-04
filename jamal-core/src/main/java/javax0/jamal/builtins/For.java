@@ -48,7 +48,7 @@ public class For implements Macro, InnerScopeDependent {
         Position pos = input.getPosition();
         final var it = new For();
         it.processor = processor;
-        it.separator = Params.<String>holder("$forsep", "separator").orElse(",");
+        it.separator = Params.<String>holder("$forsep", "separator", "sep").orElse(",");
         it.subSeparator = Params.<String>holder("$forsubsep", "subseparator").orElse("\\|");
         it.trim = Params.<Boolean>holder("trimForValues", "trim").asBoolean();
         it.skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
@@ -63,7 +63,7 @@ public class For implements Macro, InnerScopeDependent {
         final String[][] valueMatrix;
         switch (checkKeyword(input)) {
             case IN:
-                valueMatrix = it.getValueMatrix(input, variables,pos);
+                valueMatrix = it.getValueMatrix(input, variables, pos);
                 break;
             case FROM:
                 final var source = fetchId(input);

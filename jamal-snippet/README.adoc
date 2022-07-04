@@ -2362,7 +2362,7 @@ will result
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
 - SnipXml.java: 1,489 bytes
-- ThinXmlMacro.java: 585 bytes
+- ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
 - Counter.java: 4,701 bytes
 - StringMacros.java: 6,419 bytes
@@ -2638,7 +2638,7 @@ will result in the output
 
 [source]
 ----
-2022-06-18 19:26:02
+2022-07-02 18:08:58
 ----
 
 

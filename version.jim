@@ -10,10 +10,30 @@ $x
 }
 `VERSION_LINES`={@if [not blank] /$ID/{@define $ID=$VERSION}}}}}
 
+--------------------------------------------------------------------------------------------------------------------
+--
+-- This is the last stable release, which is not the actual release and not the SNAPSHOT development version.
+--
+-- This is used, where Jamal itself is used as a tool in the development project. Using the SNAPSHOT version
+-- could cause extra bugs in the documentation conversion distracting the developers from the unit tests, which should
+-- also fail in cases like that.
+-- Using the SNAPSHOT / actual release version would also create circular dependencies.
+--
+--------------------------------------------------------------------------------------------------------------------
+-- cannot move to VERSIONS because old 'VersionFetcher.tsx' reads this file from github
+-- and looks for the "define" to see its version is OK
+{@define LAST_RELEASE=1.12.2}
+
+
 {VERSIONS
 
+--------------------------------------------------------------------------------------------------------------------
+--
+-- This is the main version of the project.
+--
+--------------------------------------------------------------------------------------------------------------------
+
 VERSION=1.12.3-SNAPSHOT                    -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
-LAST_RELEASE=1.12.2
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 

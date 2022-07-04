@@ -6,7 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
-import static javax0.jamal.tools.InputHandler.*;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 
 
 public class ThinXmlMacro implements Macro, InnerScopeDependent {

@@ -220,12 +220,36 @@ Test globally defined macro optional redefinition in local scope:
    Input: "{@define :a=1}{#ident {@define ?:a=2}{:a}}"
    Output: "1"
 
+Test globally defined macro optional redefinition using local name using option 'optional':
+   Input: "{@define :a=1}{#ident {@define [optional]a=2}{a}}"
+   Output: "1"
+
+Test globally defined macro optional redefinition using global name using option 'optional':
+   Input: "{@define :a=1}{#ident {@define [optional]:a=2}{a}}"
+   Output: "1"
+
+Test globally defined macro optional redefinition in local scope using option 'optional':
+   Input: "{@define :a=1}{#ident {@define [optional]:a=2}{:a}}"
+   Output: "1"
+
+Using option 'optional' together with '?' is error:
+   Input: "{@define :a=1}{#ident {@define [optional] ?:a=2}{:a}}"
+   Throws: "You cannot use optional and '\\?' in the define at the same time.*"
+
+You cannot use [optional failIfRedefined]:
+  Input: "{@define [ifNotDefined failIfDefined] a=13}"
+  Throws: "You cannot use ifNotDefined and failIfDefined.*"
+
 Double verbatim character in define is an error:
   Input: "{@define ~?~ a={@code}}{a}"
   Throws: "define.*has no.*"
 
 Macro defined to be verbatim:
   Input: "{@define~ a={@code}}{a}"
+  Output: "{@code}"
+
+Macro defined to be verbatim using option:
+  Input: "{@define [verbatim] a={@code}}{a}"
   Output: "{@code}"
 
 Macro defined verbatim using the ~ sign after a space:
@@ -280,6 +304,14 @@ macro redefinition can result error in case we use !:
   Input: "{@define a=y}{@define ! a=x}{a}"
   Throws: "The macro 'a' was already defined."
 
+"macro redefinition can result error in case we use option 'failIfDefined'":
+  Input: "{@define a=y}{@define [failIfDefined] a=x}{a}"
+  Throws: "The macro 'a' was already defined."
+
+"You cannot use option 'failIfDefined' and '!' together":
+  Input: "{@define a=y}{@define [failIfDefined] ! a=x}{a}"
+  Throws: "You cannot use failIfDefined and '!' in the define at the same time.*"
+
 conditional redefinition does not redefine any higher scope already defined macro:
   Input: "{#ident {@define :a=y}}{@define ? a=x}{a}"
   Output: "y"
@@ -300,8 +332,12 @@ conditional redefinition does not redefine any higher scope already defined macr
   Input: "{@define a(z):=yz}{a Z}"
   Output: "yZ"
 
-"Using := to define a macro will freeze the opening and closing strings in the macro when used":
+"Using := to define a pure macro will freeze the opening and closing strings in the macro when used":
   Input: "{@define a(z):={yz}}{@define yZ=k}{@sep [ ]}[a Z]"
+  Output: "{yZ}"
+
+"Using [pure] to define a pure macro will freeze the opening and closing strings in the macro when used":
+  Input: "{@define [pure] a(z)={yz}}{@define yZ=k}{@sep [ ]}[a Z]"
   Output: "{yZ}"
 
 "Using = to define a macro will replace the macros in the macro even if the opening/closing string is already different":

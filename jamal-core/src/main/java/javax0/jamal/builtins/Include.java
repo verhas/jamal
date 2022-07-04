@@ -8,8 +8,8 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
 import javax0.jamal.tools.Range;
+import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;

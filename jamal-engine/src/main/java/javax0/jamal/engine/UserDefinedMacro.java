@@ -3,6 +3,7 @@ package javax0.jamal.engine;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Configurable;
+import javax0.jamal.api.Counted;
 import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.engine.macro.ParameterSegment;
@@ -19,7 +20,7 @@ import java.util.Optional;
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
  */
-public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable, Debuggable.UserDefinedMacro {
+public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable, Debuggable.UserDefinedMacro, Counted {
     private static final String ESCAPE = "@escape ";
     final private String id;
     final private boolean verbatim;
@@ -209,8 +210,20 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         return openStr;
     }
 
+
     @Override
     public String getCloseStr() {
         return closeStr;
+    }
+
+    private long usageCounter = 0;
+    @Override
+    public void count() {
+        usageCounter++;
+    }
+
+    @Override
+    public long counted() {
+        return usageCounter;
     }
 }

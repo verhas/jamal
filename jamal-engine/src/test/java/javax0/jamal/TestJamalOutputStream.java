@@ -1,6 +1,5 @@
 package javax0.jamal;
 
-import javax0.jamal.JamalOutputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -175,6 +175,13 @@ public interface Processor extends AutoCloseable {
      */
     @FunctionalInterface
     interface Logger {
+        /**
+         * A logger interface that the embedding application may provide for the processor.
+         * @param level the message level, standard JKD level
+         * @param pos position, may be null, and the implementation MUST NOT fail if it is null
+         * @param format the message or the message format to be use in String.format()
+         * @param params the parameters for the format
+         */
         void log(final System.Logger.Level level, final Position pos, final String format, final String... params);
     }
 

@@ -1,22 +1,40 @@
 
+  if( element instanceof PsiReturnStatement ){
+      return ((PsiReturnStatement)element).getReturnValue();
+      }
 
-[source]
-----
-bear
-zebra
-snake
-dog
-kitty
-donkey
+  if( element instanceof PsiExpressionStatement ){
+      return ((PsiExpressionStatement)element).getExpression();
+      }
 
-rosy
-ruby
-cauly
-maurieeen
-schiffffffart
+  if( element instanceof PsiYieldStatement ){
+      return ((PsiYieldStatement)element).getExpression();
+      }
 
+  if( element instanceof PsiAssertStatement ){
+      return ((PsiAssertStatement)element).getAssertCondition();
+      }
 
-----
+  if( element instanceof PsiResourceExpression ){
+      return ((PsiResourceExpression)element).getExpression();
+      }
 
+  if( element instanceof PsiResourceVariable ){
+      return ((PsiResourceVariable)element).getInitializer();
+      }
 
-and here we go
+  if( element instanceof PsiPolyadicExpression ){
+      return ((PsiPolyadicExpression)element).getOperands()[0];
+      }
+
+  if( element instanceof PsiInstanceOfExpression ){
+      return ((PsiInstanceOfExpression)element).getOperand();
+      }
+
+  if( element instanceof PsiParenthesizedExpression ){
+      return ((PsiParenthesizedExpression)element).getExpression();
+      }
+
+  if( element instanceof PsiConditionalExpression ){
+      return ((PsiConditionalExpression)element).getCondition ();
+      }

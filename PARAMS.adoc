@@ -34,7 +34,7 @@ Using these an `include` macro can be written as:
 
 In this case the parameters are enclosed between the `[` and `]` characters.
 The core built-in macros use these separator characters.
-Currently 7 built-in core macros have parameters.
+Currently 8 built-in core macros have parameters.
 
 Built-in macros in other packages are encouraged to use the `(` and `)` characters to enclose their parameters.
 When the macro does not need content other than the parameters the recommended way is to use the whole content for the parameters without any separator characters.
