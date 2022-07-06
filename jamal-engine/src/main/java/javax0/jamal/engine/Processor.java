@@ -471,7 +471,7 @@ public class Processor implements javax0.jamal.api.Processor {
         skipWhiteSpaces(evaluatedInput);
         final Optional<Identified> identifiedOpt;
         if (id.length() == 0) {
-            identifiedOpt = Optional.of( new NullMacro(qualifier.processor));
+            identifiedOpt = Optional.of(new NullMacro(qualifier.processor));
         } else {
             if (reportUndef || !optionsStore.is(NO_UNDEFAULT)) {
                 identifiedOpt = macros.getUserDefined(id, Identified.DEFAULT_MACRO);
@@ -830,26 +830,13 @@ public class Processor implements javax0.jamal.api.Processor {
     private int stepOverNestedMacros(final String input, final int start, final Position pos) throws BadSyntaxAt {
         String open = macros.open();
         String close = macros.close();
-        int searchFrom = start + open.length();
-        int depth = 1;
-        while (true) {
-            final int openIndex = input.indexOf(open, searchFrom);
-            final int closeIndex = input.indexOf(close, searchFrom);
-            if (openIndex == -1 && closeIndex == -1) {
-                throw new BadSyntaxAt("Invalid macro nesting in the argument of the user defined macro." + input, pos);
-            }
-            if (openIndex == -1 || closeIndex < openIndex) {
-                searchFrom = closeIndex + close.length();
-                depth--;
-                if (depth == 0) {
-                    break;
-                }
-            } else {
-                searchFrom = openIndex + open.length();
-                depth++;
-            }
+        final int openIndex = input.indexOf(open, start);
+        if (openIndex > -1) {
+            final var in = new javax0.jamal.tools.Input(input.substring(openIndex + open.length()));
+            final var nested = MacroBodyFetcher.getNextMacroBody(in, this);
+            return openIndex + open.length() + nested.length() + close.length();
         }
-        return searchFrom;
+        throw new BadSyntaxAt("Invalid macro nesting in the argument of the user defined macro." + input, pos);
     }
 
     String getNextMacroBody(final Input input) throws BadSyntaxAt {

@@ -124,6 +124,24 @@ public class TestProcessor {
         Assertions.assertEquals("{zz}", result);
     }
 
+    @Test
+    @DisplayName("Can use 'escape {' in the parameters of a UD macro")
+    void testMacroNestingInUDMacroArgument() throws Exception {
+        final var input = new Input("{@define Q(a,b)=a, b}{Q/w{@escape*``{``}/}");
+        final var sut = new Processor("{", "}");
+        final var result = sut.process(input);
+        Assertions.assertEquals("w{, ", result);
+    }
+
+    @Test
+    @DisplayName("Can use 'escape }' in the parameters of a UD macro")
+    void testMacroNestingInUDMacroArgument2() throws Exception {
+        final var input = new Input("{@define Q(a,b)=a, b}{Q//w{@escape*``{``}}");
+        final var sut = new Processor("{", "}");
+        final var result = sut.process(input);
+        Assertions.assertEquals(", w{", result);
+    }
+
     @Macro.Stateful
     public static class SignalMacro implements Macro {
         String closed = "not closed";
@@ -156,22 +174,22 @@ public class TestProcessor {
     @DisplayName("Macro implementing AutoClose gets closed when gets out of scope")
     public void testAutoClose() throws BadSyntax {
         final var input = new Input(
-            "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
-                "{@signalmacro}\n" +
-                "{#ident" +
-                "  {@use javax0.jamal.engine.TestProcessor.AutoClosingMacro}" +
-                "{@autoclosingmacro}\n" +
-                "{@signalmacro}" +
-                "}\n" +
-                "{@signalmacro}\n"
+                "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
+                        "{@signalmacro}\n" +
+                        "{#ident" +
+                        "  {@use javax0.jamal.engine.TestProcessor.AutoClosingMacro}" +
+                        "{@autoclosingmacro}\n" +
+                        "{@signalmacro}" +
+                        "}\n" +
+                        "{@signalmacro}\n"
         );
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
         Assertions.assertEquals(
-            "not closed\n" +
-                "AutoClosing\n" +
                 "not closed\n" +
-                "closed\n", result);
+                        "AutoClosing\n" +
+                        "not closed\n" +
+                        "closed\n", result);
     }
 
 
@@ -208,21 +226,21 @@ public class TestProcessor {
     @DisplayName("User Defined Macro implementing AutoClose gets closed when gets out of scope")
     public void testAutoCloseUdm() throws BadSyntax {
         final var input = new Input(
-            "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
-                "{@signalmacro}\n" +
-                "{#ident" +
-                "  {@use javax0.jamal.engine.TestProcessor.UdReg}" +
-                "{@udreg}\n" +
-                "{@signalmacro}" +
-                "}\n" +
-                "{@signalmacro}\n"
+                "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
+                        "{@signalmacro}\n" +
+                        "{#ident" +
+                        "  {@use javax0.jamal.engine.TestProcessor.UdReg}" +
+                        "{@udreg}\n" +
+                        "{@signalmacro}" +
+                        "}\n" +
+                        "{@signalmacro}\n"
         );
         final var sut = new Processor("{", "}");
         final var result = sut.process(input);
         Assertions.assertEquals(
-            "not closed\n" +
                 "not closed\n" +
-                "closed\n", result);
+                        "not closed\n" +
+                        "closed\n", result);
     }
 
 
@@ -264,23 +282,23 @@ public class TestProcessor {
     @DisplayName("Macro implementing AutoClose gets closed when gets out of scope")
     public void testDeferredClose() throws Exception {
         final var input = new Input(
-            "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
-                "{@signalmacro}\n" +
-                "{#ident" +
-                "  {@use javax0.jamal.engine.TestProcessor.DeferredClosingMacro}" +
-                "{@deferredclosingmacro}\n" +
-                "{@signalmacro}" +
-                "}\n" +
-                "{@signalmacro}\n"
+                "{@use javax0.jamal.engine.TestProcessor.SignalMacro}" +
+                        "{@signalmacro}\n" +
+                        "{#ident" +
+                        "  {@use javax0.jamal.engine.TestProcessor.DeferredClosingMacro}" +
+                        "{@deferredclosingmacro}\n" +
+                        "{@signalmacro}" +
+                        "}\n" +
+                        "{@signalmacro}\n"
         );
         MyContext ctx = new MyContext();
         try (final var sut = new Processor("{", "}", ctx)) {
             final var result = sut.process(input);
             Assertions.assertEquals(
-                "not closed\n" +
-                    "AutoClosing\n" +
                     "not closed\n" +
-                    "not closed\n", result);
+                            "AutoClosing\n" +
+                            "not closed\n" +
+                            "not closed\n", result);
             Assertions.assertTrue(ctx.deferred.isClosed);
         }
         Assertions.assertTrue(ctx.deferred.isClosed);
@@ -321,9 +339,9 @@ public class TestProcessor {
     @DisplayName("Macro implementing postprocessor")
     public void testPostProcessor() throws Exception {
         final var input = new Input(
-            "{@use javax0.jamal.engine.TestProcessor.Postprocessor}" +
-                "{@postprocessor}" +
-                "I think that this is something that needs capitalized."
+                "{@use javax0.jamal.engine.TestProcessor.Postprocessor}" +
+                        "{@postprocessor}" +
+                        "I think that this is something that needs capitalized."
         );
         try (final var sut = new Processor("{", "}")) {
             final var result = sut.process(input);

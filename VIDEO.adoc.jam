@@ -82,7 +82,12 @@ How to store the numbers and use the reference later.
 Each video on this chapter is about a core built-in macro.
 How to use, what options the macro supports and what is the intended use.
 
-{%video/Begin and End//%}
+{%video/Define//%}
+
+Define and use user defined macros.
+This is detailed in other videos as well, but in this video we will look at all the available features.
+
+{%video/Begin and End macros//%}
 
 How to start and end a scope using macros and naming the scope.
 
@@ -97,11 +102,6 @@ Inserting comments into your macro file.
 {%video/Defer//%}
 
 How to execute some macro at the end of the processing.
-
-{%video/Define//%}
-
-Define and use user defined macros.
-This is detailed in other videos as well, but in this video we will look at all the available features.
 
 {%video/Env//%}
 

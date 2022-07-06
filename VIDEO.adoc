@@ -121,7 +121,15 @@ Each video on this chapter is about a core built-in macro.
 How to use, what options the macro supports and what is the intended use.
 
 
-=== Begin and End
+=== Define
+
+PLANNED 
+
+Define and use user defined macros.
+This is detailed in other videos as well, but in this video we will look at all the available features.
+
+
+=== Begin and End macros
 
 PLANNED 
 
@@ -147,14 +155,6 @@ Inserting comments into your macro file.
 PLANNED 
 
 How to execute some macro at the end of the processing.
-
-
-=== Define
-
-PLANNED 
-
-Define and use user defined macros.
-This is detailed in other videos as well, but in this video we will look at all the available features.
 
 
 === Env
