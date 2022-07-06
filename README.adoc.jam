@@ -3118,7 +3118,7 @@ The macros after it already have to use the altered opening and closing strings.
 This makes it a bit tricky when you want to use a closing string that happens to contain the original closing string.
 Assume that the current opening string is `{` and the current closing string is `}`.
 You want to have `{{` as an opening string and `}}` as a closing string.
-This is often the choice when using Jamal in a programming language environment that heavily uses `{` and`}` braces.
+This is often the choice when using Jamal in a programming language environment that heavily uses `{` and `}` braces.
 In this case
 
 {%sample/
@@ -3182,8 +3182,8 @@ Note that `z` is not exported from this scope.
 After that the `<<@sep>>` restores the opening and closing strings to the inherited one and with these, it defines `a1`
 and `a2` and exports them.
 Note, that `a1` will have the actual value of the macro `z` evaluated inside the scope of the `comment` macro.
-The macro `a2` starts with `@` thus the body is not parsed during the macro definition and thus the value of `a2` is `[[z]]` unevaluated, as it is.
-Similarly, the macro `a3` will have the value`{z}`.
+The macro `a2` starts with `@` thus the body is not parsed during the macro definition and thus the value of `a2` is `[[``z``]]` unevaluated, as it is.
+Similarly, the macro `a3` will have the value `{z}`.
 
 All these macros are evaluated because the macro `comment` is started with the character `#`.
 It means that Jamal will evaluate the body of the macro before evaluating the macro itself.
@@ -3193,8 +3193,7 @@ Then we have a simple macro definition that defines `z` and then this `z` is use
 
 `z` is now, as defined in the outer scope is `SSS`.
 `a1` has the value that came from the macro `z` as it was defined inside the scope of the macro `comment`.
-Macro `a2`
-has the value `[[z]]` that has nothing special in the current scope.
+Macro `a2` has the value ``[[``z``]]`` that has nothing special in the current scope.
 The macro `a3` has the value `{z}` which is evaluated after the macro `a3` is replaced with its value.
 
 {%sample/
