@@ -131,7 +131,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=aee77b13%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=44b10a1e%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -197,6 +197,22 @@ is the same as
 The only difference is that the first version will contain a line with a trailing `\n` at the end of the line.
 The `snipline` version does not contain the trailing `\n`.
 ====
+
+A snipline can also have a trailing `filter=regex` after the name of the snippet.
+The rest of the line after the `filter=` is a regular expression that will be used to filter the line.
+(Note that there is no space before or after the `=` character.)
+The regular expression should have exactly one capturing group, and it must match the next line.
+The capturing group will be used as snippet content.
+
+For example
+
+[source]
+----
+// snipline MY_CONSTANT_SNIPPET_NAME filter="(.*)"
+  public static final MY_CONSTANT = "Hello World";
+----
+
+will store `Hello World` as the content of the snippet `MY_CONSTANT_SNIPPET_NAME`.
 
 There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
 The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.

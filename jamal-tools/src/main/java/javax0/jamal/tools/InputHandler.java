@@ -393,6 +393,19 @@ public class InputHandler {
         }
     }
 
+    public static boolean isIdentifier(final String id) {
+        final char startCharacter = id.charAt(0);
+        if( ! validId1stChar(startCharacter)){
+            return false;
+        }
+        for( int i = 1 ; i < id.length() ; i++ ){
+            if( ! validIdChar(id.charAt(i)) ){
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Checks that no parameter name contains another parameter name. If there is any parameter name that contains
      * another parameter name then {@code BadSyntax} is thrown.

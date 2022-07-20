@@ -810,6 +810,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.7.4 `default` macro first argument, macro can be defined to evaluate verbatim
 * since 1.7.6 optional and extra ignored arguments
 * since 1.12.3 options can also be used to define optional, failing, pure and verbatim macros
+* since 1.12.3 option `RestrictedDefineParameters` can be used to restrict parameters to be only identifiers
 
 ===== Define basics
 
@@ -914,9 +915,10 @@ Although Jamal could define some rule, like left-to-right, or right-to-left, or 
 Jamal suffers from hard to read situations already without this extra headache.
 To avoid that Jamal does not allow you `a` and `aa` as argument names to a macro definition the same time.
 
-During the replacement a parameter may be a string that contains the name of one or more argument names.
+During the replacement a parameter value may be a string that contains the name of one or more argument names.
 This is absolutely legit.
-These will NOT be replaced with the parameter value(s) that were provided for the other argument(s) that are inside the value of the parameter.
+The use of the macro should not, and does not depend on the names used to define the macro.
+The macro parameter names inside the actual parameter values will NOT be replaced with the parameter value(s) that were provided for the other argument(s) inside the value of the parameter.
 For example:
 
 [source]
@@ -933,7 +935,33 @@ When a leopard and a *c can run then fish can fly
 ----
 
 
-even though `*c` is a `fish`, but the characters `*c` in the output come from the value of a parameter and therefore it is not replaced.
+even though `*c` is a `fish`, but the characters `*c` in the output come from the value of a parameter, and therefore it is not replaced.
+
+===== Option `RestrictedDefineParameters`
+
+In the example above the parameter names started with the `*` character.
+These are not identifier names.
+Identifiers start with the letters `a-z` or `A-Z`, `$`, `:` or underscore `_` and can contain any of these on consecutive positions and also digits.
+If you want to restrict the macro definitions to use only identifiers as symbolic names for user defined macro arguments you can use the option  `RestrictedDefineParameters`.
+
+[source]
+----
+{@options RestrictedDefineParameters}
+{@define z($a,$b,$c,$d)=When a $a can $b then $c can $d}
+{z /leopard and a $c/run/fish/fly}
+----
+
+will result
+
+[source]
+----
+When a leopard and a $c can run then fish can fly
+----
+
+
+
+
+but the previous sample, using parameter names starting with the character `*` would result in an error.
 
 ===== Special User Defined Macros
 
@@ -2189,7 +2217,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-18.jdk/Contents/Home
 ----
 
 
@@ -3576,7 +3604,7 @@ The macros after it already have to use the altered opening and closing strings.
 This makes it a bit tricky when you want to use a closing string that happens to contain the original closing string.
 Assume that the current opening string is `{` and the current closing string is `}`.
 You want to have `{{` as an opening string and `}}` as a closing string.
-This is often the choice when using Jamal in a programming language environment that heavily uses `{` and`}` braces.
+This is often the choice when using Jamal in a programming language environment that heavily uses `{` and `}` braces.
 In this case
 
 [source]
@@ -3643,8 +3671,8 @@ Note that `z` is not exported from this scope.
 After that the `<<@sep>>` restores the opening and closing strings to the inherited one and with these, it defines `a1`
 and `a2` and exports them.
 Note, that `a1` will have the actual value of the macro `z` evaluated inside the scope of the `comment` macro.
-The macro `a2` starts with `@` thus the body is not parsed during the macro definition and thus the value of `a2` is `[[z]]` unevaluated, as it is.
-Similarly, the macro `a3` will have the value`{z}`.
+The macro `a2` starts with `@` thus the body is not parsed during the macro definition and thus the value of `a2` is `[[``z``]]` unevaluated, as it is.
+Similarly, the macro `a3` will have the value `{z}`.
 
 All these macros are evaluated because the macro `comment` is started with the character `#`.
 It means that Jamal will evaluate the body of the macro before evaluating the macro itself.
@@ -3654,8 +3682,7 @@ Then we have a simple macro definition that defines `z` and then this `z` is use
 
 `z` is now, as defined in the outer scope is `SSS`.
 `a1` has the value that came from the macro `z` as it was defined inside the scope of the macro `comment`.
-Macro `a2`
-has the value `[[z]]` that has nothing special in the current scope.
+Macro `a2` has the value ``[[``z``]]`` that has nothing special in the current scope.
 The macro `a3` has the value `{z}` which is evaluated after the macro `a3` is replaced with its value.
 
 [source]

@@ -268,4 +268,4 @@ How to control macro evaluation order and why it is important.
 
 PLANNED 
 
-How can you process the whole input file using a macro after the who file was already processed.
+How can you process the whole input file using a macro after the whole file was already processed.

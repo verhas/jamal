@@ -6,7 +6,10 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+
+import java.util.Arrays;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
 import static javax0.jamal.api.SpecialCharacters.DEFINE_VERBATIM;
@@ -27,7 +30,9 @@ public class Define implements Macro {
         final var noRedefineParam = Params.<Boolean>holder(null, "fail", "noRedefine", "noRedef", "failIfDefined").asBoolean();
         final var pureParam = Params.<Boolean>holder(null, "pure").asBoolean();
         final var globalParam = Params.<Boolean>holder(null, "global").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam).parse(input);
+        // snipline RestrictedDefineParameters filter="(.*)"
+        final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
+        Params.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam, IdOnly).parse(input);
         if (noRedefineParam.is() && optionalParam.is()) {
             throw new BadSyntax(String.format("You cannot use %s and %s", optionalParam.name(), noRedefineParam.name()));
         }
@@ -71,7 +76,15 @@ public class Define implements Macro {
         if (id.endsWith(":") && !firstCharIs(input, '(')) {
             throw new BadSyntax("The () in define is not optional when the macro name ends with ':'.");
         }
+
         final String[] params = getParameters(input, id);
+
+        if (IdOnly.is()) {
+            if (!Arrays.stream(params).allMatch(InputHandler::isIdentifier)) {
+                throw new BadSyntax("The parameters of the define must be identifiers.");
+            }
+        }
+
         final var pure = firstCharIs(input, ':');
         if (pure) {
             skip(input, 1);
