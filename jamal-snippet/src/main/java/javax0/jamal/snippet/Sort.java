@@ -23,12 +23,12 @@ public class Sort implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var separator = holder("separator").orElse("\n").asPattern();
-        final var join = holder("join").orElse("\n").asString();
-        final var locale = holder("locale").asString();
-        final var columns = holder("columns").asString();
-        final var pattern = holder("pattern").asPattern();
-        final var numeric = holder("numeric").asBoolean();
-        final var reverse = holder("reverse").asBoolean();
+        final var join = holder(null, "join").orElse("\n").asString();
+        final var locale = holder(null, "locale", "collatingOrder").asString();
+        final var columns = holder(null, "columns").asString();
+        final var pattern = holder(null, "pattern").asPattern();
+        final var numeric = holder(null, "numeric").asBoolean();
+        final var reverse = holder(null, "reverse").asBoolean();
         Scan.using(processor)
                 .from(this)
                 .firstLine()
