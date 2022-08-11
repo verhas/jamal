@@ -13,6 +13,7 @@ Do not forget to restart IntelliJ after running this script.
 %}\
 #!/usr/bin/env bash
 mvn clean install
+mkdir -p ../.asciidoctor/lib
 pushd ../.asciidoctor/lib
 rm -f *
 unzip ~/.m2/repository/com/javax0/jamal/jamal-asciidoc/{%VERSION%}/jamal-asciidoc-{%VERSION%}-jamal-asciidoc-distribution.zip >/dev/null
