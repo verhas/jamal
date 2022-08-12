@@ -5,6 +5,7 @@ import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.engine.DebuggerStub;
 import javax0.jamal.engine.NullDebugger;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.engine.ProxyDebugger;
 
 /**
  * The debugger factory finds and instantiates a debugger for the given processor. To perform this task the code looks
@@ -38,7 +39,7 @@ public class DebuggerFactory {
     public static Debugger build(Processor processor) {
         final var s = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_DEBUG_ENV).orElse("");
         if (s.length() == 0) {
-            return new NullDebugger();
+            return new ProxyDebugger();
         }
         int min = Integer.MAX_VALUE;
         boolean unique = true;

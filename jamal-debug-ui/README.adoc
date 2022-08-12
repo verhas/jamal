@@ -1,3 +1,8 @@
 = Jamal Debugger UI
 
 This directory contains the source code for the UI component of the Jamal debugger.
+The Jamal debugger UI is a JavaScript React application that runs in the browser.
+The debugger module supporting the UI implements a REST API that the UI is using.
+The same debugger module can also be used to download the UI code into the browser.
+
+The server part of the debugger is implemented in the module `jamal-debug`.
