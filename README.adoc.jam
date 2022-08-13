@@ -211,6 +211,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<escape,`escape`>>
 .. <<require,`require`>>
 .. <<macro,`macro`>>
+.. <<debug,`debug`>>
 .. <<nullmacro,`no-name macro`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
@@ -3782,6 +3783,48 @@ To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `bui
 The behavior will be the same as for user-defined macros.
 If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
 
+[[debug]]
+==== {%macroChapter%}`debug`
+since 1.12.3
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=d90d8bbd%}
+
+The macro `debug` can be used to start the debugger from the Jamal source code.
+It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.
+
+It is important to note, it will only work if the debugger is on the module path or on the classpath.
+It is also important to note that the macro only works if there is no debugger configured in the environment variables, or in the system properties or configured in the `.jamal` directory.
+
+The macro has the following syntax:
+
+{%sample/
+{@debug options}
+%}
+
+The macro has the following options:
+
+
+* `using` (aliases `debugger`, `selector`) can specify the debugger connection string.
+This is the same connection string that you can use in the environment variable {%JAMAL_DEBUG_ENV%} or system property.
+
+YOu can switch off and on the debugger inside the input using the options `on` and `off`.
+
+* `on` the debugger is switched on.
+* `off` the debugger is switched off.
+
+You cannot use the `on` and `off` options together.
+Doing so will result in an error.
+
+The options `on`, `off`, and `using` are technically all aliases, which means that a user defined macro or option of the same name does not affect the macro.
+
+* `noDebug` is an option that can be used via the `options` macro to switch the debugger off globally for the whole file, or for the part where the option is in effect.
+It is possible to use this option as a parameter to the macro, however, in this case the effect is the same as the parameter `off`.
+
+* `lenient` is an option that can be used via the `options` macro.
+When this option is on, the fact that a global and external debugger is defined will not result in an error.
+
+
+
+
 [[nullmacro]]
 === {%chapter%}Special NoName User Defined Macro
 
@@ -3889,13 +3932,14 @@ The core macros cannot use the `(` and `)` characters, because the syntax of the
 Because of that options between `(` and `)` could not be distinguished from the variable list.
 To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, `define` and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
+The core macro `debug` uses the whole input, therefore it does not use any of the brackets around the parameters.
 
 {%@comment The following macro does not generate anything into the output.
 It simply fails when the number of files using Params is not the same as expected.
 And it already saved the consistency of this documentation many times.
 %}\
 {%#define nrCoreMacrosUsingParams={%@listDir (grep="(?:Params|Scan).using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
-{%#define nrCoreMacrosUsingParamsDocumented=8%}\
+{%#define nrCoreMacrosUsingParamsDocumented=9%}\
 {%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
 ====
 

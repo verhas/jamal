@@ -20,6 +20,7 @@ import javax0.jamal.engine.util.MacroBodyFetcher;
 import javax0.jamal.engine.util.MacroQualifier;
 import javax0.jamal.engine.util.PrefixComposer;
 import javax0.jamal.tools.Marker;
+import javax0.jamal.tools.NullDebugger;
 import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
@@ -64,8 +65,19 @@ public class Processor implements javax0.jamal.api.Processor {
     final private Map<AutoCloseable, AutoCloseable> openResources = new LinkedHashMap<>();
     private final Context context;
     private final Debugger debugger;
+    private final DebuggerStub debuggerStub = new DebuggerStub(this);
     private final OptionsStore optionsStore;
     private boolean currentlyClosing = false;
+
+    @Override
+    public Optional<Debugger> getDebugger() {
+        return Optional.ofNullable(debugger);
+    }
+
+    @Override
+    public Optional<Debugger.Stub> getDebuggerStub() {
+        return Optional.ofNullable(debuggerStub);
+    }
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These

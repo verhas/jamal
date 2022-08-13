@@ -18,6 +18,14 @@ import java.util.Properties;
  */
 public interface Processor extends AutoCloseable {
     /**
+     * Get the debugger that is currently configured for the processor.
+     * @return the current debugger
+     */
+    Optional<Debugger> getDebugger();
+
+    Optional<Debugger.Stub> getDebuggerStub();
+
+    /**
      * Process the input and result the string after processing all built-in and user defined macros.
      *
      * @param in the input the processor has to work on.

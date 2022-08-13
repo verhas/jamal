@@ -49,6 +49,10 @@
             <artifactId>jamal-engine</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-testsupport</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.9.0-M1</version>

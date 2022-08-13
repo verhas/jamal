@@ -2,10 +2,9 @@ package javax0.jamal.engine.debugger;
 
 import javax0.jamal.api.Debugger;
 import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.engine.DebuggerStub;
-import javax0.jamal.engine.NullDebugger;
 import javax0.jamal.engine.Processor;
-import javax0.jamal.engine.ProxyDebugger;
+import javax0.jamal.tools.MinimumAffinityDebuggerSelector;
+import javax0.jamal.tools.ProxyDebugger;
 
 /**
  * The debugger factory finds and instantiates a debugger for the given processor. To perform this task the code looks
@@ -43,25 +42,13 @@ public class DebuggerFactory {
         }
         int min = Integer.MAX_VALUE;
         boolean unique = true;
-        Debugger selected = null;
-        for (final var debugger : Debugger.getInstances()) {
-            final var affinity = debugger.affinity(s);
-            if (affinity >= 0 && min > affinity) {
-                unique = true;
-                selected = debugger;
-                min = affinity;
-            } else if (min == affinity) {
-                unique = false;
-            }
-        }
-        if (!unique) {
-            throw new IllegalArgumentException("There are two or more equal minimum affinity debuggers.");
-        }
-        if (selected == null) {
-            throw new IllegalArgumentException("There is no debugger that can handle the given configuration string.");
-        }
+        Debugger selected = MinimumAffinityDebuggerSelector.select(Debugger.getInstances(), s);
         try {
-            selected.init(new DebuggerStub(processor));
+            if (processor.getDebuggerStub().isPresent()) {
+                selected.init(processor.getDebuggerStub().get());
+            } else {
+                throw new IllegalArgumentException("There is no debugger stub for this processor. Weird.");
+            }
         } catch (IllegalArgumentException iae) {
             throw iae;
         } catch (Exception e) {
