@@ -4062,7 +4062,7 @@ Examples:
 
 * `13y` means 13 years
 
-* 13y1m3h` means 13 years, 1 month and 3 hours
+* `13y1m3h` means 13 years, 1 month and 3 hours
 
 The property values, `ttl` or other values, are read from the property file and are inherited from `.properties` files.
 These files are not created by Jamal, but you are free to create them with different keys and values.
