@@ -32,7 +32,6 @@
                     <argLine>
                 --add-opens jamal.testsupport/javax0.jamal.builtinstest=ALL-UNNAMED
                           --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
-                          --add-opens jamal.core/javax0.jamal.core=testsupport
                           --add-opens jamal.testsupport/javax0.jamal.testsupport=org.junit.platform.commons
                           --add-opens jamal.testsupport/javax0.jamal.builtinstest=org.junit.platform.commons
                            --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED

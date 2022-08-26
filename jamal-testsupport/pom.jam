@@ -8,7 +8,6 @@
 
     {@define openForTests={opens/testsupport/builtinstest}
                           {opens/testsupport/testsupport}
-                          {opens/core/core/testsupport}
                           {opens/testsupport/testsupport/org.junit.platform.commons}
                           {opens/testsupport/builtinstest/org.junit.platform.commons}
                            --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
