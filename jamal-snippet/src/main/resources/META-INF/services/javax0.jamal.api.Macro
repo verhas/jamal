@@ -40,6 +40,7 @@ javax0.jamal.snippet.SnipLine
 javax0.jamal.snippet.SnipFile
 javax0.jamal.snippet.RangeMacro
 javax0.jamal.snippet.Rot13
+javax0.jamal.snippet.Pos
 javax0.jamal.snippet.StringMacros$Contains
 javax0.jamal.snippet.StringMacros$Substring
 javax0.jamal.snippet.StringMacros$Length
@@ -48,3 +49,4 @@ javax0.jamal.snippet.StringMacros$Quote
 javax0.jamal.snippet.StringMacros$StartsWith
 javax0.jamal.snippet.StringMacros$EndsWith
 javax0.jamal.snippet.StringMacros$Reverse
+javax0.jamal.snippet.StringMacros$Chop

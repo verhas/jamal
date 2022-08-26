@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# This shell script was automatically compiled from install-asciidoc.jam
+#
 mvn clean install
 mkdir -p ../.asciidoctor/lib
 pushd ../.asciidoctor/lib

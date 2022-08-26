@@ -12,38 +12,55 @@ The advantages of using these classes are twofold.
 This document describes the format and use of the parameters of the built-in macros using these supporting classes.
 ====
 
-The parameter parsing can scan the macro content from the start
+=== Introduction
 
-* to the end,
-
-* to a specific closing character, like new-line, or
-
-* to the end of the macro content.
-
-For example the built-in macro `include` has the follwoing two parameters among others:
-
-* `verbatim`, and
-* `lines`.
-
-Using these an `include` macro can be written as:
+Parameters are name value pairs that modify the behavior of a macro.
+For example, the line
 
 [source]
 ----
 {@include [verbatim lines=1..13] otherContent.txt}
 ----
 
-In this case the parameters are enclosed between the `[` and `]` characters.
+will instruct jamal to include the file in verbatim mode and only the lines from 1 to 13.
+
+The Java implementation declares the names and types of the parameters and the helper tool automatically parses the input.
+The Java code of the macro gets the values for the parameters parsed and converted.
+
+Parameters can be integer numbers, strings, boolean values, regular expression patterns.
+Some parameters may have multiple values.
+
+Parameters are named and aliased as defined in the Java code.
+
+The parameter parsing can scan the macro content from the start
+
+* to the end,
+
+* to a specific closing character, like new-line, or
+
+* between special opening and closing characters.
+
+NOTE: The parameters start and end with an opening and closing character.
+The macros have opening and closing strings, macro parameter parsing uses single characters.
+The actual character is specified by the Java implementation of the macro.
+It is not something you need to change on the Jamal code.
+
+As we have seen the `input` macro with the parameters
+
+[source]
+----
+{@include [verbatim lines=1..13] otherContent.txt}
+----
+
+uses the `[` and `]` characters.
 The core built-in macros use these separator characters.
-Currently 9 built-in core macros have parameters.
+Currently 10 built-in core macros have parameters.
 
 Built-in macros in other packages are encouraged to use the `(` and `)` characters to enclose their parameters.
-When the macro does not need content other than the parameters the recommended way is to use the whole content for the parameters without any separator characters.
+When the macro does not need content other than the parameters, the recommended way is to use the whole input.
 Macros working on several lines, like `trimLines` usually use the first line of the content for parameters.
 
-=== Introduction
-
-Some macros need configuration.
-For example, the `trimLines` macro in the snippet package can trim vertically if we instruct it.
+The `trimLines` macro in the snippet package can trim vertically if we instruct it.
 Similarly, the left trimming can go all to the left, but it may also leave some margin if we specify some margin.
 For this reason, this macro uses the two parameters:
 
@@ -55,7 +72,7 @@ This macro reserves the first line of the input and trims and returns only the r
 The first line can contain parameters.
 
 Other macros parse the whole input for parameters.
-For example, the `snip:collect` macro collects snippets from files, and it does not convert anything from its input.
+The `snip:collect` macro collects snippets from files, and it does not convert anything from its input.
 This macro parses the whole input looking for parameters.
 Some macros start parsing for parameters if the first non-whitespace character after the macro id is `(` and the parsing stops at the matching `)`.
 
@@ -63,7 +80,7 @@ The class `Params` provides the tools to ease parameter parsing.
 
 === Parameter Sources
 
-When macros needs parameters using the support classes, they look at different sources for the parameters.
+When macros needs parameters using the support classes, they look at different sources for the values.
 First, they look at the macro's input and try to find the parameters there.
 The parameters are specified in the format
 

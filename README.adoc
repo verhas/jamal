@@ -196,6 +196,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<require,`require`>>
 .. <<macro,`macro`>>
 .. <<debug,`debug`>>
+.. <<log,`log`>>
 .. <<nullmacro,`no-name macro`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
@@ -2218,7 +2219,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-18.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
 ----
 
 
@@ -3957,7 +3958,10 @@ When an error happens, and the `try` macro catches the exception thrown the scop
 - since 1.9.1 (`escape*`)
 
 The built-in macro escape is a special one, like `verbatim`.
-It is implemented as Java a macro class, but the macro evaluation process takes the presence of an `escape` macro into account.
+The implementation of the macro overrides the method that parses the macro seeking for the matching closing string.
+The default implementation is simply searches for the first closing string taking into account the nested macros.
+The syntax of `escape, however, is special.
+
 The syntax of the macro is the following:
 
 [source,jamal]
@@ -3966,14 +3970,11 @@ The syntax of the macro is the following:
 ----
 
 The part `SEP` between the back-tick characters can be any string, which does not appear inside the escaped string.
-This string has to be repeated at the end of the macro before the macro end string.
+This string along with the back-ticks has to be repeated at the end of the macro before the macro end string.
 
 The result of the macro is the escaped string without any modification.
 The macro itself is very simple.
-The speciality of macro is that Jamal takes care of this macro when searching for macros in the text.
-When Jamal sees a macro opening string, then it checks way before the evaluation of the macro if the actual macro is an `escape` macro or not.
-It the macro is an escape macro, then it finds the `SEP` strings, and the macro end string after that.
-If there is any macro opening or macro closing string inside the `escape` macro they are ignored.
+The speciality of macro is that it overrides  the text parsing that locates the end of the macro.
 
 [source]
 ----
@@ -3987,9 +3988,6 @@ will result
 {
 ----
 
-
-It is recommended not to use this macro in your Jamal source.
-If you can solve your task without this macro, then you should do it without such a strong tool.
 
 [NOTE]
 ====
@@ -4287,8 +4285,24 @@ To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `bui
 The behavior will be the same as for user-defined macros.
 If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
 
+[[log]]
+==== xxv. `log`
+since 1.12.3
+
+
+This macro results and empty string and sends the input to the log output.
+The macro has one parameter, `level` that may specify the logging level.
+The default level is `INFO`.
+
+The usage of the macro is, for example
+
+[source]
+----
+{@log [level=DEBUG]this is a debug message}
+----
+
 [[debug]]
-==== xxv. `debug`
+==== xxvi. `debug`
 since 1.12.3
 
 
@@ -4447,7 +4461,7 @@ The core macros use the `[` and `]` characters to enclose the parameters.
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, `define` and `defer` also use the `[` and the `]` characters.
+To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, `define`, `log` and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 The core macro `debug` uses the whole input, therefore it does not use any of the brackets around the parameters.
 
@@ -4689,7 +4703,7 @@ Examples:
 
 * `13y` means 13 years
 
-* 13y1m3h` means 13 years, 1 month and 3 hours
+* `13y1m3h` means 13 years, 1 month and 3 hours
 
 The property values, `ttl` or other values, are read from the property file and are inherited from `.properties` files.
 These files are not created by Jamal, but you are free to create them with different keys and values.
@@ -4922,15 +4936,18 @@ The current and past versions of the JavaDoc can be read online at the address:
 * https://javadoc.io/doc/com.javax0.jamal/jamal-test/
 
 
-* https://javadoc.io/doc/com.javax0.jamal/jamal-test-support/
+* https://javadoc.io/doc/com.javax0.jamal/jamal-testsupport/
 
 
 * https://javadoc.io/doc/com.javax0.jamal/jamal-tools/
 
 
+* https://javadoc.io/doc/com.javax0.jamal/jamal-word/
+
+
 * https://javadoc.io/doc/com.javax0.jamal/jamal-yaml/
 
-
+/m
 
 In addition to the low level API, there are facades that help the use of Jamal for special purposes.
 One of them is implemented by the class `javax0.jamal.Format`.

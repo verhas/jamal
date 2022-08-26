@@ -81,6 +81,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<untab,`untab`>>
 .. <<range,`range`>>
 .. <<rot13,`rot13`>>
+.. <<pos,`pos`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
@@ -1133,6 +1134,31 @@ It can easily decrypt by the reader visiting the site http://rot13.com/
 The main use is to provide some kind of obfuscation for the text that requires some effort to decipher.
 For example, your documents asks a question to the reader, and you also give the answer in ROT13.
 The reader will not be able to read the answer, only when they put effort deciphering.
+
+[[pos]]
+==== {%macroChapter%}`pos`
+{%#snip:check file={%JAVA_DIR%}Pos.java hash=8b711c86%}
+
+This macro will result the
+
+* file name,
+* line number, or
+* column number
+
+where the macro is evaluated.
+That way
+
+{%sample/
+{@pos.file}:{@pos.line}:{@pos.column}
+%}
+
+will result
+
+{%output%}
+
+The actual file name and line number may not be the one where the macro is used.
+It is where the macro is evaluated.
+This behaviour may result that the line number or column is not accurate when the macro is not evaluated from the top level context.
 
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
@@ -2531,7 +2557,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 [[String]]
 ==== {%macroChapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=5496a22e%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=116f9598%}
 [[string:contains]]
 ===== `string:contains`
 
@@ -2678,6 +2704,17 @@ The parameters are:
 You can use `left` and `right` together with `trim`.
 It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
+
+[[string:chop]]
+===== `string:chop`
+
+Chop off a substring from the start or from the end of the input.
+The parameters are:
+
+* `prefix`, `pre` or `start` can specify a string that the input may start with. If the input starts with this string it will be removed.
+* `postfix`, `post` or `end` can specify a string that the input may end with. If the input ends with this string it will be removed.
+
+* `ignorecase` or `ignoreCase` tells the macro that the strings are case insensitive.
 
 [[snip_update]]
 ==== {%macroChapter%}`snip:update`

@@ -1,4 +1,4 @@
-{%@comment external noCache%}\
+{%@comment off%}\
 :imagesdir: images
 == image:logo.svg[width=100px] Jamal Macro Language
 
@@ -212,6 +212,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<require,`require`>>
 .. <<macro,`macro`>>
 .. <<debug,`debug`>>
+.. <<log,`log`>>
 .. <<nullmacro,`no-name macro`>>
 . <<argsplit,Macro Argument Splitting>>
 . <<parparsing,Standard Built-In Parameter Parsing>>
@@ -3475,7 +3476,10 @@ When an error happens, and the `try` macro catches the exception thrown the scop
 - since 1.9.1 (`escape*`)
 
 The built-in macro escape is a special one, like `verbatim`.
-It is implemented as Java a macro class, but the macro evaluation process takes the presence of an `escape` macro into account.
+The implementation of the macro overrides the method that parses the macro seeking for the matching closing string.
+The default implementation is simply searches for the first closing string taking into account the nested macros.
+The syntax of `escape, however, is special.
+
 The syntax of the macro is the following:
 
 [source,jamal]
@@ -3484,14 +3488,11 @@ The syntax of the macro is the following:
 ----
 
 The part `SEP` between the back-tick characters can be any string, which does not appear inside the escaped string.
-This string has to be repeated at the end of the macro before the macro end string.
+This string along with the back-ticks has to be repeated at the end of the macro before the macro end string.
 
 The result of the macro is the escaped string without any modification.
 The macro itself is very simple.
-The speciality of macro is that Jamal takes care of this macro when searching for macros in the text.
-When Jamal sees a macro opening string, then it checks way before the evaluation of the macro if the actual macro is an `escape` macro or not.
-It the macro is an escape macro, then it finds the `SEP` strings, and the macro end string after that.
-If there is any macro opening or macro closing string inside the `escape` macro they are ignored.
+The speciality of macro is that it overrides  the text parsing that locates the end of the macro.
 
 {%sample/
 {@escape `a`{`a`}
@@ -3500,9 +3501,6 @@ If there is any macro opening or macro closing string inside the `escape` macro 
 will result
 
 {%output%}
-
-It is recommended not to use this macro in your Jamal source.
-If you can solve your task without this macro, then you should do it without such a strong tool.
 
 [NOTE]
 ====
@@ -3783,10 +3781,25 @@ To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `bui
 The behavior will be the same as for user-defined macros.
 If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
 
+[[log]]
+==== {%macroChapter%}`log`
+since 1.12.3
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=cb7a03ca%}
+
+This macro results and empty string and sends the input to the log output.
+The macro has one parameter, `level` that may specify the logging level.
+The default level is `INFO`.
+
+The usage of the macro is, for example
+
+{%sample/
+{@log [level=DEBUG]this is a debug message}
+%}
+
 [[debug]]
 ==== {%macroChapter%}`debug`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=d90d8bbd%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=735db43c%}
 
 The macro `debug` can be used to start the debugger from the Jamal source code.
 It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.
@@ -3930,7 +3943,7 @@ The core macros use the `[` and `]` characters to enclose the parameters.
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, `define` and `defer` also use the `[` and the `]` characters.
+To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, `define`, `log` and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 The core macro `debug` uses the whole input, therefore it does not use any of the brackets around the parameters.
 
@@ -3939,7 +3952,7 @@ It simply fails when the number of files using Params is not the same as expecte
 And it already saved the consistency of this documentation many times.
 %}\
 {%#define nrCoreMacrosUsingParams={%@listDir (grep="(?:Params|Scan).using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
-{%#define nrCoreMacrosUsingParamsDocumented=9%}\
+{%#define nrCoreMacrosUsingParamsDocumented=10%}\
 {%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
 ====
 
@@ -4228,10 +4241,10 @@ This is a simplified interface to access the functionality of Jamal.
 
 The current and past versions of the JavaDoc can be read online at the address:
 
-{%@for module in (api,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,markdown,maven-extension,maven-plugin,plantuml,ruby,scriptbasic,snippet,test,test-support,tools,yaml)=
+{%@for module in (api,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,markdown,maven-extension,maven-plugin,plantuml,ruby,scriptbasic,snippet,test,testsupport,tools,word,yaml)=
 * https://javadoc.io/doc/com.javax0.jamal/jamal-module/
 
-%}
+%}/m
 
 In addition to the low level API, there are facades that help the use of Jamal for special purposes.
 One of them is implemented by the class {%@java:class (format=`$name`) javax0.jamal.Format%}.

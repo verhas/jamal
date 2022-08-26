@@ -12,6 +12,10 @@ import javax0.jamal.tools.Scan;
 
 import java.util.List;
 
+/**
+ * This macro sets and switches on and off the debugger.
+ * It only works if a debugger is available and no debugger is configured globally.
+ */
 public class Debug implements Macro {
     final static List<Debugger> DEBUGGERS = Debugger.getInstances();
 

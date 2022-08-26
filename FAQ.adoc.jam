@@ -40,4 +40,15 @@ Note that even when you changed the opening and closing strings if you
 
 then `{@escape*``{``}` and {@escape*``}``} will be used as macro opening and closing strings inside the included file.
 }
+{Q|I installed the AsASCIIDOC plugin, and it gives error for the Jamal documentation|
+If you try to look at the git master HEAD version there is a possibility that the documentation has errors.
+Check on GitHub if the build is broken.
+It usually is not.
+After that check that you have the latest version of the plugin is installed.
+When you edit the git master HEAD version, you are editing a not released version.
+The current documentation of Jamal may use the newest features, which were not released yet.
+To edit these you need to install the non-released version.
+To do that run `mvn install` in the Jamal project directory first.
+After that `cd jamal-asciidoc` and `sh ./install-asciidoc.sh`.
+}
 

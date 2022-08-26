@@ -39,18 +39,18 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in,1);
-            if( parts.length != 1 ) {
+            String[] parts = InputHandler.getParts(in, 1);
+            if (parts.length != 1) {
                 throw new BadSyntax("The string:quote macro expects exactly one argument");
             }
             return parts[0]
-                .replace("\\", "\\\\")
-                .replace("\t", "\\t")
-                .replace("\b", "\\b")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r")
-                .replace("\f", "\\f")
-                .replace("\"", "\\\"");
+                    .replace("\\", "\\\\")
+                    .replace("\t", "\\t")
+                    .replace("\b", "\\b")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                    .replace("\f", "\\f")
+                    .replace("\"", "\\\"");
         }
 
         @Override
@@ -68,7 +68,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in,2);
+            String[] parts = InputHandler.getParts(in, 2);
             if (parts.length != 2) {
                 throw new BadSyntax(getId() + " needs two parts");
             }
@@ -106,7 +106,7 @@ public class StringMacros {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var ignoreCase = holder("ignoreCase").asBoolean();
             Scan.using(processor).from(this).between("()").keys(ignoreCase).parse(in);
-            String[] parts = InputHandler.getParts(in,2);
+            String[] parts = InputHandler.getParts(in, 2);
             if (parts.length != 2) {
                 throw new BadSyntax(getId() + " needs two parts");
             }
@@ -123,8 +123,8 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in,1);
-            if( parts.length != 1 ) {
+            String[] parts = InputHandler.getParts(in, 1);
+            if (parts.length != 1) {
                 throw new BadSyntax("The string:reverse macro expects exactly one argument");
             }
             return new StringBuilder(parts[0]).reverse().toString();
@@ -136,6 +136,30 @@ public class StringMacros {
         }
     }
 
+    public static class Chop implements Macro {
+
+        @Override
+        public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+            final var prefix = holder(null, "prefix", "pre", "start").asString();
+            final var postfix = holder(null, "postfix", "post", "end").asString();
+            final var ignore = holder(null, "ignorecase", "ignoreCase").asBoolean();
+            Scan.using(processor).from(this).between("()").keys(prefix, postfix, ignore).parse(in);
+            var result = in.toString();
+            if (prefix.isPresent() && (ignore.is() ? result.toLowerCase().startsWith(prefix.get().toLowerCase()) : result.startsWith(prefix.get()))) {
+                result = result.substring(prefix.get().length());
+            }
+            if (postfix.isPresent() && (ignore.is() ? result.toLowerCase().endsWith(postfix.get().toLowerCase()) : result.endsWith(postfix.get()))) {
+                result = result.substring(0, result.length() - postfix.get().length());
+            }
+            return result;
+        }
+
+        @Override
+        public String getId() {
+            return "string:chop";
+        }
+    }
+
     public static class Substring implements Macro, InnerScopeDependent {
 
         @Override
@@ -143,8 +167,8 @@ public class StringMacros {
             final var begin = holder(null, "begin").orElseInt(0);
             final var end = holder(null, "end").asInt();
             Scan.using(processor).from(this).between("()").keys(begin, end).parse(in);
-            String[] parts = InputHandler.getParts(in,1);
-            if( parts.length != 1 ) {
+            String[] parts = InputHandler.getParts(in, 1);
+            if (parts.length != 1) {
                 throw new BadSyntax("The string:substring macro expects exactly one argument");
             }
             final var beginIndex = begin.get() < 0 ? in.length() + begin.get() : begin.get();
