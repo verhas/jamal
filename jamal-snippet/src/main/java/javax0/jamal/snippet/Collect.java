@@ -112,11 +112,18 @@ public class Collect implements Macro, InnerScopeDependent {
         }
         final var fn = from.get();
         final var fromFile = new File(fn);
-        if (FileTools.isRemote(fn) || fromFile.isFile()) {
+        final boolean isRemote = FileTools.isRemote(fn);
+        final String normFn;
+        if (isRemote) {
+            normFn = fn;
+        } else {
+            normFn = Paths.get(fromFile.toURI()).normalize().toString();
+        }
+        if (isRemote || fromFile.isFile()) {
             if (asciidoc.is()) {
-                harvestAsciiDoc(fn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
+                harvestAsciiDoc(normFn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             } else {
-                harvestSnippets(fn, store, start.get(), liner.get(), lineFilter.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
+                harvestSnippets(normFn, store, start.get(), liner.get(), lineFilter.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             }
         } else {
             try {
@@ -344,7 +351,7 @@ public class Collect implements Macro, InnerScopeDependent {
                         throw new BadSyntax(String.format("The regex '%s' must have exactly one capturing group", regex));
                     }
                     line = matcher.group(1);
-                }else{
+                } else {
                     throw new BadSyntax(String.format("The regex '%s' did not match the next line.", regex));
                 }
             } catch (PatternSyntaxException pse) {

@@ -9,13 +9,17 @@ This file is processed by the test javax0.jamal.documentation.TestConvertReadme 
 {%@snip:collect from="jamal-api/src/main/java/"%}\
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-{%@define MACRO_INTERFACE={%@java:class (classFormat=`$simpleName`) javax0.jamal.api.Macro%}%}
-{%@define INPUT_INTERFACE={%@java:class (classFormat=`$simpleName`) javax0.jamal.api.Input%}%}
-
+{%@define MACRO_INTERFACE={%@java:class (classFormat=`$name`) javax0.jamal.api.Macro%}%}
+{%@define INPUT_INTERFACE={%@java:class (classFormat=`$name`) javax0.jamal.api.Input%}%}
+{%@define java($snippet)=[source,java,title=`$snippet` from {%#file (format=`$simpleName`) {%@snip:file $snippet%}%}]
+----
+{%#trimLines
+{%@snip $snippet%}%}
+----%}
 In this document we will describe how you can write built-in macros for your specific application.
 
 Built-in macros in Jamal are the macros, which are implemented using Java code.
-The document assumes that you are familiar with Jamal macro structure and you know
+The document assumes that you are familiar with Jamal macrostructure, and you know
 
 * the difference between built-in and user defined macros in the Jamal file,
 
@@ -77,23 +81,7 @@ directives to your `module-info.java` file.
 Having the project set up that way we can create our first built-in macro.
 The whole class is included in this document:
 
-[source,java]
-----
-{%@snip HelloWorld
-package javax0.jamal.test.examples;
-
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
-
-public class HelloWorld implements Macro {
-    @Override
-    public String evaluate(Input in, Processor processor) {
-        return "Hello, World!";
-    }
-}
-%}
-----
+{%java HelloWorld%}
 
 {%@define classFormat=`$simpleName`%}{%@define methodFormat=`$name()`%}
 The class has to implement the interface {%MACRO_INTERFACE%}.
@@ -105,9 +93,12 @@ We will see in later chapters how to read and parse the input and also how to us
 
 The last step is to create a unit test.
 
-The simplest way is to do that is using the classes from the `jamal-testsupport` library.
-This library contains test utilities that mimic a Jamal environment for the macro and also provide useful test mocks.
+The simplest way is using the classes from the `jamal-testsupport` library.
+This library contains test utilities that mock a Jamal environment for the macro and also provide useful test mocks.
 It is recommended to use this package instead of trying to invoke the macro method directly and creating mocks using some general library.
+It is to note that technically these tests are not unit tests, because they use the actual Jamal implementation and not a mock.
+However, they test against a certain release, which is supposed to be bug free and any bug discovered should signal an error in the macro  implementation.
+These tests are more readable than a clean unit tests, they are fast, reproducible, and exhibit all the important aspects of a regular unit tests.
 
 To use the test support library you have to add the dependency to your `pom.xml` file:
 
@@ -139,7 +130,7 @@ You may also need to add a JVM command line parameter via the surefire plugin co
 ----
 
 This is needed if your library uses JPMS.
-When the tests are running they need access to your code using reflection and therefore you need to "opens" the package.
+When the tests are running they need access to your code using reflection, and therefore you need to "opens" the package.
 When you run the tests in the IDE it may ignore the JPMS settings and run your code as a plain library.
 In that case the fact that the package is not open for the reflective access is not important.
 
@@ -159,27 +150,13 @@ I recommend the second.
 
 Our test will be the following:
 
-[source,java]
-----
-{%@snip TestHelloWorld_1
-    @Test
-    @DisplayName("Test that the HelloWorld built-in macro works")
-    void macroWorks() throws Exception {
-        TestThat.theInput(
-            "{@use javax0.jamal.test.examples.HelloWorld}" +
-                "{@helloworld}"
-        ).results("Hello, World!");
-    }
-%}
-----
 
-The first line declares the class as a macro.
-The second line uses the macro, and the output will be the `Hello, World!`.
+{%java TestHelloWorld_1%}
 
 With this we are essentially ready with the hello world macro application.
 There is one more topic, though, which is worth discussing here.
 
-In the sample code we had to declare the class in the Jamal file as a macro to be used.
+In the tests code we had to declare the class in the Jamal file as a macro to be used.
 This is one of the three possibilities to make a Java class available for the Jamal code.
 The second is to register the class for the standard Java service loader.
 
@@ -190,8 +167,7 @@ The Java service loader can find a class if it is
 
 * declared in the `module-info.java` module descriptor file as one providing the {%#java:class {%@define classFormat=`$name`%}javax0.jamal.api.Macro%} interface, and/or
 
-{%@define METAINFSERVICEFILE=
-{%#file (format=`$name` root=jamal-snippet)/src/main/resources/META-INF/services/javax0.jamal.api.Macro%}%}
+{%@define METAINFSERVICEFILE={%#file (format=`$name` root=jamal-snippet)/src/main/resources/META-INF/services/javax0.jamal.api.Macro%}%}
 * the full class name is listed in the file {%METAINFSERVICEFILE%}
 
 I recommend that you do both in case you use JPMS, because it will help test running inside the IDE, which may not use JPMS.
@@ -199,39 +175,12 @@ Having the class names listed in the {%METAINFSERVICEFILE%} file may also help a
 
 The module file will look something like this:
 
-[source,java]
-----
-{%@snip module_declaration
-module jamal.test {
-    requires jamal.api;
-    requires jamal.tools;
-    requires jamal.engine;
-    provides javax0.jamal.api.Macro with
-        HelloWorld,
-        Hello,
-        Spacer,
-        Array
-        ;
-}
-%}
-----
+{%java module_declaration%}
 
-Our module needs the `jamal.api` module, so we `require` it and we provide the {%MACRO_INTERFACE%} implementation.
+Our module needs the `jamal.api` module, so we `require` it, and we provide the {%MACRO_INTERFACE%} implementation.
 After this out unit test will be the following:
 
-[source,java]
-----
-{%@snip TestHelloWorld_2
-    @Test
-    @DisplayName("Test that the HelloWorld built-in macro is registered")
-    void macroRegisteredGLobal() throws Exception {
-        TestThat.theInput(
-            "{@helloworld}"
-        ).results("Hello, World!");
-    }
-
-%}
-----
+{%java TestHelloWorld_2%}
 
 Now we do not need to declare the class in the Jamal file, it is available in the global scope.
 
@@ -251,20 +200,11 @@ The syntax of the `use` macro is
 
 The parts between `[` and `]` are optional.
 
-When the macro is registered via the service loader this option is not available.
-In this case the name of the macro will be the string, which is returned by the method {%@java:method javax0.jamal.api.Macro#getId%}.
+When the macro is registered via the service loader this is not a possibility.
+In this case, adn in cases when the `use` macro does not have the optional `as macroname` part the name of the macro will be the string, which is returned by the method {%@java:method javax0.jamal.api.Macro#getId%}.
 This method is also part of the {%MACRO_INTERFACE%} interface, and it has a `default` implementations.
 
-[source,java]
-----
-{%#trimLines
-{%@snip getId
-    default String getId() {
-        return this.getClass().getSimpleName().toLowerCase();
-    }
-%}
-%}
-----
+{%java getId%}
 
 In our case the name of the class was `HelloWorld` which converts to `helloworld` all lower case as a macro name.
 You are free to override the implementation of the default method, and there are real examples for that.
@@ -272,9 +212,13 @@ For example the `jamal-snippet` library macros `trimLines`, or `killLines` overr
 
 Starting with the version 1.9.0 a macro can define multiple names to register itself.
 The different names will serve as equal aliases for the same macro.
-To do that the macro should define the abstract method {%@java:method javax0.jamal.api.Macro#getIds%}.
+To do that the macro can define the method {%@java:method javax0.jamal.api.Macro#getIds%}.
+(note that the name is the plural of the previous `getId()`)
 The default implementation of this method simply calls {%@java:method javax0.jamal.api.Macro#getId%} and returns a one element string array with the single name.
-When the method is defined all the strings returned in the string array will be registered.
+
+{%java getIds%}
+
+When the method is overridden all the strings will be registered.
 It was first used to register `assert:equals`, `assert:lessOrEquals` and so on, with the 3rd person `equals` ending as well as with the simple `equal` ending.
 Modesty and discipline is recommended when defining multiple names for a macro.
 
@@ -288,58 +232,20 @@ Even macros ignoring the input are encouraged to check that there are no extra c
 
 If we write another test, we can see that the macro really ignores its input.
 
-[source,java]
-----
-{%#trimLines
-{%@snip TestHelloWorld_3
-    @Test
-    @DisplayName("Test that the HelloWorld built-in macro works")
-    void macroIgnoresInput() throws Exception {
-        TestThat.theInput(
-            "{@helloworld the input is totally ignored}"
-        ).results("Hello, World!");
-    }
-%}
-%}
-----
+
+{%java TestHelloWorld_3%}
 
 ==== Hello, Me Macro
 
 The next macro we will write is one that will not simply greet the whole word, but rather the person, who we tell it to.
 The code of the macro `Hello` will be the following:
 
-[source,java]
-----
-{%#trimLines
-{%@snip Hello
-public class Hello implements Macro {
-    @Override
-    public String evaluate(Input in, Processor processor) {
-        return "Hello, " +in.toString().trim()+"!";
-    }
-}
-%}
-%}
-----
+{%java Hello%}
 
 It will use the `input`, convert it to string and cutting off the spaces from the start, and from the end of the string it uses it as a name for the greeting.
 The test is also straightforward and shows the direct use of the macro:
 
-[source,java]
-----
-{%#trimLines
-{%@snip TestHello_1
-    @Test
-    @DisplayName("Test that the Hello built-in macro works")
-    void macroWorks() throws Exception {
-        TestThat.theInput(
-            "{@hello Peter }\n" +
-                "{@hello Paul}\n"
-        ).results("Hello, Peter!\nHello, Paul!\n");
-    }
-%}
-%}
-----
+{%java TestHello_1%}
 
 We are handling the simplest possible way  in this example.
 We use it as it is, as a whole string, only cutting off the strings from the start and the end.
@@ -385,30 +291,7 @@ s o m e   t e x t
 
 The implementation of the macro is the following:
 
-[source,java]
-----
-{%@snip Spacer
-public class Spacer implements Macro {
-    @Override
-    public String evaluate(Input in, Processor processor) {
-        InputHandler.skipWhiteSpaces(in);
-        if (in.length() > 0) {
-            final var result = javax0.jamal.tools.Input.makeInput("", in.getPosition());
-            boolean lineStart = true;
-            while (in.length() > 0) {
-                if (!lineStart)
-                    result.append(' ');
-                lineStart = in.charAt(0) == '\n';
-                InputHandler.move(in, 1, result);
-            }
-            return result.toString();
-        } else {
-            return "";
-        }
-    }
-}
-%}
-----
+{%java Spacer%}
 
 The very first thing the macro does is that it skips the white spaces.
 It is customary to skip these spaces because one or more space has to be there after the id of the macro and they usually only separate the macro name and the content.
@@ -476,37 +359,7 @@ For example
 will select the second element, that is `aaa` from the array of `[ "x", "aaa", "z"]`.
 The code of the macro is the following:
 
-[source,java]
-----
-{%@snip Array
-public class Array implements Macro {
-    @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var pos = in.getPosition();
-        final String[] parts = InputHandler.getParts(in);
-        if (parts.length < 2) {
-            throw new BadSyntaxAt("Macro Array needs an index and at least one element", pos);
-        }
-        final int size = parts.length - 1;
-        final int index;
-        try {
-            index = Integer.parseInt(parts[0]);
-        } catch (NumberFormatException nfe) {
-            throw new BadSyntaxAt("The index in Macro array '"
-                + parts[0]
-                + "' cannot be interpreted as an integer.", pos, nfe);
-        }
-        if (index < 0 || index >= parts.length - 1) {
-            throw new BadSyntaxAt("The index in Macro array is '"
-                + parts[0]
-                + "' but it should be between "
-                + (-size) + " and " + (size - 1) + ".", pos);
-        }
-        return parts[index + 1];
-    }
-}
-%}
-----
+{%java Array%}
 
 The macro calls the method {%@java:method javax0.jamal.tools.InputHandler#getParts%} passing only the input as one argument.
 There is another version of the method that limits the number of the arguments.
@@ -549,26 +402,18 @@ If the implementation of the macro `snip` would query the macro register, it cou
 The question is whether the macro execution `trimMacro` sees `margin` as defined in itself or not.
 Is the scope already closed when the execution of `trimLines` starts?
 
-The answer is that it depends.
+It depends.
 
 If the `Macro` implementing class also implements the {%@java:class javax0.jamal.api.InnerScopeDependent%} interface then the scope is open.
 If it does not then Jamal closes the scope before starting the execution of the macro.
 
 The macro `trimLines` implements this interface because it uses parameters.
+Implementing this interface is simply adding the name of the interface after the `implements` keyword.
+There are no abstract methods in this interface to implement in the class.
 The first few lines of the method {%@java:method javax0.jamal.snippet.TrimLines#evaluate%} are the followings:
 {%@snip:collect from="jamal-snippet/src/main/java/javax0/jamal/snippet/TrimLines.java"%}\
 
-[source,java]
-----
-{%@snip trimLineStart
-    @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var margin = Params.<Integer>holder("margin").orElseInt(0);
-        final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
-        final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(margin, trimVertical, verticalTrimOnly).parse(in);
-%}
-----
+{%java trimLinesStart%}
 
 It uses the {%@java:class javax0.jamal.tools.Params%} class to parse the parameters.
 This utility class parses the content of the macro.
@@ -580,7 +425,9 @@ Thus, the value of the variable `margin` will be a configuration parameter holdi
 ====
 In earlier version of Jamal there was no utility class to support the parsing of the parameters.
 The first approach to configure a macro was to define a user defined macro without any parameter of a given name.
-Later the {%@java:class javax0.jamal.tools.Params%} was developed and it kept the functionality to fall back to macro definitions in case the parameter was not defined.
+Later the {%@java:class javax0.jamal.tools.Params%} was developed, and it kept the functionality to fall back to macro definitions in case the parameter was not defined.
+
+This backward compatibility can also be useful when there is a sense to define the parameter globally and not only for the macro invocation.
 ====
 
 The macros created before the class {%@java:class javax0.jamal.tools.Params%} had no other choice but use macros for configuration.
@@ -589,8 +436,8 @@ With the availability of parameter parsing there is no need to define a configur
 Instead, you can simply use the configuration parameters in the macro body.
 Newer macros developed after parameter parsing do not implement the interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
 
-There is a use to still define a parameter as a macro though.
-It is the case when the parameter should be defined for a larger scope and you do not want to copy the parameter `key=value` to each use of the macro.
+There is still a use defining a parameter as a macro though.
+It is the case when the parameter should be defined for a larger scope, and you do not want to copy the parameter `key=value` to each use of the macro.
 In that case you can write `{@define key=value}` before the first use of the built-in macro.
 
 The parameter parsing allows the use of aliases.
@@ -606,7 +453,7 @@ Such parameters cannot be defined using a user defined macro.
 [NOTE]
 ====
 Boolean parameters cannot be defined using user defined macros.
-They always have a default value of false if not defined in the macro body.
+They always have a default value of `false` if not defined in the macro body.
 The default value can be altered if they are defined in an `options` macro.
 If you say `{@options trimVertical}` then the default value of `trimVertical` is changed to true.
 
@@ -620,13 +467,18 @@ It is recommended not to implement this interface anymore.
 
 === Creating User Defined Macros
 
+You can easily create user defined macros using the `define` macro.
+However, user defined macros can also be created programmatically.
+This chapter will describe the latter.
+
 === Creating Your Own User Defined Macro Implementation
+
+Programmatically created user defined macros can define their own evaluation.
+
 
 === Strategies to Register Built-In Macros
 
 In this chapter I will explain the advantages, and the disadvantages of the two strategies that you can follow to register your built-in macros.
 It is a more theoretical chapter with less example code.
 You can skip this section and return to it later.
-
-{%@snip:update%}
 

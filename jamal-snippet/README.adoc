@@ -1351,7 +1351,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1161:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1160:30
 ----
 
 
@@ -2301,6 +2301,7 @@ will result
 - BlockConverter.java
 - Counter.java
 - StringMacros.java
+- AbstractXmlDefine.java
 - Clear.java
 - KillLines.java
 - SnipLoad.java
@@ -2391,7 +2392,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,504 bytes
+- snippet: 1,536 bytes
 - Snip.java: 5,063 bytes
 - SnipSave.java: 4,886 bytes
 - Case.java: 2,273 bytes
@@ -2403,19 +2404,20 @@ will result
 - Update.java: 3,779 bytes
 - SnipTransform.java: 17,339 bytes
 - FilesMacro.java: 9,221 bytes
-- Collect.java: 20,199 bytes
+- Collect.java: 20,430 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 5,370 bytes
+- TrimLines.java: 5,371 bytes
 - ThinXml.java: 8,792 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,731 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
-- SnipXml.java: 1,489 bytes
+- SnipXml.java: 903 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
 - Counter.java: 4,701 bytes
 - StringMacros.java: 7,621 bytes
+- AbstractXmlDefine.java: 1,517 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,701 bytes
 - SnipLoad.java: 3,573 bytes
@@ -2426,7 +2428,7 @@ will result
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,207 bytes
 - SnipProperties.java: 1,485 bytes
-- Xml.java: 1,509 bytes
+- Xml.java: 905 bytes
 - CounterMacro.java: 1,875 bytes
 - SnipList.java: 1,222 bytes
 - XmlDocument.java: 5,533 bytes
@@ -2689,7 +2691,7 @@ will result in the output
 
 [source]
 ----
-2022-08-26 15:31:04
+2022-08-31 16:31:56
 ----
 
 
@@ -2810,6 +2812,12 @@ In the format you can use the following placeholders:
 * `$extension5` the file name last 5 extensions
 
 
+
+The macro also supports the option `root`.
+This can be used to define the root directory for the files' and directories' location.
+The usual use is to define `root` as a global macro and all `file` macros should use file names relative to that following the definition.
+This may save some time when you are referring to many files in a deep directory structure relative to the document file.
+
 [[directory]]
 ==== xxxvi.`directory`
 
@@ -2850,6 +2858,11 @@ In the format you can use the following placeholders:
 * `$canonicalPath` the canonical path
 
 
+
+The macro also supports the option `root`.
+This can be used to define the root directory for the files' and directories' location.
+The usual use is to define `root` as a global macro and all `directory` macros should use file names relative to that following the definition.
+This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[Java]]
 ==== xxxvii.Java Macros

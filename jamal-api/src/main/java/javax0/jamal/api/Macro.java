@@ -91,9 +91,12 @@ public interface Macro extends Identified, ServiceLoaded {
     }
     // end snippet
 
+
+    // snippet getIds
     default String[] getIds() {
         return new String[]{getId()};
     }
+    // end snippet
 
     /**
      * Fetch the body of the macro including the closing string.

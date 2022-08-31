@@ -132,7 +132,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=93a7ee50%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=146b7983%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -335,7 +335,7 @@ For example, the same properties file in XML format looks like the following:
 
 [[xml_define]]
 ==== {%macroChapter%}`xml:define`
-{%#snip:check file={%JAVA_DIR%}Xml.java hash=7f15bda3%}
+{%#snip:check file={%JAVA_DIR%}Xml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=379a47df%}
 This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
 The syntax of the command is:
 
@@ -367,7 +367,7 @@ The result is:
 
 [[snip_xml]]
 ==== {%macroChapter%}`snip:xml`
-{%#snip:check file={%JAVA_DIR%}SnipXml.java hash=46efff7e%}
+{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=12ac50dc%}
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
 
@@ -966,7 +966,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=c8ce52d1%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=efeb7c77%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -2316,6 +2316,12 @@ In the format you can use the following placeholders:
          fileMacroFormatPlaceholders
 %}
 
+{%@define SUPPORT_ROOT($macro)=
+The macro also supports the option `root`.
+This can be used to define the root directory for the files' and directories' location.
+The usual use is to define `root` as a global macro and all `$macro` macros should use file names relative to that following the definition.
+This may save some time when you are referring to many files in a deep directory structure relative to the document file.%}{%SUPPORT_ROOT/file%}
+
 [[directory]]
 ==== {%macroChapter%}`directory`
 {%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=cd9d2f2f%}
@@ -2346,6 +2352,7 @@ In the format you can use the following placeholders:
 * `$canonicalPath` the canonical path
 %}
 
+{%SUPPORT_ROOT/directory%}
 
 [[Java]]
 ==== {%macroChapter%}Java Macros
