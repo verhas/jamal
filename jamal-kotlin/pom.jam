@@ -1,0 +1,44 @@
+{#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@import ../version.jim}
+{project jamal kotlin}
+    {GAV ::jamal-kotlin:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description Kotlin support module for Jamal}
+
+    {dependencies|
+        {dependency :org.jetbrains.kotlin:kotlin-stdlib:{KOTLIN_VERSION}}
+        {@for MODULE in (api,tools)=
+            {dependency|{GROUPID}|jamal-MODULE}}
+        {@for MODULE in (testsupport,jamal,core)=
+                    {dependency|{GROUPID}|jamal-MODULE||test}}
+    }
+    {build|
+     {plugins|
+            {plugin|
+                {GAV :org.jetbrains.kotlin:kotlin-maven-plugin:${KOTLIN_VERSION}}
+                {executions|
+                    {execution
+                        {id compile}
+                        {goals|{goal|compile}}
+                                                <configuration>
+                                                    <sourceDirs>
+    <sourceDir>{@escape* ``${project.basedir}``}/src/main/kotlin</sourceDir>
+    <sourceDir>{@escape* ``${project.basedir}``}/src/main/java</sourceDir>
+                                                    </sourceDirs>
+                                                </configuration>
+}
+                    {execution
+                        {id test-compile}
+                        {goals|{goal|test-compile}}
+                                                <configuration>
+                                                    <sourceDirs>
+    <sourceDir>{@escape* ``${project.basedir}``}/src/test/kotlin</sourceDir>
+    <sourceDir>{@escape* ``${project.basedir}``}/src/test/java</sourceDir>
+                                                    </sourceDirs>
+                                                </configuration>
+                                                }
+                }
+            }
+        }
+     }
+{end project}

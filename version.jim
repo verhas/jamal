@@ -62,6 +62,7 @@ SUREFIRE_PLUGIN_VERSION=3.0.0-M5           -- https://repo.maven.apache.org/mave
 MAVEN_SOURCE_PLUGIN_VERSION=3.2.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
 APPASSEMBLER_PLUGIN_VERSION=2.1.0          -- https://repo.maven.apache.org/maven2/org/codehaus/mojo/appassembler-maven-plugin
 MAVEN_DEPENDENCY_PLUGIN_VERSION=3.3.0      -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-dependency-plugin
+KOTLIN_VERSION=1.7.10
 
 -- test dependency
 JUPITER_VERSION=5.9.0-M1                   -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api

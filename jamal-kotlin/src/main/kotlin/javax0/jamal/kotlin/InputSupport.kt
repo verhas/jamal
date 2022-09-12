@@ -1,0 +1,86 @@
+package javax0.jamal.kotlin
+
+import javax0.jamal.api.Input
+import javax0.jamal.tools.InputHandler
+
+val Input.fetchId
+    get(): String {
+        return InputHandler.fetchId(this)
+    }
+
+val Input.skipWhiteSpaces
+    get():Unit {
+        InputHandler.skipWhiteSpaces(this)
+    }
+
+val Input.skipWhiteSpacesNoNL
+    get():Unit {
+        InputHandler.skipWhiteSpacesNoNL(this)
+    }
+
+val Input.skipWhiteSpaces2EOL
+    get():Unit {
+        InputHandler.skipWhiteSpaces2EOL(this)
+    }
+
+fun Input.moveWhiteSpaces(sb: StringBuilder) {
+    InputHandler.moveWhiteSpaces(this, sb)
+}
+
+fun Input.moveWhiteSpaces(sb: Input) {
+    InputHandler.moveWhiteSpaces(this, sb)
+}
+
+val Input.trim
+    get():Unit {
+        InputHandler.trim(this)
+    }
+
+val Input.rtrim
+    get():Unit {
+        InputHandler.rtrim(this)
+    }
+
+val Input.eatEscapedNL
+    get():Unit {
+        InputHandler.eatEscapedNL(this)
+    }
+
+val Input.skip2EOL: Unit
+    get() {
+        InputHandler.skip2EOL(this)
+    }
+
+val Input.fetch2EOL
+    get():String {
+        return InputHandler.fetch2EOL(this)
+    }
+
+infix fun Input.getParameters(id: String): Array<String> {
+    return InputHandler.getParameters(this, id)
+}
+
+val Input.getParts
+    get():Array<String> {
+        return InputHandler.getParts(this)
+    }
+
+infix fun Input.getPartsMax(i: Int): Array<String> {
+    return InputHandler.getParts(this, i)
+}
+
+
+val String.isGlobalMacro
+    get():Boolean {
+        return InputHandler.isGlobalMacro(this)
+    }
+
+val String.convertGlobal
+    get():String {
+        return InputHandler.convertGlobal(this)
+    }
+
+val String.isIdentifier
+    get():Boolean {
+        return InputHandler.isIdentifier(this)
+    }
