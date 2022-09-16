@@ -53,7 +53,7 @@ public class Range {
      * <p>
      * The string can contain one or more ange definitions.
      * Range definitions are separated by commas {@code ,} or by semicolon {@code ;} or these mixed.
-     * Ranges can overlap, repeated, and can have direction staring with a value greater than the end value.
+     * Ranges can overlap, repeated, and can have direction starting with a value greater than the end value.
      * <p>
      * A range definition can be a pure number {@code N}, which is the same as {@code N..N}, or a range definition in
      * the format {@code START .. END}. Here {@code START} is the first value in the range and {@code END} is the last.
