@@ -31,3 +31,5 @@ If you feel that there is some feature here missing then open a GitHub ticket an
 * Import properties as user defined macros from a `pom.xml`.
 
 * Make it possible to use Jamal macros in Word DOCX files. (DONE)
+
+* Support Kotlin as macro development language
