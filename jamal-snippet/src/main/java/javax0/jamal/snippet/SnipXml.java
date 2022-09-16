@@ -13,7 +13,7 @@ import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
-public class SnipXml implements Macro, InnerScopeDependent {
+public class SnipXml extends AbstractXmlDefine {
     @Override
     public String getId() {
         return "snip:xml";
@@ -21,25 +21,7 @@ public class SnipXml implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        skipWhiteSpaces(input);
-        var id = fetchId(input);
-        skipWhiteSpaces(input);
-        if (!firstCharIs(input, '=')) {
-            throw new BadSyntax(getId()+" '" + id + "' has no '=' to body");
-        }
-        skip(input, 1);
-
-        final XmlDocument xmlDoc;
-
-        if (isGlobalMacro(id)) {
-            xmlDoc = new XmlDocument(convertGlobal(id),input);
-            processor.defineGlobal(xmlDoc);
-        } else {
-            xmlDoc = new XmlDocument(id,input);
-            processor.define(xmlDoc);
-            // it has to be exported because it is inner scope dependent
-            processor.getRegister().export(xmlDoc.getId());
-        }
-        return "";
+        return evaluate(input,processor,
+                (String id) -> new XmlDocument(convertGlobal(id),input));
     }
 }

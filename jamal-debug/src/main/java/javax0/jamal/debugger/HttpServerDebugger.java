@@ -208,7 +208,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     public void setAfter(int level, CharSequence output) {
         currentLevel = level;
         if (weDebug()) {
-            inputAfter = input.toString();
+            inputAfter = input == null ? "" : input.toString();
             this.output = output.toString();
             handleState = "AFTER";
             handle();

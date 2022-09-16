@@ -29,7 +29,7 @@
     }
 
     {dependencies
-       {@for [evalist] MODULE in (engine,api,tools,core,{JAMAL_MODULES})=
+       {@for [evalist] MODULE in (api,tools,engine,core,{JAMAL_MODULES})=
          {dependency|{GROUPID}|jamal-MODULE|}}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE||test}}

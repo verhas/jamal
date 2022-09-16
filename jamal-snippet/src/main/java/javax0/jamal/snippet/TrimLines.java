@@ -23,7 +23,7 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
     }
 
     // end snippet
-    // snippet trimLineStart
+    // snippet trimLinesStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var margin = Params.<Integer>holder("margin").orElseInt(0);

@@ -49,7 +49,7 @@ public class For implements Macro, InnerScopeDependent {
         final var it = new For();
         it.processor = processor;
         it.separator = Params.<String>holder("$forsep", "separator", "sep").orElse(",");
-        it.subSeparator = Params.<String>holder("$forsubsep", "subseparator").orElse("\\|");
+        it.subSeparator = Params.<String>holder("$forsubsep", "subseparator", "subsep").orElse("\\|");
         it.trim = Params.<Boolean>holder("trimForValues", "trim").asBoolean();
         it.skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
         it.lenient = Params.<Boolean>holder("lenient").asBoolean();

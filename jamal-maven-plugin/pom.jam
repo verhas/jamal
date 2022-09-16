@@ -30,12 +30,14 @@
 
     {dependencies#
     {@comment we do not add all the modules and dependencies that may be needed,
-              because it can be added as needed to the POM that starts the plugin}
+              because it can be added as needed to the POM that starts the plugin
+              This cannot be done by the user of the maven extension, but this is the plugin.
+    }
         {#for MODULE in (engine,extensions)=
             {dependency|{GROUPID}|jamal-MODULE}}
         {#for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
-        {dependency :org.apache.maven:maven-plugin-api:{MAVEN_PLUGIN_API}}
+        {dependency :org.apache.maven:maven-plugin-api:{MAVEN_PLUGIN_API}:provided}
         {dependency :org.apache.maven.plugin-tools:maven-plugin-annotations:{MAVEN_PLUGIN_ANNOTATIONS}:provided}
     }
 {end project}

@@ -31,7 +31,7 @@ class Jamalizer {
     private void createNewPomJam(Path p) throws IOException {
         final var pom = Paths.get(p.toString(), "pom.xml");
         final var newPom = Paths.get(p.toString(), "pom.jam");
-        final var newPomPom = Paths.get(p.toString(), "pom.xml.jam");
+        final var newPomPom = Paths.get(p.toString(), "pom.jam");
         if ( Files.exists(pom) && !Files.exists(newPom) && !Files.exists(newPomPom)) {
             Files.copy(pom, newPom, StandardCopyOption.COPY_ATTRIBUTES);
         }

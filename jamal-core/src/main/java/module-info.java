@@ -24,7 +24,9 @@ module jamal.core {
         javax0.jamal.builtins.Require,
         javax0.jamal.builtins.Undefine,
         javax0.jamal.builtins.Defer,
-        javax0.jamal.builtins.Macro
+        javax0.jamal.builtins.Macro,
+        javax0.jamal.builtins.Debug,
+        javax0.jamal.builtins.Log
 
         ;
 

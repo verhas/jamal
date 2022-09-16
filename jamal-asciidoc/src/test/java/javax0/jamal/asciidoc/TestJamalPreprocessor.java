@@ -82,22 +82,22 @@ public class TestJamalPreprocessor {
         assertStartsWith(
                 "[WARNING]\n" +
                         "--\n" +
-                        "* User defined macro '{%zebra ...' is not defined. at " + TEST_INPUT + "/1:3\n" +
+                        "* User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
                         "--\n" +
                         "abrakadabra\n" +
                         "[WARNING]\n" +
                         "--\n" +
-                        "* User defined macro '{%zebra ...' is not defined. at " + TEST_INPUT + "/1:3\n" +
+                        "* User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
                         "--\n" +
                         "{%zebra%}\n" +
                         "[WARNING]\n" +
                         "--\n" +
-                        "* User defined macro '{%zebra ...' is not defined. at " + TEST_INPUT + "/1:3\n" +
+                        "* User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
                         "--\n" +
                         "[source]\n" +
                         "----\n" +
-                        "User defined macro '{%zebra ...' is not defined. at " + TEST_INPUT + "/1:3\n" +
-                        "javax0.jamal.api.BadSyntaxAt: User defined macro '{%zebra ...' is not defined. at " + TEST_INPUT + "/1:3\n", actual);
+                        "User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n"
+                , actual);
     }
 
 
@@ -145,7 +145,7 @@ public class TestJamalPreprocessor {
          */
         final var lines = Files.readAllLines(Paths.get(LOG_OUTPUT), StandardCharsets.UTF_8);
         Assertions.assertTrue(lines.get(8).endsWith("restored"));
-        Assertions.assertEquals("  "+TEST_IMPORT+" vpf/bqeUngN5AtDqUrH5Rw==", lines.get(11));
+        Assertions.assertEquals("  " + TEST_IMPORT + " vpf/bqeUngN5AtDqUrH5Rw==", lines.get(11));
         Assertions.assertFalse(lines.get(15).endsWith("restored"));
     }
 

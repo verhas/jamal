@@ -1,6 +1,6 @@
 import javax0.jamal.api.Debugger;
 import javax0.jamal.api.Macro;
-import javax0.jamal.engine.NullDebugger;
+import javax0.jamal.tools.NullDebugger;
 
 module jamal.engine {
     uses Macro;
@@ -13,5 +13,4 @@ module jamal.engine {
     requires jamal.tools;
     requires jdk.jshell;
     requires levenshtein;
-    provides Debugger with NullDebugger;
 }

@@ -42,7 +42,7 @@ public interface Macro extends Identified, ServiceLoaded {
 
     /**
      * @param c the character to check
-     * @return {@code true} if the character can be used as the first character of a macro identifier. Currently these
+     * @return {@code true} if the character can be used as the first character of a macro identifier. Currently, these
      * are {@code $}, {@code _} (underscore), {@code :} (colon) and any alphabetic character.
      */
     static boolean validId1stChar(char c) {
@@ -91,9 +91,12 @@ public interface Macro extends Identified, ServiceLoaded {
     }
     // end snippet
 
+
+    // snippet getIds
     default String[] getIds() {
         return new String[]{getId()};
     }
+    // end snippet
 
     /**
      * Fetch the body of the macro including the closing string.

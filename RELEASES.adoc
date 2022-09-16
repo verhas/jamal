@@ -2,6 +2,7 @@
 
 
 
+
 === https://github.com/verhas/jamal/tree/1.12.3-SNAPSHOT[1.12.3-SNAPSHOT]
 
 * `file` macro in snippet package now has formatting placeholders `bareNaked` and `nakedN` as well as `extensions` and `extensionN` with the possible `N` values being 1,2,3,4, and 5.
@@ -19,7 +20,15 @@ It also takes the included and imported files into account.
 * Macros reading and writing a file can go through a hook that the embedding application can provide.
 It is used by the asciidoctor implementation to list all the files read during the processing.
 
-* Jamal mock is implemented
+* Jamal mock library is implemented, that can be used to mock some macro for user defined macro testing
+
+* A warning is given when a macro is defined in a scope, but it is not used
+
+* Macro `for` supports the aliases `sep and `subsep`
+
+* In addition to the special characters in the macro `define`, the behaviour can also be altered using options.
+
+* the option `RestrictedDefineParameters` is now available for the `define` macro, to restrict parameter names to be identifiers
 
 === https://github.com/verhas/jamal/tree/1.12.2[1.12.2]
 

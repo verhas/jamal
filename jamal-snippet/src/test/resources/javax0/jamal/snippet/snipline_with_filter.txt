@@ -1,0 +1,4 @@
+abrak a dabra
+filter=does not matter
+        // snipline RestrictedDefineParameters filter="(.*)"
+        final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();

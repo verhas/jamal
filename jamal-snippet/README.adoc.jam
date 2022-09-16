@@ -81,6 +81,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<untab,`untab`>>
 .. <<range,`range`>>
 .. <<rot13,`rot13`>>
+.. <<pos,`pos`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
@@ -131,7 +132,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in <
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=aee77b13%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=146b7983%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -197,6 +198,22 @@ is the same as
 The only difference is that the first version will contain a line with a trailing `\n` at the end of the line.
 The `snipline` version does not contain the trailing `\n`.
 ====
+
+A snipline can also have a trailing `filter=regex` after the name of the snippet.
+The rest of the line after the `filter=` is a regular expression that will be used to filter the line.
+(Note that there is no space before or after the `=` character.)
+The regular expression should have exactly one capturing group, and it must match the next line.
+The capturing group will be used as snippet content.
+
+For example
+
+[source]
+----
+// snipline MY_CONSTANT_SNIPPET_NAME filter="(.*)"
+  public static final MY_CONSTANT = "Hello World";
+----
+
+will store `Hello World` as the content of the snippet `MY_CONSTANT_SNIPPET_NAME`.
 
 There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
 The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.
@@ -318,7 +335,7 @@ For example, the same properties file in XML format looks like the following:
 
 [[xml_define]]
 ==== {%macroChapter%}`xml:define`
-{%#snip:check file={%JAVA_DIR%}Xml.java hash=7f15bda3%}
+{%#snip:check file={%JAVA_DIR%}Xml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=379a47df%}
 This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
 The syntax of the command is:
 
@@ -350,7 +367,7 @@ The result is:
 
 [[snip_xml]]
 ==== {%macroChapter%}`snip:xml`
-{%#snip:check file={%JAVA_DIR%}SnipXml.java hash=46efff7e%}
+{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=12ac50dc%}
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
 
@@ -949,7 +966,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=c8ce52d1%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=efeb7c77%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1117,6 +1134,31 @@ It can easily decrypt by the reader visiting the site http://rot13.com/
 The main use is to provide some kind of obfuscation for the text that requires some effort to decipher.
 For example, your documents asks a question to the reader, and you also give the answer in ROT13.
 The reader will not be able to read the answer, only when they put effort deciphering.
+
+[[pos]]
+==== {%macroChapter%}`pos`
+{%#snip:check file={%JAVA_DIR%}Pos.java hash=8b711c86%}
+
+This macro will result the
+
+* file name,
+* line number, or
+* column number
+
+where the macro is evaluated.
+That way
+
+{%sample/
+{@pos.file}:{@pos.line}:{@pos.column}
+%}
+
+will result
+
+{%output%}
+
+The actual file name and line number may not be the one where the macro is used.
+It is where the macro is evaluated.
+This behaviour may result that the line number or column is not accurate when the macro is not evaluated from the top level context.
 
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
@@ -2274,6 +2316,12 @@ In the format you can use the following placeholders:
          fileMacroFormatPlaceholders
 %}
 
+{%@define SUPPORT_ROOT($macro)=
+The macro also supports the option `root`.
+This can be used to define the root directory for the files' and directories' location.
+The usual use is to define `root` as a global macro and all `$macro` macros should use file names relative to that following the definition.
+This may save some time when you are referring to many files in a deep directory structure relative to the document file.%}{%SUPPORT_ROOT/file%}
+
 [[directory]]
 ==== {%macroChapter%}`directory`
 {%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=cd9d2f2f%}
@@ -2304,6 +2352,7 @@ In the format you can use the following placeholders:
 * `$canonicalPath` the canonical path
 %}
 
+{%SUPPORT_ROOT/directory%}
 
 [[Java]]
 ==== {%macroChapter%}Java Macros
@@ -2515,7 +2564,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 [[String]]
 ==== {%macroChapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=5496a22e%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=116f9598%}
 [[string:contains]]
 ===== `string:contains`
 
@@ -2662,6 +2711,17 @@ The parameters are:
 You can use `left` and `right` together with `trim`.
 It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
+
+[[string:chop]]
+===== `string:chop`
+
+Chop off a substring from the start or from the end of the input.
+The parameters are:
+
+* `prefix`, `pre` or `start` can specify a string that the input may start with. If the input starts with this string it will be removed.
+* `postfix`, `post` or `end` can specify a string that the input may end with. If the input ends with this string it will be removed.
+
+* `ignorecase` or `ignoreCase` tells the macro that the strings are case insensitive.
 
 [[snip_update]]
 ==== {%macroChapter%}`snip:update`

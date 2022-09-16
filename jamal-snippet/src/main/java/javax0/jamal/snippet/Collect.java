@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,6 +63,8 @@ public class Collect implements Macro, InnerScopeDependent {
         // can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
         final var liner = Params.<Pattern>holder("liner").orElse("snipline\\s+([a-zA-Z0-9_$]+)").asPattern();
         // can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
+        final var lineFilter = Params.<Predicate<String>>holder("lineFilter", "filter").orElse("filter=(.*)").asPattern();
+        // can define a regular expression. The pattern will be used against any 'snipline' lines, to find the regular expression that will be used to filter the content of the line
         final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").asPattern();
         // can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
         final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
@@ -100,7 +104,7 @@ public class Collect implements Macro, InnerScopeDependent {
         // Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.
         // end snippet
         Scan.using(processor).from(this)
-                .tillEnd().keys(include, exclude, start, liner, stop, from, scanDepth, setName, prefix, postfix, asciidoc, ignoreIOEx).parse(in);
+                .tillEnd().keys(include, exclude, start, liner, lineFilter, stop, from, scanDepth, setName, prefix, postfix, asciidoc, ignoreIOEx).parse(in);
 
         final var store = SnippetStore.getInstance(processor);
         if (store.testAndSet(setName.get())) {
@@ -108,11 +112,18 @@ public class Collect implements Macro, InnerScopeDependent {
         }
         final var fn = from.get();
         final var fromFile = new File(fn);
-        if (FileTools.isRemote(fn) || fromFile.isFile()) {
+        final boolean isRemote = FileTools.isRemote(fn);
+        final String normFn;
+        if (isRemote) {
+            normFn = fn;
+        } else {
+            normFn = Paths.get(fromFile.toURI()).normalize().toString();
+        }
+        if (isRemote || fromFile.isFile()) {
             if (asciidoc.is()) {
-                harvestAsciiDoc(fn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
+                harvestAsciiDoc(normFn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             } else {
-                harvestSnippets(fn, store, start.get(), liner.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
+                harvestSnippets(normFn, store, start.get(), liner.get(), lineFilter.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             }
         } else {
             try {
@@ -135,11 +146,12 @@ public class Collect implements Macro, InnerScopeDependent {
                                 store,
                                 start.get(),
                                 liner.get(),
+                                lineFilter.get(),
                                 stop.get(),
                                 pos,
                                 prefix.get(),
-                                postfix.get()
-                                , ignoreIOEx.is(),
+                                postfix.get(),
+                                ignoreIOEx.is(),
                                 processor);
                     }
                 }
@@ -241,14 +253,15 @@ public class Collect implements Macro, InnerScopeDependent {
     /**
      * Harvest snippets from a file.
      *
-     * @param file    the file to harvest from
-     * @param store   the store to store the snippets in
-     * @param start   the start pattern
-     * @param liner   the one line pattern that reads a one-line snippet
-     * @param stop    the stop pattern
-     * @param pos     the position of the file
-     * @param prefix  the prefix to add to the snippet id
-     * @param postfix the postfix to add to the snippet id
+     * @param file       the file to harvest from
+     * @param store      the store to store the snippets in
+     * @param start      the start pattern
+     * @param liner      the one line pattern that reads a one-line snippet
+     * @param lineFilter to filter the line that is being harvested
+     * @param stop       the stop pattern
+     * @param pos        the position of the file
+     * @param prefix     the prefix to add to the snippet id
+     * @param postfix    the postfix to add to the snippet id
      * @throws BadSyntax if there is some problem collecting the snippets, snippets are not closed, or are defined more
      *                   than once.
      */
@@ -256,6 +269,7 @@ public class Collect implements Macro, InnerScopeDependent {
                                  final SnippetStore store,
                                  final Pattern start,
                                  final Pattern liner,
+                                 final Pattern lineFilter,
                                  final Pattern stop,
                                  final Position pos,
                                  final String prefix,
@@ -274,6 +288,7 @@ public class Collect implements Macro, InnerScopeDependent {
                 case OUT:
                     final var startMatcher = start.matcher(line);
                     final var linerMatcher = liner.matcher(line);
+                    final var filterMatcher = lineFilter.matcher(line);
                     if (startMatcher.find()) {
                         id = startMatcher.group(1);
                         text.setLength(0);
@@ -286,6 +301,7 @@ public class Collect implements Macro, InnerScopeDependent {
                             throw new BadSyntax("'snipline " + id + "' is on the last line of the file '" + file + "'");
                         }
                         line = lines[++lineNr];
+                        line = cutOffPartUsingMatcher(line, filterMatcher);
                         try {
                             store.snippet(prefix + id + postfix, line, new Position(file, lineNr));
                         } catch (BadSyntax e) {
@@ -313,6 +329,36 @@ public class Collect implements Macro, InnerScopeDependent {
                     new BadSyntaxAt("Snippet '" + id + "' was not terminated in the file with \"end snippet\" ", new Position(file, startLine, 0)));
         }
         assertNoErrors(file, errors);
+    }
+
+    /**
+     * cut off a part of the line using the filterMatcher.
+     * If the filterMatcher finds a match, the part of the line is cut off.
+     * Otherwise the line is returned as it is.
+     *
+     * @param line          the line to cut off
+     * @param filterMatcher the pattern matcher on the line
+     * @return the line or a part of the line if the filterMatcher finds a match
+     * @throws BadSyntax when the regular expression is malformed or does not have exactly one capturing group
+     */
+    private String cutOffPartUsingMatcher(String line, final Matcher filterMatcher) throws BadSyntax {
+        if (filterMatcher.find()) {
+            final var regex = filterMatcher.group(1);
+            try {
+                final var matcher = Pattern.compile(regex).matcher(line);
+                if (matcher.find()) {
+                    if (matcher.groupCount() != 1) {
+                        throw new BadSyntax(String.format("The regex '%s' must have exactly one capturing group", regex));
+                    }
+                    line = matcher.group(1);
+                } else {
+                    throw new BadSyntax(String.format("The regex '%s' did not match the next line.", regex));
+                }
+            } catch (PatternSyntaxException pse) {
+                throw new BadSyntax(String.format("Invalid regex '%s'", regex));
+            }
+        }
+        return line;
     }
 
     /**

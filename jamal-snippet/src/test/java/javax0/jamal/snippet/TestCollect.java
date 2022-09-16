@@ -13,6 +13,14 @@ public class TestCollect {
     }
 
     @Test
+    void testSnipLineWithFilter() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:collect from=res:javax0/jamal/snippet/snipline_with_filter.txt}" +
+                "{@snip RestrictedDefineParameters}"
+        ).results("RestrictedDefineParameters");
+    }
+
+    @Test
     void testCollectWithPrefixPostfix() throws Exception {
         TestThat.theInput("" +
                 "{@snip:collect from=res:javax0/jamal/snippet/SnippetSource-1.txt prefix=prefix:: postfix=::postfix}\n" +

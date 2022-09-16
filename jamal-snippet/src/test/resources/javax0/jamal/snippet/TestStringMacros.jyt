@@ -109,3 +109,46 @@
     "ends with":
       Input: "{@string:endsWith /abraka dabra/dabra}"
       Output: "true"
+
+"chopping the start and the end strings":
+  "case sensitive":
+    "chops off the .jam ending":
+      Input: "{@string:chop (postfix=.jam)thisfile.txt.jam}"
+      Output: "thisfile.txt"
+    "chops off the prefix":
+      Input: "{@string:chop (prefix=this)thisfile.txt.jam}"
+      Output: "file.txt.jam"
+    "chops off the prefix and postfix":
+      Input: "{@string:chop (prefix=this postfix=.jam)thisfile.txt.jam}"
+      Output: "file.txt"
+  "case insensitive cases":
+    "chops off the .jam ending":
+      Input: "{@string:chop (ignoreCase postfix=.JAM)thisfile.txt.jam}"
+      Output: "thisfile.txt"
+    "chops off the prefix":
+      Input: "{@string:chop (ignoreCase prefix=THIS)thisfile.txt.jam}"
+      Output: "file.txt.jam"
+    "chops off the prefix and postfix":
+      Input: "{@string:chop (ignoreCase prefix=THIS postfix=.JAM)thisfile.txt.jam}"
+      Output: "file.txt"
+  "failure cases":
+    "case sensitive":
+      "the postfix is not there":
+            Input: "{@string:chop (postfix=.jam)file.txt}"
+            Output: "file.txt"
+      "the prefix is not there":
+            Input: "{@string:chop (prefix=this)file.txt}"
+            Output: "file.txt"
+      "the postfix is not there because of different case":
+            Input: "{@string:chop (postfix=.jam)THISfile.txt.JAM}"
+            Output: "THISfile.txt.JAM"
+      "the prefix is not there because of different case":
+            Input: "{@string:chop (prefix=this)THISfile.txt.JAM}"
+            Output: "THISfile.txt.JAM"
+    "case insensitive":
+      "the postfix is not there":
+            Input: "{@string:chop (ignoreCase postfix=.jam)file.txt}"
+            Output: "file.txt"
+      "the prefix is not there":
+            Input: "{@string:chop (ignoreCase prefix=this)file.txt}"
+            Output: "file.txt"

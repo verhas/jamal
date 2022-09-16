@@ -449,3 +449,20 @@ conditional redefinition does not redefine any higher scope already defined macr
   Input: "{@define a=1}{@undefine a}{@define ! a=2}"
   # no output, just that it does not throw exception
   Output: ""
+
+"define with option 'RestrictedDefineParameters' does not accept non identifier as argument":
+  Input: |-
+    {@options RestrictedDefineParameters}
+    {@define z(=6,]k)=wop=6}
+  Throws: "The parameters of the define must be identifiers.*"
+
+"define with option 'RestrictedDefineParameters' works with identifiers as arguments":
+  Input: |-
+    {@options RestrictedDefineParameters}\
+    {@define z($A,_B)=wop$A}\
+    {z/a/b}
+  Output: "wopa"
+
+"define without option 'RestrictedDefineParameters' does not accept non identifier as argument":
+  Input: "{@define z(=6,]k)=wop=6}{z/a/b}"
+  Output: "wopa"
