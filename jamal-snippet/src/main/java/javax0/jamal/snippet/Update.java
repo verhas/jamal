@@ -31,6 +31,10 @@ public class Update implements Macro, InnerScopeDependent {
             "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$").asPattern();
         Scan.using(processor).from(this).firstLine().keys(head, tail, start, stop).parse(in);
 
+        if( in.getPosition().file == null ){
+            throw new BadSyntax("Cannot invoke update from an environment that has no file name");
+        }
+
         final var snippets = SnippetStore.getInstance(processor);
         final var state = new State(snippets, processor, head.get(), tail.get(), start.get(), stop.get());
         final var sb = new StringBuilder();

@@ -10,7 +10,6 @@ import javax0.jamal.tools.Scan;
 
 import java.math.BigDecimal;
 import java.text.Collator;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -68,8 +67,7 @@ public class Sort implements Macro {
         }
 
         skipWhiteSpaces(in);
-        Stream<LineHolder<String>> lines = new ArrayList<>(Arrays.asList(in.toString().split(separator.get().pattern(), -1)))
-                .stream()
+        Stream<LineHolder<String>> lines = Arrays.stream(in.toString().split(separator.get().pattern(), -1))
                 .map(s -> new LineHolder<>(s, s));
         if (columns.isPresent()) {
             List<Range> ranges = Range.calculateFrom(columns.get(), Integer.MAX_VALUE);
@@ -77,7 +75,7 @@ public class Sort implements Macro {
                 throw new BadSyntax(format("The option '%s' can only have a single range value!", columns.name()));
             }
             Range range = ranges.get(0);
-            lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from - 1, range.to - 1)));
+                lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from - 1, range.to - 1)));
         } else if (pattern.isPresent()) {
             lines = lines.map(findMatches(pattern));
         }

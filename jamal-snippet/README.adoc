@@ -2522,25 +2522,25 @@ will result
 - snippet: 1,568 bytes
 - Snip.java: 5,063 bytes
 - SnipSave.java: 4,886 bytes
-- Sort.java: 7,557 bytes
+- Sort.java: 7,490 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,798 bytes
 - RangeMacro.java: 1,282 bytes
 - Untab.java: 2,327 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
-- Update.java: 3,779 bytes
+- Update.java: 3,934 bytes
 - SnipTransform.java: 17,339 bytes
 - FilesMacro.java: 9,221 bytes
 - Collect.java: 20,430 bytes
 - SnipFile.java: 680 bytes
-- TrimLines.java: 5,371 bytes
+- TrimLines.java: 5,379 bytes
 - ThinXml.java: 8,792 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,731 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
-- SnipXml.java: 903 bytes
+- SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
 - Counter.java: 4,701 bytes
@@ -2551,12 +2551,12 @@ will result
 - SnipLoad.java: 3,573 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 10,713 bytes
-- ListDir.java: 5,579 bytes
+- ListDir.java: 5,580 bytes
 - XmlFormat.java: 3,544 bytes
 - SnippetXmlReader.java: 6,607 bytes
 - XmlInsert.java: 6,207 bytes
 - SnipProperties.java: 1,485 bytes
-- Xml.java: 905 bytes
+- Xml.java: 539 bytes
 - CounterMacro.java: 1,875 bytes
 - SnipList.java: 1,222 bytes
 - XmlDocument.java: 5,533 bytes
@@ -2819,7 +2819,7 @@ will result in the output
 
 [source]
 ----
-2022-09-16 14:16:18
+2022-09-16 16:27:36
 ----
 
 
@@ -3385,7 +3385,7 @@ The parameters are:
 * `prefix`, `pre` or `start` can specify a string that the input may start with. If the input starts with this string it will be removed.
 * `postfix`, `post` or `end` can specify a string that the input may end with. If the input ends with this string it will be removed.
 
-* `ignorecase` or `ignoreCase` tells the macro that the strings are case insensitive.
+* `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
 [[snip_update]]
 ==== xl.`snip:update`

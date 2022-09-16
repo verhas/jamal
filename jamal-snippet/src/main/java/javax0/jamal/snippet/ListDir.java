@@ -56,10 +56,9 @@ public class ListDir implements Macro, InnerScopeDependent {
             throw new BadSyntaxAt("'" + dirName + "' does not seem to be a directory to list", in.getPosition());
         }
 
-        try {
-            final var fmt = format.get();
-            final var stream = Files.walk(Paths.get(dirName), maxDepth.get(), options)
-                    .filter(p -> grep(p, grepPattern))
+        final var fmt = format.get();
+        try (final var files = Files.walk(Paths.get(dirName), maxDepth.get(), options)) {
+            final var stream = files.filter(p -> grep(p, grepPattern))
                     .filter(p -> glob(p, globPattern))
                     .map(p -> format(p, fmt));
             if (countOnly.is()) {

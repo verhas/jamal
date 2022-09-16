@@ -101,4 +101,10 @@ public class TestUpdate {
         }
         TestThat.theInput("{@include " + file + "}").throwsBadSyntax();
     }
+
+    @Test
+    void unnamed()throws Exception{
+        TestThat.theInput("{@snip:update}").throwsBadSyntax("Cannot invoke update from an environment that has no file name");
+    }
+
 }

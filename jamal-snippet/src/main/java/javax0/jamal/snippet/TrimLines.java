@@ -56,11 +56,11 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
     /**
      * Get the margin value. Margin value is usually a simple integer. In some cases, however, it can be specified using
      * the alias `trim`. When there is no number specified then the trimming is done to zero space on the left.
-     *
+     * <p>
      * This method simply looks at how margin was defined. If it was defined using the alias {@code trim} and the value
      * is "true", which usually means that the key-word {@code trim} was standing without any value then the value is
      * zero. In all other cases the string value of the parameter is parsed as an int.
-     *
+     * <p>
      * Note that you can also write {@code trim=true}, which will also mean zero margin.
      *
      * @param margin the parameter holder specifying the value of the margin

@@ -336,7 +336,7 @@ For example, the same properties file in XML format looks like the following:
 
 [[xml_define]]
 ==== {%macroChapter%}`xml:define`
-{%#snip:check file={%JAVA_DIR%}Xml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=379a47df%}
+{%#snip:check file={%JAVA_DIR%}Xml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=703dc015%}
 This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
 The syntax of the command is:
 
@@ -368,7 +368,7 @@ The result is:
 
 [[snip_xml]]
 ==== {%macroChapter%}`snip:xml`
-{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=12ac50dc%}
+{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=68dbf0e0%}
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
 
@@ -967,7 +967,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 ==== {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=efeb7c77%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=aa07d621%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1163,7 +1163,7 @@ This behaviour may result that the line number or column is not accurate when th
 
 [[sort]]
 ==== {%macroChapter%}`sort`
-{%#snip:check file={%JAVA_DIR%}Sort.java hash=c1596ae6%}
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=56c95d27%}
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
 For example
@@ -1955,7 +1955,7 @@ results
 
 [[listDir]]
 ==== {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=28939858%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=6997e3c5%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
@@ -2794,11 +2794,11 @@ The parameters are:
 * `prefix`, `pre` or `start` can specify a string that the input may start with. If the input starts with this string it will be removed.
 * `postfix`, `post` or `end` can specify a string that the input may end with. If the input ends with this string it will be removed.
 
-* `ignorecase` or `ignoreCase` tells the macro that the strings are case insensitive.
+* `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
 [[snip_update]]
 ==== {%macroChapter%}`snip:update`
-{%#snip:check file={%JAVA_DIR%}Update.java hash=fa4c7b09%}
+{%#snip:check file={%JAVA_DIR%}Update.java hash=540d509e%}
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
 
