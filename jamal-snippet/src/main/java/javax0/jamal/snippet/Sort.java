@@ -1,14 +1,21 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
-import javax0.jamal.tools.InputHandler;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scan;
 
 import java.math.BigDecimal;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -22,13 +29,33 @@ public class Sort implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        // snippet sort_options
         final var separator = holder("separator").orElse("\n").asPattern();
+        // specifies the separator regular expression, that separates the individual records.
+        // The default value if `\n`, which means the lines are the records.
         final var join = holder(null, "join").orElse("\n").asString();
+        // is the string to use to join the records together after the sorting was done.
+        // The default value is the `\n` string (not pattern), that means the records will be individual lines in the output.
         final var locale = holder(null, "locale", "collatingOrder").asString();
+        // can define the locale for the sorting.
+        // The default locale `en-US.UTF-8`.
+        // Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
         final var columns = holder(null, "columns").asString();
+        // can specify the part of the textual record to be used as sorting key.
+        // The format of the parameter is `n..m` where `n` is the first character position and `m-1` is the last character position to be used.
+        // The values can run from 1 to the maximum number of characters.
+        // If you specify column values that run out of the line length then the macro will result an error.
         final var pattern = holder(null, "pattern").asPattern();
+        // can specify a regular expression pattern to define the part of the line as sort key.
+        // The expression may contain matching groups.
+        // In that case the strings matching the parts between the parentheses are appended from left to right and used as a key.
+        // This option must not be used together with the option `columns`.
         final var numeric = holder(null, "numeric").asBoolean();
+        // will sort based on the numeric order of the keys.
+        // In this case the keys must be numeric or else the conversion to `BigDecimal` before the sort will fail.
         final var reverse = holder(null, "reverse").asBoolean();
+        // do the sorting in reverse order.
+        // end snippet
         Scan.using(processor)
                 .from(this)
                 .firstLine()
@@ -45,23 +72,30 @@ public class Sort implements Macro {
                 .stream()
                 .map(s -> new LineHolder<>(s, s));
         if (columns.isPresent()) {
-            List<Range> ranges = Range.calculateFrom(columns.get(), -1);
+            List<Range> ranges = Range.calculateFrom(columns.get(), Integer.MAX_VALUE);
             if (ranges.size() != 1) {
                 throw new BadSyntax(format("The option '%s' can only have a single range value!", columns.name()));
             }
             Range range = ranges.get(0);
-            lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from, range.to)));
+            lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from - 1, range.to - 1)));
+        } else if (pattern.isPresent()) {
+            lines = lines.map(findMatches(pattern));
         }
-        lines = lines.map(findMatches(pattern));
-        if (numeric.is()) {
-            lines = lines
-                    .map(line -> new LineHolder<>(line.original, new BigDecimal(line.key)))
-                    .sorted(Comparator.comparing(LineHolder::key))
-                    .map(intLine -> new LineHolder<>(intLine.original, intLine.key.toPlainString()));
-        } else {
-            lines = lines.sorted(Comparator.comparing(LineHolder::key, collator));
+
+        final List<String> values;
+        try {
+            values = (numeric.is() ?
+                    lines.map(line -> new LineHolder<>(line.original, new BigDecimal(line.key)))
+                            .sorted(Comparator.comparing(LineHolder::key))
+                    :
+                    lines.sorted(Comparator.comparing(LineHolder::key, collator)))
+                    .map(LineHolder::original).collect(toList());
+        } catch (final StringIndexOutOfBoundsException e) {
+            throw new BadSyntax("Column specification does not fit the lines", e);
+        } catch (final NumberFormatException e) {
+            throw new BadSyntax("Numeric sorting on non numeric values", e);
+
         }
-        List<String> values = lines.map(LineHolder::original).collect(toList());
         if (reverse.is()) {
             Collections.reverse(values);
         }
@@ -76,34 +110,44 @@ public class Sort implements Macro {
         }
     }
 
+    /**
+     * Returns a Function that converts a line holder to a new one, which uses the part of the line as a key that
+     * matches the pattern.
+     *
+     * @param pattern is a parameter, and it is guaranteed to be present when this method is invoked.
+     *                When a line does not match the pattern, the whole line is used as key.
+     * @return the function to map the line holders to new line holders matching the patterns as key
+     * @throws BadSyntax if the pattern cannot be acquired
+     */
     private Function<LineHolder<String>, LineHolder<String>> findMatches(Params.Param<Pattern> pattern) throws BadSyntax {
-        if (!pattern.isPresent()) {
-            return Function.identity();
-        }
         Pattern p = pattern.get();
         return line -> {
             var matcher = p.matcher(line.original);
-            matcher.find();
-            return new LineHolder<>(line.original, matcher.group());
+            if (matcher.find()) {
+                final var key = new StringBuilder();
+                if (matcher.groupCount() > 0) {
+                    for (int i = 1; i <= matcher.groupCount(); i++) {
+                        key.append(matcher.group(i));
+                    }
+                } else {
+                    key.append(matcher.group());
+                }
+                return new LineHolder<>(line.original, key.toString());
+            } else {
+                return new LineHolder<>(line.original, line.original);
+            }
         };
     }
 
-    private int safeParse(String number) throws BadSyntax {
-        try {
-            return Integer.parseInt(number);
-        } catch (NumberFormatException exception) {
-            throw new BadSyntax("Could not parse options 'columns' because of an exception.", exception);
-        }
-    }
-
-    private String[] splitColumns(Params.Param<String> columns) throws BadSyntax {
-        String[] parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(columns.get()));
-        if (parts.length != 2) {
-            throw new BadSyntax(format("Expected exactly 2 parameters for option '%s', got %d", columns.name(), parts.length));
-        }
-        return parts;
-    }
-
+    /**
+     * A line holder holds one record. It is called line holder because records are usually lines when the default
+     * record separator, {@code \n} is used.
+     * <p>
+     * The holder stores the original record and a KEY usually calculated from the record.
+     * Both the original string and the key can be queried from the object.
+     *
+     * @param <KEY> the type of the key.
+     */
     private static class LineHolder<KEY extends Comparable<KEY>> {
         private final String original;
         private final KEY key;

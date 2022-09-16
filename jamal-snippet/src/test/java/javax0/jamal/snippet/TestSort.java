@@ -27,10 +27,7 @@ class TestSort {
     void testSortWithSeparator() throws Exception {
         TestThat.theInput(""
                 + "{@sort separator=#\n"
-                + "b#"
-                + "a#"
-                + "d#"
-                + "c}"
+                + "b#a#d#c}"
         ).results("a\n"
                 + "b\n"
                 + "c\n"
@@ -46,10 +43,7 @@ class TestSort {
                 + "a\n"
                 + "d\n"
                 + "c}"
-        ).results("a#"
-                + "b#"
-                + "c#"
-                + "d");
+        ).results("a#b#c#d");
     }
 
     @Test
@@ -83,10 +77,59 @@ class TestSort {
     }
 
     @Test
+    @DisplayName("sort - sort based on pattern using only parts of it")
+    void testSortWithPatternGroup() throws Exception {
+        TestThat.theInput(""
+                + "{@sort pattern=\\((.*)\\)\n"
+                + "(aa)zzzzzz\n"
+                + "zzzz(dd)\n"
+                + "zzzzzzzz(bb)\n"
+                + "zzzzzzzzzz(cc)}"
+        ).results("(aa)zzzzzz\n"
+                + "zzzzzzzz(bb)\n"
+                + "zzzzzzzzzz(cc)\n"
+                + "zzzz(dd)");
+    }
+
+    @Test
+    @DisplayName("sort - sort based on pattern using multiple parts of it")
+    void testSortWithPatternGroups() throws Exception {
+        TestThat.theInput(""
+                + "{@sort pattern=\\((.*)\\).*\\[(.*)\\]\n"
+                + "(a)zzz[a]zzz\n"
+                + "zzzz(dd)sasa[13]\n"
+                + "zzzzzzzz(bb)[]\n"
+                + "zzzzzzzzzz(b)[c]}"
+        ).results("(a)zzz[a]zzz\n"
+                + "zzzzzzzz(bb)[]\n"
+                + "zzzzzzzzzz(b)[c]\n"
+                + "zzzz(dd)sasa[13]");
+    }
+
+    @Test
+    @DisplayName("sort - sort based on pattern that sometimes does not match the line")
+    void testSortWithPatternNotMatching() throws Exception {
+        TestThat.theInput(""
+                + "{@sort pattern=[a-f]{2}\n"
+                + "azzzzzz\n"
+                + "azzzzzzaa\n"
+                + "azzzzzzba\n"
+                + "zzzzdd\n"
+                + "zzzzzzzzbb\n"
+                + "zzzzzzzzzzcc}"
+        ).results("azzzzzzaa\n" +
+                "azzzzzz\n" +
+                "azzzzzzba\n" +
+                "zzzzzzzzbb\n" +
+                "zzzzzzzzzzcc\n" +
+                "zzzzdd");
+    }
+
+    @Test
     @DisplayName("sort - sort based on columns")
     void testSortWithColumns() throws Exception {
         TestThat.theInput(""
-                + "{@sort columns=2..4\n"
+                + "{@sort columns=3..5\n"
                 + "zzabzzaa\n"
                 + "zzaadd\n"
                 + "zzcazzzzbb\n"
@@ -134,6 +177,19 @@ class TestSort {
     class TestSortFailure {
 
         @Test
+        @DisplayName("Column indexing error")
+        void errorsWhenStringIsShort() throws Exception{
+            TestThat.theInput(""
+                    + "{#sort columns=1..3\n"
+                    + "b\n"
+                    + "a\n"
+                    + "d\n"
+                    + "c"
+                    + "}"
+            ).throwsBadSyntax("Column specification does not fit the lines");
+        }
+
+        @Test
         @DisplayName("pattern & columns together is bad syntax")
         void cantSortWithColumnsAndPattern() throws Exception {
             TestThat.theInput(""
@@ -147,20 +203,20 @@ class TestSort {
         }
 
         @Test
-        @DisplayName("pattern that can't compile is bad syntax")
-        void cantSortWithBadPattern() throws Exception {
+        @DisplayName("sort - sorts wrong numbers")
+        void testSortWithWromngNumeric() throws Exception {
             TestThat.theInput(""
-                    + "{#sort pattern=[a-z)\n"
-                    + "b\n"
-                    + "a\n"
-                    + "d\n"
-                    + "c"
+                    + "{#sort numeric\n"
+                    + "192.168.0.13\n"
+                    + "alma\n"
+                    + "1\n"
+                    + "2"
                     + "}"
-            ).throwsBadSyntax("There was an exception converting the parameter 'pattern'.*");
+            ).throwsBadSyntax("Numeric sorting on non numeric values");
         }
 
         @Test
-        @DisplayName("pattern that can't compile is bad syntax")
+        @DisplayName("columns cannot have multiple ranges")
         void cantSortWithBadColumns() throws Exception {
             TestThat.theInput(""
                     + "{#sort columns=2..4,5..6\n"
@@ -169,7 +225,7 @@ class TestSort {
                     + "aaaaaaaaaad\n"
                     + "aaaaaaaaaac"
                     + "}"
-            ).throwsBadSyntax("The option '.*' can only have a single range value!");
+            ).throwsBadSyntax("The option 'columns' can only have a single range value!");
         }
 
     }

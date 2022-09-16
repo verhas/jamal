@@ -82,6 +82,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<range,`range`>>
 .. <<rot13,`rot13`>>
 .. <<pos,`pos`>>
+.. <<sort,`sort`>>
 .. <<numberLines,`numberLines`>>
 .. <<killLines,`killLines`>>
 .. <<skipLines,`skipLines`>>
@@ -1160,6 +1161,78 @@ The actual file name and line number may not be the one where the macro is used.
 It is where the macro is evaluated.
 This behaviour may result that the line number or column is not accurate when the macro is not evaluated from the top level context.
 
+[[sort]]
+==== {%macroChapter%}`sort`
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=c1596ae6%}
+This macro returns the input sorted.
+The default behaviour is to sort the lines of the input alphabetically.
+For example
+
+{%sample/
+{@sort
+beta
+zeta
+alpha}
+%}
+
+will result the output
+
+{%output%}
+
+To have more flexibility you can use parameters on the first line of the input to specify collating order, record separator and so on.
+
+The options are:
+
+{%#replaceLines replace="/^.*holder\\(.*?\"(.*?)\"\\).*$/* `$1`/" \
+replace="/\",\\s*\"/`, alias `/" replace="~//~~"
+{%@snip sort_options%}%}
+
+The input is treated as a list of textual records separated by strings.
+The separator can be defined as a regular expression.
+The default value is `\n`, which means that the individual lines will be the records.
+An example, different from the default record separator:
+
+{%sample/
+{@sort separator=### join=### pattern="key=(.*)" numeric
+key=1
+this
+is one record
+###
+key=03
+This is the second
+record, multiple lines
+###
+key=2
+This gets into the middle
+}
+%}
+
+will result
+
+{%output%}
+
+This sample uses a pattern to select the key, a non-default joining string, and it also specifies that the sorting has to be numeric.
+
+The next example specifies the sorting when the collating order is specified.
+Here the collating order is Hungarian.
+{%sample/
+{@sort locale=HU
+Cukor
+Csiga
+Császár
+Czucor
+Abrak
+}
+%}
+
+It will result the following order:
+
+{%output%}
+
+Note that the special character `á` is properly used as it follows the letter `a` in the Hungarian collation order.
+Also, the `cs` is a compound sound following the letter `c` in Hungarian and that way `Czucor` comes before `Császár` or `Csiga`, whatever they mean.
+
+
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`
 {%#snip:check file={%JAVA_DIR%}NumberLines.java hash=d24ea9ad%}
@@ -1395,7 +1468,7 @@ but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
 ==== {%macroChapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=869e4557%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=1040deef%}
 This macro replaces strings in the input.
 {%parameterized%}
 
