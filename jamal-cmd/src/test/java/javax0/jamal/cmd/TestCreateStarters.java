@@ -3,6 +3,7 @@ package javax0.jamal.cmd;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -19,6 +20,7 @@ import static javax0.jamal.DocumentConverter.getRoot;
 public class TestCreateStarters {
 
     @Test
+    @DisplayName("Create the jbang starter file from the resource jbang.template")
     void testCreateTheJBangStarterFile() throws Exception {
         final var versionString = getVersionString();
         final var root = getRoot();
@@ -33,6 +35,7 @@ public class TestCreateStarters {
     }
 
     @Test
+    @DisplayName("Create the jamal.sh shell script using the dependencies plugin output and the resource jamal.sh.template")
     void testCreateJamalSh() throws Exception {
         final var versionString = getVersionString();
         final var root = getRoot();
