@@ -22,7 +22,7 @@ $x
 --------------------------------------------------------------------------------------------------------------------
 -- cannot move to VERSIONS because old 'VersionFetcher.tsx' reads this file from github
 -- and looks for the "define" to see its version is OK
-{@define LAST_RELEASE=1.12.2}
+{@define LAST_RELEASE=1.12.3}
 
 
 {VERSIONS
