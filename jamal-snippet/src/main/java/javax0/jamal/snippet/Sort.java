@@ -107,6 +107,9 @@ public class Sort implements Macro {
     private Collator getCollator(final Params.Param<String> locale) throws BadSyntax {
         if (locale.isPresent() && locale.name().equals("collator")) {
             try {
+                if ("semver".equalsIgnoreCase(locale.get())) {
+                    return new SemVerCollator();
+                }
                 final var collator = Class.forName(locale.get()).getConstructor().newInstance();
                 if (collator instanceof Collator) {
                     return (Collator) collator;

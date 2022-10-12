@@ -1163,7 +1163,7 @@ This behaviour may result that the line number or column is not accurate when th
 
 [[sort]]
 ==== {%macroChapter%}`sort`
-{%#snip:check file={%JAVA_DIR%}Sort.java hash=11462163%}
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=614444b8%}
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
 For example
@@ -1236,7 +1236,7 @@ Also, the `cs` is a compound sound following the letter `c` in Hungarian and tha
 The next example uses semantic versioning.
 
 {%sample/
-{@sort collator=javax0.jamal.snippet.SemVerCollator
+{@sort collator=semver
 1.0.0-alpha
 1.0.0-alpha.beta
 1.0.0-beta
@@ -1250,6 +1250,10 @@ The next example uses semantic versioning.
 It will result the following ordering:
 
 {%output%}
+
+NOTE: The sample above does not specify the fully qualified class name of the collator.
+The macro `sort` implements a little shortcut for the semantic versioning collator provided in the Jamal source code.
+If you write `semver` (case insensitive) instead of the fully qualified domain name, it will automatically use the `javax0.jamal.snippet.SemVerCollator` class as collator.
 
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`

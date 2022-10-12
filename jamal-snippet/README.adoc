@@ -1493,7 +1493,7 @@ The next example uses semantic versioning.
 
 [source]
 ----
-{@sort collator=javax0.jamal.snippet.SemVerCollator
+{@sort collator=semver
 1.0.0-alpha
 1.0.0-alpha.beta
 1.0.0-beta
@@ -1519,6 +1519,10 @@ It will result the following ordering:
 1.0.0
 ----
 
+
+NOTE: The sample above does not specify the fully qualified class name of the collator.
+The macro `sort` implements a little shortcut for the semantic versioning collator provided in the Jamal source code.
+If you write `semver` (case insensitive) instead of the fully qualified domain name, it will automatically use the `javax0.jamal.snippet.SemVerCollator` class as collator.
 
 [[numberLines]]
 ==== xix.`numberLines`
@@ -2558,7 +2562,7 @@ will result
 - snippet: 1,600 bytes
 - Snip.java: 5,063 bytes
 - SnipSave.java: 4,886 bytes
-- Sort.java: 8,774 bytes
+- Sort.java: 8,904 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,798 bytes
 - RangeMacro.java: 1,282 bytes
@@ -2856,7 +2860,7 @@ will result in the output
 
 [source]
 ----
-2022-10-12 15:36:47
+2022-10-12 15:52:25
 ----
 
 
