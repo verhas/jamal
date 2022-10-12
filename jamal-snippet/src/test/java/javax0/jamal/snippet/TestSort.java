@@ -143,8 +143,8 @@ class TestSort {
     @Test
     @DisplayName("sort - sorts numbers")
     void testSortWithNumeric() throws Exception {
-        TestThat.theInput(""
-                + "{#sort numeric\n"
+        TestThat.theInput("" +
+                "{#sort numeric\n"
                 + "11\n"
                 + "10\n"
                 + "1\n"
@@ -154,6 +154,32 @@ class TestSort {
                 + "2\n"
                 + "10\n"
                 + "11");
+    }
+
+    @Test
+    @DisplayName("sort - sorts numbers")
+    void testSortWithSemanticVersioning() throws Exception {
+        TestThat.theInput("" +
+                "{#sort collator=\"javax0.jamal.snippet.SemVerCollator\"\n" +
+                "1.0.0-alpha\n" +
+                "1.0.0-alpha.beta\n" +
+                "1.0.0-beta\n" +
+                "1.0.0-beta.2\n" +
+                "1.0.0-alpha.1\n" +
+                "1.0.0-beta.11\n" +
+                "1.0.0-rc.1\n" +
+                "1.0.0\n" +
+                "}"
+        ).results(
+                "1.0.0-alpha\n" +
+                        "1.0.0-alpha.1\n" +
+                        "1.0.0-alpha.beta\n" +
+                        "1.0.0-beta\n" +
+                        "1.0.0-beta.2\n" +
+                        "1.0.0-beta.11\n" +
+                        "1.0.0-rc.1\n" +
+                        "1.0.0\n"
+        );
     }
 
     @Test
@@ -178,7 +204,7 @@ class TestSort {
 
         @Test
         @DisplayName("Column indexing error")
-        void errorsWhenStringIsShort() throws Exception{
+        void errorsWhenStringIsShort() throws Exception {
             TestThat.theInput(""
                     + "{#sort columns=1..3\n"
                     + "b\n"

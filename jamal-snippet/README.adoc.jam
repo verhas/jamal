@@ -1163,7 +1163,7 @@ This behaviour may result that the line number or column is not accurate when th
 
 [[sort]]
 ==== {%macroChapter%}`sort`
-{%#snip:check file={%JAVA_DIR%}Sort.java hash=56c95d27%}
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=11462163%}
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
 For example
@@ -1232,6 +1232,24 @@ It will result the following order:
 Note that the special character `á` is properly used as it follows the letter `a` in the Hungarian collation order.
 Also, the `cs` is a compound sound following the letter `c` in Hungarian and that way `Czucor` comes before `Császár` or `Csiga`, whatever they mean.
 
+
+The next example uses semantic versioning.
+
+{%sample/
+{@sort collator=javax0.jamal.snippet.SemVerCollator
+1.0.0-alpha
+1.0.0-alpha.beta
+1.0.0-beta
+1.0.0-beta.2
+1.0.0-alpha.1
+1.0.0-beta.11
+1.0.0-rc.1
+1.0.0
+}%}
+
+It will result the following ordering:
+
+{%output%}
 
 [[numberLines]]
 ==== {%macroChapter%}`numberLines`

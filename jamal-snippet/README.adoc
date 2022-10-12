@@ -1395,10 +1395,14 @@ The options are:
 * `join`
          is the string to use to join the records together after the sorting was done.
          The default value is the `\n` string (not pattern), that means the records will be individual lines in the output.
-* `locale`, alias `collatingOrder`
+* `locale`, alias `collatingOrder`, alias `collator`
          can define the locale for the sorting.
          The default locale `en-US.UTF-8`.
          Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
+         When this option used with the alias `collator` the value of the option has to be the fully qualified name of a class extending the `java.text.Collator` abstract class.
+         The class will be instantiated and used to sort the records.
+         Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
+         This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.
 * `columns`
          can specify the part of the textual record to be used as sorting key.
          The format of the parameter is `n..m` where `n` is the first character position and `m-1` is the last character position to be used.
@@ -1483,6 +1487,37 @@ Csiga
 
 Note that the special character `á` is properly used as it follows the letter `a` in the Hungarian collation order.
 Also, the `cs` is a compound sound following the letter `c` in Hungarian and that way `Czucor` comes before `Császár` or `Csiga`, whatever they mean.
+
+
+The next example uses semantic versioning.
+
+[source]
+----
+{@sort collator=javax0.jamal.snippet.SemVerCollator
+1.0.0-alpha
+1.0.0-alpha.beta
+1.0.0-beta
+1.0.0-beta.2
+1.0.0-alpha.1
+1.0.0-beta.11
+1.0.0-rc.1
+1.0.0
+}
+----
+
+It will result the following ordering:
+
+[source]
+----
+1.0.0-alpha
+1.0.0-alpha.1
+1.0.0-alpha.beta
+1.0.0-beta
+1.0.0-beta.2
+1.0.0-beta.11
+1.0.0-rc.1
+1.0.0
+----
 
 
 [[numberLines]]
@@ -2423,6 +2458,7 @@ will result
 - Replace.java
 - SnipLine.java
 - SnipCheckFailed.java
+- SemVerCollator.java
 - SnipXml.java
 - ThinXmlMacro.java
 - BlockConverter.java
@@ -2519,10 +2555,10 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,568 bytes
+- snippet: 1,600 bytes
 - Snip.java: 5,063 bytes
 - SnipSave.java: 4,886 bytes
-- Sort.java: 7,490 bytes
+- Sort.java: 8,774 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,798 bytes
 - RangeMacro.java: 1,282 bytes
@@ -2540,6 +2576,7 @@ will result
 - Replace.java: 1,731 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
+- SemVerCollator.java: 8,929 bytes
 - SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
@@ -2819,7 +2856,7 @@ will result in the output
 
 [source]
 ----
-2022-09-16 16:27:36
+2022-10-12 15:36:47
 ----
 
 

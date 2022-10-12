@@ -5,6 +5,14 @@
 
 {%RELEASE/1.12.3-SNAPSHOT%}
 
+* Various bugfixes and dependency version updates.
+
+* Sorting macro is available in the snippet library, developed by Michael
+
+* the macro `define` has options for all the different "define" types, like pure, verbatim etc.
+Originally these can be reached using special characters, which are less verbose, but cryptic.
+The old syntax is still usable,but not recommended.
+
 * `file` macro in snippet package now has formatting placeholders `bareNaked` and `nakedN` as well as `extensions` and `extensionN` with the possible `N` values being 1,2,3,4, and 5.
 
 * the macro `counter` can save its actual value using `->` .

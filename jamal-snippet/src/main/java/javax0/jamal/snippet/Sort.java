@@ -35,10 +35,14 @@ public class Sort implements Macro {
         final var join = holder(null, "join").orElse("\n").asString();
         // is the string to use to join the records together after the sorting was done.
         // The default value is the `\n` string (not pattern), that means the records will be individual lines in the output.
-        final var locale = holder(null, "locale", "collatingOrder").asString();
+        final var locale = holder(null, "locale", "collatingOrder", "collator").asString();
         // can define the locale for the sorting.
         // The default locale `en-US.UTF-8`.
         // Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
+        // When this option used with the alias `collator` the value of the option has to be the fully qualified name of a class extending the `java.text.Collator` abstract class.
+        // The class will be instantiated and used to sort the records.
+        // Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
+        // This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.
         final var columns = holder(null, "columns").asString();
         // can specify the part of the textual record to be used as sorting key.
         // The format of the parameter is `n..m` where `n` is the first character position and `m-1` is the last character position to be used.
@@ -60,7 +64,7 @@ public class Sort implements Macro {
                 .firstLine()
                 .keys(separator, join, locale, columns, pattern, numeric, reverse)
                 .parse(in);
-        Collator collator = Collator.getInstance(getLocaleFromParam(locale));
+        Collator collator = getCollator(locale);
 
         if (pattern.isPresent() && columns.isPresent()) {
             throw new BadSyntax(format("Can not use both options '%s' and '%s' together.", pattern.name(), columns.name()));
@@ -75,7 +79,7 @@ public class Sort implements Macro {
                 throw new BadSyntax(format("The option '%s' can only have a single range value!", columns.name()));
             }
             Range range = ranges.get(0);
-                lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from - 1, range.to - 1)));
+            lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from - 1, range.to - 1)));
         } else if (pattern.isPresent()) {
             lines = lines.map(findMatches(pattern));
         }
@@ -98,6 +102,22 @@ public class Sort implements Macro {
             Collections.reverse(values);
         }
         return String.join(join.get(), values);
+    }
+
+    private Collator getCollator(final Params.Param<String> locale) throws BadSyntax {
+        if (locale.isPresent() && locale.name().equals("collator")) {
+            try {
+                final var collator = Class.forName(locale.get()).getConstructor().newInstance();
+                if (collator instanceof Collator) {
+                    return (Collator) collator;
+                } else {
+                    throw new BadSyntax(format("collator class '%s' is not a collator", locale.get()));
+                }
+            } catch (Exception e) {
+                throw new BadSyntax(format("collator class '%s' cannot be instantiated", locale.get()), e);
+            }
+        }
+        return Collator.getInstance(getLocaleFromParam(locale));
     }
 
     private Locale getLocaleFromParam(Params.Param<String> locale) throws BadSyntax {

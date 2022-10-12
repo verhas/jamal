@@ -2219,7 +2219,7 @@ is
 
 [source]
 ----
-/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/Home
 ----
 
 
