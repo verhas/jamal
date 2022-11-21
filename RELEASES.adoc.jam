@@ -3,7 +3,9 @@
 
 {%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
 
-{%RELEASE/1.12.3-SNAPSHOT%}
+{%RELEASE/1.12.4-SNAPSHOT%}
+
+{%RELEASE/1.12.3%}
 
 * Various bugfixes and dependency version updates.
 

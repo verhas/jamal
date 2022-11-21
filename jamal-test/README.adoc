@@ -5,4 +5,3 @@ This module contains integration tests for Jamal core built-in macros and also t
 
 The directory `jamal-test/src/test/java/javax0/jamal/test/core` contain the tests.
 The directory `jamal-test/src/test/java/javax0/jamal/test/extra` contain extra tests for the core built-in macros.
-

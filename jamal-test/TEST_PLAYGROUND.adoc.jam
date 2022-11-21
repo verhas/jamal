@@ -1,24 +1,15 @@
-{%@for [separator="\n" evalist skipEmpty lenient] ($T,$M,$A) in `H`
-
-{%@replaceLines replace="~^(\\w+)\\|~$1Statement|~"
-Return|ReturnValue
-Expression|Expression
-Yield|Expression
-Assert|AssertCondition%}
-{%@replaceLines replace="~^(\\w+)\\|~$1Expression|~"
-Resource|Expression%}
-ResourceVariable|Initializer
-{%@replaceLines replace="~^(\\w+)\\|~$1Expression|~"
-Polyadic|Operands|[0]
-InstanceOf|Operand
-Parenthesized|Expression
-Conditional|Condition %}
-
-`H`=
-  if( element instanceof Psi$T ){
-      return ((Psi$T)element).get$M()$A;
-      }
-%}
 
 
+[source]
+----
+{%@sep { } %}
+
+{@begin}
+  {@define [global] A=1}
+{@end}
+
+{A}
+
+
+----
 

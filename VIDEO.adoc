@@ -34,12 +34,15 @@ How to install the latest release of Jamal to be used with AsciiDoctor IntelliJ 
 
 link:https://youtu.be/bMCsUYRp-Ts[Watch it on YouTube] (2022-06-06) 
 
-How to install the latest release of Jamal to be used with AsciiDoctor IntelliJ plugin.
+A detailed and complex example how you can include the version information of your project into the documentation.
+The example is the JUnit pioneer project README.adoc file.
+This project stores the version information in the GIT metadata, it is not part of the project, therefore it is a bit more complex to fetch the information than a simple XML snippet.
 
 
 === Jamal Basics
 
-PLANNED 
+
+link:https://youtu.be/Yp0a3CV-3EI[Watch it on YouTube] (2022-11-18) 
 
 Basic syntax of Jamal macros in text files.
 How do macros start and end in the text and how they are processed.
@@ -121,11 +124,11 @@ Each video on this chapter is about a core built-in macro.
 How to use, what options the macro supports and what is the intended use.
 
 
-=== Define
+=== Define and use user defined macros.
 
-PLANNED 
 
-Define and use user defined macros.
+link:https://youtu.be/Tv6H_6YsXC8[Watch it on YouTube] (2022-11-19) 
+A detailed
 This is detailed in other videos as well, but in this video we will look at all the available features.
 
 
