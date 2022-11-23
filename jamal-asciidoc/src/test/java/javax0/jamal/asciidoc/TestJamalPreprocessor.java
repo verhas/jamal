@@ -17,6 +17,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class TestJamalPreprocessor {
+
+    private static final String PRELUDE = "[source]\n----\n\n";
+    private static final String POSTLUDE = "----\n";
+
     private static final String TEST_OUTPUT = "c7ab6b1a6410dbb9a993a50496a8578d.adoc";
     private static final String TEST_INPUT = TEST_OUTPUT + ".jam";
     private static final String TEST_IMPORT = TEST_OUTPUT + ".jim";
@@ -144,9 +148,9 @@ public class TestJamalPreprocessor {
 17   c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim oEZhG+ixKcULiztw1AYivQ==
          */
         final var lines = Files.readAllLines(Paths.get(LOG_OUTPUT), StandardCharsets.UTF_8);
-        Assertions.assertTrue(lines.get(8).endsWith("restored"));
-        Assertions.assertEquals("  " + TEST_IMPORT + " vpf/bqeUngN5AtDqUrH5Rw==", lines.get(11));
-        Assertions.assertFalse(lines.get(15).endsWith("restored"));
+        Assertions.assertTrue(lines.get(11).endsWith("restored"));
+        Assertions.assertEquals("  " + TEST_IMPORT + " vpf/bqeUngN5AtDqUrH5Rw==", lines.get(14));
+        Assertions.assertFalse(lines.get(18).endsWith("restored"));
     }
 
     private static void assertStartsWith(final String expected, final String actual) {

@@ -1,0 +1,14 @@
+{@comment log}
+
+zaba
+{@begin}
+  {@define [global] A=1}dd
+----
+
+[source]
+
+{@ende}
+
+{A}
+
+----

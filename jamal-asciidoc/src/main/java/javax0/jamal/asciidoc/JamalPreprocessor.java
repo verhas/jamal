@@ -62,6 +62,10 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     public void process(Document document, PreprocessorReader reader) {
         final var runCounter = JamalPreprocessor.runCounter++;
         final var fileName = reader.getFile();
+        /*
+         * The plugin is invoked for all asciidoc files. If the file ending is adoc, asciidoc or anything else then
+         * there is nothing to do for the Jamal preprocessor.
+         */
         if (!fileName.endsWith(".jam")) {
             return;
         }
@@ -135,8 +139,32 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 logInfo(outputFileName, "dependencies\n" + cachingFileReader.list(), runCounter, LocalDateTime.now());
             }
         }
+        /*
+         * when the input is not asciidoc then we add this asciidoc prelude to display the text as source code,
+         * but the prelude and also the closing line does not get into the output
+         */
+        if (!fileName.endsWith(".adoc.jam")) {
+            logInfo(outputFileName, "adding pre and post ludes", runCounter, LocalDateTime.now());
+            final var sourcedLines = new ArrayList<String>();
+            sourcedLines.add("[source]");
+            sourcedLines.add("----");
+            for (final var line : newLines) {
+                // add an invisible space that will fool asciidoctor not to end the source block
+                if (line.trim().equals("----")) {
+                    sourcedLines.add("----\u200F\u200F\u200E \u200E");
+                } else {
+                    sourcedLines.add(line);
+                }
+            }
+            sourcedLines.add("----");
+            reader.restoreLines(sourcedLines);
+        } else {
+            logInfo(outputFileName, "not adding ludes", runCounter, LocalDateTime.now());
+            reader.restoreLines(newLines);
+        }
+        logInfo(outputFileName, "setting cache", runCounter, LocalDateTime.now());
         cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
-        reader.restoreLines(newLines);
+        logInfo(outputFileName, "DONE", runCounter, LocalDateTime.now());
     }
 
     private List<String> postProcess(final List<String> lines, final Result r) {

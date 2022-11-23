@@ -1,15 +1,23 @@
+:source-highlighter: pygments
+:pygments-style: manni
+:pygments-linenums-mode: inline
 
+Some code block here:
 
-[source]
+[source, c, subs="macros+"]
 ----
-{%@sep { } %}
-
-{@begin}
-  {@define [global] A=1}
-{@end}
-
-{A}
+void example(void)
+{
+    printf("hello, world\n");
+}
 
 
+
+
+
+
+
+
+‏‏‎ ‎
 ----
-
+...

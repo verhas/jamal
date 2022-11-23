@@ -83,14 +83,26 @@ But only if you want.
 
 Open the Preferences window of IntelliJ and select `File Types`.
 Under the recognized file types, select `AsciiDoc files`.
-Under the `File name patterns:` click on the plus sign and add `*.adoc.jam`.
+Under the `File name patterns:` click on the plus sign and add `*.jam`
 
 image::images/intellij-configure-file-types.png[width=100%]
 
-It will associate the Asciidoctor plugin with the files with the `.adoc.jam` extension.
+It will associate the Asciidoctor plugin with the files with the `.jam` extension.
 The Jamal extension does not start the processing when you look at files that do not have the `.jam` ending.
 
-Start editing the `.adoc.jam` file and look at the right pane at the rendered document.
+Start editing the `.jam` file and look at the right pane at the rendered document.
+
+[NOTE]
+====
+Before version 1.12.4, associating Asciidoc with the extension `.adoc.jam` was recommended.
+Starting with this release, you can use the extension for Jamal files, which are not in asciidoc format.
+The extension sees when the processed file does NOT have the `.adoc` file name extension in front of the final `.jam` extension.
+In this case, the generated output for the display will get a `[source]\n----\n` prefix and a `----\n` postfix.
+It will make the asciidoctor plugin display the content as preformatted source code.
+
+The extension does not add the prefix and postfix to the saved file.
+It is added only to the text for the display.
+====
 
 == Usage
 
