@@ -151,7 +151,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             for (final var line : newLines) {
                 // add an invisible space that will fool asciidoctor not to end the source block
                 if (line.trim().equals("----")) {
-                    sourcedLines.add("----\u200F\u200F\u200E \u200E");
+                    sourcedLines.add(line.replaceAll("----","----\u200F\u200F\u200E \u200E"));
                 } else {
                     sourcedLines.add(line);
                 }

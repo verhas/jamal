@@ -3,11 +3,11 @@
 zaba
 {@begin}
   {@define [global] A=1}dd
-----
-
+                         ----
+ffffffff
 [source]
 
-{@ende}
+{@end}
 
 {A}
 
