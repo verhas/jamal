@@ -27,9 +27,7 @@ public class Dump implements Macro, InnerScopeDependent {
         final var id = InputHandler.fetchId(input);
         InputHandler.skipWhiteSpaces(input);
         final var from = InputHandler.fetchId(input);
-        if (!"to".equals(from)) {
-            throw new BadSyntax("Yaml:dump needs a 'to' after the identifier");
-        }
+        BadSyntax.when(!"to".equals(from), "Yaml:dump needs a 'to' after the identifier");
         InputHandler.skipWhiteSpaces(input);
         var reference = input.getReference();
         var fileName = FileTools.absolute(reference, input.toString().trim());

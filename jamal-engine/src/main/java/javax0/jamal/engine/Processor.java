@@ -352,9 +352,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 rawResult = evalUserDefinedMacro(qualifier.input, tr, qualifier);
                 locker.run();
                 if (qualifier.isVerbatim) {
-                    if (qualifier.postEvalCount > 0) {
-                        throw new BadSyntax("Verbatim and ! cannot be used together on a user defined macro.");
-                    }
+                    BadSyntax.when(qualifier.postEvalCount > 0, "Verbatim and ! cannot be used together on a user defined macro.");
                     tr.appendAfterEvaluation(rawResult);
                     popper.run();
                     return rawResult;
@@ -571,9 +569,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 parameters[0] = process(input);
             } else {
                 skip(input, 1);
-                if (Character.isLetterOrDigit(separator)) {
-                    throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", input.getPosition());
-                }
+                BadSyntaxAt.when(Character.isLetterOrDigit(separator), () -> "Invalid separator character '" + separator + "' ",input.getPosition());
                 final Input[] paramInputs = splitParameterString(input, separator);
                 parameters = new String[paramInputs.length];
                 for (int i = 0; i < parameters.length; i++) {
@@ -697,10 +693,7 @@ public class Processor implements javax0.jamal.api.Processor {
         while (i < output.length() && validIdChar(output.charAt(i))) {
             i++;
         }
-        if (i < output.length() && !Character.isWhitespace(output.charAt(i))) {
-            throw new BadSyntaxAt("Macro evaluated result user defined macro name contains the separator. Must not.",
-                    pos);
-        }
+        BadSyntaxAt.when(i < output.length() && !Character.isWhitespace(output.charAt(i)), "Macro evaluated result user defined macro name contains the separator. Must not.",pos);
     }
 
     /**
@@ -750,10 +743,7 @@ public class Processor implements javax0.jamal.api.Processor {
             }
             final var openIndex = input.indexOf(open, searchFrom);
             final var closeIndex = input.indexOf(close, searchFrom);
-            if (closeIndex < openIndex) {
-                throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                        pos);
-            }
+            BadSyntaxAt.when(closeIndex < openIndex, () -> "Invalid macro nesting in the last argument of the user defined macro.",pos);
             if (openIndex == -1 || separatorIndex < openIndex) {
                 appendTheNextParameter(parameters, input, start, separatorIndex, pos);
                 start = separatorIndex + 1;
@@ -782,10 +772,7 @@ public class Processor implements javax0.jamal.api.Processor {
         var openIndex = input.indexOf(open, searchFrom);
         var closeIndex = input.indexOf(close, searchFrom);
         if (openIndex != -1) {
-            if (closeIndex < openIndex) {
-                throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                        pos);
-            }
+            BadSyntaxAt.when(closeIndex < openIndex, () -> "Invalid macro nesting in the last argument of the user defined macro.",pos);
             while (true) {
                 openIndex = stepOverNestedMacros(input, openIndex, pos);
                 if (openIndex < input.length()) {
@@ -794,19 +781,12 @@ public class Processor implements javax0.jamal.api.Processor {
                 closeIndex = input.indexOf(close, openIndex);
                 openIndex = input.indexOf(open, openIndex);
                 if (openIndex == -1) {
-                    if (closeIndex != -1) {
-                        throw new BadSyntaxAt(
-                                "There are trailing macro closing strings in the last argument of the user defined macro.",
-                                pos);
-                    }
+                    BadSyntaxAt.when(closeIndex != -1, () -> "There are trailing macro closing strings in the last argument of the user defined macro.",pos);
                     break;
                 }
             }
         } else {
-            if (input.indexOf(closeIndex, searchFrom) != -1) {
-                throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                        pos);
-            }
+            BadSyntaxAt.when(input.indexOf(closeIndex, searchFrom) != -1, () -> "Invalid macro nesting in the last argument of the user defined macro.",pos);
         }
     }
 

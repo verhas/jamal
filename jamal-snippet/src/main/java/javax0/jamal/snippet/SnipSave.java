@@ -43,9 +43,7 @@ public class SnipSave implements Macro, InnerScopeDependent {
         final var format = holder("format").orElse("XML").asString();
         final var tab = holder("tab", "tabSize").orElseInt(4);
         Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, output, format, tab).parse(in);
-        if (!"XML".equals(format.get())) {
-            throw new BadSyntax("The only supported format is XML");
-        }
+        BadSyntax.when(!"XML".equals(format.get()), "The only supported format is XML");
         saveXML(processor, ref, idRegex, fnRegex, textRegex, output, tab);
         return "";
 

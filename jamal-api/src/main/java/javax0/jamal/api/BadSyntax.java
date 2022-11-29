@@ -57,10 +57,27 @@ public class BadSyntax extends Exception {
             return super.getMessage();
         } else {
             return super.getMessage() + "\n" +
-                parameters.stream()
-                    .map(BadSyntax::abbreviate)
-                    .map(m -> ">>>" + m + "\n")
-                    .collect(joining());
+                    parameters.stream()
+                            .map(BadSyntax::abbreviate)
+                            .map(m -> ">>>" + m + "\n")
+                            .collect(joining());
         }
     }
+
+    public interface ThrowingSupplier<T> {
+        T get()throws BadSyntax;
+    }
+
+    public static void when(final boolean condition, final ThrowingSupplier<String> message) throws BadSyntax {
+        if (condition) {
+            throw new BadSyntax(message.get());
+        }
+    }
+
+    public static void when(final boolean condition, final String message) throws BadSyntax {
+        if (condition) {
+            throw new BadSyntax(message);
+        }
+    }
+
 }

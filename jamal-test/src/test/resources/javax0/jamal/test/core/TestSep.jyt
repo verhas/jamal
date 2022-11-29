@@ -35,7 +35,7 @@
 {%fail |{@sep/[/ ]}|.* is ambiguous. Use a definition that does not contain spaces.%}
 {%fail |{@sep/[ /]}|.* is ambiguous. Use a definition that does not contain spaces.%}
 {%fail |{@sep [[}|using macro 'sep' you cannot use the same string as macro opening and macro closing string%}
-{%fail |{@sep [}|macro 'sep' has too short argument, only a singl character%}
+{%fail |{@sep [}|macro 'sep' has too short argument, only a single character%}
 {%fail |{@sep [[]}|.* is not correct. Use something different to separate the two characters.%}
 {%fail |{@sep [[[}|.* is not correct. Use something different to separate the two characters.%}
 {%fail |{@sep [/[}|using macro 'sep' you cannot use the same string as macro opening and macro closing string%}

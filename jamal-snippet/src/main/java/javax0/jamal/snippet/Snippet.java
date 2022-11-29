@@ -10,6 +10,7 @@ import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
+import javax0.jamal.tools.Format;
 
 public class Snippet implements Macro {
     @Override
@@ -18,9 +19,7 @@ public class Snippet implements Macro {
         skipWhiteSpaces(in);
         final var id = fetchId(in);
         skipWhiteSpaces(in);
-        if (!firstCharIs(in, '=')) {
-            throw new BadSyntax("snippet '" + id + "' has no '=' to body");
-        }
+        BadSyntax.when(!firstCharIs(in, '='), Format.msg("snippet '%s' has no '=' to body", id));
         skip(in, 1);
         skipWhiteSpaces2EOL(in);
         SnippetStore.getInstance(processor).snippet(id, in.toString(), pos);

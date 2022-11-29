@@ -49,9 +49,7 @@ class ArgumentHandler {
                     }
                 }
                 if (parameters[i].endsWith(ELIPSIS)) {
-                    if (parameters.length == 1) {
-                        throw new BadSyntax("One parameter macro cannot have 'xxx...' argument.");
-                    }
+                    BadSyntax.when(parameters.length == 1, "One parameter macro cannot have 'xxx...' argument.");
                     if (max == -1 && i == parameters.length - 1) {
                         max = Integer.MAX_VALUE;
                         parameters[i] = parameters[i].substring(0, parameters[i].length() - ELIPSIS.length()).trim();

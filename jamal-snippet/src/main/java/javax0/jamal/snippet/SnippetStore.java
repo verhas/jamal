@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax0.jamal.tools.Format;
 
 public class SnippetStore implements Identified {
     public static final String SNIPPETS_MACRO_ID = "`snippets";
@@ -192,9 +193,7 @@ public class SnippetStore implements Identified {
     }
 
     public Snippet fetchSnippet(final String id) throws BadSyntax {
-        if (!snippets.containsKey(id)) {
-            throw new BadSyntax("Snippet '" + id + "' is not defined");
-        }
+        BadSyntax.when(!snippets.containsKey(id), Format.msg("Snippet '%s' is not defined", id));
         final var snippet = snippets.get(id);
         if (snippet.exception != null) {
             throw new BadSyntax("There was an exception during the collection of the snippet '" + id + "'", snippet.exception);

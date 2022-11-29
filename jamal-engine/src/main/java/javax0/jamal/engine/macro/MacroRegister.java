@@ -11,6 +11,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
+import javax0.jamal.tools.Format;
 import javax0.jamal.tools.InputHandler;
 import javax0.levenshtein.Levenshtein;
 
@@ -434,9 +435,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                 writableScope().macros.remove(id);
                 exported = true;
             }
-            if (!exported) {
-                throw new BadSyntax("Macro '" + id + "' cannot be exported, not in the scope of export.");
-            }
+            BadSyntax.when(!exported, Format.msg("Macro '%s' cannot be exported, not in the scope of export.", id));
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
         }
@@ -450,9 +449,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void push(Marker check) throws BadSyntax {
-        if (markerIsInTheStack(check)) {
-            throw new BadSyntax("Push was performed using the marker " + check + " which happens to be already in the stack.");
-        }
+        BadSyntax.when(markerIsInTheStack(check), Format.msg("Push was performed using the marker %s which happens to be already in the stack.", check));
         final var scope = new Scope(check);
         scopeStack.add(scope);
         scopeStack.forEach(scp -> scp.macros.values().forEach(macro -> stack(macro, Stackable::push)));
@@ -476,9 +473,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                 throw new BadSyntaxAt("Scope was changed from " + check + " to " + current.checkObject + " and it was not closed before the end.", current.checkObject.getPosition());
             }
         } else {
-            if (check != null) {
-                throw new BadSyntax("Scope opened with " + check + " was closed immature.");
-            }
+            BadSyntax.when(check != null, Format.msg("Scope opened with %s was closed immature.", check));
         }
     }
 
@@ -580,9 +575,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     @Override
     public void lock(Marker check) throws BadSyntax {
         if (scopeStack.size() > 1) {
-            if (!Objects.equals(check, currentScope().checkObject)) {
-                throw new BadSyntax("Lock was performed by " + check + " for a level pushed by " + currentScope().checkObject);
-            }
+            BadSyntax.when(!Objects.equals(check, currentScope().checkObject), Format.msg("Lock was performed by %s for a level pushed by %s", check, currentScope().checkObject));
             currentScope().locked = true;
         } else {
             throw new BadSyntax("Cannot lock the top level scope.");
@@ -639,9 +632,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         var delimiterPair = currentScope().delimiterPair;
         var savedList = currentScope().savedDelimiterPairs;
         if (openDelimiter == null || closeDelimiter == null) {
-            if (savedList.size() == TOP_LEVEL) {
-                throw new BadSyntax("There was no saved macro start and end string to restore.");
-            }
+            BadSyntax.when(savedList.size() == TOP_LEVEL, "There was no saved macro start and end string to restore.");
             var savedDelim = savedList.remove(savedList.size() - 1);
             delimiterPair.separators(savedDelim.open(), savedDelim.close());
         } else {

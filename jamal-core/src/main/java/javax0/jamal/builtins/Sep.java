@@ -25,9 +25,7 @@ public class Sep implements Macro {
             return "";
         }
 
-        if (input.length() == 1) {
-            throw new BadSyntax("macro 'sep' has too short argument, only a singl character");
-        }
+        BadSyntax.when(input.length() == 1, "macro 'sep' has too short argument, only a single character");
 
         final String openMacro;
         final String closeMacro;
@@ -60,23 +58,15 @@ public class Sep implements Macro {
                 var sep = input.substring(0, 1);
                 skip(input, 1);
                 var sepIndex = input.indexOf(sep);
-                if (sepIndex == -1) {
-                    throw new BadSyntax("macro 'sep' needs two separators, like {@sep/[[/]]} where '/' is the separator");
-                }
+                BadSyntax.when(sepIndex == -1, "macro 'sep' needs two separators, like {@sep/[[/]]} where '/' is the separator");
                 openMacro = input.substring(0, sepIndex).trim();
                 closeMacro = input.substring(sepIndex + 1).trim();
-                if (closeMacro.contains(sep)) {
-                    throw new BadSyntax("macro 'sep' closing string must not contain the separator character");
-                }
+                BadSyntax.when(closeMacro.contains(sep), "macro 'sep' closing string must not contain the separator character");
             }
         }
 
-        if (openMacro.length() == 0 || closeMacro.length() == 0) {
-            throw new BadSyntax("using macro 'sep' you cannot define zero length macro open and/or macro close strings");
-        }
-        if (openMacro.equals(closeMacro)) {
-            throw new BadSyntax("using macro 'sep' you cannot use the same string as macro opening and macro closing string");
-        }
+        BadSyntax.when(openMacro.length() == 0 || closeMacro.length() == 0, "using macro 'sep' you cannot define zero length macro open and/or macro close strings");
+        BadSyntax.when(openMacro.equals(closeMacro), "using macro 'sep' you cannot use the same string as macro opening and macro closing string");
         processor.separators(openMacro, closeMacro);
         return "";
     }
@@ -110,14 +100,14 @@ public class Sep implements Macro {
     private boolean misleadingOpenString(final String openMacro, final String closingMacro) {
         final var sep = openMacro.charAt(0);
         return (sep == openMacro.charAt(openMacro.length() - 1)
-            && openMacro.length() > 2
-            && !openMacro.substring(1, openMacro.length() - 1).contains("" + sep))
-            ||
-            (sep == closingMacro.charAt(0) &&
-                closingMacro.length() > 1 &&
-                !closingMacro.substring(1).contains("" + sep)
-            )
-            ;
+                && openMacro.length() > 2
+                && !openMacro.substring(1, openMacro.length() - 1).contains("" + sep))
+                ||
+                (sep == closingMacro.charAt(0) &&
+                        closingMacro.length() > 1 &&
+                        !closingMacro.substring(1).contains("" + sep)
+                )
+                ;
     }
 
     private void restoreLastSavedDelimiters(Processor processor) throws BadSyntax {

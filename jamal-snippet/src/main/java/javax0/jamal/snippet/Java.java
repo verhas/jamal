@@ -220,9 +220,7 @@ public class Java {
             fieldName = trimmed.substring(fieldStart);
         } else {
             final var parts = InputHandler.getParts(in, 2);
-            if (parts.length < 2) {
-                throw new BadSyntaxAt("Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in + "'", in.getPosition());
-            }
+            BadSyntaxAt.when(parts.length < 2, () -> "Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in + "'",in.getPosition());
             className = parts[0];
             fieldName = parts[1];
         }

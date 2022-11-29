@@ -46,12 +46,8 @@ public class FilesMacro {
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
             final var dir = new File(dirName.length() > 0 ? dirName : ".");
-            if (!dir.exists()) {
-                throw new BadSyntaxAt("The directory '" + dirName + "' does not exist.", in.getPosition());
-            }
-            if (!dir.isDirectory()) {
-                throw new BadSyntaxAt("The directory '" + dirName + "' exists but it is not a directory.", in.getPosition());
-            }
+            BadSyntaxAt.when(!dir.exists(), () -> "The directory '" + dirName + "' does not exist.",in.getPosition());
+            BadSyntaxAt.when(!dir.isDirectory(), () -> "The directory '" + dirName + "' exists but it is not a directory.",in.getPosition());
 
             try {
                 return Trie.formatter.format(format.get(), value(name), value(dir.getAbsolutePath()), value(dir.getParent()), value(dir::getCanonicalPath));
@@ -105,12 +101,8 @@ public class FilesMacro {
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
             final var file = new File(fileName);
-            if (!file.exists()) {
-                throw new BadSyntaxAt("The file '" + file.getAbsolutePath() + "' does not exist.", in.getPosition());
-            }
-            if (!file.isFile()) {
-                throw new BadSyntaxAt("The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.", in.getPosition());
-            }
+            BadSyntaxAt.when(!file.exists(), () -> "The file '" + file.getAbsolutePath() + "' does not exist.",in.getPosition());
+            BadSyntaxAt.when(!file.isFile(), () -> "The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.",in.getPosition());
 
             try {
                 return Trie.formatter.format(format.get(),

@@ -129,13 +129,9 @@ public class MacroDocxProtect implements Macro {
         // Specify the protection level so that the user can edit only the forms of the document.
         // end::protect_options[]
         Scan.using(processor).from(this).tillEnd().keys(password, algo, track, readOnly, comments, forms).parse(in);
-        if (x(track.is()) + x(readOnly.is()) + x(comments.is()) + x(forms.is()) != 1) {
-            throw new BadSyntax("Exactly one of the protection types must be specified.");
-        }
+        BadSyntax.when(x(track.is()) + x(readOnly.is()) + x(comments.is()) + x(forms.is()) != 1, "Exactly one of the protection types must be specified.");
         final var t = Type.of(x(track.is()) + x(readOnly.is()) * 2 + x(comments.is()) * 3 + x(forms.is()) * 4);
-        if (password.isPresent() != algo.isPresent()) {
-            throw new BadSyntax("The parameter 'algorithm' and 'password' must be used together.");
-        }
+        BadSyntax.when(password.isPresent() != algo.isPresent(), "The parameter 'algorithm' and 'password' must be used together.");
         final var context = XWPFContext.getXWPFContext(processor);
         final var callBack = new CallBack();
         callBack.t = t;

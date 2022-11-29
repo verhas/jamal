@@ -5,6 +5,7 @@ import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Format;
 
 import static javax0.jamal.api.SpecialCharacters.QUERY;
 import static javax0.jamal.api.SpecialCharacters.REPORT_ERRMES;
@@ -38,9 +39,7 @@ public class Env implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var arg = in.toString().trim();
-        if (arg.length() == 0) {
-            throw new BadSyntax("Empty string as environment variable name");
-        }
+        BadSyntax.when(arg.length() == 0, "Empty string as environment variable name");
         final var test = arg.charAt(arg.length() - 1) == QUERY;
         final var report = arg.charAt(arg.length() - 1) == REPORT_ERRMES;
         final String name;
@@ -53,9 +52,7 @@ public class Env implements Macro {
         if (test) {
             return "" + (null != value);
         } else {
-            if (report && null == value) {
-                throw new BadSyntax(String.format("Environment variable '%s' is not defined", name));
-            }
+            BadSyntax.when(report && null == value, Format.msg("Environment variable '%s' is not defined", name));
             return null == value ? "" : value;
         }
     }

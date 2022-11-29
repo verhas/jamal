@@ -29,20 +29,14 @@ public class Mock implements Macro {
         // end snippet
         Params.using(processor).from(this).between("()").keys(id, when, repeat, infinite).parse(in);
 
-        if (repeat.isPresent() && infinite.isPresent()) {
-            throw new BadSyntax("You cannot use options 'repeat' and 'infinite' at the same time.");
-        }
-        if (repeat.isPresent() && repeat.get() <= 0) {
-            if (repeat.get() < 0) {
-                throw new BadSyntax("The option 'repeat' should be non-negative.");
-            } else {
-                processor.logger().log(System.Logger.Level.WARNING, in.getPosition(), "Repeat is zero.");
-            }
+        BadSyntax.when(repeat.isPresent() && infinite.isPresent(), "You cannot use options 'repeat' and 'infinite' at the same time.");
+        BadSyntax.when(repeat.isPresent() && repeat.get() < 0, "The option 'repeat' should be non-negative.");
+        if (repeat.isPresent() && repeat.get() == 0) {
+            processor.logger().log(System.Logger.Level.WARNING, in.getPosition(), "Repeat is zero.");
         }
         final Pattern inputCheck = when.isPresent() ? Pattern.compile(when.get()) : null;
 
-        final var register = processor.getRegister();
-        final MockImplementation mock = getMockImplementation(id.get(), register);
+        final MockImplementation mock = getMockImplementation(id.get(), processor.getRegister());
         mock.response(in.toString(), when.isPresent(), inputCheck, infinite.is(), repeat.get());
         return "";
     }
@@ -60,7 +54,7 @@ public class Mock implements Macro {
      * @throws BadSyntax if the existing mock cannot be get due to some error
      */
     private MockImplementation getMockImplementation(final String id, final MacroRegister register) throws BadSyntax {
-        final var existingMock = getExistingMockIfExists(id, register);
+        final var existingMock = getMockIfExists(id, register);
         final MockImplementation mock;
         if (existingMock.isPresent()) {
             mock = existingMock.get();
@@ -79,7 +73,7 @@ public class Mock implements Macro {
      * @return the mock implementation macro or empty
      * @throws BadSyntax if the existing mock cannot be get due to some error
      */
-    private Optional<MockImplementation> getExistingMockIfExists(final String id, final MacroRegister register) throws BadSyntax {
+    private Optional<MockImplementation> getMockIfExists(final String id, final MacroRegister register) throws BadSyntax {
         return register.getMacroLocal(id)
                 .filter(m -> m instanceof MockImplementation).map(m -> (MockImplementation) m);
     }

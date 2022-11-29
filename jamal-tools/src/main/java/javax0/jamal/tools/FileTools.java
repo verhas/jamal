@@ -153,19 +153,14 @@ public class FileTools {
                 break;
         }
         try {
-            if (finalFileName.startsWith(RESOURCE_PREFIX)) {
-                throw new BadSyntax("Cannot write into a resource.");
+            BadSyntax.when(finalFileName.startsWith(RESOURCE_PREFIX), "Cannot write into a resource.");
+            BadSyntax.when(finalFileName.startsWith(HTTPS_PREFIX), "Cannot write into a web resource.");
+            File file = new File(finalFileName);
+            if (file.getParentFile() != null) {
+                file.getParentFile().mkdirs();
             }
-            if (finalFileName.startsWith(HTTPS_PREFIX)) {
-                throw new BadSyntax("Cannot write into a web resource.");
-            } else {
-                File file = new File(finalFileName);
-                if (file.getParentFile() != null) {
-                    file.getParentFile().mkdirs();
-                }
-                try (final var fos = new FileOutputStream(file)) {
-                    fos.write(content.getBytes(StandardCharsets.UTF_8));
-                }
+            try (final var fos = new FileOutputStream(file)) {
+                fos.write(content.getBytes(StandardCharsets.UTF_8));
             }
         } catch (IOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + finalFileName + "'", e);

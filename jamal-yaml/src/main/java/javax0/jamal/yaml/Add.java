@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static javax0.jamal.tools.Params.holder;
+import javax0.jamal.tools.Format;
 
 public class Add implements Macro, InnerScopeDependent {
     final Yaml yaml = new Yaml();
@@ -57,19 +58,10 @@ public class Add implements Macro, InnerScopeDependent {
     }
 
     private void assertConsistency(Params.Param<String> to, Params.Param<Object> key, Params.Param<Boolean> flatten, Object anchor) throws BadSyntax {
-        if (key.get() == null && anchor instanceof Map && !flatten.is()) {
-            throw new BadSyntax("You cannot '" + getId() + "' without a 'key' parameter to a Map for '" + to.get() + "'");
-        }
-        if (key.get() != null && anchor instanceof List) {
-            throw new BadSyntax("You cannot '" + getId() + "' with a 'key' parameter to a List for '" + to.get() + "'");
-        }
-        if (key.get() != null && flatten.is()) {
-            throw new BadSyntax("You cannot '" + getId() + "' with a 'key' parameter when flattening for '" + to.get() + "'");
-        }
-        if ((!(anchor instanceof Map)) && !(anchor instanceof List)) {
-            throw new BadSyntax("You can '" + getId() + "' only to a List or Map for '" + to.get() + "'\n" +
-                "The actual class is " + anchor.getClass());
-        }
+        BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(), Format.msg("You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get()));
+        BadSyntax.when(key.get() != null && anchor instanceof List, Format.msg("You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get()));
+        BadSyntax.when(key.get() != null && flatten.is(), Format.msg("You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get()));
+        BadSyntax.when((!(anchor instanceof Map)) && !(anchor instanceof List), Format.msg("You can '%s' only to a List or Map for '%s'\nThe actual class is %s", getId(), to.get(), anchor.getClass()));
     }
 
     private Object getAnchor(Object expression, Params.Param<String> to, YamlObject yamlObject) throws BadSyntax {

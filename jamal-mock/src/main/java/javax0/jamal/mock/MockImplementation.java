@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Format;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,9 +101,10 @@ public class MockImplementation implements Macro {
     }
 
     void response(final String text, final boolean inputCheck, final Pattern inputPattern, final boolean infinite, final int repeat) throws BadSyntax {
-        if (!responses.isEmpty() && responses.get(responses.size() - 1).infinite && !responses.get(responses.size() - 1).inputCheck) {
-            throw new BadSyntax("You cannot add a new mock response after an infinite one.");
-        }
+        BadSyntax.when(!responses.isEmpty() &&
+                        responses.get(responses.size() - 1).infinite &&
+                        !responses.get(responses.size() - 1).inputCheck,
+                "You cannot add a new mock response after an infinite one.");
         responses.add(new Response(text, inputCheck, inputPattern, infinite, repeat));
     }
 
@@ -110,9 +112,7 @@ public class MockImplementation implements Macro {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var result = getResult(in);
         if (result.isEmpty()) {
-            if (shadowedMacro == null) {
-                throw new BadSyntax(String.format("Mock %s has exhausted after %d uses.", id, counter));
-            }
+            BadSyntax.when(shadowedMacro == null, Format.msg("Mock %s has exhausted after %d uses.", id, counter));
             return shadowedMacro.evaluate(in, processor);
         }
         counter++;

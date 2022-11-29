@@ -12,6 +12,7 @@ import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Params.holder;
+import javax0.jamal.tools.Format;
 
 public class StringMacros {
 
@@ -40,9 +41,7 @@ public class StringMacros {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             String[] parts = InputHandler.getParts(in, 1);
-            if (parts.length != 1) {
-                throw new BadSyntax("The string:quote macro expects exactly one argument");
-            }
+            BadSyntax.when(parts.length != 1, "The string:quote macro expects exactly one argument");
             return parts[0]
                     .replace("\\", "\\\\")
                     .replace("\t", "\\t")
@@ -69,9 +68,7 @@ public class StringMacros {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             String[] parts = InputHandler.getParts(in, 2);
-            if (parts.length != 2) {
-                throw new BadSyntax(getId() + " needs two parts");
-            }
+            BadSyntax.when(parts.length != 2, Format.msg("%s needs two parts", getId()));
             return "" + with.test(parts[0], parts[1]);
         }
     }
@@ -107,9 +104,7 @@ public class StringMacros {
             final var ignoreCase = holder("ignoreCase").asBoolean();
             Scan.using(processor).from(this).between("()").keys(ignoreCase).parse(in);
             String[] parts = InputHandler.getParts(in, 2);
-            if (parts.length != 2) {
-                throw new BadSyntax(getId() + " needs two parts");
-            }
+            BadSyntax.when(parts.length != 2, Format.msg("%s needs two parts", getId()));
             return "" + (ignoreCase.is() ? parts[0].equalsIgnoreCase(parts[1]) : parts[0].equals(parts[1]));
         }
 
@@ -124,9 +119,7 @@ public class StringMacros {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             String[] parts = InputHandler.getParts(in, 1);
-            if (parts.length != 1) {
-                throw new BadSyntax("The string:reverse macro expects exactly one argument");
-            }
+            BadSyntax.when(parts.length != 1, "The string:reverse macro expects exactly one argument");
             return new StringBuilder(parts[0]).reverse().toString();
         }
 
@@ -168,9 +161,7 @@ public class StringMacros {
             final var end = holder(null, "end").asInt();
             Scan.using(processor).from(this).between("()").keys(begin, end).parse(in);
             String[] parts = InputHandler.getParts(in, 1);
-            if (parts.length != 1) {
-                throw new BadSyntax("The string:substring macro expects exactly one argument");
-            }
+            BadSyntax.when(parts.length != 1, "The string:substring macro expects exactly one argument");
             final var beginIndex = begin.get() < 0 ? in.length() + begin.get() : begin.get();
             final var endIndex = end.isPresent() ? (end.get() < 0 ? in.length() + end.get() : end.get()) : in.length();
             return parts[0].substring(beginIndex, endIndex);
@@ -190,9 +181,7 @@ public class StringMacros {
             final var left = holder(null, "left").asBoolean();
             final var right = holder(null, "right").asBoolean();
             Scan.using(processor).from(this).between("()").keys(trim, left, right).parse(in);
-            if ((left.is() || right.is()) && !trim.is()) {
-                throw new BadSyntax("You cannot use 'left' or 'right' on 'string:length' without trim");
-            }
+            BadSyntax.when((left.is() || right.is()) && !trim.is(), "You cannot use 'left' or 'right' on 'string:length' without trim");
             var string = in.toString();
             if (trim.is()) {
                 if (left.is() == right.is()) {

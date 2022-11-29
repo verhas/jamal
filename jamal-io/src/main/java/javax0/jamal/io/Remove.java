@@ -5,6 +5,7 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 
 import java.io.File;
@@ -16,8 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.String.format;
 
 public class Remove implements Macro, InnerScopeDependent {
     @Override
@@ -37,12 +36,8 @@ public class Remove implements Macro, InnerScopeDependent {
                     .map(Path::toFile)
                     .sorted((o1, o2) -> -o1.compareTo(o2))
                     .forEach(f -> allDeleted.set(allDeleted.get() && remove(f, errors, fileList)));
-                if (!allDeleted.get()) {
-                    throw new BadSyntax(
-                        format("Not possible to delete the file/dir and all files/dirs under '%s'\n%s\n%s\n",
-                            fileName, fileList, errors)
-                    );
-                }
+                BadSyntax.when(!allDeleted.get(), Format.msg("Not possible to delete the file/dir and all files/dirs under '%s'\n%s\n%s\n",
+                            fileName, fileList, errors));
             } else {
                 Files.delete(Paths.get(fileName));
             }
@@ -62,7 +57,7 @@ public class Remove implements Macro, InnerScopeDependent {
                  final var pw = new PrintWriter(sw)) {
                 dne.printStackTrace(pw);
                 errors.append(sw);
-                errors.append(format("Files in the directory: '%s'\n",f.getAbsoluteFile()));
+                errors.append(String.format("Files in the directory: '%s'\n",f.getAbsoluteFile()));
                 Arrays.stream(f.list()).forEach( s -> errors.append(s).append("\n"));
             } catch (IOException ignored) {
             }

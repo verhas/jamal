@@ -6,6 +6,7 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Format;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
@@ -21,6 +22,7 @@ import static javax0.jamal.tools.InputHandler.getParameters;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import javax0.jamal.tools.Format;
 
 public class Define implements Macro {
     @Override
@@ -33,9 +35,7 @@ public class Define implements Macro {
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
         Params.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam, IdOnly).parse(input);
-        if (noRedefineParam.is() && optionalParam.is()) {
-            throw new BadSyntax(String.format("You cannot use %s and %s", optionalParam.name(), noRedefineParam.name()));
-        }
+        BadSyntax.when(noRedefineParam.is() && optionalParam.is(), Format.msg("You cannot use %s and %s", optionalParam.name(), noRedefineParam.name()));
         skipWhiteSpaces(input);
         boolean verbatim = verbatimParam.is();
         if (!verbatim && firstCharIs(input, DEFINE_VERBATIM)) {
@@ -44,13 +44,11 @@ public class Define implements Macro {
             skipWhiteSpaces(input);
         }
         var optional = firstCharIs(input, DEFINE_OPTIONALLY);
-        if (optionalParam.is() && optional) {
-            throw new BadSyntax(String.format("You cannot use %s and '?' in the define at the same time.", optionalParam.name()));
-        }
+        BadSyntax.when(optionalParam.is() && optional, Format.msg("You cannot use %s and '?' in the define at the same time.", optionalParam.name()));
+
         var noRedefine = firstCharIs(input, ERROR_REDEFINE);
-        if (noRedefineParam.is() && noRedefine) {
-            throw new BadSyntax(String.format("You cannot use %s and '!' in the define at the same time.", noRedefineParam.name()));
-        }
+        BadSyntax.when(noRedefineParam.is() && noRedefine, Format.msg("You cannot use %s and '!' in the define at the same time.", noRedefineParam.name()));
+
         if (optional || noRedefine) {
             skip(input, 1);
             skipWhiteSpaces(input);
@@ -68,30 +66,22 @@ public class Define implements Macro {
             if (optional) {
                 return "";
             }
-            if (noRedefine) {
-                throw new BadSyntax("The macro '" + id + "' was already defined.");
-            }
+            BadSyntax.when(noRedefine, Format.msg("The macro '%s' was already defined.", id));
         }
         skipWhiteSpaces(input);
-        if (id.endsWith(":") && !firstCharIs(input, '(')) {
-            throw new BadSyntax("The () in define is not optional when the macro name ends with ':'.");
-        }
+        BadSyntax.when(id.endsWith(":") && !firstCharIs(input, '('),"The () in define is not optional when the macro name ends with ':'.");
 
         final String[] params = getParameters(input, id);
 
         if (IdOnly.is()) {
-            if (!Arrays.stream(params).allMatch(InputHandler::isIdentifier)) {
-                throw new BadSyntax("The parameters of the define must be identifiers.");
-            }
+            BadSyntax.when(!Arrays.stream(params).allMatch(InputHandler::isIdentifier), "The parameters of the define must be identifiers.");
         }
 
         final var pure = firstCharIs(input, ':');
         if (pure) {
             skip(input, 1);
         }
-        if (!firstCharIs(input, '=')) {
-            throw new BadSyntax("define '" + id + "' has no '=' to body");
-        }
+        BadSyntax.when(!firstCharIs(input, '='), Format.msg("define '%s' has no '=' to body", id));
         skip(input, 1);
         final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, params);
         if (globalParam.is() || isGlobalMacro(id)) {

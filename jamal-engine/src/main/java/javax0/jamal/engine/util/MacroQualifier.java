@@ -9,6 +9,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.tools.Format;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,17 +77,12 @@ public class MacroQualifier {
             var optMacro = processor.getRegister().getMacro(id);
             if (optMacro.isEmpty()) {
                 final Set<String> suggestions = processor.getRegister().suggest(id);
-                if (suggestions.isEmpty()) {
-                    throw new BadSyntaxAt(
+                BadSyntaxAt.when(suggestions.isEmpty(), Format.msg("There is no built-in macro with the id '%s'", id), pos);
+                BadSyntaxAt.when(true,
                         "There is no built-in macro with the id '"
-                            + id
-                            + "'", pos);
-                } else {
-                    throw new BadSyntaxAt(
-                        "There is no built-in macro with the id '"
-                            + id + "'; did you mean " + suggestions.stream()
-                            .map(s -> "'" + s + "'").collect(Collectors.joining(", ")) + "?", pos);
-                }
+                                + id + "'; did you mean " + suggestions.stream()
+                                .map(s -> "'" + s + "'").collect(Collectors.joining(", ")) + "?", pos);
+
             }
             return optMacro.get();
         } else {

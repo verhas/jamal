@@ -86,9 +86,7 @@ public class Range {
             if (startStop.length == 1) {
                 startStop = new String[]{range, range};
             }
-            if (startStop.length != 2) {
-                throw new BadSyntax("The line range " + range + " is not valid");
-            }
+            BadSyntax.when(startStop.length != 2, Format.msg("The line range %s is not valid", range));
             final int to, from;
             try {
                 from = Integer.parseInt(startStop[0].trim());
@@ -96,9 +94,7 @@ public class Range {
             } catch (NumberFormatException nfe) {
                 throw new BadSyntax("The line range " + range + " is not valid");
             }
-            if (from == 0 || to == 0 || from == -n || to == -n) {
-                throw new BadSyntax("The line range " + range + " is not valid");
-            }
+            BadSyntax.when(from == 0 || to == 0 || from == -n || to == -n, Format.msg("The line range %s is not valid", range));
             ranges.add(range(correct(from, n), correct(to, n)));
         }
         return ranges;

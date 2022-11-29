@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -122,30 +123,41 @@ public class TestJamalPreprocessor {
     @Test
     @DisplayName("Test caching")
     void testCache() throws Exception {
-        Files.write(Paths.get(TEST_IMPORT), "{%@define foo=bar%}".getBytes(StandardCharsets.UTF_8));
+        final Path testImportPath = Paths.get(TEST_IMPORT);
+        Files.write(testImportPath, "{%@define foo=bar%}".getBytes(StandardCharsets.UTF_8));
         process("{%@comment log%}abrakadabra\n{%@import " + TEST_IMPORT + "%}{%foo%}", "abrakadabra\nbar");
         process("{%@comment log%}abrakadabra\n{%@import " + TEST_IMPORT + "%}{%foo%}", "abrakadabra\nbar");
-        Files.write(Paths.get(TEST_IMPORT), "{%@define foo=barbar%}".getBytes(StandardCharsets.UTF_8));
+        Files.write(testImportPath, "{%@define foo=barbar%}".getBytes(StandardCharsets.UTF_8));
         process("{%@comment log%}abrakadabra\n{%@import " + TEST_IMPORT + "%}{%foo%}", "abrakadabra\nbarbar");
         /*
- 0 2022-06-02T17:22:01.542646 [0:1:main:214894FC] started
- 1 2022-06-02T17:22:01.556843 [0:1:main:214894FC] md5 JhxgLaP1ca4+e7vC8mNK7Q==
- 2 2022-06-02T17:22:01.677726 [0:1:main:214894FC] saved
- 3 2022-06-02T17:22:01.678198 [0:1:main:214894FC] dependencies
- 4   c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw==
- 5
- 6 2022-06-02T17:22:01.683536 [1:1:main:1450078A] started
- 7 2022-06-02T17:22:01.684155 [1:1:main:1450078A] md5 JhxgLaP1ca4+e7vC8mNK7Q==
- 8 2022-06-02T17:22:01.689500 [1:1:main:1450078A] restored
- 9 2022-06-02T17:22:01.691332 [1:1:main:1450078A] saved
-10 2022-06-02T17:22:01.692091 [1:1:main:1450078A] dependencies
-11   c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw==
-12
-13 2022-06-02T17:22:01.693225 [2:1:main:6719A5B8] started
-14 2022-06-02T17:22:01.694193 [2:1:main:6719A5B8] md5 JhxgLaP1ca4+e7vC8mNK7Q==
-15 2022-06-02T17:22:01.707853 [2:1:main:6719A5B8] saved
-16 2022-06-02T17:22:01.709242 [2:1:main:6719A5B8] dependencies
-17   c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim oEZhG+ixKcULiztw1AYivQ==
+         * 0 = "2022-11-25T18:41:50.808224 [0:1:main:0BAE47A0] started"
+         * 1 = "2022-11-25T18:41:50.850251 [0:1:main:0BAE47A0] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         * 2 = "2022-11-25T18:41:52.107846 [0:1:main:0BAE47A0] saved"
+         * 3 = "2022-11-25T18:41:52.110372 [0:1:main:0BAE47A0] dependencies"
+         * 4 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw=="
+         * 5 = ""
+         * 6 = "2022-11-25T18:41:52.112320 [0:1:main:0BAE47A0] not adding ludes"
+         * 7 = "2022-11-25T18:41:52.113987 [0:1:main:0BAE47A0] setting cache"
+         * 8 = "2022-11-25T18:41:52.115917 [0:1:main:0BAE47A0] DONE"
+         * 9 = "2022-11-25T18:41:52.123638 [1:1:main:00D02F8D] started"
+         * 10 = "2022-11-25T18:41:52.128682 [1:1:main:00D02F8D] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         * 11 = "2022-11-25T18:41:52.152902 [1:1:main:00D02F8D] restored"
+         * 12 = "2022-11-25T18:41:52.160458 [1:1:main:00D02F8D] saved"
+         * 13 = "2022-11-25T18:41:52.161605 [1:1:main:00D02F8D] dependencies"
+         * 14 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw=="
+         * 15 = ""
+         * 16 = "2022-11-25T18:41:52.163556 [1:1:main:00D02F8D] not adding ludes"
+         * 17 = "2022-11-25T18:41:52.164491 [1:1:main:00D02F8D] setting cache"
+         * 18 = "2022-11-25T18:41:52.165938 [1:1:main:00D02F8D] DONE"
+         * 19 = "2022-11-25T18:41:52.167953 [2:1:main:45F24169] started"
+         * 20 = "2022-11-25T18:41:52.169558 [2:1:main:45F24169] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         * 21 = "2022-11-25T18:41:52.201478 [2:1:main:45F24169] saved"
+         * 22 = "2022-11-25T18:41:52.203108 [2:1:main:45F24169] dependencies"
+         * 23 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim oEZhG+ixKcULiztw1AYivQ=="
+         * 24 = ""
+         * 25 = "2022-11-25T18:41:52.204118 [2:1:main:45F24169] not adding ludes"
+         * 26 = "2022-11-25T18:41:52.206446 [2:1:main:45F24169] setting cache"
+         * 27 = "2022-11-25T18:41:52.208654 [2:1:main:45F24169] DONE"
          */
         final var lines = Files.readAllLines(Paths.get(LOG_OUTPUT), StandardCharsets.UTF_8);
         Assertions.assertTrue(lines.get(11).endsWith("restored"));

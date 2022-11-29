@@ -256,9 +256,7 @@ public class MathMacros {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var constantName = fetchId(in);
-            if (!CONSTANTS.containsKey(constantName)) {
-                throw new BadSyntaxAt("The constant " + constantName, in.getPosition());
-            }
+            BadSyntaxAt.when(!CONSTANTS.containsKey(constantName), () -> "The constant " + constantName,in.getPosition());
             return CONSTANTS.get(constantName);
         }
     }
@@ -276,22 +274,16 @@ public class MathMacros {
                     .collect(Collectors.joining(" "));
             }
             if (BINARIES.containsKey(operation)) {
-                if (ops.length != 2) {
-                    throw new BadSyntaxAt("Math binary operation " + operation + " needs exactly two operands, got " + ops.length, in.getPosition());
-                }
+                BadSyntaxAt.when(ops.length != 2, () -> "Math binary operation " + operation + " needs exactly two operands, got " + ops.length,in.getPosition());
 
                 return toStringNice(BINARIES.get(operation).applyAsDouble(ops[0], ops[1]));
             }
             if ("fma".equals(operation)) {
-                if (ops.length != 3) {
-                    throw new BadSyntaxAt("Math operation fma needs exactly three operands, got " + ops.length, in.getPosition());
-                }
+                BadSyntaxAt.when(ops.length != 3, () -> "Math operation fma needs exactly three operands, got " + ops.length,in.getPosition());
                 return toStringNice(Math.fma(ops[0], ops[1], ops[2]));
             }
             if ("random".equals(operation)) {
-                if (ops.length != 0) {
-                    throw new BadSyntaxAt("Math operation random does not accespt argument and got " + ops.length, in.getPosition());
-                }
+                BadSyntaxAt.when(ops.length != 0, () -> "Math operation random does not accespt argument and got " + ops.length,in.getPosition());
                 return toStringNice(Math.random());
             }
             throw new BadSyntaxAt("Math operation " + operation + " is not supported", in.getPosition());

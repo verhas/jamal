@@ -1,6 +1,7 @@
 package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.tools.Format;
 import javax0.jamal.tools.ScriptingTools;
 import jdk.jshell.JShell;
 import jdk.jshell.Snippet;
@@ -158,9 +159,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
     }
 
     private List<SnippetEvent> evaluateAndGetEvents(String source) throws BadSyntax {
-        if (!isOpen.get()) {
-            throw new BadSyntax("The JShell interpreter was closed. Will not be recreated.");
-        }
+        BadSyntax.when(!isOpen.get(), "The JShell interpreter was closed. Will not be recreated.");
         final List<SnippetEvent> events;
         final var original = System.err;
         try {
@@ -172,9 +171,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
         } finally {
             System.setErr(original);
         }
-        if (!isOpen.get()) {
-            throw new BadSyntax("The JShell snippet '" + source + "' closed the JShell interpreter. Will not be recreated.");
-        }
+        BadSyntax.when(!isOpen.get(), Format.msg("The JShell snippet '%s' closed the JShell interpreter. Will not be recreated.", source));
         return events;
     }
 

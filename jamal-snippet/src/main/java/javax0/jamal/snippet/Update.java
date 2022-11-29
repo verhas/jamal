@@ -24,16 +24,15 @@ public class Update implements Macro, InnerScopeDependent {
         final var tail = Params.<String>holder("tail").orElse("");
 
         final var start = Params.<Pattern>holder("start").orElse(
-            "^\\s*" +
-                Pattern.quote(processor.getRegister().open()) +
-                "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$").asPattern();
+                "^\\s*" +
+                        Pattern.quote(processor.getRegister().open()) +
+                        "\\s*(?:#|@)\\s*snip\\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\\s*$").asPattern();
         final var stop = Params.<Pattern>holder("stop").orElse(
-            "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$").asPattern();
+                "^\\s*" + Pattern.quote(processor.getRegister().close()) + "\\\\?\\s*$").asPattern();
         Scan.using(processor).from(this).firstLine().keys(head, tail, start, stop).parse(in);
 
-        if( in.getPosition().file == null ){
-            throw new BadSyntax("Cannot invoke update from an environment that has no file name");
-        }
+        BadSyntax.when(in.getPosition().file == null,
+                "Cannot invoke update from an environment that has no file name");
 
         final var snippets = SnippetStore.getInstance(processor);
         final var state = new State(snippets, processor, head.get(), tail.get(), start.get(), stop.get());
@@ -43,9 +42,7 @@ public class Update implements Macro, InnerScopeDependent {
             while ((line = br.readLine()) != null) {
                 sb.append(replace(state, line));
             }
-            if (state.skipping) {
-                throw new BadSyntaxAt("The snip macro is not terminated for 'update'.", new Position(in.getPosition().file, state.lastOpen, 1));
-            }
+            BadSyntaxAt.when(state.skipping, () -> "The snip macro is not terminated for 'update'.",new Position(in.getPosition().file, state.lastOpen, 1));
             try (final var output = new FileOutputStream(in.getPosition().file)) {
                 output.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }

@@ -46,18 +46,14 @@ public class Eval implements Macro, InnerScopeDependent {
                     }
                     loopInput = javax0.jamal.tools.Input.makeInput(result, pos);
                     loopCounter--;
-                    if (loopCounter == 0) {
-                        throw new BadSyntax("eval* probably got into an infinite loop");
-                    }
+                    BadSyntax.when(loopCounter == 0, () -> "eval* probably got into an infinite loop");
                 }
                 return result;
             case "jamal":
                 return processor.process(input);
             case "JShell":
                 final var shell = processor.getJShellEngine();
-                if( shell == null ) {
-                    throw new BadSyntax("JShell engine is not available");
-                }
+                BadSyntax.when(shell == null, () -> "JShell engine is not available");
                 return shell.evaluate(input.toString());
             default:
                 var engine = getEngine(scriptType);

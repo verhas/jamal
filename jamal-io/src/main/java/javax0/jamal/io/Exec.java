@@ -8,6 +8,7 @@ import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
 
@@ -107,15 +108,9 @@ public class Exec implements Macro {
         Scan.using(processor).from(this).firstLine().keys(osOnly, input, output, error, command, arguments,
                 environment, envReset, cwd, async, wait, destroy, force, optional).parse(in);
 
-        if (wait.isPresent() && async.isPresent()) {
-            throw new BadSyntax("The `wait` and `async` options cannot be used together.");
-        }
-        if (force.is() && !destroy.is()) {
-            throw new BadSyntax("The `force` option can only be used together with the `destroy` option.");
-        }
-        if (destroy.is() && !wait.isPresent()) {
-            throw new BadSyntax("The `destroy` option can only be used together with the `wait` option.");
-        }
+        BadSyntax.when(wait.isPresent() && async.isPresent(), "The `wait` and `async` options cannot be used together.");
+        BadSyntax.when(force.is() && !destroy.is(), "The `force` option can only be used together with the `destroy` option.");
+        BadSyntax.when(destroy.is() && !wait.isPresent(), "The `destroy` option can only be used together with the `wait` option.");
 
         if (thisOsIsNotOk(osOnly)) {
             return "";
@@ -124,7 +119,7 @@ public class Exec implements Macro {
         ProcessBuilder pb = new ProcessBuilder();
         if (setCommand(command, arguments, pb, optional)) {
             if (async.isPresent()) {
-                defineProcessNameHolderMacro(processor,async.get(),null);
+                defineProcessNameHolderMacro(processor, async.get(), null);
             }
             return "";
         }
@@ -170,9 +165,7 @@ public class Exec implements Macro {
 
     private void defineProcessNameHolderMacro(final Processor processor, final String id, final Process process) throws BadSyntax {
         final var existing = processor.getRegister().getUserDefined(id);
-        if( existing.isPresent() ){
-            throw new BadSyntax(String.format("The name `%s` is already used as a user defined macro .", id));
-        }
+        BadSyntax.when(existing.isPresent(), Format.msg("The name `%s` is already used as a user defined macro .", id));
         processor.define(new ProcessHolder(id, process));
     }
 
@@ -276,9 +269,7 @@ public class Exec implements Macro {
                     continue;
                 }
                 final var parts = line.split("=", 2);
-                if (parts.length != 2) {
-                    throw new BadSyntax(String.format("The environment variable '%s' is not defined correctly.", line));
-                }
+                BadSyntax.when(parts.length != 2, Format.msg("The environment variable '%s' is not defined correctly.", line));
                 env.put(parts[0], parts[1]);
             }
         }
@@ -301,9 +292,7 @@ public class Exec implements Macro {
      * @throws BadSyntax if the command is not configured in the environment and is not optional or the parameter is missing.
      */
     private static boolean setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final Params.Param<Boolean> optional) throws BadSyntax {
-        if (!command.isPresent()) {
-            throw new BadSyntax("'command' for the macro 'exec' is mandatory.");
-        }
+        BadSyntax.when(!command.isPresent(), "'command' for the macro 'exec' is mandatory.");
         final var executable = EnvironmentVariables.getenv(command.get());
         if (executable.isEmpty()) {
             if (optional.is()) {
@@ -326,9 +315,7 @@ public class Exec implements Macro {
 
     private static File getFile(final String name, final Input in) throws BadSyntax {
         final var absolute = FileTools.absolute(in.getReference(), name);
-        if (absolute.startsWith("https:") || absolute.startsWith("res:")) {
-            throw new BadSyntax(String.format("The file '%s' cannot be used as input, output or error", name));
-        }
+        BadSyntax.when(absolute.startsWith("https:") || absolute.startsWith("res:"), String.format("The file '%s' cannot be used as input, output or error", name));
         return new File(absolute);
     }
 
@@ -362,12 +349,8 @@ public class Exec implements Macro {
             // end snippet
             Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force, optional).parse(in);
             final var idMacro = processor.getRegister().getUserDefined(async.get());
-            if (idMacro.isEmpty()) {
-                throw new BadSyntax(String.format("Process id '%s' is not defined.", async.get()));
-            }
-            if (!(idMacro.get() instanceof ProcessHolder)) {
-                throw new BadSyntax(String.format("Process id '%s' is not a process name.", async.get()));
-            }
+            BadSyntax.when(idMacro.isEmpty(), Format.msg("Process id '%s' is not defined.", async.get()));
+            BadSyntax.when(!(idMacro.get() instanceof ProcessHolder), Format.msg("Process id '%s' is not a process name.", async.get()));
             final var process = ((ProcessHolder) idMacro.get()).getObject();
             if (process == null || optional.is()) {
                 return "";

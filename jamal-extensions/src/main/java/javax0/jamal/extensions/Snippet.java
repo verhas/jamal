@@ -20,9 +20,7 @@ public class Snippet implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var snippetFile = macro("snippetFile").from(processor).orElse(null);
-        if (snippetFile == null) {
-            throw new BadSyntax("snippetFile is null");
-        }
+        BadSyntax.when(snippetFile == null, "snippetFile is null");
         final var snippetStart = macro("snippetStart").from(processor).orElse("snippet\\s+");
         final var snippetEnd = macro("snippetEnd").from(processor).orElse("snippet\\s+end");
         skipWhiteSpaces(in);

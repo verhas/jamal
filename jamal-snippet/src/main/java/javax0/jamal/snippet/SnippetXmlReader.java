@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
+import javax0.jamal.tools.Format;
 
 public class SnippetXmlReader {
 
@@ -28,16 +29,13 @@ public class SnippetXmlReader {
                                           SnippetConsumer consumer) throws BadSyntax {
         try {
             final var root = getSnippetsRoot(is);
-            if (is(root, "snippets")) {
-                throw new BadSyntax("The root element of the XML document must be <snippets xmlns=\"" + SnipSave.NS + "\">");
-            }
+            BadSyntax.when(is(root, "snippets"), Format.msg("The root element of the XML document must be <snippets xmlns=\"%s\">", SnipSave.NS));
             final var snippets = root.getChildNodes();
             for (int i = 0; i < snippets.getLength(); i++) {
                 final var snippet = snippets.item(i);
                 if (isProcessable(snippet)) {
-                    if (is(snippet, "snippet")) {
-                        throw new BadSyntax("XML document must contain only 'snippet' tags under the 'snippets' root element");
-                    }
+                    BadSyntax.when(is(snippet, "snippet"),
+                            "XML document must contain only 'snippet' tags under the 'snippets' root element");
                     final var id = getStringAttribute(snippet, "id", null);
                     final var fnValue = getStringAttribute(snippet, "file", id);
                     final var lineValue = getIntAttribute(snippet, "line", id);
@@ -59,18 +57,16 @@ public class SnippetXmlReader {
      * throw an exception.
      *
      * @param snippet the snippet node
-     * @param id the id of the snippet used only for error reporting
-     * @param text the text of the snippet used to calculate the hash
+     * @param id      the id of the snippet used only for error reporting
+     * @param text    the text of the snippet used to calculate the hash
      * @throws BadSyntax if the hash does not match
      */
     private static void checkHash(Node snippet, String id, String text) throws BadSyntax {
         final var badHash =
-            Optional.ofNullable(snippet.getAttributes().getNamedItem("hash"))
-                .map(Node::getNodeValue)
-                .filter(hash -> !Objects.equals(hash, SnipCheck.doted(HexDumper.encode(SHA256.digest(text)))));
-        if (badHash.isPresent()) {
-            throw new BadSyntax("The 'hash' attribute of the 'snippet id=" + id + "' tag must be equal to the hash of the text");
-        }
+                Optional.ofNullable(snippet.getAttributes().getNamedItem("hash"))
+                        .map(Node::getNodeValue)
+                        .filter(hash -> !Objects.equals(hash, SnipCheck.doted(HexDumper.encode(SHA256.digest(text)))));
+        BadSyntax.when(badHash.isPresent(), Format.msg("The 'hash' attribute of the 'snippet id=%s' tag must be equal to the hash of the text", id));
     }
 
     /**
@@ -92,14 +88,14 @@ public class SnippetXmlReader {
 
     private static boolean is(Node root, String localName) {
         return Document.ELEMENT_NODE != root.getNodeType() ||
-            !localName.equals(root.getLocalName()) ||
-            !SnipSave.NS.equals(root.getNamespaceURI());
+                !localName.equals(root.getLocalName()) ||
+                !SnipSave.NS.equals(root.getNamespaceURI());
     }
 
     private static boolean isProcessable(Node node) {
         return (Document.TEXT_NODE != node.getNodeType() ||
-            !node.getTextContent().trim().isEmpty())
-            && Document.COMMENT_NODE != node.getNodeType();
+                !node.getTextContent().trim().isEmpty())
+                && Document.COMMENT_NODE != node.getNodeType();
     }
 
     /**
@@ -123,16 +119,14 @@ public class SnippetXmlReader {
                 }
             }
         }
-        if (countTexts == 0) {
-            throw new BadSyntax("The 'snippet id=" + id + "' tag must have at least one CDATA section");
-        }
+        BadSyntax.when(countTexts == 0, Format.msg("The 'snippet id=%s' tag must have at least one CDATA section", id));
         return sb.toString();
     }
 
 
     private static String getStringAttribute(final Node node, final String attribute, final String id) throws BadSyntax {
         return Optional.ofNullable(node.getAttributes().getNamedItem(attribute)).map(Node::getNodeValue).orElseThrow(
-            () -> new BadSyntax("The 'snippet" + (id == null ? "" : " id=" + id) + "' tag must have an '" + attribute + "' attribute"));
+                () -> new BadSyntax(String.format("The 'snippet%s' tag must have an '%s' attribute", id == null ? "" : " id=" + id, attribute)));
     }
 
     private static int getIntAttribute(final Node node, final String attribute, final String id) throws BadSyntax {

@@ -4,10 +4,9 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Format;
 
 import java.util.regex.Pattern;
-
-import static java.lang.String.format;
 
 /**
  * This macro can be used to define a Java implemented macro class, which is not exported by the module system.
@@ -31,16 +30,14 @@ public class Use implements Macro {
         final var macroImports = input.toString().split(",");
         for (final var macroImport : macroImports) {
             final var stripped = macroImport
-                .trim()
-                .replace("\n", " ")
-                .replace("\r", " ")
-                .replace("\t", " ")
-                .replaceAll("\\s+", " ");
+                    .trim()
+                    .replace("\n", " ")
+                    .replace("\r", " ")
+                    .replace("\t", " ")
+                    .replaceAll("\\s+", " ");
             if (stripped.length() > 0) {
                 var matcher = pattern.matcher(stripped);
-                if (!matcher.matches()) {
-                    throw new BadSyntax("use macro has bad syntax '" + stripped + "'");
-                }
+                BadSyntax.when(!matcher.matches(), Format.msg("use macro has bad syntax '%s'", stripped));
                 var isGlobal = matcher.group(1).length() > 0;
                 final var klassName = matcher.group(2);
                 final var alias = matcher.group(3);
@@ -49,16 +46,13 @@ public class Use implements Macro {
                 if (klassName.contains(".")) {
                     macro = forName(klassName);
                 } else {
-                    if( klassName.contains(":")){
+                    if (klassName.contains(":")) {
                         isGlobal = true;
                     }
                     macro = register.getMacro(klassName)
-                        .orElseThrow(() -> new BadSyntax("There is no built-in macro with the name '" + klassName + "'"));
-                    if (alias == null || alias.length() == 0) {
-                        throw new BadSyntax(format(
-                            "You cannot define an alias for the macro '%s' without actually providing an alias after the 'as'"
-                            , klassName));
-                    }
+                            .orElseThrow(() -> new BadSyntax("There is no built-in macro with the name '" + klassName + "'"));
+                    BadSyntax.when(alias == null || alias.length() == 0, Format.msg("You cannot define an alias for the macro '%s' without actually providing an alias after the 'as'",
+                                    klassName));
                 }
                 if (isGlobal) {
                     if (alias != null && alias.length() > 0) {

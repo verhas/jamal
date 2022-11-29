@@ -2,6 +2,7 @@ package javax0.jamal.tools.param;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
+import javax0.jamal.tools.Format;
 
 public class Escape {
     private static char octal(Input input, int maxLen) {
@@ -20,9 +21,7 @@ public class Escape {
 
     static void handleEscape(Input input, StringBuilder output) throws BadSyntax {
         input.deleteCharAt(0);
-        if (input.length() == 0) {
-            throw new BadSyntax("Source ended inside a string.");
-        }
+        BadSyntax.when(input.length() == 0, () -> "Source ended inside a string.");
         final var nextCh = input.charAt(0);
         final int esindex = escapes.indexOf(nextCh);
         if (esindex == -1) {
@@ -41,9 +40,8 @@ public class Escape {
 
     static void handleNormalCharacter(Input input, StringBuilder output) throws BadSyntax {
         final char ch = input.charAt(0);
-        if (ch == '\n' || ch == '\r') {
-            throw new BadSyntax("String not terminated before eol:\n" + input.substring(1, Math.min(input.length(), 60)) + "...");
-        }
+        BadSyntax.when(ch == '\n' || ch == '\r', Format.msg("String not terminated before eol:\n%s...",
+                        input.substring(1, Math.min(input.length(), 60))));
         output.append(ch);
         input.deleteCharAt(0);
     }

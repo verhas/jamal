@@ -4,8 +4,10 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Format;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Format;
 
 /**
  * Abstract class implementing the common parts of all concrete assertions.
@@ -106,9 +108,7 @@ abstract class AbstractAssert implements Macro {
 
     private static String[] getParts(Input input, int N, Params.Param<Boolean> trim, Macro macro) throws BadSyntax {
         final var parts = InputHandler.getParts(input, N);
-        if (parts.length < N - 1) {
-            throw new BadSyntax(macro.getId() + " needs at least " + (N - 1) + " arguments");
-        }
+        BadSyntax.when(parts.length < N - 1, () -> macro.getId() + " needs at least " + (N - 1) + " arguments");
         if (trim.is()) {
             for (int i = 0; i < parts.length; i++) {
                 parts[i] = parts[i].strip();

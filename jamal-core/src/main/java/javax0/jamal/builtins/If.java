@@ -50,18 +50,10 @@ public class If implements Macro {
          * @throws BadSyntax if the options are used in an inconsistent way
          */
         void assertConsistency() throws BadSyntax {
-            if (and.is() && or.is()) {
-                throw new BadSyntax("You cannot have both 'and' and 'or' options in an 'if' macro.");
-            }
-            if ((and.is() || or.is()) && countNumOptionsPresent() < 2) {
-                throw new BadSyntax("You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
-            }
-            if (blank.is() && empty.is()) {
-                throw new BadSyntax("You cannot have both 'blank' and 'empty' options in an 'if' macro.");
-            }
-            if ((empty.is() || blank.is()) && numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals)) {
-                throw new BadSyntax("You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
-            }
+            BadSyntax.when(and.is() && or.is(), "You cannot have both 'and' and 'or' options in an 'if' macro.");
+            BadSyntax.when((and.is() || or.is()) && countNumOptionsPresent() < 2,"You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
+            BadSyntax.when(blank.is() && empty.is(), "You cannot have both 'blank' and 'empty' options in an 'if' macro.");
+            BadSyntax.when((empty.is() || blank.is()) && numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals), "You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
         }
 
         Params.Param<?>[] options() {
@@ -94,9 +86,7 @@ public class If implements Macro {
         Params.using(processor).from(this).between("[]").keys(opt.options()).parse(input);
         opt.assertConsistency();
         final var parts = InputHandler.getParts(input, 3);
-        if (parts.length < 1) {
-            throw new BadSyntaxAt("Macro 'if' needs 1, 2 or 3 arguments", pos);
-        }
+        BadSyntaxAt.when(parts.length < 1, () -> "Macro 'if' needs 1, 2 or 3 arguments",pos);
 
         if (opt.not.is() != isTrue(parts[0], opt)) {
             return parts.length > 1 ? parts[1] : "";

@@ -19,10 +19,10 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.Params.holder;
+import javax0.jamal.tools.Format;
 
 public class Sort implements Macro {
 
@@ -66,18 +66,14 @@ public class Sort implements Macro {
                 .parse(in);
         Collator collator = getCollator(locale);
 
-        if (pattern.isPresent() && columns.isPresent()) {
-            throw new BadSyntax(format("Can not use both options '%s' and '%s' together.", pattern.name(), columns.name()));
-        }
+        BadSyntax.when(pattern.isPresent() && columns.isPresent(), Format.msg("Can not use both options '%s' and '%s' together.", pattern.name(), columns.name()));
 
         skipWhiteSpaces(in);
         Stream<LineHolder<String>> lines = Arrays.stream(in.toString().split(separator.get().pattern(), -1))
                 .map(s -> new LineHolder<>(s, s));
         if (columns.isPresent()) {
             List<Range> ranges = Range.calculateFrom(columns.get(), Integer.MAX_VALUE);
-            if (ranges.size() != 1) {
-                throw new BadSyntax(format("The option '%s' can only have a single range value!", columns.name()));
-            }
+            BadSyntax.when(ranges.size() != 1, Format.msg("The option '%s' can only have a single range value!", columns.name()));
             Range range = ranges.get(0);
             lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from - 1, range.to - 1)));
         } else if (pattern.isPresent()) {
@@ -114,10 +110,10 @@ public class Sort implements Macro {
                 if (collator instanceof Collator) {
                     return (Collator) collator;
                 } else {
-                    throw new BadSyntax(format("collator class '%s' is not a collator", locale.get()));
+                    throw new BadSyntax(String.format("collator class '%s' is not a collator", locale.get()));
                 }
             } catch (Exception e) {
-                throw new BadSyntax(format("collator class '%s' cannot be instantiated", locale.get()), e);
+                throw new BadSyntax(String.format("collator class '%s' cannot be instantiated", locale.get()), e);
             }
         }
         return Collator.getInstance(getLocaleFromParam(locale));

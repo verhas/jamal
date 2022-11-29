@@ -71,9 +71,7 @@ public class ScriptMacro implements javax0.jamal.api.ScriptMacro {
         final var adjustedValues = argumentHandler.adjustActualValues(parameters, optionsStore.is(Processor.LENIENT));
         if (isJShell) {
             final var shell = processor.getJShellEngine();
-            if (shell == null) {
-                throw new BadSyntax("The JShell engine is not available");
-            }
+            BadSyntax.when(shell == null, "The JShell engine is not available");
             for (int i = 0; i < argumentHandler.parameters.length; i++) {
                 ScriptingTools.populateJShell(shell, argumentHandler.parameters[i], adjustedValues[i]);
             }

@@ -27,9 +27,7 @@ public class SnipLoad implements Macro, InnerScopeDependent {
         final var input = holder("input").orElse("").asString();
         final var format = holder("format").orElse("XML").asString();
         Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, input, format).parse(in);
-        if (!"XML".equals(format.get())) {
-            throw new BadSyntax("The only supported format is XML");
-        }
+        BadSyntax.when(!"XML".equals(format.get()), "The only supported format is XML");
         final var store = SnippetStore.getInstance(processor);
         final var is = new ByteArrayInputStream(FileTools.getFileContent(FileTools.absolute(ref, input.get()), processor).getBytes(StandardCharsets.UTF_8));
         SnippetXmlReader.getSnippetsFromXml(is,

@@ -28,9 +28,7 @@ public class Debug implements Macro {
         final Params.Param<String> selector = Params.<String>holder(null, "using", "debugger", "selector").asString();
         Scan.using(processor).from(this).tillEnd().keys(on, off, selector).parse(in);
 
-        if (on.is() && off.is()) {
-            throw new BadSyntax("The 'on' and 'off' parameters cannot be used together.");
-        }
+        BadSyntax.when(on.is() && off.is(), "The 'on' and 'off' parameters cannot be used together.");
 
         final var proxyOpt = processor.getDebugger().filter(p -> p instanceof ProxyDebugger);
         final ProxyDebugger proxy;
