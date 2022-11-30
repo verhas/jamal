@@ -63,19 +63,19 @@ public class Escape implements Macro {
             fullPreserve = false;
         }
         InputHandler.skipWhiteSpaces(in);
-        BadSyntaxAt.when(in.charAt(0) != '`', () -> "The macro escape needs an escape string enclosed between ` characters.",in.getPosition());
+        BadSyntaxAt.when(in.charAt(0) != '`',"The macro escape needs an escape string enclosed between ` characters.",in.getPosition());
         InputHandler.skip(in, 1);
         final var endOfEscape = in.indexOf("`",-1);
-        BadSyntaxAt.when(endOfEscape == -1, () -> "The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.",in.getPosition());
+        BadSyntaxAt.when(endOfEscape == -1,"The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.",in.getPosition());
         final var escapeSequence = "`" + in.subSequence(0, endOfEscape) + "`";
         InputHandler.skip(in, escapeSequence.length() - 1);
         final var endOfString = in.indexOf(escapeSequence,-1);
-        BadSyntaxAt.when(endOfString == -1, () -> "I cannot find the escape string at the end of the macro: " + escapeSequence,in.getPosition());
+        BadSyntaxAt.when(endOfString == -1,"I cannot find the escape string at the end of the macro: " + escapeSequence,in.getPosition());
         final var escapedString = in.substring(0, endOfString);
         InputHandler.skip(in, escapedString);
         InputHandler.skip(in, escapeSequence);
         InputHandler.skipWhiteSpaces(in);
-        BadSyntaxAt.when(in.length() > 0, () -> "There are extra characters in the use of {@escape } after the closing escape sequence: " + escapeSequence,in.getPosition());
+        BadSyntaxAt.when(in.length() > 0,"There are extra characters in the use of {@escape } after the closing escape sequence: " + escapeSequence,in.getPosition());
         if (fullPreserve) {
             processor.deferredClose(new UnescapeCloser());
             return processor.getRegister().open() + "@escape*" + escapeSequence + escapedString + escapeSequence + processor.getRegister().close();
@@ -119,19 +119,19 @@ public class Escape implements Macro {
             skip(input,1);
         }
         moveWhiteSpaces(input, output);
-        BadSyntaxAt.when(input.charAt(0) != '`', () -> "The macro escape needs an escape string enclosed between ` characters.",input.getPosition());
+        BadSyntaxAt.when(input.charAt(0) != '`',"The macro escape needs an escape string enclosed between ` characters.",input.getPosition());
         move(input, 1, output);
         final var endOfEscape = input.indexOf("`",-1);
-        BadSyntaxAt.when(endOfEscape == -1, () -> "The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.",input.getPosition());
+        BadSyntaxAt.when(endOfEscape == -1,"The macro escape needs an escape string enclosed between ` characters. Closing ` is not found.",input.getPosition());
         final var escapeSequence = "`" + input.subSequence(0, endOfEscape) + "`";
         move(input, escapeSequence.length() - 1, output);
         final var endOfString = input.indexOf(escapeSequence,-1);
-        BadSyntaxAt.when(endOfString == -1, () -> "I cannot find the escape string at the end of the macro: " + escapeSequence,input.getPosition());
+        BadSyntaxAt.when(endOfString == -1,"I cannot find the escape string at the end of the macro: " + escapeSequence,input.getPosition());
         move(input, endOfString, output);
         move(input, escapeSequence.length(), output);
         final var closeStr = processor.getRegister().close();
         final var endOfEscapeMacro = input.indexOf(closeStr,-1);
-        BadSyntaxAt.when(endOfEscapeMacro == -1, () -> "Escape macro is not closed",start);
+        BadSyntaxAt.when(endOfEscapeMacro == -1,"Escape macro is not closed",start);
         move(input, endOfEscapeMacro, output);
         skip(input, closeStr);
         if (input.length() > 0 && input.charAt(0) == '\\') {

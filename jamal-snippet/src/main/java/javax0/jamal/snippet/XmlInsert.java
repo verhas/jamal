@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import javax0.jamal.tools.Format;
 
 public class XmlInsert implements Macro {
     @Override
@@ -42,7 +41,7 @@ public class XmlInsert implements Macro {
         Scan.using(processor).from(this).between("()").keys(xpath, into,  needed, tabsize).parse(in);
         skipWhiteSpaces(in);
         final var xml = in.toString();
-        BadSyntax.when(!xpath.isPresent(), Format.msg("The 'xpath' parameter is mandatory in '%s'", getId()));
+        BadSyntax.when(!xpath.isPresent(),  "The 'xpath' parameter is mandatory in '%s'", getId());
         final var xpathString = xpath.get();
         if (into.isPresent()) {
             final var intoDocument = processor.getRegister().getUserDefined(into.get())

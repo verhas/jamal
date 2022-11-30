@@ -94,7 +94,9 @@ public class BadSyntaxAt extends BadSyntax {
     }
 
     public static void when(final boolean condition, final String message, final Position pos) throws BadSyntaxAt {
-        BadSyntaxAt.when(condition, () -> message, pos);
+        if (condition) {
+            throw new BadSyntaxAt(message, pos);
+        }
     }
 
     /**

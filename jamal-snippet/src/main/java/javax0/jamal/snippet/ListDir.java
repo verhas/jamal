@@ -52,7 +52,7 @@ public class ListDir implements Macro, InnerScopeDependent {
         var dirName = FileTools.absolute(reference, in.toString().trim());
 
         var dir = new File(dirName);
-        BadSyntaxAt.when(!dir.isDirectory(), () -> "'" + dirName + "' does not seem to be a directory to list",in.getPosition());
+        BadSyntaxAt.when(!dir.isDirectory(),"'" + dirName + "' does not seem to be a directory to list",in.getPosition());
 
         final var fmt = format.get();
         try (final var files = Files.walk(Paths.get(dirName), maxDepth.get(), options)) {

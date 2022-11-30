@@ -65,7 +65,7 @@ public class BadSyntax extends Exception {
     }
 
     public interface ThrowingSupplier<T> {
-        T get()throws BadSyntax;
+        T get() throws BadSyntax;
     }
 
     public static void when(final boolean condition, final ThrowingSupplier<String> message) throws BadSyntax {
@@ -74,9 +74,9 @@ public class BadSyntax extends Exception {
         }
     }
 
-    public static void when(final boolean condition, final String message) throws BadSyntax {
+    public static void when(final boolean condition, final String format, final Object... parameters) throws BadSyntax {
         if (condition) {
-            throw new BadSyntax(message);
+            throw new BadSyntax(String.format(format, parameters));
         }
     }
 

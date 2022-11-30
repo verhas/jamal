@@ -569,7 +569,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 parameters[0] = process(input);
             } else {
                 skip(input, 1);
-                BadSyntaxAt.when(Character.isLetterOrDigit(separator), () -> "Invalid separator character '" + separator + "' ",input.getPosition());
+                BadSyntaxAt.when(Character.isLetterOrDigit(separator),"Invalid separator character '" + separator + "' ",input.getPosition());
                 final Input[] paramInputs = splitParameterString(input, separator);
                 parameters = new String[paramInputs.length];
                 for (int i = 0; i < parameters.length; i++) {
@@ -743,7 +743,7 @@ public class Processor implements javax0.jamal.api.Processor {
             }
             final var openIndex = input.indexOf(open, searchFrom);
             final var closeIndex = input.indexOf(close, searchFrom);
-            BadSyntaxAt.when(closeIndex < openIndex, () -> "Invalid macro nesting in the last argument of the user defined macro.",pos);
+            BadSyntaxAt.when(closeIndex < openIndex,"Invalid macro nesting in the last argument of the user defined macro.",pos);
             if (openIndex == -1 || separatorIndex < openIndex) {
                 appendTheNextParameter(parameters, input, start, separatorIndex, pos);
                 start = separatorIndex + 1;
@@ -772,7 +772,7 @@ public class Processor implements javax0.jamal.api.Processor {
         var openIndex = input.indexOf(open, searchFrom);
         var closeIndex = input.indexOf(close, searchFrom);
         if (openIndex != -1) {
-            BadSyntaxAt.when(closeIndex < openIndex, () -> "Invalid macro nesting in the last argument of the user defined macro.",pos);
+            BadSyntaxAt.when(closeIndex < openIndex,"Invalid macro nesting in the last argument of the user defined macro.",pos);
             while (true) {
                 openIndex = stepOverNestedMacros(input, openIndex, pos);
                 if (openIndex < input.length()) {
@@ -781,12 +781,12 @@ public class Processor implements javax0.jamal.api.Processor {
                 closeIndex = input.indexOf(close, openIndex);
                 openIndex = input.indexOf(open, openIndex);
                 if (openIndex == -1) {
-                    BadSyntaxAt.when(closeIndex != -1, () -> "There are trailing macro closing strings in the last argument of the user defined macro.",pos);
+                    BadSyntaxAt.when(closeIndex != -1,"There are trailing macro closing strings in the last argument of the user defined macro.",pos);
                     break;
                 }
             }
         } else {
-            BadSyntaxAt.when(input.indexOf(closeIndex, searchFrom) != -1, () -> "Invalid macro nesting in the last argument of the user defined macro.",pos);
+            BadSyntaxAt.when(input.indexOf(closeIndex, searchFrom) != -1,"Invalid macro nesting in the last argument of the user defined macro.",pos);
         }
     }
 

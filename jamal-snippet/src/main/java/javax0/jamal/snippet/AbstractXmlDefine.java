@@ -12,7 +12,6 @@ import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import javax0.jamal.tools.Format;
 
 abstract class AbstractXmlDefine implements Macro, InnerScopeDependent {
     @FunctionalInterface
@@ -24,7 +23,7 @@ abstract class AbstractXmlDefine implements Macro, InnerScopeDependent {
         skipWhiteSpaces(input);
         var id = fetchId(input);
         skipWhiteSpaces(input);
-        BadSyntax.when(!firstCharIs(input, '='), Format.msg("%s '%s' has no '=' to body", getId(), id));
+        BadSyntax.when(!firstCharIs(input, '='),  "%s '%s' has no '=' to body", getId(), id);
         skip(input, 1);
 
         final XmlDocument xmlDoc;

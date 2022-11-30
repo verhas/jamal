@@ -2,7 +2,6 @@ package javax0.jamal.tools.param;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tools.Params;
@@ -174,7 +173,7 @@ public class Param<K> implements Params.Param<K> {
      */
     private Optional<String> _get() throws BadSyntax {
         if (value.size() > 0) {
-            BadSyntax.when(value.size() > 1 && stringNeeded, Format.msg("The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName));
+            BadSyntax.when(value.size() > 1 && stringNeeded,  "The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName);
             return Optional.ofNullable(value.get(0));
         }
         final var reader = MacroReader.macro(processor);
@@ -187,7 +186,7 @@ public class Param<K> implements Params.Param<K> {
 
     private String getRaw() throws BadSyntax {
         final var opt = _get();
-        BadSyntax.when(opt.isEmpty() && mandatory && stringNeeded, Format.msg("The key '%s' for the macro '%s' is mandatory", reportingName(key), macroName));
+        BadSyntax.when(opt.isEmpty() && mandatory && stringNeeded,  "The key '%s' for the macro '%s' is mandatory", reportingName(key), macroName);
         return opt.orElse(defaultValue);
     }
 
@@ -238,7 +237,7 @@ public class Param<K> implements Params.Param<K> {
      * @throws BadSyntax when the underlying call to {@link #_get()} throws
      */
     private boolean getBoolean() throws BadSyntax {
-        BadSyntax.when(value.size() > 1, Format.msg("The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName));
+        BadSyntax.when(value.size() > 1,  "The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName);
         if (value.size() > 0) {
             return !value.get(0).equals("false") && !value.get(0).equals("no") && !value.get(0).equals("0");
         } else {

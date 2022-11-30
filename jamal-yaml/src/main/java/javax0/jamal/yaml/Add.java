@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import static javax0.jamal.tools.Params.holder;
-import javax0.jamal.tools.Format;
 
 public class Add implements Macro, InnerScopeDependent {
     final Yaml yaml = new Yaml();
@@ -58,10 +57,10 @@ public class Add implements Macro, InnerScopeDependent {
     }
 
     private void assertConsistency(Params.Param<String> to, Params.Param<Object> key, Params.Param<Boolean> flatten, Object anchor) throws BadSyntax {
-        BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(), Format.msg("You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get()));
-        BadSyntax.when(key.get() != null && anchor instanceof List, Format.msg("You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get()));
-        BadSyntax.when(key.get() != null && flatten.is(), Format.msg("You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get()));
-        BadSyntax.when((!(anchor instanceof Map)) && !(anchor instanceof List), Format.msg("You can '%s' only to a List or Map for '%s'\nThe actual class is %s", getId(), to.get(), anchor.getClass()));
+        BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(),  "You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get());
+        BadSyntax.when(key.get() != null && anchor instanceof List,  "You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get());
+        BadSyntax.when(key.get() != null && flatten.is(),  "You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get());
+        BadSyntax.when((!(anchor instanceof Map)) && !(anchor instanceof List),  "You can '%s' only to a List or Map for '%s'\nThe actual class is %s", getId(), to.get(), anchor.getClass());
     }
 
     private Object getAnchor(Object expression, Params.Param<String> to, YamlObject yamlObject) throws BadSyntax {

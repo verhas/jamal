@@ -12,7 +12,6 @@ import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Params.holder;
-import javax0.jamal.tools.Format;
 
 public class StringMacros {
 
@@ -68,7 +67,7 @@ public class StringMacros {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             String[] parts = InputHandler.getParts(in, 2);
-            BadSyntax.when(parts.length != 2, Format.msg("%s needs two parts", getId()));
+            BadSyntax.when(parts.length != 2,  "%s needs two parts", getId());
             return "" + with.test(parts[0], parts[1]);
         }
     }
@@ -104,7 +103,7 @@ public class StringMacros {
             final var ignoreCase = holder("ignoreCase").asBoolean();
             Scan.using(processor).from(this).between("()").keys(ignoreCase).parse(in);
             String[] parts = InputHandler.getParts(in, 2);
-            BadSyntax.when(parts.length != 2, Format.msg("%s needs two parts", getId()));
+            BadSyntax.when(parts.length != 2,  "%s needs two parts", getId());
             return "" + (ignoreCase.is() ? parts[0].equalsIgnoreCase(parts[1]) : parts[0].equals(parts[1]));
         }
 

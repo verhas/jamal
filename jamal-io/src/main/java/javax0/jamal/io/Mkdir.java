@@ -5,7 +5,6 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 
 import java.io.File;
@@ -25,7 +24,7 @@ public class Mkdir implements Macro, InnerScopeDependent {
         } else {
             done = new File(fileName).mkdir();
         }
-        BadSyntax.when(!done, Format.msg("Directory '%s' cannot be created", fileName));
+        BadSyntax.when(!done,  "Directory '%s' cannot be created", fileName);
         return "";
     }
 

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
-import javax0.jamal.tools.Format;
 
 public class SnippetXmlReader {
 
@@ -29,7 +28,7 @@ public class SnippetXmlReader {
                                           SnippetConsumer consumer) throws BadSyntax {
         try {
             final var root = getSnippetsRoot(is);
-            BadSyntax.when(is(root, "snippets"), Format.msg("The root element of the XML document must be <snippets xmlns=\"%s\">", SnipSave.NS));
+            BadSyntax.when(is(root, "snippets"),  "The root element of the XML document must be <snippets xmlns=\"%s\">", SnipSave.NS);
             final var snippets = root.getChildNodes();
             for (int i = 0; i < snippets.getLength(); i++) {
                 final var snippet = snippets.item(i);
@@ -66,7 +65,7 @@ public class SnippetXmlReader {
                 Optional.ofNullable(snippet.getAttributes().getNamedItem("hash"))
                         .map(Node::getNodeValue)
                         .filter(hash -> !Objects.equals(hash, SnipCheck.doted(HexDumper.encode(SHA256.digest(text)))));
-        BadSyntax.when(badHash.isPresent(), Format.msg("The 'hash' attribute of the 'snippet id=%s' tag must be equal to the hash of the text", id));
+        BadSyntax.when(badHash.isPresent(),  "The 'hash' attribute of the 'snippet id=%s' tag must be equal to the hash of the text", id);
     }
 
     /**
@@ -119,7 +118,7 @@ public class SnippetXmlReader {
                 }
             }
         }
-        BadSyntax.when(countTexts == 0, Format.msg("The 'snippet id=%s' tag must have at least one CDATA section", id));
+        BadSyntax.when(countTexts == 0,  "The 'snippet id=%s' tag must have at least one CDATA section", id);
         return sb.toString();
     }
 

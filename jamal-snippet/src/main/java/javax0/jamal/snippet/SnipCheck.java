@@ -13,7 +13,6 @@ import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scan;
 
 import java.util.Locale;
-import javax0.jamal.tools.Format;
 
 public class SnipCheck implements Macro {
 
@@ -68,9 +67,9 @@ public class SnipCheck implements Macro {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(snippet));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < MIN_LENGTH) {
-            BadSyntax.when(hashStringCalculated.contains(hash), Format.msg("The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get()));
-            BadSyntax.when(true,String.format("The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
-                    getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get()));
+            BadSyntax.when(hashStringCalculated.contains(hash), "The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
+            BadSyntax.when(true,"The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
+                    getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
         }
         if (hashStringCalculated.contains(hash)) {
             return;
@@ -110,7 +109,7 @@ public class SnipCheck implements Macro {
                 snippet.append(FileTools.getInput(absoluteFileName, processor));
             }
         }
-        BadSyntax.when(!id.isPresent() && !fileNames.isPresent(), Format.msg("You have to specify either 'id' or 'fileName' for snip:check\n'%s'", message.get()));
+        BadSyntax.when(!id.isPresent() && !fileNames.isPresent(),  "You have to specify either 'id' or 'fileName' for snip:check\n'%s'", message.get());
         return snippet.toString();
     }
 

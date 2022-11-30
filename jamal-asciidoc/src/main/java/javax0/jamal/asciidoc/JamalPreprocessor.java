@@ -121,7 +121,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 processor.setFileReader(cachingFileReader);
                 final var input = Input.makeInput(text, new Position(fileName, 0, 0));
                 final var r = process(processor, input);
-                newLines = postProcess(lines, r);
+                newLines = postProcess(lines, r, fileName);
             }
         }
 
@@ -151,7 +151,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             for (final var line : newLines) {
                 // add an invisible space that will fool asciidoctor not to end the source block
                 if (line.trim().equals("----")) {
-                    sourcedLines.add(line.replaceAll("----","----\u200F\u200F\u200E \u200E"));
+                    sourcedLines.add(line.replaceAll("----", "----\u200F\u200F\u200E \u200E"));
                 } else {
                     sourcedLines.add(line);
                 }
@@ -167,7 +167,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         logInfo(outputFileName, "DONE", runCounter, LocalDateTime.now());
     }
 
-    private List<String> postProcess(final List<String> lines, final Result r) {
+    private List<String> postProcess(final List<String> lines, final Result r, final String inputFileName) {
         List<String> newLines;
         if (r.errorMessage == null && r.result != null) {
             newLines = List.of(r.result.split("\n"));
@@ -186,7 +186,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             if (r.exception != null) {
                 newLines.add("[source]");
                 newLines.add("----");
-                newLines.addAll(List.of(ExceptionDumper.dump(r.exception).toString().split("\n")));
+                newLines.addAll(List.of(ExceptionDumper.dump(r.exception, inputFileName).toString().split("\n")));
                 newLines.add("----");
             }
         }

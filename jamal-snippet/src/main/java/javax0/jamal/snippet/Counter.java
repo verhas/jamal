@@ -9,7 +9,6 @@ import java.util.IllegalFormatException;
 
 import static javax0.jamal.tools.InputHandler.convertGlobal;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
-import javax0.jamal.tools.Format;
 
 public class Counter implements Identified, Evaluable {
     final String id;
@@ -72,7 +71,7 @@ public class Counter implements Identified, Evaluable {
             throw new BadSyntax("The format string in macro '" + getId() + "' is incorrect.", e);
         }
         if (s.contains("$alpha") || s.contains("$ALPHA")) {
-            BadSyntax.when(value < 1 || value > alphabet.length(), Format.msg("Counter '%s' grew too big to be formatted as a letter", id));
+            BadSyntax.when(value < 1 || value > alphabet.length(),  "Counter '%s' grew too big to be formatted as a letter", id);
 
             s = s.replace("$alpha", alphabet.substring(value - 1, value))
                     .replace("$ALPHA", ALPHABET.substring(value - 1, value));
@@ -87,7 +86,7 @@ public class Counter implements Identified, Evaluable {
     }
 
     private static String toRoman(int value, String id) throws BadSyntax {
-        BadSyntax.when(value < 1 || value > 3999, Format.msg("Counter '%s' grew too big to be formatted as a roman numeral", id));
+        BadSyntax.when(value < 1 || value > 3999,  "Counter '%s' grew too big to be formatted as a roman numeral", id);
         StringBuilder s = new StringBuilder();
         while (value >= 1000) {
             s.append('M');

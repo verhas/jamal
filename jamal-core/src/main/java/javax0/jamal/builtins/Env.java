@@ -5,7 +5,6 @@ import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 
 import static javax0.jamal.api.SpecialCharacters.QUERY;
 import static javax0.jamal.api.SpecialCharacters.REPORT_ERRMES;
@@ -52,7 +51,7 @@ public class Env implements Macro {
         if (test) {
             return "" + (null != value);
         } else {
-            BadSyntax.when(report && null == value, Format.msg("Environment variable '%s' is not defined", name));
+            BadSyntax.when(report && null == value,  "Environment variable '%s' is not defined", name);
             return null == value ? "" : value;
         }
     }

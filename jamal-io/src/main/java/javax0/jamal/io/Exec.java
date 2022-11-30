@@ -8,7 +8,6 @@ import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
 
@@ -165,7 +164,7 @@ public class Exec implements Macro {
 
     private void defineProcessNameHolderMacro(final Processor processor, final String id, final Process process) throws BadSyntax {
         final var existing = processor.getRegister().getUserDefined(id);
-        BadSyntax.when(existing.isPresent(), Format.msg("The name `%s` is already used as a user defined macro .", id));
+        BadSyntax.when(existing.isPresent(),  "The name `%s` is already used as a user defined macro .", id);
         processor.define(new ProcessHolder(id, process));
     }
 
@@ -269,7 +268,7 @@ public class Exec implements Macro {
                     continue;
                 }
                 final var parts = line.split("=", 2);
-                BadSyntax.when(parts.length != 2, Format.msg("The environment variable '%s' is not defined correctly.", line));
+                BadSyntax.when(parts.length != 2,  "The environment variable '%s' is not defined correctly.", line);
                 env.put(parts[0], parts[1]);
             }
         }
@@ -349,8 +348,8 @@ public class Exec implements Macro {
             // end snippet
             Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force, optional).parse(in);
             final var idMacro = processor.getRegister().getUserDefined(async.get());
-            BadSyntax.when(idMacro.isEmpty(), Format.msg("Process id '%s' is not defined.", async.get()));
-            BadSyntax.when(!(idMacro.get() instanceof ProcessHolder), Format.msg("Process id '%s' is not a process name.", async.get()));
+            BadSyntax.when(idMacro.isEmpty(),  "Process id '%s' is not defined.", async.get());
+            BadSyntax.when(!(idMacro.get() instanceof ProcessHolder),  "Process id '%s' is not a process name.", async.get());
             final var process = ((ProcessHolder) idMacro.get()).getObject();
             if (process == null || optional.is()) {
                 return "";

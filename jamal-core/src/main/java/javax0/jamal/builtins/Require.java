@@ -5,7 +5,6 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 
 import java.util.Arrays;
 
@@ -51,7 +50,7 @@ public class Require implements Macro {
         } catch (Exception e) {
             throw new BadSyntaxAt("The string '" + in.toString().trim() + "' cannot be used as a version.", in.getPosition(), e);
         }
-        BadSyntaxAt.when(requiredVersion.compareTo(Processor.jamalVersion("1.6.3")) <= 0, () -> "Required version is older than 1.6.3, which is invalid.",in.getPosition());
+        BadSyntaxAt.when(requiredVersion.compareTo(Processor.jamalVersion("1.6.3")) <= 0,"Required version is older than 1.6.3, which is invalid.",in.getPosition());
 
         final var currentVersion = Processor.jamalVersion();
 
@@ -60,7 +59,7 @@ public class Require implements Macro {
                 if (currentVersion.compareTo(requiredVersion) < 0) {
                     break;
                 }
-                BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0, () -> "The current version " + currentVersion + " is the same as the required version. It has to be older.",in.getPosition());
+                BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0,"The current version " + currentVersion + " is the same as the required version. It has to be older.",in.getPosition());
                 BadSyntaxAt.when(true,"The current version " + currentVersion + " is newer than the required version. It has to be older.", in.getPosition());
 
             case LESS_OR_EQUAL:
@@ -82,8 +81,8 @@ public class Require implements Macro {
                 if (currentVersion.compareTo(requiredVersion) > 0) {
                     break;
                 }
-                BadSyntaxAt.when (currentVersion.compareTo(requiredVersion) == 0, Format.msg("The current version %s is the same as the required version. It has to be newer.", currentVersion), in.getPosition());
-                BadSyntaxAt.when(true,"The current version " + currentVersion + " is older than the required version. It has to be newer.", in.getPosition());
+                BadSyntaxAt.when (currentVersion.compareTo(requiredVersion) == 0, () -> String.format("The current version %s is the same as the required version. It has to be newer.", currentVersion), in.getPosition());
+                BadSyntaxAt.when(true, () -> String.format("The current version %s is older than the required version. It has to be newer.", currentVersion), in.getPosition());
             default:
                 throw new IllegalArgumentException("The comparison in require is illegal.");
         }

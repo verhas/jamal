@@ -6,7 +6,6 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.ScriptMacro;
-import javax0.jamal.tools.Format;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
@@ -31,7 +30,7 @@ public class Script implements Macro {
         }
         skipWhiteSpaces(input);
         final String[] params = getParameters(input, id);
-        BadSyntaxAt.when(!firstCharIs(input, '='), Format.msg("script '%s' has no '=' to body", id), ref);
+        BadSyntaxAt.when(!firstCharIs(input, '='), () -> String.format("script '%s' has no '=' to body", id), ref);
         skip(input, 1);
         final ScriptMacro macro;
         macro = processor.newScriptMacro(id, scriptType, input.toString(), params);

@@ -2142,7 +2142,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 50.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 49.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2560,54 +2560,54 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 1,600 bytes
-- Snip.java: 4,929 bytes
+- Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
-- Sort.java: 8,847 bytes
+- Sort.java: 8,791 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,798 bytes
 - RangeMacro.java: 1,282 bytes
 - Untab.java: 2,327 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
-- Update.java: 3,905 bytes
-- SnipTransform.java: 17,195 bytes
-- FilesMacro.java: 9,077 bytes
-- Collect.java: 20,391 bytes
+- Update.java: 3,898 bytes
+- SnipTransform.java: 17,148 bytes
+- FilesMacro.java: 9,049 bytes
+- Collect.java: 20,335 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 5,379 bytes
 - ThinXml.java: 8,792 bytes
 - LineCount.java: 552 bytes
-- Replace.java: 1,712 bytes
+- Replace.java: 1,687 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
 - SemVerCollator.java: 8,929 bytes
 - SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
-- Counter.java: 4,650 bytes
-- StringMacros.java: 7,435 bytes
-- AbstractXmlDefine.java: 1,529 bytes
+- Counter.java: 4,594 bytes
+- StringMacros.java: 7,379 bytes
+- AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,701 bytes
 - SnipLoad.java: 3,540 bytes
 - Rot13.java: 855 bytes
-- SnippetStore.java: 10,722 bytes
-- ListDir.java: 5,552 bytes
+- SnippetStore.java: 10,677 bytes
+- ListDir.java: 5,545 bytes
 - XmlFormat.java: 3,544 bytes
-- SnippetXmlReader.java: 6,582 bytes
-- XmlInsert.java: 6,216 bytes
+- SnippetXmlReader.java: 6,515 bytes
+- XmlInsert.java: 6,171 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
-- CounterMacro.java: 1,847 bytes
+- CounterMacro.java: 1,842 bytes
 - SnipList.java: 1,222 bytes
 - XmlDocument.java: 5,533 bytes
-- Java.java: 10,401 bytes
-- ReplaceLines.java: 2,903 bytes
+- Java.java: 10,394 bytes
+- ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
-- SnipCheck.java: 5,774 bytes
+- SnipCheck.java: 5,702 bytes
 - Reflow.java: 2,023 bytes
 - Pos.java: 789 bytes
-- Snippet.java: 1,097 bytes
+- Snippet.java: 1,052 bytes
 ----
 
 
@@ -2860,7 +2860,7 @@ will result in the output
 
 [source]
 ----
-2022-11-29 09:00:28
+2022-11-30 10:01:11
 ----
 
 

@@ -15,7 +15,6 @@ import javax0.jamal.tools.Params;
 
 import java.util.List;
 import java.util.Map;
-import javax0.jamal.tools.Format;
 
 @Macro.Stateful
 public class Xml implements Macro, InnerScopeDependent {
@@ -123,13 +122,13 @@ public class Xml implements Macro, InnerScopeDependent {
                     sb.append(">");
                     closed = true;
                 }
-                BadSyntax.when(tagSingular.length() == 0, Format.msg("Cannot create aní XML list for the field '%s' it is too short and no !!javax0.jamal.api.Xml$TAG was present.", tagPlural));
+                BadSyntax.when(tagSingular.length() == 0,  "Cannot create aní XML list for the field '%s' it is too short and no !!javax0.jamal.api.Xml$TAG was present.", tagPlural);
                 sb.append("<").append(tagSingular);
                 if (e instanceof Map<?, ?>) {
                     mapToXml(sb, (Map) e);
                 } else if (e instanceof List<?>) {
                     final String ts = tagSingular;
-                    BadSyntax.when(tagSingular.length() < 2, Format.msg("Cannot create an XML list for the field '%s'", ts));
+                    BadSyntax.when(tagSingular.length() < 2,  "Cannot create an XML list for the field '%s'", ts);
 
                     listToXml(sb, tagSingular, tagSingular.substring(0, tagSingular.length() - 1), (List) e);
                 } else if (e instanceof CDATA) {

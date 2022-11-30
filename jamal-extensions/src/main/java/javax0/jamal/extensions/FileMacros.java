@@ -39,7 +39,7 @@ public class FileMacros {
         if (FileTools.isAbsolute(inputFileName)) {
             fileName = inputFileName;
         } else {
-            BadSyntaxAt.when(reference == null, () -> "Cannot use file macro in a file that has no reference",in.getPosition());
+            BadSyntaxAt.when(reference == null,"Cannot use file macro in a file that has no reference",in.getPosition());
             fileName = absolute(reference, inputFileName);
         }
         return fileName;
@@ -51,7 +51,7 @@ public class FileMacros {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             var reference = in.getReference();
             String[] parts = InputHandler.getParts(in, 2);
-            BadSyntaxAt.when(parts.length < 2, () -> "Write macro needs two arguments but got " + parts.length,in.getPosition());
+            BadSyntaxAt.when(parts.length < 2,"Write macro needs two arguments but got " + parts.length,in.getPosition());
             var inputFileName = parts[0];
             var content = parts[1];
             final String fileName = getAbsoluteFileName(in, reference, inputFileName);

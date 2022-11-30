@@ -9,7 +9,6 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.tools.Params.holder;
-import javax0.jamal.tools.Format;
 
 public class Replace implements Macro, InnerScopeDependent {
     @Override
@@ -18,7 +17,7 @@ public class Replace implements Macro, InnerScopeDependent {
         Scan.using(processor).from(this).between("()").keys(isRegex).parse(in);
         InputHandler.skipWhiteSpaces(in);
         final var parts = InputHandler.getParts(in);
-        BadSyntax.when(parts.length < 2, Format.msg("Marco 'replace' needs at least two arguments, got only %d:\n%s\n----------",
+        BadSyntax.when(parts.length < 2, () -> String.format("Marco 'replace' needs at least two arguments, got only %d:\n%s\n----------",
                         parts.length, String.join("\n", parts)));
         String string = parts[0];
         for (int i = 1; i < parts.length; i += 2) {

@@ -5,7 +5,6 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 import org.jruby.RubyString;
 
 public class RubyCloser implements Macro, InnerScopeDependent {
@@ -24,7 +23,7 @@ public class RubyCloser implements Macro, InnerScopeDependent {
             shell.property("$result", RubyString.newString(shell.shell.getProvider().getRuntime(), result.getSB()));
             try {
                 final var sb = shell.evaluate(closerScript, null);
-                BadSyntax.when(sb == null, Format.msg("Ruby closer script '%s' returned null", shell.getId()));
+                BadSyntax.when(sb == null,  "Ruby closer script '%s' returned null", shell.getId());
                 result.getSB().setLength(0);
                 result.getSB().append(sb);
             } catch (Exception e) {

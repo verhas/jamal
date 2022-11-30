@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax0.jamal.tools.Format;
 
 /**
  * Scan a file or the directory tree and collect the snippets from the files.
@@ -299,7 +298,7 @@ public class Collect implements Macro, InnerScopeDependent {
                         id = linerMatcher.group(1);
                         text.setLength(0);
                         final String id_ = id;
-                        BadSyntax.when(lineNr == lines.length - 1, Format.msg("'snipline %s' is on the last line of the file '%s'", id_, file));
+                        BadSyntax.when(lineNr == lines.length - 1,  "'snipline %s' is on the last line of the file '%s'", id_, file);
                         line = lines[++lineNr];
                         line = cutOffPartUsingMatcher(line, filterMatcher);
                         try {
@@ -347,7 +346,7 @@ public class Collect implements Macro, InnerScopeDependent {
             try {
                 final var matcher = Pattern.compile(regex).matcher(line);
                 if (matcher.find()) {
-                    BadSyntax.when(matcher.groupCount() != 1, Format.msg("The regex '%s' must have exactly one capturing group", regex));
+                    BadSyntax.when(matcher.groupCount() != 1,  "The regex '%s' must have exactly one capturing group", regex);
                     line = matcher.group(1);
                 } else {
                     throw new BadSyntax(String.format("The regex '%s' did not match the next line.", regex));

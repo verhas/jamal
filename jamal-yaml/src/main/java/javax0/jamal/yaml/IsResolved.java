@@ -5,7 +5,6 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Format;
 
 public class IsResolved implements Macro {
     @Override
@@ -13,7 +12,7 @@ public class IsResolved implements Macro {
         InputHandler.skipWhiteSpaces(in);
         final var id = InputHandler.fetchId(in);
         InputHandler.skipWhiteSpaces(in);
-        BadSyntax.when(in.length() > 0, Format.msg("%s needs only one single argument, the name of the macro to be tested", getId()));
+        BadSyntax.when(in.length() > 0,  "%s needs only one single argument, the name of the macro to be tested", getId());
         final var yamlObject = Resolve.getYaml(processor, id);
         return "" + yamlObject.resolved;
     }

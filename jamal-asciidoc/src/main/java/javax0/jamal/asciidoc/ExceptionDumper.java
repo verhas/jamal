@@ -20,11 +20,11 @@ class ExceptionDumper {
      * @return a StringBuilder that contains the message of the exception, the stack trace and then recursively
      * all the suppressed exceptions and the causing exception in a similar manner.
      */
-    public static StringBuilder dump(Exception t) {
+    public static StringBuilder dump(final Exception t, final String inputFileName) {
         final var me = new ExceptionDumper();
         me.output.append(t.getMessage()).append('\n');
         me.dumpIt(t, false);
-        me.output.append("sed '").append(me.sedCommand).append("'");
+        me.output.append("sed -i jam '").append(me.sedCommand).append("' ").append(inputFileName);
         return me.output;
     }
 

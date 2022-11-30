@@ -23,7 +23,7 @@ public class CounterMacro implements Macro, InnerScopeDependent {
         skipWhiteSpaces(input);
         Scan.using(processor).from(this).firstLine().keys(format, start, step, id).parse(input);
         skipWhiteSpaces(input);
-        BadSyntaxAt.when(input.length() > 0, () -> "There are extra characters after the counter definition",input.getPosition());
+        BadSyntaxAt.when(input.length() > 0, "There are extra characters after the counter definition", input.getPosition());
 
         final Counter counter;
         if (isGlobalMacro(id.get())) {

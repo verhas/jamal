@@ -4,7 +4,6 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 
 import java.util.regex.Pattern;
 
@@ -37,7 +36,7 @@ public class Use implements Macro {
                     .replaceAll("\\s+", " ");
             if (stripped.length() > 0) {
                 var matcher = pattern.matcher(stripped);
-                BadSyntax.when(!matcher.matches(), Format.msg("use macro has bad syntax '%s'", stripped));
+                BadSyntax.when(!matcher.matches(),  "use macro has bad syntax '%s'", stripped);
                 var isGlobal = matcher.group(1).length() > 0;
                 final var klassName = matcher.group(2);
                 final var alias = matcher.group(3);
@@ -51,7 +50,7 @@ public class Use implements Macro {
                     }
                     macro = register.getMacro(klassName)
                             .orElseThrow(() -> new BadSyntax("There is no built-in macro with the name '" + klassName + "'"));
-                    BadSyntax.when(alias == null || alias.length() == 0, Format.msg("You cannot define an alias for the macro '%s' without actually providing an alias after the 'as'",
+                    BadSyntax.when(alias == null || alias.length() == 0, () -> String.format("You cannot define an alias for the macro '%s' without actually providing an alias after the 'as'",
                                     klassName));
                 }
                 if (isGlobal) {

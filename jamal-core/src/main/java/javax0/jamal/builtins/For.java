@@ -8,7 +8,6 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 
 import java.util.ArrayList;
@@ -188,7 +187,7 @@ public class For implements Macro, InnerScopeDependent {
             final var value = valueArray[j];
             if (value.length() > 0 || !skipEmpty.is()) {
                 final String[] values = value.split(subSeparator.get(), -1);
-                BadSyntax.when(!lenient.is() && values.length != variables.length, Format.msg("number of the values does not match the number of the parameters\n%s\n%s",
+                BadSyntax.when(!lenient.is() && values.length != variables.length, () -> String.format("number of the values does not match the number of the parameters\n%s\n%s",
                                 String.join(",", variables), value));
                 if (trim.is()) {
                     for (int i = 0; i < values.length; i++) {
@@ -238,11 +237,11 @@ public class For implements Macro, InnerScopeDependent {
         final String valuesString;
         skip(input, 1);
         int closingTick = input.indexOf("`");
-        BadSyntaxAt.when(closingTick == -1, () -> "There is no closing '`' before the values in the for macro.",input.getPosition());
+        BadSyntaxAt.when(closingTick == -1,"There is no closing '`' before the values in the for macro.",input.getPosition());
         final var stopString = "`" + input.substring(0, closingTick + 1);
         skip(input, closingTick + 1);
         int closing = input.indexOf(stopString);
-        BadSyntaxAt.when(closing == -1, () -> "There is no closing " + stopString + " for the values in the for macro.",input.getPosition());
+        BadSyntaxAt.when(closing == -1,"There is no closing " + stopString + " for the values in the for macro.",input.getPosition());
         valuesString = input.substring(0, closing);
         skip(input, closing + stopString.length());
         return valuesString;
@@ -252,7 +251,7 @@ public class For implements Macro, InnerScopeDependent {
         final String valuesString;
         skip(input, 1);
         int closing = input.indexOf(")");
-        BadSyntaxAt.when(closing == -1, () -> "There is no closing ')' for the values in the for macro.",input.getPosition());
+        BadSyntaxAt.when(closing == -1,"There is no closing ')' for the values in the for macro.",input.getPosition());
         valuesString = input.substring(0, closing);
         skip(input, closing + 1);
         return valuesString;

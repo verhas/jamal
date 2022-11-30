@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax0.jamal.tools.Format;
 
 /**
  * This macro composes several other macros and invokes them using the parameters given.
@@ -114,7 +113,7 @@ public class SnipTransform implements Macro {
             checkMissingActions();
 
             for (final String action : actionsSet) {
-                BadSyntax.when(!knownActions.contains(action), Format.msg("Unknown action '%s'", action));
+                BadSyntax.when(!knownActions.contains(action),  "Unknown action '%s'", action);
             }
         }
 
@@ -127,7 +126,7 @@ public class SnipTransform implements Macro {
             }
             unaliasActions(actionsList);
             final var actionsSet = new LinkedHashSet<>(actionsList);
-            BadSyntax.when(actionsSet.size() != actionsList.size(), Format.msg("Duplicate action(s) in %s", actions.get()));
+            BadSyntax.when(actionsSet.size() != actionsList.size(),  "Duplicate action(s) in %s", actions.get());
             return actionsSet;
         }
 
@@ -255,7 +254,7 @@ public class SnipTransform implements Macro {
                 final var action = e.getKey();
                 if (!actionsSet.contains(action)) {
                     for (final var param : e.getValue()) {
-                        BadSyntax.when(param.isPresent(), Format.msg("'%s' can be used only when '%s' specified as action or parameter.",
+                        BadSyntax.when(param.isPresent(), () -> String.format("'%s' can be used only when '%s' specified as action or parameter.",
                                         param.name(), action));
                     }
                 }

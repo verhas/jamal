@@ -1,7 +1,6 @@
 package javax0.jamal.engine;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.ScriptingTools;
 import jdk.jshell.JShell;
 import jdk.jshell.Snippet;
@@ -171,7 +170,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
         } finally {
             System.setErr(original);
         }
-        BadSyntax.when(!isOpen.get(), Format.msg("The JShell snippet '%s' closed the JShell interpreter. Will not be recreated.", source));
+        BadSyntax.when(!isOpen.get(),  "The JShell snippet '%s' closed the JShell interpreter. Will not be recreated.", source);
         return events;
     }
 

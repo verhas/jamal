@@ -6,7 +6,6 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.InputHandler;
 
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class Regex {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var part = getParts(in);
-            BadSyntax.when(part.length != 3, Format.msg("replaceAll needs exactly 3 parts separated but the input has %d", part.length));
+            BadSyntax.when(part.length != 3,  "replaceAll needs exactly 3 parts separated but the input has %d", part.length);
             return part[0].replaceAll(part[1], part[2]);
         }
 
@@ -63,7 +62,7 @@ public class Regex {
 
         @Override
         public String evaluate(String... parameters) throws BadSyntax {
-            BadSyntax.when(parameters.length == 0, Format.msg("The generated macro %s needs at least one argument", name));
+            BadSyntax.when(parameters.length == 0,  "The generated macro %s needs at least one argument", name);
             var command = parameters[0].trim();
             final String arg;
             if (parameters.length > 1) {
@@ -148,7 +147,7 @@ public class Regex {
             final var id = fetchId(in);
             skipWhiteSpaces(in);
             final var part = getParts(in, 2);
-            BadSyntax.when(part.length != 2, Format.msg("matcher needs exactly 3 parts separated but the input has %d%d", part.length, 1));
+            BadSyntax.when(part.length != 2,  "matcher needs exactly 3 parts separated but the input has %d%d", part.length, 1);
             var pattern = Pattern.compile(part[0]);
             var matcher = pattern.matcher(part[1]);
             var udm = new GroupUserDefinedMacro(id, matcher);

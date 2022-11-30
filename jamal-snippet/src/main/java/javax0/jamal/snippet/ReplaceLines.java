@@ -34,7 +34,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter 
         final var lines = sb.toString().split("\n", -1);
         for (final var replaceString : replace.get()) {
             final var parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replaceString));
-            BadSyntaxAt.when(parts.length == 0, () -> "The replace macro should have at least one part: '" + replace.get() + "'",pos);
+            BadSyntaxAt.when(parts.length == 0,"The replace macro should have at least one part: '" + replace.get() + "'",pos);
 
             for (int k = 0; k < lines.length; k++) {
                 for (int i = 0; i < parts.length; i += 2) {
@@ -58,7 +58,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter 
                 }
             }
         }
-        BadSyntaxAt.when(noChange, () -> "{@replaceLines did not change any of the lines.",pos);
+        BadSyntaxAt.when(noChange,"{@replaceLines did not change any of the lines.",pos);
         sb.setLength(0);
         sb.append(String.join("\n", lines));
     }

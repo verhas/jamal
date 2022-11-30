@@ -5,7 +5,6 @@ import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -82,7 +81,7 @@ public class IndexStringTable implements Macro {
         BadSyntax.when(splitters.length() == 0, "$getsep defines a zero length separator");
         final var input = in.toString();
         final var index = input.indexOf(splitters.charAt(0));
-        BadSyntax.when(index == -1, Format.msg("There is no separator '%s' in the input.", splitters.charAt(0)));
+        BadSyntax.when(index == -1,  "There is no separator '%s' in the input.", splitters.charAt(0));
         final var indices = input.substring(0, index);
         var table = input.substring(index + 1);
         final var indexArray = Arrays.stream(indices.trim().split("\\s+")).mapToInt(Integer::parseInt).map(Math::abs).toArray();
@@ -92,7 +91,7 @@ public class IndexStringTable implements Macro {
             final var cols = table.split(Pattern.quote(splitter));
             final var table_ = table;
             final var i_ = i;
-            BadSyntax.when(indexArray[i] >= cols.length, Format.msg("There are only %d columns in the string \"%s\" using the splitter %s and macro 'get' wants to access %d",
+            BadSyntax.when(indexArray[i] >= cols.length, () -> String.format("There are only %d columns in the string \"%s\" using the splitter %s and macro 'get' wants to access %d",
                             cols.length, table_, splitter, indexArray[i_]));
             table = cols[indexArray[i]];
         }

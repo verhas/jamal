@@ -4,7 +4,6 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +111,7 @@ public class MockImplementation implements Macro {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var result = getResult(in);
         if (result.isEmpty()) {
-            BadSyntax.when(shadowedMacro == null, Format.msg("Mock %s has exhausted after %d uses.", id, counter));
+            BadSyntax.when(shadowedMacro == null,  "Mock %s has exhausted after %d uses.", id, counter);
             return shadowedMacro.evaluate(in, processor);
         }
         counter++;

@@ -5,7 +5,6 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 
 import java.util.Arrays;
@@ -29,7 +28,7 @@ public class Resolve implements Macro, InnerScopeDependent {
     static YamlObject getYaml(Processor processor, String id) throws BadSyntax {
         final var identified = processor.getRegister().getUserDefined(id).orElseThrow(
                 () -> new BadSyntax("Cannot resolve yaml '" + id + "', does not exists"));
-        BadSyntax.when(!(identified instanceof YamlObject), Format.msg("The user defined macro '%s' is not a YAML structure", id));
+        BadSyntax.when(!(identified instanceof YamlObject),  "The user defined macro '%s' is not a YAML structure", id);
         return (YamlObject) identified;
     }
 

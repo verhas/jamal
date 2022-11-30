@@ -5,7 +5,6 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 
 import java.io.File;
@@ -36,7 +35,7 @@ public class Remove implements Macro, InnerScopeDependent {
                     .map(Path::toFile)
                     .sorted((o1, o2) -> -o1.compareTo(o2))
                     .forEach(f -> allDeleted.set(allDeleted.get() && remove(f, errors, fileList)));
-                BadSyntax.when(!allDeleted.get(), Format.msg("Not possible to delete the file/dir and all files/dirs under '%s'\n%s\n%s\n",
+                BadSyntax.when(!allDeleted.get(), () -> String.format("Not possible to delete the file/dir and all files/dirs under '%s'\n%s\n%s\n",
                             fileName, fileList, errors));
             } else {
                 Files.delete(Paths.get(fileName));

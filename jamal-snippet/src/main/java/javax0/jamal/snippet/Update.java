@@ -42,7 +42,7 @@ public class Update implements Macro, InnerScopeDependent {
             while ((line = br.readLine()) != null) {
                 sb.append(replace(state, line));
             }
-            BadSyntaxAt.when(state.skipping, () -> "The snip macro is not terminated for 'update'.",new Position(in.getPosition().file, state.lastOpen, 1));
+            BadSyntaxAt.when(state.skipping,"The snip macro is not terminated for 'update'.",new Position(in.getPosition().file, state.lastOpen, 1));
             try (final var output = new FileOutputStream(in.getPosition().file)) {
                 output.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }

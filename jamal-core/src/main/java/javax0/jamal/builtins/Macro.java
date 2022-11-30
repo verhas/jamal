@@ -5,7 +5,6 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.Params;
 
 import java.util.Optional;
@@ -52,7 +51,7 @@ public class Macro implements javax0.jamal.api.Macro {
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, macro);
         }
-        BadSyntax.when(macro == null, Format.msg("Unknown built-in macro{@%s}", input));
+        BadSyntax.when(macro == null,  "Unknown built-in macro{@%s}", input);
         return macro.evaluate(EMPTY_INPUT, processor);
     }
 
@@ -62,7 +61,7 @@ public class Macro implements javax0.jamal.api.Macro {
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, (Identified) macro);
         } else {
-            BadSyntax.when(macro == null, () -> "Unknown user-defined macro {" + input + "}");
+            BadSyntax.when(macro == null,  "Unknown user-defined macro {%s}", input);
             return macro.evaluate();
         }
     }

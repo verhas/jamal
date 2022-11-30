@@ -18,7 +18,6 @@ import java.util.regex.PatternSyntaxException;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import javax0.jamal.tools.Format;
 
 public class Snip implements Macro {
 
@@ -93,7 +92,7 @@ public class Snip implements Macro {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(text));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < SnipCheck.MIN_LENGTH) {
-            BadSyntax.when(hashStringCalculated.contains(hash), Format.msg("The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n",
+            BadSyntax.when(hashStringCalculated.contains(hash), () -> String.format("The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n",
                             id, SnipCheck.doted(hashStringCalculated), hashString.get(), SnipCheck.MIN_LENGTH));
             throw new BadSyntax(String.format("The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n", id, SnipCheck.doted(hashStringCalculated), hashString.get(), SnipCheck.MIN_LENGTH));
         }

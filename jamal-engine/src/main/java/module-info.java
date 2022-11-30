@@ -1,6 +1,5 @@
 import javax0.jamal.api.Debugger;
 import javax0.jamal.api.Macro;
-import javax0.jamal.tools.NullDebugger;
 
 module jamal.engine {
     uses Macro;

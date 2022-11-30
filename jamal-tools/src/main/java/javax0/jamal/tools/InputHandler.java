@@ -377,7 +377,7 @@ public class InputHandler {
         if (firstCharIs(input, '(')) {
             skip(input, 1);
             var closingParen = input.indexOf(")");
-            BadSyntaxAt.when(!contains(closingParen), () -> "'" + id + "' has parameters, but no ')'",ref);
+            BadSyntaxAt.when(!contains(closingParen),"'" + id + "' has parameters, but no ')'",ref);
             var param = input.substring(0, closingParen);
             skip(input, closingParen + 1);
             skipWhiteSpaces(input);
@@ -419,7 +419,7 @@ public class InputHandler {
     public static String[] ensure(String[] parameters, Position ref) throws BadSyntaxAt {
         final var exceptionParameters = new ArrayList<String>();
         for (int i = 0; i < parameters.length; i++) {
-            BadSyntaxAt.when(requireNonNull(parameters[i]).length() == 0, () -> "User defined macro argument cannot be empty string.",ref);
+            BadSyntaxAt.when(requireNonNull(parameters[i]).length() == 0,"User defined macro argument cannot be empty string.",ref);
             for (int j = 0; j < parameters.length; j++) {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {

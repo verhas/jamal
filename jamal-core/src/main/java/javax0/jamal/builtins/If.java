@@ -86,7 +86,7 @@ public class If implements Macro {
         Params.using(processor).from(this).between("[]").keys(opt.options()).parse(input);
         opt.assertConsistency();
         final var parts = InputHandler.getParts(input, 3);
-        BadSyntaxAt.when(parts.length < 1, () -> "Macro 'if' needs 1, 2 or 3 arguments",pos);
+        BadSyntaxAt.when(parts.length < 1,"Macro 'if' needs 1, 2 or 3 arguments",pos);
 
         if (opt.not.is() != isTrue(parts[0], opt)) {
             return parts.length > 1 ? parts[1] : "";

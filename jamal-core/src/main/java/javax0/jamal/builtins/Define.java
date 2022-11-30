@@ -6,7 +6,6 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 
@@ -22,7 +21,6 @@ import static javax0.jamal.tools.InputHandler.getParameters;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import javax0.jamal.tools.Format;
 
 public class Define implements Macro {
     @Override
@@ -35,7 +33,7 @@ public class Define implements Macro {
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
         Params.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam, IdOnly).parse(input);
-        BadSyntax.when(noRedefineParam.is() && optionalParam.is(), Format.msg("You cannot use %s and %s", optionalParam.name(), noRedefineParam.name()));
+        BadSyntax.when(noRedefineParam.is() && optionalParam.is(),  "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         skipWhiteSpaces(input);
         boolean verbatim = verbatimParam.is();
         if (!verbatim && firstCharIs(input, DEFINE_VERBATIM)) {
@@ -44,10 +42,10 @@ public class Define implements Macro {
             skipWhiteSpaces(input);
         }
         var optional = firstCharIs(input, DEFINE_OPTIONALLY);
-        BadSyntax.when(optionalParam.is() && optional, Format.msg("You cannot use %s and '?' in the define at the same time.", optionalParam.name()));
+        BadSyntax.when(optionalParam.is() && optional,  "You cannot use %s and '?' in the define at the same time.", optionalParam.name());
 
         var noRedefine = firstCharIs(input, ERROR_REDEFINE);
-        BadSyntax.when(noRedefineParam.is() && noRedefine, Format.msg("You cannot use %s and '!' in the define at the same time.", noRedefineParam.name()));
+        BadSyntax.when(noRedefineParam.is() && noRedefine,  "You cannot use %s and '!' in the define at the same time.", noRedefineParam.name());
 
         if (optional || noRedefine) {
             skip(input, 1);
@@ -66,7 +64,7 @@ public class Define implements Macro {
             if (optional) {
                 return "";
             }
-            BadSyntax.when(noRedefine, Format.msg("The macro '%s' was already defined.", id));
+            BadSyntax.when(noRedefine,  "The macro '%s' was already defined.", id);
         }
         skipWhiteSpaces(input);
         BadSyntax.when(id.endsWith(":") && !firstCharIs(input, '('),"The () in define is not optional when the macro name ends with ':'.");
@@ -81,7 +79,7 @@ public class Define implements Macro {
         if (pure) {
             skip(input, 1);
         }
-        BadSyntax.when(!firstCharIs(input, '='), Format.msg("define '%s' has no '=' to body", id));
+        BadSyntax.when(!firstCharIs(input, '='),  "define '%s' has no '=' to body", id);
         skip(input, 1);
         final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, params);
         if (globalParam.is() || isGlobalMacro(id)) {

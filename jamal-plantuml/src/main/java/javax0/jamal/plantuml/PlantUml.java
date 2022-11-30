@@ -7,7 +7,6 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Cache;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Format;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
@@ -53,7 +52,7 @@ public class PlantUml implements Macro, InnerScopeDependent {
             } else {
                 erred = "true".equals(entry.getProperty("error"));
             }
-            BadSyntax.when(erred, Format.msg("There was an error processing diagram for '%s' in PlantUml.", fileName));
+            BadSyntax.when(erred,  "There was an error processing diagram for '%s' in PlantUml.", fileName);
             return Trie.formatter.format(template.get(), fileName);
         } catch (Exception e) {
             throw new BadSyntax("PlantUml diagram '" + fileName + "'cannot be created.", e);
