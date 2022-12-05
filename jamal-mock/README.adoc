@@ -23,7 +23,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-mock</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>1.12.4-SNAPSHOT</version>
 </dependency>
 ----
 

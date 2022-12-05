@@ -4,7 +4,7 @@
 
 Some code block here:
 
-[source, c, subs="macros+"]
+[source, c, subs="macros+"]nemmegy
 ----
 void example(void)
 {

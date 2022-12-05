@@ -1,6 +1,9 @@
 = Modules of the Jamal Project
 :toc:
 
+This file lists the Jamal modules delivered with each release.
+Note that other projects may contain other Jamal modules delivered independently of the modules in this project.
+
 {%@sep { } %}
 == Module Categories
 The different modules fall into one of the four categories:
@@ -13,20 +16,25 @@ If it does, the macros are specific to the embedding environment.
 
 . __macro__ is a package containing macro implementations.
 Jamal comes with a limited set of built-in macros.
-Specific features are suppoerted by macros implemented in macro libraries.
-To use those libraries they hasve to be on the module path or on the class path.
+Specific features are supported by macros implemented in macro libraries.
+To use those libraries they have to be on the module path or on the class path.
 {@define chapter($x,$y)=== https://github.com/verhas/jamal/blob/master/jamal-$x/README.adoc[{@case:upper $x}] ^_$y_^}
 
 . __debugger__ is the module implementing the debugger interface of Jamal.
 There can be several modules implementing this interface.
-Currently there are two.
+Currently, there are two.
 One provides a TCP interface for an external debugger.
 This implementation is for reference purposes, and it is not feature complete.
 The other implementation provides a REST interface towards a debugger client and it also contains a REACT.js based client.
 
+{chapter :all:core}
+This module contains no code.
+It can be used as a Maven dependency when there is a need to use all Jamal modules.
+It can be a convenience supporting some laziness, but in some cases it may be a necessity.
+
 {chapter :api:core}
 `jamal-api` contains interfaces that the Jamal macros and the processing implements.
-Some of the interfaces implement some default methods.
+Some interfaces implement some default methods.
 This module contains the `BadSyntax` and `BadSyntaxAt` exception classes, which are thrown when there is some error in the processing.
 
 {chapter :asciidoc:embed}

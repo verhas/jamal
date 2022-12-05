@@ -215,6 +215,14 @@ For example
 ----
 
 will store `Hello World` as the content of the snippet `MY_CONSTANT_SNIPPET_NAME`.
+Unfortunately it is easy to misread the line above and to think that the capture group will match the whole line.
+However, the filter on the `snipline` is not a macro parameter.
+It is processed in a different way.
+The whole part following the `filter=` is part of the regular expression, including the `"` characters in the above example.
+
+The possibility of `filter=` following the name of the snippet is a complimentary feature.
+Cutting off a part of the line using regular expression can also be done where the `snip` macro references the snippet.
+This complimentary feature exists to keep the filtering regular expression close to the line from which you want to cut a part off.
 
 There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
 The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.

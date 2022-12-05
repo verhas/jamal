@@ -5,7 +5,7 @@
 The shell script converted from this file will compile this module and then install the resulting JAR files into the
 asciidoctor plugin directory. If there is any error then the original files will be reinstalled.
 
-This way the internal working of the AciiDoctor plugin can manually tested and the developers can use the latest
+This way the internal working of the AciiDoctor plugin can manually test and the developers can use the latest
 development version.
 
 Do not forget to restart IntelliJ after running this script.

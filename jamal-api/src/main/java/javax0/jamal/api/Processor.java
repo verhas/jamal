@@ -9,7 +9,7 @@ import java.util.Properties;
 /**
  * The processor object that can be used to process an input to generate the Jamal output.
  * <p>
- * Processor instances should not be used by multiple threads. They are not thread safe by design.
+ * Processor instances should not be used by multiple threads. They are <b>not</b> thread safe by design.
  * <p>
  * A processor is AutoClosable, and it has to be closed.
  * <p>

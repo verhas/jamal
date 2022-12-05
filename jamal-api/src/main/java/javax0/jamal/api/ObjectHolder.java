@@ -1,8 +1,8 @@
 package javax0.jamal.api;
 
 /**
- * A class is an object holder if it contains an object (reference), that can be queried calling the method {@link
- * #getObject()}.
+ * A class is an object holder if the instance contains an object (reference), that can be queried calling the method
+ * {@link #getObject()}.
  * <p>
  * This interface is implemented by classes in extension modules that also implement the {@link UserDefinedMacro}
  * interface, and implement a functionality that can give a raw object when integrated with other built-in macros or

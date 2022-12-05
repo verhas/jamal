@@ -99,11 +99,22 @@ Built-in macros can use the option parsing routines for the syntax analysis of t
 In that case options can be defined at the start of the input between `(` and `)` (or some other) characters.
 The options usually have the format `name=value`.
 Core macros use `[` and `]` as option start and end characters.
++
+Macro parameters are not the same as macro arguments.
+User defined macros have arguments.
+Built-in macros have options/parameters.
+
+Macro Arguments:: The actual values passed to a user-defined macro when it is used.
+User defined macros have name, optionally arguments and a body.
+The arguments have symbolic names listed between `(` and `)` comma separated.
+At the use of the macro actual values are provided and the names are replaced by the actual values.
+
+Macro Body:: Is the text of a user-defined macro containing literal text and macro argument
 
 Standard Built-In Parameter/Option Parsing:: It means parsing the Macro Options.
 There is API support for the options parsing.
 
-Standard Built-In Macro Argument Splitting:: The standard way a built-in macro can parse the Macro Input in case it does not need to implement its syntax analysis.
+Standard Built-In Macro Argument Splitting:: The standard way a built-in macro can parse the Macro Input in case it does not intend to implement its syntax analysis.
 Using the standard way makes the macros more uniform.
 The core macro `if` uses the Standard Built-In Macro Argument Splitting.
-
+In other macro packages several macros use the built-in splitting.

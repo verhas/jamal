@@ -37,7 +37,7 @@ end snippet
 */
     public static final String JAMAL_CONNECT_TIMEOUT_ENV = "JAMAL_CONNECT_TIMEOUT";
     /*
-    snippet JAMAL_READ_TIMEOUT_documentation
+snippet JAMAL_READ_TIMEOUT_documentation
 
 {%E%}{%JAMAL_READ_TIMEOUT_ENV%}
 This variable can define the read timeout value for the web download in millisecond as unit.
@@ -218,7 +218,7 @@ end snippet
      * then it tries to read the environment variable. If the configuration parameter is not defined in either place
      * then it tries to use the value from the properties file {@code ~/.jamal.settings.properties} or
      * {@code ~/.jamal/settings.xml}.
-     *
+     * <p>
      * The name {@code env} is capital letters, words concatenated using
      * {@code _}. The system variable name is the same as the environment variable name, but lower cased and using
      * {@code .} instead of {@code _}. The property name is the same as the system variable name, but without the

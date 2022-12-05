@@ -11,7 +11,7 @@ import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
 import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
 
 /**
- * Any class that wants to function as a macro implementation should implement this interface.
+ * Any class that wants to function as a built-in macro should implement this interface.
  * <p>
  * The built-in macro {@code use} implemented in {@code javax0.jamal.builtins.Use} in the core package also assumes that
  * the class has a zero-parameter (default) constructor.

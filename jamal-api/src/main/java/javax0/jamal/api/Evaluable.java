@@ -1,8 +1,15 @@
 package javax0.jamal.api;
 
 /**
- * Something that can be evaluated. The evaluation may use strings as arguments. Typically, user defined macros and
- * scripts are evaluable.
+ * Something that can be evaluated providing some arguments to it.
+ * The evaluation may use strings as arguments.
+ * Typically, user defined macros and scripts are evaluable.
+ * <p>
+ * It is a design choice that the evaluation does not have access to the macro processor.
+ * The user defined macro does not need it.
+ * When some other code creates an instance of a class implementing this interface where the access to the macro
+ * processor is needed then the processor reference has to be injected into that object at or soon after the creation,
+ * before evaluate could be called.
  */
 public interface Evaluable extends Identified {
 

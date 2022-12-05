@@ -8,6 +8,9 @@ import java.util.LinkedHashMap;
  * appropriate part of the XML. For example, an {@code !!javax0.jamal.api.Xml$ATTR} object will be converted
  * to an attribute. Each of these classes have an {@code id} as content and nothing else, as there is no need
  * for anything else.
+ *
+ * These classes are defined in this module to have a simple and general name for them since they are used in the
+ * yaml files.
  */
 public interface Xml {
 

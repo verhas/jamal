@@ -1,9 +1,10 @@
 package javax0.jamal.api;
 
 /**
- * This interface is not implemented by any class. The classes which are closers should implement the
- * {@link AutoCloseable} interface. They, however, may need to implement the {@link Closer.ProcessorAware} or
- * {@link Closer.OutputAware} interfaces (or both). This interface contains those interfaces.
+ * This interface contains two inner interfaces and thus provides "naming" for them. This interface itself is not
+ * implemented by any class. The classes which are closers should implement the
+ * {@link AutoCloseable} interface. They, however, may need to implement the {@link Closer.ProcessorAware} and/or
+ * {@link Closer.OutputAware} interfaces. This interface contains those interfaces.
  */
 public interface Closer {
 
@@ -15,6 +16,7 @@ public interface Closer {
         /**
          * Implement this method to handle the processor injection into the macro before the closing.
          * Note that the processor is immutable and should be used to access macros and execution via the API.
+         *
          * @param processor is the processor instance used to execute this macro
          */
         void set(Processor processor);

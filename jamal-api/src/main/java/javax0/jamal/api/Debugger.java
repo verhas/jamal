@@ -4,7 +4,7 @@ import java.util.Deque;
 import java.util.List;
 
 /**
- * Debuggers should implement this interface in order to be loadable via the service loader. Also debugger classes
+ * Debuggers should implement this interface in order to be loadable via the service loader. Also, debugger classes
  * should have a public argument-less constructor.
  */
 public interface Debugger extends AutoCloseable, ServiceLoaded {

@@ -1,9 +1,17 @@
 package javax0.jamal.api;
 
 /**
- * An input has a string builder and also a file name from where the input is coming from. The string builder is used to
- * fetch the characters. The reference file name is used to construct the name of the files in case a macro like {@code
- * import} or {@code include} needs to open another file.
+ *
+ * The input Jamal is working with.
+ * This is essentially a stream of characters along with the position reference.
+ * When a macro is processed many times the output is also the input of the surrounding macro.
+ * Therefore, many times the class implementing this interface is also used as output.
+ * The naming, therefore is a bit confusing.
+ *
+ * An input has a string builder and also a file name from where the input is coming from.
+ * The string builder is used to fetch the characters.
+ * The reference file name is used to construct the name of the files in case a macro like {@code import} or
+ * {@code include} needs to open another file.
  */
 public interface Input extends CharSequence {
     /**
@@ -16,7 +24,10 @@ public interface Input extends CharSequence {
     StringBuilder getSB();
 
     /**
-     * @return the line reference that contains the line number and also the filename
+     * @return the line reference that contains the line number and also the filename.
+     * There are methods to get the file name, line number and column position directly as a convenience.
+     * The position also contains optionally a reference to a parent position.
+     * That chain is used to maintain the "include list" hierarchy in error messages.
      */
     Position getPosition();
 
@@ -61,6 +72,7 @@ public interface Input extends CharSequence {
 
     /**
      * Delete {@code numberOfCharacters} characters from the input at the start.
+     * This operation also takes care maintaining the line number and column number position values.
      *
      * @param numberOfCharacters the number of characters to be deleted
      * @return {@code this}

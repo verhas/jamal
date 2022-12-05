@@ -1,14 +1,9 @@
 {@comment log}
 
-zaba
-{@begin}
-  {@define [global] A=1}dd
-                         ----
-ffffffff
-[source]
+{@define X(BA,AB)=BABAB}{X/2/1}
 
-{@end}
+{@define IS=MUTYA}
+{@define Z($a,$b,$c)=0$a 1{IS} 2$b 3$c}
 
-{A}
-
-----
+{Z/4{IS}/{@ident 5{IS}}{@define IS=QUTYA}{@export IS}/6{IS}}
+7{IS}

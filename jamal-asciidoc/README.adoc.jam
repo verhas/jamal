@@ -153,7 +153,11 @@ Note that starting an external process may need significant resource and may sig
 * `ASCIIDOC_EXTENSION_NO_DEPENDENCIES` can be `true` or `false` defining whether the extension should consider the included files change when caching.
 The option is `false` by default, which means that the caching examines all the included, imported and other files that were used during the processing.
 
-Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file.
+Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file. Foe example, in the `~/.jamal/setting.properties` file you should write
+
+    asciidoc.extension.log=true
+
+instead of `ASCIIDOC_EXTENSION_LOG`.
 
 === Options
 {%@snip:check id=OPTIONS hash=10800ea7.439a5528.98ca9c47%}\
