@@ -75,8 +75,10 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         final var matcher = Pattern.compile("@comment\\s+([\\w\\s\\d]*)").matcher(in);
         // save the converted text from `xxx.adoc.jam` --> `xxx.adoc` by default
         boolean save = !Configuration.INSTANCE.nosave;
+        final var outputFileName = fileName.substring(0, fileName.length() - 4);
         // by default, we do not write log file
         boolean log = Configuration.INSTANCE.log;
+        logInfo(log,outputFileName,"log is specified in the environment",runCounter,startTime);
         boolean external = Configuration.INSTANCE.external;
         boolean noDependencies = Configuration.INSTANCE.noDependencies;
         if (matcher.find()) {
@@ -91,6 +93,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             }
             if (options.contains("log")) {
                 log = true;
+                logInfo(log, outputFileName, "log is specified in the file", runCounter, startTime);
             }
             if (options.contains("external")) {
                 external = true;
@@ -100,7 +103,6 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             }
             // end snippet
         }
-        final var outputFileName = fileName.substring(0, fileName.length() - 4);
         logInfo(log, outputFileName, "started", runCounter, startTime);
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
         final var text = String.join("\n", lines);
@@ -135,8 +137,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 e.printStackTrace(); // there is not much we can do here
             }
             if (log) {
-                logInfo(outputFileName, "saved", runCounter, LocalDateTime.now());
-                logInfo(outputFileName, "dependencies\n" + cachingFileReader.list(), runCounter, LocalDateTime.now());
+                logInfo(log,outputFileName, "saved", runCounter, LocalDateTime.now());
+                logInfo(log,outputFileName, "dependencies\n" + cachingFileReader.list(), runCounter, LocalDateTime.now());
             }
         }
         /*
@@ -144,7 +146,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
          * but the prelude and also the closing line does not get into the output
          */
         if (!fileName.endsWith(".adoc.jam")) {
-            logInfo(outputFileName, "adding pre and post ludes", runCounter, LocalDateTime.now());
+            logInfo(log,outputFileName, "adding pre and post ludes", runCounter, LocalDateTime.now());
             final var sourcedLines = new ArrayList<String>();
             sourcedLines.add("[source]");
             sourcedLines.add("----");
@@ -159,12 +161,12 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             sourcedLines.add("----");
             reader.restoreLines(sourcedLines);
         } else {
-            logInfo(outputFileName, "not adding ludes", runCounter, LocalDateTime.now());
+            logInfo(log,outputFileName, "not adding ludes", runCounter, LocalDateTime.now());
             reader.restoreLines(newLines);
         }
-        logInfo(outputFileName, "setting cache", runCounter, LocalDateTime.now());
+        logInfo(log,outputFileName, "setting cache", runCounter, LocalDateTime.now());
         cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
-        logInfo(outputFileName, "DONE", runCounter, LocalDateTime.now());
+        logInfo(log,outputFileName, "DONE", runCounter, LocalDateTime.now());
     }
 
     private List<String> postProcess(final List<String> lines, final Result r, final String inputFileName) {
@@ -207,10 +209,6 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             r.exception = bs;
         }
         return r;
-    }
-
-    private void logInfo(final String outputFileName, final String message, final int instance, final LocalDateTime when) {
-        logInfo(true, outputFileName, message, instance, when);
     }
 
     private void logInfo(final boolean log, final String outputFileName, final String message, final int instance, final LocalDateTime when) {
