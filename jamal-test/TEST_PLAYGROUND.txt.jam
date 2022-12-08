@@ -1,7 +1,10 @@
-{@counter:define id=sc}
-{@define section={sc}. {@counter:define id=ssc}}
-{@define subsection={sc last}.{ssc}}
+---
+---
+{@counter:define id=sc}\
+{@define section={sc}. {@counter:define id=ssc}}\
+{@define subsection={sc last}.{ssc}}\
 
+{section}
 {section}
 {section}
 {section}

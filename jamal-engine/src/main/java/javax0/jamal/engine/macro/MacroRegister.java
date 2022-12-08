@@ -414,12 +414,29 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         throw new RuntimeException(String.format("The macro class '%1$s' is not stateless, %2$s has non-final, non-static field%3$s.", klass.getName(), (k == klass ? "it " : "parent class " + k.getName()), (field == null ? "" : (" '" + field.getName() + "'"))));
     }
 
+    /**
+     * Find the scope where to export. The search starts one level above the writable scope and goes until it finds a
+     * non-locked scope. If all the scopes are locked then the top level scope is returned.
+     *
+     * @return the scope where to export the macro
+     */
+    private Scope findExportScope() {
+        final int offset = writableOffset();
+        for (int i = 1; scopeStack.size() - offset - i > 0; i++) {
+            final var scope = scopeStack.get(scopeStack.size() - offset - i);
+            if (!scope.locked) {
+                return scope;
+            }
+        }
+        return scopeStack.get(TOP_LEVEL);
+    }
+
     @Override
     public void export(String id) throws BadSyntax {
         final int offset = writableOffset();
         boolean exported = false;
         if (scopeStack.size() > offset) {
-            final var exportToScope = scopeStack.get(scopeStack.size() - offset - 1);
+            final var exportToScope = findExportScope();
             var udMacro = writableScope().udMacros.get(id);
             if (udMacro != null) {
                 final var udMacros = exportToScope.udMacros;
@@ -434,7 +451,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                 writableScope().macros.remove(id);
                 exported = true;
             }
-            BadSyntax.when(!exported,  "Macro '%s' cannot be exported, not in the scope of export.", id);
+            BadSyntax.when(!exported, "Macro '%s' cannot be exported, not in the scope of export.", id);
         } else {
             throw new BadSyntax("Macro '" + id + "' cannot be exported from the top level");
         }
@@ -448,7 +465,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void push(Marker check) throws BadSyntax {
-        BadSyntax.when(markerIsInTheStack(check),  "Push was performed using the marker %s which happens to be already in the stack.", check);
+        BadSyntax.when(markerIsInTheStack(check), "Push was performed using the marker %s which happens to be already in the stack.", check);
         final var scope = new Scope(check);
         scopeStack.add(scope);
         scopeStack.forEach(scp -> scp.macros.values().forEach(macro -> stack(macro, Stackable::push)));
@@ -472,7 +489,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                 throw new BadSyntaxAt("Scope was changed from " + check + " to " + current.checkObject + " and it was not closed before the end.", current.checkObject.getPosition());
             }
         } else {
-            BadSyntax.when(check != null,  "Scope opened with %s was closed immature.", check);
+            BadSyntax.when(check != null, "Scope opened with %s was closed immature.", check);
         }
     }
 
@@ -574,7 +591,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     @Override
     public void lock(Marker check) throws BadSyntax {
         if (scopeStack.size() > 1) {
-            BadSyntax.when(!Objects.equals(check, currentScope().checkObject),  "Lock was performed by %s for a level pushed by %s", check, currentScope().checkObject);
+            BadSyntax.when(!Objects.equals(check, currentScope().checkObject), "Lock was performed by %s for a level pushed by %s", check, currentScope().checkObject);
             currentScope().locked = true;
         } else {
             throw new BadSyntax("Cannot lock the top level scope.");

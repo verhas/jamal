@@ -1360,7 +1360,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1170:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1169:30
 ----
 
 
@@ -2868,7 +2868,7 @@ will result in the output
 
 [source]
 ----
-2022-12-08 11:37:26
+2022-12-08 18:44:27
 ----
 
 
