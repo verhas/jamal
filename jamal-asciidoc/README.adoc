@@ -144,6 +144,14 @@ Note that starting an external process may need significant resource and may sig
 * `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` can specify the command to execute when the preprocessing is done using an external process.
 * `ASCIIDOC_EXTENSION_NO_DEPENDENCIES` can be `true` or `false` defining whether the extension should consider the included files change when caching.
 The option is `false` by default, which means that the caching examines all the included, imported and other files that were used during the processing.
+* `ASCIIDOC_EXTENSION_FROM_FILE` can be `true` or `false`.
+When set to true the Jamal preprocessor will read the content of the saved file instead of the lines provided by the Asciidoctor plugin to preprocess.
+It will result less processing along with the use of the in-memory cache.
+The user has to press Control-S (or Command-S on Mac) to refresh the formatted Asciidoc output.
+It is also to note that Asciidoctor already processes the lines before invoking the Jamal preprocessor.
+If this variable is true, reading from a file will eliminate the effects of these processes.
+The output in some special cases may be different.
+The default value is `false`.
 
 Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file. Foe example, in the `~/.jamal/setting.properties` file you should write
 
@@ -159,14 +167,14 @@ If an option is defined for something controllable by configuration, then the op
 
 [source]
 ----
-{@comment off nosave log}
+{@comment off nosave log fromFile}
 ----
 
 or
 
 [source]
 ----
-{%@comment off nosave log%}
+{%@comment off nosave log fromFile%}
 ----
 
 You can place any of the options listed in the above example separated by spaces in any order.
@@ -213,6 +221,46 @@ Feel free to delete the log file.
 
 In some cases you may need to execute the rendering using an external process.
 This option instructs the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+
+==== fromFile
+
+Will instruct Jamal to ignore the lines that the Asciidoctor plugin is providing and read the lines directly from the file.
+There are two effects.
+
+. Instructing the Jamal to read from the file will save processing, because the file does not change so frequently.
+It also means that the user has to press the control-S or command-s button or use the menu to save the file to see any change in the rendered Asciidoc window.
+
+. The other effect is that any other preprocessor result running before Jamal is dropped.
+The Asciidoctor plugin may call other preprocessors before Jamal.
+When the IntelliJ plugin passes the lines are passed to Jamal, some of these preprocessors may have already modified the lines.
+These modifications get lost.
+
+[NOTE]
+====
+We have experienced using Jekyll that the Asciidoc files containing
+
+[source]
+----
+---
+key: value
+---
+----
+
+front matters are not fully passed to the Jamal preprocessor.
+The front matter lines between the `---` lines are not present in the lines provided by Asciidoctor.
+To overcome these it is recommended to start these files with a Jamal comment, like:
+
+[source]
+----
+{@comment just make some comment}\
+---
+key: value
+---
+----
+Note the `\` after the comment line.
+It is important, or else the starting `---` will be on the second line following an empty line.
+Jekyll does not like the first empty line.
+====
 
 ==== noDependencies
 

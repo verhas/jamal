@@ -9,6 +9,7 @@ public class Configuration {
     public final boolean nosave;
     public final boolean log;
     public final boolean external;
+    public final boolean fromFile;
     public final boolean noDependencies;
     public final String externalCommand;
 
@@ -19,6 +20,7 @@ public class Configuration {
         log = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_LOG").map(Boolean::parseBoolean).orElse(false);
         externalCommand = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_EXTERNAL_COMMAND").orElse("");
         external = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_EXTERNAL").map(Boolean::parseBoolean).orElse(false);
+        fromFile = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_FROM_FILE").map(Boolean::parseBoolean).orElse(false);
         noDependencies = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_NO_DEPENDENCIES").map(Boolean::parseBoolean).orElse(false);
     }
 }

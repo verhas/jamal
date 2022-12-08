@@ -2,7 +2,6 @@ package javax0.jamal.asciidoc;
 
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
-import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.Input;
 import org.asciidoctor.Asciidoctor;
@@ -15,20 +14,19 @@ import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Pattern;
 
 public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry {
     /**
-     * The result structure of the execution of in-process Jamal. This is needed to pass the result in a single return value from a method
+     * The result structure of the execution of in-process Jamal.
      */
     private static class Result {
         String result = null;
@@ -54,7 +52,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * <p>
      * To avoid unneeded processing Jamal is only executed if the source code has been changed since the last
      * execution. If the MD5 signature of the input is the same as the last execution then we just return whatever
-     * the return value was during the last execution. There is no reason to store more than one item.
+     * the return value was during the last execution. There is no reason to store more than one item, therefore
+     * this cache is static.
      */
     private static final AtomicReference<ProcessingCache> cache = new AtomicReference<>(new ProcessingCache(null, null, null));
 
@@ -69,84 +68,85 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         if (!fileName.endsWith(".jam")) {
             return;
         }
-        final var startTime = LocalDateTime.now();
         final var lines = reader.readLines();
-        final var in = lines.size() > 0 ? lines.get(0).trim() : "";
-        final var matcher = Pattern.compile("@comment\\s+([\\w\\s\\d]*)").matcher(in);
-        // save the converted text from `xxx.adoc.jam` --> `xxx.adoc` by default
-        boolean save = !Configuration.INSTANCE.nosave;
+
         final var outputFileName = fileName.substring(0, fileName.length() - 4);
-        // by default, we do not write log file
-        boolean log = Configuration.INSTANCE.log;
-        logInfo(log,outputFileName,"log is specified in the environment",runCounter,startTime);
-        boolean external = Configuration.INSTANCE.external;
-        boolean noDependencies = Configuration.INSTANCE.noDependencies;
-        if (matcher.find()) {
-            final var options = List.of(matcher.group(1).split("\\s+"));
-            // snippet OPTIONS
-            if (options.contains("off")) {
-                reader.restoreLines(lines);
-                return;
-            }
-            if (options.contains("nosave")) {
-                save = false;
-            }
-            if (options.contains("log")) {
-                log = true;
-                logInfo(log, outputFileName, "log is specified in the file", runCounter, startTime);
-            }
-            if (options.contains("external")) {
-                external = true;
-            }
-            if (options.contains("noDependencies")) {
-                noDependencies = true;
-            }
-            // end snippet
+        final var firstLine = lines.size() > 0 ? lines.get(0).trim() : "";
+        final var opts = new InFileOptions(firstLine);
+        if (opts.off) {
+            reader.restoreLines(lines);
+            return;
         }
-        logInfo(log, outputFileName, "started", runCounter, startTime);
-        final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && in.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;
-        final var text = String.join("\n", lines);
-        final String md5 = Md5Calculator.md5(text);
-        logInfo(log, outputFileName, "md5 " + md5, runCounter, LocalDateTime.now());
-        final var myCache = cache.get();
-        final var cachingFileReader = new CachingFileReader(noDependencies);
-        final List<String> newLines;
-        if (myCache.isTheSame(md5)) {
-            newLines = myCache.newLines;
-            cachingFileReader.readFiles.putAll(myCache.readFiles);
-            logInfo(log, outputFileName, "restored", runCounter, LocalDateTime.now());
-        } else {
-            if (external) {
-                newLines = JamalExecutor.execute(fileName, lines);
-            } else {
-                final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
-                processor.setFileReader(cachingFileReader);
-                final var input = Input.makeInput(text, new Position(fileName, 0, 0));
-                final var r = process(processor, input);
-                newLines = postProcess(lines, r, fileName);
+
+        if (opts.fromFile) {
+            try {
+                final var fileLines = Files.readAllLines(Path.of(fileName), StandardCharsets.UTF_8);
+                // only if the file was read
+                lines.clear();
+                lines.addAll(fileLines);
+            } catch (IOException e) {
+                // just ignore
             }
         }
 
-        if (save) {
-            final var outputFile = new File(outputFileName);
-            try (final var writer = new BufferedWriter(new FileWriter(outputFile))) {
-                for (String newLine : newLines) {
-                    writer.write(newLine + "\n");
-                }
-            } catch (Exception e) {
-                e.printStackTrace(); // there is not much we can do here
+        final var log = new Log(outputFileName, opts.log, runCounter);
+
+        log.info("started");
+        final var text = String.join("\n", lines);
+        final String md5 = Md5Calculator.md5(text);
+        log.info("md5 " + md5);
+
+        final var myCache = cache.get();
+        final var cachingFileReader = new CachingFileReader(opts.withoutDeps);
+        final List<String> newLines;
+        if (myCache.isTheSame(md5)) {
+            newLines = myCache.lines;
+            cachingFileReader.files.putAll(myCache.files);
+            log.info("restored");
+        } else {
+            if (opts.external) {
+                newLines = JamalExecutor.execute(fileName, lines);
+            } else {
+                newLines = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader);
             }
-            if (log) {
-                logInfo(log,outputFileName, "saved", runCounter, LocalDateTime.now());
-                logInfo(log,outputFileName, "dependencies\n" + cachingFileReader.list(), runCounter, LocalDateTime.now());
+            log.info("setting cache");
+            JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
+            if (opts.save) {
+                writeOutputFile(outputFileName, log, cachingFileReader, newLines);
             }
         }
+
+        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines);
+        log.info("DONE");
+    }
+
+    private List<String> runJamalInProcess(final String fileName, final List<String> lines, final boolean useDefaultSeparators, final String text, final CachingFileReader cachingFileReader) {
+        final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
+        processor.setFileReader(cachingFileReader);
+        final var input = Input.makeInput(text, new Position(fileName, 0, 0));
+        final var r = process(processor, input);
+        return postProcess(lines, r, fileName);
+    }
+
+    private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines) {
+        try (final var writer = new BufferedWriter(new FileWriter(new File(outputFileName)))) {
+            for (String newLine : newLines) {
+                writer.write(newLine + "\n");
+            }
+        } catch (Exception e) {
+            // there is not much we can do here
+        }
+        log.info("saved");
+        log.info("dependencies\n" + cachingFileReader.list());
+    }
+
+    private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> newLines) {
         /*
          * when the input is not asciidoc then we add this asciidoc prelude to display the text as source code,
          * but the prelude and also the closing line does not get into the output
          */
         if (!fileName.endsWith(".adoc.jam")) {
-            logInfo(log,outputFileName, "adding pre and post ludes", runCounter, LocalDateTime.now());
+            log.info("adding pre and post ludes");
             final var sourcedLines = new ArrayList<String>();
             sourcedLines.add("[source]");
             sourcedLines.add("----");
@@ -161,38 +161,57 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             sourcedLines.add("----");
             reader.restoreLines(sourcedLines);
         } else {
-            logInfo(log,outputFileName, "not adding ludes", runCounter, LocalDateTime.now());
+            log.info("not adding ludes");
             reader.restoreLines(newLines);
         }
-        logInfo(log,outputFileName, "setting cache", runCounter, LocalDateTime.now());
-        cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
-        logInfo(log,outputFileName, "DONE", runCounter, LocalDateTime.now());
     }
 
+    /**
+     * Modify the output according to the errors of the Jamal processing.
+     *
+     * @param lines         the original lines of the input. It is used when there was an error.
+     * @param r             the result that contains the possible errors as well as the processed output
+     * @param inputFileName the name of the input file used for error display only-
+     * @return the list of the lines to be used by the asciidoctor processor
+     */
     private List<String> postProcess(final List<String> lines, final Result r, final String inputFileName) {
-        List<String> newLines;
         if (r.errorMessage == null && r.result != null) {
-            newLines = List.of(r.result.split("\n"));
+            return List.of(r.result.split("\n"));
         } else {
-            newLines = new ArrayList<>();
+            List<String> newLines = new ArrayList<>();
+
             appendError(r.errorMessage, newLines);
-            int i;
-            for (i = 0; i < r.position.line && i < lines.size(); i++) {
-                newLines.add(lines.get(i));
-            }
+            final int errorLineNo = copyLinesPriorTheError(lines, r, newLines);
             appendError(r.errorMessage, newLines);
-            for (; i < lines.size(); i++) {
-                newLines.add(lines.get(i));
-            }
+            copyLinesPastTheError(lines, newLines, errorLineNo);
             appendError(r.errorMessage, newLines);
-            if (r.exception != null) {
-                newLines.add("[source]");
-                newLines.add("----");
-                newLines.addAll(List.of(ExceptionDumper.dump(r.exception, inputFileName).toString().split("\n")));
-                newLines.add("----");
-            }
+            appendExceptionDump(r, inputFileName, newLines);
+
+            return newLines;
         }
-        return newLines;
+    }
+
+    private static void appendExceptionDump(final Result r, final String inputFileName, final List<String> lines) {
+        if (r.exception != null) {
+            lines.add("[source]");
+            lines.add("----");
+            lines.addAll(List.of(ExceptionDumper.dump(r.exception, inputFileName).toString().split("\n")));
+            lines.add("----");
+        }
+    }
+
+    private static void copyLinesPastTheError(final List<String> lines, final List<String> newLines, final int errorLineNo) {
+        for (int i = errorLineNo; i < lines.size(); i++) {
+            newLines.add(lines.get(i));
+        }
+    }
+
+    private static int copyLinesPriorTheError(final List<String> lines, final Result r, final List<String> newLines) {
+        int i;
+        for (i = 0; i < r.position.line && i < lines.size(); i++) {
+            newLines.add(lines.get(i));
+        }
+        return i;
     }
 
     private JamalPreprocessor.Result process(final Processor processor, final Input input) {
@@ -209,24 +228,6 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             r.exception = bs;
         }
         return r;
-    }
-
-    private void logInfo(final boolean log, final String outputFileName, final String message, final int instance, final LocalDateTime when) {
-        if (log) {
-            try {
-                Files.writeString(Paths.get(outputFileName + ".log"),
-                        String.format("%s [%d:%d:%s:%08X] %s\n",
-                                when,
-                                instance,
-                                Thread.currentThread().getId(),
-                                Thread.currentThread().getName(),
-                                this.hashCode(),
-                                message),
-                        StandardOpenOption.APPEND, StandardOpenOption.CREATE);
-            } catch (Exception e) {
-                e.printStackTrace(); // there is not much we can do here
-            }
-        }
     }
 
     private void appendError(final String errorMessage, final List<String> newLines) {

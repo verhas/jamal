@@ -1,9 +1,19 @@
-{@comment log}
+{@counter:define id=sc}
+{@define section={sc}. {@counter:define id=ssc}}
+{@define subsection={sc last}.{ssc}}
 
-{@define X(BA,AB)=BABAB}{X/2/1}
+{section}
+{section}
+{section}
+{subsection}
+{subsection}
+{section}
+{subsection}
+{subsection}
+{section}
+{section}
+{subsection}
+{subsection}
+{subsection}
 
-{@define IS=MUTYA}
-{@define Z($a,$b,$c)=0$a 1{IS} 2$b 3$c}
 
-{Z/4{IS}/{@ident 5{IS}}{@define IS=QUTYA}{@export IS}/6{IS}}
-7{IS}

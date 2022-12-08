@@ -82,8 +82,7 @@ public class TestJamalPreprocessor {
     @Test
     @DisplayName("Test erroneous input")
     void testError() {
-        final var actual = process("abrakadabra\n" +
-                "{%zebra%}");
+        final var actual = process("abrakadabra\n{%zebra%}");
         assertStartsWith(
                 "[WARNING]\n" +
                         "--\n" +
@@ -109,7 +108,7 @@ public class TestJamalPreprocessor {
     @Test
     @DisplayName("Output is created even when there is an error")
     void testOutputInCaseOfError() {
-        process("abrakadabra\n{%zebra%}");
+        process("abrakadabra\n{%not_defined%}");
         Assertions.assertTrue(new File(TEST_OUTPUT).exists());
     }
 
@@ -130,42 +129,34 @@ public class TestJamalPreprocessor {
         Files.write(testImportPath, "{%@define foo=barbar%}".getBytes(StandardCharsets.UTF_8));
         process("{%@comment log%}abrakadabra\n{%@import " + TEST_IMPORT + "%}{%foo%}", "abrakadabra\nbarbar");
         /*
-         *  0 = "2022-12-05T17:57:56.631081 [0:1:main:0BAE47A0] log is specified in the file"
-         *  1 = "2022-12-05T17:57:56.631081 [0:1:main:0BAE47A0] started"
-         *  2 = "2022-12-05T17:57:56.657543 [0:1:main:0BAE47A0] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
-         *  3 = "2022-12-05T17:57:56.811108 [0:1:main:0BAE47A0] saved"
-         *  4 = "2022-12-05T17:57:56.812634 [0:1:main:0BAE47A0] dependencies"
+         *  0 = "2022-12-08T11:16:27.295737 [0:1:main:085EC632] started"
+         *  1 = "2022-12-08T11:16:27.315210 [0:1:main:085EC632] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         *  2 = "2022-12-08T11:16:27.455813 [0:1:main:085EC632] setting cache"
+         *  3 = "2022-12-08T11:16:27.456721 [0:1:main:085EC632] saved"
+         *  4 = "2022-12-08T11:16:27.458203 [0:1:main:085EC632] dependencies"
          *  5 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw=="
          *  6 = ""
-         *  7 = "2022-12-05T17:57:56.813050 [0:1:main:0BAE47A0] not adding ludes"
-         *  8 = "2022-12-05T17:57:56.814937 [0:1:main:0BAE47A0] setting cache"
-         *  9 = "2022-12-05T17:57:56.815433 [0:1:main:0BAE47A0] DONE"
-         *  10 = "2022-12-05T17:57:56.821631 [1:1:main:00D02F8D] log is specified in the file"
-         *  11 = "2022-12-05T17:57:56.821631 [1:1:main:00D02F8D] started"
-         *  12 = "2022-12-05T17:57:56.824188 [1:1:main:00D02F8D] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
-         *  13 = "2022-12-05T17:57:56.830736 [1:1:main:00D02F8D] restored"
-         *  14 = "2022-12-05T17:57:56.833500 [1:1:main:00D02F8D] saved"
-         *  15 = "2022-12-05T17:57:56.833887 [1:1:main:00D02F8D] dependencies"
-         *  16 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw=="
-         *  17 = ""
-         *  18 = "2022-12-05T17:57:56.834773 [1:1:main:00D02F8D] not adding ludes"
-         *  19 = "2022-12-05T17:57:56.835289 [1:1:main:00D02F8D] setting cache"
-         *  20 = "2022-12-05T17:57:56.836056 [1:1:main:00D02F8D] DONE"
-         *  21 = "2022-12-05T17:57:56.837318 [2:1:main:45F24169] log is specified in the file"
-         *  22 = "2022-12-05T17:57:56.837318 [2:1:main:45F24169] started"
-         *  23 = "2022-12-05T17:57:56.839148 [2:1:main:45F24169] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
-         *  24 = "2022-12-05T17:57:56.854519 [2:1:main:45F24169] saved"
-         *  25 = "2022-12-05T17:57:56.855049 [2:1:main:45F24169] dependencies"
-         *  26 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim oEZhG+ixKcULiztw1AYivQ=="
-         *  27 = ""
-         *  28 = "2022-12-05T17:57:56.856124 [2:1:main:45F24169] not adding ludes"
-         *  29 = "2022-12-05T17:57:56.856698 [2:1:main:45F24169] setting cache"
-         *  30 = "2022-12-05T17:57:56.858154 [2:1:main:45F24169] DONE"
+         *  7 = "2022-12-08T11:16:27.458521 [0:1:main:085EC632] not adding ludes"
+         *  8 = "2022-12-08T11:16:27.460115 [0:1:main:085EC632] DONE"
+         *  9 = "2022-12-08T11:16:27.465233 [1:1:main:061533AE] started"
+         *  10 = "2022-12-08T11:16:27.468418 [1:1:main:061533AE] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         *  11 = "2022-12-08T11:16:27.473917 [1:1:main:061533AE] restored"
+         *  12 = "2022-12-08T11:16:27.475250 [1:1:main:061533AE] not adding ludes"
+         *  13 = "2022-12-08T11:16:27.475609 [1:1:main:061533AE] DONE"
+         *  14 = "2022-12-08T11:16:27.477376 [2:1:main:4463D9D3] started"
+         *  15 = "2022-12-08T11:16:27.477833 [2:1:main:4463D9D3] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         *  16 = "2022-12-08T11:16:27.492409 [2:1:main:4463D9D3] setting cache"
+         *  17 = "2022-12-08T11:16:27.494772 [2:1:main:4463D9D3] saved"
+         *  18 = "2022-12-08T11:16:27.495947 [2:1:main:4463D9D3] dependencies"
+         *  19 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim oEZhG+ixKcULiztw1AYivQ=="
+         *  20 = ""
+         *  21 = "2022-12-08T11:16:27.496240 [2:1:main:4463D9D3] not adding ludes"
+         *  22 = "2022-12-08T11:16:27.497385 [2:1:main:4463D9D3] DONE"
          */
         final var lines = Files.readAllLines(Paths.get(LOG_OUTPUT), StandardCharsets.UTF_8);
-        Assertions.assertTrue(lines.get(13).endsWith("restored"));
-        Assertions.assertEquals("  " + TEST_IMPORT + " vpf/bqeUngN5AtDqUrH5Rw==", lines.get(16));
-        Assertions.assertFalse(lines.get(20).endsWith("restored"));
+        Assertions.assertTrue(lines.get(11).endsWith("restored"));
+        Assertions.assertEquals("  " + TEST_IMPORT + " vpf/bqeUngN5AtDqUrH5Rw==", lines.get(5));
+        Assertions.assertFalse(lines.get(18).endsWith("restored"));
     }
 
     private static void assertStartsWith(final String expected, final String actual) {
@@ -181,7 +172,8 @@ public class TestJamalPreprocessor {
         Document document = null;
         PreprocessorReader reader = Mockito.mock(PreprocessorReader.class);
         Mockito.when(reader.getFile()).thenReturn(TEST_INPUT);
-        Mockito.when(reader.readLines()).thenReturn(List.of(input.split("\n")));
+        final var lines = List.of(input.split("\n"));
+        Mockito.when(reader.readLines()).thenReturn(lines);
         final var response = (ArgumentCaptor<List<String>>) (ArgumentCaptor<?>) ArgumentCaptor.forClass(List.class);
         sut.process(document, reader);
         Mockito.verify(reader).restoreLines(response.capture());

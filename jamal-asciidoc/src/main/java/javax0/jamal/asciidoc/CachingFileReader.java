@@ -6,16 +6,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CachingFileReader implements Processor.FileReader {
+
+    /**
+     * {@code true} when we do not need to calculate and store the md5 values of the files, because only the main
+     * file change is cared about the caching. It is assumed that the external files do not change or their processing
+     * is too expensive and the user uses the {@code noDependencies} option at the start of the Jamal file. If the user
+     * really wants an update when a dependent file has changed all it has to do it insert a space into the main file
+     * they are editing and then delete it.
+     */
     final boolean off;
-    final Map<String, String> readFiles = new HashMap<>();
+    /**
+     * The (file_name, md5) pairs of the dependent files.
+     */
+    final Map<String, String> files = new HashMap<>();
 
     public CachingFileReader(final boolean off) {
         this.off = off;
     }
 
+    /**
+     * Get the list of the files this reader was reading so far. This method is used for log purposes.
+     *
+     * @return the string containing the list of the file names space separated and a new line.
+     */
     String list() {
         final var sb = new StringBuilder();
-        for (final var e : readFiles.entrySet()) {
+        for (final var e : files.entrySet()) {
             sb.append("  ").append(e.getKey()).append(" ").append(e.getValue()).append("\n");
         }
         return sb.toString();
@@ -37,10 +53,15 @@ public class CachingFileReader implements Processor.FileReader {
     @Override
     public void set(final String fileName, final String content) {
         if (!off) {
-            readFiles.put(fileName, Md5Calculator.md5(content));
+            files.put(fileName, Md5Calculator.md5(content));
         }
     }
 
+    /**
+     * @param fileName the original name of the file
+     * @return {@link Processor.IOHookResult#IGNORE} signalling, that we did not read the file, the next on the hook
+     * can read it.
+     */
     @Override
     public Processor.IOHookResult read(final String fileName) {
         return Processor.IOHookResult.IGNORE;
