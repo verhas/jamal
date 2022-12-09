@@ -16,6 +16,8 @@ class InFileOptions {
     boolean useDefaultSeparators;
     boolean fromFile = Configuration.INSTANCE.fromFile;
 
+    boolean keepFrontMatter = Configuration.INSTANCE.keepFrontMatter;
+
     InFileOptions(final String firstLine) {
         final var matcher = Pattern.compile("@comment\\s+([\\w\\s]*)").matcher(firstLine);
         final var options = matcher.find() ? List.of(matcher.group(1).split("\\s+")) : List.<String>of();
@@ -38,6 +40,9 @@ class InFileOptions {
         }
         if (options.contains("noDependencies")) {
             withoutDeps = true;
+        }
+        if (options.contains("keepFrontMatter")) {
+            keepFrontMatter = true;
         }
         // end snippet
         useDefaultSeparators = firstLine.length() > 1 && firstLine.charAt(0) == SpecialCharacters.IMPORT_SHEBANG1 && firstLine.charAt(1) == SpecialCharacters.IMPORT_SHEBANG2;

@@ -122,7 +122,7 @@ When the first two characters of the document are `{@`, then the macro opening a
 It is what the core built-in macro `import` also does.
 
 === Configuration
-{%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=6f18128b%}
+{%@comment {%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=5e870e97%}%}
 You can configure the extension using the Jamal built-in configuration mechanism, which uses
 
 * environment variables,
@@ -140,32 +140,75 @@ When looking for a configuration value `X_Y_Z`, then the following search order 
 
 The following configuration values are supported:
 
-* `ASCIIDOC_EXTENSION_OPEN` can define the macro opening string. The default value is {%@escape* ``{%``%}.
-* `ASCIIDOC_EXTENSION_CLOSE` can define the macro closing string. The default value is {%@escape* ``%}``%}.
-* `ASCIIDOC_EXTENSION_NOSAVE` can be `true` or `false`, and it defines whether the extension should save the rendered document to the file system.
+* `{%@snip ASCIIDOC_EXTENSION_OPEN%}` can define the macro opening string. The default value is {%@escape* ``{%``%}.
+* `{%@snip ASCIIDOC_EXTENSION_CLOSE%}` can define the macro closing string. The default value is {%@escape* ``%}``%}.
+* `{%@snip ASCIIDOC_EXTENSION_NOSAVE%}` can be `true` or `false`, and it defines whether the extension should save the rendered document to the file system.
 The default value is `false`, meaning that the rendered document is saved to the file system.
-* `ASCIIDOC_EXTENSION_LOG` can be `true` or `false`, defining whether the extension should log the rendering.
+
+* `{%@snip ASCIIDOC_EXTENSION_LOG%}` can be `true` or `false`, defining whether the extension should log the rendering.
 The default value is `false`, meaning no logging by default.
-* `ASCIIDOC_EXTENSION_EXTERNAL` can instruct the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
-The external command to be executed can be configured using the next, `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` configuration.
+
+* `{%@snip ASCIIDOC_EXTENSION_EXTERNAL%}` can instruct the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+The external command to be executed can be configured using the next, `{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}` configuration.
 Note that starting an external process may need significant resource and may significantly slow down the rendering.
-* `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` can specify the command to execute when the preprocessing is done using an external process.
-* `ASCIIDOC_EXTENSION_NO_DEPENDENCIES` can be `true` or `false` defining whether the extension should consider the included files change when caching.
+
+* `{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}` can specify the command to execute when the preprocessing is done using an external process.
+
+* `{%@snip ASCIIDOC_EXTENSION_NO_DEPENDENCIES%}` can be `true` or `false` defining whether the extension should consider the included files change when caching.
 The option is `false` by default, which means that the caching examines all the included, imported and other files that were used during the processing.
-* `ASCIIDOC_EXTENSION_FROM_FILE` can be `true` or `false`.
-When set to true the Jamal preprocessor will read the content of the saved file instead of the lines provided by the Asciidoctor plugin to preprocess.
+
+* `{%@snip ASCIIDOC_EXTENSION_FROM_FILE%}` instructs the Jamal preprocessor to read the content of the saved file instead of the lines provided by the Asciidoctor plugin to preprocess.
 It will result less processing along with the use of the in-memory cache.
 The user has to press Control-S (or Command-S on Mac) to refresh the formatted Asciidoc output.
 It is also to note that Asciidoctor already processes the lines before invoking the Jamal preprocessor.
 If this variable is true, reading from a file will eliminate the effects of these processes.
 The output in some special cases may be different.
-The default value is `false`.
+The default value is `false`, meaning that the content provided by the IntelliJ plugin is used.
+
+* `{%@snip ASCIIDOC_EXTENSION_KEEP_FRONT_MATTER%}` instructs Jamal to remove the front-matter, like
++
+[source]
+----
+---
+publish_date: 2022-01-13
+---
+----
++
+These lines are usually used by site builder tools, like Jekyll, and they are ignored by Asciidoctor.
+Asciidoctor removes these lines before starting Jamal.
+Jamal puts these lines back, thus you can have Jamal macros even in the front-end.
+You can also have macros in front of the front-matter assumed they do not produce any output.
+However, since Asciidoctor has removed these lines, it also expects that they are not present when the lines are processed by Jamal.
+The default behaviour is to remove the front-matter after Jamal has finished.
++
+NOTE: The front-matter is removed only from the lines, which are passed to the Asciidoctor plugin.
+They are never removed from the output saved into the output file.
++
+Using this option you can instruct Jamal to keep the front matter.
++
+This option is only consulted when the file is formatted as Asciidoc, having the file extension `.adoc.jam`.
+For other files any font-matter is kept as it is, and become part of the preformatted source asciidoc text.
++
+[NOTE]
+====
+The input text provided by as a list of lines does not contain the front matter when Jama is started.
+Jamal fetches the front matter calling
+[source,java]
+----
+{%#trimLines
+{%@snip fetch-font-matter%}%}
+----
+The result contains the front matter as a string omitting the last new-line character.
+Because the last new-line character is missing Asciidoctor passes an empty string when the front matter is empty, but also when the front matter is an empty line.
+This should not cause any problem.
+If this is really a problem in your application you can use the `{%@snip ASCIIDOC_EXTENSION_FROM_FILE%}`, `fromFile` option.
+====
 
 Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file. Foe example, in the `~/.jamal/setting.properties` file you should write
 
     asciidoc.extension.log=true
 
-instead of `ASCIIDOC_EXTENSION_LOG`.
+instead of `{%@snip ASCIIDOC_EXTENSION_LOG%}`.
 
 === Options
 {%@snip:check id=OPTIONS hash=d7002c9a%}\
@@ -257,6 +300,8 @@ key: value
 
 front matters are not fully passed to the Jamal preprocessor.
 The front matter lines between the `---` lines are not present in the lines provided by Asciidoctor.
+This behaviour was incorporated in Jamal version 1.12.4 and Jamal works as expected.
+In prior versions you can use a workaround as described below.
 To overcome these it is recommended to start these files with a Jamal comment, like:
 
 [source]
@@ -271,6 +316,8 @@ It is important, or else the starting `---` will be on the second line following
 Jekyll does not like the first empty line.
 ====
 
+See also the `keepFrontMatter` option.
+
 ==== noDependencies
 
 It defines that the preprocessor should not consider the included, imported or any other way used files when deciding about the cached result of the rendering.
@@ -284,6 +331,13 @@ In that case you have to change the edited file, for example inserting and delet
 
 This option may be needed when the rendered file reads a lot of other files, using snippets, includes and imports.
 This option saves some CPU time when these files do not change.
+
+==== keepFrontMatter
+
+This option will instruct Jamal to keep the front matter in the output to display.
+The front-matter is always kept in the file where Jamal saves the output.
+On the other hand, Jamal removes the font-matter, so it does not clutter the Asciidoc rendering in the plugin, unless this option is used.
+The front matter is always kept when the file is _not_ `adoc.jam`.
 
 == Modules
 
@@ -320,7 +374,7 @@ This way, it may be easier to find the error in the document and still see some 
 
 It is possible to run Jamal as an external process and get the output of the preprocessing.
 To do that you should configure the external command to execute.
-The configuration key is `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND`.
+The configuration key is `{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}`.
 When it is configured in a properties file you should use `asciidoc.extension.external.command`.
 
 For example, the configuration file `~/.jamal/settings.properties` contains the following line on the development machine:

@@ -1,23 +1,14 @@
-:source-highlighter: pygments
-:pygments-style: manni
-:pygments-linenums-mode: inline
+{%@comment keepFrontMatter%}\
+---
+aba: hukk
+---
 
 Some code block here:
 
-[source, c, subs="macros+"]nemmegy
+[source, java]
 ----
 void example(void)
 {
     printf("hello, world\n");
 }
-
-
-
-
-
-
-
-
-‏‏‎ ‎
 ----
-...

@@ -129,34 +129,37 @@ public class TestJamalPreprocessor {
         Files.write(testImportPath, "{%@define foo=barbar%}".getBytes(StandardCharsets.UTF_8));
         process("{%@comment log%}abrakadabra\n{%@import " + TEST_IMPORT + "%}{%foo%}", "abrakadabra\nbarbar");
         /*
-         *  0 = "2022-12-08T11:16:27.295737 [0:1:main:085EC632] started"
-         *  1 = "2022-12-08T11:16:27.315210 [0:1:main:085EC632] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
-         *  2 = "2022-12-08T11:16:27.455813 [0:1:main:085EC632] setting cache"
-         *  3 = "2022-12-08T11:16:27.456721 [0:1:main:085EC632] saved"
-         *  4 = "2022-12-08T11:16:27.458203 [0:1:main:085EC632] dependencies"
-         *  5 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw=="
-         *  6 = ""
-         *  7 = "2022-12-08T11:16:27.458521 [0:1:main:085EC632] not adding ludes"
-         *  8 = "2022-12-08T11:16:27.460115 [0:1:main:085EC632] DONE"
-         *  9 = "2022-12-08T11:16:27.465233 [1:1:main:061533AE] started"
-         *  10 = "2022-12-08T11:16:27.468418 [1:1:main:061533AE] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
-         *  11 = "2022-12-08T11:16:27.473917 [1:1:main:061533AE] restored"
-         *  12 = "2022-12-08T11:16:27.475250 [1:1:main:061533AE] not adding ludes"
-         *  13 = "2022-12-08T11:16:27.475609 [1:1:main:061533AE] DONE"
-         *  14 = "2022-12-08T11:16:27.477376 [2:1:main:4463D9D3] started"
-         *  15 = "2022-12-08T11:16:27.477833 [2:1:main:4463D9D3] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
-         *  16 = "2022-12-08T11:16:27.492409 [2:1:main:4463D9D3] setting cache"
-         *  17 = "2022-12-08T11:16:27.494772 [2:1:main:4463D9D3] saved"
-         *  18 = "2022-12-08T11:16:27.495947 [2:1:main:4463D9D3] dependencies"
-         *  19 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim oEZhG+ixKcULiztw1AYivQ=="
-         *  20 = ""
-         *  21 = "2022-12-08T11:16:27.496240 [2:1:main:4463D9D3] not adding ludes"
-         *  22 = "2022-12-08T11:16:27.497385 [2:1:main:4463D9D3] DONE"
+         * 0 = "2022-12-09T09:09:26.769836 [0:1:main:0A0A9FA5] started"
+         * 1 = "2022-12-09T09:09:26.789528 [0:1:main:0A0A9FA5] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         * 2 = "2022-12-09T09:09:26.955943 [0:1:main:0A0A9FA5] setting cache"
+         * 3 = "2022-12-09T09:09:26.957778 [0:1:main:0A0A9FA5] saved"
+         * 4 = "2022-12-09T09:09:26.961728 [0:1:main:0A0A9FA5] dependencies"
+         * 5 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim vpf/bqeUngN5AtDqUrH5Rw=="
+         * 6 = ""
+         * 7 = "2022-12-09T09:09:26.962332 [0:1:main:0A0A9FA5] not adding prelude and post lude, it is an asccidoc file"
+         * 8 = "2022-12-09T09:09:26.964700 [0:1:main:0A0A9FA5] Keeping the front matter, or no front matter"
+         * 9 = "2022-12-09T09:09:26.965497 [0:1:main:0A0A9FA5] DONE"
+         * 10 = "2022-12-09T09:09:26.974314 [1:1:main:352E787A] started"
+         * 11 = "2022-12-09T09:09:26.975508 [1:1:main:352E787A] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         * 12 = "2022-12-09T09:09:26.984029 [1:1:main:352E787A] restored"
+         * 13 = "2022-12-09T09:09:26.984484 [1:1:main:352E787A] not adding prelude and post lude, it is an asccidoc file"
+         * 14 = "2022-12-09T09:09:26.986272 [1:1:main:352E787A] Keeping the front matter, or no front matter"
+         * 15 = "2022-12-09T09:09:26.986746 [1:1:main:352E787A] DONE"
+         * 16 = "2022-12-09T09:09:26.989539 [2:1:main:7FC645E4] started"
+         * 17 = "2022-12-09T09:09:26.990004 [2:1:main:7FC645E4] md5 JhxgLaP1ca4+e7vC8mNK7Q=="
+         * 18 = "2022-12-09T09:09:27.011614 [2:1:main:7FC645E4] setting cache"
+         * 19 = "2022-12-09T09:09:27.014887 [2:1:main:7FC645E4] saved"
+         * 20 = "2022-12-09T09:09:27.016931 [2:1:main:7FC645E4] dependencies"
+         * 21 = "  c7ab6b1a6410dbb9a993a50496a8578d.adoc.jim oEZhG+ixKcULiztw1AYivQ=="
+         * 22 = ""
+         * 23 = "2022-12-09T09:09:27.017441 [2:1:main:7FC645E4] not adding prelude and post lude, it is an asccidoc file"
+         * 24 = "2022-12-09T09:09:27.019282 [2:1:main:7FC645E4] Keeping the front matter, or no front matter"
+         * 25 = "2022-12-09T09:09:27.019865 [2:1:main:7FC645E4] DONE"
          */
         final var lines = Files.readAllLines(Paths.get(LOG_OUTPUT), StandardCharsets.UTF_8);
-        Assertions.assertTrue(lines.get(11).endsWith("restored"));
         Assertions.assertEquals("  " + TEST_IMPORT + " vpf/bqeUngN5AtDqUrH5Rw==", lines.get(5));
-        Assertions.assertFalse(lines.get(18).endsWith("restored"));
+        Assertions.assertTrue(lines.get(12).endsWith("restored"));
+        Assertions.assertFalse(lines.get(19).endsWith("restored"));
     }
 
     private static void assertStartsWith(final String expected, final String actual) {
@@ -169,7 +172,8 @@ public class TestJamalPreprocessor {
 
     private String process(String input, String expected) {
         final var sut = new JamalPreprocessor();
-        Document document = null;
+        Document document = Mockito.mock(Document.class);
+        Mockito.when(document.getAttribute("front-matter","")).thenReturn("");
         PreprocessorReader reader = Mockito.mock(PreprocessorReader.class);
         Mockito.when(reader.getFile()).thenReturn(TEST_INPUT);
         final var lines = List.of(input.split("\n"));

@@ -68,7 +68,16 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         if (!fileName.endsWith(".jam")) {
             return;
         }
-        final var lines = reader.readLines();
+        final var linesAfterFM = reader.readLines();
+        // snipline fetch-font-matter
+        final var frontMatter = document.getAttribute("front-matter", null);
+        final var lines = new ArrayList<String>();
+        if (frontMatter instanceof String) {
+            lines.add("---");
+            lines.addAll(List.of(((String) frontMatter).split("\n", -1)));
+            lines.add("---\n");
+        }
+        lines.addAll(linesAfterFM);
 
         final var outputFileName = fileName.substring(0, fileName.length() - 4);
         final var firstLine = lines.size() > 0 ? lines.get(0).trim() : "";
@@ -116,7 +125,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             }
         }
 
-        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines);
+        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
         log.info("DONE");
     }
 
@@ -140,17 +149,28 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         log.info("dependencies\n" + cachingFileReader.list());
     }
 
-    private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> newLines) {
+    private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final InFileOptions opts) {
         /*
          * when the input is not asciidoc then we add this asciidoc prelude to display the text as source code,
          * but the prelude and also the closing line does not get into the output
          */
-        if (!fileName.endsWith(".adoc.jam")) {
+        if (fileName.endsWith(".adoc.jam")) {
+            log.info("not adding prelude and post lude, it is an asccidoc file");
+            if (opts.keepFrontMatter || !lines.get(0).equals("---")) {
+                log.info("Keeping the front matter, or no front matter");
+                reader.restoreLines(lines);
+            } else {
+                final var firstLine = lineIndexAfterTheFrontMatter(lines);
+                for (int i = lines.size() - 1; i >= firstLine; i--) {
+                    reader.restoreLine(lines.get(i));
+                }
+            }
+        } else {
             log.info("adding pre and post ludes");
             final var sourcedLines = new ArrayList<String>();
             sourcedLines.add("[source]");
             sourcedLines.add("----");
-            for (final var line : newLines) {
+            for (final var line : lines) {
                 // add an invisible space that will fool asciidoctor not to end the source block
                 if (line.trim().equals("----")) {
                     sourcedLines.add(line.replaceAll("----", "----\u200F\u200F\u200E \u200E"));
@@ -160,10 +180,30 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             }
             sourcedLines.add("----");
             reader.restoreLines(sourcedLines);
-        } else {
-            log.info("not adding ludes");
-            reader.restoreLines(newLines);
         }
+    }
+
+    /**
+     * Search for the end of the front-matter.
+     * Front-matter is the part at the start of the asciidoc file that starts with, and ends with a {@code ---} line.
+     * It is used by Jekyll and some other site builder tools, and it is ignored by asciidoc.
+     * The Jamal plugin puts this front-matter back at the start of the file before processing.
+     * In case there is any front-matter after the Jamal processing it is removed so that Asciidoc processing gets the
+     * lines it was expecting.
+     * <p>
+     * It is assumed that the file starts with a line {@code ---}. This is not checked.
+     *
+     * @param lines the lines that contain the font-matter
+     * @return the index of the first line after the front matter or zero if there is no end to the front-matter before
+     * the last line
+     */
+    private static int lineIndexAfterTheFrontMatter(final List<String> lines) {
+        for (int i = 1; i < lines.size(); i++) {
+            if (lines.get(i).equals("---")) {
+                return i + 1;
+            }
+        }
+        return 0;
     }
 
     /**
