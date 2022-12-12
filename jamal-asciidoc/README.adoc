@@ -1,20 +1,14 @@
-[WARNING]
---
-* The id(OPTIONS) hash is '5c4042d1.cd73b18f.f96960df.71fba97e.2adb1854.04346043.7d055754.92a31d99' does not contain 'd7002c9a'. at /Users/verhasp/github/jamal/jamal-asciidoc/README.adoc.jam/213:14
---
 = Jamal AsciiDoc Extension
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
-{%@snip:collect from="src/main/java/"%}
+
 Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]
 
-This document is the readme file for the Jamal Asciidoc extension version `{%VERSION%}`.
+This document is the readme file for the Jamal Asciidoc extension version `1.12.4-SNAPSHOT`.
 
 == Introduction
 
-{%@env ASCIIDOC_EXTENSION_LOG%}
+
 
 This Jamal module provides an extension for Asciidoc.
 The extension is a preprocessor extension reading the input of the Asciidoc document before the actual transformation of Asciidoc happens.
@@ -40,30 +34,24 @@ This way, this extension is an extension of a plugin.
 You cannot install this extension as a separate plugin to IntelliJ.
 It works only with the Asciidoc plugin in IntelliJ.
 ====
-{%#snip:define LAST_RELEASE=
-{%#killLines pattern=".*LAST_RELEASE.*" keep
-{%@include [verbatim] ../version.jim%}%}%}\
-{%#define LAST_RELEASE={%@snip LAST_RELEASE /([\d.]+)/%}%}\
-{%!#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/{%`#define V={%LAST_RELEASE%}%}%}\
-{%!#if [not]/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/{%`#define V={%VERSION%}%}%}\
 
-{%@define INSTALL_FOLDER=`.Asciidoctor/lib`%}
-To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip`.
+
+To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip`.
 
 You can download this file from the central Maven repository using the URLs:
-{%#define DL=https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/{%V%}/jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip%}{%@define URL($x)=$x[``$x``]%}
 
-{%URL {%DL%}%}
 
-{%URL {%DL%}.asc%}
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip``]
 
-{%URL {%DL%}.md5%}
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.asc``]
 
-{%URL {%DL%}.sha1%}
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.md5``]
+
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.sha1``]
 
 The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files are standard checksum files to check the integrity of the archive.
 
-Extract the content of this zip file into your projects {%INSTALL_FOLDER%} folder.
+Extract the content of this zip file into your projects `.Asciidoctor/lib` folder.
 
 Restart IntelliJ.
 As soon as you open a file configured as Asciidoc and has the extension `.jam`, it will ask you:
@@ -112,7 +100,7 @@ It is added only to the text for the display.
 
 After the installation, you can open any file that has the extension `.adoc.jam` and have a look at the right pane at the rendered document.
 
-The default macro opening and closing strings are {%@escape* ``{%``%} and {%@escape* ``%}``%}.
+The default macro opening and closing strings are {% and %}.
 It is the usual convention when editing Asciidoc files with Jamal preprocessor.
 The reason for this is because these documents many times include sample code snippets that frequently may have `{` and `}` in them.
 If you want to use `{` and `}` as macro opening and closing strings, then start your file with the line:
@@ -126,7 +114,7 @@ When the first two characters of the document are `{@`, then the macro opening a
 It is what the core built-in macro `import` also does.
 
 === Configuration
-{%@comment {%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=5e870e97%}%}
+
 You can configure the extension using the Jamal built-in configuration mechanism, which uses
 
 * environment variables,
@@ -144,24 +132,24 @@ When looking for a configuration value `X_Y_Z`, then the following search order 
 
 The following configuration values are supported:
 
-* `{%@snip ASCIIDOC_EXTENSION_OPEN%}` can define the macro opening string. The default value is {%@escape* ``{%``%}.
-* `{%@snip ASCIIDOC_EXTENSION_CLOSE%}` can define the macro closing string. The default value is {%@escape* ``%}``%}.
-* `{%@snip ASCIIDOC_EXTENSION_NOSAVE%}` can be `true` or `false`, and it defines whether the extension should save the rendered document to the file system.
+* `ASCIIDOC_EXTENSION_OPEN` can define the macro opening string. The default value is {%.
+* `ASCIIDOC_EXTENSION_CLOSE` can define the macro closing string. The default value is %}.
+* `ASCIIDOC_EXTENSION_NOSAVE` can be `true` or `false`, and it defines whether the extension should save the rendered document to the file system.
 The default value is `false`, meaning that the rendered document is saved to the file system.
 
-* `{%@snip ASCIIDOC_EXTENSION_LOG%}` can be `true` or `false`, defining whether the extension should log the rendering.
+* `ASCIIDOC_EXTENSION_LOG` can be `true` or `false`, defining whether the extension should log the rendering.
 The default value is `false`, meaning no logging by default.
 
-* `{%@snip ASCIIDOC_EXTENSION_EXTERNAL%}` can instruct the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
-The external command to be executed can be configured using the next, `{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}` configuration.
+* `ASCIIDOC_EXTENSION_EXTERNAL` can instruct the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+The external command to be executed can be configured using the next, `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` configuration.
 Note that starting an external process may need significant resource and may significantly slow down the rendering.
 
-* `{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}` can specify the command to execute when the preprocessing is done using an external process.
+* `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND` can specify the command to execute when the preprocessing is done using an external process.
 
-* `{%@snip ASCIIDOC_EXTENSION_NO_DEPENDENCIES%}` can be `true` or `false` defining whether the extension should consider the included files change when caching.
+* `ASCIIDOC_EXTENSION_NO_DEPENDENCIES` can be `true` or `false` defining whether the extension should consider the included files change when caching.
 The option is `false` by default, which means that the caching examines all the included, imported and other files that were used during the processing.
 
-* `{%@snip ASCIIDOC_EXTENSION_FROM_FILE%}` instructs the Jamal preprocessor to read the content of the saved file instead of the lines provided by the Asciidoctor plugin to preprocess.
+* `ASCIIDOC_EXTENSION_FROM_FILE` instructs the Jamal preprocessor to read the content of the saved file instead of the lines provided by the Asciidoctor plugin to preprocess.
 It will result less processing along with the use of the in-memory cache.
 The user has to press Control-S (or Command-S on Mac) to refresh the formatted Asciidoc output.
 It is also to note that Asciidoctor already processes the lines before invoking the Jamal preprocessor.
@@ -169,7 +157,7 @@ If this variable is true, reading from a file will eliminate the effects of thes
 The output in some special cases may be different.
 The default value is `false`, meaning that the content provided by the IntelliJ plugin is used.
 
-* `{%@snip ASCIIDOC_EXTENSION_KEEP_FRONT_MATTER%}` instructs Jamal to remove the front-matter, like
+* `ASCIIDOC_EXTENSION_KEEP_FRONT_MATTER` instructs Jamal to remove the front-matter, like
 +
 [source]
 ----
@@ -199,27 +187,21 @@ The input text provided by as a list of lines does not contain the front matter 
 Jamal fetches the front matter calling
 [source,java]
 ----
-{%#trimLines
-{%@snip fetch-font-matter%}%}
+final var frontMatter = document.getAttribute("front-matter", null);
 ----
 The result contains the front matter as a string omitting the last new-line character.
 Because the last new-line character is missing Asciidoctor passes an empty string when the front matter is empty, but also when the front matter is an empty line.
 This should not cause any problem.
-If this is really a problem in your application you can use the `{%@snip ASCIIDOC_EXTENSION_FROM_FILE%}`, `fromFile` option.
+If this is really a problem in your application you can use the `ASCIIDOC_EXTENSION_FROM_FILE`, `fromFile` option.
 ====
 
 Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file. Foe example, in the `~/.jamal/setting.properties` file you should write
 
     asciidoc.extension.log=true
 
-instead of `{%@snip ASCIIDOC_EXTENSION_LOG%}`.
+instead of `ASCIIDOC_EXTENSION_LOG`.
 
 === Options
-[WARNING]
---
-* The id(OPTIONS) hash is '5c4042d1.cd73b18f.f96960df.71fba97e.2adb1854.04346043.7d055754.92a31d99' does not contain 'd7002c9a'. at /Users/verhasp/github/jamal/jamal-asciidoc/README.adoc.jam/213:14
---
-{%@snip:check id=OPTIONS hash=d7002c9a%}\
 
 You can alter the auxiliary functions of the extension using options.
 You can place these options into the document's first line into a comment.
@@ -234,7 +216,7 @@ or
 
 [source]
 ----
-{%@escape*``{%@comment off nosave log fromFile%}``%}
+{%@comment off nosave log fromFile%}
 ----
 
 You can place any of the options listed in the above example separated by spaces in any order.
@@ -350,15 +332,41 @@ The front matter is always kept when the file is _not_ `adoc.jam`.
 == Modules
 
 When using Jamal, you probably want to use extra built-in macros in addition to the core modules.
-The ZIP file you extracted to the {%INSTALL_FOLDER%} folder contains the following modules:
+The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the following modules:
 
-{%@import modules.jim%}
-{%@for [evalist] MODULE in ({%JAMAL_MODULES%})=
-* `jamal-MODULE`
-%}
+
+
+* `jamal-extensions`
+
+* `jamal-snippet`
+
+* `jamal-test`
+
+* `jamal-scriptbasic`
+
+* `jamal-groovy`
+
+* `jamal-ruby`
+
+* `jamal-plantuml`
+
+* `jamal-debug`
+
+* `jamal-jamal`
+
+* `jamal-yaml`
+
+* `jamal-io`
+
+* `jamal-assertions`
+
+* `jamal-markdown`
+
+* `jamal-mock`
+
 
 It is essentially all the macro modules that come with Jamal by default.
-If you want to use additional modules, all you have to do is copy the `.jar` files to the {%INSTALL_FOLDER%} folder.
+If you want to use additional modules, all you have to do is copy the `.jar` files to the `.Asciidoctor/lib` folder.
 The IntelliJ Asciidoc plugin will automatically load the modules.
 
 == Error Handling
@@ -382,14 +390,14 @@ This way, it may be easier to find the error in the document and still see some 
 
 It is possible to run Jamal as an external process and get the output of the preprocessing.
 To do that you should configure the external command to execute.
-The configuration key is `{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}`.
+The configuration key is `ASCIIDOC_EXTENSION_EXTERNAL_COMMAND`.
 When it is configured in a properties file you should use `asciidoc.extension.external.command`.
 
 For example, the configuration file `~/.jamal/settings.properties` contains the following line on the development machine:
 
 [source]
 ----
-{%@escape*``asciidoc.extension.external.command=/Users/verhasp/.jbang/bin/jbang jamal@verhas -open=\{% -close=%\} $1 $2``%}
+asciidoc.extension.external.command=/Users/verhasp/.jbang/bin/jbang jamal@verhas -open=\{% -close=%\} $1 $2
 ----
 
 As you can see, I use `jbang` to execute Jamal as an external command.
@@ -457,81 +465,3 @@ The last result is really the last result, even when you keep multiple `.adoc.ja
 Editing one of the files will overwrite in the memory the last result form the other file.
 This, however, affects only the speed.
 The resulting output files, which the preprocessor saves by default, or the rendering results are never affected by this caching.
-[WARNING]
---
-* The id(OPTIONS) hash is '5c4042d1.cd73b18f.f96960df.71fba97e.2adb1854.04346043.7d055754.92a31d99' does not contain 'd7002c9a'. at /Users/verhasp/github/jamal/jamal-asciidoc/README.adoc.jam/213:14
---
-[source]
-----
-The id(OPTIONS) hash is '5c4042d1.cd73b18f.f96960df.71fba97e.2adb1854.04346043.7d055754.92a31d99' does not contain 'd7002c9a'. at /Users/verhasp/github/jamal/jamal-asciidoc/README.adoc.jam/213:14
-javax0.jamal.snippet.SnipCheckFailed: The id(OPTIONS) hash is '5c4042d1.cd73b18f.f96960df.71fba97e.2adb1854.04346043.7d055754.92a31d99' does not contain 'd7002c9a'. at /Users/verhasp/github/jamal/jamal-asciidoc/README.adoc.jam/213:14
-	at javax0.jamal.snippet.SnipCheck.checkHashString(SnipCheck.java:80)
-	at javax0.jamal.snippet.SnipCheck.evaluate(SnipCheck.java:41)
-	at javax0.jamal.engine.Processor.evaluateBuiltinMacro(Processor.java:448)
-	at javax0.jamal.engine.Processor.lambda$evaluateBuiltInMacro$6(Processor.java:392)
-	at javax0.jamal.engine.Processor.safeEvaluate(Processor.java:401)
-	at javax0.jamal.engine.Processor.evaluateBuiltInMacro(Processor.java:392)
-	at javax0.jamal.engine.Processor.evalMacro(Processor.java:347)
-	at javax0.jamal.engine.Processor.processMacro(Processor.java:260)
-	at javax0.jamal.engine.Processor.process(Processor.java:169)
-	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:259)
-	at javax0.jamal.asciidoc.JamalPreprocessor.runJamalInProcess(JamalPreprocessor.java:135)
-	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:118)
-	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy.process(PreprocessorProxy.java:94)
-	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy$INVOKER$i$2$0$process.call(PreprocessorProxy$INVOKER$i$2$0$process.gen)
-	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodTwoOrN.call(JavaMethod.java:1035)
-	at org.jruby.RubyMethod.call(RubyMethod.java:124)
-	at org.jruby.RubyMethod$INVOKER$i$call.call(RubyMethod$INVOKER$i$call.gen)
-	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrOneOrTwoOrNBlock.call(JavaMethod.java:376)
-	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther2:\=\{\}(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$block$parse$1(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
-	at org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
-	at org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
-	at org.jruby.runtime.Block.yield(Block.java:188)
-	at org.jruby.RubyArray.each(RubyArray.java:1865)
-	at org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
-	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:152)
-	at org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:161)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther24:each(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$method$parse$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
-	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
-	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:149)
-	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:148)
-	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:210)
-	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:142)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.invokeOther83:parse(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.RUBY$method$load$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
-	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
-	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:175)
-	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:222)
-	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:226)
-	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.invokeOther27:load(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
-	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.RUBY$method$convert$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
-	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
-	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:112)
-	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:192)
-	at org.jruby.RubyClass.finvoke(RubyClass.java:784)
-	at org.jruby.runtime.Helpers.invoke(Helpers.java:661)
-	at org.jruby.RubyBasicObject.callMethod(RubyBasicObject.java:370)
-	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:311)
-	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:336)
-	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:331)
-	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:803)
-	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:769)
-	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:758)
-	at org.asciidoc.intellij.editor.AsciiDocPreviewEditor.lambda$render$0(AsciiDocPreviewEditor.java:149)
-	at org.asciidoc.intellij.editor.LazyApplicationPoolExecutor.lambda$execute$0(LazyApplicationPoolExecutor.java:66)
-	at com.intellij.openapi.application.impl.ApplicationImpl$1.run(ApplicationImpl.java:297)
-	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:702)
-	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:699)
-	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
-	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1.run(Executors.java:699)
-	at java.base/java.lang.Thread.run(Thread.java:833)
-sed -i jam 's/d7002c9a/5c4042d1/g;' /Users/verhasp/github/jamal/jamal-asciidoc/README.adoc.jam
-----
