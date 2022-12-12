@@ -75,7 +75,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         if (frontMatter instanceof String) {
             lines.add("---");
             lines.addAll(List.of(((String) frontMatter).split("\n", -1)));
-            lines.add("---\n");
+            lines.add("---");
         }
         lines.addAll(linesAfterFM);
 
@@ -138,7 +138,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     }
 
     private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines) {
-        try (final var writer = new BufferedWriter(new FileWriter(new File(outputFileName)))) {
+        try (final var writer = new BufferedWriter(new FileWriter(outputFileName))) {
             for (String newLine : newLines) {
                 writer.write(newLine + "\n");
             }

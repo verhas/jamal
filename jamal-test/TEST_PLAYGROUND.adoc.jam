@@ -1,8 +1,6 @@
-{%@comment keepFrontMatter%}\
 ---
-aba: hukk
+aba: huk
 ---
-
 Some code block here:
 
 [source, java]
