@@ -3010,7 +3010,7 @@ When no options are specified the `test` is true, if
 The literal `false` is false using any combination of upper and lower case letters with or without surrounding spaces.
 
 The evaluation of the test string can be modified using options.
-There are  8 options.
+There are  11 options.
 
 
 The first three options are "boolean" options.
@@ -3093,6 +3093,16 @@ This will result the desired
 ----
 
 ====
+
+The options
+
+* `isDefined` (alias `defined`),
+* `isLocal` (alias `local`),
+* `isGlobal` (alias `global`),
+
+test that the string given as the firsts parameter is a defined user defined macro, a locally defined macro, or a globally defined macro.
+A macro is locally defined if it was defined in the same scope where the `if` is used.
+
 
 The following examples show a few cases, as demonstrations:
 

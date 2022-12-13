@@ -339,6 +339,32 @@ The front-matter is always kept in the file where Jamal saves the output.
 On the other hand, Jamal removes the font-matter, so it does not clutter the Asciidoc rendering in the plugin, unless this option is used.
 The front matter is always kept when the file is _not_ `adoc.jam`.
 
+== Modifying the Output Location
+
+This asciidoctor plugin not only gives the Jamal processed output to the Asciidoctor IntelliJ plugin, but also saves this result to a file.
+The file name is the same as the processed file except the `.jam` extension is chopped off.
+The file is saved into the same directory where the Jamal file is.
+
+This default behaviour can be altered defining the user defined macro `asciidoc:output` macro in the Jamal source.
+If this macro is defined as an argument less macro, the value will be used to modify the output.
+The value of the macro can be a directory or a file.
+
+[source]
+----
+{@define asciidoc:output=..} will store the output in the parent directory
+{@define asciidoc:output=target} will store the output in the target directory
+{@define asciidoc:output=myfile.adoc} will store the output into the file myfile.adoc
+----
+
+The file name can be absolute, or relative to the Jamal input text.
+
+* If the name points to an existing directory then the output will be saved there.
+The name of the file will be the same as input, minus the `.jam` extension.
+
+* If the file does not exist, or it is not a directory, then the output will be saved into the named file.
+
+Processing the Jamal file out of the IntelliJ Asciidoctor plugin extension will ignore this user defined macro.
+
 == Modules
 
 When using Jamal, you probably want to use extra built-in macros in addition to the core modules.

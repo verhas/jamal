@@ -35,6 +35,20 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     }
 
     /**
+     * Get a user defined macro from the currently active local (writable) scope. Used by the macro if to test that a
+     * macro is local.
+     * <p>
+     * The default implementation always returns empty.
+     *
+     * @param id the identifier of the macro
+     * @return the macro. It will return empty in case there is a macro defined with the given name, but not in
+     * the currently writable level (higher level or the one level below).
+     */
+    default Optional<Identified> getUdMacroLocal(String id) {
+        return Optional.empty();
+    }
+
+    /**
      * Get a user defined macro based on the id of the macro.
      *
      * @param id  the identifier (name) of the macro
@@ -49,7 +63,7 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      * @param id  the identifier (name) of the macro
      * @param def the identifier (name) of the macro used in the case macro for {@code id} is not defined
      * @param <T> some type that implements {@link Identified}. Note that anything implementing {@link Identified}
-     *           can be stored in the macro registry.
+     *            can be stored in the macro registry.
      * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
      */
     default <T extends Identified> Optional<T> getUserDefined(String id, String def) {
@@ -66,7 +80,7 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     /**
      * Define a user defined macro on the global level, but instead of the identifier returned by the
      * {@link Identified#getId()} use the alias provided as argument.
-     *
+     * <p>
      * The default implementation throws exception.
      *
      * @param macro the user defined macro (or anything {@link Identified}) to be stored on the global level
@@ -78,7 +92,7 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
 
     /**
      * Define a macro on the global level.
-     *
+     * <p>
      * Note that this is an overloaded method and since the {@link Macro} interface extends the {@link Identified}
      * interface this overloading heavily relies on the Java overloading mechanism and resolution. The implementation
      * of this method does extra checks before storing the macro. For example, the actual implementation in Jamal checks
@@ -91,7 +105,7 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     /**
      * Define a macro on the global level. It is the same as the {@link #global(Macro)} method, but instead of using the
      * identifier returned by the method {@link Identified#getId()} is uses the {@code alias} as a name for the macro.
-     *
+     * <p>
      * Also see the notes about overloading and extra checks at {@link #global(Macro)}.
      *
      * @param macro to store in the definition structure on the top level.

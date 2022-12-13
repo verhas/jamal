@@ -113,7 +113,7 @@ public class TestJamalPreprocessor {
     }
 
     @Test
-    @DisplayName("Output file is created")
+    @DisplayName("Output file is created when no error")
     void testNormalOutput() {
         process("abrakadabra\n{%@define foo=bar%}{%foo%}");
         Assertions.assertTrue(new File(TEST_OUTPUT).exists());

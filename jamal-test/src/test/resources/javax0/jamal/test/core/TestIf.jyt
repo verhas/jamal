@@ -145,3 +145,15 @@ Testing 'or' with one numeric options:
 Testing 'or' set to false:
   Input: '{@if [or=false equals=3 equals=4] /4/or set to false is no way/what?}'
   Output: or set to false is no way
+
+Testing isDefined:
+  Input: '{@define a=13}{@if [isDefined] /a/yes/no} {@if [isDefined] /b/yes/no}'
+  Output: 'yes no'
+
+Testing isLocal:
+  Input: '{@define a=13}{#ident {@if [isLocal] /a/yes/no} {@if [isLocal] /b/yes/no}} {@if [isLocal] /a/yes/no} {@if [isLocal] /b/yes/no}'
+  Output: 'no no yes no'
+
+Testing isGlobal:
+  Input: '{@define a=13}{#ident {@if [isGlobal] /a/yes/no} {@if [isGlobal] /:a/yes/no} {@if [isGlobal] /b/yes/no} {@define b=wuff}{@if [isGlobal] /b/yes/no}} {@if [isGlobal] /a/yes/no} {@if [isGlobal] /b/yes/no}'
+  Output: 'yes yes no no yes no'

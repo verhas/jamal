@@ -37,7 +37,10 @@ public class If implements Macro {
         final Params.Param<Boolean> not = Params.<Boolean>holder("not").asBoolean();
         final Params.Param<Boolean> and = Params.<Boolean>holder("and").asBoolean();
         final Params.Param<Boolean> or = Params.<Boolean>holder("or").asBoolean();
-        final Params.Param<List<Integer>> lessThan = Params.<Integer>holder("lessThan", "less","smaller", "smallerThan").asList(Integer.class);
+        final Params.Param<Boolean> isDefined = Params.<Boolean>holder("isDefined","defined").asBoolean();
+        final Params.Param<Boolean> isGlobal = Params.<Boolean>holder("isGlobal","global").asBoolean();
+        final Params.Param<Boolean> isLocal = Params.<Boolean>holder("isLocal","local").asBoolean();
+        final Params.Param<List<Integer>> lessThan = Params.<Integer>holder("lessThan", "less", "smaller", "smallerThan").asList(Integer.class);
         final Params.Param<List<Integer>> greaterThan = Params.<Integer>holder("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan").asList(Integer.class);
         final Params.Param<List<Integer>> equals = Params.<Integer>holder("equals", "equal", "equalsTo", "equalTo").asList(Integer.class);
         // end snippet
@@ -50,14 +53,15 @@ public class If implements Macro {
          * @throws BadSyntax if the options are used in an inconsistent way
          */
         void assertConsistency() throws BadSyntax {
+            BadSyntax.when((isDefined.is() || isGlobal.is() || isLocal.is()) && (blank.is() || empty.is() || countNumOptionsPresent() > 0), "'blank' or 'empty' cannot be used together with 'isDefined', 'isLocal', or 'isGlobal' or with numeric checks");
             BadSyntax.when(and.is() && or.is(), "You cannot have both 'and' and 'or' options in an 'if' macro.");
-            BadSyntax.when((and.is() || or.is()) && countNumOptionsPresent() < 2,"You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
+            BadSyntax.when((and.is() || or.is()) && countNumOptionsPresent() < 2, "You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
             BadSyntax.when(blank.is() && empty.is(), "You cannot have both 'blank' and 'empty' options in an 'if' macro.");
             BadSyntax.when((empty.is() || blank.is()) && numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals), "You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
         }
 
         Params.Param<?>[] options() {
-            return new Params.Param[]{empty, blank, not, and, or, lessThan, greaterThan, equals};
+            return new Params.Param[]{empty, blank, not, and, or, lessThan, greaterThan, equals, isDefined, isGlobal, isLocal};
         }
 
         List<Boolean> numericOptionsPresent() throws BadSyntax {
@@ -86,9 +90,9 @@ public class If implements Macro {
         Params.using(processor).from(this).between("[]").keys(opt.options()).parse(input);
         opt.assertConsistency();
         final var parts = InputHandler.getParts(input, 3);
-        BadSyntaxAt.when(parts.length < 1,"Macro 'if' needs 1, 2 or 3 arguments",pos);
+        BadSyntaxAt.when(parts.length < 1, "Macro 'if' needs 1, 2 or 3 arguments", pos);
 
-        if (opt.not.is() != isTrue(parts[0], opt)) {
+        if (opt.not.is() != isTrue(processor, parts[0], opt)) {
             return parts.length > 1 ? parts[1] : "";
         } else {
             return parts.length > 2 ? parts[2] : "";
@@ -103,7 +107,8 @@ public class If implements Macro {
         }
     }
 
-    private boolean isTrue(final String test,
+    private boolean isTrue(final Processor processor,
+                           final String test,
                            final Options opt) throws BadSyntax {
         if (opt.countNumOptionsPresent() > 0) {
             final int testN;
@@ -114,16 +119,30 @@ public class If implements Macro {
             }
             if (opt.and.is()) {
                 return (!opt.lessThan.isPresent() || compare(opt.lessThan.get(), true, n -> n > testN))
-                    && (!opt.greaterThan.isPresent() || compare(opt.greaterThan.get(), true, n -> n < testN))
-                    && (!opt.equals.isPresent() || compare(opt.equals.get(), true, n -> n == testN))
-                    ;
+                        && (!opt.greaterThan.isPresent() || compare(opt.greaterThan.get(), true, n -> n < testN))
+                        && (!opt.equals.isPresent() || compare(opt.equals.get(), true, n -> n == testN))
+                        ;
             } else {
                 return (opt.lessThan.isPresent() && compare(opt.lessThan.get(), false, n -> n > testN))
-                    || (opt.greaterThan.isPresent() && compare(opt.greaterThan.get(), false, n -> n < testN))
-                    || (opt.equals.isPresent() && compare(opt.equals.get(), false, n -> n == testN))
-                    ;
+                        || (opt.greaterThan.isPresent() && compare(opt.greaterThan.get(), false, n -> n < testN))
+                        || (opt.equals.isPresent() && compare(opt.equals.get(), false, n -> n == testN))
+                        ;
             }
         }
+        if (opt.isLocal.is()) {
+            return processor.getRegister().getUdMacroLocal(test).isPresent();
+        } else if (opt.isGlobal.is()) {
+            final String globalName;
+            if (InputHandler.isGlobalMacro(test)) {
+                globalName = test;
+            } else {
+                globalName = ":" + test;
+            }
+            return processor.getRegister().getUserDefined(globalName).isPresent();
+        } else if (opt.isDefined.is()) {
+            return processor.getRegister().getUserDefined(test).isPresent();
+        }
+
         if (opt.blank.is()) {
             return test.trim().length() == 0;
         }

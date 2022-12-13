@@ -2577,7 +2577,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=fc89e70f%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=4fbb025d%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -2604,7 +2604,7 @@ When no options are specified the `test` is true, if
 The literal `false` is false using any combination of upper and lower case letters with or without surrounding spaces.
 
 The evaluation of the test string can be modified using options.
-There are {%@define nrIfOptions=8%} {%nrIfOptions%} options.
+There are {%@define nrIfOptions=11%} {%nrIfOptions%} options.
 {%#snip:check id=if_options lines={%nrIfOptions%} %}
 
 The first three options are "boolean" options.
@@ -2677,6 +2677,16 @@ This will result the desired
 
 {%output%}
 ====
+
+The options
+
+* `isDefined` (alias `defined`),
+* `isLocal` (alias `local`),
+* `isGlobal` (alias `global`),
+
+test that the string given as the firsts parameter is a defined user defined macro, a locally defined macro, or a globally defined macro.
+A macro is locally defined if it was defined in the same scope where the `if` is used.
+
 
 The following examples show a few cases, as demonstrations:
 

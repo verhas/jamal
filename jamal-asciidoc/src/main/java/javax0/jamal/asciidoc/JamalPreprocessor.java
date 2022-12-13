@@ -1,9 +1,12 @@
 package javax0.jamal.asciidoc;
 
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
+import javax0.jamal.tools.MacroReader;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.extension.JavaExtensionRegistry;
@@ -33,6 +36,9 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         Position position = new Position("", 0, 0);
         String errorMessage = null;
         Exception exception = null;
+
+        List<String> lines;
+        Processor processor;
     }
 
     @Override
@@ -79,7 +85,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         }
         lines.addAll(linesAfterFM);
 
-        final var outputFileName = fileName.substring(0, fileName.length() - 4);
+        var outputFileName = fileName.substring(0, fileName.length() - 4);
         final var firstLine = lines.size() > 0 ? lines.get(0).trim() : "";
         final var opts = new InFileOptions(firstLine);
         if (opts.off) {
@@ -90,7 +96,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         if (opts.fromFile) {
             try {
                 final var fileLines = Files.readAllLines(Path.of(fileName), StandardCharsets.UTF_8);
-                // only if the file was read
+                // only if the file was read, it skips in the case of exception
                 lines.clear();
                 lines.addAll(fileLines);
             } catch (IOException e) {
@@ -100,7 +106,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
         final var log = new Log(outputFileName, opts.log, runCounter);
 
-        log.info("started");
+        log.info("started " + outputFileName);
         final var text = String.join("\n", lines);
         final String md5 = Md5Calculator.md5(text);
         log.info("md5 " + md5);
@@ -116,7 +122,23 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             if (opts.external) {
                 newLines = JamalExecutor.execute(fileName, lines);
             } else {
-                newLines = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader);
+                final var result = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader);
+                newLines = result.lines;
+                try {
+                    final var output = MacroReader.macro(result.processor).readValue("asciidoc:output").orElse(null);
+                    if( output != null ) {
+                        final var outputFile = new File(FileTools.absolute(fileName,output));
+                        if( outputFile.exists() && outputFile.isDirectory() ){
+                            final var outputFileNameFile = new File(outputFileName);
+                            outputFileName = new File(outputFile,outputFileNameFile.getName()).getAbsolutePath();
+                        }else {
+                            //noinspection ResultOfMethodCallIgnored
+                            outputFile.mkdirs();
+                            outputFileName = outputFile.getAbsolutePath();
+                        }
+                    }
+                } catch (BadSyntax ignored) {
+                }
             }
             log.info("setting cache");
             JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
@@ -129,12 +151,14 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         log.info("DONE");
     }
 
-    private List<String> runJamalInProcess(final String fileName, final List<String> lines, final boolean useDefaultSeparators, final String text, final CachingFileReader cachingFileReader) {
+    private Result runJamalInProcess(final String fileName, final List<String> lines, final boolean useDefaultSeparators, final String text, final CachingFileReader cachingFileReader) {
         final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
         processor.setFileReader(cachingFileReader);
         final var input = Input.makeInput(text, new Position(fileName, 0, 0));
         final var r = process(processor, input);
-        return postProcess(lines, r, fileName);
+        r.processor = processor;
+        r.lines = postProcess(lines, r, fileName);
+        return r;
     }
 
     private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines) {
