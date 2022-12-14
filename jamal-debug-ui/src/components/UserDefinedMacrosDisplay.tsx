@@ -2,7 +2,8 @@ import React, {FC} from "react";
 import "./UserDefinedMacrosDisplay.css";
 import {Table} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
-import type Data, {UserDefinedMacro} from '../server/Data'
+import type Data from '../server/Data';
+import type { UserDefinedMacro } from '../server/Data';
 
 type UserDefinedMacrosDisplayProps = {
     data: Data;

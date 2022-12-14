@@ -4,7 +4,7 @@ Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]
 
-This document is the readme file for the Jamal Asciidoc extension version `1.12.4-SNAPSHOT`.
+This document is the readme file for the Jamal Asciidoc extension version `1.12.4`.
 
 == Introduction
 
@@ -36,18 +36,18 @@ It works only with the Asciidoc plugin in IntelliJ.
 ====
 
 
-To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip`.
+To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip`.
 
 You can download this file from the central Maven repository using the URLs:
 
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.asc``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip.asc``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.md5``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip.md5``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.3/jamal-asciidoc-1.12.3-jamal-asciidoc-distribution.zip.sha1``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/1.12.4/jamal-asciidoc-1.12.4-jamal-asciidoc-distribution.zip.sha1``]
 
 The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files are standard checksum files to check the integrity of the archive.
 

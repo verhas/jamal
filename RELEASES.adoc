@@ -3,7 +3,17 @@
 
 
 
-=== https://github.com/verhas/jamal/tree/1.12.4-SNAPSHOT[1.12.4-SNAPSHOT]
+=== https://github.com/verhas/jamal/tree/1.12.5-SNAPSHOT[1.12.5-SNAPSHOT]
+
+=== https://github.com/verhas/jamal/tree/1.12.4[1.12.4]
+
+* Asciidoctor extension works on all `*.jam` files.
+If the extension is not `.adoc.jam` it formats the display as preformatted Asciidoc text.
+* Asciidoctor extension can read directly from the `.jam` file when the `fromFile` option is used.
+* Bug fixed that sometimes resulted undefined counters.
+* Asciidoctor gracefully handles the front-matter when working with Jekyll files
+* Asciidoctor preprocessor can save the output to a file denoted by the macro `asciidoc:output`
+* core macro `if` has `isDefined`, `isLocal and isGlobal` options
 
 === https://github.com/verhas/jamal/tree/1.12.3[1.12.3]
 

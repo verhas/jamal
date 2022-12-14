@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal scriptbasic</name>
     <artifactId>jamal-scriptbasic</artifactId>
-    <version>1.12.4-SNAPSHOT</version>
+    <version>1.12.4</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.4-SNAPSHOT</version>
+        <version>1.12.4</version>
     </parent>
     <description>ScriptBasic support for Jamal</description>
     <build>
@@ -39,18 +39,18 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
-            <version>1.12.4-SNAPSHOT</version>
+            <version>1.12.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-api</artifactId>
-            <version>1.12.4-SNAPSHOT</version>
+            <version>1.12.4</version>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
-            <version>1.12.4-SNAPSHOT</version>
+            <version>1.12.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
