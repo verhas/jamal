@@ -1,5 +1,4 @@
 #! /bin/bash
-export NODE_OPTIONS=--openssl-legacy-provider
 npm version `grep '^VERSION=' ../version.jim|cut -d'=' -f2 | cut -d' ' -f1`
 npm run build
 rm -rf ../jamal-debug/src/main/resources/ui/static/css
