@@ -42,7 +42,7 @@ public class Pos implements Macro {
         // The default value is a comma `,`.
         // This option must be used together with the option `all`.
         // end snippet
-        Scan.using(processor).from(this).between("()").keys(parent, top, format, all, sep).parse(in);
+        Scan.using(processor).from(this).between("()").keys(parent, up, top, format, all, sep).parse(in);
         final var what = in.toString().trim();
         final String formatString;
         if (what.length() > 0 && format.isPresent()) {
@@ -102,7 +102,7 @@ public class Pos implements Macro {
             for (int counter = up.get();
                  counter > 0; counter--) {
                 pos = pos.parent;
-                if( pos == null ){
+                if (pos == null) {
                     throw new BadSyntax(String.format("The value %d for up in macro pos is too large, there are not so many levels of hierarchy.", up.get()));
                 }
             }

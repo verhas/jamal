@@ -131,6 +131,11 @@ public class TestThat implements AutoCloseable {
 
     private Position pos = null;
 
+    public TestThat atPosition(Position pos) {
+        this.pos = pos;
+        return this;
+    }
+
     public TestThat atPosition(String fileName, int line, int col) {
         pos = new Position(fileName, line, col);
         return this;
