@@ -1146,7 +1146,7 @@ The reader will not be able to read the answer, only when they put effort deciph
 
 [[pos]]
 ==== {%macroChapter%}`pos`
-{%#snip:check file={%JAVA_DIR%}Pos.java hash=8b711c86%}
+{%#snip:check file={%JAVA_DIR%}Pos.java hash=91e4a6d1%}
 
 This macro will result the
 
@@ -1154,8 +1154,8 @@ This macro will result the
 * line number, or
 * column number
 
-where the macro is evaluated.
-That way
+of the actual location.
+The simple way using the macro is, for example
 
 {%sample/
 {@pos.file}:{@pos.line}:{@pos.column}
@@ -1165,9 +1165,18 @@ will result
 
 {%output%}
 
-The actual file name and line number may not be the one where the macro is used.
-It is where the macro is evaluated.
+The version introduced after 1.12.4 also handles options between `(` and `)`:
+
+{%#eval {%`@comment%}
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%@snip pos_options%}
+%}%}
+
+The actual file name and line number may not be the one where the macro is in the file.
+It is where the macro `pos` is evaluated.
 This behaviour may result that the line number or column is not accurate when the macro is not evaluated from the top level context.
+It is also known that Jamal increases the line numbers in some cases extensively during maco evaluation.
+This is a known bug resulting in the line number larger than the actual.
 
 [[sort]]
 ==== {%macroChapter%}`sort`

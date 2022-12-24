@@ -11,3 +11,4 @@ void example(void)
     printf("hello, world\n");
 }
 ----
+{%@pos.file%}

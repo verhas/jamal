@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal word</name>
     <artifactId>jamal-word</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.4</version>
+        <version>1.12.5-SNAPSHOT</version>
     </parent>
     <description>Microsoft Word module for Jamal</description>
     <build>

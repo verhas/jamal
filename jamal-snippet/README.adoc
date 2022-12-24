@@ -23,7 +23,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -110,7 +110,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -446,7 +446,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.12.4</version>
+<version>1.12.5-SNAPSHOT</version>
 ...
 ----
 
@@ -485,7 +485,7 @@ The result is:
 [source]
 ----
 ...
-<version>1.12.4</version>
+<version>1.12.5-SNAPSHOT</version>
 ...
 ----
 
@@ -563,7 +563,7 @@ The following example demonstrates how the result of the processing can be modif
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5-SNAPSHOT</version>
 </dependency>}
 <plugins><plugin>
 <artifactId>my-imaginary</artifactId>
@@ -593,7 +593,7 @@ will result
     <dependency>
       <groupId>com.javax0.jamal</groupId>
       <artifactId>jamal-snippet</artifactId>
-      <version>1.12.4</version>
+      <version>1.12.5-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <pluginManagement/>
@@ -1348,8 +1348,8 @@ This macro will result the
 * line number, or
 * column number
 
-where the macro is evaluated.
-That way
+of the actual location.
+The simple way using the macro is, for example
 
 [source]
 ----
@@ -1364,9 +1364,45 @@ will result
 ----
 
 
-The actual file name and line number may not be the one where the macro is used.
-It is where the macro is evaluated.
+The version introduced after 1.12.4 also handles options between `(` and `)`:
+
+
+*  `top`
+will instruct the macro to use the location no of the top level.
+It is the same as the current file if there were no imports or includes.
+This option cannot be used together with `parent`, `all` or `up`
+*  `parent`
+will use the location of the `include` or `import` macro that was used to include or import the current file.
+This option cannot be used together with `top`, `all` or `up`
+*  `all`
+list all the locations in the hierarchy from the current to the top level.
+The locations will be separated by a comma `,` or by the string specified in the option `sep`.
+This option cannot be used together with `top`, `parent` or `up`
+*  `format`
+specifies the format of the location.
+The format can be any string and the formatting escape sequences `%f`, `%l` and `%l` are placeholders for the name of the file, line and column.
+The default is `%f:%l:%c`.
+This is also changed when the `.file`, `.line` or `.column` ending is used in the macro.
+These cannot be used together with the `format` macro.
+They are the short forms for `format="%f``, `format="%l``, and `format="%c``.
+The format is also used with the option `all`.
+*  `up`
+specifies the number of steps up in the hierarchy.
+`up=0` is the default.
+`up=1` is the same as `parent`.
+This option cannot be used together with `top`, `parent` or `all`
+*  `sep`
+specifies the string used to concatenate the locations when the option `all` is used.
+The default value is a comma `,`.
+This option must be used together with the option `all`.
+
+
+
+The actual file name and line number may not be the one where the macro is in the file.
+It is where the macro `pos` is evaluated.
 This behaviour may result that the line number or column is not accurate when the macro is not evaluated from the top level context.
+It is also known that Jamal increases the line numbers in some cases extensively during maco evaluation.
+This is a known bug resulting in the line number larger than the actual.
 
 [[sort]]
 ==== xviii.`sort`
@@ -2614,7 +2650,7 @@ will result
 - SkipLines.java: 2,762 bytes
 - SnipCheck.java: 5,702 bytes
 - Reflow.java: 2,023 bytes
-- Pos.java: 789 bytes
+- Pos.java: 5,288 bytes
 - Snippet.java: 1,052 bytes
 ----
 
@@ -2658,7 +2694,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.12.4</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.12.5-SNAPSHOT</version>
 </project>
 }
 ----
@@ -2674,7 +2710,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5-SNAPSHOT</version>
 </project>
 ----
 
@@ -2689,7 +2725,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.12.4</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.12.5-SNAPSHOT</version>
 </project>
 }
 ----
@@ -2705,7 +2741,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.12.4</version>
+<version>1.12.5-SNAPSHOT</version>
 </project>
 ----
 
@@ -2726,7 +2762,7 @@ The previous example that we used before can also be formulated this way.
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.12.4</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>1.12.5-SNAPSHOT</version>
 </project>
 ----
 
@@ -2743,7 +2779,7 @@ It will result in the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5-SNAPSHOT</version>
 </project>
 ----
 
@@ -2766,7 +2802,7 @@ project>
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>1.12.4
+  version>1.12.5-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -2786,7 +2822,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.5-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
@@ -2818,7 +2854,7 @@ For example:
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>1.12.4
+  version>1.12.5-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -2836,7 +2872,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>1.12.4</version>
+<version>1.12.5-SNAPSHOT</version>
 <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
@@ -2868,7 +2904,7 @@ will result in the output
 
 [source]
 ----
-2022-12-14 21:39:39
+2022-12-24 06:43:06
 ----
 
 
