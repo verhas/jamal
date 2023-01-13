@@ -1,7 +1,6 @@
 package javax0.jamal.api;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -21,7 +20,7 @@ import java.util.ServiceLoader;
  * This is a workaround.
  * <p>
  * The {@link Macro} interface extends this interface, because macros are service loaded.
- *
+ * <p>
  * This is a very general interface, could be used in any other project, nothing specific to Jamal.
  */
 public interface ServiceLoaded {
@@ -46,18 +45,18 @@ public interface ServiceLoaded {
     /**
      * Load the classes using the names listed in the {@code META-INF/services/}<i>class name</i> resources found by the
      * classloader.
-     *
+     * <p>
      * The implementation mimics the behaviour of the class loader using the {@code provider()} public static method if
      * it exists in the implementation.
-     *
+     * <p>
      * Class types and assignability is not checked by the method. If there is any discrepancy a class cast exception
      * will occur.
      *
      * @param klass the interface for which the classes are to be loaded
-     * @param list the list to fill the instances to
-     * @param <T> the klass type
+     * @param list  the list to fill the instances to
+     * @param <T>   the klass type
      */
-    private static <T> void loadViaMetaInf(final Class<T> klass, final List<T> list) {
+    static <T> void loadViaMetaInf(final Class<T> klass, final List<T> list) {
         try {
             final var classes = new HashSet<Class<T>>(); // different classloaders in the hierarchy may load the same file more than once
             for (final var url : loadResources("META-INF/services/" + klass.getName(), ServiceLoaded.class.getClassLoader())) {
@@ -99,13 +98,13 @@ public interface ServiceLoaded {
      * need to implement the service interface.
      *
      * @param klass the provider class
+     * @param <T>   the klass type
      * @return the provider method or {@code null} if there is no provider method in the class
-     * @param <T> the klass type
      */
-    private static <T> Method getProvider(Class<T> klass){
+    private static <T> Method getProvider(Class<T> klass) {
         try {
             return klass.getDeclaredMethod("provider");
-        }catch(NoClassDefFoundError | NoSuchMethodException e){
+        } catch (NoClassDefFoundError | NoSuchMethodException e) {
             return null;
         }
     }
@@ -113,7 +112,7 @@ public interface ServiceLoaded {
     /**
      * Get the url list of the resources for the given name.
      *
-     * @param name the name of the resource
+     * @param name        the name of the resource
      * @param classLoader the class loader to use or {@code null} to use the system class loader
      * @return the list of the urls
      * @throws IOException

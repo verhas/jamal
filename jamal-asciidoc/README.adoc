@@ -144,6 +144,28 @@ That way you edit the text and see the result instantly in the other editor pane
 
 NOTE: The conversion also manages when there is a line containing only `----` in the text.
 
+=== Other Formats
+
+The conversion of different formats is not hardwired into the preprocessor.
+The preprocessor defines the interface `javax0.jamal.asciidoc.Converter` and uses all converters available.
+The interface implementations are loaded using the service loader as defined in the Java 9 module systems.
+
+There are two converters supplied inside the JAR file of the preprocessor itself:
+
+* Asciidoc -> Asciidoc converter (`javax0.jamal.asciidoc.AsciiDocConverter`)
+
+* Markdown -> Asciidoc converter (`javax0.jamal.asciidoc.MarkdownConverter`)
+
+The first one is fairly obvious, it just leaves the text as it is after the Jamal processing.
+The markdown conversion converts from markdown to asciidoc.
+
+If there are other implementations in some JAR files copied into the  `.asciidoctor/lib` properly exposed to the service loader then they will also be consulted.
+The method `canConvert(name)` is consulted for each converter passing the file name.
+If any of the converters' method returns `true`, stating that the specific converter can convert the file then the `convert(lines)` will be invoked.
+Only one converter is invoked for an input.
+
+If none of the converters can convert the input then it is converted using the built-in text converter.
+
 === Configuration
 
 You can configure the extension using the Jamal built-in configuration mechanism, which uses
@@ -362,7 +384,7 @@ The front matter is always kept when the file is _not_ `adoc.jam`.
 
 == Modifying the Output Location
 
-This asciidoctor plugin not only gives the Jamal processed output to the Asciidoctor IntelliJ plugin, but also saves this result to a file.
+The preprocessor does not only give the output to the Asciidoctor IntelliJ plugin, but also saves it to a file.
 The file name is the same as the processed file except the `.jam` extension is chopped off.
 The file is saved into the same directory where the Jamal file is.
 

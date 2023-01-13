@@ -1,3 +1,6 @@
+import javax0.jamal.asciidoc.AsciiDocConverter;
+import javax0.jamal.asciidoc.Converter;
+import javax0.jamal.asciidoc.MarkdownConverter;
 import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 
 module jamal.asciidoc {
@@ -12,4 +15,6 @@ module jamal.asciidoc {
     requires jamal.snippet;
     requires markdown.to.asciidoc;
     provides ExtensionRegistry with javax0.jamal.asciidoc.JamalPreprocessor;
+    uses Converter;
+    provides Converter with AsciiDocConverter, MarkdownConverter;
 }

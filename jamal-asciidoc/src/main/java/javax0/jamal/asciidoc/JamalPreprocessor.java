@@ -27,8 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static nl.jworks.markdown_to_asciidoc.Converter.convertMarkdownToAsciiDoc;
-
 public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry {
     /**
      * The result structure of the execution of in-process Jamal.
@@ -76,7 +74,6 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         if (!fileName.endsWith(".jam")) {
             return;
         }
-        final var markdown = fileName.endsWith("md.jam") || fileName.endsWith("markdown.jam");
         final var linesAfterFM = reader.readLines();
         // snipline fetch-font-matter
         final var frontMatter = document.getAttribute("front-matter", null);
@@ -149,14 +146,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 writeOutputFile(outputFileName, log, cachingFileReader, newLines);
             }
         }
-        if (markdown) {
-            final var asciidocLines = Arrays.asList(
-                    convertMarkdownToAsciiDoc(String.join("\n", newLines))
-                            .split("\n"));
-            restoreTheLinesIntoThePlugin(reader, fileName, log, asciidocLines, opts);
-        } else {
-            restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
-        }
+        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
         log.info("DONE");
     }
 
@@ -182,41 +172,43 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         log.info("dependencies\n" + cachingFileReader.list());
     }
 
+    private static List<Converter> converters = Converter.getInstances();
+
+    /**
+     * Convert the lines to Asciidoc and then restore them to the IntelliJ Asciidoctor plugin.
+     *
+     * The code asks each converted loaded by the service loader if that can accommodate the conversions.
+     * The simplest conversion os the one that converts from Asciidoc to Asciidoc doing nothing.
+     * There is also a markdown converter supplied in the application.
+     * Any other converter can be copied into the .asciidoctor/lib directory, it will work.
+     *
+     * If there is no converter, then the input is treated as plaintext and converted to preformatted text in Asciidoc.
+     *
+     * @param reader the reader of the IntelliJ plugin to be used to restore the lines
+     * @param fileName the original name of the file, with the {@code .jam} extension
+     * @param log logger
+     * @param lines the lines of the input to be converted and saved to the Asciidoc editor IntelliJ plugin
+     * @param opts input file options, to decide if the front matter is to be kept in the file
+     */
     private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final InFileOptions opts) {
-        /*
-         * when the input is not asciidoc then we add and asciidoc prelude to display the text as source code,
-         * but the prelude and also the closing line does not get into the output
-         *
-         * When the extension is adoc.jam then it is already asciidoc
-         * When the extension is md.jam or markdown.jam them it is converted to asciidoc for the display: no prelude, postlude
-         */
-        if (fileName.endsWith(".adoc.jam") || fileName.endsWith(".md.jam") ||fileName.endsWith(".markdown.jam")) {
-            log.info("not adding prelude and post lude, it is an asciidoc file");
-            if (opts.keepFrontMatter || !lines.get(0).equals("---")) {
-                log.info("Keeping the front matter, or no front matter");
-                reader.restoreLines(lines);
-            } else {
-                final var firstLine = lineIndexAfterTheFrontMatter(lines);
-                for (int i = lines.size() - 1; i >= firstLine; i--) {
-                    reader.restoreLine(lines.get(i));
-                }
-            }
-        } else {
-            log.info("adding pre and post ludes");
-            final var sourcedLines = new ArrayList<String>();
-            sourcedLines.add("[source]");
-            sourcedLines.add("----");
-            for (final var line : lines) {
-                // add an invisible space that will fool asciidoctor not to end the source block
-                if (line.trim().equals("----")) {
-                    sourcedLines.add(line.replaceAll("----", "----\u200F\u200F\u200E \u200E"));
+        for (final var converter : converters) {
+            if (converter.canConvert(fileName)) {
+                final var convertedLines = converter.convert(lines);
+                log.info("not adding prelude and post lude, it is an asciidoc file");
+                if (opts.keepFrontMatter || !convertedLines.get(0).equals("---")) {
+                    log.info("Keeping the front matter, or no front matter");
+                    reader.restoreLines(convertedLines);
                 } else {
-                    sourcedLines.add(line);
+                    final var firstLine = lineIndexAfterTheFrontMatter(convertedLines);
+                    for (int i = convertedLines.size() - 1; i >= firstLine; i--) {
+                        reader.restoreLine(convertedLines.get(i));
+                    }
                 }
+                return;
             }
-            sourcedLines.add("----");
-            reader.restoreLines(sourcedLines);
         }
+        log.info("adding pre and post ludes");
+        reader.restoreLines(TextConverter.convert(lines));
     }
 
     /**
