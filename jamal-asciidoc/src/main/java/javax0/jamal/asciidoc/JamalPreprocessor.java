@@ -191,7 +191,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
          * When the extension is md.jam or markdown.jam them it is converted to asciidoc for the display: no prelude, postlude
          */
         if (fileName.endsWith(".adoc.jam") || fileName.endsWith(".md.jam") ||fileName.endsWith(".markdown.jam")) {
-            log.info("not adding prelude and post lude, it is an asccidoc file");
+            log.info("not adding prelude and post lude, it is an asciidoc file");
             if (opts.keepFrontMatter || !lines.get(0).equals("---")) {
                 log.info("Keeping the front matter, or no front matter");
                 reader.restoreLines(lines);
