@@ -1,10 +1,15 @@
 # Title
 
 ## Title
-
+*b* birka _tornya_ **zama** __bama__ mek.
 This is the text that I write here. Khm...
 
+{%@define a=```
+%}
 
-```java
+{%a%}java
 this is Java
-```TEST_PLAYGROUND.txt.jam
+```
+
+
+TEST_PLAYGROUND.txt.jam

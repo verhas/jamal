@@ -10,5 +10,6 @@ module jamal.asciidoc {
     requires jdk.jshell;
     requires java.xml;
     requires jamal.snippet;
+    requires markdown.to.asciidoc;
     provides ExtensionRegistry with javax0.jamal.asciidoc.JamalPreprocessor;
 }

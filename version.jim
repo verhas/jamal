@@ -79,6 +79,7 @@ FLEXMARK_VERSION=0.64.0                    -- https://repo.maven.apache.org/mave
 APACHE_POI_VERSION=5.2.2                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 ASCIIDOCTORJ_VERSION=2.5.4                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
 JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
+MARKDOWN_TO_ASCIIDOC=2.0                   -- https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/
 
 -- dependencies needed for the Maven extension (not the plugin)
 MAVEN_CORE_VERSION=3.8.6                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core

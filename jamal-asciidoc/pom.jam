@@ -36,6 +36,10 @@
       {dependency |org.asciidoctor|asciidoctorj-api|{ASCIIDOCTORJ_VERSION}|provided}
       {dependency |org.asciidoctor|asciidoctorj|{ASCIIDOCTORJ_VERSION}|provided}
       {dependency |org.mockito|mockito-core|{MOCKITO_VERSION}}
+      {dependency |com.github.bodiam|markdown-to-asciidoc|{MARKDOWN_TO_ASCIIDOC}}
     }
 
+    {repositories{repository|jitpack|https://jitpack.io/}}
+
 {end project}
+{@try {@xmlFormat}}

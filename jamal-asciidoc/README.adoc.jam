@@ -106,11 +106,11 @@ It is added only to the text for the display.
 
 == Usage
 
-After the installation, you can open any file that has the extension `.adoc.jam` and have a look at the right pane at the rendered document.
+After the installation, you can open any file that has the extension `.jam` and have a look at the right pane at the rendered document.
 
 The default macro opening and closing strings are {%@escape* ``{%``%} and {%@escape* ``%}``%}.
 It is the usual convention when editing Asciidoc files with Jamal preprocessor.
-The reason for this is because these documents many times include sample code snippets that frequently may have `{` and `}` in them.
+The reason for this is that these documents many times include sample code snippets that frequently may have `{` and `}` in them.
 If you want to use `{` and `}` as macro opening and closing strings, then start your file with the line:
 
 [source]
@@ -120,6 +120,37 @@ If you want to use `{` and `}` as macro opening and closing strings, then start 
 
 When the first two characters of the document are `{@`, then the macro opening and closing strings will be `{` and `}`.
 It is what the core built-in macro `import` also does.
+
+=== Asciidoc
+
+When you edit an asciidoc file the extension is `adoc.jam`.
+The plugin converts the Jamal macros and passes the pure asciidoc document to the IntelliJ Asciidoctor plugin.
+You edit the file and see the result instantly in the other editor pane.
+
+=== Markdown
+
+When you edit a Markdown file the extension is either `md.jam` or `markdown.jam`.
+The plugin first converts the Jamal macros and then converts the markdown to Asciidoc.
+The Jamal processed markdown file is saved into the output, but the converted Asciidoc is passed to the IntelliJ Asciidoctor plugin.
+That way you edit the markdown and see the result instantly in the other editor pane.
+
+=== Text
+
+When you edit a text file the extension is anything ending with `.jam` but none of the Asciidoc or Markdown extensions.
+In this case the plugin first converts the Jamal macros and then converts the text to Asciidoc plain text.
+That way it adds
+
+  [source]
+  ----
+
+in front of the text and adds
+
+  ----
+
+at the end of the file.
+That way you edit the text and see the result instantly in the other editor pane.
+
+NOTE: The conversion also manages when there is a line containing only `----` in the text.
 
 === Configuration
 {%@comment {%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=5e870e97%}%}

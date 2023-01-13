@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static nl.jworks.markdown_to_asciidoc.Converter.convertMarkdownToAsciiDoc;
+
 public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry {
     /**
      * The result structure of the execution of in-process Jamal.
@@ -74,6 +76,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         if (!fileName.endsWith(".jam")) {
             return;
         }
+        final var markdown = fileName.endsWith("md.jam") || fileName.endsWith("markdown.jam");
         final var linesAfterFM = reader.readLines();
         // snipline fetch-font-matter
         final var frontMatter = document.getAttribute("front-matter", null);
@@ -126,12 +129,12 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 newLines = result.lines;
                 try {
                     final var output = MacroReader.macro(result.processor).readValue("asciidoc:output").orElse(null);
-                    if( output != null ) {
-                        final var outputFile = new File(FileTools.absolute(fileName,output));
-                        if( outputFile.exists() && outputFile.isDirectory() ){
+                    if (output != null) {
+                        final var outputFile = new File(FileTools.absolute(fileName, output));
+                        if (outputFile.exists() && outputFile.isDirectory()) {
                             final var outputFileNameFile = new File(outputFileName);
-                            outputFileName = new File(outputFile,outputFileNameFile.getName()).getAbsolutePath();
-                        }else {
+                            outputFileName = new File(outputFile, outputFileNameFile.getName()).getAbsolutePath();
+                        } else {
                             //noinspection ResultOfMethodCallIgnored
                             outputFile.mkdirs();
                             outputFileName = outputFile.getAbsolutePath();
@@ -146,8 +149,14 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 writeOutputFile(outputFileName, log, cachingFileReader, newLines);
             }
         }
-
-        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
+        if (markdown) {
+            final var asciidocLines = Arrays.asList(
+                    convertMarkdownToAsciiDoc(String.join("\n", newLines))
+                            .split("\n"));
+            restoreTheLinesIntoThePlugin(reader, fileName, log, asciidocLines, opts);
+        } else {
+            restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
+        }
         log.info("DONE");
     }
 
@@ -175,10 +184,13 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final InFileOptions opts) {
         /*
-         * when the input is not asciidoc then we add this asciidoc prelude to display the text as source code,
+         * when the input is not asciidoc then we add and asciidoc prelude to display the text as source code,
          * but the prelude and also the closing line does not get into the output
+         *
+         * When the extension is adoc.jam then it is already asciidoc
+         * When the extension is md.jam or markdown.jam them it is converted to asciidoc for the display: no prelude, postlude
          */
-        if (fileName.endsWith(".adoc.jam")) {
+        if (fileName.endsWith(".adoc.jam") || fileName.endsWith(".md.jam") ||fileName.endsWith(".markdown.jam")) {
             log.info("not adding prelude and post lude, it is an asccidoc file");
             if (opts.keepFrontMatter || !lines.get(0).equals("---")) {
                 log.info("Keeping the front matter, or no front matter");
