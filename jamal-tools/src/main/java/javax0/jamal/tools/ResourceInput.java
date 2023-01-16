@@ -17,7 +17,7 @@ class ResourceInput {
     static String getInput(String fileName) throws IOException {
         try (final var is = FileTools.class.getClassLoader().getResourceAsStream(fileName)) {
             if (is == null) {
-                throw new BindException("The resource file 'res:" + fileName + "' cannot be read.");
+                throw new IOException("The resource file 'res:" + fileName + "' cannot be read.");
             }
             try (final var writer = new StringWriter()) {
                 new InputStreamReader(is, StandardCharsets.UTF_8).transferTo(writer);

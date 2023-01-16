@@ -318,7 +318,7 @@ will result
 {%output%}
 
 When the underlying Snake Yaml library generates the text format of the Yaml data it realizes that both `z` and `y` fields refer to the same object.
-Thus SnakeYaml generates a label, something like `&id001` at the first occurrence and instead of repeating the same structure it on second occasion it only references that as `*id001`.
+Thus, SnakeYaml generates a label, something like `&id001` at the first occurrence and instead of repeating the same structure it on second occasion it only references that as `*id001`.
 The resolving process can circumvent this creating a copy for every reference.
 
 {%sample/
@@ -367,21 +367,25 @@ Here we got an error message from the macro `try`, and the Yaml structure stored
 [[Import]]
 ==== {%macroChapter%}{%ImportingChapter%}
 
+{%#define RES($x)={%#if |{%@env intellij.asciidoctor.plugin?%}|./src/test/resources/|res:%}$x%}
 There is no import macro to read Yaml formatted data from a file.
 If you want to read data from a file, you should combine the `yaml:define` and the core `include` macros.
 For example, there is a resource file {%@file (format=`$name`) src/test/resources/sample.yaml%} in the project where this documentation is compiled.
-It ren be referenced from the test execution, which also converts this document as `res:sample.yaml`.
+It can be referenced from the test execution, which also converts this document as `res:sample.yaml`.
 The content of this file is
 
-{%sample/
-{%@include [verbatim] res:sample.yaml%}%}
+{%sample {%#include [verbatim] {%RES sample.yaml%}%}%}
 
 You can use the following structure to read it from the file and assign the Yaml data to the macro `aqt`:
+
 
 {%sample/
 {#yaml:define aqt={@include [verbatim] res:sample.yaml}}
 {aqt}
 %}
+{%#block{%sample/
+{#yaml:define aqt={@include [verbatim] {%RES sample.yaml%}}}
+{aqt}%}%}
 
 which will result
 
@@ -397,7 +401,7 @@ Other packages usually use `(` and `)`.
 The file {%@file (format=`$name`) src/test/resources/sample.yaml.jam%} contains Jamal macros:
 
 {%sample/
-{%@include [verbatim]res:sample.yaml.jam%}
+{%#include [verbatim]{%RES sample.yaml.jam%}%}
 %}
 
 You can include it with evaluation using the following macro sequence.
@@ -407,6 +411,12 @@ You can include it with evaluation using the following macro sequence.
 {#yaml:define h={@include res:sample.yaml.jam}}
 {h}
 %}
+{%#block
+{%sample/
+{@define a=wuff wuff}
+{#yaml:define h={@include {%RES sample.yaml.jam%}}}
+{h}
+%}%}
 
 which will result:
 
@@ -414,7 +424,7 @@ which will result:
 
 {%chap isResolved%}
 
-The macro `yaml:isResolved` results `true` or `false` if the Yaml macro given as argument is eihter resolved or not.
+The macro `yaml:isResolved` results `true` or `false` if the Yaml macro given as argument is either resolved or not.
 The syntax of the macro is
 
 {%sample/

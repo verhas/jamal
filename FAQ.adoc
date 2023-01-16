@@ -6,8 +6,8 @@
 === Is Jamal for Java developers?
 
 
-Yes, but not only.
-It is written in Java, therefore you need a Java environment to run it, but it supports other environments.
+Not exclusively.
+Jamal is written in Java, therefore you need a Java environment to run it, but it supports other environments.
 You do not need to know Java or be a Java programmer to use Jamal.
 
 
@@ -26,7 +26,7 @@ Gradle is configured using a powerful Groovy based DSL that can invoke any Java 
 
 Yes, absolutely.
 
-First, the macro opening and closing sequences are not necessarily single characters.
+NOTE: The macro opening and closing sequences are not necessarily single characters.
 It is possible to use multi-character sequences.
 You can define macro starting string as a command line parameter.
 You can define it programmatically when you embed Jamal into an application providing the macro opening and closing __string__ as the constructor argument to the Processor class.
@@ -44,7 +44,14 @@ Note that even when you changed the opening and closing strings if you
 
 then `{` and } will be used as macro opening and closing strings inside the included file.
 
-=== I installed the AsASCIIDOC plugin, and it gives error for the Jamal documentation
+Also, when you use the IntelliJ Asciidoctor plugin with the Jamal preprocessor the macro opening string is
+
+* `{%`, and the macro closing string is
+
+* `%}`, unless the file starts with the characters  `{@`.
+
+
+=== I installed the ASCIIDOC plugin, and it gives error for the Jamal documentation
 
 
 If you try to look at the git master HEAD version there is a possibility that the documentation has errors.
@@ -56,5 +63,3 @@ The current documentation of Jamal may use the newest features, which were not r
 To edit these you need to install the non-released version.
 To do that run `mvn install` in the Jamal project directory first.
 After that `cd jamal-asciidoc` and `sh ./install-asciidoc.sh`.
-
-

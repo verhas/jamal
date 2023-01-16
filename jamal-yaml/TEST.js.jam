@@ -1,0 +1,11 @@
+{@comment}{@define asciidoctor:output=wamm.txt}
+{#yaml:define Q=
+- {#if/{@env intellij.asciidoctor.plugin?}/{@define A=13}{@export A}/{@define A=14}{@export A}}
+- {@env JAVA_HOME?}
+- "{A}"
+- ["w,'ofa","mofa ", summa]
+}
+{#yaml:define Z=
+- {@yaml:ref Q}
+- {@yaml:ref Q}}
+{@yaml:resolve Z}{Z}

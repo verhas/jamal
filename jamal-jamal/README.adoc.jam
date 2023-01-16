@@ -1,23 +1,23 @@
-= Jamal Self integration module
+= Jamal Self-Integration module
 
-The integration modules, like plantUML, Ruby, Groovy all integrate some external processor into Jamal.
+The integration modules, like plantUML, Ruby, and Groovy, integrate some external processors into Jamal.
 These external processors get a text input and provide a text output.
-In case of the Ruby module the input is the Ruby code.
-In case of the Groovy module the input is the Groovy code.
-The output in both these cases is the output of the program embedded into the macro.
+In the case of the Ruby module, the input is the Ruby code.
+In the case of the Groovy module, the input is the Groovy code.
+The output in both these cases is the program's output embedded into the macro.
 
-Jamal itself is a processor that has a text input and produces text output.
-That way it can be integrated into itself.
-The question is if it should be or not?
+Jamal is a processor with a text input and produces text output.
+That way, it can be integrated into itself.
+The question is if it should be or not.
 
-Using this module you can have a whole Jamal text inside a macro, probably using totally different macro start and strop strings.
-The evaluation of the macro will be executed in a separate processor instance and that way it will not have effect on the current execution.
+Using this module, you can have a whole Jamal text inside a macro, probably using different macro start and strop strings.
+A separate processor will execute the macros, which will not affect the current execution.
 
-This feature is used in the readme documentations of Jamal.
-Till the release 1.7.2 it was provided using a proprietary, test scope built-in macro.
-With this module this feature, although this is a niche feature, is available to any application.
+This feature is used in the readme documentation of Jamal.
+Till the release of 1.7.2, it was provided using a proprietary, test scope built-in macro.
+With this module, this feature, although this is a niche feature, is available to any application.
 
-To use this module you have to add the dependency to you Maven project, as:
+To use this module, you have to add the dependency to your Maven project as:
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 
@@ -34,20 +34,20 @@ To use this module you have to add the dependency to you Maven project, as:
 
 == Macros implemented in the package
 
-There is only one built-in macro defined in the module: `output`.
+Only one built-in macro is defined in the module: `output`.
 It uses a separate Jamal processor to evaluate its input and returns the processed result.
 
-The macro instantiates a new Jamal processor (internally called localProc)on its first use.
+On its first use, the macro instantiates a new Jamal processor (internally called localProc).
 The macro start and end strings are the `{` and `}` characters.
 
-If for any reason you want to execute the samples in isolated processors then you can define the option `isolatedOutput`.
+If for any reason, you want to execute the samples in isolated processors, then you can define the option `isolatedOutput`.
 
 [source]
 ----
 {@options isolatedOutput}
 ----
 
-In that case the macro will allocate a new Jamal processor (internally called isolatedProc) for every invocation.
+In that case, the macro will allocate a new Jamal processor (internally called isolatedProc) for every invocation.
 
 You can also use the `isolate` options between `(` and `)` characters in the macro.
 If you switch off this option
@@ -57,23 +57,23 @@ If you switch off this option
 {@options ~isolatedOutput}
 ----
 
-the subsequent calls to the macro will use the separate, but shared, localProc Jamal processor.
+the subsequent calls to the macro will use the separate but shared localProc Jamal processor.
 
-To use the module in an ASCIIDOC file you can include the resource file `jamal.jim` as
+To use the module in an Asciidoc file, you can include the resource file `jamal.jim` as
 
 [source]
 ----
 {@import res:jamal.jim}
 ----
 
-after that you can use the two user defined macros: `sample` and `output`.
-The input of the macro `sample` is the Jamal text to be evaluated.
-The result of the `sample` is the text itself displayed as source.
-When `output` is used the Jamal text is evaluated, and the result is the output as source code.
+after that, you can use the two user-defined macros: `sample` and `output`.
+The macro `sample` input is the Jamal text to be evaluated.
+The result of the `sample` is the text itself displayed as the source.
+When `output` is used, the Jamal text is evaluated, and the result is the output as source code.
 
-The macro opening and closing string is `{` and `}`.
-The sample codes one after the other are evaluated in the same processor.
-It means that macros, options or other similar constructs are usable in the consequent outputs.
+The macro opening and closing strings are `{` and `}`.
+The sample codes, one after the other, are evaluated in the same processor.
+It means that macros, options, or similar constructs are usable in the consequent outputs.
 
 NOTE: The samples are only evaluated when the macro {%@escape`|``{%output%}``|`%} is invoked.
 

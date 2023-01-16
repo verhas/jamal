@@ -65,8 +65,9 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     @Override
     public void process(Document document, PreprocessorReader reader) {
-        final var runCounter = JamalPreprocessor.runCounter++;
+         final var runCounter = JamalPreprocessor.runCounter++;
         final var fileName = reader.getFile();
+        setContextClassLoader();
         /*
          * The plugin is invoked for all asciidoc files. If the file ending is adoc, asciidoc or anything else then
          * there is nothing to do for the Jamal preprocessor.
@@ -150,10 +151,29 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         log.info("DONE");
     }
 
+    /**
+     * Set the context class loader to the preprocessors class loader.
+     * <p>
+     * Snake yaml is part of the Yaml macro library, but it is also used by the Asciidoctor plugin.
+     * When Snake Yaml code tries to access the class {@link javax0.jamal.api.Ref} it uses it tries to load the class
+     * calling the context class loader and then the plugin's class loader.
+     * <p>
+     * The plugin, eventually separates itself from the preprocessor.
+     * It loads the preprocessor with a special class loader. (At least it seems like that.)
+     * That class loader does not see any Jamal library.
+     * <p>
+     * Hence, to help the situation we set here the context class loader.
+     */
+    private void setContextClassLoader() {
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+    }
+
     private Result runJamalInProcess(final String fileName, final List<String> lines, final boolean useDefaultSeparators, final String text, final CachingFileReader cachingFileReader) {
         final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
         processor.setFileReader(cachingFileReader);
         final var input = Input.makeInput(text, new Position(fileName, 0, 0));
+        // snipline spec_env filter="(.*?)"
+        System.setProperty("intellij.asciidoctor.plugin","1");
         final var r = process(processor, input);
         r.processor = processor;
         r.lines = postProcess(lines, r, fileName);
@@ -176,26 +196,26 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     /**
      * Convert the lines to Asciidoc and then restore them to the IntelliJ Asciidoctor plugin.
-     *
+     * <p>
      * The code asks each converted loaded by the service loader if that can accommodate the conversions.
      * The simplest conversion os the one that converts from Asciidoc to Asciidoc doing nothing.
      * There is also a markdown converter supplied in the application.
      * Any other converter can be copied into the .asciidoctor/lib directory, it will work.
-     *
+     * <p>
      * If there is no converter, then the input is treated as plaintext and converted to preformatted text in Asciidoc.
      *
-     * @param reader the reader of the IntelliJ plugin to be used to restore the lines
+     * @param reader   the reader of the IntelliJ plugin to be used to restore the lines
      * @param fileName the original name of the file, with the {@code .jam} extension
-     * @param log logger
-     * @param lines the lines of the input to be converted and saved to the Asciidoc editor IntelliJ plugin
-     * @param opts input file options, to decide if the front matter is to be kept in the file
+     * @param log      logger
+     * @param lines    the lines of the input to be converted and saved to the Asciidoc editor IntelliJ plugin
+     * @param opts     input file options, to decide if the front matter is to be kept in the file
      */
     private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final InFileOptions opts) {
         for (final var converter : converters) {
             if (converter.canConvert(fileName)) {
                 final var convertedLines = converter.convert(lines);
                 log.info("not adding prelude and post lude, it is an asciidoc file");
-                if (opts.keepFrontMatter || !convertedLines.get(0).equals("---")) {
+                if (opts.keepFrontMatter || convertedLines.size() == 0 || !convertedLines.get(0).equals("---")) {
                     log.info("Keeping the front matter, or no front matter");
                     reader.restoreLines(convertedLines);
                 } else {
@@ -208,7 +228,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             }
         }
         log.info("adding pre and post ludes");
-        reader.restoreLines(TextConverter.convert(lines));
+        reader.restoreLines(TextConverter.convert(fileName, lines));
     }
 
     /**

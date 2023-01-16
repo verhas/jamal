@@ -1,4 +1,4 @@
-package javax0.jamal.asciidoc;
+package javax0.jamal.asciidoc.converters;
 
 import java.util.List;
 

@@ -134,13 +134,19 @@ The plugin first converts the Jamal macros and then converts the markdown to Asc
 The Jamal processed markdown file is saved into the output, but the converted Asciidoc is passed to the IntelliJ Asciidoctor plugin.
 That way you edit the markdown and see the result instantly in the other editor pane.
 
-=== Text
+=== Xml
 
-When you edit a text file the extension is anything ending with `.jam` but none of the Asciidoc or Markdown extensions.
+The xml conversion happens the same way as any text format.
+It is handled separately to add the `xml` formatting after the `source` as `[source,xml]` in the case of `pom.jam` files.
+
+=== Text
+{%@define OTHER_FORMATS=Other formats%}
+When you edit a text file the extension is anything ending with `.jam` but none of the extensions converters recognize.
+The details about converters you can plug into the process are covered in the next section _"{%OTHER_FORMATS%}"_.
 In this case the plugin first converts the Jamal macros and then converts the text to Asciidoc plain text.
 That way it adds
 
-  [source]
+  [source,xxx]
   ----
 
 in front of the text and adds
@@ -148,11 +154,13 @@ in front of the text and adds
   ----
 
 at the end of the file.
+The characters `xxx` in the actual conversion will be the internal extension that stands before the final `.jam` extension.
+For example editing `my_gorgeous.xml.jam` will start with `[source,xml]`.
 That way you edit the text and see the result instantly in the other editor pane.
 
 NOTE: The conversion also manages when there is a line containing only `----` in the text.
 
-=== Other Formats
+=== {%OTHER_FORMATS%}
 
 The conversion of different formats is not hardwired into the preprocessor.
 The preprocessor defines the interface `javax0.jamal.asciidoc.Converter` and uses all converters available.
@@ -262,6 +270,22 @@ Note that these names should be translated to lower case and use `.` as separato
     asciidoc.extension.log=true
 
 instead of `{%@snip ASCIIDOC_EXTENSION_LOG%}`.
+
+=== Special Environment Variable `{%@snip spec_env%}`
+
+The system property `{%@snip spec_env%}` is defined by the embedding environment.
+You can use this via the `env` macro to decide if the Jamal processor is running as an asciidoctor preprocessor.
+{%@import res:jamal.jim%}
+{%sample/
+{#if /{@env {%@snip spec_env%}}/This was compiled in IntelliJ/This was compiled outside of IntelliJ}
+%}
+
+will result in
+
+{%output%}
+
+You should use this macro only for very special purposes.
+Using this macro will result different output based on the different Jamal processor environment.
 
 === Options
 {%@snip:check id=OPTIONS hash=92a31d99%}\

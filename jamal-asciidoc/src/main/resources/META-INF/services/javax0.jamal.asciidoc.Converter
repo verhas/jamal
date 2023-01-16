@@ -1,2 +1,3 @@
-javax0.jamal.asciidoc.AsciiDocConverter
-javax0.jamal.asciidoc.MarkdownConverter
+javax0.jamal.asciidoc.converters.AsciiDocConverter
+javax0.jamal.asciidoc.converters.MarkdownConverter
+javax0.jamal.asciidoc.converters.XmlConverter

@@ -10,7 +10,7 @@
         {plugins|
             {plugin|
                 {GAV :org.apache.maven.plugins:maven-assembly-plugin:{MAVEN_ASSEMBLY_PLUGIN_VERSION}}
-                   <configuration>
+                    {configuration>
                      <archive>
                        <manifest>
                          <mainClass>javax0.jamal.cmd.JamalMain</mainClass>
@@ -19,7 +19,7 @@
                      <descriptorRefs>
                        <descriptorRef>jar-with-dependencies</descriptorRef>
                      </descriptorRefs>
-                   </configuration>
+                   }
                    <executions>
                      <execution>
                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
@@ -72,3 +72,4 @@
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
 {end project}
+{@try{@xmlFormat}}

@@ -5,6 +5,13 @@
 
 === https://github.com/verhas/jamal/tree/1.12.5-SNAPSHOT[1.12.5-SNAPSHOT]
 
+* Asciidoctor extension works with any file and converts whatever it can to Asciidoc
+
+* There is a converter for Markdown, Xml and general text
+
+* It is possible to write a general converter for any file, which is edited as text and can be converted to asciidoc.
+The converter will be picked up by the Asciidoctor plugin's Jamal preprocessor.
+
 === https://github.com/verhas/jamal/tree/1.12.4[1.12.4]
 
 * Asciidoctor extension works on all `*.jam` files.

@@ -466,3 +466,7 @@ conditional redefinition does not redefine any higher scope already defined macr
 "define without option 'RestrictedDefineParameters' does not accept non identifier as argument":
   Input: "{@define z(=6,]k)=wop=6}{z/a/b}"
   Output: "wopa"
+
+"define and export the macro using an option":
+  Input: "{#block {@define [export] a=1}}{a}"
+  Output: "1"

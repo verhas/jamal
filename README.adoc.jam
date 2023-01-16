@@ -792,7 +792,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.7.6 optional and extra ignored arguments
 * since 1.12.3 options can also be used to define optional, failing, pure and verbatim macros
 * since 1.12.3 option `{%@snip RestrictedDefineParameters%}` can be used to restrict parameters to be only identifiers
-
+* since 1.12.5 optopn `export` can be used as a shorthand instead of define and export one after the other
 ===== Define basics
 
 `define` defines a user-defined macro in the current scope.
@@ -1102,6 +1102,28 @@ With this option there is no need for the `?` in front of the macro name, every 
 %}
 
 results
+
+{%output%}
+
+==== Exported Macros
+
+When you define a macro it gets into the local scope unless you define it global.
+It is possible to export a macro after it was defined.
+Exporting a macro right after the definition is so common that the option `export` does the same.
+For example the following sample
+
+{%sample/
+{#block
+{@define A=not exported}
+{@define B=exported explicitly}{@export B}
+{@define [export] C=exported using option}
+}
+A: {?A}
+B: {?B}
+C: {?C}
+%}
+
+will result the output
 
 {%output%}
 

@@ -1,0 +1,5 @@
+{@comment}{@define alma=alma}
+<[!CDATA[[ this is the Cadata context ]]>
+<xml tag="{alma}">
+  this is the content in the XML
+</xml>
