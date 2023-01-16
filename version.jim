@@ -1,3 +1,4 @@
+{@comment}
 -- This file defines the version of the project mas well as many other versions used all over the project.
 -- The central location of all the versions make maintenance easier.
 -- The version defined here can be used by the Jamal Maven Extension to use to refer to the parent project from the modules.

@@ -18,14 +18,13 @@ Till the release of 1.7.2, it was provided using a proprietary, test scope built
 With this module, this feature, although this is a niche feature, is available to any application.
 
 To use this module, you have to add the dependency to your Maven project as:
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
+{%@snip:xml pom=pom.xml%}{%@import ../version.jim%}\
 
 [source,xml]
 ----
 <dependency>
-    <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-jamal</artifactId>
+    <groupId>{%GROUPID%}</groupId>
+    <artifactId>{%pom /project/artifactId/text()%}</artifactId>
     <version>{%VERSION%}</version>
 </dependency>
 

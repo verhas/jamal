@@ -367,7 +367,7 @@ Here we got an error message from the macro `try`, and the Yaml structure stored
 [[Import]]
 ==== {%macroChapter%}{%ImportingChapter%}
 
-{%#define RES($x)={%#if |{%@env intellij.asciidoctor.plugin?%}|./src/test/resources/|res:%}$x%}
+{%#define RES($x)={%#if |{%@env intellij.asciidoctor.plugin?%}|../jamal-test/src/test/resources/|res:%}$x%}
 There is no import macro to read Yaml formatted data from a file.
 If you want to read data from a file, you should combine the `yaml:define` and the core `include` macros.
 For example, there is a resource file {%@file (format=`$name`) src/test/resources/sample.yaml%} in the project where this documentation is compiled.
