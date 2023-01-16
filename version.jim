@@ -34,7 +34,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=1.12.5-SNAPSHOT                    -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=1.12.5                             -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 

@@ -24,7 +24,7 @@ To use this module, you have to add the dependency to your Maven project as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-jamal</artifactId>
-    <version>1.12.5-SNAPSHOT</version>
+    <version>1.12.5</version>
 </dependency>
 
 ----
@@ -74,3 +74,4 @@ The sample codes, one after the other, are evaluated in the same processor.
 It means that macros, options, or similar constructs are usable in the consequent outputs.
 
 NOTE: The samples are only evaluated when the macro `{%output%}` is invoked.
+
