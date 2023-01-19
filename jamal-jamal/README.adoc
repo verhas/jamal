@@ -35,7 +35,7 @@ To use this module, you have to add the dependency to your Maven project as:
 Only one built-in macro is defined in the module: `output`.
 It uses a separate Jamal processor to evaluate its input and returns the processed result.
 
-On its first use, the macro instantiates a new Jamal processor (internally called localProc).
+On its first use, the macro instantiates a new Jamal processor (internally called `localProc`).
 The macro start and end strings are the `{` and `}` characters.
 
 If for any reason, you want to execute the samples in isolated processors, then you can define the option `isolatedOutput`.
@@ -55,7 +55,7 @@ If you switch off this option
 {@options ~isolatedOutput}
 ----
 
-the subsequent calls to the macro will use the separate but shared localProc Jamal processor.
+the subsequent calls to the macro will use the separate but shared `localProc` Jamal processor.
 
 To use the module in an Asciidoc file, you can include the resource file `jamal.jim` as
 

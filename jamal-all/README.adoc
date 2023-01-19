@@ -30,29 +30,31 @@ This will add the following dependencies to your project:
 
 * `jamal-core`
 
-* `jamal-snippet`
-
-* `jamal-scriptbasic`
+* `jamal-assertions`
 
 * `jamal-groovy`
 
-* `jamal-ruby`
-
-* `jamal-plantuml`
+* `jamal-io`
 
 * `jamal-jamal`
 
-* `jamal-yaml`
-
-* `jamal-io`
+* `jamal-java`
 
 * `jamal-markdown`
 
-* `jamal-assertions`
+* `jamal-mock`
+
+* `jamal-plantuml`
+
+* `jamal-ruby`
+
+* `jamal-scriptbasic`
+
+* `jamal-snippet`
+
+* `jamal-yaml`
 
 * `jamal-word`
-
-* `jamal-mock`
 
 * `jamal-maven-plugin`
 

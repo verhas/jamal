@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>jamal snippet</name>
-    <packaging>jar</packaging>
-    <artifactId>jamal-snippet</artifactId>
+    <name>jamal java</name>
+    <artifactId>jamal-java</artifactId>
     <version>1.12.6-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
         <version>1.12.6-SNAPSHOT</version>
     </parent>
-    <description>Jamal macro library snippet macros</description>
+    <description>Jamal module for Java Run-Rime Compile and Load</description>
     <build>
         <plugins>
             <plugin>
@@ -30,8 +29,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                --add-opens jamal.snippet/javax0.jamal.snippet=ALL-UNNAMED
-                          --add-opens jamal.snippet/javax0.jamal.documentation=ALL-UNNAMED
+                --add-opens jamal.java/javax0.jamal.java=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>
@@ -51,43 +49,33 @@
             <artifactId>jamal-engine</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.javax0.mavenDownload</groupId>
+            <artifactId>mavenDownloader</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
+            <version>1.12.6-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-jamal</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-assertions</artifactId>
-            <version>1.12.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-plantuml</artifactId>
+            <artifactId>jamal-snippet</artifactId>
             <version>1.12.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.9.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -1,4 +1,4 @@
-{@comment}{@define asciidoctor:output=wamm.txt}
+{@comment}{@define asciidoc:output=wamm.txt}
 {#yaml:define Q=
 - {#if/{@env intellij.asciidoctor.plugin?}/{@define A=13}{@export A}/{@define A=14}{@export A}}
 - {@env JAVA_HOME?}

@@ -5,5 +5,5 @@
 {#define modules:DEBUG=debug}
 {#define modules:CORE_TEST={modules:CORE},{modules:TESTSUPPORT}}
 {#define modules:EMBED=maven-plugin,maven-extension,cmd,doclet,asciidoc}
-{#define modules:MACROS=snippet,scriptbasic,groovy,ruby,plantuml,jamal,yaml,io,markdown,assertions,word,mock}
+{#define modules:MACROS=assertions,groovy,io,jamal,java,markdown,mock,plantuml,ruby,scriptbasic,snippet,yaml,word}
 {#define modules:ALL={modules:CORE},{modules:MACROS},{modules:EMBED},{modules:DEBUG}}

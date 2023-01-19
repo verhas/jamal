@@ -238,6 +238,16 @@ I do not think that you would need anything like this, but if you need, there is
 This module provides macros that can help you read text from files and write text to external files.
 {%further io%}
 
+=== {%#block {%depCounter%}%} `jamal`
+
+This module lets you call Jamal processing some part of the code in a separate processor.
+{%further jamal%}
+
+=== {%#block {%depCounter%}%} `java`
+
+This module allows loading built-in macros during run-time.
+{%further java%}
+
 === {%#block {%depCounter%}%} `markdown`
 This module lets you convert Markdown to HTML.
 This module is mainly practical when you embed Jamal macros in a JavaDoc and use the Jamal doclet extension.
@@ -274,4 +284,4 @@ This module provides a macro to mock the behavior of built-in macros.
 This is mainly when debugging or testing the functionality of some macro packages.
 {%further mock%}
 
-{%#assert:equals /{%dependencies%}/{%depCounter%}/Not all dependencies are documented or some documented dependency is not there any more%}
+{%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more%}

@@ -213,6 +213,16 @@ For further information read the link:../jamal-plantuml/README.adoc[documentatio
 This module provides macros that can help you read text from files and write text to external files.
 For further information read the link:../jamal-io/README.adoc[documentation] of the module.
 
+===  `jamal`
+
+This module lets you call Jamal processing some part of the code in a separate processor.
+For further information read the link:../jamal-jamal/README.adoc[documentation] of the module.
+
+===  `java`
+
+This module allows loading built-in macros during run-time.
+For further information read the link:../jamal-java/README.adoc[documentation] of the module.
+
 ===  `markdown`
 This module lets you convert Markdown to HTML.
 This module is mainly practical when you embed Jamal macros in a JavaDoc and use the Jamal doclet extension.

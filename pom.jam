@@ -98,6 +98,7 @@
         {@for [evalist] MODULE in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,all)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
         {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
+        {dependency|com.javax0.mavenDownload|mavenDownloader|{MAVEN_DOWNLOADER}}
         {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}|test}
         }}
 
@@ -118,3 +119,4 @@
         {end profile}
     }
 {end project}
+{@try{@xmlFormat}}
