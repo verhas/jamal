@@ -1,0 +1,22 @@
+{#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{project jamal groovy}
+    {GAV ::jamal-groovy:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description Groovy module for Jamal}
+
+    {@define openForTests={opens/groovy/groovy}}
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+      {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
+      {dependency |{GROUPID}|jamal-snippet|{VERSION}|test}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
+      {dependency :org.codehaus.groovy:groovy-jsr223:{GROOVY_VERSION}:}
+    }
+
+{end project}

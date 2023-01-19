@@ -1,0 +1,23 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@import ../version.jim}
+{project jamal plantuml}
+    {packaging jar}
+    {GAV ::jamal-plantuml:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description|Jamal macro library snippet macros}
+
+    {@define openForTests={opens/plantuml/plantuml}
+                          {opens/plantuml/documentation}}
+
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies#
+        {@for MODULE in (api,tools,engine)=
+            {dependency|{GROUPID}|jamal-MODULE}}
+        {@for MODULE in (testsupport,core,snippet,jamal)=
+            {dependency|{GROUPID}|jamal-MODULE||test}}
+        {@for MODULE in (api,engine,params)=
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency|net.sourceforge.plantuml|plantuml|{PLANTUML_VERSION}|}
+    }
+{end project}
