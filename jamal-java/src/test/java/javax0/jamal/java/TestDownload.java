@@ -23,8 +23,7 @@ public class TestDownload {
         final var dir = System.getProperty("user.home") + "/.m2/repository/com/squareup/tools/build/maven-archeologist/0.0.3.1/";
         deleteDirectory(new File(dir));
         TestThat.theInput("{@maven:download com.squareup.tools.build:maven-archeologist:0.0.3.1}"
-        ).results(
-                "");
+        ).results(s -> s.startsWith("A") && s.length() == 37);
         Assertions.assertTrue(new File(dir + "maven-archeologist-0.0.3.1.jar").exists());
     }
 

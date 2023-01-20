@@ -105,4 +105,3 @@ The application of Jamal is independent of build automation. It can be antora, j
 <h1>Conclusion</h1>
 
 Treating documentation as source code is a good idea and a good start. It can, and should, however, be extended to include more features. When you treat your documentation as a source code, you should not stop simply using built automation, automated testing, review processes, and versioning. You should also apply techniques like Don't Repeat Yourself (DRY). Extra tools exist and seamlessly integrate with the already existing build and formatting tools to do that.
-

@@ -1,4 +1,4 @@
-== Jamal Snippet Handling Macros
+= Jamal Snippet Handling Macros
 
 
 
@@ -1360,7 +1360,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1170:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1169:30
 ----
 
 
@@ -2904,7 +2904,7 @@ will result in the output
 
 [source]
 ----
-2023-01-19 05:27:49
+2023-01-20 12:35:09
 ----
 
 

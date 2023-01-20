@@ -1,4 +1,4 @@
-== Jamal PlantUML Diagrams
+= Jamal PlantUML Diagrams
 :imagesdir: images
 
 PlantUML's integration supports PlantUML descriptions to be embedded into any Jamal file.

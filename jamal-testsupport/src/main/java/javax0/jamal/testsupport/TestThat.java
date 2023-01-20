@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -186,6 +187,27 @@ public class TestThat implements AutoCloseable {
         final var output = results();
         close();
         return output;
+    }
+
+    /**
+     * Create a new macro, a new processor and test that the input creates the expected output.
+     * If the test predicate does not accept the result then JUnit5 assertion failure will happen.
+     *
+     * @param test that checks the output
+     * @throws NoSuchMethodException     if the macro class can not be instantiated
+     * @throws IllegalAccessException    if the macro class can not be instantiated
+     * @throws InstantiationException    if the macro class can not be instantiated
+     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
+     */
+    public void results(Predicate<String> test) throws
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
+        final var result = resultsClose();
+        Assertions.assertTrue(test.test(result));
     }
 
     /**

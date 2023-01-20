@@ -1,6 +1,8 @@
 {%@comment off%}\
+= image:logo.svg[width=100px] Jamal Macro Language
+
 :imagesdir: images
-== image:logo.svg[width=100px] Jamal Macro Language
+
 
 {%@comment This is the ASCIIDOC version of the readme.
 The source of the file is the README.adoc.jam.
@@ -21,7 +23,7 @@ jamal-snippet.
 {%@import environmentvariables.jim%}
 
 ****
-image:jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
+image::jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
@@ -167,7 +169,7 @@ image::jamaldebugger2559x1089.png[]
 * <<./jamal-io/README.adoc#,Io Module README>>, How to read and write external files from Jamal macros
 * <<./jamal-jamal/README.adoc#,Jamal Jamal Module README>>, How to use Jamal inside Jamal as an embedded language
 * <<./jamal-markdown/README.adoc#,Jamal Markdown Module README>>, Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
-* <<./jamal-mmock/README.adoc#,Jamal Mock Module README>>, Mock built-in macros to test macros that are to run in a specific environment
+* <<./jamal-mock/README.adoc#,Jamal Mock Module README>>, Mock built-in macros to test macros that are to run in a specific environment
 * <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
 * <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
 * <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files

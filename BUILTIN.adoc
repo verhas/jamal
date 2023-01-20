@@ -1,4 +1,4 @@
-== Writing Built-In Macros for Jamal
+= Writing Built-In Macros for Jamal
 
 
 
@@ -406,7 +406,7 @@ This macro interpreted the input as an array of characters.
 Many times macros want to work with individual parameters.
 In the next chapter we will look at an example how we should do that.
 
-==== Splitting the Input
+=== Splitting the Input
 
 If you look at the core built-in macro `if` then you can see that it does not have a special syntax.
 It just has three parameters and in case the first parameter is true, then it returns the second parameter, otherwise the third.
@@ -487,9 +487,9 @@ This second exception also contains the reference to the input location.
 If the location of the error is not interesting inside the macro then it is good enough to throw a simple `BadSyntax` exception.
 The processor catches that exception and converts it to a `BadSyntaxAt` exception that will reference the character at the very start of the macro.
 
-=== General Structure of the `evaluate()` Method
+== General Structure of the `evaluate()` Method
 
-=== Macros that are `InnerScopeDependent`
+== Macros that are `InnerScopeDependent`
 
 The macro evaluation order is detailed in the link:README.adoc[README] of Jamal.
 When Jamal sees a built-in macro that starts with a `#` character at the start then it evaluates the content of it before invoking the macro itself.
@@ -583,20 +583,19 @@ The options, however, are not user defined macros.
 Macros that rely on user defined macros or options as parameters defined _inside_ should implement the interface `InnerScopeDependent`.
 It is recommended not to implement this interface anymore.
 
-=== Creating User Defined Macros
+== Creating User Defined Macros
 
 You can easily create user defined macros using the `define` macro.
 However, user defined macros can also be created programmatically.
 This chapter will describe the latter.
 
-=== Creating Your Own User Defined Macro Implementation
+== Creating Your Own User Defined Macro Implementation
 
 Programmatically created user defined macros can define their own evaluation.
 
 
-=== Strategies to Register Built-In Macros
+== Strategies to Register Built-In Macros
 
 In this chapter I will explain the advantages, and the disadvantages of the two strategies that you can follow to register your built-in macros.
 It is a more theoretical chapter with less example code.
 You can skip this section and return to it later.
-

@@ -165,6 +165,39 @@
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.sahli.asciidoc.confluence.publisher</groupId>
+                    <artifactId>asciidoc-confluence-publisher-maven-plugin</artifactId>
+                    <version>0.17.1</version>
+                    <configuration>
+                        <asciidocRootFolder>.</asciidocRootFolder>
+                        <sourceEncoding>UTF-8</sourceEncoding>
+                        <!-- default -->
+                        <rootConfluenceUrl>https://javax0.atlassian.net/wiki/</rootConfluenceUrl>
+                        <skipSslVerification>false</skipSslVerification>
+                        <maxRequestsPerSecond>10</maxRequestsPerSecond>
+                        <spaceKey>asciidoc</spaceKey>
+                        <ancestorId>262145</ancestorId>
+                        <serverId>confluence</serverId>
+                        <pageTitlePrefix xml:space="preserve">Doc :: </pageTitlePrefix>
+                        <pageTitleSuffix xml:space="preserve"> [1.12.6-SNAPSHOT]</pageTitleSuffix>
+                        <versionMessage>Version 1.12.6-SNAPSHOT</versionMessage>
+                        <notifyWatchers>false</notifyWatchers>
+                        <attributes>
+                            <version>1.12.6-SNAPSHOT</version>
+                            <someOtherKey>value</someOtherKey>
+                        </attributes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>publish-documentation</id>
+                            <goals>
+                                <goal>publish</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>

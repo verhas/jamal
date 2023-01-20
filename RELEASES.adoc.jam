@@ -1,7 +1,8 @@
-== Jamal Releases
+= Jamal Releases
+
 {%@snip:collect from=./jamal-core/src%}
 
-{%@define RELEASE($x)==== https://github.com/verhas/jamal/tree/$x[$x]%}
+{%@define RELEASE($x)=== https://github.com/verhas/jamal/tree/$x[$x]%}
 
 {%RELEASE/1.12.6-SNAPSHOT%}
 

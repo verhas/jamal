@@ -1,8 +1,10 @@
 package javax0.jamal.java;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
@@ -12,12 +14,36 @@ import javax0.maventools.download.MavenCoordinates;
 import javax0.maventools.download.Pom;
 import javax0.maventools.download.Repo;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.UUID;
 
 public class Download implements Macro {
+
+
+    public static class FileListHolder implements Identified, ObjectHolder<File[]> {
+
+
+        private final String id;
+        private final File[] files;
+        private FileListHolder(File [] files){
+            id = ("A" + UUID.randomUUID()).replaceAll("-",":");
+            this.files = files;
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public File[] getObject() {
+            return files;
+        }
+    }
 
 
     @Override
@@ -40,11 +66,10 @@ public class Download implements Macro {
         }
         final var coords = new MavenCoordinates(coordsString[0], coordsString[1], coordsString[2]);
         try {
-            new Downloader(localPath, reposArr).fetch(coords, Set.of(type), Set.of(Pom.DependencyScope.COMPILE));
+            return new FileListHolder(new Downloader(localPath, reposArr).fetch(coords, Set.of(type), Set.of(Pom.DependencyScope.COMPILE))).getId();
         } catch (Exception e) {
             throw new BadSyntax("Cannot download " + in, e);
         }
-        return "";
     }
 
     private Repo[] getRepos(final Params.Param<String> repos) throws BadSyntax {

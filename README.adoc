@@ -1,11 +1,13 @@
-:imagesdir: images
-== image:logo.svg[width=100px] Jamal Macro Language
+= Jamal
+:doctitle: Jamal Macro Language
+
+== image:images/logo.svg[width=100px] Jamal Macro Language
 
 
 
 
 ****
-image:jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
+image::images/jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
@@ -28,7 +30,7 @@ The Java version development started in 2018.
 Jamal leverages on the programming language's features, and the twenty years of experience of using the old version.
 In this documentation, the term "Jamal" refers to the Java implementation of the macro language.
 
-image::text2text.png[align=center]
+image::images/text2text.png[align=center]
 
 Jamal's basic concept is to transform a source text to a target text enabling programmatic constructs in the source text.
 That way, it enables the maintainer of the text to
@@ -129,7 +131,7 @@ Jamal can be used in JavaDoc using the Jamal Doclet implementation.
 These different features are documented in their respective module documentations:
 
 === Debugger
-image::jamaldebugger2559x1089.png[]
+image::images/jamaldebugger2559x1089.png[]
 * <<./jamal-debug/README.adoc#,Debugger Technical Documentation>>
 
 === Applications, Embedding
@@ -151,7 +153,7 @@ image::jamaldebugger2559x1089.png[]
 * <<./jamal-io/README.adoc#,Io Module README>>, How to read and write external files from Jamal macros
 * <<./jamal-jamal/README.adoc#,Jamal Jamal Module README>>, How to use Jamal inside Jamal as an embedded language
 * <<./jamal-markdown/README.adoc#,Jamal Markdown Module README>>, Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
-* <<./jamal-mmock/README.adoc#,Jamal Mock Module README>>, Mock built-in macros to test macros that are to run in a specific environment
+* <<./jamal-mock/README.adoc#,Jamal Mock Module README>>, Mock built-in macros to test macros that are to run in a specific environment
 * <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
 * <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
 * <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files
@@ -682,7 +684,7 @@ In that case, the macro evaluates the rest of the input till the matching closin
 
 
 
-image::evaluationorder.svg[]
+image::images/evaluationorder.svg[]
 
 
 If the macro starts with the `#` character, then the input is first parsed for other macros.
@@ -1979,7 +1981,7 @@ When the input of the macro is executed the global macro `$input` contains the o
 The naming may be strange at first, but consider that this string is the input for the deferred macro evaluation.
 
 
-image::input_output.svg[]
+image::images/input_output.svg[]
 
 If this evaluation defines the global macro `$output` the value of the macro will be used instead of the original output.
 

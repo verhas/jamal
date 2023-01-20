@@ -1,4 +1,4 @@
-== Jamal Snippet Handling Macros
+= Jamal Snippet Handling Macros
 {%@import res:jamal.jim%}\
 {%@import ../shared_text.jim%}\
 {%@snip:collect from="src/main/java/"%}\
