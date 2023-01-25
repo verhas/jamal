@@ -301,3 +301,4 @@ It is not possible to process the whole text as a single chunk and keep the form
 In case of complex macros there is no clear mapping between the input and the output text.
 Without a mapping between the characters of the input and the output there is no way to copy the formatting.
 ====
+

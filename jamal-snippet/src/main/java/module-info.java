@@ -13,6 +13,7 @@ import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.LineCount;
 import javax0.jamal.snippet.ListDir;
 import javax0.jamal.snippet.NumberLines;
+import javax0.jamal.snippet.Numbers;
 import javax0.jamal.snippet.Pos;
 import javax0.jamal.snippet.RangeMacro;
 import javax0.jamal.snippet.Reflow;
@@ -43,6 +44,7 @@ import javax0.jamal.snippet.StringMacros.StartsWith;
 import javax0.jamal.snippet.StringMacros.Substring;
 import javax0.jamal.snippet.ThinXmlMacro;
 import javax0.jamal.snippet.TrimLines;
+import javax0.jamal.snippet.Unicode;
 import javax0.jamal.snippet.Untab;
 import javax0.jamal.snippet.Update;
 import javax0.jamal.snippet.Xml;
@@ -107,5 +109,7 @@ module jamal.snippet {
             RangeMacro,
             Rot13,
             Pos,
+            Numbers,
+            Unicode,
             SnipTransform;
 }

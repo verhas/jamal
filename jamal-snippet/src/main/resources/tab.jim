@@ -1,0 +1,41 @@
+{@comment}
+{#define NUL={@unicode &#0}}
+{#define SOH={@unicode &#1}}
+{#define STX={@unicode &#2}}
+{#define ETX={@unicode &#3}}
+{#define EOT={@unicode &#4}}
+{#define ENQ={@unicode &#5}}
+{#define ACK={@unicode &#6}}
+{#define BEL={@unicode &#7}}
+{#define BS={@unicode &#8}}
+{#define HT={@unicode &#9}}
+{#define LF={@unicode &#10}}
+{#define VT={@unicode &#11}}
+{#define FF={@unicode &#12}}
+{#define CR={@unicode &#13}}
+{#define SO={@unicode &#14}}
+{#define SI={@unicode &#15}}
+{#define DLE={@unicode &#16}}
+{#define DC1={@unicode &#17}}
+{#define DC2={@unicode &#18}}
+{#define DC3={@unicode &#19}}
+{#define DC4={@unicode &#20}}
+{#define NAK={@unicode &#21}}
+{#define SYN={@unicode &#22}}
+{#define ETB={@unicode &#23}}
+{#define CAN={@unicode &#24}}
+{#define EM={@unicode &#25}}
+{#define SUB={@unicode &#26}}
+{#define ESC={@unicode &#27}}
+{#define FS={@unicode &#28}}
+{#define GS={@unicode &#29}}
+{#define RS={@unicode &#30}}
+{#define US={@unicode &#31}}
+{#define DEL={@unicode &#127}}
+
+{#define SP={@unicode &#32}}
+{#define NBSP={@unicode &#160}}
+{#define NBHYPHEN={@unicode &#8209}}
+{#define NBHYPHEN={@unicode &#173}}
+
+{#define BULLET={@unicode &#8226}}

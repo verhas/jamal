@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 /**
@@ -33,13 +34,18 @@ public interface ServiceLoaded {
      * @return the list of instances
      */
     static <T> List<T> getInstances(Class<T> klass) {
-        ServiceLoader<T> services = ServiceLoader.load(klass);
         List<T> list = new ArrayList<>();
-        services.iterator().forEachRemaining(list::add);
-        if (list.size() == 0) {
-            loadViaMetaInf(klass, list);
+        try {
+            final ServiceLoader<T> services = ServiceLoader.load(klass);
+            services.iterator().forEachRemaining(list::add);
+            if (list.size() == 0) {
+                loadViaMetaInf(klass, list);
+            }
+            return list;
+        } catch (ServiceConfigurationError ignored) {
+            loadViaMetaInf(klass,list);
+            return list;
         }
-        return list;
     }
 
     /**

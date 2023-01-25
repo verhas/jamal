@@ -99,6 +99,8 @@ This way, it is easier to keep your documentation up to date.
 .. <<thinXml,`thinXml`>>
 .. <<date,`date`>>
 .. <<format,`format`>>
+.. <<numbers,`numbers`>>
+.. <<unicode,`unicode`>>
 .. <<case,`case:lower`, `case:upper`, ...>>
 .. <<file,`file`>>
 .. <<directory,`directory`>>
@@ -2373,6 +2375,16 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 ----
 %}
 
+[[numbers]]
+==== {%macroChapter%}`numbers`
+
+{%!@snip numbers%}
+
+[[unicode]]
+==== {%macroChapter%}`unicode`
+
+{%!@snip unicode%}
+
 [[case]]
 ==== {%macroChapter%}`case:lower`, `case:upper`, ...
 {%#snip:check file={%JAVA_DIR%}Case.java hash=1dbb1c57%}
@@ -2388,7 +2400,7 @@ These are:
 
 [[file]]
 ==== {%macroChapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=5696d1bd%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=5a2997ff%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2436,7 +2448,7 @@ This may save some time when you are referring to many files in a deep directory
 
 [[directory]]
 ==== {%macroChapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=5696d1bd%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=5a2997ff%}
 {%fileDirectory directory%}
 
 {%sample/
@@ -2454,15 +2466,10 @@ This file is in the directory `../jamal-snippet`.
 %}
 
 In the format you can use the following placeholders:
-{%#snip:define dirMacroFormatPlaceholdersFormatted=
-{%@snip (replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||") dirMacroFormatPlaceholders %}%}
+{%#snip:define fileMacroFormatPlaceholdersFormatted=
+{%@snip (replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||") fileMacroFormatPlaceholders %}%}
 
-{%@snip dirMacroFormatPlaceholdersFormatted
-* `$name` gives the name of the directory as was specified on the macro
-* `$absolutePath` gives the name of the directory as was specified on the macro
-* `$parent` the parent directory
-* `$canonicalPath` the canonical path
-%}
+{%#replace |{%@snip fileMacroFormatPlaceholdersFormatted%}|file|directory%}
 
 {%SUPPORT_ROOT/directory%}
 

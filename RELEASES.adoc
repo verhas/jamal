@@ -5,7 +5,8 @@
 
 
 == https://github.com/verhas/jamal/tree/1.12.6-SNAPSHOT[1.12.6-SNAPSHOT]
-
+Snippet library macro `directory` has the same formatting options as `file` macro.
+There are two new macros in the snippet library: `unicode` and `numbers
 
 == https://github.com/verhas/jamal/tree/1.12.5[1.12.5]
 

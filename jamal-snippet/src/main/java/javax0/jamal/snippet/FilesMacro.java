@@ -8,6 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
+import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
 
 import java.io.File;
@@ -22,21 +23,33 @@ import static javax0.jamal.tools.Params.holder;
  * Inner classes implement macros that ease the handling of document references to files and directories.
  */
 public class FilesMacro {
-
+    private static class Trie {
+        static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
+                // snippet fileMacroFormatPlaceholders
+                "$name", // gives the name of the file as was specified on the macro
+                "$absolutePath", // the absolute path to the file
+                "$parent", // the parent directory where the file is
+                "$simpleName", // the name of the file without the path
+                "$canonicalPath", // the canonical path
+                "$bareNaked", // the file name without the extensions
+                "$naked1", // the file name without the last extension
+                "$naked2", // the file name without the last 2 extensions
+                "$naked3", // the file name without the last 3 extensions
+                "$naked4", // the file name without the last 4 extensions
+                "$naked5", // the file name without the last 5 extensions
+                "$extensions", // the file name extensions
+                "$extension1", // the file name last extension
+                "$extension2", // the file name last 2 extensions
+                "$extension3", // the file name last 3 extensions
+                "$extension4", // the file name last 4 extensions
+                "$extension5"  // the file name last 5 extensions
+                // end snippet
+        );
+    }
     /**
      * Check that the directory exists, and it is a directory.
      */
     public static class Directory implements Macro, InnerScopeDependent {
-        private static class Trie {
-            static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
-                    // snippet dirMacroFormatPlaceholders
-                    "$name", // gives the name of the directory as was specified on the macro
-                    "$absolutePath",  // gives the name of the directory as was specified on the macro
-                    "$parent", // the parent directory
-                    "$canonicalPath" // the canonical path
-                    // end snippet
-            );
-        }
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -50,7 +63,7 @@ public class FilesMacro {
             BadSyntaxAt.when(!dir.isDirectory(),"The directory '" + dirName + "' exists but it is not a directory.",in.getPosition());
 
             try {
-                return Trie.formatter.format(format.get(), value(name), value(dir.getAbsolutePath()), value(dir.getParent()), value(dir::getCanonicalPath));
+                return formatString(format, name, dir);
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + dirName
@@ -69,29 +82,7 @@ public class FilesMacro {
      * Check that the file exists, and it is a file.
      */
     public static class FileMacro implements Macro, InnerScopeDependent {
-        private static class Trie {
-            static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
-                    // snippet fileMacroFormatPlaceholders
-                    "$name", // gives the name of the file as was specified on the macro
-                    "$absolutePath", // the absolute path to the file
-                    "$parent", // the parent directory where the file is
-                    "$simpleName", // the name of the file without the path
-                    "$canonicalPath", // the canonical path
-                    "$bareNaked", // the file name without the extensions
-                    "$naked1", // the file name without the last extension
-                    "$naked2", // the file name without the last 2 extensions
-                    "$naked3", // the file name without the last 3 extensions
-                    "$naked4", // the file name without the last 4 extensions
-                    "$naked5", // the file name without the last 5 extensions
-                    "$extensions", // the file name extensions
-                    "$extension1", // the file name last extension
-                    "$extension2", // the file name last 2 extensions
-                    "$extension3", // the file name last 3 extensions
-                    "$extension4", // the file name last 4 extensions
-                    "$extension5"  // the file name last 5 extensions
-                    // end snippet
-            );
-        }
+
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -105,25 +96,7 @@ public class FilesMacro {
             BadSyntaxAt.when(!file.isFile(),"The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.",in.getPosition());
 
             try {
-                return Trie.formatter.format(format.get(),
-                        value(name),
-                        value(file.getAbsolutePath()),
-                        value(file.getParent()),
-                        value(file::getName),
-                        value(file::getCanonicalPath),
-                        value(new FileClosure(file, 0)::nakedFileName),
-                        value(new FileClosure(file, 1)::nakedFileNameN),
-                        value(new FileClosure(file, 2)::nakedFileNameN),
-                        value(new FileClosure(file, 3)::nakedFileNameN),
-                        value(new FileClosure(file, 4)::nakedFileNameN),
-                        value(new FileClosure(file, 5)::nakedFileNameN),
-                        value(new FileClosure(file, 0)::extensions),
-                        value(new FileClosure(file, 1)::extensionsN),
-                        value(new FileClosure(file, 2)::extensionsN),
-                        value(new FileClosure(file, 3)::extensionsN),
-                        value(new FileClosure(file, 4)::extensionsN),
-                        value(new FileClosure(file, 5)::extensionsN)
-                );
+                return formatString(format, name, file);
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + fileName
@@ -132,67 +105,85 @@ public class FilesMacro {
             }
         }
 
-        private static class FileClosure {
-            final File f;
-            final int i;
-
-            private FileClosure(final File f, final int i) {
-                this.f = f;
-                this.i = i;
-            }
-
-            /**
-             * Return the file name omitting the last {@code i} extensions.
-             * If there are less than {@code i} extensions then return the file name without extension.
-             *
-             * @return the file name without the extensions
-             */
-            private String nakedFileNameN() {
-                final var nameParts = f.getName().split("\\.");
-                final var needed = nameParts.length - i;
-                if (needed < 1) {
-                    return nameParts[0];
-                } else {
-                    return Arrays.stream(nameParts).limit(needed).collect(Collectors.joining("."));
-                }
-            }
-
-            /**
-             * Calculate the file name without any extensions.
-             *
-             * @return the file name without the extensions.
-             */
-            private String nakedFileName() {
-                return f.getName().split("\\.")[0];
-            }
-
-            /**
-             * Return the file name omitting the last {@code i} extensions.
-             * If there are less than {@code i} extensions then return the file name without extension.
-             *
-             * @return the file name without the extensions
-             */
-            private String extensionsN() {
-                final var nameParts = f.getName().split("\\.");
-                final var skip = i >= nameParts.length ? 1 : nameParts.length - i;
-                return Arrays.stream(nameParts).skip(skip).collect(Collectors.joining("."));
-            }
-
-            /**
-             * get the extensions of the file
-             *
-             * @return all the extensions of the file name
-             */
-            private String extensions() {
-                return Arrays.stream(f.getName().split("\\.")).skip(1).collect(Collectors.joining("."));
-            }
-        }
-
         @Override
         public String getId() {
             return "file";
         }
     }
+    private static String formatString(final Params.Param<String> format, final String name, final File dir) throws Exception {
+        return Trie.formatter.format(format.get(),
+                value(name),
+                value(dir.getAbsolutePath()),
+                value(dir.getParent()),
+                value(dir::getName),
+                value(dir::getCanonicalPath),
+                value(new FileClosure(dir, 0)::nakedFileName),
+                value(new FileClosure(dir, 1)::nakedFileNameN),
+                value(new FileClosure(dir, 2)::nakedFileNameN),
+                value(new FileClosure(dir, 3)::nakedFileNameN),
+                value(new FileClosure(dir, 4)::nakedFileNameN),
+                value(new FileClosure(dir, 5)::nakedFileNameN),
+                value(new FileClosure(dir, 0)::extensions),
+                value(new FileClosure(dir, 1)::extensionsN),
+                value(new FileClosure(dir, 2)::extensionsN),
+                value(new FileClosure(dir, 3)::extensionsN),
+                value(new FileClosure(dir, 4)::extensionsN),
+                value(new FileClosure(dir, 5)::extensionsN)
+        );
+    }
+    private static class FileClosure {
+        final File f;
+        final int i;
 
+        private FileClosure(final File f, final int i) {
+            this.f = f;
+            this.i = i;
+        }
 
+        /**
+         * Return the file name omitting the last {@code i} extensions.
+         * If there are less than {@code i} extensions then return the file name without extension.
+         *
+         * @return the file name without the extensions
+         */
+        private String nakedFileNameN() {
+            final var nameParts = f.getName().split("\\.");
+            final var needed = nameParts.length - i;
+            if (needed < 1) {
+                return nameParts[0];
+            } else {
+                return Arrays.stream(nameParts).limit(needed).collect(Collectors.joining("."));
+            }
+        }
+
+        /**
+         * Calculate the file name without any extensions.
+         *
+         * @return the file name without the extensions.
+         */
+        private String nakedFileName() {
+            return f.getName().split("\\.")[0];
+        }
+
+        /**
+         * Return the file name omitting the last {@code i} extensions.
+         * If there are less than {@code i} extensions then return the file name without extension.
+         *
+         * @return the file name without the extensions
+         */
+        private String extensionsN() {
+            final var nameParts = f.getName().split("\\.");
+            final var skip = i >= nameParts.length ? 1 : nameParts.length - i;
+            return Arrays.stream(nameParts).skip(skip).collect(Collectors.joining("."));
+        }
+
+        /**
+         * get the extensions of the file
+         *
+         * @return all the extensions of the file name
+         */
+        private String extensions() {
+            return Arrays.stream(f.getName().split("\\.")).skip(1).collect(Collectors.joining("."));
+        }
+    }
 }

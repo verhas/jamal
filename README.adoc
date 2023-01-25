@@ -1,13 +1,13 @@
-= Jamal
-:doctitle: Jamal Macro Language
+= image:logo.svg[width=100px] Jamal Macro Language
 
-== image:images/logo.svg[width=100px] Jamal Macro Language
+:imagesdir: images
+
 
 
 
 
 ****
-image::images/jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
+image::jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
 image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
@@ -30,7 +30,7 @@ The Java version development started in 2018.
 Jamal leverages on the programming language's features, and the twenty years of experience of using the old version.
 In this documentation, the term "Jamal" refers to the Java implementation of the macro language.
 
-image::images/text2text.png[align=center]
+image::text2text.png[align=center]
 
 Jamal's basic concept is to transform a source text to a target text enabling programmatic constructs in the source text.
 That way, it enables the maintainer of the text to
@@ -131,7 +131,7 @@ Jamal can be used in JavaDoc using the Jamal Doclet implementation.
 These different features are documented in their respective module documentations:
 
 === Debugger
-image::images/jamaldebugger2559x1089.png[]
+image::jamaldebugger2559x1089.png[]
 * <<./jamal-debug/README.adoc#,Debugger Technical Documentation>>
 
 === Applications, Embedding
@@ -684,7 +684,7 @@ In that case, the macro evaluates the rest of the input till the matching closin
 
 
 
-image::images/evaluationorder.svg[]
+image::evaluationorder.svg[]
 
 
 If the macro starts with the `#` character, then the input is first parsed for other macros.
@@ -1981,7 +1981,7 @@ When the input of the macro is executed the global macro `$input` contains the o
 The naming may be strange at first, but consider that this string is the input for the deferred macro evaluation.
 
 
-image::images/input_output.svg[]
+image::input_output.svg[]
 
 If this evaluation defines the global macro `$output` the value of the macro will be used instead of the original output.
 

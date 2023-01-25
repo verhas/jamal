@@ -1,2 +1,12 @@
 = Jamal Java Integration Module
 
+The Jamal Java integration module is an experimental module allowing Jamal source to download Java JAR files from Maven repositories during run-time and load the classes into the running application.
+
+The module, as planned, also will support Java source code compilation during run-time using the source buddy library.
+
+The module is not yet ready for production use, but it is already possible to use it for testing and development purposes.
+
+The security of the library has to be designed carefully to balance the ease of use and the security of the application.
+Without any security measures a Jamal file could execute any Java code ever published on the internet, which is not a good idea.
+
+Sentences of this documentation were partially suggested by GitHub Copilot.

@@ -42,6 +42,8 @@ javax0.jamal.snippet.RangeMacro
 javax0.jamal.snippet.Rot13
 javax0.jamal.snippet.Sort
 javax0.jamal.snippet.Pos
+javax0.jamal.snippet.Numbers
+javax0.jamal.snippet.Unicode
 javax0.jamal.snippet.StringMacros$Contains
 javax0.jamal.snippet.StringMacros$Substring
 javax0.jamal.snippet.StringMacros$Length

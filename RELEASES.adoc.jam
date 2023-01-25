@@ -5,7 +5,8 @@
 {%@define RELEASE($x)=== https://github.com/verhas/jamal/tree/$x[$x]%}
 
 {%RELEASE/1.12.6-SNAPSHOT%}
-
+Snippet library macro `directory` has the same formatting options as `file` macro.
+There are two new macros in the snippet library: `unicode` and `numbers
 
 {%RELEASE/1.12.5%}
 

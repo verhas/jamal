@@ -37,9 +37,9 @@ public class TestSnippetSaveAndLoad {
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
                 .results().split("\n")).collect(Collectors.toSet());
-        Assertions.assertEquals(new TreeSet<>(Set.of("is", "trimLinesStart", "store", "sort_options", "dirMacroFormatPlaceholders",
+        Assertions.assertEquals(new TreeSet<>(Set.of("is", "trimLinesStart", "unicode", "store", "sort_options",
                 "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats","pos_options",
-                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK","names")), new TreeSet<>(result));
+                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK","names", "numbers")), new TreeSet<>(result));
     }
 
     @Test
@@ -112,14 +112,14 @@ public class TestSnippetSaveAndLoad {
         TestThat
                 .theInput("" +
                         "{@snip:collect from=\"src/main/java/\"}" +
-                        "{@snip:save output=target/dump2.xml name=dirMacroFormatPlaceholders}" +
+                        "{@snip:save output=target/dump2.xml name=fileMacroFormatPlaceholders}" +
                         "{@snip:clear}" +
                         "{@snip:load input=target/dump2.xml}" +
                         "{@snip:list listSeparator=\"\\n\"}"
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
                 .results("" +
-                        "dirMacroFormatPlaceholders");
+                        "fileMacroFormatPlaceholders");
     }
 
     @Test
@@ -130,12 +130,12 @@ public class TestSnippetSaveAndLoad {
                         "{@snip:collect from=\"src/main/java/\"}" +
                         "{@snip:save output=target/dump3.xml}" +
                         "{@snip:clear}" +
-                        "{@snip:load input=target/dump3.xml name=dirMacroFormatPlaceholders}" +
+                        "{@snip:load input=target/dump3.xml name=fileMacroFormatPlaceholders}" +
                         "{@snip:list listSeparator=\"\\n\"}"
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
                 .results("" +
-                        "dirMacroFormatPlaceholders");
+                        "fileMacroFormatPlaceholders");
     }
 
     @Test
