@@ -1,4 +1,5 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@define asciidoc:output=pom.xml}\
 {@import ../version.jim}
 {project jamal snippet}
     {packaging jar}
@@ -23,3 +24,4 @@
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
 {end project}
+{@try{@xmlFormat}}

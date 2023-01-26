@@ -3,6 +3,9 @@
 -- The central location of all the versions make maintenance easier.
 -- The version defined here can be used by the Jamal Maven Extension to use to refer to the parent project from the modules.
 
+{#define :asciidoc:output={#if |{#string:equals |{#file (format=$simpleName){@pos (top format=%f)}}|pom.jam}
+     |pom.xml}}
+
 -- define the macro that uses its lines to define the versions of the modules
 {@define VERSIONS($x)=
 {!!@for [separator="\n" subseparator="=" skipForEmpty lenient evalist] ($ID,$VERSION) in `VERSION_LINES`

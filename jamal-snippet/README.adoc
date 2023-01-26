@@ -1362,7 +1362,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1172:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1171:30
 ----
 
 
@@ -2633,7 +2633,7 @@ will result
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
 - Numbers.java: 1,817 bytes
-- Unicode.java: 1,921 bytes
+- Unicode.java: 2,068 bytes
 - Counter.java: 4,594 bytes
 - StringMacros.java: 7,379 bytes
 - AbstractXmlDefine.java: 1,484 bytes
@@ -2910,7 +2910,7 @@ will result in the output
 
 [source]
 ----
-2023-01-25 13:20:20
+2023-01-26 12:35:44
 ----
 
 
@@ -3040,50 +3040,127 @@ The constants defined in this file are:
 
 
 
+`NUL` 
+`SOH` 
+start of header,
+`STX` 
+start of text,
+`ETX` 
+end of text,
+`EOT` 
+end of transmission,
+`ENQ` 
+enquiry,
+`ACK` 
+acknowledge,
+`BEL` 
+bell,
+`BS` 
+backspace,
+`HT` 
+horizontal tab,
+`LF` 
+line feed,
+`VT` 
+vertical tab,
+`FF` 
+form feed,
+`CR` 
+carriage return,
+`SO` 
+shift out,
+`SI` 
+shift in,
+`DLE` 
+data link escape,
+`DC1` 
+device control 1,
+`DC2` 
+device control 2,
+`DC3` 
+device control 3,
+`DC4` 
+device control 4,
+`NAK` 
+negative acknowledge,
+`SYN` 
+synchronous idle,
+`ETB` 
+end of transmission block,
+`CAN` 
+cancel,
+`EM` 
+end of medium,
+`SUB` 
+substitute,
+`ESC` 
+escape,
+`FS` 
+file separator,
+`GS` 
+group separator,
+`RS` 
+record separator,
+`US` 
+unit separator,
+`DEL` 
+delete,
 
-`NUL`
-`SOH`
-`STX`
-`ETX`
-`EOT`
-`ENQ`
-`ACK`
-`BEL`
-`BS`
-`HT`
-`LF`
-`VT`
-`FF`
-`CR`
-`SO`
-`SI`
-`DLE`
-`DC1`
-`DC2`
-`DC3`
-`DC4`
-`NAK`
-`SYN`
-`ETB`
-`CAN`
-`EM`
-`SUB`
-`ESC`
-`FS`
-`GS`
-`RS`
-`US`
-`DEL`
+`SP` 
+space,
+`NBSP` 
+non breaking space,
+`ZWSP` 
+zero width space,
 
-`SP`
-`NBSP`
-`NBHYPHEN`
-`NBHYPHEN`
+`BULLET`(•) 
 
-`BULLET`
+`TM`(™) 
+`TRADEMARK`(™) 
+`COPYRIGHT`(©) 
+`REGISTERED`(®) 
+`DEGREE`(°) 
+`PLUSMINUS`(±) 
+`MULTIPLY`(×) 
+`DIVIDE`(÷) 
+`APPROX`(≈) 
+`NEQ`(≠) 
+`LEQ`(≤) 
+`GEQ`(≥) 
+`INFINITY`(∞) 
+`NOT`(¬) 
+`AND`(∧) 
+`OR`(∨) 
+`IMPLIES`(⇒) 
+`EQUIV`(⇔) 
+`FORALL`(∀) 
+`EXISTS`(∃) 
+`PARTIAL`(∂) 
+`EMPTYSET`(∅) 
+`NABLA`(∇) 
+`IN`(∈) 
+`NOTIN`(∉) 
+`SUBSET`(⊂) 
+`SUBSETEQ`(⊆) 
+`SUPSET`(⊃) 
+`SUPSETEQ`(⊇) 
+`UNION`(∪) 
+`INTERSECTION`(∩) 
+`PROD`(∏) 
+`SUM`(∑) 
+`INTEGRAL`(∫) 
+`SQRT`(√) 
+`PERP`(⊥) 
+`MID`(∣) 
+`ANGLE`(∠) 
+`DIAMOND`(♦) 
+`LOZENGE`(◊) 
+`CLUB`(♣) 
+`DIAMOND`(♦) 
+`HEART`(ϖ) 
 
 
-This are symbolic names for some non-printable characters
+These are symbolic names for some non-printable characters and for some commonly used symbols.
 
 
 

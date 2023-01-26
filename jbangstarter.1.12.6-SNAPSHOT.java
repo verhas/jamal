@@ -13,7 +13,6 @@
 //DEPS com.javax0.jamal:jamal-plantuml:1.12.6-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-debug:1.12.6-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-jamal:1.12.6-SNAPSHOT
-//DEPS com.javax0.jamal:jamal-java:1.12.6-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-yaml:1.12.6-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-io:1.12.6-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-assertions:1.12.6-SNAPSHOT

@@ -36,12 +36,13 @@ You can import this file as `{@import res:tab.jim}`.
 The constants defined in this file are:
 
 {%@import src/main/resources/tab.jim%}
-
-{%!#replaceLines replace="|\\{#define\\s(\\w+).*|`$1`|" replace="|\\{@comment\\}||"
+{%!#replaceLines replace="|\\{#define\\s(\\w+).*\\(\\.(.*)\\.\\)|`$1`({%@ident{%$2%}%}) " \
+                 replace="|\\{#define\\s(\\w+).*|`$1` " \
+                 replace="|^\\{@comment.*||"
 {%@include [verbatim] src/main/resources/tab.jim%}
 %}
 
-This are symbolic names for some non-printable characters
+These are symbolic names for some non-printable characters and for some commonly used symbols.
 
 end snippet
  */

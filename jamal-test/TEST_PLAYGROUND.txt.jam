@@ -1,6 +1,140 @@
----
-okay
+{@comment}
+{#define NUL={@unicode &#0}}
+{#define SOH={@unicode &#1}}
+{#define STX={@unicode &#2}}
+{#define ETX={@unicode &#3}}
+{#define EOT={@unicode &#4}}
+{#define ENQ={@unicode &#5}}
+{#define ACK={@unicode &#6}}
+{#define BEL={@unicode &#7}}
+{#define BS={@unicode &#8}}
+{#define HT={@unicode &#9}}
+{#define LF={@unicode &#10}}
+{#define VT={@unicode &#11}}
+{#define FF={@unicode &#12}}
+{#define CR={@unicode &#13}}
+{#define SO={@unicode &#14}}
+{#define SI={@unicode &#15}}
+{#define DLE={@unicode &#16}}
+{#define DC1={@unicode &#17}}
+{#define DC2={@unicode &#18}}
+{#define DC3={@unicode &#19}}
+{#define DC4={@unicode &#20}}
+{#define NAK={@unicode &#21}}
+{#define SYN={@unicode &#22}}
+{#define ETB={@unicode &#23}}
+{#define CAN={@unicode &#24}}
+{#define EM={@unicode &#25}}
+{#define SUB={@unicode &#26}}
+{#define ESC={@unicode &#27}}
+{#define FS={@unicode &#28}}
+{#define GS={@unicode &#29}}
+{#define RS={@unicode &#30}}
+{#define US={@unicode &#31}}
+{#define DEL={@unicode &#127}}
 
----
+{#define SP={@unicode &#32}}
+{#define NBSP={@unicode &#160}}
+{#define NBHYPHEN={@unicode &#8209}}
+{#define NBHYPHEN={@unicode &#173}}
 
-\u0071suppy
+{#define BULLET={@unicode &#8226}}
+
+{#define TM={@unicode &#8482}}
+{#define COPYRIGHT={@unicode &#169}}
+{#define REGISTERED={@unicode &#174}}
+{#define TRADEMARK={@unicode &#8482}}
+{#define DEGREE={@unicode &#176}}
+{#define PLUSMINUS={@unicode &#177}}
+{#define MULTIPLY={@unicode &#215}}
+{#define DIVIDE={@unicode &#247}}
+{#define APPROX={@unicode &#8776}}
+{#define NEQ={@unicode &#8800}}
+{#define LEQ={@unicode &#8804}}
+{#define GEQ={@unicode &#8805}}
+{#define INFINITY={@unicode &#8734}}
+{#define NOT={@unicode &#172}}
+{#define AND={@unicode &#8743}}
+{#define OR={@unicode &#8744}}
+{#define IMPLIES={@unicode &#8658}}
+{#define EQUIV={@unicode &#8660}}
+{#define FORALL={@unicode &#8704}}
+{#define EXISTS={@unicode &#8707}}
+{#define PARTIAL={@unicode &#8706}}
+{#define EMPTYSET={@unicode &#8709}}
+{#define NABLA={@unicode &#8711}}
+{#define IN={@unicode &#8712}}
+{#define NOTIN={@unicode &#8713}}
+{#define SUBSET={@unicode &#8834}}
+{#define SUBSETEQ={@unicode &#8838}}
+{#define SUPSET={@unicode &#8835}}
+{#define SUPSETEQ={@unicode &#8839}}
+{#define UNION={@unicode &#8746}}
+{#define INTERSECTION={@unicode &#8745}}
+{#define PROD={@unicode &#8719}}
+{#define SUM={@unicode &#8721}}
+{#define INTEGRAL={@unicode &#8747}}
+{#define SQRT={@unicode &#8730}}
+{#define PERP={@unicode &#8869}}
+{#define MID={@unicode &#8739}}
+{#define ANGLE={@unicode &#8736}}
+{#define DIAMOND={@unicode &#8900}}
+{#define LOZENGE={@unicode &#9674}}
+{#define CLUB={@unicode &#9827}}
+{#define DIAMOND={@unicode &#9830}}
+{#define HEART={@unicode &#982}}
+
+
+{@comment}
+----
+
+SP {SP}
+NBSP {NBSP}
+NBHYPHEN {NBHYPHEN}
+NBHYPHEN {NBHYPHEN}
+
+BULLET {BULLET}
+
+TM {TM}
+COPYRIGHT {COPYRIGHT}
+REGISTERED {REGISTERED}
+TRADEMARK {TRADEMARK}
+DEGREE {DEGREE}
+PLUSMINUS {PLUSMINUS}
+MULTIPLY {MULTIPLY}
+DIVIDE {DIVIDE}
+APPROX {APPROX}
+NEQ {NEQ}
+LEQ {LEQ}
+GEQ {GEQ}
+INFINITY {INFINITY}
+NOT {NOT}
+AND {AND}
+OR {OR}
+IMPLIES {IMPLIES}
+EQUIV {EQUIV}
+FORALL {FORALL}
+EXISTS {EXISTS}
+PARTIAL {PARTIAL}
+EMPTYSET {EMPTYSET}
+NABLA {NABLA}
+IN {IN}
+NOTIN {NOTIN}
+SUBSET {SUBSET}
+SUBSETEQ {SUBSETEQ}
+SUPSET {SUPSET}
+SUPSETEQ {SUPSETEQ}
+UNION {UNION}
+INTERSECTION {INTERSECTION}
+PROD {PROD}
+SUM {SUM}
+INTEGRAL {INTEGRAL}
+SQRT {SQRT}
+PERP {PERP}
+MID {MID}
+ANGLE {ANGLE}
+DIAMOND {DIAMOND}
+LOZENGE {LOZENGE}
+CLUB {CLUB}
+DIAMOND {DIAMOND}
+HEART {HEART}

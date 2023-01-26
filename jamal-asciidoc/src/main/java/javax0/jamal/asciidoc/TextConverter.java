@@ -29,9 +29,13 @@ public class TextConverter {
     public static List<String> convertText(final List<String> original, final ArrayList<String> sourcedLines) {
         sourcedLines.add("----");
         for (final var line : original) {
-            // add an invisible space that will fool asciidoctor not to end the source block
-            if (line.trim().equals("----")) {
-                sourcedLines.add(line.replaceAll("----", "----\u200F\u200F\u200E \u200E"));
+            final var trimmed = line.trim();
+            if (trimmed.length() == 0) {
+                // add an invisible space so that empty lines at the start and at the end will be displayed
+                sourcedLines.add("\u200B");
+            } else if (trimmed.equals("----")) {
+                // add an invisible space that will fool asciidoctor not to end the source block
+                sourcedLines.add(line.replaceAll("----", "----\u200B"));
             } else {
                 sourcedLines.add(line);
             }

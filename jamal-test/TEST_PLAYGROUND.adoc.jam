@@ -6,6 +6,23 @@ Some code block here:
 
 [source, java]
 ----
+{%@unicode &#8203%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void example(void)
 {
     printf("hello, world\n");

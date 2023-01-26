@@ -134,7 +134,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                             outputFileName = new File(outputFile, outputFileNameFile.getName()).getAbsolutePath();
                         } else {
                             //noinspection ResultOfMethodCallIgnored
-                            outputFile.mkdirs();
+                            outputFile.getParentFile().mkdirs();
                             outputFileName = outputFile.getAbsolutePath();
                         }
                     }
