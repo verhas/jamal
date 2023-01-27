@@ -25,6 +25,7 @@
         <module>jamal-snippet</module>
         <module>jamal-yaml</module>
         <module>jamal-word</module>
+        <module>jamal-prog</module>
         <module>jamal-maven-plugin</module>
         <module>jamal-maven-extension</module>
         <module>jamal-cmd</module>
@@ -286,6 +287,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-word</artifactId>
+                <version>1.12.6-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-prog</artifactId>
                 <version>1.12.6-SNAPSHOT</version>
             </dependency>
             <dependency>

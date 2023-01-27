@@ -178,6 +178,15 @@ public class InputHandler {
         return output.toString();
     }
 
+    public static String fetchNumber(Input input){
+        final var output = new StringBuilder();
+        while (input.length() > 0 && Character.isDigit(input.charAt(0))) {
+            output.append(input.charAt(0));
+            skip(input, 1);
+        }
+        return output.toString();
+    }
+
     /**
      * Checks that the identifier is global or not. The check simply looks for embedded '{@code :}' character in the
      * identifier.
@@ -391,6 +400,11 @@ public class InputHandler {
         }
     }
 
+    /**
+     * Checks that a string is a valid identifier.
+     * @param id the string holding the identifier or something else
+     * @return true if the string syntactically is a valid identifier
+     */
     public static boolean isIdentifier(final String id) {
         final char startCharacter = id.charAt(0);
         if( ! validId1stChar(startCharacter)){
@@ -398,6 +412,18 @@ public class InputHandler {
         }
         for( int i = 1 ; i < id.length() ; i++ ){
             if( ! validIdChar(id.charAt(i)) ){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isNumber(final String id) {
+        if( id.length() == 0 ){
+            return false;
+        }
+        for( int i = id.charAt(0) == '-' || id.charAt(0) == '+' ? 1 : 0 ; i < id.length() ; i++ ){
+            if( ! Character.isDigit(id.charAt(i)) ){
                 return false;
             }
         }

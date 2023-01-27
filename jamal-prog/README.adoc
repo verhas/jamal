@@ -1,0 +1,3 @@
+= Jamal Prog Macro
+
+The prog macro extends Jamal to execute a simple BASIC like macros.

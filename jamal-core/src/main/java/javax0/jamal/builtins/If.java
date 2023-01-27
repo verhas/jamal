@@ -37,9 +37,9 @@ public class If implements Macro {
         final Params.Param<Boolean> not = Params.<Boolean>holder("not").asBoolean();
         final Params.Param<Boolean> and = Params.<Boolean>holder("and").asBoolean();
         final Params.Param<Boolean> or = Params.<Boolean>holder("or").asBoolean();
-        final Params.Param<Boolean> isDefined = Params.<Boolean>holder("isDefined","defined").asBoolean();
-        final Params.Param<Boolean> isGlobal = Params.<Boolean>holder("isGlobal","global").asBoolean();
-        final Params.Param<Boolean> isLocal = Params.<Boolean>holder("isLocal","local").asBoolean();
+        final Params.Param<Boolean> isDefined = Params.<Boolean>holder("isDefined", "defined").asBoolean();
+        final Params.Param<Boolean> isGlobal = Params.<Boolean>holder("isGlobal", "global").asBoolean();
+        final Params.Param<Boolean> isLocal = Params.<Boolean>holder("isLocal", "local").asBoolean();
         final Params.Param<List<Integer>> lessThan = Params.<Integer>holder("lessThan", "less", "smaller", "smallerThan").asList(Integer.class);
         final Params.Param<List<Integer>> greaterThan = Params.<Integer>holder("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan").asList(Integer.class);
         final Params.Param<List<Integer>> equals = Params.<Integer>holder("equals", "equal", "equalsTo", "equalTo").asList(Integer.class);
@@ -99,7 +99,7 @@ public class If implements Macro {
         }
     }
 
-    private boolean compare(List<Integer> number, boolean and, Predicate<Integer> p) {
+    private static boolean compare(List<Integer> number, boolean and, Predicate<Integer> p) {
         if (and) {
             return number.stream().allMatch(p);
         } else {
@@ -107,9 +107,9 @@ public class If implements Macro {
         }
     }
 
-    private boolean isTrue(final Processor processor,
-                           final String test,
-                           final Options opt) throws BadSyntax {
+    private static boolean isTrue(final Processor processor,
+                                  final String test,
+                                  final Options opt) throws BadSyntax {
         if (opt.countNumOptionsPresent() > 0) {
             final int testN;
             try {

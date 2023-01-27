@@ -79,7 +79,7 @@ public interface Processor extends AutoCloseable {
      * @return the new user defined macro
      * @throws BadSyntax in case the parameter names contain each other
      */
-    UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax;
+    UserDefinedMacro newUserDefinedMacro(String id, String input, String... params) throws BadSyntax;
 
     /**
      * The same as {@link #newUserDefinedMacro(String, String, String[])} but it can also define when the macro is
@@ -93,7 +93,7 @@ public interface Processor extends AutoCloseable {
      * @return see {@link #newUserDefinedMacro(String, String, String[])}
      * @throws BadSyntax see {@link #newUserDefinedMacro(String, String, String[])}
      */
-    default UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String[] params) throws BadSyntax {
+    default UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String... params) throws BadSyntax {
         return newUserDefinedMacro(id, input, params);
     }
 

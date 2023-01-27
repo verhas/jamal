@@ -57,14 +57,13 @@ public class Defer implements Macro, InnerScopeDependent {
             this.output = output;
         }
 
-        private static final String[] NO_PARAMS = new String[0];
         private final String inputName;// = "$input";
         private final String outputName;// = "$output";
 
         @Override
         public void close() throws Exception {
             final String out = output.toString();
-            processor.defineGlobal(processor.newUserDefinedMacro(inputName, out, true, NO_PARAMS));
+            processor.defineGlobal(processor.newUserDefinedMacro(inputName, out, true));
             processor.defineGlobal(new Identified.Undefined(outputName));
             processor.process(input);
             if (processor.errors().size() > 0) {

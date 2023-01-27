@@ -1,0 +1,30 @@
+"for.jam":
+  Input: |-
+    {@prog
+    for i=1 to 3
+            << i
+    next
+    }
+  Output: "123"
+
+"While loop.jam":
+  Input: |-
+    {@prog
+    i=1
+    while i<4
+            << i
+            i=i+1
+    wend
+    }
+  Output: "123"
+
+Inner Macro:
+  Input: |-
+    {@define h=there}\
+    {@prog
+      << @"{@define k=33}"
+        << k + "44"
+    z = 55
+    << z + h
+    }{z}
+  Output: "7755there55"
