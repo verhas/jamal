@@ -6,7 +6,9 @@
     {parent :{GROUPID}:jamal-parent}
     {description Jamal module for Programmatic Extension}
 
-    {@define openForTests={opens/prog/prog}}
+    {@define openForTests={opens/prog/prog}
+                          {opens/prog/prog.commands}
+    }
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies

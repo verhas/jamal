@@ -1362,7 +1362,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1171:30
+../jamal-snippet/README.adoc.jam:1172:30
 ----
 
 
@@ -2634,7 +2634,7 @@ will result
 - BlockConverter.java: 1,858 bytes
 - Numbers.java: 1,817 bytes
 - Unicode.java: 2,068 bytes
-- Counter.java: 4,594 bytes
+- Counter.java: 4,579 bytes
 - StringMacros.java: 7,379 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
@@ -2910,7 +2910,7 @@ will result in the output
 
 [source]
 ----
-2023-01-26 12:58:15
+2023-01-27 16:54:13
 ----
 
 

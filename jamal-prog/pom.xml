@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.prog/javax0.jamal.prog=ALL-UNNAMED
+                          --add-opens jamal.prog/javax0.jamal.prog.commands=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>
