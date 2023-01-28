@@ -14,10 +14,11 @@ public class While implements Command {
 
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
         final var sb = new StringBuilder();
-        while (Operation.isTrue(condition.execute(processor))) {
-            sb.append(block.execute(processor));
+        while (Operation.isTrue(condition.execute(ctx))) {
+            sb.append(block.execute(ctx));
         }
         return sb.toString();
     }

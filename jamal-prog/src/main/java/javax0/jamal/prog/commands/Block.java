@@ -13,10 +13,11 @@ public class Block implements Command{
     }
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
         final var sb = new StringBuilder();
         for (final var command : commands) {
-            sb.append(command.execute(processor));
+            sb.append(command.execute(ctx));
         }
         return sb.toString();
     }

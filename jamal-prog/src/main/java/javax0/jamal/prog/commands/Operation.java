@@ -1,7 +1,6 @@
 package javax0.jamal.prog.commands;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.InputHandler;
 
@@ -21,18 +20,19 @@ public class Operation extends Expression {
     }
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
         final String leftValue;
 
         if (left != null) {
-            leftValue = left.execute(processor);
+            leftValue = left.execute(ctx);
         } else {
             leftValue = null;
         }
         final String rightValue;
         switch (operator) {
             case "+":
-                rightValue = right.execute(processor);
+                rightValue = right.execute(ctx);
                 if (leftValue == null) {
                     return rightValue;
                 }
@@ -41,61 +41,61 @@ public class Operation extends Expression {
                 }
                 return leftValue + rightValue;
             case "-":
-                rightValue = right.execute(processor);
+                rightValue = right.execute(ctx);
                 if (leftValue == null) {
                     return "-" + rightValue;
                 }
                 assertBothNumeric(leftValue, rightValue, operator);
                 return new BigInteger(leftValue).subtract(new BigInteger(rightValue)).toString();
             case "*":
-                rightValue = right.execute(processor);
+                rightValue = right.execute(ctx);
                 assertBothNumeric(leftValue, rightValue, operator);
-                return new BigInteger(leftValue).multiply(new BigInteger(right.execute(processor))).toString();
+                return new BigInteger(leftValue).multiply(new BigInteger(right.execute(ctx))).toString();
             case "/":
-                rightValue = right.execute(processor);
+                rightValue = right.execute(ctx);
                 assertBothNumeric(leftValue, rightValue, operator);
-                return new BigInteger(leftValue).divide(new BigInteger(right.execute(processor))).toString();
+                return new BigInteger(leftValue).divide(new BigInteger(right.execute(ctx))).toString();
             case "%":
-                rightValue = right.execute(processor);
+                rightValue = right.execute(ctx);
                 assertBothNumeric(leftValue, rightValue, operator);
                 return new BigInteger(leftValue).mod(new BigInteger(rightValue)).toString();
             case "<":
-                return compare(processor, leftValue, right, x -> x < 0);
+                return compare(ctx, leftValue, right, x -> x < 0);
             case "<=":
-                return compare(processor, leftValue, right, x -> x <= 0);
+                return compare(ctx, leftValue, right, x -> x <= 0);
             case ">":
-                return compare(processor, leftValue, right, x -> x > 0);
+                return compare(ctx, leftValue, right, x -> x > 0);
             case ">=":
-                return compare(processor, leftValue, right, x -> x >= 0);
+                return compare(ctx, leftValue, right, x -> x >= 0);
             case "==":
-                return compare(processor, leftValue, right, x -> x == 0);
+                return compare(ctx, leftValue, right, x -> x == 0);
             case "!=":
-                return compare(processor, leftValue, right, x -> x != 0);
+                return compare(ctx, leftValue, right, x -> x != 0);
             case "and":
                 assertNotNull(leftValue, operator);
-                return (isTrue(leftValue) && isTrue(right.execute(processor))) + "";
+                return (isTrue(leftValue) && isTrue(right.execute(ctx))) + "";
             case "or":
                 assertNotNull(leftValue, operator);
-                return (isTrue(leftValue) || isTrue(right.execute(processor))) + "";
+                return (isTrue(leftValue) || isTrue(right.execute(ctx))) + "";
             case "@":
                 assertNull(leftValue, operator);
-                return processor.process(Input.makeInput(right.execute(processor)));
+                return ctx.getProcessor().process(Input.makeInput(right.execute(ctx)));
             case "not":
                 assertNull(leftValue, operator);
-                return (!isTrue(right.execute(processor))) + "";
+                return (!isTrue(right.execute(ctx))) + "";
             default:
                 throw new RuntimeException("Unknown operator '" + operator + "'");
         }
     }
 
-    private static String compare(final Processor processor,
+    private static String compare(final Context ctx,
                                   final String leftValue,
                                   final Expression rightValue,
                                   final Predicate<Integer> predicate) throws BadSyntax {
         if (leftValue == null) {
             throw new RuntimeException("SNAFU Left value of comparison is null");
         }
-        final var b = rightValue.execute(processor);
+        final var b = rightValue.execute(ctx);
         if (bothNumeric(leftValue, b)) {
             return predicate.test(getCompareTo(leftValue, b)) + "";
         }

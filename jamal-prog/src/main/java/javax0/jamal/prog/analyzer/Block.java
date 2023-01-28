@@ -30,9 +30,12 @@ public class Block {
                         break;
                     case "next":
                     case "else":
+                    case "elseif":
                     case "endif":
                     case "wend":
                         return block;
+                    default:
+                        throw new BadSyntax("Unexpected reserved word '"+lexes.peek().text+"'");
                 }
             }else if( lexes.peek().type == Lex.Type.IDENTIFIER ){
                 commands.add(Assignment.analyze(lexes));

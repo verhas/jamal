@@ -1,9 +1,8 @@
 package javax0.jamal.prog.commands;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Processor;
 
-public class Output implements Command  {
+public class Output implements Command {
     private final Expression expression;
 
     public Output(final Expression expression) {
@@ -11,7 +10,8 @@ public class Output implements Command  {
     }
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
-        return expression.execute(processor);
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
+        return expression.execute(ctx);
     }
 }

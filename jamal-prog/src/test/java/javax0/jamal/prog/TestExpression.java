@@ -4,6 +4,7 @@ import javax0.jamal.engine.Processor;
 import javax0.jamal.prog.analyzer.Expression;
 import javax0.jamal.prog.analyzer.Lexer;
 import javax0.jamal.prog.commands.Assignment;
+import javax0.jamal.prog.commands.Context;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ public class TestExpression {
             Assignment.let(processor,entry.getKey(), entry.getValue());
         }
         final var expression = Expression.analyze(new Lexer().analyze(Input.makeInput(input)));
-        Assertions.assertEquals(expected, expression.execute(processor));
+        Assertions.assertEquals(expected, expression.execute(new Context(processor)));
     }
 
     @DisplayName("Test various constant expressions")

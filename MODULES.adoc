@@ -117,6 +117,10 @@ Use Ruby code in your macros using the macros implemented in this module.
 
 Use BASIC code in your macros using the macros implemented in this module.
 
+== https://github.com/verhas/jamal/blob/master/jamal-prog/README.adoc[PROG] ^_macro_^
+This module implements a simple BASIC like language integrated into Jamal.
+
+
 == https://github.com/verhas/jamal/blob/master/jamal-snippet/README.adoc[SNIPPET] ^_macro_^
 This module implements macros to help document programs.
 It includes advanced snippet handling, text transformation, text assertions and many other features.

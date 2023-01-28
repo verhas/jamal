@@ -6,20 +6,18 @@ import javax0.jamal.prog.commands.Operation;
 /**
  * An expression is
  * <p>
+ * <pre>
  * 'not' ( expression )
  * expression1 'and' expression
  * expression1 'or' expression
  * expression1
+ * </pre>
  */
 
 public class Expression {
     public static javax0.jamal.prog.commands.Expression analyze(final Lex.List lexes) throws BadSyntax {
         if (!lexes.hasNext()) {
             throw new BadSyntax("Expression is empty");
-        }
-        if (lexes.is("@")) {
-            lexes.next();
-            return new Operation("@", null, Expression.analyze(lexes));
         }
         if (lexes.is("not")) {
             lexes.next();

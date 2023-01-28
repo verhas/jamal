@@ -2,6 +2,7 @@ package javax0.jamal.prog.commands;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.InputHandler;
 
 public class Assignment implements Command {
 
@@ -14,12 +15,20 @@ public class Assignment implements Command {
     }
 
     public static void let(final Processor processor, final String variable, final String value) throws BadSyntax {
-        processor.define(processor.newUserDefinedMacro(variable, value));
+        final var macro = processor.newUserDefinedMacro(InputHandler.convertGlobal(variable), value);
+
+        if (InputHandler.isGlobalMacro(variable)) {
+            processor.defineGlobal(macro);
+        } else {
+            processor.define(macro);
+        }
     }
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
-        let(processor,variable, expression.execute(processor));
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
+        final var processor = ctx.getProcessor();
+        let(processor, variable, expression.execute(ctx));
         return "";
     }
 }

@@ -1,3 +1,273 @@
 = Jamal Prog Macro
-
+{%@import res:jamal.jim%}
 The prog macro extends Jamal to execute a simple BASIC like macros.
+
+Using this integration module you can mix Jamal macro text with simple, imperative code snippets.
+To use this module you have to add the dependency to your Maven project, as:
+
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>{%pom /project/artifactId/text()%}</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+Note that this dependency is added to the different Jamal integrations.
+This module is available automatically when you use Jamal in Maven extension, JavaDoc, through JBang, or in the IntelliJ Asciidoctor plugin.
+
+The language is a subset of the BASIC language, and it is very simple by design.
+It is far simpler than ScriptBasic, Ruby or Groovy, which are also integrated into Jamal by other modules.
+On the other hand it is tightly integrated into Jamal.
+The other programming modules allow nesting programming code into Jamal text and then use macros to manage the input and the output of the snippets.
+This module allows nesting code into Jama and the other way around.
+Program code can also include Jamal macros.
+Also, there is no need for extra macros to manage the input and the output of the code.
+The code uses the same symbolic names as the Jamal macros, and the output of the code is directly the output of the code macro.
+
+The language is a subset of the BASIC language, and it is very simple.
+There are only a few commands that you can use:
+
+* variable assignment
+
+* if-then-else
+
+* for loops
+
+* while loops
+
+* output, denoted by `<<`
+
+Expressions can contain
+
+* the basic operations: `+`, `-`, `*`, `/`, `%`,
+* comparisons `==`, `!=`, `<`, `>`, `<`=`, `>=`
+* logical operations `and`, `or`, `not`
+* and parenthesis.
+
+In addition to these there is a special operator `@` used to start evaluation of Jamal macros in strings.
+
+== Macros in the Package
+
+There are two macros in the package:
+
+* `program` is the macro that executes a program
+* `expression` is the macro that evaluates an expression
+
+The macro `program` takes the input of the macro and interprets it as a program.
+The result of the macro is the concatenated strings of the output `<<` commands.
+
+The macro `expression` takes the input of the macro and interprets it as an expression.
+The result of the macro is the value of the expression.
+
+The command `program` has the option `stepLimit`.
+This parameter has to be a number.
+It limits the number of steps that the program can execute.
+When the limit is reached the program will throw an exception.
+The default value of the limit is 100000 (hundred-thousand).
+This limit is to prevent infinite loops.
+
+== Expression Syntax
+
+Expressions are composed of numeric constants, strings, variables and operators.
+The operators are the basic arithmetic operators, the comparison operators, the logical operators and the `@` operator.
+
+The formal syntax of the expressions is:
+
+  expression ::= 'not' '(' expression ')' |
+                 expression1 `and` expression |
+                 expression1 `or` expression |
+                 expression1
+
+  expression1 ::= expression2 `==` expression |
+                  expression2 `!=` expression |
+                  expression2 `<` expression |
+                  expression2 `>` expression |
+                  expression2 `<=` expression |
+                  expression2 `>=` expression |
+                  expression2
+
+    expression2 ::= expression3 `+` expression |
+                    expression3 `-` expression |
+                    expression3
+
+    expression3 ::= expression4 `*` expression |
+                    expression4 `/` expression |
+                    expression4 `%` expression |
+                    expression4
+
+    expression4 ::= `@` expression |
+                    `(` expression `)` |
+                    number |
+                    string |
+                    variable |
+                    '+' expression4 |
+                    '-' expression4
+
+The different operations are executed using BigDecimal numbers if the operands are both numeric.
+In other cases string operations are used.
+In this case `-`, `*`, `/` and `%` are not defined and will cause syntax error.
+`+` is defined as string concatenation.
+When used as unary `+` it is a no-op resulting the same string as the operand.
+
+The operator `@` is used to evaluate a Jamal macros.
+It is applied to the expression that follows it, and it evaluates it as string.
+
+This evaluation is done in the same scope as the surrounding environment.
+If you `define` here a macro then it will be available in the surrounding environment.
+There is no need to `export` the macro.
+
+The same is ture for the variables.
+If you assign a value to a variable here then it will be available in the surrounding environment as a macro.
+The other way around, if you assign a value to a macro in the surrounding environment then it will be available in the program as a variable.
+Such macros must not have parameters.
+
+The following code uses two macros.
+One with parameter and it is used in a `try` block to catch the exception.
+The other macro, `b` has no parameter, and it can be used in the program.
+
+The macro `b` is used as a variable, and it is outputted from the program.
+It is also modified.
+The character `1` is appended to the string.
+The variable `evil` is not defined in the program, but it is used outside.
+
+{%sample/
+{@define a(x)=this is x}
+{@define b   =this is b}
+{@try! {@program
+            <<a}}
+{@program
+     <<b + @"{a A}"
+     b = b + 1
+     evil = 666
+} {b}
+{evil}
+%}
+
+{%output%}
+
+== Commands
+
+The interpreted language has only a very few commands.
+These are
+
+* variable assignment
+* if-then-else
+* for loops
+* while loops
+* output
+
+In the following chapters we will discuss these commands.
+
+=== variable assignment
+
+The variable assignment has the form:
+
+    variable = expression
+
+The name of the variable can be any string, which is a valid Jamal user defined macro name.
+The value of the expression will be treated as a string and will be stored in the macro registry.
+
+{%sample/
+{@program
+     :z = 13
+     b = z + 17
+}{b}
+%}
+
+will result
+
+{%output%}
+
+The variable `:z` is registered in the global macro scope.
+It can later also be referenced as `z` unless there is a variable `z` in a lower scope.
+
+=== if-then-else
+
+If-then-else has the form:
+
+    if expression then
+        block
+    elseif expression then
+        block
+    else
+        block
+    endif
+
+The `else` and `elseif` parts are optional.
+The interpretation of the commands is the conventional.
+
+{%sample/
+{@program
+if "true" then
+    <<"if true"
+elseif true then
+    <<"elseif true"
+else
+    <<"else"
+endif
+}
+%}
+
+will result
+
+{%output%}
+
+=== for loops
+
+For loops execute the lines between the `for` and `next` commands.
+
+{%sample/
+{@program
+for i=0 to 9 step 1
+    <<i
+next
+}
+%}
+
+will output
+
+{%output%}
+
+The `step` part is optional.
+The values are evaluated when the loop is started.
+The `step` value can be negative.
+
+Note that the for loop uses the same operation as `+`.
+It means, if some values are strings then the loop will concatenate the step value.
+Unfortunately, in this case the loop cannot terminate.
+
+=== while loops
+
+{%sample/
+{@program
+i = 0
+while i < 10
+    <<i
+    i = i + 1
+wend
+}
+%}
+
+will result
+
+{%output%}
+
+=== output
+
+The output command, as you could see examples in the previous samples, is the `<<` command.
+The expression after the `<<` is evaluated and the result is appended to the result of the program macro.
+
+{%sample/{@program
+   a = "{@define z=55}"
+   a = @a
+   <<a
+   <<z
+
+} {z}%}
+
+{%output%}

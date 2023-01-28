@@ -16,6 +16,7 @@ import static javax0.jamal.prog.analyzer.Expression.getExpressionBetweenParenthe
  * variable
  * '+' expression4
  * '-' expression4
+ * `@` expression4
  */
 public class Expression4 {
     public static javax0.jamal.prog.commands.Expression analyze(final Lex.List lexes) throws BadSyntax {
@@ -38,6 +39,10 @@ public class Expression4 {
                 if (lex.text.equals("-")) {
                     return new Operation("-",null,  Expression4.analyze(lexes));
                 }
+                if (lex.text.equals("@")) {
+                    return new Operation("@", null, Expression.analyze(lexes));
+                }
+
                 throw new BadSyntax("Expression: expected identifier or string, got " + lex.text);
             default:
                 throw new BadSyntax("Expression: expected identifier or string, got " + lex.text);

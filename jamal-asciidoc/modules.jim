@@ -6,4 +6,4 @@ This dependency is needed by the maven assembly plugin.
 This is a separate file, because this file is also included by the README.adoc.jam file.
 
 }
-{@define JAMAL_MODULES=extensions,snippet,test,scriptbasic,groovy,ruby,plantuml,debug,jamal,yaml,io,assertions,markdown,mock}
+{@define JAMAL_MODULES=extensions,snippet,test,scriptbasic,groovy,ruby,plantuml,debug,jamal,prog,yaml,io,assertions,markdown,mock}

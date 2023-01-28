@@ -462,6 +462,8 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-jamal`
 
+* `jamal-prog`
+
 * `jamal-yaml`
 
 * `jamal-io`

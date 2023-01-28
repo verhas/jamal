@@ -17,7 +17,7 @@ Do not forget to restart IntelliJ after running this script.
 # It is used to automate the installation of the development version of jamal-asciidoc plugin
 # from inside the development environment.
 #
-echo "Compiling and installing the Jamal asciidotor plugin only"
+echo "Compiling and installing the Jamal asciidoctor plugin only"
 mvn clean install
 echo "Creating the JAMAL_PROJECT_HOME/.asciidoctor/lib directory"
 mkdir -p ../.asciidoctor/lib

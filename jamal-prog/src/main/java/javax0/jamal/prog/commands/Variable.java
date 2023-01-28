@@ -12,8 +12,9 @@ public class Variable extends Expression {
     }
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
-        return MacroReader.macro(processor).readValue(name)
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
+        return MacroReader.macro(ctx.getProcessor()).readValue(name)
                 .orElseThrow(() -> new BadSyntax("Variable " + name + " is not defined"));
     }
 }

@@ -7,11 +7,11 @@ import static javax0.jamal.prog.analyzer.Expression.getExpressionBetweenParenthe
 
 /**
  * An expression2 is
- * <p>
-
+ * <pre>
  * expression3 '+' expression2
  * expression3 '-' expression2
  * expression3
+ * </pre>
  */
 
 public class Expression2 {

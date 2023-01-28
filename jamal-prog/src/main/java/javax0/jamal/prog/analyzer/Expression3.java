@@ -7,12 +7,12 @@ import static javax0.jamal.prog.analyzer.Expression.getExpressionBetweenParenthe
 
 /**
  * An expression3 is
- * <p>
-
+ * <pre>
  * expression4 '*' expression3
  * expression4 '/' expression3
  * expression4 '%' expression3
  * expression4
+ * </pre>
  */
 public class Expression3 {
     public static javax0.jamal.prog.commands.Expression analyze(final Lex.List lexes) throws BadSyntax {

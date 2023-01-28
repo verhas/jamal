@@ -1,7 +1,6 @@
 package javax0.jamal.prog.commands;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Processor;
 
 import java.util.Objects;
 
@@ -13,7 +12,8 @@ public class Constant extends Expression {
     }
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
         return value;
     }
 }

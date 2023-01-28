@@ -115,6 +115,10 @@ This module implements a macro that invokes PlantUML, generates the graphical fi
 {chapter :scriptbasic:macro}
 {lang BASIC}
 
+{chapter :prog:macro}
+This module implements a simple BASIC like language integrated into Jamal.
+
+
 {chapter :snippet:macro}
 This module implements macros to help document programs.
 It includes advanced snippet handling, text transformation, text assertions and many other features.

@@ -16,11 +16,12 @@ public class If implements Command {
 
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
-        if( Operation.isTrue(condition.execute(processor))){
-            return then.execute(processor);
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
+        if( Operation.isTrue(condition.execute(ctx))){
+            return then.execute(ctx);
         } else {
-            return otherwise.execute(processor);
+            return otherwise.execute(ctx);
         }
     }
 }

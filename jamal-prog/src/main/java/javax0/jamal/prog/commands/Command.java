@@ -13,5 +13,5 @@ public interface Command {
      * @param processor the Jamal processing environment
      * @return the result of the execution
      */
-    String execute(Processor processor) throws BadSyntax;
+    String execute(Context context) throws BadSyntax;
 }

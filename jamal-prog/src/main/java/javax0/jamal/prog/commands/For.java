@@ -36,14 +36,15 @@ public class For implements Command {
     }
 
     @Override
-    public String execute(final Processor processor) throws BadSyntax {
+    public String execute(final Context ctx) throws BadSyntax {
+        ctx.step();
         final var sb = new StringBuilder();
-        String loopValue = start.execute(processor);
-        String step = this.step.execute(processor);
-        String end = this.end.execute(processor);
+        String loopValue = start.execute(ctx);
+        String step = this.step.execute(ctx);
+        String end = this.end.execute(ctx);
         while (isDone(loopValue, step, end)) {
-            Assignment.let(processor, variable, loopValue);
-            sb.append(block.execute(processor));
+            Assignment.let(ctx.getProcessor(), variable, loopValue);
+            sb.append(block.execute(ctx));
             if (Operation.bothNumeric(loopValue, step)) {
                 loopValue = new BigInteger(loopValue).add(new BigInteger(step)).toString();
             } else {
