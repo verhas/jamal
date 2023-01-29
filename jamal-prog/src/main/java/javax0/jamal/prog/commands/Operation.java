@@ -77,7 +77,7 @@ public class Operation extends Expression {
             case "or":
                 assertNotNull(leftValue, operator);
                 return (isTrue(leftValue) || isTrue(right.execute(ctx))) + "";
-            case "@":
+            case "!":
                 assertNull(leftValue, operator);
                 return ctx.getProcessor().process(Input.makeInput(right.execute(ctx)));
             case "not":

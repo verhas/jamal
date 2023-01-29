@@ -21,6 +21,11 @@ public class Expression1 {
         if (lexes.isEmpty()) {
             throw new BadSyntax("Expression is empty");
         }
+        if (lexes.is("not")) {
+            lexes.next();
+            final var op = new Operation("not", null, Expression1.analyze(lexes));
+            return op;
+        }
         var expression3 = Expression2.analyze(lexes);
         if (lexes.is("==") || lexes.is("!=") || lexes.is("<") || lexes.is("<=") || lexes.is(">") || lexes.is(">=")) {
             final var op = lexes.next().text;

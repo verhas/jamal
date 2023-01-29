@@ -19,13 +19,6 @@ public class Expression {
         if (!lexes.hasNext()) {
             throw new BadSyntax("Expression is empty");
         }
-        if (lexes.is("not")) {
-            lexes.next();
-            lexes.assume(Lex.Type.RESERVED, "(");
-            final var op = new Operation("not", null, Expression.analyze(lexes));
-            lexes.assume(Lex.Type.RESERVED, ")");
-            return op;
-        }
         var expression1 = Expression1.analyze(lexes);
         if (lexes.is("and") || lexes.is("or")) {
             final var op = lexes.next().text;

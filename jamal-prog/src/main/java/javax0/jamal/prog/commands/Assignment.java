@@ -28,7 +28,11 @@ public class Assignment implements Command {
     public String execute(final Context ctx) throws BadSyntax {
         ctx.step();
         final var processor = ctx.getProcessor();
-        let(processor, variable, expression.execute(ctx));
+        if (variable == null) {
+            expression.execute(ctx);
+        } else {
+            let(processor, variable, expression.execute(ctx));
+        }
         return "";
     }
 }

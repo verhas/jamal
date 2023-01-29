@@ -31,6 +31,7 @@
                     <argLine>
                 --add-opens jamal.prog/javax0.jamal.prog=ALL-UNNAMED
                           --add-opens jamal.prog/javax0.jamal.prog.commands=ALL-UNNAMED
+    
             </argLine>
                 </configuration>
             </plugin>
@@ -58,7 +59,13 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-snippet</artifactId>
-            <version>1.12.5</version>
+            <version>1.12.6-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-jamal</artifactId>
+            <version>1.12.6-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>

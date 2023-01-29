@@ -10,8 +10,7 @@ public class While {
         final var condition = Expression.analyze(lexes);
         lexes.eol("New line is expected after 'while expression'");
         final var block = Block.analyze(lexes);
-        lexes.assume(Lex.Type.RESERVED, "wend", "Expected wend after while");
-        lexes.eol("Expected newline after wend");
+        lexes.assumeKWNL( "wend", "Expected wend after while","Expected newline after wend");
         return new javax0.jamal.prog.commands.While(condition, block);
     }
 

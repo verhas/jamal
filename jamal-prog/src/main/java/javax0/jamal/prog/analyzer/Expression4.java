@@ -39,8 +39,8 @@ public class Expression4 {
                 if (lex.text.equals("-")) {
                     return new Operation("-",null,  Expression4.analyze(lexes));
                 }
-                if (lex.text.equals("@")) {
-                    return new Operation("@", null, Expression.analyze(lexes));
+                if (lex.text.equals("!")) {
+                    return new Operation("!", null, Expression.analyze(lexes));
                 }
 
                 throw new BadSyntax("Expression: expected identifier or string, got " + lex.text);

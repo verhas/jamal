@@ -10,25 +10,21 @@ public class If {
     public static javax0.jamal.prog.commands.If analyze(final Lex.List lexes) throws BadSyntax {
         lexes.next();
         final var condition = Expression.analyze(lexes);
-        lexes.assume(Lex.Type.RESERVED,"then","Expected then after if condition");
+        lexes.assume(Lex.Type.RESERVED, "then", "Expected then after if condition");
         lexes.eol("Expected newline after if condition");
         final var then = Block.analyze(lexes);
         if (lexes.is("else")) {
             lexes.next();
             lexes.eol("Expected newline after else");
             final var otherwise = Block.analyze(lexes);
-            final var res =  new javax0.jamal.prog.commands.If(condition, then, otherwise);
-            lexes.assume(Lex.Type.RESERVED,"endif","Expected endif after else block");
+            final var res = new javax0.jamal.prog.commands.If(condition, then, otherwise);
+            lexes.assume(Lex.Type.RESERVED, "endif", "Expected endif after else block");
             return res;
         }
         if (lexes.is("elseif")) {
             return new javax0.jamal.prog.commands.If(condition, then, new javax0.jamal.prog.commands.Block(List.of(If.analyze(lexes))));
         }
-        if (lexes.is("endif")) {
-            lexes.next();
-            lexes.eol("Expected newline after else");
-            return new javax0.jamal.prog.commands.If(condition, then, new javax0.jamal.prog.commands.Block(List.of()));
-        }
-        throw new BadSyntax("Expected else, elseif or endif after if");
+        lexes.assumeKWNL("endif", "Expected else, elseif or endif after if", "Expected newline after if");
+        return new javax0.jamal.prog.commands.If(condition, then, new javax0.jamal.prog.commands.Block(List.of()));
     }
 }

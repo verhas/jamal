@@ -79,11 +79,23 @@ public class Lex {
             return next();
         }
 
+        public void assumeKW(String text, String msg) throws BadSyntax {
+            assume(Type.RESERVED, text, msg);
+        }
+
+        public void assumeKWNL(String text, String msg, String newLineMsg) throws BadSyntax {
+            assume(Type.RESERVED, text, msg);
+            if( newLineMsg != null ){
+                eol(newLineMsg);
+            }
+        }
+
         public Lex assume(Type type, String text, String msg) throws BadSyntax {
             if (lexes.isEmpty() || lexes.get(0).type != type || !lexes.get(0).text.equals(text)) {
                 throw new BadSyntax(msg);
             }
             return next();
         }
+
     }
 }

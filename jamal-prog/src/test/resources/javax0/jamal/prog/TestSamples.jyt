@@ -1,3 +1,31 @@
+Test negated condition:
+  Input: |-
+    {@program
+    if not 0 then
+            << "yes"
+    endif
+    if not 1 or 1 then
+            << "yes"
+    endif
+    if not(1 and 1) then
+            << "no"
+    endif
+    }
+  Output: "yesyes"
+
+Loop In a list of output commands:
+  Input: |-
+    {@program stepLimit=19
+      <<"this is the output "
+      <<"of the program "
+      for i=1 to 2
+      <<"and it is,.. "
+      next
+      <<"concatenated "
+      <<"together "
+    }
+  Output: "this is the output of the program and it is,.. and it is,.. concatenated together "
+
 If then else:
   Input: |-
     {@program
@@ -34,7 +62,7 @@ If then else:
     {@define a(x)=this is x}
     {@define b   =this is b }
     {@program 
-        <<b + @"{a A}"
+        <<b + !"{a A}"
     b = b + 1
     evil = 666
     } {b}
@@ -66,7 +94,7 @@ Inner Macro:
   Input: |-
     {@define h=there}\
     {@program
-      << @"{@define k=33}"
+      << !"{@define k=33}"
         << k + "44"
     z = 55
     << z + h

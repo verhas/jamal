@@ -1,4 +1,4 @@
-= Jamal Prog Macro
+= Jamal Prog Macro Module
 
 The prog macro extends Jamal to execute a simple BASIC like macros.
 
@@ -47,7 +47,7 @@ Expressions can contain
 * logical operations `and`, `or`, `not`
 * and parenthesis.
 
-In addition to these there is a special operator `@` used to start evaluation of Jamal macros in strings.
+In addition to these there is a special operator `!` used to start evaluation of Jamal macros in strings.
 
 == Macros in the Package
 
@@ -56,11 +56,33 @@ There are two macros in the package:
 * `program` is the macro that executes a program
 * `expression` is the macro that evaluates an expression
 
+=== Program
+
 The macro `program` takes the input of the macro and interprets it as a program.
 The result of the macro is the concatenated strings of the output `<<` commands.
 
-The macro `expression` takes the input of the macro and interprets it as an expression.
-The result of the macro is the value of the expression.
+For example:
+
+[source]
+----
+{@program
+     <<"this is the output "
+     <<"of the program "
+     for i=1 to 2
+     <<"and it is,.. "
+     next
+     <<"concatenated "
+     <<"together "
+} 
+----
+
+will result in the output:
+
+[source]
+----
+this is the output of the program and it is,.. and it is,.. concatenated together  
+----
+
 
 The command `program` has the option `stepLimit`.
 This parameter has to be a number.
@@ -69,15 +91,76 @@ When the limit is reached the program will throw an exception.
 The default value of the limit is 100000 (hundred-thousand).
 This limit is to prevent infinite loops.
 
+
+[source]
+----
+{@try! {@program stepLimit=18
+<<"this is the output "
+<<"of the program "
+for i=1 to 2
+<<"and it is,.. "
+next
+<<"concatenated "
+<<"together "
+}} 
+----
+
+will result in the output:
+
+[source]
+----
+Step limit reached 
+----
+
+
+[%collapsible,title=How the steps are counted]
+====
+Each code "block" is calculated a step, each individual command is calculated as a step and each operation in an expression is calculated as a step.
+In the example above the steps are
+
+[start=0]
+. program start counts as one step
+. the first `<<`
+. accessing the constant string value
+. the second `<<`
+. accessing the constant string value
+. starting the for loop
+. accessing constant `1` for the start value
+. accessing constant `2` for the end value
+. accessing constant `1` for the step value, which is implicit, still accessing it is a step
+
+. starting the code block of the for the first loop execution
+. the first execution `<<` in the for loop
+. the access to the constant string value in the first loop execution
+
+. starting the code block of the for the second loop execution
+. the second execution `<<` in the for loop
+. the access to the constant string value in the second loop execution
+. accessing the constant string value
+. the `"concatenated "` `<<` fater the loop has finished
+. accessing the constant string value
+. the `"together "` `<<`
+. accessing the constant string value
+
+The command `next` does not calculate.
+That command is just a marker for the end of the loop, and it is used by the syntax analyser.
+If you change the `stepLimit` to 19 then the program will succeed.
+====
+
+=== Expression
+
+The macro `expression` takes the input of the macro and interprets it as an expression.
+The result of the macro is the value of the expression.
+
+
 == Expression Syntax
 
 Expressions are composed of numeric constants, strings, variables and operators.
-The operators are the basic arithmetic operators, the comparison operators, the logical operators and the `@` operator.
+The operators are the basic arithmetic operators, the comparison operators, the logical operators and the `!` operator.
 
 The formal syntax of the expressions is:
 
-  expression ::= 'not' '(' expression ')' |
-                 expression1 `and` expression |
+  expression ::= expression1 `and` expression |
                  expression1 `or` expression |
                  expression1
 
@@ -87,6 +170,7 @@ The formal syntax of the expressions is:
                   expression2 `>` expression |
                   expression2 `<=` expression |
                   expression2 `>=` expression |
+                  'not' expression1 |
                   expression2
 
     expression2 ::= expression3 `+` expression |
@@ -98,7 +182,7 @@ The formal syntax of the expressions is:
                     expression4 `%` expression |
                     expression4
 
-    expression4 ::= `@` expression |
+    expression4 ::= `!` expression |
                     `(` expression `)` |
                     number |
                     string |
@@ -112,7 +196,7 @@ In this case `-`, `*`, `/` and `%` are not defined and will cause syntax error.
 `+` is defined as string concatenation.
 When used as unary `+` it is a no-op resulting the same string as the operand.
 
-The operator `@` is used to evaluate a Jamal macros.
+The operator `!` is used to evaluate a Jamal macros.
 It is applied to the expression that follows it, and it evaluates it as string.
 
 This evaluation is done in the same scope as the surrounding environment.
@@ -140,7 +224,7 @@ The variable `evil` is not defined in the program, but it is used outside.
 {@try! {@program
             <<a}}
 {@program
-     <<b + @"{a A}"
+     <<b + !"{a A}"
      b = b + 1
      evil = 666
 } {b}
@@ -291,7 +375,7 @@ The expression after the `<<` is evaluated and the result is appended to the res
 ----
 {@program
    a = "{@define z=55}"
-   a = @a
+   a = !a
    <<a
    <<z
 
