@@ -1,4 +1,4 @@
-{#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
 {@import ../version.jim}
 {project jamal doclet}
@@ -16,3 +16,4 @@
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
     }
 {end project}
+{@try{@xmlFormat}}

@@ -5,6 +5,11 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
+/**
+ * This macro helps to overcome the fact that JavaDoc {@code code} tag look like a macro.
+ * When used in a segment where the macro processor is active it will be processed as a macro.
+ * The outcome of the macro processing will be similar to what it would be out of the macro processing scope.
+ */
 public class Code implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
