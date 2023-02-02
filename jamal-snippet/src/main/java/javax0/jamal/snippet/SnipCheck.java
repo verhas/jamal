@@ -32,28 +32,47 @@ public class SnipCheck implements Macro {
         final var id = Params.<String>holder("id");
         final var fileName = Params.<String>holder("file", "files");
         final var message = Params.<String>holder("message").orElse("");
-        Scan.using(processor).from(this).tillEnd().keys(hashString, lines, id, fileName, message).parse(in);
+        final var warning = Params.<Boolean>holder("snipCheckWarningOnly", "warning", "warningOnly").asBoolean();
+        final var error = Params.<Boolean>holder("snipCheckError", "error", "errorLog").asBoolean();
+        Scan.using(processor).from(this).tillEnd().keys(hashString, lines, id, fileName, message, warning, error).parse(in);
         BadSyntax.when(lines.isPresent() && hashString.isPresent(), "You cannot specify 'lines' and 'hash' the same time for snip:check");
+
+        BadSyntax.when(warning.is() && error.is(), "You cannot specify 'warning' and 'error' the same time for snip:check");
 
         final String snippet = getSnippetContent(in, processor, id, fileName, message);
 
         if (hashString.isPresent()) {
-            checkHashString(hashString, id, fileName, message, snippet, pos);
+            checkHashString(hashString, id, fileName, message, warning, error, snippet, pos, processor);
             return "";
         }
 
         if (lines.isPresent()) {
-            checkLineCount(lines, id, fileName, message, snippet);
+            checkLineCount(lines, id, fileName, message, warning, error, snippet, pos, processor);
             return "";
         }
         throw new BadSyntax("Neither lines, nor hash is checked in " + getId() + "'" + message.get() + "'");
     }
 
-    private void checkLineCount(Params.Param<Integer> lines, Params.Param<String> id, Params.Param<String> fileName, Params.Param<String> message, String snippet) throws BadSyntax {
+    private void checkLineCount(final Params.Param<Integer> lines,
+                                final Params.Param<String> id,
+                                final Params.Param<String> fileName,
+                                final Params.Param<String> message,
+                                final Params.Param<Boolean> warning,
+                                final Params.Param<Boolean> error,
+                                final String snippet,
+                                final Position pos,
+                                final Processor processor) throws BadSyntax {
         final var lastNl = snippet.charAt(snippet.length() - 1) == '\n' ? 0 : 1;
         final var newlines = snippet.replaceAll("[^\\n]", "").length() + lastNl;
         if (newlines == lines.get()) {
             return;
+        }
+        if (warning.is()) {
+            processor.logger().log(System.Logger.Level.WARNING, pos, "The " + getIdString(id, fileName) + " has " + newlines + " lines and not " + lines.get() + ".\n" + "'" + message.get() + "'");
+            return;
+        }
+        if (error.is()) {
+            processor.logger().log(System.Logger.Level.ERROR, pos, "The " + getIdString(id, fileName) + " has " + newlines + " lines and not " + lines.get() + ".\n" + "'" + message.get() + "'");
         }
         throw new BadSyntax("The " + getIdString(id, fileName) + " has " + newlines + " lines and not " + lines.get() + ".\n" + "'" + message.get() + "'");
     }
@@ -62,17 +81,29 @@ public class SnipCheck implements Macro {
                                  final Params.Param<String> id,
                                  final Params.Param<String> fileName,
                                  final Params.Param<String> message,
+                                 final Params.Param<Boolean> warning,
+                                 final Params.Param<Boolean> error,
                                  final String snippet,
-                                 final Position pos) throws BadSyntax {
+                                 final Position pos,
+                                 final Processor processor) throws BadSyntax {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(snippet));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < MIN_LENGTH) {
             BadSyntax.when(hashStringCalculated.contains(hash), "The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
-            BadSyntax.when(true,"The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
+            BadSyntax.when(true, "The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
                     getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
         }
         if (hashStringCalculated.contains(hash)) {
             return;
+        }
+        if (warning.is()) {
+            processor.logger().log(System.Logger.Level.WARNING, pos, "The %s hash is '%s', not '%s'.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(),
+                    message.isPresent() ? message.get() : "");
+            return;
+        }
+        if (error.is()) {
+            processor.logger().log(System.Logger.Level.ERROR, pos, "The %s hash is '%s', not '%s'.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(),
+                    message.isPresent() ? message.get() : "");
         }
         if (message.isPresent()) {
             throw new SnipCheckFailed(getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), message.get(), pos);
@@ -109,7 +140,7 @@ public class SnipCheck implements Macro {
                 snippet.append(FileTools.getInput(absoluteFileName, processor));
             }
         }
-        BadSyntax.when(!id.isPresent() && !fileNames.isPresent(),  "You have to specify either 'id' or 'fileName' for snip:check\n'%s'", message.get());
+        BadSyntax.when(!id.isPresent() && !fileNames.isPresent(), "You have to specify either 'id' or 'fileName' for snip:check\n'%s'", message.get());
         return snippet.toString();
     }
 

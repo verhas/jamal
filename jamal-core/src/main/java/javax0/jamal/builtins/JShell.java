@@ -12,7 +12,12 @@ public class JShell implements Macro {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        processor.getJShellEngine().define(input.toString());
+        final var engine = processor.getJShellEngine();
+        if (engine == null) {
+            throw new BadSyntax("The processor could not load the JShell engine.");
+        }
+        engine.define(input.toString());
+
         return "";
     }
 

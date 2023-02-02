@@ -6,6 +6,8 @@ import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
+import javax0.jamal.api.ResourceReader;
+import javax0.jamal.api.ServiceLoaded;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static javax0.jamal.tools.Input.makeInput;
@@ -24,8 +27,7 @@ import static javax0.jamal.tools.Input.makeInput;
  */
 public class FileTools {
 
-    private static final String RESOURCE_PREFIX = "res:";
-    private static final int RESOURCE_PREFIX_LENGTH = RESOURCE_PREFIX.length();
+
     private static final String HTTPS_PREFIX = "https://";
 
     /**
@@ -98,9 +100,12 @@ public class FileTools {
         return getFileContent(fileName, false, processor);
     }
 
+    private static final List<ResourceReader> readers = ServiceLoaded.getInstances(ResourceReader.class);
+
+
     /**
-     * Get the content of the file either reading it or from the cache. The cache is only consulted when the file is
-     * a {@code http://} prefixed resource.
+     * Get the content of the file either reading it or from the cache or from the original source.
+     * The cache is only consulted when the file is  a {@code http://} prefixed resource.
      *
      * @param fileName  the name of the file.
      * @param noCache   do not read the cache if this parameter is {@code true}. If there is cache configured the content
@@ -110,7 +115,6 @@ public class FileTools {
      * @throws BadSyntax if the file cannot be read
      */
     public static String getFileContent(final String fileName, final boolean noCache, final Processor processor) throws BadSyntax {
-        final String finalFileName;
         final var res = processor.getFileReader().map(reader -> reader.read(fileName)).orElse(Processor.IOHookResult.IGNORE);
         switch (res.type()) {
             case DONE:
@@ -120,22 +124,34 @@ public class FileTools {
                 processor.getFileReader().ifPresent(reader -> reader.set(fileName, content));
                 return content;
             default:
-                finalFileName = fileName;
                 break;
         }
+        if (readers.isEmpty()) {
+            readers.addAll(ServiceLoaded.getInstances(ResourceReader.class));
+        }
         try {
-            final String content;
-            if (finalFileName.startsWith(RESOURCE_PREFIX)) {
-                content = ResourceInput.getInput(finalFileName.substring(RESOURCE_PREFIX_LENGTH));
-            } else if (finalFileName.startsWith(HTTPS_PREFIX)) {
-                content = CachedHttpInput.getInput(finalFileName, noCache).toString();
-            } else {
-                content = FileInput.getInput(finalFileName);
-            }
+            final String content =
+                    readers.stream()
+                            .filter(r -> r.canRead(fileName))
+                            .findFirst()
+                            .map(r -> {
+                                try {
+                                    return r.read(fileName, noCache);
+                                } catch (IOException e) {
+                                    throw new UncheckedIOException(e);
+                                }
+                            }).orElseGet(() -> {
+                                        try {
+                                            return FileInput.getInput(fileName);
+                                        } catch (IOException e) {
+                                            throw new UncheckedIOException(e);
+                                        }
+                                    }
+                            );
             processor.getFileReader().ifPresent(reader -> reader.set(fileName, content));
             return content;
-        } catch (IOException | UncheckedIOException e) {
-            throw new BadSyntax("Cannot get the content of the file '" + finalFileName + "'", e);
+        } catch (UncheckedIOException e) {
+            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
         }
     }
 
@@ -153,10 +169,13 @@ public class FileTools {
                 break;
         }
         try {
-            BadSyntax.when(finalFileName.startsWith(RESOURCE_PREFIX), "Cannot write into a resource.");
+            if (readers.stream().anyMatch(r -> r.canRead(fileName))) {
+                throw new BadSyntax("Cannot write into a resource.");
+            }
             BadSyntax.when(finalFileName.startsWith(HTTPS_PREFIX), "Cannot write into a web resource.");
             File file = new File(finalFileName);
             if (file.getParentFile() != null) {
+                //noinspection ResultOfMethodCallIgnored
                 file.getParentFile().mkdirs();
             }
             try (final var fos = new FileOutputStream(file)) {
@@ -233,12 +252,10 @@ public class FileTools {
             final var unixedReference = reference == null ? "." : reference.replaceAll("\\\\", "/");
             final String prefix;
             final String unprefixedReference;
-            if (unixedReference.startsWith(HTTPS_PREFIX)) {
-                unprefixedReference = unixedReference.substring((HTTPS_PREFIX).length());
-                prefix = HTTPS_PREFIX;
-            } else if (unixedReference.startsWith(RESOURCE_PREFIX)) {
-                unprefixedReference = unixedReference.substring((RESOURCE_PREFIX).length());
-                prefix = RESOURCE_PREFIX;
+            int i = fileStart(unixedReference);
+            if (i >= 0) {
+                prefix = unixedReference.substring(0, i);
+                unprefixedReference = unixedReference.substring(i);
             } else {
                 prefix = "";
                 unprefixedReference = unixedReference;
@@ -288,8 +305,44 @@ public class FileTools {
      * @return {@code true} if the file name should be treated as a remote file and {@code false} otherwise
      */
     public static boolean isRemote(String fileName) {
-        return fileName.startsWith(HTTPS_PREFIX) ||
-                fileName.startsWith(RESOURCE_PREFIX);
+        return prefixEnd(fileName) >= 0;
+    }
+
+    /**
+     * Check if the name of the file has to be interpreted as a remote file (or Java resource).
+     * <p>
+     * The actualimplementation checks that the resource type is at the start of the file name with a ':' character
+     * following it. The resource type is a sequence of alphabetic characters. It has to be at least two characters.
+     *
+     * @param fileName the file name to check.
+     * @return index of the ':' character following the resource type, e.g. 'res:', 'https:', or -1 if the file name is
+     * local, simple file
+     */
+    private static int prefixEnd(final String fileName) {
+        int i = fileName.indexOf(':');
+        if (i < 2) { // -1 none, 0 starts with, 1 Windows drive letter
+            return -1;
+        }
+        for (int j = 0; j < i; j++) {
+            if (!Character.isAlphabetic(fileName.charAt(j))) {
+                return -1;
+            }
+        }
+        return i;
+    }
+
+    /**
+     * Return the character index where the file name used to calculate the absolute file name from the reference and the
+     * relative file name has to start.
+     *
+     * @param fileName the full file name including the prefix and all the parts before the file name
+     * @return the index, which is the first character of the file name
+     */
+    private static int fileStart(final String fileName) {
+        if (fileName.startsWith("https://")) {
+            return 7;
+        }
+        return readers.stream().filter(r -> r.canRead(fileName)).findFirst().map(r -> r.fileStart(fileName)).orElse(-1);
     }
 
     /**

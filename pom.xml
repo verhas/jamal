@@ -32,6 +32,7 @@
         <module>jamal-doclet</module>
         <module>jamal-asciidoc</module>
         <module>jamal-debug</module>
+        <module>jamal-maven-input</module>
         <module>jamal-test</module>
         <module>jamal-testsupport</module>
         <module>jamal-extensions</module>
@@ -322,6 +323,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-debug</artifactId>
+                <version>1.12.6-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-maven-input</artifactId>
                 <version>1.12.6-SNAPSHOT</version>
             </dependency>
             <dependency>

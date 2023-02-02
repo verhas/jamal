@@ -127,5 +127,9 @@
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-debug</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-maven-input</artifactId>
+        </dependency>
     </dependencies>
 </project>

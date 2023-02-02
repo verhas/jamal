@@ -349,8 +349,16 @@ public interface Processor extends AutoCloseable {
         }
     }
 
+    /**
+     * Set a {@link FileReader} hook to work with a processor to intercept any file reading operations the macros may make.
+     * @param fileReader the file reader
+     */
     void setFileReader(FileReader fileReader);
 
+    /**
+     * Get the file reader hook.
+     * @return the file reader hook
+     */
     Optional<FileReader> getFileReader();
 
     /**

@@ -35,10 +35,18 @@ import static jdk.jshell.Snippet.Status.REJECTED;
  */
 public class JShellEngine implements javax0.jamal.api.JShellEngine {
 
-    private JShell js = null;
-    private ByteArrayOutputStream output = null;
-    private final List<String> deferredDefines = new ArrayList<>();
-    private final AtomicBoolean isOpen = new AtomicBoolean(false);
+
+    private JShell js;
+    private ByteArrayOutputStream output;
+    private final List<String> deferredDefines;
+    private final AtomicBoolean isOpen;
+
+    public JShellEngine(){
+        js = null;
+        output = null;
+        deferredDefines = new ArrayList<>();
+        isOpen = new AtomicBoolean(false);
+    }
 
     /**
      * Initialize the JShell this engine used. It creates the JShell object, the byte array output stream that captures

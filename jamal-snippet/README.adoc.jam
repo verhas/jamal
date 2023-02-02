@@ -678,7 +678,7 @@ then snippet inclusion will purposefully fail.
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=9f1a1d9e%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=a5b69032%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -812,6 +812,21 @@ mvn clean verify -D{%JAMAL_SNIPPET_CHECK%}=false
 
 which will compile your code on the development machine fine.
 When you are finished with the adhoc changing, however, you have to update the documentation to reflect the changes in the code.
+
+There is another way to force processing without error.
+The macro `snip:check` has the option `snipCheckWarningOnly` (aliased as `warning`, `warningOnly`).
+The name `snipCheckWarningOnly` is supposed to be used globally in the Jamal file via the `options` macro.
+On the macro you will probably use `warning` or the more expressive `warningOnly`.
+With this option the macro will not cause bad syntax error in case the check fails.
+It will only log into the log file a warning message.
+
+NOTE: Even when you use the `snipCheckWarningOnly` option, the macro will cause bad syntax when the hash code is too short, or there are some other errors.
+It is only to supress hash code or line mismatch.
+
+Using the option `warning` the error message will be sent to the log as a warning.
+If you use the option `snipCheckError` (aliased as `error`) then the error message will be sent to the log as an error.
+In this case the error will not be suppressed.
+You cannot use `warning` and `error` together.
 
 [[snipList]]
 ==== {%macroChapter%}`snip:list`

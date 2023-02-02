@@ -37,6 +37,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         String errorMessage = null;
         Exception exception = null;
 
+        String log;
+
         List<String> lines;
         Processor processor;
     }
@@ -65,7 +67,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     @Override
     public void process(Document document, PreprocessorReader reader) {
-         final var runCounter = JamalPreprocessor.runCounter++;
+        final var runCounter = JamalPreprocessor.runCounter++;
         final var fileName = reader.getFile();
         setContextClassLoader();
         /*
@@ -115,31 +117,21 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         final var myCache = cache.get();
         final var cachingFileReader = new CachingFileReader(opts.withoutDeps);
         final List<String> newLines;
+        final String processorLog;
         if (myCache.isTheSame(md5)) {
             newLines = myCache.lines;
             cachingFileReader.files.putAll(myCache.files);
             log.info("restored");
+            processorLog = "";
         } else {
             if (opts.external) {
                 newLines = JamalExecutor.execute(fileName, lines);
+                processorLog = "";
             } else {
                 final var result = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader);
                 newLines = result.lines;
-                try {
-                    final var output = MacroReader.macro(result.processor).readValue("asciidoc:output").orElse(null);
-                    if (output != null) {
-                        final var outputFile = new File(FileTools.absolute(fileName, output));
-                        if (outputFile.exists() && outputFile.isDirectory()) {
-                            final var outputFileNameFile = new File(outputFileName);
-                            outputFileName = new File(outputFile, outputFileNameFile.getName()).getAbsolutePath();
-                        } else {
-                            //noinspection ResultOfMethodCallIgnored
-                            outputFile.getParentFile().mkdirs();
-                            outputFileName = outputFile.getAbsolutePath();
-                        }
-                    }
-                } catch (BadSyntax ignored) {
-                }
+                processorLog = result.log;
+                outputFileName = getSaveToFileName(fileName, outputFileName, result);
             }
             log.info("setting cache");
             JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
@@ -147,8 +139,28 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 writeOutputFile(outputFileName, log, cachingFileReader, newLines);
             }
         }
-        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
+        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, processorLog, opts);
         log.info("DONE");
+    }
+
+    private static String getSaveToFileName(final String fileName, String outputFileName, final Result result) {
+        try {
+            final var output = MacroReader.macro(result.processor).readValue("asciidoc:output").orElse(null);
+            if (output != null) {
+                final var outputFile = new File(FileTools.absolute(fileName, output));
+                if (outputFile.exists() && outputFile.isDirectory()) {
+                    final var outputFileNameFile = new File(outputFileName);
+                    return new File(outputFile, outputFileNameFile.getName()).getAbsolutePath();
+                } else {
+                    //noinspection ResultOfMethodCallIgnored
+                    outputFile.getParentFile().mkdirs();
+                    return outputFile.getAbsolutePath();
+                }
+            }
+        } catch (BadSyntax ignored) {
+            // the macro may have parameters: we do not use it in that case
+        }
+        return outputFileName;
     }
 
     /**
@@ -173,7 +185,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         processor.setFileReader(cachingFileReader);
         final var input = Input.makeInput(text, new Position(fileName, 0, 0));
         // snipline spec_env filter="(.*?)"
-        System.setProperty("intellij.asciidoctor.plugin","1");
+        System.setProperty("intellij.asciidoctor.plugin", "1");
         final var r = process(processor, input);
         r.processor = processor;
         r.lines = postProcess(lines, r, fileName);
@@ -204,13 +216,14 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * <p>
      * If there is no converter, then the input is treated as plaintext and converted to preformatted text in Asciidoc.
      *
-     * @param reader   the reader of the IntelliJ plugin to be used to restore the lines
-     * @param fileName the original name of the file, with the {@code .jam} extension
-     * @param log      logger
-     * @param lines    the lines of the input to be converted and saved to the Asciidoc editor IntelliJ plugin
-     * @param opts     input file options, to decide if the front matter is to be kept in the file
+     * @param reader       the reader of the IntelliJ plugin to be used to restore the lines
+     * @param fileName     the original name of the file, with the {@code .jam} extension
+     * @param log          logger
+     * @param lines        the lines of the input to be converted and saved to the Asciidoc editor IntelliJ plugin
+     * @param processorLog the log of the Jamal processor
+     * @param opts         input file options, to decide if the front matter is to be kept in the file
      */
-    private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final InFileOptions opts) {
+    private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final String processorLog, final InFileOptions opts) {
         for (final var converter : converters) {
             if (converter.canConvert(fileName)) {
                 final var convertedLines = converter.convert(lines);
@@ -268,6 +281,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         } else {
             List<String> newLines = new ArrayList<>();
 
+            appendLog(r.log,newLines);
             appendError(r.errorMessage, newLines);
             final int errorLineNo = copyLinesPriorTheError(lines, r, newLines);
             appendError(r.errorMessage, newLines);
@@ -304,16 +318,21 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     private JamalPreprocessor.Result process(final Processor processor, final Input input) {
         final Result r = new Result();
+        final StringColletingLogger logger = new StringColletingLogger();
         try {
+            processor.setLogger(logger);
             r.result = processor.process(input);
+            r.log = logger.toString();
         } catch (BadSyntaxAt bs) {
             r.position = bs.getPosition();
             r.errorMessage = bs.getMessage();
             r.exception = bs;
+            r.log = logger.toString();
         } catch (Exception bs) {
             r.position = new Position("", 0);
             r.errorMessage = bs.getMessage();
             r.exception = bs;
+            r.log = logger.toString();
         }
         return r;
     }
@@ -323,6 +342,15 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             newLines.add("[WARNING]");
             newLines.add("--");
             Collections.addAll(newLines, Arrays.stream(errorMessage.split("\n")).map(s -> "* " + s).toArray(String[]::new));
+            newLines.add("--");
+        }
+    }
+
+    private void appendLog(final String log, final List<String> newLines) {
+        if (log != null && log.length() != 0) {
+            newLines.add("[NOTE]");
+            newLines.add("--");
+            Collections.addAll(newLines, Arrays.stream(log.split("\n")).map(s -> "* " + s).toArray(String[]::new));
             newLines.add("--");
         }
     }

@@ -41,3 +41,4 @@
         {dependency :org.apache.maven.plugin-tools:maven-plugin-annotations:{MAVEN_PLUGIN_ANNOTATIONS}:provided}
     }
 {end project}
+{@try{@xmlFormat}}

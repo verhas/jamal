@@ -945,6 +945,21 @@ mvn clean verify -DJAMAL_SNIPPET_CHECK=false
 which will compile your code on the development machine fine.
 When you are finished with the adhoc changing, however, you have to update the documentation to reflect the changes in the code.
 
+There is another way to force processing without error.
+The macro `snip:check` has the option `snipCheckWarningOnly` (aliased as `warning`, `warningOnly`).
+The name `snipCheckWarningOnly` is supposed to be used globally in the Jamal file via the `options` macro.
+On the macro you will probably use `warning` or the more expressive `warningOnly`.
+With this option the macro will not cause bad syntax error in case the check fails.
+It will only log into the log file a warning message.
+
+NOTE: Even when you use the `snipCheckWarningOnly` option, the macro will cause bad syntax when the hash code is too short, or there are some other errors.
+It is only to supress hash code or line mismatch.
+
+Using the option `warning` the error message will be sent to the log as a warning.
+If you use the option `snipCheckError` (aliased as `error`) then the error message will be sent to the log as an error.
+In this case the error will not be suppressed.
+You cannot use `warning` and `error` together.
+
 [[snipList]]
 ==== x.`snip:list`
 
@@ -1362,7 +1377,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1172:30
+../jamal-snippet/README.adoc.jam:1187:30
 ----
 
 
@@ -2654,7 +2669,7 @@ will result
 - Java.java: 10,394 bytes
 - ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
-- SnipCheck.java: 5,702 bytes
+- SnipCheck.java: 7,791 bytes
 - Reflow.java: 2,023 bytes
 - Pos.java: 5,292 bytes
 - Snippet.java: 1,052 bytes
@@ -2910,7 +2925,7 @@ will result in the output
 
 [source]
 ----
-2023-01-29 17:53:56
+2023-02-02 20:34:26
 ----
 
 

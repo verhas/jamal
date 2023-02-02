@@ -132,6 +132,10 @@
             <artifactId>jamal-mock</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-maven-input</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>

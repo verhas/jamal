@@ -15,7 +15,7 @@
     {dependencies#
         {@for MODULE in (api,tools,engine)=
             {dependency|{GROUPID}|jamal-MODULE}}
-        {@for MODULE in (testsupport,jamal,core)=
+        {@for MODULE in (testsupport,jamal,core,maven-input)=
             {dependency|{GROUPID}|jamal-MODULE||test}}
         {@comment specific release to avoid circular dependency, we use it only to generate documentation}
         {@for MODULE in (assertions,plantuml)=

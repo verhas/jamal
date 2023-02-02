@@ -22,8 +22,9 @@ public class Output implements Macro {
         Params.using(processor).from(this).between("()").keys(isolate).parse(in);
         InputHandler.skipWhiteSpaces2EOL(in);
         if (isolate.is()) {
-            final var isolatedProc = new javax0.jamal.engine.Processor("{", "}");
-            return isolatedProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
+            try (var isolatedProc = new javax0.jamal.engine.Processor("{", "}")) {
+                return isolatedProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
+            }
         } else {
             if (localProc == null) {
                 localProc = new javax0.jamal.engine.Processor("{", "}");
