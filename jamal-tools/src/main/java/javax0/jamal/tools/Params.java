@@ -58,7 +58,6 @@ import static javax0.jamal.tools.InputHandler.startsWith;
 public class Params {
     public static class ExtraParams {
         private final Map<String, Param<?>> params = new HashMap<>();
-        ;
     }
 
     public interface Param<T> {
