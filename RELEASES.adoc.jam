@@ -6,7 +6,19 @@
 
 {%RELEASE/1.12.6-SNAPSHOT%}
 Snippet library macro `directory` has the same formatting options as `file` macro.
-There are two new macros in the snippet library: `unicode` and `numbers
+There are two new macros in the snippet library: `unicode` and `numbers`.
+The `snip:check` macro implements the options `warning` and `error`.
+JShell handling improved. When there is no JShell it causes BadSyntax and thus can be handled using the macro `try`.
+
+When closing the processor exceptions are cleared not only when there are closers.
+This was a bug causing the exceptions reappearing using the macros `sample` and `output`.
+
+The handling of external files, like `res:`, and `https:` were moved to services found using the service loader mechanism.
+Loading files from Maven artifacts was implementing this service.
+
+The prog macro package is implemented giving imperative simple BASIC like programming capabilities.
+
+The Asciidoc preprocessor for the IntelliJ Asciidoctor plugin supports the `prefixLog` option.
 
 {%RELEASE/1.12.5%}
 

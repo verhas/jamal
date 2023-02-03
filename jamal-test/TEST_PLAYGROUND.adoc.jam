@@ -1,3 +1,4 @@
+{%@comment %}
 ---
 aba: huk
 ---
@@ -7,12 +8,14 @@ Some code block here:
 [source, java]
 ----
 {%@unicode &#8203%}
+{%@snip:define A55=0000%}
 
 
 
 
 
 
+{%@log [level=INFO] jajj%}
 
 
 

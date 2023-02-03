@@ -8,5 +8,6 @@ public class TestConvertInstallShell {
     @Test
     void installShellConversion() throws Exception {
         DocumentConverter.convert("install-asciidoc.sh.jam");
+        DocumentConverter.convert("../install-asciidoc.sh.jam");
     }
 }

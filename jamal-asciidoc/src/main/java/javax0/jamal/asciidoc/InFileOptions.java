@@ -18,6 +18,8 @@ class InFileOptions {
 
     boolean keepFrontMatter = Configuration.INSTANCE.keepFrontMatter;
 
+    boolean prefixLog;
+
     InFileOptions(final String firstLine) {
         final var matcher = Pattern.compile("@comment\\s+([\\w\\s]*)").matcher(firstLine);
         final var options = matcher.find() ? List.of(matcher.group(1).split("\\s+")) : List.<String>of();
@@ -34,6 +36,9 @@ class InFileOptions {
         }
         if (options.contains("log")) {
             log = true;
+        }
+        if( options.contains("prefixLog")){
+            prefixLog = true;
         }
         if (options.contains("external")) {
             external = true;

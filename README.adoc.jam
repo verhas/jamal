@@ -4338,10 +4338,10 @@ This is a simplified interface to access the functionality of Jamal.
 
 The current and past versions of the JavaDoc can be read online at the address:
 
-{%@for module in (api,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,markdown,maven-extension,maven-plugin,plantuml,ruby,scriptbasic,snippet,test,testsupport,tools,word,yaml)=
+{%@for module in (api,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,java,maven-input,markdown,maven-extension,maven-plugin,plantuml,ruby,scriptbasic,snippet,test,testsupport,tools,word,yaml)=
 * https://javadoc.io/doc/com.javax0.jamal/jamal-module/
 
-%}/m
+%}
 
 In addition to the low level API, there are facades that help the use of Jamal for special purposes.
 One of them is implemented by the class {%@java:class (format=`$name`) javax0.jamal.Format%}.

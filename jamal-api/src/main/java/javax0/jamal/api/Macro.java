@@ -171,9 +171,9 @@ public interface Macro extends Identified, ServiceLoaded {
 
             if (input.indexOf(open) == 0) {
                 int offset = open.length();
-                while (offset < input.length() && input.charAt(offset) == IDENT
+                while (offset < input.length() && (input.charAt(offset) == IDENT
                         || input.charAt(offset) == POST_VALUATE
-                        || Character.isWhitespace(input.charAt(offset))) {
+                        || Character.isWhitespace(input.charAt(offset)))) {
                     offset++;
                 }
                 final var macro = getMacro(processor.getRegister(), input, offset);

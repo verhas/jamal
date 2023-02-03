@@ -97,14 +97,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         }
 
         if (opts.fromFile) {
-            try {
-                final var fileLines = Files.readAllLines(Path.of(fileName), StandardCharsets.UTF_8);
-                // only if the file was read, it skips in the case of exception
-                lines.clear();
-                lines.addAll(fileLines);
-            } catch (IOException e) {
-                // just ignore
-            }
+            replaceTheLinesFromTheFile(fileName, lines);
         }
 
         final var log = new Log(outputFileName, opts.log, runCounter);
@@ -117,20 +110,27 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         final var myCache = cache.get();
         final var cachingFileReader = new CachingFileReader(opts.withoutDeps);
         final List<String> newLines;
-        final String processorLog;
         if (myCache.isTheSame(md5)) {
             newLines = myCache.lines;
             cachingFileReader.files.putAll(myCache.files);
             log.info("restored");
-            processorLog = "";
         } else {
             if (opts.external) {
                 newLines = JamalExecutor.execute(fileName, lines);
-                processorLog = "";
             } else {
-                final var result = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader);
+                final var logger = opts.prefixLog ? new StringColletingLogger() : new javax0.jamal.api.Processor.Logger() {
+                    @Override
+                    public void log(final System.Logger.Level level, final Position pos, final String format, final String... params) {
+
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "";
+                    }
+                };
+                final var result = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader, logger);
                 newLines = result.lines;
-                processorLog = result.log;
                 outputFileName = getSaveToFileName(fileName, outputFileName, result);
             }
             log.info("setting cache");
@@ -139,8 +139,19 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 writeOutputFile(outputFileName, log, cachingFileReader, newLines);
             }
         }
-        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, processorLog, opts);
+        restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
         log.info("DONE");
+    }
+
+    private static void replaceTheLinesFromTheFile(final String fileName, final ArrayList<String> lines) {
+        try {
+            final var fileLines = Files.readAllLines(Path.of(fileName), StandardCharsets.UTF_8);
+            // only if the file was read, it skips in the case of exception
+            lines.clear();
+            lines.addAll(fileLines);
+        } catch (IOException e) {
+            // just ignore
+        }
     }
 
     private static String getSaveToFileName(final String fileName, String outputFileName, final Result result) {
@@ -180,8 +191,9 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
     }
 
-    private Result runJamalInProcess(final String fileName, final List<String> lines, final boolean useDefaultSeparators, final String text, final CachingFileReader cachingFileReader) {
+    private Result runJamalInProcess(final String fileName, final List<String> lines, final boolean useDefaultSeparators, final String text, final CachingFileReader cachingFileReader, final javax0.jamal.api.Processor.Logger logger) {
         final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
+        processor.setLogger(logger);
         processor.setFileReader(cachingFileReader);
         final var input = Input.makeInput(text, new Position(fileName, 0, 0));
         // snipline spec_env filter="(.*?)"
@@ -204,7 +216,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         log.info("dependencies\n" + cachingFileReader.list());
     }
 
-    private static List<Converter> converters = Converter.getInstances();
+    private static final List<Converter> converters = Converter.getInstances();
 
     /**
      * Convert the lines to Asciidoc and then restore them to the IntelliJ Asciidoctor plugin.
@@ -216,14 +228,13 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * <p>
      * If there is no converter, then the input is treated as plaintext and converted to preformatted text in Asciidoc.
      *
-     * @param reader       the reader of the IntelliJ plugin to be used to restore the lines
-     * @param fileName     the original name of the file, with the {@code .jam} extension
-     * @param log          logger
-     * @param lines        the lines of the input to be converted and saved to the Asciidoc editor IntelliJ plugin
-     * @param processorLog the log of the Jamal processor
-     * @param opts         input file options, to decide if the front matter is to be kept in the file
+     * @param reader   the reader of the IntelliJ plugin to be used to restore the lines
+     * @param fileName the original name of the file, with the {@code .jam} extension
+     * @param log      logger
+     * @param lines    the lines of the input to be converted and saved to the Asciidoc editor IntelliJ plugin
+     * @param opts     input file options, to decide if the front matter is to be kept in the file
      */
-    private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final String processorLog, final InFileOptions opts) {
+    private void restoreTheLinesIntoThePlugin(final PreprocessorReader reader, final String fileName, final Log log, final List<String> lines, final InFileOptions opts) {
         for (final var converter : converters) {
             if (converter.canConvert(fileName)) {
                 final var convertedLines = converter.convert(lines);
@@ -276,12 +287,17 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * @return the list of the lines to be used by the asciidoctor processor
      */
     private List<String> postProcess(final List<String> lines, final Result r, final String inputFileName) {
-        if (r.errorMessage == null && r.result != null) {
+        if (r.errorMessage == null && r.log.length() == 0 && r.result != null) {
             return List.of(r.result.split("\n"));
+        } else if (r.errorMessage == null && r.log.length() > 0) {
+            List<String> newLines = new ArrayList<>();
+            appendLog(r.log, newLines);
+            newLines.addAll(List.of(r.result.split("\n")));
+            return newLines;
         } else {
             List<String> newLines = new ArrayList<>();
 
-            appendLog(r.log,newLines);
+            appendLog(r.log, newLines);
             appendError(r.errorMessage, newLines);
             final int errorLineNo = copyLinesPriorTheError(lines, r, newLines);
             appendError(r.errorMessage, newLines);
@@ -318,21 +334,19 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     private JamalPreprocessor.Result process(final Processor processor, final Input input) {
         final Result r = new Result();
-        final StringColletingLogger logger = new StringColletingLogger();
         try {
-            processor.setLogger(logger);
             r.result = processor.process(input);
-            r.log = logger.toString();
+            r.log = processor.logger().toString();
         } catch (BadSyntaxAt bs) {
             r.position = bs.getPosition();
             r.errorMessage = bs.getMessage();
             r.exception = bs;
-            r.log = logger.toString();
+            r.log = processor.logger().toString();
         } catch (Exception bs) {
             r.position = new Position("", 0);
             r.errorMessage = bs.getMessage();
             r.exception = bs;
-            r.log = logger.toString();
+            r.log = processor.logger().toString();
         }
         return r;
     }

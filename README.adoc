@@ -5011,6 +5011,12 @@ The current and past versions of the JavaDoc can be read online at the address:
 * https://javadoc.io/doc/com.javax0.jamal/jamal-jamal/
 
 
+* https://javadoc.io/doc/com.javax0.jamal/jamal-java/
+
+
+* https://javadoc.io/doc/com.javax0.jamal/jamal-maven-input/
+
+
 * https://javadoc.io/doc/com.javax0.jamal/jamal-markdown/
 
 
@@ -5046,7 +5052,7 @@ The current and past versions of the JavaDoc can be read online at the address:
 
 * https://javadoc.io/doc/com.javax0.jamal/jamal-yaml/
 
-/m
+
 
 In addition to the low level API, there are facades that help the use of Jamal for special purposes.
 One of them is implemented by the class `javax0.jamal.Format`.

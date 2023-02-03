@@ -1,3 +1,9 @@
+[WARNING]
+--
+* Macro was not terminated in the file.
+* @define HEADER($x)=$x
+*  at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
+--
 # H1
 ## H2
 ### H3
@@ -6,10 +12,18 @@
 ###### H6
 
 Alternatively, for H1 and H2, an underline-ish style:
-documen,mn
-Alt-H1
+[WARNING]
+--
+* Macro was not terminated in the file.
+* @define HEADER($x)=$x
+*  at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
+--
+{%@define HEADER($x)=$x
+{%
 ======
-
+%}\
+,mn
+{%HEADER Alt-H1%}
 
 Alt-H2
 ------
@@ -156,3 +170,86 @@ This line is only separated by a single newline, so it's a separate line in the 
 
 
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+[WARNING]
+--
+* Macro was not terminated in the file.
+* @define HEADER($x)=$x
+*  at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
+--
+[source]
+----
+Macro was not terminated in the file.
+@define HEADER($x)=$x
+ at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
+javax0.jamal.api.BadSyntaxAt: Macro was not terminated in the file.
+@define HEADER($x)=$x
+ at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
+	at javax0.jamal.api.Macro.fetch(Macro.java:169)
+	at javax0.jamal.engine.util.MacroBodyFetcher.getNextMacroBody(MacroBodyFetcher.java:49)
+	at javax0.jamal.engine.Processor.getNextMacroBody(Processor.java:835)
+	at javax0.jamal.engine.Processor.processMacro(Processor.java:241)
+	at javax0.jamal.engine.Processor.process(Processor.java:169)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:323)
+	at javax0.jamal.asciidoc.JamalPreprocessor.runJamalInProcess(JamalPreprocessor.java:189)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:121)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy.process(PreprocessorProxy.java:94)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy$INVOKER$i$2$0$process.call(PreprocessorProxy$INVOKER$i$2$0$process.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodTwoOrN.call(JavaMethod.java:1035)
+	at org.jruby.RubyMethod.call(RubyMethod.java:124)
+	at org.jruby.RubyMethod$INVOKER$i$call.call(RubyMethod$INVOKER$i$call.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrOneOrTwoOrNBlock.call(JavaMethod.java:376)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:325)
+	at org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:72)
+	at org.jruby.ir.interpreter.Interpreter.INTERPRET_BLOCK(Interpreter.java:116)
+	at org.jruby.runtime.MixedModeIRBlockBody.commonYieldPath(MixedModeIRBlockBody.java:136)
+	at org.jruby.runtime.IRBlockBody.doYield(IRBlockBody.java:170)
+	at org.jruby.runtime.BlockBody.yield(BlockBody.java:108)
+	at org.jruby.runtime.Block.yield(Block.java:188)
+	at org.jruby.RubyArray.each(RubyArray.java:1865)
+	at org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroBlock.call(JavaMethod.java:560)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:85)
+	at org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:94)
+	at org.jruby.ir.instructions.CallBase.interpret(CallBase.java:546)
+	at org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:361)
+	at org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:72)
+	at org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:80)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:164)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:151)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:210)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:142)
+	at org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:345)
+	at org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:72)
+	at org.jruby.ir.interpreter.InterpreterEngine.interpret(InterpreterEngine.java:92)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:238)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:225)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:226)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at org.jruby.ir.interpreter.InterpreterEngine.processCall(InterpreterEngine.java:325)
+	at org.jruby.ir.interpreter.StartupInterpreterEngine.interpret(StartupInterpreterEngine.java:72)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.INTERPRET_METHOD(MixedModeIRMethod.java:128)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:115)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:192)
+	at org.jruby.RubyClass.finvoke(RubyClass.java:784)
+	at org.jruby.runtime.Helpers.invoke(Helpers.java:661)
+	at org.jruby.RubyBasicObject.callMethod(RubyBasicObject.java:370)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:311)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:336)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:331)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:816)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:782)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:771)
+	at org.asciidoc.intellij.editor.AsciiDocPreviewEditor.lambda$render$0(AsciiDocPreviewEditor.java:149)
+	at org.asciidoc.intellij.editor.LazyApplicationPoolExecutor.lambda$execute$0(LazyApplicationPoolExecutor.java:66)
+	at com.intellij.openapi.application.impl.ApplicationImpl$1.run(ApplicationImpl.java:246)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:702)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:699)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1.run(Executors.java:699)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+----
