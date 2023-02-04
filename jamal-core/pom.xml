@@ -4,11 +4,11 @@
     <name>jamal core</name>
     <packaging>jar</packaging>
     <artifactId>jamal-core</artifactId>
-    <version>1.12.6-SNAPSHOT</version>
+    <version>1.12.6</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.6-SNAPSHOT</version>
+        <version>1.12.6</version>
     </parent>
     <description>Jamal macro library built-in macros</description>
     <build>

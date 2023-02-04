@@ -1,5 +1,5 @@
 {@comment prefixLog}
-{@log [level=INFO] abrikidebra}
 
 
-
+User home is: {@env USER_HOME}
+{#listDir (exclude=Application) {@env USER_HOME}}
