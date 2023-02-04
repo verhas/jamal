@@ -29,6 +29,9 @@ public interface Macro extends Identified, ServiceLoaded {
     @interface Stateful {
     }
 
+    static List<Macro> getInstances(final ClassLoader cl) {
+        return ServiceLoaded.getInstances(Macro.class,cl);
+    }
     /**
      * Get an instance from all the classes that implement the interface {@code Macro}.
      *

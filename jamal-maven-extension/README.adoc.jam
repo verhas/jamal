@@ -269,11 +269,6 @@ If you want to do anything like that, the in-memory Yaml structures these macros
 This module gives you assertion macros that can fail if certain conditions are not met.
 {%further assertions%}
 
-=== {%#block {%depCounter%}%} `extensions`
-It is an extension module with experimental macros.
-The macros in this package are not supported and may change incompatible ways from version to version.
-{%further extensions%}
-
 === {%#block {%depCounter%}%} `debug`
 This module does not provide any macro, but it has to be on the classpath to start the debugger.
 A brief introduction is described above on how to start the Jamal processing when compiling a `pom.xml.jam.

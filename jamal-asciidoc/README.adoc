@@ -5,7 +5,7 @@ Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]
 
-This document is the readme file for the Jamal Asciidoc extension version `1.12.6`.
+This document is the readme file for the Jamal Asciidoc extension version `1.12.7-SNAPSHOT`.
 
 == Introduction
 
@@ -451,35 +451,43 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 
 
-* `jamal-extensions`
+* `jamal-engine`
 
-* `jamal-snippet`
+* `jamal-api`
 
-* `jamal-test`
+* `jamal-tools`
 
-* `jamal-scriptbasic`
+* `jamal-core`
+
+* `jamal-assertions`
 
 * `jamal-groovy`
 
-* `jamal-ruby`
-
-* `jamal-plantuml`
-
-* `jamal-debug`
-
-* `jamal-jamal`
-
-* `jamal-prog`
-
-* `jamal-yaml`
-
 * `jamal-io`
 
-* `jamal-assertions`
+* `jamal-jamal`
 
 * `jamal-markdown`
 
 * `jamal-mock`
+
+* `jamal-plantuml`
+
+* `jamal-ruby`
+
+* `jamal-scriptbasic`
+
+* `jamal-snippet`
+
+* `jamal-yaml`
+
+* `jamal-word`
+
+* `jamal-prog`
+
+* `jamal-test`
+
+* `jamal-debug`
 
 * `jamal-maven-input`
 

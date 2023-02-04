@@ -76,7 +76,7 @@ This can be done adding
 ----
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-word</artifactId>
-    <version>1.12.6</version>
+    <version>1.12.7-SNAPSHOT</version>
 ----
 
 to your Maven `pom.xml`.

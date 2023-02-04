@@ -25,7 +25,7 @@ This directory will contain the file `extensions.xml` with the content:
     <extension>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-maven-extension</artifactId>
-        <version>1.12.6</version>
+        <version>1.12.7-SNAPSHOT</version>
     </extension>
 </extensions>
 ---
@@ -73,7 +73,7 @@ To automate this, the Jamal Maven plugin can be started with the command line
 
 [source]
 ----
-mvn -Djamalize=true com.javax0.jamal:jamal-maven-plugin:1.12.6:jamal
+mvn -Djamalize=true com.javax0.jamal:jamal-maven-plugin:1.12.7-SNAPSHOT:jamal
 ----
 
 from the top level project directory.
@@ -243,11 +243,6 @@ For further information read the link:../jamal-yaml/README.adoc[documentation] o
 ===  `assertions`
 This module gives you assertion macros that can fail if certain conditions are not met.
 For further information read the link:../jamal-assertions/README.adoc[documentation] of the module.
-
-===  `extensions`
-It is an extension module with experimental macros.
-The macros in this package are not supported and may change incompatible ways from version to version.
-For further information read the link:../jamal-extensions/README.adoc[documentation] of the module.
 
 ===  `debug`
 This module does not provide any macro, but it has to be on the classpath to start the debugger.

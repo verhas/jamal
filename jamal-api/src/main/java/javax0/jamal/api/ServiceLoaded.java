@@ -34,16 +34,20 @@ public interface ServiceLoaded {
      * @return the list of instances
      */
     static <T> List<T> getInstances(Class<T> klass) {
+        return getInstances(klass, Thread.currentThread().getContextClassLoader());
+    }
+
+    static <T> List<T> getInstances(Class<T> klass, final ClassLoader cl) {
         List<T> list = new ArrayList<>();
         try {
-            final ServiceLoader<T> services = ServiceLoader.load(klass);
+            final ServiceLoader<T> services = ServiceLoader.load(klass, cl);
             services.iterator().forEachRemaining(list::add);
             if (list.size() == 0) {
-                loadViaMetaInf(klass, list);
+                loadViaMetaInf(klass, list, cl);
             }
             return list;
         } catch (ServiceConfigurationError ignored) {
-            loadViaMetaInf(klass,list);
+            loadViaMetaInf(klass, list, cl);
             return list;
         }
     }
@@ -62,10 +66,10 @@ public interface ServiceLoaded {
      * @param list  the list to fill the instances to
      * @param <T>   the klass type
      */
-    static <T> void loadViaMetaInf(final Class<T> klass, final List<T> list) {
+    static <T> void loadViaMetaInf(final Class<T> klass, final List<T> list, final ClassLoader cl) {
         try {
             final var classes = new HashSet<Class<T>>(); // different classloaders in the hierarchy may load the same file more than once
-            for (final var url : loadResources("META-INF/services/" + klass.getName(), ServiceLoaded.class.getClassLoader())) {
+            for (final var url : loadResources("META-INF/services/" + klass.getName(), cl)) {
                 try (var is = url.openStream()) {
                     for (final var className : new String(is.readAllBytes(), StandardCharsets.UTF_8).split("[\n\r]+")) {
                         try {

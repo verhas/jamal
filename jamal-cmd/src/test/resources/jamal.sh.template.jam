@@ -1,9 +1,12 @@
+{@comment}\
 #!/usr/bin/env bash
-{#import {ROOT}/version.jim}
-{@define REPO=$HOME/.m2/repository}
-{@define CENTRAL=https://repo1.maven.org/maven2}
-CLASSPATH=""
+{@define ? ROOT=../../../..}\
+{#import {ROOT}/version.jim}\
+{#define asciidoc:output={ROOT}/jamal.sh.java}\
+{@define REPO=$HOME/.m2/repository}\
+{@define CENTRAL=https://repo1.maven.org/maven2}\
 
+CLASSPATH=""
 function download() {}
   DIR=${}1//\.//}
   if ! test -f {REPO}/$DIR/$2/$3/$2-$3.jar; then

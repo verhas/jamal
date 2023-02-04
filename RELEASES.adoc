@@ -5,6 +5,12 @@
 
 
 == https://github.com/verhas/jamal/tree/1.12.6-SNAPSHOT[1.12.6-SNAPSHOT]
+
+The extensions plugin was removed from the Maven extension dependency and from the asciidoc extension.
+
+== https://github.com/verhas/jamal/tree/1.12.6[1.12.6]
+There is a new macro library `prog` that implements a simple BASIC like programming language.
+
 Snippet library macro `directory` has the same formatting options as `file` macro.
 There are two new macros in the snippet library: `unicode` and `numbers`.
 The `snip:check` macro implements the options `warning` and `error`.

@@ -26,7 +26,7 @@ $x
 --------------------------------------------------------------------------------------------------------------------
 -- cannot move to VERSIONS because old 'VersionFetcher.tsx' reads this file from github
 -- and looks for the "define" to see its version is OK
-{@define LAST_RELEASE=1.12.5}
+{@define LAST_RELEASE=1.12.6}
 
 
 {VERSIONS
@@ -37,7 +37,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=1.12.6                             -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=1.12.7-SNAPSHOT                    -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 

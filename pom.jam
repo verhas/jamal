@@ -17,7 +17,7 @@
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
     {description Jamal macro library to process text files}
     {modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions)=jamal-$M,}jamal-all}
-    {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
+    {license|The Apache License, Version 2.0|https://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
     {github|verhas|jamal}
     {properties|

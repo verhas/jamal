@@ -24,7 +24,7 @@ public class TestCreateStarters {
     void testCreateTheJBangStarterFile() throws Exception {
         final var versionString = getVersionString();
         final var root = getRoot();
-        final var content = getContent("{@include res:jbang.template}", root, versionString);
+        final var content = getContent("{@include res:jbang.template.jam}", root, versionString);
 
         if (!versionString.contains("-")) {
             Files.write(Paths.get(root + "/" + "jbangstarter.java"), content.getBytes(StandardCharsets.UTF_8),
@@ -39,7 +39,7 @@ public class TestCreateStarters {
     void testCreateJamalSh() throws Exception {
         final var versionString = getVersionString();
         final var root = getRoot();
-        final var content = getContent("{@include res:jamal.sh.template}", root, versionString);
+        final var content = getContent("{@include res:jamal.sh.template.jam}", root, versionString);
 
         Files.write(Paths.get(root + "/" + "jamal.sh"), content.getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE, StandardOpenOption.WRITE);

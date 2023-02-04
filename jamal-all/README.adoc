@@ -15,7 +15,7 @@ The solution is to have a JAR project that has all the needed dependencies and a
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-all</artifactId>
-    <version>1.12.6</version>
+    <version>1.12.7-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -37,8 +37,6 @@ This will add the following dependencies to your project:
 * `jamal-io`
 
 * `jamal-jamal`
-
-* `jamal-java`
 
 * `jamal-markdown`
 

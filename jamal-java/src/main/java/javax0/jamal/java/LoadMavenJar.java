@@ -1,10 +1,8 @@
 package javax0.jamal.java;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
@@ -14,47 +12,23 @@ import javax0.maventools.download.MavenCoordinates;
 import javax0.maventools.download.Pom;
 import javax0.maventools.download.Repo;
 
-import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.UUID;
 
-public class Download implements Macro {
-
-
-    public static class FileListHolder implements Identified, ObjectHolder<File[]> {
-
-
-        private final String id;
-        private final File[] files;
-        private FileListHolder(File [] files){
-            id = ("A" + UUID.randomUUID()).replaceAll("-",":");
-            this.files = files;
-        }
-
-        @Override
-        public String getId() {
-            return id;
-        }
-
-        @Override
-        public File[] getObject() {
-            return files;
-        }
-    }
-
+public class LoadMavenJar implements Macro {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var artifact = Params.<String>holder(null, "artifact").orElse("jar");
         final var repos = Params.<String>holder("respositories", "repo", "repos").orElse("central");
-        final var noDep = Params.<Boolean>holder(null, "noDependencies");
+        final var noDep = Params.<Boolean>holder(null, "noDependencies","noDeps").asBoolean();
+        final var reload = Params.<Boolean>holder(null, "reload", "overwrite", "update").asBoolean();
         final var local = Params.<String>holder(null, "local").orElse(null);
-        Scan.using(processor).from(this).between("()").keys(artifact, repos, local, noDep).parse(in);
+        Scan.using(processor).from(this).between("()").keys(repos, noDep, reload, local).parse(in);
 
-        final var type = ArtifactType.type(artifact.get());
 
         final var localPath = getLocalPath(local);
 
@@ -66,10 +40,47 @@ public class Download implements Macro {
         }
         final var coords = new MavenCoordinates(coordsString[0], coordsString[1], coordsString[2]);
         try {
-            return new FileListHolder(new Downloader(localPath, reposArr).fetch(coords, Set.of(type), Set.of(Pom.DependencyScope.COMPILE))).getId();
+            final var files = new Downloader(localPath, reposArr).fetch(coords, Set.of(ArtifactType.JAR), Set.of(Pom.DependencyScope.COMPILE));
+            final var urls = new URL[files.length];
+            int i = 0;
+            for (final var f : files) {
+                urls[i++] = f.toURI().toURL();
+            }
+            if (reload.is()) {
+                loadAllMacros(urls, processor);
+            } else  {
+                loadNewMacros(urls, processor);
+            }
+            return "";
         } catch (Exception e) {
             throw new BadSyntax("Cannot download " + in, e);
         }
+    }
+
+    private static class MyUrlClassLoader extends URLClassLoader {
+        public MyUrlClassLoader(URL[] urls) {
+            super(urls, Thread.currentThread().getContextClassLoader());
+        }
+
+        public void addURL(URL url) {
+            super.addURL(url);
+        }
+    }
+
+    private void loadNewMacros(final URL[] files, final Processor processor) {
+        final var cl = new MyUrlClassLoader(files);
+        final var macros = Macro.getInstances(cl);
+        final var register = processor.getRegister();
+        for (final var macro : macros) {
+            if (register.getMacro(macro.getIds()[0]).isEmpty()) {
+                processor.getRegister().define(macro);
+            }
+        }
+    }
+
+    private void loadAllMacros(final URL[] files, final Processor processor) {
+        final var cl = new MyUrlClassLoader(files);
+        Macro.getInstances(cl).forEach(processor.getRegister()::define);
     }
 
     private Repo[] getRepos(final Params.Param<String> repos) throws BadSyntax {
@@ -96,6 +107,6 @@ public class Download implements Macro {
 
     @Override
     public String getId() {
-        return "maven:download";
+        return "maven:load";
     }
 }

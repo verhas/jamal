@@ -1,10 +1,48 @@
 {@comment Definition and list of all the modules}
-{#define modules:CORE=engine,api,tools,core}
-{#define modules:TESTSUPPORT=testsupport}
-{#define modules:TEST=test}
-{#define modules:DEBUG=debug}
-{#define modules:CORE_TEST={modules:CORE},{modules:TESTSUPPORT}}
-{#define modules:EMBED=maven-plugin,maven-extension,cmd,doclet,asciidoc}
-{#define modules:INPUT=maven-input}
-{#define modules:MACROS=assertions,groovy,io,jamal,java,markdown,mock,plantuml,ruby,scriptbasic,snippet,yaml,word,prog}
+
+Also note that the file starting with the Jamal 'she-bang' telling the compiler that the macro start and end string are
+the code type even of the importing file uses different strings.
+
+The reson to have these definitions in a separate file in the root of the project to find all lists when a new module is added.
+
+{@define modules:API=api}
+
+The JAR files belonging to the core of Jamal.
+It includes the API, the Engine and Tools, and also the core library.
+Jamal can be executed without the core library or using a different macro set, but it is only a theoretical possibility
+without practical benefit
+{@define modules:CORE=engine,api,tools,core}
+
+The test support contains the Java API that helps writing test for Jamal built-in macros
+{@define modules:TESTSUPPORT=testsupport}
+
+This library contains only tests.
+{@define modules:TEST=test}
+
+The command line embedding of Jamal is implemented in this JAR.
+{@define modules:CMD=cmd}
+
+The JAR contains the debugger for Jamal. The core API to serve a debugger is in the engine.
+This JAR implements the debugger itself.
+This JAR has to be on the classpath (module path) when Jamal is executed and you may need a debugger.
+{@define modules:DEBUG=debug}
+
+JAR files that embed Jamal in other tools.
+{@define modules:EMBED=maven-plugin,maven-extension,{modules:CMD},doclet,asciidoc}
+
+A JAR file that implements the handling of re,ote resources for the 'MAVEN:' prefix.
+{@define modules:INPUT=maven-input}
+
+The actual JAR files that implement the macros.
+The experimental 'extensions' module is not included.
+{#define modules:MACROS=assertions,groovy,io,jamal,markdown,mock,plantuml,ruby,scriptbasic,snippet,yaml,word,prog}
+
+All the modules. This is used in the pom.jam of the module jamal-all.
 {#define modules:ALL={modules:CORE},{modules:MACROS},{modules:EMBED},{modules:DEBUG},{modules:INPUT}}
+
+The dependencies used in the JBANG starter script. These modules are listed after the //DEPS comment.
+{#define modules:JBANG_DEPENDENCIES={modules:MACROS},{modules:CORE},{modules:CMD},{modules:DEBUG},{modules:INPUT}}
+
+The modules that are used in the asciidoc-maven-plugin. This macro is used in the documentation and also in the pom.jam
+file to configure the Maven packager plugin collecting all these modules into a ZIP file.
+{#define modules:ASCIIDOC={modules:CORE},{modules:MACROS},{modules:TEST},{modules:DEBUG},{modules:INPUT}}

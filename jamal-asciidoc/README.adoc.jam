@@ -454,8 +454,8 @@ Processing the Jamal file out of the IntelliJ Asciidoctor plugin extension will 
 When using Jamal, you probably want to use extra built-in macros in addition to the core modules.
 The ZIP file you extracted to the {%INSTALL_FOLDER%} folder contains the following modules:
 
-{%@import modules.jim%}
-{%@for [evalist] MODULE in ({%JAMAL_MODULES%})=
+{%@import ../modules.jim%}
+{%@for [evalist] MODULE in ({%modules:ASCIIDOC%})=
 * `jamal-MODULE`
 %}
 

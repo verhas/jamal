@@ -35,11 +35,15 @@ public interface Converter {
     boolean canConvert(final String fileName);
 
     static List<Converter> getInstances() {
-        ServiceLoader<Converter> services = ServiceLoader.load(Converter.class);
+        return getInstances(Thread.currentThread().getContextClassLoader());
+    }
+
+    static List<Converter> getInstances(final ClassLoader cl) {
+        ServiceLoader<Converter> services = ServiceLoader.load(Converter.class, cl);
         final var list = new ArrayList<Converter>();
         services.iterator().forEachRemaining(list::add);
         if (list.size() == 0) {
-            ServiceLoaded.loadViaMetaInf(Converter.class, list);
+            ServiceLoaded.loadViaMetaInf(Converter.class, list, cl);
         }
         return list;
     }

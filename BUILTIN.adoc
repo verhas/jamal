@@ -38,7 +38,7 @@ You need the following dependency in your project:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-api</artifactId>
-    <version>1.12.6</version>
+    <version>1.12.7-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -50,7 +50,7 @@ In later versions, when we will do a bit more in our macros we will also need th
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-tools</artifactId>
-    <version>1.12.6</version>
+    <version>1.12.7-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -107,7 +107,7 @@ To use the test support library you have to add the dependency to your `pom.xml`
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-testsupport</artifactId>
-    <version>1.12.6</version>
+    <version>1.12.7-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
 ----

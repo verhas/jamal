@@ -1,5 +1,5 @@
 import javax0.jamal.api.Macro;
-import javax0.jamal.java.Download;
+import javax0.jamal.java.LoadMavenJar;
 
 module jamal.java {
     exports javax0.jamal.java;
@@ -7,5 +7,5 @@ module jamal.java {
     requires jamal.tools;
     requires jamal.engine;
     requires mavenDownloader;
-    provides Macro with Download;
+    provides Macro with LoadMavenJar;
 }
