@@ -229,6 +229,11 @@ This module is mainly practical when you embed Jamal macros in a JavaDoc and use
 I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
 For further information read the link:../jamal-markdown/README.adoc[documentation] of the module.
 
+===  `java`
+
+Experimental module providing macros to load Java classes and call their methods.
+For further information read the link:../jamal-java/README.adoc[documentation] of the module.
+
 ===  `yaml`
 This module provides macros that can read, write and manipulate YAML data.
 This macro package may be handy if you use macros that build up the POM structure in memory as a YAML structure.

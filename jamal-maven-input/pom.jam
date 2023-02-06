@@ -13,7 +13,7 @@
               because it can be added as needed to the POM that starts the plugin
               This cannot be done by the user of the maven extension, but this is the plugin.
     }
-        {#for MODULE in (engine,extensions)=
+        {#for MODULE in (engine,extensions,tools)=
             {dependency|{GROUPID}|jamal-MODULE}}
         {#for MODULE in (testsupport)=
             {dependency|{GROUPID}|jamal-MODULE||test}}

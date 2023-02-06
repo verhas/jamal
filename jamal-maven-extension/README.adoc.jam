@@ -254,6 +254,11 @@ This module is mainly practical when you embed Jamal macros in a JavaDoc and use
 I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
 {%further markdown%}
 
+=== {%#block {%depCounter%}%} `java`
+
+Experimental module providing macros to load Java classes and call their methods.
+{%further java%}
+
 === {%#block {%depCounter%}%} `yaml`
 This module provides macros that can read, write and manipulate YAML data.
 This macro package may be handy if you use macros that build up the POM structure in memory as a YAML structure.

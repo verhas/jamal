@@ -49,7 +49,7 @@ public class TestEnvironmentNoDebug {
         final var EXPECTED = "Peter Verhas' macbook";
         Assertions.assertEquals(EXPECTED, EnvironmentVariables.getenv("jamal.testproperty").orElse(null),
                 "When you compile Jamal if there is a ~/.jamal/settings.properties file it is read\n" +
-                        "and the value of the property testproperty is used.\n" +
+                        "and the value of the property 'testproperty' is used.\n" +
                         "It has to be \"" + EXPECTED + "\"\n" +
                         "You should delete the properties file, use settings.xml or set the property,\n" +
                         "or disable this test,\n"+

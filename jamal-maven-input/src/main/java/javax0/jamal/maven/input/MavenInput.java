@@ -2,6 +2,7 @@ package javax0.jamal.maven.input;
 
 import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.ResourceReader;
+import javax0.jamal.tools.FileTools;
 import javax0.maventools.download.ArtifactType;
 import javax0.maventools.download.Downloader;
 import javax0.maventools.download.MavenCoordinates;
@@ -76,7 +77,7 @@ public class MavenInput implements ResourceReader {
 
 
     static {
-        var localRepo = EnvironmentVariables.getenv(JAMAL_LOCAL_REPO_ENV).orElse(System.getProperty("user.home") + "/.m2/repository");
+        var localRepo = EnvironmentVariables.getenv(JAMAL_LOCAL_REPO_ENV).orElse(FileTools.adjustedFileName("~/.m2/repository"));
         LOCAL_REPO = Paths.get(localRepo);
         REMOTE_REPOS = Arrays.stream(EnvironmentVariables.getenv(JAMAL_REMOTE_REPOS_ENV).orElse("central").split(",")) //
                 .map(name ->

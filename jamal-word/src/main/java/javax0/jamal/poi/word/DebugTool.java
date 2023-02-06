@@ -1,7 +1,5 @@
 package javax0.jamal.poi.word;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -9,7 +7,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import java.util.List;
 
 public class DebugTool {
-    private static final Logger LOGGER = LogManager.getLogger(DebugTool.class);
     private static int counter = 0;
 
     public static void debugDoc(final String prefix, final XWPFInput input) {

@@ -10,7 +10,6 @@ module jamal.word {
     requires jamal.engine;
     requires org.apache.poi.ooxml;
     requires jamal.tools;
-    requires org.apache.logging.log4j;
     requires java.desktop;
     provides javax0.jamal.api.Macro with MacroDocxProtect, MacroDocxTrackRevisions, MacroDocxText, MacroDocxInclude, MacroDocxPicture;
 }

@@ -14,6 +14,7 @@
        {@for MODULE in (api,tools,engine)=
          {dependency|{GROUPID}|jamal-MODULE}}
       {dependency|com.javax0.mavenDownload|mavenDownloader|{MAVEN_DOWNLOADER}}
+      {dependency|com.javax0.sourcebuddy|SourceBuddy|{SOURCE_BUDDY}}
       {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
       {dependency |{GROUPID}|jamal-snippet|{LAST_RELEASE}|test}
       {@for MODULE in (api,engine)=

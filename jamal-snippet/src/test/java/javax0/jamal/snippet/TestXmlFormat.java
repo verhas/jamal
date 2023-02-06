@@ -47,7 +47,7 @@ public class TestXmlFormat {
                 "         <![CDATA[\n" +
                 "    this is a CDATA section\n a few lines\n  ever more tabbed\nand untabbed\n" +
                 "]]>}")
-            .ignoreLineEnding()
+            .ignoreLineEnding().ignoreSpaces()
             .results("" +
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<apple chew=\"bak&quot;ka\" core=\"hard\">\n" +
@@ -144,7 +144,7 @@ public class TestXmlFormat {
                 "       <![CDATA[\n" +
                 "    this is a CDATA section\n a few lines\n  ever more tabbed\nand untabbed\n" +
                 "]]>")
-            .ignoreLineEnding()
+            .ignoreLineEnding().ignoreSpaces()
             .results("" +
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<apple chew=\"bak&quot;ka\" core=\"hard\">\n" +

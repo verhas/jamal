@@ -51,7 +51,12 @@
         <dependency>
             <groupId>com.javax0.mavenDownload</groupId>
             <artifactId>mavenDownloader</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.sourcebuddy</groupId>
+            <artifactId>SourceBuddy</artifactId>
+            <version>2.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

@@ -4,9 +4,150 @@ The Jamal Java integration module is an experimental module allowing Jamal sourc
 
 The module, as planned, also will support Java source code compilation during run-time using the source buddy library.
 
-The module is not yet ready for production use, but it is already possible to use it for testing and development purposes.
+The module is not yet ready for production use, but it is already possible for testing and development purposes.
 
 The security of the library has to be designed carefully to balance the ease of use and the security of the application.
-Without any security measures a Jamal file could execute any Java code ever published on the internet, which is not a good idea.
+Without any security measures, a Jamal file could execute any Java code published online, which is not a good idea.
 
-Sentences of this documentation were partially suggested by GitHub Copilot.
+GitHub Copilot suggested some sentences of this documentation.
+
+== Macros
+
+=== `maven:load`
+
+Load the macros from a Maven artifact.
+The macro also loads the dependencies of the artifact.
+Options can control this behavior.
+
+This macro reads its input and interprets it as a maven coordinate set.
+The format has to be
+
+          groupId:artifactId:version
+
+You have to specify all three coordinates.
+The macro works in two steps:
+
+1. First, it downloads the artifact JAR and all the dependencies.
+
+2. It loads the macros from the JAR files using a class loader.
+
+It is possible to load only the file without the dependencies using the `noDependencies` option.
+
+WARNING: Loading a JAR file from the internet is a security risk.
+You must configure the security appropriately to mitigate this risk.
+For more information, see the section about security.
+
+The options are:
+
+* `repositories` (aliases are `repository`, `repo`, `repos`) define the Maven repositories used comma separated.
+The values are the repository URLs or symbolic names.
+The symbolic names can be
+- "central"
+- `jcenter-bintray`
+- `google-android`
+- `google-maven-central`
++
+The default value is `central`.
+
+* `noDependencies` (alias is `noDeps`) says that the dependencies of the JAR should not be loaded.
+The default value is `false`.
+
+* `reload` (aliases are `overwrite`, `update`) says that macros found in the JAR should be reloaded even if they were
+already loaded.
+
+* `local` can specify the location of the local Maven repository.
+The default value is `~/.m2/repository`.
+
+* `exclude` can specify a comma-separated list of maven coordinates that should not be loaded.
+This parameter will not stop loading the "root" artifact specified in the macro input.
+The coordinates format is the same as in the configuration file for the `maven.load.exclude` property regarding the wildcards.
+
+If the configuration or the security prevents the load, the macro throws an `IllegalStateException`.
+It means that the processing will stop.
+Also, it is impossible to catch and handle this error using the `{@try ...}` macro.
+
+== Security and Safe Configuration
+
+The macro `maven:load` reads the configuration of Jamal via an API that works only when the configuration is secure.
+
+=== Secure configuration
+
+The configuration is secure if:
+
+* There is no configuration.
+In that case, nothing can be opened, so there is no security risk.
+However, in this case, the macro will not be able to load any JAR file.
+
+.The configuration directory and the files are _SAFE_
+====
+* `~/.jamal`, and the files
+* `~/.jamal/settings.properties`, and
+* `~/.jamal/settings.xml` are _SAFE_
+====
+
+
+.A file or directory is _SAFE_ if
+====
+* it does not exist, or
+
+* owned by the current user and
+
+* not writable by anyone else, and
+
+* not readable by anyone else,
+
+* not listable (`x` flag) by anyone else.
+
+* In the case of a plain file, it is not executable (`x` flag) by anyone, including the current user.
+
+* It is a plain file when it is supposed to be a file, and it is a directory when it is supposed to be a directory.
+====
+
+When reading the configuration, if either the `maven.load.include` or `maven.load.exclude` properties point to files, these files should also be _SAFE_.
+
+
+Securing the configuration is not a must for Jamal's other parts and functionalities, although it is a good practice.
+The security is only checked before reading the configuration for the `maven:load` macro.
+
+Also, the `maven:load` macro uses a unique API to read the configuration.
+Every time the macro runs, the API rereads the files, checks the security of the configuration, and ignores the in-memory cached configuration.
+Also, note that while most of the macros and functionalities of Jamal read configuration via an API that consults
+
+* system properties,
+
+* environment variables, and lastly
+
+* the configuration files,
+
+the API used by the `maven:load` macro reads only the configuration files.
+
+=== Configuration
+
+The `maven:load` macro has to be configured for security reasons.
+It can only load JAR files which are explicitly allowed by the configuration.
+
+==== `maven.load.include`
+
+The configuration should have the property `maven.load.include` set.
+The property's value is a comma-separated list of maven coordinates or a file name.
+
+When the property points to a file, the file also has to be _SAFE_ as defined in the previous section.
+The file should contain a list of maven coordinates, one per line.
+
+Every maven coordinate has to be in the format
+
+          groupId:artifactId:version
+
+and the `artifactId` and `version` can be a wildcard `*`.
+The `groupId` cannot be a wildcard.
+
+If the `artifactId` is a wildcard, then the `version` has to be a wildcard too.
+
+==== `maven.load.exclude`
+
+The key `maven.load.exclude` can be used to exclude some maven coordinates from the list of allowed coordinates.
+If a coordinate is excluded, it cannot be used even if it is included in the `maven.load.include` list.
+
+A coordinate will also be skipped if it is present as a dependency.
+In this case, however, the download will not stop.
+The class loading, however, may still fail if classes are missing because of the exclusion.

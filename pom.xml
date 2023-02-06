@@ -25,6 +25,7 @@
         <module>jamal-yaml</module>
         <module>jamal-word</module>
         <module>jamal-prog</module>
+        <module>jamal-java</module>
         <module>jamal-maven-plugin</module>
         <module>jamal-maven-extension</module>
         <module>jamal-cmd</module>
@@ -93,7 +94,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.4.1</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <doclint>none</doclint>
@@ -291,6 +292,11 @@
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-java</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-plugin</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
@@ -370,7 +376,7 @@
             <dependency>
                 <groupId>com.javax0.mavenDownload</groupId>
                 <artifactId>mavenDownloader</artifactId>
-                <version>1.0.0</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>

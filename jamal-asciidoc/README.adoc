@@ -485,6 +485,8 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-prog`
 
+* `jamal-java`
+
 * `jamal-test`
 
 * `jamal-debug`

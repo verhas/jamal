@@ -2,7 +2,7 @@
 #!/usr/bin/env bash
 {@define ? ROOT=../../../..}\
 {#import {ROOT}/version.jim}\
-{#define asciidoc:output={ROOT}/jamal.sh.java}\
+{#define asciidoc:output={ROOT}/jamal.sh}\
 {@define REPO=$HOME/.m2/repository}\
 {@define CENTRAL=https://repo1.maven.org/maven2}\
 

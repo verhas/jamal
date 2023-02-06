@@ -67,6 +67,7 @@ public class TestThat implements AutoCloseable {
     private String input;
     private String macroOpen = "{", macroClose = "}";
     private boolean ignoreLineEndingFlag = false;
+    private boolean ignoreSpacesFlag = false;
 
     private TestThat(Class<? extends Macro> klass) {
         this.klass = klass;
@@ -92,6 +93,11 @@ public class TestThat implements AutoCloseable {
 
     public TestThat ignoreLineEnding() {
         ignoreLineEndingFlag = true;
+        return this;
+    }
+
+    public TestThat ignoreSpaces() {
+        ignoreSpacesFlag = true;
         return this;
     }
 
@@ -237,14 +243,26 @@ public class TestThat implements AutoCloseable {
             System.out.println("    Input: " + yamlStringify(input));
             System.out.println("    Output: " + yamlStringify(result == null ? "" : result));
         }
+        final String expectedNl;
+        final String resultNl;
         if (ignoreLineEndingFlag) {
-            final var expectedNl = expected.replaceAll("\r", "");
-            //noinspection ConstantConditions
-            final var resultNl = result.replaceAll("\r", "");
-            Assertions.assertEquals(expectedNl, resultNl);
+            expectedNl = expected.replaceAll("\r", "");
+            resultNl = result.replaceAll("\r", "");
         } else {
-            Assertions.assertEquals(expected, result);
+            expectedNl = expected;
+            resultNl = result;
         }
+        final String expectedSPC;
+        final String resultSPC;
+        if (ignoreSpacesFlag) {
+            expectedSPC = expectedNl.replaceAll("\\s", "");
+            resultSPC = resultNl.replaceAll("\\s", "");
+        } else {
+            expectedSPC = expectedNl;
+            resultSPC = resultNl;
+        }
+
+        Assertions.assertEquals(expectedSPC, resultSPC);
     }
 
     private static String yamlStringify(String s) {

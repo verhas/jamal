@@ -129,6 +129,11 @@
             <version>1.12.7-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-java</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
         </dependency>

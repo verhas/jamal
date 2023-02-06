@@ -46,6 +46,10 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-tools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
             <scope>test</scope>
         </dependency>
@@ -60,7 +64,7 @@
         <dependency>
             <groupId>com.javax0.mavenDownload</groupId>
             <artifactId>mavenDownloader</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
 </project>
