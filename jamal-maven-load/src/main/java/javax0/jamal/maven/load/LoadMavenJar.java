@@ -1,4 +1,4 @@
-package javax0.jamal.java;
+package javax0.jamal.maven.load;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.EnvironmentVariables;
@@ -44,9 +44,10 @@ public class LoadMavenJar implements Macro {
         Scan.using(processor).from(this).between("()").keys(repos, noDep, reload, local, exclude).parse(in);
 
 
-        final var localPath = getLocalPath(local, in.getPosition());
+        final Properties properties = getConfiguration();
+        final var localPath = getLocalPath(local, in.getPosition(), properties);
 
-        final var reposArr = getRepos(repos);
+        final var reposArr = getRepos(repos, properties);
 
         final var coordsString = in.toString().trim().split(":", 3);
         if (coordsString.length < 3) {
@@ -54,18 +55,17 @@ public class LoadMavenJar implements Macro {
         }
 
         final var coords = new MavenCoordinates(coordsString[0], coordsString[1], coordsString[2]);
-        final Properties properties = getConfiguration();
         checkPermissions(coords, properties);
         final var downloader = new Downloader(localPath, reposArr);
         final var fn = Optional.ofNullable(properties.get("mvn.load.exclude")).map(Object::toString).orElse(null);
         if (fn != null) {
-            final var excludes = getPatterns(fn);
+            final var excludes = getStrings(fn);
             downloader.exclude(excludes.toArray(String[]::new));
         }
-            if (exclude.isPresent()) {
-                final var excludes = exclude.get().split(",");
-                downloader.exclude(excludes);
-            }
+        if (exclude.isPresent()) {
+            final var excludes = exclude.get().split(",");
+            downloader.exclude(excludes);
+        }
         try {
             final File[] files;
             if (noDep.is()) {
@@ -169,27 +169,54 @@ public class LoadMavenJar implements Macro {
         }
     }
 
-    private Repo[] getRepos(final Params.Param<String> repos) throws BadSyntax {
+    private Repo[] getRepos(final Params.Param<String> repos, final Properties properties) throws BadSyntax {
         final var lines = repos.get().split("\n");
         final Repo[] reps = new Repo[lines.length];
         int i = 0;
         for (final var line : lines) {
             final var name = line.trim();
-            final var repo = Arrays.stream(Repo.REPOS).filter(r -> r.name.equals(name)).findFirst();
-            reps[i++] = repo.orElseGet(() -> new Repo("", name));
+            reps[i++] = Arrays.stream(Repo.REPOS)
+                    .filter(r -> r.name.equals(name))
+                    .findFirst()
+                    .orElseGet(() -> new Repo("", checkPermissions(name, properties)));
         }
         return reps;
     }
 
-    private static Path getLocalPath(final Params.Param<String> local, final Position pos) throws BadSyntax {
+    private String checkPermissions(final String url, final Properties properties) {
+        final var paths = Optional.ofNullable(properties.get("maven.load.repo")).map(Object::toString).orElse(null);
+        if (paths == null) {
+            throw new IllegalStateException("There is no 'maven.load.repos' property in the configuration.\n" +
+                    "This property must be set to a comma separated list of urls of the permitted repositories.\n");
+        }
+        if (getStrings(paths).noneMatch(p -> p.equals(url))) {
+            throw new IllegalStateException(String.format("The repo '%s' is not permitted.", url));
+        }
+        return url;
+    }
+
+
+    private Path getLocalPath(final Params.Param<String> local, final Position pos, final Properties properties) throws BadSyntax {
         final Path localPath;
         if (local.isPresent() && local.get() != null) {
             final var fn = FileTools.absolute(pos.file, local.get());
             localPath = Paths.get(fn);
+            checkPermissions(localPath, properties);
         } else {
             localPath = Paths.get(FileTools.adjustedFileName("~/.m2/repository/"));
         }
         return localPath;
+    }
+
+    private void checkPermissions(final Path local, final Properties properties) {
+        final var paths = Optional.ofNullable(properties.get("maven.load.local")).map(Object::toString).orElse(null);
+        if (paths == null) {
+            throw new IllegalStateException("There is no 'maven.load.local' property in the configuration.\n" +
+                    "This property must be set to a comma separated list of absolute path pointing to the allowed local repositories.\n");
+        }
+        if (getStrings(paths).noneMatch(p -> p.equals(local.toFile().getAbsolutePath()))) {
+            throw new IllegalStateException(String.format("The local repo '%s' is not allowed.", local));
+        }
     }
 
     /**
@@ -204,36 +231,38 @@ public class LoadMavenJar implements Macro {
             throw new IllegalStateException("There is no 'maven.load.include' property in the configuration.\n" +
                     "This property must be set to a comma separated list of maven coordinates that are allowed to be downloaded or a file name.\n");
         }
-        if (getPatterns(includes).map(MavenCoordinatesPattern::fromString).noneMatch(p -> p.matches(coords))) {
+        if (getStrings(includes).map(MavenCoordinatesPattern::fromString).noneMatch(p -> p.matches(coords))) {
             throw new IllegalStateException(String.format("The maven artifact '%s' is not included.", coords));
         }
         final var excludes = Optional.ofNullable(properties.get("maven.load.exclude")).map(Object::toString).orElse(null);
-        if (excludes != null && getPatterns(excludes).map(MavenCoordinatesPattern::fromString).anyMatch(p -> p.matches(coords))) {
+        if (excludes != null && getStrings(excludes).map(MavenCoordinatesPattern::fromString).anyMatch(p -> p.matches(coords))) {
             throw new IllegalStateException(String.format("The maven artifact '%s' is excluded.", coords));
         }
     }
 
     /**
-     * Get the patterns from the configuration. The patterns can be either a comma separated list of patterns or a file
-     * name that contains the patterns. The file name must be relative and in the .
+     * Get the strings from the configuration. The strings can be either a comma separated list of strings or a file
+     * name that contains the strings. The file name must be relative and in the ~/.jamal/ directory. Also, the file
+     * has to be safe, as checked by {@link EnvironmentVariables#assertFileSafe(Path)}.
      *
      * @param fn the configuration property
      * @return the stream of patterns
+     * @throws IllegalStateException if the configuration is in a separate file and the file is not safe
      */
-    private static Stream<String> getPatterns(final String fn) {
+    private static Stream<String> getStrings(final String fn) {
         try {
-            final Stream<String> patterns;
+            final Stream<String> lines;
             final var path = Paths.get(FileTools.adjustedFileName("~/.jamal/" + fn));
             if (Files.exists(path)) {
                 if (fn.contains("/") || fn.contains("\\")) {
                     throw new IllegalStateException("The file name for the include patterns must be in the ~/.jamal directory.");
                 }
                 EnvironmentVariables.assertFileSafe(path);
-                patterns = Stream.of(Files.readAllLines(path).toArray(new String[0]));
+                lines = Stream.of(Files.readAllLines(path).toArray(new String[0]));
             } else {
-                patterns = Stream.of(fn.split(","));
+                lines = Stream.of(fn.split(","));
             }
-            return patterns;
+            return lines;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

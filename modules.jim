@@ -35,7 +35,8 @@ A JAR file that implements the handling of re,ote resources for the 'MAVEN:' pre
 
 The actual JAR files that implement the macros.
 The experimental 'extensions' module is not included.
-{#define modules:MACROS=assertions,groovy,io,jamal,markdown,mock,plantuml,ruby,scriptbasic,snippet,yaml,word,prog,java}
+The module 'java' is not included due to security issues.
+{#define modules:MACROS=assertions,groovy,io,jamal,markdown,mock,plantuml,ruby,scriptbasic,snippet,yaml,word,prog,maven-load}
 
 All the modules. This is used in the pom.jam of the module jamal-all.
 {#define modules:ALL={modules:CORE},{modules:MACROS},{modules:EMBED},{modules:DEBUG},{modules:INPUT}}

@@ -14,25 +14,21 @@ public class JavaSourceMacro implements Macro {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         try {
-            final var klass = Compiler.java()
-                    .options("-cp", System.getProperty("java.class.path"), "-p", System.getProperty("jdk.module.path"))
-                    .from("module-info","module myModule {\n" +
-                    "    uses javax0.jamal.api.Macro;\n" +
-                    "    requires jamal.api;" +
-                    "    exports javax0.jamal.java.testmacros;\n" +
-                    "}")
-                    .from(in.toString()).compile().load();
-            if (klass instanceof Macro) {
-                final var macro = (Macro) klass;
-                processor.getRegister().define(macro);
-                return "";
-            } else {
-                throw new BadSyntax("The class does not implement the Macro interface");
-            }
-        } catch (ClassNotFoundException e) {
-            throw new BadSyntax("There is a problem with the class name in the source code", e);
-        } catch (Compiler.CompileException e) {
-            throw new BadSyntax("The Java code is erroneous", e);
+            final var className = Compiler.getBinaryNameFromSource(in.toString());
+            final var macro = Compiler.java()
+                    .from("module-info", "module myModule {\n" +
+                            "    uses javax0.jamal.api.Macro;\n" +
+                            "    requires jamal.api;" +
+                            "    exports javax0.jamal.java.testmacros;\n" +
+                            "}")
+                    .from(in.toString())
+                    .compile()
+                    .load(Compiler.LoaderOption.REVERSE)//even if there is a class with the same name in the classpath
+                    .newInstance(className, Macro.class);
+            processor.getRegister().define(macro);
+            return "";
+        } catch (Exception e) {
+            throw new BadSyntax("There is a problem with the class in the source code", e);
         }
     }
 

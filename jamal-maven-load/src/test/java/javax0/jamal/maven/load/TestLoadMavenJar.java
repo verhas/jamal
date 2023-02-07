@@ -1,4 +1,4 @@
-package javax0.jamal.java;
+package javax0.jamal.maven.load;
 
 import javax0.jamal.api.Processor;
 import javax0.jamal.testsupport.TestThat;

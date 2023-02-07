@@ -56,7 +56,7 @@ This will add the following dependencies to your project:
 
 * `jamal-prog`
 
-* `jamal-java`
+* `jamal-maven-load`
 
 * `jamal-maven-plugin`
 

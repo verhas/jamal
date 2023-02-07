@@ -123,6 +123,8 @@ download "com.github.virtuald" "curvesapi" "1.07"
 download "org.apache.logging.log4j" "log4j-api" "2.17.2"
 download "org.apache.commons" "commons-collections4" "4.4"
 download "com.javax0.jamal" "jamal-prog" "1.12.7-SNAPSHOT"
+download "com.javax0.jamal" "jamal-maven-load" "1.12.7-SNAPSHOT"
+download "com.javax0.mavenDownload" "mavenDownloader" "1.1.0"
 download "com.javax0.jamal" "jamal-testsupport" "1.12.7-SNAPSHOT"
 
 

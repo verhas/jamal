@@ -130,7 +130,7 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-java</artifactId>
+            <artifactId>jamal-maven-load</artifactId>
             <version>1.12.7-SNAPSHOT</version>
         </dependency>
         <dependency>

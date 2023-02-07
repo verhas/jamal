@@ -25,7 +25,7 @@
         <module>jamal-yaml</module>
         <module>jamal-word</module>
         <module>jamal-prog</module>
-        <module>jamal-java</module>
+        <module>jamal-maven-load</module>
         <module>jamal-maven-plugin</module>
         <module>jamal-maven-extension</module>
         <module>jamal-cmd</module>
@@ -292,7 +292,7 @@
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>jamal-java</artifactId>
+                <artifactId>jamal-maven-load</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
             <dependency>
