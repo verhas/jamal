@@ -14,11 +14,14 @@ public class JavaSourceMacro implements Macro {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         try {
-            final var klass = Compiler.java().from("module-info.java","module myModule {\n" +
+            final var klass = Compiler.java()
+                    .options("-cp", System.getProperty("java.class.path"), "-p", System.getProperty("jdk.module.path"))
+                    .from("module-info","module myModule {\n" +
                     "    uses javax0.jamal.api.Macro;\n" +
                     "    requires jamal.api;" +
                     "    exports javax0.jamal.java.testmacros;\n" +
-                    "}").from(in.toString()).compile().load();
+                    "}")
+                    .from(in.toString()).compile().load();
             if (klass instanceof Macro) {
                 final var macro = (Macro) klass;
                 processor.getRegister().define(macro);
