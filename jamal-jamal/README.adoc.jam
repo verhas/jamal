@@ -18,14 +18,15 @@ Till the release of 1.7.2, it was provided using a proprietary, test scope built
 With this module, this feature, although this is a niche feature, is available to any application.
 
 To use this module, you have to add the dependency to your Maven project as:
-{%@snip:xml pom=pom.xml%}{%@import ../version.jim%}\
+{%@snip:xml pom=pom.xml%}\
+{%@snip:xml ppom=../pom.xml%}\
 
 [source,xml]
 ----
 <dependency>
-    <groupId>{%GROUPID%}</groupId>
+    <groupId>{%ppom /project/groupId/text()%}</groupId>
     <artifactId>{%pom /project/artifactId/text()%}</artifactId>
-    <version>{%VERSION%}</version>
+    <version>{%pom /project/version/text()%}</version>
 </dependency>
 
 ----

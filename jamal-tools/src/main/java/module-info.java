@@ -8,7 +8,7 @@ module jamal.tools {
     uses ResourceReader;
     requires jamal.api;
     exports javax0.jamal.tools;
-    exports javax0.jamal.tools.param to jamal.prog;
+    exports javax0.jamal.tools.param;
     requires java.scripting;
     requires levenshtein;
     provides Debugger with NullDebugger;

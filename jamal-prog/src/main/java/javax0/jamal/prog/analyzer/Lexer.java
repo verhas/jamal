@@ -25,6 +25,11 @@ public class Lexer {
                 InputHandler.skip(in, 1);
                 continue;
             }
+            if (in.charAt(0) == '\'') {
+                InputHandler.skip(in, 1);
+                skipComment(in, list);
+                continue;
+            }
             if (in.charAt(0) == '\n') {
                 final var lex = new Lex(Lex.Type.RESERVED, "\n");
                 list.add(lex);
@@ -33,6 +38,10 @@ public class Lexer {
             }
             if (Macro.validId1stChar(in.charAt(0))) {
                 final var id = InputHandler.fetchId(in);
+                if (id.equals("rem")) {
+                    skipComment(in, list);
+                    continue;
+                }
                 if (RESERVED.contains(id)) {
                     final var lex = new Lex(Lex.Type.RESERVED, id);
                     list.add(lex);
@@ -64,5 +73,22 @@ public class Lexer {
             throw new BadSyntax("Unexpected character '" + in.charAt(0) + "' in the input");
         }
         return new Lex.List(list);
+    }
+
+    /**
+     * Skip the comment until the end of line. The end of line is not skipped.
+     *
+     * @param in   the input
+     * @param list the lexical list, where an '\n' is added.
+     */
+    private static void skipComment(final Input in, final ArrayList<Lex> list) {
+        while (!in.isEmpty() && in.charAt(0) != '\n') {
+            InputHandler.skip(in, 1);
+        }
+        if (!in.isEmpty()) {
+            final var lex = new Lex(Lex.Type.RESERVED, "\n");
+            list.add(lex);
+            InputHandler.skip(in, 1);
+        }
     }
 }

@@ -31,8 +31,9 @@ public class TestProgram {
     @Test
     void test() throws Exception {
         test("i = 55\n" +
-                "while i < 58\n" +
-                "<< \"a\"\n" +
+                "while i < 58 'this is a comment\n" +
+                "rem this is a full line comment\n" +
+                "<< \"a\" rem this is also comment\n" +
                 "i = i + 1\n" +
                 "wend\n", "aaa");
 
