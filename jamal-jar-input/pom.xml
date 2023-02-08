@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>jamal doclet</name>
-    <artifactId>jamal-doclet</artifactId>
+    <name>jamal jar input</name>
+    <artifactId>jamal-jar-input</artifactId>
     <version>1.12.7-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
         <version>1.12.7-SNAPSHOT</version>
     </parent>
-    <description>doclet module for Jamal</description>
+    <description>Jamal JAR reading plugin</description>
     <build>
         <plugins>
             <plugin>
@@ -29,7 +29,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                --add-opens jamal.doclet/javax0.jamal.doclet=ALL-UNNAMED
+                --add-opens jamal.jar.input/javax0.jamal.jar.input=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>
@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-api</artifactId>
+            <artifactId>jamal-extensions</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
@@ -50,19 +50,16 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-core</artifactId>
+            <artifactId>jamal-testsupport</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.9.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.9.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

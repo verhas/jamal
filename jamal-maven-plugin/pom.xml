@@ -40,7 +40,15 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-extensions</artifactId>
+            <artifactId>jamal-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-tools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

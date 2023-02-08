@@ -125,6 +125,9 @@ download "org.apache.commons" "commons-collections4" "4.4"
 download "com.javax0.jamal" "jamal-prog" "1.12.7-SNAPSHOT"
 download "com.javax0.jamal" "jamal-maven-load" "1.12.7-SNAPSHOT"
 download "com.javax0.mavenDownload" "mavenDownloader" "1.1.0"
+download "com.javax0.jamal" "jamal-maven-input" "1.12.7-SNAPSHOT"
+download "com.javax0.jamal" "jamal-extensions" "1.12.7-SNAPSHOT"
+download "com.javax0.jamal" "jamal-jar-input" "1.12.7-SNAPSHOT"
 download "com.javax0.jamal" "jamal-testsupport" "1.12.7-SNAPSHOT"
 
 

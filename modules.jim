@@ -3,7 +3,7 @@
 Also note that the file starting with the Jamal 'she-bang' telling the compiler that the macro start and end string are
 the code type even of the importing file uses different strings.
 
-The reson to have these definitions in a separate file in the root of the project to find all lists when a new module is added.
+The reason to have these definitions in a separate file in the root of the project to find all lists when a new module is added.
 
 {@define modules:API=api}
 
@@ -31,14 +31,17 @@ JAR files that embed Jamal in other tools.
 {@define modules:EMBED=maven-plugin,maven-extension,{modules:CMD},doclet,asciidoc}
 
 A JAR file that implements the handling of re,ote resources for the 'MAVEN:' prefix.
-{@define modules:INPUT=maven-input}
+{@define modules:INPUT=maven-input,jar-input}
 
-The actual JAR files that implement the macros.
+The actual modules that implement the macros.
 The experimental 'extensions' module is not included.
 The module 'java' is not included due to security issues.
 {#define modules:MACROS=assertions,groovy,io,jamal,markdown,mock,plantuml,ruby,scriptbasic,snippet,yaml,word,prog,maven-load}
 
-All the modules. This is used in the pom.jam of the module jamal-all.
+The modules implementing some application and embed Jamal use this in the pom.jam as dependency.
+{#define modules:DEFAULT_JAMAL_MODULES={modules:CORE},{modules:MACROS},{modules:INPUT}}
+
+All the modules. This is used in the pom.jam of the module jamal-parent.
 {#define modules:ALL={modules:CORE},{modules:MACROS},{modules:EMBED},{modules:DEBUG},{modules:INPUT}}
 
 The dependencies used in the JBANG starter script. These modules are listed after the //DEPS comment.

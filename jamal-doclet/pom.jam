@@ -1,6 +1,7 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
 {@import ../version.jim}
+{@import ../modules.jim}
 {project jamal doclet}
     {GAV ::jamal-doclet:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
@@ -10,7 +11,9 @@
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies
-       {@for MODULE in (api,tools,engine,core)=
+       {@comment The doclet can be configurede in the POM file to get the needed dependencies on the classpath,
+                 therfore there is no need to add here all the default dependencies.}
+       {@for [evalist] MODULE in ({modules:CORE})=
          {dependency|{GROUPID}|jamal-MODULE}}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}

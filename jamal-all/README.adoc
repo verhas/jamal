@@ -72,6 +72,8 @@ This will add the following dependencies to your project:
 
 * `jamal-maven-input`
 
+* `jamal-jar-input`
+
 
 [NOTE]
 ====

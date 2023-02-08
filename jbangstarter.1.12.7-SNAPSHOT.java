@@ -21,6 +21,7 @@
 //DEPS com.javax0.jamal:jamal-cmd:1.12.7-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-debug:1.12.7-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-maven-input:1.12.7-SNAPSHOT
+//DEPS com.javax0.jamal:jamal-jar-input:1.12.7-SNAPSHOT
 
 
 

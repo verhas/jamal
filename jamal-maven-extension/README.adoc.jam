@@ -1,6 +1,7 @@
 = Jamal Maven Extension
 {%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}
+{%#define VERSION={%pom /project/version/text()%}%}\
+{%#define ARTIFACT_ID={%pom /project/artifactId/text()%}%}
 {%@import ../environmentvariables.jim%}
 
 This module lets you maintain your `pom.xml` files using Jamal macros.
@@ -25,7 +26,7 @@ This directory will contain the file `extensions.xml` with the content:
 <extensions>
     <extension>
         <groupId>com.javax0.jamal</groupId>
-        <artifactId>jamal-maven-extension</artifactId>
+        <artifactId>{%ARTIFACT_ID%}</artifactId>
         <version>{%VERSION%}</version>
     </extension>
 </extensions>
@@ -93,7 +94,7 @@ When you want to convert a project to use the Jamal maven extension you only hav
 
 3. rename the existing `pom.xml` files to `pom.jam`.
 
-When you have a multi-module project this can be cumbersome and error-prone.
+When you have a multimodule project this can be cumbersome and error-prone.
 To automate this, the Jamal Maven plugin can be started with the command line
 
 [source]
@@ -215,48 +216,58 @@ The module does not provide macros.
 
 === {%#block {%depCounter%}%} `groovy`
 This module provides macros that allow embedding Groovy code into the `pom.xml.jam` file.
+
 {%further groovy%}
 
 === {%#block {%depCounter%}%} `ruby`
 This module provides macros that allow embedding Ruby code into the `pom.xml.jam` file.
+
 {%further ruby%}
 
 === {%#block {%depCounter%}%} `scriptbasic`
 This module provides macros that allow embedding ScriptBasic code into the `pom.xml.jam` file.
+
 {%further scriptbasic%}
 
 === {%#block {%depCounter%}%} `snippet`
 This module provides snippet macros.
+
 {%further snippet%}
 
 === {%#block {%depCounter%}%} `plantuml`
 This module lets you embed PlantUML diagrams into your `pom.xml.jam` file.
 I do not think that you would need anything like this, but if you need, there is no way to put it on the classpath other than listed here as a dependency.
+
 {%further plantuml%}
 
 === {%#block {%depCounter%}%} `io`
 This module provides macros that can help you read text from files and write text to external files.
+
 {%further io%}
 
 === {%#block {%depCounter%}%} `jamal`
 
 This module lets you call Jamal processing some part of the code in a separate processor.
+
 {%further jamal%}
 
 === {%#block {%depCounter%}%} `java`
 
 This module allows loading built-in macros during run-time.
+
 {%further java%}
 
 === {%#block {%depCounter%}%} `markdown`
 This module lets you convert Markdown to HTML.
 This module is mainly practical when you embed Jamal macros in a JavaDoc and use the Jamal doclet extension.
 I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
+
 {%further markdown%}
 
 === {%#block {%depCounter%}%} `java`
 
 Experimental module providing macros to load Java classes and call their methods.
+
 {%further java%}
 
 === {%#block {%depCounter%}%} `yaml`
@@ -272,20 +283,34 @@ If you want to do anything like that, the in-memory Yaml structures these macros
 
 === {%#block {%depCounter%}%} `assertions`
 This module gives you assertion macros that can fail if certain conditions are not met.
+
 {%further assertions%}
 
 === {%#block {%depCounter%}%} `debug`
 This module does not provide any macro, but it has to be on the classpath to start the debugger.
 A brief introduction is described above on how to start the Jamal processing when compiling a `pom.xml.jam.
+
 {%further debug%}
 
 === {%#block {%depCounter%}%} `mock`
 This module provides a macro to mock the behavior of built-in macros.
 This is mainly when debugging or testing the functionality of some macro packages.
+
 {%further mock%}
 
 === {%#block {%depCounter%}%} `prog`
 This module extends Jamal with a very simple "BASIC" like programming language.
+
 {%further prog%}
+
+=== {%#block {%depCounter%}%} `maven-input`
+This library provides Java services that the Jamal file handling uses, so that you can use reference resources from inside maven artifacts over the network.
+
+{%further maven-input%}
+
+=== {%#block {%depCounter%}%} `jar-input`
+This library provides Java services that the Jamal file handling uses, so that you can use resources from inside JAR files.
+
+{%further jar-input%}
 
 {%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more%}
