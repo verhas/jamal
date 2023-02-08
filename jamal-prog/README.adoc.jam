@@ -59,7 +59,7 @@ There are two macros in the package:
 * `expression` is the macro that evaluates an expression
 
 === Program
-
+{%@snip:check file="./src/main/java/javax0/jamal/prog/Program.java" hashCode="ce1c60af"%}
 The macro `program` takes the input of the macro and interprets it as a program.
 The result of the macro is the concatenated strings of the output `<<` commands.
 
@@ -79,6 +79,8 @@ For example:
 will result in the output:
 
 {%output%}
+
+The language is very simple, documented below in the section about expressions, and commands.
 
 The command `program` has the option `stepLimit`.
 This parameter has to be a number.
@@ -134,6 +136,8 @@ The command `next` does not calculate.
 That command is just a marker for the end of the loop, and it is used by the syntax analyser.
 If you change the `stepLimit` to 19 then the program will succeed.
 ====
+
+The macro also supports the `do` and `run` aliases.
 
 === Expression
 

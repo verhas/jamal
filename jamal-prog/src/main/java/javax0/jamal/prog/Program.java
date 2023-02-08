@@ -23,5 +23,10 @@ public class Program implements Macro {
         Scan.using(processor).from(it).firstLine().keys(limit).parse(in);
         return Integer.parseInt(limit.get());
     }
+
+    @Override
+    public String[] getIds() {
+        return new String[]{"program", "do", "run"};
+    }
 }
 

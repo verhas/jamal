@@ -194,7 +194,7 @@ The extension is compatible with the Jamal Maven plugin so that you can generate
 
 == Available Macros
 
-{%@define dependencies={%pom count(/project/dependencies/dependency/groupId[text()="com.javax0.jamal"]/../artifactId)%}%}
+{%@define dependencies={%pom count(/project/dependencies/dependency/groupId[text()="com.javax0.jamal"])%}%}
 When Maven loads the Jamal Maven Extension, it recursively loads the dependencies of the artifact.
 The dependencies configured are the followings:
 {%@counter:define start=0 id=depCounter%}

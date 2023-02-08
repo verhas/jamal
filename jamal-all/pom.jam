@@ -1,3 +1,4 @@
+{@comment}
 {#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
 {@import ../version.jim}
@@ -14,3 +15,4 @@
          {dependency|{GROUPID}|jamal-$M}}
     }
 {end project}
+{@try{@xmlFormat}}

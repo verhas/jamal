@@ -84,6 +84,8 @@ this is the output of the program and it is,.. and it is,.. concatenated togethe
 ----
 
 
+The language is very simple, documented below in the section about expressions, and commands.
+
 The command `program` has the option `stepLimit`.
 This parameter has to be a number.
 It limits the number of steps that the program can execute.
@@ -146,6 +148,8 @@ The command `next` does not calculate.
 That command is just a marker for the end of the loop, and it is used by the syntax analyser.
 If you change the `stepLimit` to 19 then the program will succeed.
 ====
+
+The macro also supports the `do` and `run` aliases.
 
 === Expression
 
@@ -386,4 +390,3 @@ The expression after the `<<` is evaluated and the result is appended to the res
 ----
 55 55
 ----
-
