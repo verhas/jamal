@@ -22,7 +22,9 @@ public class JavaSourceMacro {
     /**
      * The namespace of the macros in this class. JBIM stands for Java Built-In Macros.
      */
+    // snipline MACRO_NS filter="(.*?)"
     private static final String MACRO_NS = "jbim:";
+    // snipline DEFAULT_ID filter="(.*?)"
     private static final String DEFAULT_ID = MACRO_NS + "source";
 
     /**
@@ -178,23 +180,18 @@ public class JavaSourceMacro {
                 }
                 final var loader = compiler.annotatedClasses().compile()
                         .load(Compiler.LoaderOption.REVERSE);//even if there is a class with the same name in the classpath
+                final var register = processor.getRegister();
                 for (final var nm : nameSet) {
                     final var macro = loader.newInstance(nm, Macro.class);
-                    processor.getRegister().define(macro);
+                    register.define(macro);
                 }
+                // delete the user defined macro replacing it with an empty set
+                register.define(new JavaMacroSet(name));
                 return "";
             } catch (Exception e) {
                 throw new BadSyntax("There was an exception compiling the Java sources", e);
             }
         }
-
-        /**
-         * Do not add the specified or default module info to the compiler. This method is invoked when there was no
-         * module info specified.
-         */
-        private void doNotAddModuleInfo() {
-        }
-
 
         @Override
         public String getId() {
@@ -202,10 +199,19 @@ public class JavaSourceMacro {
         }
     }
 
+    /**
+     * Do not add the specified or default module info to the compiler. This method is invoked when there was no
+     * module info specified.
+     */
+    private static void doNotAddModuleInfo() {
+    }
+
     private static void addDefaultModuleInfo(final Fluent.AddSource compiler, final HashSet<String> pckgSet) {
+        // snippet addDefaultModuleInfo
         compiler.from("module-info", "module A" + System.currentTimeMillis() + " {\n" +
                 "    requires jamal.api;" +
                 pckgSet.stream().map(s -> "    exports " + s + ";\n").collect(Collectors.joining("\n")) +
                 "}");
+        // end snippet
     }
 }
