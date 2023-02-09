@@ -7,5 +7,8 @@ module jamal.java {
     requires jamal.tools;
     requires jamal.engine;
     requires SourceBuddy;
-    provides Macro with JavaSourceMacro;
+    provides Macro with JavaSourceMacro.JavaClass,
+            JavaSourceMacro.JavaModuleInfo,
+            JavaSourceMacro.JavaMacroClass,
+            JavaSourceMacro.JavaCompile;
 }

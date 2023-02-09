@@ -8,6 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.Arrays;
 
@@ -33,7 +34,7 @@ public class Define implements Macro {
         final var exportParam = Params.<Boolean>holder(null, "export").asBoolean();
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly).parse(input);
+        Scan.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly).parse(input);
         BadSyntax.when(noRedefineParam.is() && optionalParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         BadSyntax.when(globalParam.is() && exportParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         skipWhiteSpaces(input);

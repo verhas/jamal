@@ -286,4 +286,3 @@ For further information read the link:../jamal-maven-input/README.adoc[documenta
 This library provides Java services that the Jamal file handling uses, so that you can use resources from inside JAR files.
 
 For further information read the link:../jamal-jar-input/README.adoc[documentation] of the module.
-

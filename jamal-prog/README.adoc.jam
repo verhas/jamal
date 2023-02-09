@@ -42,6 +42,8 @@ There are only a few commands that you can use:
 
 * output, denoted by `<<`
 
+* comment following `rem` or an `'` character till the end of the line
+
 Expressions can contain
 
 * the basic operations: `+`, `-`, `*`, `/`, `%`,
@@ -69,9 +71,11 @@ For example:
 {@program
      <<"this is the output "
      <<"of the program "
+     ' here we start a loop
      for i=1 to 2
+     rem this is also a comment
      <<"and it is,.. "
-     next
+     next ' I can write comments at the end of the line
      <<"concatenated "
      <<"together "
 } %}

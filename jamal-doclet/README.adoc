@@ -262,4 +262,3 @@ ${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java
 -windowtitle
 '...'
 ----
-
