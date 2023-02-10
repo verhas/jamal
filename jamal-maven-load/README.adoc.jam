@@ -74,13 +74,17 @@ The macro `maven:load` reads the configuration of Jamal via an API that works on
 
 === Secure configuration
 
-The configuration is secure if:
+This macro works only if your configuration files' access control is properly set.
+Without that someone accessing the computer in a different account could modify the configuration and load malicious code.
+
+The configuration must be secure meaning:
 
 * There is no configuration.
 In that case, nothing can be opened, so there is no security risk.
 However, in this case, the macro will not be able to load any JAR file.
+OR
 
-.The configuration directory and the files are _SAFE_
+The configuration directory and the files are _SAFE_
 ====
 * `~/.jamal`, and the files
 * `~/.jamal/settings.properties`, and
@@ -88,7 +92,7 @@ However, in this case, the macro will not be able to load any JAR file.
 ====
 
 
-.A file or directory is _SAFE_ if
+A file or directory is _SAFE_ if
 ====
 * it does not exist, or
 
@@ -107,6 +111,7 @@ However, in this case, the macro will not be able to load any JAR file.
 
 When reading the configuration, if any of the
 
+====
 * `maven.load.include`
 
 * `maven.load.exclude`
@@ -116,21 +121,20 @@ When reading the configuration, if any of the
 * `maven.load.repo`
 
 properties point to files, these files should also be _SAFE_.
+====
 
-Securing the configuration is not a must for Jamal's other parts and functionalities, although it is a good practice.
+NOTE: Securing the configuration is not a must for Jamal's other parts and functionalities, although it is a good practice.
 The security is only checked before reading the configuration for the `maven:load` macro.
 
 Also, the `maven:load` macro uses a unique API to read the configuration.
 Every time the macro runs, the API rereads the files, checks the security of the configuration, and ignores the in-memory cached configuration.
-Also, note that while most of the macros and functionalities of Jamal read configuration via an API that consults
+Also, note that while most of the macros and functionalities of Jamal read configuration via an API that consults the system properties first, environment variables second, and lastly only
+the configuration files,
 
-* system properties,
-
-* environment variables, and lastly
-
-* the configuration files,
-
-the API used by the `maven:load` macro reads only the configuration files.
+====
+the API used by the `maven:load` macro reads only the configuration files in the directory `~/.jamal/`.
+These are `~/.jamal/settings.properties` or `~/.jamal/settings.xml` and the files references by the above-mentioned properties.
+====
 
 === Configuration
 
@@ -140,13 +144,24 @@ Also, the remote repositories and the local repository have to be configured unl
 
 The values for the property keys are
 
-* comma separated list of maven coordinates, absolute paths, or URLs as needed, or
+* comma separated list of maven coordinates + path,
+
+* absolute paths,
+
+* URLs, or
 
 * a file name that contains the list of the same information.
 
 When a key points to a file, the file also has to be _SAFE_ as defined in the previous section.
 It has to be in the same directory as the configuration file and has to be specified by the bare name and extension but without any path.
 The file contains the configuration information one per line.
+
+[NOTE]
+====
+You can use the comma-separated list in the `.properties` file.
+When you have too many configuration items, however, it is better to use a file.
+To have a readable format the file contains the list of the configuration items one per line.
+====
 
 ==== `maven.load.include`
 
@@ -157,10 +172,23 @@ Every maven coordinate has to be in the format
 
           groupId:artifactId:version
 
-and the `artifactId` and `version` may be a wildcard `*`.
-The `groupId` cannot be a wildcard.
+or
+          groupId:artifactId:version:path
 
+The `groupId` cannot be a wildcard.
+The `artifactId` and `version` may be a wildcard `*`.
+The path part is optional.
 If the `artifactId` is a wildcard, then the `version` has to be a wildcard too.
+
+The path represents the path to the Jamal source.
+It can either be the absolute path to the Jamal text or a directory.
+When the value ends with a `/` it is considered a directory.
+
+When the path is specified it is compared against the path of the Jamal source.
+The Jamal source file has to be the same or has to be in the specified directory.
+
+The macro `maven:load` is used sometimes from a file included or imported by the top Jamal source directly or through other includes or imports.
+In this case, just as when the normal, the path of the top level Jamal file is used only.
 
 ==== `maven.load.exclude`
 

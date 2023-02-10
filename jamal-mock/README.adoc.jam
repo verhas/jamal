@@ -1,45 +1,50 @@
 = Jamal Mock module
 
 {%@import res:jamal.jim%}\
-{%@snip:collect from="./src/main/java"%}
+{%@sep 〔 〕%}\
+〔@snip:collect from="./src/main/java"〕\
 
 Using this module, you can mock built-in macros.
 The reason to mock a built-in macro is mainly for testing purposes.
-When you develop a macro package the built-in macros collecting information from different sources
+When you develop a macro package collecting information from different sources
 
-* may not be available at all in the test environment
+* those may not be available at all in the test environment
 
-* may function differently,
+* may function in the test environment differently,
 
 * may be expensive to set up an environment where these built-in macros function as needed for the test.
+
+The solution is to mock the built-in macros.
 
 The primary goal developing this module was to provide mocking possibility for the Java::Geci macros.
 That way you can develop the code generator templates in IntelliJ using the Asciidoc plugin.
 When the built-in macros of Java::Geci are mocked you can see the generated code in the WYSIWYG editor.
 
 To use this module, you have to add the dependency to your Maven project, as:
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
+〔@snip:xml pom=pom.xml〕\
+〔#define VERSION=〔pom /project/version/text()〕〕\
 
 [source,xml]
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-mock</artifactId>
-    <version>{%VERSION%}</version>
+    <version>〔VERSION〕</version>
 </dependency>
 ----
 
+or use the `maven:load` macro to load the dependency from Maven Central.
+
 == Macros in this library
-{%@define EXAMPLE($Y,$X)=
+〔@define EXAMPLE($Y,$X)=
 
 [title=$Y]
 ====
-{%sample/$X%}
+〔sample/$X〕
 outputs
-{%output%}
+〔output〕
 ====
-%}
+〕
 
 
 === `mock`
@@ -53,72 +58,72 @@ The reason to mock a built-in macro is to test some macro code in a test environ
 
 The use of the macro is simple.
 You have to define the name of the macro you want to mock and the output.
-{%EXAMPLE/simple mock/
+〔EXAMPLE/simple mock/
 {@mock (macro=w)ajaja}{@w}
-%}
+〕
 
 You can override existing macros, even the core built-in ones.
 The mocks are only available on the current scope.
 
-{%EXAMPLE/mock locality/
+〔EXAMPLE/mock locality/
 {#ident {@mock (macro=comment)comment is overridden}{@comment}}{@comment is not overridden here}
-%}
+〕
 
 You can also define multiple responses for a single mock.
 These responses will be used in the other they are defined.
 
-{%EXAMPLE/repeated mock/
+〔EXAMPLE/repeated mock/
 {@mock (macro=ww)1}{@mock (macro=ww)2}{@ww}{@ww}
-%}
+〕
 
 If you use a mock more times it has defined values it will result syntax error.
 
-{%EXAMPLE/mock exhausted/
+〔EXAMPLE/mock exhausted/
 {@try! {@mock (macro=z)1}{@z}{@z}}
-%}
+〕
 
 Exhausted mock shadowing a defined built-in macro will not throw an exception though.
 It will simply use the original macro.
-{%EXAMPLE/mock exhausted/
+〔EXAMPLE/mock exhausted/
 {@mock (macro=ident)exhausted}\
 {@mock (macro=ident)macros}\
 {@ident whatever is here, mocked} {@ident second time also mocked} {@ident are not mocked anymore}
-%}
+〕
 
 If you want to use a mock multiple times resulting the same value you can use the `repeat` option.
 
-{%EXAMPLE/mock repeated/
+〔EXAMPLE/mock repeated/
 {@mock (macro=w repeat=2)A}{@w}{@w}
-%}
+〕
 
 In addition to the repeat option it is also possible to use the `infinite` option meaning: repeat as many times as needed.
 
-{%EXAMPLE/mock infinite/
+〔EXAMPLE/mock infinite/
 {@mock (macro=w infinite)X}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}
-%}
+〕
 
 You can also define multiple mocks for the same macro and give a regular expression to each.
 When the regular expression matches the input of the macro the one will be used.
 If there are more than one mock that would match the input then the one first defined and not exhausted yet are used.
 
-{%EXAMPLE/mock infinite/
+〔EXAMPLE/mock infinite/
 {@mock (macro=q when=".*bee.*")bee}{@comment defined first, but used second}
 {@mock (macro=q when=".*apple.*")apple}
 {@q this is an apple and}
 {@q there is a bee}
-%}
+〕
 
 In the next section we will describe all these options in details (reference) and also the formal argument how a mock response is selected.
 
 ==== Options of `mock`
 
-{%@snip (
+〔@snip (
 replace="/.*?\"(.*?)\",\\s\"(.*?)\",\\s\"(.*?)\".*\\|/* `$1` (aliases `$2`, `$3`)"
 replace="/.*?\"(.*?)\",\\s\"(.*?)\".*\\|/* `$1` (alias `$2`)"
 replace="/.*?\"(.*?)\".*\\|/* `$1`"
 replace="/.*\\|/"
 ) mock_options
-%}
+〕
 
 When the mock macro is used the input of the macro least the options between the `(` and `)` characters will be used as a response.
 A new use of the `mock` macro for the same `macro` name will add a new response to the mock.
@@ -149,9 +154,9 @@ As an extreme, though not practical use you can mock the macro `mock` itself.
 The example below mocks the macro `mock`, then it is used, therefore the macro `ident` is not mocked.
 After that the macro `comment` is mocked again, as the mocking of `mock` is exhausted.
 
-{%EXAMPLE/Mocking `mock`/
+〔EXAMPLE/Mocking `mock`/
 {@mock (macro=mock)mock the mock once}{@mock (macro=ident)}{@mock (macro=comment)this is a comment}
 {#ident not mocked}
 {#comment mocked, does not matter what I write here}
-%}
+〕
 

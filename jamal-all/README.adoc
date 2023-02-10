@@ -32,10 +32,6 @@ This will add the following dependencies to your project:
 
 * `jamal-assertions`
 
-* `jamal-groovy`
-
-* `jamal-io`
-
 * `jamal-jamal`
 
 * `jamal-markdown`
@@ -44,19 +40,23 @@ This will add the following dependencies to your project:
 
 * `jamal-plantuml`
 
-* `jamal-ruby`
-
-* `jamal-scriptbasic`
-
 * `jamal-snippet`
 
 * `jamal-yaml`
 
-* `jamal-word`
-
 * `jamal-prog`
 
 * `jamal-maven-load`
+
+* `jamal-groovy`
+
+* `jamal-io`
+
+* `jamal-ruby`
+
+* `jamal-scriptbasic`
+
+* `jamal-word`
 
 * `jamal-maven-plugin`
 

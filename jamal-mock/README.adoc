@@ -1,16 +1,17 @@
 = Jamal Mock module
 
 
-
 Using this module, you can mock built-in macros.
 The reason to mock a built-in macro is mainly for testing purposes.
-When you develop a macro package the built-in macros collecting information from different sources
+When you develop a macro package collecting information from different sources
 
-* may not be available at all in the test environment
+* those may not be available at all in the test environment
 
-* may function differently,
+* may function in the test environment differently,
 
 * may be expensive to set up an environment where these built-in macros function as needed for the test.
+
+The solution is to mock the built-in macros.
 
 The primary goal developing this module was to provide mocking possibility for the Java::Geci macros.
 That way you can develop the code generator templates in IntelliJ using the Asciidoc plugin.
@@ -23,9 +24,11 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-mock</artifactId>
-    <version>1.12.6-SNAPSHOT</version>
+    <version>1.12.7-SNAPSHOT</version>
 </dependency>
 ----
+
+or use the `maven:load` macro to load the dependency from Maven Central.
 
 == Macros in this library
 

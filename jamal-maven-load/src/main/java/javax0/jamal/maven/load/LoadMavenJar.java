@@ -14,7 +14,6 @@ import javax0.jamal.tools.Scan;
 import javax0.maventools.download.ArtifactType;
 import javax0.maventools.download.Downloader;
 import javax0.maventools.download.MavenCoordinates;
-import javax0.maventools.download.MavenCoordinatesPattern;
 import javax0.maventools.download.Pom;
 import javax0.maventools.download.Repo;
 
@@ -27,9 +26,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class LoadMavenJar implements Macro {
@@ -43,19 +44,13 @@ public class LoadMavenJar implements Macro {
         final var exclude = Params.<String>holder("exclude").orElse(null);
         Scan.using(processor).from(this).between("()").keys(repos, noDep, reload, local, exclude).parse(in);
 
-
-        final Properties properties = getConfiguration();
+        final Properties properties = configuration.get();
         final var localPath = getLocalPath(local, in.getPosition(), properties);
 
         final var reposArr = getRepos(repos, properties);
 
-        final var coordsString = in.toString().trim().split(":", 3);
-        if (coordsString.length < 3) {
-            throw new BadSyntax("artifact coordinates should be 'groupId:artifactId:version");
-        }
-
-        final var coords = new MavenCoordinates(coordsString[0], coordsString[1], coordsString[2]);
-        checkPermissions(coords, properties);
+        final MavenCoordinates coords = getMavenCoordinates(in);
+        checkPermissions(coords, properties, in.getPosition());
         final var downloader = new Downloader(localPath, reposArr);
         final var fn = Optional.ofNullable(properties.get("mvn.load.exclude")).map(Object::toString).orElse(null);
         if (fn != null) {
@@ -88,6 +83,17 @@ public class LoadMavenJar implements Macro {
             throw new BadSyntax("Cannot download " + in, e);
         }
     }
+
+    private static MavenCoordinates getMavenCoordinates(final Input in) throws BadSyntax {
+        final var c = in.toString().trim().split(":", 3);
+        if (c.length < 3) {
+            throw new BadSyntax("artifact coordinates should be 'groupId:artifactId:version");
+        }
+
+        return new MavenCoordinates(c[0], c[1], c[2]);
+    }
+
+    static Supplier<Properties> configuration = LoadMavenJar::getConfiguration;
 
     private static Properties getConfiguration() {
         final Properties properties;
@@ -219,23 +225,81 @@ public class LoadMavenJar implements Macro {
         }
     }
 
+    private static class MavenCoordinatesPattern extends MavenCoordinates {
+        final String path;
+
+        public static MavenCoordinatesPattern fromString(final String coordinates) {
+            final var s = coordinates.split(":", 4);
+            if (s.length != 3 && s.length != 4) {
+                throw new IllegalArgumentException(coordinates + " is not a valid maven coordinate, must have two : in it.");
+            }
+            if (s.length == 3) {
+                return new MavenCoordinatesPattern(s[0], s[1], s[2], "");
+            } else {
+                return new MavenCoordinatesPattern(s[0], s[1], s[2], s[3]);
+            }
+        }
+
+        public MavenCoordinatesPattern(final String groupId, final String artifactId, final String version, final String path) {
+            super(groupId, artifactId, version);
+            this.path = path;
+            if (groupId.equals("*")) {
+                throw new IllegalArgumentException("The the group id must not be '*'");
+            }
+            if (artifactId.equals("*") && !version.equals("*")) {
+                throw new IllegalArgumentException("The the artifact id must not be '*' if the version is not '*'");
+            }
+        }
+
+        public boolean matches(final MavenCoordinates coords, final Position position) {
+            for( var pos = position ; pos != null ; pos = pos.parent) {
+                if (matches(coords, pos.file)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public boolean matches(final MavenCoordinates coords, final String path) {
+            Objects.requireNonNull(coords);
+            if (!(Objects.equals(groupId, coords.groupId) &&
+                    (artifactId.equals("*") || artifactId.equals(coords.artifactId)) &&
+                    (version.equals("*") || version.equals(coords.version)))) {
+                return false;
+            }
+            if (this.path == null || this.path.isEmpty()) {
+                return true;
+            }
+            if (this.path.endsWith("/")) {
+                return path.startsWith(this.path);
+            }
+            return Objects.equals(path, this.path);
+        }
+    }
+
     /**
      * Check that the permissions allow the download of the given coordinates.
      *
-     * @param properties the configuration loaded
      * @param coords     the download artifact coordinates
+     * @param properties the configuration loaded
+     * @param position   the position of the top level file that has uses the macro or, which includes/imports a file that
+     *                   uses the macro, or includes a file that includes a file that...
      */
-    private void checkPermissions(final MavenCoordinates coords, final Properties properties) {
+    private void checkPermissions(final MavenCoordinates coords, final Properties properties, final Position position) {
+        var pos = position;
+        while (pos.parent != null) {
+            pos = pos.parent;
+        }
+        final var top = pos;
         final var includes = Optional.ofNullable(properties.get("maven.load.include")).map(Object::toString).orElse(null);
         if (includes == null) {
             throw new IllegalStateException("There is no 'maven.load.include' property in the configuration.\n" +
                     "This property must be set to a comma separated list of maven coordinates that are allowed to be downloaded or a file name.\n");
         }
-        if (getStrings(includes).map(MavenCoordinatesPattern::fromString).noneMatch(p -> p.matches(coords))) {
+        if (getStrings(includes).map(MavenCoordinatesPattern::fromString).noneMatch(p -> p.matches(coords, top.file))) {
             throw new IllegalStateException(String.format("The maven artifact '%s' is not included.", coords));
         }
         final var excludes = Optional.ofNullable(properties.get("maven.load.exclude")).map(Object::toString).orElse(null);
-        if (excludes != null && getStrings(excludes).map(MavenCoordinatesPattern::fromString).anyMatch(p -> p.matches(coords))) {
+        if (excludes != null && getStrings(excludes).map(MavenCoordinatesPattern::fromString).anyMatch(p -> p.matches(coords, position))) {
             throw new IllegalStateException(String.format("The maven artifact '%s' is excluded.", coords));
         }
     }

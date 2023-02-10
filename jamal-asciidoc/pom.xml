@@ -77,14 +77,6 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-jamal</artifactId>
         </dependency>
         <dependency>
@@ -101,23 +93,11 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-ruby</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-scriptbasic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-snippet</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-yaml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-word</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

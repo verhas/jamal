@@ -13,19 +13,19 @@
         <module>jamal-tools</module>
         <module>jamal-core</module>
         <module>jamal-assertions</module>
-        <module>jamal-groovy</module>
-        <module>jamal-io</module>
         <module>jamal-jamal</module>
         <module>jamal-markdown</module>
         <module>jamal-mock</module>
         <module>jamal-plantuml</module>
-        <module>jamal-ruby</module>
-        <module>jamal-scriptbasic</module>
         <module>jamal-snippet</module>
         <module>jamal-yaml</module>
-        <module>jamal-word</module>
         <module>jamal-prog</module>
         <module>jamal-maven-load</module>
+        <module>jamal-groovy</module>
+        <module>jamal-io</module>
+        <module>jamal-ruby</module>
+        <module>jamal-scriptbasic</module>
+        <module>jamal-word</module>
         <module>jamal-maven-plugin</module>
         <module>jamal-maven-extension</module>
         <module>jamal-cmd</module>
@@ -233,16 +233,6 @@
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>jamal-groovy</artifactId>
-                <version>1.12.7-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.javax0.jamal</groupId>
-                <artifactId>jamal-io</artifactId>
-                <version>1.12.7-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-jamal</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
@@ -263,16 +253,6 @@
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>jamal-ruby</artifactId>
-                <version>1.12.7-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.javax0.jamal</groupId>
-                <artifactId>jamal-scriptbasic</artifactId>
-                <version>1.12.7-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-snippet</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
@@ -283,17 +263,37 @@
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
-                <artifactId>jamal-word</artifactId>
-                <version>1.12.7-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-prog</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-load</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-groovy</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-io</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-ruby</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-scriptbasic</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-word</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
             <dependency>

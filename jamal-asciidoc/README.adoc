@@ -461,10 +461,6 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-assertions`
 
-* `jamal-groovy`
-
-* `jamal-io`
-
 * `jamal-jamal`
 
 * `jamal-markdown`
@@ -473,15 +469,9 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-plantuml`
 
-* `jamal-ruby`
-
-* `jamal-scriptbasic`
-
 * `jamal-snippet`
 
 * `jamal-yaml`
-
-* `jamal-word`
 
 * `jamal-prog`
 

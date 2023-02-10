@@ -6,7 +6,17 @@
 
 {%RELEASE/1.12.7-SNAPSHOT%}
 
-The extensions plugin was removed from the Maven extension dependency and from the asciidoc extension.
+* The extensions plugin was removed from the Maven extension dependency and from the asciidoc extension.
+
+* Macro `program` can also be used with `do` and `run` aliases.
+
+* File handling can read from a JAR file.
+
+* `maven:load` can load macros from maven repository.
+
+* `jbim` macro package was developed that can compile and load Java code from the Jamal file.
+
+* Jbang, Asciidoctor,
 
 {%RELEASE/1.12.6%}
 There is a new macro library `prog` that implements a simple BASIC like programming language.

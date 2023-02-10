@@ -70,16 +70,6 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-groovy</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-io</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-jamal</artifactId>
             <version>1.12.7-SNAPSHOT</version>
         </dependency>
@@ -100,16 +90,6 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-ruby</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-scriptbasic</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-snippet</artifactId>
             <version>1.12.7-SNAPSHOT</version>
         </dependency>
@@ -120,17 +100,37 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-word</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-prog</artifactId>
             <version>1.12.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-maven-load</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-groovy</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-io</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-ruby</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-scriptbasic</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-word</artifactId>
             <version>1.12.7-SNAPSHOT</version>
         </dependency>
         <dependency>
