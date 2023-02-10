@@ -110,31 +110,6 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-groovy</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-io</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-ruby</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-scriptbasic</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-word</artifactId>
-            <version>1.12.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-maven-input</artifactId>
             <version>1.12.7-SNAPSHOT</version>
         </dependency>

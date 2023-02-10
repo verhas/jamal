@@ -214,20 +214,6 @@ This module is the Jamal execution engine.
 It is needed to execute Jamal.
 The module does not provide macros.
 
-=== {%#block {%depCounter%}%} `groovy`
-This module provides macros that allow embedding Groovy code into the `pom.xml.jam` file.
-
-{%further groovy%}
-
-=== {%#block {%depCounter%}%} `ruby`
-This module provides macros that allow embedding Ruby code into the `pom.xml.jam` file.
-
-{%further ruby%}
-
-=== {%#block {%depCounter%}%} `scriptbasic`
-This module provides macros that allow embedding ScriptBasic code into the `pom.xml.jam` file.
-
-{%further scriptbasic%}
 
 === {%#block {%depCounter%}%} `snippet`
 This module provides snippet macros.
@@ -240,20 +226,12 @@ I do not think that you would need anything like this, but if you need, there is
 
 {%further plantuml%}
 
-=== {%#block {%depCounter%}%} `io`
-This module provides macros that can help you read text from files and write text to external files.
-
-{%further io%}
-
 === {%#block {%depCounter%}%} `jamal`
 
 This module lets you call Jamal processing some part of the code in a separate processor.
 
 {%further jamal%}
 
-=== {%#block {%depCounter%}%} `java`
-
-This module allows loading built-in macros during run-time.
 
 {%further java%}
 
@@ -263,10 +241,6 @@ This module is mainly practical when you embed Jamal macros in a JavaDoc and use
 I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
 
 {%further markdown%}
-
-=== {%#block {%depCounter%}%} `java`
-
-Experimental module providing macros to load Java classes and call their methods.
 
 {%further java%}
 
@@ -313,4 +287,12 @@ This library provides Java services that the Jamal file handling uses, so that y
 
 {%further jar-input%}
 
+=== {%#block {%depCounter%}%} `maven-load`
+The library provides macros that can load Java Built-in Macros from Maven artifacts.
+
+
+{%further maven-load%}
+
 {%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more%}
+
+

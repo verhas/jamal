@@ -188,20 +188,6 @@ This module is the Jamal execution engine.
 It is needed to execute Jamal.
 The module does not provide macros.
 
-===  `groovy`
-This module provides macros that allow embedding Groovy code into the `pom.xml.jam` file.
-
-For further information read the link:../jamal-groovy/README.adoc[documentation] of the module.
-
-===  `ruby`
-This module provides macros that allow embedding Ruby code into the `pom.xml.jam` file.
-
-For further information read the link:../jamal-ruby/README.adoc[documentation] of the module.
-
-===  `scriptbasic`
-This module provides macros that allow embedding ScriptBasic code into the `pom.xml.jam` file.
-
-For further information read the link:../jamal-scriptbasic/README.adoc[documentation] of the module.
 
 ===  `snippet`
 This module provides snippet macros.
@@ -214,20 +200,12 @@ I do not think that you would need anything like this, but if you need, there is
 
 For further information read the link:../jamal-plantuml/README.adoc[documentation] of the module.
 
-===  `io`
-This module provides macros that can help you read text from files and write text to external files.
-
-For further information read the link:../jamal-io/README.adoc[documentation] of the module.
-
 ===  `jamal`
 
 This module lets you call Jamal processing some part of the code in a separate processor.
 
 For further information read the link:../jamal-jamal/README.adoc[documentation] of the module.
 
-===  `java`
-
-This module allows loading built-in macros during run-time.
 
 For further information read the link:../jamal-java/README.adoc[documentation] of the module.
 
@@ -237,10 +215,6 @@ This module is mainly practical when you embed Jamal macros in a JavaDoc and use
 I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
 
 For further information read the link:../jamal-markdown/README.adoc[documentation] of the module.
-
-===  `java`
-
-Experimental module providing macros to load Java classes and call their methods.
 
 For further information read the link:../jamal-java/README.adoc[documentation] of the module.
 
@@ -286,4 +260,13 @@ For further information read the link:../jamal-maven-input/README.adoc[documenta
 This library provides Java services that the Jamal file handling uses, so that you can use resources from inside JAR files.
 
 For further information read the link:../jamal-jar-input/README.adoc[documentation] of the module.
+
+===  `maven-load`
+The library provides macros that can load Java Built-in Macros from Maven artifacts.
+
+
+For further information read the link:../jamal-maven-load/README.adoc[documentation] of the module.
+
+
+
 
