@@ -4,6 +4,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,6 +23,7 @@ import java.util.function.Supplier;
  * The tests also check the security mocking the configuration. The configuration is injected through a package private
  * field.
  */
+@Disabled("This test is disabled, because it is not unit test. It is a kind of integration test and it will not ron on the CI server for snapshot releases.")
 public class TestLoadMavenJar {
     public static final String TEST_MACRO = "{@array :2:0:1:2:3}"; // macro implemented in the jamal-test JAR file
     private static final String TEST_STRING = String.format(""
