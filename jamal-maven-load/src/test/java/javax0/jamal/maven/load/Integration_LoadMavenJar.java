@@ -1,14 +1,16 @@
 package javax0.jamal.maven.load;
 
+import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.function.Supplier;
 
@@ -23,15 +25,23 @@ import java.util.function.Supplier;
  * The tests also check the security mocking the configuration. The configuration is injected through a package private
  * field.
  */
-@Disabled("This test is disabled, because it is not unit test. It is a kind of integration test and it will not ron on the CI server for snapshot releases.")
-public class TestLoadMavenJar {
-    public static final String TEST_MACRO = "{@array :2:0:1:2:3}"; // macro implemented in the jamal-test JAR file
+public class Integration_LoadMavenJar {
+    /**
+     * The test string contains the macro executed by the different tests.
+     * The first macro use will result an error string to demonstrate that the macro 'array' was not loaded.
+     * After that the 'maven:load' loads the macro from the actual version of jamal-test.
+     * In the last line the test macro is called again, this time without the 'try' surrounding.
+     * It will result 2.
+     */
     private static final String TEST_STRING = String.format(""
-                    + "{@try! %s}"
-                    + "{@maven:load %%s com.javax0.jamal:jamal-test:%s}" // %%s -> options
-                    + "%s",
-            TEST_MACRO, getVersionString(), TEST_MACRO);
+            + "{@try! {@array}}"
+            + "{@maven:load %%s com.javax0.jamal:jamal-test:%s}" // %%s -> options
+            + "{@array :2:0:1:2:3}", getVersionString());
     private static final String RESULT = "There is no built-in macro with the id 'array'; did you mean '@try'?2";
+    /**
+     * We selected one core macro arbitrarily. The package test has the core as dependency. If the option 'update'
+     * is used in the macro 'maven:load' then the core macros are also reloaded and updated. Otherwise, not.
+     */
     public static final String CORE_MACRO = "define"; // to check if it was reloaded
 
     private static String getVersionString() {
@@ -59,7 +69,7 @@ public class TestLoadMavenJar {
     /**
      * Mock the configuration so that the tests can run without the need to have a configuration file.
      * <p>
-     * A basic set of properties are addded to the configuration and the argument can override any of these or add new.
+     * A basic set of properties are added to the configuration and the argument can override any of these or add new.
      *
      * @param extraProperties the overriding or new properties, arguments are used in pars, have to be even number of
      *                        argument, or else index out of bounds exception will be thrown.
@@ -155,9 +165,9 @@ public class TestLoadMavenJar {
         setupSecurityMock(
                 "maven.load.include", "com.javax0.jamal:jamal-test:*:myFile",
                 "maven.load.exclude", "com.javax0.jamal:jamal-test:*:yourSomething"
-                );
+        );
         TestThat.theInput(String.format(TEST_STRING, ""))
-                .atPosition(new Position("yourFile", 1, 1,new Position("myFile", 1, 1)))
+                .atPosition(new Position("yourFile", 1, 1, new Position("myFile", 1, 1)))
                 .results(RESULT);
     }
 
@@ -167,11 +177,12 @@ public class TestLoadMavenJar {
         setupSecurityMock(
                 "maven.load.include", "com.javax0.jamal:jamal-test:*:myFile",
                 "maven.load.exclude", "com.javax0.jamal:jamal-test:*:yourFile"
-                );
+        );
         TestThat.theInput(String.format(TEST_STRING, ""))
-                .atPosition(new Position("anyFile", 1, 1,new Position("yourFile",1,1,new Position("myFile", 1, 1))))
+                .atPosition(new Position("anyFile", 1, 1, new Position("yourFile", 1, 1, new Position("myFile", 1, 1))))
                 .throwsUp(IllegalStateException.class, "The maven artifact 'com.javax0.jamal:jamal-test:1.12.7-SNAPSHOT' is excluded.");
     }
+
     @DisplayName("Fails when security includes the coordinates, but not for this file")
     @Test
     void failWhenFileNameDoesNotMatch() throws Exception {

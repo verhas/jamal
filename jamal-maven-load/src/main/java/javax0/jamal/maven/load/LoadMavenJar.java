@@ -101,6 +101,7 @@ public class LoadMavenJar implements Macro {
             properties = EnvironmentVariables.getNewProperties();
         } catch (IOException e) {
             // this is NOT BadSyntax because it is not a Jamal source issue, and it must not be caught using the 'try' macro
+            // this is a hard-core configuration error, which may signal security breach
             throw new RuntimeException(e);
         }
         return properties;

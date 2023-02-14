@@ -16,4 +16,4 @@ RUN chmod u+xr integrationtest
 USER jamal
 RUN mkdir -p /home/jamal/.m2/repository
 RUN chmod u+xr /home/jamal/.m2/repository
-CMD pwd ; ls -l ; ./integrationtest
+CMD ./integrationtest

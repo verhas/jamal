@@ -6,6 +6,18 @@ mkdir -p .m2/repository
 git clone https://github.com/verhas/jamal.git
 cd jamal
 mvn clean install
+echo <<MESSAGE_END
+
++-----------------------------------------------------------------------------------------------------------------------
+BUILD HAS FINISHED
+
+INTEGRATION TESTS START...
++-----------------------------------------------------------------------------------------------------------------------
+MESSAGE_END
+
+cd jamal-maven-load
+mvn test -Dtest=javax0.jamal.maven.load.Integration_LoadMavenJar
+
 
 
 
