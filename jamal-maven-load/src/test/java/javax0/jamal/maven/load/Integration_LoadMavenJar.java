@@ -1,6 +1,5 @@
 package javax0.jamal.maven.load;
 
-import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.testsupport.TestThat;
@@ -9,8 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 import java.util.function.Supplier;
 
@@ -36,19 +33,13 @@ public class Integration_LoadMavenJar {
     private static final String TEST_STRING = String.format(""
             + "{@try! {@array}}"
             + "{@maven:load %%s com.javax0.jamal:jamal-test:%s}" // %%s -> options
-            + "{@array :2:0:1:2:3}", getVersionString());
+            + "{@array :2:0:1:2:3}", JamalVersion.get());
     private static final String RESULT = "There is no built-in macro with the id 'array'; did you mean '@try'?2";
     /**
      * We selected one core macro arbitrarily. The package test has the core as dependency. If the option 'update'
      * is used in the macro 'maven:load' then the core macros are also reloaded and updated. Otherwise, not.
      */
     public static final String CORE_MACRO = "define"; // to check if it was reloaded
-
-    private static String getVersionString() {
-        final var version = new Properties();
-        Processor.jamalVersion(version);
-        return version.getProperty("version");
-    }
 
     private static void addProperty(Properties props, String key, String value) {
         if (props.containsKey(key)) {

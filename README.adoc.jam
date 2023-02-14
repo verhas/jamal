@@ -2025,10 +2025,11 @@ Use `import` to import user-defined macro definitions.
 Because the textual output from the evaluation of the file is discarded feel free to use text in the file to be imported as documentation.
 There is no need to enclose such a text into a `{@comment ...}` macro.
 
-Starting with version 1.5.0 the import macro looks into the file before evaluating it.
+{%@define DEFAULTOPEN($VERSION,$MACRO)=
+Starting with version $VERSION the $MACRO macro looks into the file before evaluating it.
 If the very first two characters in the file are `{@` then it evaluates the content using `{` as macro opening string and `}` as macro closing string.
-This way you can freely import resource files provided in JAR file or through the net even if you use different macro opening and closing strings.
-Such import files cannot redefine the macro opening and closing string unless file importing also uses `{` and `}`.
+This way you can freely $MACRO resource files provided in JAR file or through the net even if you use different macro opening and closing strings.%}
+{%DEFAULTOPEN/1.5.0/import%}
 
 Starting with version 1.11.0 the import macro has the option `noCache`.
 {%@define noCacheExplanation=
@@ -2038,7 +2039,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=44b37659%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=b517021c%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
@@ -2094,6 +2095,8 @@ If the recursion does not end the include macros would drive the macro resolutio
 This limit prevents this to happen.
 
 The limit can be modified setting the environment variable {%JAMAL_INCLUDE_DEPTH_ENV%}.
+
+{%DEFAULTOPEN/1.12.7/include%}
 
 [[use]]
 ==== {%macroChapter%}`use`

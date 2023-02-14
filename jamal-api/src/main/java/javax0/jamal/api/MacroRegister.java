@@ -256,7 +256,9 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     void test(Marker check) throws BadSyntax;
 
     /**
-     * @return the current {@link Marker} object
+     * @return the current {@link Marker} object.
+     * <p>
+     * See the documentation of the method {@link #push(Marker)}
      */
     Marker test();
 

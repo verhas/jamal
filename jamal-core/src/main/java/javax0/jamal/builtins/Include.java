@@ -6,11 +6,16 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
+import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scan;
 
+import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
+import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
+import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG1;
+import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG2;
 import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
@@ -52,16 +57,24 @@ public class Include implements Macro {
             throw new BadSyntax("Include depth is too deep");
         }
         final String result;
-        final var includedInput = getInput(fileName, position, noCache.is(), processor);
+        final var in = getInput(fileName, position, noCache.is(), processor);
+        final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
+        final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
         if (lines.isPresent()) {
-            Range.Lines.filter(includedInput.getSB(), lines.get());
+            Range.Lines.filter(in.getSB(), lines.get());
         }
         if (verbatim.get()) {
-            result = includedInput.toString();
+            result = in.toString();
         } else {
             var marker = new Marker("{@include " + fileName + "}", position);
             processor.getRegister().push(marker);
-            result = processor.process(includedInput);
+            if (useDefaultSeparators) {
+                processor.separators(IMPORT_OPEN, IMPORT_CLOSE);
+                result = processor.process(in);
+                processor.separators(null, null);
+            } else {
+                result = processor.process(in);
+            }
             processor.getRegister().pop(marker);
         }
         depth++;
