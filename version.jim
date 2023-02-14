@@ -79,7 +79,7 @@ JUPITER_VERSION=5.9.0                      -- https://repo.maven.apache.org/mave
 MOCKITO_VERSION=4.6.1                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 --dependencies needed for the Jamal libraries
-PLANTUML_VERSION=1.2022.7                  -- https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml
+PLANTUML_VERSION=1.2023.1                  -- https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml
 JRUBY_VERSION=9.3.8.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
 GROOVY_VERSION=3.0.12                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
 OGNL_VERSION=3.3.2                         -- https://repo.maven.apache.org/maven2/ognl/ognl
