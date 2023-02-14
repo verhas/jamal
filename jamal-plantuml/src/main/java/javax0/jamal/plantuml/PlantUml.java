@@ -52,7 +52,7 @@ public class PlantUml implements Macro, InnerScopeDependent {
             } else {
                 erred = "true".equals(entry.getProperty("error"));
             }
-            BadSyntax.when(erred,  "There was an error processing diagram for '%s' in PlantUml.", fileName);
+            BadSyntax.when(erred, "There was an error processing diagram for '%s' in PlantUml.", fileName);
             return Trie.formatter.format(template.get(), fileName);
         } catch (Exception e) {
             throw new BadSyntax("PlantUml diagram '" + fileName + "'cannot be created.", e);
@@ -74,8 +74,16 @@ public class PlantUml implements Macro, InnerScopeDependent {
         final var reader = new SourceStringReader(text);
         FileFormat fileFormat = convertFileFormat(format);
         final var os = new ByteArrayOutputStream();
+        final var headless = System.getProperty("java.awt.headless");
         try (os) {
+            System.setProperty("java.awt.headless", "true");
             erred = "(Error)".equals(reader.outputImage(os, new FileFormatOption(fileFormat)).getDescription());
+        } finally {
+            if (headless != null) {
+                System.setProperty("java.awt.headless", headless);
+            } else {
+                System.clearProperty("java.awt.headless");
+            }
         }
         //noinspection ResultOfMethodCallIgnored
         file.getParentFile().mkdirs();
@@ -128,6 +136,8 @@ public class PlantUml implements Macro, InnerScopeDependent {
      * }</pre>
      * <p>
      * lines, then leave it there. If they are not there, then the method prepends and appends the lines.
+     * If first line starts with {@code @} then it is assumed that the diagram description is already there.
+     * This allows the user to use other diagram types not only UML.
      *
      * @param in the input
      * @return the diagram describing string

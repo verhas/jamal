@@ -676,3 +676,6 @@ Using some arbitrary value to signal a boolean value is usually not the best cho
 presenting the value in the form of a standalone parameter, or with value `yes`, `true`, `no`, `0`, `false` is a
 matter of taste. Use the one that you feel makes your code the most readable. Jamal source can get very easily
 really messy and complex. Strive to make it as simple as possible.
+
+
+

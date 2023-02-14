@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo Integration test starts
+mkdir -p .m2
+mkdir -p .m2/repository
+git clone https://github.com/verhas/jamal.git
+cd jamal
+mvn clean install
+
+
+
+

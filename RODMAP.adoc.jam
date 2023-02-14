@@ -4,7 +4,6 @@ Rudimentary description of features that are to be developed in the future. The 
 and the list is not a promise or guarantee.
 If you feel that there is some feature here missing then open a GitHub ticket and suggest the missing feature.
 
-
 * Scripting languages properties can be set to object values if the value is a macro name and the named macro implements
  ObjectHolder.
 
@@ -32,4 +31,4 @@ If you feel that there is some feature here missing then open a GitHub ticket an
 
 * Make it possible to use Jamal macros in Word DOCX files. (DONE)
 
-* Support Kotlin as macro development language
+* Support Kotlin as macro development language (STARTED)
