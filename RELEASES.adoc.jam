@@ -23,6 +23,8 @@ Any script needing those have to use the `maven:load` macro to load the modules.
 
 * when you specify a range, like in the macro `include` option `lines` you can use `inf` or `infinity` to denote the infinity as the start or end of a range (case-insensitive).
 
+* docker is used to support integration level tests, especially the access control check of the configuration needed by the macro `maven:load`.
+
 {%RELEASE/1.12.6%}
 There is a new macro library `prog` that implements a simple BASIC like programming language.
 

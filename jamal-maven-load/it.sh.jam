@@ -41,3 +41,11 @@ fi〗\
 〖Configure/0770/Not〗
 〖Configure/0700/〗
 〖Configure/0500/〗
+cd ..
+chmod 0700 jamal.sh〖@define POMOUT=pom.test.xml〗
+./jamal.sh pom.jam 〖POMOUT〗
+if [ `diff -b 〖POMOUT〗 pom.xml`] ;then
+  echo "Jamal via SHELL created different output"
+  diff -b 〖POMOUT〗 pom.xml
+  exit 1
+fi
