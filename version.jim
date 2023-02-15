@@ -60,6 +60,7 @@ LEVENSHTEIN_VERSION=1.0.0                  -- https://repo.maven.apache.org/mave
                                            -- to ease the version maintenance when upgrading to new version here are the repo URLs
 -- plugin dependencies
 MAVEN_COMPILER_PLUGIN_VERSION=3.10.1       -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin
+--- failing release
 MAVEN_JAVADOC_PLUGIN_VERSION=3.5.0         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
 MAVEN_GPG_PLUGIN_VERSION=3.0.1             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/
 MAVEN_ASSEMBLY_PLUGIN_VERSION=3.4.2        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/
