@@ -1,4 +1,4 @@
-{@sep 〔〕}\
+{@sep 〖〗}\
 #!/bin/sh
 
 echo Integration test starts
@@ -7,15 +7,15 @@ mkdir -p .m2/repository
 git clone https://github.com/verhas/jamal.git
 cd jamal
 mvn clean install
-echo <<MESSAGE_END
+echo <<EOT
 
 +-----------------------------------------------------------------------------------------------------------------------
 BUILD HAS FINISHED
 
 INTEGRATION TESTS START...
 +-----------------------------------------------------------------------------------------------------------------------
-MESSAGE_END
+EOT
 
 cd jamal-maven-load
 mkdir -p ~/.jamal
-〔@include jamal-maven-load/it.sh.jam〕
+〖@include [lines=3..inf] ../../jamal-maven-load/it.sh.jam〗

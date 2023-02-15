@@ -1,5 +1,10 @@
-{@sep 〔 〕}\
+{@comment}\
 #!/bin/sh
+{@sep 〖 〗}\
+〖@comment this file is included by $PROJECTHOME/jamal-maven-load/integration-test.jam
+The first two lines of this file is skipped by the include.
+It is important not to insert anything before those lines or modify the include 'lines=3..' parameter.
+〗\
 
 echo "
 testproperty=Peter Verhas' macbook
@@ -11,20 +16,28 @@ maven.load.local=.m2/repository
 maven.load.include=com.javax0.jamal:jamal-test:*
 maven.load.exclude=.com.javax0.jamal:jamal-api:*" >~/.jamal/settings.properties
 
-〔@define Configure($CHMOD,$NOT)=echo "chmod $CHMOD settings.properties"
-chmod u+rx ~/.jamal
+〖@define Configure($CHMOD,$NOT)=echo "chmod $CHMOD settings.properties"
+chmod 0500 ~/.jamal
 chmod $CHMOD ~/.jamal/settings.properties
-mvn test -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure〕\
-〔Configure/0777/Not〕
-〔Configure/0707/Not〕
-〔Configure/0770/Not〕
-〔Configure/0700/Not〕
-〔Configure/0600/〕
-〔@define Configure($CHMOD,$NOT)=echo "chmod $CHMOD ~/.jamal"
+mvn test -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure
+if [ "$?" -ne "0" ]; then
+echo "TEST Integration_Configuration$NOTSecure FAILED with chmod $CHMOD ~/.jamal/settings.properties"
+exit 1
+fi〗\
+〖Configure/0777/Not〗
+〖Configure/0707/Not〗
+〖Configure/0770/Not〗
+〖Configure/0700/Not〗
+〖Configure/0600/〗
+〖@define Configure($CHMOD,$NOT)=echo "chmod $CHMOD ~/.jamal"
 chmod $CHMOD ~/.jamal
-mvn test -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure〕\
-〔Configure/0777/Not〕
-〔Configure/0707/Not〕
-〔Configure/0770/Not〕
-〔Configure/0700/〕
-〔Configure/0500/〕
+mvn test -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure
+if [ "$?" -ne "0" ]; then
+echo "TEST Integration_Configuration$NOTSecure FAILED with chmod $CHMOD ~/.jamal"
+exit 1
+fi〗\
+〖Configure/0777/Not〗
+〖Configure/0707/Not〗
+〖Configure/0770/Not〗
+〖Configure/0700/〗
+〖Configure/0500/〗

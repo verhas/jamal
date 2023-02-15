@@ -21,6 +21,8 @@ Any script needing those have to use the `maven:load` macro to load the modules.
 
 * Core macro include also uses the `{` and `}` characters to delimit the macro when the included file starts with `{@`.
 
+* when you specify a range, like in the macro `include` option `lines` you can use `inf` or `infinity` to denote the infinity as the start or end of a range (case-insensitive).
+
 {%RELEASE/1.12.6%}
 There is a new macro library `prog` that implements a simple BASIC like programming language.
 

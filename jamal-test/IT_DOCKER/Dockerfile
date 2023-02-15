@@ -1,11 +1,6 @@
 FROM alpine
 RUN apk update
-RUN apk add --no-cache openjdk17
-RUN apk add --no-cache maven
-RUN apk add --no-cache graphviz
-RUN apk add --no-cache git
-RUN apk add --no-cache fontconfig
-RUN apk add --no-cache ttf-droid
+RUN apk add --no-cache openjdk17 maven graphviz git fontconfig ttf-droid
 RUN addgroup TESTGROUP
 RUN adduser -G TESTGROUP -D -s /bin/bash jamal
 

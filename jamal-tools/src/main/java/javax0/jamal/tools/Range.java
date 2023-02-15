@@ -86,18 +86,26 @@ public class Range {
             if (startStop.length == 1) {
                 startStop = new String[]{range, range};
             }
-            BadSyntax.when(startStop.length != 2,  "The line range %s is not valid", range);
+            BadSyntax.when(startStop.length != 2, "The line range %s is not valid", range);
             final int to, from;
             try {
-                from = Integer.parseInt(startStop[0].trim());
-                to = Integer.parseInt(startStop[1].trim());
+                from = str2int(startStop[0]);
+                to = str2int(startStop[1]);
             } catch (NumberFormatException nfe) {
                 throw new BadSyntax("The line range " + range + " is not valid");
             }
-            BadSyntax.when(from == 0 || to == 0 || from == -n || to == -n,  "The line range %s is not valid", range);
+            BadSyntax.when(from == 0 || to == 0 || from == -n || to == -n, "The line range %s is not valid", range);
             ranges.add(range(correct(from, n), correct(to, n)));
         }
         return ranges;
+    }
+
+    private static int str2int(final String s) {
+        final var t = s.trim();
+        if (t.equalsIgnoreCase("inf") || t.equalsIgnoreCase("infinity")) {
+            return Integer.MAX_VALUE;
+        }
+        return Integer.parseInt(t);
     }
 
     private static int correct(final int from, final int n) {
