@@ -1,0 +1,58 @@
+{@comment}
+# Integration Tests using Docker
+
+This directory contains the integration tests.
+Integration tests are executed using Docker containers.
+{@define I13T={@file (format=`$name`) integrationtest}}\
+{@define I13TJAM={@file (format=`$name`) integrationtest.jam}}\
+{@define Dockerfile={@file (format=`$simpleName`) Dockerfile}}\
+{@define test_sh={@file (format=`$simpleName`) test.sh}}\
+
+The shell script {I13T} is created from the source {I13TJAM}.
+
+Some integration tests are included from other subprojects from {@file (format=`$simpleName`)../../jamal-maven-load/it.sh} files.
+Those files are developed testing their functionality locally on the development machine.
+When they work they are included into the top level {I13TJAM} file.
+
+{@define LEVEL=2}{@define C($X)={@do
+for i=1 to LEVEL
+<< "#"
+next} $X}{@define DOWN={@do
+LEVEL=LEVEL+1}}{@define UP={@do
+LEVEL=LEVEL-1}}\
+
+{C Executing the integration tests}
+
+The tests can be created and executed using the {test_sh} script.
+The script will build the Docker image and run the tests.
+
+Prerequisites:
+
+* Docker must be installed and running.
+
+* The script must be executed from the directory containing the {I13T} and the {Dockerfile}.
+
+* The docker instance running should have internet connection
+
+ ** to GitHub for cloning Jamal source
+
+ ** Maven central for building Jamal
+
+{C Integration tests implemented}
+{DOWN}
+{C Basic Maven Compilation}
+
+The first step is to build Maven.
+Because the container does not have a local repo it will provide a fresh build downloading all dependencies from central.
+
+{C Setting Security}
+
+When the macro `maven:load` is used, it requires that the configuration in `~/jamal` is secure.
+It must not be read or modified by other users.
+The test sets the file permissions to the directory and the configuration file in different ways and runs tests.
+
+{C Command Line execution}
+
+The test runs the command line tool `jamal` with different parameters.
+{UP}
+

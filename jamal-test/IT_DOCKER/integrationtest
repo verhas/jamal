@@ -15,8 +15,10 @@ INTEGRATION TESTS START...
 +-----------------------------------------------------------------------------------------------------------------------
 EOT
 
-cd jamal-maven-load
 mkdir -p ~/.jamal
+chmod 0700 ~/jamal/jamal.sh
+
+cd jamal-maven-load
 
 echo "
 testproperty=Peter Verhas' macbook
@@ -102,4 +104,12 @@ mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 if [ "$?" -ne "0" ]; then
 echo "TEST Integration_ConfigurationSecure FAILED with chmod 0500 ~/.jamal"
 exit 1
+fi
+
+cd ../jamal-test/IT_DOCKER
+./jamal.sh ../../pom.jam pom.test.xml
+if [ $(diff -b pom.test.xml pom.xml) ] ;then
+  echo "Jamal via SHELL created different output"
+  diff -b pom.test.xml ../../pom.xml
+  exit 1
 fi

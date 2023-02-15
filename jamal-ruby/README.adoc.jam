@@ -1,5 +1,5 @@
 {%@comment off %}\
-{%@comment this file is converted using runtime information from the module and therefore it cannot be processed by the asciidoctor plugin: off, as above%}\
+{%@comment this file is converted using runtime information from the module, and therefore it cannot be processed by the asciidoctor plugin: off, as above%}\
 = Jamal Ruby integration module
 {%@import res:jamal.jim%}\
 {%@snip:collect from="src/test/java/"%}\

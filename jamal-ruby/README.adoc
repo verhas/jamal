@@ -1,28 +1,49 @@
+[WARNING]
+--
+* There were 2 syntax errors processing the Jamal input:
+* 1. There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17
+* 2. There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8
+--
+[WARNING]
+--
+* There were 2 syntax errors processing the Jamal input:
+* 1. There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17
+* 2. There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8
+--
+{%@comment of %}\
+{%@comment this file is converted using runtime information from the module, and therefore it cannot be processed by the asciidoctor plugin: off, as above%}\
 = Jamal Ruby integration module
+{%@import res:jamal.jim%}\
+{%@snip:collect from="src/test/java/"%}\
+{%@snip:collect from="src/main/java/"%}\
+{%@snip:collect from="../jamal-snippet/src/test/java/javax0/jamal/documentation"%}\
 
-
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}
 
 Using this integration module, you can mix Jamal macro text with Ruby code snippets.
 To use this module, you have to add the dependency to your Maven project, as:
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
 
 [source,xml]
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-ruby</artifactId>
-    <version>1.12.7-SNAPSHOT</version>
+    <version>{%VERSION%}</version>
 </dependency>
 
 ----
  Following that you can use the macros
+{%@ruby:property $chapters = 0%}{%@comment count the chapters and then we can use this in the text where we says how mny macros are there%}
+{%@define chap($x)=. <<$x,`ruby:$x`>> {%@ruby:import
+$chapters++%}%}
 
-
-
-. <<eval,`ruby:eval`>> 
-. <<import,`ruby:import`>> 
-. <<shell,`ruby:shell`>> 
-. <<property,`ruby:property`>> 
-. <<closer,`ruby:closer`>> 
+{%chap eval%}
+{%chap import%}
+{%chap shell%}
+{%chap property%}
+{%chap closer%}{%#define chapNR={%@ruby:eval $chapters%}%}
 
 macros.
 
@@ -41,7 +62,7 @@ Instead, Ruby scripts perform the tasks, eliminating the need to write a separat
 
 The chapter <<Sample,Sample>> describes this process as a non-trivial example for using the Ruby engine.
 
-The package defines 0 macros.
+The package defines {%chapNR%} macros.
 
 The macro `ruby:eval` evaluates a simple expression.
 `ruby:import` can import Ruby code.
@@ -51,34 +72,28 @@ Finally, `ruby:closer` makes it possible to implement closer scripts.
 
 The different macros use Ruby `ScriptingContainer` objects to execute the Ruby scripts.
 These container objects are automatically created and named.
-Their use is detailed in the chapter <<ShellObjects,Using Multiple Container Objects>>.
+{%@define ShellObjects=ShellObjects%}{%@define ShellObjectsTitle=Using Multiple Container Objects%}\
+Their use is detailed in the chapter <<{%ShellObjects%},{%ShellObjectsTitle%}>>.
 If you do not want to use multiple, separated Ruby containers, you do not need to worry about the container objects.
 Jamal will create one upon using one of the Ruby macros and utilize it throughout the Jamal file.
 
+{%@define chap($x)=[[$x]]
+==== {%macroChapter%}`ruby:$x`
+%}
 
-
-[[eval]]
-==== i. `ruby:eval`
-
+{%chap eval%}
 
 The macro `ruby:eval` uses its whole input as a ruby expression and evaluates it.
 For example the following macro call:
-[source]
-----
+{%sample/
 {@ruby:eval 1+1}
-----
+%}
 
 will result:
 
-[source]
-----
-2
-----
+{%output%}
 
-
-[[import]]
-==== ii. `ruby:import`
-
+{%chap import%}
 
 This macro can import a Ruby file into the shell.
 The macro has two forms:
@@ -114,9 +129,7 @@ It will result in an empty string, the macro `ruby:import` results.
 
 Use `ruby:import` if you do not want to include the result of the script into your output or if the script is in a separate Ruby file.
 
-[[shell]]
-==== iii. `ruby:shell`
-
+{%chap shell%}
 
 You can execute a script using `ruby:shell` and get the result as a string into the Jamal output.
 The format of the macro is
@@ -138,9 +151,7 @@ Using `something.rb` is just a good convention that you may like to follow.
 The `script content` will be evaluated, and the final result will be the result of the macro.
 Use this macro if your script is longer and not just a simple one-liner, in which case you can use the macro `ruby:eval`.
 
-[[property]]
-==== iv. `ruby:property`
-
+{%chap property%}
 
 This macro sets and gets Ruby variables.
 Ruby containers can communicate with the embedding application, which is Jamal in our case.
@@ -148,47 +159,35 @@ The embedding application can set and get variables of the Ruby script.
 
 For example, the following sample
 
-[source]
-----
+{%sample/
 {@ruby:property $myProp=(to_i)55}
 {@ruby:eval $myProp+45}
-----
+%}
 
 and it will result
 
-[source]
-----
-100
-----
-
+{%output%}
 
 You can also fetch the value of a variable set before by the Ruby script or by the `ruby:property` macro:
 
 
-[source]
-----
+{%sample/
 {@ruby:eval $yourProp=133}
 {@ruby:property $yourProp}
-----
+%}
 
 will result
 
-[source]
-----
-133
-133
-----
-
+{%output%}
 
 once by the result of the `ruby:eval` and once as the `ruby:property` also fetched this value.
 
 Setting the value, you can specify the type of the property.
 In the sample above we wrote
 
-[source]
-----
+{%sample/
 {@ruby:property $myProp=(to_i)55}
-----
+%}
 
 In that code `(to_i)` is a conversion and the `ruby:property` macro will evaluate, and act upon it.
 The `(tp_i)` converts the text following it to a Fixnum value.
@@ -221,51 +220,34 @@ It may also happen that you want to pass a *string* that starts with the charact
 
 Some examples:
 
-[source]
-----
+{%sample/
 {@ruby:property complex=(to_c)66+13i}
 {@ruby:eval complex * complex}
-----
+%}
 
 will result
 
-[source]
-----
-4187.0+1716.0i
-----
+{%output%}
 
-
-[source]
-----
+{%sample/
 {@ruby:property complex=(to_c/i)66+13i}
 {@ruby:eval complex * complex}
-----
+%}
 
 will result
 
-[source]
-----
-4187+1716i
-----
+{%output%}
 
-
-[source]
-----
+{%sample/
 {@ruby:property ratio=(to_r)66/13}
 {@ruby:eval ratio * ratio}
-----
+%}
 
 will result
 
-[source]
-----
-4356/169
-----
+{%output%}
 
-
-[[closer]]
-==== v. `ruby:closer`
-
+{%chap closer%}
 
 Using the macro `ruby:closer`, you can create a so-called closer script.
 You can use the script to modify the whole output after the processing of Jamal has finished.
@@ -288,25 +270,22 @@ The closer script should result in a string that will replace the original resul
 You can specify any number of closer scripts using different or the same Ruby shell.
 Jamal will invoke all scripts one after the other in the order they were defined in the Jamal source.
 
-[source]
-----
+{%sample/
 Hi, I am the content of the Jamal file.
 {@ruby:closer "I do not care what the original text was, replace it with this one."}
 The closer will kill me.
-----
+%}
 
 will result
 
-[source]
-----
-I do not care what the original text was, replace it with this one.
-----
+{%output%}
 
+[[{%ShellObjects%}]]
+=== {%ShellObjectsTitle%}
+{%#define defaultShellName={%@snip defaultShellName /"(.*)"/%}%}\
+{%#define shellNamingMacro={%@snip shellNamingMacro /"(.*)"/%}%}\
 
-[[ShellObjects]]
-=== Using Multiple Container Objects
-
-If you do not specify any shell object, it will be created automatically using the name `:ruby_shell`.
+If you do not specify any shell object, it will be created automatically using the name `{%defaultShellName%}`.
 
 Jamal stores Ruby shell objects along with the user-defined macros.
 It has two consequences.
@@ -321,29 +300,28 @@ It is a feature to ease the use of the Ruby shells when you have only one.
 It will be created and be available everywhere in the Jamal file, even if the first use of Ruby was in a local scope.
 
 You can overwrite the name of the shell, defining the user-defined macro
-`rubyShell`, or using the macro option of the same name or the alias `shell`.
+`{%shellNamingMacro%}`, or using the macro option of the same name or the alias `shell`.
 
 It can be done using the usual built-in macro `define`, as in the example
-
-[source]
-----
+{%@define myLocalShell=myLocalShell%}
+{%#comment
+we need this here, to be safe
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}\
+{%sample/
 {@ruby:eval $z = 13}
-{@define rubyShell=myLocalShell}
+{@define {%shellNamingMacro%}={%myLocalShell%}}
 {@ruby:eval $z}
-----
+%}
 
 will result in the output:
 
-[source]
-----
-13
+{%output%}
 
-null
-----
-
-
-The reason for this is that the first evaluation is executed in a shell named `:ruby_shell`.
-The second evaluation, however, runs in a different shell, named `myLocalShell`.
+The reason for this is that the first evaluation is executed in a shell named `{%defaultShellName%}`.
+The second evaluation, however, runs in a different shell, named `{%myLocalShell%}`.
 
 [NOTE]
 ====
@@ -357,214 +335,93 @@ On the other hand, using `{@try...}` will pass the content unevaluated, and the 
 It is not Ruby module specific; however, it is a widespread mistake, hence described here.
 ====
 
-There is a resource file named `ruby.jim`.
+There is a resource file named {%#file {%@define fileFormat=`$name`%}{%@define root=src/main/resources/%}ruby.jim%}.
 You can import this file and then use the macros defined in it.
 The previous example will look the following:
 
+{%#comment
+we need this here because all samples run in the same processor, and we renamed the shell
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}
 
-
-[source]
-----
+{%sample/
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
-{shell=myLocalShell}
+{shell={%myLocalShell%}}
 {@ruby:eval $z}
-----
+%}
 
 will result in the output:
 
-[source]
-----
-13
-
-null
-----
-
+{%output%}
 
 It is the same as the previous one, not surprisingly.
 
-All Ruby macros are link:../GLOSSARY.adoc[inner scope dependent], which means that you can define the macro `rubyShell` inside the Ruby macro call.
+All Ruby macros are link:../GLOSSARY.adoc[inner scope dependent], which means that you can define the macro `{%shellNamingMacro%}` inside the Ruby macro call.
 In that case, the definition following the Jamal rules will be local to the Ruby macro.
 
 For example
+{%#comment
+we need this here because all samples run in the same processor, and we renamed the shell
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}
 
-
-[source]
-----
+{%sample/
 {@import res:ruby.jim}
 {@ruby:eval $z = 13}
-{#ruby:eval {shell=myLocalShell}$z}
+{#ruby:eval {shell={%myLocalShell%}}$z}
 {@ruby:eval $z = 13}
-----
+%}
 
 will result in the output:
 
-[source]
-----
-13
-null
-13
-----
-
+{%output%}
 
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `ruby:eval`.
 (What is more, it is local to the `try` macro.)
 
 The last example can also be written as
 
+{%#comment
+we need this here because all samples run in the same processor, and we renamed the shell
+{%sample/
+{@undefine {%shellNamingMacro%}}
+%}{%output%}
+%}
 
-
-[source]
-----
+{%sample/
 {@ruby:eval $z = 13}
-{#ruby:eval (shell=myLocalShell)$z}
+{#ruby:eval (shell={%myLocalShell%})$z}
 {@ruby:eval $z = 13}
-----
+%}
 
 will result in the same output:
 
-[source]
-----
-13
-null
-13
-----
-
+{%output%}
 
 [[Sample]]
 === Sample Application, Converting this `README.adoc`
 
-
-
-In this chapter, I will tell the story and the technology used to maintain this documentation file.
-Several macros are used during the maintenance of the documentation to ensure that the documentation is correct and up-to-date.
-This particular document's processing uses Ruby scripts, which are used instead of some built-in macros for demonstration purposes.
-
-
-The documentation of Jamal is a series of Asciidoc files.
-The Asciidoc format was invented to be a documentation source format that is easy to read and edit.
-At the same time, Jamal can also convert it to many different output formats.
-Asciidoc, however, provides only limited possibility to eliminate redundancy and to ensure consistency.
-This is where Jamal comes into play.
-
-Jamal's documentation is maintained in `xxx.adoc.jam` files, and they are converted to `xxx.adoc` files.
-With this workflow, the Asciidoc files are not source files.
-They are intermediate files along the conversion path.
-Jamal `define` macros are used to eliminate text repetition, redundancy whenever it is possible.
-The Jamal snippet library macros are used to keep the sample codes included in the document up-to-date.
-
-[NOTE]
-====
-When reading this part of the documentation, you are probably familiar with the basic functionalities of Jamal.
-If you need to refresh the memory, then read the link:README.adoc[documentation] in the project's root folder.
-Snippet macros are documented in the link:jamal-snippet/README.adoc[Snippet README.adoc] file.
-It is unnecessary to know and understand how the snippet macros work to read this chapter, but it is a recommended read in general.
-====
-
-Technical documentation using Jamal and the snippet macros usually generates the documentation in multiple steps.
-
-* Run the tests, including the sample code, and capture the sample output in one or more output files.
-
-* Process the Jamal source of the documentation and include from the source code and the generated sample output files the samples.
-
-For example, a Java application can support the documentation with unit test samples.
-Some of the unit tests serve the purpose of testing only, while others are there to document specific code parts.
-The output of the documentation purposed tests is captured into output files.
-The test file `jamal-ruby/src/test/java/javax0/jamal/ruby/TestRubyMacros.java` contains
+{%@define $lang=ruby%}
+{%@define $Lang=Ruby%}
+{%@include ../scriptingReadme.adoc.jim%}
 
 [source,java]
 ----
-// snippet sample_snippet
-@Test
-@DisplayName("Test that ruby conversion to fixnum works")
-void testRubyPropertyFixNum() throws Exception {
-    TestThat.theInput(
-        "{%@define rubyShell=wuff%}" +
-            "{%@ruby:property int=(to_i)5%}" +
-            "{%@ruby:shell\n" +
-            "  (int*int)\n" +
-            "%}"
-    ).usingTheSeparators("{%", "%}").results("25");
-}
-
-// end snippet
-----
-To get this content into the document what we have to write is the following:
-
-
-        [source,java]
-        ----
-        // snippet sample_snippet
-        {%@snip sample_snippet %}\
-        // end snippet
-        ----
-
-
-The output generated (none in this case) can also be included using the `snip` macro.
-
-It is logical to run the tests and generate the test output in an initial step in the case of Java.
-However, when we test and document Jamal processing, it is a logical idea to use the Jamal environment, which is converting the documentation.
-The external approach with an initial step is also possible, but it is not needed.
-
-The sample Jamal code can be included in the documentation as a code sample.
-Using Jamal macros, Jamal can also convert it to the corresponding output, which can also be included in the resulting document without saving it into an intermediate file.
-
-To do that, the Jamal Snippet package unit test file
-`jamal-snippet/src/test/java/javax0/jamal/documentation/TestConvertReadme.java`
-uses a built-in macro, implemented in the file:
-
-* `jamal-snippet/src/test/java/javax0/jamal/documentation/Output.java`
-
-This Java implemented macro is available on the classpath when the unit test runs.
-
-[NOTE]
-====
-Executing the Jamal processing of a Java software package documentation via the unit tests has other advantages.
-The macros `java:class` and `java:method` can check that the class and method names referenced in the document are valid.
-Class and method names may change during refactoring.
-The documentation many times does not follow this change and becomes stale.
-When the classes and methods are referenced using these macros, they throw an exception if the class or method does not exist.
-====
-
-This class is very simple:
-
-[source,java]
-----
-public class Output implements Macro {
-    final Processor localProc = new javax0.jamal.engine.Processor("{", "}");
-
-    @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
-        return localProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
-    }
-}
-----
-
-It creates a single Jamal processor instance and uses it to evaluate the input passed to it.
-This macro runs a Jamal processor separate from the Jamal processor that is converting the document.
-However, the two Jamal processors run in the same JVM, and one is invoking the other through this built-in macro.
-
-To simplify the use, there is a `readmemacros.jim` macro import file that defines the user-defined macro `sample` and `output`.
-(A built-in macro can have the same name as a user-defined.)
-The macro `sample` results in its content in Asciidoc code sample format, adding `[source]\n----` before and `----` after the sample code.
-At the same time, it also saves the sample code in a user-defined variable called `lastCode`.
-The macro `output` uses the `lastCode` and using the built-in `output` from the `Output.java` displays the calculated result as a code block.
-
-It is very similar when we are using Ruby, but in this case, we do not need the built-in macro `output`.
-When Jamal converts this document, the readmemacros.jim` inside the `jamal-ruby` directory contains some Ruby scripts instead of the built-in macros.
-
-The unit test code that invokes the Jamal processor to convert this document is the following:
-
-
-
-[source,java]
-----
-final var processor = new Processor("{%", "%}");
-final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
-final var shell = Shell.getShell(processor, Shell.DEFAULT_RUBY_SHELL_NAME);
-shell.property("$processor", new MyProcessor());
-processor.defineGlobal(shell);
-final var result = processor.process(in);
+{%#trimLines
+{%@snip Ruby_Jamal_Doc_Execution
+        final var processor = new Processor("{%", "%}");
+        final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
+        final var shell = Shell.getShell(processor, Shell.DEFAULT_RUBY_SHELL_NAME);
+        shell.property("$processor", new MyProcessor());
+        processor.defineGlobal(shell);
+        final var result = processor.process(in);
+%}
+%}
 ----
 It is almost a standard invocation of the Jamal processor.
 The only difference is that it creates a Ruby container using the default container name and injects a Jamal `MyProcessor` instance into the container with the name `$processor`.
@@ -574,39 +431,31 @@ The `MyProcessor` class is an inner class inside the test class, and it reads as
 
 [source,java]
 ----
-public static class MyProcessor {
-    final Processor processor = new Processor("{", "}");
+{%#trimLines
+{%@snip MyProcessor
+    public static class MyProcessor {
+        final Processor processor = new Processor("{", "}");
 
-    public String process(String s) throws BadSyntax {
-        return processor.process(Input.makeInput(s));
+        public String process(String s) throws BadSyntax {
+            return processor.process(Input.makeInput(s));
+        }
     }
-}
+%}
+%}
 ----
 
-This class is a wrapper, that provides the method `process()` with a string argument.
+This class is a wrapper, that provides the method `{%@java:method javax0.jamal.ruby.TestConvertRubyReadme$MyProcessor#process%}()` with a string argument.
 It can directly be invoked from Ruby.
 
 Using this possibility the user defined macros `sample` and `output` are simply the following:
-
+{%@snip:collect from="readmemacros.jim"%}
 
 * `sample`
 
 [source]
 ----
-    {%@define sample(code)=[source]
-    ----
-    {%#trimLines
-    {%@ruby:property $lastCode=(to_s)code%}{%@ruby:shell
-    while $lastCode.length > 0 and $lastCode[0] == '\n'
-        $lastCode = $lastCode[1..-1]
-    end
-    while $lastCode.length > 0 and $lastCode[$lastCode.length-1] == '\n'
-        $lastCode = $lastCode[0..-2]
-    end
-    $lastCode
-    %}%}
-    ----%}
-    
+{%#replaceLines replace="/^(.*)$/    $1/"
+{%@snip Ruby_sample_user_defined_macro%}%}
 ----
 
 This macro saves the sample code to the global Ruby variable `$lastCode calling the macro `ruby:property`.
@@ -617,14 +466,8 @@ Finally, the script returns the resulted string, which is placed between the Asc
 
 [source]
 ----
-    {%@define output=[source]
-    ----
-    {%#trimLines
-    {%#ruby:shell
-    $processor.process($lastCode)%}%}
-    ----
-    %}
-    
+{%#replaceLines replace="/^(.*)$/    $1/"
+{%@snip Ruby_output_user_defined_macro%}%}
 ----
 
 This macro uses the saved property `lastCode` to access the text of the last sample.
@@ -632,13 +475,249 @@ It invokes the processor to process it.
 The result value of the macro is the output of the processor.
 
 This chapter discussed how documentation should be "programs" to avoid redundancy in the source and to support consistency.
-After that, we made a short detour discussing the Jamal snippets, which have complete documentation in the file link:../jamal-snippet/README.adoc[Snippet README].
+After that, we made a short detour discussing the Jamal snippets, which have complete documentation in the file link:{%@file ../jamal-snippet/README.adoc%}[Snippet README].
 We also discussed how the documentation conversion works with snippets and Jamal samples in the Snippet module.
 Finally, we had a look at how simpler it is using the Ruby integration.
 
 NOTE: We copied none of the sample codes manually in the source `README.adoc.jam`.
 
 It demonstrates the power and flexibility of Jamal enhanced with the Ruby integration.
-If you like the idea, but Ruby is not your favorite scripting language, have a look at the link:../jamal-groovy/README.adoc[Groovy Integration] documentation and give it a try.
+If you like the idea, but Ruby is not your favorite scripting language, have a look at the link:{%@file ../jamal-groovy/README.adoc%}[Groovy Integration] documentation and give it a try.
 
+{%@snip:update%}
+[WARNING]
+--
+* There were 2 syntax errors processing the Jamal input:
+* 1. There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17
+* 2. There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8
+--
+[source]
+----
+There were 2 syntax errors processing the Jamal input:
+1. There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17
+2. There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8
 
+javax0.jamal.api.BadSyntax: There were 2 syntax errors processing the Jamal input:
+1. There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17
+2. There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8
+
+	at javax0.jamal.engine.Processor.closeProcess(Processor.java:907)
+	at javax0.jamal.engine.Processor.process(Processor.java:183)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:338)
+	at javax0.jamal.asciidoc.JamalPreprocessor.runJamalInProcess(JamalPreprocessor.java:201)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:132)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy.process(PreprocessorProxy.java:94)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy$INVOKER$i$2$0$process.call(PreprocessorProxy$INVOKER$i$2$0$process.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodTwoOrN.call(JavaMethod.java:1035)
+	at org.jruby.RubyMethod.call(RubyMethod.java:124)
+	at org.jruby.RubyMethod$INVOKER$i$call.call(RubyMethod$INVOKER$i$call.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrOneOrTwoOrNBlock.call(JavaMethod.java:376)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther2:\=\{\}(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$block$parse$1(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
+	at org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
+	at org.jruby.runtime.Block.yield(Block.java:188)
+	at org.jruby.RubyArray.each(RubyArray.java:1865)
+	at org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:152)
+	at org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:161)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther24:each(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$method$parse$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:149)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:148)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:210)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:142)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.invokeOther83:parse(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.RUBY$method$load$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:175)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:222)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:226)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.invokeOther34:load(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.RUBY$method$convert$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:112)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:192)
+	at org.jruby.RubyClass.finvoke(RubyClass.java:784)
+	at org.jruby.runtime.Helpers.invoke(Helpers.java:661)
+	at org.jruby.RubyBasicObject.callMethod(RubyBasicObject.java:370)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:311)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:336)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:331)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:816)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:782)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:771)
+	at org.asciidoc.intellij.editor.AsciiDocPreviewEditor.lambda$render$0(AsciiDocPreviewEditor.java:149)
+	at org.asciidoc.intellij.editor.LazyApplicationPoolExecutor.lambda$execute$0(LazyApplicationPoolExecutor.java:66)
+	at com.intellij.openapi.application.impl.ApplicationImpl$1.run(ApplicationImpl.java:246)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:702)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:699)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1.run(Executors.java:699)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+	Suppressed: javax0.jamal.api.BadSyntaxAt: There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17
+		at javax0.jamal.api.BadSyntaxAt.when(BadSyntaxAt.java:92)
+		at javax0.jamal.engine.util.MacroQualifier.getMacro(MacroQualifier.java:79)
+		at javax0.jamal.engine.util.MacroQualifier.<init>(MacroQualifier.java:50)
+		at javax0.jamal.engine.Processor.processMacro(Processor.java:249)
+		at javax0.jamal.engine.Processor.process(Processor.java:169)
+		... 59 more
+	Suppressed: javax0.jamal.api.BadSyntaxAt: There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8
+		at javax0.jamal.api.BadSyntaxAt.when(BadSyntaxAt.java:92)
+		at javax0.jamal.engine.util.MacroQualifier.getMacro(MacroQualifier.java:79)
+		at javax0.jamal.engine.util.MacroQualifier.<init>(MacroQualifier.java:50)
+		at javax0.jamal.engine.Processor.processMacro(Processor.java:249)
+		at javax0.jamal.engine.Processor.process(Processor.java:169)
+		at javax0.jamal.engine.Processor.lambda$evaluateUserDefinedMacro$5(Processor.java:383)
+		at javax0.jamal.engine.Processor.safeEvaluate(Processor.java:401)
+		at javax0.jamal.engine.Processor.evaluateUserDefinedMacro(Processor.java:383)
+		at javax0.jamal.engine.Processor.evalMacro(Processor.java:371)
+		at javax0.jamal.engine.Processor.processMacro(Processor.java:262)
+		at javax0.jamal.engine.Processor.process(Processor.java:169)
+		... 59 more
+Suppressed exceptions:
+There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17javax0.jamal.api.BadSyntaxAt: There is no built-in macro with the id 'ruby:property' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/25:17
+	at javax0.jamal.api.BadSyntaxAt.when(BadSyntaxAt.java:92)
+	at javax0.jamal.engine.util.MacroQualifier.getMacro(MacroQualifier.java:79)
+	at javax0.jamal.engine.util.MacroQualifier.<init>(MacroQualifier.java:50)
+	at javax0.jamal.engine.Processor.processMacro(Processor.java:249)
+	at javax0.jamal.engine.Processor.process(Processor.java:169)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:338)
+	at javax0.jamal.asciidoc.JamalPreprocessor.runJamalInProcess(JamalPreprocessor.java:201)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:132)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy.process(PreprocessorProxy.java:94)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy$INVOKER$i$2$0$process.call(PreprocessorProxy$INVOKER$i$2$0$process.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodTwoOrN.call(JavaMethod.java:1035)
+	at org.jruby.RubyMethod.call(RubyMethod.java:124)
+	at org.jruby.RubyMethod$INVOKER$i$call.call(RubyMethod$INVOKER$i$call.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrOneOrTwoOrNBlock.call(JavaMethod.java:376)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther2:\=\{\}(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$block$parse$1(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
+	at org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
+	at org.jruby.runtime.Block.yield(Block.java:188)
+	at org.jruby.RubyArray.each(RubyArray.java:1865)
+	at org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:152)
+	at org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:161)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther24:each(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$method$parse$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:149)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:148)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:210)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:142)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.invokeOther83:parse(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.RUBY$method$load$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:175)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:222)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:226)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.invokeOther34:load(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.RUBY$method$convert$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:112)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:192)
+	at org.jruby.RubyClass.finvoke(RubyClass.java:784)
+	at org.jruby.runtime.Helpers.invoke(Helpers.java:661)
+	at org.jruby.RubyBasicObject.callMethod(RubyBasicObject.java:370)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:311)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:336)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:331)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:816)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:782)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:771)
+	at org.asciidoc.intellij.editor.AsciiDocPreviewEditor.lambda$render$0(AsciiDocPreviewEditor.java:149)
+	at org.asciidoc.intellij.editor.LazyApplicationPoolExecutor.lambda$execute$0(LazyApplicationPoolExecutor.java:66)
+	at com.intellij.openapi.application.impl.ApplicationImpl$1.run(ApplicationImpl.java:246)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:702)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:699)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1.run(Executors.java:699)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8javax0.jamal.api.BadSyntaxAt: There is no built-in macro with the id 'ruby:import' at /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:45 <<< /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam/29:8
+	at javax0.jamal.api.BadSyntaxAt.when(BadSyntaxAt.java:92)
+	at javax0.jamal.engine.util.MacroQualifier.getMacro(MacroQualifier.java:79)
+	at javax0.jamal.engine.util.MacroQualifier.<init>(MacroQualifier.java:50)
+	at javax0.jamal.engine.Processor.processMacro(Processor.java:249)
+	at javax0.jamal.engine.Processor.process(Processor.java:169)
+	at javax0.jamal.engine.Processor.lambda$evaluateUserDefinedMacro$5(Processor.java:383)
+	at javax0.jamal.engine.Processor.safeEvaluate(Processor.java:401)
+	at javax0.jamal.engine.Processor.evaluateUserDefinedMacro(Processor.java:383)
+	at javax0.jamal.engine.Processor.evalMacro(Processor.java:371)
+	at javax0.jamal.engine.Processor.processMacro(Processor.java:262)
+	at javax0.jamal.engine.Processor.process(Processor.java:169)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:338)
+	at javax0.jamal.asciidoc.JamalPreprocessor.runJamalInProcess(JamalPreprocessor.java:201)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:132)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy.process(PreprocessorProxy.java:94)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy$INVOKER$i$2$0$process.call(PreprocessorProxy$INVOKER$i$2$0$process.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodTwoOrN.call(JavaMethod.java:1035)
+	at org.jruby.RubyMethod.call(RubyMethod.java:124)
+	at org.jruby.RubyMethod$INVOKER$i$call.call(RubyMethod$INVOKER$i$call.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrOneOrTwoOrNBlock.call(JavaMethod.java:376)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther2:\=\{\}(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$block$parse$1(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
+	at org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
+	at org.jruby.runtime.Block.yield(Block.java:188)
+	at org.jruby.RubyArray.each(RubyArray.java:1865)
+	at org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:152)
+	at org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:161)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther24:each(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$method$parse$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:149)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:148)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:210)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:142)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.invokeOther83:parse(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.RUBY$method$load$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:175)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:222)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:226)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.invokeOther34:load(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.RUBY$method$convert$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:112)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:192)
+	at org.jruby.RubyClass.finvoke(RubyClass.java:784)
+	at org.jruby.runtime.Helpers.invoke(Helpers.java:661)
+	at org.jruby.RubyBasicObject.callMethod(RubyBasicObject.java:370)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:311)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:336)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:331)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:816)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:782)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:771)
+	at org.asciidoc.intellij.editor.AsciiDocPreviewEditor.lambda$render$0(AsciiDocPreviewEditor.java:149)
+	at org.asciidoc.intellij.editor.LazyApplicationPoolExecutor.lambda$execute$0(LazyApplicationPoolExecutor.java:66)
+	at com.intellij.openapi.application.impl.ApplicationImpl$1.run(ApplicationImpl.java:246)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:702)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:699)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1.run(Executors.java:699)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+sed -i jam '' /Users/verhasp/github/jamal/jamal-ruby/README.adoc.jam
+----

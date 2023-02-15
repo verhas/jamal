@@ -16,6 +16,16 @@ INTEGRATION TESTS START...
 +-----------------------------------------------------------------------------------------------------------------------
 EOT
 
-cd jamal-maven-load
 mkdir -p ~/.jamal
+chmod 0700 ~/jamal/jamal.sh
+〖@comment〗
+cd jamal-maven-load
 〖@include [lines=3..inf] ../../jamal-maven-load/it.sh.jam〗
+cd ../jamal-test/IT_DOCKER
+〖@define POMOUT=pom.test.xml〗\
+./jamal.sh ../../pom.jam 〖POMOUT〗
+if [ $(diff -b 〖POMOUT〗 pom.xml) ] ;then
+  echo "Jamal via SHELL created different output"
+  diff -b 〖POMOUT〗 ../../pom.xml
+  exit 1
+fi
