@@ -40,22 +40,6 @@ public class TestEnvironmentNoDebug {
                         "Execute the shell script ${projectRoot}/jamal-debug-ui/deployprod and git commit/push.");
     }
 
-    @Test
-    @DisplayName("EnvironmentVariables.getenv() reads the ~/.jamal/setting.properties file")
-    void testProperties() {
-        final var jamalDirectory = System.getProperty("user.home") + "/.jamal/";
-        final var jamalPFile = jamalDirectory + "settings.properties";
-        Assumptions.assumeTrue(new File(jamalPFile).exists());
-        final var EXPECTED = "Peter Verhas' macbook";
-        Assertions.assertEquals(EXPECTED, EnvironmentVariables.getenv("jamal.testproperty").orElse(null),
-                "When you compile Jamal if there is a ~/.jamal/settings.properties file it is read\n" +
-                        "and the value of the property 'testproperty' is used.\n" +
-                        "It has to be \"" + EXPECTED + "\"\n" +
-                        "You should delete the properties file, use settings.xml or set the property,\n" +
-                        "or disable this test,\n"+
-                        "or do not compile Jamal.");
-    }
-
     private static String backEndVersion() {
         final var version = new Properties();
         Processor.jamalVersion(version);

@@ -1,4 +1,4 @@
-{@comment@}#!/bin/sh
+#!/bin/sh
 export JAMAL=../../jamal.sh
 
 echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-ruby:1.12.6
