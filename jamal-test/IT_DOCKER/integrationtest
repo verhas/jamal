@@ -107,8 +107,8 @@ exit 1
 fi
 
 cd ../jamal-test/IT_DOCKER
-./jamal.sh ../../pom.jam pom.test.xml
-if [ $(diff -b pom.test.xml pom.xml) ] ;then
+../../jamal.sh ../../pom.jam pom.test.xml
+if [ $(diff -b pom.test.xml ../../pom.xml) ] ;then
   echo "Jamal via SHELL created different output"
   diff -b pom.test.xml ../../pom.xml
   exit 1

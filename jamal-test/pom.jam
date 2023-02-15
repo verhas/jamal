@@ -14,7 +14,11 @@
                           {opens/test/test.examples}
                           {opens/test/test.statecheck}
                           {opens/test/test.devpath}
-                          {opens/engine/engine}}
+                          {opens/engine/engine}
+                          {opens/engine/engine/jamal.snippet}
+                          {exports/test/test.core/jamal.core}
+                          {exports/test/test.examples/jamal.core}
+}
 
     {build {plugins  {@include ../plugins.jim}}}
 

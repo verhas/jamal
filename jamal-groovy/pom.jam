@@ -6,7 +6,9 @@
     {parent :{GROUPID}:jamal-parent}
     {description Groovy module for Jamal}
 
-    {@define openForTests={opens/groovy/groovy}}
+    {@define openForTests={opens/groovy/groovy}
+                        --add-reads jamal.groovy=jamal.engine
+}
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies

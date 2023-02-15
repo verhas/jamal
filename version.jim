@@ -59,40 +59,40 @@ LEVENSHTEIN_VERSION=1.0.0                  -- https://repo.maven.apache.org/mave
 
                                            -- to ease the version maintenance when upgrading to new version here are the repo URLs
 -- plugin dependencies
-MAVEN_COMPILER_PLUGIN_VERSION=3.9.0        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin
-MAVEN_JAVADOC_PLUGIN_VERSION=3.4.1         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
+MAVEN_COMPILER_PLUGIN_VERSION=3.10.1       -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin
+MAVEN_JAVADOC_PLUGIN_VERSION=3.5.0         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
 MAVEN_GPG_PLUGIN_VERSION=3.0.1             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/
-MAVEN_ASSEMBLY_PLUGIN_VERSION=3.3.0        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/
-MAVEN_PLUGIN_API=3.8.6                     -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/
-MAVEN_PLUGIN_ANNOTATIONS=3.6.4             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-annotations/
-MAVEN_PLUGIN_PLUGIN_VERSION=3.6.4          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin
+MAVEN_ASSEMBLY_PLUGIN_VERSION=3.4.2        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/
+MAVEN_PLUGIN_API=4.0.0-alpha-4             -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/
+MAVEN_PLUGIN_ANNOTATIONS=3.7.1             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-annotations/
+MAVEN_PLUGIN_PLUGIN_VERSION=3.7.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin
 SONATYPE_PLUGIN_VERSION=1.6.13             -- https://repo.maven.apache.org/maven2/org/sonatype/plugins/nexus-staging-maven-plugin
-SUREFIRE_PLUGIN_VERSION=3.0.0-M5           -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
+SUREFIRE_PLUGIN_VERSION=3.0.0-M9           -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
 MAVEN_SOURCE_PLUGIN_VERSION=3.2.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
 APPASSEMBLER_PLUGIN_VERSION=2.1.0          -- https://repo.maven.apache.org/maven2/org/codehaus/mojo/appassembler-maven-plugin
-MAVEN_DEPENDENCY_PLUGIN_VERSION=3.3.0      -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-dependency-plugin
+MAVEN_DEPENDENCY_PLUGIN_VERSION=3.5.0      -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-dependency-plugin
 
 -- test dependency
-JUPITER_VERSION=5.9.0                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
+JUPITER_VERSION=5.9.2                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-params
-MOCKITO_VERSION=4.6.1                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
+MOCKITO_VERSION=5.1.1                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 --dependencies needed for the Jamal libraries
 PLANTUML_VERSION=1.2023.1                  -- https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml
-JRUBY_VERSION=9.3.8.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
-GROOVY_VERSION=3.0.12                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
-OGNL_VERSION=3.3.2                         -- https://repo.maven.apache.org/maven2/ognl/ognl
+JRUBY_VERSION=9.4.1.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
+GROOVY_VERSION=3.0.15                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
+OGNL_VERSION=3.3.4                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=1.33                     -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
 FLEXMARK_VERSION=0.64.0                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
-APACHE_POI_VERSION=5.2.2                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
-ASCIIDOCTORJ_VERSION=2.5.4                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
+APACHE_POI_VERSION=5.2.3                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
+ASCIIDOCTORJ_VERSION=2.5.7                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
 JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
 MARKDOWN_TO_ASCIIDOC=2.0                   -- https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/
 MAVEN_DOWNLOADER=1.1.0                     -- https://repo.maven.apache.org/maven2/com/javax0/mavenDownload/mavenDownloader/
 SOURCE_BUDDY=2.2.0                         -- https://repo.maven.apache.org/maven2/com/javax0/sourcebuddy/SourceBuddy/
 
 -- dependencies needed for the Maven extension (not the plugin)
-MAVEN_CORE_VERSION=3.8.6                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
+MAVEN_CORE_VERSION=4.0.0-alpha-4           -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
 PLEXUS_COMPONENT_METADATA_VERSION=2.1.1    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata
 }

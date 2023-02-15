@@ -39,6 +39,9 @@
                           --add-opens jamal.test/javax0.jamal.test.statecheck=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.devpath=ALL-UNNAMED
                           --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
+                          --add-opens jamal.engine/javax0.jamal.engine=jamal.snippet
+                          --add-exports jamal.test/javax0.jamal.test.core=jamal.core
+                          --add-exports jamal.test/javax0.jamal.test.examples=jamal.core
             </argLine>
                 </configuration>
             </plugin>

@@ -32,6 +32,7 @@
                 --add-opens jamal.ruby/javax0.jamal.ruby=ALL-UNNAMED
                           --add-opens java.base/sun.nio.ch=org.jruby.complete
                           --add-opens java.base/java.io=org.jruby.complete
+                          --add-reads jamal.ruby=jamal.engine
             </argLine>
                 </configuration>
             </plugin>
@@ -68,19 +69,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.9.0</version>
+            <version>5.9.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.9.0</version>
+            <version>5.9.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jruby</groupId>
             <artifactId>jruby-complete</artifactId>
-            <version>9.3.8.0</version>
+            <version>9.4.1.0</version>
         </dependency>
     </dependencies>
 </project>
