@@ -151,4 +151,4 @@
         {end profile}
     }
 {end project}
-{@try{@xmlFormat}}
+{@xmlFormat}

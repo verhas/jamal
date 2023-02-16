@@ -24,4 +24,4 @@
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
 {end project}
-{@try{@xmlFormat}}
+{@xmlFormat}

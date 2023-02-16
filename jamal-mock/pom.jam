@@ -1,5 +1,5 @@
 {@comment noSave}
-{#import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
 {@import ../version.jim}
 {project jamal mock}

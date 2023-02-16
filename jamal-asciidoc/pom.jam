@@ -42,4 +42,4 @@
     {repositories{repository|jitpack|https://jitpack.io/}}
 
 {end project}
-{@try {@xmlFormat}}
+{@xmlFormat}

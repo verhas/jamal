@@ -21,3 +21,4 @@
         {dependency|net.sourceforge.plantuml|plantuml|{PLANTUML_VERSION}|}
     }
 {end project}
+{@xmlFormat}

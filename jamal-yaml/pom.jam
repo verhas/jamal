@@ -21,4 +21,4 @@
     }
 
 {end project}
-{@try{@xmlFormat}}
+{@xmlFormat}

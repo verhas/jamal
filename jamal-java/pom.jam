@@ -20,4 +20,4 @@
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
     }
 {end project}
-{@try{@xmlFormat}}
+{@xmlFormat}

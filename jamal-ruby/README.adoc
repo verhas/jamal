@@ -641,4 +641,26 @@ NOTE: We copied none of the sample codes manually in the source `README.adoc.jam
 It demonstrates the power and flexibility of Jamal enhanced with the Ruby integration.
 If you like the idea, but Ruby is not your favorite scripting language, have a look at the link:../jamal-groovy/README.adoc[Groovy Integration] documentation and give it a try.
 
+== Loading the macros
 
+Starting with the version `1.12.7` the library is not configured to be on the class path of the command line version or the Asciidoctor preprocessor.
+The reason is security.
+The interpreter, just as well as the Groovy and ScriptBasic interpreters, can execute arbitrary code.
+If you want to use the ScriptBasic interpreter you have to
+
+* modify the property `maven.load.include` and `maven.load.exclude` in the file `~/.jamal/settings.properties` to include the `ruby` module.
+For example:
+
+  maven.load.include=com.javax0.jamal:jamal-ruby:1.12.7-SNAPSHOT
+
+* add the line
+
+  {@maven:load com.javax0.jamal:jamal-ruby:1.12.7-SNAPSHOT}
++
+to the Jamal file where you want to use the ScriptBasic interpreter.
+
+* To include the resource file `ruby.jim` you have to add the line
+
+  {@import maven:com.javax0.jamal:jamal-ruby:1.12.7-SNAPSHOT::ruby.jim}
++
+instead importing it as a resource.
