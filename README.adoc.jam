@@ -3617,7 +3617,7 @@ It simply evaluates the result setting a flag that tells `escape*` that this tim
 ==== {%macroChapter%}`require`
 since 1.6.4
 
-Since Jamal has many different versions, there may be a need to stick to a specific version.
+Since Jamal has many versions, there may be a need to stick to a specific version.
 To do that, the built-in macro introduced in version 1.6.4 `require` can be used.
 The syntax of the macro is
 
@@ -3658,6 +3658,23 @@ You can specify only one version in a `require` macro.
 If you want to specify a minimum and a maximum version, you should use two `require` macros.
 
 Using a version before `1.6.4` in the `require` argument is an error.
+
+Starting with version `1.12.7` you can use the alias `version` for this macro.
+With this release if you use the macro without any argument it will result the current version.
+For example
+
+{%sample/
+This documentation is about the version {@version}
+%}
+
+will result in
+
+{%output%}
+
+NOTE: In the documentation of Jamal (this document and other modules) we do not use this macro.
+The documentation is about the version of Jamal, which is the source code and not the one running.
+They may be different.
+The version of the documented code is in the `pom.xml` file: `{%VERSION%}`.
 
 [[macro]]
 ==== {%macroChapter%}`macro`

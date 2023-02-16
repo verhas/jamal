@@ -5,7 +5,17 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Properties;
+
 public class TestRequire {
+
+    @Test
+    @DisplayName("Using it without argument will return the current version")
+    void testCurrentVersionAsString() throws Exception {
+        final var properties = new Properties();
+        Processor.jamalVersion(properties);
+        TestThat.theInput("{@version}").results(properties.getProperty("version"));
+    }
 
     @Test
     @DisplayName("Test that requiring a future version throws exception")

@@ -129,4 +129,3 @@ if [ "$(diff -b test_ruby.txt test_ruby.test)" ] ;then
   exit 1
 fi
 rm test_ruby.test
-

@@ -19,6 +19,7 @@ import java.util.Properties;
 public interface Processor extends AutoCloseable {
     /**
      * Get the debugger that is currently configured for the processor.
+     *
      * @return the current debugger
      */
     Optional<Debugger> getDebugger();
@@ -185,8 +186,9 @@ public interface Processor extends AutoCloseable {
     interface Logger {
         /**
          * A logger interface that the embedding application may provide for the processor.
-         * @param level the message level, standard JKD level
-         * @param pos position, may be null, and the implementation MUST NOT fail if it is null
+         *
+         * @param level  the message level, standard JKD level
+         * @param pos    position, may be null, and the implementation MUST NOT fail if it is null
          * @param format the message or the message format to be use in String.format()
          * @param params the parameters for the format
          */
@@ -194,12 +196,11 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
-     *
      * @return the logger implementation that was set by the embedding application. There is no method to set the logger
      * object, just as there is no metjod to set the context. Both of these objects are application specific and as the
      * embedding applications are using a specific implementation of this interface they will use the one that provides
      * the possibility to set the logger (context, {@link #getContext}).
-     *
+     * <p>
      * The default implementation returns a null logger that just does not log.
      */
     default Logger logger() {
@@ -351,12 +352,14 @@ public interface Processor extends AutoCloseable {
 
     /**
      * Set a {@link FileReader} hook to work with a processor to intercept any file reading operations the macros may make.
+     *
      * @param fileReader the file reader
      */
     void setFileReader(FileReader fileReader);
 
     /**
      * Get the file reader hook.
+     *
      * @return the file reader hook
      */
     Optional<FileReader> getFileReader();
@@ -433,11 +436,22 @@ public interface Processor extends AutoCloseable {
      * Load the version property from the properties file and store it into the properties variable {@code version}. The
      * properties will contain one property named {@code "version"}.
      *
+     * The implementation loads all the {@code version.properties} files from the classpath and selects the one that
+     * contains the string {@code "jamal-api"} in the path. This is needed because there are some implementations, like
+     * the IntelliJ embedding where there is a {@code version.properties} file in the classpath, but it is not the one we want,
+     * and also it happens sooner in the classpath, so it is loaded first.
+     *
      * @param version the properties that will hold the version property
      */
     static void jamalVersion(Properties version) {
         try {
-            version.load(Processor.class.getClassLoader().getResourceAsStream("version.properties"));
+            final var it = Processor.class.getClassLoader().getResources("version.properties").asIterator();
+            while (it.hasNext()) {
+                final var url = it.next();
+                if (url.getPath().contains("jamal-api")) {
+                    version.load(url.openStream());
+                }
+            }
         } catch (IOException e) {
             throw new IllegalArgumentException("Version information of Jamal cannot be identified.");
         }

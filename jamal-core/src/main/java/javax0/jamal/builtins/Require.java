@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
 import java.util.Arrays;
+import java.util.Properties;
 
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
@@ -28,17 +29,25 @@ public class Require implements Macro {
             return lex.length();
         }
 
-        static String[] lexes() {
-            return Arrays.stream(values()).map(p -> p.lex).toArray(String[]::new);
-        }
+        static final String[] lexes = Arrays.stream(values()).map(p -> p.lex).toArray(String[]::new);
+    }
+
+    @Override
+    public String[] getIds() {
+        return new String[]{"require", "version"};
     }
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         skipWhiteSpaces(in);
+        if( in.length() == 0 ){
+            final var p = new Properties();
+            Processor.jamalVersion(p);
+            return ""+p.getProperty("version");
+        }
         final int exact;
         final Prefix comparing;
-        if ((exact = startsWith(in, Prefix.lexes())) != -1) {
+        if ((exact = startsWith(in, Prefix.lexes)) != -1) {
             comparing = Prefix.values()[exact];
             skip(in, comparing.len());
         } else {
@@ -50,8 +59,7 @@ public class Require implements Macro {
         } catch (Exception e) {
             throw new BadSyntaxAt("The string '" + in.toString().trim() + "' cannot be used as a version.", in.getPosition(), e);
         }
-        BadSyntaxAt.when(requiredVersion.compareTo(Processor.jamalVersion("1.6.3")) <= 0,"Required version is older than 1.6.3, which is invalid.",in.getPosition());
-
+        BadSyntaxAt.when(requiredVersion.compareTo(Processor.jamalVersion("1.6.3")) <= 0, "Required version is older than 1.6.3, which is invalid.", in.getPosition());
         final var currentVersion = Processor.jamalVersion();
 
         switch (comparing) {
@@ -59,8 +67,8 @@ public class Require implements Macro {
                 if (currentVersion.compareTo(requiredVersion) < 0) {
                     break;
                 }
-                BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0,"The current version " + currentVersion + " is the same as the required version. It has to be older.",in.getPosition());
-                BadSyntaxAt.when(true,"The current version " + currentVersion + " is newer than the required version. It has to be older.", in.getPosition());
+                BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0, "The current version " + currentVersion + " is the same as the required version. It has to be older.", in.getPosition());
+                BadSyntaxAt.when(true, "The current version " + currentVersion + " is newer than the required version. It has to be older.", in.getPosition());
 
             case LESS_OR_EQUAL:
                 if (currentVersion.compareTo(requiredVersion) <= 0) {
@@ -81,7 +89,7 @@ public class Require implements Macro {
                 if (currentVersion.compareTo(requiredVersion) > 0) {
                     break;
                 }
-                BadSyntaxAt.when (currentVersion.compareTo(requiredVersion) == 0, () -> String.format("The current version %s is the same as the required version. It has to be newer.", currentVersion), in.getPosition());
+                BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0, () -> String.format("The current version %s is the same as the required version. It has to be newer.", currentVersion), in.getPosition());
                 BadSyntaxAt.when(true, () -> String.format("The current version %s is older than the required version. It has to be newer.", currentVersion), in.getPosition());
             default:
                 throw new IllegalArgumentException("The comparison in require is illegal.");
