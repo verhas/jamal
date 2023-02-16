@@ -24,9 +24,9 @@ Prerequisites:
 
 * The docker instance running should have internet connection
 
- ** to GitHub for cloning Jamal source
+  * to GitHub for cloning Jamal source
 
- ** Maven central for building Jamal
+  * Maven central for building Jamal
 
 ## Integration tests implemented
 
@@ -44,4 +44,3 @@ The test sets the file permissions to the directory and the configuration file i
 ### Command Line execution
 
 The test runs the command line tool `jamal` with different parameters.
-

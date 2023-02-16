@@ -34,9 +34,9 @@ Prerequisites:
 
 * The docker instance running should have internet connection
 
- ** to GitHub for cloning Jamal source
+  * to GitHub for cloning Jamal source
 
- ** Maven central for building Jamal
+  * Maven central for building Jamal
 
 {C Integration tests implemented}
 {DOWN}
