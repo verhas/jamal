@@ -30,7 +30,6 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.debug/javax0.jamal.debugger=ALL-UNNAMED
-    
             </argLine>
                 </configuration>
             </plugin>

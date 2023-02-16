@@ -31,7 +31,6 @@
                     <argLine>
                 --add-opens jamal.groovy/javax0.jamal.groovy=ALL-UNNAMED
                         --add-reads jamal.groovy=jamal.engine
-
             </argLine>
                 </configuration>
             </plugin>
