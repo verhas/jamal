@@ -272,3 +272,13 @@ How to control macro evaluation order and why it is important.
 PLANNED 
 
 How can you process the whole input file using a macro after the whole file was already processed.
+
+== Conference Recordings
+
+
+=== Talk on Java On
+
+
+link:https://youtu.be/YzY3K48nrtU[Watch it on YouTube] (2022-12-08) 
+
+One hour long talk and demonstration of Jamal, also discussion with the conference attendees and organizers.

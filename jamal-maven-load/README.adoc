@@ -1,19 +1,19 @@
 = Jamal Maven Load Module
 
-The Jamal Java integration module is an experimental module allowing Jamal source to download Java JAR files from Maven repositories during run-time and load the classes into the running application.
+The Jamal Maven Load module contains a macro to download Java JAR files from Maven repositories during run-time and load the macro classes into the running application.
 
 The library's security was designed carefully to balance the ease of use and the security of the application.
 Without any security measures, a Jamal file could execute any Java code published online, which is not a good idea.
 To prevent this the Jamal installation has to be configured properly to use this module.
 The requirements of a proper configuration are described in the section about security.
 
-== Macros
+== Macro
+
+Currently, there is only one maco defined in this module.
 
 === `maven:load`
 
-Load the macros from a Maven artifact.
-The macro also loads the dependencies of the artifact.
-Options can control this behavior.
+It loads the macros from a Maven artifact along with its dependencies, unless the `noDependencies` option is used.
 
 This macro reads its input and interprets it as a maven coordinate set.
 The format has to be
@@ -25,20 +25,24 @@ The macro works in two steps:
 
 1. First, it downloads the artifact JAR and all the dependencies.
 
-2. It loads the macros from the JAR files using a class loader.
+2. It loads the macros from the JAR files (the specified one and the dependencies) using a class loader.
 
 It is possible to load only the file without the dependencies using the `noDependencies` option.
 
-WARNING: Loading a JAR file from the internet is a security risk.
+[WARNING]
+====
+Loading a JAR file from the internet is a security risk.
 You must configure the security appropriately to mitigate this risk.
 For more information, see the section about security.
+====
 
+The behavior of the macro can be controlled using options.
 The options are:
 
 * `repositories` (aliases are `repository`, `repo`, `repos`) define the Maven repositories used comma separated.
 The values are the repository URLs or symbolic names.
 The symbolic names can be
-- "central"
+- `central`
 - `jcenter-bintray`
 - `google-android`
 - `google-maven-central-americas`
@@ -46,7 +50,8 @@ The symbolic names can be
 - `google-maven-central-asia`
 +
 The default value is `central`.
-When this option is used other than the predefined symbolic names using a full URL it is checked against the configuration.
+When a URL is specified it is checked against the configuration.
+The symbolic names are permitted by default, they can be used without configuration.
 For more information see the section about security.
 
 * `noDependencies` (alias is `noDeps`) says that the dependencies of the JAR should not be loaded.
