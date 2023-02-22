@@ -15,4 +15,9 @@ public class TestLog {
         sut.results("");
         Assertions.assertEquals("DEBUG null debug message", log.toString());
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

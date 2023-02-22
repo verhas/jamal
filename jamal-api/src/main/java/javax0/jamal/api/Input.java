@@ -65,6 +65,15 @@ public interface Input extends CharSequence {
         return getSB().length();
     }
 
+    /**
+     * @return {@code true} if the input is lazy, {@code false} otherwise.
+     * Lazy input means that the input is not read from its original source in its whole before it is needed.
+     * As a consequence some operations, like {@link #indexOf(String, int)} may alter the internal state of the input.
+     */
+    default boolean isLazy() {
+        return false;
+    }
+
     @Override
     default char charAt(int index) {
         return getSB().charAt(index);

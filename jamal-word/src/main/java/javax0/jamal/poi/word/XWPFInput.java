@@ -161,6 +161,10 @@ public class XWPFInput extends Input {
         return true;
     }
 
+    @Override
+    public boolean isLazy() {
+        return true;
+    }
 
     /**
      * @param paragraph to check if it is empty

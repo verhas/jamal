@@ -157,7 +157,11 @@ public class InputHandler {
      *        {@define =hatto (x)=belxanto}{#define {=hatto /1}(x) =tttxttt}{bel1anto/_}
      *
      * }</pre>
-     * which is an experimental feature and is deliberately not documented except here.
+     * which is an experimental feature and is deliberately not documented except here. (So much not documented that
+     * I am just watching and debugging it five years later... realising that I did that deliberately.)
+     *
+     * Just turned out that this is a very useful feature. It is used to use emojis as macro names... Who would have
+     * thought?
      *
      * @param input that contains the identifier at the start. The identifier will be removed at the end of the method.
      * @return the identifier string that was found and removed from the start of the input.
@@ -178,7 +182,7 @@ public class InputHandler {
         return output.toString();
     }
 
-    public static String fetchNumber(Input input){
+    public static String fetchNumber(Input input) {
         final var output = new StringBuilder();
         while (input.length() > 0 && Character.isDigit(input.charAt(0))) {
             output.append(input.charAt(0));
@@ -386,7 +390,7 @@ public class InputHandler {
         if (firstCharIs(input, '(')) {
             skip(input, 1);
             var closingParen = input.indexOf(")");
-            BadSyntaxAt.when(!contains(closingParen),"'" + id + "' has parameters, but no ')'",ref);
+            BadSyntaxAt.when(!contains(closingParen), "'" + id + "' has parameters, but no ')'", ref);
             var param = input.substring(0, closingParen);
             skip(input, closingParen + 1);
             skipWhiteSpaces(input);
@@ -402,16 +406,17 @@ public class InputHandler {
 
     /**
      * Checks that a string is a valid identifier.
+     *
      * @param id the string holding the identifier or something else
      * @return true if the string syntactically is a valid identifier
      */
     public static boolean isIdentifier(final String id) {
         final char startCharacter = id.charAt(0);
-        if( ! validId1stChar(startCharacter)){
+        if (!validId1stChar(startCharacter)) {
             return false;
         }
-        for( int i = 1 ; i < id.length() ; i++ ){
-            if( ! validIdChar(id.charAt(i)) ){
+        for (int i = 1; i < id.length(); i++) {
+            if (!validIdChar(id.charAt(i))) {
                 return false;
             }
         }
@@ -419,11 +424,11 @@ public class InputHandler {
     }
 
     public static boolean isNumber(final String id) {
-        if( id.length() == 0 ){
+        if (id.length() == 0) {
             return false;
         }
-        for( int i = id.charAt(0) == '-' || id.charAt(0) == '+' ? 1 : 0 ; i < id.length() ; i++ ){
-            if( ! Character.isDigit(id.charAt(i)) ){
+        for (int i = id.charAt(0) == '-' || id.charAt(0) == '+' ? 1 : 0; i < id.length(); i++) {
+            if (!Character.isDigit(id.charAt(i))) {
                 return false;
             }
         }
@@ -445,12 +450,12 @@ public class InputHandler {
     public static String[] ensure(String[] parameters, Position ref) throws BadSyntaxAt {
         final var exceptionParameters = new ArrayList<String>();
         for (int i = 0; i < parameters.length; i++) {
-            BadSyntaxAt.when(requireNonNull(parameters[i]).length() == 0,"User defined macro argument cannot be empty string.",ref);
+            BadSyntaxAt.when(requireNonNull(parameters[i]).length() == 0, "User defined macro argument cannot be empty string.", ref);
             for (int j = 0; j < parameters.length; j++) {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {
                         exceptionParameters.add("" + i + ". parameter '" + parameters[i] + "' contains the "
-                            + j + ". parameter '" + parameters[j] + "'");
+                                + j + ". parameter '" + parameters[j] + "'");
                     }
                 }
             }
