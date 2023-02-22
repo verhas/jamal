@@ -1,6 +1,12 @@
+{@import res:emo.jim}
 {@sep 🍓 🥬}\
-🍓@define 🥐=breakfast🥬\
+🍓@define 🥐 =breakfast🥬\
 🍓@define 🍗 =lunch🥬\
 When you eat rich 🍓🥐🥬 you do not need big 🍓🍗🥬.
 
 
+🍓@sep🥬
+
+{@define Z(X,Y...)=X,Y}
+{Z ,1, 2, 3, 4}
+When you eat rich {🥐} you do not need big {🍗}. {relieved_face}
