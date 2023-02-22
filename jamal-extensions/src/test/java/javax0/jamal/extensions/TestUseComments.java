@@ -31,6 +31,6 @@ public class TestUseComments {
     @Test
     @DisplayName("Test the use of emoji characters in Jamal")
     void testEmojiDefine()throws Exception{
-        TestThat.theInput("{@define 🐶=🐕}{\uD83D\uDC36}").results("\uD83D\uDC15");
+        TestThat.theInput("{@define 🐶 =🐕}{\uD83D\uDC36}").results("\uD83D\uDC15");
     }
 }
