@@ -49,11 +49,6 @@ public class TestConvertReadme {
     }
 
     @Test
-    void convertTutorials() throws Exception {
-        DocumentConverter.convert("../TUTORIALS.adoc.jam");
-    }
-
-    @Test
     void convertVideo() throws Exception {
         DocumentConverter.convert("../VIDEO.adoc.jam");
     }

@@ -16,10 +16,12 @@ If all dependencies are up-to-date then the output should not contain any `*[red
 +
 The JavaDoc plugin version 3.5.0 caused an exception during the compilation, that seems to be an internal error of the plugin.
 Sun Bug report ID `9074818` was assigned to this issue.
+Probably they will simply ignore this as the issue is with the Maven plugin.
+https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.0.1` 
 
-* `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.4.2` 
+* `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.5.0` 
 
 * `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-4` 
 
