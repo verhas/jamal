@@ -25,6 +25,10 @@ Any script needing those have to use the `maven:load` macro to load the modules.
 
 * docker is used to support integration level tests, especially the access control check of the configuration needed by the macro `maven:load`.
 
+* The core macro `define` implements the option `tail` to have the last parameter containing the rest of the input instead of getting an error.
+
+* The snippet library implements Base64 encoding and decoding. Using this macro you can insert Kroki pictures into your document. There is also a `res:kroki.jim` importable resource script.
+
 {%RELEASE/1.12.6%}
 There is a new macro library `prog` that implements a simple BASIC like programming language.
 

@@ -1,12 +1,3 @@
-{@define use:kroki:asciidoc=
-   {@define [tail] kroki($dt,$ft,$x)=image::https://kroki.io/$dt/$ft/{@base64 (compress url)
-                      $x
-                      }[]}
-}
-
-{@define use:kroki:markdown=
-   {@define [tail] kroki($dt,$ft,$x)=![](https://kroki.io/$dt/$ft/{@base64 (compress url)
-                      $x
-                      })}
-}
+{@define use:kroki:asciidoc={@define [tail] kroki($dt,$ft,$x)=image::https://kroki.io/$dt/$ft/{@base64 (compress url)$x}[]}}
+{@define use:kroki:markdown={@define [tail] kroki($dt,$ft,$x)=![](https://kroki.io/$dt/$ft/{@base64 (compress url)$x})}}
 

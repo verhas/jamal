@@ -4,7 +4,7 @@ This is a simple demonstration how you can include pictures using the Kroki serv
 
 You have to import the resource `kroki.jim` into your Markdown file.
 
-{%@import res:kroki.jim%}
+
 
 The `kroki.jim` file contains macros that can be used to include pictures into a Markdown file.
 However, that file also includes macros for Asciidoc.
@@ -12,33 +12,12 @@ Both macros are called `kroki`, and have the same parameter.
 You should tell which output you would like to use, therefore you should first invoke the macro `use:kroki:markdown`.
 This will set the output to Markdown.
 
-{%use:kroki:markdown%}
+
+   
+
 
 Guess, what you can see the Asciidoc version of this file.
 
 After that you can use the `kroki` macro to include pictures.
 
-{%kroki/plantuml/svg/
-skinparam ranksep 20
-skinparam dpi 125
-skinparam packageTitleAlignment left
-
-rectangle "Main" {
-(main.view)
-(singleton)
-}
-rectangle "Base" {
-(base.component)
-(component)
-(model)
-}
-rectangle "<b>main.ts</b>" as main_ts
-
-(component) ..> (base.component)
-main_ts ==> (main.view)
-(main.view) --> (component)
-(main.view) ...> (singleton)
-(singleton) ---> (model)
-%}
-
-
+![](https://kroki.io/plantuml/svg/eNplTz0PgjAQ3fsrLkwwUJXEDUl0d3M3B5ykoS0N1-hg_O8WNFJ1e3fv495xr6zDEQ2MaHsmB8Va8GfZOgWbYhttHDY9dnRSXtNeq84ash40XbwQIzUebacJkiMqm8BdpCYAeVV0y0TKaiL9YDPxiMUHZJrFdQCyGYwbbEgNjhiboSX94yzraj7guVzVVQLIMM1nzyI2g5QV_KW_lbDbBTLuuWDI88B9tVg4OadGT0U4GCfnq_MTL7B2ww==)

@@ -1,36 +1,5 @@
-{%@comment %}
----
-aba: huk
----
-= Titele
-Some code block here:
-
-link:./src/main/java/javax0/jamal/test/examples/Array.java[Array.java]
-
-[source, java]
-----
-{%@unicode &#8203%}
-{%@snip:define A55=0000%}
-
-
-
-
-
-
-{%@log [level=INFO] jajj%}
-
-
-
-
-
-
-
-
-
-
-void example(void)
-{
-    printf("hello, world\n");
-}
-----
-{%@pos.file%}
+{@define [tail]A(A,B,...C...)= .A. .B. .C.}
+{A /1/2}
+{A /1/2/3}
+{A /1/2/3/4}
+{A /1/2/3/4/5}
