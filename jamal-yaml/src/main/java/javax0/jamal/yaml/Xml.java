@@ -78,7 +78,7 @@ public class Xml implements Macro, InnerScopeDependent {
                     closed = true;
                 }
                 if (value instanceof TEXT) {
-                    sb.append(escape(value.toString()));
+                    sb.append(escape(""+value));
                     ended = true;
                 } else if (value instanceof CDATATEXT) {
                     sb.append("<![CDATA[").append(value).append("]]>");
@@ -94,7 +94,7 @@ public class Xml implements Macro, InnerScopeDependent {
                     listToXml(sb, tag, tag.substring(0, tag.length() - 1), (List) value);
                 } else {
                     sb.append("<").append(tag).append(">");
-                    sb.append(escape(value.toString()));
+                    sb.append(escape(""+value));
                 }
             }
             if (closed && !ended) {
