@@ -7,7 +7,7 @@ import javax0.jamal.api.Processor;
 public class Ref implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) {
-        return "!!javax0.jamal.api.Ref " + in;
+        return "!ref " + in;
     }
 
     @Override

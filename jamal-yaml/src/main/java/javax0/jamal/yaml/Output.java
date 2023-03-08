@@ -14,7 +14,7 @@ import java.io.StringWriter;
 
 @Macro.Stateful
 public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, Closer.ProcessorAware, AutoCloseable {
-    final Yaml yaml = new Yaml();
+    final Yaml yaml = YamlFactory.newYaml();
 
     private Processor processor;
     private Input output;

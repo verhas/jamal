@@ -41,7 +41,7 @@ public class YamlObject implements UserDefinedMacro, ObjectHolder<Object> {
         final var macro = YamlDumperOptions.get(processor);
         final Yaml yaml;
         if (macro == null) {
-            yaml = new Yaml();
+            yaml = YamlFactory.newYaml();
         } else {
             final var options = macro.getObject();
             yaml = new Yaml(options);

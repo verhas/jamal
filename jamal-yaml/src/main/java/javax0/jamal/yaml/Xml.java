@@ -65,7 +65,7 @@ public class Xml implements Macro, InnerScopeDependent {
             final var tag = e.getKey();
             final var value = e.getValue();
             if (value instanceof ATTR) {
-                BadSyntax.when(closed, "!!javax0.jamal.api.Xml$Attr cannot follow content node");
+                BadSyntax.when(closed, "!text cannot follow content node");
                 final var attrs = (ATTR) value;
                 if (attrs.size() != 0) {
                     attributesTo(sb, attrs);
@@ -110,11 +110,11 @@ public class Xml implements Macro, InnerScopeDependent {
         boolean closed = false;
         for (final var e : list) {
             if (e instanceof ATTR) {
-                BadSyntax.when(closed, "!!javax0.jamal.api.Xml$ATTR cannot follow content node.");
+                BadSyntax.when(closed, "!attr cannot follow content node.");
                 attributesTo(sb, (Map<String, String>) e);
             } else if (e instanceof TAG) {
-                BadSyntax.when(closed, "!!javax0.jamal.api.Xml$TAG cannot follow content node.");
-                BadSyntax.when(tagged, "!!javax0.jamal.api.Xml$TAG must not be repeated.");
+                BadSyntax.when(closed, "!tag cannot follow content node.");
+                BadSyntax.when(tagged, "!tag must not be repeated.");
                 tagged = true;
                 tagSingular = ((TAG) e).id;
             } else {
@@ -122,7 +122,7 @@ public class Xml implements Macro, InnerScopeDependent {
                     sb.append(">");
                     closed = true;
                 }
-                BadSyntax.when(tagSingular.length() == 0,  "Cannot create aní XML list for the field '%s' it is too short and no !!javax0.jamal.api.Xml$TAG was present.", tagPlural);
+                BadSyntax.when(tagSingular.length() == 0,  "Cannot create aní XML list for the field '%s' it is too short and no !tag was present.", tagPlural);
                 sb.append("<").append(tagSingular);
                 if (e instanceof Map<?, ?>) {
                     mapToXml(sb, (Map) e);

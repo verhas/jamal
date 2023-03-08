@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @SuppressWarnings("unchecked")
 class Resolver {
-    final Yaml yaml = new Yaml();
+    final Yaml yaml = YamlFactory.newYaml();
     /**
      * Those objects that have been resolved, or their resolution is currently going. Since there is no IdentityHashSet,
      * we use a map, the value is always null.

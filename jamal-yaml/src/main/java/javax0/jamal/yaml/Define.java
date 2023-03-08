@@ -17,7 +17,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
 
 public class Define implements Macro, InnerScopeDependent {
-    final Yaml yaml = new Yaml();
+    final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
