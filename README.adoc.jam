@@ -799,7 +799,8 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.7.6 optional and extra ignored arguments
 * since 1.12.3 options can also be used to define optional, failing, pure and verbatim macros
 * since 1.12.3 option `{%@snip RestrictedDefineParameters%}` can be used to restrict parameters to be only identifiers
-* since 1.12.5 optopn `export` can be used as a shorthand instead of define and export one after the other
+* since 1.12.5 option `export` can be used as a shorthand instead of define and export one after the other
+* since 1.12.7 option `tail` to parse the tail parameters as a single string
 ===== Define basics
 
 `define` defines a user-defined macro in the current scope.
@@ -853,7 +854,7 @@ The two definitions are equivalent.
 
 NOTE: There is one exception, when you have to use `()` even for empty parameter list.
 This is the case, when the `id` ends with a colon `:`.
-In this case the definition `{@define id:=...}` would be ambigous, because using `:=` instead of `=` has a special meaning (see it later).
+In this case the definition `{@define id:=...}` would be ambiguous, because using `:=` instead of `=` has a special meaning (see it later).
 
 When the macro is used, the arguments are replaced in the body by the actual parameters supplied at the place of use.
 The arguments are specified as a comma-separated list.
@@ -1482,14 +1483,17 @@ Following the version 1.12.3 the macro `define` can be used with the options
 These can be used instead of the modifying characters `~`, `?`, `!` and `:` respectively.
 You cannot use them together with the modifying character, but you can use one of the modifying character and the other option, unless they are mutually exclusive (`?` and `!`).
 
-n addition to that you can use the option
+In addition to that you can use the options
 
 * `global`
+* `tail`
 
-to define a global macro, even if the macro does not have a `:` in the name.
+Use `global` to define a global macro, even if the macro does not have a `:` in the name.
 Using the option as `global=false`, however, will not make a macro containing `:` local.
 This option can be used together with the name containing `:`.
 
+The option `tail` can be used to signal that the input string should be split into exactly to the number of the arguments.
+If the last part after the splitting still contains one or more argument separator character or string, it will be part of the last argument.
 
 [[undefine]]
 ==== {%macroChapter%}`undefine`

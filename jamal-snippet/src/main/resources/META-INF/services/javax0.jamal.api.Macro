@@ -53,3 +53,5 @@ javax0.jamal.snippet.StringMacros$StartsWith
 javax0.jamal.snippet.StringMacros$EndsWith
 javax0.jamal.snippet.StringMacros$Reverse
 javax0.jamal.snippet.StringMacros$Chop
+javax0.jamal.snippet.Base64$Decode
+javax0.jamal.snippet.Base64$Encode

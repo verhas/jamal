@@ -87,6 +87,23 @@ public interface Processor extends AutoCloseable {
      * verbatim. The default implementation ignores the verbatim flag. See the note of {@link
      * #newUserDefinedMacro(String, String, String[]) newUserDefinedMacro()}
      *
+     * @param id            see {@link #newUserDefinedMacro(String, String, String[])}
+     * @param input         see {@link #newUserDefinedMacro(String, String, String[])}
+     * @param verbatim      {@code true} if the result of the macro should not be evaluated
+     * @param tailParameter {@code true} if the macro should accept a tail parameter
+     * @param params        see {@link #newUserDefinedMacro(String, String, String[])}
+     * @return see {@link #newUserDefinedMacro(String, String, String[])}
+     * @throws BadSyntax see {@link #newUserDefinedMacro(String, String, String[])}
+     */
+    default UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, boolean tailParameter, String... params) throws BadSyntax {
+        return newUserDefinedMacro(id, input, params);
+    }
+
+    /**
+     * The same as {@link #newUserDefinedMacro(String, String, String[])} but it can also define when the macro is
+     * verbatim. The default implementation ignores the verbatim flag. See the note of {@link
+     * #newUserDefinedMacro(String, String, String[]) newUserDefinedMacro()}
+     *
      * @param id       see {@link #newUserDefinedMacro(String, String, String[])}
      * @param input    see {@link #newUserDefinedMacro(String, String, String[])}
      * @param verbatim {@code true} if the result of the macro should not be evaluated
@@ -435,7 +452,7 @@ public interface Processor extends AutoCloseable {
     /**
      * Load the version property from the properties file and store it into the properties variable {@code version}. The
      * properties will contain one property named {@code "version"}.
-     *
+     * <p>
      * The implementation loads all the {@code version.properties} files from the classpath and selects the one that
      * contains the string {@code "jamal-api"} in the path. This is needed because there are some implementations, like
      * the IntelliJ embedding where there is a {@code version.properties} file in the classpath, but it is not the one we want,

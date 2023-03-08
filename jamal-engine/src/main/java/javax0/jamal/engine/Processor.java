@@ -126,12 +126,17 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, String... params) throws BadSyntax {
-        return newUserDefinedMacro(id, input, false, params);
+        return newUserDefinedMacro(id, input, false, false, params);
     }
 
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String... params) throws BadSyntax {
-        return new javax0.jamal.engine.UserDefinedMacro(this, id, input, verbatim, params);
+        return newUserDefinedMacro(id, input, verbatim, false, params);
+    }
+
+    @Override
+    public UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, boolean tailParameter, String... params) throws BadSyntax {
+        return new javax0.jamal.engine.UserDefinedMacro(this, id, input, verbatim, tailParameter, params);
     }
 
     @Override
@@ -569,8 +574,8 @@ public class Processor implements javax0.jamal.api.Processor {
                 parameters[0] = process(input);
             } else {
                 skip(input, 1);
-                BadSyntaxAt.when(Character.isLetterOrDigit(separator), "Invalid separator character '" + separator + "' ", input.getPosition());
-                final Input[] paramInputs = splitParameterString(input, separator);
+                BadSyntaxAt.when(Character.isLetterOrDigit(separator), "Invalid separator character '" + separator + "' ", ref);
+                final Input[] paramInputs = splitParameterString(input, separator, expectedArgNr);
                 parameters = new String[paramInputs.length];
                 for (int i = 0; i < parameters.length; i++) {
                     parameters[i] = process(paramInputs[i]);
@@ -719,14 +724,16 @@ public class Processor implements javax0.jamal.api.Processor {
      * because of that then stay with version prior 1.2.0, e.g.: 1.1.0 and migrate your macros so that they do not use
      * tricks.
      *
-     * @param in        the input that starts after the first occurrence of the separator character
-     * @param separator the separator character
+     * @param in            the input that starts after the first occurrence of the separator character
+     * @param separator     the separator character
+     * @param expectedArgNr the expected number of arguments. If the number is negative, then the trailing parameters
+     *                      are parsed as a single string.
      * @return the parameter array as input, with correct positioning to where the parameters start
      * @throws BadSyntaxAt if the nesting of the macro opening and closing strings do not match. The implementation does
      *                     not check this purposefully. If there are unbalanced opening and closing strings it will not
      *                     be detected.
      */
-    private Input[] splitParameterString(final Input in, final char separator) throws BadSyntaxAt {
+    private Input[] splitParameterString(final Input in, final char separator, final int expectedArgNr) throws BadSyntaxAt {
         final var open = macros.open();
         final var close = macros.close();
         final var parameters = new ArrayList<Input>();
@@ -734,9 +741,11 @@ public class Processor implements javax0.jamal.api.Processor {
         final var pos = in.getPosition();
         int start = 0;
         int searchFrom = 0;
+        final boolean tailing = expectedArgNr < -1;
+        final int maxArgs = tailing ? -expectedArgNr : expectedArgNr;
         while (true) {
             final var separatorIndex = input.indexOf(separator, searchFrom);
-            if (separatorIndex == -1) {
+            if (separatorIndex == -1 || (parameters.size() == maxArgs - 1 && tailing)) {
                 checkForImbalance(input, searchFrom, pos);
                 appendTheLastParameter(parameters, input, start, pos);
                 break;
@@ -790,18 +799,28 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
-    private void appendTheNextParameter(final List<Input> parameters,
-                                        final String input,
-                                        final int start,
-                                        final int separatorIndex,
-                                        final Position pos) {
+    /**
+     * Appends the next parameter to the array list `parameters`. The parameter is the substring of the input string
+     * between the start index and the separator index.
+     *
+     * @param parameters     the list to append the new parameter to
+     * @param input          the input from which we gouge the parameter
+     * @param start          the start index of the parameter
+     * @param separatorIndex the index of the separator character
+     * @param pos            the position of the input. It gets forked for the returned new input object.
+     */
+    private static void appendTheNextParameter(final List<Input> parameters,
+                                               final String input,
+                                               final int start,
+                                               final int separatorIndex,
+                                               final Position pos) {
         parameters.add(makeInput(input.substring(start, separatorIndex), pos.fork()));
     }
 
-    private void appendTheLastParameter(final List<Input> parameters,
-                                        final String input,
-                                        final int start,
-                                        final Position pos) {
+    private static void appendTheLastParameter(final List<Input> parameters,
+                                               final String input,
+                                               final int start,
+                                               final Position pos) {
         if (start < input.length()) {
             parameters.add(makeInput(input.substring(start), pos.fork()));
         } else {

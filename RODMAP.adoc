@@ -32,3 +32,7 @@ If you feel that there is some feature here missing then open a GitHub ticket an
 * Make it possible to use Jamal macros in Word DOCX files. (DONE)
 
 * Support Kotlin as macro development language (STARTED)
+
+* Implement JUnit plugin that does all the conversions of the `*.jam` files without individual unit tests.
+
+* Implement an annotation processor that can be used to generate Java code via Jamal macros.

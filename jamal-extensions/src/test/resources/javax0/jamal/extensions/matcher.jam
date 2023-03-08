@@ -1,6 +1,0 @@
-{@use global javax0.jamal.extensions.Regex.Matcher as matcher}
-{@matcher myMatcher ````(.*?)/(.*)`before the slash/after the slash}
-{myMatcher -matches}
-{myMatcher -nr}
-{!#for index in ({myMatcher -groupIndices})=index. {`myMatcher :group:index}
-}

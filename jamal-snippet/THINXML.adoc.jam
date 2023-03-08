@@ -12,16 +12,16 @@ code%}
 
 == Introduction
 
-ThinXML is a format mapped to XML effortlessly and straightforwardly, but it contains fewer characters and is more readable.
-The ThinXML format lets you leave the closing tags.
+ThinXML is a format mapped to XML effortlessly and straightforward, but it contains fewer characters and is more readable.
+The ThinXML format allows you to leave the closing tags off.
 Instead of the closing tags, it introduces positioning.
+
 
 It is somewhat similar to what the Python language is doing compared to other languages.
 Many languages use explicit closing for complex constructs, like adding a `}` to the end of a block or using the `end` keyword.
-Python starts to write with the previous indentation following a block.
 
-ThinXML does the same.
-To ease understanding here is a simple example:
+ThinXML uses spaces to indicate the nesting of the XML tags.
+To ease the understanding here is a simple example:
 
 {%sample/
 project>

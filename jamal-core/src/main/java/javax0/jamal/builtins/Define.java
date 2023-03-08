@@ -27,6 +27,7 @@ public class Define implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var verbatimParam = Params.<Boolean>holder(null, "verbatim").asBoolean();
+        final var tailParamsParam = Params.<Boolean>holder(null, "tail").asBoolean();
         final var optionalParam = Params.<Boolean>holder(null, "optional", "ifNotDefined").asBoolean();
         final var noRedefineParam = Params.<Boolean>holder(null, "fail", "noRedefine", "noRedef", "failIfDefined").asBoolean();
         final var pureParam = Params.<Boolean>holder(null, "pure").asBoolean();
@@ -34,11 +35,12 @@ public class Define implements Macro {
         final var exportParam = Params.<Boolean>holder(null, "export").asBoolean();
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
-        Scan.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly).parse(input);
+        Scan.using(processor).from(this).between("[]").keys(verbatimParam, tailParamsParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly).parse(input);
         BadSyntax.when(noRedefineParam.is() && optionalParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         BadSyntax.when(globalParam.is() && exportParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         skipWhiteSpaces(input);
         boolean verbatim = verbatimParam.is();
+        boolean tailParams = tailParamsParam.is();
         if (!verbatim && firstCharIs(input, DEFINE_VERBATIM)) {
             verbatim = true;
             skip(input, 1);
@@ -84,7 +86,7 @@ public class Define implements Macro {
         }
         BadSyntax.when(!firstCharIs(input, '='), "define '%s' has no '=' to body", id);
         skip(input, 1);
-        final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, params);
+        final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, tailParams, params);
         if (globalParam.is() || isGlobalMacro(id)) {
             processor.defineGlobal(macro);
         } else {

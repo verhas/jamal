@@ -80,6 +80,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<trimLines,`trimLines`>>
 .. <<untab,`untab`>>
 .. <<range,`range`>>
+.. <<Base64,`base64`>>
 .. <<rot13,`rot13`>>
 .. <<pos,`pos`>>
 .. <<sort,`sort`>>
@@ -1136,6 +1137,108 @@ The option `lines` cannot be used in singular, but it can also be aliased as `ra
 The format and the meaning of the option `lines` is exactly the same as the option of the same name in the core `import` macro.
 
 {%TEXT:RANGE%}
+
+[[Base64]]
+==== {%macroChapter%}`base64` encode and decode
+{%#snip:check file={%JAVA_DIR%}Base64.java hash=def63361.676a6b28.4255aa9b%}
+
+There are two macros that can encode and decode the input using the Base64 algorithm.
+The encoding macro is called `base64`.
+It also has an alias `base64:encode`.
+
+The decoding macro is named `base64:decode`.
+
+By default, the macros trim the input removing the spaces from the start and from the end.
+If you need to encode a string that contains spaces you can use the option `quote`.
+In this case the string has to be quoted.
+Any character can be used as quoting character except space and the same character should be used at the start and at the end of the string.
+The option `quote` can be used with the decoding macro as well to provide coherent use, although there is not much use of the option in this case.
+
+
+{%sample/
+{@base64:encode This is a test}
+%}
+
+will result in
+
+{%output%}
+
+and
+
+{%sample/
+{@base64:decode VGhpcyBpcyBhIHRlc3Q=}
+%}
+
+will result in
+
+{%output%}
+
+If you need a space before the text also encoded you should write
+
+{%sample/
+{@base64:encode (quote) " This is a test"}
+%}
+
+resulting in
+
+{%output%}
+
+and again the reverse:
+
+{%sample/
+>>{@base64:decode (quote) "IFRoaXMgaXMgYSB0ZXN0"}<<
+%}
+
+will result in
+
+{%output%}
+
+As the `>>` shows that the space is also decoded.
+
+Both then encoding and the decoding macro can have the option `url`.
+In this case URL safe encoding is used.
+The encoding macro will also handle the option `compress`.
+Using this option the string is first compressed before encoding.
+
+NOTE: There is no option to decode the compressed string.
+This option was developed to support link:https://docs.kroki.io[Kroki] service GET requests.
+
+With these options you can encode the following string:
+
+{%@define KROKI_SAMPLE=
+image::https://kroki.io/plantuml/svg/{@base64 (compress url)
+skinparam ranksep 20
+skinparam dpi 125
+skinparam packageTitleAlignment left
+
+rectangle "Main" {
+(main.view)
+(singleton)
+}
+rectangle "Base" {
+(base.component)
+(component)
+(model)
+}
+rectangle "<b>main.ts</b>" as main_ts
+
+(component) ..> (base.component)
+main_ts ==> (main.view)
+(main.view) --> (component)
+(main.view) ...> (singleton)
+(singleton) ---> (model)
+}[]
+%}
+
+{%sample/{%KROKI_SAMPLE%}%}
+
+which will result in
+
+{%output%}
+
+{%#killLines pattern="source|----"
+{%output%}%}
+
 
 [[rot13]]
 ==== {%macroChapter%}`rot13`

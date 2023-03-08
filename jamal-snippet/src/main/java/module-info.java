@@ -1,4 +1,5 @@
 import javax0.jamal.api.Macro;
+import javax0.jamal.snippet.Base64;
 import javax0.jamal.snippet.Case;
 import javax0.jamal.snippet.Clear;
 import javax0.jamal.snippet.Collect;
@@ -111,5 +112,7 @@ module jamal.snippet {
             Pos,
             Numbers,
             Unicode,
+            Base64.Encode,
+            Base64.Decode,
             SnipTransform;
 }

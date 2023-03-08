@@ -24,6 +24,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     private static final String ESCAPE = "@escape ";
     final private String id;
     final private boolean verbatim;
+    final private boolean tailParameter;
     final private Processor processor;
     final private OptionsStore optionsStore;
     final private String content;
@@ -61,20 +62,21 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      *                   because this way the result of the macro would be dependent on the evaluation order of the
      *                   parameters.
      */
-    public UserDefinedMacro(Processor processor, String id, String content, boolean verbatim, String... parameters) throws BadSyntax {
+    public UserDefinedMacro(Processor processor, String id, String content, boolean verbatim, boolean tailParameter, String... parameters) throws BadSyntax {
         this.processor = processor;
         this.optionsStore = OptionsStore.getInstance(processor);
         this.openStr = processor.getRegister().open();
         this.closeStr = processor.getRegister().close();
         this.id = id;
         this.verbatim = verbatim;
+        this.tailParameter = tailParameter;
         this.content = content;
         argumentHandler = new ArgumentHandler(this, parameters);
         InputHandler.ensure(parameters, null);
     }
 
     public UserDefinedMacro(Processor processor, String id, String content, String... parameters) throws BadSyntax {
-        this(processor, id, content, false, parameters);
+        this(processor, id, content, false, false, parameters);
     }
 
     @Override
@@ -192,7 +194,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
                 || Identified.MACRO_NAME_ARG2.equals(argumentHandler.parameters[0]))) {
             return argumentHandler.parameters.length - 1;
         }
-        return argumentHandler.parameters.length;
+        return tailParameter  ? -argumentHandler.parameters.length : argumentHandler.parameters.length;
     }
 
     @Override

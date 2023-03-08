@@ -46,6 +46,13 @@ public interface Evaluable extends Identified {
      * expression module. The result currently is used by the processor to handle the parameters of the user defined
      * macros differently that accept one single parameter.
      * <p>
+     * When the value is negative and less than -1 then the macro uses tail parameter. The tail parameter is the last
+     * parameter that may contain the separator character or string. When you pass {@code /1/2/3/4/5} to a macro that expects
+     * three arguments, Jamal will throw an exception. When you pass {@code /1/2/3/4/5} to a macro that expects three arguments,
+     * but this is returned as -3, then the arguments will be {@code 1}, {@code 2}, and {@code 3/4/5}.
+     * <p>
+     * The define macro creates user defined macros this way when the option `tail` is set to `true`.
+     * <p>
      * Also, when a macro is named {@code default} and has arguments and the first argument is named {@code $macro} or
      * {@code $_} then the evaluation gives the name of the macro as an extra into this argument and all other arguments
      * get filled with the strings that comes from the macro input. This first argument is interesting, when the user
