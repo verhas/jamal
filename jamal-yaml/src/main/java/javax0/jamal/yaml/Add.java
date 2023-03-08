@@ -16,7 +16,7 @@ import java.util.Map;
 import static javax0.jamal.tools.Params.holder;
 
 public class Add implements Macro, InnerScopeDependent {
-    final Yaml yaml = new Yaml();
+    final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

@@ -30,20 +30,20 @@
   Input: |
     {@yaml:define a=
     a:
-      attribute: !!javax0.jamal.api.Xml$ATTR this is the attribute   # a simple attribute
-      content: !!javax0.jamal.api.Xml$TEXT this is the content       # we have to use this or else it will be a map
+      attribute: !attr this is the attribute   # a simple attribute
+      content: !text this is the content       # we have to use this or else it will be a map
                                                                      # the key is not used, can be anything
     lists:
-    # there is no !!javax0.jamal.api.Xml$TAG, the <lists>...</lists> will contains <list></list> tags
-    - !!javax0.jamal.api.Xml$ATTR { attribute: is a bitch }          # this is an attribute to the <lists...>
+    # there is no !tag, the <lists>...</lists> will contains <list></list> tags
+    - !attr { attribute: is a bitch }          # this is an attribute to the <lists...>
     - a
-    - !!javax0.jamal.api.Xml$CDATA b                                 # this will become CDATA
+    - !cdata b                                 # this will become CDATA
     - c
     - d
     kuka:
       # the key `attribute1` is ignored by the conversion
       # here we have to use a map as an attribute because the name 'beno' is a tag in the xml as well as an attribute
-      attribute1: !!javax0.jamal.api.Xml$ATTR {beno: "attribute with a name, which is the same as a tag"}
+      attribute1: !attr {beno: "attribute with a name, which is the same as a tag"}
       beno: 665-453
     }{#xmlFormat {@yaml:xml a}}
   Output: |+
@@ -109,10 +109,10 @@
   Input: |
     {@yaml:define a=
     a:
-      att: !!javax0.jamal.api.Xml$ATTR 'this is an " attribute' # note that the " will be escaped
+      att: !attr 'this is an " attribute' # note that the " will be escaped
       # the key here is ignored, this node is a text node in the XML. The text is escaped for the < but not for the ".
       # The conversion also escapes the ", but the built-in JDK XML formatter converts it back here. He is right.
-      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$TEXT "this is < the text \" of A"
+      "zsubasuba abraka not appear whatever": !text "this is < the text \" of A"
     }{#xmlFormat {@yaml:xml a}}
   Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -124,10 +124,10 @@
   Input: |
     {@yaml:define a=
     a:
-      att: !!javax0.jamal.api.Xml$ATTR this is an attribute
+      att: !attr this is an attribute
       # this is the same as the previous example but the text node is also CDATA
       # in this case there is no conversion, CDATA contains whatever character... even <
-      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this < is the text of A
+      "zsubasuba abraka not appear whatever": !cdatatext this < is the text of A
     }{#xmlFormat {@yaml:xml a}}
   Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -140,8 +140,8 @@
     {@yaml:define a=
     a:
       # here we specify multiple attributes in a single Map object for the sake of simplicity
-      att: !!javax0.jamal.api.Xml$ATTR { at1: this is an attribute, at2: this is also an attribute }
-      "zsubasuba abraka not appear whatever": !!javax0.jamal.api.Xml$CDATATEXT this is the text of A
+      att: !attr { at1: this is an attribute, at2: this is also an attribute }
+      "zsubasuba abraka not appear whatever": !cdatatext this is the text of A
     }{#xmlFormat {@yaml:xml a}}
   Output: |+
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -153,7 +153,7 @@
   Input: |
     {@yaml:define a=
     as:
-    - !!javax0.jamal.api.Xml$CDATA this is the text of A
+    - !cdata this is the text of A
     - k: h
       h: k
     }{#xmlFormat {@yaml:xml a}}
@@ -173,9 +173,9 @@
   Input: |
     {@yaml:define a=
     a:
-    - !!javax0.jamal.api.Xml$ATTR { att: this is an attribute }
+    - !attr { att: this is an attribute }
     # it has to be specified here. You can specify any tag name.
-    - !!javax0.jamal.api.Xml$TAG A
+    - !tag A
     - k: h
       h: k
     }{#xmlFormat {@yaml:xml a}}
@@ -215,9 +215,9 @@
   Input: |
     {@yaml:define a=
     a:
-    - !!javax0.jamal.api.Xml$TAG A
-    - !!javax0.jamal.api.Xml$TAG B
+    - !tag A
+    - !tag B
     - h
     - k
     }{#xmlFormat {@yaml:xml a}}
-  Throws: "!!javax0.jamal.api.Xml.TAG must not be repeated."
+  Throws: "!tag must not be repeated."

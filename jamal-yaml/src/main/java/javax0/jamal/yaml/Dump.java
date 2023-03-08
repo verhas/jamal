@@ -15,7 +15,7 @@ import java.io.IOException;
 
 
 public class Dump implements Macro, InnerScopeDependent {
-    final Yaml yaml = new Yaml();
+    final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {

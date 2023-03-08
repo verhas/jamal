@@ -121,7 +121,7 @@ When you specify a value
 
 [source,yaml]
 ----
-!!javax0.jamal.api.Ref xyz
+!ref xyz
 ----
 
 it will create a `new Ref(xyz)` object.
@@ -149,7 +149,7 @@ You can also write this example as
 {%sample/
 {@yaml:define b=- x
 - y
-- !!javax0.jamal.api.Ref a}{@comment DON'T DO THIS!}
+- !ref a}{@comment DON'T DO THIS!}
 {@yaml:define a=[a,b,c]}
 {b}
 %}
@@ -181,7 +181,7 @@ will result
 
 When you invoke `yaml:resolve`, all the referenced Yaml macros have to be defined.
 
-Using this reference possibility, you can have several small Yaml fragments possibly referencing each others using the `!!javax0.jamal.api.Ref`.
+Using this reference possibility, you can have several small Yaml fragments possibly referencing each others using the `!ref`.
 When the small segments are done, you can apply `yaml:resolve` on the root one and create the output.
 
 [NOTE]
@@ -217,7 +217,7 @@ You can reference another user defined Yaml definition in the form:
 {%sample/
 {@yaml:define x=
 a: this is a string
-b: !!javax0.jamal.api.Ref xyz}
+b: !ref xyz}
 %}
 
 It is more readable if you write:
@@ -943,14 +943,14 @@ You can also specify attributes, use of CDATA and tag names for list elements us
 Jamal contains five classes, which can be referred to in Yaml files, and they are treated special during the XML conversion.
 When referring to the class it has to use the fully qualified class name with the `!!` prefix as in the list below.
 
-* `!!javax0.jamal.api.Xml$ATTR` will be used as an attribute for the tag containing this object.
+* `!attr` will be used as an attribute for the tag containing this object.
 When the containing object is a map, the `ATTR` object can be a simple string, or it can be a map.
 When the `ATTR` is a simple string, the key of it will be used as attribute name.
 If the `ATTR` object is a member of an array then it can only be a map.
 When the `ATTR` object is a map then the keys and values will be used as attribute keys and values.
 You have to use this form in a map if the name of the attribute is the same as one of the content keys.
 
-* `!!javax0.jamal.api.Xml$TEXT` will be used as the text value for the tag containing this object.
+* `!text` will be used as the text value for the tag containing this object.
 In an ordinary situation this just happens when you specify a string.
 In those cases there is no need for this class.
 It is only needed when you specified an attribute for some object using an `ATTR` for an object, which is supposed to be a text.
@@ -959,11 +959,11 @@ When the conversion sees the `TEXT` object it knows that it must treat this Map 
 If you use this object type it has to be the last in the map.
 Any further keys will result error.
 
-* `!!javax0.jamal.api.Xml$CDATATEXT` is the same as the `TEXT`, but it will also enclose the text as CDATA.
+* `!cdatatext` is the same as the `TEXT`, but it will also enclose the text as CDATA.
 
-* `!!javax0.jamal.api.Xml$CDATA` will instruct the converter to convert the actual node to CDATA.
+* `!cdata` will instruct the converter to convert the actual node to CDATA.
 
-* `!!javax0.jamal.api.Xml$TAG` can specify a TAG name for the list members.
+* `!tag` can specify a TAG name for the list members.
 The default behaviour is that a list will be converted to a `<As><A></A><A></A>...</As>` structure.
 Here `As` is the plural form of a word, like `dependencies`.
 The conversion will calculate the singular in the very simple way chopping off the last character.

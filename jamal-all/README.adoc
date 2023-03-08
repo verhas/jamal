@@ -52,6 +52,8 @@ This will add the following dependencies to your project:
 
 * `jamal-io`
 
+* `jamal-openai`
+
 * `jamal-ruby`
 
 * `jamal-scriptbasic`
