@@ -26,7 +26,6 @@ Following that, you can use the
 . <<import,{%ImportingChapter%}>>
 {%chap isResolved%}
 {%chap get%}
-{%chap get%}
 {%chap set%}
 {%chap add%}
 {%chap format%}

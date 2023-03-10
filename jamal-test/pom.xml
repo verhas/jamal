@@ -33,6 +33,7 @@
                 --add-opens jamal.test/javax0.jamal.test.extra=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.core=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.yaml=ALL-UNNAMED
+                          --add-opens jamal.test/javax0.jamal.test.json=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.tools.params=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.tools.junit=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.examples=ALL-UNNAMED
@@ -67,6 +68,10 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-json</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

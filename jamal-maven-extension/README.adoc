@@ -229,6 +229,11 @@ If you want to do anything like that, the in-memory Yaml structures these macros
 
 For further information read the link:../jamal-yaml/README.adoc[documentation] of the module.
 
+===  `json`
+This module provides macros that can read, write and manipulate JSON data.
+
+For further information read the link:../jamal-json/README.adoc[documentation] of the module.
+
 ===  `assertions`
 This module gives you assertion macros that can fail if certain conditions are not met.
 

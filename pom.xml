@@ -19,6 +19,7 @@
         <module>jamal-plantuml</module>
         <module>jamal-snippet</module>
         <module>jamal-yaml</module>
+        <module>jamal-json</module>
         <module>jamal-prog</module>
         <module>jamal-maven-load</module>
         <module>jamal-groovy</module>
@@ -260,6 +261,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-yaml</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-json</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
             <dependency>

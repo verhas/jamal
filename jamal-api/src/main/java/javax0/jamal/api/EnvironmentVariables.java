@@ -221,7 +221,7 @@ end snippet
      * <li>The method first looks at the system variables, to see if there is a value defined there and </li>
      * <li>if there is none then it tries to read the environment variable.</li>
      * <li>If the configuration parameter is not defined in either place
-     * then it tries to use the value from the properties file {@code ~/.jamal.settings.properties} or
+     * then it tries to use the value from the properties file {@code ~/.jamal/settings.properties} or
      * {@code ~/.jamal/settings.xml}.</li>
      * </ol>
      * <p>

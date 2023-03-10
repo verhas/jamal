@@ -1,0 +1,21 @@
+a simple get from a json structure:
+  Input: |-
+    {@json:define a={a:alma,b:{c: 3, d:[1,2,{q:{h:"deep h"}}]}}}{@json:get (from=a) /b/d/2/q/h}
+  Output: "deep h"
+  
+a simple get from a json structure without 'from':
+  Input: |-
+    {@json:define a={a:alma,b:{c: 3, d:[1,2,{q:{h:"deep h"}}]}}}{@json:get a./b/d/2/q/h}
+  Output: "deep h"
+
+"A simple get can work without the 'from' option, giving the name in the macro input instead":
+  Input: |-
+    {@json:define a={a:alma,b:{c: 3, d:[1,2,{q:{h:"deep h"}}]}}}{@json:get a./b/d/2/q/h}
+  Output: |-
+    deep h
+
+"There is no need to add the starting / to the JSONPointer":
+  Input: |-
+    {@json:define a={a:alma,b:{c: 3, d:[1,2,{q:{h:"deep h"}}]}}}{@json:get a.b/d/2/q/h}
+  Output: |-
+    deep h

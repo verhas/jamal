@@ -340,7 +340,7 @@ public class FileTools {
      */
     private static int fileStart(final String fileName) {
         if (fileName.startsWith("https://")) {
-            return 7;
+            return 7; // number of characters
         }
         return readers.stream().filter(r -> r.canRead(fileName)).findFirst().map(r -> r.fileStart(fileName)).orElse(-1);
     }

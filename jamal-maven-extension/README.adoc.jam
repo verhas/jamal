@@ -255,6 +255,11 @@ If you want to do anything like that, the in-memory Yaml structures these macros
 
 {%further yaml%}
 
+=== {%#block {%depCounter%}%} `json`
+This module provides macros that can read, write and manipulate JSON data.
+
+{%further json%}
+
 === {%#block {%depCounter%}%} `assertions`
 This module gives you assertion macros that can fail if certain conditions are not met.
 

@@ -44,6 +44,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 {CHECK :GROOVY_VERSION:org/codehaus/groovy/groovy-jsr223}
 {CHECK :OGNL_VERSION:ognl/ognl}
 {CHECK :SNAKEYAML_VERSION:org/yaml/snakeyaml}
+{CHECK :JSON_ORG_VERSION:org/json/json}
 {CHECK :FLEXMARK_VERSION:com/vladsch/flexmark/flexmark-all}
 {CHECK :APACHE_POI_VERSION:org/apache/poi/poi-ooxml}
 {CHECK :ASCIIDOCTORJ_VERSION:org/asciidoctor/asciidoctorj}

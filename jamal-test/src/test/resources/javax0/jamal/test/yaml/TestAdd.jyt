@@ -156,7 +156,7 @@ you can not append a map to a list:
     {a}
   Throws: "You can add only a List to a List when flat.*"
 
-you cannot add avalue to a map without key:
+you cannot add a value to a map without key:
   Input: |-
     {@yaml:define a=
     a: this is a
@@ -200,7 +200,7 @@ you cannot add anything to a non existent part (null) of a map:
     {@yaml:add to=a.zuppa key=birca
     this is c first
     }
-  Throws: "Cannot 'yaml:add' into the OGN expression 'a.zuppa'"
+  Throws: "Cannot 'yaml:add' into the OGNL expression 'a.zuppa'"
 
 you cannot add anything to a non existent part (null) of a list:
   Input: |-
@@ -210,7 +210,7 @@ you cannot add anything to a non existent part (null) of a list:
     {@yaml:add to=a.zuppa key=birca
     this is c first
     }"
-  Throws: "Cannot 'yaml:add' into the OGN expression 'a.zuppa'"
+  Throws: "Cannot 'yaml:add' into the OGNL expression 'a.zuppa'"
 
 you get error when the OGNL expression is erroneous:
   Input: |-

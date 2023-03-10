@@ -43,13 +43,15 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MOCKITO_VERSION` `5.1.1` 
 
-* `OK`  `JRUBY_VERSION` `9.4.1.0` 
+* `*[red]#NO#*`  `JRUBY_VERSION` `9.4.1.0` `*[red]#upgrade to 9.4.2.0#*`
 
 * `OK`  `GROOVY_VERSION` `3.0.15` 
 
 * `OK`  `OGNL_VERSION` `3.3.4` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.0` 
+
+* `OK`  `JSON_ORG_VERSION` `20230227` 
 
 * `OK`  `FLEXMARK_VERSION` `0.64.0` 
 

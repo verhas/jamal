@@ -1,0 +1,21 @@
+"setting a simple variable":
+  Input: |-
+    {@json:define a={a:1,b:2,c:3}}{@json:set b=a./b}{b}
+  Output: "2"
+
+"setting a simple variable with a string":
+    Input: |-
+      {@json:define a={a:1,b:"braucherda",c:3}}{@json:set b=a./b}{b}
+    Output: "braucherda"
+
+"setting a simple variable with a map":
+  Input: |-
+    {@json:define a={a:1,b:{"zoorukka":"wauchera"},c:3}}{@json:set b=a./b}{b}
+  Output: |-
+    {"zoorukka":"wauchera"}
+
+"setting a simple variable with a list":
+  Input: |-
+    {@json:define a={a:1,b:["micherda"],c:3}}{@json:set b=a./b}{b}
+  Output: |-
+    ["micherda"]
