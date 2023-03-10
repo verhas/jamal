@@ -83,7 +83,7 @@ The source text
 
 * include and execute JShell, ScriptBasic, Groovy, Ruby or other scripts,
 
-* works with yaml, XML data,
+* works with JSON, yaml, XML data,
 
 * import documentation and code snippets from the documented application or over the network,
 
@@ -178,6 +178,7 @@ image::jamaldebugger2559x1089.png[]
 * <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
 * <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
 * <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files
+* <<./jamal-json/README.adoc#,Jamal JSon Module README>>, Use data from JSON files in your macros and use macros in your JSON files
 * <<./jamal-assertions/README.adoc#,Jamal Assertions Module README>>, contains macros to make assertions to ensure the consistency of your documentation
 * <<./jamal-word/README.adoc#,DOCX Word Processing README>>, describes the Jamal Microsoft Word Processing module and the macros that are specific to DOCX processing
 
@@ -4263,6 +4264,12 @@ The integration and how to use the module macros are described in the link:{%@fi
 === {%chapter%}Ruby Integration
 {%GroovyRuby :ruby:Ruby%}
 
+[[JSON]]
+=== {%chapter%}JSON Integration
+
+The JSON module can be used to simplify the maintenance of JSON files using macros and splitting up the JSON files into smaller chunks.
+The documentation of the module is link:{%@file jamal-json/README.adoc%}[JSON readme]
+
 [[Yaml]]
 === {%chapter%}Yaml Integration
 
@@ -4362,7 +4369,7 @@ This is a simplified interface to access the functionality of Jamal.
 
 The current and past versions of the JavaDoc can be read online at the address:
 
-{%@for module in (api,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,java,maven-input,markdown,maven-extension,maven-plugin,plantuml,ruby,scriptbasic,snippet,test,testsupport,tools,word,yaml)=
+{%@for module in (api,assertions,cmd,core,debug,doclet,engine,extensions,groovy,io,jamal,java,maven-input,markdown,maven-extension,maven-plugin,plantuml,ruby,scriptbasic,snippet,test,testsupport,tools,word,yaml,json)=
 * https://javadoc.io/doc/com.javax0.jamal/jamal-module/
 
 %}

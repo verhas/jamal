@@ -473,6 +473,8 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-yaml`
 
+* `jamal-json`
+
 * `jamal-prog`
 
 * `jamal-maven-load`

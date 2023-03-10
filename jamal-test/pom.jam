@@ -9,6 +9,7 @@
     {@define openForTests={opens/test/test.extra}
                           {opens/test/test.core}
                           {opens/test/test.yaml}
+                          {opens/test/test.json}
                           {opens/test/test.tools.params}
                           {opens/test/test.tools.junit}
                           {opens/test/test.examples}
@@ -23,7 +24,7 @@
     {build {plugins  {@include ../plugins.jim}}}
 
     {dependencies
-        {@for MODULE in (api,tools,engine,core,yaml,snippet,jamal,debug)=
+        {@for MODULE in (api,tools,engine,core,yaml,json,snippet,jamal,debug)=
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency|{GROUPID}|jamal-testsupport||test}
         {@for MODULE in (api,engine,params)=

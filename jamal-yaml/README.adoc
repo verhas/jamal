@@ -24,7 +24,6 @@ Following that, you can use the
 . <<import,Importing yaml from a file>>
 . <<isResolved,`yaml:isResolved`>>
 . <<get,`yaml:get`>>
-. <<get,`yaml:get`>>
 . <<set,`yaml:set`>>
 . <<add,`yaml:add`>>
 . <<format,`yaml:format`>>
@@ -421,10 +420,11 @@ The content of this file is
 
 [source]
 ----
-# this is a sample Yaml file that the test TestImport.jyt imports
+# this is a sample Yaml file that the test TestImport imports
 # note that this file is a pure YAML file and no Jamal macros are in it
+# contains user defined macro reference `a`
 &id
-a: this is a
+a: this is {a}
 b: this is b
 c:
   - 1
@@ -449,7 +449,7 @@ which will result
 [source]
 ----
 &id001
-a: this is a
+a: this is {a}
 b: this is b
 c: [1, 2, 3, 5]
 q: *id001

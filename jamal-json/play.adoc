@@ -1,0 +1,3 @@
+
+
+{"zilch":{"nada":"nothing"},"services":["http","https","jamal-debug",{"com.javax0.jamal.sizing":1000,"com.javax0.jamal.title":"Non-relational DB Instance","com.javax0.jamal.nodeType":"primary"}],"version":"3.6"}

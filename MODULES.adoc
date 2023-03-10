@@ -160,6 +160,9 @@ It could be part of the engine.
 This implementation can read DOCX format files, process the Jamal macros and generate DOCX output.
 This module is included in the command line version, thus you can convert Microsoft Word documents from the command line version of Jamal.
 
+=== link:https://github.com/verhas/jamal/blob/master/jamal-json/README.adoc[JSON] ^_macro_^
+This module implements macros that support the reading and processing of JSON format data.
+
 === link:https://github.com/verhas/jamal/blob/master/jamal-yaml/README.adoc[YAML] ^_macro_^
 This module implements macros that support the reading and processing of YAML format data.
 It may be useful when you have to maintain large YAML data files.

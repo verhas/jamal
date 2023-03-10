@@ -1,0 +1,12 @@
+# this is a sample Yaml file that the test TestImport imports
+# note that this file is a pure YAML file and no Jamal macros are in it
+# contains user defined macro reference `a`
+&id
+a: this is {a}
+b: this is b
+c:
+  - 1
+  - 2
+  - 3
+  - 5
+q: *id

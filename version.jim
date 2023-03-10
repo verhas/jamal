@@ -85,6 +85,7 @@ JRUBY_VERSION=9.4.1.0                      -- https://repo.maven.apache.org/mave
 GROOVY_VERSION=3.0.15                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
 OGNL_VERSION=3.3.4                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=2.0                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
+JSON_ORG_VERSION=20230227                  -- https://repo.maven.apache.org/maven2/org/json/json/
 FLEXMARK_VERSION=0.64.0                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
 APACHE_POI_VERSION=5.2.3                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 ASCIIDOCTORJ_VERSION=2.5.7                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj

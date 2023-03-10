@@ -21,33 +21,27 @@ public class Add implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var to = holder("yamlDataTarget", "to").asString();
-        final var key = holder(null, "key").orElseNull();
+        final var key = Params.<String>holder(null, "key").orElseNull();
         final var flatten = holder(null, "flat", "flatten").asBoolean();
         Params.using(processor).from(this).keys(to, key, flatten).parse(in);
         final var dotIndex = to.get().indexOf('.');
         final String id = getId(to, dotIndex);
-        final Object expression = getOgnlExpression(in, to, dotIndex);
+        final Object expression = getOgnlExpression( to, dotIndex);
         final Object yamlStructure = getNewYamlPart(in);
         final var yamlObject = Resolve.getYaml(processor, id);
         final Object anchor = getAnchor(expression, to, yamlObject);
         assertConsistency(to, key, flatten, anchor);
         if (anchor instanceof Map) {
             if (flatten.is()) {
-                if (yamlStructure instanceof Map<?, ?>) {
-                    ((Map<Object, Object>) anchor).putAll((Map<?, ?>) yamlStructure);
-                } else {
-                    throw new BadSyntax("You can add only a Map to a Map when flat(ten) for '" + to.get() + "'");
-                }
+                BadSyntax.when(!(yamlStructure instanceof Map<?, ?>), "You can add only a Map to a Map when flat(ten) for '%s'", to.get());
+                ((Map<Object, Object>) anchor).putAll((Map<?, ?>) yamlStructure);
             } else {
                 ((Map<Object, Object>) anchor).put(key.get(), yamlStructure);
             }
         } else {
             if (flatten.is()) {
-                if (yamlStructure instanceof List<?>) {
-                    ((List<Object>) anchor).addAll((List<?>) yamlStructure);
-                } else {
-                    throw new BadSyntax("You can add only a List to a List when flat(tten) for '" + to.get() + "'");
-                }
+                BadSyntax.when(!(yamlStructure instanceof List<?>) || !(anchor instanceof List<?>), "You can add only a List to a List when flat(tten) for '%s'", to.get());
+                ((List<Object>) anchor).addAll((List<?>) yamlStructure);
             } else {
                 ((List<Object>) anchor).add(yamlStructure);
             }
@@ -56,7 +50,7 @@ public class Add implements Macro, InnerScopeDependent {
         return "";
     }
 
-    private void assertConsistency(Params.Param<String> to, Params.Param<Object> key, Params.Param<Boolean> flatten, Object anchor) throws BadSyntax {
+    private void assertConsistency(Params.Param<String> to, Params.Param<String> key, Params.Param<Boolean> flatten, Object anchor) throws BadSyntax {
         BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(),  "You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get());
         BadSyntax.when(key.get() != null && anchor instanceof List,  "You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get());
         BadSyntax.when(key.get() != null && flatten.is(),  "You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get());
@@ -77,7 +71,7 @@ public class Add implements Macro, InnerScopeDependent {
             exception = e;
         }
         if (anchor == null) {
-            throw new BadSyntax("Cannot '" + getId() + "' into the OGN expression '" + to.get() + "'", exception);
+            throw new BadSyntax("Cannot '" + getId() + "' into the OGNL expression '" + to.get() + "'", exception);
         }
         return anchor;
     }
@@ -92,7 +86,7 @@ public class Add implements Macro, InnerScopeDependent {
         return yamlStructure;
     }
 
-    private Object getOgnlExpression(Input in, Params.Param<String> to, int dotIndex) throws BadSyntax {
+    private Object getOgnlExpression(Params.Param<String> to, int dotIndex) throws BadSyntax {
         final Object expression;
         if (dotIndex == -1) {
             expression = null;

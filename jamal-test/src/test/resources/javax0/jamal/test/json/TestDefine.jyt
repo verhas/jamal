@@ -1,0 +1,17 @@
+{%@define OUTPUT={"a":1,"b":2}%}
+define a simple json structure use it with verbatim:
+  Input: |-
+    {@json:define z={a: 1,    b: 2}}{@verbatim z}
+  Output: |-
+    {%OUTPUT%}
+define a simple json structure use it:
+  Input: |-
+    {@json:define z={a: 1,b:2}}{z}
+  Output: |-
+    {%OUTPUT%}
+
+define a list and use it with verbatim:
+  Input: |-
+    {@json:define z=[{a:1,b:2}]}{@verbatim z}
+  Output: |-
+    [{%OUTPUT%}]

@@ -7,6 +7,7 @@
 //DEPS com.javax0.jamal:jamal-plantuml:1.12.7-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-snippet:1.12.7-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-yaml:1.12.7-SNAPSHOT
+//DEPS com.javax0.jamal:jamal-json:1.12.7-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-prog:1.12.7-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-maven-load:1.12.7-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-engine:1.12.7-SNAPSHOT

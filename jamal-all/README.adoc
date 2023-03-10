@@ -44,6 +44,8 @@ This will add the following dependencies to your project:
 
 * `jamal-yaml`
 
+* `jamal-json`
+
 * `jamal-prog`
 
 * `jamal-maven-load`
