@@ -1,46 +1,71 @@
 package javax0.jamal.openai;
 
-import org.json.JSONObject;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.NodeId;
-import org.yaml.snakeyaml.nodes.Tag;
-import org.yaml.snakeyaml.representer.Representer;
-import org.yaml.snakeyaml.resolver.Resolver;
+import javax0.jamal.api.EnvironmentVariables;
+import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.HexDumper;
+import javax0.jamal.tools.SHA256;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.regex.Pattern;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Query {
 
-    private String url = ConfigurationReader.getUrl();
+    private static final String DEFAULT_CACHE_ROOT = "~/.jamal/cache/";
+    private static final String DEFAULT_CACHE_SUB = "openai/";
+    private final static File CACHE_ROOT_DIRECTORY = new File(
+            EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_HTTPS_CACHE_ENV)
+                    .or(() -> Optional.of(DEFAULT_CACHE_ROOT)).map(FileTools::adjustedFileName).get());
 
-    public Object getModel(final String name) throws IOException {
-        final var con = (HttpURLConnection) new URL(url + "models/" + name).openConnection();
-        return get(con);
+    private final String cacheSeed;
+
+    public Query(final String cacheSeed) {
+        this.cacheSeed = cacheSeed;
     }
 
-    public Object getModels() throws IOException {
-        final var con = (HttpURLConnection) new URL(url + "models").openConnection();
-        return get(con);
+    private File cacheFile = null;
+
+    private String hashCode(final String url, final String content) {
+        return subdirs(HexDumper.encode(SHA256.digest(cacheSeed + url + content)));
     }
 
-    public Object getCompletion(Map<String, Object> parameters) throws IOException {
-        final var con = (HttpURLConnection) new URL(url + "completions").openConnection();
-        return post(con, parameters);
+    private static String subdirs(final String s) {
+        return s.replaceAll("([0-9a-fA-F]{8})(?!$)", "$1-").replaceFirst("-", "/");
     }
 
-    private Object post(final HttpURLConnection con, Map<String, Object> params) throws IOException {
+    private String getCachedResponse(final String url, final String params) throws IOException {
+        final var cacheFile = getCachefile(url, params);
+        if (cacheFile.exists()) {
+            return Files.readString(cacheFile.toPath(), StandardCharsets.UTF_8);
+        }
+        return null;
+    }
+
+    private File getCachefile(final String url, final String params) {
+        if (cacheFile == null) {
+            final var cacheDir = new File(CACHE_ROOT_DIRECTORY, DEFAULT_CACHE_SUB + hashCode(url, params));
+            if (!cacheDir.exists()) {
+                cacheDir.mkdirs();
+            }
+            cacheFile = new File(cacheDir, "response.json");
+        }
+        return cacheFile;
+    }
+
+    String post(final String url, String params) throws IOException {
+        final var cachedResponse = getCachedResponse(url, params);
+        if (cachedResponse != null) {
+            return cachedResponse;
+        }
+        final var con = (HttpURLConnection) new URL(url).openConnection();
         try {
             con.setRequestMethod("POST");
             con.setRequestProperty("Authorization", "Bearer " + ConfigurationReader.getApiKey().orElseThrow());
@@ -49,25 +74,28 @@ public class Query {
             con.setInstanceFollowRedirects(true);
             con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
-            JSONObject json = new JSONObject(params);
-            con.getOutputStream().write(json.toString().getBytes(StandardCharsets.UTF_8));
+            con.getOutputStream().write(params.getBytes(StandardCharsets.UTF_8));
             final int status = con.getResponseCode();
             final var reader = new BufferedReader(
                     new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
             final var retval = reader.lines().collect(Collectors.joining("\n"));
             if (status != 200) {
-                throw new IOException("GET url '" + url + "' returned " + status);
+                throw new IOException("POST url '" + url + "' returned " + status + "\n" + retval);
             }
-            final var result = new JSONObject(retval);
-            return result;
+            final var cachefile = getCachefile(url, params);
+            Files.writeString(cachefile.toPath(), retval, StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            return retval;
         } finally {
             con.disconnect();
         }
     }
 
-    private static final YamlNoImplicitTagResolver noImplicitTagResolver = new YamlNoImplicitTagResolver();
-
-    private Object get(final HttpURLConnection con) throws IOException {
+    String get(final String url) throws IOException {
+        final var cachedResponse = getCachedResponse(url, "");
+        if (cachedResponse != null) {
+            return cachedResponse;
+        }
+        final var con = (HttpURLConnection) new URL(url).openConnection();
         try {
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", "Bearer " + ConfigurationReader.getApiKey().orElseThrow());
@@ -80,28 +108,14 @@ public class Query {
             }
             final var reader = new BufferedReader(
                     new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-            final var retval = reader.lines().collect(Collectors.joining("\n"));
-            final var yaml = new Yaml();
-            final var result = yaml.load(retval);
-            return result;
+            final var retval = reader.lines().collect(Collectors.joining("\n")).trim();
+            final var cachefile = getCachefile(url, "");
+            Files.writeString(cachefile.toPath(), retval, StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            return retval;
         } finally {
             con.disconnect();
         }
     }
-
-
-    public static class YamlNoImplicitTagResolver extends Resolver {
-        @Override
-        protected void addImplicitResolvers() {
-        }
-        public void addImplicitResolver(Tag tag, Pattern regexp, String first) {
-
-        }
-
-        @Override
-        public Tag resolve(NodeId kind, String value, boolean implicit) {
-            return super.resolve(kind,value,implicit);
-        }
-    }
 }
+
 

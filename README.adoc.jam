@@ -1978,7 +1978,7 @@ When looping up a property from the `~/.jamal/setting.properties` or `~/.jamal/s
 [NOTE]
 ====
 This search algorithm tries to follow the naming of the Java system properties, environment and properties.
-Also, it makes it possible to define something globvally for the user, or only for the running shell or only for the running JVM.
+Also, it makes it possible to define something globally for the user, or only for the running shell or only for the running JVM.
 The more local configuration overrules the broader one using this algorithm.
 ====
 
@@ -2035,6 +2035,22 @@ Starting with version $VERSION the $MACRO macro looks into the file before evalu
 If the very first two characters in the file are `{@` then it evaluates the content using `{` as macro opening string and `}` as macro closing string.
 This way you can freely $MACRO resource files provided in JAR file or through the net even if you use different macro opening and closing strings.%}
 {%DEFAULTOPEN/1.5.0/import%}
+
+[NOTE]
+====
+If there is a need to change the macro opening and closing strings in the imported file, the recommendation is to reset these changes before the end of the file.
+This way the imported file will not affect the importing file.
+Also, when the imported file starts with the `{@` characters the importing process changes the macro opening and closing strings to `{` and `}` before the import and resets them after the import.
+If there is a `sep` macro changing the macro opening and closing strings in the imported file then the reset will go back one level only, essentially reversing the last `sep` macro use.
+Assume that you have a file that uses the `[` and `]` characters as macro opening and closing strings.
+This file imports a file that starts with the `{@` characters.
+The imported file also uses `{@sep <>}` to change the macro opening and closing strings to `<` and `>`.
+At the end of the file this is reset and now the macro opening and closing strings are `{` and `}`.
+
+This only happens when the file importing the other file uses something other than the `{` and `}` characters as macro opening and closing strings.
+If the importing file uses the `{` and `}` characters then the imported file will be evaluated using the `{` and `}` characters as macro opening and closing strings just the normal way without setting and resetting the macro opening and closing strings.
+In this case the `{@sep <>}` change the macro opening and closing strings and this change will be in effect in the importing file.
+====
 
 Starting with version 1.11.0 the import macro has the option `noCache`.
 {%@define noCacheExplanation=
