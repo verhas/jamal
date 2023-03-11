@@ -1,0 +1,20 @@
+"Get the models from the openAI API and assert that the JSON is longer than 10_000 characters":
+  Input: |-
+    {@import res:openai.jim}\
+    {#assert:less /10000/{#string:length {openai:query_models}}}
+  Output: ""
+"Get the babbage model description  from the openAI API and assert that the JSON is longer than 500 characters":
+  Input: |-
+    {@import res:openai.jim}\
+    {#assert:less /500/{#string:length {openai:query_model babbage}}}
+  Output: ""
+"Get Descartes completion":
+    Input: |-
+      {@import res:openai.jim}\
+      {openai:model babbage}\
+      {#json:define descartes_said={openai:completion |
+                                      "prompt": "Descartes said:",
+                                      "temperature": 0.2
+                                  }
+      }{@json:get descartes_said./choices/0/text}
+    Output: " \"I am not a philosopher, but I am a man of science, and"

@@ -10,10 +10,6 @@ public class ConfigurationReader {
         return EnvironmentVariables.getenv("OPENAI_API_KEY");
     }
 
-    public static String getUrl() {
-        return EnvironmentVariables.getenv("OPENAI_URL").orElse("https://api.openai.com/v1/");
-    }
-
     public static Optional<String> getOrganization() {
         return EnvironmentVariables.getenv("OPENAI_ORGANIZATION");
     }

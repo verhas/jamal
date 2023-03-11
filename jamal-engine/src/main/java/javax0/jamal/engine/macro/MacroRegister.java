@@ -66,7 +66,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         /**
          * The delimiters that were saved on this level.
          */
-        final List<Delimiters> savedDelimiterPairs = new ArrayList<>();
+         final List<Delimiters> savedDelimiterPairs = new ArrayList<>();
         /**
          * The last delimiter pair that was defined on this scope level. Null if there was none defined in this scope.
          */

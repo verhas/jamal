@@ -1,5 +1,3 @@
-{@define [tail]A(A,B,...C...)= .A. .B. .C.}
-{A /1/2}
-{A /1/2/3}
-{A /1/2/3/4}
-{A /1/2/3/4/5}
+{%@define a=this is a%}
+{%@import imported.jim%}
+{%a%}
