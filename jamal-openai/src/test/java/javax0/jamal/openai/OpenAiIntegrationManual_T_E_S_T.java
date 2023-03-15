@@ -2,10 +2,6 @@ package javax0.jamal.openai;
 
 import javax0.jamal.testsupport.JamalTests;
 import javax0.jamal.testsupport.JamalYamlTest;
-import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 /**
@@ -16,7 +12,7 @@ import org.junit.jupiter.api.TestFactory;
  *
  * This is the reason why the name of the class is not TestSomething, so it is not picked up by the command line.
  */
-class BuiltinMacros {
+class OpenAiIntegrationManual_T_E_S_T {
 
     @TestFactory
     JamalTests<?> testAll() {

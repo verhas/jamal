@@ -1266,7 +1266,7 @@ The reader will not be able to read the answer, only when they put effort deciph
 
 [[pos]]
 ==== {%macroChapter%}`pos`
-{%#snip:check file={%JAVA_DIR%}Pos.java hash=3ac51d97%}
+{%#snip:check file={%JAVA_DIR%}Pos.java hash=0af0c677%}
 
 This macro will result the
 

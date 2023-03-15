@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>jamal json</name>
-    <artifactId>jamal-json</artifactId>
+    <name>jamal openai</name>
+    <artifactId>jamal-openai</artifactId>
     <version>1.12.7-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
         <version>1.12.7-SNAPSHOT</version>
     </parent>
-    <description>json module for Jamal</description>
+    <description>openai module for Jamal</description>
     <build>
         <plugins>
             <plugin>
@@ -29,7 +29,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                --add-opens jamal.json/javax0.jamal.json=ALL-UNNAMED
+                --add-opens jamal.openai/javax0.jamal.openai=ALL-UNNAMED
             </argLine>
                 </configuration>
             </plugin>
@@ -51,6 +51,30 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-json</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-assertions</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-snippet</artifactId>
+            <version>1.12.7-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-jamal</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -66,14 +90,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.1.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20230227</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

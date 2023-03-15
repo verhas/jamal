@@ -12,9 +12,28 @@
     Input: |-
       {@import res:openai.jim}\
       {openai:model babbage}\
+      {@options openai:local}\
       {#json:define descartes_said={openai:completion |
                                       "prompt": "Descartes said:",
                                       "temperature": 0.2
                                   }
       }{@json:get descartes_said./choices/0/text}
-    Output: " \"I am not a philosopher, but I am a man of science, and"
+    Output: "this is a cached answer"
+
+"Get Descartes completion twice with different tabulation and hash still works":
+    Input: |- 
+      {@import res:openai.jim}\
+      {openai:model babbage}\
+      {@options openai:local}\
+      {openai:hash |e721ebd8}\
+      {#json:define descartes_said={openai:completion |
+                                      "prompt": "Descartes said:",
+                                      "temperature": 0.2
+                                  }
+      }\
+      {#json:define descartes_said={openai:completion |
+                                      "prompt": "Descartes said:",
+                             "temperature": 0.2
+                                  }
+      }{@json:get descartes_said./choices/0/text}
+    Output: "this is a cached answer"

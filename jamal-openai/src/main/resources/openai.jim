@@ -1,19 +1,26 @@
-{@sep  []}
+{@sep  [. .]}
 
-[@define seed(_seed)=[@define $seed=_seed]]
-[seed 1]
-[@define openai:model(_model)=[@define $model="model" : "_model",
-]]
-[@define $model=]
+[.@define seed(_seed)=[.@define $seed=_seed.].]
+[.seed 1.]
+[.@define openai:model(_model)=[.@define $model="model" : "_model",
+.].]
+[.@define $model=.]
+[.@define openai:hash(_hash)=[.@define $hash=_hash.].]
+[.@define $hash=.]
 
+[.@define openai:query_models=[.@openai:get seed=[.$seed.] url=https://api.openai.com/v1/models.].]
+[.@define openai:query_model($model)=[.@openai:get seed=[.$seed.] url=https://api.openai.com/v1/models/$model.].]
 
-[@define openai:query_models=[@openai:get seed=[$seed] url=https://api.openai.com/v1/models]]
-[@define openai:query_model($model)=[@openai:get seed=[$seed] url=https://api.openai.com/v1/models/$model]]
-
-[@define openai:completion($json)=[#openai:post seed=[$seed] url=https://api.openai.com/v1/completions
+[.@define openai:completion($json)=[.#openai:post seed=[.$seed.] url=https://api.openai.com/v1/completions [.#if [blank]/[.$hash.]//hash="[.$hash.]".]
 {
-[$model]
+[.$model.]
 $json
-}]]
+}.].]
+[.@define openai:chat($json)=[.#openai:post seed=[.$seed.] url=https://api.openai.com/v1/chat/completions [.#if [blank]/[.$hash.]//hash="[.$hash.]".]
+{
+[.$model.]
+$json
+}.].]
 
-[@sep]
+
+[.@sep.]

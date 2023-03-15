@@ -10,7 +10,7 @@ public interface Command {
     /**
      * Execute the command.
      *
-     * @param processor the Jamal processing environment
+     * @param context the Jamal processing environment
      * @return the result of the execution
      */
     String execute(Context context) throws BadSyntax;

@@ -99,8 +99,7 @@ public class Pos implements Macro {
         }
 
         if (up.isPresent()) {
-            for (int counter = up.get();
-                 counter > 0; counter--) {
+            for (int counter = up.get(); counter > 0; counter--) {
                 pos = pos.parent;
                 if (pos == null) {
                     throw new BadSyntax(String.format("The value %d for up in macro pos is too large, there are not so many levels of hierarchy.", up.get()));
@@ -113,9 +112,14 @@ public class Pos implements Macro {
         }
 
         if (top.is()) {
-            while (pos.parent != null) {
-                pos = pos.parent;
+            if (pos != null) {
+                while (pos.parent != null) {
+                    pos = pos.parent;
+                }
             }
+        }
+        if( pos == null ){
+            return "";
         }
         return formatString
                 .replaceAll("%f", "" + pos.file)

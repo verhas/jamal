@@ -122,7 +122,7 @@ public class Operation extends Expression {
     }
 
     static boolean bothNumeric(final String leftValue, final String rightValue) {
-        return InputHandler.isNumber(leftValue) && InputHandler.isNumber(rightValue);
+        return leftValue != null && InputHandler.isNumber(leftValue) && rightValue != null && InputHandler.isNumber(rightValue);
     }
 
     private static int getCompareTo(final String leftValue, final String rightValue) {

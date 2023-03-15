@@ -2,14 +2,12 @@ package javax0.jamal.json;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
-import org.json.JSONObject;
 
 public class JsonMacroObject implements UserDefinedMacro, ObjectHolder<Object> {
 
-    private Object content;
-    final private String id;
+    private final Object content;
+    private final String id;
 
     @Override
     public Object getObject() {
@@ -21,10 +19,6 @@ public class JsonMacroObject implements UserDefinedMacro, ObjectHolder<Object> {
         return true;
     }
 
-    public void setContent(JSONObject content) {
-        this.content = content;
-    }
-
     public JsonMacroObject(String id, Object content) {
         this.content = content;
         this.id = id;
@@ -32,6 +26,11 @@ public class JsonMacroObject implements UserDefinedMacro, ObjectHolder<Object> {
 
     @Override
     public String evaluate(String... parameters) throws BadSyntax {
+        BadSyntax.when(parameters.length > 1, "JSON object macro can have one argument, a JSONPointer");
+        if (parameters.length > 0 && parameters[0].trim().length() > 0) {
+            final var expression = JsonTools.getPointer(parameters[0].trim());
+            return String.valueOf(expression.queryFrom(content));
+        }
         return content.toString();
     }
 

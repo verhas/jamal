@@ -213,10 +213,6 @@ public class JamalMojo extends AbstractMojo {
         if (sourceDirectory == null) {
             sourceDirectory = Paths.get(defaultSourceDirectory + "/..").toString();
         }
-        if (sourceDirectory == null) {
-            log.error("sourceDirectory configuration parameter is null. Jamal needs source files to process.");
-            throw new MojoExecutionException("sourceDirectory configuration parameter is null");
-        }
         if (targetDirectory == null) {
             log.warn("targetDirectory is null. Jamal will not produce output but it will process the sources.");
         }
@@ -253,7 +249,7 @@ public class JamalMojo extends AbstractMojo {
         final var msg = String.format(format, (Object[]) params) + (pos == null ? "" : " at ") + BadSyntaxAt.posFormat(pos);
         switch(level){
             case DEBUG: log.debug(msg); break;
-            case INFO: log.info(msg); break;
+            case INFO:
             case TRACE: log.info(msg); break;
             case WARNING: log.warn(msg); break;
             case ERROR: log.error(msg); break;

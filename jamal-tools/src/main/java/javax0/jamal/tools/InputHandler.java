@@ -492,7 +492,7 @@ public class InputHandler {
      * the spaces.
      *
      * @param input to be split up
-     * @return the list of the strings created from the input
+     * @return the array of the strings created from the input
      */
     public static String[] getParts(Input input) {
         return getParts(input, -1);

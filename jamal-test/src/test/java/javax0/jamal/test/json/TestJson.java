@@ -9,11 +9,9 @@ public class TestJson {
     @TestFactory
     JamalTests<?> testAll() {
         return JamalYamlTest.factory(
-            "TestSet",
-            "TestDump",
             "TestImport",
             "TestDefine",
-            "TestAdd",
+            "TestSet",
             "TestGet",
             JamalYamlTest.__OFF__
         );
