@@ -76,7 +76,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public Optional<Debugger.Stub> getDebuggerStub() {
-        return Optional.ofNullable(debuggerStub);
+        return Optional.of(debuggerStub);
     }
 
     /**

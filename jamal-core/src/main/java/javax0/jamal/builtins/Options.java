@@ -13,7 +13,7 @@ public class Options implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) {
         final var os = OptionsStore.getInstance(processor);
-        os.addOptions(in.toString().split("\\|", -1));
+        os.addOptions(in.toString().split("\\||\\s+", -1));
         return "";
     }
 }

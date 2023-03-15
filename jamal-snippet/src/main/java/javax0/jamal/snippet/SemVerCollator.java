@@ -152,6 +152,7 @@ class SemVerCollator extends Collator {
                 return +1;
             }
             // ascii collating order, SemVer 11/4/2
+            //noinspection ConstantValue
             if (la == null && lb == null) {
                 return a.compareTo(b);
             } else {

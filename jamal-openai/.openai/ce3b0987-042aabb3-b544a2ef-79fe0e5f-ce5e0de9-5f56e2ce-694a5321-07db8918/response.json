@@ -1,0 +1,19 @@
+{
+  "id": "cmpl-6tdMbcRdQK3GzD5MolyAjUQzuLjA3",
+  "object": "text_completion",
+  "created": 1678717373,
+  "model": "babbage",
+  "choices": [
+    {
+      "text": "this is a cached answer",
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "length"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 5,
+    "completion_tokens": 16,
+    "total_tokens": 21
+  }
+}

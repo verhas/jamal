@@ -1,21 +1,83 @@
-"setting a simple variable":
+"you can add a map structure with a key to the root of the structure":
   Input: |-
-    {@json:define a={a:1,b:2,c:3}}{@json:set b=a./b}{b}
-  Output: "2"
-
-"setting a simple variable with a string":
-    Input: |-
-      {@json:define a={a:1,b:"braucherda",c:3}}{@json:set b=a./b}{b}
-    Output: "braucherda"
-
-"setting a simple variable with a map":
-  Input: |-
-    {@json:define a={a:1,b:{"zoorukka":"wauchera"},c:3}}{@json:set b=a./b}{b}
+    {@json:define a= {"a": "this is a", "b": "this is b"}}\
+    {@json:set a/c={"a": "this is a",   "b": "this is b"}}{a}
   Output: |-
-    {"zoorukka":"wauchera"}
+    {"a":"this is a","b":"this is b","c":{"a":"this is a","b":"this is b"}}
 
-"setting a simple variable with a list":
+"you can overwrite the value of a key in the root of the structure":
   Input: |-
-    {@json:define a={a:1,b:["micherda"],c:3}}{@json:set b=a./b}{b}
+    {@json:define a= {"a": "this is a", "b": "this is b"}}\
+    {@json:set a/a="this is a updated"}{a}
   Output: |-
-    ["micherda"]
+    {"a":"this is a updated","b":"this is b"}
+
+"you can add a list to the root element of the structure":
+  Input: |-
+    {@json:define a=["a", "b"]}\
+    {@json:set a/*="c"}\
+    {@json:set a/*="d"}\
+    {a}\
+  Output: |-
+    ["a","b","c","d"]
+
+add a new element with a key to a map:
+  Input: |-
+    {@json:define a={a:"this is a","b":"this is b","c": {}}}\
+    {@json:set a/c/huppa="abraka dabra"}\
+    {a}
+  Output: |-
+    {"a":"this is a","b":"this is b","c":{"huppa":"abraka dabra"}}
+
+you can add elements to a list:
+  Input: |-
+    {@json:define a={a:"this is a","b":"this is b","c": []}}\
+    {@json:set a/c/*="this is c first"}\
+    {@json:set a/c/*="this is c second"}\
+    {a}
+  Output: |-
+    {"a":"this is a","b":"this is b","c":["this is c first","this is c second"]}
+
+you cannot append anything to a list when you specify a key:
+  Input: |-
+    {@json:define a=[a,b,c]}\
+    {@json:set a/birca=this is not added}
+  Throws: "The JSON structure in 'json:set' is an array, but the key is not '\\*'"
+
+you cannot add something to a string:
+  Input: |-
+    {@json:define a={"a":"this is a"}}
+    {@json:set a/a/birca="this cannot be added to a string"
+    }
+  Throws: "The path '/a' does not point to a JSON object or array\\."
+
+you cannot add anything to a non existent part (null) of a map:
+  Input: |-
+    {@json:define a={"a":"this is a"}}
+    {@json:set a/zuppa/birca=this cannot be added    }
+  Throws: "The path '/zuppa' does not point to a JSON object or array."
+
+you cannot add anything to a non existent part (null) of a list:
+  Input: |-
+    {@json:define a=[this is a]}
+    {@json:set a/zuppa/birca=
+    this is c first
+    }"
+  Throws: "The path '/zuppa' is not valid or cannot be evaluated for the given JSON."
+
+you get error when the JSON expression is erroneous:
+  Input: |-
+    {@json:define a=[this is a]}
+    {@json:set a/zuppa!hh/birca=
+    this is c first
+    }
+  Throws: The path '/zuppa!hh' is not valid or cannot be evaluated for the given JSON.
+
+you get error when the json if malformed:
+  Input: |-
+    {@json:define a=[this is a]}
+    {@json:set a/*=
+    {- khmm
+    z: 2
+    this is c first}}
+  Throws: "Cannot load JSON data."

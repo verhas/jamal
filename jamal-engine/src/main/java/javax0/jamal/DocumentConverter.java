@@ -39,7 +39,7 @@ public class DocumentConverter {
      * Create a JUnit test in your application that looks the following:
      *
      * <pre>
-     *     @Test
+     *     \@Test
      *     void generateDoc() throws Exception {
      *         DocumentConverter.convert("./README.adoc.jam");
      *     }
@@ -59,7 +59,7 @@ public class DocumentConverter {
         FileTools.writeFileContent(output, result, processor);
     }
 
-    private static class Includes {
+    public static class Includes {
         private final String[] includes;
 
         private Includes(String[] includes) {
@@ -71,7 +71,7 @@ public class DocumentConverter {
         }
     }
 
-    private static class Excludes {
+    public static class Excludes {
         private final String[] excludes;
 
         private Excludes(String[] excludes) {

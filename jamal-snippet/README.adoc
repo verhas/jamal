@@ -2773,7 +2773,7 @@ will result
 - Replace.java: 1,687 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
-- SemVerCollator.java: 8,929 bytes
+- SemVerCollator.java: 8,970 bytes
 - SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
@@ -2801,7 +2801,7 @@ will result
 - SkipLines.java: 2,762 bytes
 - SnipCheck.java: 7,791 bytes
 - Reflow.java: 2,023 bytes
-- Pos.java: 5,292 bytes
+- Pos.java: 5,392 bytes
 - Snippet.java: 1,052 bytes
 ----
 
@@ -3055,7 +3055,7 @@ will result in the output
 
 [source]
 ----
-2023-03-11 01:09:06
+2023-03-15 16:24:19
 ----
 
 

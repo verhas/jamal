@@ -4,7 +4,7 @@ import java.util.Optional;
 
 /**
  * A simple generic Trie implementation.
- * For more information about tries visit https://en.wikipedia.org/wiki/Trie
+ * For more information about tries visit <a href="https://en.wikipedia.org/wiki/Trie">Trie/Wikipedia</a>
  * This implementation is a pointer vector implementation.
  * The implementation is simplified, and it cannot handle the case, when a key is the prefix of another key.
  * In other words only leaf nodes can have values.

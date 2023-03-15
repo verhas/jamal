@@ -3369,7 +3369,7 @@ will result:
 {%output%}
 
 You cannot export a macro defined in a higher scope.
-You can use those macros and you can reference them.
+You can use those macros, and you can reference them.
 It is just that you cannot export them to the enclosing scope because they do not belong to the current scope.
 You can export a macro that was defined in a lower scope and was exported to the current scope.
 However, you cannot export a macro that was defined in a lower scope but was not exported to the current scope, simply because they do not exist anymore when the export is executed.
@@ -3381,7 +3381,7 @@ You cannot export macros from the top-level scope, because there is no enclosing
 since 1.0.3 (core)
 
 The options macro can be used to alter the behavior of Jamal.
-The options can be listed `|` separated as an argument to the macro.
+The options can be listed `|` or space separated as an argument to the macro.
 
 {%sample/
 {@options lenient|failfast|mySpecialOption}

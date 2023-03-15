@@ -1,8 +1,0 @@
-"test dumping json to a file":
-  Input: |-
-    {@json:define a={a:a,b:b}}\
-    {@json:dump a to target/dumped.json}\
-    {#json:define b={@include [verbatim]target/dumped.json}}\
-    {b}
-  Output: |-
-    {"a":"a","b":"b"}

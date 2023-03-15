@@ -65,4 +65,17 @@ public class Position {
     public Position fork() {
         return new Position(file, line, column,this);
     }
+
+    /**
+     *
+     * @return the top position in the hierarchy. The top position is the one in the file that is on the top
+     * level of the processing.
+     */
+    public Position top(){
+        var top = parent;
+        while( top.parent != null ){
+            top = top.parent;
+        }
+        return top;
+    }
 }
