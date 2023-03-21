@@ -67,8 +67,9 @@ public class Position {
     }
 
     /**
+     * Get the top position in the hierarchy.
      *
-     * @return the top position in the hierarchy. The top position is the one in the file that is on the top
+     * @return The top position is the one in the file that is on the top
      * level of the processing.
      */
     public Position top(){
