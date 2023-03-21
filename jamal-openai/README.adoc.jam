@@ -11,7 +11,7 @@ For example asking the prompt below __"Descartes said"__ will result in the foll
 {%@import src/main/resources/openai.jim%}\
 {%openai:model babbage%}\
 {%@options openai:local%}\
-{%seed 4%}\
+{%seed 5%}\
 {%#json:define descartes_said={%openai:completion |
                                 "prompt": "Short Summary of EPAM's 2018Q4 Earnings Call:",
                                 "temperature": 0.2

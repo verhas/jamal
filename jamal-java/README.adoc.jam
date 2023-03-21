@@ -25,6 +25,8 @@ The macros use the first line of the input to collect the option and the rest of
 The use of this macro package poses several security risk.
 If you configure your Jamal installation to have this package on the class path then open only Jamal sources which come from a trusted source.
 
+You can also use this module loading it dynamically using the `maven:load` macro.
+
 
 {%#define macro($x)=`{%MACRO_NS%}$x`%}
 == Macros

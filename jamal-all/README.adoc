@@ -62,6 +62,8 @@ This will add the following dependencies to your project:
 
 * `jamal-word`
 
+* `jamal-java`
+
 * `jamal-maven-plugin`
 
 * `jamal-maven-extension`

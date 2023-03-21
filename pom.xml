@@ -28,6 +28,7 @@
         <module>jamal-ruby</module>
         <module>jamal-scriptbasic</module>
         <module>jamal-word</module>
+        <module>jamal-java</module>
         <module>jamal-maven-plugin</module>
         <module>jamal-maven-extension</module>
         <module>jamal-cmd</module>
@@ -306,6 +307,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-word</artifactId>
+                <version>1.12.7-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-java</artifactId>
                 <version>1.12.7-SNAPSHOT</version>
             </dependency>
             <dependency>

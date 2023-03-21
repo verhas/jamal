@@ -7,11 +7,11 @@ That way you can ask OpenAI to complete your text, answer questions and so on.
 For example asking the prompt below __"Descartes said"__ will result in the following text:
 __
 
-EPAM's 2018Q4 Earnings Call Summary:
+EPAM's 2018Q4 Earnings Call
 
-EP__
+EPAM's__
 
-  {"created":1679342470,"usage":{"completion_tokens":16,"prompt_tokens":13,"total_tokens":29},"model":"babbage","id":"cmpl-6wFyoWoWCVIJ1GEua6DHjwuSk4V6P","choices":[{"finish_reason":"length","index":0,"text":"\n\nEPAM's 2018Q4 Earnings Call Summary:\n\nEP","logprobs":null}],"object":"text_completion"}
+  {"created":1679360290,"usage":{"completion_tokens":16,"prompt_tokens":13,"total_tokens":29},"model":"babbage","id":"cmpl-6wKcELkwb3NNfcRSHbnY50oTC4sYn","choices":[{"finish_reason":"length","index":0,"text":"\n\nEPAM's 2018Q4 Earnings Call\n\nEPAM's","logprobs":null}],"object":"text_completion"}
 
 ...c
 
@@ -20,18 +20,16 @@ EP__
 
 * How are you?
 
-* __
-
-As an AI language model, I don't have feelings, but I'm functioning well. Thank you for asking. How can I assist you today?__
+* __As an AI language model, I don't have emotions, but I'm functioning well. Thank you for asking. How can I assist you today?__
 
 * Do some editing on the text
 
 
-* __He was not able to finish the task that they gave him the day before yesterday.
+* __He was not able to finish the task that was given to him the day before yesterday
 __
 
 * create an image
 
-image::https://oaidalleapiprodscus.blob.core.windows.net/private/org-pw12yovxFuSbMN2zHjaHFgrj/user-lcgcIzGG8aAi3ZULtwzDv7Xa/img-4TjZ41YgoUhmk7UeXUaROC7k.png?st=2023-03-20T19%3A01%3A22Z&se=2023-03-20T21%3A01%3A22Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-20T17%3A56%3A00Z&ske=2023-03-21T17%3A56%3A00Z&sks=b&skv=2021-08-06&sig=e9fjTqipfmF93Q%2BIGIjGLVquMcuQT8YNxRzoC9aEn5c%3D[width=512px]
+image::https://oaidalleapiprodscus.blob.core.windows.net/private/org-pw12yovxFuSbMN2zHjaHFgrj/user-lcgcIzGG8aAi3ZULtwzDv7Xa/img-jYULcyKg493qKAbzuoXrkTqp.png?st=2023-03-20T23%3A58%3A21Z&se=2023-03-21T01%3A58%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-20T20%3A36%3A57Z&ske=2023-03-21T20%3A36%3A57Z&sks=b&skv=2021-08-06&sig=i9zyxDGlbucRiW0adhClVIT1SToEdkYDtjUF2LOkcsk%3D[width=512px]
 
-  {"data":[{"url":"https://oaidalleapiprodscus.blob.core.windows.net/private/org-pw12yovxFuSbMN2zHjaHFgrj/user-lcgcIzGG8aAi3ZULtwzDv7Xa/img-4TjZ41YgoUhmk7UeXUaROC7k.png?st=2023-03-20T19%3A01%3A22Z&se=2023-03-20T21%3A01%3A22Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-20T17%3A56%3A00Z&ske=2023-03-21T17%3A56%3A00Z&sks=b&skv=2021-08-06&sig=e9fjTqipfmF93Q%2BIGIjGLVquMcuQT8YNxRzoC9aEn5c%3D"}],"created":1679342482}
+  {"data":[{"url":"https://oaidalleapiprodscus.blob.core.windows.net/private/org-pw12yovxFuSbMN2zHjaHFgrj/user-lcgcIzGG8aAi3ZULtwzDv7Xa/img-jYULcyKg493qKAbzuoXrkTqp.png?st=2023-03-20T23%3A58%3A21Z&se=2023-03-21T01%3A58%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-20T20%3A36%3A57Z&ske=2023-03-21T20%3A36%3A57Z&sks=b&skv=2021-08-06&sig=i9zyxDGlbucRiW0adhClVIT1SToEdkYDtjUF2LOkcsk%3D"}],"created":1679360301}
