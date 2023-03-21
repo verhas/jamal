@@ -21,6 +21,15 @@ $json
 [.$model.]
 $json
 }.].]
+[.@define openai:edits($json)=[.#openai:post seed=[.$seed.] url=https://api.openai.com/v1/edits [.#if [blank]/[.$hash.]//hash="[.$hash.]".]
+{
+[.$model.]
+$json
+}.].]
+[.@define openai:images:generations($json)=[.#openai:post seed=[.$seed.] url=https://api.openai.com/v1/images/generations [.#if [blank]/[.$hash.]//hash="[.$hash.]".]
+{
+$json
+}.].]
 
 
 [.@sep.]

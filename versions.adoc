@@ -23,7 +23,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.5.0` 
 
-* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-4` 
+* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `4.0.0-alpha-4` `*[red]#upgrade to 4.0.0-alpha-5#*`
 
 * `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.8.1` 
 
@@ -31,7 +31,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.0.0-M9` 
+* `*[red]#NO#*`  `SUREFIRE_PLUGIN_VERSION` `3.0.0-M9` `*[red]#upgrade to 3.0.0#*`
 
 * `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.2.1` 
 
@@ -41,11 +41,11 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `JUPITER_VERSION` `5.9.2` 
 
-* `OK`  `MOCKITO_VERSION` `5.1.1` 
+* `*[red]#NO#*`  `MOCKITO_VERSION` `5.1.1` `*[red]#upgrade to 5.2.0#*`
 
 * `*[red]#NO#*`  `JRUBY_VERSION` `9.4.1.0` `*[red]#upgrade to 9.4.2.0#*`
 
-* `OK`  `GROOVY_VERSION` `3.0.15` 
+* `*[red]#NO#*`  `GROOVY_VERSION` `3.0.15` `*[red]#upgrade to 3.0.16#*`
 
 * `OK`  `OGNL_VERSION` `3.3.4` 
 
@@ -65,7 +65,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `SOURCE_BUDDY` `2.2.0` 
 
-* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-4` 
+* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `4.0.0-alpha-4` `*[red]#upgrade to 4.0.0-alpha-5#*`
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.1.1` 
 
