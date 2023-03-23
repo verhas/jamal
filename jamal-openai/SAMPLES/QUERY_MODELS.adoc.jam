@@ -1,0 +1,10 @@
+{%@comment fromFile%}\
+== Jamal OpenAI module Completion API
+{%@import samples.jim%}
+* List all the models
+{%@define openai:seed=33%}
+
+[source]
+----
+{%openai:query_models%}
+----

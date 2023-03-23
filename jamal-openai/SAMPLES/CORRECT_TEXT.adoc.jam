@@ -1,9 +1,10 @@
+{%@comment fromFile%}\
 == Jamal OpenAI module Completion API
 {%@import samples.jim%}
 * Do some editing on the text
-{%seed 33%}\
+{%@define openai:seed=34%}\
+{%@define openai:model=text-davinci-edit-001%}\
 
-{%openai:model text-davinci-edit-001%}\
 {%@define INPUT=He was not able to finish the task that that she gave her the day before yesterday%}
 {%@define INSTRUCTION=rewrite the sentence to gender-neutral also fixing errors, removing repetitions and making it more concise%}
 * *input:* {%INPUT%}

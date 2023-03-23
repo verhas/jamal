@@ -71,11 +71,11 @@ public class Options {
      * @throws BadSyntax if there is some error with the options
      */
     public Options(Processor processor, Input in, Macro macro) throws BadSyntax {
-        final var url = Params.<String>holder("url").asString();
-        final var cacheSeed = Params.<String>holder("seed").asString();
+        final var url = Params.<String>holder("openai:url", "url").asString();
+        final var cacheSeed = Params.<String>holder("openai:seed", "seed").asString();
         final var local = Params.<Boolean>holder("openai:local", "local").asBoolean();
         final var sealed = Params.<Boolean>holder("openai:sealed", "sealed").asBoolean();
-        final var hash = Params.<String>holder("hash").orElse(null);
+        final var hash = Params.<String>holder("openai:hash", "hash").orElse(null);
         final var fallible = Params.<Boolean>holder("openai:fallible", "fallible").asBoolean();
         final var asynch = Params.<Boolean>holder("openai:asynch", "asynch").asBoolean();
 

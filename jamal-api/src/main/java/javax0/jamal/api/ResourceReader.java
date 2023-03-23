@@ -4,6 +4,9 @@ import java.io.IOException;
 
 public interface ResourceReader extends ServiceLoaded {
 
+    default void setProcessor(final Processor processor) {
+    }
+
     /**
      * Return {@code true} if the file name is accepted by this reader.
      *

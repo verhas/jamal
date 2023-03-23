@@ -130,6 +130,7 @@ public class FileTools {
             readers.addAll(ServiceLoaded.getInstances(ResourceReader.class));
         }
         try {
+            readers.forEach(r -> r.setProcessor(processor));
             final String content =
                     readers.stream()
                             .filter(r -> r.canRead(fileName))

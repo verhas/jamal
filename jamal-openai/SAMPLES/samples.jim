@@ -2,4 +2,8 @@
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%#maven:load com.javax0.jamal:jamal-openai:{%VERSION%}%}\
 {%@import ../src/main/resources/openai.jim%}\
+{%@comment
+ in production this file has to be included as
+                  {%@import res:`openai:get`openai.jim%}
+%}
 {%@options openai:local openai:fallible openai:asynch%}\

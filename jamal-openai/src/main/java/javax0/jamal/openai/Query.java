@@ -273,6 +273,9 @@ public class Query {
      * @return the formatted and thus normalized JSON string
      */
     private static String normalizeJSON(final String content) {
+        if( content == null || content.isBlank() ) {
+            return "";
+        }
         return new JSONObject(content).toString();
     }
 

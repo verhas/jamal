@@ -8,6 +8,30 @@ That way you can ask OpenAI to complete your text, answer questions and so on.
 * For example asking the prompt below __"Short Summary of EPAM's 2018Q4 Earnings Call:"__ will result in the following text:
 
 
-====
-{"process":{"process-id":84329,"cmd":"/Applications/IntelliJ IDEA.app/Contents/MacOS/idea ","thread":"ApplicationImpl pooled thread 3"},"download-time":0,"counter":1,"id":"e81b4f29-6c6048de-734af268-d3c24569-77005105-e77b6a2e-d7cc46a9-111048b6","message":"Asynchronous download is running","running-since":"2023-03-23 15:16:52.456"}
-====
+
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the former CME Group, Inc. (CME) and the former NYMEX Group, Inc. (NYMEX) and has entered into a definitive agreement to merge the two companies into a new company, CME Group, Inc. (CME). The transaction is expected to close in the fourth quarter of 2018.
+
+The company announced that it has completed the acquisition of the assets of the

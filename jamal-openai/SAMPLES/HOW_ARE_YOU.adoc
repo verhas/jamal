@@ -1,3 +1,4 @@
+
 == Jamal OpenAI module Completion API
 
 
@@ -7,6 +8,4 @@ That way you can ask OpenAI to complete your text, answer questions and so on.
 
 * How are you ?
 
-
-
-As an AI language model, I don't have feelings, but I'm functioning well. Thank you for asking. How can I assist you today?
+As an AI language model, I don't have emotions, but I'm functioning properly and ready to assist you. How can I help you today?

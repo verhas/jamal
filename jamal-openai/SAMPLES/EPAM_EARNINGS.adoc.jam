@@ -1,3 +1,4 @@
+{%@comment fromFile%}\
 == Jamal OpenAI module Completion API
 {%@import samples.jim%}
 {%@define PROMPT=Short Summary of EPAM's 2018Q4 Earnings Call:%}
@@ -7,15 +8,14 @@ That way you can ask OpenAI to complete your text, answer questions and so on.
 
 * For example asking the prompt below __"{%PROMPT%}"__ will result in the following text:
 
-{%openai:model babbage%}\
-{%seed 125%}\
-{%#json:define descartes_said={%openai:completion |
+{%@define openai:model=babbage%}\
+{%@options ~openai:sealed%}\
+{%@define openai:seed=126%}\
+{%#json:define epam_results={%openai:completion |
 "prompt": "{%PROMPT%}",
-"max_tokens": 100,
-"temperature": 1.0
+"max_tokens": 1000,
+"temperature": 0.2
 %}\
 %}\
 
-====
-{%@json:get descartes_said/choices/0/text | descartes_said%}
-====
+{%@json:get epam_results/choices/0/text | epam_results%}
