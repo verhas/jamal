@@ -10,18 +10,18 @@ For example asking the prompt below __"Descartes said"__ will result in the foll
 {%#maven:load com.javax0.jamal:jamal-openai:{%VERSION%}%}\
 {%@import src/main/resources/openai.jim%}\
 {%openai:model babbage%}\
-{%@options openai:local%}\
-{%seed 5%}\
+{%@options openai:local openai:fallible openai:asynch%}\
+{%seed 10456%}\
 {%#json:define descartes_said={%openai:completion |
                                 "prompt": "Short Summary of EPAM's 2018Q4 Earnings Call:",
+                                "max_tokens": 100,
                                 "temperature": 0.2
                             %}\
 %}\
-__{%@json:get descartes_said/choices/0/text%}__
 
-  {%descartes_said%}
-
-...c
+====
+{%@json:get descartes_said/choices/0/text | descartes_said%}
+====
 
 {%openai:model gpt-3.5-turbo%}
 {%openai:hash|%}
@@ -31,27 +31,30 @@ __{%@json:get descartes_said/choices/0/text%}__
 * __{%#json:define chat_response={%openai:chat |
 "messages": [{"role":"user","content":"how are you"}],
 "temperature": 0.2
-%}%}{%@json:get chat_response/choices/0/message/content%}__
+%}%}{%@json:get chat_response/choices/0/message/content|chat_response%}__
 
 * Do some editing on the text
 
 {%openai:model text-davinci-edit-001%}\
-
-* __{%#json:define edit_response={%openai:edits |
-"input": "He was not able to finish the task that that she gave her the day before yesterday",
-"instruction" : "rewrite the sentence to gender-neutral also fixing errors, removing repetitions and making it more concise",
+{%@define INPUT=He was not able to finish the task that that she gave her the day before yesterday%}
+{%@define INSTRUCTION=rewrite the sentence to gender-neutral also fixing errors, removing repetitions and making it more concise%}
+** input: {%INPUT%}
+** instruction: {%INSTRUCTION%}
+** response: __{%#json:define edit_response={%openai:edits |
+"input": "{%INPUT%}",
+"instruction" : "{%INSTRUCTION%}",
 "temperature": 0.2
-%}%}{%edit_response /choices/0/text%}__
+%}%}{%@json:get edit_response/choices/0/text|edit_response%}__
 
-* create an image
+{%@define IMAGE_PROMPT=paint a cute otter opening a shell or an egg%}
+* create an image {%IMAGE_PROMPT%}
 
 {%#json:define edit_response={%openai:images:generations |
 "n" : 1,
 "response_format" : "url",
-"prompt": "paint a cute otter opening a shell or an egg"
-%}%}image::{%edit_response /data/0/url%}[width=512px]
+"prompt": "{%IMAGE_PROMPT%}"
+%}%}image::{%@json:get edit_response/data/0/url|edit_response%}[width=512px]
 
-  {%edit_response%}
 
 
 

@@ -138,7 +138,7 @@ will result:
                 throw new BadSyntax("The macro '" + mkp.macroId + "' is not a JSON macro or even does not exist.");
             }
         } else {
-            final var json = tools.getJsonFromPath(mkp);
+            final var json = tools.getJsonFromPathOrBadSyntax(mkp);
             if (json instanceof JSONArray) {
                 BadSyntax.when(!mkp.key.equals("*"), String.format("The JSON structure in '%s' is an array, but the key is not '*'", getId()));
                 ((JSONArray) json).put(content);

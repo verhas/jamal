@@ -118,15 +118,19 @@ class JsonTools {
             /*
              * There is no '/' in the string. This means that the string is the name of the macro
              */
-            return new MacroPathKey(null, null, getJson(s), s);
+            return new MacroPathKey(null, null, getJson(s).getObject(), s);
         } else {
             return new MacroPathKey(s.substring(slash), null, getJson(s.substring(0, slash)).getObject(), s.substring(0, slash));
         }
     }
 
-    Object getJsonFromPath(final JsonTools.MacroPathKey mkp) throws BadSyntax {
+    Object getJsonFromPath(final JsonTools.MacroPathKey mkp) {
+        return mkp.path == null ? mkp.json : mkp.path.queryFrom(mkp.json);
+    }
+
+    Object getJsonFromPathOrBadSyntax(final JsonTools.MacroPathKey mkp) throws BadSyntax {
         try {
-            return mkp.path == null ? mkp.json : mkp.path.queryFrom(mkp.json);
+            return getJsonFromPath(mkp);
         } catch (Exception e) {
             throw new BadSyntax("The path '" + mkp.path + "' is not valid or cannot be evaluated for the given JSON.", e);
         }

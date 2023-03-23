@@ -124,8 +124,17 @@ The format of the macro is:
 {@json:get macro_name/JSONPointer}
 ----
 
+or
+
+[source]
+----
+{@json:get macro_name/JSONPointer | macro_name/JSONPointer | ...}
+----
+
+The second format will try to get the first, then the second and so on pointer from one or more JSON structures until one of them is found.
+
 The same result can be achieved simply writing the JSONPointer after the name of the JSON macro defined using <<define,`json:define`>>.
-In that case you can omit the `@json:get `  starting with the macro name.
+In that case you can omit the `@json:get ` starting with the macro name, and you cannot use the second format.
 
 The `JSONPointer` is navigational path documented in the link:https://stleary.github.io/JSON-java/org/json/JSONPointer.html[JavaDoc] api of the JSON library this macro package uses:
 

@@ -48,14 +48,26 @@ public class Options {
      */
     final String hash;
 
+    /**
+     * The request has to be sent asynchronously. When the macro needs to communicate with the server, it will star the
+     * communication asynchronously and return immediately with either a syntax error or a json message containing error
+     * message.
+     */
+    final boolean asynch;
+
+    /**
+     * The request may fail , and it is okay. In that case the macro will return an error message containing JSON.
+     */
+    final boolean fallible;
+
     final File top;
 
     /**
      * Create a new object and parse the options from the input.
      *
      * @param processor used to process the options
-     * @param in the input
-     * @param macro used by the underlying processor to report error messages
+     * @param in        the input
+     * @param macro     used by the underlying processor to report error messages
      * @throws BadSyntax if there is some error with the options
      */
     public Options(Processor processor, Input in, Macro macro) throws BadSyntax {
@@ -64,12 +76,16 @@ public class Options {
         final var local = Params.<Boolean>holder("openai:local", "local").asBoolean();
         final var sealed = Params.<Boolean>holder("openai:sealed", "sealed").asBoolean();
         final var hash = Params.<String>holder("hash").orElse(null);
+        final var fallible = Params.<Boolean>holder("openai:fallible", "fallible").asBoolean();
+        final var asynch = Params.<Boolean>holder("openai:asynch", "asynch").asBoolean();
 
-        Scan.using(processor).from(macro).firstLine().keys(url, cacheSeed, local, sealed, hash).parse(in);
+        Scan.using(processor).from(macro).firstLine().keys(url, cacheSeed, local, sealed, hash, fallible, asynch).parse(in);
         this.url = url.get();
         this.cacheSeed = cacheSeed.get();
         this.local = local.is();
         this.sealed = sealed.is();
+        this.asynch = asynch.is();
+        this.fallible = fallible.is();
         this.hash = hash.isPresent() ? hash.get().trim() : null;
         final String top = in.getPosition().top().file;
         this.top = new File(top == null ? "." : top);

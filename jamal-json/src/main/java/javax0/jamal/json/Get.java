@@ -5,7 +5,9 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.InputHandler;
 import org.json.JSONException;
+
 /* snippet Get_macro_documentation
 This macro will fetch one value or a "sub" json from a JSON structure.
 This can be useful when you want to document some configuration or other data structure that is present as a JSON file in your project.
@@ -16,8 +18,16 @@ The format of the macro is:
 {@json:get macro_name/JSONPointer}
 %}
 
+or
+
+{%sample/
+{@json:get macro_name/JSONPointer | macro_name/JSONPointer | ...}
+%}
+
+The second format will try to get the first, then the second and so on pointer from one or more JSON structures until one of them is found.
+
 The same result can be achieved simply writing the JSONPointer after the name of the JSON macro defined using {%ref define%}.
-In that case you can omit the `@json:get `  starting with the macro name.
+In that case you can omit the `@json:get ` starting with the macro name, and you cannot use the second format.
 
 The `JSONPointer` is navigational path documented in the link:https://stleary.github.io/JSON-java/org/json/JSONPointer.html[JavaDoc] api of the JSON library this macro package uses:
 
@@ -50,20 +60,29 @@ However, as you can see from the example above, the different approaches provide
 end snippet
 */
 public class Get implements Macro, InnerScopeDependent {
+
+    private static final String INVALID_PATH = "The path '%s' is not valid or cannot be evaluated for the given JSON.";
+
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var s = in.toString().trim();
-        try {
-            final var tools = new JsonTools(processor);
-            final var mkp = tools.getMacroPath(s);
-            if (mkp.json == null) {
-                throw new BadSyntax("The JSON path '" + s + "' is not defined");
+        InputHandler.skipWhiteSpaces(in);
+        final var paths = in.toString().trim().split("\\|");
+        final var tools = new JsonTools(processor);
+        for (final var s : paths) {
+            try {
+                final var mkp = tools.getMacroPath(s.trim());
+                BadSyntax.when(paths.length == 1 && mkp.json == null, "There is no macro named '%s' in the registry containing a JSON object", mkp.macroId);
+                if (mkp.json != null) {
+                    final var json = tools.getJsonFromPath(mkp);
+                    return json.toString();
+                }
+            } catch (JSONException | IllegalArgumentException e) {
+                if (paths.length == 1) {
+                    throw new BadSyntax(String.format(INVALID_PATH, in), e);
+                }
             }
-            final var json = tools.getJsonFromPath(mkp);
-            return json.toString();
-        } catch (JSONException | IllegalArgumentException e) {
-            throw new BadSyntax("Syntax error in the JSONPointer expression '" + in + "'", e);
         }
+        throw new BadSyntax(String.format(INVALID_PATH, in));
     }
 
     @Override

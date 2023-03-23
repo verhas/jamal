@@ -271,6 +271,15 @@ public class FileTools {
         }
     }
 
+    /**
+     * Convert the file name to an absolute file name if it starts with a {@code ~} character. The {@code ~} character
+     * denotes the home directory of the user. The home directory is determined by the system property {@code
+     * user.home}. It is used usually by the shell, but the file handling system calls don't honour this notation.
+     *
+     * @param fileName optionally containing a {@code ~} character at the start
+     * @return the original file name, or the file name replacing the {@code ~} character with the home directory of the
+     * user
+     */
     public static String adjustedFileName(final String fileName) {
         if (fileName.charAt(0) == '~' && fileName.charAt(1) == '/') {
             return System.getProperty("user.home") + fileName.substring(1);

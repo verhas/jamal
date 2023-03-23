@@ -1,0 +1,5 @@
+{%@snip:xml pom=../pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+{%#maven:load com.javax0.jamal:jamal-openai:{%VERSION%}%}\
+{%@import ../src/main/resources/openai.jim%}\
+{%@options openai:local openai:fallible openai:asynch%}\
