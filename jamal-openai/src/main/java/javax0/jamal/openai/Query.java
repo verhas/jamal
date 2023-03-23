@@ -136,7 +136,7 @@ public class Query {
     /**
      * The map of the tasks that are running asynchronously.
      */
-    private static final Map<File, Query> tasks = new HashMap<>();
+    private static final Map<String, Query> tasks = new HashMap<>();
 
     /**
      * Create a new query with the given options.
@@ -150,11 +150,11 @@ public class Query {
     /**
      * Execute a POST request with the given request body.
      *
-     * @param requestBody the request body, must ne a properly formatted JSON object
+     * @param requestBody the request body, must be a properly formatted JSON object
      * @return the response body, or the error JSON if the {@link Options#fallible} is {@code true} and the operation is
      * asynchronous and not cached
      * @throws IOException if the connection fails
-     * @throws BadSyntax
+     * @throws BadSyntax when some error happens
      */
     String post(String requestBody) throws IOException, BadSyntax {
         this.requestBody = requestBody;
@@ -177,14 +177,15 @@ public class Query {
         if (opt.asynch) {
             final long delta;
             synchronized (tasks) {
-                if (!tasks.containsKey(cacheFile)) {
+                if (!tasks.containsKey(cacheFile.getAbsolutePath())) {
                     final var task = new FutureTask<>(() -> doHttp(method));
                     timeScheduled = System.currentTimeMillis();
-                    tasks.put(cacheFile, this);
+                    tasks.put(cacheFile.getAbsolutePath(), this);
                     new Thread(task).start();
                 } else {
-                    timeScheduled = tasks.get(cacheFile).timeScheduled;
-                    asynchCounter = tasks.get(cacheFile).asynchCounter;
+                    final Query query = tasks.get(cacheFile.getAbsolutePath());
+                    timeScheduled = query.timeScheduled;
+                    asynchCounter = query.asynchCounter;
                 }
                 asynchCounter.incrementAndGet();
                 delta = System.currentTimeMillis() - timeScheduled;
@@ -203,6 +204,11 @@ public class Query {
         return "{" +
                 String.format(fmt, "message", "Asynchronous download is running") + "," +
                 String.format(fmtN, "counter", asynchCounter.get()) + "," +
+                "process : {" +
+                String.format(fmtN, "process-id", ProcessHandle.current().pid()) + "," +
+                String.format(fmt, "cmd", ProcessHandle.current().info().commandLine().orElse("")) + "," +
+                String.format(fmt, "thread", Thread.currentThread().getName()) +
+                "}," +
                 String.format(fmt, "id", cacheFile.getParentFile().getName()) + "," +
                 String.format(fmt, "running-since", new SimpleDateFormat(STD_DT_FORMAT).format(new Date(timeScheduled))) + "," +
                 String.format(fmtN, "download-time", delta) +
@@ -236,7 +242,7 @@ public class Query {
             writeCacheOutput();
             // without removing this from the map removing the cache file from disk would not ignite new download
             synchronized (tasks) {
-                tasks.remove(cacheFile);
+                tasks.remove(cacheFile.getAbsolutePath());
             }
             if (!(status >= 200 && status < 300) && !opt.fallible) {
                 appendResponseLogDump(con);

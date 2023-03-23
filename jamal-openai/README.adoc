@@ -9,23 +9,31 @@ For example asking the prompt below __"Descartes said"__ will result in the foll
 ====
 
 
-EPAM's 2018Q4 Earnings Call will be held on Thursday, November 5, 2018 at 9:00 a.m. ET.
+EPAM's 2018Q4 Earnings Call Summary:
 
-EPAM's 2018Q4 Earnings Call will be webcast live and can be accessed through the investor relations section of the company's website at www.epam.com.
+EPAM's 2018Q4 Earnings Call Summary:
 
-About EPAM
+EPAM's 2018Q4 Earnings Call Summary:
 
-EPAM is a leading provider of cloud-based software solutions for the global financial services industry. EPAM's solutions are
+EPAM's 2018Q4 Earnings Call Summary:
+
+EPAM's 2018Q4 Earnings Call Summary:
+
+EPAM's 2018Q4 Earnings Call Summary:
+
+EPAM's 2018Q4 Earnings Call Summary:
+
+EPAM's 2018Q4 Earn
 ====
 
 
 
 
-* How are you?
+* How are you....sd.......nssden........vg..?
 
 * __
 
-As an AI language model, I do not have feelings or emotions. However, I am functioning properly and ready to assist you with any task or question you may have. How can I assist you today?__
+As an AI language model, I do not have emotions or feelings, but I am functioning well. Thank you for asking. How may I assist you today?__
 
 * Do some editing on the text
 
@@ -33,10 +41,10 @@ As an AI language model, I do not have feelings or emotions. However, I am funct
 
 ** input: He was not able to finish the task that that she gave her the day before yesterday
 ** instruction: rewrite the sentence to gender-neutral also fixing errors, removing repetitions and making it more concise
-** response: __He was not able to finish the task that was given to him the day before yesterday.
+** response: __He was not able to finish the task that she gave him the day before yesterday
 __
 
 
 * create an image paint a cute otter opening a shell or an egg
 
-image::https://oaidalleapiprodscus.blob.core.windows.net/private/org-pw12yovxFuSbMN2zHjaHFgrj/user-lcgcIzGG8aAi3ZULtwzDv7Xa/img-xrXPEtynltkRFRQprJfVsQNp.png?st=2023-03-22T20%3A42%3A21Z&se=2023-03-22T22%3A42%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-22T21%3A10%3A47Z&ske=2023-03-23T21%3A10%3A47Z&sks=b&skv=2021-08-06&sig=d%2BlmgS3G4unAva4yDpZ1WxFXe/Pke/86yV2iJtepqfw%3D[width=512px]
+image::https://oaidalleapiprodscus.blob.core.windows.net/private/org-pw12yovxFuSbMN2zHjaHFgrj/user-lcgcIzGG8aAi3ZULtwzDv7Xa/img-gZHSeQpXfCk046BDraY15SwD.png?st=2023-03-23T14%3A15%3A13Z&se=2023-03-23T16%3A15%3A13Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-03-23T14%3A20%3A51Z&ske=2023-03-24T14%3A20%3A51Z&sks=b&skv=2021-08-06&sig=SR/PCXujWNOj02B/S%2BI/J1DbHjZs3yuXYSQn5EbxwpE%3D[width=512px]

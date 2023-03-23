@@ -11,7 +11,7 @@ For example asking the prompt below __"Descartes said"__ will result in the foll
 {%@import src/main/resources/openai.jim%}\
 {%openai:model babbage%}\
 {%@options openai:local openai:fallible openai:asynch%}\
-{%seed 10456%}\
+{%seed 104767%}\
 {%#json:define descartes_said={%openai:completion |
                                 "prompt": "Short Summary of EPAM's 2018Q4 Earnings Call:",
                                 "max_tokens": 100,
@@ -20,13 +20,13 @@ For example asking the prompt below __"Descartes said"__ will result in the foll
 %}\
 
 ====
-{%@json:get descartes_said/choices/0/text | descartes_said%}
+{%@json:get descartes_said/choices/0/text | descartes_said %}
 ====
 
 {%openai:model gpt-3.5-turbo%}
 {%openai:hash|%}
 
-* How are you?
+* How are you....sd.......nssden........vg..?
 
 * __{%#json:define chat_response={%openai:chat |
 "messages": [{"role":"user","content":"how are you"}],

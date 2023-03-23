@@ -9,11 +9,5 @@ That way you can ask OpenAI to complete your text, answer questions and so on.
 
 
 ====
-
-
-The Company announced the above-average dividend increase, as it delivered third quarter earnings that handily beat consensus estimates. This increase came about as a result of the Company's steady share price and premium earnings, EPAM is finally driven by the global growth in Asia Pacific and Europe
-
-EPAM Energy Infrastructure is the issuer of EPAM Energy Infrastructure 2018 Q4 Profits and contains forward looking statements. Past performance is not a guarantee of future results.
-
-EPAM Energy Infrastructure, the
+{"process":{"process-id":84329,"cmd":"/Applications/IntelliJ IDEA.app/Contents/MacOS/idea ","thread":"ApplicationImpl pooled thread 3"},"download-time":0,"counter":1,"id":"e81b4f29-6c6048de-734af268-d3c24569-77005105-e77b6a2e-d7cc46a9-111048b6","message":"Asynchronous download is running","running-since":"2023-03-23 15:16:52.456"}
 ====

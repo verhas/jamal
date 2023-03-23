@@ -26,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -35,15 +37,35 @@ import java.util.stream.Stream;
 
 public class LoadMavenJar implements Macro {
 
+    /**
+     * The class loaders are reserved and reused when a single process executes different Jamal processors for the same source.
+     * In that case the same macros are loaded again and again, but using the same class loader. This way the macros can
+     * rely on static fields to store their global state.
+     * <p>
+     * The actual need for this was the OpenAI module, which uses a static map to keep track of the currently executing OpenAPI queries.
+     */
+    private static final Map<String, ClassLoader> classLoaders = new HashMap<>();
+
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+        final String nonce = in.toString();
         final var repos = Params.<String>holder("repositories", "repository", "repo", "repos").orElse("central");
         final var noDep = Params.<Boolean>holder("noDependencies", "noDeps").asBoolean();
         final var reload = Params.<Boolean>holder("reload", "overwrite", "update").asBoolean();
         final var local = Params.<String>holder("local").orElse(null);
         final var exclude = Params.<String>holder("exclude").orElse(null);
         Scan.using(processor).from(this).between("()").keys(repos, noDep, reload, local, exclude).parse(in);
-
+        synchronized (classLoaders) {
+            if (classLoaders.containsKey(nonce)) {
+                final var cl = classLoaders.get(nonce);
+                if (reload.is()) {
+                    loadAllMacros(cl, processor);
+                } else {
+                    loadNewMacros(cl, processor);
+                }
+                return "";
+            }
+        }
         final Properties properties = configuration.get();
         final var localPath = getLocalPath(local, in.getPosition(), properties);
 
@@ -73,10 +95,14 @@ public class LoadMavenJar implements Macro {
             for (final var f : files) {
                 urls[i++] = f.toURI().toURL();
             }
+            final ClassLoader cl;
             if (reload.is()) {
-                loadAllMacros(urls, processor);
+                cl = loadAllMacros(urls, processor);
             } else {
-                loadNewMacros(urls, processor);
+                cl = loadNewMacros(urls, processor);
+            }
+            synchronized (classLoaders) {
+                classLoaders.put(nonce, cl);
             }
             return "";
         } catch (Exception e) {
@@ -153,8 +179,12 @@ public class LoadMavenJar implements Macro {
     }
 
 
-    private void loadNewMacros(final URL[] files, final Processor processor) {
+    private ClassLoader loadNewMacros(final URL[] files, final Processor processor) {
         final var cl = new ChildFirstUrlClassLoader(files);
+        return loadNewMacros(cl, processor);
+    }
+
+    private ClassLoader loadNewMacros(final ClassLoader cl, final Processor processor) {
         final var macros = Macro.getInstances(cl);
         final var register = processor.getRegister();
         for (final var macro : macros) {
@@ -162,10 +192,15 @@ public class LoadMavenJar implements Macro {
                 processor.getRegister().define(macro);
             }
         }
+        return cl;
     }
 
-    private void loadAllMacros(final URL[] files, final Processor processor) {
+    private ClassLoader loadAllMacros(final URL[] files, final Processor processor) {
         final var cl = new ChildFirstUrlClassLoader(files);
+        return loadAllMacros(cl, processor);
+    }
+
+    private ClassLoader loadAllMacros(final ClassLoader cl, final Processor processor) {
         final var macros = Macro.getInstances(cl);
         final var register = processor.getRegister();
         for (final var macro : macros) {
@@ -174,6 +209,7 @@ public class LoadMavenJar implements Macro {
                 processor.getRegister().define(macro);
             }
         }
+        return cl;
     }
 
     private Repo[] getRepos(final Params.Param<String> repos, final Properties properties) throws BadSyntax {
@@ -253,13 +289,14 @@ public class LoadMavenJar implements Macro {
         }
 
         public boolean matches(final MavenCoordinates coords, final Position position) {
-            for( var pos = position ; pos != null ; pos = pos.parent) {
+            for (var pos = position; pos != null; pos = pos.parent) {
                 if (matches(coords, pos.file)) {
                     return true;
                 }
             }
             return false;
         }
+
         public boolean matches(final MavenCoordinates coords, final String path) {
             Objects.requireNonNull(coords);
             if (!(Objects.equals(groupId, coords.groupId) &&
