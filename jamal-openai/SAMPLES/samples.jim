@@ -6,4 +6,8 @@
  in production this file has to be included as
                   {%@import res:`openai:get`openai.jim%}
 %}
-{%@options openai:local openai:fallible openai:asynch%}\
+{%@options openai:local%}
+snippet intelliJ_only
+{%#if /{%@env intellij.asciidoctor.plugin%}/
+       {%@options openai:fallible openai:asynch%}/%}
+end snippet

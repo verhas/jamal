@@ -71,12 +71,19 @@ public class Options {
      * @throws BadSyntax if there is some error with the options
      */
     public Options(Processor processor, Input in, Macro macro) throws BadSyntax {
+        //snipline openai_url filter="(.*?)"
         final var url = Params.<String>holder("openai:url", "url").asString();
+        //snipline openai_seed filter="(.*?)"
         final var cacheSeed = Params.<String>holder("openai:seed", "seed").asString();
+        //snipline openai_local filter="(.*?)"
         final var local = Params.<Boolean>holder("openai:local", "local").asBoolean();
+        //snipline openai_sealed filter="(.*?)"
         final var sealed = Params.<Boolean>holder("openai:sealed", "sealed").asBoolean();
+        //snipline openai_hash filter="(.*?)"
         final var hash = Params.<String>holder("openai:hash", "hash").orElse(null);
+        //snipline openai_fallible filter="(.*?)"
         final var fallible = Params.<Boolean>holder("openai:fallible", "fallible").asBoolean();
+        //snipline openai_asynch filter="(.*?)"
         final var asynch = Params.<Boolean>holder("openai:asynch", "asynch").asBoolean();
 
         Scan.using(processor).from(macro).firstLine().keys(url, cacheSeed, local, sealed, hash, fallible, asynch).parse(in);
@@ -86,7 +93,7 @@ public class Options {
         this.sealed = sealed.is();
         this.asynch = asynch.is();
         this.fallible = fallible.is();
-        this.hash = hash.isPresent() ? hash.get().trim() : null;
+        this.hash = hash.isPresent() && !hash.get().trim().isBlank() ? hash.get().trim() : null;
         final String top = in.getPosition().top().file;
         this.top = new File(top == null ? "." : top);
     }

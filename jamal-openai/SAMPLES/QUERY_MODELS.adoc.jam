@@ -4,6 +4,9 @@
 * List all the models
 {%@define openai:seed=33%}
 
+{%@define openai:hash=f4bf5bc6-7509e435-e10ab854-01aaad40-3a8e5269-92d71db9-f067d380-39ee3eb0%}
+
+
 [source]
 ----
 {%openai:query_models%}

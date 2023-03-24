@@ -4086,7 +4086,8 @@ When the macros `import` or `include` reference a file with a name that starts w
 
 * `res:`,
 * `https:`,
-* `maven:` or
+* `maven:`,
+* `jar:`, or
 * __some other prefix__ `:`
 
 then these files are treated in a special way.
@@ -4102,7 +4103,7 @@ NOTE: The `res:` and `https` handlers are implemented in the `jamal-tools` modul
 These handlers can be used without any extra dependency.
 The `maven:` handler is implemented in the `jamal-maven-input` module.
 This module has an external dependency.
-Implementing this handler in a separate module it is easier to separate Jamal from ny external module.
+Implementing this handler in a separate module it is easier to separate Jamal from external modules.
 As a general rule Jamal is developed minimizing the external dependencies for the core modules.
 Modules, macros needing external libraries are developed in separate modules.
 If there is any security, licensing or other issue with the external library then the module can be removed from the installation without affecting the core functionality of Jamal.
@@ -4147,7 +4148,18 @@ For example to add the pomlib library JAR to the classpath you can use the follo
 </plugin>
 ----
 
-NOTE: The module `jamal-pomlib` was discontinued and is not part of the current Jamal library structure.
+NOTE: The module `jamal-pomlib` is here as an example, although it was discontinued and is not part of the current Jamal library structure.
+
+===== Loading Resources from `maven:load` loaded libraries
+
+Starting with version 1.12.7, it is possible to load macros from Maven artifacts using the macro `maven:load`.
+The resources in these artifacts are not on the classpath.
+In this case, the application uses different classloaders to load the macro classes that are usable by default and those loaded with the `maven:load` macro.
+Jamal uses the application class loader to load resources using the `res:` prefix unless otherwise instructed (see below).
+This classloader does not see the dynamically loaded classes and resources.
+
+To load a resource from a dynamically loaded library, the `res:` prefix has to be followed by the name of a macro enclosed between `pass:[`]` backtick characters before the resource name.
+That way, the resource loading will use the class loader, which loaded the macro and will eventually find the resource in the dynamically loaded library.
 
 ==== Web Resources
 

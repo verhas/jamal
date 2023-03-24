@@ -13,7 +13,7 @@ That way you can ask OpenAI to complete your text, answer questions and so on.
 {%@define openai:seed=126%}\
 {%#json:define epam_results={%openai:completion |
 "prompt": "{%PROMPT%}",
-"max_tokens": 1000,
+"max_tokens": 100,
 "temperature": 0.2
 %}\
 %}\
