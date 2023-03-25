@@ -23,7 +23,7 @@ public class TestTrie {
     }
     @Test
     @DisplayName("Finds a single element put in as string supplier")
-    void testGetFromSUpplier() throws Exception {
+    void testGetFromSupplier() throws Exception {
         final var sut = new Trie();
         sut.put("a", () -> "b");
         Assertions.assertEquals("b", sut.get("a"));

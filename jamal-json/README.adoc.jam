@@ -26,6 +26,8 @@ Following that, you can use the
 . <<import,{%ImportingChapter%}>>
 . {%ref get%}
 . {%ref set%}
+. {%ref length%}
+. {%ref keys%}
 
 {%@define chap($x)=[[$x]]
 === {%macroChapter%}`json:$x`
@@ -53,3 +55,13 @@ These differences come from the different nature of Json and Yaml.
 
 {%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
 {%@snip Set_macro_documentation%}%}
+
+{%chap length%}
+
+{%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
+{%@snip Length_macro_documentation%}%}
+
+{%chap keys%}
+
+{%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
+{%@snip Keys_macro_documentation%}%}

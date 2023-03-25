@@ -13,6 +13,8 @@ public class TestJson {
             "TestDefine",
             "TestSet",
             "TestGet",
+            "TestLength",
+            "TestKeys",
             JamalYamlTest.__OFF__
         );
     }

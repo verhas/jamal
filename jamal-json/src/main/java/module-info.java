@@ -1,4 +1,6 @@
 import javax0.jamal.api.Macro;
+import javax0.jamal.json.Keys;
+import javax0.jamal.json.Length;
 import javax0.jamal.json.Set;
 import javax0.jamal.json.Define;
 import javax0.jamal.json.Get;
@@ -9,5 +11,5 @@ module jamal.json {
     requires jamal.tools;
     requires jamal.engine;
     requires org.json;
-    provides Macro with Define,  Get, Set;
+    provides Macro with Define,  Get, Set, Length, Keys;
 }

@@ -1,3 +1,5 @@
 javax0.jamal.json.Define
 javax0.jamal.json.Get
 javax0.jamal.json.Set
+javax0.jamal.json.Length
+javax0.jamal.json.Keys

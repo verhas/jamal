@@ -1,0 +1,12 @@
+get the keys of the top level structure of a JSON structure:
+  Input: |-
+    {@json:define a={a:alma,b:{c: 3, d:[1,2,{q:{h:"deep h"}}]}}}{@json:keys a}
+  Output: "a,b"
+get the keys of the top level structure of a JSON structure separated with | :
+  Input: |-
+    {@json:define a={a:alma,b:{c: 3, d:[1,2,{q:{h:"deep h"}}]}}}{@json:keys (sep=|) a}
+  Output: "a|b"
+throw error if the path is valid, but it is not a JSON structure:
+  Input: |-
+    {@json:define a=[1,2,3,4,"alma","korte","barack","obama"]}{@json:keys a}
+  Throws: "The path 'a' is not valid, is not a structure or cannot be evaluated for the given JSON."
