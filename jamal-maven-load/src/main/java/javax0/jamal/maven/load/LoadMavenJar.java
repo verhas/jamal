@@ -239,6 +239,15 @@ public class LoadMavenJar implements Macro {
     }
 
 
+    /**
+     * Get the path to the local repository. This can be configured using the macro option {@code local} or remain the default.
+     *
+     * @param local      the parameter passed to the macro
+     * @param pos        the position of the macro used for error signalling in case the configured directory does not exist
+     * @param properties the configuration properties to check permission
+     * @return the path to the local repository
+     * @throws BadSyntax when the local repo is not allowed in the configuration
+     */
     private Path getLocalPath(final Params.Param<String> local, final Position pos, final Properties properties) throws BadSyntax {
         final Path localPath;
         if (local.isPresent() && local.get() != null) {
@@ -251,6 +260,12 @@ public class LoadMavenJar implements Macro {
         return localPath;
     }
 
+    /**
+     * Check that the local repo is configured as secure.
+     *
+     * @param local      the path to the repo to be checked
+     * @param properties configuration properties that contains the security configuration
+     */
     private void checkPermissions(final Path local, final Properties properties) {
         final var paths = Optional.ofNullable(properties.get("maven.load.local")).map(Object::toString).orElse(null);
         if (paths == null) {
