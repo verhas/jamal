@@ -505,7 +505,7 @@ The syntax of the command is
 
 [source]
 ----
-{@xml:insert (options) xml content}
+{@xml:insert (options) xml_content}
 ----
 
 The options define the name of the xml formatted user defined macro the content should be inserted into as well as the xPath that defines the location of the insertion.
@@ -1505,7 +1505,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1290:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1289:30
 ----
 
 
@@ -2040,7 +2040,7 @@ will result
 ----
 
 
-You can define the start, and the step value for the counter as well as the format.
+You can define the `start`, and the `step` value for the counter as well as the `format`.
 For example,
 
 [source]
@@ -2069,7 +2069,27 @@ It is an error
 * if either `$alpha` or `$ALPHA` is used in the format, and the value is zero, negative, or larger than 26, or
 * if either `$roman` or `$ROMAN` is used in the format, and the value is zero, negative, or larger than 3999.
 
+In some applications the number 4 is depicted as `IIII` instead of `IV` when using roman numerals.
+You can see such use typically on some clock faces.
+If you want to use this notation you can use the option `IIII` (all capital).
+The use of this option makes only sense when you also specify the `$roman` or `$ROMAN` in the format.
+The macro does not check this.
+
 Examples:
+
+[source]
+----
+{@counter:define id=h format=$roman IIII}{h} {h} {h} {h} {h} {h} {h} {h} {h} {h} {h}
+----
+
+will result in
+
+[source]
+----
+i ii iii iiii v vi vii viii ix x xi
+----
+
+
 
 [source]
 ----
@@ -2779,7 +2799,7 @@ will result
 - BlockConverter.java: 1,858 bytes
 - Numbers.java: 1,817 bytes
 - Unicode.java: 2,068 bytes
-- Counter.java: 4,579 bytes
+- Counter.java: 4,504 bytes
 - StringMacros.java: 7,379 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
@@ -2793,9 +2813,9 @@ will result
 - XmlInsert.java: 6,171 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
-- CounterMacro.java: 1,842 bytes
+- CounterMacro.java: 1,938 bytes
 - SnipList.java: 1,222 bytes
-- XmlDocument.java: 5,533 bytes
+- XmlDocument.java: 5,671 bytes
 - Java.java: 10,394 bytes
 - ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
@@ -3055,7 +3075,7 @@ will result in the output
 
 [source]
 ----
-2023-03-25 19:23:21
+2023-03-29 10:48:13
 ----
 
 

@@ -36,6 +36,8 @@ For example, the macro `verbatim` cannot be redefined.
 
 Engine:: Engine is the Java module and program code that executes the Jamal processor.
 
+Experimental Module:: Experimental module is a macro library or module, which is provided as is without any guarantee of further compatibility. The module may later be discontinued, or the API may change.
+
 Scope:: When Jamal executes, macros have a specific scope of validity.
 For example, including a file into a Jamal macro source will process that file in a new scope.
 This new scope is inside the scope of the file that includes the other.

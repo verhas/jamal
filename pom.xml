@@ -137,7 +137,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.11.0</version>
                     <configuration>
-                        <source>17</source>
+                        <source>20</source>
                         <target>11</target>
                         <release>11</release>
                     </configuration>

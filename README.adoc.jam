@@ -7,7 +7,7 @@ The source of the file is the README.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module
 jamal-snippet.
 
-%}{%@import res:jamal.jim%}{%@import shared_text.jim%}\
+%}{%@import res:jamal.jim%}{%@import shared_text.jim%}{%@import RELEASES.jim%}\
 {%@define output=[source]
 ----
 {%#trimLines trimVertical
@@ -801,7 +801,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.12.3 options can also be used to define optional, failing, pure and verbatim macros
 * since 1.12.3 option `{%@snip RestrictedDefineParameters%}` can be used to restrict parameters to be only identifiers
 * since 1.12.5 option `export` can be used as a shorthand instead of define and export one after the other
-* since 1.12.7 option `tail` to parse the tail parameters as a single string
+* since {%RELEASE:BUDAPEST%} option `tail` to parse the tail parameters as a single string
 ===== Define basics
 
 `define` defines a user-defined macro in the current scope.
@@ -2117,7 +2117,7 @@ This limit prevents this to happen.
 
 The limit can be modified setting the environment variable {%JAMAL_INCLUDE_DEPTH_ENV%}.
 
-{%DEFAULTOPEN/1.12.7/include%}
+{%DEFAULTOPEN/{%RELEASE:BUDAPEST%}/include%}
 
 [[use]]
 ==== {%macroChapter%}`use`
@@ -3680,7 +3680,7 @@ If you want to specify a minimum and a maximum version, you should use two `requ
 
 Using a version before `1.6.4` in the `require` argument is an error.
 
-Starting with version `1.12.7` you can use the alias `version` for this macro.
+Starting with version `{%RELEASE:BUDAPEST%}` you can use the alias `version` for this macro.
 With this release if you use the macro without any argument it will result the current version.
 For example
 
@@ -4152,7 +4152,7 @@ NOTE: The module `jamal-pomlib` is here as an example, although it was discontin
 
 ===== Loading Resources from `maven:load` loaded libraries
 
-Starting with version 1.12.7, it is possible to load macros from Maven artifacts using the macro `maven:load`.
+Starting with version {%RELEASE:BUDAPEST%}, it is possible to load macros from Maven artifacts using the macro `maven:load`.
 The resources in these artifacts are not on the classpath.
 In this case, the application uses different classloaders to load the macro classes that are usable by default and those loaded with the `maven:load` macro.
 Jamal uses the application class loader to load resources using the `res:` prefix unless otherwise instructed (see below).

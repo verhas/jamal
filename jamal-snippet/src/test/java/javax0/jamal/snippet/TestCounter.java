@@ -105,6 +105,13 @@ public class TestCounter {
     }
 
     @Test
+    @DisplayName("The option `IIII` will create a different 4")
+    void testROMANFormatIIII() throws Exception {
+        TestThat.theInput("{#counter:define IIII format=$ROMAN.) id=f}{f} {f} {f} {f}"
+        ).results("I.) II.) III.) IIII.)");
+    }
+
+    @Test
     @DisplayName("Roman format can be defined as user defined macro")
     void testRomanFormatCanBeDefined() throws Exception {
         TestThat.theInput("{#counter:define {@define format=$roman.)}id=f}{f} {f} {f}"

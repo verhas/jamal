@@ -1,5 +1,6 @@
 = Jamal ScriptBasic integration module
-{%@snip:collect from="src/test/java/"%}
+
+{%@snip:collect from="src/test/java/"%}{%@import ../RELEASES.jim%}\
 
 Using this integration module you can mix Jamal macro text with ScriptBasic code snippets.
 To use this module you have to add the dependency to your Maven project, as:
@@ -66,7 +67,7 @@ The macro invocation `{\#basic ...}` was using the `#` character, therefore the 
 That way the macros `{start}` and `{end}` are evaluated first.
 The BASIC interpreter already gets `for i=1 to 13`.
 
-Starting with the version `1.12.7` the library is not configured to be on the class path of the command line version or the Asciidoctor preprocessor.
+Starting with the version `{%RELEASE:BUDAPEST%}` the library is not configured to be on the class path of the command line version or the Asciidoctor preprocessor.
 The reason is security.
 The interpreter, just as well as the Groovy and Ruby interpreters, can execute arbitrary code.
 If you want to use the ScriptBasic interpreter you have to

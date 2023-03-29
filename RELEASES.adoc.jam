@@ -1,10 +1,11 @@
 = Jamal Releases
 
+{%@import RELEASES.jim%}
 {%@snip:collect from=./jamal-core/src%}
 
 {%@define RELEASE($x)=== https://github.com/verhas/jamal/tree/$x[$x]%}
 
-{%RELEASE/1.12.7-SNAPSHOT%}
+{%RELEASE/{%RELEASE:BUDAPEST%}%}
 
 * The extensions plugin was removed from the Maven extension dependency and from the asciidoc extension.
 

@@ -1,6 +1,6 @@
 = Jamal Yaml integration module
 
-{%@import res:jamal.jim%}
+{%@import res:jamal.jim%}{%@import ../RELEASES.jim%}
 {%#counter:define id=macroChapter {%@define format=$roman. %}%}
 {%@snip:collect from=src/main/java%}
 Using this integration module, you can mix Jamal macro text with YAML data.
@@ -185,7 +185,7 @@ For more information on macro evaluation order, see the core documentation of Ja
 ====
 
 {%chap ref%}
-The use of this macro has been deprecated since Jamal version 1.12.7.
+The use of this macro has been deprecated since Jamal version {%RELEASE:BUDAPEST%}.
 Use this macro to reference another Yaml definition.
 With that release, the local tag `!ref` is defined, which is a much cleaner and shorter way to reference another Yaml definition.
 

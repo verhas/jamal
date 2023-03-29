@@ -31,6 +31,12 @@ public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document
     final Document doc;
     final XPath xPath;
 
+    /**
+     * Define an XML from a string.
+     * @param id the identifier of the macro to be defined
+     * @param input the input that contains the XML
+     * @throws BadSyntax if the XML cannot be read or parsed
+     */
     public XmlDocument(String id, String input) throws BadSyntax {
         this.id = id;
         var dbFactory = DocumentBuilderFactory.newInstance();
@@ -44,6 +50,13 @@ public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document
         xPath = XPathFactory.newInstance().newXPath();
     }
 
+    /**
+     * Define an XML from a file for which the name is given in the input.
+     *
+     * @param id the identifier of the macro to be defined
+     * @param input the input that contains the file name
+     * @throws BadSyntax if the file name is not given or the file cannot be read or parsed
+     */
     public XmlDocument(String id, Input input) throws BadSyntax {
         var reference = input.getReference();
         final var fileName = FileTools.absolute(reference, input.toString().trim());
@@ -108,17 +121,7 @@ public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document
      */
     private static void trimDocument(Document doc)  {
         final var root = doc.getDocumentElement();
-        final var children = root.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            final var child = children.item(i);
-            if (child.getNodeType() == Node.TEXT_NODE ){
-                if( child.getTextContent().trim().isEmpty() ) {
-                    child.setTextContent("");
-                }
-            }else{
-                trimNode(child);
-            }
-        }
+        trimNode(root);
     }
 
     private static void trimNode(Node node) {

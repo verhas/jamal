@@ -415,7 +415,7 @@ This latter use is for the case when the Jamal file processed creates an XML fil
 The syntax of the command is
 
 {%sample/
-{@xml:insert (options) xml content}
+{@xml:insert (options) xml_content}
 %}
 
 The options define the name of the xml formatted user defined macro the content should be inserted into as well as the xPath that defines the location of the insertion.
@@ -1672,7 +1672,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 ==== {%macroChapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=bc763211%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=edf53099.067c2e37.7d9e34d8%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -1694,7 +1694,7 @@ will result
 
 {%output%}
 
-You can define the start, and the step value for the counter as well as the format.
+You can define the `start`, and the `step` value for the counter as well as the `format`.
 For example,
 
 {%sample/
@@ -1721,7 +1721,22 @@ It is an error
 {%errorMessage /$alpha/26%}, or
 {%errorMessage /$roman/3999%}.
 
+In some applications the number 4 is depicted as `IIII` instead of `IV` when using roman numerals.
+You can see such use typically on some clock faces.
+If you want to use this notation you can use the option `IIII` (all capital).
+The use of this option makes only sense when you also specify the `$roman` or `$ROMAN` in the format.
+The macro does not check this.
+
 Examples:
+
+{%sample/
+{@counter:define id=h format=$roman IIII}{h} {h} {h} {h} {h} {h} {h} {h} {h} {h} {h}
+%}
+
+will result in
+
+{%output%}
+
 
 {%sample/
 {#counter:define id=cFormatted{@define format=%03d.}}{cFormatted} {cFormatted} {cFormatted}

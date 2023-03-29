@@ -20,17 +20,18 @@ public class CounterMacro implements Macro, InnerScopeDependent {
         final var id = Params.<String>holder("id");
         final var start = Params.<Integer>holder("start").orElseInt(1);
         final var step = Params.<Integer>holder("step").orElseInt(1);
+        final var iiii = Params.<Boolean>holder("IIII").asBoolean();
         skipWhiteSpaces(input);
-        Scan.using(processor).from(this).firstLine().keys(format, start, step, id).parse(input);
+        Scan.using(processor).from(this).firstLine().keys(format, start, step, id, iiii).parse(input);
         skipWhiteSpaces(input);
         BadSyntaxAt.when(input.length() > 0, "There are extra characters after the counter definition", input.getPosition());
 
         final Counter counter;
         if (isGlobalMacro(id.get())) {
-            counter = new Counter(convertGlobal(id.get()), start.get(), step.get(), format.get(), processor);
+            counter = new Counter(convertGlobal(id.get()), start.get(), step.get(), format.get(), iiii.is(),processor);
             processor.defineGlobal(counter);
         } else {
-            counter = new Counter(id.get(), start.get(), step.get(), format.get(), processor);
+            counter = new Counter(id.get(), start.get(), step.get(), format.get(), iiii.is(), processor);
             processor.define(counter);
             // it has to be exported because it is inner scope dependent
             processor.getRegister().export(counter.getId());
