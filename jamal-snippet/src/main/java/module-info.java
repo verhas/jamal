@@ -17,6 +17,8 @@ import javax0.jamal.snippet.NumberLines;
 import javax0.jamal.snippet.Numbers;
 import javax0.jamal.snippet.Pos;
 import javax0.jamal.snippet.RangeMacro;
+import javax0.jamal.snippet.Reference;
+import javax0.jamal.snippet.References;
 import javax0.jamal.snippet.Reflow;
 import javax0.jamal.snippet.Replace;
 import javax0.jamal.snippet.ReplaceLines;
@@ -114,5 +116,7 @@ module jamal.snippet {
             Unicode,
             Base64.Encode,
             Base64.Decode,
+            Reference,
+            References,
             SnipTransform;
 }

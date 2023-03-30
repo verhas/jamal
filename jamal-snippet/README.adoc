@@ -82,6 +82,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<replace,`replace`>>
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
+.. <<references,`references`>>
 .. <<reflow,`reflow`>>
 .. <<snipLine,`snip:line`>>
 .. <<snipFile,`snip:file`>>
@@ -1304,7 +1305,7 @@ The syntax of the macro is:
 
 [source]
 ----
-{@range lines=1-3,5-7;-1,0
+{@range lines=1..3,5..7;..1,0
 
 lines
 }
@@ -1322,6 +1323,8 @@ The range start line number can be larger than the end line number.
 In that case that lines appear in reversed order from the start to the end.
 The lines are included in the order as the ranges specify.
 Using this option you can rearrange the order of the lines.
+When you want to specify a range lasting to the end of the lines you can write `13..inf` or `5..infinity`.
+
 This option cannot be defined as macro.
 
 [[Base64]]
@@ -1505,7 +1508,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1289:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1290:30
 ----
 
 
@@ -2171,11 +2174,86 @@ The value of this user defined macro will be the same as the actual value of the
 ====
 The `-` character before the `>` is a macro parameter separator, and the macro itself checks only the `>` character.
 It means that you can use `.>`, `+>` or `/>` or any other non-alphanumeric first character in front of the `>`.
-It is revcommended to use the `-` ot `=` fore readability reasons.
+It is recommended to use the `-` or `=` for readability reasons.
 ====
 
+[[references]]
+==== xxvi.`references`
+
+From time to time there may be a need to have a reference to a part of the text that is defined later.
+Macros, by their nature cannot be used before they are defined.
+You cannot reference a section or chapter number before the section or chapter is defined.
+The macros provide powerful tools to overcome this limitation in many different ways.
+For example, you can define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
+The problem with this approach is that it separates parts of the document that belong together.
+It is 100% against the philosophy of Jamal.
+
+The `ref` and `references` macros give a different solution to this problem.
+These macros help to save the values of selected macros to an external file.
+Rendering the document the second time the file is read back and the macros are defined.
+
+Typically, you use the macro `references` at the start of the file to define the reference file.
+After that you can use the `ref` (or `reference` full name, but singular) to add specific macros to the set to be saved.
+
+[source]
+----
+{@references file=sample.jrf}
+{@ref a}
+This is defined later, but can be used here: {a}
+{@define a=The value of a}
+----
+
+will result in
+
+[source]
+----
+This is defined later, but can be used here: The value of a
+----
+
+
+The macro `references` has two parameters:
+
+* `file` can specify the file name to be used to save the references.
+The default file name is `ref.jrf`.
+* `holder` is the name of the macro that will hold the list of macros to be saved.
+The default name is `xrefs`.
+
+Using these options you can separate the references of different files and even in the same directory.
+You can also save multiple set of references from a single document.
+
+When using the macro `ref` you can specify the name of the macro to be saved.
+Following it by a `>` sign, you can specify the name of the holder macro, where you want the reference saved.
+
+[source]
+----
+{@references file=sample.jrf holder="otherRefs"}
+{@ref a > otherRefs}
+This is defined later, but can be used here: {a}
+{@define a=The value of a}
+----
+
+will result in
+
+[source]
+----
+This is defined later, but can be used here: The value of a
+----
+
+
+When using these macros the rendering has to run twice.
+The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
+It is your responsibility to write macros that are stable, having values independent of the previous execution.
+
+When the rendering runs the first time, or the reference file was deleted the macros are not defined.
+To avoid errors the `?` can be used in front of the macro names defined later.
+This will result an empty string at the place of the use of the macro.
+
+Another possibility is to use the `ref` macro before the first use of the referenced macro.
+This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
+
+
 [[reflow]]
-==== xxvi.`reflow`
+==== xxvii.`reflow`
 
 This macro reflows the content.
 
@@ -2341,7 +2419,7 @@ Setting the `width` to any non-positive value will remove the limit from the lin
 You may use this to override a globally set `width` macro.
 
 [[snipLine]]
-==== xxvii.`snip:line`
+==== xxviii.`snip:line`
 
 The macro `snip:line` results in the starting line number of the snippet in the file where the snippet is defined.
 For example, if the snippet `hubbaba` was collected from a file with the `snippet hubbaba` on line 5, the macro will return 6.
@@ -2373,7 +2451,7 @@ The syntax of the macro is
 The text following the snippet id is ignored, reserved for future development.
 
 [[snipFile]]
-==== xxviii.`snip:file`
+==== xxix.`snip:file`
 
 The macro `snip:file` returns the file's name where the snippet is defined.
 The returned file name is a full absolute path.
@@ -2391,7 +2469,7 @@ The syntax of the macro is
 The text following the snippet id is ignored, reserved for future development.
 
 [[snipTransform]]
-==== xxix.`snip:transform`
+==== xxx.`snip:transform`
 
 
 The `snip:transform` macro integrates the functionality of the macros
@@ -2585,7 +2663,7 @@ The reason for that is readability. While `untab size` may be acceptable, it is 
 The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
-==== xxx.`lineCount`
+==== xxxi.`lineCount`
 
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
@@ -2606,7 +2684,7 @@ results
 
 
 [[listDir]]
-==== xxxi.`listDir`
+==== xxxii.`listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -2676,6 +2754,7 @@ will result
 - SnipXml.java
 - ThinXmlMacro.java
 - BlockConverter.java
+- Reference.java
 - Numbers.java
 - Unicode.java
 - Counter.java
@@ -2695,6 +2774,7 @@ will result
 - CounterMacro.java
 - SnipList.java
 - XmlDocument.java
+- References.java
 - Java.java
 - ReplaceLines.java
 - SkipLines.java
@@ -2771,7 +2851,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,696 bytes
+- snippet: 1,760 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
 - Sort.java: 8,791 bytes
@@ -2797,6 +2877,7 @@ will result
 - SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
+- Reference.java: 1,506 bytes
 - Numbers.java: 1,817 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 4,504 bytes
@@ -2816,6 +2897,7 @@ will result
 - CounterMacro.java: 1,938 bytes
 - SnipList.java: 1,222 bytes
 - XmlDocument.java: 5,671 bytes
+- References.java: 5,066 bytes
 - Java.java: 10,394 bytes
 - ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
@@ -2853,7 +2935,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xxxii.`xmlFormat`
+==== xxxiii.`xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -3007,7 +3089,7 @@ will result
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[thinXml]]
-==== xxxiii.`thinXml`
+==== xxxiv.`thinXml`
 
 This macro converts thin XML to normal XML.
 Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it works only for full XML files and not for XML fragments.
@@ -3059,7 +3141,7 @@ It is not formatted also and there is no leading ```<?xml version="1.0" encoding
 For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
 
 [[date]]
-==== xxxiv.`date`
+==== xxxv.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -3075,12 +3157,12 @@ will result in the output
 
 [source]
 ----
-2023-03-29 10:48:13
+2023-03-30 15:22:28
 ----
 
 
 [[format]]
-==== xxxv.`format`
+==== xxxvi.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -3131,7 +3213,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[numbers]]
-==== xxxvi.`numbers`
+==== xxxvii.`numbers`
 
 
 The macro `numbers` can create a comma separated list of numbers.
@@ -3168,7 +3250,7 @@ will result
 
 
 [[unicode]]
-==== xxxvii.`unicode`
+==== xxxviii.`unicode`
 
 
 This macro can insert unicode characters into the output.
@@ -3330,7 +3412,7 @@ These are symbolic names for some non-printable characters and for some commonly
 
 
 [[case]]
-==== xxxviii.`case:lower`, `case:upper`, ...
+==== xxxix.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -3343,7 +3425,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xxxix.`file`
+==== xl.`file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -3402,7 +3484,7 @@ The usual use is to define `root` as a global macro and all `file` macros should
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[directory]]
-==== xl.`directory`
+==== xli.`directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -3461,7 +3543,7 @@ The usual use is to define `root` as a global macro and all `directory` macros s
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[Java]]
-==== xli.Java Macros
+==== xlii.Java Macros
 
 
 [[java:class]]
@@ -3660,7 +3742,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[String]]
-==== xlii.String Macros
+==== xliii.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -3856,7 +3938,7 @@ The parameters are:
 * `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
 [[snip_update]]
-==== xliii.`snip:update`
+==== xliv.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

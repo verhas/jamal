@@ -14,6 +14,8 @@ import javax0.jamal.engine.util.SeparatorCalculator;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
@@ -112,11 +114,11 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         }
         final var output = new StringBuilder(segmentsLengthSum(root, values));
         final String sep = pure ||
-            (openStr.equals(processor.getRegister().open()) && closeStr.equals(processor.getRegister().close()))
-            ? null :
-            "`" + new SeparatorCalculator("abcdefghijklmnopqsrtxvyz")
-                .calculate(processor.getRegister().open() + processor.getRegister().close())
-                + "`";
+                (openStr.equals(processor.getRegister().open()) && closeStr.equals(processor.getRegister().close()))
+                ? null :
+                "`" + new SeparatorCalculator("abcdefghijklmnopqsrtxvyz")
+                        .calculate(processor.getRegister().open() + processor.getRegister().close())
+                        + "`";
         for (Segment segment = root; segment != null; segment = segment.next()) {
             if (segment instanceof ParameterSegment) {
                 output.append(segment.content(values));
@@ -162,10 +164,10 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
             final String currOpen = processor.getRegister().open();
             final String currClose = processor.getRegister().close();
             final var replacer = new Replacer(Map.of(
-                currOpen, currOpen + ESCAPE + sep + currOpen + sep + currClose,
-                currClose, currOpen + ESCAPE + sep + currClose + sep + currClose,
-                openStr, currOpen,
-                closeStr, currClose
+                    currOpen, currOpen + ESCAPE + sep + currOpen + sep + currClose,
+                    currClose, currOpen + ESCAPE + sep + currClose + sep + currClose,
+                    openStr, currOpen,
+                    closeStr, currClose
             ), openStr);
             return replacer.replace(input);
         } else {
@@ -181,7 +183,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      * The reason for that is that the result of this method is used to count the number of the argument provided when
      * the macro is invoked. In case the macro is named {@code default} and the first argument is named as above this
      * parameter will get the name of the original macro, which was used in the Jamal source file and which was not
-     * defined. When a macro is not defined Jamal try to call the macro named "default" and if the first argument is as
+     * defined. When a macro is not defined, Jamal try to call the macro named "default" and if the first argument is as
      * named above it will insert the name of the original and undefined macro name in front of the other parameters.
      *
      * @return the number of values expected on the call of the macro.
@@ -189,12 +191,12 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     @Override
     public int expectedNumberOfArguments() {
         if (Identified.DEFAULT_MACRO.equals(getId()) &&
-            argumentHandler.parameters.length > 0 &&
-            (Identified.MACRO_NAME_ARG1.equals(argumentHandler.parameters[0])
-                || Identified.MACRO_NAME_ARG2.equals(argumentHandler.parameters[0]))) {
+                argumentHandler.parameters.length > 0 &&
+                (Identified.MACRO_NAME_ARG1.equals(argumentHandler.parameters[0])
+                        || Identified.MACRO_NAME_ARG2.equals(argumentHandler.parameters[0]))) {
             return argumentHandler.parameters.length - 1;
         }
-        return tailParameter  ? -argumentHandler.parameters.length : argumentHandler.parameters.length;
+        return tailParameter ? -argumentHandler.parameters.length : argumentHandler.parameters.length;
     }
 
     @Override
@@ -219,6 +221,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     }
 
     private long usageCounter = 0;
+
     @Override
     public void count() {
         usageCounter++;
@@ -228,4 +231,72 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     public long counted() {
         return usageCounter;
     }
+
+    private final Base64.Encoder encoder = Base64.getEncoder();
+    private final Base64.Decoder decoder = Base64.getDecoder();
+
+    private String encode(String s) {
+        return encoder.encodeToString(s.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String decode(String s) {
+        return new String(decoder.decode(s), StandardCharsets.UTF_8);
+    }
+
+    private static final int ID_POS = 0;
+    private static final int OPEN_STR_POS = ID_POS + 1;
+    private static final int CLOSE_STR_POS = OPEN_STR_POS + 1;
+    private static final int VERBATIM_POS = CLOSE_STR_POS + 1;
+    private static final int TAIL_PARAMETER_POS = VERBATIM_POS + 1;
+    private static final int PURE_POS = TAIL_PARAMETER_POS + 1;
+    private static final int CONTENT_POS = PURE_POS + 1;
+    private static final int PARAMETERS_POS = CONTENT_POS + 1;
+
+    /**
+     * Create a serialized representation of the macro.
+     *
+     * @param processor  the processor
+     * @param serialized the serialized representation
+     * @throws BadSyntax if the serialized representation is not valid
+     */
+    private UserDefinedMacro(Processor processor, String serialized) throws BadSyntax {
+        this.processor = processor;
+        this.optionsStore = OptionsStore.getInstance(processor);
+        final var parts = serialized.split("\\|");
+        id = decode(parts[ID_POS]);
+        openStr = decode(parts[OPEN_STR_POS]);
+        closeStr = decode(parts[CLOSE_STR_POS]);
+        verbatim = parts[VERBATIM_POS].equals("1");
+        tailParameter = parts[TAIL_PARAMETER_POS].equals("1");
+        pure = parts[PURE_POS].equals("1");
+        content = decode(parts[CONTENT_POS]);
+        String[] parameters = new String[parts.length - PARAMETERS_POS];
+        for (int i = PARAMETERS_POS; i < parts.length; i++) {
+            parameters[i - PARAMETERS_POS] = decode(parts[i]);
+        }
+        argumentHandler = new ArgumentHandler(this, parameters);
+        InputHandler.ensure(parameters, null);
+    }
+
+    @Override
+    public javax0.jamal.api.UserDefinedMacro deserialize(String serialized) throws BadSyntax {
+        return new javax0.jamal.engine.UserDefinedMacro(processor, serialized);
+    }
+
+    @Override
+    public String serialize() {
+        final var sb = new StringBuilder();
+        sb.append(encode(id)).append("|");
+        sb.append(encode(openStr)).append("|");
+        sb.append(encode(closeStr)).append("|");
+        sb.append(verbatim ? 1 : 0).append("|");
+        sb.append(tailParameter ? 1 : 0).append("|");
+        sb.append(pure ? 1 : 0).append("|");
+        sb.append(encode(content)).append("|");
+        for (final var p : argumentHandler.parameters) {
+            sb.append(encode(p)).append("|");
+        }
+        return sb.toString();
+    }
+
 }

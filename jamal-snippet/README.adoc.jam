@@ -90,6 +90,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<replace,`replace`>>
 .. <<replaceLines,`replaceLines`>>
 .. <<counter_define,`counter:define`>>
+.. <<references,`references`>>
 .. <<reflow,`reflow`>>
 .. <<snipLine,`snip:line`>>
 .. <<snipFile,`snip:file`>>
@@ -1125,7 +1126,7 @@ This macro can filter lines of its input by a range of numbers.
 The syntax of the macro is:
 
 {%sample/
-{@range lines=1-3,5-7;-1,0
+{@range lines=1..3,5..7;..1,0
 
 lines
 }
@@ -1805,8 +1806,73 @@ The value of this user defined macro will be the same as the actual value of the
 ====
 The `-` character before the `>` is a macro parameter separator, and the macro itself checks only the `>` character.
 It means that you can use `.>`, `+>` or `/>` or any other non-alphanumeric first character in front of the `>`.
-It is revcommended to use the `-` ot `=` fore readability reasons.
+It is recommended to use the `-` or `=` for readability reasons.
 ====
+
+[[references]]
+==== {%macroChapter%}`references`
+
+From time to time there may be a need to have a reference to a part of the text that is defined later.
+Macros, by their nature cannot be used before they are defined.
+You cannot reference a section or chapter number before the section or chapter is defined.
+The macros provide powerful tools to overcome this limitation in many different ways.
+For example, you can define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
+The problem with this approach is that it separates parts of the document that belong together.
+It is 100% against the philosophy of Jamal.
+
+The `ref` and `references` macros give a different solution to this problem.
+These macros help to save the values of selected macros to an external file.
+Rendering the document the second time the file is read back and the macros are defined.
+
+Typically, you use the macro `references` at the start of the file to define the reference file.
+After that you can use the `ref` (or `reference` full name, but singular) to add specific macros to the set to be saved.
+
+{%sample/
+{@references file=sample.jrf}
+{@ref a}
+This is defined later, but can be used here: {a}
+{@define a=The value of a}
+%}
+
+will result in
+
+{%output%}
+
+The macro `references` has two parameters:
+
+* `file` can specify the file name to be used to save the references.
+The default file name is `{%@snip REF_JRF%}`.
+* `holder` is the name of the macro that will hold the list of macros to be saved.
+The default name is `{%@snip XREFS%}`.
+
+Using these options you can separate the references of different files and even in the same directory.
+You can also save multiple set of references from a single document.
+
+When using the macro `ref` you can specify the name of the macro to be saved.
+Following it by a `>` sign, you can specify the name of the holder macro, where you want the reference saved.
+
+{%sample/
+{@references file=sample.jrf holder="otherRefs"}
+{@ref a > otherRefs}
+This is defined later, but can be used here: {a}
+{@define a=The value of a}
+%}
+
+will result in
+
+{%output%}
+
+When using these macros the rendering has to run twice.
+The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
+It is your responsibility to write macros that are stable, having values independent of the previous execution.
+
+When the rendering runs the first time, or the reference file was deleted the macros are not defined.
+To avoid errors the `?` can be used in front of the macro names defined later.
+This will result an empty string at the place of the use of the macro.
+
+Another possibility is to use the `ref` macro before the first use of the referenced macro.
+This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
+
 
 [[reflow]]
 ==== {%macroChapter%}`reflow`

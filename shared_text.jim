@@ -6,4 +6,6 @@ The range start line number can be larger than the end line number.
 In that case that lines appear in reversed order from the start to the end.
 The lines are included in the order as the ranges specify.
 Using this option you can rearrange the order of the lines.
+When you want to specify a range lasting to the end of the lines you can write `13..inf` or `5..infinity`.
+
 This option cannot be defined as macro.}

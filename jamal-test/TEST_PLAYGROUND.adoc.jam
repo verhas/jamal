@@ -1,3 +1,12 @@
+{%@comment fromFile%}
+what is happening here
+
+`{%@references file="habakukk.jrf" holder="habakukk"%}`
+{%@ref a > habakukk%}
+{%a%}
 {%@define a=this is a%}
 {%@import imported.jim%}
 {%a%}
+
+{%@ref b > habakukk%}
+ macros included in the cross reference: {%habakukk%}
