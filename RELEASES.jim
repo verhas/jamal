@@ -11,4 +11,4 @@ After all, they are history and history does not change (rip Orwell).
 The symbolic names we use are city names.
 The first "next" release is named after the city where I lived in most of the my life.
 
-{@define RELEASE:BUDAPEST=1.12.7}
+{@define RELEASE:BUDAPEST=2.0.0}

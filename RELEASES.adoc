@@ -5,7 +5,7 @@
 
 
 
-== https://github.com/verhas/jamal/tree/1.12.7[1.12.7]
+== https://github.com/verhas/jamal/tree/2.0.0[2.0.0]
 
 * The extensions plugin was removed from the Maven extension dependency and from the asciidoc extension.
 

@@ -33,11 +33,11 @@ This version currently is
 
 {%output%}
 
-If we create an assertion that this version is in the `1.xxx` range, we can write it as the following:
-{%@define MAJOR_VERSION=1.%}
+If we create an assertion that this version is in the `2.xxx` range, we can write it as the following:
+{%@define MAJOR_VERSION=2.%}
 {%sample/
 here we have an assertion
-{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are not in the 1.xxx range anymore}
+{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are not in the 2.xxx range anymore}
 assertion was okay
 %}
 
