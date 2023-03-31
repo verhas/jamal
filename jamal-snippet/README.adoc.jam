@@ -133,7 +133,7 @@ There is no need to invoke the `use` command to get access to these macros.
 === {%chapter%}Macros
 {%@define parameterized=
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in <<{%@file ../PARAMS.adoc%},PARAMS>>.
+These parameters are parsed using the Standard Parameter Parsing as defined in link:{%@file ../PARAMS.adoc%}[PARAMS].
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
@@ -281,7 +281,7 @@ The snippets can be used later using the <<snip,`snip`>> macro.
 The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
-These options are parsed using the Standard Parameter Parsing as defined in <<{%@file ../PARAMS.adoc%},PARAMS>>.
+These options are parsed using the Standard Parameter Parsing as defined in link:{%@file ../PARAMS.adoc%}[PARAMS].
 
 {%#eval {%`@comment%}
 {%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*?)\".*~* `$1`~.*//\\s*~"
@@ -2473,7 +2473,7 @@ will result
 
 {%output%}
 
-For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
+For more examples and detailed explanation of the thin XML format, see the link:./THINXML.adoc[Thin XML Format] page.
 
 [[thinXml]]
 ==== {%macroChapter%}`thinXml`
@@ -2509,7 +2509,7 @@ will result
 As you can see in this example the output is not a full XML file.
 It is not formatted also and there is no leading ```<?xml version="1.0" encoding="UTF-8" standalone="no"?>``` line.
 
-For more examples and detailed explanation of the thin XML format, see the <<./THINXML.adoc#,Thin XML Format>> page.
+For more examples and detailed explanation of the thin XML format, see the link:./THINXML.adoc[Thin XML Format] page.
 
 [[date]]
 ==== {%macroChapter%}`date`
@@ -2819,7 +2819,7 @@ evaluate
 ----
 %}
 
-The macro can have two arguments, using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>> or one, specifying the full name of the method.
+The macro can have two arguments, using the link:../README.adoc#argsplit[Standard Built-In Macro Argument Splitting] or one, specifying the full name of the method.
 The method's full name is the class's full name, and the method name separated by either a `#` character or by `::` characters.
 
 The format string can be any string with `$` prefixed placeholders.
