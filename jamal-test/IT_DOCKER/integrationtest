@@ -172,4 +172,4 @@ if [ "$(diff -b test_scriptbasic.txt test_scriptbasic.test)" ] ;then
   diff -b test_scriptbasic.txt test_scriptbasic.test
   exit 1
 fi
-#rm test_scriptbasic.test
+rm test_scriptbasic.test

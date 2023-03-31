@@ -164,14 +164,14 @@ The maven coordinates for the Jamal module are:
 </dependency>
 ----
 
-The module has a dependency on the PlantUml binaries, and the currently used version of PlantUml is 1.2023.1:
+The module has a dependency on the PlantUml binaries, and the currently used version of PlantUml is 1.2023.5:
 
 [source,xml]
 ----
 <dependency>
     <groupId>net.sourceforge.plantuml</groupId>
     <artifactId>plantuml</artifactId>
-    <version>1.2023.1</version>
+    <version>1.2023.5</version>
 </dependency>
 ----
 

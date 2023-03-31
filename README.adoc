@@ -132,38 +132,38 @@ These different features are documented in their respective module documentation
 
 === Debugger
 image::jamaldebugger2559x1089.png[]
-* <<./jamal-debug/README.adoc#,Debugger Technical Documentation>>
+* link:./jamal-debug/README.adoc#[Debugger Technical Documentation]
 
 === Applications, Embedding
 
-* <<./jamal-asciidoc/README.adoc#,Jamal Asciidoc Documentation>>, How to configure and use Jamal to edit Asciidoc files using IntelliJ WYSIWYG editor.
-* <<./jamal-doclet/README.adoc#,Jamal Doclet Documentation>>, How to use Jamal in JavaDoc
-* <<./jamal-maven-plugin/README.adoc#,Jamal Maven Plugin README>>, How to use Jamal as a Maven plugin
-* <<./jamal-maven-extension/README.adoc#,Jamal Maven Extension README>>, How to use Jamal as a Maven extension
+* link:./jamal-asciidoc/README.adoc[Jamal Asciidoc Documentation], How to configure and use Jamal to edit Asciidoc files using IntelliJ WYSIWYG editor.
+* link:./jamal-doclet/README.adoc[Jamal Doclet Documentation], How to use Jamal in JavaDoc
+* link:./jamal-maven-plugin/README.adoc[Jamal Maven Plugin README], How to use Jamal as a Maven plugin
+* link:./jamal-maven-extension/README.adoc[Jamal Maven Extension README], How to use Jamal as a Maven extension
 
 === Programming Language Modules
 
 
-* <<./jamal-ruby/README.adoc#,Ruby Module README>>, How to use Ruby code in your Jamal source
-* <<./jamal-groovy/README.adoc#,Groovy Module README>>, How to use Groovy code in your Jamal source
-* <<./jamal-scriptbasic/README.adoc#,ScriptBasic Module README>>, How to use ScriptBasic code in your Jamal source
+* link:./jamal-ruby/README.adoc#[Ruby Module README], How to use Ruby code in your Jamal source
+* link:./jamal-groovy/README.adoc#[Groovy Module README], How to use Groovy code in your Jamal source
+* link:./jamal-scriptbasic/README.adoc#[ScriptBasic Module README], How to use ScriptBasic code in your Jamal source
 
 === Other External Modules
 
-* <<./jamal-io/README.adoc#,Io Module README>>, How to read and write external files from Jamal macros
-* <<./jamal-jamal/README.adoc#,Jamal Jamal Module README>>, How to use Jamal inside Jamal as an embedded language
-* <<./jamal-markdown/README.adoc#,Jamal Markdown Module README>>, Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
-* <<./jamal-mock/README.adoc#,Jamal Mock Module README>>, Mock built-in macros to test macros that are to run in a specific environment
-* <<./jamal-plantuml/README.adoc#,Jamal PlantUML Module README>>, Embed PlantUML pictures into your documentation
-* <<./jamal-snippet/README.adoc#,Jamal Snippet Module README>>, Use snippets to compile your documentation
-* <<./jamal-yaml/README.adoc#,Jamal Yaml Module README>>, Use data from Yaml files in your macros and use macros in your Yaml files
-* <<./jamal-json/README.adoc#,Jamal JSon Module README>>, Use data from JSON files in your macros and use macros in your JSON files
-* <<./jamal-assertions/README.adoc#,Jamal Assertions Module README>>, contains macros to make assertions to ensure the consistency of your documentation
-* <<./jamal-word/README.adoc#,DOCX Word Processing README>>, describes the Jamal Microsoft Word Processing module and the macros that are specific to DOCX processing
+* link:./jamal-io/README.adoc[Io Module README], How to read and write external files from Jamal macros
+* link:./jamal-jamal/README.adoc[Jamal Jamal Module README], How to use Jamal inside Jamal as an embedded language
+* link:./jamal-markdown/README.adoc[Jamal Markdown Module README], Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
+* link:./jamal-mock/README.adoc[Jamal Mock Module README], Mock built-in macros to test macros that are to run in a specific environment
+* link:./jamal-plantuml/README.adoc[Jamal PlantUML Module README], Embed PlantUML pictures into your documentation
+* link:./jamal-snippet/README.adoc[Jamal Snippet Module README], Use snippets to compile your documentation
+* link:./jamal-yaml/README.adoc[Jamal Yaml Module README], Use data from Yaml files in your macros and use macros in your Yaml files
+* link:./jamal-json/README.adoc[Jamal JSon Module README], Use data from JSON files in your macros and use macros in your JSON files
+* link:./jamal-assertions/README.adoc[Jamal Assertions Module README], contains macros to make assertions to ensure the consistency of your documentation
+* link:./jamal-word/README.adoc[DOCX Word Processing README], describes the Jamal Microsoft Word Processing module and the macros that are specific to DOCX processing
 
 === Test Support
 
-* <<./jamal-testsupport/README.adoc#,Jamal Test Module README>>, Use this module to test your own Java implemented macros
+* link:./jamal-testsupport/README.adoc[Jamal Test Module README], Use this module to test your own Java implemented macros
 
 In this readme, we first discuss how the macros look and how Jamal will convert its input to the output.
 Then we discuss the API that lets you embed the macro processing into your application.
@@ -531,7 +531,7 @@ Currently, there are two debuggers implemented:
 . web based debugger with UI written in React.js
 . a TCP/telnet based debugger.
 
-The detailed technical documentation of the server side of the debuggers is described in the document <<jamal-debug/README.adoc,debugger readme>>.
+The detailed technical documentation of the server side of the debuggers is described in the document link:./jamal-debug/README.adoc[debugger readme].
 The TCP based debugger is only for experimental purposes or when the web based debugger is not available.
 
 Here we briefly describe the web based debugger.
@@ -2250,7 +2250,7 @@ is
 
 [source]
 ----
-/Users/verhasp/.sdkman/candidates/java/19-open
+/Applications/IntelliJ IDEA.app/Contents/jbr/Contents/Home
 ----
 
 
@@ -2583,9 +2583,7 @@ The output generated by the Jamal preprocessor:
 
 [source]
 ----
-1. iterated
-2. iterated
-3. iterated
+The JShell engine is not available
 ----
 
 
@@ -2647,7 +2645,9 @@ It simply prints
 
 [source]
 ----
-Hello, My Dear
+There were 2 syntax errors processing the Jamal input:
+1. The processor could not load the JShell engine. at /Users/verhasp/github/jamal/README.adoc.jam/2314:9 <<< /Users/verhasp/github/jamal/README.adoc.jam/2311:3 <<< /Users/verhasp/github/jamal/README.adoc.jam/2309:9
+2. The JShell engine is not available at /Users/verhasp/github/jamal/README.adoc.jam/2319:2 <<< /Users/verhasp/github/jamal/README.adoc.jam/2311:3 <<< /Users/verhasp/github/jamal/README.adoc.jam/2309:9
 ----
 
 

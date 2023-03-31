@@ -5,8 +5,17 @@ This directory contains the integration tests.
 Integration tests are executed using Docker containers.
 
 The shell script `integrationtest` is created from the source `integrationtest.jam`.
+The Jamal source is the skeleton of the integration test script.
+It includes other scripts so that after the processing there will be one giant monolithic shell script.
+It eases the maintenance of the docker image.
 
-Some integration tests are included from other subprojects from `it.sh` files.
+The included script file names are `test_ ... .sh.jam`.
+The files named `test_ ... .txt.jam` are processed during the test.
+Their result is compared to the expected result.
+These files are `test_ ... .txt`.
+
+
+Some integration tests are included from other subprojects.
 Those files are developed testing their functionality locally on the development machine.
 When they work they are included into the top level `integrationtest.jam` file.
 
@@ -14,7 +23,7 @@ When they work they are included into the top level `integrationtest.jam` file.
 ## Executing the integration tests
 
 The tests can be created and executed using the `test.sh` script.
-The script will build the Docker image and run the tests.
+This script creates the test scripts from the local Jamal sources, builds the Docker image and runs the tests.
 
 Prerequisites:
 
@@ -24,11 +33,17 @@ Prerequisites:
 
 * The docker instance running should have internet connection
 
-  * to GitHub for cloning Jamal source
+  ** to GitHub for cloning Jamal source
 
-  * Maven central for building Jamal
+  ** Maven central for building Jamal
+
+Note that the processing of the Jamal sources to prepare the integration test is done with the locally installed development version, but the integration tests will be executed cloning the Jamal repository from GitHub.
 
 ## Integration tests implemented
+
+This section describes the integration tests implemented.
+Each subsection is a test, part of, and executed by the `integrationtest` script.
+
 
 ### Basic Maven Compilation
 
@@ -44,4 +59,3 @@ The test sets the file permissions to the directory and the configuration file i
 ### Command Line execution
 
 The test runs the command line tool `jamal` with different parameters.
-
