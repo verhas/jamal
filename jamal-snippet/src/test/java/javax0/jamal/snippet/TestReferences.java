@@ -20,7 +20,7 @@ public class TestReferences {
     @Test
     void testReferences() throws Exception {
         cleanRefFile();
-        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").matches("WARNING The reference file .*/jamal-snippet/ref.jrf was not found.UNDEFINED");
+        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").matches("WARNING The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.UNDEFINED");
         TestThat.theInput("{@references}{@ref a}{a}").results("1");
         cleanRefFile();
     }
@@ -29,7 +29,7 @@ public class TestReferences {
     @Test
     void testReferencesWithArgs() throws Exception {
         cleanRefFile();
-        TestThat.theInput("{@references}{@ref a}{a/1}{@define a($x)=$x}").matches("WARNING The reference file .*/jamal-snippet/ref.jrf was not found.UNDEFINED");
+        TestThat.theInput("{@references}{@ref a}{a/1}{@define a($x)=$x}").matches("WARNING The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.UNDEFINED");
         TestThat.theInput("{@references}{@ref a}{a/1}").results("1");
         cleanRefFile();
     }
