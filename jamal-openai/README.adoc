@@ -37,7 +37,7 @@ For more information about how to configure `maven:load` please read the link:..
 
 To load the macros use the following line in your Jamal document:
 
-  {@maven:load com.javax0.jamal:jamal-openai:1.12.7-SNAPSHOT}\
+  {@maven:load com.javax0.jamal:jamal-openai:2.0.1-SNAPSHOT}\
 
 The module defines macros on three levels.
 The low level is the pure API access implemented with HTTP POST and GET.

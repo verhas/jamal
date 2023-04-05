@@ -5,6 +5,7 @@ import javax0.jamal.snippet.SnipCheckFailed;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,12 +51,14 @@ class ExceptionDumper {
         if (printMessage) {
             output.append(t.getMessage());
         }
-        try (final var sw = new StringWriter();
-             final var pw = new PrintWriter(sw)) {
-            t.printStackTrace(pw);
-            output.append(sw);
-        } catch (IOException ioException) {
-            // does not happen, StringWriter does not do anything in close
+        for( final var s : t.getStackTrace() ){
+            if( s.getClassName().startsWith("javax0.jamal")) {
+                output.append(String.format("\t%s(%s:%d)\n",s.getClassName(),s.getMethodName(),s.getLineNumber()));
+            }
+        }
+        if (t.getCause() != null) {
+            output.append("Causing Exception:\n");
+            dumpIt(t.getCause(), true);
         }
         if (t.getSuppressed().length > 0) {
             output.append("Suppressed exceptions:\n");
@@ -63,11 +66,5 @@ class ExceptionDumper {
                 dumpIt(sup, true);
             }
         }
-        if (t.getCause() != null) {
-            output.append("Causing Exception:\n");
-            dumpIt(t.getCause(), true);
-        }
     }
-
-
 }

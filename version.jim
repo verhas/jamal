@@ -10,6 +10,7 @@ else
  << ""
 endif}}
 
+{@import RELEASES.jim}
 
 -- define the macro that uses its lines to define the versions of the modules
 {@define VERSIONS($x)=
@@ -42,7 +43,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=2.0.0                    -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=2.0.1-SNAPSHOT                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 

@@ -1,5 +1,16 @@
-{@comment}{@define alma=alma}
-<[!CDATA[[ this is the Cadata context ]]>
-<xml tag="{alma}">
-  this is the content in the XML
-</xml>
+{@import ../pom.jim}
+{project hahh}
+
+{addTo :/build/plugins}
+    {add:plugin :org.apache.maven.plugins:maven-compiler-plugin:3.1:compile}
+
+{addTo :/build/pluginManagement/plugins}
+    {add:plugin :org.apache.maven.plugins:maven-source-plugin:{MAVEN_SOURCE_PLUGIN_VERSION}:::
+        {executions|
+            {execution|
+                {id|attach-sources}
+                {goals|{goal|jar}}
+            }
+        }
+    }
+{end project}

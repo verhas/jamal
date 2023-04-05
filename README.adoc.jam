@@ -802,6 +802,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.12.3 option `{%@snip RestrictedDefineParameters%}` can be used to restrict parameters to be only identifiers
 * since 1.12.5 option `export` can be used as a shorthand instead of define and export one after the other
 * since {%RELEASE:BUDAPEST%} option `tail` to parse the tail parameters as a single string
+
 ===== Define basics
 
 `define` defines a user-defined macro in the current scope.

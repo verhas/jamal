@@ -1,5 +1,47 @@
+[WARNING]
+--
+* Cannot insert XML at '/project' at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/7:21 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/6:10 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/3:9
+--
+{@import ../pom.jim}
+{project hahh}
 
-<[!CDATA[[ this is the Cadata context ]]>
-<xml tag="alma">
-  this is the content in the XML
-</xml>
+{addTo :/build/plugins}
+    {add:plugin :org.apache.maven.plugins:maven-compiler-plugin:3.1:compile}
+
+{addTo :/build/pluginManagement/plugins}
+[WARNING]
+--
+* Cannot insert XML at '/project' at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/7:21 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/6:10 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/3:9
+--
+    {add:plugin :org.apache.maven.plugins:maven-source-plugin:{MAVEN_SOURCE_PLUGIN_VERSION}:::
+        {executions|
+            {execution|
+                {id|attach-sources}
+                {goals|{goal|jar}}
+            }
+        }
+    }
+{end project}
+[WARNING]
+--
+* Cannot insert XML at '/project' at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/7:21 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/6:10 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/3:9
+--
+[source]
+----
+Cannot insert XML at '/project' at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/7:21 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/6:10 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/3:9
+	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:142)
+	javax0.jamal.engine.Processor(closeProcess:904)
+	javax0.jamal.engine.Processor(process:188)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:338)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:201)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:132)
+Causing Exception:
+Content is not allowed in trailing section.	javax0.jamal.snippet.XmlInsert(insert:69)
+	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:140)
+	javax0.jamal.engine.Processor(closeProcess:904)
+	javax0.jamal.engine.Processor(process:188)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:338)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:201)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:132)
+sed -i jam '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam
+----

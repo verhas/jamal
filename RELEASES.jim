@@ -12,3 +12,9 @@ The symbolic names we use are city names.
 The first "next" release is named after the city where I lived in most of the my life.
 
 {@define RELEASE:BUDAPEST=2.0.0}
+
+Csepel is part of Budapest since January 1, 1950.
+Before that it was a separate town.
+It is district XXI now.
+
+{@define RELEASE:CSEPEL=2.0.1}

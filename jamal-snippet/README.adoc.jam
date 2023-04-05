@@ -409,7 +409,7 @@ which is the current version of the project as read from the `pom.xml` file.
 
 [[xml_insert]]
 ==== {%macroChapter%}`xml:insert`
-{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=1cf98069%}
+{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=7d4d01db%}
 This macro can modify an XML formatted user defined macro inserting content into the XML document.
 It can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
 This latter use is for the case when the Jamal file processed creates an XML file.
@@ -582,6 +582,8 @@ You can manually copy the content of the snippet there, which helps the navigati
 You can use the macro <<snip_update,snip_update>> to update the snippet's content in the Jamal source file.
 Since that macro modifies the file you edit, you must use it with care.
 
+Since the introduction of the Asciidoctor preprocessor and the WYSIWYG editing possibility of Asciidoc and Markdown files the importance of this feature has decreased.
+
 ==== Partial snippet
 
 The second case uses only part of the snippet. (starting from Jamal version 1.7.2)
@@ -622,6 +624,12 @@ and the Jamal code
 
 to gauge out the string `:rubyShell` from the source code.
 
+[NOTE]
+====
+It is also possible to specify the regular expression in the source code.
+As it is documented in the section <<snip_collect,`collect`>>, the `snipLine` declaration may end with a `filter=regular expression` option.
+====
+
 When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole snippet is calculated.
 If there is any change in the snippet, even outside the first line, the hash code will be different and the snippet inclusion will purposefully fail.
 
@@ -639,8 +647,8 @@ Note that there is no `/` around the regular expression.
 
 The option `poly` has to be between `(` and `)` characters as usual in non-core built-in macros.
 
-In this case, the macro collects and concatenates all snippets matching the regular expression, and the value of the macro is the resulting text.
-The snippets are sorted by their name before concatenation regardless of their appearance order in the file or files.
+In this case, the macro collects and concatenates all snippets with regular expression matching names, and the value of the macro is the resulting text.
+The snippets are sorted by their names before concatenation regardless of their appearance order in the file or files.
 
 [NOTE]
 ====
@@ -677,6 +685,12 @@ If there is
 * for any reason the concatenated set of snippets changes,
 
 then snippet inclusion will purposefully fail.
+
+==== Snippet Transformation
+
+You can surround the snippet using the macro <<snipTransform,`snip:transform`>> transforming the output.
+This is, however, such a usual case that the macro will automatically invoke the transformation.
+To do this the macro `snip` will accept all the options of the macro `snip:transform` and will pass them to that.
 
 [[snip_check]]
 ==== {%macroChapter%}`snip:check`

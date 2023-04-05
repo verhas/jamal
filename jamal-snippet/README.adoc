@@ -23,7 +23,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -114,7 +114,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -450,7 +450,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.0.0</version>
+<version>2.0.1-SNAPSHOT</version>
 ...
 ----
 
@@ -489,7 +489,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.0.0</version>
+<version>2.0.1-SNAPSHOT</version>
 ...
 ----
 
@@ -567,7 +567,7 @@ The following example demonstrates how the result of the processing can be modif
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 </dependency>}
 <plugins><plugin>
 <artifactId>my-imaginary</artifactId>
@@ -597,7 +597,7 @@ will result
     <dependency>
       <groupId>com.javax0.jamal</groupId>
       <artifactId>jamal-snippet</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <pluginManagement/>
@@ -715,6 +715,8 @@ You can manually copy the content of the snippet there, which helps the navigati
 You can use the macro <<snip_update,snip_update>> to update the snippet's content in the Jamal source file.
 Since that macro modifies the file you edit, you must use it with care.
 
+Since the introduction of the Asciidoctor preprocessor and the WYSIWYG editing possibility of Asciidoc and Markdown files the importance of this feature has decreased.
+
 ==== Partial snippet
 
 The second case uses only part of the snippet. (starting from Jamal version 1.7.2)
@@ -755,6 +757,12 @@ and the Jamal code
 
 to gauge out the string `:rubyShell` from the source code.
 
+[NOTE]
+====
+It is also possible to specify the regular expression in the source code.
+As it is documented in the section <<snip_collect,`collect`>>, the `snipLine` declaration may end with a `filter=regular expression` option.
+====
+
 When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole snippet is calculated.
 If there is any change in the snippet, even outside the first line, the hash code will be different and the snippet inclusion will purposefully fail.
 
@@ -772,8 +780,8 @@ Note that there is no `/` around the regular expression.
 
 The option `poly` has to be between `(` and `)` characters as usual in non-core built-in macros.
 
-In this case, the macro collects and concatenates all snippets matching the regular expression, and the value of the macro is the resulting text.
-The snippets are sorted by their name before concatenation regardless of their appearance order in the file or files.
+In this case, the macro collects and concatenates all snippets with regular expression matching names, and the value of the macro is the resulting text.
+The snippets are sorted by their names before concatenation regardless of their appearance order in the file or files.
 
 [NOTE]
 ====
@@ -810,6 +818,12 @@ If there is
 * for any reason the concatenated set of snippets changes,
 
 then snippet inclusion will purposefully fail.
+
+==== Snippet Transformation
+
+You can surround the snippet using the macro <<snipTransform,`snip:transform`>> transforming the output.
+This is, however, such a usual case that the macro will automatically invoke the transformation.
+To do this the macro `snip` will accept all the options of the macro `snip:transform` and will pass them to that.
 
 [[snip_check]]
 ==== ix.`snip:check`
@@ -1508,7 +1522,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1291:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1304:30
 ----
 
 
@@ -2891,7 +2905,7 @@ will result
 - ListDir.java: 5,545 bytes
 - XmlFormat.java: 3,544 bytes
 - SnippetXmlReader.java: 6,515 bytes
-- XmlInsert.java: 6,171 bytes
+- XmlInsert.java: 6,316 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 1,938 bytes
@@ -2947,7 +2961,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.1-SNAPSHOT</version>
 </project>
 }
 ----
@@ -2963,7 +2977,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 </project>
 ----
 
@@ -2978,7 +2992,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.1-SNAPSHOT</version>
 </project>
 }
 ----
@@ -2994,7 +3008,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.0.0</version>
+<version>2.0.1-SNAPSHOT</version>
 </project>
 ----
 
@@ -3015,7 +3029,7 @@ The previous example that we used before can also be formulated this way.
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.1-SNAPSHOT</version>
 </project>
 ----
 
@@ -3032,7 +3046,7 @@ It will result in the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 </project>
 ----
 
@@ -3055,7 +3069,7 @@ project>
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.0.0
+  version>2.0.1-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3075,7 +3089,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
@@ -3107,7 +3121,7 @@ For example:
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.0.0
+  version>2.0.1-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3125,7 +3139,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.0.0</version>
+<version>2.0.1-SNAPSHOT</version>
 <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
@@ -3157,7 +3171,7 @@ will result in the output
 
 [source]
 ----
-2023-03-31 16:05:35
+2023-04-05 15:50:53
 ----
 
 

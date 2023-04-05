@@ -63,14 +63,17 @@ public class XmlInsert implements Macro {
         return "";
     }
 
-    static void insert(Document intoDocument, String xpath, String xml, boolean neeed) throws Exception {
+    static void insert(Document intoDocument, String xpath, String xml, boolean need) throws Exception {
         final var dbFactory = DocumentBuilderFactory.newInstance();
         final var dBuilder = dbFactory.newDocumentBuilder();
         final var doc = dBuilder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
         final var xPathEngine = XPathFactory.newInstance().newXPath();
         final var node = (Node) xPathEngine.evaluate(xpath, intoDocument, XPathConstants.NODE);
+        if( node == null ){
+            throw new BadSyntax("The XPath expression '"+xpath+"' did not match any node in the document.");
+        }
         final var importNode = intoDocument.importNode(doc.getFirstChild(), true);
-        if (neeed) {
+        if (need) {
             final var name = importNode.getNodeName();
             final var children = node.getChildNodes();
             final var nrChilds = children.getLength();
