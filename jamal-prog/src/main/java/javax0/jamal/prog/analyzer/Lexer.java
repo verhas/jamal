@@ -12,7 +12,7 @@ import java.util.Set;
 public class Lexer {
 
     final static private Set<String> RESERVED = Set.of(
-            "if", "else", "elseif", "then", "endif", "while", "wend", "for", "next", "do", "until", "and", "or", "not", "to", "step"
+            "if", "else", "elseif", "then", "endif", "while", "wend", "for", "next", "do", "until", "and", "or", "not", "to", "step", "end"
     );
     final static private String[] OPERANDS = {
             "==", "!=", "<=", ">=", "<<", "!", "=", "+", "-", "*", "/", "%", "(", ")", "<", ">",

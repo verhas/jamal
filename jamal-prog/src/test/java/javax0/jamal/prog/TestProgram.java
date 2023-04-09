@@ -74,4 +74,32 @@ public class TestProgram {
                 "}"
         ).throwsBadSyntax("Step limit reached");
     }
+
+
+    @DisplayName("Avoids infinite loop for a command that is simply a String")
+    @Test
+    void test3() throws Exception {
+        TestThat.theInput("" +
+                "{@program \n" +
+                "\"a\"\n" +
+                "}"
+        ).throwsBadSyntax("Unexpected token 'a'");
+    }
+
+    @DisplayName("elseif works also as 'else' 'if' in two words")
+    @Test
+    void testElseIf() throws Exception {
+        TestThat.theInput("" +
+                "{@program \n" +
+                "if 1==1 then\n" +
+                "    <<\"a\"\n" +
+                "else if 1== 1 then\n" +
+                "    <<\"b\"\n" +
+                "  else\n" +
+                "    <<\"c\"\n" +
+                "end if\n" +
+                "}"
+        ).results("a");
+    }
+
 }

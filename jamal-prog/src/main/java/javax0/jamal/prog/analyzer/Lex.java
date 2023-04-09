@@ -83,11 +83,35 @@ public class Lex {
             assume(Type.RESERVED, text, msg);
         }
 
-        public void assumeKWNL(String text, String msg, String newLineMsg) throws BadSyntax {
-            assume(Type.RESERVED, text, msg);
-            if( newLineMsg != null ){
+        public void assumeEndKWNL(String text, String msg, String newLineMsg) throws BadSyntax {
+            assumeEnd(text, msg);
+            if (newLineMsg != null) {
                 eol(newLineMsg);
             }
+        }
+
+        public void assumeKWNL(String text, String msg, String newLineMsg) throws BadSyntax {
+            assume(Type.RESERVED, text, msg);
+            if (newLineMsg != null) {
+                eol(newLineMsg);
+            }
+        }
+
+        public Lex assumeEnd(String text, String msg) throws BadSyntax {
+            if (lexes.isEmpty() || lexes.get(0).type != Type.RESERVED) {
+                throw new BadSyntax(msg);
+            }
+            if (lexes.get(0).text.equals("end" + text)) {
+                return next();
+            }
+            if( lexes.size() < 2 ){
+                throw new BadSyntax(msg);
+            }
+            if( lexes.get(1).type != Type.RESERVED || !lexes.get(0).text.equals("end") || !lexes.get(1).text.equals(text) ){
+                throw new BadSyntax(msg);
+            }
+            next();
+            return next();
         }
 
         public Lex assume(Type type, String text, String msg) throws BadSyntax {

@@ -14,8 +14,9 @@ public class Block {
             if (lexes.peek().type == Lex.Type.RESERVED) {
                 switch(lexes.peek().text){
                     case "\n":
-                        lexes.next();
+                        lexes.next(); // ignore empty lines
                         break;
+                        // start the block specific analyzers, who will also consume the keyword
                     case "if":
                         commands.add(If.analyze(lexes));
                         break;
@@ -28,17 +29,21 @@ public class Block {
                     case "<<":
                         commands.add(Output.analyze(lexes));
                         break;
+                        // return with the block and the caller will check that the block closing keyword is acceptable
                     case "next":
                     case "else":
                     case "elseif":
                     case "endif":
                     case "wend":
+                    case "end":
                         return block;
                     default:
                         throw new BadSyntax("Unexpected reserved word '"+lexes.peek().text+"'");
                 }
             }else if( lexes.peek().type == Lex.Type.IDENTIFIER ){
                 commands.add(Assignment.analyze(lexes));
+            }else {
+                throw new BadSyntax("Unexpected token '"+lexes.peek().text+"'");
             }
         }
         return block;

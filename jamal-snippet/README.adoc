@@ -1522,7 +1522,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1304:30
+../jamal-snippet/README.adoc.jam:1305:30
 ----
 
 
@@ -3171,7 +3171,7 @@ will result in the output
 
 [source]
 ----
-2023-04-05 15:50:53
+2023-04-09 18:17:39
 ----
 
 
