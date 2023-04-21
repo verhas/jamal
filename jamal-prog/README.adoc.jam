@@ -295,6 +295,8 @@ will result
 
 {%output%}
 
+You can write `endif` and `elseif` as `end if` and `else if`.
+
 === for loops
 
 For loops execute the lines between the `for` and `next` commands.

@@ -13,7 +13,7 @@ pushd .asciidoctor/lib
 echo "removing all old files"
 rm -f *
 echo "unzipping the libraries from the local maven repo"
-unzip ~/.m2/repository/com/javax0/jamal/jamal-asciidoc/2.0.1-SNAPSHOT/jamal-asciidoc-2.0.1-SNAPSHOT-jamal-asciidoc-distribution.zip >/dev/null
+unzip ~/.m2/repository/com/javax0/jamal/jamal-asciidoc/2.0.1/jamal-asciidoc-2.0.1-jamal-asciidoc-distribution.zip >/dev/null
 echo "cd back to Jamal main project directory"
 popd
 echo "Restart IntelliJ, then you have the new version"

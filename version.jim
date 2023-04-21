@@ -43,7 +43,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=2.0.1-SNAPSHOT                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=2.0.1                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 
@@ -78,7 +78,7 @@ MAVEN_DEPENDENCY_PLUGIN_VERSION=3.5.0      -- https://repo.maven.apache.org/mave
 JUPITER_VERSION=5.9.2                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-params
-MOCKITO_VERSION=5.2.0                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
+MOCKITO_VERSION=5.3.0                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 --dependencies needed for the Jamal libraries
 PLANTUML_VERSION=1.2023.5                  -- https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml
@@ -89,7 +89,7 @@ SNAKEYAML_VERSION=2.0                      -- https://repo.maven.apache.org/mave
 JSON_ORG_VERSION=20230227                  -- https://repo.maven.apache.org/maven2/org/json/json/
 FLEXMARK_VERSION=0.64.0                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
 APACHE_POI_VERSION=5.2.3                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
-ASCIIDOCTORJ_VERSION=2.5.7                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
+ASCIIDOCTORJ_VERSION=2.5.8                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
 JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
 MARKDOWN_TO_ASCIIDOC=2.0                   -- https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/
 MAVEN_DOWNLOADER=1.1.0                     -- https://repo.maven.apache.org/maven2/com/javax0/mavenDownload/mavenDownloader/
