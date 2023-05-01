@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static java.util.Objects.nonNull;
+
 public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry {
     /**
      * The result structure of the execution of in-process Jamal.
@@ -68,7 +70,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     @Override
     public void process(Document document, PreprocessorReader reader) {
         final var runCounter = JamalPreprocessor.runCounter++;
-        final var fileName = reader.getFile();
+        final var fileName = nonNull(reader.getFile()) ? reader.getFile() : (String) document.getAttribute("docfile");
         setContextClassLoader();
         /*
          * The plugin is invoked for all asciidoc files. If the file ending is adoc, asciidoc or anything else then
