@@ -60,6 +60,7 @@ module jamal.snippet {
     requires jamal.tools;
     requires jamal.engine;
     requires java.xml;
+    requires javaLex;
     provides Macro with Clear,
             Collect,
             LineCount,

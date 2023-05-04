@@ -32,12 +32,22 @@ To use this module, you have to add the dependency to your Maven project, as:
     <artifactId>jamal-io</artifactId>
     <version>{%VERSION%}</version>
 </dependency>
-
 ----
+
+or as an alternative your macro file has to use the `maven:load` macro to load the module as
+
+{%sample/
+{@maven:load com.javax0.jamal:jamal-io:{%VERSION%}}%}
+
+before using any macro from this package from the first time.
+Also note, that using the `maven:load` macro requires that you configure the `jamal-io` package as safe in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+
 
 Following that, you can use the macros
 {%@define chap($x)=. <<$x,`io:$x`>>%}
 
+{%chap cwd%}
+. <<name,`os:name`>>
 {%chap write%}
 {%chap remove%}
 {%chap mkdir%}
@@ -53,6 +63,21 @@ macros.
 {%@define section($x)===== $x%}
 
 == Macros implemented in the package
+
+{%chap cwd%}
+
+This macro can be used to get the current working directory.
+The format of the macro is
+
+{%sample/
+{@io:cwd}%}
+
+and the output is the actual working directory absolute path name.
+
+[[name]]
+=== {%macroChapter%}`os:name`
+
+This macro will return the actual operating system name, as it is contained in the system variable `os.name`.
 
 {%chap write%}
 
@@ -218,7 +243,7 @@ When Jamal looks for some configuration it looks at the
 
 whichever it finds first.
 The key given is used as is in the case of the environment variables.
-For example `JAVA_HOME` is used as is.
+For example, `JAVA_HOME` is used as is.
 However, when the code looks at the system properties, it looks for the key `java.home`.
 The transformation is to contert to lower case and replace the underscore characters with dot.
 In the configuration file the key is also lowe case and the underscore characters are replaced with dot but if the key has a `jamal.` prefix it is also removed.
@@ -309,7 +334,7 @@ On the other hand the external program will see this environment variable as und
 The next example shows how to use the option `optional`.
 This option tells the macro `exec` not to bother when the command is not configured in the Jamal environment.
 It can come handy in a few situations.
-For example you want to use Graphviz to create some nice looking diagrams.
+For example, you want to use Graphviz to create some nice looking diagrams.
 Some macros extract the Graphviz dot file from the document and then use Graphviz to create the image.
 The Jamal processing of the document runs as part of the unit test to ensure that the documentation just as well as the tests are correct and up-to-date.
 
@@ -340,7 +365,7 @@ The test checks that the error message belongs to this case and not to the use o
 
 This macro can be used to wait for the completion of a proces started earlier asynchronously.
 A document may start some external process at an earlier point and needs the result only later.
-While the external processess runs the document processing can go on and the wait for the result when it is needed.
+While the external processess runs the document processing can go on and wait for the result when it is needed.
 The output of the external process cannot be collected from the result of the `exec` macro.
 Output of asynchronously started external processes do not appear as the result of the macro.
 In this case the output is typically redirected to a file and the result can be collected from the file after the `waitFor` was processed.

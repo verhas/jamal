@@ -2,7 +2,7 @@
 
 {%@comment This is the ASCIIDOC version of the GLOSSARY document.
 The source of the file is the GLOSSARY.adoc.jam.
-This file is processed by the test javax0.jamal.documentation. TestConvertReadme in the module jamal-snippet.
+This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
 
 %}{%@import res:jamal.jim%}\
 {%@snip:xml pom=pom.xml%}\
@@ -65,7 +65,7 @@ The macros defined here are also available for evaluating the macro itself, but 
 
 * *ended* when the scope has ended, the references to any macro are deleted and will be GC-ed.
 
-In addition to these three states we also use the terminology "__export scope__" and "__global scope__".
+In addition to these three states, we also use the terminology "__export scope__" and "__global scope__".
 
 * *export* scope is one level above the current scope.
 When a macro defined in the _active_ scope is exported, the macro is moved to this scope.
@@ -102,7 +102,7 @@ If you cannot avoid it, then you should use different snippet start and end regu
 You can define these as the `snip:collect` macro parameters.
 
 Maco Input:: The input of a macro is the text that follows the macro name and lasts to the macro closing.
-For example the `{@trimLine {%@define TITMI=this is the macro input%}{%TITMI%}}` has the text `{%TITMI%}` as macro input.
+For example, the `{@trimLine {%@define TITMI=this is the macro input%}{%TITMI%}}` has the text `{%TITMI%}` as macro input.
 
 Macro Option, Macro Parameter:: These two things have the same meaning and both are used in the documentation.
 Built-in macros can use the option parsing routines for the syntax analysis of the input of the macro.
@@ -115,14 +115,14 @@ User defined macros have arguments.
 Built-in macros have options/parameters.
 
 Macro Arguments:: The actual values passed to a user-defined macro when it is used.
-User defined macros have name, optionally arguments and a body.
+User defined macros have name, optionally arguments, and a body.
 The arguments have symbolic names listed between `(` and `)` comma separated.
-At the use of the macro actual values are provided and the names are replaced by the actual values.
+The macro actual values are provided at the use, and the names are replaced by the actual values.
 
 Macro Body:: Is the text of a user-defined macro containing literal text and macro argument
 
 Standard Built-In Parameter/Option Parsing:: It means parsing the Macro Options.
-There is API support for the options parsing.
+There is API support for the options' parsing.
 
 Standard Built-In Macro Argument Splitting:: The standard way a built-in macro can parse the Macro Input in case it does not intend to implement its syntax analysis.
 Using the standard way makes the macros more uniform.

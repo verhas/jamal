@@ -32,7 +32,7 @@ $x
 --------------------------------------------------------------------------------------------------------------------
 -- cannot move to VERSIONS because old 'VersionFetcher.tsx' reads this file from github
 -- and looks for the "define" to see its version is OK
-{@define LAST_RELEASE=1.12.6}
+{@define LAST_RELEASE=2.0.1}
 
 
 {VERSIONS
@@ -94,6 +94,7 @@ JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/mave
 MARKDOWN_TO_ASCIIDOC=2.0                   -- https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/
 MAVEN_DOWNLOADER=1.1.0                     -- https://repo.maven.apache.org/maven2/com/javax0/mavenDownload/mavenDownloader/
 SOURCE_BUDDY=2.3.0                         -- https://repo.maven.apache.org/maven2/com/javax0/sourcebuddy/SourceBuddy/
+JAVA_LEX=1.0.1                             -- https://repo.maven.apache.org/maven2/com/javax0/javaLex/javaLex/
 
 -- dependencies needed for the Maven extension (not the plugin)
 MAVEN_CORE_VERSION=4.0.0-alpha-5           -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core

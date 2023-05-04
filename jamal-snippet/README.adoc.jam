@@ -137,7 +137,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in l
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=54a4dcfe%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=2ad2e153%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.

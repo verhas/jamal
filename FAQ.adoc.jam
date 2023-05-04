@@ -7,25 +7,25 @@ ANSWER}
 
 {Q/Is Jamal for Java developers?/
 Not exclusively.
-Jamal is written in Java, therefore you need a Java environment to run it, but it supports other environments.
+Jamal is written in Java, therefore, you need a Java environment to run it, but it supports other environments.
 You do not need to know Java or be a Java programmer to use Jamal.
 }
 
 {Q/Is there support for Gradle?/
 Yes.
 You can use Jamal in your Gradle built project.
-There is not Gradle plugin or Gradle extension the same way as there are plugin and extension for Maven.
-The reason for that is, you do not need.
+There is no Gradle plugin or Gradle extension the same way as there are plugin and extension for Maven.
+The reason for that is, you do not need it.
 Gradle is configured using a powerful Groovy based DSL that can invoke any Java API, hence it does not need any Jamal like preprocessor.
 }
 
 {Q|Can I change the `{@escape*``{``}` and `{@escape*``}``}` macro opening and closing characters?|
-Yes, absolutely.
+Yes, absolutely. And they are NOT CHARACTERS. They are strings.
 
 NOTE: The macro opening and closing sequences are not necessarily single characters.
 It is possible to use multi-character sequences.
 You can define macro starting string as a command line parameter.
-You can define it programmatically when you embed Jamal into an application providing the macro opening and closing __string__ as the constructor argument to the Processor class.
+You can define it programmatically when you embed Jamal into an application providing the macro opening and closing __string__ as the constructor argument to the `Processor` class.
 Last, but not least you can change the macro opening and closing __strings__ using the `sep` macro.
 
 The documentation of the `sep` macro is at
@@ -34,13 +34,13 @@ https://github.com/verhas/jamal/blob/master/README.adoc#sep
 
 Note that even when you changed the opening and closing strings if you
 
-* `import` a file AND
+* `import` or `include` a file AND
 
 * the file starts with the characters `{@escape*``{``}@`
 
 then `{@escape*``{``}` and {@escape*``}``} will be used as macro opening and closing strings inside the included file.
 
-Also, when you use the IntelliJ Asciidoctor plugin with the Jamal preprocessor the macro opening string is
+Also, when you use the IntelliJ Asciidoctor plugin with the Jamal preprocessor, the macro opening string is
 
 * `{@escape*``{%``}`, and the macro closing string is
 
@@ -54,7 +54,7 @@ It usually is not.
 After that check that you have the latest version of the plugin is installed.
 When you edit the git master HEAD version, you are editing a not released version.
 The current documentation of Jamal may use the newest features, which were not released yet.
-To edit these you need to install the non-released version.
+To edit these, you need to install the non-released version.
 To do that run `mvn install` in the Jamal project directory first.
 After that `cd jamal-asciidoc` and `sh ./install-asciidoc.sh`.
 }

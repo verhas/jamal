@@ -329,11 +329,11 @@ If you try to collect anything with the same `onceAs` parameter, the collection 
 It was already collected.
 * `prefix`
 You can define a prefix, which is prepended to the snippet names.
-The snippets will be stored with this prefix and the macros should use these prefixed names to reference the snippets.
+The snippets will be stored with this prefix, and the macros should use these prefixed names to reference the snippets.
 For example, if you define the prefix as `myprefix::` then the snippet named `mysnippet` will be stored as `myprefix::mysnippet`.
 * `postfix`
 You can define a postfix, which is appended to the snippet names.
-The snippets will be stored with this postfix and the macros should use these postfixed names to reference the snippets.
+The snippets will be stored with this postfix, and the macros should use these postfixed names to reference the snippets.
 For example, if you define the postfix as `::mypostfix` then the snippet named `mysnippet` will be stored as `mysnippet::mypostfix`.
 
 +
@@ -342,10 +342,10 @@ The use case is when you collect snippets from different sources where the names
 * `asciidoc`
 Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
 This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
-Using these start and stop delimiters the snippets can also be nested arbitrarily, and they can also overlap.
+Using these start and stop delimiters, the snippets can also be nested arbitrarily, and they can also overlap.
 * `ignoreErrors`
 Using this parameter, the macro will ignore IOExceptions.
-An IOException typically occur, when a file is binary and by accident it contains an invalid UTF-8 sequence.
+An IOException typically occurs when a file is binary and by accident it contains an invalid UTF-8 sequence.
 Use this option only as a last resort.
 Better do not mix binary files with ASCII files.
 Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.
@@ -2879,7 +2879,7 @@ will result
 - SnipTransform.java: 17,148 bytes
 - Base64.java: 3,470 bytes
 - FilesMacro.java: 8,162 bytes
-- Collect.java: 20,335 bytes
+- Collect.java: 20,338 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 5,379 bytes
 - ThinXml.java: 8,792 bytes
@@ -3171,7 +3171,7 @@ will result in the output
 
 [source]
 ----
-2023-04-25 21:31:48
+2023-05-04 12:14:00
 ----
 
 

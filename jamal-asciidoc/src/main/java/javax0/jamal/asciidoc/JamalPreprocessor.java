@@ -73,8 +73,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         final var fileName = nonNull(reader.getFile()) ? reader.getFile() : (String) document.getAttribute("docfile");
         setContextClassLoader();
         /*
-         * The plugin is invoked for all asciidoc files. If the file ending is adoc, asciidoc or anything else then
-         * there is nothing to do for the Jamal preprocessor.
+         * The plugin is invoked for all asciidoc files.
+         * If the file ending is adoc, asciidoc or anything else, then there is nothing to do with the Jamal preprocessor.
          */
         if (!fileName.endsWith(".jam")) {
             return;

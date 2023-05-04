@@ -82,11 +82,11 @@ public class Collect implements Macro, InnerScopeDependent {
         // It was already collected.
         final var prefix = Params.<String>holder("prefix").orElse("");
         // You can define a prefix, which is prepended to the snippet names.
-        // The snippets will be stored with this prefix and the macros should use these prefixed names to reference the snippets.
+        // The snippets will be stored with this prefix, and the macros should use these prefixed names to reference the snippets.
         // For example, if you define the prefix as `myprefix::` then the snippet named `mysnippet` will be stored as `myprefix::mysnippet`.
         final var postfix = Params.<String>holder("postfix").orElse("");
         // You can define a postfix, which is appended to the snippet names.
-        // The snippets will be stored with this postfix and the macros should use these postfixed names to reference the snippets.
+        // The snippets will be stored with this postfix, and the macros should use these postfixed names to reference the snippets.
         // For example, if you define the postfix as `::mypostfix` then the snippet named `mysnippet` will be stored as `mysnippet::mypostfix`.
         //
         //+
@@ -95,10 +95,10 @@ public class Collect implements Macro, InnerScopeDependent {
         final var asciidoc = Params.<Boolean>holder("asciidoc", "asciidoctor").asBoolean();
         // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
         // This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
-        // Using these start and stop delimiters the snippets can also be nested arbitrarily, and they can also overlap.
+        // Using these start and stop delimiters, the snippets can also be nested arbitrarily, and they can also overlap.
         final var ignoreIOEx = Params.<Boolean>holder("ignoreErrors").asBoolean();
         // Using this parameter, the macro will ignore IOExceptions.
-        // An IOException typically occur, when a file is binary and by accident it contains an invalid UTF-8 sequence.
+        // An IOException typically occurs when a file is binary and by accident it contains an invalid UTF-8 sequence.
         // Use this option only as a last resort.
         // Better do not mix binary files with ASCII files.
         // Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.

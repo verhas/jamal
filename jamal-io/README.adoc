@@ -22,12 +22,24 @@ To use this module, you have to add the dependency to your Maven project, as:
     <artifactId>jamal-io</artifactId>
     <version>2.0.2-SNAPSHOT</version>
 </dependency>
-
 ----
+
+or as an alternative your macro file has to use the `maven:load` macro to load the module as
+
+[source]
+----
+{@maven:load com.javax0.jamal:jamal-io:2.0.2-SNAPSHOT}
+----
+
+before using any macro from this package from the first time.
+Also note, that using the `maven:load` macro requires that you configure the `jamal-io` package as safe in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+
 
 Following that, you can use the macros
 
 
+. <<cwd,`io:cwd`>>
+. <<name,`os:name`>>
 . <<write,`io:write`>>
 . <<remove,`io:remove`>>
 . <<mkdir,`io:mkdir`>>
@@ -42,8 +54,27 @@ macros.
 
 == Macros implemented in the package
 
+[[cwd]]
+=== i. `io:cwd`
+
+
+This macro can be used to get the current working directory.
+The format of the macro is
+
+[source]
+----
+{@io:cwd}
+----
+
+and the output is the actual working directory absolute path name.
+
+[[name]]
+=== ii. `os:name`
+
+This macro will return the actual operating system name, as it is contained in the system variable `os.name`.
+
 [[write]]
-=== i. `io:write`
+=== iii. `io:write`
 
 
 Using this macro you can write some text into a file.
@@ -73,7 +104,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[remove]]
-=== ii. `io:remove`
+=== iv. `io:remove`
 
 
 This macro can be used to remove a file or directory.
@@ -97,7 +128,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[mkdir]]
-=== iii. `io:mkdir`
+=== v. `io:mkdir`
 
 
 This macro can be used to create a directory.
@@ -121,7 +152,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[print]]
-=== iv. `io:print`
+=== vi. `io:print`
 
 
 This macro can be used to print some text to the standard output or to the standard error.
@@ -142,7 +173,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[exec]]
-=== v. `io:exec`
+=== vii. `io:exec`
 
 
 
@@ -281,7 +312,7 @@ When Jamal looks for some configuration it looks at the
 
 whichever it finds first.
 The key given is used as is in the case of the environment variables.
-For example `JAVA_HOME` is used as is.
+For example, `JAVA_HOME` is used as is.
 However, when the code looks at the system properties, it looks for the key `java.home`.
 The transformation is to contert to lower case and replace the underscore characters with dot.
 In the configuration file the key is also lowe case and the underscore characters are replaced with dot but if the key has a `jamal.` prefix it is also removed.
@@ -422,7 +453,7 @@ exec -> printenv
 The next example shows how to use the option `optional`.
 This option tells the macro `exec` not to bother when the command is not configured in the Jamal environment.
 It can come handy in a few situations.
-For example you want to use Graphviz to create some nice looking diagrams.
+For example, you want to use Graphviz to create some nice looking diagrams.
 Some macros extract the Graphviz dot file from the document and then use Graphviz to create the image.
 The Jamal processing of the document runs as part of the unit test to ensure that the documentation just as well as the tests are correct and up-to-date.
 
@@ -461,12 +492,12 @@ The test checks that the error message belongs to this case and not to the use o
 
 
 [[waitFor]]
-=== vi. `io:waitFor`
+=== viii. `io:waitFor`
 
 
 This macro can be used to wait for the completion of a proces started earlier asynchronously.
 A document may start some external process at an earlier point and needs the result only later.
-While the external processess runs the document processing can go on and the wait for the result when it is needed.
+While the external processess runs the document processing can go on and wait for the result when it is needed.
 The output of the external process cannot be collected from the result of the `exec` macro.
 Output of asynchronously started external processes do not appear as the result of the macro.
 In this case the output is typically redirected to a file and the result can be collected from the file after the `waitFor` was processed.
@@ -531,4 +562,3 @@ exec -> sleep
 
 
 ----
-

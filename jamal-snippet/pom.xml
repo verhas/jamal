@@ -94,5 +94,10 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.javax0.javaLex</groupId>
+            <artifactId>javaLex</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 </project>

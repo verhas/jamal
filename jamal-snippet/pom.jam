@@ -22,6 +22,7 @@
             {dependency|{GROUPID}|jamal-MODULE|{LAST_RELEASE}|test}}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency|com.javax0.javaLex|javaLex|{JAVA_LEX}}
     }
 {end project}
 {@xmlFormat}
