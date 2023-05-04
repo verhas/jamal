@@ -320,7 +320,7 @@ can limit the directory traversing to a certain depth.
 can specify the start directory for the traversing.
 * `onceAs`
 You can use the parameter `onceAs` to avoid repeated snippet collections.
-Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
+Your collect macro may be in an included file, or the Jamal source structure is complex.
 At a certain point, it may happen that Jamal already collected the snippets you need.
 Collecting it again would be erroneous.
 When snippets are collected, you cannot redefine a snippet.
@@ -339,6 +339,10 @@ For example, if you define the postfix as `::mypostfix` then the snippet named `
 +
 The parameter `prefix` and `postfix` can be used together.
 The use case is when you collect snippets from different sources where the names may collide.
+* `java`
+Collect snippets from the Java sources based on the Java syntax without any special tag.
+* `javaSnippetCollectors`
+You can define a comma separated list of Java snippet collectors.
 * `asciidoc`
 Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
 This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
@@ -2443,7 +2447,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 49.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 51.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2743,6 +2747,7 @@ will result
 ----
 - jamal
 - snippet
+- JavaMatcherBuilderMacros.java
 - Snip.java
 - SnipSave.java
 - Sort.java
@@ -2865,7 +2870,8 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,760 bytes
+- snippet: 1,792 bytes
+- JavaMatcherBuilderMacros.java: 16,491 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
 - Sort.java: 8,791 bytes
@@ -2879,7 +2885,7 @@ will result
 - SnipTransform.java: 17,148 bytes
 - Base64.java: 3,470 bytes
 - FilesMacro.java: 8,162 bytes
-- Collect.java: 20,338 bytes
+- Collect.java: 23,919 bytes
 - SnipFile.java: 680 bytes
 - TrimLines.java: 5,379 bytes
 - ThinXml.java: 8,792 bytes
@@ -3171,7 +3177,7 @@ will result in the output
 
 [source]
 ----
-2023-05-04 12:14:00
+2023-05-04 16:31:44
 ----
 
 

@@ -57,3 +57,17 @@ javax0.jamal.snippet.Base64$Decode
 javax0.jamal.snippet.Base64$Encode
 javax0.jamal.snippet.Reference
 javax0.jamal.snippet.References
+javax0.jamal.snippet.JavaMatcherBuilderMacros.StringMacro
+javax0.jamal.snippet.JavaMatcherBuilderMacros.List
+javax0.jamal.snippet.JavaMatcherBuilderMacros.Comment
+javax0.jamal.snippet.JavaMatcherBuilderMacros.OptionalMacro
+javax0.jamal.snippet.JavaMatcherBuilderMacros.Keyword
+javax0.jamal.snippet.JavaMatcherBuilderMacros.OneOrMore
+javax0.jamal.snippet.JavaMatcherBuilderMacros.Unordered
+javax0.jamal.snippet.JavaMatcherBuilderMacros.ZeroOrMore
+javax0.jamal.snippet.JavaMatcherBuilderMacros.OneOf
+javax0.jamal.snippet.JavaMatcherBuilderMacros.CharacterMacro
+javax0.jamal.snippet.JavaMatcherBuilderMacros.IntegerMacro
+javax0.jamal.snippet.JavaMatcherBuilderMacros.NumberMacro
+javax0.jamal.snippet.JavaMatcherBuilderMacros.FloatMacro
+javax0.jamal.snippet.JavaMatcherBuilderMacros.Match
