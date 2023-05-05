@@ -34,7 +34,11 @@ public interface ServiceLoaded {
      * @return the list of instances
      */
     static <T> List<T> getInstances(Class<T> klass) {
-        return getInstances(klass, Thread.currentThread().getContextClassLoader());
+        final var services =  getInstances(klass, Thread.currentThread().getContextClassLoader());
+        if( services.size() > 0 ){
+            return services;
+        }
+        return getInstances(klass, ServiceLoaded.class.getClassLoader());
     }
 
     static <T> List<T> getInstances(Class<T> klass, final ClassLoader cl) {

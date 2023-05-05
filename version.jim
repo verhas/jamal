@@ -32,7 +32,7 @@ $x
 --------------------------------------------------------------------------------------------------------------------
 -- cannot move to VERSIONS because old 'VersionFetcher.tsx' reads this file from github
 -- and looks for the "define" to see its version is OK
-{@define LAST_RELEASE=2.0.1}
+{@define LAST_RELEASE=1.12.6} -- 2.0.0, 2.0.1 have an error in the class loading that prevents maven extension working with them
 
 
 {VERSIONS

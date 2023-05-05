@@ -31,3 +31,4 @@
         {dependency :org.apache.maven:maven-core:{MAVEN_CORE_VERSION}:provided}
     }
 {end project}
+{@xmlFormat}
