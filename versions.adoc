@@ -25,9 +25,9 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-5` 
 
-* `*[red]#NO#*`  `MAVEN_PLUGIN_ANNOTATIONS` `3.8.1` `*[red]#upgrade to 3.8.2#*`
+* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.8.2` 
 
-* `*[red]#NO#*`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.8.1` `*[red]#upgrade to 3.8.2#*`
+* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.8.2` 
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
 
@@ -39,9 +39,9 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.5.0` 
 
-* `*[red]#NO#*`  `JUPITER_VERSION` `5.9.2` `*[red]#upgrade to 5.9.3#*`
+* `OK`  `JUPITER_VERSION` `5.9.3` 
 
-* `*[red]#NO#*`  `MOCKITO_VERSION` `5.3.0` `*[red]#upgrade to 5.3.1#*`
+* `OK`  `MOCKITO_VERSION` `5.3.1` 
 
 * `OK`  `JRUBY_VERSION` `9.4.2.0` 
 
@@ -53,7 +53,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `JSON_ORG_VERSION` `20230227` 
 
-* `*[red]#NO#*`  `FLEXMARK_VERSION` `0.64.0` `*[red]#upgrade to 0.64.4#*`
+* `OK`  `FLEXMARK_VERSION` `0.64.4` 
 
 * `OK`  `APACHE_POI_VERSION` `5.2.3` 
 

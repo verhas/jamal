@@ -32,7 +32,7 @@ $x
 --------------------------------------------------------------------------------------------------------------------
 -- cannot move to VERSIONS because old 'VersionFetcher.tsx' reads this file from github
 -- and looks for the "define" to see its version is OK
-{@define LAST_RELEASE=1.12.6} -- 2.0.0, 2.0.1 have an error in the class loading that prevents maven extension working with them
+{@define LAST_RELEASE=2.0.2}
 
 
 {VERSIONS
@@ -43,7 +43,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=2.0.2                              -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=2.0.3-SNAPSHOT                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 
@@ -66,8 +66,8 @@ MAVEN_JAVADOC_PLUGIN_VERSION=3.4.1         -- https://repo.maven.apache.org/mave
 MAVEN_GPG_PLUGIN_VERSION=3.0.1             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/
 MAVEN_ASSEMBLY_PLUGIN_VERSION=3.5.0        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/
 MAVEN_PLUGIN_API=4.0.0-alpha-5             -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/
-MAVEN_PLUGIN_ANNOTATIONS=3.8.1             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-annotations/
-MAVEN_PLUGIN_PLUGIN_VERSION=3.8.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin
+MAVEN_PLUGIN_ANNOTATIONS=3.8.2             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-annotations/
+MAVEN_PLUGIN_PLUGIN_VERSION=3.8.2          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin
 SONATYPE_PLUGIN_VERSION=1.6.13             -- https://repo.maven.apache.org/maven2/org/sonatype/plugins/nexus-staging-maven-plugin
 SUREFIRE_PLUGIN_VERSION=3.0.0              -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
 MAVEN_SOURCE_PLUGIN_VERSION=3.2.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
@@ -75,10 +75,10 @@ APPASSEMBLER_PLUGIN_VERSION=2.1.0          -- https://repo.maven.apache.org/mave
 MAVEN_DEPENDENCY_PLUGIN_VERSION=3.5.0      -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-dependency-plugin
 
 -- test dependency
-JUPITER_VERSION=5.9.2                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
+JUPITER_VERSION=5.9.3                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-params
-MOCKITO_VERSION=5.3.0                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
+MOCKITO_VERSION=5.3.1                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 --dependencies needed for the Jamal libraries
 PLANTUML_VERSION=1.2023.5                  -- https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml
@@ -87,7 +87,7 @@ GROOVY_VERSION=3.0.17                      -- https://repo.maven.apache.org/mave
 OGNL_VERSION=3.3.4                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=2.0                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
 JSON_ORG_VERSION=20230227                  -- https://repo.maven.apache.org/maven2/org/json/json/
-FLEXMARK_VERSION=0.64.0                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
+FLEXMARK_VERSION=0.64.4                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
 APACHE_POI_VERSION=5.2.3                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 ASCIIDOCTORJ_VERSION=2.5.8                 -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
 JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
