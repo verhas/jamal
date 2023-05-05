@@ -46,6 +46,7 @@ public class Collect implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var reference = in.getReference();
+        //<editor-fold desc="Collection Options" default="collapsed">
         final var pos = in.getPosition();
         // snippet collect_options
         final var include = Params.<Predicate<String>>holder("include").orElse(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
@@ -96,8 +97,8 @@ public class Collect implements Macro, InnerScopeDependent {
         // The use case is when you collect snippets from different sources where the names may collide.
         final var java = Params.<Boolean>holder(null, "java").asBoolean();
         // Collect snippets from the Java sources based on the Java syntax without any special tag.
-        final var javaNippetCollectors = Params.<String>holder("javaSnippetCollectors").asString().orElseNull();
-        // You can define a comma separated list of Java snippet collectors.
+        final var javaSnippetCollectors = Params.<String>holder("javaSnippetCollectors").asString().orElseNull();
+        // You can define a comma-separated list of Java snip{%@comment%}pet collectors.
         final var asciidoc = Params.<Boolean>holder("asciidoc", "asciidoctor").asBoolean();
         // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
         // This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
@@ -110,7 +111,8 @@ public class Collect implements Macro, InnerScopeDependent {
         // Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.
         // end snippet
         Scan.using(processor).from(this)
-                .tillEnd().keys(include, exclude, start, liner, lineFilter, stop, from, scanDepth, setName, prefix, postfix, asciidoc, java, javaNippetCollectors, ignoreIOEx).parse(in);
+                .tillEnd().keys(include, exclude, start, liner, lineFilter, stop, from, scanDepth, setName, prefix, postfix, asciidoc, java, javaSnippetCollectors, ignoreIOEx).parse(in);
+        //</editor-fold>
 
         BadSyntax.when(asciidoc.is() && java.is(), "You cannot use both 'asciidoc' and 'java' parameters in the same collect macro.");
 
@@ -131,7 +133,7 @@ public class Collect implements Macro, InnerScopeDependent {
             if (asciidoc.is()) {
                 harvestAsciiDoc(normFn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             } else if (java.is()) {
-                harvestJava(normFn, store, pos, ignoreIOEx.is(), prefix.get(), postfix.get(), javaNippetCollectors.get(), processor);
+                harvestJava(normFn, store, pos, ignoreIOEx.is(), prefix.get(), postfix.get(), javaSnippetCollectors.get(), processor);
             } else {
                 harvestSnippets(normFn, store, start.get(), liner.get(), lineFilter.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             }
@@ -156,7 +158,7 @@ public class Collect implements Macro, InnerScopeDependent {
                                 store,
                                 pos,
                                 ignoreIOEx.is(), prefix.get(), postfix.get(),
-                                javaNippetCollectors.get(),
+                                javaSnippetCollectors.get(),
                                 processor);
                     } else {
                         harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(),
@@ -212,20 +214,24 @@ public class Collect implements Macro, InnerScopeDependent {
                              final String javaSnippetCollectors,
                              Processor processor) throws BadSyntax {
         List<BadSyntax> errors = new ArrayList<>();
+        BadSyntax.when(javaSnippetCollectors == null || javaSnippetCollectors.isEmpty(), "You must specify at least one Java snip"+"pet collector.");
         final String[] lines = getFileContent(file, ignoreIOEx, processor);
         final var javaLexed = new JavaLexed(String.join("\n", lines));
         for (final var collector : javaSnippetCollectors.split(",")) {
-            final var matcher = JavaMatcherBuilderMacros.getMatcherFromMacro(processor, collector);
+            if( collector == null || collector.isEmpty() ) {
+                continue;
+            }
+            final var matcher = JavaMatcherBuilderMacros.getMatcherFromMacro(processor, collector.trim());
             int i = 0;
             MatchResult result;
-            while ((result = javaLexed.match(matcher).fromIndex(i).result()).matches) {
+            while ((result = javaLexed.find(matcher).fromIndex(i).result()).matches) {
                 i = result.end;
                 final var idGrp = javaLexed.group("snippetName");
                 final var idRgrp = javaLexed.regexGroups("snippetName");
                 final String snippetName;
-                if (idGrp != null) {
+                if (idGrp != null && idGrp.size() > 0) {
                     snippetName = idGrp.get(0).getLexeme();
-                } else if (idRgrp != null) {
+                } else if (idRgrp != null && idRgrp.isPresent() && idRgrp.get().groupCount() > 0 ) {
                     snippetName = idRgrp.get().group(1);
                 } else {
                     throw new BadSyntax("Java collector found a matcher that does not have a 'snip' group defining the name of the snippet");
@@ -234,9 +240,9 @@ public class Collect implements Macro, InnerScopeDependent {
                 final var snipGrp = javaLexed.group("snippet");
                 final var snipRgrp = javaLexed.regexGroups("snippet");
                 final String snippetContent;
-                if (snipGrp != null) {
+                if (snipGrp != null && snipGrp.size() > 0) {
                     snippetContent = snipGrp.get(0).getLexeme();
-                } else if (snipRgrp != null) {
+                } else if (snipRgrp != null && snipRgrp.isPresent() && snipRgrp.get().groupCount() > 0) {
                     snippetContent = snipRgrp.get().group(1);
                 } else {
                     throw new BadSyntax("Java collector found a matcher that does not have a 'snip' group defining the name of the snippet");

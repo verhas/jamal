@@ -87,4 +87,15 @@ public class TestCollect {
                 ""
         ).throwsBadSyntax("Snippet 'one' is already opened on line 3");
     }
+
+    @Test
+    void testJavaCollection() throws Exception {
+        TestThat.theInput("{#define javaSnippetCollectors={#j:list {#j:match private void}\\\n" +
+                "{#j:identifier (name=snippetName)harvestJava}\\\n" +
+                "{#j:anyTill {#j:string (name=snippet)}}\\\n" +
+                "}}\\\n" +
+                "{@snip:collect from=\"src/main/java\" java}\\\n" +
+                "{@snip harvestJava}\n").results("You must specify at least one Java snip\n");
+    }
+
 }

@@ -11,6 +11,7 @@ import javax0.jamal.snippet.Java.ClassMacro;
 import javax0.jamal.snippet.Java.FieldMacro;
 import javax0.jamal.snippet.Java.MethodMacro;
 import javax0.jamal.snippet.JavaMatcherBuilderMacros;
+import javax0.jamal.snippet.JavaSourceInsert;
 import javax0.jamal.snippet.KillLines;
 import javax0.jamal.snippet.LineCount;
 import javax0.jamal.snippet.ListDir;
@@ -121,6 +122,10 @@ module jamal.snippet {
             Reference,
             References,
             SnipTransform,
+            JavaSourceInsert,
+            JavaMatcherBuilderMacros.AnyTill,
+            JavaMatcherBuilderMacros.Not,
+            JavaMatcherBuilderMacros.Identifier,
             JavaMatcherBuilderMacros.StringMacro,
             JavaMatcherBuilderMacros.List,
             JavaMatcherBuilderMacros.Comment,

@@ -1,12 +1,3 @@
-{@import res:emo.jim}
-{@sep 🍓 🥬}\
-🍓@define 🥐 =breakfast🥬\
-🍓@define 🍗 =lunch🥬\
-When you eat rich 🍓🥐🥬 you do not need big 🍓🍗🥬.
-
-
-🍓@sep🥬
-
-{@define Z(X,Y...)=X,Y}
-{Z ,1, 2, 3, 4}
-When you eat rich {🥐} you do not need big {🍗}. {relieved_face}
+{%@for $VAR in (a,b,c,d,e,f)=
+        final static private String $VAR = "$VAR";%}
+{%@java:insert (to=TEST_PLAYGORUND_MNI_O1G.java)%}

@@ -1,9 +1,34 @@
-
-When you eat rich breakfast you do not need big lunch.
-
-
-
-
-
-1, 2
-When you eat rich breakfast you do not need big lunch. 😌
+[WARNING]
+--
+* The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
+--
+{%@for $VAR in (a,b,c,d,e,f)=
+        final static private String $VAR = "$VAR";%}
+[WARNING]
+--
+* The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
+--
+{%@java:insert (to=TEST_PLAYGORUND_MNI_O1G.java)%}
+[WARNING]
+--
+* The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
+--
+[source]
+----
+The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
+	javax0.jamal.tools.Params(parse:414)
+	javax0.jamal.tools.Params(parse:284)
+	javax0.jamal.tools.Scan$Builder(parse:61)
+	javax0.jamal.snippet.JavaSourceInsert(evaluate:23)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:453)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:397)
+	javax0.jamal.engine.Processor(safeEvaluate:406)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:397)
+	javax0.jamal.engine.Processor(evalMacro:352)
+	javax0.jamal.engine.Processor(processMacro:265)
+	javax0.jamal.engine.Processor(process:174)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:340)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:203)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:134)
+sed -i jam '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam
+----

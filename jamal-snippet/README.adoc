@@ -99,6 +99,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
+.. <<JavaInsert,`java:insert`>>
 .. <<String,String Macros>>
 .. <<snip_update,`snip:update`>>
 
@@ -342,7 +343,7 @@ The use case is when you collect snippets from different sources where the names
 * `java`
 Collect snippets from the Java sources based on the Java syntax without any special tag.
 * `javaSnippetCollectors`
-You can define a comma separated list of Java snippet collectors.
+You can define a comma-separated list of Java snippet collectors.
 * `asciidoc`
 Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
 This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
@@ -1526,7 +1527,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1305:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1305:30
 ----
 
 
@@ -2447,7 +2448,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 51.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 52.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2763,7 +2764,9 @@ will result
 - FilesMacro.java
 - Collect.java
 - SnipFile.java
+- JavaMatcherBuilderMacros.java.jam
 - TrimLines.java
+- JavaSourceInsert.java
 - ThinXml.java
 - LineCount.java
 - Replace.java
@@ -2870,8 +2873,8 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,792 bytes
-- JavaMatcherBuilderMacros.java: 16,491 bytes
+- snippet: 1,856 bytes
+- JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
 - Sort.java: 8,791 bytes
@@ -2885,9 +2888,11 @@ will result
 - SnipTransform.java: 17,148 bytes
 - Base64.java: 3,470 bytes
 - FilesMacro.java: 8,162 bytes
-- Collect.java: 23,919 bytes
+- Collect.java: 24,444 bytes
 - SnipFile.java: 680 bytes
+- JavaMatcherBuilderMacros.java.jam: 1,855 bytes
 - TrimLines.java: 5,379 bytes
+- JavaSourceInsert.java: 4,685 bytes
 - ThinXml.java: 8,792 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,687 bytes
@@ -3177,7 +3182,7 @@ will result in the output
 
 [source]
 ----
-2023-05-05 11:10:09
+2023-05-06 01:29:31
 ----
 
 
@@ -3760,9 +3765,45 @@ and use the user defined macros, like the following:
 publicMethodMacro::evaluate(Input,Processor)
 ----
 
+[[JavaInsert]]
+==== xliii.`java:insert`
+
+
+The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
+The macro has two parameters:
+
+* `file` is the name of the file where the segment is to be inserted.
+  It is also aliased as `to` and `into`.
+
+* `segment` is the name of the segment where the content is to be inserted.
+  It is also aliased as `id` and `at`.
+  This parameter is optional and is not needed if there is only one segment in the file.
+
+The segment in the source file starts with a line
+
+  //<editor-fold id="segment"...>
+
+and it ends with
+
+    //</editor-fold>
+
+If there are lines between these two lines, they are deleted and replaced by the input of the macro.
+
+If the macro input is empty, then the file writing is deferred until the end of the processing.
+In this case, the content of the whole output is going to be used.
+
+[NOTE]
+====
+When the macro writes its' input into the file, you will most probably want to use `#` as macro character.
+That way, the input will be first processed.
+
+The suggested practice is to name the file `XYZ.java.jam` for code to be inserted into `XYZ.java`.
+Do not forget to add ``{%@comment nosave%}`` to the beginning of the file.
+This will prevent the Asciidoctor version of Jamal overwriting the Java file when editing the macros.
+====
 
 [[String]]
-==== xliii.String Macros
+==== xliv.String Macros
 
 [[string:contains]]
 ===== `string:contains`
@@ -3958,7 +3999,7 @@ The parameters are:
 * `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
 [[snip_update]]
-==== xliv.`snip:update`
+==== xlv.`snip:update`
 
 This macro can be used to automatically copy the content of the snippets into the `snip` macros.
 That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.

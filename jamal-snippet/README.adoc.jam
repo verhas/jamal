@@ -107,6 +107,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
+.. <<JavaInsert,`java:insert`>>
 .. <<String,String Macros>>
 .. <<snip_update,`snip:update`>>
 
@@ -137,7 +138,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in l
 %}
 [[snip_collect]]
 ==== {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=71b691f6%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=0ff9361c%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -2893,6 +2894,42 @@ and use the user defined macros, like the following:
 publicMethodMacro::evaluate(Input,Processor)
 ----
 %}
+[[JavaInsert]]
+==== {%macroChapter%}`java:insert`
+{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=c9a24367%}
+
+The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
+The macro has two parameters:
+
+* `file` is the name of the file where the segment is to be inserted.
+  It is also aliased as `to` and `into`.
+
+* `segment` is the name of the segment where the content is to be inserted.
+  It is also aliased as `id` and `at`.
+  This parameter is optional and is not needed if there is only one segment in the file.
+
+The segment in the source file starts with a line
+
+  //<editor-fold id="segment"...>
+
+and it ends with
+
+    //</editor-fold>
+
+If there are lines between these two lines, they are deleted and replaced by the input of the macro.
+
+If the macro input is empty, then the file writing is deferred until the end of the processing.
+In this case, the content of the whole output is going to be used.
+
+[NOTE]
+====
+When the macro writes its' input into the file, you will most probably want to use `#` as macro character.
+That way, the input will be first processed.
+
+The suggested practice is to name the file `XYZ.java.jam` for code to be inserted into `XYZ.java`.
+Do not forget to add ``{%@escape*`.`{%@comment nosave%}`.`%}`` to the beginning of the file.
+This will prevent the Asciidoctor version of Jamal overwriting the Java file when editing the macros.
+====
 
 [[String]]
 ==== {%macroChapter%}String Macros
