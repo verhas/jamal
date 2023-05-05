@@ -2908,6 +2908,9 @@ The macro has two parameters:
   It is also aliased as `id` and `at`.
   This parameter is optional and is not needed if there is only one segment in the file.
 
+The parameters are not enclosed.
+They follow the macro name directly until the end of the line.
+
 The segment in the source file starts with a line
 
   //<editor-fold id="segment"...>

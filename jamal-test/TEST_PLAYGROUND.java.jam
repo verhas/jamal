@@ -1,5 +1,5 @@
-{%@comment%}
+{%@comment nosave%}
 
 dddd This is just Java Code
 
-{%endcomment%}
+{%#java:insert to=TEST_PLAYGORUND_MNI_O1G.java%}
