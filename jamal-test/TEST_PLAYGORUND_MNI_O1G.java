@@ -7,6 +7,9 @@ public class TEST_PLAYGORUND_MNI_O1G {
 dddd This is just Java Code
 
 
+The class `IntelliJOnly` exists.
+
+
     //</editor-fold>
 
 

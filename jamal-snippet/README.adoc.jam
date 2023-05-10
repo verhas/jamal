@@ -16,7 +16,7 @@ When you document an application, there is a lot of information that changes by 
 These changes have to be followed in the documentation.
 Some changes need manual editing.
 Some changes can be automated.
-When the functionality of the program changes, then the new documentation has to describe the new functionality.
+When the program functionality changes, the changed documentation has to describe the new functionality.
 We can hardly automate this change of documentation.
 When some literal parameter also used in the document changes, then Jamal can automatically update the documentation.
 A typical example is the version number of the application.
@@ -107,8 +107,24 @@ This way, it is easier to keep your documentation up to date.
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
-.. <<JavaInsert,`java:insert`>>
+... <<java:class,`java:class`>>
+... <<java:field,`java:field`>>
+... <<java:method,`java:method`>>
+... <<java:sources,`java:sources`>>
+... <<java:classes,`java:classes`>>
+... <<java:methods,`java:methods`>>
+... <<java:fields,`java:fields`>>
+... <<java:insert,`java:insert`>>
 .. <<String,String Macros>>
+... <<string:contains,`string:contains`>>
+... <<string:quote,`string:quote`>>
+... <<string:equals,`string:equals`>>
+... <<string:startsWith,`string:startsWith`>>
+... <<string:endsWith,`string:endsWith`>>
+... <<string:reverse,`string:reverse`>>
+... <<string:substring,`string:substring`>>
+... <<string:length,`string:length`>>
+... <<string:chop,`string:chop`>>
 .. <<snip_update,`snip:update`>>
 
 {%@counter:define id=chapter format=%d. %}
@@ -797,7 +813,7 @@ The dots are not part of the code and are printed only for convenience and ignor
 You can use as many or as few dots in the hash code as you like.
 
 The hash code is displayed using lower case hexadecimal characters, but you can use upper case or mixed case characters.
-Before the check, the dots are removed, and the characters are converted to lower case.
+Before the check, the dots are removed, and the characters are converted to a lower case.
 ====
 
 In some rare cases, you do not want to check all the modifications of the file.
@@ -2689,7 +2705,7 @@ In the format you can use the following placeholders:
 
 [[Java]]
 ==== {%macroChapter%}Java Macros
-{%#snip:check file={%JAVA_DIR%}Java.java hash=6d0c665a%}
+{%#snip:check file={%JAVA_DIR%}Java.java hash=57bba76d%}
 
 [[java:class]]
 ===== `java:class`
@@ -2699,7 +2715,16 @@ The macro `java:$x` checks that the parameter is a valid Java $x and found on th
 It is an error if the class is not on the classpath.
 This macro is useful when you document Java source code and run the Jamal conversion from a unit test.
 In this case, the macro will see the test and main classes.
-It can check that the $x mentioned in the documentation is still there; it was not deleted or renamed.%}\
+It can check that the $x mentioned in the documentation is still there; it was not deleted or renamed.
+
+When you run the conversion outside the code of the documented program, the $x is not on the classpath.
+You can use the `java:sources` macro to include the source code as well as the compiled byte codes in the documentation to overcome this limitation.
+It is typically the case when you use IntelliJ and Asciidoctor plugin.
+
+Note that the Java compiler may not be available in the JRE executing the IntelliJ editor.
+In this case, the macro will find the class if you also specify the compiled classes using the parameter `classes` to the macro `java:sources`.
+
+%}\
 {%classMethodMacroIntro class%}
 
 The output of the macro is the class formatted.
@@ -2725,16 +2750,9 @@ ClassMacro.
 
 The format string can be any string with `$` prefixed placeholders.
 The placeholders that the macro handles are:
-{%@define replace=/^\s*"(.*)"\s*,\s*klass\.(.*)\(\),?$/* `$1` will be replaced by the result of calling `$2()`%}
-{%#snip:define classFormatFormatted={%#replaceLines
-{%@snip classFormats%}%}%}
-{%@snip classFormatFormatted
-"$simpleName",
-                    "$name",
-                    "$canonicalName",
-                    "$packageName",
-                    "$typeName"
-%}
+
+{%#replaceLines replace="/^\\s*\"\\$(.*)\"\\s*,?/* `\\$$1` will be replaced by the result of calling `$1()`"
+{%@snip classFormats%}%}
 
 For example
 
@@ -2747,6 +2765,7 @@ The class that implements the macro `java:class` is
 It is in the package {#java:class javax0.jamal.snippet.Java$ClassMacro {@define classFormat=$packageName}}
 {@java:class javax0.jamal.snippet.Java$ClassMacro} is still the "normal" name,
 format defined inside the macro is local.
+{@java:class (format="$simpleName") javax0.jamal.snippet.Java$ClassMacro} is the simple name.
 %}
 
 will result in the output
@@ -2790,7 +2809,7 @@ The placeholders that the macro handles are:
 ^.*?"(.*?)".*//\s*(.*)$
 * `$1` will be replaced by the $2
 OTFDC
-of the fields's defining class
+of the fields' defining class
 OTF
 of the field
 \).and\(
@@ -2894,8 +2913,156 @@ and use the user defined macros, like the following:
 publicMethodMacro::evaluate(Input,Processor)
 ----
 %}
-[[JavaInsert]]
-==== {%macroChapter%}`java:insert`
+
+[[java:sources]]
+===== `java:sources`
+
+This macro will read Java sources, compile them and make them available for the other macros.
+Think of this macro as a location declaration of the Java files documented.
+You can specify the location of the source code as well as the location of the compiled class files.
+To do that, the macro has two parameters:
+
+* `src` is the location of the source files. It is also aliased as `source` and `sources`.
+* `class` is the location of the compiled class files. It is also aliased as `classes`.
+
+{%@define NOPAREN=
+Since the macro does not use its input, the parameters can be specified in the macro call without enclosing them between parentheses.%}{%NOPAREN%}
+
+Jamal may be running with a JDK that can provide a Java compiler instance for Java.
+This is the case when Jamal is executed from the command line, from a Maven extension, etc.
+Executing Jamal inside IntelliJ as an Asciidoctor plugin preprocessor may not provide a Java compiler.
+
+If there is no source location defined or there is no compiler available, then the macro will load the already compiled classes.
+In other cases, the macro will read the source files, compile them and load the classes for the macros to use.
+
+NOTE: Compiling the source code may need significant resource.
+You may consider omitting the `src` parameter if you use the macros only for class, method and field names formatting.
+On the other hand, when you use the macros for code generation, you may stick to the source code.
+(See also the <<java:insert,`java:insert`>> macro.)
+In those situations, the compiled code, before the code generation, may be out of date or even unavailable when Jamal is executed as part of the compilation.
+
+When the classes are loaded form the compiled class files, it may happen that not all classes are loaded.
+
+This macro has a third option named `store`.
+When the classes are loaded they are stored in a user defined macro named `{%@snip LOADED_CLASSES%}`.
+You can load different sets of class files providing a different name in this parameter.
+This parameter can also be used in the macros
+
+* <<java:classes,`java:classes`>>
+* <<java:methods,`java:methods`>>
+* <<java:fields,`java:fields`>>
+
+but not in
+
+* <<java:class,`java:class`>>
+* <<java:method,`java:method`>>
+* <<java:field,`java:field`>>
+
+The plural versions are used for code generation.
+The singular versions are used for formatting.
+
+[[java:classes]]
+===== `java:classes`
+
+This macro will return the list of selected classes.
+The classes have to be loaded first using the <<java:sources,`java:sources`>> macro.
+The macro has three parameters:
+
+{%@define STORE=* `store` can specify an alternative user defined macro where the classes are stored.
+Use this option specifying the same name as in the macro <<java:sources,`java:sources`>>.
+It is recommended not to use this option.
+%}{%STORE%}
+{%@define SELECTOR($x)=* `selector`, aliased as `only`, and `filter` should be used to filter the $x.
+The value of this parameter is a selector expression.
+This selector expression is interpreted by the tool REFI as documented `https://github.com/verhas/refi`.
+%}{%SELECTOR/classes%}
+{%@define SEP($x)=* `sep`, aliased as `separator` canbe used to specify the separator string between the $x.
+The default value is comma, which makes the result usable in a `for` macro.
+Do not forget to use the `[evalist]` option when using in the `for` macro the result of this macro.
+%}{%SEP/classes%}
+{%NOPAREN%}
+
+The returned list will contain the names of the classes.
+
+[[java:methods]]
+===== `java:methods`
+
+This macro will return a list of selected methods.
+The macro has four parameters:
+
+{%STORE%}
+{%SELECTOR(methods)%}
+{%@define CLASS($x)=* `class` can be used to specify a selector for the classes where the $x are to be selected from.
+%}{%CLASS/methods%}
+{%SEP(methods)%}
+
+{%NOPAREN%}
+
+The methods will be stored in user-defined macros.
+The returned string is the name of the macro where the methods are stored.
+These macros can be evaluated.
+The macro will interpret the first argument as a formatting command and will return
+
+* `class` will result the name of the class the method is declared in
+
+* `name` will result the name of the class.
+This is also the case when there is no parameter defined.
+
+* `modifiers` will return the modifiers of the method.
+
+* `modifiers-abstract` will return the modifiers of the method, minus the `abstract` modifier if there was such.
+
+* `exceptions` will return the list of the exceptions the method throws.
+
+* `args` will return the list of the arguments of the method.
+
+* `call` will return the method call with the arguments.
+
+* `callWith` will return the method call with the arguments provided in the macro.
+
+* `type` the return type of the method.
+
+* `signature` the signature of the method.
+This formatting also interprets the following parameters as:
+
+** `concrete` will return the signature of the method without the `abstract` modifier if there was such.
+** `abstract` will return the signature of the method with the `abstract` modifier if there was such.
+** `interface` will return the signature of the method without the `public` modifier, so it can be used in an interface.
+** `public` will return the signature of the method with the `public` modifier, even if the original method was not public
+
+
+[[java:fields]]
+===== `java:fields`
+This macro will return a list of selected fields.
+The macro has four parameters:
+
+{%STORE%}
+{%SELECTOR(fields)%}
+{%@define CLASS($x)=* `class` can be used to specify a selector for the classes where the $x are to be selected from.
+%}{%CLASS/fields%}
+{%SEP(fields)%}
+
+{%NOPAREN%}
+
+The fields will be stored in user-defined macros.
+The returned string is the name of the macro where the fields are stored.
+These macros can be evaluated.
+The macro will interpret the first argument as a formatting command and will return
+
+* `class` the class name the field is declared in.
+
+* `name` the name of the field.
+This is also the case when there is no parameter defined.
+
+* `modifiers` the modifiers of the field.
+
+* `modifiers-abstract` the modifiers of the field, minus the `abstract` modifier if there was such.
+
+* `type` the type of the field.
+
+
+[[java:insert]]
+===== `java:insert`
 {%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=c9a24367%}
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
@@ -2937,6 +3104,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 [[String]]
 ==== {%macroChapter%}String Macros
 {%#snip:check file={%JAVA_DIR%}StringMacros.java hash=a840f16a%}
+
 [[string:contains]]
 ===== `string:contains`
 

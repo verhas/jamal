@@ -75,3 +75,7 @@ javax0.jamal.snippet.JavaMatcherBuilderMacros$IntegerMacro
 javax0.jamal.snippet.JavaMatcherBuilderMacros$NumberMacro
 javax0.jamal.snippet.JavaMatcherBuilderMacros$FloatMacro
 javax0.jamal.snippet.JavaMatcherBuilderMacros$Match
+javax0.jamal.snippet.CompileJavaMacros$Compile
+javax0.jamal.snippet.CompileJavaMacros$ListClasses
+javax0.jamal.snippet.CompileJavaMacros$ListMethods
+javax0.jamal.snippet.CompileJavaMacros$ListFields

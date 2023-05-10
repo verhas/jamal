@@ -277,7 +277,7 @@ will result in
 
 [source]
 ----
-This was compiled in IntelliJ
+This was compiled outside of IntelliJ
 ----
 
 

@@ -23,6 +23,8 @@
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
         {dependency|com.javax0.javaLex|javaLex|{JAVA_LEX}}
+        {dependency|com.javax0.sourcebuddy|SourceBuddy|{SOURCE_BUDDY}}
+        {dependency|com.javax0|refi|{REFI}}
     }
 {end project}
 {@xmlFormat}

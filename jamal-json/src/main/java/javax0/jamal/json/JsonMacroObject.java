@@ -1,18 +1,10 @@
 package javax0.jamal.json;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.tools.IdentifiedObjectHolder;
 
-public class JsonMacroObject implements UserDefinedMacro, ObjectHolder<Object> {
-
-    private final Object content;
-    private final String id;
-
-    @Override
-    public Object getObject() {
-        return content;
-    }
+public class JsonMacroObject extends IdentifiedObjectHolder<Object> implements UserDefinedMacro {
 
     @Override
     public boolean isVerbatim() {
@@ -20,8 +12,7 @@ public class JsonMacroObject implements UserDefinedMacro, ObjectHolder<Object> {
     }
 
     public JsonMacroObject(String id, Object content) {
-        this.content = content;
-        this.id = id;
+        super(content, id);
     }
 
     @Override
@@ -30,21 +21,16 @@ public class JsonMacroObject implements UserDefinedMacro, ObjectHolder<Object> {
         if (parameters.length > 0 && parameters[0].trim().length() > 0) {
             try {
                 final var expression = JsonTools.getPointer(parameters[0].trim());
-                return String.valueOf(expression.queryFrom(content));
+                return String.valueOf(expression.queryFrom(getObject()));
             } catch (final Exception e) {
                 throw new BadSyntax(String.format("JSON object '%s' cannot be queried with '%s'", getId(), parameters[0]), e);
             }
         }
-        return content.toString();
+        return getObject().toString();
     }
 
     @Override
     public int expectedNumberOfArguments() {
         return 0;
-    }
-
-    @Override
-    public String getId() {
-        return id;
     }
 }

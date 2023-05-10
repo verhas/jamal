@@ -1,11 +1,6 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.IndexedPlaceHolders.ThrowingStringSupplier;
 import javax0.jamal.tools.InputHandler;
@@ -15,6 +10,8 @@ import javax0.jamal.tools.Scan;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.IndexedPlaceHolders.value;
@@ -40,8 +37,8 @@ public class Java {
             Scan.using(processor).from(this).between("()").keys(format).parse(in);
             InputHandler.skipWhiteSpaces(in);
             final var className = in.toString().trim();
+            final var klass = classForName(className, processor, getId(), in.getPosition());
             try {
-                final var klass = Class.forName(className);
                 return Trie.formatter.format(format.get(),
                         klass.getSimpleName(),
                         klass.getName(),
@@ -50,7 +47,7 @@ public class Java {
                         klass.getTypeName()
                 );
             } catch (Exception e) {
-                throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition(), e);
+                throw new BadSyntaxAt(String.format("The class '%s' cannot be formatted in the macro '%s'.", className, getId()), in.getPosition(), e);
             }
         }
 
@@ -89,11 +86,7 @@ public class Java {
             final var className = parts[0];
             final var fieldName = parts[1];
             final Class<?> klass;
-            try {
-                klass = Class.forName(className);
-            } catch (Exception e) {
-                throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition(), e);
-            }
+            klass = classForName(className, processor, getId(), in.getPosition());
             final Field field;
             try {
                 field = klass.getDeclaredField(fieldName);
@@ -103,7 +96,7 @@ public class Java {
             }
             final ThrowingStringSupplier valueCalculator;
             if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers())) {
-                valueCalculator = () -> "" + field.get(null);
+                valueCalculator = () -> Objects.toString(field.get(null));
             } else {
                 valueCalculator = () -> {
                     throw new BadSyntax("Field '" + fieldRef + "' value is not available as it is not 'final' or not 'static'");
@@ -162,11 +155,7 @@ public class Java {
             final var className = parts[0];
             final var methodName = parts[1];
             final Class<?> klass;
-            try {
-                klass = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + getId() + "'.", in.getPosition());
-            }
+            klass = classForName(className, processor, getId(), in.getPosition());
 
             final var method = Arrays.stream(klass.getDeclaredMethods()).filter(m -> m.getName().equals(methodName)).findAny().orElseThrow(
                     () -> new BadSyntaxAt("The method '" + methodName + "' cannot be found in the class '" + className + "' in the macro '" + getId() + "'.", in.getPosition())
@@ -182,7 +171,7 @@ public class Java {
                         method.getReturnType().getName(),
                         Arrays.stream(method.getExceptionTypes()).map(Class::getName).collect(Collectors.joining(",")),
                         Arrays.stream(method.getParameterTypes()).map(Class::getName).collect(Collectors.joining(",")),
-                        "" + method.getParameterCount(),
+                        Objects.toString(method.getParameterCount()),
                         Modifier.toString(method.getModifiers()
                         )
                 );
@@ -197,6 +186,34 @@ public class Java {
         }
     }
 
+    private static Optional<CompileJavaMacros.Holder> getHolder(final Processor processor, final String id) throws BadSyntax {
+        final var result = processor.getRegister()
+                .getUserDefined(id)
+                .filter(p -> p instanceof ObjectHolder)
+                .map(p -> (ObjectHolder<?>) p)
+                .map(ObjectHolder::getObject)
+                .filter(o -> o instanceof CompileJavaMacros.Holder)
+                .map(o -> (CompileJavaMacros.Holder) o);
+        if (result.isEmpty()) {
+            throw new BadSyntax("Macro " + id + " is not defined or not a class store. Were Java classes specified with 'java:sources'?");
+        } else {
+            return result;
+        }
+    }
+
+    private static Class<?> classForName(final String className, final Processor processor, final String macroId, final Position pos) throws BadSyntax {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            final var loaded = getHolder(processor, CompileJavaMacros.LOADED_CLASSES);
+            try {
+                return loaded.get().loaded.get(className);
+            } catch (ClassNotFoundException ex) {
+                throw new BadSyntaxAt("The class '" + className + "' cannot be found on the classpath in the macro '" + macroId + "'.", pos);
+            }
+        }
+
+    }
 
     private static String[] split(Input in, Macro macro) throws BadSyntaxAt {
         final var trimmed = in.toString().trim();
@@ -220,7 +237,7 @@ public class Java {
             fieldName = trimmed.substring(fieldStart);
         } else {
             final var parts = InputHandler.getParts(in, 2);
-            BadSyntaxAt.when(parts.length < 2,"Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in + "'",in.getPosition());
+            BadSyntaxAt.when(parts.length < 2, "Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in + "'", in.getPosition());
             className = parts[0];
             fieldName = parts[1];
         }

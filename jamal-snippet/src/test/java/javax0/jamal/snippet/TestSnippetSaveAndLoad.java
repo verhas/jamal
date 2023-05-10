@@ -37,9 +37,9 @@ public class TestSnippetSaveAndLoad {
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
                 .results().split("\n")).collect(Collectors.toSet());
-        Assertions.assertEquals(new TreeSet<>(Set.of("XREFS","REF_JRF","is", "trimLinesStart", "unicode", "store", "sort_options",
-                "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats","pos_options",
-                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK","names", "numbers")), new TreeSet<>(result));
+        Assertions.assertEquals(new TreeSet<>(Set.of("LOADED_CLASSES", "XREFS", "REF_JRF", "is", "trimLinesStart", "unicode", "store", "sort_options",
+                "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats", "pos_options",
+                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK", "names", "numbers")), new TreeSet<>(result));
     }
 
     @Test

@@ -130,7 +130,7 @@ public class Params {
     // in some cases this is '(', for core macros it is '['
     private Character start = null;
 
-    private static class BadKey extends BadSyntax {
+    public static class BadKey extends BadSyntax {
         final String key;
 
         BadKey(String key, String message) {
@@ -378,7 +378,7 @@ public class Params {
      * @param keys     the set of the valid keys
      * @return the set of suggestions
      */
-    private Set<String> suggest(String spelling, Set<String> keys) {
+    public static Set<String> suggest(String spelling, Set<String> keys) {
         final Set<String> suggestions = new HashSet<>();
         int minDistance = 3;
         for (String key : keys) {

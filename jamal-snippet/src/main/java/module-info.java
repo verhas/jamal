@@ -38,6 +38,7 @@ import javax0.jamal.snippet.SnipTransform;
 import javax0.jamal.snippet.SnipXml;
 import javax0.jamal.snippet.Snippet;
 import javax0.jamal.snippet.Sort;
+import javax0.jamal.snippet.CompileJavaMacros;
 import javax0.jamal.snippet.StringMacros.Chop;
 import javax0.jamal.snippet.StringMacros.Contains;
 import javax0.jamal.snippet.StringMacros.EndsWith;
@@ -58,11 +59,15 @@ import javax0.jamal.snippet.XmlInsert;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;
+    exports javax0.jamal.snippet.tools;
     requires jamal.api;
     requires jamal.tools;
     requires jamal.engine;
     requires java.xml;
     requires javaLex;
+    requires SourceBuddy;
+    requires jdk.compiler;
+    requires refi;
     provides Macro with Clear,
             Collect,
             LineCount,
@@ -139,6 +144,10 @@ module jamal.snippet {
             JavaMatcherBuilderMacros.IntegerMacro,
             JavaMatcherBuilderMacros.NumberMacro,
             JavaMatcherBuilderMacros.FloatMacro,
-            JavaMatcherBuilderMacros.Match
+            JavaMatcherBuilderMacros.Match,
+            CompileJavaMacros.Compile,
+            CompileJavaMacros.ListClasses,
+            CompileJavaMacros.ListMethods,
+            CompileJavaMacros.ListFields
             ;
 }
