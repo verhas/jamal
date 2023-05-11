@@ -83,6 +83,9 @@
                     {GAV :org.apache.maven.plugins:maven-surefire-plugin:{SUREFIRE_PLUGIN_VERSION}}
                 }
                 {plugin|
+                    {GAV :org.slf4j:slf4j-api:{SLF4J}}
+                }
+                {plugin|
                       {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:{SONATYPE_PLUGIN_VERSION}}
                       {extensions :true}
                       {configuration|

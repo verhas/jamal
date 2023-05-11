@@ -5001,17 +5001,14 @@ The `macroOpen` and `macroClose` parameters are `String` values.
 The parameter `input` to the method `process()` has to be an object that implements the `javax0.jamal.api.Input` interface.
 The easiest way to do that is to use the readily available class `javax0.jamal.tools.Input`.
 
-You can see an example to create an `Input` from an existing file in the `jamal-maven-plugin` module.
-The method `createInput()` reads a file, and then it creates a new input:
+You can see an example to create an `Input` from an existing file in the `jamal-maven-plugin` module:
 
 [source,java]
 ----
-private Input createInput(Path inputFile) throws IOException {
-    try (final var lines = Files.lines(inputFile)) {
-        final var fileContent = lines.collect(Collectors.joining("\n"));
-        return new javax0.jamal.tools.Input(fileContent, new Position(inputFile.toString(), 1));
-    }
-}
+result = processor.process(
+        new javax0.jamal.tools.Input(
+                Files.readString(inputPath, StandardCharsets.UTF_8),
+                new Position(inputPath.toString(), 1)));
 ----
 
 An `Input` holds the content the processor has to process.
