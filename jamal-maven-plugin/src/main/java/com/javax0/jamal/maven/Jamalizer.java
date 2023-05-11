@@ -1,6 +1,10 @@
-package javax0.jamal.maven;
+package com.javax0.jamal.maven;
 
 import javax0.jamal.api.Processor;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -11,7 +15,8 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.stream.Collectors;
 
-class Jamalizer {
+@Mojo(name="jamalize")
+public class Jamalizer extends AbstractMojo {
     void jamalize() throws IOException {
         final Path newDir = createMvnDir(Path.of("."));
         writeExtensionsFile(newDir);
@@ -51,7 +56,7 @@ class Jamalizer {
                 "        <groupId>com.javax0.jamal</groupId>\n" +
                 "        <artifactId>jamal-maven-extension</artifactId>\n" +
                 "        <version>" +
-                Processor.jamalVersion()
+                Processor.jamalVersionString()
                 + "</version>\n" +
                 "    </extension>\n" +
                 "</extensions>\n").getBytes(StandardCharsets.UTF_8),
@@ -70,5 +75,14 @@ class Jamalizer {
             Files.createDirectory(newDir);
         }
         return newDir;
+    }
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        try {
+            new Jamalizer().jamalize();
+        } catch (IOException e) {
+            throw new MojoExecutionException("Cannot jamalize",e);
+        }
     }
 }

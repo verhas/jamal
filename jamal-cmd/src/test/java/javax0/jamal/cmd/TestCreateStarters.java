@@ -22,7 +22,7 @@ public class TestCreateStarters {
     @Test
     @DisplayName("Create the jbang starter file from the resource jbang.template")
     void testCreateTheJBangStarterFile() throws Exception {
-        final var versionString = getVersionString();
+        final var versionString = Processor.jamalVersionString();
         final var root = getRoot();
         final var content = getContent("{@include res:jbang.template.jam}", root, versionString);
 
@@ -37,7 +37,7 @@ public class TestCreateStarters {
     @Test
     @DisplayName("Create the jamal.sh shell script using the dependencies plugin output and the resource jamal.sh.template")
     void testCreateJamalSh() throws Exception {
-        final var versionString = getVersionString();
+        final var versionString = Processor.jamalVersionString();
         final var root = getRoot();
         final var content = getContent("{@include res:jamal.sh.template.jam}", root, versionString);
 
@@ -51,12 +51,6 @@ public class TestCreateStarters {
         return TestThat.theInput(input)
                 .define("ROOT", root)
                 .results();
-    }
-
-    private String getVersionString() {
-        final var version = new Properties();
-        Processor.jamalVersion(version);
-        return version.getProperty("version");
     }
 
     @Test

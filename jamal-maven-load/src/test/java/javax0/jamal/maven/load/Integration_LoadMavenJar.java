@@ -33,7 +33,7 @@ public class Integration_LoadMavenJar {
     private static final String TEST_STRING = String.format(""
             + "{@try! {@array}}"
             + "{@maven:load %%s com.javax0.jamal:jamal-test:%s}" // %%s -> options
-            + "{@array :2:0:1:2:3}", JamalVersion.get());
+            + "{@array :2:0:1:2:3}", Processor.jamalVersionString());
     private static final String RESULT = "There is no built-in macro with the id 'array'; did you mean '@try'?2";
     /**
      * We selected one core macro arbitrarily. The package test has the core as dependency. If the option 'update'

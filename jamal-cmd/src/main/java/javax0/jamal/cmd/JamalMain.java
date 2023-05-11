@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -55,9 +54,7 @@ public class JamalMain {
     public static void main(String[] args) {
         final var params = CmdParser.parse(args, parameters);
         if (params.get("version").isPresent()) {
-            final var version = new Properties();
-            javax0.jamal.api.Processor.jamalVersion(version);
-            System.out.printf("Jamal Version %s", version.getProperty("version"));
+            System.out.printf("Jamal Version %s", javax0.jamal.api.Processor.jamalVersionString());
             return;
         }
         if (params.get("shcnf").isPresent()) {
@@ -201,7 +198,7 @@ public class JamalMain {
         final var from = params.get("from").orElse("\\.jam$");
         final var to = params.get("to").orElse("");
         final var inputFileName = inputFile.toString();
-        if (!inputFile.toString().replaceAll("\\\\","/").startsWith(sourceDirectory)) {
+        if (!inputFile.toString().replaceAll("\\\\", "/").startsWith(sourceDirectory)) {
             throw new IllegalArgumentException(
                     String.format("The input file '%s' is not in the source directory '%s'"
                             , inputFileName

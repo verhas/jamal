@@ -12,9 +12,7 @@ public class TestRequire {
     @Test
     @DisplayName("Using it without argument will return the current version")
     void testCurrentVersionAsString() throws Exception {
-        final var properties = new Properties();
-        Processor.jamalVersion(properties);
-        TestThat.theInput("{@version}").results(properties.getProperty("version"));
+        TestThat.theInput("{@version}").results(Processor.jamalVersionString());
     }
 
     @Test

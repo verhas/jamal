@@ -1,9 +1,3 @@
-[WARNING]
---
-* Macro was not terminated in the file.
-* @define HEADER($x)=$x
-*  at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
---
 # H1
 ## H2
 ### H3
@@ -12,18 +6,10 @@
 ###### H6
 
 Alternatively, for H1 and H2, an underline-ish style:
-[WARNING]
---
-* Macro was not terminated in the file.
-* @define HEADER($x)=$x
-*  at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
---
-{%@define HEADER($x)=$x
-{%
-======
-%}\
 ,mn
-{%HEADER Alt-H1%}
+Alt-H1
+======
+
 
 Alt-H2
 ------
@@ -170,25 +156,3 @@ This line is only separated by a single newline, so it's a separate line in the 
 
 
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
-[WARNING]
---
-* Macro was not terminated in the file.
-* @define HEADER($x)=$x
-*  at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
---
-[source]
-----
-Macro was not terminated in the file.
-@define HEADER($x)=$x
- at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam/8:3
-	javax0.jamal.api.Macro(macroNotTerminated:255)
-	javax0.jamal.api.Macro(fetch:167)
-	javax0.jamal.engine.util.MacroBodyFetcher(getNextMacroBody:49)
-	javax0.jamal.engine.Processor(getNextMacroBody:854)
-	javax0.jamal.engine.Processor(processMacro:246)
-	javax0.jamal.engine.Processor(process:174)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:340)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:203)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:134)
-sed -i jam '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.md.jam
-----

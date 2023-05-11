@@ -475,11 +475,18 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
+     * @return the current Jamal version in the form of a string
+     */
+    static String jamalVersionString() {
+        final var version = new Properties();
+        jamalVersion(version);
+        return version.getProperty("version");
+    }
+
+    /**
      * @return the current Jamal version in the form of a {@link Runtime.Version}
      */
     static Runtime.Version jamalVersion() {
-        final var version = new Properties();
-        jamalVersion(version);
-        return jamalVersion(version.getProperty("version"));
+        return jamalVersion(jamalVersionString());
     }
 }

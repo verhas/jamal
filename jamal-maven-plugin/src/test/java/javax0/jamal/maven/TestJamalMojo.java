@@ -1,5 +1,9 @@
 package javax0.jamal.maven;
 
+import com.javax0.jamal.maven.JamalMojo;
+import com.javax0.jamal.maven.Jamalizer;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.junit.jupiter.api.Test;
 
 public class TestJamalMojo {
@@ -13,9 +17,9 @@ public class TestJamalMojo {
     }
 
     @Test
-    public void testNothing() {
-        sut = new JamalMojo();
-//        sut.execute();
+    public void testNothing() throws MojoExecutionException, MojoFailureException {
+        final var sut = new Jamalizer();
+        sut.execute();
     }
 
 }

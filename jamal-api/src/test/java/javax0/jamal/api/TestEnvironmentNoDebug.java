@@ -35,15 +35,9 @@ public class TestEnvironmentNoDebug {
     @Test
     @DisplayName("The ui has the same version as the other parts of the code")
     void testUiBackEndVersionIsTheSame() {
-        Assertions.assertEquals(backEndVersion(), frontEndVersion(),
+        Assertions.assertEquals(Processor.jamalVersionString(), frontEndVersion(),
                 "The back-end version and the front-end versions must be the same\n" +
                         "Execute the shell script ${projectRoot}/jamal-debug-ui/deployprod and git commit/push.");
-    }
-
-    private static String backEndVersion() {
-        final var version = new Properties();
-        Processor.jamalVersion(version);
-        return version.getProperty("version");
     }
 
     private static String frontEndVersion() {

@@ -1,17 +1,12 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 
 import java.util.Arrays;
 import java.util.Properties;
 
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.InputHandler.startsWith;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Require implements Macro {
 
@@ -40,10 +35,9 @@ public class Require implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         skipWhiteSpaces(in);
-        if( in.length() == 0 ){
+        if (in.length() == 0) {
             final var p = new Properties();
-            Processor.jamalVersion(p);
-            return ""+p.getProperty("version");
+            return Processor.jamalVersionString();
         }
         final int exact;
         final Prefix comparing;

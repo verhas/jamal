@@ -10,8 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+
 public class TestUpdate {
-    @Test
+
+    // @Test update was modified as non-functional in 2.1.0
     void testUpdate() throws Exception {
         final var file = "target/document_update_test.jam";
         try (final var output = new FileOutputStream(file)) {
@@ -48,7 +50,7 @@ public class TestUpdate {
     }
 
 
-    @Test
+    // @Test
     void testUpdateWithOldContent() throws Exception {
         final var file = "target/document_update_test.jam";
         try (final var output = new FileOutputStream(file)) {
@@ -85,7 +87,7 @@ public class TestUpdate {
         }
     }
 
-    @Test
+    //@Test
     void testUnterminated() throws Exception {
         final var file = "target/document_update_test.jam";
         try (final var output = new FileOutputStream(file)) {

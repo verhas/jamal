@@ -23,7 +23,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -52,7 +52,7 @@ These small text pieces are called snippets.
 When the `.jam` file gets processed, the snippets will automatically contain the source code's actual text.
 This way, it is easier to keep your documentation up to date.
 
-=== Table of contents
+== Table of contents
 
 . <<usage,Usage>>
 . <<macros,Macros>>
@@ -123,7 +123,7 @@ This way, it is easier to keep your documentation up to date.
 
 
 [[usage]]
-=== 1.Usage
+== 1.Usage
 
 If you are using Jamal programmatically or from Maven then the dependency you have to add to your project is:
 
@@ -131,7 +131,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -139,10 +139,10 @@ The macro classes are listed in the `provides` directive in the `module-info.jav
 There is no need to invoke the `use` command to get access to these macros.
 
 [[macros]]
-=== 2.Macros
+== 2.Macros
 
 [[snip_collect]]
-==== i.`snip:collect`
+=== i.`snip:collect`
 
 Since 1.7.4 option `onceAs`
 
@@ -208,10 +208,10 @@ is the same as
 ----
 
 [NOTE]
-====
+===
 The only difference is that the first version will contain a line with a trailing `\n` at the end of the line.
 The `snipline` version does not contain the trailing `\n`.
-====
+===
 
 A snipline can also have a trailing `filter=regex` after the name of the snippet.
 The rest of the line after the `filter=` is a regular expression that will be used to filter the line.
@@ -241,7 +241,7 @@ There can be extra characters before or after the `snippet name` and/or the `end
 The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.
 
 [NOTE]
-====
+===
 The definition and matching criteria of the start and the end of the snippet are very liberal.
 The reason for that is to ease in recognizing these in different files.
 The regular expressions will find snippet start and snippet ends in Java files, in XML, in Perl or Python code.
@@ -269,7 +269,7 @@ Because there is also an accidental `snippet` line before it, the collection wou
 Because of the previous `snippet` line, the real `// snippet` line becomes part of the previous snippet.
 The `// snippet` line is preceded by an `// end snippet` line to avoid this.
 Such a line out of a snippet is ignored, and in this case, it closes the accidental snippet.
-====
+===
 
 As you can see, the regular expression contains a collection group, which Jamal uses as the name of the snippet.
 For example, the code
@@ -383,7 +383,7 @@ To do that, you have to have the `snip:collect` in every JavaDoc, presumably usi
 That collect macro should name the collection to avoid redefinition error.
 
 [[snip_properties]]
-==== ii.`snip:properties`
+=== ii.`snip:properties`
 
 This macro will load properties from a "properties" file or an "XML" file.
 The names of the properties will become the names of the snippets and the values of the snippets.
@@ -438,7 +438,7 @@ For example, the same properties file in XML format looks like the following:
 ----
 
 [[xml_define]]
-==== iii.`xml:define`
+=== iii.`xml:define`
 
 This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
 The syntax of the command is:
@@ -471,13 +471,13 @@ The result is:
 [source]
 ----
 ...
-<version>2.0.3-SNAPSHOT</version>
+<version>2.1.0-SNAPSHOT</version>
 ...
 ----
 
 
 [[snip_xml]]
-==== iv.`snip:xml`
+=== iv.`snip:xml`
 
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
@@ -510,7 +510,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.0.3-SNAPSHOT</version>
+<version>2.1.0-SNAPSHOT</version>
 ...
 ----
 
@@ -518,7 +518,7 @@ The result is:
 which is the current version of the project as read from the `pom.xml` file.
 
 [[xml_insert]]
-==== v.`xml:insert`
+=== v.`xml:insert`
 
 This macro can modify an XML formatted user defined macro inserting content into the XML document.
 It can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
@@ -588,7 +588,7 @@ The following example demonstrates how the result of the processing can be modif
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
 </dependency>}
 <plugins><plugin>
 <artifactId>my-imaginary</artifactId>
@@ -618,7 +618,7 @@ will result
     <dependency>
       <groupId>com.javax0.jamal</groupId>
       <artifactId>jamal-snippet</artifactId>
-      <version>2.0.3-SNAPSHOT</version>
+      <version>2.1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <pluginManagement/>
@@ -629,20 +629,20 @@ will result
 
 The insert macros in this example do not specify any `id`.
 This means that all the modification is done to the XML, which is the whole document.
-Also the modification happens at the end of the processing.
+Also, the modification happens at the end of the processing.
 
 The first four insertions are optional in the sense that they will modify the output if there is no such tag in the XML.
 They make not much sense in a simple XML file, like this, but in a larger XML, where the different parts come from different includes it may make sense.
 Such insertions ensure that these parts are inserted if they are needed by other insertions.
 The first four lines could be in a separate file and included using the `include` macro to support pom structure.
 
-In the example the fifth insertion can only be executed successfully because the first one is there.
+In the example, the fifth insertion can only be executed successfully because the first one is there.
 Without this there would be no `/project/dependencies` location in the XML file.
 At the same time the second optional insertion for the `plugins` is ignored, because there is an explicit `plugins` tag in the content.
 The fifth insertion adds a dependency to the `dependencies` tag.
 
 [[snip_define]]
-==== vi.`snip:define`
+=== vi.`snip:define`
 
 You can use this macro to define a snippet.
 Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
@@ -693,13 +693,13 @@ which is defined inside the file and not collected from an external file.
 As you can see there are no spaces before the characters `It is the...`.
 
 [[snip_clear]]
-==== vii.`snip:clear`
+=== vii.`snip:clear`
 
 Calling this macro deletes all collected snippets from memory.
 The result of the macro is an empty string.
 
 [[snip]]
-==== viii.`snip`
+=== viii.`snip`
 
 
 You can use the `snip` macro to insert one or more snippets into the output.
@@ -720,7 +720,7 @@ You can check only the hash code.
 You can also use any of the options of the macro <<snipTransform,`snip:transform`>>.
 The macro `snip` will automatically apply the transformations calling the macro `snip:transform`.
 
-==== Use one snippet
+=== Use one snippet
 
 The syntax for the first case is
 
@@ -738,7 +738,7 @@ Since that macro modifies the file you edit, you must use it with care.
 
 Since the introduction of the Asciidoctor preprocessor and the WYSIWYG editing possibility of Asciidoc and Markdown files the importance of this feature has decreased.
 
-==== Partial snippet
+=== Partial snippet
 
 The second case uses only part of the snippet. (starting from Jamal version 1.7.2)
 
@@ -779,15 +779,15 @@ and the Jamal code
 to gauge out the string `:rubyShell` from the source code.
 
 [NOTE]
-====
+===
 It is also possible to specify the regular expression in the source code.
 As it is documented in the section <<snip_collect,`collect`>>, the `snipLine` declaration may end with a `filter=regular expression` option.
-====
+===
 
 When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole snippet is calculated.
 If there is any change in the snippet, even outside the first line, the hash code will be different and the snippet inclusion will purposefully fail.
 
-==== Multiple Snippets
+=== Multiple Snippets
 
 The third use is to insert multiple snippets into the output. (starting from Jamal 1.11.0)
 In this case, the syntax is the following:
@@ -805,7 +805,7 @@ In this case, the macro collects and concatenates all snippets with regular expr
 The snippets are sorted by their names before concatenation regardless of their appearance order in the file or files.
 
 [NOTE]
-====
+===
 This ordering is different from what you can achieve using AsciiDoc style snippet collecting.
 When you do AsciiDoc style snippet collecting, you use the `tag::` name `[]` and `end::` name `[]` syntax to start and stop snippets.
 A snippet can be started and stopped using the same name many times in the same file.
@@ -818,9 +818,9 @@ The snippets may be collected from different files.
 The order of the different snippets coming from separate files is not defined.
 The snippets are sorted by their name before concatenation to guarantee a definite order.
 It is recommended to name these snippets with a name and a number, like `my_snippet_1000`, `my_snippet_2000`, etc.
-That way, the regular expression can be `my_snippet_\d{4}`, and in case the ordering needs to be changed slightly, there is room to insert a new snippet between two already existing ones.
+That way, the regular expression can be `pass:[my_snippet_\d{4}]`, and in case the ordering needs to be changed slightly, there is room to insert a new snippet between two already existing ones.
 You may remember this technique from 40 years ago when BASIC program lines had to be numbered.
-====
+===
 
 When used with the option `poly`, it is impossible to use any comment following the regular expression.
 The whole text after the option till the macro closing string is interpreted as part of the regular expression.
@@ -840,14 +840,14 @@ If there is
 
 then snippet inclusion will purposefully fail.
 
-==== Snippet Transformation
+=== Snippet Transformation
 
 You can surround the snippet using the macro <<snipTransform,`snip:transform`>> transforming the output.
 This is, however, such a usual case that the macro will automatically invoke the transformation.
 To do this the macro `snip` will accept all the options of the macro `snip:transform` and will pass them to that.
 
 [[snip_check]]
-==== ix.`snip:check`
+=== ix.`snip:check`
 
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
@@ -941,7 +941,7 @@ Update the documentation to follow the change of the code part.
 3. Rerun the macro processing.
 
 [NOTE]
-====
+===
 The error message contains the 64 character hex code as eight times eight characters dot-separated.
 It helps you select a part of the code when you copy the new code into the documentation after the update.
 It also helps you select different parts if you want to have more than one reference to the hash code.
@@ -950,7 +950,7 @@ You can use as many or as few dots in the hash code as you like.
 
 The hash code is displayed using lower case hexadecimal characters, but you can use upper case or mixed case characters.
 Before the check, the dots are removed, and the characters are converted to a lower case.
-====
+===
 
 In some rare cases, you do not want to check all the modifications of the file.
 You specify the option `lines` to check the number of lines in the snippet or file has not changed.
@@ -998,7 +998,7 @@ In this case the error will not be suppressed.
 You cannot use `warning` and `error` together.
 
 [[snipList]]
-==== x.`snip:list`
+=== x.`snip:list`
 
 This macro lists the defined snippets.
 
@@ -1036,7 +1036,7 @@ If you want to match the full name, file name, or content line, you have to use 
 If all the parameters are missing, then the macro will list all the snippet names.
 
 [[snipSave]]
-==== xi.`snip:save`
+=== xi.`snip:save`
 
 This macro saves all the collected snippets to a file.
 
@@ -1128,7 +1128,7 @@ The text of the snippet is the content of the `snippet` tag.
 It is saved as a `CDATA` section(s).
 
 [[snipLoad]]
-==== xii.`snip:load`
+=== xii.`snip:load`
 
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 
@@ -1178,7 +1178,7 @@ Extra attributes are ignored.
 If you want to change something in the XML file and edit some snippet code temporarily, you can rename the tag `hash` to `_hash`, for example.
 
 [[trimLines]]
-==== xiii.`trimLines`
+=== xiii.`trimLines`
 
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
@@ -1272,7 +1272,7 @@ c
 
 
 [[untab]]
-==== xiv.`untab`
+=== xiv.`untab`
 
 
 The syntax of the macro is:
@@ -1332,7 +1332,7 @@ will be converted to
 
 
 [[range]]
-==== xv.`range`
+=== xv.`range`
 
 
 This macro can filter lines of its input by a range of numbers.
@@ -1363,7 +1363,7 @@ When you want to specify a range lasting to the end of the lines you can write `
 This option cannot be defined as macro.
 
 [[Base64]]
-==== xvi.`base64` encode and decode
+=== xvi.`base64` encode and decode
 
 
 There are two macros that can encode and decode the input using the Base64 algorithm.
@@ -1490,7 +1490,7 @@ image::https://kroki.io/plantuml/svg/eNplTz0PgjAQ3fsrLkwwUJXEDUl0d3M3B5ykoS0N1-h
 
 
 [[rot13]]
-==== xvii.`rot13`
+=== xvii.`rot13`
 
 
 This macro calculates the ROT13 transformation of the input.
@@ -1522,7 +1522,7 @@ For example, your documents asks a question to the reader, and you also give the
 The reader will not be able to read the answer, only when they put effort deciphering.
 
 [[pos]]
-==== xviii.`pos`
+=== xviii.`pos`
 
 
 This macro will result the
@@ -1543,7 +1543,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1321:30
+../jamal-snippet/README.adoc.jam:1322:30
 ----
 
 
@@ -1588,7 +1588,7 @@ It is also known that Jamal increases the line numbers in some cases extensively
 This is a known bug resulting in the line number larger than the actual.
 
 [[sort]]
-==== xix.`sort`
+=== xix.`sort`
 
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
@@ -1752,7 +1752,7 @@ The macro `sort` implements a little shortcut for the semantic versioning collat
 If you write `semver` (case insensitive) instead of the fully qualified domain name, it will automatically use the `javax0.jamal.snippet.SemVerCollator` class as collator.
 
 [[numberLines]]
-==== xx.`numberLines`
+=== xx.`numberLines`
 
 This macro can put numbers in front of the lines, sequentially numbering them.
 
@@ -1821,7 +1821,7 @@ The standard Java method `String::format` will format the number using the forma
 Any illegal formatting will result in an error.
 
 [[killLines]]
-==== xxi.`killLines`
+=== xxi.`killLines`
 
 This macro deletes, or keeps the selected lines from its input.
 
@@ -1897,7 +1897,7 @@ creates the output
 In this case only the comment lines remained that start with `//` at the start of the line.
 
 [[skipLines]]
-==== xxii.`skipLines`
+=== xxii.`skipLines`
 
 You can use this macro to skip lines from the snippet.
 
@@ -1964,7 +1964,7 @@ The `skip` and `endSkip` lines cannot be nested.
 When there is a match for a `skip`, any further `skip` is ignored until an `endSkip`.
 
 [[replace]]
-==== xxiii.`replace`
+=== xxiii.`replace`
 
 The macro `replace` replaces strings with other strings in its input.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -2003,7 +2003,7 @@ the pear has fallen off the bush
 but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
-==== xxiv.`replaceLines`
+=== xxiv.`replaceLines`
 
 This macro replaces strings in the input.
 
@@ -2050,7 +2050,7 @@ Use the parameter`detectNoChange` to detect this.
 If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
-==== xxv.`counter:define`
+=== xxv.`counter:define`
 
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
@@ -2206,14 +2206,14 @@ The user defined macro `m`, which is a counter interprets the argument and creat
 The value of this user defined macro will be the same as the actual value of the counter.
 
 [NOTE]
-====
+===
 The `-` character before the `>` is a macro parameter separator, and the macro itself checks only the `>` character.
 It means that you can use `.>`, `+>` or `/>` or any other non-alphanumeric first character in front of the `>`.
 It is recommended to use the `-` or `=` for readability reasons.
-====
+===
 
 [[references]]
-==== xxvi.`references`
+=== xxvi.`references`
 
 From time to time there may be a need to have a reference to a part of the text that is defined later.
 Macros, by their nature cannot be used before they are defined.
@@ -2288,7 +2288,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 
 
 [[reflow]]
-==== xxvii.`reflow`
+=== xxvii.`reflow`
 
 This macro reflows the content.
 
@@ -2454,7 +2454,7 @@ Setting the `width` to any non-positive value will remove the limit from the lin
 You may use this to override a globally set `width` macro.
 
 [[snipLine]]
-==== xxviii.`snip:line`
+=== xxviii.`snip:line`
 
 The macro `snip:line` results in the starting line number of the snippet in the file where the snippet is defined.
 For example, if the snippet `hubbaba` was collected from a file with the `snippet hubbaba` on line 5, the macro will return 6.
@@ -2486,7 +2486,7 @@ The syntax of the macro is
 The text following the snippet id is ignored, reserved for future development.
 
 [[snipFile]]
-==== xxix.`snip:file`
+=== xxix.`snip:file`
 
 The macro `snip:file` returns the file's name where the snippet is defined.
 The returned file name is a full absolute path.
@@ -2504,7 +2504,7 @@ The syntax of the macro is
 The text following the snippet id is ignored, reserved for future development.
 
 [[snipTransform]]
-==== xxx.`snip:transform`
+=== xxx.`snip:transform`
 
 
 The `snip:transform` macro integrates the functionality of the macros
@@ -2663,7 +2663,7 @@ When the lines are deleted the numbering will have gaps.
 It may be your intention, but usually it is not.
 
 [NOTE]
-====
+===
 The macro `snip:transform` is just a wrapper around the underlying macros.
 It first looks up the macros by the name and then invokes them according to the parameters.
 It is usually not interesting for the user of the macro.
@@ -2673,7 +2673,7 @@ Jamal, however, makes it possible to redefine built-in macros locally and global
 If any of the underlying macros are redefined when the `snip:transform` is invoked, then the actual macro will be invoked.
 It also implies that the developers should implement these macros as compatible as the macro of the same name in the snippet package.
 They have to implement the `BlockConverter` interface, and their `convertTextBlock()` method should accept the same parameters as their snippet counterpart.
-====
+===
 
 The parameters for the `snip:transform` are:
 
@@ -2698,7 +2698,7 @@ The reason for that is readability. While `untab size` may be acceptable, it is 
 The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
-==== xxxi.`lineCount`
+=== xxxi.`lineCount`
 
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
@@ -2719,7 +2719,7 @@ results
 
 
 [[listDir]]
-==== xxxii.`listDir`
+=== xxxii.`listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -2909,7 +2909,7 @@ will result
 - ModifiersBuilder.java: 1,740 bytes
 - ReflectionTools.java: 26,140 bytes
 - MethodTool.java: 7,761 bytes
-- Update.java: 3,898 bytes
+- Update.java: 1,592 bytes
 - SnipTransform.java: 17,148 bytes
 - Base64.java: 3,470 bytes
 - FilesMacro.java: 8,162 bytes
@@ -2986,7 +2986,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-==== xxxiii.`xmlFormat`
+=== xxxiii.`xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -2998,7 +2998,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.3-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.1.0-SNAPSHOT</version>
 </project>
 }
 ----
@@ -3014,7 +3014,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3029,7 +3029,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.3-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.1.0-SNAPSHOT</version>
 </project>
 }
 ----
@@ -3045,7 +3045,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.0.3-SNAPSHOT</version>
+<version>2.1.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3066,7 +3066,7 @@ The previous example that we used before can also be formulated this way.
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.0.3-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.1.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3083,7 +3083,7 @@ It will result in the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3106,7 +3106,7 @@ project>
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.0.3-SNAPSHOT
+  version>2.1.0-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3126,7 +3126,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
@@ -3140,7 +3140,7 @@ will result
 For more examples and detailed explanation of the thin XML format, see the link:./THINXML.adoc[Thin XML Format] page.
 
 [[thinXml]]
-==== xxxiv.`thinXml`
+=== xxxiv.`thinXml`
 
 This macro converts thin XML to normal XML.
 Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it works only for full XML files and not for XML fragments.
@@ -3158,7 +3158,7 @@ For example:
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.0.3-SNAPSHOT
+  version>2.1.0-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3176,7 +3176,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.0.3-SNAPSHOT</version>
+<version>2.1.0-SNAPSHOT</version>
 <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
@@ -3192,7 +3192,7 @@ It is not formatted also and there is no leading ```<?xml version="1.0" encoding
 For more examples and detailed explanation of the thin XML format, see the link:./THINXML.adoc[Thin XML Format] page.
 
 [[date]]
-==== xxxv.`date`
+=== xxxv.`date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -3208,12 +3208,12 @@ will result in the output
 
 [source]
 ----
-2023-05-10 14:32:57
+2023-05-11 16:01:14
 ----
 
 
 [[format]]
-==== xxxvi.`format`
+=== xxxvi.`format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
@@ -3264,7 +3264,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[numbers]]
-==== xxxvii.`numbers`
+=== xxxvii.`numbers`
 
 
 The macro `numbers` can create a comma separated list of numbers.
@@ -3301,7 +3301,7 @@ will result
 
 
 [[unicode]]
-==== xxxviii.`unicode`
+=== xxxviii.`unicode`
 
 
 This macro can insert unicode characters into the output.
@@ -3463,7 +3463,7 @@ These are symbolic names for some non-printable characters and for some commonly
 
 
 [[case]]
-==== xxxix.`case:lower`, `case:upper`, ...
+=== xxxix.`case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -3476,7 +3476,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-==== xl.`file`
+=== xl.`file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -3535,7 +3535,7 @@ The usual use is to define `root` as a global macro and all `file` macros should
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[directory]]
-==== xli.`directory`
+=== xli.`directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -3594,11 +3594,11 @@ The usual use is to define `root` as a global macro and all `directory` macros s
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[Java]]
-==== xlii.Java Macros
+=== xlii.Java Macros
 
 
 [[java:class]]
-===== `java:class`
+==== `java:class`
 
 
 The macro `java:class` checks that the parameter is a valid Java class and found on the classpath.
@@ -3680,7 +3680,7 @@ Do not include verbatim text into the format string.
 Choose a format string you want to refer to the classes and use it globally in the document.
 
 [[java:field]]
-===== `java:field`
+==== `java:field`
 
 
 The macro `java:field` checks that the parameter is a valid Java field and found on the classpath.
@@ -3732,7 +3732,7 @@ The placeholders that the macro handles are:
 
 
 [[java:method]]
-===== `java:method`
+==== `java:method`
 
 
 The macro `java:method` checks that the parameter is a valid Java method and found on the classpath.
@@ -3821,7 +3821,7 @@ publicMethodMacro::evaluate(Input,Processor)
 
 
 [[java:sources]]
-===== `java:sources`
+==== `java:sources`
 
 This macro will read Java sources, compile them and make them available for the other macros.
 Think of this macro as a location declaration of the Java files documented.
@@ -3868,7 +3868,7 @@ The plural versions are used for code generation.
 The singular versions are used for formatting.
 
 [[java:classes]]
-===== `java:classes`
+==== `java:classes`
 
 This macro will return the list of selected classes.
 The classes have to be loaded first using the <<java:sources,`java:sources`>> macro.
@@ -3892,7 +3892,7 @@ Since the macro does not use its input, the parameters can be specified in the m
 The returned list will contain the names of the classes.
 
 [[java:methods]]
-===== `java:methods`
+==== `java:methods`
 
 This macro will return a list of selected methods.
 The macro has four parameters:
@@ -3949,7 +3949,7 @@ This formatting also interprets the following parameters as:
 
 
 [[java:fields]]
-===== `java:fields`
+==== `java:fields`
 This macro will return a list of selected fields.
 The macro has four parameters:
 
@@ -3989,7 +3989,7 @@ This is also the case when there is no parameter defined.
 
 
 [[java:insert]]
-===== `java:insert`
+==== `java:insert`
 
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
@@ -4019,21 +4019,21 @@ If the macro input is empty, then the file writing is deferred until the end of 
 In this case, the content of the whole output is going to be used.
 
 [NOTE]
-====
+===
 When the macro writes its' input into the file, you will most probably want to use `#` as macro character.
 That way, the input will be first processed.
 
 The suggested practice is to name the file `XYZ.java.jam` for code to be inserted into `XYZ.java`.
 Do not forget to add ``{%@comment nosave%}`` to the beginning of the file.
 This will prevent the Asciidoctor version of Jamal overwriting the Java file when editing the macros.
-====
+===
 
 [[String]]
-==== xliii.String Macros
+=== xliii.String Macros
 
 
 [[string:contains]]
-===== `string:contains`
+==== `string:contains`
 
 This macro returns the string `true` if the input contains a text given as a parameter and the text `false` otherwise.
 The macro handles two parameters:
@@ -4046,7 +4046,7 @@ The macro will check if a match is found inside the input.
 (It calls the Java regular expression matcher `find()`.)
 
 [[string:quote]]
-===== `string:quote`
+==== `string:quote`
 
 This macro returns the input of the macro quoted.
 You can use the string inside another string that way.
@@ -4078,7 +4078,7 @@ The actual conversions performed are:
 * `"` -> `\"`
 
 [[string:equals]]
-===== `string:equals`
+==== `string:equals`
 
 This macro returns the string literal `true` or `false` comparing the two arguments.
 It returns `true` if the two arguments are equal and `false` otherwise.
@@ -4103,7 +4103,7 @@ false
 
 
 [[string:startsWith]]
-===== `string:startsWith`
+==== `string:startsWith`
 
 This macro returns the string literal `true` or `false` comparing the two arguments.
 It returns `true` if the first argument starts with the second argument and `false` otherwise.
@@ -4126,7 +4126,7 @@ false
 
 
 [[string:endsWith]]
-===== `string:endsWith`
+==== `string:endsWith`
 
 This macro returns the string literal `true` or `false` comparing the two arguments.
 It returns `true` if the first argument ends with the second argument and `false` otherwise.
@@ -4149,7 +4149,7 @@ false
 
 
 [[string:reverse]]
-===== `string:reverse`
+==== `string:reverse`
 
 This macro returns the reverse of the input string.
 For example:
@@ -4168,7 +4168,7 @@ hgfedcba9876543210
 
 
 [[string:substring]]
-===== `string:substring`
+==== `string:substring`
 
 This macro returns a substring of the input.
 The parameters are
@@ -4199,7 +4199,7 @@ the
 
 
 [[string:length]]
-===== `string:length`
+==== `string:length`
 
 This macro returns the length of the input.
 The parameters are:
@@ -4215,7 +4215,7 @@ It will have the same effect as using `trim` alone.
 Using either `left` or `right` without trim is an error.
 
 [[string:chop]]
-===== `string:chop`
+==== `string:chop`
 
 Chop off a substring from the start or from the end of the input.
 The parameters are:
@@ -4226,59 +4226,8 @@ The parameters are:
 * `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
 [[snip_update]]
-==== xliv.`snip:update`
+=== xliv.`snip:update`
 
-This macro can be used to automatically copy the content of the snippets into the `snip` macros.
-That way, the Jamal source will contain an updated value of the snippet helping the navigation in the Jamal source file.
-
-The result of the macro is an empty string, and it has no side effect inside the macro processor.
-What it does, however, is that it alters the file it was used in inserting the snippets into the comment part of the `snip` macro.
-Its operation is done in three steps:
-
-1. Reads the file into the memory.
-2. It goes through all the lines and inserts the snippet's content into the comment part of the `snip` macros.
-If there is already a comment there, then it gets deleted and replaced.
-3. Writes the altered content into the original file updating it.
-
-This macro alters the original file; therefore, its use has to be performed with great care.
-Ensure that you save the original file before executing Jamal, making a copy of it or committing it into the git repository.
-
-The `snip:update` macro does not perform Jamal syntax analysis.
-To use this macro successfully, you have to follow the additional rules:
-
-* The `{@snip id...` macro should start on a new line.
-There may be spaces before the macro.
-There must not be a comment on the same line following the snipped identifier.
-You can put a few non-space characters after the snippet identifier if you want to exclude a snippet use from the update.
-
-* The `snip` macro matching macro closing string has to be on a separate line.
-There may be spaces before and after the closing string, but nothing else.
-
-You can customize the `update` macro.
-If the macros `start` and/or `stop` are defined, their value will be used as a regular expression to find the beginning, and the end of the snippet content insertion points.
-The default value for `start` is
-
-    ^\s*\Q{\E\s*(?:#|@)\s*snip\s+([$_:a-zA-Z][$_:a-zA-Z0-9]*)\s*$
-
-When this pattern is calculated, the actual macro opening string is used instead of `{`.
-The `stop` string is
-
-    ^\s*\Q}\E\s*$
-
-When this pattern is calculated, the actual macro closing string is used instead of `}`.
-
-(The `\Q` and `\E` escape sequences in Java regular expressions denote escaping, so that the characters between are matched literally.)
-
-It is also possible to define a `head` and `tail` macro.
-The content of the `head` macro will be copied in front of the inserted snippet.
-The content of the `tail` macro will be copied after the inserted snippet.
-It can be used to insert, for example, asciidoc
-
-   [source]
-   ----
-
-header and
-
-   ----
-
-footer when the snippets are code samples in an asciidoc file.
+This macro was used to automatically copy the content of the snippets into the `snip` macros.
+Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
+Currently, the macro exists only for backward compatibility and does nothing.

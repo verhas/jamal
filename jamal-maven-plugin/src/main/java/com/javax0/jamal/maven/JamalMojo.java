@@ -1,4 +1,4 @@
-package javax0.jamal.maven;
+package com.javax0.jamal.maven;
 
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
@@ -6,6 +6,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.w3c.dom.Document;
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
 /**
  * process all the files using jamal
  */
-@Mojo(name = "jamal", requiresProject = false)
+@Mojo(name = "jamal", requiresProject = false, defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class JamalMojo extends AbstractMojo {
 
     //<editor-fold desc="Configuration parameters" >
@@ -53,9 +54,6 @@ public class JamalMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${filePattern}")
     private String filePattern;
-
-    @Parameter(defaultValue = "${jamalize}")
-    private String jamalize;
 
     @Parameter(defaultValue = "${project.build.formatOutput}")
     private String formatOutput;
@@ -89,14 +87,6 @@ public class JamalMojo extends AbstractMojo {
         logParameters();
         normalizeDirectories();
         logParameters();
-        if( "true".equals(jamalize)){
-            try {
-                new Jamalizer().jamalize();
-            } catch (IOException e) {
-                throw new MojoExecutionException("Cannot jamalize",e);
-            }
-            return;
-        }
         final var includePredicate = getPathPredicate(filePattern);
         final var excludePredicate = getPathPredicate(exclude).negate();
         processingSuccessful = true;
@@ -268,7 +258,6 @@ public class JamalMojo extends AbstractMojo {
         log.debug("    sourceDirectory=" + sourceDirectory);
         log.debug("    targetDirectory=" + targetDirectory);
         log.debug("    transform " + qq(transformFrom) + " -> " + qq(transformTo));
-        log.debug("    jamalize=" + jamalize);
         log.debug("----");
     }
 

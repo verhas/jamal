@@ -19,7 +19,7 @@ jamal-snippet.
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@define pu$folder=images%}\
 {%@define pu$template=%}\
-{%@snip:collect from=./jamal-maven-plugin/src/main/java/javax0/jamal/maven/JamalMojo.java%}\
+{%@snip:collect from=./jamal-maven-plugin/src/main/java/com/javax0/jamal/maven/JamalMojo.java%}\
 {%@snip:collect from=./jamal-api/src/main/java%}\
 {%@snip:collect from=./jamal-core/src/main/java%}\
 {%@snip:collect from=./jamal-tools/src/main/java%}\

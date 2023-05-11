@@ -43,7 +43,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=2.0.3-SNAPSHOT                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=2.1.0-SNAPSHOT                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 
@@ -93,7 +93,7 @@ ASCIIDOCTORJ_VERSION=2.5.8                 -- https://repo.maven.apache.org/mave
 JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
 MARKDOWN_TO_ASCIIDOC=2.0                   -- https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/
 MAVEN_DOWNLOADER=1.1.0                     -- https://repo.maven.apache.org/maven2/com/javax0/mavenDownload/mavenDownloader/
-SOURCE_BUDDY=2.4.0-SNAPSHOT                -- https://repo.maven.apache.org/maven2/com/javax0/sourcebuddy/SourceBuddy/
+SOURCE_BUDDY=2.4.0                         -- https://repo.maven.apache.org/maven2/com/javax0/sourcebuddy/SourceBuddy/
 JAVA_LEX=1.0.2                             -- https://repo.maven.apache.org/maven2/com/javax0/javaLex/javaLex/
 REFI=1.0.1                                 -- https://repo.maven.apache.org/maven2/com/javax0/refi/
 
