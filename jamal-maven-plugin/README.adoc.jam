@@ -118,3 +118,47 @@ The version 1.x.x was a plugin that was used to process the `pom.xml` file.
 In the versions 2.x.x the plugin is more used as a general purpose Jamal processor.
 The envisioned use is to process documentation and code generating Jamal files.
 In versions 2.x.x `pom.xml.jam` files are deprecated and followed by `pom.jam` files directly processed by the Jamal Maven extension.
+
+=== Jamalizing a Java Project
+
+The Jamal Maven plugin can be used to modify a Java Maven project to use Jamal.
+The modification does not alter any existing file, it only adds new files.
+
+To star the jamalization of a project, you can use the command line
+
+  mvn jamal:jamalize
+
+or
+
+  mvn com.javax0.jamal:jamal-maven-plugin:{%VERSION%}:jamalize
+
+Jamalization will use the version of Jamal executing it.
+If this version is a `-SNAPSHOT` version the process will not be able to download the Asciidoctor extension.
+Only the released versions are available in the Maven repository.
+
+To override the version of Jamal used for the jamalization, you can use the command line
+
+  mvn jamal:jamalize -Djamal.version=needed-version
+
+Jamalization is available since 2.1.0, but it is capable of installing any earlier released version.
+
+The new files jamalization creates are:
+
+* every `pom.xml` file is copied to `pom.xml.jam`.
+Since Jamal is non-intrusive, the original content processed with Jamal will result in the same XML.
+After this initial state the new `pom.jam` file can gradually be modified.
+The size of the `pom.jam` is usually 20% to 30% of the original `pom.xml` file.
+
+* a new `.mvn/extensions.xml` file is created in the current directory.
+The content of this extension will instruct Maven to use the Jamal Maven extension.
+
+* a new `.asciidoctor/lib` directory is created in the current directory.
+The process also downloads the
+
+  https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/{VERSION}/jamal-asciidoc-{VERSION}-jamal-asciidoc-distribution.zip
++
+file and unzips it into the `.asciidoctor/lib` directory.
+The `pass:[{VERSION}]` is the version of Jamal used for the jamalization or the one defined in the system variable `jamal.version`.
+This way, the Jamal preprocessor extension is available for the IntelliJ IDEA AsciiDoc plugin.
+You also have to remember to configure IntelliJ to handle `.jam` files as AsciiDoc files and restart it.
+For more information, please read the link:../jamal-asciidoc/README.adoc[documentation of the Jamal AsciiDoc extension].
