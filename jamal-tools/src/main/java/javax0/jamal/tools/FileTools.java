@@ -155,6 +155,47 @@ public class FileTools {
             throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
         }
     }
+    public static byte[] getFileBinaryContent(final String fileName, final boolean noCache, final Processor processor) throws BadSyntax {
+        final var res = processor.getFileReader().map(reader -> reader.read(fileName)).orElse(Processor.IOHookResult.IGNORE);
+        switch (res.type()) {
+            case DONE:
+                return res.getBinary();
+            case REDIRECT:
+                final var content = getFileBinaryContent(res.get(), noCache, processor);
+                processor.getFileReader().ifPresent(reader -> reader.set(fileName, content));
+                return content;
+            default:
+                break;
+        }
+        if (readers.isEmpty()) {
+            readers.addAll(ServiceLoaded.getInstances(ResourceReader.class));
+        }
+        try {
+            readers.forEach(r -> r.setProcessor(processor));
+            final byte[] content =
+                    readers.stream()
+                            .filter(r -> r.canRead(fileName))
+                            .findFirst()
+                            .map(r -> {
+                                try {
+                                    return r.readBinary(fileName, noCache);
+                                } catch (IOException e) {
+                                    throw new UncheckedIOException(e);
+                                }
+                            }).orElseGet(() -> {
+                                        try {
+                                            return FileInput.getBinaryInput(fileName);
+                                        } catch (IOException e) {
+                                            throw new UncheckedIOException(e);
+                                        }
+                                    }
+                            );
+            processor.getFileReader().ifPresent(reader -> reader.set(fileName, content));
+            return content;
+        } catch (UncheckedIOException e) {
+            throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
+        }
+    }
 
     public static void writeFileContent(String fileName, String content, final Processor processor) throws BadSyntax {
         final String finalFileName;

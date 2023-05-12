@@ -57,11 +57,11 @@ public class JamalMojo extends AbstractMojo {
 
     private NameTransformer transformer;
 
-    private final Logger log = org.slf4j.LoggerFactory.getLogger("jamal");
+    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger("jamal");
 
     @Override
     public void execute() throws MojoExecutionException {
-        log.info("Jamal processing started in " + source + " with include pattern " + include + " and exclude pattern " + exclude);
+        LOG.info("Jamal processing started in " + source + " with include pattern " + include + " and exclude pattern " + exclude);
         passBool = Boolean.parseBoolean(pass);
         source = Paths.get(source).normalize().toAbsolutePath().toString();
         logParameters();
@@ -87,7 +87,7 @@ public class JamalMojo extends AbstractMojo {
 
         try {
             final var output = transformer.transform(inputPath);
-            log.info(String.format(":: '%s' -> '%s'", inputPath, output));
+            LOG.info(String.format(":: '%s' -> '%s'", inputPath, output));
             final String result;
             try (final var processor = new Processor(open, close)) {
                 processor.setLogger(JamalLogger::log);
@@ -122,7 +122,7 @@ public class JamalMojo extends AbstractMojo {
         var sw = new StringWriter();
         var out = new PrintWriter(sw);
         e.printStackTrace(out);
-        Arrays.stream(sw.toString().split("\n")).forEach(log::error);
+        Arrays.stream(sw.toString().split("\n")).forEach(LOG::error);
     }
 
     /**
@@ -144,9 +144,9 @@ public class JamalMojo extends AbstractMojo {
     }
 
     private void logParameters() {
-        log.info("    open      = " + open);
-        log.info("    close     = " + close);
-        log.info("    transform = " + transform);
-        log.info("    pass      = " + passBool);
+        LOG.info("    open      = " + open);
+        LOG.info("    close     = " + close);
+        LOG.info("    transform = " + transform);
+        LOG.info("    pass      = " + passBool);
     }
 }

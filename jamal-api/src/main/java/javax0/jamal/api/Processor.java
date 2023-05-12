@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
@@ -252,6 +253,10 @@ public interface Processor extends AutoCloseable {
          */
         String get();
 
+        default byte[] getBinary() {
+            throw new RuntimeException("GetBinary for this hook is nNot implemented");
+        }
+
         /**
          * A singleton instance to be returned by FileReader implementations when the file reading is ignored by the
          * hook.
@@ -266,14 +271,24 @@ public interface Processor extends AutoCloseable {
             public String get() {
                 throw new IllegalStateException("IO hook result was IGNORE, nothing to \"get()\".");
             }
+
+            @Override
+            public byte[] getBinary() {
+                throw new IllegalStateException("IO hook result was IGNORE, nothing to \"getBinary()\".");
+            }
         };
     }
 
     class IOHookResultImpl implements IOHookResult {
         private final Type type;
-        private final String content;
+        private final byte[] content;
 
         public IOHookResultImpl(final Type type, final String content) {
+            this.type = type;
+            this.content = content == null ? null : content.getBytes(StandardCharsets.UTF_8);
+        }
+
+        public IOHookResultImpl(final Type type, final byte[] content) {
             this.type = type;
             this.content = content;
         }
@@ -285,6 +300,11 @@ public interface Processor extends AutoCloseable {
 
         @Override
         public String get() {
+            return new String(content, StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public byte[] getBinary() {
             return content;
         }
     }
@@ -295,7 +315,7 @@ public interface Processor extends AutoCloseable {
         }
 
         public IOHookResultDone() {
-            super(Type.DONE, null);
+            super(Type.DONE, (byte[]) null);
         }
     }
 
@@ -364,6 +384,9 @@ public interface Processor extends AutoCloseable {
          * @param content  the content of the file, which was read by the processor.
          */
         default void set(final String fileName, final String content) {
+        }
+
+        default void set(final String fileName, final byte[] content) {
         }
     }
 

@@ -113,6 +113,9 @@ public class MavenInput implements ResourceReader {
 
     @Override
     public String read(final String fileName, final boolean noCache) throws IOException {
+        return new String(readBinary(fileName, noCache), StandardCharsets.UTF_8);
+    }
+    public byte[] readBinary(final String fileName, final boolean noCache) throws IOException {
         try {
             final var coor = new ResourceCoordinates(fileName);
             final Set<Pom.DependencyScope> classifiers;
@@ -133,7 +136,7 @@ public class MavenInput implements ResourceReader {
                 try( final var  jarFile = new JarFile(file)){
                     final var entry = jarFile.getJarEntry(coor.fileName);
                     if (entry != null) {
-                        return new String(jarFile.getInputStream(entry).readAllBytes(), StandardCharsets.UTF_8);
+                        return jarFile.getInputStream(entry).readAllBytes();
                     }
                 }
             }

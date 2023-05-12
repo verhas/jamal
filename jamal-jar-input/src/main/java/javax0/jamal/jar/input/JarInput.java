@@ -70,13 +70,18 @@ public class JarInput implements ResourceReader {
 
     @Override
     public String read(final String fileName, final boolean noCache) throws IOException {
+        return new String(readBinary(fileName, noCache), StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public byte[] readBinary(final String fileName, final boolean noCache) throws IOException {
         try {
             final var coor = new ResourceCoordinates(fileName);
 
             try (final var jarFile = new JarFile(coor.jarFile)) {
                 final var entry = jarFile.getJarEntry(coor.resourceName);
                 if (entry != null) {
-                    return new String(jarFile.getInputStream(entry).readAllBytes(), StandardCharsets.UTF_8);
+                    return jarFile.getInputStream(entry).readAllBytes();
                 }
             }
         } catch (Exception e) {

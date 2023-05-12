@@ -46,11 +46,19 @@ public interface ResourceReader extends ServiceLoaded {
      * is ignored.
      *
      * @param fileName the name of the resource with the prefix.
-     * @param noCache if {@code true} then the content of the resource should not be cached.
+     * @param noCache  if {@code true} then the content of the resource should not be cached.
      * @return the content of the resource as a string
      * @throws IOException if the resource cannot be read
      */
-    default String read(String fileName, boolean noCache) throws IOException{
+    default String read(String fileName, boolean noCache) throws IOException {
         return read(fileName);
+    }
+
+    default byte[] readBinary(String fileName, boolean nocache) throws IOException {
+        return readBinary(fileName);
+    }
+
+    default byte[] readBinary(String fileName) throws IOException {
+        throw new IOException("Binary resource reading is not supported by this resource reader.");
     }
 }

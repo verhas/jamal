@@ -19,7 +19,7 @@
                           {opens/engine/engine/jamal.snippet}
                           {exports/test/test.core/jamal.core}
                           {exports/test/test.examples/jamal.core}
-}
+    }
 
     {build {plugins  {@include ../plugins.jim}}}
 

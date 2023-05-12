@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -43,22 +45,45 @@ class CachedHttpInput {
      * Get the content of the URL downloading it or from the cache.
      *
      * @param urlString the URL
-     * @param noCache do not read the cache if this parameter is {@code true}. If there is cache configured the content
-     *                is still saved into the cache. It is only teh reading controlled by the parameter.
+     * @param noCache   do not read the cache if this parameter is {@code true}. If there is cache configured the content
+     *                  is still saved into the cache. It is only teh reading controlled by the parameter.
      * @return the content of the file in a String Builder.
      * @throws IOException if the file/URL cannot be read
      */
     public static StringBuilder getInput(final String urlString, final boolean noCache) throws IOException {
-        final var url = new URL(urlString);
-        final var entry = Cache.getEntry(url);
-        final StringBuilder content;
-        if (noCache || entry.isMiss() || (content = entry.getContent()) == null) {
-            return entry.save(readBufferedReader(getBufferedReader(url)));
-        } else {
-            return content;
+        try {
+            final URL url = new URI(urlString).toURL();
+            final var entry = Cache.getEntry(url);
+            final StringBuilder content;
+            if (noCache || entry.isMiss() || (content = entry.getContent()) == null) {
+                return entry.save(readBufferedReader(getBufferedReader(url)));
+            } else {
+                return content;
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
+    public static byte[] getBinaryContent(final String urlString, final boolean noCache) throws IOException {
+        try {
+            final URL url = new URI(urlString).toURL();
+            final var entry = Cache.getEntry(url);
+            final byte[] content;
+            if (noCache || entry.isMiss() || (content = entry.getBinaryContent()) == null) {
+                return entry.save(readURL(url));
+            } else {
+                return content;
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    static byte[] readURL(URL url) throws IOException {
+        return getHttpURLConnection(url).getInputStream().readAllBytes();
+    }
 
     /**
      * Read from the reader and return the lines
@@ -87,6 +112,12 @@ class CachedHttpInput {
      * @throws IOException if the response is not OK
      */
     private static BufferedReader getBufferedReader(URL url) throws IOException {
+        final HttpURLConnection con = getHttpURLConnection(url);
+        return new HttpBufferedReader(
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8), con);
+    }
+
+    private static HttpURLConnection getHttpURLConnection(URL url) throws IOException {
         final var con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setConnectTimeout(CONNECT_TIMEOUT);
@@ -96,8 +127,7 @@ class CachedHttpInput {
         if (status != 200) {
             throw new IOException("GET url '" + url + "' returned " + status);
         }
-        return new HttpBufferedReader(
-                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8), con);
+        return con;
     }
 
     /**

@@ -27,4 +27,8 @@ public class FileInput {
                     .toString();
         }
     }
+
+    static byte[] getBinaryInput(String fileName) throws IOException {
+            return Files.readAllBytes(Paths.get(fileName));
+    }
 }

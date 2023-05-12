@@ -2,12 +2,7 @@ package javax0.jamal.tools;
 
 import javax0.jamal.api.EnvironmentVariables;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -129,6 +124,28 @@ public class Cache {
             }
         }
 
+        public byte[] getBinaryContent() {
+            try {
+                assertPropertiesAreLoaded();
+                if (file.exists()) {
+                    properties.put("read", "" + System.currentTimeMillis());
+                    properties.put("read_formatted", now());
+                    properties.put("count", "" + (Integer.parseInt(Optional.ofNullable((String) properties.get("count")).orElse("0")) + 1));
+                    saveProperties();
+                    final var buffer = new ByteArrayOutputStream();
+                    try (final var is = new FileInputStream(file)) {
+                        is.transferTo(buffer);
+                        buffer.close();
+                        return buffer.toByteArray();
+                    }
+                } else {
+                    return null;
+                }
+            } catch (IOException ioex) {
+                return null;
+            }
+        }
+
         public String getProperty(String key) {
             try {
                 assertPropertiesAreLoaded();
@@ -189,7 +206,7 @@ public class Cache {
         /**
          * Save the given content into a cache file. The saving may fail. In that case the failure will be silent and
          * does not throw an exception. This is designed that way not to prevent operation in case of a wrongly
-         * configured cache. In that case the file will be downloaded each time instead of using the cache, but Jamal
+         * configured cache. In that case, the file will be downloaded each time instead of using the cache, but Jamal
          * will still work.
          *
          * @param content to be saved into the cache file
@@ -197,6 +214,10 @@ public class Cache {
          */
         @SafeVarargs
         public final void save(String content, Map<String, String>... maps) {
+            save(content.getBytes(StandardCharsets.UTF_8), maps);
+        }
+
+        public final byte[] save(byte[] content, Map<String, String>... maps) {
             if (cacheExists()) {
                 try {
                     assertPropertiesAreLoaded();
@@ -209,11 +230,12 @@ public class Cache {
                     //noinspection ResultOfMethodCallIgnored
                     file.getParentFile().mkdirs();
                     try (final var fos = new FileOutputStream(file)) {
-                        fos.write(content.getBytes(StandardCharsets.UTF_8));
+                        fos.write(content);
                     }
                 } catch (IOException ignore) {
                 }
             }
+            return content;
         }
 
         /**

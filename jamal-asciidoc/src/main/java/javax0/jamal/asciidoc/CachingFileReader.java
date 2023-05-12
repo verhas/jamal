@@ -57,6 +57,12 @@ public class CachingFileReader implements Processor.FileReader {
         }
     }
 
+    public void set(final String fileName, final byte[] content) {
+        if (!off) {
+            files.put(fileName, Md5Calculator.md5(content));
+        }
+    }
+
     /**
      * @param fileName the original name of the file
      * @return {@link Processor.IOHookResult#IGNORE} signalling, that we did not read the file, the next on the hook

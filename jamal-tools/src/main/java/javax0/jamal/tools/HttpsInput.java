@@ -3,9 +3,6 @@ package javax0.jamal.tools;
 import javax0.jamal.api.ResourceReader;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 
 public class HttpsInput implements ResourceReader {
     private static final String RESOURCE_PREFIX = "https:";
@@ -24,7 +21,7 @@ public class HttpsInput implements ResourceReader {
 
     @Override
     public String read(String fileName) throws IOException {
-        return read(fileName,true);
+        return read(fileName, true);
     }
 
     /**
@@ -36,6 +33,11 @@ public class HttpsInput implements ResourceReader {
      */
     @Override
     public String read(String fileName, boolean noCache) throws IOException {
-        return CachedHttpInput.getInput(fileName,noCache).toString();
+        return CachedHttpInput.getInput(fileName, noCache).toString();
+    }
+
+    @Override
+    public byte[] readBinary(String fileName, boolean noCache) throws IOException {
+        return CachedHttpInput.getBinaryContent(fileName, noCache);
     }
 }

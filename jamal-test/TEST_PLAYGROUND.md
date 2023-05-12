@@ -6,13 +6,12 @@
 ###### H6
 
 Alternatively, for H1 and H2, an underline-ish style:
-,mn
-Alt-H1
-======
 
+,mn
 
 Alt-H2
 ------
+
 Emphasis, aka italics, with *asterisks* or _underscores_.
 
 Strong emphasis, aka bold, with **asterisks** or __underscores__.
