@@ -19,9 +19,9 @@ Sun Bug report ID `9074818` was assigned to this issue.
 Probably they will simply ignore this as the issue is with the Maven plugin.
 https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
-* `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.0.1` 
+* `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.1.0` 
 
-* `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.5.0` 
+* `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.6.0` 
 
 * `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-5` 
 
@@ -31,7 +31,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.0.0` 
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.1.0` 
 
 * `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.2.1` 
 
@@ -39,7 +39,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.5.0` 
 
-* `OK`  `JUPITER_VERSION` `5.9.3` 
+* `OK`  `JUPITER_VERSION` `5.10.0-M1` 
 
 * `OK`  `MOCKITO_VERSION` `5.3.1` 
 
@@ -63,11 +63,13 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_DOWNLOADER` `1.1.0` 
 
-* `OK`  `SOURCE_BUDDY` `2.3.0` 
+* `OK`  `SOURCE_BUDDY` `2.4.0` 
 
 * `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-5` 
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.1.1` 
+
+* `OK`  `ASM_VERSION` `9.5` 
 
 * `??` `PLANTUML_VERSION` has to be checked manually from link:https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml[`https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml`].
 The `maven-metadata.xml` for this artifact is wrong.

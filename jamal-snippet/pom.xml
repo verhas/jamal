@@ -109,5 +109,10 @@
             <artifactId>refi</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.5</version>
+        </dependency>
     </dependencies>
 </project>

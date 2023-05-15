@@ -25,6 +25,7 @@
         {dependency|com.javax0.javaLex|javaLex|{JAVA_LEX}}
         {dependency|com.javax0.sourcebuddy|SourceBuddy|{SOURCE_BUDDY}}
         {dependency|com.javax0|refi|{REFI}}
+        {dependency|org.ow2.asm|asm|{ASM_VERSION}}
     }
 {end project}
 {@xmlFormat}

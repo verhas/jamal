@@ -136,6 +136,7 @@
         {dependency|com.javax0.mavenDownload|mavenDownloader|{MAVEN_DOWNLOADER}}
         {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}|test}
         {dependency|com.javax0|refi|{REFI}}
+        {dependency|org.ow2.asm|asm|{ASM_VERSION}}
         }}
 
     {profiles|

@@ -1,12 +1,9 @@
-{%@comment fromFile%}
-what is happening here
+{%@comment %}
 
-`{%@references file="habakukk.jrf" holder="habakukk"%}`
-{%@ref a > habakukk%}
-{%a%}
-{%@define a=this is a%}
-{%@import imported.jim%}
-{%a%}
+This is a sample asciidoc file that references a sample snippet from snips.sh
 
-{%@ref b > habakukk%}
- macros included in the cross reference: {%habakukk%}
+[source,tetx]
+----
+{%@include [verbatim] https://snips.sh/f/Xoc2u5J6pT?r=1%}
+----
+

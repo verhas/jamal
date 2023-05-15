@@ -1,14 +1,10 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Closer;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.javalex.JavaSourceDiff;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -20,12 +16,13 @@ public class JavaSourceInsert implements Macro {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var file = Params.<String>holder(null, "to", "file", "into");
         final var segment = Params.<String>holder("segment", "at", "id").orElseNull();
-        Scan.using(processor).from(this).firstLine().keys(file, segment).parse(in);
+        final var update = Params.<Boolean>holder(null, "check", "checkUpdate", "update", "updateOnly").asBoolean();
+        Scan.using(processor).from(this).firstLine().keys(file, segment, update).parse(in);
         if (in.isEmpty()) {
-            processor.deferredClose(new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition()));
+            processor.deferredClose(new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.get()));
             return "";
         } else {
-            try (final var closer = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition())) {
+            try (final var closer = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.get())) {
                 closer.set(in);
                 closer.set(processor);
             }
@@ -46,10 +43,13 @@ public class JavaSourceInsert implements Macro {
         private Input output;
         private Processor processor;
 
-        private JavaSourceInsertCloser(final String file, final String segment, final Position pos) {
+        private final boolean update;
+
+        private JavaSourceInsertCloser(final String file, final String segment, final Position pos, boolean update) {
             this.file = file;
             this.segment = segment;
             this.pos = pos;
+            this.update = update;
         }
 
         private static final Pattern segmentStartPattern = Pattern.compile("^\\s*//\\s*<\\s*editor-fold(.*>)");
@@ -58,7 +58,8 @@ public class JavaSourceInsert implements Macro {
         @Override
         public void close() throws BadSyntax {
             final String fileName = FileTools.absolute(pos.file, file);
-            final var source = FileTools.getFileContent(fileName, processor).split("\n", -1);
+            final var originalContent = FileTools.getFileContent(fileName, processor);
+            final var source = originalContent.split("\n", -1);
             final var outlines = new ArrayList<String>(source.length);
             boolean inSegment = false;
             boolean segmentAdded = false;
@@ -93,7 +94,13 @@ public class JavaSourceInsert implements Macro {
             }
             BadSyntax.when(inSegment, "The segment " + segment + " was not closed in the file " + file + ".");
             BadSyntax.when(!segmentAdded, "The segment " + segment + " was not found in the file " + file + ".");
-            FileTools.writeFileContent(fileName, String.join("\n", outlines.toArray(String[]::new)), processor);
+            final var newContent = String.join("\n", outlines.toArray(String[]::new));
+            if (update) {
+                if (!new JavaSourceDiff().test(originalContent, newContent)) {
+                    return;
+                }
+            }
+            FileTools.writeFileContent(fileName, newContent, processor);
         }
 
         @Override

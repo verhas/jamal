@@ -1543,7 +1543,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1322:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1321:30
 ----
 
 
@@ -2917,7 +2917,7 @@ will result
 - SnipFile.java: 680 bytes
 - JavaMatcherBuilderMacros.java.jam: 1,855 bytes
 - TrimLines.java: 5,379 bytes
-- JavaSourceInsert.java: 4,685 bytes
+- JavaSourceInsert.java: 5,063 bytes
 - ThinXml.java: 8,792 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,687 bytes
@@ -3208,7 +3208,7 @@ will result in the output
 
 [source]
 ----
-2023-05-12 12:19:42
+2023-05-15 17:03:04
 ----
 
 
@@ -3993,7 +3993,7 @@ This is also the case when there is no parameter defined.
 
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
-The macro has two parameters:
+The macro has three parameters:
 
 * `file` is the name of the file where the segment is to be inserted.
   It is also aliased as `to` and `into`.
@@ -4002,8 +4002,21 @@ The macro has two parameters:
   It is also aliased as `id` and `at`.
   This parameter is optional and is not needed if there is only one segment in the file.
 
-The parameters are not enclosed.
+* `check`, `checkUpdate`, `update`, `updateOnly` will do an extra step before updating the file.
+It will do a lexical analysis on the original file and on the new version and compares the two.
+If they are the same on the Java lexical level ignoring differences in comments and white-space, then the file is not updated.
+
++
+This is useful not to ruin the already generated code when it was formatted and does not change other than that.
+The downside is that the comparison needs time and some memory.
+
+The parameters are not enclosed between any characters.
 They follow the macro name directly until the end of the line.
+
+[source]
+----
+{@java:insert update to="Sample.java" id="segment"}
+----
 
 The segment in the source file starts with a line
 
@@ -4019,14 +4032,14 @@ If the macro input is empty, then the file writing is deferred until the end of 
 In this case, the content of the whole output is going to be used.
 
 [NOTE]
-===
+====
 When the macro writes its' input into the file, you will most probably want to use `#` as macro character.
 That way, the input will be first processed.
 
 The suggested practice is to name the file `XYZ.java.jam` for code to be inserted into `XYZ.java`.
 Do not forget to add ``{%@comment nosave%}`` to the beginning of the file.
 This will prevent the Asciidoctor version of Jamal overwriting the Java file when editing the macros.
-===
+====
 
 [[String]]
 === xliii.String Macros

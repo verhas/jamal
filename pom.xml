@@ -158,7 +158,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.slf4j</groupId>
@@ -382,19 +382,19 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>5.9.3</version>
+                <version>5.10.0-M1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.9.3</version>
+                <version>5.10.0-M1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
-                <version>5.9.3</version>
+                <version>5.10.0-M1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -418,6 +418,11 @@
                 <artifactId>refi</artifactId>
                 <version>1.0.1</version>
             </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>9.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <profiles>
@@ -428,7 +433,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
