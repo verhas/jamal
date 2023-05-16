@@ -2928,9 +2928,13 @@ To do that, the macro has two parameters:
 {%@define NOPAREN=
 Since the macro does not use its input, the parameters can be specified in the macro call without enclosing them between parentheses.%}{%NOPAREN%}
 
+The macro will first try to compile the source files.
+It will try to load the classes from the class files if the compilation fails for any reason.
+
 Jamal may be running with a JDK that can provide a Java compiler instance for Java.
 This is the case when Jamal is executed from the command line, from a Maven extension, etc.
 Executing Jamal inside IntelliJ as an Asciidoctor plugin preprocessor may not provide a Java compiler.
+The compilation may also fail when there are external dependencies needed for the compilation.
 
 If there is no source location defined or there is no compiler available, then the macro will load the already compiled classes.
 In other cases, the macro will read the source files, compile them and load the classes for the macros to use.
@@ -2942,6 +2946,8 @@ On the other hand, when you use the macros for code generation, you may stick to
 In those situations, the compiled code, before the code generation, may be out of date or even unavailable when Jamal is executed as part of the compilation.
 
 When the classes are loaded form the compiled class files, it may happen that not all classes are loaded.
+For example, if a class extends a library class or interface, not provided as source code, then class loading will fail for that class.
+The other classes will, however, still be loaded, and the macros will be able to use them.
 
 This macro has a third option named `store`.
 When the classes are loaded they are stored in a user defined macro named `{%@snip LOADED_CLASSES%}`.
@@ -2959,7 +2965,7 @@ but not in
 * <<java:field,`java:field`>>
 
 The plural versions are used for code generation.
-The singular versions are used for formatting.
+The singular versions are used for formatting and will always use the classes in the executing JVM or those loaded to the default macro class store.
 
 [[java:classes]]
 ==== `java:classes`

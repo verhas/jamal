@@ -1543,7 +1543,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1321:30
+../jamal-snippet/README.adoc.jam:1322:30
 ----
 
 
@@ -2784,7 +2784,6 @@ will result
 - FilesMacro.java
 - Collect.java
 - SnipFile.java
-- JavaMatcherBuilderMacros.java.jam
 - TrimLines.java
 - JavaSourceInsert.java
 - ThinXml.java
@@ -2894,7 +2893,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,920 bytes
+- snippet: 1,888 bytes
 - JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
@@ -2915,7 +2914,6 @@ will result
 - FilesMacro.java: 8,162 bytes
 - Collect.java: 24,444 bytes
 - SnipFile.java: 680 bytes
-- JavaMatcherBuilderMacros.java.jam: 1,855 bytes
 - TrimLines.java: 5,379 bytes
 - JavaSourceInsert.java: 5,063 bytes
 - ThinXml.java: 8,792 bytes
@@ -2931,7 +2929,7 @@ will result
 - Numbers.java: 1,817 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 4,504 bytes
-- CompileJavaMacros.java: 17,253 bytes
+- CompileJavaMacros.java: 22,541 bytes
 - StringMacros.java: 7,379 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
@@ -3208,7 +3206,7 @@ will result in the output
 
 [source]
 ----
-2023-05-15 17:03:04
+2023-05-16 09:25:23
 ----
 
 
@@ -3834,9 +3832,13 @@ To do that, the macro has two parameters:
 
 Since the macro does not use its input, the parameters can be specified in the macro call without enclosing them between parentheses.
 
+The macro will first try to compile the source files.
+It will try to load the classes from the class files if the compilation fails for any reason.
+
 Jamal may be running with a JDK that can provide a Java compiler instance for Java.
 This is the case when Jamal is executed from the command line, from a Maven extension, etc.
 Executing Jamal inside IntelliJ as an Asciidoctor plugin preprocessor may not provide a Java compiler.
+The compilation may also fail when there are external dependencies needed for the compilation.
 
 If there is no source location defined or there is no compiler available, then the macro will load the already compiled classes.
 In other cases, the macro will read the source files, compile them and load the classes for the macros to use.
@@ -3848,6 +3850,8 @@ On the other hand, when you use the macros for code generation, you may stick to
 In those situations, the compiled code, before the code generation, may be out of date or even unavailable when Jamal is executed as part of the compilation.
 
 When the classes are loaded form the compiled class files, it may happen that not all classes are loaded.
+For example, if a class extends a library class or interface, not provided as source code, then class loading will fail for that class.
+The other classes will, however, still be loaded, and the macros will be able to use them.
 
 This macro has a third option named `store`.
 When the classes are loaded they are stored in a user defined macro named `loadedClasses`.
@@ -3865,7 +3869,7 @@ but not in
 * <<java:field,`java:field`>>
 
 The plural versions are used for code generation.
-The singular versions are used for formatting.
+The singular versions are used for formatting and will always use the classes in the executing JVM or those loaded to the default macro class store.
 
 [[java:classes]]
 ==== `java:classes`

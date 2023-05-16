@@ -98,6 +98,8 @@ JAVA_LEX=1.0.2                             -- https://repo.maven.apache.org/mave
 REFI=1.0.1                                 -- https://repo.maven.apache.org/maven2/com/javax0/refi/
 SLF4J=2.0.7                                -- https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/
 ASM_VERSION=9.5                            -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm/
+ASM_TREE_VERSION=9.5                       -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/
+
 -- dependencies needed for the Maven extension (not the plugin)
 MAVEN_CORE_VERSION=4.0.0-alpha-5           -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
 PLEXUS_COMPONENT_METADATA_VERSION=2.1.1    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata

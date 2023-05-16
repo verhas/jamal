@@ -54,6 +54,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 {CHECK :MAVEN_CORE_VERSION:org/apache/maven/maven-core}
 {CHECK :PLEXUS_COMPONENT_METADATA_VERSION:org/codehaus/plexus/plexus-component-metadata}
 {CHECK :ASM_VERSION:org/ow2/asm/asm}
+{CHECK :ASM_TREE_VERSION:org/ow2/asm/asm-tree}
 
 * `??` `PLANTUML_VERSION` has to be checked manually from link:https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml[`https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml`].
 The `maven-metadata.xml` for this artifact is wrong.

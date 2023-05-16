@@ -137,6 +137,7 @@
         {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}|test}
         {dependency|com.javax0|refi|{REFI}}
         {dependency|org.ow2.asm|asm|{ASM_VERSION}}
+        {dependency|org.ow2.asm|asm-tree|{ASM_VERSION}}
         }}
 
     {profiles|

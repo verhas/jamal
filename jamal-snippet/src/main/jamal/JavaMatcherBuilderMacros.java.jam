@@ -1,5 +1,5 @@
 {%@comment nosave%}
-{%#java:insert to="JavaMatcherBuilderMacros.java" segment="stringType"
+{%#java:insert to="../java/javax0/jamal/snippet/JavaMatcherBuilderMacros.java" segment="stringType"
     /*
      * {%@rot13 Guvf vf trarengrq pbqr. QB ABG rqvg znahnyyl.%}
      */

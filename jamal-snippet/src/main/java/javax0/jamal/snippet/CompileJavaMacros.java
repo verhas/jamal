@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class CompileJavaMacros {
@@ -112,19 +113,80 @@ public class CompileJavaMacros {
 
                 final var compilerObject = Compiler.java();
                 if (sourceLocations != null && sourceLocations.length > 0 && compilerObject.canCompile()) {
-                    compileAndLoadFromSources(in, processor, storeName, sourceLocations, compilerObject);
-                } else if (classLocations != null && classLocations.length > 0) {
-                    loadFromCompiledCode(in, processor, storeName, classLocations, compilerObject);
-                } else {
-                    throw new BadSyntax("There is no location defined from which we could compile or load the Java code.");
+                    tryToCompileAndLoadFromSources(in, processor, storeName, sourceLocations, classLocations, compilerObject);
+                    return "";
                 }
+                tryToLoadFromCompiledCode(in, processor, storeName, classLocations, () -> new BadSyntax("There is no location defined from which we could compile or load the Java code."));
             } catch (Exception e) {
                 throw new BadSyntax(String.format("There was an exception while compiling Java sources at '%s'", in), e);
             }
             return "";
         }
 
-        private static void loadFromCompiledCode(Input in, Processor processor, Params.Param<String> storeName, String[] classLocations, Fluent.AddSource compilerObject) throws IOException, ClassNotFoundException, BadSyntax {
+        /**
+         * Try to load the classes from the compiled code.
+         *
+         * @param in                the input, used to get the reference for the BadSyntax exception if there is an error
+         * @param processor         the processor used to locate the files relative to the input reference
+         * @param storeName         the name of the macro where to store the result
+         * @param classLocations    the locations where the compiled classes are located
+         * @param exceptionSupplier the exception to throw if there is no location defined from which we could load the Java code
+         * @throws Exception if the files cannot be compiled or loaded, or some other error occurs
+         */
+        private static void tryToLoadFromCompiledCode(Input in, Processor processor,
+                                                      Params.Param<String> storeName,
+                                                      String[] classLocations,
+                                                      Supplier<Exception> exceptionSupplier) throws Exception {
+            if (classLocations != null && classLocations.length > 0) {
+                loadFromCompiledCode(in, processor, storeName, classLocations);
+            } else {
+                throw exceptionSupplier.get();
+            }
+        }
+
+        /**
+         * Try to compile the source code and load it from the compilation result.
+         * If there is an error during the compilation, then try to load the classes from the class locations.
+         *
+         * @param in              the input, used to get the reference for the BadSyntax exception if there is an error
+         * @param processor       the processor used to locate the files relative to the input reference
+         * @param storeName       the name of the macro where to store the result
+         * @param sourceLocations the locations where the source code is located
+         * @param classLocations  the locations where the compiled classes are located
+         * @param compilerObject  the compiler object that can compile the source code
+         * @throws Exception if the files cannot be compiled or loaded, or some other error occurs
+         */
+        private static void tryToCompileAndLoadFromSources(Input in,
+                                                           Processor processor,
+                                                           Params.Param<String> storeName,
+                                                           String[] sourceLocations,
+                                                           String[] classLocations,
+                                                           Fluent.AddSource compilerObject) throws Exception {
+            try {
+                compileAndLoadFromSources(in, processor, storeName, sourceLocations, compilerObject);
+            } catch (Exception e) {
+                tryToLoadFromCompiledCode(in, processor, storeName, classLocations, () -> e);
+            }
+        }
+
+        /**
+         * Load the classes from the compiled code.
+         *
+         * @param in             the input, used to get the reference for the BadSyntax exception if there is an error
+         * @param processor      the processor used to locate the files relative to the input reference
+         * @param storeName      the name of the macro where to store the result
+         * @param classLocations the locations where the compiled classes are located
+         * @param compilerObject the compiler object that can compile the source code
+         * @throws IOException            if the files cannot be loaded
+         * @throws ClassNotFoundException if some classes cannot be loaded
+         * @throws BadSyntax              if there is a NoClassDefFoundError, since this is an error, but in this case it should
+         *                                be handled more like an exception, it is converted to a BadSyntax exception
+         */
+        private static void loadFromCompiledCode(Input in,
+                                                 Processor processor,
+                                                 Params.Param<String> storeName,
+                                                 String[] classLocations) throws IOException, ClassNotFoundException, BadSyntax {
+            final var compilerObject = Compiler.java();
             final var dir0 = FileTools.absolute(in.getReference(), classLocations[0]);
             final var compiler = compilerObject.byteCode(Paths.get(dir0));
             for (int i = 1; i < classLocations.length; i++) {
@@ -134,12 +196,29 @@ public class CompileJavaMacros {
             try {
                 final var loaded = new Holder(compiler.load(Compiler.LoaderOption.SLOPPY));
                 processor.getRegister().global(new IdentifiedObjectHolder<>(loaded, storeName.get()));
-            }catch(NoClassDefFoundError e){
+            } catch (NoClassDefFoundError e) {
                 throw new BadSyntax(String.format("There was an exception while loading Java classes at '%s'", in), e);
             }
         }
 
-        private static void compileAndLoadFromSources(Input in, Processor processor, Params.Param<String> storeName, String[] sourceLocations, Fluent.AddSource compilerObject) throws IOException, ClassNotFoundException, Compiler.CompileException, BadSyntax {
+        /**
+         * Compile the source code and load it from the compilation result.
+         *
+         * @param in              the input, used to get the reference for the BadSyntax exception if there is an error
+         * @param processor       the processor used to locate the files relative to the input reference
+         * @param storeName       the name of the macro where to store the result
+         * @param sourceLocations the locations where the source code is located
+         * @param compilerObject  the compiler object that can compile the source code
+         * @throws IOException            if the files cannot be loaded
+         * @throws ClassNotFoundException if some classes cannot be loaded
+         * @throws BadSyntax              if there is a NoClassDefFoundError, since this is an error, but in this case it should
+         *                                be handled more like an exception, it is converted to a BadSyntax exception
+         */
+        private static void compileAndLoadFromSources(Input in,
+                                                      Processor processor,
+                                                      Params.Param<String> storeName,
+                                                      String[] sourceLocations,
+                                                      Fluent.AddSource compilerObject) throws IOException, ClassNotFoundException, Compiler.CompileException, BadSyntax {
             final var dir0 = FileTools.absolute(in.getReference(), sourceLocations[0]);
             final var compiler = compilerObject.from(Paths.get(dir0));
             for (int i = 1; i < sourceLocations.length; i++) {
