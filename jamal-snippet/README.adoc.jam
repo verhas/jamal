@@ -2920,10 +2920,14 @@ publicMethodMacro::evaluate(Input,Processor)
 This macro will read Java sources, compile them and make them available for the other macros.
 Think of this macro as a location declaration of the Java files documented.
 You can specify the location of the source code as well as the location of the compiled class files.
-To do that, the macro has two parameters:
+To do that, the macro has four parameters:
 
 * `src` is the location of the source files. It is also aliased as `source` and `sources`.
 * `class` is the location of the compiled class files. It is also aliased as `classes`.
+* `store` can specify the name of the macro holding the loaded classes.
+See details below.
+* `options` aliased as `compilerOptions` can specify the options passed to the Java compiler.
+You can use this parameter to pass options like `-cp` or `-classpath` to the compiler.
 
 {%@define NOPAREN=
 Since the macro does not use its input, the parameters can be specified in the macro call without enclosing them between parentheses.%}{%NOPAREN%}

@@ -103,7 +103,8 @@ public class CompileJavaMacros {
             final var storeName = storeNameParam();
             final var source = Params.<String>holder("source", "src", "sources").asString().orElseNull();
             final var classes = Params.<String>holder("class", "classes").asString().orElseNull();
-            Scan.using(processor).from(this).tillEnd().keys(storeName, source, classes).parse(in);
+            final var options = Params.<String>holder("options", "compilerOptions").asString().orElse("");
+            Scan.using(processor).from(this).tillEnd().keys(storeName, source, classes,options).parse(in);
             try {
                 final var sourceLocations = source.get() == null ? null : source.get().split(",");
                 final var classLocations = classes.get() == null ? null : classes.get().split(",");
@@ -111,14 +112,14 @@ public class CompileJavaMacros {
                                 (classLocations == null || classLocations.length == 0),
                         "There is no location defined to compile");
 
-                final var compilerObject = Compiler.java();
+                final Fluent.AddSource compilerObject = Compiler.java().options(options.get().trim().split("\\s+"));
                 if (sourceLocations != null && sourceLocations.length > 0 && compilerObject.canCompile()) {
                     tryToCompileAndLoadFromSources(in, processor, storeName, sourceLocations, classLocations, compilerObject);
                     return "";
                 }
                 tryToLoadFromCompiledCode(in, processor, storeName, classLocations, () -> new BadSyntax("There is no location defined from which we could compile or load the Java code."));
             } catch (Exception e) {
-                throw new BadSyntax(String.format("There was an exception while compiling Java sources at '%s'", in), e);
+                throw new BadSyntax("There was an exception while compiling Java sources.", e);
             }
             return "";
         }
@@ -138,7 +139,13 @@ public class CompileJavaMacros {
                                                       String[] classLocations,
                                                       Supplier<Exception> exceptionSupplier) throws Exception {
             if (classLocations != null && classLocations.length > 0) {
-                loadFromCompiledCode(in, processor, storeName, classLocations);
+                try {
+                    loadFromCompiledCode(in, processor, storeName, classLocations);
+                }catch (Exception e){
+                    final var ex = exceptionSupplier.get();
+                    ex.addSuppressed(e);
+                    throw ex;
+                }
             } else {
                 throw exceptionSupplier.get();
             }
@@ -218,14 +225,19 @@ public class CompileJavaMacros {
                                                       Processor processor,
                                                       Params.Param<String> storeName,
                                                       String[] sourceLocations,
-                                                      Fluent.AddSource compilerObject) throws IOException, ClassNotFoundException, Compiler.CompileException, BadSyntax {
+                                                      Fluent.AddSource compilerObject) throws IOException, ClassNotFoundException, BadSyntax {
             final var dir0 = FileTools.absolute(in.getReference(), sourceLocations[0]);
             final var compiler = compilerObject.from(Paths.get(dir0));
             for (int i = 1; i < sourceLocations.length; i++) {
                 final var dir = FileTools.absolute(in.getReference(), sourceLocations[i]);
                 compiler.from(Paths.get(dir));
             }
-            final var loaded = new Holder(compiler.compile().load());
+            final Holder loaded;
+            try {
+                loaded = new Holder(compiler.compile().load());
+            } catch (Compiler.CompileException e) {
+                throw new BadSyntax(String.format("There was a compiler exception + %s", e.getMessage()), e);
+            }
             processor.getRegister().global(new IdentifiedObjectHolder<>(loaded, storeName.get()));
         }
 

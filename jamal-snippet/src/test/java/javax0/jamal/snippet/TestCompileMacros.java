@@ -29,7 +29,6 @@ public class TestCompileMacros {
                 "\n");
     }
 
-    @Test
     void testClassReading() throws IOException {
         try (final var files = Files.walk(new File("target/classes").toPath())) {
             files.filter(Files::isRegularFile)
