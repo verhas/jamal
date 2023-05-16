@@ -117,6 +117,7 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:substring,`string:substring`>>
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
+... <<shell:var,`shell:var`>>
 .. <<snip_update,`snip:update`>>
 
 
@@ -1543,7 +1544,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1321:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1322:30
 ----
 
 
@@ -2815,6 +2816,7 @@ will result
 - Xml.java
 - CounterMacro.java
 - SnipList.java
+- ShellVar.java
 - XmlDocument.java
 - References.java
 - Java.java
@@ -2893,7 +2895,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,888 bytes
+- snippet: 1,920 bytes
 - JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
@@ -2945,6 +2947,7 @@ will result
 - Xml.java: 539 bytes
 - CounterMacro.java: 1,938 bytes
 - SnipList.java: 1,222 bytes
+- ShellVar.java: 3,599 bytes
 - XmlDocument.java: 5,671 bytes
 - References.java: 5,066 bytes
 - Java.java: 11,283 bytes
@@ -3206,7 +3209,7 @@ will result in the output
 
 [source]
 ----
-2023-05-16 11:22:06
+2023-05-16 17:08:28
 ----
 
 
@@ -4241,13 +4244,49 @@ Using either `left` or `right` without trim is an error.
 Chop off a substring from the start or from the end of the input.
 The parameters are:
 
-* `prefix`, `pre` or `start` can specify a string that the input may start with. If the input starts with this string it will be removed.
-* `postfix`, `post` or `end` can specify a string that the input may end with. If the input ends with this string it will be removed.
+* `prefix`, `pre` or `start` can specify a string that the input may start with. If the input starts with this string, it will be removed.
+* `postfix`, `post` or `end` can specify a string that the input may end with. If the input ends with this string, it will be removed.
 
 * `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
+[[shell:var]]
+=== xliv.`shell:var`
+
+This macro is a convenience tool replacing `$variable` and `pass:[${variable}]` sequences with the values of the variables.
+The values of the variables can be provided and looked up from
+
+* macro parameters in the string of the value of the parameter `variables`,
+* macros defined,
+* Java system variables,
+* environment variables,
+
+in this order.
+
+[source]
+----
+{@define A=value}
+{@shell:var $A}
+----
+
+results in
+
+[source]
+----
+value
+----
+
+
+The variable replacement is performed recursively.
+If there is a variable reference in the result, then it will be replaced again.
+Also, when the reference is `pass:[${string}]` formatted the `string` is first processed for variables.
+This processing is done 100 levels deep.
+If the macro detects a loop, then it will stop the processing and results in a `BadSyntax` exception.
+
+Although `$` is a valid character in a macro name, you cannot reference a macro that has a $ in its name.
+Also, the macro must not require any parameter.
+
 [[snip_update]]
-=== xliv.`snip:update`
+=== xlv.`snip:update`
 
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
