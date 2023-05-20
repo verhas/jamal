@@ -44,24 +44,29 @@ public class Exec implements Macro {
         // The pattern is a regular expression.
         // The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
         // It means that it is enough to provide a pattern that matches part of the OS name.
-        // For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
+        // For example, `windows` will match `Windows 10` and `Windows 7` but not `Linux`.
         // If the pattern is not provided, the execution will start on all operating systems.%}{%osOnly%}
         final var input = Params.holder(null, "input").asString();
         // defines the file name to be used as standard input for the new process.
-        // If it is not provided then the content of the macro will be used as input.
-        // When an `input` is defined the content of the macro will be ignored.
+        // If it is not provided, then the content of the macro will be used as input.
+        // When an `input` is defined, the content of the macro will be ignored.
         final var output = Params.holder(null, "output").asString();
         // defines the file name to be used as standard output for the new process.
-        // If it is not provided then the output will appear as the result of the macro.
-        // When an `output` is defined the result of the macro will be empty string.
+        // If it is not provided, then the output will appear as the result of the macro.
+        // When an `output` is defined, the result of the macro will be empty string.
         final var error = Params.holder(null, "error").asString();
         // defines the file name to be used as standard error for the new process.
-        // If it is not provided then the standard error will be used.
+        // If it is not provided, then the standard error will be used.
         final var command = Params.holder(null, "command").asString();
         // The name of the command to be executed.
         // This is not the name of the shell script or any executable.
-        // For security reason every executable should be configured via a system property, environment variable or in the `~/.jamal.setup.properties` file.
+        // For security reason, every executable should be configured via a system property, environment variable or in the `~/.jamal/settings.properties` file.
         // The command itself is the string value of the configuration property.
+        // The search for the variables first looks at the system properties, then the environment variables and finally in the settings file.
+        // The name for these is converted to follow the system property and environment variable conventions.
+        // It means that the name "MERMAID" will be searched as "mermaid" when looking in the configuration file or as a system property.
+        // (MERMAID is an example, replace it with any name.)
+        // Also underscore and dot characters are converted back and forth.
         final var arguments = Params.holder(null, "argument", "arguments").asList(String.class);
         // The arguments to be passed to the command.
         // This is a multivalued parameter.
@@ -69,19 +74,24 @@ public class Exec implements Macro {
         // This option can specify the environment variables to be passed to the command.
         // This option usually is a multi-line string, thus the use of the `"""` delimiter is recommended.
         // Each line of the configuration parameter can be
-        // * empty, in which case the line is ignored
-        // * a comment starting with the `#` character, in which case the line is ignored
-        // * a `key=value` pair, in which case the key is the name of the environment variable and the value is the value of the variable.
+        // ** empty, in which case the line is ignored
+        // ** a comment starting with the `#` character, in which case the line is ignored
+        // ** a `key=value` pair, in which case the key is the name of the environment variable and the value is the value of the variable.
+        //
+        // +
+        // These variables are available for the command, but not for the Jamal process.
+        // You cannot use this parameter to define the environment variable specifying the executable.
+        // It would be convenient, but at the same time, it would just wipe out all the security measures introduced with the configuration requirements.
         final var envReset = Params.holder(null, "envReset", "reset").asBoolean();
-        // This option can be used to reset the environment variables before the command is executed.
-        // Without these option the command will inherit the environment variables of the Jamal process and the defined environment variables are added to the current list.
+        // This option can be used to "reset" the environment variables before the command is executed.
+        // Without these options, the command will inherit the environment variables of the Jamal process, and the defined environment variables are added to the current list.
         final var cwd = Params.holder(null, "directory", "cwd", "curdir", "cd").asString();
         // Set the current working directory for the command.
-        // If this option is not provided then the current working directory of the Jamal process will be used.
+        // If this option is not provided, the current working directory of the Jamal process will be used.
         final var async = Params.holder(null, "async", "asynch", "asynchronous").asString();
-        // Using this option Jamal will not wait for the command to finish before continuing with the next macro.
-        // In this case the output cannot be used as the result of the macro.
-        // If this option is used the output of the macro will be empty string.
+        // Using this option, Jamal will not wait for the command to finish before continuing with the next macro.
+        // In this case, the output cannot be used as the result of the macro.
+        // If this option is used, the output of the macro will be empty string.
         // The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
         // This macro can later be used to wait for the process to finish.
         // Although technically the name is a user defined macro, you cannot use it as a conventional user defined macro.
@@ -91,7 +101,7 @@ public class Exec implements Macro {
         // If there is a user defined macro of the same name on the same level, an error will occur.
         final var wait = Params.holder(null, "wait", "waitMax", "timeOut").asInt();
         // {%@define wait=This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
-        // If the process does not finish in the specified time a BadSyntax exception will be thrown.%}{%wait%}
+        // If the process does not finish in the specified time, a BadSyntax exception will be thrown.%}{%wait%}
         // This option cannot be used together with the `async` option.
         final var destroy = Params.holder(null, "destroy", "kill").asBoolean();
         // {%@define destroy=This option can be used to destroy the process if it has not finished within the specified time.

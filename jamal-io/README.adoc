@@ -31,8 +31,8 @@ or as an alternative your macro file has to use the `maven:load` macro to load t
 {@maven:load com.javax0.jamal:jamal-io:2.1.0-SNAPSHOT}
 ----
 
-before using any macro from this package from the first time.
-Also note, that using the `maven:load` macro requires that you configure the `jamal-io` package as safe in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+before using any macro from this package for the first time.
+Also note, that using the `maven:load` macro requires that you configure the `jamal-io` package as safe in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
 
 
 Following that, you can use the macros
@@ -193,10 +193,10 @@ The rest of the macro will be used as the input text to the program, and Jamal w
 Note that it is not possible to execute an arbitrary program from Jamal.
 Anything you want to execute as a separate process has to be configured in the system.
 For security reason, the command specification is a symbolic name.
-The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
-The recommended way to configure the executable is to use the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
+The recommended way to configure the executable is to use the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
 
-For example, if you want to execute the Graphviz program, you can configure it in the `~/.jamal/setup.properties` file as:
+For example, if you want to execute the Graphviz program, you can configure it in the `~/.jamal/settings.properties` file as:
 
 [source]
 ----
@@ -221,24 +221,29 @@ The execution will only start if the operating system's name matches the pattern
 The pattern is a regular expression.
 The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
 It means that it is enough to provide a pattern that matches part of the OS name.
-For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
+For example, `windows` will match `Windows 10` and `Windows 7` but not `Linux`.
 If the pattern is not provided, the execution will start on all operating systems.
 *  `input`
 defines the file name to be used as standard input for the new process.
-If it is not provided then the content of the macro will be used as input.
-When an `input` is defined the content of the macro will be ignored.
+If it is not provided, then the content of the macro will be used as input.
+When an `input` is defined, the content of the macro will be ignored.
 *  `output`
 defines the file name to be used as standard output for the new process.
-If it is not provided then the output will appear as the result of the macro.
-When an `output` is defined the result of the macro will be empty string.
+If it is not provided, then the output will appear as the result of the macro.
+When an `output` is defined, the result of the macro will be empty string.
 *  `error`
 defines the file name to be used as standard error for the new process.
-If it is not provided then the standard error will be used.
+If it is not provided, then the standard error will be used.
 *  `command`
 The name of the command to be executed.
 This is not the name of the shell script or any executable.
-For security reason every executable should be configured via a system property, environment variable or in the `~/.jamal.setup.properties` file.
+For security reason, every executable should be configured via a system property, environment variable or in the `~/.jamal/settings.properties` file.
 The command itself is the string value of the configuration property.
+The search for the variables first looks at the system properties, then the environment variables and finally in the settings file.
+The name for these is converted to follow the system property and environment variable conventions.
+It means that the name `MERMAID` will be searched as `mermaid` when looking in the configuration file or as a system property.
+(MERMAID is an example, replace it with any name.)
+Also underscore and dot characters are converted back and forth.
 *  `argument`, `arguments`
 The arguments to be passed to the command.
 This is a multivalued parameter.
@@ -246,19 +251,24 @@ This is a multivalued parameter.
 This option can specify the environment variables to be passed to the command.
 This option usually is a multi-line string, thus the use of the `"""` delimiter is recommended.
 Each line of the configuration parameter can be
-* empty, in which case the line is ignored
-* a comment starting with the `#` character, in which case the line is ignored
-* a `key=value` pair, in which case the key is the name of the environment variable and the value is the value of the variable.
+** empty, in which case the line is ignored
+** a comment starting with the `#` character, in which case the line is ignored
+** a `key=value` pair, in which case the key is the name of the environment variable and the value is the value of the variable.
+
++
+These variables are available for the command, but not for the Jamal process.
+You cannot use this parameter to define the environment variable specifying the executable.
+It would be convenient, but at the same time, it would just wipe out all the security measures introduced with the configuration requirements.
 *  `envReset`, `reset`
-This option can be used to reset the environment variables before the command is executed.
-Without these option the command will inherit the environment variables of the Jamal process and the defined environment variables are added to the current list.
+This option can be used to `reset` the environment variables before the command is executed.
+Without these options, the command will inherit the environment variables of the Jamal process, and the defined environment variables are added to the current list.
 *  `directory`, `cwd`, `curdir`, `cd`
 Set the current working directory for the command.
-If this option is not provided then the current working directory of the Jamal process will be used.
+If this option is not provided, the current working directory of the Jamal process will be used.
 *  `async`, `asynch`, `asynchronous`
-Using this option Jamal will not wait for the command to finish before continuing with the next macro.
-In this case the output cannot be used as the result of the macro.
-If this option is used the output of the macro will be empty string.
+Using this option, Jamal will not wait for the command to finish before continuing with the next macro.
+In this case, the output cannot be used as the result of the macro.
+If this option is used, the output of the macro will be empty string.
 The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
 This macro can later be used to wait for the process to finish.
 Although technically the name is a user defined macro, you cannot use it as a conventional user defined macro.
@@ -268,7 +278,7 @@ The exec macro handles the name as the core built-in macro `define` when a `!` i
 If there is a user defined macro of the same name on the same level, an error will occur.
 *  `wait`, `waitMax`, `timeOut`
 This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
-If the process does not finish in the specified time a BadSyntax exception will be thrown.
+If the process does not finish in the specified time, a BadSyntax exception will be thrown.
 This option cannot be used together with the `async` option.
 *  `destroy`, `kill`
 This option can be used to destroy the process if it has not finished within the specified time.
@@ -288,7 +298,7 @@ Note that all these options are technically aliases.
 It means that you cannot use a user defined macro to specify their values.
 They all have to be specified in the first line of the macro.
 
-}
+
 
 
 
@@ -308,7 +318,7 @@ When Jamal looks for some configuration it looks at the
 
 * environment variables
 
-* `~/.jamal.setup.(properties|xml)`
+* `~/.jamal/settings.(properties|xml)`
 
 whichever it finds first.
 The key given is used as is in the case of the environment variables.
@@ -460,7 +470,7 @@ The Jamal processing of the document runs as part of the unit test to ensure tha
 In this setup you may face the issue that Graphviz is not installed on the continous intergration server.
 The lack of the application will break the build, since Jamal cannot run the external process.
 As a workaround you can add the output of Graphviz to the source control and use the option `optional`.
-When you build your code on your local system Graphiz is available, configured in your `~/.jamal/setup.properties` and works.
+When you build your code on your local system Graphiz is available, configured in your `~/.jamal/settings.properties` and works.
 Whenever you change the graph description in your documentation file, the SVG or PNG of the graph will follow during the build.
 When the code is comitted to the CVS server the integration server kicks-in, runs the build.
 The build will see that the Graphviz application is not configured and will ignore the external process.
@@ -514,7 +524,7 @@ The execution will only start if the operating system's name matches the pattern
 The pattern is a regular expression.
 The pattern is matched against the operating system's name using the Java pattern matching `find()` method.
 It means that it is enough to provide a pattern that matches part of the OS name.
-For example `windows` will match `windows 10` and `windows 7` but not `Linux`.
+For example, `windows` will match `Windows 10` and `Windows 7` but not `Linux`.
 If the pattern is not provided, the execution will start on all operating systems.
 *  `async`, `asynch`, `asynchronous`, `id`, `name`
 This option should refer to the name, which was specified in the macro `io:exec`.
@@ -523,7 +533,7 @@ Note that this option has two extra aliases, that do not exist in the macro `exe
 These are `id` and `name`.
 *  `wait`, `waitMax`, `timeOut`
 This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
-If the process does not finish in the specified time a BadSyntax exception will be thrown.
+If the process does not finish in the specified time, a BadSyntax exception will be thrown.
 If this option is not present the macro will wait for the process to finish without time limit.
 *  `destroy`, `kill`
 This option can be used to destroy the process if it has not finished within the specified time.
@@ -562,4 +572,3 @@ exec -> sleep
 
 
 ----
-

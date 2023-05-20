@@ -65,7 +65,7 @@ public class JamalMain {
             System.out.println("Usage: jamal [options] input output\n" +
                     // snippet command_options_help
                     "  -help                      help\n" +
-                    "  -shcnf                     show the configuration values from ~/.jamal/setup.(properties|xml)\n" +
+                    "  -shcnf                     show the configuration values from ~/.jamal/settings.(properties|xml)\n" +
                     "  -version                   display version\n" +
                     "  -verbose                   print out the conversions\n" +
                     "  -open=<macroOpen>          the macro opening string\n" +

@@ -84,9 +84,9 @@ The `regex` is used as the pattern and the replacement is the value of the optio
 {%OPT to=<replacement>%} replacement for the file name transformation.
 See also the option `-from`.
 
-{%OPT docx%} process the input as a DOCX, Microsoft Word file and also generate a Microsof Word document on the output.
+{%OPT docx%} process the input as a DOCX, Microsoft Word file and also generate a Microsoft Word document on the output.
 
-{%OPT shcnf%} show the configuration values from the `~/.jamal/setup.properties`, or from the `~/.jamal/setup.xml` file, whichever exists.
+{%OPT shcnf%} show the configuration values from the `~/.jamal/settings.properties`, or from the `~/.jamal/settings.xml` file, whichever exists.
 
 {%#assert:intEquals/{%optionCounter last%}/{%NR_OF_OPTIONS%}/There is a discrepancy between the number of optioins documented ({%optionCounter last%}) and the number of options ({%NR_OF_OPTIONS%})%}
 

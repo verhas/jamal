@@ -39,8 +39,8 @@ or as an alternative your macro file has to use the `maven:load` macro to load t
 {%sample/
 {@maven:load com.javax0.jamal:jamal-io:{%VERSION%}}%}
 
-before using any macro from this package from the first time.
-Also note, that using the `maven:load` macro requires that you configure the `jamal-io` package as safe in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+before using any macro from this package for the first time.
+Also note, that using the `maven:load` macro requires that you configure the `jamal-io` package as safe in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
 
 
 Following that, you can use the macros
@@ -177,10 +177,10 @@ The rest of the macro will be used as the input text to the program, and Jamal w
 Note that it is not possible to execute an arbitrary program from Jamal.
 Anything you want to execute as a separate process has to be configured in the system.
 For security reason, the command specification is a symbolic name.
-The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
-The recommended way to configure the executable is to use the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
+The recommended way to configure the executable is to use the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
 
-For example, if you want to execute the Graphviz program, you can configure it in the `~/.jamal/setup.properties` file as:
+For example, if you want to execute the Graphviz program, you can configure it in the `~/.jamal/settings.properties` file as:
 
 [source]
 ----
@@ -208,7 +208,7 @@ Note that all these options are technically aliases.
 It means that you cannot use a user defined macro to specify their values.
 They all have to be specified in the first line of the macro.%}{%ALIAS$ONLY%}
 
-{%@snip:collect asciidoc from=src/test/java/javax0/jamal/io/TestExec.java%}}
+{%@snip:collect asciidoc from=src/test/java/javax0/jamal/io/TestExec.java%}
 
 {%@define example($x)=[source]
 ----
@@ -239,7 +239,7 @@ When Jamal looks for some configuration it looks at the
 
 * environment variables
 
-* `~/.jamal.setup.(properties|xml)`
+* `~/.jamal/settings.(properties|xml)`
 
 whichever it finds first.
 The key given is used as is in the case of the environment variables.
@@ -341,7 +341,7 @@ The Jamal processing of the document runs as part of the unit test to ensure tha
 In this setup you may face the issue that Graphviz is not installed on the continous intergration server.
 The lack of the application will break the build, since Jamal cannot run the external process.
 As a workaround you can add the output of Graphviz to the source control and use the option `optional`.
-When you build your code on your local system Graphiz is available, configured in your `~/.jamal/setup.properties` and works.
+When you build your code on your local system Graphiz is available, configured in your `~/.jamal/settings.properties` and works.
 Whenever you change the graph description in your documentation file, the SVG or PNG of the graph will follow during the build.
 When the code is comitted to the CVS server the integration server kicks-in, runs the build.
 The build will see that the Graphviz application is not configured and will ignore the external process.

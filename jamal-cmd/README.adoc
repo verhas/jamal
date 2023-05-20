@@ -79,10 +79,6 @@ The `regex` is used as the pattern and the replacement is the value of the optio
 * `-to=<replacement>`  replacement for the file name transformation.
 See also the option `-from`.
 
-* `-docx`  process the input as a DOCX, Microsoft Word file and also generate a Microsof Word document on the output.
+* `-docx`  process the input as a DOCX, Microsoft Word file and also generate a Microsoft Word document on the output.
 
-* `-shcnf`  show the configuration values from the `~/.jamal/setup.properties`, or from the `~/.jamal/setup.xml` file, whichever exists.
-
-
-
-
+* `-shcnf`  show the configuration values from the `~/.jamal/settings.properties`, or from the `~/.jamal/settings.xml` file, whichever exists.
