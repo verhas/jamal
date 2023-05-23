@@ -5,6 +5,36 @@
 
 
 
+== https://github.com/verhas/jamal/tree/2.1.0[2.1.0]
+
+* Java:insert macro can insert a macro result into a Java source file between
+
+  <editor-fold id="">
+  </editor-fold>
++
+lines.
+
+* Macro `java:sources` can load the sources and compile as well, as from the compiled classes so that other macros can reference.
+Macros `java:classes`, `java:methods`, `java:fields` can be used to list the classes, methods, and the fields of a class.
+
+* Jamal Maven plugin was rewritten and has new functionality.
+
+* Jamalize can be used to install asciidoctor library files for IntelliJ.
+
+* `shell:var` can replace `$xxx` and `${xxx}` references.
+
+* `io:exec` was extended to support multi-line command and arguments.
+
+
+== https://github.com/verhas/jamal/tree/2.0.2[2.0.2]
+
+Experimental feature with a snippet collection from Java sources without specifying snippets in the code.
+
+== https://github.com/verhas/jamal/tree/2.0.1[2.0.1]
+
+Bug fix release.
+A bug driving the `prog` macro into infinite loop was fixed.
+
 == https://github.com/verhas/jamal/tree/2.0.0[2.0.0]
 
 * The extensions plugin was removed from the Maven extension dependency and from the asciidoc extension.

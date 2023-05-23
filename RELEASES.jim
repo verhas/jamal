@@ -18,3 +18,9 @@ Before that it was a separate town.
 It is district XXI now.
 
 {@define RELEASE:CSEPEL=2.0.1}
+
+District XXIII is Soroksar.
+
+{@define RELEASE:SOROKSAR=2.0.2}
+
+{@define RELEASE:BERLIN=2.1.0}

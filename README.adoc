@@ -16,6 +16,10 @@ image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.sv
 
 
 
+NOTE: This is the latest development documentation.
+This is a SNAPSHOT version (2.1.1-SNAPSHOT).
+To see the documentation of a release you have to follow the link in the documentation link:RELEASES.adoc[`RELEASES.adoc`]
+
 
 Jamal is a complex text processor with a wide variety of possible use.
 The first version of Jamal was developed 20 years ago in Perl.
@@ -224,7 +228,7 @@ Then you can issue the command:
 
 [source]
 ----
-mvn com.javax0.jamal:jamal-maven-plugin:2.1.0:jamal
+mvn com.javax0.jamal:jamal-maven-plugin:2.1.1-SNAPSHOT:jamal
 ----
 
 if you have a `pom.xml` file in your directory.
@@ -253,7 +257,7 @@ To start Jamal on the command line, you need a command:
 
 [source,bash]
 ----
-java -cp $HOME/.m2/repository/com/javax0/jamal/jamal-engine/2.1.0/jamal-engine-2.1.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-api/2.1.0/jamal-api-2.1.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-tools/2.1.0/jamal-tools-2.1.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-core/2.1.0/jamal-core-2.1.0.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-cmd/2.1.0/jamal-cmd-2.1.0.jar: javax0.jamal.cmd.JamalMain options
+java -cp $HOME/.m2/repository/com/javax0/jamal/jamal-engine/2.1.1-SNAPSHOT/jamal-engine-2.1.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-api/2.1.1-SNAPSHOT/jamal-api-2.1.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-tools/2.1.1-SNAPSHOT/jamal-tools-2.1.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-core/2.1.1-SNAPSHOT/jamal-core-2.1.1-SNAPSHOT.jar:$HOME/.m2/repository/com/javax0/jamal/jamal-cmd/2.1.1-SNAPSHOT/jamal-cmd-2.1.1-SNAPSHOT.jar: javax0.jamal.cmd.JamalMain options
 ----
 
 It is not a user-friendly approach.
@@ -265,7 +269,7 @@ For this reason, there is a file, `jamal.sh` that has the following content:
 #!/usr/bin/env bash
 MODULES="api engine core tools cmd"
 REPO=$HOME/.m2/repository/com/javax0/jamal
-VERSION=2.1.0
+VERSION=2.1.1-SNAPSHOT
 
 for MODULE in $MODULES ; do
   if ! test -f $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar;, then
@@ -4250,7 +4254,7 @@ will result
 
 [source]
 ----
-The current version 2.1 is older than the required version. It has to be newer.
+The current version 2.1.1-SNAPSHOT is older than the required version. It has to be newer.
 ----
 
 
@@ -4272,14 +4276,14 @@ will result in
 
 [source]
 ----
-This documentation is about the version 2.1.0
+This documentation is about the version 2.1.1-SNAPSHOT
 ----
 
 
 NOTE: In the documentation of Jamal (this document and other modules) we do not use this macro.
 The documentation is about the version of Jamal, which is the source code and not the one running.
 They may be different.
-The version of the documented code is in the `pom.xml` file: `2.1.0`.
+The version of the documented code is in the `pom.xml` file: `2.1.1-SNAPSHOT`.
 
 [[macro]]
 ==== xxv. `macro`
@@ -4843,7 +4847,7 @@ For example, to add the pomlib library JAR to the classpath you can use the foll
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1-SNAPSHOT</version>
     <executions>
         <execution>
             <id>execution</id>
@@ -5050,7 +5054,7 @@ If you use Maven, you can simply have
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-engine</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1-SNAPSHOT</version>
 </dependency>
 ----
 

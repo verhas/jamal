@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal json</name>
     <artifactId>jamal-json</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>2.1.0</version>
+        <version>2.1.1-SNAPSHOT</version>
     </parent>
     <description>json module for Jamal</description>
     <build>
