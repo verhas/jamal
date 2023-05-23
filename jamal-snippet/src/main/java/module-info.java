@@ -105,6 +105,7 @@ module jamal.snippet {
             CompileJavaMacros.ListClasses,
             CompileJavaMacros.ListMethods,
             CompileJavaMacros.ListFields,
-            ShellVar
+            ShellVar,
+            HashCode
             ;
 }

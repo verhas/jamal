@@ -1,3 +1,4 @@
+{%@comment fromFile%}\
 :imagesdir: images
 = image:logo.svg[width=100px] Jamal Macro Language
 //{%@rot13 QB ABG RQVG GUVF SVYR; GUVF VF TRARENGRQ SEBZ ERNQZR.nqbp.wnz%}
@@ -105,7 +106,7 @@ You can start Jamal processing
 
 * as a JavaDoc doclet letting you use Jamal macros in your JavaDoc documentation (including markdown), and
 
-* embedded into applications using a simple API, for example the Yamaledt JUnit 5 YAML test data source library.
+* embedded into applications using a simple API, For example, the Yamaledt JUnit 5 YAML test data source library.
 
 You can extend the set of built-in macros creating new macros in any JVM language.
 
@@ -216,6 +217,7 @@ Then we discuss the API that lets you embed the macro processing into your appli
 .. <<export,`export`>>
 .. <<options,`options`>>
 .. <<try,`try`>>
+.. <<catch,`catch`>>
 .. <<escape,`escape`>>
 .. <<require,`require`>>
 .. <<macro,`macro`>>
@@ -292,11 +294,11 @@ REPO=$HOME/.m2/repository/com/javax0/jamal
 VERSION={%VERSION%}
 
 for MODULE in $MODULES ; do
-  if ! test -f $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar; then
-    if command -v wget &>/dev/null; then
+  if ! test -f $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar;, then
+    if command -v wget &>/dev/null;, then
       wget --no-check-certificate https://repo1.maven.org/maven2/com/javax0/jamal/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar -O $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
     else
-      if command -v curl &>/dev/null; then
+      if command -v curl &>/dev/null;, then
         curl https://repo1.maven.org/maven2/com/javax0/jamal/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar -o $REPO/jamal-$MODULE/$VERSION/jamal-$MODULE-$VERSION.jar
       else
         echo "There is no curl nor wget available"
@@ -374,10 +376,10 @@ The first value is the regular expression, the second parameter is the replaceme
 These are the parameters that will be used in the Java method `inputFileName.replaceAll(a,b)` to calculate the output file name.
 The default value is `\.jam$` and an empty string.
 The default value will cause `replaceAll` to chop off the `.jam` extension from the end of the file.
-That way, for example `pom.xml.jam` will be converted to `pom.xml`.
+That way, For example, `pom.xml.jam` will be converted to `pom.xml`.
 
 * `-t` or `--target=<targetDirectory>` can specify the target directory where the output will be stored.
-If input files are under some subdirectories of the `<sourceDirectory>` then the same directory structure will be created for the output.
+If input files are under some subdirectories of the `<sourceDirectory>`, then the same directory structure will be created for the output.
 The default value is the current directory.
 
 * `-x` or `--regex` use regular expression for the `<include>` and for the `<exclude>` values.
@@ -426,8 +428,8 @@ NOTE: The possibility to start Jamal using JBang was developed for the version 1
 
 [NOTE]
 ====
-If you have used Jamal with jbang before then jbang will store its catalog file in the local cache.
-When you start Jamal using `jbang jamal@verhas ...` and you see an old version starting then delete the file
+If you have used Jamal with jbang before, then jbang will store its catalog file in the local cache.
+When you start Jamal using `jbang jamal@verhas ...` and you see an old version starting, then delete the file
 
 ```
 ~/.jbang/cache/urls/d917b991facb86b9860fa179df2c804fc2090cc76a83fb15b49f47cc2e885f7c/jbangstarter.java
@@ -634,7 +636,7 @@ When the name of a macro contains one or more  `:` characters, then the macro is
 Since this character can also be part of the macro's name, there must be a space before it.
 
 There are also some other rules that make it possible to use a space as separator character.
-When a macro has exactly one argument then the parsing follows special rules.
+When a macro has exactly one argument, then the parsing follows special rules.
 It is also possible to invoke a macro with more or less number of arguments than are defined using the option `lenient`.
 These are advanced topics and are detailed later.
 
@@ -680,7 +682,7 @@ title Macro Evaluation
 
 (*) --> "Macro Start String"
 
-if " # or @ character?" then
+if " # or @ character?", then
 -->[ #] "evaluate the\nmacro input"
 --> "evaluate built-in macro"
 else
@@ -723,7 +725,7 @@ will generate
 {%output%}
 
 Note that this is important to use the `@` character in front of the keyword `comment` to make it a real comment.
-If the macro character `#` is used, like `{#comment comment_text}` then the `comment_text` part will be evaluated.
+If the macro character `#` is used, like `{#comment comment_text}`, then the `comment_text` part will be evaluated.
 If there is some macro in the `comment_text` that modifies the evaluation state, then the modification will happen.
 For example, if the `comment_text` defines some global macro, then the defined macro can be used after the `comment` block.
 
@@ -756,7 +758,7 @@ Any user defined macro in this scope is going to be local, unless exported or ha
 
 It is recommended to use `begin` and `end` when the structure is complex, and it is more readable to use the `begin`, `end` macros than a simple `block`.
 To ensure that all `begin` has an `end` you can name the blocks.
-You can put an arbitrary string after the macro name `begin` and if you do then you have to repeat the same string after the macro name `end`.
+You can put an arbitrary string after the macro name `begin` and if you do, then you have to repeat the same string after the macro name `end`.
 The spaces from the beginning, and the end of the parameter are trimmed.
 
 {%sample/
@@ -774,7 +776,7 @@ will result
 First `Z` is defined to be the string `"1"` (without the quotes).
 Then we start a new scope, named `alma`.
 Inside this new scope we redefine the macro `Z` to be `2`.
-When we use `Z` writing `{Z}` then it will output `2` here.
+When we use `Z` writing `{Z}`, then it will output `2` here.
 We also define `S` to be `2` and we also <<export,`export`>> it.
 Exporting means that the definition will get to the surrounding scope.
 After that we close the scope named `alma`.
@@ -876,7 +878,7 @@ These practices can be absolutely okay so long as long they support the readabil
 Applying such practices may help to visually separate the macro arguments from the textual content of the macro body.
 
 From practice, we see that in case of longer macros using simple, argument names with one or only a few letters may lead to some error.
-For example the macro:
+For example, the macro:
 
 {%sample/
 {@define fox(x)=The brown fox jumps over the high x}{fox fence}
@@ -905,7 +907,7 @@ The macro parameter names inside the actual parameter values will NOT be replace
 For example:
 
 {%sample/
-{@define z(*a,*b,*c,*d)=When a *a can *b then *c can *d}
+{@define z(*a,*b,*c,*d)=When a *a can *b, then *c can *d}
 {z /leopard and a *c/run/fish/fly}
 %}
 
@@ -924,7 +926,7 @@ If you want to restrict the macro definitions to use only identifiers as symboli
 
 {%sample/
 {@options RestrictedDefineParameters}
-{@define z($a,$b,$c,$d)=When a $a can $b then $c can $d}
+{@define z($a,$b,$c,$d)=When a $a can $b, then $c can $d}
 {z /leopard and a $c/run/fish/fly}
 %}
 
@@ -992,14 +994,14 @@ When a user defined macro is evaluated, the result of the macro is evaluated aga
 This can be prevented using the <<verbatim,`verbatim`>> macro.
 You can also read more details on the macro evaluation order in the chapter <<verbatim,`verbatim`>>.
 
-If you use the `~` (tilde) character after the keyword `define` then the macro will be evaluated "verbatim" by default.
+If you use the `~` (tilde) character after the keyword `define`, then the macro will be evaluated "verbatim" by default.
 It means that the value of the user defined macro will not be evaluated like if it was used with the macro `verbatim`.
 For example:
 
 {%sample/
 {@define x=1966}
 {@define a={x}}
-{a} evaluates first to the macro `x` and then that evaluates to 1966
+{a} evaluates first to the macro `x` and, then that evaluates to 1966
 {@verbatim a} stops before the evaluation of the result of the macro and this way it is the same as
 {@define ~ a={x}}{a}
 %}
@@ -1024,7 +1026,7 @@ will result
 ====
 You cannot use `!` together wit the macro  `verbatim`.
 This is because the format `{!@verbatim ...}` is the same as simply `{...}` without the `!` and the `@verbatim`.
-On the other hand when the macro would almost always be used together with `verbatim` then it makes sense to define the macro to be a verbatim user defined macro.
+On the other hand when the macro would almost always be used together with `verbatim`, then it makes sense to define the macro to be a verbatim user defined macro.
 In the few cases when it would be used without `verbatim` you can use `!`.
 
 The macros in the module Yaml define the object structures read from the Yaml format as verbatim user defined macros.
@@ -1035,10 +1037,10 @@ To prevent this these Yaml data containing user defined macros are verbatim by d
 
 ===== Global Macros
 
-When the name of the macro contains at least one colon character `:` then the macro will be defined in the global scope.
+When the name of the macro contains at least one colon character `:`, then the macro will be defined in the global scope.
 Global scope is the top-level scope, and it means that a macro like that can be used everywhere in the text after it was defined.
 
-For example modifying a bit our example from the "<<begin, `begin` and `end`>>" section
+For example, modifying a bit our example from the "<<begin, `begin` and `end`>>" section
 
 {%sample/
 {@define A:Z=1}
@@ -1054,7 +1056,7 @@ will result
 In this case the macro `A:Z` is a global macro because it has a `:` in the name.
 
 It is also possible to define a user-defined macro to be global without `:` in the name.
-If the very first character of the name of the macro is `:` then this character is removed, but the macro is defined in the global scope.
+If the very first character of the name of the macro is `:`, then this character is removed, but the macro is defined in the global scope.
 Further modifying the example we get:
 
 {%sample/
@@ -1104,7 +1106,7 @@ which will result:
 
 NOTE: The <<try,`try`>> built-in macro is mainly for debugging purposes and returns the error message itself.
 
-If you automatically want to interpret all user defined macro reference if there was a `?` in front of them then you can use the option `emptyUndef`.
+If you automatically want to interpret all user defined macro reference if there was a `?` in front of them, then you can use the option `emptyUndef`.
 With this option there is no need for the `?` in front of the macro name, every undefined macro will evaluate to empty string.
 
 {%sample/
@@ -1120,7 +1122,7 @@ results
 When you define a macro it gets into the local scope unless you define it global.
 It is possible to export a macro after it was defined.
 Exporting a macro right after the definition is so common that the option `export` does the same.
-For example the following sample
+For example, the following sample
 
 {%sample/
 {#block
@@ -1141,7 +1143,7 @@ will result the output
 ===== Default macro
 
 In addition to having a `?` character or using the `try` macro, there is another possibility to avoid the error in case of an undefined macro.
-If the macro `default` is defined then it will be used instead of any undefined macro, even when the `?` character is used in front of the macro name.
+If the macro `default` is defined, then it will be used instead of any undefined macro, even when the `?` character is used in front of the macro name.
 
 Example:
 
@@ -1201,7 +1203,7 @@ If the number of the actual parameters is not the same as what the defined `defa
 Consider the use `{@options :lenient}` along with the definition of the `default` macro, or a default macro with optional arguments.
 
 Starting with the version 1.7.4 the macro `default` can have a special first parameter.
-If the first argument of the macro is either `$macro` or `$_` then this parameter will hold the name of the macro, which was not found.
+If the first argument of the macro is either `$macro` or `$_`, then this parameter will hold the name of the macro, which was not found.
 That way the `default` macro can use the name of the macro in its evaluation.
 
 Example:
@@ -1239,7 +1241,7 @@ If there are extra parameters, they will be ignored.
 The separator character cannot be an alphanumeric character (letter or digit, Unicode categories Lu, Ll, Lt, Lm, Lo, and Nd).
 Any other Unicode character can be used as a parameter separator character.
 
-If the user-defined macro has exactly one argument then there is no need to use a separator character.
+If the user-defined macro has exactly one argument, then there is no need to use a separator character.
 The sole parameter of the macro can start after the name of the macro at the first non-whitespace, alphanumeric character.
 For example,
 
@@ -1253,7 +1255,7 @@ will result
 {%output%}
 
 The parameter, in this case should start with an alphanumeric character or with a macro start string.
-If it starts with something else then that character will be the separator character that separates the parameters.
+If it starts with something else, then that character will be the separator character that separates the parameters.
 In this case, because there is only one parameter it will separate the macro name from the parameter.
 For example,
 
@@ -1341,14 +1343,14 @@ will result
 The provided third value, `t` is ignored.
 
 There are situations where the use of a separator character is not a must, but the use of it helps the readability.
-Consider, for example `{enclose/a/b/v}`.
+Consider, For example, `{enclose/a/b/v}`.
 We know  from earlier that `enclose` has only one argument, however the use of it looks like it has three.
 The one argument it has is `a/b/v`.
 
 Omitting the separator character, `/` in this case, does not help the readability or only a bit.
 The use `{enclose a/b/c}` still looks like a macro with three parameters.
 In situations like that the most readable solution is to use an explicit separator character that looks good.
-For example `{enclose |a/b/c}` makes it evident and readable that there is only one parameter: `a/b/c`.
+For example, `{enclose |a/b/c}` makes it evident and readable that there is only one parameter: `a/b/c`.
 
 In the following sample code, you can see some complex examples that demonstrate these cases:
 
@@ -1377,7 +1379,7 @@ Anything can be a parameter name that does not contain a comma, a closing parent
 
 2. When a macro parameter is replaced in the body of the macro the processing of that string is finished and is not processed further replacing macro parameters.
 Macro parameters are only replaced with the actual values in the macro body and not in the parameter actual values.
-That is why parameters `a` and `b` are replaced with the actual string ' %66h' but then this is not replaced with the actual value of the parameter `%66h`.
+That is why parameters `a` and `b` are replaced with the actual string ' %66h' but, then this is not replaced with the actual value of the parameter `%66h`.
 
 3. When we define the macros `x` and `y` inside the `comment` macro it happens in a local scope of the `comment` macro.
 It means that the definition of `x` has no effect outside the macro `comment`.
@@ -1448,7 +1450,7 @@ will result
 
 {%output%}
 
-Optional parameters are different from leinent mode, that they do not allow extra parameters. For example the
+Optional parameters are different from leinent mode, that they do not allow extra parameters. For example, the
 
 {%sample/
 {@try! {a :1:2:3:4:5:6}}
@@ -1458,7 +1460,7 @@ will result the error
 
 {%output%}
 
-If you want to allow extra parameters then you can append `...` after the last argument:
+If you want to allow extra parameters, then you can append `...` after the last argument:
 
 {%sample/
 {@define a(...a,b,c,d,e...)=>a< .b. /c/ |d| (e)}
@@ -1544,7 +1546,7 @@ The macro is undefined only in the local scope, where it was undefined but on hi
 |{?fruit}|
 %}
 
-In this example we undefine the macro fruit in the local scope, but then we export it from this scope.
+In this example we undefine the macro fruit in the local scope, but, then we export it from this scope.
 Being explicitly undefined can be exported the same way as the macro, which is defined.
 Because the "undefinedness" is exported the macro `fruit` becomes undefined in the enclosing scope.
 
@@ -1615,7 +1617,7 @@ since 1.0.0 (core)
 `eval` interprets the content of the macro.
 The text written after the macro keyword `eval` is evaluated as a script.
 The scripting language can be defined following a `/` character.
-If there is no script type defined (or `jamal` is defined) then the content will be evaluated as normal Jamal macro text.
+If there is no script type defined (or `jamal` is defined), then the content will be evaluated as normal Jamal macro text.
 Otherwise, the script engine named is used.
 
 There are three ways to use the macro in one of the following formats:
@@ -1626,14 +1628,14 @@ eval/scripttype script
 eval* text
 %}
 
-If `eval` is followed by `/` character then the next identifier is the type of the script.
+If `eval` is followed by `/` character, then the next identifier is the type of the script.
 White space characters before, and after the `/`, as well as after the script type name are ignored.
 You can use any scripting language that
 
 * implements the Java scripting API and
 * the interpreter is available on the classpath when Jamal is executed.
 
-If the script type is `jamal` then it is the same as if there was no script type specified.
+If the script type is `jamal`, then it is the same as if there was no script type specified.
 You may need the explicit specification of `jamal` when the content of the macro to be evaluated starts with the `/` character.
 
 {%#define evaluateLoopLimit={%#replace (regex) /{%@snip evaluateLoopLimit /(".*?")/%}/"/`/%}%}\
@@ -1641,7 +1643,7 @@ You may need the explicit specification of `jamal` when the content of the macro
 {%@define firstAlias={%#replace (regex) /{%@snip evaluateLoopLimit /".*?"\s*,\s*"(.*?)"/%}/"/`/%}%}\
 {%#assert:intEquals /{%#string:length {%#replace (regex) /{%evaluateLoopLimitAliases%}/[\w`\s]//%}%}/1/there are more than two aliases%}\
 
-If character following the keyword `eval` is `\*` then the scripting type is `jamal` and the evaluation is repeated until all macros are resolved.
+If character following the keyword `eval` is `\*`, then the scripting type is `jamal` and the evaluation is repeated until all macros are resolved.
 The macro assumes that all the macros are resolved when the evaluation of the text does not change any more.
 This may lead to infinite loop, therefore there is a built-in limit.
 `eval*` evaluates the macro input at most {%@snip DEFAULT_LOOP_LIMIT /(\d+)/%} times.
@@ -1760,7 +1762,7 @@ As usually the option name can be defined as a macro, like `{@define $input=$INP
 [NOTE]
 ====
 You probably want to use the macro `defer` with the `@` character in front of the macro name.
-If you use `#` then the content is evaluated before the macro `defer` is executed.
+If you use `#`, then the content is evaluated before the macro `defer` is executed.
 In this case the macro sees the evaluated input and will defer the evaluation of that to the end of the execution.
 ====
 
@@ -1876,7 +1878,7 @@ It contains a string that can be interpreted as a macro.
 For this reason the macro `doplikate` is defined as a "verbatim" macro.
 This is signalled by the `~` character after the `define` keyword.
 Verbatim user defined macros are not post evaluated.
-When `doplikate` is invoked in the `defer` then `{mememe}Mememe?` will be converted to `{mememe}Mememe?{mememe}Mememe?`.
+When `doplikate` is invoked in the `defer`, then `{mememe}Mememe?` will be converted to `{mememe}Mememe?{mememe}Mememe?`.
 This result also will not be evaluated again.
 
 However, when we set the macro `$output` in the line `{#define $output={doplikate/{$input}}}` why `{mememe}Mememe?` is not evaluated.
@@ -1922,7 +1924,7 @@ The output is still:
 {%output%}
 
 The last example shows that other macros survive and can be used in subsequent deferred actions.
-If the macro `doplikate` is defined in a deferred action then the subsequent deferred actions can use the macro:
+If the macro `doplikate` is defined in a deferred action, then the subsequent deferred actions can use the macro:
 
 {%sample/
 {@defer {#define $output=|{$input}|}}\
@@ -1943,8 +1945,8 @@ since 1.3.0
 
 `env` returns the value of an environment variable.
 The macro can also be used to test that an environment variable exists or not.
-If the argument to the macro is the name of an environment variable then the result will be the value of the variable.
-If the variable is not defined then the macro will result empty string.
+If the argument to the macro is the name of an environment variable, then the result will be the value of the variable.
+If the variable is not defined, then the macro will result empty string.
 
 {%sample/
 {@env JAVA_HOME}
@@ -1956,7 +1958,7 @@ is
 
 on the machine where the original `README.adoc.jam` file was converted to ASCIIDOC.
 
-If there is a `?` after the name of the variable name then the macro will result either the `true` or `false`.
+If there is a `?` after the name of the variable name, then the macro will result either the `true` or `false`.
 This can be used to test that an environment variable exists or not.
 Testing the value of the environment variable in an `{@if ... }` macro may be misleading when the value is literal `false` or an empty string.
 
@@ -1966,12 +1968,12 @@ In this case the macro will throw exception when the environment variable is not
 The macro does not only check the environment variables when looking for a configuration value.
 
 * First it looks at the Java system properties,
-* then it looks at the environment variables,
+*, then it looks at the environment variables,
 * and finally tries to look up the configuration value from the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file.
 
 When looking up a Java system property the algorithm
 
-. converts the name of the property to lowercase, and then
+. converts the name of the property to lowercase, and, then
 . replaces all `_` character with a dot `.` character.
 
 When looping up a property from the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file the algorithm also removes any `JAMAL_` or `jamal.` prefix from the property name.
@@ -2001,7 +2003,7 @@ If the importing happens
 * in scope that was started with a `begin` macro
 
 then the "top-level-scope of the file" is the one, that contains the `import` macro.
-If anything is defined into the global scope in the imported file then those macros will eventually be in the global scope and available to anyone later.
+If anything is defined into the global scope in the imported file, then those macros will eventually be in the global scope and available to anyone later.
 
 The output that the processing of the imported file generates is discarded.
 
@@ -2033,7 +2035,7 @@ There is no need to enclose such a text into a `{@comment ...}` macro.
 
 {%@define DEFAULTOPEN($VERSION,$MACRO)=
 Starting with version $VERSION the $MACRO macro looks into the file before evaluating it.
-If the very first two characters in the file are `{@` then it evaluates the content using `{` as macro opening string and `}` as macro closing string.
+If the very first two characters in the file are `{@`, then it evaluates the content using `{` as macro opening string and `}` as macro closing string.
 This way you can freely $MACRO resource files provided in JAR file or through the net even if you use different macro opening and closing strings.%}
 {%DEFAULTOPEN/1.5.0/import%}
 
@@ -2042,14 +2044,14 @@ This way you can freely $MACRO resource files provided in JAR file or through th
 If there is a need to change the macro opening and closing strings in the imported file, the recommendation is to reset these changes before the end of the file.
 This way the imported file will not affect the importing file.
 Also, when the imported file starts with the `{@` characters the importing process changes the macro opening and closing strings to `{` and `}` before the import and resets them after the import.
-If there is a `sep` macro changing the macro opening and closing strings in the imported file then the reset will go back one level only, essentially reversing the last `sep` macro use.
+If there is a `sep` macro changing the macro opening and closing strings in the imported file, then the reset will go back one level only, essentially reversing the last `sep` macro use.
 Assume that you have a file that uses the `[` and `]` characters as macro opening and closing strings.
 This file imports a file that starts with the `{@` characters.
 The imported file also uses `{@sep <>}` to change the macro opening and closing strings to `<` and `>`.
 At the end of the file this is reset and now the macro opening and closing strings are `{` and `}`.
 
 This only happens when the file importing the other file uses something other than the `{` and `}` characters as macro opening and closing strings.
-If the importing file uses the `{` and `}` characters then the imported file will be evaluated using the `{` and `}` characters as macro opening and closing strings just the normal way without setting and resetting the macro opening and closing strings.
+If the importing file uses the `{` and `}` characters, then the imported file will be evaluated using the `{` and `}` characters as macro opening and closing strings just the normal way without setting and resetting the macro opening and closing strings.
 In this case the `{@sep <>}` change the macro opening and closing strings and this change will be in effect in the importing file.
 ====
 
@@ -2169,7 +2171,7 @@ Usually, the alias part (the `as scriptbasic` in the example above) can also be 
 In such a case the macro will be registered with the name that the macro provides by itself as an identifier.
 The interface `Macro` defines a method `String getId()` that should return the identifier of the macro.
 The interface also provides a default implementation that returns the lower-case version of the class name (w/o the packages).
-If there is no defined alias following the `as` keyword then the one returned by the macro implementation will be used.
+If there is no defined alias following the `as` keyword, then the one returned by the macro implementation will be used.
 
 It is recommended to use the alias in the Jamal source file.
 That way there is no ambiguity when reading the code what the name of the built-in macro is.
@@ -2182,7 +2184,7 @@ In that case it will look for an already loaded built-in macro with the given na
 Following this both names can refer to the same macro.
 
 The alias will refer to the built-in macro, which is the closest reachable in the current scope.
-If the evaluation leaves the current scope, and the `global` keyword was not used then the alias will also go out of the scope.
+If the evaluation leaves the current scope, and the `global` keyword was not used, then the alias will also go out of the scope.
 It is independent of the macro itself.
 The macro may be reachable via the original name.
 
@@ -2201,7 +2203,7 @@ The syntax of the command is
 {@script/scripttype id(parameters)=body}
 %}
 
-If `script` is followed by `/` character then the next identifier is the type of the script.
+If `script` is followed by `/` character, then the next identifier is the type of the script.
 If this is missing the default, `JShell` is assumed.
 You can use any scripting language that implements the Java scripting API and the interpreter is available on the classpath.
 
@@ -2222,11 +2224,11 @@ Without this, all the scripts that use some integer or floating-point calculatio
 Therefore, Jamal tries to convert the actual parameters.
 
 * First it tries treating it as an integer.
-If it succeeds then the global variable having the name as the parameter will hold an integer value.
+If it succeeds, then the global variable having the name as the parameter will hold an integer value.
 
-* If the conversion to an integer does not work then it tries the same with double.
+* If the conversion to an integer does not work, then it tries the same with double.
 
-* If that is also not feasible then it will check if the actual value is lower case `true` or `false`.
+* If that is also not feasible, then it will check if the actual value is lower case `true` or `false`.
 In this case the global variable of the script will be a `Boolean` value.
 
 * In any other case, the global variable will get the actual value as a string assigned to it.
@@ -2261,14 +2263,14 @@ Starting with version 1.3.0 Jamal support the JShell built-in scripting engine.
 You can define `JShell` as script type.
 In this case the content will be passed to the Java built-in JShell engine.
 When the script is invoked the result of the macro will be the string that is printed by the JShell script.
-If this is empty then the value of the last Java shell snippet will be used.
+If this is empty, then the value of the last Java shell snippet will be used.
 The argument names have to be valid Java identifiers.
 When the script is invoked they will be defined as `String`, `long`, `double` or `boolean` variables.
 They will get the actual values of the parameters.
 The type depends on the actual value.
-If the value string can be interpreted as a `long` then it will be converted to `long`.
-If the string is not a long, but can be converted to `double` then the variable will be `double`.
-If the string is either `true` or `false` case insensitive then the variable will be `boolean`.
+If the value string can be interpreted as a `long`, then it will be converted to `long`.
+If the string is not a long, but can be converted to `double`, then the variable will be `double`.
+If the string is either `true` or `false` case insensitive, then the variable will be `boolean`.
 In any other case the variable will be declared as `String`.
 
 In short, the arguments to a `script` macro will be converted to the following types in this order, whichever first succeeds:
@@ -2295,7 +2297,7 @@ The macro <<script,script>> is to define a script macro that later can be invoke
 When the macro `JShell` or <<script,script>> is used the result is empty string.
 When the script is invoked the output of the macro will be what the script prints out to the standard output.
 
-The following example defines a global method, a script using the method and then it invokes the script.
+The following example defines a global method, a script using the method and, then it invokes the script.
 
 {%sample/
 {@JShell
@@ -2326,7 +2328,7 @@ Jamal will invoke the JShell interpreter executing
 String world = "My Dear";
 %}
 
-first, and then
+first, and, then
 
 {%sample/
 hello();
@@ -2334,10 +2336,10 @@ hello();
 
 Since the method `hello()` prints out to the standard output `Hello, My Dear` this is the result of this macro.
 
-If there is some error in the code of the snippet then Jamal will throw a `BadSyntax` exception.
+If there is some error in the code of the snippet, then Jamal will throw a `BadSyntax` exception.
 In this exception the causing exception is included if there is any.
 This causing exception should give some clue to find out what the issue is.
-If that does not help then using the interactive JShell program should help.
+If that does not help, then using the interactive JShell program should help.
 
 Creating a JShell execution environment is expensive.
 To do that the Java starts a new JVM process for the JShell.
@@ -2384,7 +2386,7 @@ containing v1 v2 and v3}
 %}
 
 The `variable` or the multiple variables can be used in the content and will be replaced for each iteration with the respective element on the comma-separated list.
-When there are multiple variables then the sub-list of the values is separated using the `|` character.
+When there are multiple variables, then the sub-list of the values is separated using the `|` character.
 Both the command and the `|` character can be modified to use something else instead of these characters.
 
 The list of the values can also be separated by other strings.
@@ -2423,7 +2425,7 @@ where the options can be
 * `lenient` for lenient operation (see below)
 * `evaluateValueList`, or `evalist` to instruct the loop that the list of the values between the `(` and `)` has to be evaluated.
 
-For example the macros:
+For example, the macros:
 
 {%sample/
 {#for $a in (a:b:c)={@define $forsep=:}a is $a
@@ -2475,9 +2477,9 @@ A 3rd party macro can decide to use any character pair as they like.
 ====
 
 The number of the actual values separated by `|` character should be the same as the number of the variables in the for loop.
-If this is not the case then the macro evaluation will throw a bad syntax exception.
+If this is not the case, then the macro evaluation will throw a bad syntax exception.
 This can be suppressed with the option `lenient`.
-If the option `lenient` is used then extra values are ignored and missing values are presented as empty strings.
+If the option `lenient` is used, then extra values are ignored and missing values are presented as empty strings.
 Note that this same option controls how user defined macro arguments are paired to the parameters.
 
 Starting with version 1.5.3 you can fine tune how a `for` loop treats the empty elements.
@@ -2580,7 +2582,7 @@ will result
 {%output%}
 
 The macro `{@ident ...}` is evaluated and its result is the content of the macro and it is not evaluated further before the evaluation of the macro `for`.
-The macro `for` gets evaluated and then the output is evaluated because the macro is preceeded with the back-tick character, which is a shorthand for the core built-in macro `eval`.
+The macro `for` gets evaluated and, then the output is evaluated because the macro is preceeded with the back-tick character, which is a shorthand for the core built-in macro `eval`.
 This evaluation defines `x`, `y` and `z`.
 
 Because the case that we want to evaluate the list part of the `for` loop but not the body part is so common there is an option that helps with this.
@@ -2614,10 +2616,10 @@ With the conventional form of the `for` macro it was not possible, because the f
 Jamal 1.6.3 introduced a new, backward compatible format for the `for` macro.
 
 Instead of the `(` and `)` characters it is possible to use an arbitrary string to denote the end of the values.
-When the first character after the keyword `in` (after optional spaces) is the backtick character then the string till the next backtick character will be used to denote the end of the values.
+When the first character after the keyword `in` (after optional spaces) is the backtick character, then the string till the next backtick character will be used to denote the end of the values.
 The starting and ending backtick should also be part of the string closing the values.
 
-For example the following
+For example, the following
 
 {%sample/
 {@for x in `END`a),b),c),d)`END`=x }
@@ -2685,7 +2687,7 @@ For example, `{@if [lessThan=7 and greaterThan=2] /6/it is in (2,7)/out of range
 If you feel it is more readable you can put these options at any place in the list.
 
 The following options will do numerical comparison.
-When any of them are used then the test string is converted to a number.
+When any of them are used, then the test string is converted to a number.
 If the test string is not a number an error will happen.
 These options are integer options, which means that you have to specify a number following them like `lessThan=55`.
 
@@ -2694,7 +2696,7 @@ These options are integer options, which means that you have to specify a number
 * `equals` (aliases `equal`, `equalsTo`, `equalTo`) is true if the number is equal to the value.
 
 There is no separately "less than or equal" and "greater or equal" option.
-If, for example, you want to test that a number is greater than or equal to a certain value then you can use the `greaterThan` and the `equals` options together.
+If, for example, you want to test that a number is greater than or equal to a certain value, then you can use the `greaterThan` and the `equals` options together.
 An alternative is to use the `lessThan` option along with the boolean `not` option.
 
 [NOTE]
@@ -2822,7 +2824,7 @@ In this evaluation `{@ident {a}}` is evaluated and `{b}` is also evaluated.
 `{b}` becomes '92`.
 This way `c` will become `{a}92`.
 
-If we redefine later `a` to some different value then `c` will follow this change.
+If we redefine later `a` to some different value, then `c` will follow this change.
 If we redefine `b` the value of `c`
 will still remain `1492` assuming `a` is still `14`.
 
@@ -2923,7 +2925,7 @@ since 1.0.0 (core)
 To understand what it does, we have to discuss first how Jamal evaluates the different macros.
 
 Jamal parses the input from the start towards the end and copies the characters from the input to the output.
-Whenever, when it sees a macro then it evaluates the macro, and the result of the evaluation is copied to the output.
+Whenever, when it sees a macro, then it evaluates the macro, and the result of the evaluation is copied to the output.
 This evaluation is done in three steps, two of those are recursive.
 Let's have a simple example:
 
@@ -2937,14 +2939,14 @@ Whenever `a` is evaluated it will result the string `this is it`.
 
 The macro `b` has the value `{a}`.
 When macro `b` is defined the content `{a}` is not evaluated before the definition because there is a `@` before the `define`.
-When `b` is evaluated it results `{a}` and then before using this output in place of the use of the macro `b` this result is evaluated by Jamal as a new input.
+When `b` is evaluated it results `{a}` and, then before using this output in place of the use of the macro `b` this result is evaluated by Jamal as a new input.
 This second recursive evaluation will result in the string `this is it`.
 
 The macro `c` is defined using the `#` character before the keyword `define`, therefore Jamal will process the body of the macro before processing the built-in macro `define` itself.
 Essentially, it will evaluate `{b}` first.
-It will put the resulting characters after the `=` sign in the definition of `c` and then it will evaluate the `define` built-in macro.
+It will put the resulting characters after the `=` sign in the definition of `c` and, then it will evaluate the `define` built-in macro.
 
-As we discussed above when this time `{b}` is evaluated it results `{a}`, which also gets evaluated and then it results `this is it`.
+As we discussed above when this time `{b}` is evaluated it results `{a}`, which also gets evaluated and, then it results `this is it`.
 Therefore, the value of the macro `c` is `this is it` and that is what we see in the output:
 
 {%output%}
@@ -2956,11 +2958,11 @@ This way the evaluation of a macro is done in three steps:
 For this evaluation Jamal starts a new scope and evaluate the macros following these three steps.
 
 2. Evaluate the macro itself.
-If it is a built-in macro then it calls the `evaluate()` method of the Java class that implements the macro.
-If the macro is user defined then it evaluates as described in the section <<define,`define`>>.
+If it is a built-in macro, then it calls the `evaluate()` method of the Java class that implements the macro.
+If the macro is user defined, then it evaluates as described in the section <<define,`define`>>.
 
-3. If the macro is user-defined or starts with a `!` character then Jamal evaluates the output of the macro.
-If it contains macros then evaluate those using these three steps.
+3. If the macro is user-defined or starts with a `!` character, then Jamal evaluates the output of the macro.
+If it contains macros, then evaluate those using these three steps.
 %}
 {%THREESTEPS%}
 
@@ -3021,12 +3023,12 @@ It is used directly as the value of the new macro `c` because of the `verbatim` 
 The value of `c` will be `{a}`.
 Also, when we use `{c}` the result of `c` is scanned as a third step for further macros.
 In this case, there is one because the value of the macro `c` is `{a}`, that further evaluates to `this is it`.
-On the other hand when we use `{@verbatim c}` then the result `{a}` is not processed any further.
+On the other hand when we use `{@verbatim c}`, then the result `{a}` is not processed any further.
 
 {%output%}
 
 Note that the macro `verbatim` is a special one because it is hardwired into the evaluation logic of Jamal and it is not a "real" built-in macro.
-In other words, if there are user-defined macros and built-in macros then `verbatim` is one level deeper built-in than the other built-in macros.
+In other words, if there are user-defined macros and built-in macros, then `verbatim` is one level deeper built-in than the other built-in macros.
 To understand this may be important if you want to write your own built-in macros as Java classes.
 You cannot "redefine" `verbatim`.
 
@@ -3046,8 +3048,8 @@ These points can be refined further:
 1. First the beginning of the macro text is evaluated if the text contains macros.
 The user-defined macro name itself in the text can be the result of another macro.
 For example, calling the macro named `white` can be `{white}`.
-If there is another macro `{@define black=white}` then using `{{black}}` will result the same as `{white}`.
-In this case first `{black}` is evaluated to `white` and then `{white}` is evaluated.
+If there is another macro `{@define black=white}`, then using `{{black}}` will result the same as `{white}`.
+In this case first `{black}` is evaluated to `white` and, then `{white}` is evaluated.
 There may be multiple macros at the start.
 For example, we can have `{@define bla=whi}` and `{@define ck=te}`.
 Using these we can get `{{bla}{ck}}` to `{white}`.
@@ -3056,19 +3058,19 @@ Using these we can get `{{bla}{ck}}` to `{white}`.
 Recall that the first character that is not part of the name of the macro is used as a parameter separator character.
 This is a non-space character that cannot be part of a macro name, or the first character that follows the spaces after the macro name.
 The splitting process takes care of the macro calls that are in the arguments.
-For example the macro `{q/a/{b|c/g}}` will get two parameters.
+For example, the macro `{q/a/{b|c/g}}` will get two parameters.
 The first parameter to `q` is `a`, the second is `{b|c/g}`.
 The first `/` character separates the name of the macro from the parameters.
 At the same time, it defines which character is used as a separator character.
 The second `/` character separates the first and second parameters.
 The third `/` is not used as a separator character because it is inside a macro use.
 This character is not used as a separator character, even when the macro `{b|c/g}` is evaluated, because in that macro use the separator character is `|`.
-Similarly, if we look at the macro `{q/a/{b/c}}` then the parameters are `a` and `{b/c}`.
+Similarly, if we look at the macro `{q/a/{b/c}}`, then the parameters are `a` and `{b/c}`.
 In this case, the third `/` is ignored and is not considered as a parameter separator.
 Although this character is a parameter separator when the macro `b` is evaluated.
 The characters that are inside further macro calls are not used as parameter separators.
 
-3. When the parameter strings are identified then they are evaluated one after the other.
+3. When the parameter strings are identified, then they are evaluated one after the other.
 In the previous example `a` and `{b|c/g}` are evaluted before `q` is evaluated.
 When the macro `q` is evaluated, the parameters already contain the result of the evaluation of these macro uses.
 
@@ -3083,7 +3085,7 @@ In the previous examples the evaluation of the macro use `{q/a/{b/c}}` would eva
 After that, the splitting takes place on the resulting string.
 
 Usually, this results in the same as the new algorithm.
-However, if the definition of `b` is for example `{@define b(Z)=shoot/Z}`, then the evaluated string will be `a/shoot/c`.
+However, if the definition of `b` is For example, `{@define b(Z)=shoot/Z}`, then the evaluated string will be `a/shoot/c`.
 In this case the final evaluation will get (prior 1.2.0) `{q/a/shoot/c}`.
 It will result in three parameters.
 This is probably an error because `q` in the example needs only two.
@@ -3092,7 +3094,7 @@ Even, if the option `lenient` was declared the result is not the one the author 
 The versions 1.2.0 and later can revert to the earlier algorithm if the Jamal code defines the option `omasalgotm`.
 Using the macro `options` as `{@options omasalgotm}` you can switch to the old algorithm.
 The name of the option is an abbreviation and is hard to remember to distract from the use of it.
-If you need this option then your Jamal source file does some shady thing that it should not.
+If you need this option, then your Jamal source file does some shady thing that it should not.
 This option is obsolete from the very start of the introduction and is meant as a last resort to keep backward compatibility.
 It is removed from Jamal versions 1.10.0 and later.
 
@@ -3111,7 +3113,7 @@ The syntax of the command is
 {@sep /startString/endString}
 %}
 
-If both the start and end strings are a single character, for example `[` and `]` then you can use the simple form:
+If both the start and end strings are a single character, For example, `[` and `]`, then you can use the simple form:
 
 {%sample/
 {@sep []}
@@ -3171,7 +3173,7 @@ They contain a bit of heuristics.
 They were designed to let the users use the most readable format of the `sep` macro.
 The same time they help avoid unreadable declarations and errors.
 
-If in doubt then you can always use the last, definitive syntax that does not rely on any heuristics.
+If in doubt, then you can always use the last, definitive syntax that does not rely on any heuristics.
 This syntax is described in the followings.
 
 If the syntax does not match and of the previous cases, Jamal will use the syntax that is defined with the following "regular expression" like line:
@@ -3282,7 +3284,7 @@ All these macros are evaluated because the macro `comment` is started with the c
 It means that Jamal will evaluate the body of the macro before evaluating the macro itself.
 
 After the `comment` macro the separators are set back to the original value `{` and `}` automatically.
-Then we have a simple macro definition that defines `z` and then this `z` is used, and the exported `a1`, `a2`, and `a3`.
+Then we have a simple macro definition that defines `z` and, then this `z` is used, and the exported `a1`, `a2`, and `a3`.
 
 `z` is now, as defined in the outer scope is `SSS`.
 `a1` has the value that came from the macro `z` as it was defined inside the scope of the macro `comment`.
@@ -3325,12 +3327,12 @@ exporting one or more macros, comma separated.
 
 When a macro is defined it is defined in the current scope (unless the name contains one or more `:`, or it starts with `:`).
 
-The Jamal input file is one scope and if there is a macro defined in the file on the top-level then that macro can be used anywhere inside the file.
+The Jamal input file is one scope and if there is a macro defined in the file on the top-level, then that macro can be used anywhere inside the file.
 However, when Jamal includes a file into another it opens a new scope.
 The macro `include` should include some text in the output.
-It can be used, for example, to split up a long document into chapters and then use Jamal to create the final output.
+It can be used, for example, to split up a long document into chapters and, then use Jamal to create the final output.
 In that case, the macros defined in the included files should not interfere with the definitions in the file that includes the other one.
-To accomplish this separation Jamal starts a new scope when it includes a file.
+To accomplish this separation, Jamal starts a new scope when it includes a file.
 Scopes are embedded into each other like a call stack in a programming languages.
 When a macro is defined in scope it is available in that scope and all other scopes that are opened from that scope.
 When a macro is redefined in a scope the redefined value is used until the scope is closed.
@@ -3380,8 +3382,9 @@ You cannot export macros from the top-level scope, because there is no enclosing
 ==== {%macroChapter%}`options`
 
 since 1.0.3 (core)
+since 2.1.0 it is possible to query the values of options.
 
-The options macro can be used to alter the behavior of Jamal.
+The `options` macro can be used to alter the behavior of Jamal.
 The options can be listed `|` or space separated as an argument to the macro.
 
 {%sample/
@@ -3389,7 +3392,8 @@ The options can be listed `|` or space separated as an argument to the macro.
 %}
 
 The macro does not check the option's name.
-For example the option `lenient` is used by Jamal itself and by the `for` macro, however, if you type `{@options lenuent}` misspelled the `options` macro will not recognize it as an error.
+For example, the option `lenient` is used by Jamal itself and by the `for` macro.
+However, if you type `{@options lenuent}` misspelled the `options` macro will not recognize it as an error.
 The option `lenuent`{%@comment DELIBERATELY MISTYPED!!!%} could be used by some other macros and the `options` macro just treats it as a new option.
 It stores the options specified, and they can be queried by any other built-in macros.
 Any extension can define and use any options it likes.
@@ -3398,8 +3402,19 @@ The scope of the options is local, or global the same way as the scope of user-d
 
 [NOTE]
 ====
-Technically the options are stored along the user-defined macros.
-These objects cannot be evaluated only queried for their stored value, which is either `true` or `false`.
+Technically, the options are stored along the user-defined macros.
+These objects can be evaluated.
+Their value is either `true` or `false`.
+For example,
+
+{%sample/
+{@options applePie|~humblePie}applePie is {?applePie}, humblePie is {?humblePie}
+%}
+
+will result in the following output:
+
+{%output%}
+
 It is possible to export the options to higher layers the same way as macros.
 ====
 
@@ -3424,14 +3439,14 @@ There can be no space between the `~` character and the name of the option.
 Similar to user defined macros, options containing a `:` are global.
 You can define a global value for an option using the `:` prefix in front of the name of the option.
 This character will be removed from the name, the same way as it is removed from the name of global user defined macros.
-If the `:` is inside the name then it remains part of the name, and it is not possible to have a local definition for the option.
+If the `:` is inside the name, then it remains part of the name, and it is not possible to have a local definition for the option.
 
 The options implemented currently:
 
 ===== `:lenient`
 
 In the lenient mode, the number of the arguments to a user-defined macro do not need to be exactly the same as it is defined.
-If there are fewer values provided then the rest of the arguments will be an empty string in the lenient mode.
+If there are fewer values provided, then the rest of the arguments will be an empty string in the lenient mode.
 Similarly, if there are more arguments than needed the extra arguments will be ignored.
 The option `lenient` is global.
 Nothing will stop you to redefined the option in a local scope, but macro evaluation will use the global value even in that scope.
@@ -3455,11 +3470,11 @@ The code providing compatibility with the old evaluation style is not included i
 * 1.3.0 till 1.7.6 introduces the option `nl`.
 * 1.7.7 removes this option
 
-When this option is in effect then all new-line characters are copied into the output.
+When this option is in effect, then all new-line characters are copied into the output.
 This was the default and non-changeable behavior prior 1.3.0.
 
 In versions 1.3.0 and later it is possible to escape a newline character that is following a macro closing string.
-For example the macro `{@define z=1}` can be followed by a `\` character before the newline.
+For example, the macro `{@define z=1}` can be followed by a `\` character before the newline.
 That way `{@define z=1}\` will tell Jamal that the next newline character is not needed in the output.
 The backslash, the newline character following it and the spaces that may be between the two will be skipped.
 
@@ -3506,9 +3521,9 @@ since 1.5.0 (core)
 
 The macro try will evaluate its content and return the result.
 The evaluation does not open a new scope, just like in the case of the macro `{@eval }`.
-In case the evaluation results an error then the result will be empty string.
+In case the evaluation results an error, then the result will be empty string.
 
-For example the following macro will produce an empty string.
+For example, the following macro will produce an empty string.
 
 {%sample/
 {@try {!@verbatim macro}}
@@ -3518,20 +3533,75 @@ The macro `macro` is not defined, but the error is caught with the macro `try`.
 
 The macro `try` can also be used to include the error message into the output.
 If we use an `!` character right after (no spaces) the `try` keyword the result will be the error message.
-If there is no error then the result is the result of the evaluated text inside the macro.
+If there is no error, then the result is the result of the evaluated text inside the macro.
 
 NOTE: Jamal usually allows you to have spaces in places like the keyword `try` and the following `!` or `?`.
-For example you can have spaces between the macro name `define` and the `!`, `?` or `~` character.
+For example, you can have spaces between the macro name `define` and the `!`, `?` or `~` character.
 In case of `try` there must be no space.
 The reason for this strictness is that `try` is followed by arbitrary text evaluated by the macro itself.
 Allowing space between the macro name and the `!` or `?` character would result ambigous syntax.
 We could not tell if the `!` or `?` character is part of the macro use or already the first starting character of the text to be evaluated.
 
-If we use a `?` character right after (no spaces) the `try` keyword then the result will be the string `true` if there was no error and `false` is there was an error.
+If we use a `?` character right after (no spaces) the `try` keyword, then the result will be the string `true` if there was no error and `false` is there was an error.
 This can be used to test the "computability" of the text.
 
 The macro `try` should only be used to debug certain macro files.
 When an error happens, and the `try` macro catches the exception thrown the scopes may not be properly closed.
+
+[[catch]]
+==== {%macroChapter%}`catch`
+
+since 2.1.0 (core)
+
+{%@define CATCH=`catch`%}
+
+This macro will execute its input if there was an error caught by a `try` macro.
+The macro {%CATCH%} can be used to handle errors in a macro file.
+
+The general rule is that you should use the {%CATCH%} macro in the same scope where the `try` macro is used.
+However, it can be used a bit more complexly than that.
+Here are the rules:
+
+* A {%CATCH%} executes the content if there was an error executing a `try` on the same level as the catch, and it was not caught by another {%CATCH%} on the same level.
+
+* A {%CATCH%} executes the content is there was an error executing a `try` on a higher level, and it was not caught by another {%CATCH%} on the same or higher level as the {%CATCH%} is.
+
+* When a {%CATCH%} executes the content the error is cleared on the level where the {%CATCH%} is.
+
+* Errors are automatically cleared when a scope closes.
+{%sample/
+{@try {@include} file name is missing}{@catch there was an error}
+%}
+
+will result in
+
+{%output%}
+
+[NOTE]
+====
+The error handling is implemented using the option `{%@snip tryoption%}`.
+When an error is detected by a `try` macro, this option is set.
+If there is no error, then the option is reset, hence clearing any error on the same level.
+When {%CATCH%} is executed, it checks the value of the option and resets it.
+When executing in a nested scope, the reset will not clear the error on the higher level.
+
+The name of the option was chosen to be user-friendly so that you can
+
+* export it to higher scopes,
+* query its value, presumably in an `if` macro,
+* set and reset it using the <<options,`options`>> macro.
+
+{%sample/
+{@try {@include}}{#if/{{%@snip tryoption%}}/there was an error}
+{#if/{{%@snip tryoption%}}/still there is an error, not cleared}{@catch}
+{#if/{{%@snip tryoption%}}/no, this one will not be displayed/error cleared}
+%}
+
+will result in
+
+{%output%}
+
+====
 
 [[escape]]
 ==== {%macroChapter%}`escape`
@@ -3573,7 +3643,7 @@ In this case the macro opening and closing strings, which were in effect at the 
 That way the macros defined inside the macros will be evaluated even though the macro opening and closing strings have changed.
 
 At the same time the current macro opening and closing strings had no special effect by the time of the macro definition.
-If there is any current macro opening and closing string in the definition of the macro then they should not play a special role.
+If there is any current macro opening and closing string in the definition of the macro, then they should not play a special role.
 They get protected using the `escape` macro automatically.
 ====
 
@@ -3600,7 +3670,7 @@ The closer object is automatically created and registered by Jamal when the `esc
 ====
 
 This macro comes in handy when you want to protect something from evaluation that should never be interpreted as a macro text.
-For example you can have a Maven property in a `pom.jam` file, like `${project.build.sourceDirectory}`.
+For example, you can have a Maven property in a `pom.jam` file, like `${project.build.sourceDirectory}`.
 You can redefine at the start of the file the macro open and macro close strings, but it may be simpler to protect the one or few special strings.
 A normal escape, without the `\*` after the keyword hides the content from evaluation only once.
 When the `*` character is used the content will be protected even when it is deep inside macros and target for many different evaluations.
@@ -3707,7 +3777,7 @@ The macro named `macro` is a special one that is needed only in rare cases.
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
 A hypothetical library, built-in macro package may import macros from a property file, where the property names contain `.` dots.
 These names are not permitted in Jamal.
-The implementation then either provides extra built-in macros to access the values or converts the names to conforming ones.
+The implementation, then either provides extra built-in macros to access the values or converts the names to conforming ones.
 The first approach loses the aim of the pure import.
 The second approach forces the users to remember the transformations, and it may be a source of name collisions.
 
@@ -3734,7 +3804,7 @@ For example
 will evaluate the macro `my.weird.macro` with the arguments `1` and `2` and `3`.
 When the parameter `alias` is used the macro `macro` does not evaluate the macro, but instead it creates an alias to the macro.
 The alias is also returned and can be used as in the example.
-If the automatically generated alias is `_1` then the above example will evaluate through the intermediary step:
+If the automatically generated alias is `_1`, then the above example will evaluate through the intermediary step:
 
 {%sample/
 {_1/1/2/3}
@@ -3742,7 +3812,7 @@ If the automatically generated alias is `_1` then the above example will evaluat
 
 and the macro at this point will be the same user defined macro, which is named `my.weird.macro`.
 The automatically generated macro has the format `_n` where `nnn` is a number usually starting with 1 and increasing by one for each macro.
-If it happens to be defined then the counting skips the number.
+If it happens to be defined, then the counting skips the number.
 This alias has a scope inside the user defined macro use, and it is not exported from there.
 
 If you want to use the alias many times you can select a name yourself.
@@ -3768,7 +3838,7 @@ You can force the macro `macro` to search for the original macro only in the glo
 To do that use the option `global`.
 This option, however, does not alter the scope of the new aliases in case an alias is created.
 The alias will be created in the current scope for generated aliases, or one level higher (exported) for specified aliases.
-If the specified alias contains one or more `:` characters then the macro will be defined with the alias in the global scope.
+If the specified alias contains one or more `:` characters, then the macro will be defined with the alias in the global scope.
 This is the same behaviour that the macro `define` follows.
 
 Note that there is no restriction on the alias.
@@ -3949,8 +4019,8 @@ When this option is on, the fact that a global and external debugger is defined 
 There is a special user defined macro that has no name.
 It is automatically created by Jamal every time it is needed.
 This user defined macro is used whenever the macro closing string follows the macro opening string directly.
-It can be used when you want to insert the macro opening string into the text but you do not want it to be interpreted as a macro opening.
-For example the following input
+It can be used when you want to insert the macro opening string into the text, but you do not want it to be interpreted as a macro opening.
+For example, the following input
 
 {%sample/
 {}
@@ -3960,7 +4030,7 @@ will result in the following output:
 
 {%output%}
 
-If you use this macro inside another macro then the result will be evaluated after the macro itself was evaluated.
+If you use this macro inside another macro, then the result will be evaluated after the macro itself was evaluated.
 For example
 
 {%sample/
@@ -4021,17 +4091,17 @@ This character can be any unicode character except
 
 * white space character.
 
-If the first non-white space character is a letter or digit character then the second syntax is used.
+If the first non-white space character is a letter or digit character, then the second syntax is used.
 In this case the input is split up along the white space characters.
 Multiple adjacent white space characters are counted as one.
 The splitting does not create empty parameters.
 
 The third possibility is when the fist non-space character is backtick (`++`++`).
-If the first non-whitespace character after the name of the macro id is a backtick then the parsing expects to be a regular expression till the next backtick.
+If the first non-whitespace character after the name of the macro id is a backtick, then the parsing expects to be a regular expression till the next backtick.
 After the regular expression and after the closing backtick the rest of the input is spit up using the regular expression as separator.
 
 Backtick was selected during the design of the syntax to enclose the regular expression because this character is very rare in Java regular expression.
-In case you need one inside the regular expression then you have to simply double it, and the parsing will single it back.
+In case you need one inside the regular expression, then you have to simply double it, and the parsing will single it back.
 
 [[parparsing]]
 === {%chapter%}Standard Built-In Parameter/Option Parsing
@@ -4107,7 +4177,7 @@ This module has an external dependency.
 Implementing this handler in a separate module it is easier to separate Jamal from external modules.
 As a general rule Jamal is developed minimizing the external dependencies for the core modules.
 Modules, macros needing external libraries are developed in separate modules.
-If there is any security, licensing or other issue with the external library then the module can be removed from the installation without affecting the core functionality of Jamal.
+If there is any security, licensing or other issue with the external library, then the module can be removed from the installation without affecting the core functionality of Jamal.
 Security, licensing and other issues are addressed in development.
 Removing the modules is a workaround and temporary solution.
 
@@ -4116,10 +4186,10 @@ Removing the modules is a workaround and temporary solution.
 When the file name starts with the characters `res:` it is a Java resource file.
 It means that the file is in a JAR file among the classes.
 The JAR file has to be on the classpath.
-When Jamal is started from the command line then the JAR file has to be added to the classpath.
+When Jamal is started from the command line, then the JAR file has to be added to the classpath.
 The classpath is usually after the `-cp` or `-classpath` argument of the Java command line.
-If Jamal is started as a Maven plugin then the configuration in the `pom.xml` file should include the dependency.
-For example to add the pomlib library JAR to the classpath you can use the following fragment in your `pom.xml`:
+If Jamal is started as a Maven plugin, then the configuration in the `pom.xml` file should include the dependency.
+For example, to add the pomlib library JAR to the classpath you can use the following fragment in your `pom.xml`:
 
 [source,xml]
 ----
@@ -4170,15 +4240,15 @@ Jamal does not download any resource using the unencrypted `HTTP` protocol.
 
 It is possible to cache the downloaded files.
 The environment variable {%JAMAL_HTTPS_CACHE_ENV%} can define a directory to store the web resources.
-In case the environment variable is not defined then the default value `~/.jamal/cache/` will be used.
-If the cache directory exists Jamal will store there the downloaded files.
+In case the environment variable is not defined, then the default value `~/.jamal/cache/` will be used.
+If the cache directory exists, Jamal will store the downloaded files in it.
 Jamal will create the subdirectories if needed, but Jamal will never create the cache directory itself.
-If you do not want to use the caching then do not create the cache directory.
+If you do not want to use the caching, then do not create the cache directory.
 
 Jamal will not cache a downloaded files that has `SNAPSHOT` in the URL (all capital letters).
 There is no cache eviction or expiration by default.
 You can find the files in the cache directory in subdirectories.
-You can also find there corresponding property files that contain information about the caching.
+You can also find the corresponding property files there that contain information about the caching.
 These properties files contain information about when a file was stored in the cache and also when it was last time read.
 It is also possible to define Time To Live (TTL) for the cache items.
 
@@ -4200,7 +4270,7 @@ The unites are:
 
 * `s` for second(s)
 
-If you use multiple time units then the value is the sum of the time units.
+If you use multiple time units, then the value is the sum of the time units.
 The units should be used in `Y`, `M`, `w`, `d`, `h`, `m`, `s` order.
 You can omit the units that have zero value.
 You can use any number in front of a unit, you are not limited with the natural amount of time units.
@@ -4215,7 +4285,7 @@ Examples:
 The property values, `ttl` or other values, are read from the property file and are inherited from `.properties` files.
 These files are not created by Jamal, but you are free to create them with different keys and values.
 The `.properties` files can be created in the different cache directories up to the root directory of the properties.
-When a key is defined in multiple `.properties` files then the value closer to the properties file of the cached item is used.
+When a key is defined in multiple `.properties` files, then the value closer to the properties file of the cached item is used.
 If the key is defined in the properties file of the cached item, then the value is used.
 This way you can define the TTL for a specific cache item, a group of items and for the whole cache.
 
@@ -4235,7 +4305,7 @@ For more information see the JavaDoc documentation of the class `java.net.HttpUR
 
 ==== Maven resources
 
-When the name of the file stats with the characters `maven:` then Jamal tries to find the file in the Maven repository.
+When the name of the file stats with the characters `maven:`, then Jamal tries to find the file in the Maven repository.
 You can use file names like
 
 {%sample/
@@ -4252,7 +4322,7 @@ For more information read the link:jamal-maven-input/README.adoc[documentation] 
 [[error_messages]]
 === {%chapter%}Error Messages
 
-When there is a processing error then Jamal throws a Java exception.
+When there is a processing error, then Jamal throws a Java exception.
 The message of the exception contains at the end the location of the error.
 Sometimes it is not simple to identify the location due to the string replacement nature of Jamal processing.
 To help locating the error as precise as possible the location is given as a series as triplets.
@@ -4261,12 +4331,12 @@ The location is given in the following format:
 
     file/line:column
 
-When a file includes or imports another file then the location of the file is given in the error message along with the location from where the file is included or imported.
+When a file includes or imports another file, then the location of the file is given in the error message along with the location from where the file is included or imported.
 The format in this case is
 
     file/line:column <<< file/line:column
 
-If the include/import hierarchy is deeper then the location is also given in several levels.
+If the include/import hierarchy is deeper, then the location is also given in several levels.
 In some cases the hierarchy is created in the error message inside a single file to help locating the error.
 
 [[snippet]]
@@ -4370,8 +4440,8 @@ It also keeps track of the line number, and the column of the actual character a
 A `new Position(s,1)` creates a new position that identifies the file by the name's` and the line number 1.
 
 When a new processor is instantiated, it uses the `ServiceLoader` mechanism to find all the built-in macros that are on the classpath.
-If your application has special macros implemented in Java then you can just put the library on the `modulepath`.
-If the classes are defined in the `provides` directive of the module then Jamal will find and load them automatically.
+If your application has special macros implemented in Java, then you can just put the library on the `modulepath`.
+If the classes are defined in the `provides` directive of the module, then Jamal will find and load them automatically.
 
 It is also possible to define user-defined and built-in macros via API.
 To do that you need access to the `MacroRegister` object that the `Processor` object has.
@@ -4423,7 +4493,7 @@ The practice is to create one or more unit tests converting the project `.jam` f
 
 The method {%@java:method (format="`$name(file)`") javax0.jamal.DocumentConverter::convert%} converts the file given as argument.
 The resulting file will be created in the same directory as the original file with the `.jam` extra extension chopped off.
-For example, if you convert `README.adoc.jam` then the resulting file will be `README.adoc`.
+For example, if you convert `README.adoc.jam`, then the resulting file will be `README.adoc`.
 
 The other method {%@java:method (format="`$name(file)`") javax0.jamal.DocumentConverter::convertAll%} converts many files.
 It takes two arguments, both are list of file name endings.

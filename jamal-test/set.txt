@@ -1,0 +1,212 @@
+'!'=0
+'#'=0
+'$'=86037
+'*'=(  )
+-=569XZilms
+0=-zsh
+'?'=0
+@=(  )
+ANT_HOME=/Users/verhasp/bin/apache-ant-1.10.6/
+ARGC=0
+CDPATH=''
+CNSAC_REPO=/Users/verhasp/github/cns-ac/
+COLORFGBG='0;15'
+COLORTERM=truecolor
+COLUMNS=171
+COMMAND_MODE=unix2003
+CPUTYPE=arm64
+DISPLAY=/private/tmp/com.apple.launchd.wX13HDWYNT/org.xquartz:0
+EDITOR=vi
+EGID=20
+EUID=502
+FIGNORE=''
+FPATH=/usr/local/share/zsh/site-functions:/usr/share/zsh/site-functions:/usr/share/zsh/5.9/functions
+FUNCNEST=700
+GID=20
+GRADLE_HOME=/Users/verhasp/.sdkman/candidates/gradle/current
+GROOVY_HOME=/Users/verhasp/.sdkman/candidates/groovy/current
+HISTCHARS='!^#'
+HISTCMD=1025
+HISTFILE=/Users/verhasp/.zsh_history
+HISTSIZE=2000
+HOME=/Users/verhasp
+HOST=MacBook-Pro.local
+IFS=$' \t\n\C-@'
+ITERM_PROFILE=.
+ITERM_SESSION_ID=w0t2p0:EE818B67-8885-4DAA-8EA8-A9356178B117
+JAVA_HOME=/Users/verhasp/.sdkman/candidates/java/current
+KEYBOARD_HACK=''
+KEYTIMEOUT=40
+LC_CTYPE=UTF-8
+LC_TERMINAL=iTerm2
+LC_TERMINAL_VERSION=3.4.19
+LINENO=25
+LINES=48
+LISTMAX=100
+LOGNAME=verhasp
+M2_HOME=/Users/verhasp/bin/apache-maven-3.8.3/
+MACHTYPE=x86_64
+MAESTRO_CLI_HOME=/Users/verhasp/EPAM/maestro-cli
+MAILCHECK=60
+MAILPATH=''
+MANPATH=''
+MAVEN_HOME=/Users/verhasp/.sdkman/candidates/maven/current
+MODULE_PATH=/usr/lib/zsh/5.9
+MVND_HOME=/Users/verhasp/.sdkman/candidates/mvnd/current
+NULLCMD=cat
+OLDPWD=/Users/verhasp/github/jamal
+OPTARG=''
+OPTIND=1
+OSTYPE=darwin22.0
+PATH='/Users/verhasp/.rbenv/shims:/Users/verhasp/.sdkman/candidates/mvnd/current/bin:/Users/verhasp/.sdkman/candidates/maven/current/bin:/Users/verhasp/.sdkman/candidates/java/current/bin:/Users/verhasp/.sdkman/candidates/groovy/current/bin:/Users/verhasp/.sdkman/candidates/gradle/current/bin:/Users/verhasp/.jbang/bin:/Users/verhasp/EPAM/maestro-cli/bin/:/Users/verhasp/bin/rakudo-moar-2022.12-01-macos-arm64-clang/bin:/Users/verhasp/.rbenv/versions/3.1.3/bin/:/Users/verhasp/bin/mongodb-macos-x86_64-4.4.3/bin:/Users/verhasp/bin/mongodb-database-tools-macos-x86_64-100.2.1/bin:/Users/verhasp/Library/Python/3.7/bin:/Users/verhasp/bin/:/opt/local/bin/:/Users/verhasp/bin/apache-ant-1.10.6/bin:/Users/verhasp/bin/apache-maven-3.8.3/bin:/Users/verhasp/bin/groovy-3.0.9/bin:/Users/verhasp/bin/gradle-6.7.1/bin:/Users/verhasp/bin/spark-2.4.5-bin-hadoop2.7:/opt/local/bin:/opt/local/sbin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/texbin:/usr/local/go/bin:/Applications/Little Snitch.app/Contents/Components:/opt/X11/bin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/local/git/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/verhasp/.cargo/bin'
+PPID=86032
+PROMPT='$ '
+PROMPT2='%_> '
+PROMPT3='?# '
+PROMPT4='+%N:%i> '
+PS1='$ '
+PS2='%_> '
+PS3='?# '
+PS4='+%N:%i> '
+PSVAR=''
+PWD=/Users/verhasp/github/jamal/jamal-io
+PYSPARK_DRIVER_PYTHON=jupyter
+PYSPARK_DRIVER_PYTHON_OPTS=notebook
+PYSPARK_PYTHON=python3
+RANDOM=9014
+RBENV_SHELL=zsh
+READNULLCMD=more
+SAVEHIST=1000
+SDKMAN_CANDIDATES=( activemq ant asciidoctorj ballerina bpipe btrace concurnas connor coursier cuba cxf doctoolchain flink gaiden gradle gradleprofiler grails groovy groovyserv hadoop helidon http4k infrastructor jarviz java jbake jbang jmc jmeter joern jreleaser karaf kcctl ki kobweb kotlin kscript ktx layrry leiningen maven mcs micronaut mulefd mvnd mybatis neo4jmigrations pierrot pomchecker quarkus sbt scala scalacli schemacrawler skeletal spark springboot sshoogr taxi test tomcat toolkit vertx visualvm webtau znai )
+SDKMAN_CANDIDATES_API=https://api.sdkman.io/2
+SDKMAN_CANDIDATES_CACHE=/Users/verhasp/.sdkman/var/candidates
+SDKMAN_CANDIDATES_CSV=activemq,ant,asciidoctorj,ballerina,bpipe,btrace,concurnas,connor,coursier,cuba,cxf,doctoolchain,flink,gaiden,gradle,gradleprofiler,grails,groovy,groovyserv,hadoop,helidon,http4k,infrastructor,jarviz,java,jbake,jbang,jmc,jmeter,joern,jreleaser,karaf,kcctl,ki,kobweb,kotlin,kscript,ktx,layrry,leiningen,maven,mcs,micronaut,mulefd,mvnd,mybatis,neo4jmigrations,pierrot,pomchecker,quarkus,sbt,scala,scalacli,schemacrawler,skeletal,spark,springboot,sshoogr,taxi,test,tomcat,toolkit,vertx,visualvm,webtau,znai
+SDKMAN_CANDIDATES_DIR=/Users/verhasp/.sdkman/candidates
+SDKMAN_DIR=/Users/verhasp/.sdkman
+SDKMAN_KERNEL=Darwin
+SDKMAN_PLATFORM=darwinarm64
+SECONDS=8436
+SHELL=/bin/zsh
+SHLVL=1
+SPARK_HOME=/Users/verhasp/bin/spark-2.4.5-bin-hadoop2.7
+SPROMPT='zsh: correct '\''%R'\'' to '\''%r'\'' [nyae]? '
+SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.HKNqg8nZWu/Listeners
+TERM=xterm-256color
+TERM_PROGRAM=iTerm.app
+TERM_PROGRAM_VERSION=3.4.19
+TERM_SESSION_ID=w0t2p0:EE818B67-8885-4DAA-8EA8-A9356178B117
+TIMEFMT='%J  %U user %S system %P cpu %*E total'
+TMPDIR=/var/folders/0v/zpz64s8x60vcxp4hctx4n55w0000gp/T/
+TMPPREFIX=/tmp/zsh
+TRY_BLOCK_ERROR=-1
+TRY_BLOCK_INTERRUPT=-1
+TTY=/dev/ttys002
+TTYIDLE=1
+UID=502
+USER=verhasp
+USERNAME=verhasp
+VENDOR=apple
+WATCH
+WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
+XPC_FLAGS=0x0
+XPC_SERVICE_NAME=0
+ZSH_ARGZERO=-zsh
+ZSH_EVAL_CONTEXT=toplevel
+ZSH_NAME=zsh
+ZSH_PATCHLEVEL=zsh-5.9-0-g73d3173
+ZSH_SUBSHELL=0
+ZSH_VERSION=5.9
+_=set
+__CFBundleIdentifier=com.googlecode.iterm2
+__CF_USER_TEXT_ENCODING=0x0:0:2
+_cmd_variant=( [cat]=unix [cp]=unix [ls]=unix [rm]=darwin22.0 [vi]=vim )
+_comp_assocs=( '' )
+_comp_dumpfile=/Users/verhasp/.zcompdump
+_comp_options
+_comp_setup
+_compautos
+_comps
+_lastcomp
+_patcomps
+_postpatcomps
+_services
+aliases
+argv=(  )
+bash_shell=false
+builtins
+cdpath=(  )
+commands
+comppostfuncs=(  )
+compprefuncs=(  )
+cygwin=false
+darwin=true
+dirstack
+dis_aliases
+dis_builtins
+dis_functions
+dis_functions_source
+dis_galiases
+dis_patchars
+dis_reswords
+dis_saliases
+fignore=(  )
+fpath=( /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions /usr/share/zsh/5.9/functions )
+freebsd=false
+funcfiletrace
+funcsourcetrace
+funcstack
+functions
+functions_source
+functrace
+galiases
+histchars='!^#'
+history
+historywords
+jobdirs
+jobstates
+jobtexts
+key=( [Backspace]=$'\C-H' [Delete]=$'\C-[[3~' [Down]=$'\C-[OB' [End]=$'\C-[OF' [F1]=$'\C-[OP' [F10]=$'\C-[[21~' [F11]=$'\C-[[23~' [F12]=$'\C-[[24~' [F13]=$'\C-[[1;2P' [F14]=$'\C-[[1;2Q' [F15]=$'\C-[[1;2R' [F16]=$'\C-[[1;2S' [F17]=$'\C-[[15;2~' [F18]=$'\C-[[17;2~' [F19]=$'\C-[[18;2~' [F2]=$'\C-[OQ' [F20]=$'\C-[[19;2~' [F3]=$'\C-[OR' [F4]=$'\C-[OS' [F5]=$'\C-[[15~' [F6]=$'\C-[[17~' [F7]=$'\C-[[18~' [F8]=$'\C-[[19~' [F9]=$'\C-[[20~' [Home]=$'\C-[OH' [Insert]=$'\C-[[2~' [Left]=$'\C-[OD' [PageDown]=$'\C-[[6~' [PageUp]=$'\C-[[5~' [Right]=$'\C-[OC' [Up]=$'\C-[OA' )
+keymaps
+mailpath=(  )
+manpath=(  )
+module_path=( /usr/lib/zsh/5.9 )
+modules
+nameddirs
+options
+parameters
+patchars
+path=( /Users/verhasp/.rbenv/shims /Users/verhasp/.sdkman/candidates/mvnd/current/bin /Users/verhasp/.sdkman/candidates/maven/current/bin /Users/verhasp/.sdkman/candidates/java/current/bin /Users/verhasp/.sdkman/candidates/groovy/current/bin /Users/verhasp/.sdkman/candidates/gradle/current/bin /Users/verhasp/.jbang/bin /Users/verhasp/EPAM/maestro-cli/bin/ /Users/verhasp/bin/rakudo-moar-2022.12-01-macos-arm64-clang/bin /Users/verhasp/.rbenv/versions/3.1.3/bin/ /Users/verhasp/bin/mongodb-macos-x86_64-4.4.3/bin /Users/verhasp/bin/mongodb-database-tools-macos-x86_64-100.2.1/bin /Users/verhasp/Library/Python/3.7/bin /Users/verhasp/bin/ /opt/local/bin/ /Users/verhasp/bin/apache-ant-1.10.6/bin /Users/verhasp/bin/apache-maven-3.8.3/bin /Users/verhasp/bin/groovy-3.0.9/bin /Users/verhasp/bin/gradle-6.7.1/bin /Users/verhasp/bin/spark-2.4.5-bin-hadoop2.7 /opt/local/bin /opt/local/sbin /Library/Frameworks/Python.framework/Versions/3.7/bin /usr/local/bin /System/Cryptexes/App/usr/bin /usr/bin /bin /usr/sbin /sbin /usr/texbin /usr/local/go/bin '/Applications/Little Snitch.app/Contents/Components' /opt/X11/bin /Library/Apple/usr/bin /Library/Frameworks/Mono.framework/Versions/Current/Commands /usr/local/git/bin /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin /Users/verhasp/.cargo/bin )
+pipestatus=( 0 )
+prompt='$ '
+psvar=(  )
+reswords
+saliases
+sdkman_auto_answer=false
+sdkman_auto_complete=true
+sdkman_auto_env=false
+sdkman_auto_update=true
+sdkman_beta_channel=false
+sdkman_checksum_enable=true
+sdkman_colour_enable=true
+sdkman_curl_connect_timeout=7
+sdkman_curl_continue=true
+sdkman_curl_max_time=10
+sdkman_curl_retry=0
+sdkman_curl_retry_max_time=60
+sdkman_debug_mode=false
+sdkman_insecure_ssl=true
+sdkman_rosetta2_compatible=false
+sdkman_selfupdate_feature=true
+signals=( EXIT HUP INT QUIT ILL TRAP ABRT EMT FPE KILL BUS SEGV SYS PIPE ALRM TERM URG STOP TSTP CONT CHLD TTIN TTOU IO XCPU XFSZ VTALRM PROF WINCH INFO USR1 USR2 ZERR DEBUG )
+solaris=false
+status=0
+termcap
+terminfo
+userdirs
+usergroups
+watch
+widgets
+zle_bracketed_paste=( $'\C-[[?2004h' $'\C-[[?2004l' )
+zsh_eval_context=( toplevel )
+zsh_scheduled_events
+zsh_shell=true

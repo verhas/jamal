@@ -244,9 +244,17 @@ The name for these is converted to follow the system property and environment va
 It means that the name `MERMAID` will be searched as `mermaid` when looking in the configuration file or as a system property.
 (MERMAID is an example, replace it with any name.)
 Also underscore and dot characters are converted back and forth.
+
++
+To ease typing, this parameter can be multi-line strings.
+In that case, the non-empty lines are treated as individual parameters before any `arguments` parameters are added.
+Must not start with empty line.
+The first line has to be the configured name of the command.
 *  `argument`, `arguments`
 The arguments to be passed to the command.
 This is a multivalued parameter.
+To ease typing, each parameter can be multi-line strings.
+In that case, the non-empty lines are treated as individual parameters.
 *  `environment`, `env`
 This option can specify the environment variables to be passed to the command.
 This option usually is a multi-line string, thus the use of the `"""` delimiter is recommended.

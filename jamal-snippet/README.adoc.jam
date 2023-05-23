@@ -126,6 +126,7 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
 ... <<shell:var,`shell:var`>>
+... <<hashCode,`hashCode`>>
 .. <<snip_update,`snip:update`>>
 
 {%@counter:define id=chapter format=%d. %}
@@ -3317,6 +3318,20 @@ If the macro detects a loop, then it will stop the processing and results in a `
 
 Although `$` is a valid character in a macro name, you cannot reference a macro that has a $ in its name.
 Also, the macro must not require any parameter.
+
+[[hashCode]]
+=== {%macroChapter%}`hashCode`
+{%#snip:check file={%JAVA_DIR%}HashCode.java hash=4880057c%}
+
+This macro returns the hash code of the macro input as a 64-character hexadecimal string.
+
+{%sample/
+{@hashCode abraka dabra}
+%}
+
+will result in
+
+{%output%}
 
 [[snip_update]]
 === {%macroChapter%}`snip:update`

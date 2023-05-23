@@ -80,3 +80,4 @@ javax0.jamal.snippet.CompileJavaMacros$ListClasses
 javax0.jamal.snippet.CompileJavaMacros$ListMethods
 javax0.jamal.snippet.CompileJavaMacros$ListFields
 javax0.jamal.snippet.ShellVar
+javax0.jamal.snippet.HashCode

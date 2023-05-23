@@ -1,5 +1,7 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.ObjectHolder;
 
@@ -9,7 +11,7 @@ import javax0.jamal.api.ObjectHolder;
  * the {@code options} ,acro can set or reset. This object also implement the {@link ObjectHolder} interface so it can be
  * used by some of the macros that rely on object storing of other macros.
  */
-public class Option implements Identified, ObjectHolder<Boolean> {
+public class Option implements Evaluable, ObjectHolder<Boolean> {
     private final String name;
     private boolean value;
     public Option(String name) {
@@ -28,5 +30,15 @@ public class Option implements Identified, ObjectHolder<Boolean> {
 
     public void set(boolean value) {
         this.value = value;
+    }
+
+    @Override
+    public String evaluate(String... parameters) throws BadSyntax {
+        return Boolean.toString(value);
+    }
+
+    @Override
+    public int expectedNumberOfArguments() {
+        return 0;
     }
 }

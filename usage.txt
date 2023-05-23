@@ -1,6 +1,6 @@
 Usage: jamal [options] input output
   -help                      help
-  -shcnf                     show the configuration values from ~/.jamal/settingsd.(properties|xml)
+  -shcnf                     show the configuration values from ~/.jamal/settings.(properties|xml)
   -version                   display version
   -verbose                   print out the conversions
   -open=<macroOpen>          the macro opening string

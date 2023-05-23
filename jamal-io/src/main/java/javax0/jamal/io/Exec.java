@@ -1,25 +1,14 @@
 package javax0.jamal.io;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -67,9 +56,17 @@ public class Exec implements Macro {
         // It means that the name "MERMAID" will be searched as "mermaid" when looking in the configuration file or as a system property.
         // (MERMAID is an example, replace it with any name.)
         // Also underscore and dot characters are converted back and forth.
+        //
+        // +
+        // To ease typing, this parameter can be multi-line strings.
+        // In that case, the non-empty lines are treated as individual parameters before any `arguments` parameters are added.
+        // Must not start with empty line.
+        // The first line has to be the configured name of the command.
         final var arguments = Params.holder(null, "argument", "arguments").asList(String.class);
         // The arguments to be passed to the command.
         // This is a multivalued parameter.
+        // To ease typing, each parameter can be multi-line strings.
+        // In that case, the non-empty lines are treated as individual parameters.
         final var environment = Params.holder(null, "environment", "env").asString();
         // This option can specify the environment variables to be passed to the command.
         // This option usually is a multi-line string, thus the use of the `"""` delimiter is recommended.
@@ -174,7 +171,7 @@ public class Exec implements Macro {
 
     private void defineProcessNameHolderMacro(final Processor processor, final String id, final Process process) throws BadSyntax {
         final var existing = processor.getRegister().getUserDefined(id);
-        BadSyntax.when(existing.isPresent(),  "The name `%s` is already used as a user defined macro .", id);
+        BadSyntax.when(existing.isPresent(), "The name `%s` is already used as a user defined macro .", id);
         processor.define(new ProcessHolder(id, process));
     }
 
@@ -278,7 +275,7 @@ public class Exec implements Macro {
                     continue;
                 }
                 final var parts = line.split("=", 2);
-                BadSyntax.when(parts.length != 2,  "The environment variable '%s' is not defined correctly.", line);
+                BadSyntax.when(parts.length != 2, "The environment variable '%s' is not defined correctly.", line);
                 env.put(parts[0], parts[1]);
             }
         }
@@ -302,7 +299,9 @@ public class Exec implements Macro {
      */
     private static boolean setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final Params.Param<Boolean> optional) throws BadSyntax {
         BadSyntax.when(!command.isPresent(), "'command' for the macro 'exec' is mandatory.");
-        final var executable = EnvironmentVariables.getenv(command.get());
+        final var commandArray = command.get().split("\n");
+        BadSyntax.when(commandArray.length < 1, "There is no command symbolic name defined in the macro");
+        final var executable = EnvironmentVariables.getenv(commandArray[0]);
         if (executable.isEmpty()) {
             if (optional.is()) {
                 return true;
@@ -311,7 +310,8 @@ public class Exec implements Macro {
         }
         final var cmd = new ArrayList<String>();
         cmd.add(executable.get());
-        cmd.addAll(arguments.get());
+        Arrays.stream(commandArray).skip(1).filter(s -> s.trim().length() > 0).forEach(cmd::add);
+        arguments.get().stream().flatMap(s -> Arrays.stream(s.split("\n"))).filter(s -> s.trim().length() > 0).forEach(cmd::add);
         pb.command(cmd);
         return false;
     }
@@ -358,8 +358,8 @@ public class Exec implements Macro {
             // end snippet
             Scan.using(processor).from(this).tillEnd().keys(osOnly, async, wait, destroy, force, optional).parse(in);
             final var idMacro = processor.getRegister().getUserDefined(async.get());
-            BadSyntax.when(idMacro.isEmpty(),  "Process id '%s' is not defined.", async.get());
-            BadSyntax.when(!(idMacro.get() instanceof ProcessHolder),  "Process id '%s' is not a process name.", async.get());
+            BadSyntax.when(idMacro.isEmpty(), "Process id '%s' is not defined.", async.get());
+            BadSyntax.when(!(idMacro.get() instanceof ProcessHolder), "Process id '%s' is not a process name.", async.get());
             final var process = ((ProcessHolder) idMacro.get()).getObject();
             if (process == null || optional.is()) {
                 return "";

@@ -118,6 +118,7 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
 ... <<shell:var,`shell:var`>>
+... <<hashCode,`hashCode`>>
 .. <<snip_update,`snip:update`>>
 
 
@@ -1544,7 +1545,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1322:30
+../jamal-snippet/README.adoc.jam:1324:30
 ----
 
 
@@ -2785,6 +2786,7 @@ will result
 - FilesMacro.java
 - Collect.java
 - SnipFile.java
+- HashCode.java
 - TrimLines.java
 - JavaSourceInsert.java
 - ThinXml.java
@@ -2895,7 +2897,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,920 bytes
+- snippet: 1,952 bytes
 - JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
@@ -2916,6 +2918,7 @@ will result
 - FilesMacro.java: 8,162 bytes
 - Collect.java: 24,444 bytes
 - SnipFile.java: 680 bytes
+- HashCode.java: 514 bytes
 - TrimLines.java: 5,379 bytes
 - JavaSourceInsert.java: 5,063 bytes
 - ThinXml.java: 8,792 bytes
@@ -3209,7 +3212,7 @@ will result in the output
 
 [source]
 ----
-2023-05-18 19:26:40
+2023-05-23 15:33:02
 ----
 
 
@@ -4285,8 +4288,27 @@ If the macro detects a loop, then it will stop the processing and results in a `
 Although `$` is a valid character in a macro name, you cannot reference a macro that has a $ in its name.
 Also, the macro must not require any parameter.
 
+[[hashCode]]
+=== xlv.`hashCode`
+
+
+This macro returns the hash code of the macro input as a 64-character hexadecimal string.
+
+[source]
+----
+{@hashCode abraka dabra}
+----
+
+will result in
+
+[source]
+----
+9d8abd45416a62bcfb6437eb0fe978f95b8b8df30edb58dea17980a067857124
+----
+
+
 [[snip_update]]
-=== xlv.`snip:update`
+=== xlvi.`snip:update`
 
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.

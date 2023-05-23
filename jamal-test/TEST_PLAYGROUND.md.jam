@@ -7,16 +7,15 @@ A[Christmas] -->|Get money| B(Go shopping)
 B --> C{Let me think}
 C -->|One| D[Laptop]
 C -->|Two| E[iPhone]
-C -->|Three| F[fa:fa-car Car]
+C -->|Three| F[fa:fa-car Care]
 %}
-{%#io:exec command="mermaid"
-           error="aaa.err.txt"
-           output="aaa.out.txt"
-           cwd="./"
-           argument="-i"
-           argument="aaa.mmd"
-           argument="-o"
-           argument="aaa.svg"%}
+{%#io:exec command="""mermaid
+-i
+aaa.mmd
+-o
+aaa.svg
+""" cwd="." error="convert.err.txt" output="convert.out.txt"
+%}
 
 ![Mermaid Diagram](./aaa.svg)
 
