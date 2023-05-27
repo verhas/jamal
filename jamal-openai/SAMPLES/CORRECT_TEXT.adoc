@@ -4,7 +4,7 @@
 
 
 
-* *input:* He was not able to finish the task that that she gave her the day before yesterday
+* *input:* He was not hey I want  able to finish the task that gibberish that she gave her the day before yesterday
 * *instruction:* rewrite the sentence to gender-neutral also fixing errors, removing repetitions and making it more concise
-* *response:* __He was not able to finish the task she gave him the day before yesterday
+* *response:* __She was not able to finish the task that she was given the day before yesterday
 __

@@ -5,6 +5,10 @@
 
 
 
+== https://github.com/verhas/jamal/tree/2.2.0[2.2.0]
+
+* Support for JSR223 scripting API
+
 == https://github.com/verhas/jamal/tree/2.1.0[2.1.0]
 
 * Java:insert macro can insert a macro result into a Java source file between

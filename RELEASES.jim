@@ -24,3 +24,5 @@ District XXIII is Soroksar.
 {@define RELEASE:SOROKSAR=2.0.2}
 
 {@define RELEASE:BERLIN=2.1.0}
+
+{@define RELEASE:MELBOURNE=2.2.0}

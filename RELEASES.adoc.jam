@@ -5,6 +5,10 @@
 
 {%@define RELEASE($x)=== https://github.com/verhas/jamal/tree/$x[$x]%}
 
+{%RELEASE/{%RELEASE:MELBOURNE%}%}
+
+* Support for JSR223 scripting API
+
 {%RELEASE/{%RELEASE:BERLIN%}%}
 
 * Java:insert macro can insert a macro result into a Java source file between

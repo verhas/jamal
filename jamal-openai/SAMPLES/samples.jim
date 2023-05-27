@@ -1,12 +1,28 @@
-{%@snip:xml pom=../pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
-{%#maven:load com.javax0.jamal:jamal-openai:{%VERSION%}%}\
-{%@import ../src/main/resources/openai.jim%}\
+
+Get the latest version of the OpenAI API from the maven repository
+The version is read from the pom.xml file in the root directory of the module.
+{%@snip:xml pom=../pom.xml%}
+{%#define VERSION={%pom /project/version/text()%}%}
+{%#maven:load com.javax0.jamal:jamal-openai:{%VERSION%}%}
+
+import the higher level macro definitions
+
+{%@import ../src/main/resources/openai.jim%}
 {%@comment
- in production this file has to be included as
+             in production this file has to be included as
+
                   {%@import res:`openai:get`openai.jim%}
+
+
 %}
-{%@options openai:local%}
+
+{%@options openai:local%} will store the cache in the directory where the document is and not in a central, user-specific directory
+
+when working in IntelliJ
+
+* the error from the macro processing goes into the result instead of making it an error
+* the macro returns without the response, hence asynch
+
 snippet intelliJ_only
 {%#if /{%@env intellij.asciidoctor.plugin%}/
        {%@options openai:fallible openai:asynch%}/%}

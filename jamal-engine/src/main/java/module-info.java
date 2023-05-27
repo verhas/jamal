@@ -12,4 +12,6 @@ module jamal.engine {
     requires jamal.tools;
     requires jdk.jshell;
     requires levenshtein;
+    requires java.scripting;
+    provides javax.script.ScriptEngineFactory with javax0.jamal.engine.JamalEngineFactory;
 }

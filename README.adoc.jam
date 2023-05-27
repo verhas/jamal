@@ -163,6 +163,11 @@ image::jamaldebugger2559x1089.png[]
 * link:./jamal-maven-plugin/README.adoc[Jamal Maven Plugin README], How to use Jamal as a Maven plugin
 * link:./jamal-maven-extension/README.adoc[Jamal Maven Extension README], How to use Jamal as a Maven extension
 
+Jamal also supports the JSR223 standard.
+That way Jamal can be used in any JSR223 compliant application that may need scripting.
+The macro opening and closing strings are `{` and `}` in this case unless the script attributes `open` and `close` are set.
+Script bindings are put into Jamal macros and are loaded from Jamal macros after execution.
+
 === Programming Language Modules
 
 {%@define LANGUAGE(Ruby)=* link:./jamal-{%@case:lower Ruby%}/README.adoc#[Ruby Module README], How to use Ruby code in your Jamal source%}
