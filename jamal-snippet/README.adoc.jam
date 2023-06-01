@@ -127,6 +127,7 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:chop,`string:chop`>>
 ... <<shell:var,`shell:var`>>
 ... <<hashCode,`hashCode`>>
+... <<cache,`cache`>>
 .. <<snip_update,`snip:update`>>
 
 {%@counter:define id=chapter format=%d. %}
@@ -3332,6 +3333,58 @@ This macro returns the hash code of the macro input as a 64-character hexadecima
 will result in
 
 {%output%}
+
+[[cache]]
+=== {%macroChapter%}`cache`
+{%#snip:check file={%JAVA_DIR%}CacheMacro.java hash=0db266f8%}
+
+This macro returns either the name of a hash file or `true`/`false` checking the existence of a cache file.
+The macro uses its whole input as parameters.
+The defined parameters are:
+
+* `file` or `url` is the name of the file to cache.
+If this parameter is defined, and the cache file does not, then
+** the macro will read/download the file, and
+** create the cache file.
+
+* `cacheDirectory`, `dir`, or `directory` can specify the directory where the cache file is stored.
+It is usually a relative path to the directory where the macro is used.
+
+* `key` is the name of the cache file.
+If this parameter is not present, the macro will calculate the hash of the file name and use it as key.
+
+* `ext`, or `extension` is the extension of the cache file.
+This parameter is optional.
+The default value is `cache`.
+You can specify the extension with or without the leading dot.
+The use of this parameter is important when you want to reference a downloaded media file from the document.
+
+* `exists`, or `query` will simply check the existence of the cache file.
+If the cache file exists, then the macro returns `true`, otherwise `false`.
+
+* `cacheTtl`, `ttl` can specify the time-to-live of the cache file.
+The format should be the same as ttl specification in the main cache configuration.
+
+The paraneters `cacheDirectory`, and `cacheTtl` can be specified as macros.
+This possibility is useful when you want to use the same cache parameters for multiple files.
+The other parameter names are technically aliases and cannot be specified as macro names.
+
+Example:
+
+{%sample/
+This is just a sample text.
+{@cache exists key=abrakadabra}
+%}
+
+will result in
+
+{%output%}
+
+The use of this macro along with the core `if` macro can be used to download or otherwise create a file only if it does not exist.
+A sample application, for example, can use the calculated hashcode of the PlantUML source and start the rendering only if the cache file with the given key does not exist.
+It will save processing time or download bandwidth.
+
+[[cache:clear]]
 
 [[snip_update]]
 === {%macroChapter%}`snip:update`

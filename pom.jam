@@ -22,6 +22,7 @@
     {github|verhas|jamal}
     {properties|
         {property :project.build.sourceEncoding:UTF-8}
+        {property :maven.plugin.validation:VERBOSE}
     }
     {distributionManagement|
         {snapshotRepository |ossrh|https://oss.sonatype.org/content/repositories/snapshots}

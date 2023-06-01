@@ -23,7 +23,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -119,6 +119,7 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:chop,`string:chop`>>
 ... <<shell:var,`shell:var`>>
 ... <<hashCode,`hashCode`>>
+... <<cache,`cache`>>
 .. <<snip_update,`snip:update`>>
 
 
@@ -133,7 +134,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -473,7 +474,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.1.1-SNAPSHOT</version>
+<version>2.2.0-SNAPSHOT</version>
 ...
 ----
 
@@ -512,7 +513,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.1.1-SNAPSHOT</version>
+<version>2.2.0-SNAPSHOT</version>
 ...
 ----
 
@@ -590,7 +591,7 @@ The following example demonstrates how the result of the processing can be modif
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
 </dependency>}
 <plugins><plugin>
 <artifactId>my-imaginary</artifactId>
@@ -620,7 +621,7 @@ will result
     <dependency>
       <groupId>com.javax0.jamal</groupId>
       <artifactId>jamal-snippet</artifactId>
-      <version>2.1.1-SNAPSHOT</version>
+      <version>2.2.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <pluginManagement/>
@@ -1545,7 +1546,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1324:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1324:30
 ----
 
 
@@ -2815,6 +2816,7 @@ will result
 - SnippetXmlReader.java
 - XmlInsert.java
 - SnipProperties.java
+- CacheMacro.java
 - Xml.java
 - CounterMacro.java
 - SnipList.java
@@ -2897,7 +2899,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,952 bytes
+- snippet: 1,984 bytes
 - JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
@@ -2947,6 +2949,7 @@ will result
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 6,316 bytes
 - SnipProperties.java: 1,485 bytes
+- CacheMacro.java: 2,768 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 1,938 bytes
 - SnipList.java: 1,222 bytes
@@ -3002,7 +3005,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.1.1-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.2.0-SNAPSHOT</version>
 </project>
 }
 ----
@@ -3018,7 +3021,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3033,7 +3036,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.1.1-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.2.0-SNAPSHOT</version>
 </project>
 }
 ----
@@ -3049,7 +3052,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.1.1-SNAPSHOT</version>
+<version>2.2.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3070,7 +3073,7 @@ The previous example that we used before can also be formulated this way.
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.1.1-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.2.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3087,7 +3090,7 @@ It will result in the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3110,7 +3113,7 @@ project>
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.1.1-SNAPSHOT
+  version>2.2.0-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3130,7 +3133,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
@@ -3162,7 +3165,7 @@ For example:
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.1.1-SNAPSHOT
+  version>2.2.0-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3180,7 +3183,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.1.1-SNAPSHOT</version>
+<version>2.2.0-SNAPSHOT</version>
 <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
@@ -3212,7 +3215,7 @@ will result in the output
 
 [source]
 ----
-2023-05-23 17:32:38
+2023-06-01 19:55:18
 ----
 
 
@@ -4307,8 +4310,66 @@ will result in
 ----
 
 
+[[cache]]
+=== xlvi.`cache`
+
+
+This macro returns either the name of a hash file or `true`/`false` checking the existence of a cache file.
+The macro uses its whole input as parameters.
+The defined parameters are:
+
+* `file` or `url` is the name of the file to cache.
+If this parameter is defined, and the cache file does not, then
+** the macro will read/download the file, and
+** create the cache file.
+
+* `cacheDirectory`, `dir`, or `directory` can specify the directory where the cache file is stored.
+It is usually a relative path to the directory where the macro is used.
+
+* `key` is the name of the cache file.
+If this parameter is not present, the macro will calculate the hash of the file name and use it as key.
+
+* `ext`, or `extension` is the extension of the cache file.
+This parameter is optional.
+The default value is `cache`.
+You can specify the extension with or without the leading dot.
+The use of this parameter is important when you want to reference a downloaded media file from the document.
+
+* `exists`, or `query` will simply check the existence of the cache file.
+If the cache file exists, then the macro returns `true`, otherwise `false`.
+
+* `cacheTtl`, `ttl` can specify the time-to-live of the cache file.
+The format should be the same as ttl specification in the main cache configuration.
+
+The paraneters `cacheDirectory`, and `cacheTtl` can be specified as macros.
+This possibility is useful when you want to use the same cache parameters for multiple files.
+The other parameter names are technically aliases and cannot be specified as macro names.
+
+Example:
+
+[source]
+----
+This is just a sample text.
+{@cache exists key=abrakadabra}
+----
+
+will result in
+
+[source]
+----
+This is just a sample text.
+false
+----
+
+
+The use of this macro along with the core `if` macro can be used to download or otherwise create a file only if it does not exist.
+A sample application, for example, can use the calculated hashcode of the PlantUML source and start the rendering only if the cache file with the given key does not exist.
+It will save processing time or download bandwidth.
+
+[[cache:clear]]
+
 [[snip_update]]
-=== xlvi.`snip:update`
+=== xlvii.`snip:update`
 
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
