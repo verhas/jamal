@@ -4,7 +4,8 @@
 
 
 
-![Mermaid Diagram](./aaa.svg)
+.cached
+![Mermaid Diagram](images/e8a96c341e35bf3594a44f6a47e198b17c60affc393db847a4e26f7ed05708b5.svg)
 
 
 
@@ -14,7 +15,7 @@
 ```xml
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-test</artifactId>
-<version>2.1.0-SNAPSHOT</version>
+<version>2.2.0-SNAPSHOT</version>
 ```
 
 

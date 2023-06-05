@@ -1,23 +1,25 @@
 # Sample documentation
 
 {%@maven:load com.javax0.jamal:jamal-io:2.1.0-SNAPSHOT%}
-{%#io:write (output="aaa.mmd")
-flowchart TD
+
+{%#define CHART=flowchart TD
 A[Christmas] -->|Get money| B(Go shopping)
 B --> C{Let me think}
 C -->|One| D[Laptop]
 C -->|Two| E[iPhone]
 C -->|Three| F[fa:fa-car Care]
 %}
+{%#define KEY={%#hashCode {%CHART%}%}%}
+{%#if [not]/{%#cache dir=images key={%KEY%} ext=svg exists%}/
+{%#io:write (output="aaa.mmd") {%CHART%}%}
 {%#io:exec command="""mermaid
 -i
 aaa.mmd
 -o
-aaa.svg
+images/{%KEY%}.svg
 """ cwd="." error="convert.err.txt" output="convert.out.txt"
-%}
-
-![Mermaid Diagram](./aaa.svg)
+%}/.cached%}
+![Mermaid Diagram](images/{%KEY%}.svg)
 
 {%@snip:xml pom=./pom.xml%}
 {%@snip:xml parent_pom=../pom.xml%}

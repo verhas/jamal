@@ -1650,7 +1650,7 @@ You may need the explicit specification of `jamal` when the content of the macro
 
 If character following the keyword `eval` is `\*`, then the scripting type is `jamal` and the evaluation is repeated until all macros are resolved.
 The macro assumes that all the macros are resolved when the evaluation of the text does not change any more.
-This may lead to infinite loop, therefore there is a built-in limit.
+This may lead to infinite loop, therefore, there is a built-in limit.
 `eval*` evaluates the macro input at most {%@snip DEFAULT_LOOP_LIMIT /(\d+)/%} times.
 This limit can be changed with the option {%evaluateLoopLimit%}.
 This name can also be used as a user defined macro to set this option globally, for example:
@@ -2130,7 +2130,8 @@ The limit can be modified setting the environment variable {%JAMAL_INCLUDE_DEPTH
 [[use]]
 ==== {%macroChapter%}`use`
 
-since 1.0.0 since 1.7.4 can define an alias for an already loaded macro
+* since 1.0.0
+* since 1.7.4 can define an alias for an already loaded macro
 
 `use` declares a Java class as a built-in macro or defines an alias name for an already loaded built-in macro.
 
