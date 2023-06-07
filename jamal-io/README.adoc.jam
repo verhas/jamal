@@ -49,6 +49,7 @@ Following that, you can use the macros
 {%chap cwd%}
 . <<name,`os:name`>>
 {%chap write%}
+{%chap file%}
 {%chap remove%}
 {%chap mkdir%}
 {%chap print%}
@@ -103,6 +104,20 @@ The default value is to truncate the file.
 The default is not to create the directory and hence, neither the file.
 
 {%OPTIONS_NOTE%}
+
+{%chap file%}
+
+This macro can be used to test a file.
+The result of the macro will be either `true` or `false` depending on the file test.
+
+The macro has two options:
+
+* `io:file` (alias `file`) names the file.
+The file name can be absolute or relative to the file where the macro is used.
+
+* `isHidden`, `exists`, `isDirectory`, `isFile`, `canExecute`, `canRead`, `canWrite` specifies the test.
+Technically, this option is boolean, but the macro tests the name you use instead of the existence.
+If you do not specify any of these tests then `exists` will be used.
 
 {%chap remove%}
 

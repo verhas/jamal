@@ -41,6 +41,7 @@ Following that, you can use the macros
 . <<cwd,`io:cwd`>>
 . <<name,`os:name`>>
 . <<write,`io:write`>>
+. <<file,`io:file`>>
 . <<remove,`io:remove`>>
 . <<mkdir,`io:mkdir`>>
 . <<print,`io:print`>>
@@ -103,8 +104,24 @@ The default is not to create the directory and hence, neither the file.
 Note that the option can be defined as a user defined macro or as an option using the `{@option ...}` macro.
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
+[[file]]
+=== iv. `io:file`
+
+
+This macro can be used to test a file.
+The result of the macro will be either `true` or `false` depending on the file test.
+
+The macro has two options:
+
+* `io:file` (alias `file`) names the file.
+The file name can be absolute or relative to the file where the macro is used.
+
+* `isHidden`, `exists`, `isDirectory`, `isFile`, `canExecute`, `canRead`, `canWrite` specifies the test.
+Technically, this option is boolean, but the macro tests the name you use instead of the existence.
+If you do not specify any of these tests then `exists` will be used.
+
 [[remove]]
-=== iv. `io:remove`
+=== v. `io:remove`
 
 
 This macro can be used to remove a file or directory.
@@ -128,7 +145,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[mkdir]]
-=== v. `io:mkdir`
+=== vi. `io:mkdir`
 
 
 This macro can be used to create a directory.
@@ -152,7 +169,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[print]]
-=== vi. `io:print`
+=== vii. `io:print`
 
 
 This macro can be used to print some text to the standard output or to the standard error.
@@ -173,7 +190,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[exec]]
-=== vii. `io:exec`
+=== viii. `io:exec`
 
 
 
@@ -510,7 +527,7 @@ The test checks that the error message belongs to this case and not to the use o
 
 
 [[waitFor]]
-=== viii. `io:waitFor`
+=== ix. `io:waitFor`
 
 
 This macro can be used to wait for the completion of a proces started earlier asynchronously.
