@@ -14,7 +14,7 @@ Useful to fetch ephemeral resources via HTTP to have them attached to the docume
 
 {%RELEASE/{%RELEASE:BERLIN%}%}
 
-* Java:insert macro can insert a macro result into a Java source file between
+* `java:insert` macro can insert a macro result into a Java source file between
 
   <editor-fold id="">
   </editor-fold>

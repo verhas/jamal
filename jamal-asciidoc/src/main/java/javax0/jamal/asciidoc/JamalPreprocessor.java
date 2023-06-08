@@ -200,6 +200,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         final var input = Input.makeInput(text, new Position(fileName, 0, 0));
         // snipline spec_env filter="(.*?)"
         System.setProperty("intellij.asciidoctor.plugin", "1");
+        // snipline spec_env2 filter="(.*?)"
+        System.setProperty("asciidocfx.asciidoctor.plugin", "1");
         final var r = process(processor, input);
         r.processor = processor;
         r.lines = postProcess(lines, r, fileName);

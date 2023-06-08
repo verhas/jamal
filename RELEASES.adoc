@@ -14,7 +14,7 @@ Useful to fetch ephemeral resources via HTTP to have them attached to the docume
 
 == https://github.com/verhas/jamal/tree/2.1.0[2.1.0]
 
-* Java:insert macro can insert a macro result into a Java source file between
+* `java:insert` macro can insert a macro result into a Java source file between
 
   <editor-fold id="">
   </editor-fold>

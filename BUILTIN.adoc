@@ -599,4 +599,3 @@ Programmatically created user defined macros can define their own evaluation.
 In this chapter I will explain the advantages, and the disadvantages of the two strategies that you can follow to register your built-in macros.
 It is a more theoretical chapter with less example code.
 You can skip this section and return to it later.
-

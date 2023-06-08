@@ -63,5 +63,3 @@ The current documentation of Jamal may use the newest features, which were not r
 To edit these, you need to install the non-released version.
 To do that run `mvn install` in the Jamal project directory first.
 After that `cd jamal-asciidoc` and `sh ./install-asciidoc.sh`.
-
-

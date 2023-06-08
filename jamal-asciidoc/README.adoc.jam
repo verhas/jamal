@@ -3,7 +3,7 @@
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@snip:collect from="src/main/java/"%}
-Use Jamal in IntelliJ interactively with AsciiDoc utilizing the AsciiDoc plugin.
+Use Jamal in IntelliJ or AsciidocFX interactively with AsciiDoc utilizing the AsciiDoc plugin.
 
 image:images/splash.png[width=100%]
 
@@ -13,9 +13,9 @@ This document is the readme file for the Jamal Asciidoc extension version `{%VER
 
 {%@env ASCIIDOC_EXTENSION_LOG%}
 
-This Jamal module provides an extension for Asciidoc.
+This Jamal module provides an extension for Asciidoctor.
 The extension is a preprocessor extension reading the input of the Asciidoc document before the actual transformation of Asciidoc happens.
-Using this extension, you can configure your Asciidoc converted to invoke the Jamal preprocessing as part of the Asciidoc conversion.
+Using this extension, you can configure your Asciidoc converter to invoke the Jamal preprocessing as part of the Asciidoc conversion.
 
 The primary use case is using the extension with the IntelliJ IDEA plugin for Asciidoc.
 Installing this extension, you can see the rendered and Jamal preprocessed Asciidoc result on the right editor pane while editing your `.adoc.jam` file.
@@ -49,14 +49,15 @@ To use the plugin together with the IntelliJ Asciidoc plugin, you need the file 
 
 You can download this file from the central Maven repository using the URLs:
 {%#define DL=https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/{%V%}/jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip%}{%@define URL($x)=$x[``$x``]%}
-
+{%@define DLINKS=
 {%URL {%DL%}%}
 
 {%URL {%DL%}.asc%}
 
 {%URL {%DL%}.md5%}
 
-{%URL {%DL%}.sha1%}
+{%URL {%DL%}.sha1%}%}
+{%DLINKS%}
 
 The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files are standard checksum files to check the integrity of the archive.
 
@@ -105,6 +106,36 @@ The extension does not add the prefix and postfix to the saved file.
 It is added only to the text for the display.
 ====
 
+== Installation with AsciidocFX
+
+The installation for AsciidocFX needs to copy all the JAR files dowloadable from Maven central
+
+{%DLINKS%}
+
+into the `lib` directory of your AsciidocFX installation.
+It is 
+
+* `~/Applications/AsciidocFX/lib` on MacOs
+* TBD on Linux, and
+* TBD on Windows
+
+Note that you need AsciidocFX 1.8.5 or newer.
+
+After copying the files you will get an error message warning you about duplicate JAR libraries of different versions.
+The reason for that is AsciidocFX using older versions of many of the libraries.
+The message recommends to remove the older versions.
+Please, do that.
+
+NOTE: There is no guarantee that this will work.
+As for Jamal 2.2.0 and AsciidocFX 1.8.5 the experiments whosed that there were no issues running AsccidocFX with Jamal.
+Most of the libraries have newer versions, which are minor version updates.
+The Yaml handling library, however is 1.3 for AsciidocFX and 2.0 for Jamal.
+The API of the two versions are not compatible, and it may cause issues in some cases.
+
+After the files are copied to the `lib` folder you need to restart AsciidocFX and that is it.
+AsciidocFX 1.8.5 and later versions recognize `.jam` as Asciidoc extension and will work properly.
+There is no need to copy Jamal into each project directory separately.
+
 == Usage
 
 After the installation, you can open any file that has the extension `.jam` and have a look at the right pane at the rendered document.
@@ -134,6 +165,11 @@ When you edit a Markdown file the extension is either `md.jam` or `markdown.jam`
 The plugin first converts the Jamal macros and then converts the markdown to Asciidoc.
 The Jamal processed markdown file is saved into the output, but the converted Asciidoc is passed to the IntelliJ Asciidoctor plugin.
 That way you edit the markdown and see the result instantly in the other editor pane.
+
+In IntelliJ there is a plugin to display Markdown files.
+In this case it is not invoked.
+The preview of the document may look slightly different from the Markdown preview.
+If you are interested how the Markdown plugin renders the same document you can open any times the saves `.md` file.
 
 === Xml
 
@@ -272,13 +308,13 @@ Note that these names should be translated to lower case and use `.` as separato
 
 instead of `{%@snip ASCIIDOC_EXTENSION_LOG%}`.
 
-=== Special Environment Variable `{%@snip spec_env%}`
+=== Special Environment Variables `{%@snip spec_env%}` and `{%@snip spec_env2%}`
 
-The system property `{%@snip spec_env%}` is defined by the embedding environment.
+The system property `{%@snip spec_env%}` and `{%@snip spec_env2%}` are defined by the embedding environment.
 You can use this via the `env` macro to decide if the Jamal processor is running as an asciidoctor preprocessor.
 {%@import res:jamal.jim%}
 {%sample/
-{#if /{@env {%@snip spec_env%}}/This was compiled in IntelliJ/This was compiled outside of IntelliJ}
+{#if /{@env {%@snip spec_env%}}/This was compiled in IntelliJ or AsciidocFX/This was compiled outside of IntelliJ or AsciidocFX/}
 %}
 
 will result in
@@ -287,6 +323,29 @@ will result in
 
 You should use this macro only for very special purposes.
 Using this macro will result different output based on the different Jamal processor environment.
+Currently, there is no support to distinguish between IntelliJ and AsciidocFX environment.
+
+The use case to use the environment variable is executing external processors or retrieving expensive resources.
+Examples:
+
+* A macro executing Mermaid or some other processing as an external tool may execute the external tool in an asynchronous way when running inside an editor.
+The external processing may finish later than Jamal finishes.
+In this case, the preview of the document will show a broken image until the processing is finished.
+The next time the preview is refreshed, the image will be shown.
++
+When the same code runs out of the editor, the external processing will be executed synchronously.
+The execution time of Jamal may be longer, but it does not affect an interactive user.
+On the other hand, it is guaranteed that the generated picture is there.
+
+* Another example is retrieving a response from ChatGPT.
+Getting the response may take a few seconds or even minutes.
+When running inside an editor, the response will be retrieved asynchronously, and the preview will be available.
+This preview will show a message about the ongoing processing.
+This is better than freezing the rendering for long seconds.
++
+When running outside of the editor, the response will be retrieved synchronously, same as in the previous example.
+
+NOTE: When the environment variable was introduced, I had no idea any use of it.
 
 === Options
 {%@snip:check id=OPTIONS hash=2798f8b7%}\
