@@ -41,6 +41,7 @@ Following that, you can use the macros
 . <<cwd,`io:cwd`>>
 . <<name,`os:name`>>
 . <<write,`io:write`>>
+. <<copy,`io:copy`>>
 . <<file,`io:file`>>
 . <<remove,`io:remove`>>
 . <<mkdir,`io:mkdir`>>
@@ -104,8 +105,22 @@ The default is not to create the directory and hence, neither the file.
 Note that the option can be defined as a user defined macro or as an option using the `{@option ...}` macro.
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
+[[copy]]
+=== iv. `io:copy`
+
+
+This macro can be used to copy a file.
+It is usually useful when a document is fetches some binary information via the web and wants to store it locally attached to the document.
+For example, the OpenAI can ask the service to generate a picture.
+The result is a downloadable picture.
+The picture is stored by the service only for a limited time.
+After that tim,e, the picture us deleted and the
+Using this macro, the picture can be downloaded and stored locally.
+
+
+
 [[file]]
-=== iv. `io:file`
+=== v. `io:file`
 
 
 This macro can be used to test a file.
@@ -121,7 +136,7 @@ Technically, this option is boolean, but the macro tests the name you use instea
 If you do not specify any of these tests then `exists` will be used.
 
 [[remove]]
-=== v. `io:remove`
+=== vi. `io:remove`
 
 
 This macro can be used to remove a file or directory.
@@ -145,7 +160,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[mkdir]]
-=== vi. `io:mkdir`
+=== vii. `io:mkdir`
 
 
 This macro can be used to create a directory.
@@ -169,7 +184,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[print]]
-=== vii. `io:print`
+=== viii. `io:print`
 
 
 This macro can be used to print some text to the standard output or to the standard error.
@@ -190,7 +205,7 @@ Note that the option can be defined as a user defined macro or as an option usin
 The aliases can only be used on the macro itself after the name of the macro between `(` and `)` characters.
 
 [[exec]]
-=== viii. `io:exec`
+=== ix. `io:exec`
 
 
 
@@ -527,7 +542,7 @@ The test checks that the error message belongs to this case and not to the use o
 
 
 [[waitFor]]
-=== ix. `io:waitFor`
+=== x. `io:waitFor`
 
 
 This macro can be used to wait for the completion of a proces started earlier asynchronously.

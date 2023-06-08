@@ -4,6 +4,7 @@ import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
 
 import java.io.File;
+import java.nio.file.Files;
 
 public class IoFile implements Macro, InnerScopeDependent {
 

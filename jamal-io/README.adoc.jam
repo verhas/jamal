@@ -49,6 +49,7 @@ Following that, you can use the macros
 {%chap cwd%}
 . <<name,`os:name`>>
 {%chap write%}
+{%chap copy%}
 {%chap file%}
 {%chap remove%}
 {%chap mkdir%}
@@ -104,6 +105,18 @@ The default value is to truncate the file.
 The default is not to create the directory and hence, neither the file.
 
 {%OPTIONS_NOTE%}
+
+{%chap copy%}
+
+This macro can be used to copy a file.
+It is usually useful when a document is fetches some binary information via the web and wants to store it locally attached to the document.
+For example, the OpenAI can ask the service to generate a picture.
+The result is a downloadable picture.
+The picture is stored by the service only for a limited time.
+After that tim,e, the picture us deleted and the
+Using this macro, the picture can be downloaded and stored locally.
+
+
 
 {%chap file%}
 

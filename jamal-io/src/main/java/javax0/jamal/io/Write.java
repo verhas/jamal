@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +21,7 @@ public class Write implements Macro, InnerScopeDependent {
         final var file = Utils.getFile();
         final var append = Params.holder("io:append", "append").asBoolean();
         final var mkdir = Params.holder("io:mkdir", "mkdir").asBoolean();
-        Params.using(processor).from(this).keys(file, append, mkdir).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(file, append, mkdir).parse(in);
 
         InputHandler.skipWhiteSpaces(in);
 

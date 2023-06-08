@@ -6,5 +6,5 @@ module jamal.io {
     requires jamal.api;
     requires jamal.tools;
     requires jamal.engine;
-    provides Macro with Write, Remove, Mkdir, Print, Cwd, OsName, Exec, Exec.WaitFor, IoFile;
+    provides Macro with Write, Remove, Mkdir, Print, Cwd, OsName, Exec, Exec.WaitFor, IoFile,Copy;
 }

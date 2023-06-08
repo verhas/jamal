@@ -7,7 +7,10 @@
 
 == https://github.com/verhas/jamal/tree/2.2.0[2.2.0]
 
-* Support for JSR223 scripting API
+* Support for JSR223 scripting API. Now you can use Jamal in any application that can be scripted.
+* New macro in the file module to test file existence, type (dir or plain file), readability, writable, executable, or hidden.
+* New macro in the file module to copy binary files.
+Useful to fetch ephemeral resources via HTTP to have them attached to the document.
 
 == https://github.com/verhas/jamal/tree/2.1.0[2.1.0]
 

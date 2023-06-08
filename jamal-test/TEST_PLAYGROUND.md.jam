@@ -1,58 +1,17 @@
 # Sample documentation
 
-{%@maven:load com.javax0.jamal:jamal-io:2.1.0-SNAPSHOT%}
+{%@maven:load com.javax0.jamal:jamal-io:2.2.0-SNAPSHOT%}
 
-{%#define CHART=flowchart TD
-A[Christmas] -->|Get money| B(Go shopping)
-B --> C{Let me think}
-C -->|One| D[Laptop]
-C -->|Two| E[iPhone]
-C -->|Three| F[fa:fa-car Care]
+{%!#if [not] `///`{%@io:file file="mimmoma.png" exists%}
+///
+  {%@ident {%#io:copy cache
+                from="https://raw.githubusercontent.com/javax0/javax0.github.io/master/assets/images/big-mvbbutton.png"
+                to="mimmoma.png"
+           %}
+  %}
+///
+{%@comment We already have the file downloaded%}
 %}
-{%#define KEY={%#hashCode {%CHART%}%}%}
-{%#if [not]/{%#cache dir=images key={%KEY%} ext=svg exists%}/
-{%#io:write (output="aaa.mmd") {%CHART%}%}
-{%#io:exec command="""mermaid
--i
-aaa.mmd
--o
-images/{%KEY%}.svg
-""" cwd="." error="convert.err.txt" output="convert.out.txt"
-%}/.cached%}
-![Mermaid Diagram](images/{%KEY%}.svg)
 
-{%@snip:xml pom=./pom.xml%}
-{%@snip:xml parent_pom=../pom.xml%}
-{%@counter:define id=CHAPTER format="%d. "%}
-## {%CHAPTER%}Dependency
+image::mimmoma.png[]
 
-```xml
-<groupId>{%parent_pom /project/groupId%}</groupId>
-<artifactId>{%pom /project/artifactId%}</artifactId>
-<version>{%pom /project/version%}</version>
-```
-
-{%@snip:collect from="./src/main"%}
-
-{%@define sample(SNIPPET)=
-```java
-{%#numberLines format="%02d "
-{%@snip SNIPPET%}%}
-```
-[snippet]({%@snip:file SNIPPET%})%}
-
-## {%CHAPTER%}Array Sample
-{%#define ARRAY_CHAPTER={%CHAPTER last%}%}
-
-{%sample Array%}
-
-## {%CHAPTER%}Hello World Sample
-
-{%sample HelloWorld%}
-The array chapter is {%ARRAY_CHAPTER%}
-
-## {%CHAPTER%} Simple UML
-
-![world's simplest uml]({%@plantuml sample.svg
-a -> b
-%})
