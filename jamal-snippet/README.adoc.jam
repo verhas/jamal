@@ -3075,7 +3075,7 @@ This is also the case when there is no parameter defined.
 
 [[java:insert]]
 ==== `java:insert`
-{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=8f8478b8%}
+{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=ec9f4586%}
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
 The macro has three parameters:
@@ -3088,12 +3088,24 @@ The macro has three parameters:
   This parameter is optional and is not needed if there is only one segment in the file.
 
 * `check`, `checkUpdate`, `update`, `updateOnly` will do an extra step before updating the file.
-It will do a lexical analysis on the original file and on the new version and compares the two.
+It will do a lexical analysis on the original file and on the new version and compare the two.
 If they are the same on the Java lexical level ignoring differences in comments and white-space, then the file is not updated.
 
 +
 This is useful not to ruin the already generated code when it was formatted and does not change other than that.
+It can also be used when the build process runs in properly configured a CI/CD environment where the build process cannot write the source files.
+In that case, the developer builds should update the source code, and the CI/CD process can see the already updated code.
+
++
 The downside is that the comparison needs time and some memory.
+
+* `failOnUpdate`, `failUpdate`, `updateError` will result an error if the file is updated.
+Note that the processing will not stop, only the macro will result in an error at the end of the Jamal file processing.
+If there are multiple `java:insert` macros in the file, then all of them will be processed the error will only happen at the end of the processing.
+This option may be useful in a build process when the code generation runs after the compilation.
+If the code was updated, then the compilation should fail.
+The code, however, was already updated and the compilation started again will be successful.
+
 
 The parameters are not enclosed between any characters.
 They follow the macro name directly until the end of the line.

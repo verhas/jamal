@@ -17,17 +17,23 @@ public class JavaSourceInsert implements Macro {
         final var file = Params.<String>holder(null, "to", "file", "into");
         final var segment = Params.<String>holder("segment", "at", "id").orElseNull();
         final var update = Params.<Boolean>holder(null, "check", "checkUpdate", "update", "updateOnly").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(file, segment, update).parse(in);
+        final var throwUp = Params.<Boolean>holder(null, "failOnUpdate", "failUpdate", "updateError").asBoolean();
+        Scan.using(processor).from(this).firstLine().keys(file, segment, update, throwUp).parse(in);
+        final JavaSourceInsertCloser closer;
         if (in.isEmpty()) {
-            processor.deferredClose(new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.get()));
-            return "";
+            closer = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.is() || throwUp.is());
+            processor.deferredClose(closer);
         } else {
-            try (final var closer = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.get())) {
+            try (final var _c = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.is() || throwUp.is())) {
+                closer = _c;
                 closer.set(in);
                 closer.set(processor);
             }
-            return in.toString();
         }
+        if (throwUp.is()) {
+            processor.deferredClose(() -> BadSyntax.when(closer.isUpdated(), "The file " + file.get() + " was updated."));
+        }
+        return in.toString();
     }
 
     @Override
@@ -44,6 +50,8 @@ public class JavaSourceInsert implements Macro {
         private Processor processor;
 
         private final boolean update;
+
+        private boolean updated = false;
 
         private JavaSourceInsertCloser(final String file, final String segment, final Position pos, boolean update) {
             this.file = file;
@@ -101,6 +109,7 @@ public class JavaSourceInsert implements Macro {
                 }
             }
             FileTools.writeFileContent(fileName, newContent, processor);
+            updated = true;
         }
 
         @Override
@@ -112,6 +121,11 @@ public class JavaSourceInsert implements Macro {
         public void set(final Processor processor) {
             this.processor = processor;
         }
+
+        public boolean isUpdated() {
+            return updated;
+        }
+
     }
 
 }
