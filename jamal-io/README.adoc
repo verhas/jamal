@@ -110,13 +110,34 @@ The aliases can only be used on the macro itself after the name of the macro bet
 
 
 This macro can be used to copy a file.
-It is usually useful when a document is fetches some binary information via the web and wants to store it locally attached to the document.
+It is usually useful when a source file is some binary information via the web, and you want to store it locally attached to the document.
 For example, the OpenAI can ask the service to generate a picture.
 The result is a downloadable picture.
 The picture is stored by the service only for a limited time.
-After that tim,e, the picture us deleted and the
+After that time, the picture us deleted and not available for the document.
 Using this macro, the picture can be downloaded and stored locally.
 
+The macro is controlled by options.
+The options are:
+
+* `from` should specify the source file.
+It is usually a URL starting with `https://`.
+Note that Jamal deliberately does not support `http://` URLs.
+
+* `to` the target file name.
+This is where the file will be saved.
+
+* `io:append`, `append` is a boolean parameter meaning that the file should be appended.
+
+* `io:mkdir`, `mkdir` is a boolean parameter meaning that the directory where the file should be saved should be created if it does not exist.
+
+* `cache` is a boolean parameter meaning that the file download cache implemented in Jamal should be used.
+
+
+* `overwrite` is a boolean parameter meaning that the file should be overwritten if it exists.
+If this parameter is not specified and the target file exists, then the macro will not even start the copy.
+The same effect could be reached surrounding the `io:copy` macro with an `if` macro using <<file,`io::file`>> checking the existence of the target file.
+This option is for convenience.
 
 
 [[file]]

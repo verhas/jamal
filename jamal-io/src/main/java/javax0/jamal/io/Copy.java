@@ -21,11 +21,16 @@ public class Copy implements Macro {
         final var append = Params.holder("io:append", "append").asBoolean();
         final var mkdir = Params.holder("io:mkdir", "mkdir").asBoolean();
         final var useCache = Params.holder("cache").asBoolean();
-        Scan.using(processor).from(this).tillEnd().keys(from, to, append, mkdir, useCache).parse(in);
+        final var overwrite = Params.holder("overwrite").asBoolean();
+
+        Scan.using(processor).from(this).tillEnd().keys(from, to, append, mkdir, useCache,overwrite).parse(in);
 
         final var toName = Utils.getFile(to, in);
         final var fromName = Utils.getFile(from, in);
         final var f = new File(toName);
+        if( f.exists() && !overwrite.is() ){
+            return "";
+        }
         if (mkdir.is()) {
             //noinspection ResultOfMethodCallIgnored
             f.getParentFile().mkdirs();
