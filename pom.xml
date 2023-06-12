@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>2.2.0</version>
     <description>Jamal macro library to process text files</description>
     <modules>
         <module>jamal-engine</module>
@@ -192,11 +192,11 @@
                         <ancestorId>262145</ancestorId>
                         <serverId>confluence</serverId>
                         <pageTitlePrefix xml:space="preserve">Doc :: </pageTitlePrefix>
-                        <pageTitleSuffix xml:space="preserve"> [2.2.0-SNAPSHOT]</pageTitleSuffix>
-                        <versionMessage>Version 2.2.0-SNAPSHOT</versionMessage>
+                        <pageTitleSuffix xml:space="preserve"> [2.2.0]</pageTitleSuffix>
+                        <versionMessage>Version 2.2.0</versionMessage>
                         <notifyWatchers>false</notifyWatchers>
                         <attributes>
-                            <version>2.2.0-SNAPSHOT</version>
+                            <version>2.2.0</version>
                             <someOtherKey>value</someOtherKey>
                         </attributes>
                     </configuration>
@@ -218,167 +218,167 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-engine</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-api</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-tools</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-core</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-assertions</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-jamal</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-markdown</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-mock</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-plantuml</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-snippet</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-yaml</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-json</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-prog</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-load</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-groovy</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-io</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-openai</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-ruby</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-scriptbasic</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-word</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-java</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-plugin</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-extension</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-cmd</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-doclet</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-asciidoc</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-debug</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-input</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-jar-input</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-test</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-testsupport</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-extensions</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-all</artifactId>
-                <version>2.2.0-SNAPSHOT</version>
+                <version>2.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>

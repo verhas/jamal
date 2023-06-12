@@ -11,6 +11,13 @@
 * New macro in the file module to test file existence, type (dir or plain file), readability, writable, executable, or hidden.
 * New macro in the file module to copy binary files.
 Useful to fetch ephemeral resources via HTTP to have them attached to the document.
+* New macro in the snippet library to memoize certain operations.
+* `snip_list` does not list erroneous snippets anymore.
+* `java:insert` can fail with error if it updates the file.
+* new environment variable `asciidocfx.asciidoctor.plugin` is usable, the same as `intellij.asciidoctor.plugin`
+* Jamal works in AsciidocFX as well.
+This is not a feature of this release, but it was tested and documented in this release first.
+It requires AsciidocFX 1.8.5 or later.
 
 {%RELEASE/{%RELEASE:BERLIN%}%}
 

@@ -1,6 +1,6 @@
 = Using Kroki service
 
-This is a simple demonstration how you can include pictures using the Kroki service into an Asciidoc file.
+This is a simple demonstration of how you can include pictures using the Kroki service into an Asciidoc file.
 
 You have to import the resource `kroki.jim` into your Asciidoc file.
 

@@ -43,6 +43,37 @@ main_ts ==> (main.view)
 (singleton) ---> (model)
 %}
 
+
+{%@maven:load com.javax0.jamal:jamal-io:2.2.0-SNAPSHOT%}
+{%#io:copy from="{%kroki:url/structurizr/svg/
+workspace {
+model {
+user = person "User"
+softwareSystem = softwareSystem "Software System" {
+webapp = container "Web Application" {
+user -> this "Uses!!!"
+}
+database = container "Database" {
+webapp -> this "Reads from and writes to"
+}
+}
+}
+views {
+systemContext softwareSystem {
+include *
+autolayout lr
+}
+container softwareSystem {
+include *
+autolayout lr
+}
+theme default
+}
+}
+%}" to="structurizr.svg"%}
+
+image::structurizr.svg[]
+
 Using Jamal, you can even use macros inside the picture descriptions.
 They will be processed before the picture is rendered.
 
