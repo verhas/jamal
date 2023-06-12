@@ -119,6 +119,7 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:chop,`string:chop`>>
 ... <<shell:var,`shell:var`>>
 ... <<hashCode,`hashCode`>>
+... <<memoize,`memoize`>>
 .. <<snip_update,`snip:update`>>
 
 
@@ -1022,7 +1023,7 @@ There are four parameters the macro handles; all are optional:
 
 The first three parameters are interpreted as regular expressions.
 If any missing or empty string, then the parameter is not taken into account.
-If any of them is specified only those snippets will be listed that match the expression.
+If any of them is specified, only those snippets will be listed that match the expression.
 
 The listing will filter the snippets to include only those into the list that
 
@@ -1036,6 +1037,12 @@ The matching means that the regular expression should match part of the text.
 If you want to match the full name, file name, or content line, you have to use a `^ ... $` format regular expression.
 
 If all the parameters are missing, then the macro will list all the snippet names.
+
+NOTE: The versions 2.2.0 and later do not include the snippets in the list which are errored.
+These are snippets, which are not closed.
+These are usually not snippets, but their start is recognized as a snippet start.
+You can have the word `snippet` in your code followed by something that may look like a snippet start.
+This is not an error in Jamal, only if you try to use any of these snippets.
 
 [[snipSave]]
 === xi.`snip:save`
@@ -1376,7 +1383,7 @@ The decoding macro is named `base64:decode`.
 
 By default, the macros trim the input removing the spaces from the start and from the end.
 If you need to encode a string that contains spaces you can use the option `quote`.
-In this case the string has to be quoted.
+In this case, the string has to be quoted.
 Any character can be used as quoting character except space and the same character should be used at the start and at the end of the string.
 The option `quote` can be used with the decoding macro as well to provide coherent use, although there is not much use of the option in this case.
 
@@ -1442,14 +1449,14 @@ will result in
 As the `>>` shows that the space is also decoded.
 
 Both then encoding and the decoding macro can have the option `url`.
-In this case URL safe encoding is used.
+In this case, URL safe encoding is used.
 The encoding macro will also handle the option `compress`.
-Using this option the string is first compressed before encoding.
+Using this option, the string is first compressed before encoding.
 
 NOTE: There is no option to decode the compressed string.
 This option was developed to support link:https://docs.kroki.io[Kroki] service GET requests.
 
-With these options you can encode the following string:
+With these options, you can encode the following string:
 
 
 
@@ -1545,7 +1552,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1323:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1330:30
 ----
 
 
@@ -2790,6 +2797,7 @@ will result
 - TrimLines.java
 - JavaSourceInsert.java
 - ThinXml.java
+- Memoize.java
 - LineCount.java
 - Replace.java
 - SnipLine.java
@@ -2897,7 +2905,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,952 bytes
+- snippet: 1,984 bytes
 - JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
@@ -2922,6 +2930,7 @@ will result
 - TrimLines.java: 5,379 bytes
 - JavaSourceInsert.java: 5,597 bytes
 - ThinXml.java: 8,792 bytes
+- Memoize.java: 8,203 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,687 bytes
 - SnipLine.java: 691 bytes
@@ -2949,7 +2958,7 @@ will result
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 1,938 bytes
-- SnipList.java: 1,222 bytes
+- SnipList.java: 1,136 bytes
 - ShellVar.java: 3,599 bytes
 - XmlDocument.java: 5,671 bytes
 - References.java: 5,066 bytes
@@ -3212,7 +3221,7 @@ will result in the output
 
 [source]
 ----
-2023-06-09 18:19:09
+2023-06-12 16:49:44
 ----
 
 
@@ -4319,8 +4328,56 @@ will result in
 ----
 
 
+[[memoize]]
+=== xlvi.`memoize`
+
+
+This macro can be used to evaluate some input only one and reevaluate only when it has been changed.
+This has been useful to execute macros that generate some external resources from some text in the document and do not want to repeat the generation if the text has not changed.
+You may want to memoize, for example, PlantUML or other picture generation.
+Using this macro, you can generate the picture only when the text influencing the generation has changed.
+
+The macro has three parameters:
+
+* `file` is the name of the file that is generated.
+You can have multiple files specified, this parameter can be repeated.
+The macro does not read this file or write this file.
+It simply checks that the file exists or not.
+If the file does not exist, then the macro will evaluate its input.
+The input evaluation is supposed to generate the file some way.
+The file generation is out of the scope of this macro.
+
++
+When there is no `file` specified, then the macro will assume that the result is there.
+Some calculations may not generate file and the result is somewhere else.
+In that case, there is no point to check a file.
+
+* `hashCode` is the hash value the hash code of the text influencing the generation.
+If it is not defined, the value is calculated automatically from the input of the macro.
+You can use the macro `hashCode` in the document to make the calculation.
+Usually there is no point manually inserting a hash value into the document.
+You want to calculate it from some text other than the pure input of the macro.
+
++
+For example, you generate a PlantUML picture, but it also includes some other files during the PlantUML generation.
+In this case, the text included will not be part of the input of the macro.
+You still want to execute the picture generation even when only the included text file is changed.
+In that case, you can use the `hashCode` macro on the verbatim included files and use the result as the `hashCode` parameter of the `memoize` macro.
+
+* `hashFile` is the name of the file that contains the hash value.
+Before evaluating the input, the macro checks that the hash value is the same as the one in the file.
+The macro does not evaluate the input if they are the same.
+If they differ, including the special case, when the hash file does not exist, then the macro generates the file and evaluates the input.
+
+The return value of the macro is the input evaluated when it is evaluated and an empty string when it is not evaluated.
+This functionality helps to see evidence during interactive editing then the macro was evaluated.
+You can just use macros that generate no output if you do not need this feature.
+
+
+
+
 [[snip_update]]
-=== xlvi.`snip:update`
+=== xlvii.`snip:update`
 
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.

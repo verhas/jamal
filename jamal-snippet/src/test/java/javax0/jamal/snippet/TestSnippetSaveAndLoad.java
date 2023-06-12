@@ -25,8 +25,13 @@ public class TestSnippetSaveAndLoad {
     @Test
     @DisplayName("Test that snippets can be saved as XML and then they can be loaded")
     void testSaveAllLoadAll() throws Exception {
-        // When this test fails, then check if there was any new snippet
-        // defined in the module in the main Java source dir
+        final var expected = Arrays.stream(TestThat
+                .theInput("" +
+                        "{@snip:collect from=\"src/main/java/\"}" +
+                        "{@snip:list listSeparator=\"\\n\"}"
+                )
+                .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
+                .results().split("\n")).sorted().collect(Collectors.joining("\n"));
         final var result = Arrays.stream(TestThat
                 .theInput("" +
                         "{@snip:collect from=\"src/main/java/\"}" +
@@ -36,10 +41,8 @@ public class TestSnippetSaveAndLoad {
                         "{@snip:list listSeparator=\"\\n\"}"
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
-                .results().split("\n")).collect(Collectors.toSet());
-        Assertions.assertEquals(new TreeSet<>(Set.of("LOADED_CLASSES", "XREFS", "REF_JRF", "is", "trimLinesStart", "unicode", "store", "sort_options",
-                "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats", "pos_options",
-                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK", "names", "numbers")), new TreeSet<>(result));
+                .results().split("\n")).sorted().collect(Collectors.joining("\n"));
+        Assertions.assertEquals(expected,result);
     }
 
     @Test
