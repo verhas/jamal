@@ -1,10 +1,6 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Scan;
 
 import java.util.stream.Collectors;
@@ -21,8 +17,9 @@ public class SnipList implements Macro, InnerScopeDependent {
         Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, listSeparator).parse(in);
         final var store = SnippetStore.getInstance(processor);
         return store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())
-            .map(s -> s.id)
-            .collect(Collectors.joining(listSeparator.get()));
+                .filter(snip -> snip.exception == null)
+                .map(s -> s.id)
+                .collect(Collectors.joining(listSeparator.get()));
     }
 
     @Override
