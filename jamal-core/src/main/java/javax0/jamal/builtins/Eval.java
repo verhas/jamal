@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.skip;
@@ -31,9 +32,9 @@ public class Eval implements Macro, InnerScopeDependent {
         switch (scriptType) {
             case "*":
                 // snippet evaluateLoopLimit
-                Params.Param<Integer> limit = Params.<Integer>holder("evaluateLoopLimit", "limit", "max").orElseInt(DEFAULT_LOOP_LIMIT);
+                final var limit = Params.holder("evaluateLoopLimit", "limit", "max").orElseInt(DEFAULT_LOOP_LIMIT);
                 // end snippet
-                Params.using(processor).from(this).between("[]").keys(limit).parse(input);
+                Scan.using(processor).from(this).between("[]").keys(limit).parse(input);
                 int loopCounter = limit.get();
                 String result;
                 final Position pos = input.getPosition();

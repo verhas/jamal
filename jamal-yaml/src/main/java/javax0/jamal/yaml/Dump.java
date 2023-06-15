@@ -1,13 +1,9 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileWriter;
@@ -21,7 +17,7 @@ public class Dump implements Macro, InnerScopeDependent {
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
-        Params.using(processor).from(this).keys(clone, copy).between("()").parse(input);
+        Scan.using(processor).from(this).between("()").keys(clone, copy).parse(input);
 
         InputHandler.skipWhiteSpaces(input);
         final var id = InputHandler.fetchId(input);

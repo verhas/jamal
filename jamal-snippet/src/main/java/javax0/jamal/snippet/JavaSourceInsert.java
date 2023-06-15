@@ -86,6 +86,7 @@ public class JavaSourceInsert implements Macro {
                     final var matcher = segmentStartPattern.matcher(line);
                     if (matcher.matches()) {
                         final var segmentParameters = matcher.group(1);
+                        // get the parameters from the segment without any key constraints using the params handling utility parser
                         final var params = Params.using(null)
                                 .from(() -> "for segment " + segment + "in file " + file + "[" + segmentParameters + "]")
                                 .endWith('>')

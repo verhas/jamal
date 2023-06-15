@@ -23,7 +23,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -134,7 +134,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -474,7 +474,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.2.0</version>
+<version>2.3.0-SNAPSHOT</version>
 ...
 ----
 
@@ -513,7 +513,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.2.0</version>
+<version>2.3.0-SNAPSHOT</version>
 ...
 ----
 
@@ -591,7 +591,7 @@ The following example demonstrates how the result of the processing can be modif
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0-SNAPSHOT</version>
 </dependency>}
 <plugins><plugin>
 <artifactId>my-imaginary</artifactId>
@@ -621,7 +621,7 @@ will result
     <dependency>
       <groupId>com.javax0.jamal</groupId>
       <artifactId>jamal-snippet</artifactId>
-      <version>2.2.0</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <pluginManagement/>
@@ -997,7 +997,7 @@ It is only to supress hash code or line mismatch.
 
 Using the option `warning` the error message will be sent to the log as a warning.
 If you use the option `snipCheckError` (aliased as `error`) then the error message will be sent to the log as an error.
-In this case the error will not be suppressed.
+In this case, the error will not be suppressed.
 You cannot use `warning` and `error` together.
 
 [[snipList]]
@@ -1552,7 +1552,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1331:30
+../jamal-snippet/README.adoc.jam:1332:30
 ----
 
 
@@ -2224,8 +2224,8 @@ It is recommended to use the `-` or `=` for readability reasons.
 [[references]]
 === xxvi.`references`
 
-From time to time there may be a need to have a reference to a part of the text that is defined later.
-Macros, by their nature cannot be used before they are defined.
+From time to time, there may be a need to have a reference to a part of the text that is defined later.
+Macros, by their nature, cannot be used before they are defined.
 You cannot reference a section or chapter number before the section or chapter is defined.
 The macros provide powerful tools to overcome this limitation in many different ways.
 For example, you can define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
@@ -2284,17 +2284,17 @@ This is defined later, but can be used here: The value of a
 ----
 
 
-When using these macros the rendering has to run twice.
+When using these macros, the rendering has to run twice.
 The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
 It is your responsibility to write macros that are stable, having values independent of the previous execution.
+Following the version 2.3.0, the macro also signals an error if the macros change between processing.
 
-When the rendering runs the first time, or the reference file was deleted the macros are not defined.
+When the rendering runs the first time, or the reference file was deleted, the macros are not defined.
 To avoid errors the `?` can be used in front of the macro names defined later.
-This will result an empty string at the place of the use of the macro.
+This will result in an empty string when the macro is used.
 
 Another possibility is to use the `ref` macro before the first use of the referenced macro.
 This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
-
 
 [[reflow]]
 === xxvii.`reflow`
@@ -2541,7 +2541,7 @@ The macro is configured with parameters in a similar way as the underlying macro
 The parameters are the same as in those macros, and they are used by the underlying macros the same way.
 There are two differences, however.
 
-1. Th `snip:transform` macro does not use any user defined macro or option as a parameter.
+1. The `snip:transform` macro does not use any user defined macro or option as a parameter.
 You cannot, for example, `{@define replace=/foo/bar/}` and hope that `snip:transform` will replace `foo` with `bar`.
 You have to use the parameter `replace` as a macro option.
 
@@ -2668,11 +2668,11 @@ You cannot, for example, specify `width` without adding `reflow` to the actions 
 You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get added implicitly.
 For example, you want to kill a few lines and also number the lines.
 If you do not list the action `kill` then it will be executed after the numbering.
-When the lines are deleted the numbering will have gaps.
+When the lines are deleted, the numbering will have gaps.
 It may be your intention, but usually it is not.
 
 [NOTE]
-===
+====
 The macro `snip:transform` is just a wrapper around the underlying macros.
 It first looks up the macros by the name and then invokes them according to the parameters.
 It is usually not interesting for the user of the macro.
@@ -2682,7 +2682,7 @@ Jamal, however, makes it possible to redefine built-in macros locally and global
 If any of the underlying macros are redefined when the `snip:transform` is invoked, then the actual macro will be invoked.
 It also implies that the developers should implement these macros as compatible as the macro of the same name in the snippet package.
 They have to implement the `BlockConverter` interface, and their `convertTextBlock()` method should accept the same parameters as their snippet counterpart.
-===
+====
 
 The parameters for the `snip:transform` are:
 
@@ -2921,14 +2921,14 @@ will result
 - ReflectionTools.java: 26,140 bytes
 - MethodTool.java: 7,761 bytes
 - Update.java: 1,592 bytes
-- SnipTransform.java: 17,148 bytes
+- SnipTransform.java: 17,149 bytes
 - Base64.java: 3,470 bytes
 - FilesMacro.java: 8,162 bytes
 - Collect.java: 24,444 bytes
 - SnipFile.java: 680 bytes
 - HashCode.java: 514 bytes
 - TrimLines.java: 5,379 bytes
-- JavaSourceInsert.java: 5,597 bytes
+- JavaSourceInsert.java: 5,729 bytes
 - ThinXml.java: 8,792 bytes
 - Memoize.java: 8,203 bytes
 - LineCount.java: 552 bytes
@@ -2959,9 +2959,9 @@ will result
 - Xml.java: 539 bytes
 - CounterMacro.java: 1,938 bytes
 - SnipList.java: 1,136 bytes
-- ShellVar.java: 3,599 bytes
+- ShellVar.java: 3,693 bytes
 - XmlDocument.java: 5,671 bytes
-- References.java: 5,066 bytes
+- References.java: 7,304 bytes
 - Java.java: 11,283 bytes
 - ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
@@ -3011,7 +3011,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.2.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.3.0-SNAPSHOT</version>
 </project>
 }
 ----
@@ -3027,7 +3027,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3042,7 +3042,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.2.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.3.0-SNAPSHOT</version>
 </project>
 }
 ----
@@ -3058,7 +3058,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.2.0</version>
+<version>2.3.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3079,7 +3079,7 @@ The previous example that we used before can also be formulated this way.
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.2.0</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.3.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3096,7 +3096,7 @@ It will result in the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0-SNAPSHOT</version>
 </project>
 ----
 
@@ -3119,7 +3119,7 @@ project>
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.2.0
+  version>2.3.0-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3139,7 +3139,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
@@ -3171,7 +3171,7 @@ For example:
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.2.0
+  version>2.3.0-SNAPSHOT
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3189,7 +3189,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.2.0</version>
+<version>2.3.0-SNAPSHOT</version>
 <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
@@ -3221,7 +3221,7 @@ will result in the output
 
 [source]
 ----
-2023-06-12 17:15:06
+2023-06-15 18:23:27
 ----
 
 

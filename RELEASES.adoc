@@ -5,12 +5,25 @@
 
 
 
+
+== https://github.com/verhas/jamal/tree/2.3.0[2.3.0]
+
+* Core macro supports the option `flat` (alias as `export`) to evaluate the content in the same scope as the surrounding macro.
+* `references` macro runs an idempotency check at the end of the execution
+
 == https://github.com/verhas/jamal/tree/2.2.0[2.2.0]
 
 * Support for JSR223 scripting API. Now you can use Jamal in any application that can be scripted.
 * New macro in the file module to test file existence, type (dir or plain file), readability, writable, executable, or hidden.
 * New macro in the file module to copy binary files.
 Useful to fetch ephemeral resources via HTTP to have them attached to the document.
+* New macro in the snippet library to memoize certain operations.
+* `snip_list` does not list erroneous snippets anymore.
+* `java:insert` can fail with error if it updates the file.
+* new environment variable `asciidocfx.asciidoctor.plugin` is usable, the same as `intellij.asciidoctor.plugin`
+* Jamal works in AsciidocFX as well.
+This is not a feature of this release, but it was tested and documented in this release first.
+It requires AsciidocFX 1.8.5 or later.
 
 == https://github.com/verhas/jamal/tree/2.1.0[2.1.0]
 
@@ -28,7 +41,7 @@ Macros `java:classes`, `java:methods`, `java:fields` can be used to list the cla
 
 * Jamalize can be used to install asciidoctor library files for IntelliJ.
 
-* `shell:var` can replace `$xxx` and `${xxx}` references.
+* `shell:var` can replace `$xxx` and `$pass:[{xxx}]` references.
 
 * `io:exec` was extended to support multi-line command and arguments.
 
@@ -44,7 +57,7 @@ A bug driving the `prog` macro into infinite loop was fixed.
 
 == https://github.com/verhas/jamal/tree/2.0.0[2.0.0]
 
-* The extensions plugin was removed from the Maven extension dependency and from the asciidoc extension.
+* The 'extensions' plugin was removed from the Maven extension dependency and from the asciidoc extension.
 
 * Macro `program` can also be used with `do` and `run` aliases.
 
@@ -506,10 +519,10 @@ The for macro has a new syntax (backward compatible) and now it can have multipl
 
 There are new macros: env and jshell.
 The default scripting engine is not JavaScript anymore, it is JShell.
-bug fix over 1.3.0. DO NOT USE THAT RELEASE deployment fix from 1.4.0 which also failed to upload for mysterious reasons UPDATE: I have found the bug and fixed the pom for later releases.
+bug fix over 1.3.0. DO NOT USE THAT RELEASE_N deployment fix from 1.4.0 which also failed to upload for mysterious reasons UPDATE: I have found the bug and fixed the pom for later releases.
 
 
-== https://github.com/verhas/jamal/tree/1.3.0[1.3.0] RELEASE IS CORRUPT, DO NOT USE
+== https://github.com/verhas/jamal/tree/1.3.0[1.3.0] RELEASE_N IS CORRUPT, DO NOT USE
 
 Failed release.
 

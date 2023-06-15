@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class If implements Macro {
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var pos = input.getPosition();
         final var opt = new Options();
-        Params.using(processor).from(this).between("[]").keys(opt.options()).parse(input);
+        Scan.using(processor).from(this).between("[]").keys(opt.options()).parse(input);
         opt.assertConsistency();
         final var parts = InputHandler.getParts(input, 3);
         BadSyntaxAt.when(parts.length < 1, "Macro 'if' needs 1, 2 or 3 arguments", pos);

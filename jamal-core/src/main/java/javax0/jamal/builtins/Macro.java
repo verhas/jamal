@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,7 +25,7 @@ public class Macro implements javax0.jamal.api.Macro {
         final var type = Params.<String>holder(null, "type").orElse(USERDEFINED);
         final var alias = Params.<String>holder(null, "alias").orElse("");
         final var global = Params.<Boolean>holder(null, "global").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(type, global, alias).parse(input);
+        Scan.using(processor).from(this).between("[]").keys(type, global, alias).parse(input);
         skipWhiteSpaces(input);
 
         final var macroType = type.get().toLowerCase();

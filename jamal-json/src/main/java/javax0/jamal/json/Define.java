@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
 import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
@@ -91,7 +92,7 @@ end snippet
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var line = holder(null, "line", "JSONL", "jsonl").asBoolean();
-        Params.using(processor).from(this).keys(line).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(line).parse(in);
 
         final String id = getMacroIdentifier(in, processor);
         if (id == null) return "";

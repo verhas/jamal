@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.LinkedHashMap;

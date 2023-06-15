@@ -12,6 +12,7 @@ import javax0.jamal.api.Xml.TAG;
 import javax0.jamal.api.Xml.TEXT;
 import javax0.jamal.engine.StackLimiter;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class Xml implements Macro, InnerScopeDependent {
         final var copy = Resolver.copyOption();
         final var topTag = Params.<String>holder("yamlXmlTopTag", "tag").orElse("xml");
         final var attributes = Params.<String>holder("yamlXmlAttributes", "attributes").orElseNull();
-        Params.using(processor).from(this).keys(clone, copy, topTag, attributes).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(clone, copy, topTag, attributes).parse(in);
 
         final var yamlObject = Resolve.getYaml(processor, in.toString().trim());
         Resolver.resolve(yamlObject, processor, clone.is(), copy.is());

@@ -1,31 +1,12 @@
 package javax0.jamal.engine.macro;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Counted;
-import javax0.jamal.api.Debuggable;
-import javax0.jamal.api.Delimiters;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Marker;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.Stackable;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.levenshtein.Levenshtein;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -66,7 +47,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         /**
          * The delimiters that were saved on this level.
          */
-         final List<Delimiters> savedDelimiterPairs = new ArrayList<>();
+        final List<Delimiters> savedDelimiterPairs = new ArrayList<>();
         /**
          * The last delimiter pair that was defined on this scope level. Null if there was none defined in this scope.
          */
@@ -220,10 +201,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      * {@define son=Junior Bond}} defines the macro {@code son} in the higher layer and not the locked one.
      * <p>
      * The second use of the macro {@code h} does not contain any redefinition of the macro {@code firstName}. In this
-     * case the value defined at the start of the example is used. When the macro is evaluated the evaluation of {@code
+     * case, the value defined at the start of the example is used. When the macro is evaluated the evaluation of {@code
      * {@define son=Junior Bond}} overwrites the same macro with the same value.
      * <p>
-     * Finally the macro {@code son} is used when the top level is the current one, and it is defined (actually twice),
+     * Finally, the macro {@code son} is used when the top level is the current one, and it is defined (actually twice),
      * but that is not a problem, you can redefine any macro any times.
      *
      * @return the writable scope
@@ -421,7 +402,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     /**
      * Find the scope where to export. The search starts one level above the writable scope and goes until it finds a
-     * non-locked scope. If all the scopes are locked then the top level scope is returned.
+     * non-locked scope. If all the scopes are locked, then the top level scope is returned.
      *
      * @return the scope where to export the macro
      */
@@ -434,6 +415,16 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
             }
         }
         return scopeStack.get(TOP_LEVEL);
+    }
+
+    @Override
+    public void export() throws BadSyntax {
+        final var ids = new HashSet<String>();
+        ids.addAll(writableScope().udMacros.keySet());
+        ids.addAll(writableScope().macros.keySet());
+        for (final var id : ids) {
+            export(id);
+        }
     }
 
     @Override

@@ -1,3 +1,9 @@
 Block returns empty string:
   Input: "{@block this is a bloc}"
   Output: ""
+Block evaluates the macros, but does not exports them:
+  Input: "{#block {@define this=AAA}this is a bloc}{?this}"
+  Output: ""
+Block evaluates the macros, and exports when flat:
+  Input: "{#block [flat]{@define this=AAA}this is a bloc}{?this}"
+  Output: "AAA"

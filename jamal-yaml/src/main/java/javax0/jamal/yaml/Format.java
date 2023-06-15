@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import org.yaml.snakeyaml.DumperOptions;
 
 import static javax0.jamal.tools.Params.holder;
@@ -39,11 +40,11 @@ public class Format implements Macro, InnerScopeDependent {
         // sets the desired width
         // end snippet
 
-        Params.using(processor).from(this).keys(
+        Scan.using(processor).from(this).tillEnd().keys(
             allowUnicode, canonical, explicitEnd, explicitStart, prettyFlow,
             splitLines, defaultFlowStyle, defaultScalarStyle, lineBreak,
             indent, indicatorIndent, width
-        ).tillEnd().parse(in);
+        ).parse(in);
 
         final var options = YamlDumperOptions.defineExport(processor).getObject();
         options.setAllowUnicode(allowUnicode.is());

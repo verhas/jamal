@@ -13,6 +13,7 @@ public class ShellVar implements Macro {
         final var parameters = Params.<String>holder("variables").orElse("");
         Scan.using(processor).from(this).between("()").keys(parameters).parse(in);
         final Map<String, String> values = new HashMap<>();
+        // get the parameters without any key name constraint using the params handling tools
         Params.using(processor).tillEnd().parse(javax0.jamal.tools.Input.makeInput(parameters.get()), values::put, s -> true);
 
         final var sb = in.getSB();

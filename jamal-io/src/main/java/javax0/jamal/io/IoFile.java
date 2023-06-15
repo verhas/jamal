@@ -2,6 +2,7 @@ package javax0.jamal.io;
 
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -16,7 +17,7 @@ public class IoFile implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var file = Params.holder("io:file", "file").asString();
         final var condition = Params.holder(null, "isHidden", "exists", "isDirectory", "isFile", "canExecute", "canRead", "canWrite").asBoolean();
-        Params.using(processor).from(this).tillEnd().keys(file, condition).parse(in);
+        Scan.using(processor).from(this).tillEnd().keys(file, condition).parse(in);
 
 
         final var fileName = Utils.getFile(file, in);

@@ -9,6 +9,7 @@ import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class For implements Macro, InnerScopeDependent {
         it.skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
         it.lenient = Params.<Boolean>holder("lenient").asBoolean();
         it.evalValueList = Params.<Boolean>holder("evaluateValueList", "evalist").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(it.subSeparator, it.separator, it.trim, it.skipEmpty, it.lenient, it.evalValueList).parse(input);
+        Scan.using(processor).from(this).between("[]").keys(it.subSeparator, it.separator, it.trim, it.skipEmpty, it.lenient, it.evalValueList).parse(input);
 
         skipWhiteSpaces(input);
 

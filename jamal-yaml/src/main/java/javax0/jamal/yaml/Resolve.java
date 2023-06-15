@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ public class Resolve implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
-        Params.using(processor).from(this).keys(clone, copy).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(clone, copy).parse(in);
 
         for (final var id : Arrays.stream(in.toString().split(",")).map(String::trim).collect(Collectors.toSet())) {
             final var yamlObject = getYaml(processor, id);

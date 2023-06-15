@@ -1,6 +1,7 @@
 = Jamal Snippet Handling Macros
 {%@import res:jamal.jim%}\
 {%@import ../shared_text.jim%}\
+{%@import ../RELEASES.jim%}\
 {%@snip:collect from="src/main/java/"%}\
 {%@snip:collect from="src/test/java/" exclude="Sample.java"%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
@@ -861,7 +862,7 @@ It is only to supress hash code or line mismatch.
 
 Using the option `warning` the error message will be sent to the log as a warning.
 If you use the option `snipCheckError` (aliased as `error`) then the error message will be sent to the log as an error.
-In this case the error will not be suppressed.
+In this case, the error will not be suppressed.
 You cannot use `warning` and `error` together.
 
 [[snipList]]
@@ -1852,8 +1853,8 @@ It is recommended to use the `-` or `=` for readability reasons.
 [[references]]
 === {%macroChapter%}`references`
 
-From time to time there may be a need to have a reference to a part of the text that is defined later.
-Macros, by their nature cannot be used before they are defined.
+From time to time, there may be a need to have a reference to a part of the text that is defined later.
+Macros, by their nature, cannot be used before they are defined.
 You cannot reference a section or chapter number before the section or chapter is defined.
 The macros provide powerful tools to overcome this limitation in many different ways.
 For example, you can define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
@@ -1902,17 +1903,17 @@ will result in
 
 {%output%}
 
-When using these macros the rendering has to run twice.
+When using these macros, the rendering has to run twice.
 The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
 It is your responsibility to write macros that are stable, having values independent of the previous execution.
+Following the version {%RELEASE:MANAUS%}, the macro also signals an error if the macros change between processing.
 
-When the rendering runs the first time, or the reference file was deleted the macros are not defined.
+When the rendering runs the first time, or the reference file was deleted, the macros are not defined.
 To avoid errors the `?` can be used in front of the macro names defined later.
-This will result an empty string at the place of the use of the macro.
+This will result in an empty string when the macro is used.
 
 Another possibility is to use the `ref` macro before the first use of the referenced macro.
 This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
-
 
 [[reflow]]
 === {%macroChapter%}`reflow`
@@ -2052,7 +2053,7 @@ The syntax of the macro is
 
 [[snipTransform]]
 === {%macroChapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=598b2b9f%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=1b5aee4f%}
 
 The `snip:transform` macro integrates the functionality of the macros
 
@@ -2076,7 +2077,7 @@ The macro is configured with parameters in a similar way as the underlying macro
 The parameters are the same as in those macros, and they are used by the underlying macros the same way.
 There are two differences, however.
 
-1. Th `snip:transform` macro does not use any user defined macro or option as a parameter.
+1. The `snip:transform` macro does not use any user defined macro or option as a parameter.
 You cannot, for example, `{@define replace=/foo/bar/}` and hope that `snip:transform` will replace `foo` with `bar`.
 You have to use the parameter `replace` as a macro option.
 
@@ -2179,11 +2180,11 @@ You cannot, for example, specify `width` without adding `reflow` to the actions 
 You will list the action in the `actions` parameter if you want to use it in a different place/order than the one it would get added implicitly.
 For example, you want to kill a few lines and also number the lines.
 If you do not list the action `kill` then it will be executed after the numbering.
-When the lines are deleted the numbering will have gaps.
+When the lines are deleted, the numbering will have gaps.
 It may be your intention, but usually it is not.
 
 [NOTE]
-===
+====
 The macro `snip:transform` is just a wrapper around the underlying macros.
 It first looks up the macros by the name and then invokes them according to the parameters.
 It is usually not interesting for the user of the macro.
@@ -2193,7 +2194,7 @@ Jamal, however, makes it possible to redefine built-in macros locally and global
 If any of the underlying macros are redefined when the `snip:transform` is invoked, then the actual macro will be invoked.
 It also implies that the developers should implement these macros as compatible as the macro of the same name in the snippet package.
 They have to implement the `BlockConverter` interface, and their `convertTextBlock()` method should accept the same parameters as their snippet counterpart.
-===
+====
 
 The parameters for the `snip:transform` are:
 
@@ -3082,7 +3083,7 @@ This is also the case when there is no parameter defined.
 
 [[java:insert]]
 ==== `java:insert`
-{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=ec9f4586%}
+{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=13497d8a%}
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
 The macro has three parameters:

@@ -1,11 +1,8 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import ognl.Ognl;
 import ognl.OgnlException;
 import org.yaml.snakeyaml.Yaml;
@@ -23,10 +20,10 @@ public class Add implements Macro, InnerScopeDependent {
         final var to = holder("yamlDataTarget", "to").asString();
         final var key = Params.<String>holder(null, "key").orElseNull();
         final var flatten = holder(null, "flat", "flatten").asBoolean();
-        Params.using(processor).from(this).keys(to, key, flatten).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(to, key, flatten).parse(in);
         final var dotIndex = to.get().indexOf('.');
         final String id = getId(to, dotIndex);
-        final Object expression = getOgnlExpression( to, dotIndex);
+        final Object expression = getOgnlExpression(to, dotIndex);
         final Object yamlStructure = getNewYamlPart(in);
         final var yamlObject = Resolve.getYaml(processor, id);
         final Object anchor = getAnchor(expression, to, yamlObject);
@@ -51,10 +48,10 @@ public class Add implements Macro, InnerScopeDependent {
     }
 
     private void assertConsistency(Params.Param<String> to, Params.Param<String> key, Params.Param<Boolean> flatten, Object anchor) throws BadSyntax {
-        BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(),  "You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get());
-        BadSyntax.when(key.get() != null && anchor instanceof List,  "You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get());
-        BadSyntax.when(key.get() != null && flatten.is(),  "You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get());
-        BadSyntax.when((!(anchor instanceof Map)) && !(anchor instanceof List),  "You can '%s' only to a List or Map for '%s'\nThe actual class is %s", getId(), to.get(), anchor.getClass());
+        BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(), "You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get());
+        BadSyntax.when(key.get() != null && anchor instanceof List, "You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get());
+        BadSyntax.when(key.get() != null && flatten.is(), "You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get());
+        BadSyntax.when((!(anchor instanceof Map)) && !(anchor instanceof List), "You can '%s' only to a List or Map for '%s'\nThe actual class is %s", getId(), to.get(), anchor.getClass());
     }
 
     private Object getAnchor(Object expression, Params.Param<String> to, YamlObject yamlObject) throws BadSyntax {

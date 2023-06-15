@@ -1,6 +1,6 @@
 = Using Kroki service
 
-This is a simple demonstration how you can include pictures using the Kroki service into an Asciidoc file.
+This is a simple demonstration of how you can include pictures using the Kroki service into an Asciidoc file.
 
 You have to import the resource `kroki.jim` into your Asciidoc file.
 
@@ -11,8 +11,6 @@ However, that file also includes macros for Asciidoc.
 Both macros are called `kroki`, and have the same parameter.
 You should tell which output you would like to use, therefore you should first invoke the macro `use:kroki:asciidoc`.
 This will set the output to Asciidoc. 
-   
-
 
 Guess, what you can see the Markdown version of this file.
 

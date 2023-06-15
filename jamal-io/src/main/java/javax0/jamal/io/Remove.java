@@ -1,11 +1,7 @@
 package javax0.jamal.io;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
+import javax0.jamal.api.*;
+import javax0.jamal.tools.Scan;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +18,7 @@ public class Remove implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var file = Utils.getFile();
         final var recursive = Utils.getRecursive();
-        Params.using(processor).from(this).keys(file, recursive).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(file, recursive).parse(in);
 
         final var fileName = Utils.getFile(file, in);
 
@@ -32,11 +28,11 @@ public class Remove implements Macro, InnerScopeDependent {
             final var fileList = new StringBuilder();
             if (recursive.is()) {
                 Files.walk(Paths.get(fileName))
-                    .map(Path::toFile)
-                    .sorted((o1, o2) -> -o1.compareTo(o2))
-                    .forEach(f -> allDeleted.set(allDeleted.get() && remove(f, errors, fileList)));
+                        .map(Path::toFile)
+                        .sorted((o1, o2) -> -o1.compareTo(o2))
+                        .forEach(f -> allDeleted.set(allDeleted.get() && remove(f, errors, fileList)));
                 BadSyntax.when(!allDeleted.get(), () -> String.format("Not possible to delete the file/dir and all files/dirs under '%s'\n%s\n%s\n",
-                            fileName, fileList, errors));
+                        fileName, fileList, errors));
             } else {
                 Files.delete(Paths.get(fileName));
             }
@@ -56,8 +52,8 @@ public class Remove implements Macro, InnerScopeDependent {
                  final var pw = new PrintWriter(sw)) {
                 dne.printStackTrace(pw);
                 errors.append(sw);
-                errors.append(String.format("Files in the directory: '%s'\n",f.getAbsoluteFile()));
-                Arrays.stream(f.list()).forEach( s -> errors.append(s).append("\n"));
+                errors.append(String.format("Files in the directory: '%s'\n", f.getAbsoluteFile()));
+                Arrays.stream(f.list()).forEach(s -> errors.append(s).append("\n"));
             } catch (IOException ignored) {
             }
         } catch (IOException ioe) {

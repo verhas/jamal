@@ -1,18 +1,12 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.InputHandler.startsWith;
+import static javax0.jamal.tools.InputHandler.*;
 import static javax0.jamal.tools.Params.holder;
 
 
@@ -22,15 +16,15 @@ public class Set implements Macro, InnerScopeDependent {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
         final var from = holder("yamlDataSource", "from").orElseNull().asString();
-        Params.using(processor).from(this).keys(clone, copy, from).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(clone, copy, from).parse(in);
 
         skipWhiteSpaces(in);
         final var id = fetchId(in);
-        BadSyntax.when(in.length() == 0 || in.charAt(0) != '=',  "There is no '=' after the identifier in '%s'", getId());
+        BadSyntax.when(in.length() == 0 || in.charAt(0) != '=', "There is no '=' after the identifier in '%s'", getId());
         skip(in, 1);
         skipWhiteSpaces(in);
 
-        final String fromId = getFromId(in, from,this);
+        final String fromId = getFromId(in, from, this);
 
         try {
             final var yamlObject = Resolve.getYaml(processor, fromId);
@@ -51,7 +45,7 @@ public class Set implements Macro, InnerScopeDependent {
             if (startsWith(in, "/") == 0) {
                 skip(in, 1);
                 fromId = fetchId(in);
-                BadSyntax.when(startsWith(in, ".") == -1,  "The macro name at the start of the OGNL expression must be followed by a . (dot) character in the macro %s", me.getId());
+                BadSyntax.when(startsWith(in, ".") == -1, "The macro name at the start of the OGNL expression must be followed by a . (dot) character in the macro %s", me.getId());
                 skip(in, 1);
             } else {
                 throw new BadSyntax(String.format("The 'from' macro name is not specified in the macro %s", me.getId()));

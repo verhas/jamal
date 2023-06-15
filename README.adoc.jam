@@ -63,18 +63,18 @@ That way, it enables the maintainer of the text to
 
 * support consistency with the documented external system(s).
 
-Jamal design is to be transparent and applicable to any target text file and format.
-It uses special start and stop strings for the macros and all other text is copied to the output.
+Jamal is designed is to be transparent and applicable to any target text file and format.
+It uses special start and stop strings for the macros, and all other text is copied to the output.
 The start and stop string are not hardwired, can be configured and even dynamically changed in the input.
 Jamal can create your file from a Jamal source file no matter any particular need to keep new lines, spacing, or special characters.
 That way, Jamal can be applied as a universal, programmable preprocessor to any text file type.
 The types include document formats, like Markdown, AsciiDoc, HTML, Microsoft Word Docx, and textual data description formats, like JSON, YAML, XML, or even programming languages.
-In addition to text files Jamal macros can also be used in DOCX format Microsoft Word files and processed creating an output file.
+In addition to text files, Jamal macros can also be used in DOCX format Microsoft Word files and processed creating an output file.
 This way Jamal can be used as a template engine for creating Microsoft Word documents.
 
 The source text
 
-* uses built-in macros (there is a purposefully limited number of them in the core module and there are a lot in different other modules),
+* uses built-in macros, (there is a purposefully limited number of them in the core module, and there are many in different other modules),
 
 * define and use previously defined user-defined macros,
 
@@ -742,14 +742,31 @@ When the code needs the evaluation, then use the [`block`](#block) macro.
 
 since 1.0.0 (core)
 
-`block` is technically the same as `comment`.
+`block` has a similar functionality as `comment`.
 It is recommended to use the `comment` macro with the `@` starting character.
-In that case the content of the comment is not interpreted by Jamal.
+Jamal does not interpret the macro content in that case.
 Use the `block` with `#` to have the content interpreted.
-Block should be used to enclose definitions to a scope level.
+`block` should be used to enclose definitions to a scope level.
 Note that the result of the macro `{#block ... }` is an empty string.
 
+`block` can be used with the option `flat` or `export` (since release {%RELEASE:MANAUS%}).
+In this case, Jamal will automatically export all the macros defined inside the block.
+Note that it only works when the macro definitions happen.
+The `block` macro is started using the `#` character.
+
 {%forMoreAboutEvaluationOrder%}
+
+{%sample/
+{@block it is like comment {@define x=1} is not evaluated}
+{#block it is like comment {@define x=1}{@define y=1} is evaluated{@export y}}
+x is not exported, value is not defined: "{?x}" <-- empty string
+y is exported, value is defined: "{y}" <-- not empty string, it is 1
+{#block [flat] {@define H=1}{@define K=1} exports automatically}
+H is exported, value is defined: "{H}" <-- not empty string
+K is exported, value is defined: "{K}" <-- not empty string, it is 1
+%}
+
+{%output%}
 
 [[begin]]
 ==== {%macroChapter%}`begin` and `end`
@@ -1992,7 +2009,7 @@ The more local configuration overrules the broader one using this algorithm.
 
 [[import]]
 ==== {%macroChapter%}`import`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=adc10756%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=e334dca1%}
 since 1.0.0 (core)
 
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
@@ -2115,7 +2132,7 @@ This type of use is not recommended and is included only for backward compatibil
 
 {%fileNameExplanationFor/include%}
 
-The number of includes are limited to 100 in depth.
+The number of includes is limited to 100 in depth.
 A file can include another, which can again include another and so on, but only to the maximum depth of 100.
 This depth limit is set because an included file can be included many times.
 It is possible to implement recursion.
@@ -2550,7 +2567,7 @@ will result
 
 Sometimes the values for the `for` loop come from some macro.
 In that case the `for` macro should start with the `#` character, otherwise the macro will not be evaluated to the list of values.
-For example: {%#block{%sample/{@undefine x}{@undefine y}{@undefine z}%}{%output%}%}
+For example: {%#block[] {%sample/{@undefine x}{@undefine y}{@undefine z}%}{%output%}%}
 
 {%sample/
 {@define list=x,y,z}{@for z in ({list})={@define z=zz}}{?x}{?y}{?z}
@@ -2639,7 +2656,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=70cd2b2e%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=6dfb533a%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -3777,7 +3794,7 @@ The version of the documented code is in the `pom.xml` file: `{%VERSION%}`.
 [[macro]]
 ==== {%macroChapter%}`macro`
 since 1.11.0
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=d21730c5%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=6b04abc9%}
 
 The macro named `macro` is a special one that is needed only in rare cases.
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
@@ -4124,7 +4141,7 @@ The core macros use the `[` and `]` characters to enclose the parameters.
 ====
 The core macros cannot use the `(` and `)` characters, because the syntax of the macro `for` already supported the multi-variable version of it.
 Because of that options between `(` and `)` could not be distinguished from the variable list.
-To be consistent the macros `include`, `import`, `eval`, `if`, `macro`, `define`, `log` and `defer` also use the `[` and the `]` characters.
+To be consistent the macros `block`,`include`, `import`, `eval`, `if`, `macro`, `define`, `log` and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 The core macro `debug` uses the whole input, therefore it does not use any of the brackets around the parameters.
 
@@ -4133,7 +4150,7 @@ It simply fails when the number of files using Params is not the same as expecte
 And it already saved the consistency of this documentation many times.
 %}\
 {%#define nrCoreMacrosUsingParams={%@listDir (grep="(?:Params|Scan).using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
-{%#define nrCoreMacrosUsingParamsDocumented=10%}\
+{%#define nrCoreMacrosUsingParamsDocumented=11%}\
 {%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
 ====
 

@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -19,7 +20,7 @@ public class Get implements Macro, InnerScopeDependent {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
         final var from = holder("yamlDataSource", "from").asString();
-        Params.using(processor).from(this).keys(clone, copy, from).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(clone, copy, from).parse(in);
         final var fromId = Set.getFromId(in,from,this);
         skipWhiteSpaces(in);
         try {

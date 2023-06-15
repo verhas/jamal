@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.PrintStream;
 
@@ -15,7 +16,7 @@ public class Print implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var err = Params.holder("io:err", "err").asBoolean();
-        Params.using(processor).from(this).keys(err).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(err).parse(in);
 
         final PrintStream out;
         if (err.is()) {

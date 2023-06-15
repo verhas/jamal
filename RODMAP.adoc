@@ -1,8 +1,8 @@
 = JAMAL ROADMAP
 
-Rudimentary description of features that are to be developed in the future. The list is not listed in order of priority
+Rudimentary description of features that are to be developed in the future. The list is not listed in order of priority,
 and the list is not a promise or guarantee.
-If you feel that there is some feature here missing then open a GitHub ticket and suggest the missing feature.
+If you feel that there is some feature here missing, then open a GitHub ticket and suggest the missing feature.
 
 * Scripting languages properties can be set to object values if the value is a macro name and the named macro implements
  ObjectHolder.
@@ -10,11 +10,11 @@ If you feel that there is some feature here missing then open a GitHub ticket an
 * Yaml resolve should work if the referenced macro does not hold a Yaml object but some other ObjectHolder.
 
 * Integrate RestAssured so that you can write REST tests in Jamal and converting the document will run the tests and the
- output will that way become a test execution report.
+output will that way become a test execution report.
 
 * Implement Yaml data exporting in XML format. No attributes in this case, but that is perfect for XMLs like POM files,
- and it makes possible to use Yaml structural composition for POM files and other XML formats that do not use
- attributes. (DONE)
+and it makes it possible to use Yaml structural composition for POM files and other XML formats that do not use
+attributes. (DONE)
 
 * Implement breakpoints in Jamal debugger. A Jamal breakpoint is a string, and the execution in the debugger stops when
  the string is part of the next part to be executed. (DONE)
@@ -37,4 +37,4 @@ If you feel that there is some feature here missing then open a GitHub ticket an
 
 * Implement an annotation processor that can be used to generate Java code via Jamal macros.
 
-* Implement `res:` file loading so that ``res:`macroName` `` can be used to load a resourcee file from the classpath of the class implementing the macro `macroName`.
+* Implement `res:` file loading so that ``res:`macroName` `` can be used to load a resource file from the classpath of the class implementing the macro `macroName`. (DONE)

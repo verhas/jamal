@@ -9,13 +9,14 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 public class Defer implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var inputName = Params.<String>holder("$input", "input", "inputName").orElse("$input");
         final var outputName = Params.<String>holder("$output", "output", "outputName").orElse("$output");
-        Params.using(processor).from(this).between("[]").keys(inputName, outputName).parse(in);
+        Scan.using(processor).from(this).between("[]").keys(inputName, outputName).parse(in);
         processor.deferredClose(new DeferredCloser(in, inputName.get(), outputName.get()));
         return "";
     }

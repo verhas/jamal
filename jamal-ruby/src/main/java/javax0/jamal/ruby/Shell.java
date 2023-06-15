@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import org.jruby.embed.LocalContextScope;
 import org.jruby.embed.ScriptingContainer;
 
@@ -57,7 +58,7 @@ public class Shell implements Identified {
     // end snippet
     public static Shell getShell(final Input in, final Processor processor, final Macro macro) throws BadSyntax {
         final var id = Params.<String>holder(Shell.RUBY_SHELL_NAMING_MACRO, "shell").orElse(Shell.DEFAULT_RUBY_SHELL_NAME);
-        Params.using(processor).from(macro).keys(id).between("()").parse(in);
+        Scan.using(processor).from(macro).between("()").keys(id).parse(in);
         return getShell(processor, id.get());
     }
 

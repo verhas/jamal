@@ -6,6 +6,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 @Macro.Stateful
 public class Output implements Macro {
@@ -19,7 +20,7 @@ public class Output implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var isolate = Params.<Boolean>holder("isolatedOutput","isolate").asBoolean();
-        Params.using(processor).from(this).between("()").keys(isolate).parse(in);
+        Scan.using(processor).from(this).between("()").keys(isolate).parse(in);
         InputHandler.skipWhiteSpaces2EOL(in);
         if (isolate.is()) {
             try (var isolatedProc = new javax0.jamal.engine.Processor("{", "}")) {

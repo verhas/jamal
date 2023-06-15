@@ -6,6 +6,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -74,7 +75,7 @@ public class Import implements Stackable {
         var position = input.getPosition();
         final var top = Params.<Boolean>holder(null, "top").asBoolean();
         final var noCache = Params.<Boolean>holder(null, "noCache").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(top, noCache).parse(input);
+        Scan.using(processor).from(this).between("[]").keys(top, noCache).parse(input);
         if (top.is()) {
             while (position.parent != null) {
                 position = position.parent;

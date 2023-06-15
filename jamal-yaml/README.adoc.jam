@@ -345,7 +345,7 @@ You can use the following structure to read it from the file and assign the Yaml
 {#yaml:define aqt={@include [verbatim] res:sample.yaml}}
 {aqt}
 %}
-{%#block{%sample/
+{%#block[]{%sample/
 {#yaml:define aqt={@include [verbatim] {%RES sample.yaml%}}}
 {aqt}%}%}
 

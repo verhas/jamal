@@ -1,0 +1,16 @@
+
+{%@define tag:def($id,...$text)={%@define TAG:$id=$text%}\
+{%@define ! _TAG_:$id=$text%}\
+[[$id]]
+%}
+
+{%@define tag:ref($id,...$text)=
+{%!#if[empty]/{%?xrefs%}/{%@ident {%@references file="tagref.jrf"%}%}%}\
+{%@ref TAG:$id%}\
+<<$id,{%#if[empty]/$text/{%?TAG:$id%}/$text%}>>
+{%#define all:tags={%#if[not empty]/{%?all:tags%}/{%?all:tags%},%}$id%}
+%}
+
+{%tag:ref/ch1%}{%tag:ref/ch2%}
+{%tag:def/ch1/This is the first chapter%}
+{%tag:def/ch2/This is the second chapter%}

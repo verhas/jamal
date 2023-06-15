@@ -18,7 +18,7 @@ For example, the macro
 {%sample/
 {@snip:xml pom=pom.xml}
 %}
-{%#block {%output%} is needed to execute the sample macro because we use later the `pom` macro%}
+{%#block[] {%output%} is needed to execute the sample macro because we use later the `pom` macro%}
 
 reads the `pom.xml` file from the same directory where the document is.
 It stores the XML in the memory, and you can query it via the `pom` macro afterward.

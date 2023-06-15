@@ -1,5 +1,6 @@
 package javax0.jamal.api;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -175,6 +176,16 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      * @throws BadSyntax when there is some error exporting
      */
     void export(String id) throws BadSyntax;
+
+    /**
+     * Export all the user defined and built-in macros defined from the current evaluation level.
+     *
+     * @throws BadSyntax if any of the exports fail, for example, we are in the global scope
+     */
+    default void export() throws BadSyntax {
+        throw new IllegalArgumentException(String.format("export() is not implemented by this implementation '%s'", this.getClass().getName()));
+    }
+
 
     /**
      * Export all the user defined macros defined by the array {@code ids}

@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 import java.io.File;
 
@@ -14,7 +15,7 @@ public class Mkdir implements Macro, InnerScopeDependent {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var file = Utils.getFile();
         final var recursive = Utils.getRecursive();
-        Params.using(processor).from(this).keys(file, recursive).parse(in);
+        Scan.using(processor).from(this).firstLine().keys(file, recursive).parse(in);
 
         final var fileName = Utils.getFile(file, in);
 

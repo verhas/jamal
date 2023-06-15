@@ -8,6 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
@@ -46,7 +47,7 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var clone = Resolver.cloneOption();
         final var copy = Resolver.copyOption();
-        Params.using(processor).from(this).keys(clone, copy).between("()").parse(in);
+        Scan.using(processor).from(this).between("()").keys(clone, copy).parse(in);
         // TODO create a new instance and defer closing to that one to be thread safe
         this.clone = clone.is();
         this.copy = copy.is();

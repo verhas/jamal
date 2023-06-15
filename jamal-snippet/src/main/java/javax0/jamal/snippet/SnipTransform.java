@@ -83,7 +83,7 @@ public class SnipTransform implements Macro {
 
         private void parse(final Params.ExtraParams extraParams, final Input in, final Processor processor) throws BadSyntax {
             if (extraParams == null) {
-                // there is no '(' and ')' around the parameters
+                // there are no '(' and ')' around the parameters
                 Scan.using(processor)
                         .from(SnipTransform.this)
                         .firstLine()

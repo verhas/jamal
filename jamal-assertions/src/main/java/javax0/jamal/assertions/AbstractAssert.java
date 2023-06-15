@@ -6,6 +6,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scan;
 
 /**
  * Abstract class implementing the common parts of all concrete assertions.
@@ -60,12 +61,12 @@ abstract class AbstractAssert implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         // snippet Assertion_params
-        Params.Param<Boolean> trim = Params.<Boolean>holder("trim", "strip").asBoolean();
-        Params.Param<Boolean> not = Params.<Boolean>holder("not", "negate").asBoolean();
-        Params.Param<Boolean> test = Params.<Boolean>holder("test", "boolean", "bool").asBoolean();
+        final var trim = Params.<Boolean>holder("trim", "strip").asBoolean();
+        final var not = Params.<Boolean>holder("not", "negate").asBoolean();
+        final var test = Params.<Boolean>holder("test", "boolean", "bool").asBoolean();
         //end snippet
 
-        Params.using(processor).from(this).between("()").keys(trim, not, test).parse(input);
+        Scan.using(processor).from(this).between("()").keys(trim, not, test).parse(input);
         String[] parts = getParts(input, N, trim, this);
         if (negateIfNeeded(test(parts), not)) {
             return test.is() ? "true" : "";
