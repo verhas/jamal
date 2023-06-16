@@ -10,6 +10,10 @@
 
 * Core macro supports the option `flat` (alias as `export`) to evaluate the content in the same scope as the surrounding macro.
 * `references` macro runs an idempotency check at the end of the execution
+* Macro parameters that do not need `(` and `)` can be specified with optional parentheses.
+You do not need to remember not to use the parentheses.
+* Asciidoctor's extension supports both 2.5.10 and 3.0.0-alpha.1 versions of Asciidoctor.
+It is not integration tested for the 3.X.X versions because IntelliJ plugin currently supports 2.X.X versions only.
 
 == https://github.com/verhas/jamal/tree/2.2.0[2.2.0]
 
