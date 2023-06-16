@@ -31,6 +31,7 @@
     {dependencies
        {@for [evalist] MODULE in ({modules:ASCIIDOC})=
          {dependency|{GROUPID}|jamal-MODULE|}}
+      {dependency |com.javax0.jamal|jamal-asciidoc258|{VERSION}}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE||test}}
       {dependency |org.asciidoctor|asciidoctorj-api|{ASCIIDOCTORJ_VERSION}|provided}

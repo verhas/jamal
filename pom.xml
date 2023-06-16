@@ -40,6 +40,7 @@
         <module>jamal-test</module>
         <module>jamal-testsupport</module>
         <module>jamal-extensions</module>
+        <module>jamal-asciidoc258</module>
         <module>jamal-all</module>
     </modules>
     <licenses>
@@ -159,7 +160,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.slf4j</groupId>

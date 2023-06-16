@@ -10,6 +10,7 @@ module jamal.asciidoc {
     requires jamal.api;
     requires jamal.tools;
     requires jamal.engine;
+    requires jamal.asciidoc_COMPAT;
     requires asciidoctorj.api;
     requires asciidoctorj;
     requires jdk.jshell;

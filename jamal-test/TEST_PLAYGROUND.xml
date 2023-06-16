@@ -32,16 +32,16 @@ Cannot insert XML at '/project' at /Users/verhasp/github/jamal/jamal-test/TEST_P
 	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:142)
 	javax0.jamal.engine.Processor(closeProcess:904)
 	javax0.jamal.engine.Processor(process:188)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:338)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:201)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:132)
+	javax0.jamal.asciidoc258.JamalPreprocessor258(process:338)
+	javax0.jamal.asciidoc258.JamalPreprocessor258(runJamalInProcess:201)
+	javax0.jamal.asciidoc258.JamalPreprocessor258(process:132)
 Causing Exception:
 Content is not allowed in trailing section.	javax0.jamal.snippet.XmlInsert(insert:69)
 	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:140)
 	javax0.jamal.engine.Processor(closeProcess:904)
 	javax0.jamal.engine.Processor(process:188)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:338)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:201)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:132)
+	javax0.jamal.asciidoc258.JamalPreprocessor258(process:338)
+	javax0.jamal.asciidoc258.JamalPreprocessor258(runJamalInProcess:201)
+	javax0.jamal.asciidoc258.JamalPreprocessor258(process:132)
 sed -i jam '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam
 ----

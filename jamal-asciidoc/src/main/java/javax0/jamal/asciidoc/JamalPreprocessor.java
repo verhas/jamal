@@ -3,6 +3,7 @@ package javax0.jamal.asciidoc;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
+import javax0.jamal.asciidoc258.JamalPreprocessor258;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
@@ -12,6 +13,7 @@ import org.asciidoctor.ast.Document;
 import org.asciidoctor.extension.JavaExtensionRegistry;
 import org.asciidoctor.extension.Preprocessor;
 import org.asciidoctor.extension.PreprocessorReader;
+import org.asciidoctor.extension.Reader;
 import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 
 import java.io.BufferedWriter;
@@ -48,7 +50,22 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     @Override
     public void register(Asciidoctor asciidoctor) {
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
-        javaExtensionRegistry.preprocessor(JamalPreprocessor.class);
+        javaExtensionRegistry.preprocessor(getVersionFittingPreprocessorClass());
+    }
+
+    private Class<? extends Preprocessor> getVersionFittingPreprocessorClass() {
+        try {
+            final var abstractPreprocessor = Class.forName("org.asciidoctor.extension.Preprocessor");
+            for( final var m : abstractPreprocessor.getDeclaredMethods()){
+                if( "process".equals(m.getName())){
+                    if( m.getReturnType() == void.class){
+                        return JamalPreprocessor258.class;
+                    }
+                }
+            }
+        } catch (Exception ignore) {
+        }
+        return this.getClass();
     }
 
     private static int runCounter = 0;
@@ -58,17 +75,17 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * <p>
      * The ASCIIDOCTOR plugin invokes the rendering many times (two or three sometimes) even, when the source has not
      * changed. Rendering an AsciiDoc document is not cheap in itself, but Jamal processing AND rendering can be
-     * extremely expensive. You can do extensive things programming Jamal.
+     * extremely expensive. You can do extensive things programming, Jamal.
      * <p>
-     * To avoid unneeded processing Jamal is only executed if the source code has been changed since the last
-     * execution. If the MD5 signature of the input is the same as the last execution then we just return whatever
-     * the return value was during the last execution. There is no reason to store more than one item, therefore
+     * To avoid unneeded processing, Jamal is only executed if the source code has been changed since the last
+     * execution. If the MD5 signature of the input is the same as the last execution, then we just return whatever
+     * the return value was during the last execution. There is no reason to store more than one item, therefore,
      * this cache is static.
      */
     private static final AtomicReference<ProcessingCache> cache = new AtomicReference<>(new ProcessingCache(null, null, null));
 
     @Override
-    public void process(Document document, PreprocessorReader reader) {
+    public Reader process(Document document, PreprocessorReader reader) {
         final var runCounter = JamalPreprocessor.runCounter++;
         final var fileName = nonNull(reader.getFile()) ? reader.getFile() : (String) document.getAttribute("docfile");
         setContextClassLoader();
@@ -77,7 +94,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
          * If the file ending is adoc, asciidoc or anything else, then there is nothing to do with the Jamal preprocessor.
          */
         if (!fileName.endsWith(".jam")) {
-            return;
+            return reader;
         }
         final var linesAfterFM = reader.readLines();
         // snipline fetch-font-matter
@@ -95,7 +112,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         final var opts = new InFileOptions(firstLine);
         if (opts.off) {
             reader.restoreLines(lines);
-            return;
+            return reader;
         }
 
         if (opts.fromFile) {
@@ -143,6 +160,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         }
         restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
         log.info("DONE");
+        return reader;
     }
 
     private static void replaceTheLinesFromTheFile(final String fileName, final ArrayList<String> lines) {
@@ -202,7 +220,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         System.setProperty("intellij.asciidoctor.plugin", "1");
         // snipline spec_env2 filter="(.*?)"
         System.setProperty("asciidocfx.asciidoctor.plugin", "1");
-        final var r = process(processor, input);
+        final var r = processJamal(processor, input);
         r.processor = processor;
         r.lines = postProcess(lines, r, fileName);
         return r;
@@ -336,7 +354,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         return i;
     }
 
-    private JamalPreprocessor.Result process(final Processor processor, final Input input) {
+    private JamalPreprocessor.Result processJamal(final Processor processor, final Input input) {
         final Result r = new Result();
         try {
             r.result = processor.process(input);

@@ -1,0 +1,29 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{@import ../modules.jim}
+{project jamal asciidoc258}
+    {GAV ::jamal-asciidoc258:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description Asciidoc preprocessor extension}
+
+    {@define openForTests={opens/asciidoc/asciidoc}
+    }
+    {build|
+      {plugins|
+        {@include ../plugins.jim}
+      }
+    }
+
+    {dependencies
+       {@for [evalist] MODULE in ({modules:ASCIIDOC})=
+         {dependency|{GROUPID}|jamal-MODULE|}}
+      {dependency |org.asciidoctor|asciidoctorj-api|2.5.10|provided}
+      {dependency |org.asciidoctor|asciidoctorj|2.5.10|provided}
+      {dependency |org.mockito|mockito-core|{MOCKITO_VERSION}}
+    }
+
+    {repositories{repository|jitpack|https://jitpack.io/}}
+
+{end project}
+{@xmlFormat}
