@@ -24,29 +24,66 @@ For example, the line
 
 will instruct Jamal to include the file verbatim and only the lines from 1 to 13.
 
-The Java implementation declares the parameters' names and types, and the helper tool automatically parses the input.
-The Java code of the macro gets the values for the parameters parsed and converted.
+The parameters are between the `[` and `]` characters.
+They have to form `name=value` pairs separated by spaces.
 
-Parameters can be integer numbers, strings, boolean values, and regular expression patterns.
+The enclosing characters for the parameters are not hard-wired.
+Each macro can declare the characters it uses to enclose the parameters.
+It is customary to use `[` and `]` for the core macros and `(` and `)` for the macros in other packages.
+
+NOTE: The use of the `[` and `]` characters in case of the core macros was a decision late in the development process.
+The macro `for` was the first one to support parameters, and it already used the `(` and `)` characters to enclose the parameters.
+To keep backward compatibility, the decision was made: the core macros will use `[` and `]`.
+There is nothing to stop a non-core macro from using these characters, but it is not recommended.
+
+There are macros which do not need any content other than the parameters.
+In this case, the parameters are the whole input and are not enclosed in any characters.
+Some macros use line oriented input, and they assume an empty first line.
+The first line is used for parameters in that case, also not needing any enclosing characters.
+
+The macros can have mandatory and optional parameters.
+Parameters have types and can have default values.
+Specifying a parameter not handled by the macro is an error.
+
+The macro Java implementation declares the parameter names, types, and optionally default value.
+The helper tool automatically parses the input.
+The macro Java code gets the values for the parameters parsed and converted.
+
+Parameters can be
+
+* integer numbers,
+* strings,
+* boolean values (always have a default value ˛false`), and
+* regular expression patterns,
+* lists.
+
 Some parameters may have multiple values.
+Enumerated parameters can be emulated using boolean parameters. (Discussed later.)
 
-Parameters are named and aliased as defined in the Java code.
+The Java code can define a name and also aliases for the same parameter.
+The names and aliases can be used interchangeably, though the Java code can query the actual name used.
+The use of this feature is acceptable in some special cases only, like emulating enumerated parameters.
 
-The parameter parsing can scan the macro content from the start
+Names and aliases are case-sensitive.
 
-* to the end,
+The parameter name is also the name of the user-defined macro that can be used to define the value of the parameter.
+Aliases are not considered as macro names when searching for values.
 
-* to a specific closing character, like a new-line, or
+TIP: Let's say that a parameter has the name `globalFormat` an the alias `format`.
+In that case the user defined macro `globalFormat` can be used to define the value of the parameter.
+The parameter name `globalFormat` can also be used as a parameter name on the input and so can the alias `format`.
+However, even if there is a macro defined and named `format` it will not be used to define the value of the parameter.
+Aliases work only in the input of the macro.
 
-* between special opening and closing characters.
+The Java code may define the name to be `null`.
+In this case, only the aliases are defined without name.
+It means that no user defined macro can define the value for the parameter.
 
 NOTE: The parameters start and end with an opening and closing character.
 The macros have opening and closing strings.
 Macro parameter parsing uses single characters.
-The Java implementation of the macro specifies the actual character.
-It is not something you need to change on the Jamal code.
 
-As we have seen, the `input` macro with the parameters
+As we have seen, the `include` macro with the parameters
 
 [source]
 ----
@@ -54,28 +91,9 @@ As we have seen, the `input` macro with the parameters
 ----
 
 uses the `[` and `]` characters.
+
 The built-in core macros use these separator characters.
 Currently 11 built-in core macros have parameters.
-
-Built-in macros in other packages are encouraged to use the `(` and `)` characters to enclose their parameters.
-When the macro does not need content other than the parameters, the recommended way is to use the whole input.
-Macros working on several lines, like `trimLines`, usually use the first line of the content for parameters.
-
-The `trimLines` macro in the snippet package can trim vertically if we instruct it.
-Similarly, the left trimming can go all to the left, but it may also leave some margin if we specify some margin.
-For this reason, this macro uses two parameters:
-
-* `trimVertical`, and
-
-* `margin`.
-
-This macro reserves the first line of the input and trims and returns only the rest of the lines.
-The first line can contain parameters.
-
-Other macros parse the whole input for parameters.
-The `snip:collect` macro collects snippets from files and does not convert anything from its input.
-This macro parses the whole input looking for parameters.
-Some macros start parsing for parameters if the first non-whitespace character after the macro id is `(` and the parsing stops at the matching `)`.
 
 The class `Params` provides the tools to ease parameter parsing.
 
@@ -95,18 +113,17 @@ The names are the parameter names that the macro may use.
 The macro first passes the input to the parsing method.
 When a parameter is not defined, the algorithm tries to look up a user-defined macro with the name as the parameter.
 If you set `{@define margin=2}` somewhere in your Jamal source, this value will be used by every `trimLine` following it.
-The parameter of the same name or a macro defined locally overrides the outer definition.
 If the value is not defined as a parameter or a user-defined macro, then the built-in macros can use default values.
 
 NOTE: The macro `default` usually steps into the place of an undefined macro.
-When you use an undefined user-defined macro, and Jamal does not find the macro, it uses the macro named `default`, assuming `default` is defined.
-In this case, we do not use this macro.
+Not in this case.
 It is also an error if the macro used as the configuration has parameters unless the option `{@options lenient}` is specified.
 
 The parameters have types.
 
 * In the case of boolean parameters, the values `false`, `0`, or `no` are treated as false.
-Everything else will result true.
+Everything else will result `true`.
+The usual way to use boolean parameters is to specify the parameter name only.
 If a required boolean parameter is not present as a parameter, then the option of the same name is taken into account.
 The option is the one that you can set using the macro `{@options ...}`.
 For example, you can specify `{@options trimVertical}` if you want all uses of the macro `trimLine` to trim vertically.
@@ -116,9 +133,14 @@ Undefined boolean parameters are `false`.
 
 * Parameters can be strings and integers.
 These can be defined in a parameter or as the value of a macro, as described above.
+A parameter is string or integer when it is declared like that in the Java source.
+You can freely enclose integer parameters in quotes and specify a string without quotes.
+Note, however, that in the latter case you cannot use some special characters in the string, like spaces or `=`.
 
 * Some parameters can have more than one value.
 The parameter's `name` can appear more than once with multiple values assigned to it.
+In this case, the name or an alias appears multiple times a value assigned.
+The names and the aliases can be mixed arbitrarily.
 
 Macros may decide whether to define any default value for a parameter.
 If not, the macro will error if the parameter is not defined and there is no user-defined macro.
@@ -129,16 +151,16 @@ Alias names do not play a role as user-defined macros.
 In other words, the "main" name of the parameter can also be a macro; aliases cannot.
 
 The core macro uses `$forsep` as a parameter and has an alias `separator`.
-If neither is specified in the macro, only the user-defined macro `$forsep` is used.
-If there is a `{@define separator=;}` in the code, it will not alter the execution of the `for` macro.
-Inside the macro, however, the names and the aliases are interchangeable.
+If neither is specified in the macro, only the user-defined macro `$forsep` is consulted.
+If there is a `{@define separator=;}` in the code, it will not alter the `for` macro execution.
+In the parameter list, however, the names and the aliases are interchangeable.
 
 Macros can define parameters using only aliases.
 Technically they specify `null` as the name and give meaningful strings only for one or more aliases.
 In that case, there is no way to define a global value for the parameter as a macro.
 
 Aliases are specific to the macro.
-Different macros may use the same parameter name for other purposes providing different or the same aliases.
+Different macros may use the same parameter name for different purposes, providing different or the same aliases.
 It is up to the macro implementation what parameter names and aliases they use.
 However, the parameter names and the aliases are unique in a single macro implementation.
 
@@ -155,7 +177,7 @@ the `value1, value2, ..., valueN` values are either _numeric_, _boolean_ or _str
 The type depends on what the macro awaits for the specific parameter.
 
 You can enclose the values between `"`, `"""` or without any delimiter.
-The `"..."` is a typical string representation.
+`"..."` is a typical string representation.
 Using the `"` is optional if there is no space or a particular escape sequence in the value.
 For example, `margin=1` is just as good as `margin="1"`.
 On the other hand, `name=Peter Verhas` is not valid.
@@ -173,7 +195,7 @@ If there are many parameters, and the first line becomes too long, then the `\` 
 Subsequent lines can also escape the new-line character using the `\` character.
 It makes the parser skip the new line and go on parsing on the following line.
 
-For example
+Let's assume that we have a macro `someMacro` and the Java class `SomeMacro` declares the parameters to be on the first line of the input.
 
 [source,text]
 ----
@@ -186,6 +208,8 @@ comment="this is still a parameter because of the \\ at the end of the previous 
 this is the input the macro will use for its result; everything else until here are parameters
 }
 ----
+
+When the macro declares that the parameters are on the first line or until the end of the input you can still optionally use `(` and `)` to enclose the parameters.
 
 When the macro asks the parser object to parse the input, it also specifies the parameter names it can handle.
 An error will occur if there is any parameter the macro does not handle.
@@ -248,7 +272,7 @@ When the value has some other type, it is shown like a casting operation `(type)
 
 ==== Simple Parameters
 
-This example shows the simple use of two integer, and a string parameter use.
+This example shows the simple use of two integers and a string parameter use.
 
 
 [source,text]

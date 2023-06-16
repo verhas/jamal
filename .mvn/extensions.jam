@@ -1,15 +1,15 @@
-{@import https://raw.githubusercontent.com/verhas/jamal/master/version.jim}\
+{@snip:xml V=https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-api/maven-metadata.xml}\
+{#define RELEASE={V //metadata/versioning/release}}\
 {@define asciidoc:output=extensions.xml}\
 <!--
 This file was generated from extensions.jam in the same directory as extensions.xml
 
-The current version of Jamal is {VERSION}.
-The latest version is {LAST_RELEASE}.
+The latest version is {RELEASE}.
 -->
 {#thinXml
 extensions>
   extension>
     groupId>com.javax0.jamal
     artifactId>jamal-maven-extension
-    version>1.12.6
+    version>{RELEASE}
 }

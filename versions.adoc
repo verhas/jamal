@@ -31,7 +31,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.1.0` 
+* `*[red]#NO#*`  `SUREFIRE_PLUGIN_VERSION` `3.1.0` `*[red]#upgrade to 3.1.2#*`
 
 * `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.0` 
 
@@ -43,7 +43,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MOCKITO_VERSION` `5.3.1` 
 
-* `OK`  `JRUBY_VERSION` `9.4.2.0` 
+* `*[red]#NO#*`  `JRUBY_VERSION` `9.4.2.0` `*[red]#upgrade to 9.4.3.0#*`
 
 * `OK`  `GROOVY_VERSION` `3.0.17` 
 
@@ -57,7 +57,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `APACHE_POI_VERSION` `5.2.3` 
 
-* `OK`  `ASCIIDOCTORJ_VERSION` `2.5.8` 
+* `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `2.5.8` `*[red]#upgrade to 3.0.0-alpha.1#*`
 
 * `OK`  `JSCRIPTBASIC_VERSION` `2.1.1` 
 

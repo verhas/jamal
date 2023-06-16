@@ -46,7 +46,7 @@ public class TestParams {
      * <p>
      * {%section Simple Parameters%}
      * <p>
-     * This example shows the simple use of two integer, and a string parameter use.
+     * This example shows the simple use of two integers and a string parameter use.
      * <p>
      * end snippet
      * <p>
@@ -431,6 +431,55 @@ public class TestParams {
     }
 
     @Test
+    @DisplayName("Parsing simple parameters between optional ( and ) / 1")
+    void testSimpleParametersBetweenOptionalParens_() throws Exception {
+        keys("margin:I,top:I").input(" (margin=2 top=3)").results(
+                "margin:I,top:I\n" +
+                        "input:\n" +
+                        " (margin=2 top=3)\n" +
+                        "result:\n" +
+                        "margin=2\n" +
+                        "top=3"
+        );
+    }
+
+    @Test
+    @DisplayName("Parsing simple parameters between optional ( and ) / 2")
+    void testSimpleParametersBetweenOptionalParens() throws Exception {
+        keys("margin:I,top:I,left:S").input(" (margin=2 top=3 left=\"aligned\")").results(
+                "margin:I,top:I,left:S\n" +
+                        "input:\n" +
+                        " (margin=2 top=3 left=\"aligned\")\n" +
+                        "result:\n" +
+                        "margin=2\n" +
+                        "top=3\n" +
+                        "left=\"aligned\""
+        );
+    }
+
+    @Test
+    @DisplayName("Parsing simple parameters between optional ( and ) / 3")
+    void testSimpleParametersBetweenOptionalParensMultiLine() throws Exception {
+        keys("margin:I,top:I").input(" (margin=2 \n" +
+                "top=3)").results(
+                "margin:I,top:I\n" +
+                        "input:\n" +
+                        " (margin=2 \n" +
+                        "top=3)\n" +
+                        "result:\n" +
+                        "margin=2\n" +
+                        "top=3"
+        );
+    }
+
+    @Test
+    @DisplayName("Parsing simple parameters using optional ( but missing closing )")
+    void testSimpleParametersOptionalParenMissing() throws Exception {
+        keys("margin:I,top:I,left:S").input(" (margin=2 top=3 left=\"aligned\"")
+                .throwsUp("The macro 'test environment' has parameters that starts with optional '(' but does not end with ')'.");
+    }
+
+    @Test
     @DisplayName("Parsing simple parameters between ( and ) on multi line")
     void testSimpleParametersBetweenParensML() throws Exception {
         keys("margin:I,top:I,left:S").between("()").input(" (margin=2 top=3 \nleft=\"aligned\")").results(
@@ -662,7 +711,7 @@ public class TestParams {
     @Test
     @DisplayName("When an undefined key is used calling a macro the error contains a suggestion")
     void testUndefinedKey() throws Exception {
-        TestThat.theInput("{@if [enpty] //}").throwsBadSyntax("The key 'enpty' is not used by the macro 'if'\\. Did you mean 'empty'\\?");
+        TestThat.theInput("{@if [enpty] //}").throwsBadSyntax("The key 'enpty' is not used by the macro 'if'\\. Did you mean 'empty',.*\\?");
     }
 }
 

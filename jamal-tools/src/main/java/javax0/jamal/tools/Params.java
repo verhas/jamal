@@ -7,23 +7,14 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.StringFetcher;
 import javax0.levenshtein.Levenshtein;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.startsWith;
+import static javax0.jamal.tools.InputHandler.*;
 
 /**
  * Parse the start of the input for macro parameters.
@@ -379,17 +370,14 @@ public class Params {
      * @return the set of suggestions
      */
     public static Set<String> suggest(String spelling, Set<String> keys) {
-        final Set<String> suggestions = new HashSet<>();
-        int minDistance = 3;
+        final var map = new TreeMap<Integer, List<String>>();
         for (String key : keys) {
             final int distance = Levenshtein.distance(key, spelling);
-            if (distance < minDistance) {
-                minDistance = distance;
-                suggestions.clear();
-            }
-            if (distance <= minDistance) {
-                suggestions.add(key);
-            }
+            map.computeIfAbsent(distance, k -> new ArrayList<>()).add(key);
+        }
+        final Set<String> suggestions = new LinkedHashSet<>();
+        for (final var k : map.values()) {
+            suggestions.addAll(k);
         }
         return suggestions;
     }
@@ -397,34 +385,61 @@ public class Params {
     public void parse(Input input, BiConsumer<String, String> store, Predicate<String> valid) throws BadSyntax {
         parse();
         skipStartingSpacesAndEscapedTerminal(input);
-        if (start != null) {
+        var needClosingParen = false;
+        if (start == null) {
+            if (firstCharIs(input, '(')) {
+                skip(input, 1);
+                needClosingParen = true;
+                skipSpacesAndEscapedTerminal(input, ')');
+            }
+        } else {
             if (firstCharIs(input, start)) {
                 skip(input, 1);
             } else {
                 return;
             }
         }
-        while ((terminal == null || !firstCharIs(input, terminal)) && input.length() > 0) {
-            if (terminal != null && firstCharIs(input, terminal)) {
+
+        while ((terminal == null || !firstCharIs(input, terminal))) {
+            if (terminal == null) {
+                if (input.length() == 0) {
+                    break;
+                }
+            } else {
+                if (terminal == '\n' && input.length() == 0) {
+                    break;
+                }
+                if (firstCharIs(input, terminal) && (terminal != '\n' || !needClosingParen)) {
+                    break;
+                }
+            }
+            if (needClosingParen && firstCharIs(input, ')')) {
+                skip(input, 1);
+                while ((terminal == null || !firstCharIs(input, terminal)) && input.length() > 0) {
+                    BadSyntax.when(!Character.isWhitespace(input.charAt(0)), String.format("The macro '%s' has parameter content following the closing ')'.", macroName));
+                    skip(input, 1);
+                }
+                needClosingParen = false; // not anymore
                 break;
             }
-            skipSpacesAndEscapedTerminal(input);
+            skipSpacesAndEscapedTerminal(input, terminal);
             final var id = fetchId(input);
             if (!valid.test(id)) {
                 throw new BadKey(id, "The key '" + id + "' is not used by the macro '" + macroName + "'.");
             }
             final String param;
-            skipSpacesAndEscapedTerminal(input);
+            skipSpacesAndEscapedTerminal(input, terminal);
             if (firstCharIs(input, '=')) {
                 skip(input, 1);
-                skipSpacesAndEscapedTerminal(input);
-                param = StringFetcher.getString(input, terminal);
+                skipSpacesAndEscapedTerminal(input, terminal);
+                param = StringFetcher.getString(input, needClosingParen ? (Character) ')' : terminal);
             } else {
                 param = "true";
             }
             store.accept(id, param);
-            skipSpacesAndEscapedTerminal(input);
+            skipSpacesAndEscapedTerminal(input, needClosingParen ? (Character) ')' : terminal);
         }
+        BadSyntax.when(needClosingParen, String.format("The macro '%s' has parameters that starts with optional '(' but does not end with ')'.", macroName));
         skip(input, 1);
     }
 
@@ -465,7 +480,7 @@ public class Params {
      *
      * @param input the input that contains the next parameters with spaces optionally in front of them
      */
-    private void skipSpacesAndEscapedTerminal(Input input) {
+    private void skipSpacesAndEscapedTerminal(final Input input, final Character terminal) {
         skipper(input, i -> i.length() > 0 && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), terminal));
     }
 
