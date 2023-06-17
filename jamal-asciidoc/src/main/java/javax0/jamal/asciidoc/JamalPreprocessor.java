@@ -5,6 +5,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
 import javax0.jamal.asciidoc258.JamalPreprocessor258;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.snippet.IdempotencyFailed;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.MacroReader;
@@ -56,9 +57,9 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     private Class<? extends Preprocessor> getVersionFittingPreprocessorClass() {
         try {
             final var abstractPreprocessor = Class.forName("org.asciidoctor.extension.Preprocessor");
-            for( final var m : abstractPreprocessor.getDeclaredMethods()){
-                if( "process".equals(m.getName())){
-                    if( m.getReturnType() == void.class){
+            for (final var m : abstractPreprocessor.getDeclaredMethods()) {
+                if ("process".equals(m.getName())) {
+                    if (m.getReturnType() == void.class) {
                         return JamalPreprocessor258.class;
                     }
                 }
@@ -136,6 +137,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         } else {
             if (opts.external) {
                 newLines = JamalExecutor.execute(fileName, lines);
+                log.info("setting cache");
+                JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
             } else {
                 final var logger = opts.prefixLog ? new StringColletingLogger() : new javax0.jamal.api.Processor.Logger() {
                     @Override
@@ -151,9 +154,11 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 final var result = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader, logger);
                 newLines = result.lines;
                 outputFileName = getSaveToFileName(fileName, outputFileName, result);
+                if (!(result.exception instanceof IdempotencyFailed)) {
+                    log.info("setting cache");
+                    JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
+                }
             }
-            log.info("setting cache");
-            JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
             if (opts.save) {
                 writeOutputFile(outputFileName, log, cachingFileReader, newLines);
             }

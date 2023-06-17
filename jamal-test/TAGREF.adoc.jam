@@ -8,7 +8,7 @@
 {%!#if[empty]/{%?xrefs%}/{%@ident {%@references file="tagref.jrf"%}%}%}\
 {%@ref TAG:$id%}\
 <<$id,{%#if[empty]/$text/{%?TAG:$id%}/$text%}>>
-{%#define all:tags={%#if[not empty]/{%?all:tags%}/{%?all:tags%},%}$id%}
+{%#define all:tags={%#if[not empty]/{%?all:tags%}/{%?all:tags%},%}$id%} .
 %}
 
 {%tag:ref/ch1%}{%tag:ref/ch2%}

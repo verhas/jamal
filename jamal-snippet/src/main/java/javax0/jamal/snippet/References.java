@@ -49,9 +49,9 @@ public class References implements Macro {
                 }
             }
         } catch (IOException e) {
-            // when the file is not there, we just return a warning string  that gets into the place of the macro
+            // when the file is not there, we just return a warning string that gets into the place of the macro
             // telling whoever reads the document that the reference file was not there
-            return String.format("WARNING The reference file %s was not found.", xrefFile.getAbsolutePath());
+            throw new IdempotencyFailed(String.format("The reference file %s was not found.", xrefFile.getAbsolutePath()));
         }
         return "";
     }
@@ -144,7 +144,7 @@ public class References implements Macro {
             BadSyntax.when(missing.size() > 0, "The following references are missing: " + String.join(", ", missing));
             if (macrosSerialized != null) {
                 final var diff = checkIdempotency(macrosSerialized, sb.toString().split("\n"));
-                BadSyntax.when(diff.length() > 0, "The following references are not idempotent: " + diff);
+                IdempotencyFailed.when(diff.length() > 0, "The following references are not idempotent: " + diff);
             }
         }
 

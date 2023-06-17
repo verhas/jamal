@@ -30,7 +30,6 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.asciidoc/javax0.jamal.asciidoc=ALL-UNNAMED
-    
             </argLine>
                 </configuration>
             </plugin>

@@ -1,34 +1,7 @@
-[WARNING]
---
-* The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
---
-{%@for $VAR in (a,b,c,d,e,f)=
-        final static private String $VAR = "$VAR";%}
-[WARNING]
---
-* The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
---
-{%@java:insert (to=TEST_PLAYGORUND_MNI_O1G.java)%}
-[WARNING]
---
-* The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
---
-[source]
-----
-The key '(to=TEST_PLAYGORUND_MNI_O1G.java)' is not used by the macro 'java:insert'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:15
-	javax0.jamal.tools.Params(parse:414)
-	javax0.jamal.tools.Params(parse:284)
-	javax0.jamal.tools.Scan$Builder(parse:61)
-	javax0.jamal.snippet.JavaSourceInsert(evaluate:23)
-	javax0.jamal.engine.Processor(evaluateBuiltinMacro:453)
-	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:397)
-	javax0.jamal.engine.Processor(safeEvaluate:406)
-	javax0.jamal.engine.Processor(evaluateBuiltInMacro:397)
-	javax0.jamal.engine.Processor(evalMacro:352)
-	javax0.jamal.engine.Processor(processMacro:265)
-	javax0.jamal.engine.Processor(process:174)
-	javax0.jamal.asciidoc258.JamalPreprocessor258(process:340)
-	javax0.jamal.asciidoc258.JamalPreprocessor258(runJamalInProcess:203)
-	javax0.jamal.asciidoc258.JamalPreprocessor258(process:134)
-sed -i jam '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam
-----
+
+        final static private String a = "a";
+        final static private String b = "b";
+        final static private String c = "c";
+        final static private String d = "d";
+        final static private String e = "e";
+        final static private String f = "f";

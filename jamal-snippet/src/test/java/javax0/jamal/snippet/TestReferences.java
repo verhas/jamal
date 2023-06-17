@@ -20,7 +20,7 @@ public class TestReferences {
     @Test
     void testReferences() throws Exception {
         cleanRefFile();
-        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").matches("WARNING The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.UNDEFINED");
+        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").throwsBadSyntax("The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.");
         TestThat.theInput("{@references}{@ref a}{a}").results("1");
         cleanRefFile();
     }
@@ -29,7 +29,7 @@ public class TestReferences {
     @Test
     void testReferencesNonIdempotent1() throws Exception {
         cleanRefFile();
-        TestThat.theInput("{@references}{@ref a}{@ref b}{a}{@define a=1}").matches("WARNING The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.UNDEFINED");
+        TestThat.theInput("{@references}{@ref a}{@ref b}{a}{@define a=1}").throwsBadSyntax("The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.");
         TestThat.theInput("{@references}{@ref a}{a}").throwsBadSyntax("The following references are not idempotent: macro 'b' is deleted.*");
         cleanRefFile();
     }
@@ -38,7 +38,7 @@ public class TestReferences {
     @Test
     void testReferencesNonIdempotent2() throws Exception {
         cleanRefFile();
-        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").matches("WARNING The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.UNDEFINED");
+        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").throwsBadSyntax("The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.");
         TestThat.theInput("{@references}{@ref a}{@define c=3}{@ref c}{a}").throwsBadSyntax("The following references are not idempotent: macro 'c' is new.*");
         cleanRefFile();
     }
@@ -47,7 +47,7 @@ public class TestReferences {
     @Test
     void testReferencesNonIdempotent3() throws Exception {
         cleanRefFile();
-        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").matches("WARNING The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.UNDEFINED");
+        TestThat.theInput("{@references}{@ref a}{a}{@define a=1}").throwsBadSyntax("The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.");
         TestThat.theInput("{@references}{@ref a}{@define a=3}{a}").throwsBadSyntax("The following references are not idempotent: macro 'a' has changed.*");
         cleanRefFile();
     }
@@ -57,7 +57,7 @@ public class TestReferences {
     @Test
     void testReferencesWithArgs() throws Exception {
         cleanRefFile();
-        TestThat.theInput("{@references}{@ref a}{a/1}{@define a($x)=$x}").matches("WARNING The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.UNDEFINED");
+        TestThat.theInput("{@references}{@ref a}{a/1}{@define a($x)=$x}").throwsBadSyntax("The reference file .*[/\\\\]jamal-snippet[/\\\\]ref.jrf was not found.");
         TestThat.theInput("{@references}{@ref a}{a/1}").results("1");
         cleanRefFile();
     }

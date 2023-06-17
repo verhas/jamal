@@ -2833,6 +2833,7 @@ will result
 - ReplaceLines.java
 - SkipLines.java
 - SnipCheck.java
+- IdempotencyFailed.java
 - Reflow.java
 - Pos.java
 - Snippet.java
@@ -2905,7 +2906,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 1,984 bytes
+- snippet: 2,016 bytes
 - JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
@@ -2961,11 +2962,12 @@ will result
 - SnipList.java: 1,136 bytes
 - ShellVar.java: 3,693 bytes
 - XmlDocument.java: 5,671 bytes
-- References.java: 7,304 bytes
+- References.java: 7,325 bytes
 - Java.java: 11,283 bytes
 - ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
 - SnipCheck.java: 7,791 bytes
+- IdempotencyFailed.java: 1,194 bytes
 - Reflow.java: 2,023 bytes
 - Pos.java: 5,392 bytes
 - Snippet.java: 1,052 bytes
@@ -3221,7 +3223,7 @@ will result in the output
 
 [source]
 ----
-2023-06-16 16:18:25
+2023-06-17 01:55:52
 ----
 
 
