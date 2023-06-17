@@ -14,11 +14,11 @@ public class TestDevPath {
     /**
      * This test checks that the dev path is read properly form a file.
      * <p>
-     * If you run this test from Maven surefire then it will fail. The reason for that is simple. The dev path is
+     * If you run this test from Maven surefire, then it will fail. The reason for that is simple. The dev path is
      * read when the FileTools class is loaded. When you run it from IntelliJ it starts new. When you start from
-     * Maven it was already loaded and does not re-read the system property or environment variable.
+     *  Maven, it was already loaded and does not re-read the system property or environment variable.
      *
-     * @throws Exception
+     * @throws Exception if something goes wrong
      */
     @Test
     @IntelliJOnly

@@ -1,8 +1,17 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.TransientException;
 
-public class IdempotencyFailed extends BadSyntax {
+/**
+ * This exception is thrown when the references are not idempotent.
+ * References are macros read from and saved into a separate file at the start and end of the processing.
+ * If the values saved are not the same as read, it means that the processing was not idempotent.
+ * It is usually caused by the change of some macro.
+ * After the value of the macro edited, the first processing will save the new value and the idempotency error will disappear.
+ * This is why this exception also implements the {@link TransientException} interface.
+ */
+public class IdempotencyFailed extends BadSyntax implements TransientException {
 
     public IdempotencyFailed(final String message) {
         super(message);

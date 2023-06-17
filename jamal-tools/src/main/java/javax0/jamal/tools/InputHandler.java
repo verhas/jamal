@@ -159,7 +159,7 @@ public class InputHandler {
      * }</pre>
      * which is an experimental feature and is deliberately not documented except here. (So much not documented that
      * I am just watching and debugging it five years later... realising that I did that deliberately.)
-     *
+     * <p>
      * Just turned out that this is a very useful feature. It is used to use emojis as macro names... Who would have
      * thought?
      *

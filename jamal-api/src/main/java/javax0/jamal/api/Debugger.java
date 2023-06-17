@@ -35,7 +35,7 @@ public interface Debugger extends AutoCloseable, ServiceLoaded {
          * not exposed. However, debugging is something that pokes into the internals when the user needs to see what
          * the current state is. For this reason the interface {@link Debuggable} is defined that gives access to those
          * methods that are needed for the debugger.
-         *
+         * <p>
          * The debugger must not modify this list.
          *
          * @return the list of scopes

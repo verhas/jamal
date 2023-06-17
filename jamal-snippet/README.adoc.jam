@@ -256,8 +256,8 @@ The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)`
 ===
 The definition and matching criteria of the start and the end of the snippet are very liberal.
 The reason for that is to ease in recognizing these in different files.
-The regular expressions will find snippet start and snippet ends in Java files, in XML, in Perl or Python code.
-Essentially you should not have a problem signaling the start, and the end of the snippet in any program code that allows you to write some form of a comment.
+The regular expressions will find snippet start, and snippet ends in Java files, in XML, in Perl or Python code.
+Essentially, you should not have a problem signaling the start, and the end of the snippet in any program code that allows you to write some form of a comment.
 
 The disadvantage of this liberal definition is that sometimes it finds lines that accidentally contain the word snippet.
 If you look at the source code in the file {%@file src/main/java/javax0/jamal/snippet/TrimLines.java%} you can see examples.
@@ -1111,13 +1111,12 @@ will result
 
 The syntax of the macro is:
 
-[source,text]
-----
+{%sample/
 {@untab tabSize=8
 multiple line of
     text with \t tab characters
 }
-----
+%}
 
 This macro replaces the tab characters in the input with spaces.
 Each tab will be replaced with one or more spaces so that the alignment of the lines is preserved.
@@ -1126,8 +1125,8 @@ This option has two aliases `tab` and `size`, which you can also use as macro pa
 However, only `tabSize` is recognized as a macro if defined outside or inside the `untab`.
 With that you can set the tab stop globally for all the snippets:
 
-[source]
-----
+{%sample/
+
 {@define :tabSize=8}
 ...
 
@@ -1136,10 +1135,9 @@ With that you can set the tab stop globally for all the snippets:
   possible
     multiple lines
 }
-----
+%}
 
-
-For example:
+{%@comment we need to have a separate file edited using VI or some other tab-friendly editor%}
 For example:
 {%@snip:check id=untabSample,untabSampleOutput hash=3ea1ff00 message="Check the untab sample if it is still okay!"%}
 [source,text]
@@ -1154,9 +1152,6 @@ will be converted to
 ----
 {%#snip ({%TRANSFORMATIONS%}) untabSampleOutput%}
 ----
-
-
-
 
 
 [[range]]
@@ -3341,7 +3336,7 @@ Also, the macro must not require any parameter.
 
 [[hashCode]]
 === {%macroChapter%}`hashCode`
-{%#snip:check file={%JAVA_DIR%}HashCode.java hash=4880057c%}
+{%#snip:check file={%JAVA_DIR%}HashCode.java hash=c8949c69%}
 
 This macro returns the hash code of the macro input as a 64-character hexadecimal string.
 

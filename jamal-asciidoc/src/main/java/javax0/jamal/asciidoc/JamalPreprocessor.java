@@ -3,9 +3,9 @@ package javax0.jamal.asciidoc;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
+import javax0.jamal.api.TransientException;
 import javax0.jamal.asciidoc258.JamalPreprocessor258;
 import javax0.jamal.engine.Processor;
-import javax0.jamal.snippet.IdempotencyFailed;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.MacroReader;
@@ -154,7 +154,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 final var result = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader, logger);
                 newLines = result.lines;
                 outputFileName = getSaveToFileName(fileName, outputFileName, result);
-                if (!(result.exception instanceof IdempotencyFailed)) {
+                if (!(result.exception instanceof TransientException)) {
                     log.info("setting cache");
                     JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
                 }

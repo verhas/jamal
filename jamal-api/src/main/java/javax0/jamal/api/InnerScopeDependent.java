@@ -11,7 +11,7 @@ package javax0.jamal.api;
  * Macro options handling reads the macro named as the option if the option does not have a value specified at the use of the macro.
  * Using options, however, is more convenient in most cases.
  * Using macros holding the value for a macro option is useful when the Jamal code uses a macro option many times with the same value different from the default.
- *
+ * <p>
  * This kind of use, however, does not require that the macro implements this interface.
  * In this case, the macro holding the value for the option is defined outside.
  * <p>

@@ -38,6 +38,12 @@
       {dependency |org.asciidoctor|asciidoctorj|{ASCIIDOCTORJ_VERSION}|provided}
       {dependency |org.mockito|mockito-core|{MOCKITO_VERSION}}
       {dependency |com.github.bodiam|markdown-to-asciidoc|{MARKDOWN_TO_ASCIIDOC}}
+      {@comment This dependency is needed for the markdown to asciidoc conversion.
+                It is not used directly and it is a transitive dependency of the markdown to asciidoc converter.
+                The version of the dependency is too old and has security issues.
+                Therefore, here we override the version to the latest one.
+      }
+      {dependency :org.jsoup:jsoup:1.15.3}
     }
 
     {repositories{repository|jitpack|https://jitpack.io/}}

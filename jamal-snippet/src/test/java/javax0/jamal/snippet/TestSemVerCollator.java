@@ -10,7 +10,7 @@ import java.util.List;
 public class TestSemVerCollator {
 
     @Test
-    void testSimpleVersionCompare() throws Exception {
+    void testSimpleVersionCompare() {
         final var sut = new SemVerCollator();
         Assertions.assertTrue(0 > sut.compare("1.0.0", "1.0.1"));
         Assertions.assertTrue(0 > sut.compare("1.0.A", "1.0.B"));
@@ -22,7 +22,7 @@ public class TestSemVerCollator {
     }
 
     @Test
-    void negativeVersionCompare() throws Exception {
+    void negativeVersionCompare() {
         final var sut = new SemVerCollator();
         Assertions.assertTrue(0 < sut.compare("1.0.1", "1.0.0"));
         Assertions.assertTrue(0 < sut.compare("1.0.C", "1.0.A"));
@@ -34,7 +34,7 @@ public class TestSemVerCollator {
     }
 
     @Test
-    void equalVersion() throws Exception {
+    void equalVersion() {
         final var sut = new SemVerCollator();
         Assertions.assertEquals(0, sut.compare("1.0.1", "1.0.1"));
         Assertions.assertEquals(0, sut.compare("1.0.B", "1.0.B"));
@@ -46,14 +46,14 @@ public class TestSemVerCollator {
     }
 
     @Test
-    void buildDoesNotMatter() throws Exception {
+    void buildDoesNotMatter() {
         final var sut = new SemVerCollator();
         Assertions.assertEquals(0, sut.compare("1.0.1+123", "1.0.1"));
         Assertions.assertEquals(0, sut.compare("1.0.B+123", "1.0.B+124"));
     }
 
     @Test
-    void preReleaseVersionPrecedesVersion() throws Exception {
+    void preReleaseVersionPrecedesVersion() {
         final var sut = new SemVerCollator();
         Assertions.assertTrue(0 > sut.compare("1.0.0-alpha", "1.0.0"));
         Assertions.assertTrue(0 > sut.compare("1.0.A", "1.0.B-SNAPSHOT"));
@@ -63,7 +63,7 @@ public class TestSemVerCollator {
     }
 
     @Test
-    void generalTests() throws Exception {
+    void generalTests() {
         final var sut = new SemVerCollator();
         // 1.0.0-alpha, 1.0.0-alpha.1, 1.0.0-0.3.7, 1.0.0-x.7.z.92, 1.0.0-x-y-z.–.
         Assertions.assertTrue(0 > sut.compare("1.0.0-alpha", "1.0.0-alpha.1"));
@@ -87,7 +87,7 @@ public class TestSemVerCollator {
     }
 
     @Test
-    void compareTheByteArrays() throws Exception {
+    void compareTheByteArrays() {
         final var sut = new SemVerCollator();
         Assertions.assertTrue(0 > compareBA("1.0.0","1.0.1"));
         Assertions.assertTrue(0 > compareBA("1.0.A", "1.0.B"));

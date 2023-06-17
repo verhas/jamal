@@ -33,7 +33,7 @@ public class Option implements Evaluable, ObjectHolder<Boolean> {
     }
 
     @Override
-    public String evaluate(String... parameters) throws BadSyntax {
+    public String evaluate(String... parameters) {
         return Boolean.toString(value);
     }
 

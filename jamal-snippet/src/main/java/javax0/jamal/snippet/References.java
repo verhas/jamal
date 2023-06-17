@@ -96,7 +96,7 @@ public class References implements Macro {
         }
 
         @Override
-        public String evaluate(final String... parameters) throws BadSyntax {
+        public String evaluate(final String... parameters) {
             return String.join(",", set);
         }
 

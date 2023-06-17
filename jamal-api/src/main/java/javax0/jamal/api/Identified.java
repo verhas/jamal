@@ -15,7 +15,7 @@ package javax0.jamal.api;
  * Macro register is essentially the only place where a built-in macro can store and later retrieve an object, because
  * there is no guarantee that the macro instances are not shared by different processors or that a processor uses only
  * a single instance of a macro class.
- *
+ * <p>
  * This interface also defines the name of the "default" macro, and the "$macro" and "$_" names.
  */
 @FunctionalInterface

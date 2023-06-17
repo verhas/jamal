@@ -7,7 +7,7 @@ import javax0.jamal.api.Processor;
 
 public class TestMacro implements Macro {
     @Override
-    public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+    public String evaluate(final Input in, final Processor processor) {
         return "maci";
     }
 

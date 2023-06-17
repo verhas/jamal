@@ -129,7 +129,7 @@ public interface ServiceLoaded {
      * @param name        the name of the resource
      * @param classLoader the class loader to use or {@code null} to use the system class loader
      * @return the list of the urls
-     * @throws IOException
+     * @throws IOException if the resources cannot be loaded
      */
     static List<URL> loadResources(String name, ClassLoader classLoader) throws IOException {
         final List<URL> list = new ArrayList<>();

@@ -19,6 +19,7 @@ public class Operation extends Expression {
         this.right = Objects.requireNonNull(right);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public String execute(final Context ctx) throws BadSyntax {
         ctx.step();

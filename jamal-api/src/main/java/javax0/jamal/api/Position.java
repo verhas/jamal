@@ -47,6 +47,12 @@ public class Position {
         this(file, 1);
     }
 
+    /**
+     * Creates a new instance from this one.
+     *
+     * @return the new instance
+     */
+    @Override
     public Position clone() {
         return new Position(this);
     }

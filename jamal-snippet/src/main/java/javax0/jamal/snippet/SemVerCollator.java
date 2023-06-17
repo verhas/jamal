@@ -39,7 +39,7 @@ class SemVerCollator extends Collator {
      * There are no different instances of this collator, there is no state.
      *
      * @param o the Collator to be compared with this.
-     * @return
+     * @return {@see Object#equals(Object)  Object.equals()}
      */
     @Override
     public boolean equals(Object o) {

@@ -474,7 +474,7 @@ public class TestParams {
 
     @Test
     @DisplayName("Parsing simple parameters using optional ( but missing closing )")
-    void testSimpleParametersOptionalParenMissing() throws Exception {
+    void testSimpleParametersOptionalParenMissing() {
         keys("margin:I,top:I,left:S").input(" (margin=2 top=3 left=\"aligned\"")
                 .throwsUp("The macro 'test environment' has parameters that starts with optional '(' but does not end with ')'.");
     }

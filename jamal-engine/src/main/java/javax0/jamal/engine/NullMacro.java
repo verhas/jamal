@@ -18,7 +18,7 @@ public class NullMacro implements Identified, Evaluable {
     }
 
     @Override
-    public String evaluate(final String... parameters) throws BadSyntax {
+    public String evaluate(final String... parameters) {
         return open;
     }
 

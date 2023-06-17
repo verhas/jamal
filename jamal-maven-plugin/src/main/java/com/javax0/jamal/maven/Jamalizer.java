@@ -168,7 +168,7 @@ public class Jamalizer extends AbstractMojo {
     }
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException {
         try {
             jamalize();
         } catch (IOException e) {

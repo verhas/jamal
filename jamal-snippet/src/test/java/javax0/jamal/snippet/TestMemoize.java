@@ -17,7 +17,7 @@ public class TestMemoize {
      * hash.code} file. The second time it is not evaluated because the {@code hash.code} file exists and the hash code
      * is the same.
      *
-     * @throws Exception
+     * @throws Exception when the test fails
      */
     @Test
     @DisplayName("Test that memoize remembers not to run the second time")
@@ -38,7 +38,7 @@ public class TestMemoize {
      * second content. It does not matter that the hash code of the first content is not this value. It is provided,
      * it is used. The second time it does not evaluate, because it is memoized.
      *
-     * @throws Exception
+     * @throws Exception when the test fails
      */
     @Test
     @DisplayName("Test that memoize remembers not to run the second time for given hash code")
@@ -57,7 +57,7 @@ public class TestMemoize {
     /**
      * If there are no files and no hash code, then the memoize sees no reason to run the content.
      *
-     * @throws Exception
+     * @throws Exception when the test fails
      */
     @Test
     @DisplayName("Test what happens when no file or hash code is provided")
@@ -77,7 +77,7 @@ public class TestMemoize {
      * second content. It does not matter that the hash code of the first content is not this value. It is provided,
      * it is used. The second time it does not evaluate, because it is memoized.
      *
-     * @throws Exception
+     * @throws Exception when the test fails
      */
     @Test
     @DisplayName("Test that memoize remembers not to run the second time for given hash code")

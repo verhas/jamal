@@ -56,9 +56,8 @@ public class Memoize implements Macro {
      * @param file the name of the hash file where the hash is stored as text. It has to be the absolute path.
      * @param hash the hash value to compare the file content to
      * @return {@code true} if the hash code does not match the file content. {@code false} otherwise.
-     * @throws BadSyntax if the file name cannot be converted to an absolute path
      */
-    private static boolean hashCodeDoesNotMatch(String file, String hash) throws BadSyntax {
+    private static boolean hashCodeDoesNotMatch(String file, String hash) {
         if (file == null) {
             return false;
         }

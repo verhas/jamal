@@ -16,11 +16,11 @@ import java.util.regex.Pattern;
 
 /**
  * Some global tests that other tests may depend on the same way as all modules depend on the API module.
- *
+ * <p>
  * For example the test {@code test} tests that the environment variable {@code JAMAL_DEBUG} is not set.
  * Setting this environment variable while executing the unit tests would stop every unit test and wait for the
  * debugger.
- *
+ * <p>
  *
  */
 public class TestEnvironmentNoDebug {

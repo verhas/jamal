@@ -375,8 +375,8 @@ public interface Processor extends AutoCloseable {
          *     <li>The processor invokes the read hook again for the file name {@code f2}.</li>
          *     <li>The read hook returns {@link IOHookResult.Type#IGNORE}</li>
          *     <li>The processor reads the content of the file {@code f3}</li>
-         *     <li>The processor calls the read hook {@link #set(String, String) set("f3", "...")} with the content</li>
-         *     <li>The processor calls the read hook {@link #set(String, String) set("f2", "...")} with the content</li>
+         *     <li>The processor calls the read hook {@code set("f3", "...")} with the content</li>
+         *     <li>The processor calls the read hook {@code set("f2", "...")} with the content</li>
          * </ul>
          *
          * @param fileName the name of the file, which was passed to the {@link #read(String)} method (not the altered

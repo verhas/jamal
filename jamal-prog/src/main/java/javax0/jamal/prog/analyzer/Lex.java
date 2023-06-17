@@ -68,7 +68,7 @@ public class Lex {
             return isEmpty() || lexes.get(0).is("\n");
         }
 
-        public boolean is(String text) throws BadSyntax {
+        public boolean is(String text) {
             return hasNext() && lexes.get(0).is(text);
         }
 

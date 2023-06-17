@@ -247,8 +247,8 @@ The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)`
 ===
 The definition and matching criteria of the start and the end of the snippet are very liberal.
 The reason for that is to ease in recognizing these in different files.
-The regular expressions will find snippet start and snippet ends in Java files, in XML, in Perl or Python code.
-Essentially you should not have a problem signaling the start, and the end of the snippet in any program code that allows you to write some form of a comment.
+The regular expressions will find snippet start, and snippet ends in Java files, in XML, in Perl or Python code.
+Essentially, you should not have a problem signaling the start, and the end of the snippet in any program code that allows you to write some form of a comment.
 
 The disadvantage of this liberal definition is that sometimes it finds lines that accidentally contain the word snippet.
 If you look at the source code in the file src/main/java/javax0/jamal/snippet/TrimLines.java you can see examples.
@@ -1286,7 +1286,7 @@ c
 
 The syntax of the macro is:
 
-[source,text]
+[source]
 ----
 {@untab tabSize=8
 multiple line of
@@ -1315,7 +1315,6 @@ With that you can set the tab stop globally for all the snippets:
 
 
 For example:
-For example:
 
 [source,text]
 ----
@@ -1335,9 +1334,6 @@ will be converted to
 ...     ... .   .       ..      .
 
 ----
-
-
-
 
 
 [[range]]
@@ -1552,7 +1548,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1332:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1326:30
 ----
 
 
@@ -2927,16 +2923,16 @@ will result
 - FilesMacro.java: 8,162 bytes
 - Collect.java: 24,444 bytes
 - SnipFile.java: 680 bytes
-- HashCode.java: 514 bytes
+- HashCode.java: 497 bytes
 - TrimLines.java: 5,379 bytes
 - JavaSourceInsert.java: 5,729 bytes
 - ThinXml.java: 8,792 bytes
-- Memoize.java: 8,203 bytes
+- Memoize.java: 8,104 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,687 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
-- SemVerCollator.java: 8,970 bytes
+- SemVerCollator.java: 9,016 bytes
 - SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
@@ -2944,7 +2940,7 @@ will result
 - Numbers.java: 1,817 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 4,504 bytes
-- CompileJavaMacros.java: 23,094 bytes
+- CompileJavaMacros.java: 23,008 bytes
 - StringMacros.java: 7,379 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
@@ -2962,12 +2958,12 @@ will result
 - SnipList.java: 1,136 bytes
 - ShellVar.java: 3,693 bytes
 - XmlDocument.java: 5,671 bytes
-- References.java: 7,325 bytes
+- References.java: 7,308 bytes
 - Java.java: 11,283 bytes
 - ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
 - SnipCheck.java: 7,791 bytes
-- IdempotencyFailed.java: 1,194 bytes
+- IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,023 bytes
 - Pos.java: 5,392 bytes
 - Snippet.java: 1,052 bytes
@@ -3223,7 +3219,7 @@ will result in the output
 
 [source]
 ----
-2023-06-17 01:55:52
+2023-06-17 11:06:28
 ----
 
 

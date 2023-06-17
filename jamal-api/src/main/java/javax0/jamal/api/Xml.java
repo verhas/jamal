@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
  * appropriate part of the XML. For example, an {@code !attr} object will be converted
  * to an attribute. Each of these classes have an {@code id} as content and nothing else, as there is no need
  * for anything else.
- *
+ * <p>
  * These classes are defined in this module to have a simple and general name for them since they are used in the
  * yaml files.
  */

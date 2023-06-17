@@ -9,7 +9,7 @@ import javax0.jamal.tools.SHA256;
 
 public class HashCode implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         return HexDumper.encode(SHA256.digest(in.toString()));
     }
 

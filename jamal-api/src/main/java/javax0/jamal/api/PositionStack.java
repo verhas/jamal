@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 /**
  * A simple position stack implementation used in the default implementation of {@link Macro#fetch(Processor, Input)}.
- *
+ * <p>
  * This is not a public class.
  */
 class PositionStack {

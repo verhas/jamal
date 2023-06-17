@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class UseComments implements Macro {
     @Override
-    public String evaluate(Input in, Processor processor) throws BadSyntax {
+    public String evaluate(Input in, Processor processor) {
         return "";
     }
 

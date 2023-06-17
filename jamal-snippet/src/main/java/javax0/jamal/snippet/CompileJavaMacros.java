@@ -183,7 +183,6 @@ public class CompileJavaMacros {
          * @param processor      the processor used to locate the files relative to the input reference
          * @param storeName      the name of the macro where to store the result
          * @param classLocations the locations where the compiled classes are located
-         * @param compilerObject the compiler object that can compile the source code
          * @throws IOException            if the files cannot be loaded
          * @throws ClassNotFoundException if some classes cannot be loaded
          * @throws BadSyntax              if there is a NoClassDefFoundError, since this is an error, but in this case it should

@@ -18,7 +18,7 @@ public class TestScriptEngine {
 
     @Test
     @DisplayName("The scripting system finds the interpreter")
-    public void findsTheInterpreterAmongAllTheInterpreters() throws ScriptException {
+    public void findsTheInterpreterAmongAllTheInterpreters() {
         final var manager = new ScriptEngineManager();
         final List<ScriptEngineFactory> factories = manager.getEngineFactories();
         boolean wasFound = false;

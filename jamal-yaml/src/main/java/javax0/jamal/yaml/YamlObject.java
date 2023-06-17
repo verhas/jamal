@@ -36,7 +36,7 @@ public class YamlObject implements UserDefinedMacro, ObjectHolder<Object> {
     }
 
     @Override
-    public String evaluate(String... parameters) throws BadSyntax {
+    public String evaluate(String... parameters) {
         final var out = new StringWriter();
         final var macro = YamlDumperOptions.get(processor);
         final Yaml yaml;
