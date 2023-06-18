@@ -59,5 +59,5 @@ The dependency also makes it possible for the module `jamal-asciidoctor` to retu
 
 ## Summary and Roadmap
 
-This module is a patch to the terrible decision of the Asciidoctor developers to change the SPI incompatible.
+This module is a patch to accommodate the decision of the Asciidoctor developers to change the SPI incompatible.
 This temporary solution will deprecate in a few years as the AsciidoctorJ library 2.X.X versions will be phased out.
