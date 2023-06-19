@@ -4,23 +4,14 @@ This is a simple demonstration of how you can include pictures using the Kroki s
 
 You can import the resource `kroki.jim` into your Markdown file.
 
-{%@import res:kroki.jim%}
+{%@import src/main/resources/kroki.jim%}
+
 
 The `kroki.jim` file contains macros that to include pictures in a Markdown file.
-The file also includes macros for Asciidoc.
-Both macros are called `kroki`, and have the same parameter.
-The include file cannot know what format you use.
-Therefore, you should tell it which output you would like to use.
-First invoke the macro `use:kroki:markdown`.
-This will set the output to Markdown.
-
-{%use:kroki:markdown%}
-
-You can guess what macro you could invoke for Asciidoc.
 
 After that, you can use the `kroki` macro to include pictures.
 
-{%kroki/plantuml/svg/
+{%kroki /KROKI_MD/plantuml/svg/
 skinparam ranksep 20
 skinparam dpi 125
 skinparam packageTitleAlignment left
@@ -44,8 +35,8 @@ main_ts ==> (main.view)
 %}
 
 
-{%@maven:load com.javax0.jamal:jamal-io:2.2.0-SNAPSHOT%}
-{%#io:copy from="{%kroki:url/structurizr/svg/
+
+{%kroki /STR/structurizr/svg/
 workspace {
 model {
 user = person "User"
@@ -70,9 +61,7 @@ autolayout lr
 theme default
 }
 }
-%}" to="structurizr.svg"%}
-
-image::structurizr.svg[]
+%}
 
 Using Jamal, you can even use macros inside the picture descriptions.
 They will be processed before the picture is rendered.

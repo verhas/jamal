@@ -129,8 +129,9 @@ This way, it is easier to keep your documentation up to date.
 ... <<shell:var,`shell:var`>>
 ... <<hashCode,`hashCode`>>
 ... <<memoize,`memoize`>>
+... <<download,`download`>>
 .. <<snip_update,`snip:update`>>
-
+. <<kroki,Kroki>>
 {%@counter:define id=chapter format=%d. %}
 {%@counter:define id=macroChapter format=$roman. %}
 
@@ -220,10 +221,10 @@ is the same as
 ----
 
 [NOTE]
-===
+====
 The only difference is that the first version will contain a line with a trailing `\n` at the end of the line.
 The `snipline` version does not contain the trailing `\n`.
-===
+====
 
 A snipline can also have a trailing `filter=regex` after the name of the snippet.
 The rest of the line after the `filter=` is a regular expression that will be used to filter the line.
@@ -253,7 +254,7 @@ There can be extra characters before or after the `snippet name` and/or the `end
 The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.
 
 [NOTE]
-===
+====
 The definition and matching criteria of the start and the end of the snippet are very liberal.
 The reason for that is to ease in recognizing these in different files.
 The regular expressions will find snippet start, and snippet ends in Java files, in XML, in Perl or Python code.
@@ -281,7 +282,7 @@ Because there is also an accidental `snippet` line before it, the collection wou
 Because of the previous `snippet` line, the real `// snippet` line becomes part of the previous snippet.
 The `// snippet` line is preceded by an `// end snippet` line to avoid this.
 Such a line out of a snippet is ignored, and in this case, it closes the accidental snippet.
-===
+====
 
 As you can see, the regular expression contains a collection group, which Jamal uses as the name of the snippet.
 For example, the code
@@ -646,10 +647,10 @@ and the Jamal code
 to gauge out the string `:rubyShell` from the source code.
 
 [NOTE]
-===
+====
 It is also possible to specify the regular expression in the source code.
 As it is documented in the section <<snip_collect,`collect`>>, the `snipLine` declaration may end with a `filter=regular expression` option.
-===
+====
 
 When you check the snippet consistency using the option `hash` or `hashCode` the hash code of the whole snippet is calculated.
 If there is any change in the snippet, even outside the first line, the hash code will be different and the snippet inclusion will purposefully fail.
@@ -672,7 +673,7 @@ In this case, the macro collects and concatenates all snippets with regular expr
 The snippets are sorted by their names before concatenation regardless of their appearance order in the file or files.
 
 [NOTE]
-===
+====
 This ordering is different from what you can achieve using AsciiDoc style snippet collecting.
 When you do AsciiDoc style snippet collecting, you use the `tag::` name `[]` and `end::` name `[]` syntax to start and stop snippets.
 A snippet can be started and stopped using the same name many times in the same file.
@@ -687,7 +688,7 @@ The snippets are sorted by their name before concatenation to guarantee a defini
 It is recommended to name these snippets with a name and a number, like `my_snippet_1000`, `my_snippet_2000`, etc.
 That way, the regular expression can be `pass:[my_snippet_\d{4}]`, and in case the ordering needs to be changed slightly, there is room to insert a new snippet between two already existing ones.
 You may remember this technique from 40 years ago when BASIC program lines had to be numbered.
-===
+====
 
 When used with the option `poly`, it is impossible to use any comment following the regular expression.
 The whole text after the option till the macro closing string is interpreted as part of the regular expression.
@@ -809,7 +810,7 @@ Update the documentation to follow the change of the code part.
 3. Rerun the macro processing.
 
 [NOTE]
-===
+====
 The error message contains the 64 character hex code as eight times eight characters dot-separated.
 It helps you select a part of the code when you copy the new code into the documentation after the update.
 It also helps you select different parts if you want to have more than one reference to the hash code.
@@ -818,7 +819,7 @@ You can use as many or as few dots in the hash code as you like.
 
 The hash code is displayed using lower case hexadecimal characters, but you can use upper case or mixed case characters.
 Before the check, the dots are removed, and the characters are converted to a lower case.
-===
+====
 
 In some rare cases, you do not want to check all the modifications of the file.
 You specify the option `lines` to check the number of lines in the snippet or file has not changed.
@@ -1839,11 +1840,11 @@ The user defined macro `m`, which is a counter interprets the argument and creat
 The value of this user defined macro will be the same as the actual value of the counter.
 
 [NOTE]
-===
+====
 The `-` character before the `>` is a macro parameter separator, and the macro itself checks only the `>` character.
 It means that you can use `.>`, `+>` or `/>` or any other non-alphanumeric first character in front of the `>`.
 It is recommended to use the `-` or `=` for readability reasons.
-===
+====
 
 [[references]]
 === {%macroChapter%}`references`
@@ -3354,6 +3355,11 @@ will result in
 {%!@snip Memoize%}
 
 
+[[download]]
+=== {%macroChapter%}`download`
+
+{%!@snip Download%}
+
 [[snip_update]]
 === {%macroChapter%}`snip:update`
 {%#snip:check file={%JAVA_DIR%}Update.java hash=012589df%}
@@ -3367,3 +3373,43 @@ When this happens, you can keep backward compatibility with
   {@use global comment as snip:update}
 
 This will render the current, no operation functionality of the macro.
+
+[[kroki]]
+=== {%macroChapter%}Kroki
+
+In this section, we will describe how to use the snippet handling macros together with the Kroki service.
+
+The Kroki service is a free online service that can render diagrams from a text.
+You can use the public service, or you can install the application in premise.
+In this section, we will use the public service, but using an in premise installation is very similar.
+
+The documentation of the service and the supported diagram types are available at https://kroki.io/.
+
+There is direct support to include Kroki generated pictures for AsciiDoc and into Markdown documents.
+There is a resource file in this module named `kroki.jim`.
+You can import this file into your document using `{@import res:kroki.jim}` and use the macro defined in it.
+
+The macro `kroki` has four parameters:
+
+* The name of the diagram.
+This will be used to name the generated picture file.
+
+* The diagram type.
+This can be any supported by the used Kroki service.
+
+* The file type, which can be `png`, svg`, `jpeg` etc.
+This parameter will be passed to the Kroki service as well as used as a file name extension.
+The different possible file types are documented at https://kroki.io/.
+
+* The diagram text.
+
+The macro will encode the diagram text, send it to the Kroki service, download the generated picture and include it in the document.
+The macro will use Markdown syntax for the picture of the including file name ends with `md.jam` and AsciiDoc syntax otherwise.
+
+If you want some other syntax, you can use the macro `kroki:download`.
+This macro has the same arguments and will return the downloaded picture's file name.
+
+These macros will generate picture files with the given name and file type as an extension.
+In addition to that, the macros will also generate a file with the same name and an extra extension `.hash`.
+When the macro executes, it will invoke the web-based service only if the picture file does not exist, or if the diagram text has changed since the last execution.
+You may want to add these files to your source repository to avoid unnecessary network traffic on the CI/CD server.

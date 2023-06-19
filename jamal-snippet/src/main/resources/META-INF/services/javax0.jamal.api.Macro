@@ -82,3 +82,4 @@ javax0.jamal.snippet.CompileJavaMacros$ListFields
 javax0.jamal.snippet.ShellVar
 javax0.jamal.snippet.HashCode
 javax0.jamal.snippet.Memoize
+javax0.jamal.snippet.Download

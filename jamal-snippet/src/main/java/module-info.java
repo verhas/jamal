@@ -99,6 +99,7 @@ module jamal.snippet {
             CompileJavaMacros.ListFields,
             ShellVar,
             HashCode,
-            Memoize
+            Memoize,
+            Download
             ;
 }

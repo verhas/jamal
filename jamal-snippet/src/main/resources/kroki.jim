@@ -1,4 +1,12 @@
-{@define use:kroki:asciidoc={@define [tail] kroki($dt,$ft,$x)=image::https://kroki.io/$dt/$ft/{@base64 (compress url)$x}[]}}
-{@define use:kroki:markdown={@define [tail] kroki($dt,$ft,$x)=![](https://kroki.io/$dt/$ft/{@base64 (compress url)$x})}}
+{@comment }
+define the macro kroki to download the image from kroki.io and reference it either Asciidoc or Markdown syntax
+
+{@define [tail] kroki($name,$dt,$ft,$x)={#if /{#string:equals/md.jam/{#file (format="$extension2") {@pos (top format=%f)}}}/![]({kroki:download |$name|$dt|$ft|$x})/image::{kroki:download |$name|$dt|$ft|$x}[]}}
+
+{@define kroki:download($name,$dt,$ft,$x)={#define URL={kroki:url|$dt|$ft|$x}}\
+{#memoize (file="$name.$ft" hashFile="$name.$ft.hash" hashCode="{#hashCode {URL}}")
+{@ident {#download (file="$name.$ft") {URL}}}}$name.$ft}
+
 {@define kroki:url($dt,$ft,$x)=https://kroki.io/$dt/$ft/{@base64 (compress url)$x}}
+
 

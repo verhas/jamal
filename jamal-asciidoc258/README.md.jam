@@ -21,7 +21,7 @@ A preprocessor cannot implement both incompatible methods.
 
 The solution is to have two different versions of the preprocessor in two modules.
 One module depends on the new version of the Asciidoc library, the other on the old version.
-This Maven module implements the preprocessor for the old library.
+The second Maven module implements the preprocessor for the old library.
 
 The new version implements the preprocessor registering service `org.asciidoctor.jruby.extension.spi.ExtensionRegistry`.
 It is invoked by Asciidoctor to register the preprocessor.

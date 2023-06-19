@@ -6,6 +6,7 @@ import org.asciidoctor.extension.PreprocessorReader;
 import org.asciidoctor.extension.Reader;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class JamalPreprocessor258 extends Preprocessor {
     public interface Process {

@@ -2,11 +2,7 @@ package javax0.jamal.asciidoc;
 
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.extension.PreprocessorReader;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -15,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestJamalPreprocessor {
@@ -173,7 +171,7 @@ public class TestJamalPreprocessor {
     private String process(String input, String expected) {
         final var sut = new JamalPreprocessor();
         Document document = Mockito.mock(Document.class);
-        Mockito.when(document.getAttribute("front-matter","")).thenReturn("");
+        Mockito.when(document.getAttribute("front-matter", "")).thenReturn("");
         PreprocessorReader reader = Mockito.mock(PreprocessorReader.class);
         Mockito.when(reader.getFile()).thenReturn(TEST_INPUT);
         final var lines = List.of(input.split("\n"));
