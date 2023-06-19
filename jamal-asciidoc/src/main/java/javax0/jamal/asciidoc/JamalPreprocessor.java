@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.nonNull;
 
-public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry {
+public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry, JamalPreprocessor258.Process {
     /**
      * The result structure of the execution of in-process Jamal.
      */

@@ -13,9 +13,9 @@ jamal input output
 ----
 
 The conversion can automatically be done for multiple files in a directory structure.
-To do that program handles options.
+To do that, the program handles options.
 The options can be given in upper or lower case letters and have a `-` or `--` prefix.
-Options can be abbreviated to their shortest form which is still unambiguous.
+Options can be abbreviated to their shortest form, which is still unambiguous.
 
 When an option has a value, it has to follow the option name with `=`.
 In this case the `=` signals already that the parameter is an option.
@@ -82,7 +82,3 @@ See also the option `-from`.
 * `-docx`  process the input as a DOCX, Microsoft Word file and also generate a Microsoft Word document on the output.
 
 * `-shcnf`  show the configuration values from the `~/.jamal/settings.properties`, or from the `~/.jamal/settings.xml` file, whichever exists.
-
-
-
-
