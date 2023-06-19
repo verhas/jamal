@@ -6,7 +6,6 @@ import org.asciidoctor.extension.PreprocessorReader;
 import org.asciidoctor.extension.Reader;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class JamalPreprocessor258 extends Preprocessor {
     public interface Process {
@@ -15,16 +14,12 @@ public class JamalPreprocessor258 extends Preprocessor {
 
     private final Process process;
 
-    public JamalPreprocessor258() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public JamalPreprocessor258(Process process) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         super();
-        process = (Process) Class.forName("javax0.jamal.asciidoc.JamalPreprocessor").getConstructor().newInstance();
+        this.process = process;
     }
 
     public void process(Document document, PreprocessorReader reader) {
-        try {
-            process.process(document, reader);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        process.process(document, reader);
     }
 }

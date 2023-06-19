@@ -54,19 +54,19 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         javaExtensionRegistry.preprocessor(getVersionFittingPreprocessorClass());
     }
 
-    private Class<? extends Preprocessor> getVersionFittingPreprocessorClass() {
+    private Preprocessor getVersionFittingPreprocessorClass() {
         try {
             final var abstractPreprocessor = Class.forName("org.asciidoctor.extension.Preprocessor");
             for (final var m : abstractPreprocessor.getDeclaredMethods()) {
                 if ("process".equals(m.getName())) {
                     if (m.getReturnType() == void.class) {
-                        return JamalPreprocessor258.class;
+                        return new JamalPreprocessor258(this);
                     }
                 }
             }
         } catch (Exception ignore) {
         }
-        return this.getClass();
+        return this;
     }
 
     private static int runCounter = 0;
