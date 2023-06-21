@@ -1,36 +1,22 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.getParameters;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
 /**
  * See the documentation of the "for" loop in the README.doc in the project root.
  */
 @Macro.Stateful
-public class For implements Macro, InnerScopeDependent {
+public class For implements Macro, InnerScopeDependent, OptionsControlled.Core {
 
     Params.Param<String> separator;
     Params.Param<String> subSeparator;
@@ -189,7 +175,7 @@ public class For implements Macro, InnerScopeDependent {
             if (value.length() > 0 || !skipEmpty.is()) {
                 final String[] values = value.split(subSeparator.get(), -1);
                 BadSyntax.when(!lenient.is() && values.length != variables.length, () -> String.format("number of the values does not match the number of the parameters\n%s\n%s",
-                                String.join(",", variables), value));
+                        String.join(",", variables), value));
                 if (trim.is()) {
                     for (int i = 0; i < values.length; i++) {
                         values[i] = values[i].trim();
@@ -238,11 +224,11 @@ public class For implements Macro, InnerScopeDependent {
         final String valuesString;
         skip(input, 1);
         int closingTick = input.indexOf("`");
-        BadSyntaxAt.when(closingTick == -1,"There is no closing '`' before the values in the for macro.",input.getPosition());
+        BadSyntaxAt.when(closingTick == -1, "There is no closing '`' before the values in the for macro.", input.getPosition());
         final var stopString = "`" + input.substring(0, closingTick + 1);
         skip(input, closingTick + 1);
         int closing = input.indexOf(stopString);
-        BadSyntaxAt.when(closing == -1,"There is no closing " + stopString + " for the values in the for macro.",input.getPosition());
+        BadSyntaxAt.when(closing == -1, "There is no closing " + stopString + " for the values in the for macro.", input.getPosition());
         valuesString = input.substring(0, closing);
         skip(input, closing + stopString.length());
         return valuesString;
@@ -252,7 +238,7 @@ public class For implements Macro, InnerScopeDependent {
         final String valuesString;
         skip(input, 1);
         int closing = input.indexOf(")");
-        BadSyntaxAt.when(closing == -1,"There is no closing ')' for the values in the for macro.",input.getPosition());
+        BadSyntaxAt.when(closing == -1, "There is no closing ')' for the values in the for macro.", input.getPosition());
         valuesString = input.substring(0, closing);
         skip(input, closing + 1);
         return valuesString;

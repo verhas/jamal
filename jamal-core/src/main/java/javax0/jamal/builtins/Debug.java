@@ -1,10 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Debugger;
-import javax0.jamal.api.Input;
+import javax0.jamal.api.*;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MinimumAffinityDebuggerSelector;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.ProxyDebugger;
@@ -16,7 +13,7 @@ import java.util.List;
  * This macro sets and switches on and off the debugger.
  * It only works if a debugger is available and no debugger is configured globally.
  */
-public class Debug implements Macro {
+public class Debug implements Macro, OptionsControlled.Core {
     final static List<Debugger> DEBUGGERS = Debugger.getInstances();
 
     @Override

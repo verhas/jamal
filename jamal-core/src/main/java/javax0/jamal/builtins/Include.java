@@ -1,12 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Input;
+import javax0.jamal.api.*;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
@@ -21,7 +16,7 @@ import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 @Macro.Stateful
-public class Include implements Macro {
+public class Include implements Macro, OptionsControlled.Core {
     /**
      * Count the depth of the includes. In case this is more than 100 stop the processing. Most likely this is a wrong
      * recursive include that would cause stack overflow.

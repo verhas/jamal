@@ -11,7 +11,7 @@ import javax0.jamal.tools.Scan;
  * <p>
  * The implementation, as easily can be seen is the same as the macro {@link Comment}.
  */
-public class Block implements Macro, InnerScopeDependent {
+public class Block implements Macro, InnerScopeDependent, OptionsControlled.Core {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

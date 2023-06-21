@@ -1,11 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Configurable;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
+import javax0.jamal.api.*;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
@@ -23,7 +19,7 @@ import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
-public class Define implements Macro {
+public class Define implements Macro, OptionsControlled.Core {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var verbatimParam = Params.<Boolean>holder(null, "verbatim").asBoolean();

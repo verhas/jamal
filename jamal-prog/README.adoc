@@ -2,8 +2,8 @@
 
 The prog macro extends Jamal to execute a simple BASIC like programming language.
 
-Using this integration module you can mix Jamal macro text with simple, imperative code snippets.
-To use this module you have to add the dependency to your Maven project, as:
+Using this integration module, you can mix Jamal macro text with simple, imperative code snippets.
+To use this module, you have to add the dependency to your Maven project, as:
 
 
 [source,xml]
@@ -20,7 +20,7 @@ This module is available automatically when you use Jamal in Maven extension, Ja
 
 The language is a subset of the BASIC language, and it is very simple by design.
 It is far simpler than ScriptBasic, Ruby or Groovy, which are also integrated into Jamal by other modules.
-On the other hand it is tightly integrated into Jamal.
+On the other hand, it is tightly integrated into Jamal.
 The other programming modules allow nesting programming code into Jamal text and then use macros to manage the input and the output of the snippets.
 This module allows nesting code into Jama and the other way around.
 Program code can also include Jamal macros.
@@ -44,12 +44,12 @@ There are only a few commands that you can use:
 
 Expressions can contain
 
-* the basic operations: `+`, `-`, `*`, `/`, `%`,
+* the basic operations: `+`, `-`, `*`, `/`, `%`, `.`,
 * comparisons `==`, `!=`, `<`, `>`, `<`=`, `>=`
 * logical operations `and`, `or`, `not`
 * and parenthesis.
 
-In addition to these there is a special operator `!` used to start evaluation of Jamal macros in strings.
+In addition to these, there is a special operator `!` used to start evaluation of Jamal macros in strings.
 
 == Macros in the Package
 
@@ -88,15 +88,14 @@ this is the output of the program and it is,.. and it is,.. concatenated togethe
 ----
 
 
-The language is very simple, documented below in the section about expressions, and commands.
+The language is elementary, documented below in the section about expressions and commands.
 
 The command `program` has the option `stepLimit`.
 This parameter has to be a number.
 It limits the number of steps that the program can execute.
-When the limit is reached the program will throw an exception.
+When the limit is reached, the program will throw an exception.
 The default value of the limit is 100000 (hundred-thousand).
 This limit is to prevent infinite loops.
-
 
 [source]
 ----
@@ -121,8 +120,8 @@ Step limit reached
 
 [%collapsible,title=How the steps are counted]
 ====
-Each code "block" is calculated a step, each individual command is calculated as a step and each operation in an expression is calculated as a step.
-In the example above the steps are
+Each code "block" is a step, each individual command is a step, and each operation in an expression is a step.
+In the example above, the steps are
 
 [start=0]
 . program start counts as one step

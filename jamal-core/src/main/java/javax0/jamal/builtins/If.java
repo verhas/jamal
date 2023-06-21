@@ -1,10 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
+import javax0.jamal.api.*;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
@@ -29,7 +26,7 @@ import java.util.function.Predicate;
  * can be used as separator. The first non-space character following the {@code if} will be used as separator
  * character.
  */
-public class If implements Macro {
+public class If implements Macro, OptionsControlled.Core {
 
     private static class Options {
         // snippet if_options

@@ -25,13 +25,9 @@ public class FunctionCall extends Expression {
         if (macro.isPresent()) {
             final var m = macro.get();
             final String open, close;
-            if (m.getClass().getPackage().getName().equals("javax0.jamal.builtins")) {
-                open = "[";
-                close = "]";
-            } else {
-                open = "(";
-                close = ")";
-            }
+            open = m.optionsStart();
+            close = m.optionsEnd();
+
             final var argBuilder = new StringBuilder();
             if (arguments.length > 1) {
                 argBuilder.append(open);
@@ -40,8 +36,8 @@ public class FunctionCall extends Expression {
                 }
                 argBuilder.append(close);
             }
-            if( arguments.length > 0 ){
-                argBuilder.append(arguments[arguments.length-1]);
+            if (arguments.length > 0) {
+                argBuilder.append(arguments[arguments.length - 1]);
             }
             return macro.get().evaluate(Input.makeInput(argBuilder.toString()), context.getProcessor());
         } else {

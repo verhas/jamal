@@ -23,7 +23,7 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
  * When a macro implementation has state then it has to be annotated using {@link Macro.Stateful}.
  */
 @FunctionalInterface
-public interface Macro extends Identified, ServiceLoaded {
+public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
 
     @Retention(RetentionPolicy.RUNTIME)
     @interface Stateful {
