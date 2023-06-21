@@ -15,9 +15,9 @@ public class TestFunctionCall {
                 "<< define(\"verbatim\",\"f(A,B)=ABBA\")\n" +
                 "<< f(23,\"{S}\")\n" +
                 "<< define(\"f(A,B)=ABBA\")\n" +
-                "<< f(23,\"{S}\")\n" +
+                "<< !f(23,\"{S}\")\n" +
                 "<< f(23,45+1)\n" +
-                "}").results("true23464623");
+                "}").results("true23{S}{S}2323ABBAABBA2323464623");
     }
 
 }
