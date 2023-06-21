@@ -1,5 +1,6 @@
 package javax0.jamal.asciidoc;
 
+import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
@@ -24,10 +25,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.nonNull;
@@ -69,7 +70,11 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         return this;
     }
 
-    private static int runCounter = 0;
+    /**
+     * This integer holds a counter counting how many times the preprocessor was invoked.
+     * This is used for logging purposes only.
+     */
+    private static final AtomicInteger runCounter = new AtomicInteger(0);
 
     /**
      * This is the reference that holds the last run.
@@ -85,9 +90,52 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      */
     private static final AtomicReference<ProcessingCache> cache = new AtomicReference<>(new ProcessingCache(null, null, null));
 
+    final static ExecutorService fileConverterExecutor = Executors.newSingleThreadExecutor();
+
+    final static Map<String, Integer> fileCounter = new HashMap<>();
+
+    private class FileConverter implements Runnable {
+
+        private final String inputFile;
+        private final int counter;
+        private final InFileOptions opts;
+
+        FileConverter(String inputFile, InFileOptions opts) {
+            synchronized (fileCounter) {
+                this.inputFile = inputFile;
+                if (fileCounter.containsKey(inputFile)) {
+                    counter = fileCounter.get(inputFile) + 1;
+                } else {
+                    counter = 0;
+                }
+                fileCounter.put(inputFile, counter);
+                this.opts = opts;
+            }
+        }
+
+        @Override
+        public void run() {
+            synchronized (FileConverter.class) {
+                synchronized (fileCounter) {
+                    final var last = fileCounter.get(inputFile);
+                    if (  last > counter) {
+                        return;
+                    }
+                }
+                try {
+                    DocumentConverter.convert(inputFile, opts.useDefaultSeparators);
+                } catch (Exception ignore) {
+                    // there is not much we can do here to signal the error,
+                    // and the synchronous processing will hopefully get the same error
+                }
+            }
+
+        }
+    }
+
     @Override
     public Reader process(Document document, PreprocessorReader reader) {
-        final var runCounter = JamalPreprocessor.runCounter++;
+        final var runCounter = JamalPreprocessor.runCounter.incrementAndGet();
         final var fileName = nonNull(reader.getFile()) ? reader.getFile() : (String) document.getAttribute("docfile");
         setContextClassLoader();
         /*
@@ -114,6 +162,10 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         if (opts.off) {
             reader.restoreLines(lines);
             return reader;
+        }
+
+        if (opts.dual && !opts.fromFile) {
+            fileConverterExecutor.submit(new FileConverter(fileName, opts));
         }
 
         if (opts.fromFile) {
@@ -210,7 +262,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * It loads the preprocessor with a special class loader. (At least it seems like that.)
      * That class loader does not see any Jamal library.
      * <p>
-     * Hence, to help the situation we set here the context class loader.
+     * Hence, to help the situation, we set here the context class loader.
      */
     private void setContextClassLoader() {
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
@@ -287,7 +339,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * Front-matter is the part at the start of the asciidoc file that starts with, and ends with a {@code ---} line.
      * It is used by Jekyll and some other site builder tools, and it is ignored by asciidoc.
      * The Jamal plugin puts this front-matter back at the start of the file before processing.
-     * In case there is any front-matter after the Jamal processing it is removed so that Asciidoc processing gets the
+     * In case there is any front-matter after the Jamal processing, it is removed so that Asciidoc processing gets the
      * lines it was expecting.
      * <p>
      * It is assumed that the file starts with a line {@code ---}. This is not checked.

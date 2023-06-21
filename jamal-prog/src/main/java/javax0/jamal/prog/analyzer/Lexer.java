@@ -15,7 +15,7 @@ public class Lexer {
             "if", "else", "elseif", "then", "endif", "while", "wend", "for", "next", "do", "until", "and", "or", "not", "to", "step", "end"
     );
     final static private String[] OPERANDS = {
-            "==", "!=", "<=", ">=", "<<", "!", "=", "+", "-", "*", "/", "%", "(", ")", "<", ">",
+            "==", "!=", "<=", ">=", "<<", "!", "=", "+", "-", "*", "/", "%", "(", ")", "<", ">", ","
     };
 
     public Lex.List analyze(Input in) throws BadSyntax {

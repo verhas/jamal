@@ -29,6 +29,9 @@ public class Expression4 {
         final var lex = lexes.next();
         switch (lex.type) {
             case IDENTIFIER:
+                if( lexes.is("(") ){
+                    return FunctionCall.analyze(lex, lexes);
+                }
                 return new Variable(lex.text);
             case STRING:
                 return new Constant(lex.text);

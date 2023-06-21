@@ -26,7 +26,7 @@ public class Program implements Macro {
 
     @Override
     public String[] getIds() {
-        return new String[]{"program", "do", "run"};
+        return new String[]{"program", "prog", "do", "run"};
     }
 }
 

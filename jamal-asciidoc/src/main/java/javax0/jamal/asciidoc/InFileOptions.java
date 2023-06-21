@@ -15,7 +15,7 @@ class InFileOptions {
     boolean off = false;
     boolean useDefaultSeparators;
     boolean fromFile = Configuration.INSTANCE.fromFile;
-
+    boolean dual = false;
     boolean keepFrontMatter = Configuration.INSTANCE.keepFrontMatter;
 
     boolean prefixLog;
@@ -25,13 +25,17 @@ class InFileOptions {
         final var options = matcher.find() ? List.of(matcher.group(1).split("\\s+")) : List.<String>of();
 
         // snippet OPTIONS
+        if (options.contains("dual")) {
+            dual = true;
+            save = false;
+        }
         if (options.contains("fromFile")) {
             fromFile = true;
         }
         if (options.contains("off")) {
             off = true;
         }
-        if (options.contains("nosave")) {
+        if (options.contains("nosave") || options.contains("noSave")) {
             save = false;
         }
         if (options.contains("log")) {

@@ -41,7 +41,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `JUPITER_VERSION` `5.10.0-M1` 
 
-* `OK`  `MOCKITO_VERSION` `5.3.1` 
+* `*[red]#NO#*`  `MOCKITO_VERSION` `5.3.1` `*[red]#upgrade to 5.4.0#*`
 
 * `OK`  `JRUBY_VERSION` `9.4.3.0` 
 
@@ -51,13 +51,13 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `SNAKEYAML_VERSION` `2.0` 
 
-* `OK`  `JSON_ORG_VERSION` `20230227` 
+* `*[red]#NO#*`  `JSON_ORG_VERSION` `20230227` `*[red]#upgrade to 20230618#*`
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
 * `OK`  `APACHE_POI_VERSION` `5.2.3` 
 
-* `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `2.5.8` `*[red]#upgrade to 3.0.0-alpha.1#*`
+* `OK`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` 
 
 * `OK`  `JSCRIPTBASIC_VERSION` `2.1.1` 
 

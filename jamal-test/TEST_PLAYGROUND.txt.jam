@@ -1,3 +1,5 @@
 {%@for $VAR in (a,b,c,d,e,f)=
         final static private String $VAR = "$VAR";%}
 {%@java:insert (to=TEST_PLAYGORUND_MNI_O1G.java)%}
+{%@do
+<< 1+1%}

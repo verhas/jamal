@@ -100,6 +100,7 @@ module jamal.snippet {
             ShellVar,
             HashCode,
             Memoize,
-            Download
+            Download,
+            UrlEncode
             ;
 }

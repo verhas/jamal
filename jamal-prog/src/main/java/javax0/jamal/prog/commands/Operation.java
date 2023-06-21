@@ -83,7 +83,7 @@ public class Operation extends Expression {
                 return ctx.getProcessor().process(Input.makeInput(right.execute(ctx)));
             case "not":
                 assertNull(leftValue, operator);
-                return (!isTrue(right.execute(ctx))) + "";
+                return String.valueOf(!isTrue(right.execute(ctx)));
             default:
                 throw new RuntimeException("Unknown operator '" + operator + "'");
         }
@@ -98,9 +98,9 @@ public class Operation extends Expression {
         }
         final var b = rightValue.execute(ctx);
         if (bothNumeric(leftValue, b)) {
-            return predicate.test(getCompareTo(leftValue, b)) + "";
+            return String.valueOf(predicate.test(getCompareTo(leftValue, b)));
         }
-        return predicate.test(leftValue.compareTo(b)) + "";
+        return String.valueOf(predicate.test(leftValue.compareTo(b)));
     }
 
     private static void assertBothNumeric(final String leftValue, final String rightValue, final String operator) throws BadSyntax {

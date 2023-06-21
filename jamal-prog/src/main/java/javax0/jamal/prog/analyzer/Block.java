@@ -29,7 +29,7 @@ public class Block {
                     case "<<":
                         commands.add(Output.analyze(lexes));
                         break;
-                        // return with the block and the caller will check that the block closing keyword is acceptable
+                        // return with the block, and the caller will check that the block closing keyword is acceptable
                     case "next":
                     case "else":
                     case "elseif":
