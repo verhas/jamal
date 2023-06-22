@@ -422,7 +422,42 @@ User-defined macros are processed for further macros after they produce their re
 Calling a macro as a function does not process the result further.
 If you need the result processed, you should use the `!` operator.
 
-Variable assignment automatically define argument less macros.
-You can define macros with arguments using the `@define` macro evaluating strings or calling the define macro as a function.
+Variable assignment automatically defines argument less macros.
+You can define macros with arguments using the `define` macro evaluating strings or calling the define macro as a function.
 
+Let's have a look at the following example.
 
+{%sample/
+{@prog
+<< "here we go\n"
+_ = define( "a(x)=this is x\n" )
+<< a( "A" )
+}
+{_} is empty
+{a /'is just a'}
+%}
+
+will result in
+
+{%output%}
+
+It also shows that the macros defined inside the program code part can also be used inside and outside in the same context.
+
+The following example will show macros chained as method calls.
+It also gives a good example explaining why the receiver is the last argument.
+
+{%sample/
+{@program
+<< "this is a string"
+<<"\n"
+<< "this is a string".string:substring("begin=1","end=5")
+<<"\n"
+<< "this is a string".string:substring("begin=1","end=5").case:upper()
+<<"\n"
+<< "this is a string".string:substring("begin=1","end=5").case:upper().string:chop("post=S")
+}
+%}
+
+will result in
+
+{%output%}

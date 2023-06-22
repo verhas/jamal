@@ -39,5 +39,13 @@ public class TestFunctionAndMethodCalls {
                 "}").results("true");
     }
 
+    @Test
+    void testMethodChainedCall() throws Exception {
+        TestThat.theInput("" +
+                "{@program\n" +
+                "<< \"this is a string\".string:substring(\"begin=1\",\"end=5\").case:upper()\n" +
+                "}").results("HIS");
+    }
+
 
 }

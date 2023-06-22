@@ -19,9 +19,9 @@ public class Expression3 {
             throw new BadSyntax("Expression is empty");
         }
         var expression4 = Expression4.analyze(lexes);
-        if( lexes.is(".")){
+        while( lexes.is(".")){
             lexes.next(); // consume the '.'
-            return MethodCall.analyze(expression4, lexes);
+            expression4 = MethodCall.analyze(expression4, lexes);
         }
         if (lexes.is("*") || lexes.is("/") || lexes.is("%")) {
             final var op = lexes.next().text;
