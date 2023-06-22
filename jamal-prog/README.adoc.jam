@@ -1,5 +1,6 @@
 = Jamal Prog Macro Module
 {%@import res:jamal.jim%}
+{%@snip:collect from=./src/main/java/%}
 The prog macro extends Jamal to execute a simple BASIC like programming language.
 
 Using this integration module, you can mix Jamal macro text with simple, imperative code snippets.
@@ -150,7 +151,7 @@ The result of the macro is the value of the expression.
 
 == Expression Syntax
 
-Expressions are composed of numeric constants, strings, variables and operators.
+Expressions are composed of numeric constants, strings, variables, and operators.
 The operators are the basic arithmetic operators, the comparison operators, the logical operators and the `!` operator.
 
 The formal syntax of the expressions is:
@@ -175,6 +176,7 @@ The formal syntax of the expressions is:
     expression3 ::= expression4 `*` expression |
                     expression4 `/` expression |
                     expression4 `%` expression |
+                    expresson4 `.` function_call |
                     expression4
 
     expression4 ::= `!` expression |
@@ -182,11 +184,16 @@ The formal syntax of the expressions is:
                     number |
                     string |
                     variable |
+                    function_call |
+                    `+` expression4 |
                     '+' expression4 |
                     '-' expression4
 
+    function_call ::= identifier `(` expression_list `)`
+
+
 The different operations are executed using BigDecimal numbers if the operands are both numeric.
-In other cases string operations are used.
+In other cases, string operations are used.
 In this case `-`, `*`, `/` and `%` are not defined and will cause syntax error.
 `+` is defined as string concatenation.
 When used as unary `+` it is a no-op resulting the same string as the operand.
@@ -198,9 +205,9 @@ This evaluation is done in the same scope as the surrounding environment.
 If you `define` here a macro then it will be available in the surrounding environment.
 There is no need to `export` the macro.
 
-The same is ture for the variables.
-If you assign a value to a variable here then it will be available in the surrounding environment as a macro.
-The other way around, if you assign a value to a macro in the surrounding environment then it will be available in the program as a variable.
+The same is true for the variables.
+If you assign a value to a variable here, then it will be available in the surrounding environment as a macro.
+The other way around, if you assign a value to a macro in the surrounding environment, then it will be available in the program as a variable.
 Such macros must not have parameters.
 
 The following code uses two macros.
@@ -350,3 +357,72 @@ The expression after the `<<` is evaluated and the result is appended to the res
 } {z}%}
 
 {%output%}
+
+== Function and Method Calls
+
+As we discussed before, you can use parameterless macros by the name as a variables.
+You can also use a macro as a method or function call even when it has parameters.
+
+The syntax of a function call is
+
+{%sample/
+   macroName( expression, expression, ... )
+%}
+
+In this case, the expressions will be passed to the macro as argument or arguments.
+
+A method call is similar, but it has a receiver "object".
+
+{%sample/
+   receiver.macroName( expression, expression, ... )
+%}
+
+The receiver is an expression.
+The method call is a syntactic sugar only and it is equivalent to
+
+{%sample/
+   macroName( expression, expression, ... , receiver)
+%}
+
+CAUTION: The receiver is the last argument.
+It is not the same as usual.
+It makes sense when built-in macros are called this way chained.
+The macros work one after the other on each others output, and the options can be specified as parameter strings.
+
+The macro can be a user defined macro or a built-in macro.
+First, the user defined macro registry is consulted, and the built-in macros are only considered when the user defined macro is not found.
+
+The argument mapping is simple in the case of user defined macros.
+User defined macros have several arguments, and the arguments of the function call are mapped to the arguments of the macro in the order of the arguments.
+You can also use argument less macros, simply not writing anything between the `()` characters.
+This is almost the same as using the macro as a variable.
+The only difference is that putting `()` characters after the macro name will make it a function call to a built-in  macro in the case the user defined macro does not exist.
+Without the `()` an undefined macro will create an error even if a built-in macro exists with the same name.
+
+
+
+In the case of built-in macros, the mapping is not so trivial.
+Built-in macros have one single string parameters, which is not split up to separate arguments by default.
+The macro implementation may split up the string to separate arguments, but it is not the default behavior.
+Many macro implementations apply specific and unique syntax.
+
+The mapping joins the arguments of the call to a single string.
+It takes the arguments but the last one and joins them separating with a space each.
+After that this string is surrounded with `()` characters or whatever the macro can use to enclose options.
+Finally, the last argument is appended to the string.
+
+This way the arguments at the start are options for the macro call.
+Now this may also explain why the receiver is the last argument when the syntax is a method call.
+
+NOTE: You cannot call a macro that has a name, which is a keyword in the language.
+The keywords are {%#replace (regex) /{%@snip KEYWORDS%}/"/`/%}.
+
+There is one major difference between evaluating a user-defined macro in the macro environment and calling it as a function.
+User-defined macros are processed for further macros after they produce their result unless they are a verbatim type.
+Calling a macro as a function does not process the result further.
+If you need the result processed, you should use the `!` operator.
+
+Variable assignment automatically define argument less macros.
+You can define macros with arguments using the `@define` macro evaluating strings or calling the define macro as a function.
+
+
