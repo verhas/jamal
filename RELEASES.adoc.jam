@@ -28,6 +28,11 @@ Useful to fetch ephemeral resources via HTTP to have them attached to the docume
 * Jamal works in AsciidocFX as well.
 This is not a feature of this release, but it was tested and documented in this release first.
 It requires AsciidocFX 1.8.5 or later.
+* Macro `download` in the snippet library can download files from the internet.
+* New macro `UrlEncode` in the snippet library.
+* Macros implement the `OptionControlled` interface to discover the option open and close characters.
+* MAcro `program` can be used with the alias `prog` and macros can be invoked from the BASIC script as functions or methods.
+* define can define a user-defined class specifying the class
 
 {%RELEASE BERLIN%}
 

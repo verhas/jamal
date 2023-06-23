@@ -1361,7 +1361,7 @@ This is a known bug resulting in the line number larger than the actual.
 
 [[sort]]
 === {%macroChapter%}`sort`
-{%#snip:check file={%JAVA_DIR%}Sort.java hash=17198829%}
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=0b15671b%}
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
 For example

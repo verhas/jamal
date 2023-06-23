@@ -109,6 +109,7 @@ public class Define implements Macro, OptionsControlled.Core {
                     c.configure("tail", tailParams);
                     c.configure("params", params);
                 })
+                .hurl("Class '%s' cannot be cast to Identified.", className)
                 .cast(Identified.class)
                 .get();
     }

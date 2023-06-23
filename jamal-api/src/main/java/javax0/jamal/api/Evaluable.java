@@ -58,7 +58,9 @@ public interface Evaluable extends Identified {
      * get filled with the strings that comes from the macro input. This first argument is interesting, when the user
      * defined macro {@code default} is invoked because the macro used was not defined.
      */
-    int expectedNumberOfArguments();
+    default int expectedNumberOfArguments() {
+        return -1;
+    }
 
     /**
      * Set the identifier that was used to identify the macro. It may not be the same as the one the macro thinks about
