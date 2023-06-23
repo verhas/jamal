@@ -289,7 +289,7 @@ For other files any font-matter is kept as it is, and become part of the preform
 +
 [NOTE]
 ====
-The input text provided by as a list of lines does not contain the front matter when Jama is started.
+The input text provided by as a list of lines does not contain the front matter when Jamal is started.
 Jamal fetches the front matter calling
 [source,java]
 ----

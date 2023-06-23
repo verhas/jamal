@@ -18,20 +18,22 @@ To use this module, you have to add the dependency to your Maven project, as:
 </dependency>
 ----
 
-Note that this dependency is added to the different Jamal integrations.
+The dependency is added to the different Jamal integrations.
 This module is available automatically when you use Jamal in Maven extension, JavaDoc, through JBang, or in the IntelliJ Asciidoctor plugin.
+In other environments you may need to add the dependency manually or load the module using the macro `maven:load`.
 
-The language is a subset of the BASIC language, and it is very simple by design.
+The language is a subset of the BASIC language, and it is straightforward by design.
 It is far simpler than ScriptBasic, Ruby or Groovy, which are also integrated into Jamal by other modules.
 On the other hand, it is tightly integrated into Jamal.
 The other programming modules allow nesting programming code into Jamal text and then use macros to manage the input and the output of the snippets.
-This module allows nesting code into Jama and the other way around.
-Program code can also include Jamal macros.
-Also, there is no need for extra macros to manage the input and the output of the code.
-The code uses the same symbolic names as the Jamal macros, and the output of the code is directly the output of the code macro.
 
-The language is a subset of the BASIC language, and it is very simple.
-There are only a few commands that you can use:
+This module also allows nesting code into Jamal and the other way around, but you do not need extra macros to transfer data between the macro and the program code.
+Program code can use macros as variables, function-, and method-calls.
+The output of the program is directly the output of the code macro.
+Thus, there is no need for extra macros to manage the input and the output of the code.
+
+The language is line oriented BASIC Like language.
+There are only a few commands:
 
 * variable assignment
 
@@ -43,7 +45,7 @@ There are only a few commands that you can use:
 
 * output, denoted by `<<`
 
-* comment following `rem` or an `'` character till the end of the line
+* comment following `rem` or and `'` character till the end of the line
 
 Expressions can contain
 
@@ -141,7 +143,7 @@ That command is just a marker for the end of the loop, and it is used by the syn
 If you change the `stepLimit` to 19 then the program will succeed.
 ====
 
-The macro also supports the `do` and `run` aliases.
+The macro also supports the `prog`, `do` and `run` aliases.
 
 === Expression
 

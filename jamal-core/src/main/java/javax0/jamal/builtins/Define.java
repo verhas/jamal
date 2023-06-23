@@ -1,23 +1,17 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Throwing;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
-import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
-import static javax0.jamal.api.SpecialCharacters.DEFINE_VERBATIM;
-import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
-import static javax0.jamal.tools.InputHandler.convertGlobal;
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.getParameters;
-import static javax0.jamal.tools.InputHandler.isGlobalMacro;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.api.SpecialCharacters.*;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Define implements Macro, OptionsControlled.Core {
     @Override
@@ -29,9 +23,10 @@ public class Define implements Macro, OptionsControlled.Core {
         final var pureParam = Params.<Boolean>holder(null, "pure").asBoolean();
         final var globalParam = Params.<Boolean>holder(null, "global").asBoolean();
         final var exportParam = Params.<Boolean>holder(null, "export").asBoolean();
+        final var javaDefined = Params.<Boolean>holder(null, "class").asBoolean();
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
-        Scan.using(processor).from(this).between("[]").keys(verbatimParam, tailParamsParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly).parse(input);
+        Scan.using(processor).from(this).between("[]").keys(verbatimParam, tailParamsParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly, javaDefined).parse(input);
         BadSyntax.when(noRedefineParam.is() && optionalParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         BadSyntax.when(globalParam.is() && exportParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         skipWhiteSpaces(input);
@@ -82,12 +77,17 @@ public class Define implements Macro, OptionsControlled.Core {
         }
         BadSyntax.when(!firstCharIs(input, '='), "define '%s' has no '=' to body", id);
         skip(input, 1);
-        final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, tailParams, params);
+        final Identified macro;
+        if (javaDefined.is()) {
+            macro = createFromClass(convertGlobal(id), input.toString(), verbatim, tailParams, params);
+        } else {
+            macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, tailParams, params);
+        }
         if (globalParam.is() || isGlobalMacro(id)) {
             processor.defineGlobal(macro);
         } else {
             processor.define(macro);
-            if(exportParam.is()){
+            if (exportParam.is()) {
                 processor.getRegister().export(macro.getId());
             }
         }
@@ -95,5 +95,21 @@ public class Define implements Macro, OptionsControlled.Core {
             ((Configurable) macro).configure("pure", true);
         }
         return "";
+    }
+
+    private Identified createFromClass(String id, String className, boolean verbatim, boolean tailParams, String... params) throws BadSyntax {
+        return Throwing.of(() -> Class.forName(className.trim()), "Class '%s' not found.", className)
+                .hurl("Class '%s' does not implement Identified and Evaluable.", className)
+                .when(klass -> !(Identified.class.isAssignableFrom(klass)) || !(Evaluable.class.isAssignableFrom(klass)))
+                .map(Class::getConstructor, "Class '%s' has no default constructor.", className)
+                .map(Constructor::newInstance, "Class '%s' cannot be instantiated.", className)
+                .when(Configurable.class, c -> {
+                    c.configure("id", id);
+                    c.configure("verbatim", verbatim);
+                    c.configure("tail", tailParams);
+                    c.configure("params", params);
+                })
+                .cast(Identified.class)
+                .get();
     }
 }

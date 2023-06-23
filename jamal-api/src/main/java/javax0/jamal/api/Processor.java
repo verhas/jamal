@@ -198,7 +198,7 @@ public interface Processor extends AutoCloseable {
 
     /**
      * A very simple functional interface that the embedding applications can implement, provide to accommodate log
-     * messages from the Jama processing.
+     * messages from the Jamal processing.
      */
     @FunctionalInterface
     interface Logger {

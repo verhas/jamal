@@ -98,9 +98,9 @@ public class BadSyntax extends Exception {
      * The message formatting happens only when the {@code condition} is {@code true}. The arguments are, however,
      * evaluated before the call.
      *
-     * @param condition when this parameter is {@code true} the method throws {@code BadSyntax} exception.
-     *                  when the parameter is {@code false} the method returns.
-     * @param format   is message format
+     * @param condition  when this parameter is {@code true} the method throws {@code BadSyntax} exception.
+     *                   when the parameter is {@code false} the method returns.
+     * @param format     is message format
      * @param parameters the parameter for the message format
      * @throws BadSyntax when the {@code condition} is {@code true}.
      */
