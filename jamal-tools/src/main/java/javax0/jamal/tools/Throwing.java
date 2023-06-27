@@ -73,6 +73,10 @@ public class Throwing<T> implements ThrowingAPI.HasMessage<T>, ThrowingAPI.NoMes
     T object;
     java.util.function.Supplier<String> message;
 
+    private String getMessage(){
+        return  message == null ? "RTE": message.get();
+    }
+
     private Throwing(T object) {
         this.object = object;
     }
@@ -92,7 +96,7 @@ public class Throwing<T> implements ThrowingAPI.HasMessage<T>, ThrowingAPI.NoMes
         try {
             return new Throwing<>(object.get());
         } catch (Exception e) {
-            throw new BadSyntax(message == null ? "RuntimeException occurred" : message.get(), e);
+            throw new BadSyntax(e.getMessage(), e);
         }
     }
 
@@ -157,7 +161,7 @@ public class Throwing<T> implements ThrowingAPI.HasMessage<T>, ThrowingAPI.NoMes
      */
     public ThrowingAPI.NoMessage<T> when(boolean condition) throws BadSyntax {
         if (condition) {
-            throw new BadSyntax(message.get());
+            throw new BadSyntax(getMessage());
         }
         return of(() -> object);
     }
@@ -189,7 +193,7 @@ public class Throwing<T> implements ThrowingAPI.HasMessage<T>, ThrowingAPI.NoMes
             try {
                 consumer.accept(object);
             } catch (Exception e) {
-                throw new BadSyntax(message == null ? "RuntimeException occurred" : message.get(), e);
+                throw new BadSyntax( getMessage(), e);
             }
         }
         return of(() -> object);
@@ -233,7 +237,7 @@ public class Throwing<T> implements ThrowingAPI.HasMessage<T>, ThrowingAPI.NoMes
             try {
                 consumer.accept(condition.cast(object));
             } catch (Exception e) {
-                throw new BadSyntax(message.get(), e);
+                throw new BadSyntax(getMessage(), e);
             }
         }
         return of(() -> object);

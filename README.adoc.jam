@@ -1,5 +1,6 @@
 {%@comment fromFile%}\
 :imagesdir: images
+:jamal_home: https://github.com/verhas/jamal/
 = image:logo.svg[width=100px] Jamal Macro Language
 //{%@rot13 QB ABG RQVG GUVF SVYR; GUVF VF TRARENGRQ SEBZ ERNQZR.nqbp.wnz%}
 
@@ -25,25 +26,37 @@ jamal-snippet.
 {%@snip:collect from=./jamal-core/src/main/java%}\
 {%@snip:collect from=./jamal-tools/src/main/java%}\
 {%@snip:collect from=./jamal-engine/src/main/java%}\
-
-{%@import environmentvariables.jim%}
+{%@import environmentvariables.jim%}\
 
 ****
 image::jetbrains.svg[Supported,link="https://www.jetbrains.com",width=50px, alt="JetBrains"] Developed using https://www.jetbrains.com/community/opensource/#support[JetBrains OSS License]
 
 image::https://javadoc.io/badge/com.javax0.jamal/jamal-parent.svg[link=https://javadoc.io/doc/com.javax0.jamal]
-image:https://github.com/verhas/jamal/actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link=https://github.com/verhas/jamal/actions/workflows/jamal-build.yml]
+
+image:{jamal_home}actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link={jamal_home}actions/workflows/jamal-build.yml]
 ****
-
-
 
 {%#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/
 NOTE: This is the latest development documentation.
-This is a SNAPSHOT version ({%VERSION%}).
-To see the documentation of a release you have to follow the link in the documentation link:{%@file RELEASES.adoc%}[`RELEASES.adoc`]
-%}
+This is a SNAPSHOT version ({%VERSION%}).%}
 
-Jamal is a complex text processor with a wide variety of possible use.
+{%@comment when the last release will support already methods we will use this one more readable
+{%#do
+if VERSION.string:contains("text=SNAPSHOT") then
+<< "NOTE: "
+<< """This is the latest development documentation.
+To see the documentation of a release you have to follow the link in the documentation link:{%@file RELEASES.adoc%}[`RELEASES.adoc`]
+"""
+end if
+%}%}
+
+Jamal is a complex text processor with a wide variety of possible uses.
+You can use it
+
+* as a meta markup language to enhance the documentation automating information gathering.
+* to eliminate redundancy in XML, YAML, JSON or other data description files.
+* to create a template engine for your application.
+
 The first version of Jamal was developed 20 years ago in Perl.
 It was used in many projects to simplify build-scripts maintenance, content text, and many other things.
 The old Perl version is still in use for the build chain maintenance of the ScriptBasic scripting language, which is used in many industrial products.
@@ -261,7 +274,7 @@ mvn com.javax0.jamal:jamal-maven-plugin:{%VERSION%}:jamal
 if you have a `pom.xml` file in your directory.
 
 If you do not have, then read the documentation of the Jamal Maven plugin at
-`https://github.com/verhas/jamal/blob/master/jamal-maven-plugin/README.md`
+`{jamal_home}blob/master/jamal-maven-plugin/README.md`
 It is short and straightforward.
 
 When something goes wrong, then Jamal will give you a detailed error message.
@@ -826,6 +839,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.12.3 option `{%@snip RestrictedDefineParameters%}` can be used to restrict parameters to be only identifiers
 * since 1.12.5 option `export` can be used as a shorthand instead of define and export one after the other
 * since {%RELEASE:BUDAPEST%} option `tail` to parse the tail parameters as a single string
+* since {%RELEASE:MANAUS%} option `class` to define a macro by the implementing class
 
 ===== Define basics
 
@@ -847,7 +861,7 @@ or
 ----
 
 The arguments part is optional in case there are no arguments for the macro.
-In that case the macro syntax is
+In that case, the macro syntax is
 
 [source]
 ----
@@ -922,7 +936,7 @@ Although Jamal could define some rule, like left-to-right, or right-to-left, or 
 Jamal suffers from hard to read situations already without this extra headache.
 To avoid that Jamal does not allow you `a` and `aa` as argument names to a macro definition the same time.
 
-During the replacement a parameter value may be a string that contains the name of one or more argument names.
+During the replacement, a parameter value may be a string that contains the name of one or more argument names.
 This is absolutely legit.
 The use of the macro should not, and does not depend on the names used to define the macro.
 The macro parameter names inside the actual parameter values will NOT be replaced with the parameter value(s) that were provided for the other argument(s) inside the value of the parameter.
@@ -967,12 +981,28 @@ but the previous sample, using parameter names starting with the character `*` w
 ===== Special User Defined Macros
 
 In Jamal user defined macros are defined using the `define` macro.
-Internally, a user defined macro can be anything that implements a specific Java interface.
-Jamal only requires that it can be evaluated and that it handles the string arguments passed to it.
+Internally, a user defined macro can be anything that implements two interfaces: `Identified` and `Evaluable`.
+It should be evaluated, and that it handles the string arguments passed to it.
 Some built-in macros implemented in external packages, like the Yaml package have their implementation.
 It means that they create user defined macros that you can pass parameters, and their evaluation results some output, but they are not "classical" user defined macros.
 They just behave like the macros that are defined using `define`.
 Foe example the macro `counter:define`from the Snippet package creates a "user defined" macro that results a number when used, but it also changes the value at every invocation.
+
+Starting with the release {%RELEASE:MANAUS%} the macro supports the option `class`.
+This option can provide the class name that implements the macro.
+The class has to implement the `Identified` and `Evaluable` interfaces.
+It optionally can implement the `Configurable` interface.
+If it does, then it will be configured with the parameters:
+
+* `"id"` providing a string with the macro identifier as defined in the `define` macro.
+* `"verbatim"` will be either `true` or `false` depending on the value of the `verbatim` option of the `define` macro.
+* `"tail"`  will be either `true` or `false` depending on the value of the `tail` option of the `define` macro.
+* `"params"` will be an array of strings with the parameter names as defined in the `define` macro.
+* `"processor"` will be the processor that is used to evaluate the `define` macro.
+* `"input"` will be the input of the `define` macro following the `=` sign.
+
+The configuration calls the method `configure()` with the listed configuration keys as a strings and object values as parameters.
+
 
 ===== Macro redefine
 
@@ -4407,7 +4437,7 @@ The documentation of the module is link:{%@file jamal-io/README.adoc%}[Io readme
 [[JamalAPI]]
 === {%chapter%}Jamal API
 
-Embedding Jamal into an application is very simple.
+Embedding Jamal into an application is straightforward.
 You need the Jamal libraries on your classpath.
 If you use Maven, you can simply have
 
@@ -4424,7 +4454,7 @@ in your pom file.
 
 The library `jamal-engine` transitively depends on the other libraries that are needed (`jamal-core`, `jamal-api` and `jamal-tools`).
 
-You also have to specify that you use these modules (Java 9 and later) if your code uses modules.
+You also have to specify that you use the modules (Java 9 and later) if your code uses modules.
 
 {%sample/
 module jamal.maven {
@@ -4434,7 +4464,7 @@ requires jamal.engine;
 }
 %}
 
-The code invoking Jamal needs a processor that will process the input.
+You can instantiate a `Processor` object to process the input.
 
 [source,java]
 ----
@@ -4476,7 +4506,7 @@ var register=processor.getRegister();
 ----
 
 The register has API to define macros and user-defined macros.
-For further information see the API JavaDoc documentation.
+For further information, see the API JavaDoc documentation.
 
 There is a very simple API class that makes it possible to use Jamal as a templating engine.
 The utility class `javax0.jamal.Format` has the method

@@ -1,0 +1,2 @@
+{@comment this file is used to test in the integration tests that the MavenLoad is working correctly}
+{@define jim:test=true}

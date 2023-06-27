@@ -1,37 +1,23 @@
 package javax0.jamal.maven.load;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.NullMacro;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Option;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
-import javax0.maventools.download.ArtifactType;
-import javax0.maventools.download.Downloader;
-import javax0.maventools.download.MavenCoordinates;
-import javax0.maventools.download.Pom;
-import javax0.maventools.download.Repo;
+import javax0.maventools.download.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -63,6 +49,7 @@ public class LoadMavenJar implements Macro {
                 } else {
                     loadNewMacros(cl, processor);
                 }
+                loadJimResources(processor,cl);
                 return "";
             }
         }
@@ -101,12 +88,28 @@ public class LoadMavenJar implements Macro {
             } else {
                 cl = loadNewMacros(urls, processor);
             }
+            loadJimResources(processor,cl);
             synchronized (classLoaders) {
                 classLoaders.put(nonce, cl);
             }
             return "";
         } catch (Exception e) {
             throw new BadSyntax("Cannot download " + in, e);
+        }
+    }
+
+    private void loadJimResources(Processor processor, ClassLoader cl) throws BadSyntax {
+        try {
+            final var urls = cl.getResources(Processor.GLOBAL_INCLUDE_RESOURCE);
+            while (urls.hasMoreElements()) {
+                try (final var is = urls.nextElement().openStream()) {
+                    final var input = javax0.jamal.tools.Input.makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8),
+                            new Position("res:" + Processor.GLOBAL_INCLUDE_RESOURCE, 1, 1));
+                    processor.process(input);
+                }
+            }
+        } catch (IOException e) {
+            throw new BadSyntax("Cannot load resource " + Processor.GLOBAL_INCLUDE_RESOURCE, e);
         }
     }
 

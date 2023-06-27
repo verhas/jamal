@@ -23,7 +23,7 @@ public class Define implements Macro, OptionsControlled.Core {
         final var pureParam = Params.<Boolean>holder(null, "pure").asBoolean();
         final var globalParam = Params.<Boolean>holder(null, "global").asBoolean();
         final var exportParam = Params.<Boolean>holder(null, "export").asBoolean();
-        final var javaDefined = Params.<Boolean>holder(null, "class").asBoolean();
+        final var javaDefined = Params.<Boolean>holder(null, "class").asString();
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
         Scan.using(processor).from(this).between("[]").keys(verbatimParam, tailParamsParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly, javaDefined).parse(input);
@@ -78,8 +78,8 @@ public class Define implements Macro, OptionsControlled.Core {
         BadSyntax.when(!firstCharIs(input, '='), "define '%s' has no '=' to body", id);
         skip(input, 1);
         final Identified macro;
-        if (javaDefined.is()) {
-            macro = createFromClass(convertGlobal(id), input.toString(), verbatim, tailParams, params);
+        if (javaDefined.isPresent()) {
+            macro = createFromClass(processor, javaDefined.get(),convertGlobal(id), input, verbatim, tailParams, params);
         } else {
             macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, tailParams, params);
         }
@@ -97,7 +97,7 @@ public class Define implements Macro, OptionsControlled.Core {
         return "";
     }
 
-    private Identified createFromClass(String id, String className, boolean verbatim, boolean tailParams, String... params) throws BadSyntax {
+    private Identified createFromClass(Processor processor, String className, String id, Input in, boolean verbatim, boolean tailParams, String... params) throws BadSyntax {
         return Throwing.of(() -> Class.forName(className.trim()), "Class '%s' not found.", className)
                 .hurl("Class '%s' does not implement Identified and Evaluable.", className)
                 .when(klass -> !(Identified.class.isAssignableFrom(klass)) || !(Evaluable.class.isAssignableFrom(klass)))
@@ -108,6 +108,8 @@ public class Define implements Macro, OptionsControlled.Core {
                     c.configure("verbatim", verbatim);
                     c.configure("tail", tailParams);
                     c.configure("params", params);
+                    c.configure("processor", processor);
+                    c.configure("input", in);
                 })
                 .hurl("Class '%s' cannot be cast to Identified.", className)
                 .cast(Identified.class)

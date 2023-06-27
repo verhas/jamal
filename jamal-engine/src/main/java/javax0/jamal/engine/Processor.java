@@ -1,19 +1,7 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Closer;
-import javax0.jamal.api.Context;
-import javax0.jamal.api.Debugger;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Evaluable;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.MacroRegister;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.debugger.DebuggerFactory;
 import javax0.jamal.engine.util.ExceptionDumper;
 import javax0.jamal.engine.util.MacroBodyFetcher;
@@ -25,25 +13,16 @@ import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.api.Macro.validIdChar;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.getParts;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Processor implements javax0.jamal.api.Processor {
 
@@ -79,6 +58,8 @@ public class Processor implements javax0.jamal.api.Processor {
         return Optional.of(debuggerStub);
     }
 
+    private final BadSyntax initializationException;
+
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
      * separators start and end macros and the usual strings are "{" and "}".
@@ -100,14 +81,29 @@ public class Processor implements javax0.jamal.api.Processor {
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s ->
                 optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))))
         );
-        try {
-            macros.separators(macroOpen, macroClose);
-        } catch (BadSyntax badSyntax) {
-            throw new IllegalArgumentException(
-                    "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
-        }
         Macro.getInstances().forEach(macros::define);
         debugger = DebuggerFactory.build(this);
+        URL url = null;
+        try {
+            macros.separators("{", "}");
+            final var urls = getClass().getClassLoader().getResources(GLOBAL_INCLUDE_RESOURCE);
+            while (urls.hasMoreElements()) {
+                url = urls.nextElement();
+                try (final var is = url.openStream()) {
+                    final var in = makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8), new Position("res:" + GLOBAL_INCLUDE_RESOURCE, 1, 1));
+                    process(in);
+                }
+            }
+            macros.separators(macroOpen, macroClose);
+        } catch (IOException | RuntimeException e) {
+            System.out.printf("Cannot load the library files from .jim: from %s%n", url);
+            initializationException = new BadSyntax("", e);
+            return;
+        } catch (BadSyntax e) {
+            initializationException = e;
+            return;
+        }
+        initializationException = null;
     }
 
     public Processor(String macroOpen, String macroClose) {
@@ -162,6 +158,9 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public String process(final Input input) throws BadSyntax {
+        if (initializationException != null) {
+            throw initializationException;
+        }
         limiter.up();
         final var marker = macros.test();
         final var output = makeInput(input.getPosition());

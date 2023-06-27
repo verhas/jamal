@@ -18,6 +18,9 @@ import java.util.Properties;
  * when you are going to need it.
  */
 public interface Processor extends AutoCloseable {
+
+    String GLOBAL_INCLUDE_RESOURCE = ".jim";
+
     /**
      * Get the debugger that is currently configured for the processor.
      *

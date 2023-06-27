@@ -4,10 +4,13 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
@@ -46,6 +49,19 @@ public class Integration_LoadMavenJar {
             return;
         }
         props.put(key, value);
+    }
+
+    /**
+     * The individual tests run in one JVM and the class loaders are cached. This method clears the cache before each
+     * test call. Without this, some tests would pass when executed individually but fail when executing the whole file.
+     * @throws Exception
+     */
+    @BeforeEach
+    void cleanClassCache() throws Exception {
+        Field classLoadersFields = LoadMavenJar.class.getDeclaredField("classLoaders");
+        classLoadersFields.setAccessible(true);
+        final var map = (Map) classLoadersFields.get(null);
+        map.clear();
     }
 
     private void setupSecurityMock(String... extraProperties) {
@@ -162,6 +178,18 @@ public class Integration_LoadMavenJar {
                 .results(RESULT);
     }
 
+    @DisplayName("Loads the .jim file from the loaded class. In this case the jamal-test contains a specific '.jim' resource file.")
+    @Test
+    void loadsTheJimFile() throws Exception {
+        setupSecurityMock(
+                "maven.load.include", "com.javax0.jamal:jamal-test:*:myFile"
+        );
+        TestThat.theInput(String.format("{@maven:load com.javax0.jamal:jamal-test:%s}{jim:test}"
+                        , Processor.jamalVersionString()))
+                .atPosition(new Position("myFile", 1, 1))
+                .results("true");
+    }
+
     @DisplayName("Fails when some file in the position stack is excluded")
     @Test
     void failForSubLevelMatch() throws Exception {
@@ -171,7 +199,7 @@ public class Integration_LoadMavenJar {
         );
         TestThat.theInput(String.format(TEST_STRING, ""))
                 .atPosition(new Position("anyFile", 1, 1, new Position("yourFile", 1, 1, new Position("myFile", 1, 1))))
-                .throwsUp(IllegalStateException.class, "The maven artifact 'com.javax0.jamal:jamal-test:1.12.7-SNAPSHOT' is excluded.");
+                .throwsUp(IllegalStateException.class, "The maven artifact 'com.javax0.jamal:jamal-test:.*-SNAPSHOT' is excluded.");
     }
 
     @DisplayName("Fails when security includes the coordinates, but not for this file")

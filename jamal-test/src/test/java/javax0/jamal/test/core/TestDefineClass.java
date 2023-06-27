@@ -34,6 +34,10 @@ public class TestDefineClass {
                     break;
                 case "params":
                     break;
+                case "processor":
+                    break;
+                case "input":
+                    break;
                 default:
                     throw new RuntimeException("Unknown key: " + key);
             }
@@ -43,7 +47,7 @@ public class TestDefineClass {
     @Test
     @DisplayName("Test that a user defined macro can be implemented in Java and defined using the class name")
     void testJavaDefinedUserDefinedMacro() throws Exception {
-        TestThat.theInput("{@define [class]test=javax0.jamal.test.core.TestDefineClass$TestUserDefinedMacro}{test}").results("test");
+        TestThat.theInput("{@define [class=javax0.jamal.test.core.TestDefineClass$TestUserDefinedMacro]test=test}{test}").results("test");
     }
 
 }
