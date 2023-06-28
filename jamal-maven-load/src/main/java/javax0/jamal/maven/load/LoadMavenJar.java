@@ -25,7 +25,7 @@ public class LoadMavenJar implements Macro {
 
     /**
      * The class loaders are reserved and reused when a single process executes different Jamal processors for the same source.
-     * In that case the same macros are loaded again and again, but using the same class loader. This way the macros can
+     * In that case, the same macros are loaded again and again, but using the same class loader. This way the macros can
      * rely on static fields to store their global state.
      * <p>
      * The actual need for this was the OpenAI module, which uses a static map to keep track of the currently executing OpenAPI queries.
@@ -103,13 +103,13 @@ public class LoadMavenJar implements Macro {
             final var urls = cl.getResources(Processor.GLOBAL_INCLUDE_RESOURCE);
             while (urls.hasMoreElements()) {
                 try (final var is = urls.nextElement().openStream()) {
-                    final var input = javax0.jamal.tools.Input.makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8),
+                            final var input = javax0.jamal.tools.Input.makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8),
                             new Position("res:" + Processor.GLOBAL_INCLUDE_RESOURCE, 1, 1));
-                    processor.process(input);
-                }
-            }
-        } catch (IOException e) {
-            throw new BadSyntax("Cannot load resource " + Processor.GLOBAL_INCLUDE_RESOURCE, e);
+                            processor.process(input);
+                        }
+                    }
+            } catch (IOException e) {
+                throw new BadSyntax("Cannot load resource " + Processor.GLOBAL_INCLUDE_RESOURCE, e);
         }
     }
 
@@ -130,7 +130,7 @@ public class LoadMavenJar implements Macro {
             properties = EnvironmentVariables.getNewProperties();
         } catch (IOException e) {
             // this is NOT BadSyntax because it is not a Jamal source issue, and it must not be caught using the 'try' macro
-            // this is a hard-core configuration error, which may signal security breach
+            // this is a hard-core configuration error, which may signal a security breach
             throw new RuntimeException(e);
         }
         return properties;
@@ -138,7 +138,7 @@ public class LoadMavenJar implements Macro {
 
     /**
      * This class loader delegates in reverse. It looks first up the class and calls the parent class loader only if the
-     * class is not found. This way the dynamically loaded macros can override
+     * class is not found. This way, the dynamically loaded macros can override
      * the already loaded macros when their implementation is different from the one already loaded.
      * <p>
      * Since the service loader uses the Macro class loaded by the old class loader, which is the parent class loader of
@@ -146,7 +146,7 @@ public class LoadMavenJar implements Macro {
      * <p>
      * The same is true for the classes of the Jamal engine and Tools.
      * An implemented macro gets {@code Input} and {@code Processor} as parameters. These are from the API package,
-     * but there is no reason to reload them. It just may cause problem, if the macro package was compiled with a different
+     * but there is no reason to reload them. It just may cause a problem if the macro package was compiled with a different
      * version of Jamal. Filtering all these packages out is the safest way to avoid problems. There still may be some issues
      * when the macro dynamically loaded was compiled with a different version of Jamal than the one that is running, but
      * only if the two versions are not binary compatible.
@@ -170,7 +170,7 @@ public class LoadMavenJar implements Macro {
                     c = findClass(name);
                 } catch (ClassNotFoundException ignore) {
                     // we cannot call it via super.getParent() because it is protected
-                    // --> when the class is not found it also calls findClass() again and the fails
+                    // --> when the class is not found, it also calls `findClass()` again, and then fails
                     c = super.loadClass(name, resolve);
                 }
             }
@@ -246,7 +246,7 @@ public class LoadMavenJar implements Macro {
      * Get the path to the local repository. This can be configured using the macro option {@code local} or remain the default.
      *
      * @param local      the parameter passed to the macro
-     * @param pos        the position of the macro used for error signalling in case the configured directory does not exist
+     * @param pos        the position of the macro used for error signaling in case the configured directory does not exist
      * @param properties the configuration properties to check permission
      * @return the path to the local repository
      * @throws BadSyntax when the local repo is not allowed in the configuration
@@ -267,7 +267,7 @@ public class LoadMavenJar implements Macro {
      * Check that the local repo is configured as secure.
      *
      * @param local      the path to the repo to be checked
-     * @param properties configuration properties that contains the security configuration
+     * @param properties configuration properties object that contains the security configuration
      */
     private void checkPermissions(final Path local, final Properties properties) {
         final var paths = Optional.ofNullable(properties.get("maven.load.local")).map(Object::toString).orElse(null);
