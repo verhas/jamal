@@ -23,7 +23,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.6.0` 
 
-* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-5` 
+* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `4.0.0-alpha-5` `*[red]#upgrade to 4.0.0-alpha-7#*`
 
 * `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.9.0` 
 
@@ -65,7 +65,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `SOURCE_BUDDY` `2.4.0` 
 
-* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-5` 
+* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `4.0.0-alpha-5` `*[red]#upgrade to 4.0.0-alpha-7#*`
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.1.1` 
 

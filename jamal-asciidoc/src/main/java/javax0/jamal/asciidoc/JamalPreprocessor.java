@@ -18,10 +18,7 @@ import org.asciidoctor.extension.PreprocessorReader;
 import org.asciidoctor.extension.Reader;
 import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,6 +65,19 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         } catch (Exception ignore) {
         }
         return this;
+    }
+
+    private String getAsciidoctorJVersion() {
+        try (final var in = getClass().getResourceAsStream("/META-INF/asciidoctorj-version.properties")) {
+            if (in == null) {
+                return "N/A";
+            }
+            Properties versionProps = new Properties();
+            versionProps.load(in);
+            return versionProps.getProperty("version.asciidoctorj");
+        } catch (Exception e) {
+            return "N/A";
+        }
     }
 
     /**
@@ -118,7 +128,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             synchronized (FileConverter.class) {
                 synchronized (fileCounter) {
                     final var last = fileCounter.get(inputFile);
-                    if (  last > counter) {
+                    if (last > counter) {
                         return;
                     }
                 }
@@ -277,6 +287,11 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         System.setProperty("intellij.asciidoctor.plugin", "1");
         // snipline spec_env2 filter="(.*?)"
         System.setProperty("asciidocfx.asciidoctor.plugin", "1");
+        try {
+            // snipline asciidoctorj_version filter="(.*?)"
+            processor.defineGlobal(processor.newUserDefinedMacro("asciidoctorj:version", getAsciidoctorJVersion()));
+        } catch (BadSyntax ignore) {
+        }
         final var r = processJamal(processor, input);
         r.processor = processor;
         r.lines = postProcess(lines, r, fileName);

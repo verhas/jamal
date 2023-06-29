@@ -1,5 +1,7 @@
 # Sample documentation
 
+{%asciidoctorj:version%}
+
 {%@maven:load com.javax0.jamal:jamal-io:2.2.0-SNAPSHOT%}
 
 {%!#if [not] `///`{%@io:file file="mimmoma.png" exists%}

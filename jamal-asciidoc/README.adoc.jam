@@ -108,7 +108,7 @@ It is added only to the text for the display.
 
 == Installation with AsciidocFX
 
-The installation for AsciidocFX needs to copy all the JAR files dowloadable from Maven central
+The installation for AsciidocFX needs to copy all the JAR files downloadable from Maven central
 
 {%DLINKS%}
 
@@ -121,19 +121,20 @@ It is
 
 Note that you need AsciidocFX 1.8.5 or newer.
 
-After copying the files you will get an error message warning you about duplicate JAR libraries of different versions.
-The reason for that is AsciidocFX using older versions of many of the libraries.
-The message recommends to remove the older versions.
+After copying the files, you will get an error message warning you about duplicate JAR libraries of different versions.
+The reason for that is AsciidocFX using older versions in many cases.
+The message recommends removing the older versions.
 Please, do that.
+Currently, there is no automated tool to assist the removal of the older versions.
 
 NOTE: There is no guarantee that this will work.
-As for Jamal 2.2.0 and AsciidocFX 1.8.5 the experiments whosed that there were no issues running AsccidocFX with Jamal.
+As for Jamal 2.2.0 and AsciidocFX 1.8.5 the experiments showed no issues running AsccidocFX with Jamal.
 Most of the libraries have newer versions, which are minor version updates.
-The Yaml handling library, however is 1.3 for AsciidocFX and 2.0 for Jamal.
-The API of the two versions are not compatible, and it may cause issues in some cases.
+The Yaml handling library, however, is 1.3 for AsciidocFX and 2.0 for Jamal.
+The APIs of the two versions are not compatible, and it may cause issues in some cases.
 
 After the files are copied to the `lib` folder you need to restart AsciidocFX and that is it.
-AsciidocFX 1.8.5 and later versions recognize `.jam` as Asciidoc extension and will work properly.
+AsciidocFX 1.8.5 and later versions recognize `.jam` as an Asciidoc extension and will work properly.
 There is no need to copy Jamal into each project directory separately.
 
 == Usage
@@ -143,15 +144,22 @@ After the installation, you can open any file that has the extension `.jam` and 
 The default macro opening and closing strings are {%@escape* ``{%``%} and {%@escape* ``%}``%}.
 It is the usual convention when editing Asciidoc files with Jamal preprocessor.
 The reason for this is that these documents many times include sample code snippets that frequently may have `{` and `}` in them.
+Asciidoc also uses the `{` and `}` to denote attributes.
 If you want to use `{` and `}` as macro opening and closing strings, then start your file with the line:
 
 [source]
 ----
-{@comment }
+{@comment }\
 ----
 
 When the first two characters of the document are `{@`, then the macro opening and closing strings will be `{` and `}`.
 It is what the core built-in macro `import` also does.
+The back-slash following the macro closing string escapes the new line, thus this comment is truly an empty string.
+
+It is a frequent mistake to start the document with some macro other than an empty comment.
+Sometimes the macro start changes from `{@` to `{#` to pre-evaluate the macro input.
+With that, all of a sudden the macros are not recognized anymore.
+It is safer to use the empty comment as a "shebang" line.
 
 === Asciidoc
 
@@ -161,15 +169,15 @@ You edit the file and see the result instantly in the other editor pane.
 
 === Markdown
 
-When you edit a Markdown file the extension is either `md.jam` or `markdown.jam`.
+When you edit a Markdown file, the extension is either `md.jam` or `markdown.jam`.
 The plugin first converts the Jamal macros and then converts the markdown to Asciidoc.
 The Jamal processed markdown file is saved into the output, but the converted Asciidoc is passed to the IntelliJ Asciidoctor plugin.
 That way you edit the markdown and see the result instantly in the other editor pane.
 
-In IntelliJ there is a plugin to display Markdown files.
-In this case it is not invoked.
+In IntelliJ, there is a plugin to display Markdown files.
+In this case, it is not invoked.
 The preview of the document may look slightly different from the Markdown preview.
-If you are interested how the Markdown plugin renders the same document you can open any times the saves `.md` file.
+If you are interested how the Markdown plugin renders the same document, you can open any times the saves `.md` file.
 
 === Xml
 
@@ -177,10 +185,11 @@ The xml conversion happens the same way as any text format.
 It is handled separately to add the `xml` formatting after the `source` as `[source,xml]` in the case of `pom.jam` files.
 
 === Text
-{%@define OTHER_FORMATS=Other formats%}
-When you edit a text file the extension is anything ending with `.jam` but none of the extensions converters recognize.
+{%@define OTHER_FORMATS=Other formats%}\
+
+The editor will treat a file as plain text when the extension is not recognized by any of the extension converters.
 The details about converters you can plug into the process are covered in the next section _"{%OTHER_FORMATS%}"_.
-In this case the plugin first converts the Jamal macros and then converts the text to Asciidoc plain text.
+In this case, the plugin first converts the Jamal macros and then converts the text to Asciidoc plain text.
 That way it adds
 
   [source,xxx]
@@ -200,6 +209,7 @@ NOTE: The conversion also manages when there is a line containing only `----` in
 === {%OTHER_FORMATS%}
 
 The conversion of different formats is not hardwired into the preprocessor.
+You do not need, but can create Java classes doing conversion from different formats to Asciidoc.
 The preprocessor defines the interface `javax0.jamal.asciidoc.Converter` and uses all converters available.
 The interface implementations are loaded using the service loader as defined in the Java 9 module systems.
 
@@ -256,7 +266,7 @@ Note that starting an external process may need significant resource and may sig
 The option is `false` by default, which means that the caching examines all the included, imported and other files that were used during the processing.
 
 * `{%@snip ASCIIDOC_EXTENSION_FROM_FILE%}` instructs the Jamal preprocessor to read the content of the saved file instead of the lines provided by the Asciidoctor plugin to preprocess.
-It will result less processing along with the use of the in-memory cache.
+It will result in less processing along with the use of the in-memory cache.
 The user has to press Control-S (or Command-S on Mac) to refresh the formatted Asciidoc output.
 It is also to note that Asciidoctor already processes the lines before invoking the Jamal preprocessor.
 If this variable is true, reading from a file will eliminate the effects of these processes.
@@ -274,7 +284,7 @@ publish_date: 2022-01-13
 +
 These lines are usually used by site builder tools, like Jekyll, and they are ignored by Asciidoctor.
 Asciidoctor removes these lines before starting Jamal.
-Jamal puts these lines back, thus you can have Jamal macros even in the front-end.
+Jamal puts these lines back; thus you can have Jamal macros even in the front-end.
 You can also have macros in front of the front-matter assumed they do not produce any output.
 However, since Asciidoctor has removed these lines, it also expects that they are not present when the lines are processed by Jamal.
 The default behaviour is to remove the front-matter after Jamal has finished.
@@ -282,10 +292,10 @@ The default behaviour is to remove the front-matter after Jamal has finished.
 NOTE: The front-matter is removed only from the lines, which are passed to the Asciidoctor plugin.
 They are never removed from the output saved into the output file.
 +
-Using this option you can instruct Jamal to keep the front matter.
+Using this option, you can instruct Jamal to keep the front matter.
 +
 This option is only consulted when the file is formatted as Asciidoc, having the file extension `.adoc.jam`.
-For other files any font-matter is kept as it is, and become part of the preformatted source asciidoc text.
+For other files, any font-matter is kept as it is, and becomes part of the preformatted source asciidoc text.
 +
 [NOTE]
 ====
@@ -297,16 +307,27 @@ Jamal fetches the front matter calling
 {%@snip fetch-font-matter%}%}
 ----
 The result contains the front matter as a string omitting the last new-line character.
-Because the last new-line character is missing Asciidoctor passes an empty string when the front matter is empty, but also when the front matter is an empty line.
+Because the last new-line character is missing, Asciidoctor passes an empty string when the front matter is empty, but also when the front matter is an empty line.
 This should not cause any problem.
-If this is really a problem in your application you can use the `{%@snip ASCIIDOC_EXTENSION_FROM_FILE%}`, `fromFile` option.
+If this is really a problem in your application, you can use the `{%@snip ASCIIDOC_EXTENSION_FROM_FILE%}`, `fromFile` option.
 ====
 
-Note that these names should be translated to lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file. Foe example, in the `~/.jamal/setting.properties` file you should write
+Note that these names should be translated to a lower case and use `.` as separator instead of `_` when using the `~/.jamal/setting.properties` or `~/.jamal/setting.xml` file. For example, in the `~/.jamal/setting.properties` file you should write
 
-    asciidoc.extension.log=true
+    {%#replace/{%#case:lower {%@snip ASCIIDOC_EXTENSION_LOG%}%}/_/.%}=true
 
 instead of `{%@snip ASCIIDOC_EXTENSION_LOG%}`.
+
+=== Predefined Macros
+
+The plugin defines the following macro before starting the preprocessing:
+
+* `{%@snip asciidoctorj_version%}` is the version of the AsciidoctorJ library used by the IntelliJ plugin.
+It is {%?{%@snip asciidoctorj_version%}%}.
+If you see no version number, then the Asciidoc file was created by Jamal running in a different installation and not AsciidoctorJ integration.
+
+Consider the possibilities that the macros may not be defined when running the conversion outside of IntelliJ or other AsciidoctorJ integration.
+To avoid error use the `{?...}` format when referencing the macro.
 
 === Special Environment Variables `{%@snip spec_env%}` and `{%@snip spec_env2%}`
 
@@ -314,7 +335,7 @@ The system property `{%@snip spec_env%}` and `{%@snip spec_env2%}` are defined b
 You can use this via the `env` macro to decide if the Jamal processor is running as an asciidoctor preprocessor.
 {%@import res:jamal.jim%}
 {%sample/
-{#if /{@env {%@snip spec_env%}}/This was compiled in IntelliJ or AsciidocFX/This was compiled outside of IntelliJ or AsciidocFX/}
+{#if /{@env {%@snip spec_env%}}/This was compiled in IntelliJ or AsciidocFX/This was compiled outside IntelliJ or AsciidocFX/}
 %}
 
 will result in
@@ -325,7 +346,7 @@ You should use this macro only for very special purposes.
 Using this macro will result different output based on the different Jamal processor environment.
 Currently, there is no support to distinguish between IntelliJ and AsciidocFX environment.
 
-The use case to use the environment variable is executing external processors or retrieving expensive resources.
+The use case for the environment variable is executing external processors or retrieving expensive resources.
 Examples:
 
 * A macro executing Mermaid or some other processing as an external tool may execute the external tool in an asynchronous way when running inside an editor.
@@ -447,9 +468,9 @@ key: value
 
 front matters are not fully passed to the Jamal preprocessor.
 The front matter lines between the `---` lines are not present in the lines provided by Asciidoctor.
-This behaviour was incorporated in Jamal version 1.12.4 and Jamal works as expected.
-In prior versions you can use a workaround as described below.
-To overcome these it is recommended to start these files with a Jamal comment, like:
+This behavior was incorporated in Jamal version 1.12.4 and Jamal works as expected.
+In prior versions, you can use a workaround as described below.
+To overcome these, it is recommended to start these files with a Jamal comment, like:
 
 [source]
 ----
@@ -538,12 +559,12 @@ The value of the macro can be a directory or a file.
 
 The file name can be absolute, or relative to the Jamal input text.
 
-* If the name points to an existing directory then the output will be saved there.
+* If the name points to an existing directory, then the output will be saved there.
 The name of the file will be the same as input, minus the `.jam` extension.
 
 * If the file does not exist, or it is not a directory, then the output will be saved into the named file.
 
-Processing the Jamal file out of the IntelliJ Asciidoctor plugin extension will ignore this user defined macro.
+Processing the Jamal file outside the IntelliJ Asciidoctor plugin extension will ignore this user defined macro.
 
 == Modules
 
@@ -558,6 +579,9 @@ The ZIP file you extracted to the {%INSTALL_FOLDER%} folder contains the followi
 It is essentially all the macro modules that come with Jamal by default.
 If you want to use additional modules, all you have to do is copy the `.jar` files to the {%INSTALL_FOLDER%} folder.
 The IntelliJ Asciidoc plugin will automatically load the modules.
+
+You can also load macro JARs dynamically using the `maven:load` macro.
+For detailed instruction how to use the macro, see the module's link:../jamal-maven-load/README.adoc[README].
 
 == Error Handling
 
@@ -576,12 +600,15 @@ The error message at the end of the document is followed by a source block, incl
 
 This way, it may be easier to find the error in the document and still see some preview while the input is erroneous.
 
+NOTE: There is an Easter egg in the last line of the error message.
+It may be useful when you use `snip:check`.
+
 == Executing External Jamal
 
 It is possible to run Jamal as an external process and get the output of the preprocessing.
-To do that you should configure the external command to execute.
+To do that, you should configure the external command to execute.
 The configuration key is `{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}`.
-When it is configured in a properties file you should use `asciidoc.extension.external.command`.
+When it is configured in a properties file you should use `{%#case:lower {%#replace/{%@snip ASCIIDOC_EXTENSION_EXTERNAL_COMMAND%}/_/.%}%}`.
 
 For example, the configuration file `~/.jamal/settings.properties` contains the following line on the development machine:
 
@@ -600,14 +627,15 @@ The extension checks the options in the first line of the document, but in case 
 [NOTE]
 ====
 This option was developed as a last resort.
-For example, during the development the Java JDK used by IntelliJ and hence used to execute Jamal could not find the JShell engine.
+For example, the Java JDK used by IntelliJ during the development and hence used to execute Jamal could not find the JShell engine.
 The main README uses the JShell engine when it discusses the feature.
-With this option the main README can also be edited WYSIWYG style.
+With this option, the main README can also be edited WYSIWYG style.
+(It is not needed anymore, the top README was modified.)
 ====
 
 [WARNING]
 ====
-You may recognize that using this option you can execute any external command.
+You may recognize that using this option, you can execute any external command.
 Keep your `~/.jamal/settings.properties` file secure.
 Configure the external command to execute only if you have no other way to use the extension.
 ====
@@ -616,13 +644,13 @@ Configure the external command to execute only if you have no other way to use t
 
 The IntelliJ plugin AsciiDoctor renderer seems to run multiple times even when the file does not change.
 Asciidoc rendering may not be cheap, but Jamal processing and the rendering can be really expensive.
-Please note, that Jamal is almost a full programming language, and you can create fairly complex structures.
-However, Jamal processing is supposed to be idempotent.
-If you have the same source you are supposed to get the same output.
+Please note that Jamal is almost a full programming language, and you can create fairly complex structures.
+However, Jamal processing is supposed to be link:https://www.google.com/search?q=define+idempotent[idempotent].
+If you have the same source, you are supposed to get the same output.
 
 [NOTE]
 ====
-If you want to see how many times and when the preprocessor was executed switch on the logging.
+If you want to see how many times and when the preprocessor was executed, switch on the logging.
 You will see in the log file something like the following:
 
 [source,text]
@@ -647,10 +675,10 @@ The log shows you
 * the md5 fingerprint of the input
 * `restored` when the fingerprint shows that the input did not change since the last run
 
-The logging is a troubleshooting feature and there is no guarantee that this document follows the changes of the logging format.
+The logging is a troubleshooting feature, and there is no guarantee that this document follows the changes of the logging format.
 ====
 
-The Jamal Asciidoctor preprocessor stores the result of the last processing (in memory) and if it sees the same input next time it just returns the already calculated output.
+The Jamal Asciidoctor preprocessor stores the result of the last processing (in-memory), and if it sees the same input, it just returns the already calculated output.
 The last result is really the last result, even when you keep multiple `.adoc.jam` files in your IntelliJ open.
 Editing one of the files will overwrite in the memory the last result form the other file.
 This, however, affects only the speed.
