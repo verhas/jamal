@@ -3102,7 +3102,7 @@ This is also the case when there is no parameter defined.
 
 [[java:insert]]
 ==== `java:insert`
-{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=13497d8a%}
+{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=74bd6cd3%}
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
 The macro has three parameters:

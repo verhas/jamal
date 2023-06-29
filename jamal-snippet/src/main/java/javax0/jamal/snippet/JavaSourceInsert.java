@@ -7,6 +7,8 @@ import javax0.jamal.tools.Scan;
 import javax0.javalex.JavaSourceDiff;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Input.makeInput;
@@ -67,43 +69,22 @@ public class JavaSourceInsert implements Macro {
         public void close() throws BadSyntax {
             final String fileName = FileTools.absolute(pos.file, file);
             final var originalContent = FileTools.getFileContent(fileName, processor);
-            final var source = originalContent.split("\n", -1);
-            final var outlines = new ArrayList<String>(source.length);
+            final var linesSrc = originalContent.split("\n", -1);
+            final var linesOut = new ArrayList<String>(linesSrc.length);
+            final var linesGen = Arrays.asList(output.toString().split("\n", -1));
             boolean inSegment = false;
             boolean segmentAdded = false;
-            for (final var line : source) {
+            for (final var line : linesSrc) {
                 if (inSegment) {
-                    final var matcher = segmentEndPattern.matcher(line);
-                    if (matcher.matches()) {
-                        // we squeeze the output into one line, no problem
-                        outlines.add(output.toString());
-                        outlines.add(line);
-                        inSegment = false;
-                        segmentAdded = true;
-                    }
+                    inSegment = !segmentEndPattern.matcher(line).matches();
+                    segmentAdded = copyOrSkipLineInSegment(linesOut, linesGen, inSegment, line);
                 } else {
-                    outlines.add(line);
-                    final var matcher = segmentStartPattern.matcher(line);
-                    if (matcher.matches()) {
-                        final var segmentParameters = matcher.group(1);
-                        // get the parameters from the segment without any key constraints using the params handling utility parser
-                        final var params = Params.using(null)
-                                .from(() -> "for segment " + segment + "in file " + file + "[" + segmentParameters + "]")
-                                .endWith('>')
-                                .fetchParameters(makeInput(segmentParameters));
-                        if (segment == null || (params.get("id") != null && segment.equals(params.get("id")))) {
-                            inSegment = true;
-                            BadSyntax.when(segmentAdded, segment == null ?
-                                    "There are multiple segments in the file " + file + "and no segment id specified"
-                                    :
-                                    "There are multiple segments with the id " + segment + "in the file " + file + ".");
-                        }
-                    }
+                    inSegment = copyLineOutOfSegment(linesOut, segmentAdded, line);
                 }
             }
             BadSyntax.when(inSegment, "The segment " + segment + " was not closed in the file " + file + ".");
             BadSyntax.when(!segmentAdded, "The segment " + segment + " was not found in the file " + file + ".");
-            final var newContent = String.join("\n", outlines.toArray(String[]::new));
+            final var newContent = String.join("\n", linesOut.toArray(String[]::new));
             if (update) {
                 if (!new JavaSourceDiff().test(originalContent, newContent)) {
                     return;
@@ -111,6 +92,64 @@ public class JavaSourceInsert implements Macro {
             }
             FileTools.writeFileContent(fileName, newContent, processor);
             updated = true;
+        }
+
+        /**
+         * Skip the line, or copy the line to the output when the segment ends.
+         * When the segment ends, the generated code lines are also added and the segment closing line also.
+         * When the segment does not end yet, then the line is simply skipped, since the new generated code will
+         * replace the old one.
+         *
+         * @param linesOut  the output lines to append the current line to
+         * @param linesGen  the generated lines to add to the output when the segment ends
+         * @param inSegment signals if we are still inside the segment, the line is not a segment end
+         * @param line      the line to copy to the output if it is the segment end
+         * @return {@code true} if the line is the segment end and the segment was added to the output
+         */
+        private static boolean copyOrSkipLineInSegment(ArrayList<String> linesOut, List<String> linesGen, boolean inSegment, String line) {
+            boolean segmentAdded = false;
+            if (!inSegment) {
+                linesOut.addAll(linesGen);
+                linesOut.add(line);
+                segmentAdded = true;
+            }
+            return segmentAdded;
+        }
+
+        /**
+         * Copy the line to the output and check if the line starts the target segment.
+         * The target segment starts with a line that matches the {@code segmentStartPattern}
+         * and the specified segment id is the same as the segment id in the line.
+         * <p>
+         * If the desired segment id is {@code null}, then any segment start is accepted.
+         *
+         * @param linesOut     the output lines to append the current line to
+         * @param segmentAdded signals if the segment was already added, in which case finding another segment start is an error
+         * @param line         the line to copy to the output
+         * @return {@code true} if the line starts the segment
+         * @throws BadSyntax if the segment is already added and the line starts a new segment
+         */
+        private boolean copyLineOutOfSegment(ArrayList<String> linesOut, boolean segmentAdded, String line) throws BadSyntax {
+            linesOut.add(line);
+            boolean inSegment = false;
+            final var matcher = segmentStartPattern.matcher(line);
+            if (matcher.matches()) {
+                final var segmentParameters = matcher.group(1);
+                // get the parameters from the segment without any key constraints using the params handling utility parser
+                final var params = Params.using(null)
+                        .from(() -> "for segment " + segment + "in file " + file + "[" + segmentParameters + "]")
+                        .endWith('>')
+                        .fetchParameters(makeInput(segmentParameters));
+                if (segment == null || (params.get("id") != null && segment.equals(params.get("id")))) {
+                    inSegment = true;
+                    BadSyntax.when(segmentAdded, segment == null ?
+                                    "There are multiple segments in the file %s and no segment id specified"
+                                    :
+                                    String.format("There are multiple segments with the id %s in the file %%s.", segment),
+                            file);
+                }
+            }
+            return inSegment;
         }
 
         @Override

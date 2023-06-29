@@ -2956,7 +2956,7 @@ will result
 - SnipFile.java: 680 bytes
 - HashCode.java: 497 bytes
 - TrimLines.java: 5,379 bytes
-- JavaSourceInsert.java: 5,729 bytes
+- JavaSourceInsert.java: 7,884 bytes
 - ThinXml.java: 8,792 bytes
 - Memoize.java: 8,104 bytes
 - LineCount.java: 552 bytes
@@ -3252,7 +3252,7 @@ will result in the output
 
 [source]
 ----
-2023-06-29 16:40:06
+2023-06-29 19:13:54
 ----
 
 
