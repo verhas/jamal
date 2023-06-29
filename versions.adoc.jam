@@ -4,7 +4,7 @@
 This file can be used to check the Jamal dependency versions.
 It loads the versions from the `{@file version.jim}` file and has a macro comparing it against the current Maven repo.
 The rendering of this file is slow because it has to download the Maven metadata files from the Maven repository.
-If all dependencies are up-to-date then the output should not contain any `*[red]#NO#*` text with upgrade instructions.
+If all dependencies are up-to-date, then the output should not contain any `*[red]#NO#*` text with upgrade instructions.
 
 {@define CHECK($X,$Y)=
 * {@snip:xml V=https://repo.maven.apache.org/maven2/$Y/maven-metadata.xml}\

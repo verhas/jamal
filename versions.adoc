@@ -3,7 +3,7 @@
 This file can be used to check the Jamal dependency versions.
 It loads the versions from the `version.jim` file and has a macro comparing it against the current Maven repo.
 The rendering of this file is slow because it has to download the Maven metadata files from the Maven repository.
-If all dependencies are up-to-date then the output should not contain any `*[red]#NO#*` text with upgrade instructions.
+If all dependencies are up-to-date, then the output should not contain any `*[red]#NO#*` text with upgrade instructions.
 
 
 
@@ -23,7 +23,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.6.0` 
 
-* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `4.0.0-alpha-5` `*[red]#upgrade to 4.0.0-alpha-7#*`
+* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-7` 
 
 * `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.9.0` 
 
@@ -41,17 +41,17 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `JUPITER_VERSION` `5.10.0-M1` 
 
-* `*[red]#NO#*`  `MOCKITO_VERSION` `5.3.1` `*[red]#upgrade to 5.4.0#*`
+* `OK`  `MOCKITO_VERSION` `5.4.0` 
 
 * `OK`  `JRUBY_VERSION` `9.4.3.0` 
 
-* `OK`  `GROOVY_VERSION` `3.0.17` 
+* `OK`  `GROOVY_VERSION` `3.0.18` 
 
 * `OK`  `OGNL_VERSION` `3.3.4` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.0` 
 
-* `*[red]#NO#*`  `JSON_ORG_VERSION` `20230227` `*[red]#upgrade to 20230618#*`
+* `OK`  `JSON_ORG_VERSION` `20230618` 
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
@@ -65,7 +65,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `SOURCE_BUDDY` `2.4.0` 
 
-* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `4.0.0-alpha-5` `*[red]#upgrade to 4.0.0-alpha-7#*`
+* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-7` 
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.1.1` 
 

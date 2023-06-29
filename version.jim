@@ -78,15 +78,15 @@ MAVEN_DEPENDENCY_PLUGIN_VERSION=3.6.0      -- https://repo.maven.apache.org/mave
 JUPITER_VERSION=5.10.0-M1                      -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-params
-MOCKITO_VERSION=5.3.1                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
+MOCKITO_VERSION=5.4.0                      -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 --dependencies needed for the Jamal libraries
 PLANTUML_VERSION=1.2023.8                  -- https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml
 JRUBY_VERSION=9.4.3.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
-GROOVY_VERSION=3.0.17                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
+GROOVY_VERSION=3.0.18                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
 OGNL_VERSION=3.3.4                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=2.0                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
-JSON_ORG_VERSION=20230227                  -- https://repo.maven.apache.org/maven2/org/json/json/
+JSON_ORG_VERSION=20230618                  -- https://repo.maven.apache.org/maven2/org/json/json/
 FLEXMARK_VERSION=0.64.8                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
 APACHE_POI_VERSION=5.2.3                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 ASCIIDOCTORJ_VERSION=3.0.0-alpha.1         -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
@@ -101,6 +101,6 @@ ASM_VERSION=9.5                            -- https://repo.maven.apache.org/mave
 ASM_TREE_VERSION=9.5                       -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/
 
 -- dependencies needed for the Maven extension (not the plugin)
-MAVEN_CORE_VERSION=4.0.0-alpha-5           -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
+MAVEN_CORE_VERSION=4.0.0-alpha-7           -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
 PLEXUS_COMPONENT_METADATA_VERSION=2.1.1    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata
 }
