@@ -4186,7 +4186,7 @@ And it already saved the consistency of this documentation many times.
 
 
 The documentation of the parameter handling in these macros is not part of this readme.
-It can be found in the separate link:PARAMS.adoc[PARAMS] document.
+It can be found in the separate link:documentation/PARAMS.adoc[PARAMS] document.
 
 [[JamalENV]]
 === {%chapter%}Jamal Environment Variables

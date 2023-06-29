@@ -1,7 +1,7 @@
 = Planned and Created Video Tutorials
 
 The videos help you jumpstart using Jamal.
-They cover introduction and basic features as well as more complex topics.
+They cover an introduction and basic features as well as more complex topics.
 The videos are published on YouTube:
 
 link:https://www.youtube.com/channel/UCpUOu9zcCUdwAj0H3YzQa3A[YT channel]

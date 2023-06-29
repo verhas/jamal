@@ -1,4 +1,5 @@
 == Standard Built-In Parameter Parsing
+{%@define methodFormat=`$name()`%}\
 
 Even though built-in macros are free to parse their input any way they want, there are support classes that ease this task.
 The advantages of using these classes are twofold.
@@ -93,9 +94,13 @@ As we have seen, the `include` macro with the parameters
 uses the `[` and `]` characters.
 
 The built-in core macros use these separator characters.
-Currently 11 built-in core macros have parameters.
+Currently {%@listDir (
+              grep="(?:Scan).using\\(processor\\).from\\(this\\)" pattern=".*\\.java$"
+              countOnly
+              )
+../jamal-core/src/main/java/javax0/jamal/builtins%} built-in core macros have parameters.
 
-The class `Params` provides the tools to ease parameter parsing.
+The class `{%@java:class javax0.jamal.tools.Params%}` provides the tools to ease parameter parsing.
 
 === Parameter Sources
 
@@ -242,7 +247,7 @@ You can use the same escape sequences.
 In this chapter, we list some syntax examples and the use of the parameters.
 These examples come from the unit test file
 
-    ./jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java
+    {%@file ../jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java%}
 
 The display of each example contains a definition line, an _INPUT_ part, and a _RESULT_ part.
 The "INPUT" part shows the code that defines the values of the parameters.
@@ -261,445 +266,31 @@ The RESULT part shows the parameters with the values as `key=value`.
 When the returned value is a string, the result is enclosed between quotes.
 When the value has some other type, it is shown like a casting operation `(type)` in front of the value.
 
+{%@define section($X)=
+==== $X%}
 
-
-
-
-
-
-
-
-
-==== Simple Parameters
-
-This example shows the simple use of two integers and a string parameter use.
-
-
+{%@snip:collect from="../jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java"%}
+{%@define example($XXX)=
+{%#replaceLines replace=/<p>//^\s*\*\s*//
+{%@snip head_$XXX%}%}
 [source,text]
 ----
-margin:I,top:I,left:S
-----
-INPUT
-
-[source,text]
-----
-
-margin=2 top=3 left="aligned"
-----
-
-RESULT
-
-[source,text]
-----
-
-margin=2
-top=3
-left="aligned"
-
-----
-
-
-The integer parameters are not enclosed between `"` characters, although it is perfectly okay to do so. On the
-other hand the value `"aligned"` is specified between quotes. This value is also eligible to be specified without
-`"` as it contains neither space, not special escape character or the parsing closing character, which was `\n`
-in this case.
-
-
-
-
-
-
-==== Simple Boolean Example
-
-Boolean parameters can be specified by the sheer presence. When a boolean parameter is not present and not
-defined as an option, then the value is `false`.
-
-
-[source,text]
-----
-left:B,right:B
-----
-INPUT
-
-[source,text]
-----
-
-left
-----
-
-RESULT
-
-[source,text]
-----
-
-left=(boolean)true
-right=(boolean)false
-
-----
-
-
-Boolean `true` parameters can be represented by the appearance of the parameter on the line. In this example the
-parameter`left` simple appears on the input without any value. The parameter `right` does not and it is also not
-set to `true` as an option, so the value if false.
-
-
-
-
-
-
-==== Parameter Defined as User Defined Macro
-
-
-[source,text]
-----
-margin:I,top:I,left:S
-----
-INPUT
-
-[source,text]
-----
-
-{@define margin=2}
-top=3 left="aligned"
-----
-
-RESULT
-
-[source,text]
-----
-
-margin=2
-top=3
-left="aligned"
-
-----
-
-
-In this example two values are present as parameters, but the parameter
-`margin` is present by a user defined macro.
-
-
-
-
-
-
-==== Value defined in User-defined Macro is Overridden by parameter
-
-This example shows that a parameter defined in a user-defined macro is overridden by the definition of the
-parameter on the input.
-
-
-[source,text]
-----
-margin:I
-----
-INPUT
-
-[source,text]
-----
-
-{@define margin=3}
-margin=2
-----
-
-RESULT
-
-[source,text]
-----
-
-margin=2
-
-----
-
-
-The parameter `margin` is defined as a user defined parameter, but the value `3` is ignored because it is also
-defined on the input to be `2` and this is stronger.
-
-
-
-
-
-==== Missing Parameter
-
-When a parameter is used by a macro and there is no default value
-for the parameter then not defining the parameter will be an error.
-
-
-[source,text]
-----
-margin:I,missing:S
-----
-INPUT
-
-[source,text]
-----
-
-margin=2
-----
-
-RESULT
-
-[source,text]
-----
-
-javax0.jamal.api.BadSyntax: The key 'missing' for the macro 'test environment' is mandatory
-
-----
-
-
-The sample macro configuration requires two parameters: `margin` and `missing`.
-None of them has default value and they are also no boolean or list values.
-Margin is defined in the input but the parameter `missing`, aptly named, is indeed missing.
-This makes the parameter parsing to throw an exception.
-
-
-
-
-
-
-==== Continuation line
-
-This example shows that the first line can be extended using continuation lines, which are escaped using `\`
-character at the end of the line.
-
-
-[source,text]
-----
-margin:I,top:I,left:S
-----
-INPUT
-
-[source,text]
-----
-
-margin=2 top=3 \
-      left="aligned"
-----
-
-RESULT
-
-[source,text]
-----
-
-margin=2
-top=3
-left="aligned"
-
-----
-
-The parameters `margin` and `top` are defined on the first line.
-The parameter `left` would have been too long.
-It got into the next line.
-To do that the last character on the previous line is a `\` character.
-
-
-
-
-
-==== Multi-line String parameter, one line
-
-This example shows how you can use multi-line strings as parameters.
-Multi-line strings start and end with the `"""` characters and can span multiple lines.
-In this example the sample multi-line string does not span multiple line showing that this is not a must.
-The use also demonstrates that single `"` characters do not need to be escaped, but they may be escaped.
-
-
-[source,text]
-----
-left:S
-----
-INPUT
-
-[source,text]
-----
-
-left="""ali"gn\"ed"""
-----
-
-RESULT
-
-[source,text]
-----
-
-left="ali\"gn\"ed"
-
-----
-
-
-The value of the parameter`left` is specified as a multi-line string, and it contains two `"` characters, one escaped, the other without escaping.
-
-
-
-
-
-==== Multi-line String parameter, two lines
-
-This example shows how you can use multi-line strings as parameters.
-Multi-line strings start and end with the `"""` characters and can span multiple lines.
-In this example the sample multi-line string spans two lines.
-
-
-[source,text]
-----
-left:S
-----
-INPUT
-
-[source,text]
-----
-
-left="""alig
-ned"""
-----
-
-RESULT
-
-[source,text]
-----
-
-left="alig\nned"
-
-----
-
-
-This time the parameter `aligned` contains a new line in the string.
-
-
-
-
-
-==== Multi-valued parameter can have single value
-
-Multi-valued parameters can apper more than once as parameter.
-But it is not a must.
-They may be missing, or specified only one time.
-This example shows that a multi-valued parameter can appear one time.
-
-
-[source,text]
-----
-left:L
-----
-INPUT
-
-[source,text]
-----
-
-left="aligned"
-----
-
-RESULT
-
-[source,text]
-----
-
-left=[aligned]
-
-----
-
-
-The parameter `left` is a `L` list as it is declared by the testing macro.
-Even though it is a list it appears only once as a parameter.
-The result for the macro is that this parameter will be a list that has a single element.
-
-
-
-
-
-
-==== Multi-valued Parameter with Multiple Values
-
-This example shows how to specify multiple values for a parameter that is declared to have multiple values.
-
-
-[source,text]
-----
-left:L
-----
-INPUT
-
-[source,text]
-----
-
-left="aligned"left="alignad"
-----
-
-RESULT
-
-[source,text]
-----
-
-left=[aligned,alignad]
-
-----
-
-
-
-
-
-
-
-==== Boolean Parameters
-
-This example shows an extensive list of all the possibilities how a boolean parameter can be defined.
-
-
-[source,text]
-----
-trueOption:B,explicitFalseOption:B,implicitFalseOption:B,falseAsNo:B,falseAsFalse:B,
-falseAs0:B,trueAsTrue:B,trueAsYes:B,trueAs1:B,trueAsAnything:B,trueStandalone:B
-----
-INPUT
-
-[source,text]
-----
-
-{@options trueOption|~explicitFalseOption}
-falseAsNo=no falseAsFalse=false falseAs0=0 trueAsTrue=true \
-trueAsYes=yes trueAs1=1 trueAsAnything="really anything goes" trueStandalone
-----
-
-RESULT
-
-[source,text]
-----
-
-trueOption=(boolean)true
-explicitFalseOption=(boolean)false
-implicitFalseOption=(boolean)false
-falseAsNo=(boolean)false
-falseAsFalse=(boolean)false
-falseAs0=(boolean)false
-trueAsTrue=(boolean)true
-trueAsYes=(boolean)true
-trueAs1=(boolean)true
-trueAsAnything=(boolean)true
-trueStandalone=(boolean)true
-
-----
-
-
-The parameter `trueOption` is set globally calling the macro `options`. The `explicitFalseOption` is set to false
-on the same line. This is an example about how to set and reset options, even more than one at the same time.
-
-* The parameter `implicitFalseOption` is not set anywhere. It is required by the macro, it is notdefined as an
-option and also not as a parameter. This parameter will be `false` by default.
-
-* The parameter `falseAsNo` is set to `no` as a parameter. Similarly `falseAsFalse` is set to `false`, `falseAs0`
-is set to `0`.
-
-* As the false parameters are listed with all the values the `true` values are also listed with some of the
-possible assignment values that result a `true` value. `trueAsTrue` is set to `true`. The parameter `trueAsYes`
-is set to `yes`, `trueAs1` is set to `1`. Finally `trueAsAnything` is set to an arbitrary string that will be
-converted to a true value.
-
-* The parameter `trueStandalone` demonstrate the use of a boolean parameter when the name is simply listed as a
-parameter without any value. In this case the presence of the parameter signals the true value it presents.
-
-Using some arbitrary value to signal a boolean value is usually not the best choice. Other than choosing
-presenting the value in the form of a standalone parameter, or with value `yes`, `true`, `no`, `0`, `false` is a
-matter of taste. Use the one that you feel makes your code the most readable. Jamal source can get very easily
-really messy and complex. Strive to make it as simple as possible.
-
-
-
+{%#replaceLines replace="/input:/----\nINPUT\n\n[source,text]\n----\n/result:/----\n\nRESULT\n\n[source,text]\n----\n/<p>//"
+{%#replaceLines replace=/^\s*"//(\\n)?"\s?\+?$//\\"/"/\\\\/\\/
+{%@snip $XXX%}%}
+----
+%}
+{%#replaceLines replace=/<p>//^\s*\*\s*//
+{%@snip doc_$XXX%}%}%}
+{%@comment
+Get the snippets that are in the file `TestParams.java`.
+Get only those that do not contain a `_` character in the name.
+The snippets are named `header_testMethodName`, `testMethodName`, and `doc_testMethodName` for the three parts for each example.
+
+We use # in the 'for' loop because we want the snip:list to be evaluated to get the snippet ids.
+After the iteration, we want to evaluate the 'example' macros, protected by a ` back-tick.
+After Jamal evaluated them, we evaluate the result as the snippets may also use macros, like 'section'.
+%}
+{%!!#for $snippet in ({%@snip:list file="TestParams.java" name="^[^_]+$"%})=
+{%`example $snippet%}
+%}

@@ -4720,7 +4720,7 @@ The core macro `debug` uses the whole input, therefore it does not use any of th
 
 
 The documentation of the parameter handling in these macros is not part of this readme.
-It can be found in the separate link:PARAMS.adoc[PARAMS] document.
+It can be found in the separate link:documentation/PARAMS.adoc[PARAMS] document.
 
 [[JamalENV]]
 === 7. Jamal Environment Variables

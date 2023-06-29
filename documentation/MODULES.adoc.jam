@@ -1,3 +1,4 @@
+{chapter :jar-input:debugger}
 = Modules of the Jamal Project
 :toc:
 
@@ -18,7 +19,6 @@ Using the symbolic macro as {category} will expand to the category name and ensu
 === {category core}
 __{core}__ belongs to the core of Jamal, and it is an essential part of the Jamal macro processor
 
-
 === {category embed}
 __{embed}__ is a module, which uses Jamal and makes it possible to use Jamal in some specific environment.
 Such a module may or may not contain macros.
@@ -28,7 +28,7 @@ If it does, the macros are specific to the embedding environment.
 __{macro}__ is a package containing macro implementations.
 Jamal comes with a limited set of built-in macros.
 Specific features are supported by macros implemented in macro libraries.
-To use those libraries they have to be on the module path or on the class path.
+To use those libraries, they have to be on the module path or on the class path.
 
 === {category debugger}
 __{debugger}__ is the module implementing the debugger interface of Jamal.
@@ -36,136 +36,158 @@ There can be several modules implementing this interface.
 Currently, there are two.
 One provides a TCP interface for an external debugger.
 This implementation is for reference purposes, and it is not feature complete.
-The other implementation provides a REST interface towards a debugger client and it also contains a REACT.js based client.
+The other implementation provides a REST interface towards a debugger client, and it also contains a REACT.js based client.
 
 === {category input}
 __{input}__ is a module implementing an input handler for Jamal.
-Input handlers are loaded via the service loader and can load resource files, maven artifacts, files from JAR archives etc.
-
-{@define chapter($x,$y)==== link:https://github.com/verhas/jamal/blob/master/jamal-$x/README.adoc[{@case:upper $x}] ^_$y_^}
+Input handlers are loaded via the service loader and can load resource files, maven artifacts, files from JAR archives, etc.
+{@counter:define id=chapter_counter}
+{@define chapter($x,$y)==== {chapter_counter}. link:https://github.com/verhas/jamal/blob/master/jamal-$x/README.adoc[{@case:upper $x}] ^_{$y}_^
+{#define ! _{#replace/$x/-/_/}=.}{@comment makes chapter doubly define an error}
+}
 
 == Modules
-{chapter :all:{core}}
+{chapter :all:core}
 This module contains no code.
 It can be used as a Maven dependency when there is a need to use all Jamal modules.
 It can be a convenience supporting some laziness, but in some cases it may be a necessity.
 
-{chapter :api:{core}}
+{chapter :api:core}
 `jamal-api` contains interfaces that the Jamal macros and the processing implements.
 Some interfaces implement some default methods.
 This module contains the `BadSyntax` and `BadSyntaxAt` exception classes, which are thrown when there is some error in the processing.
 
-{chapter :asciidoc:{embed}}
+{chapter :asciidoc:embed}
 `jamal-asciidoc` is an ASCIIDOCTOR preprocessor preprocessing the text input using Jamal.
 The primary use of this module is to install it into WYSIWYG editors that support asciidoctor.
 For example, you can use Jamal via this module in IntelliJ.
 
-{chapter :assertions:{macro}}
+{chapter :asciidoc258:embed}
+This module is a dependency for the `jamal-asciidoc` module.
+It provides backward compatibility for the AsciidoctorJ 2.X.X versions.
+
+{chapter :assertions:macro}
 Contains macros that can be used to perform assertions.
 An assertion is usually a constraint checking some string values.
-When the assertion fails the processing will give an error.
+When the assertion fails, the processing will give an error.
 You can use assertions to enforce document consistency.
 
-{chapter :cmd:{embed}}
+{chapter :cmd:embed}
 This module is the command line version of Jamal.
 This module has a `public static void main()`, a shell script to start Jamal.
-The module also support jbang to start Jamal.
-The module has dependency for ALL the macro modules so that you can use any macro in your files.
-In addition to that it incorporates the word module to process Microsoft Word documents from the command line.
+The module also supports jbang to start Jamal.
+The module has dependencies for ALL the macro modules so that you can use any macro in your files.
+In addition to that, it incorporates the word module to process Microsoft Word documents from the command line.
 
-{chapter :{core}:{macro}}
+{chapter :core:macro}
 Implements the core built-in macros.
 
-{chapter :debug:{debugger}}
+{chapter :debug:debugger}
 This module implements two debuggers.
 The Jamal engine does not contain a debugger itself.
 The engine has an SPI that the debuggers can implement and hook into the evaluation process.
-This module implements a TCP based debugger for reference purposes and one with a REST interface.
+This module implements a TCP-based debugger for reference purposes and one with a REST interface.
 The TCP implementation is not feature complete and serves reference purposes as a simple implementation of the SPI.
 The REST implementation includes a REACT.js based web client, and it is a fully usable debugger.
 
-{chapter :debug-ui:{debugger}}
-This is the REACT.js based ui for the debugger.
-
-{chapter :doclet:{embed}}
+{chapter :doclet:embed}
 With this module you can use Jamal macros in your JavaDoc documentation.
 
-{chapter :engine:{core}}
+{chapter :engine:core}
 Jamal core functionality implementation.
 
-{chapter :extensions:{macro}}
+{chapter :extensions:macro}
 Experimental macros, nothing is guaranteed.
 Usually macros in this module get into their own modules later.
 
-{chapter :groovy:{macro}}{@define lang($x)=
+{chapter :groovy:macro}{@define lang($x)=
 Use $x code in your macros using the macros implemented in this module.}
 {lang Groovy}
 
-{chapter :io:{macro}}
+{chapter :io:macro}
 This module implements macros that can read and write files and can start external processes.
 There is a special security consideration for this module and how you MUST configure the external processes to run.
 
-{chapter :jamal:{macro}}
+{chapter :jamal:macro}
 Special macros to embed Jamal into Jamal.
 This is a module used mainly to demonstrate how Jamal works and to have Jamal macros as examples in a Jamal processed file.
 
-{chapter :markdown:{macro}}
+{chapter :markdown:macro}
 A macro that processes its input as markdown and results the HTML output.
 The main purpose of this macro package is to use it together with the JavaDoc embedding.
 
-{chapter :maven-extension:{embed}}
+{chapter :maven-extension:embed}
 This module implements a Maven extension (not a plugin, that is the next module).
 With this you can use the Maven build tool controlled by a `pom.jam` file, which is a `pom.xml` file possibly extended with Jamal macros.
 
-{chapter :maven-input:{input}}
+{chapter :maven-input:input}
 This module implements a Maven input handler making files in Maven artifact JAR files available for Jamal processing.
 
-{chapter :maven-load:{macro}}
+{chapter :jar-input:debugger}
+This module implements a JAR input handler making files in local JAR files available for Jamal processing.
+
+{chapter :maven-load:macro}
 This module implements a macro that can load a Maven artifact and loads the built-in macros implemented in the JAR file.
 
-{chapter :maven-plugin:{embed}}
+{chapter :maven-plugin:embed}
 This module implements a maven plugin, so you can start Jamal processing from inside a build process.
 
-{chapter :mock:{macro}}
+{chapter :mock:macro}
 This module implements the macro `mock` to mock some built-in macros in a test environment where the given macro may not be available or behaves differently.
 Using `mock` you can create tests for your macro packages.
 
-{chapter :plantuml:{macro}}
+{chapter :plantuml:macro}
 This module implements a macro that invokes PlantUML, generates the graphical file from the source code that you can reference as an image from your documentation.
 
-{chapter :ruby:{macro}}
+{chapter :ruby:macro}
 {lang Ruby}
 
-{chapter :scriptbasic:{macro}}
+{chapter :scriptbasic:macro}
 {lang BASIC}
 
-{chapter :prog:{macro}}
+{chapter :prog:macro}
 This module implements a simple BASIC like language integrated into Jamal.
 
-
-{chapter :snippet:{macro}}
+{chapter :snippet:macro}
 This module implements macros to help document programs.
-It includes advanced snippet handling, text transformation, text assertions and many other features.
+It includes advanced snippet handling, text transformation, text assertions, and many other features.
 
-{chapter :test:{core}}
+{chapter :test:core}
 This module contains only test code.
-During the build these integration tests check the consistency of the application.
+During the build, these integration tests check the consistency of the application.
 
-{chapter :testsupport:{core}}
+{chapter :testsupport:core}
 This module contains classes that you can use to write unit tests to check the implementation of some macros.
 
-{chapter :tools:{core}}
+{chapter :tools:core}
 This module implements some auxiliary classes for the engine.
 It could be part of the engine.
 
-{chapter :word:{embed}}
+{chapter :word:embed}
 This implementation can read DOCX format files, process the Jamal macros and generate DOCX output.
 This module is included in the command line version, thus you can convert Microsoft Word documents from the command line version of Jamal.
 
-{chapter :json:{macro}}
+{chapter :json:macro}
 This module implements macros that support the reading and processing of JSON format data.
 
-{chapter :yaml:{macro}}
+{chapter :yaml:macro}
 This module implements macros that support the reading and processing of YAML format data.
 It may be useful when you have to maintain large YAML data files.
-Using these macros you can split up a Yaml file into smaller pieces and use macros to simplify repetitive parts.
+Using these macros, you can split up a Yaml file into smaller pieces and use macros to simplify repetitive parts.
+
+{chapter :openai:macro}
+Macros implementing interface to OpenAI.
+
+{chapter :java:debugger}
+Experimental module integrating the Java compiler into Jamal as macros.
+
+{chapter :debug-ui:debugger}
+This is not a module.
+The code in the directory `jamal-debug-ui` contains the REACT.js based ui for the debugger.
+
+{#define module_directory_count={@listDir  (maxDepth=1 pattern=jamal-[\w\-]*$ countOnly) ..}}
+{!#if [not equals={module_directory_count}]/{chapter_counter last}/
+   {`@error There are {#do
+       << ({module_directory_count}-{chapter_counter last})
+   } modules not documented.`}
+}
