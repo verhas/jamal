@@ -226,13 +226,13 @@ The important options are:
 [source]
 ----
 --module-path
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.0/jamal-tools-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.0/jamal-core-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.0/jamal-engine-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.0/jamal-api-2.3.0.jar'
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.1-SNAPSHOT/jamal-tools-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.1-SNAPSHOT/jamal-core-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.1-SNAPSHOT/jamal-engine-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.1-SNAPSHOT/jamal-api-2.3.1-SNAPSHOT.jar'
 --patch-module
 jamal.doclet='${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java:${PROJECT_ROOT}/jamal/jamal-doclet/target/generated-sources/annotations'
 -doclet
 'javax0.jamal.doclet.JamalDoclet'
 -docletpath
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.0/jamal-api-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.0/jamal-tools-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.0/jamal-engine-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.0/jamal-core-2.3.0.jar:$USERHOME/
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.1-SNAPSHOT/jamal-api-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.1-SNAPSHOT/jamal-tools-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.1-SNAPSHOT/jamal-engine-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.1-SNAPSHOT/jamal-core-2.3.1-SNAPSHOT.jar:$USERHOME/
 -encoding
 'UTF-8'
 -protected
@@ -256,7 +256,7 @@ ${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java
 -taglet
 'javax0.jamal.doclet.JamalTaglet'
 -tagletpath
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.0/jamal-api-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.0/jamal-tools-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.0/jamal-engine-2.3.0.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.0/jamal-core-2.3.0.jar'
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.1-SNAPSHOT/jamal-api-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.1-SNAPSHOT/jamal-tools-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.1-SNAPSHOT/jamal-engine-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.1-SNAPSHOT/jamal-core-2.3.1-SNAPSHOT.jar'
 -use
 -version
 -windowtitle

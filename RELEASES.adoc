@@ -14,6 +14,12 @@
 You do not need to remember not to use the parentheses.
 * Asciidoctor's extension supports both 2.5.10 and 3.0.0-alpha.1 versions of Asciidoctor.
 It is not integration tested for the 3.X.X versions because IntelliJ plugin currently supports 2.X.X versions only.
+* Asciidoctor integration defines `asciidoctorj:version` macro.
+* Upon start and macro load Jamal executes the `.jim` resource files.
+* Macro `define` can create a user defined macro being an instance of a given class.
+* Macro `urlEncode` can encode a string to be used in a URL.
+* More Kroki support with `kroki` macro.
+* Built-in BASIC can call user defined and built-in macros.
 
 == https://github.com/verhas/jamal/tree/2.2.0[2.2.0]
 
