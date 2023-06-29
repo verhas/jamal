@@ -50,7 +50,7 @@ public class TestConvertReadme {
 
     @Test
     void convertVideo() throws Exception {
-        DocumentConverter.convert("../VIDEO.adoc.jam");
+        DocumentConverter.convert("../documentation/VIDEO.adoc.jam");
     }
 
    @Test
