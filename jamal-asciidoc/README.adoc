@@ -112,7 +112,7 @@ https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.2.0/jamal
 https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.2.0/jamal-asciidoc-2.2.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.2.0/jamal-asciidoc-2.2.0-jamal-asciidoc-distribution.zip.sha1``]
 
 into the `lib` directory of your AsciidocFX installation.
-It is 
+It is
 
 * `~/Applications/AsciidocFX/lib` on MacOs
 * TBD on Linux, and
@@ -225,7 +225,40 @@ The method `canConvert(name)` is consulted for each converter passing the file n
 If any of the converters' method returns `true`, stating that the specific converter can convert the file then the `convert(lines)` will be invoked.
 Only one converter is invoked for an input.
 
-If none of the converters can convert the input then it is converted using the built-in text converter.
+If none of the converters can convert the input, then it is converted using the built-in text converter.
+
+=== Live Templates
+
+When you use Jamal in the IntelliJ Asciidoctor plugin, you can separately install IntelliJ live templates.
+These templates help you to write macros.
+The template names all start with the prefix `jm-`.
+If you start typing it, IntelliJ will automatically offer the templates that you can select from:
+
+image::images/jm-templates.png[]
+
+To install the live templates, download the ZIP file
+
+* `https://raw.githubusercontent.com/verhas/jamal/master/jamal-asciidoc/live-templates.zip[]`
+
+When you have this file downloaded, you have to use the IntelliJ menu:
+
+* `File` -> `Manage IDE Settings  >` -> `Import Settings...`
+
+This menu brings up a file selector.
+You have to navigate to the downloaded ZIP file and select it.
+
+On the modal dialog:
+
+image::images/modal1.png[]
+
+ensure that the checkboxes are selected and then press `OK`.
+The next dialog will need your confirmation to restart the IDE:
+
+image::images/modal2.png[]
+
+Click`Import and Restart`.
+
+After the IDE restarted you will have your live templates at your disposal.
 
 === Configuration
 
@@ -320,7 +353,7 @@ instead of `ASCIIDOC_EXTENSION_LOG`.
 The plugin defines the following macro before starting the preprocessing:
 
 * `asciidoctorj:version` is the version of the AsciidoctorJ library used by the IntelliJ plugin.
-It is .
+It is 2.5.10.
 If you see no version number, then the Asciidoc file was created by Jamal running in a different installation and not AsciidoctorJ integration.
 
 Consider the possibilities that the macros may not be defined when running the conversion outside of IntelliJ or other AsciidoctorJ integration.
@@ -340,7 +373,7 @@ will result in
 
 [source]
 ----
-This was compiled outside IntelliJ or AsciidocFX/
+This was compiled in IntelliJ or AsciidocFX
 ----
 
 

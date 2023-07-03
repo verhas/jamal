@@ -9,7 +9,7 @@ If you feel that there is some feature here missing, then open a GitHub ticket a
 
 * Yaml resolve should work if the referenced macro does not hold a Yaml object but some other ObjectHolder.
 
-* Integrate RestAssured so that you can write REST tests in Jamal and converting the document will run the tests and the
+* Integrate RestAssured so that you can write REST tests in Jamal and converting the document will run the tests, and the
 output will that way become a test execution report.
 
 * Implement Yaml data exporting in XML format. No attributes in this case, but that is perfect for XMLs like POM files,

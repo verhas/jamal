@@ -2686,7 +2686,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=74d5f551%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=7fd83854%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -2721,34 +2721,33 @@ It is enough to use their keyword between the `[` and `]`.
 (See examples later.)
 
 * `blank` will test true if the test string is blank, it is empty or contains spaces only.
-* `empty` will test true if the test string is zero length and does not contain even spaces.
+* `empty` will test true if the test string is zero lengths and does not contain even spaces.
 * `not`  will negate the test result.
-* `or` can be used with the numerical options when more than one test is needed.
+* `or` can be used with the comparing options when more than one test is needed.
 When you specify more than one `equals`, `lessThan`, or `greaterThan` option the test is true if any of the tests is true.
-This is the default behaviour, so this option is not needed.
+This is the default behavior, so this option is not needed.
 Setting `or=false` has no effect and is not the same as using the option `and`.
 This option is included only to add readability if needed.
-* `and` can be used with the numerical options when more than one test is needed.
+* `and` can be used with the comparing options when more than one test is needed.
 When you specify more than one `equals`, `lessThan`, or `greaterThan` option test is true if all the tests are true.
-This option cannot be used together with the option `or` and it also needs multiple numeric options.
+This option cannot be used together with the option `or` and it also needs multiple comparison options.
 
 Note that the options `and` and `or` are simple boolean options.
 They can appear only once in the list of the macro options.
 You cannot write `{@if [equals=3 or equals=4 or equals=6] /9/a/b}`.
-It is recommended to use the `or` or the `and` option following the first numeric option.
+It is recommended to use the `or` or the `and` option following the first comparing option.
 For example, `{@if [lessThan=7 and greaterThan=2] /6/it is in (2,7)/out of range}` .
-If you feel it is more readable you can put these options at any place in the list.
+If you feel it is more readable, you can put these options at any place in the list.
 
-The following options will do numerical comparison.
+The following options will do numerical comparison when the test string is a number.
 When any of them are used, then the test string is converted to a number.
-If the test string is not a number an error will happen.
-These options are integer options, which means that you have to specify a number following them like `lessThan=55`.
+If the test string is not a number, the comparison will be done alphabetically.
 
-* `lessThan` (aliases `less`,`smaller`, `smallerThan`) is true if the number is less than the value.
-* `greaterThan` (aliases `greater`, `bigger`, `biggerThan`, `larger`, `largerThan`) is true if the number is greater than the value.
-* `equals` (aliases `equal`, `equalsTo`, `equalTo`) is true if the number is equal to the value.
+* `lessThan` (aliases `less`,`smaller`, `smallerThan`) is true if the condition is less than the test value.
+* `greaterThan` (aliases `greater`, `bigger`, `biggerThan`, `larger`, `largerThan`) is true if the condition is greater than the test value.
+* `equals` (aliases `equal`, `equalsTo`, `equalTo`) is true if the condition is equal to the value.
 
-There is no separately "less than or equal" and "greater or equal" option.
+There is no separate "less than or equal" and "greater or equal" option.
 If, for example, you want to test that a number is greater than or equal to a certain value, then you can use the `greaterThan` and the `equals` options together.
 An alternative is to use the `lessThan` option along with the boolean `not` option.
 
@@ -2768,13 +2767,13 @@ The definition was something like this:
 %}
 
 The only problem was that the `if` macro was not able to handle the case `{tag false}`.
-In that case the evaluation results
+In that case, the evaluation results
 
 {%output%}
 
 instead of `<tag>false</tag>`.
 
-To fix that we need to use the option `blank` as in the following sample:
+To fix that, we need to use the option `blank` as in the following sample:
 
 {%sample/
 {@define default($_,...$x)={#if [not blank]
@@ -2793,7 +2792,7 @@ The options
 * `isLocal` (alias `local`),
 * `isGlobal` (alias `global`),
 
-test that the string given as the firsts parameter is a defined user defined macro, a locally defined macro, or a globally defined macro.
+test that the string given as the first parameter is a defined user defined macro, a locally defined macro, or a globally defined macro.
 A macro is locally defined if it was defined in the same scope where the `if` is used.
 
 
@@ -2831,16 +2830,18 @@ The following examples show a few cases, as demonstrations:
 {s/{`@if [greaterThan=13 not]/13/true/false}/true} 13 is not greater than 13, it is the same logic as the previous
 {s/{`@if [lessThan=13 equals=14]/13/true/false}/false} 13 is not less than 13 and does not equal 14
 {s/{`@if [lessThan=13 and largerThan=2]/12/true/false}/true} 12 is in the range (2,13)
-%}%}{%output%}
+%}%}
+
+{%output%}
 
 [NOTE]
 ====
 The above example is generated running the samples.
 The composition of the sample is somewhat complex.
 It uses sophisticated macros that heavily use the macro evaluation order.
-These macros also check that the 'if' macro really works the way it is supposed to.
-If you are interested in how it looks, check the file `README.adoc.jam` and search for the string "{%specialSearchString%}".
-This string, {%specialSearchString%} appears only once in the Jamal source file.
+These macros also check that the `if` macro really works the way it is supposed to.
+If you are interested in how it looks, check the file `README.adoc.jam` and search for the string "__{%specialSearchString%}__".
+This string appears only once in the Jamal source file.
 ====
 
 [[ident]]

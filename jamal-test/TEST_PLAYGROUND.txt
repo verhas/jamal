@@ -1,54 +1,41 @@
-[WARNING]
---
-* There were 2 syntax errors processing the Jamal input:
-* 1. User defined macro '{%x ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:3
-* 2. User defined macro '{%z ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:9
---
-[WARNING]
---
-* There were 2 syntax errors processing the Jamal input:
-* 1. User defined macro '{%x ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:3
-* 2. User defined macro '{%z ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:9
---
-{%jim:core%}
-{%jim:snippet%}
-{%x%} {%z%}
-[WARNING]
---
-* There were 2 syntax errors processing the Jamal input:
-* 1. User defined macro '{%x ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:3
-* 2. User defined macro '{%z ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:9
---
-[source]
-----
-There were 2 syntax errors processing the Jamal input:
-1. User defined macro '{%x ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:3
-2. User defined macro '{%z ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:9
 
-	javax0.jamal.engine.Processor(closeProcess:925)
-	javax0.jamal.engine.Processor(process:187)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:417)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:280)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:206)
-	javax0.jamal.asciidoc258.JamalPreprocessor258(process:24)
-Suppressed exceptions:
-User defined macro '{%x ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:3	javax0.jamal.engine.Processor(throwForUndefinedUdMacro:543)
-	javax0.jamal.engine.Processor(evalUserDefinedMacro:501)
-	javax0.jamal.engine.Processor(evalMacro:356)
-	javax0.jamal.engine.Processor(processMacro:266)
-	javax0.jamal.engine.Processor(process:173)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:417)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:280)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:206)
-	javax0.jamal.asciidoc258.JamalPreprocessor258(process:24)
-User defined macro '{%z ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/2:9	javax0.jamal.engine.Processor(throwForUndefinedUdMacro:543)
-	javax0.jamal.engine.Processor(evalUserDefinedMacro:501)
-	javax0.jamal.engine.Processor(evalMacro:356)
-	javax0.jamal.engine.Processor(processMacro:266)
-	javax0.jamal.engine.Processor(process:173)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:417)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:280)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:206)
-	javax0.jamal.asciidoc258.JamalPreprocessor258(process:24)
-sed -i jam '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam
-----
+
+
+
+
+
+
+
+
+
+  private int a;
+  public int getA(){
+    return a;
+  }
+  public void setA(int a){
+    this.a=a;
+  }
+
+
+  private Double b;
+  public Double getB(){
+    return b;
+  }
+  public void setB(Double b){
+    this.b=b;
+  }
+
+
+  private Boolean c;
+  public Boolean isC(){
+    return c;
+  }
+  public void setC(Boolean c){
+    this.c=c;
+  }
+
+
+
+void passer(int a, Double b) {
+delegatedTo.passer(a, b);
+}

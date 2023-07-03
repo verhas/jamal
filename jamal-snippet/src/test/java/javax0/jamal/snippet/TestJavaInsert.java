@@ -32,6 +32,7 @@ public class TestJavaInsert {
                 "\n" +
                 "//</editor-fold>\n" +
                 "}\n", result);
+        Files.delete(Paths.get(TARGET_TEST_JAVA_INSERT_JAVA));
     }
 
 }

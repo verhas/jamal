@@ -1,7 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
@@ -38,11 +38,11 @@ public class If implements Macro, OptionsControlled.Core {
         final Params.Param<Boolean> isDefined = Params.<Boolean>holder("isDefined", "defined").asBoolean();
         final Params.Param<Boolean> isGlobal = Params.<Boolean>holder("isGlobal", "global").asBoolean();
         final Params.Param<Boolean> isLocal = Params.<Boolean>holder("isLocal", "local").asBoolean();
-        final Params.Param<List<Integer>> lessThan = Params.<Integer>holder("lessThan", "less", "smaller", "smallerThan").asList(Integer.class);
-        final Params.Param<List<Integer>> greaterThan = Params.<Integer>holder("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan").asList(Integer.class);
-        final Params.Param<List<Integer>> equals = Params.<Integer>holder("equals", "equal", "equalsTo", "equalTo").asList(Integer.class);
+        final Params.Param<List<String>> lessThan = Params.<String>holder("lessThan", "less", "smaller", "smallerThan").asList(String.class);
+        final Params.Param<List<String>> greaterThan = Params.<String>holder("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan").asList(String.class);
+        final Params.Param<List<String>> equals = Params.<String>holder("equals", "equal", "equalsTo", "equalTo").asList(String.class);
         // end snippet
-        private final List<Params.Param<List<Integer>>> numericOptions = List.of(lessThan, greaterThan, equals);
+        private final List<Params.Param<List<String>>> numericOptions = List.of(lessThan, greaterThan, equals);
 
         /**
          * Check that the options are used in a consistent manner and the user is not using options together which
@@ -64,7 +64,7 @@ public class If implements Macro, OptionsControlled.Core {
 
         List<Boolean> numericOptionsPresent() throws BadSyntax {
             List<Boolean> list = new ArrayList<>();
-            for (Params.Param<List<Integer>> numericOption : numericOptions) {
+            for (Params.Param<List<String>> numericOption : numericOptions) {
                 list.add(numericOption.isPresent());
             }
             return list;
@@ -97,7 +97,7 @@ public class If implements Macro, OptionsControlled.Core {
         }
     }
 
-    private static boolean compare(List<Integer> number, boolean and, Predicate<Integer> p) {
+    private static boolean compare(List<String> number, boolean and, Predicate<String> p) {
         if (and) {
             return number.stream().allMatch(p);
         } else {
@@ -105,25 +105,48 @@ public class If implements Macro, OptionsControlled.Core {
         }
     }
 
+    /**
+     *  b is less than a
+     * @param a the first number
+     * @param b the second number
+     * @return true if b is less than a
+     */
+    private static boolean lt(final String a, final String b) {
+        try {
+            return Integer.parseInt(a) > Integer.parseInt(b);
+        } catch (NumberFormatException nfe) {
+            return a.compareTo(b) > 0;
+        }
+    }
+
+    private static boolean gt(final String a, final String b) {
+        try {
+            return Integer.parseInt(a) < Integer.parseInt(b);
+        } catch (NumberFormatException nfe) {
+            return a.compareTo(b) < 0;
+        }
+    }
+    private static boolean eq(final String a, final String b) {
+        try {
+            return Integer.parseInt(a) == Integer.parseInt(b);
+        } catch (NumberFormatException nfe) {
+            return a.compareTo(b) == 0;
+        }
+    }
+
     private static boolean isTrue(final Processor processor,
                                   final String test,
                                   final Options opt) throws BadSyntax {
         if (opt.countNumOptionsPresent() > 0) {
-            final int testN;
-            try {
-                testN = Integer.parseInt(test);
-            } catch (NumberFormatException nfe) {
-                throw new BadSyntax("When macro 'if' uses a numeric option the test has to be an integer value.");
-            }
             if (opt.and.is()) {
-                return (!opt.lessThan.isPresent() || compare(opt.lessThan.get(), true, n -> n > testN))
-                        && (!opt.greaterThan.isPresent() || compare(opt.greaterThan.get(), true, n -> n < testN))
-                        && (!opt.equals.isPresent() || compare(opt.equals.get(), true, n -> n == testN))
+                return (!opt.lessThan.isPresent() || compare(opt.lessThan.get(), true, n -> lt(n,test)))
+                        && (!opt.greaterThan.isPresent() || compare(opt.greaterThan.get(), true, n -> gt(n,test)))
+                        && (!opt.equals.isPresent() || compare(opt.equals.get(), true, n -> eq(n,test)))
                         ;
             } else {
-                return (opt.lessThan.isPresent() && compare(opt.lessThan.get(), false, n -> n > testN))
-                        || (opt.greaterThan.isPresent() && compare(opt.greaterThan.get(), false, n -> n < testN))
-                        || (opt.equals.isPresent() && compare(opt.equals.get(), false, n -> n == testN))
+                return (opt.lessThan.isPresent() && compare(opt.lessThan.get(), false, n -> lt(n,test)))
+                        || (opt.greaterThan.isPresent() && compare(opt.greaterThan.get(), false, n -> gt(n,test)))
+                        || (opt.equals.isPresent() && compare(opt.equals.get(), false, n -> eq(n,test)))
                         ;
             }
         }

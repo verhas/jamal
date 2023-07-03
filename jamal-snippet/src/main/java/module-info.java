@@ -76,6 +76,7 @@ module jamal.snippet {
             References,
             SnipTransform,
             JavaSourceInsert,
+            JavaSourceTemplate,
             JavaMatcherBuilderMacros.AnyTill,
             JavaMatcherBuilderMacros.Not,
             JavaMatcherBuilderMacros.Identifier,

@@ -1,3 +1,37 @@
-{%jim:core%}
-{%jim:snippet%}
-{%x%} {%z%}
+
+{%@java:template (template="attributes")
+{%@comment
+Using this macro in a Java template you can define a class with attributes and getters and setters.
+%}\
+{%@define field($type,$name)=
+  private $type $name;
+  public $type {%#if/{%@string:equals(ignoreCase)/boolean/$type%}/is/get%}{%@case:cap $name%}(){
+    return $name;
+  }
+  public void set{%@case:cap $name%}($type $name){
+    this.$name=$name;
+  }
+%}
+{%@define delegateObject($x)={%@define DELEGATE_CLASS=$x%}%}
+{%@define delegate($x)={%@comment%}\
+{%#define ARGS={%@replace (regex) ~$x~^.+?\s+\w+\s*\((.*)\).*$~$1~%}%}\
+{%#define NAME={%@replace (regex) ~$x~^.+?\s+(\w+).*$~$1~%}%}\
+{%#define TYPE={%@replace (regex) ~$x~^(.+?)\s+\w+.*$~$1~%}%}\
+$x {
+{%#if [not]/{%#string:equals/void/{%TYPE%}%}/return %}\
+{%DELEGATE_CLASS%}.{%NAME%}({%@define sep=%}\
+{%!@for [evalist] arg in ({%ARGS%})={%#define ARG={%@replace (regex) ~arg~[^\s]+\s+(.*)$~$1~%}%}\
+{%sep%}{%ARG%}{%@define sep=,%}\
+%});
+}%}
+%}
+
+{%attributes%}
+
+
+{%field|int|a%}
+{%field|Double|b%}
+{%field|Boolean|c%}
+
+{%delegateObject delegatedTo%}
+{%delegate void passer(int a, Double b)%}

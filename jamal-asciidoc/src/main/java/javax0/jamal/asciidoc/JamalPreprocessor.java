@@ -5,7 +5,8 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.TransientException;
-import javax0.jamal.asciidoc258.JamalPreprocessor258;
+import javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy;
+import javax0.jamal.asciidoc258.CompatibilityProcess;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
@@ -30,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.nonNull;
 
-public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry, JamalPreprocessor258.Process {
+public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry, CompatibilityProcess {
     /**
      * The result structure of the execution of in-process Jamal.
      */
@@ -49,22 +50,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     @Override
     public void register(Asciidoctor asciidoctor) {
         JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
-        javaExtensionRegistry.preprocessor(getVersionFittingPreprocessorClass());
-    }
-
-    private Preprocessor getVersionFittingPreprocessorClass() {
-        try {
-            final var abstractPreprocessor = Class.forName("org.asciidoctor.extension.Preprocessor");
-            for (final var m : abstractPreprocessor.getDeclaredMethods()) {
-                if ("process".equals(m.getName())) {
-                    if (m.getReturnType() == void.class) {
-                        return new JamalPreprocessor258(this);
-                    }
-                }
-            }
-        } catch (Exception ignore) {
-        }
-        return this;
+        javaExtensionRegistry.preprocessor((Preprocessor) Asciidoctor2XXCompatibilityProxy.create(this));
     }
 
     private String getAsciidoctorJVersion() {

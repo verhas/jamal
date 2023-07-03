@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<templateSet group="Jamal">
+    <template description="mark the beginning of a named or anonymous block" name="jm-begin" toReformat="false" toShortenFQNames="true" value="{%@begin $M$%}">
+        <variable alwaysStopAt="true" expression="&quot;[marker]&quot;" name="M"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="enclose the content into a block" name="jm-block" toReformat="false" toShortenFQNames="true" value="{%#block [$O$] $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;flat&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="catch an error" name="jm-catch" toReformat="false" toShortenFQNames="true" value="{%@catch $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="Comment out the content" name="jm-comment" toReformat="false" toShortenFQNames="true" value="{%@comment $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="Switch operation to debug mode" name="jm-debug" toReformat="false" toShortenFQNames="true" value="{%@debug $O$%}">
+        <variable alwaysStopAt="true" expression="&quot;on off noDebug lenient using&quot;" name="O"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="defer evaluation of content after the document was processed" name="jm-defer" toReformat="false" toShortenFQNames="true" value="{%@defer [$O$] $C%}">
+        <variable alwaysStopAt="true" expression="&quot;$input $output&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="Define a Jamal user defined macro" name="jm-define" toReformat="false" toShortenFQNames="true" value="{%@define [$O$]$M$($P$)=$V$%}">
+        <variable alwaysStopAt="true" expression="&quot;verbatim tail optional fail pure global export class&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;MACRO_NAME&quot;" name="M"/>
+        <variable alwaysStopAt="true" expression="&quot;$p1,$p2,...&quot;" name="P"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="V"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="mark the end of a named or anonymous block" name="jm-end" toReformat="false" toShortenFQNames="true" value="{%@end $M$%}">
+        <variable alwaysStopAt="true" expression="&quot;[marker]&quot;" name="M"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="get the value of an environment variable" name="jm-env" toReformat="false" toShortenFQNames="true" value="{%@env $P$ $C$%}">
+        <variable alwaysStopAt="true" expression="enum(&quot;?&quot;,&quot;!&quot;,&quot;&quot;)" name="P"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="escape the evaluation of the content" name="jm-escape" toReformat="false" toShortenFQNames="true" value="{%@escape$S$ `$P$` $C$`$P$`%}">
+        <variable alwaysStopAt="true" expression="enum(&quot;*&quot;,&quot;&quot;)" name="S"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="P"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="evaluate the content as script" name="jm-eval" toReformat="false" toShortenFQNames="true" value="{%@eval/$S$ $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;script&quot;" name="S"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="export the macro one level up" name="jm-export" toReformat="false" toShortenFQNames="true" value="{%@export $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;m1, m2, m3&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="repeat the content with different values" name="jm-for" toReformat="false" toShortenFQNames="true" value="{%@for [$O$]($A$) in ($V$)=$C$%}">
+        <variable alwaysStopAt="true" expression="&quot;$forsep=, $forsubsep=| trim skipEmpty lenient evalist&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;$a, $b, $c&quot;" name="A"/>
+        <variable alwaysStopAt="true" expression="&quot;a1|a2|a3,b1|b2|b3,c1|c2|c3&quot;" name="V"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="return the content without evaluation" name="jm-ident" toReformat="false" toShortenFQNames="true" value="{%@ident $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="If statement" name="jm-if" toReformat="false" toShortenFQNames="true" value="{%@if [$O$] /$C$/$T$/$E$%}">
+        <variable alwaysStopAt="true" expression="&quot;not empty blank and or defined global local lessThan greaterThan equals&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;CONDITION&quot;" name="C"/>
+        <variable alwaysStopAt="true" expression="&quot;THEN&quot;" name="T"/>
+        {%@define MACRO_NAME()=%}
+
+        <variable alwaysStopAt="true" expression="&quot;ELSE&quot;" name="E"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="import definitions from the file" name="jm-import" toReformat="false" toShortenFQNames="true" value="{%@import [$O$] $F$%}">
+        <variable alwaysStopAt="true" expression="&quot;top noCache&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="fileRelativePath()" name="F"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="include a file" name="jm-include" toReformat="false" toShortenFQNames="true" value="{%@include [$O$] $F$%}">
+        <variable alwaysStopAt="true" expression="&quot;top noCache verbatim lines=m..n&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="fileRelativePath()" name="F"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="define script for the JShell engine" name="jm-JShell" toReformat="false" toShortenFQNames="true" value="{%@JShell $E$%}">
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="E"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="log a message" name="jm-log" toReformat="false" toShortenFQNames="true" value="{%@log [$O$] $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;log=info&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="reference a macro with irregular name" name="jm-macro" toReformat="false" toShortenFQNames="true" value="{%@macro [type=$T$ $O$] $C$%}">
+        <variable alwaysStopAt="true" expression="enum(&quot;&quot;,&quot;userdefined&quot;,&quot;builtin&quot;)" name="T"/>
+        <variable alwaysStopAt="true" expression="&quot;alias=&quot;&quot; global&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;macro-name&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="set or reset options" name="jm-options" toReformat="false" toShortenFQNames="true" value="{%@options $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;o1  ~o2&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="require a certain version of Jamal" name="jm-require" toReformat="false" toShortenFQNames="true" value="{%@require $R$ $V$%}">
+        <variable alwaysStopAt="true" expression="enum(&quot;&lt;=&quot;,&quot;&lt;&quot;,&quot;=&quot;,&quot;&gt;=&quot;,&quot;&gt;&quot;)" name="R"/>
+        <variable alwaysStopAt="true" expression="&quot;2.3.1-SNAPSHOT&quot;" name="V"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="execute script" name="jm-script" toReformat="false" toShortenFQNames="true" value="{%@script$SL$ $E$%}">
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="E"/>
+        <variable alwaysStopAt="true" expression="&quot;/script_lang" name="SL"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="define opening and closing string" name="jm-sep" toReformat="false" toShortenFQNames="true" value="{%@sep $O$ $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;{!&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;!}&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="define opening and closing string" name="jm-try" toReformat="false" toShortenFQNames="true" value="{%@try$M$$C$%}">
+        <variable alwaysStopAt="true" expression="enum(&quot;&quot;,&quot;!&quot;,&quot;?&quot;)" name="M"/>
+        <variable alwaysStopAt="true" expression="&quot;...&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="undefine a macro" name="jm-undefine" toReformat="false" toShortenFQNames="true" value="{%@undefine $C$%}">
+        <variable alwaysStopAt="true" expression="&quot;macro_name&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+    <template description="use a class as macro" name="jm-use" toReformat="false" toShortenFQNames="true" value="{%@use  [$O$] $C$ $ALI$%}">
+        <variable alwaysStopAt="true" expression="&quot;global&quot;" name="O"/>
+        <variable alwaysStopAt="true" expression="&quot;as alias&quot;" name="ALI"/>
+        <variable alwaysStopAt="true" expression="&quot;com.package.name.MacroClass&quot;" name="C"/>
+        <context>
+            <option name="AsciiDoc" value="true"/>
+        </context>
+    </template>
+</templateSet>

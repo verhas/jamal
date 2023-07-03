@@ -227,7 +227,40 @@ The method `canConvert(name)` is consulted for each converter passing the file n
 If any of the converters' method returns `true`, stating that the specific converter can convert the file then the `convert(lines)` will be invoked.
 Only one converter is invoked for an input.
 
-If none of the converters can convert the input then it is converted using the built-in text converter.
+If none of the converters can convert the input, then it is converted using the built-in text converter.
+
+=== Live Templates
+
+When you use Jamal in the IntelliJ Asciidoctor plugin, you can separately install IntelliJ live templates.
+These templates help you to write macros.
+The template names all start with the prefix `jm-`.
+If you start typing it, IntelliJ will automatically offer the templates that you can select from:
+
+image::images/jm-templates.png[]
+
+To install the live templates, download the ZIP file
+
+* `https://raw.githubusercontent.com/verhas/jamal/master/jamal-asciidoc/live-templates.zip[]`
+
+When you have this file downloaded, you have to use the IntelliJ menu:
+
+* `File` -> `Manage IDE Settings  >` -> `Import Settings...`
+
+This menu brings up a file selector.
+You have to navigate to the downloaded ZIP file and select it.
+
+On the modal dialog:
+
+image::images/modal1.png[]
+
+ensure that the checkboxes are selected and then press `OK`.
+The next dialog will need your confirmation to restart the IDE:
+
+image::images/modal2.png[]
+
+Click`Import and Restart`.
+
+After the IDE restarted you will have your live templates at your disposal.
 
 === Configuration
 {%@comment {%@snip:check file=src/main/java/javax0/jamal/asciidoc/Configuration.java hash=5e870e97%}%}

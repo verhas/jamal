@@ -1,0 +1,3 @@
+#! /bin/bash
+rm ../live-templates.zip
+zip -r ../live-templates.zip *

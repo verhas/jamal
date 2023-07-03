@@ -2838,6 +2838,7 @@ will result
 - Counter.java
 - CompileJavaMacros.java
 - StringMacros.java
+- JavaSourceTemplate.java
 - AbstractXmlDefine.java
 - Clear.java
 - KillLines.java
@@ -2933,7 +2934,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 2,080 bytes
+- snippet: 2,112 bytes
 - JavaMatcherBuilderMacros.java: 20,775 bytes
 - Snip.java: 4,904 bytes
 - SnipSave.java: 4,853 bytes
@@ -2974,6 +2975,7 @@ will result
 - Counter.java: 4,504 bytes
 - CompileJavaMacros.java: 23,008 bytes
 - StringMacros.java: 7,379 bytes
+- JavaSourceTemplate.java: 7,568 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,701 bytes
@@ -3252,7 +3254,7 @@ will result in the output
 
 [source]
 ----
-2023-06-29 19:13:54
+2023-07-03 18:27:47
 ----
 
 

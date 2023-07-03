@@ -58,6 +58,7 @@ javax0.jamal.snippet.Base64$Encode
 javax0.jamal.snippet.Reference
 javax0.jamal.snippet.References
 javax0.jamal.snippet.JavaSourceInsert
+javax0.jamal.snippet.JavaSourceTemplate
 javax0.jamal.snippet.JavaMatcherBuilderMacros$AnyTill
 javax0.jamal.snippet.JavaMatcherBuilderMacros$Not
 javax0.jamal.snippet.JavaMatcherBuilderMacros$Identifier
