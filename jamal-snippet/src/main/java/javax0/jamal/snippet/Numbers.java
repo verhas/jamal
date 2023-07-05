@@ -15,8 +15,8 @@ The numbers can be specified with a start, end and step value.
 The default values are `start=0`, and `step=1`.
 The end value is mandatory.
 
-The first number is the start value inclusive and the counting ends with the end value exclusive.
-You can specify the values with the options keys
+The first number is the start value inclusive, and the counting ends with the end value exclusive.
+You can specify the values with the option keys
 
 * `start`, or `from`
 * `end`, or `to`
@@ -40,7 +40,7 @@ public class Numbers implements Macro {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var start = Params.<Integer>holder("start", "from").orElseInt(0);
-        final var end = Params.<Integer>holder("end", "to").asInt();
+        final var end = Params.<Integer>holder("end", "to", "stop").asInt();
         final var step = Params.<Integer>holder("step", "increment", "by").orElseInt(1);
         Scan.using(processor).from(this).tillEnd().keys(start, end, step).parse(in);
 

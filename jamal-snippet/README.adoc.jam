@@ -1523,7 +1523,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 === {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=825d29fa%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=c6272662%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1538,8 +1538,21 @@ The format of the macro is
 }
 ----
 
+or
+
+[source]
+----
+{@filterLines parameters
+
+ ...
+
+}
+----
+
+NOTE: We recommend using the `filterLines` and `pattern` aliases when you want to keep the lines matching the pattern and delete the other lines. In other cases the `filterLines` and `kill` or `killLines` and `kill` or `pattern` aliases can be used. The `killLines` and `keep` aliases together are not recommended.
+
 The default behavior of the macro is to delete the empty lines.
-In that case it removes all lines that contain only spaces or nothing at all.
+In that case, it removes all lines that contain only spaces or nothing at all.
 
 The parameter macro `pattern` may define a regular expression to select the lines.
 
@@ -2255,7 +2268,7 @@ results
 
 [[listDir]]
 === {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=32aaef7c%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=7c05a283%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
@@ -2281,7 +2294,7 @@ Specify `1` in case you do not want to recurse into subdirectories.
 
 * `followSymlinks` to follow symbolic links
 
-* `countOnly` returns the number of the files as a string instead of the list of the file names.
+* `countOnly` (alias `count`) returns the number of the files as a string instead of the list of the file names.
 
 The returned names of the files and directories are comma separated by default.
 This makes the use of the macro a good candidate to provide the list elements for a `for` loop.
@@ -2734,7 +2747,7 @@ In the format you can use the following placeholders:
 
 [[Java]]
 === {%macroChapter%}Java Macros
-{%#snip:check file={%JAVA_DIR%}Java.java hash=57bba76d%}
+{%#snip:check file={%JAVA_DIR%}Java.java hash=af9875a1%}
 
 [[java:class]]
 ==== `java:class`
@@ -3385,7 +3398,7 @@ will result in
 
 [[snip_update]]
 === {%macroChapter%}`snip:update`
-{%#snip:check file={%JAVA_DIR%}Update.java hash=012589df%}
+{%#snip:check file={%JAVA_DIR%}Update.java hash=d340554d%}
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
 Currently, the macro exists only for backward compatibility and does nothing.

@@ -22,9 +22,10 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter {
         return in.toString();
     }
 
+    private static final String[] IDS = new String[]{"killLines", "filterLines"};
     @Override
-    public String getId() {
-        return "killLines";
+    public String[] getIds() {
+        return IDS;
     }
 
     @Override

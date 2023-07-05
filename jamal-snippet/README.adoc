@@ -1874,8 +1874,21 @@ The format of the macro is
 }
 ----
 
+or
+
+[source]
+----
+{@filterLines parameters
+
+ ...
+
+}
+----
+
+NOTE: We recommend using the `filterLines` and `pattern` aliases when you want to keep the lines matching the pattern and delete the other lines. In other cases the `filterLines` and `kill` or `killLines` and `kill` or `pattern` aliases can be used. The `killLines` and `keep` aliases together are not recommended.
+
 The default behavior of the macro is to delete the empty lines.
-In that case it removes all lines that contain only spaces or nothing at all.
+In that case, it removes all lines that contain only spaces or nothing at all.
 
 The parameter macro `pattern` may define a regular expression to select the lines.
 
@@ -2780,7 +2793,7 @@ Specify `1` in case you do not want to recurse into subdirectories.
 
 * `followSymlinks` to follow symbolic links
 
-* `countOnly` returns the number of the files as a string instead of the list of the file names.
+* `countOnly` (alias `count`) returns the number of the files as a string instead of the list of the file names.
 
 The returned names of the files and directories are comma separated by default.
 This makes the use of the macro a good candidate to provide the list elements for a `for` loop.
@@ -2949,7 +2962,7 @@ will result
 - ModifiersBuilder.java: 1,740 bytes
 - ReflectionTools.java: 26,140 bytes
 - MethodTool.java: 7,761 bytes
-- Update.java: 1,592 bytes
+- Update.java: 1,640 bytes
 - SnipTransform.java: 17,149 bytes
 - Base64.java: 3,470 bytes
 - FilesMacro.java: 8,162 bytes
@@ -2959,7 +2972,7 @@ will result
 - TrimLines.java: 5,379 bytes
 - JavaSourceInsert.java: 7,884 bytes
 - ThinXml.java: 8,792 bytes
-- Memoize.java: 8,104 bytes
+- Memoize.java: 8,020 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 1,687 bytes
 - SnipLine.java: 691 bytes
@@ -2970,7 +2983,7 @@ will result
 - BlockConverter.java: 1,858 bytes
 - UrlEncode.java: 923 bytes
 - Reference.java: 1,506 bytes
-- Numbers.java: 1,817 bytes
+- Numbers.java: 1,825 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 4,504 bytes
 - CompileJavaMacros.java: 23,008 bytes
@@ -2978,12 +2991,12 @@ will result
 - JavaSourceTemplate.java: 7,568 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
-- KillLines.java: 1,701 bytes
+- KillLines.java: 1,778 bytes
 - SnipLoad.java: 3,540 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
 - Download.java: 2,251 bytes
-- ListDir.java: 5,545 bytes
+- ListDir.java: 5,369 bytes
 - XmlFormat.java: 3,544 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 6,316 bytes
@@ -2994,7 +3007,7 @@ will result
 - ShellVar.java: 3,693 bytes
 - XmlDocument.java: 5,671 bytes
 - References.java: 7,308 bytes
-- Java.java: 11,283 bytes
+- Java.java: 11,281 bytes
 - ReplaceLines.java: 2,889 bytes
 - SkipLines.java: 2,762 bytes
 - SnipCheck.java: 7,791 bytes
@@ -3254,7 +3267,7 @@ will result in the output
 
 [source]
 ----
-2023-07-03 18:27:47
+2023-07-04 21:50:27
 ----
 
 
@@ -3318,8 +3331,8 @@ The numbers can be specified with a start, end and step value.
 The default values are `start=0`, and `step=1`.
 The end value is mandatory.
 
-The first number is the start value inclusive and the counting ends with the end value exclusive.
-You can specify the values with the options keys
+The first number is the start value inclusive, and the counting ends with the end value exclusive.
+You can specify the values with the option keys
 
 * `start`, or `from`
 * `end`, or `to`
@@ -3773,7 +3786,7 @@ The placeholders that the macro handles are:
 * `$classTypeName` will be replaced by the type name of the fields' defining class
 * `$packageName` will be replaced by the package where the method is
 * `$typeClass` will be replaced by the type of the field
-* `$modifiers` will be replaced by the modifiers list of the method
+* `$modifiers` will be replaced by the modifier list of the method
 * `$value` will be replaced by the value of the field in case the field is both `static` and `final`
 
 
@@ -3832,7 +3845,7 @@ The placeholders that the macro handles are:
 * `$exceptions` will be replaced by the comma separated values of the exception types the method throws
 * `$parameterTypes` will be replaced by the comma separated parameter types
 * `$parameterCount` will be replaced by the number of the parameters in decimal format
-* `$modifiers` will be replaced by the modifiers list of the method
+* `$modifiers` will be replaced by the modifier list of the method
 
 
 These formats can be used in your macros directly or using the macros defined in the jim file `res:snippet.jim`.

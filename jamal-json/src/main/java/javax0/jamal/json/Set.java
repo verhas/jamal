@@ -1,10 +1,6 @@
 package javax0.jamal.json;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,19 +17,17 @@ The format of the macro is:
 Here
 
 * `X` is the name of the JSON structure that is defined in the macro registry.
-  In other words `X` is a macro defined using the macro {%ref define%}.
+  In other words, `X` is a macro defined using the macro {%ref define%}.
 
 * `path` is the path to the value that is added to the JSON structure, names of the keys along the paths `/`
 separated.
-If the path is empty then the value is added to the root of the JSON structure.
+If the path is empty, then the value is added to the root of the JSON structure.
 
 * `c` is the key of the value that is added to the JSON structure.
-If this value is numeric then the value is added to the array at the given index.
+If this value is numeric, then the value is added to the array at the given index.
 If this value is `*` then the value is added to the array at the end.
 
 The value can be a JSON structure, a string, a number or a boolean.
-
-
 
 ==== Examples
 
@@ -54,7 +48,7 @@ will result:
 
 ===== Adding element to a Map in the JSON structure
 
-In this example the value is added to the value of the map from the top level named `b`.
+In this example, the value is added to the value of the map from the top level named `b`.
 
 {%sample/
 {@json:define a={"a": "this is a simple JSON with a top level Map","b":{}}}
@@ -66,53 +60,15 @@ will result:
 
 {%output%}
 
-===== Using flat to add multiple elements to a Map
-
-This example will add multiple elements to a map inside the json structure.
-
-{%sample/
-{@json:define docker={
-version: "3.6",
-services: ["http","https","jamal-debug"],
-zilch: { "nada": "nothing" }
-}}\
-{@json:set to=docker./services flat
-[{
-"com.javax0.jamal.title": "Non-relational DB Instance",
-"com.javax0.jamal.sizing": 1000,
-"com.javax0.jamal.nodeType": "primary"
-}]
-}
-docker: {docker}
-%}
-
-will result:
-
-{%output%}
-
 ===== Adding elements to an array
 
 This example adds one element to an array.
 The added element itself is an array.
-It is not flattened
 
 {%sample/
 {@json:define a=["this is a simple JSON with a top level Map","kukuruc"]}
-{@json:set to=a
-["this is one element","this is the second element"]}
-{a}
-%}
-
-will result:
-
-{%output%}
-
-If we use flattening we get different result
-
-{%sample/
-{@json:define a=[this is a simple JSON with a top level Map,kukuruc]}
-{@json:set to=a flatten
-[this is one element,this is the second element]}
+{@json:set a/*="this is one element"}
+{@json:set a/*="this is the second element"}
 {a}
 %}
 

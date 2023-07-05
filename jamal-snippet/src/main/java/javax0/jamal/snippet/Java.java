@@ -70,7 +70,7 @@ public class Java {
                     "$classTypeName",// type name OTFDC
                     "$packageName",// package where the method is
                     "$typeClass",// type OTF
-                    "$modifiers",// modifiers list of the method
+                    "$modifiers",// modifier list of the method
                     "$value"// value OTF in case the field is both `static` and `final`
                     // end snippet
             );
@@ -141,7 +141,7 @@ public class Java {
                     "$exceptions",// comma separated values of the exception types the method throws
                     "$parameterTypes",// comma separated parameter types
                     "$parameterCount",// number of the parameters in decimal format
-                    "$modifiers"// modifiers list of the method
+                    "$modifiers"// modifier list of the method
                     // end snippet
             );
         }

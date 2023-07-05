@@ -1,11 +1,6 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.Scan;
@@ -33,7 +28,7 @@ public class ListDir implements Macro, InnerScopeDependent {
         final var glob = holder("pattern").orElse(null).asString();
         final var maxDepth = holder("maxDepth").orElseInt(Integer.MAX_VALUE);
         final var isFollowSymlinks = holder("followSymlinks").asBoolean();
-        final var countOnly = holder("countOnly").asBoolean();
+        final var countOnly = holder("countOnly", "count").asBoolean();
         Scan.using(processor).from(this).between("()")
                 .keys(format, maxDepth, isFollowSymlinks, separator, grep, glob, countOnly).parse(in);
 
@@ -52,7 +47,7 @@ public class ListDir implements Macro, InnerScopeDependent {
         var dirName = FileTools.absolute(reference, in.toString().trim());
 
         var dir = new File(dirName);
-        BadSyntaxAt.when(!dir.isDirectory(),"'" + dirName + "' does not seem to be a directory to list",in.getPosition());
+        BadSyntaxAt.when(!dir.isDirectory(), "'" + dirName + "' does not seem to be a directory to list", in.getPosition());
 
         final var fmt = format.get();
         try (final var files = Files.walk(Paths.get(dirName), maxDepth.get(), options)) {

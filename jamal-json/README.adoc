@@ -20,7 +20,6 @@ Following that, you can use the
 
 
 . <<define,`json:define`>>
-. <<import,Importing json from a file>>
 . <<get,`json:get`>>
 . <<set,`json:set`>>
 . <<length,`json:length`>>
@@ -29,7 +28,7 @@ Following that, you can use the
 
 macros.
 This macro package was created refactoring the original `jamal-yaml` macro library.
-During the development we created the macros so that they can be used in similar manner to Yaml macros.
+During the development, we created the macros so that they can be used in a similar manner to Yaml macros.
 Although we tried to be as close to the structure of the Yaml macros, there are differences.
 These differences come from the different nature of Json and Yaml.
 
@@ -190,19 +189,17 @@ The format of the macro is:
 Here
 
 * `X` is the name of the JSON structure that is defined in the macro registry.
-  In other words `X` is a macro defined using the macro <<define,`json:define`>>.
+  In other words, `X` is a macro defined using the macro <<define,`json:define`>>.
 
 * `path` is the path to the value that is added to the JSON structure, names of the keys along the paths `/`
 separated.
-If the path is empty then the value is added to the root of the JSON structure.
+If the path is empty, then the value is added to the root of the JSON structure.
 
 * `c` is the key of the value that is added to the JSON structure.
-If this value is numeric then the value is added to the array at the given index.
+If this value is numeric, then the value is added to the array at the given index.
 If this value is `*` then the value is added to the array at the end.
 
 The value can be a JSON structure, a string, a number or a boolean.
-
-
 
 ==== Examples
 
@@ -228,7 +225,7 @@ will result:
 
 ===== Adding element to a Map in the JSON structure
 
-In this example the value is added to the value of the map from the top level named `b`.
+In this example, the value is added to the value of the map from the top level named `b`.
 
 [source]
 ----
@@ -245,46 +242,16 @@ will result:
 ----
 
 
-===== Using flat to add multiple elements to a Map
-
-This example will add multiple elements to a map inside the json structure.
-
-[source]
-----
-{@json:define docker={
-version: "3.6",
-services: ["http","https","jamal-debug"],
-zilch: { "nada": "nothing" }
-}}\
-{@json:set to=docker./services flat
-[{
-"com.javax0.jamal.title": "Non-relational DB Instance",
-"com.javax0.jamal.sizing": 1000,
-"com.javax0.jamal.nodeType": "primary"
-}]
-}
-docker: {docker}
-----
-
-will result:
-
-[source]
-----
-docker: {"zilch":{"nada":"nothing"},"services":["http","https","jamal-debug"],"version":"3.6"}
-----
-
-
 ===== Adding elements to an array
 
 This example adds one element to an array.
 The added element itself is an array.
-It is not flattened
 
 [source]
 ----
 {@json:define a=["this is a simple JSON with a top level Map","kukuruc"]}
-{@json:set to=a
-["this is one element","this is the second element"]}
+{@json:set a/*="this is one element"}
+{@json:set a/*="this is the second element"}
 {a}
 ----
 
@@ -292,25 +259,7 @@ will result:
 
 [source]
 ----
-["this is a simple JSON with a top level Map","kukuruc"]
-----
-
-
-If we use flattening we get different result
-
-[source]
-----
-{@json:define a=[this is a simple JSON with a top level Map,kukuruc]}
-{@json:set to=a flatten
-[this is one element,this is the second element]}
-{a}
-----
-
-will result:
-
-[source]
-----
-["this is a simple JSON with a top level Map","kukuruc"]
+["this is a simple JSON with a top level Map","kukuruc","this is one element","this is the second element"]
 ----
 
 

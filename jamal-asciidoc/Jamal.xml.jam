@@ -16,138 +16,475 @@ $variables
 
 
 〔template |begin|begin $M$|mark the beginning of a named or anonymous block|
-〔variable |M|"[marker]"〕
+  〔variable |M|"[marker]"〕
 〕
 
 〔template |block|#block [$O$] $C$|enclose the content into a block|
-〔variable |O|"flat"〕
-〔variable |C|"..."〕
+  〔variable |O|"flat"〕
+  〔variable |C|"..."〕
 〕
 
 〔template |catch|catch $C$|catch an error|
-〔variable |C|"..."〕
+  〔variable |C|"..."〕
 〕
 
 〔template |comment|comment $C$|Comment out the content|
-〔variable |C|"..."〕
+  〔variable |C|"..."〕
 〕
 
 〔template |debug|debug $O$|Switch operation to debug mode|
-〔variable |O|"on off noDebug lenient using"〕
+  〔variable |O|"on off noDebug lenient using"〕
 〕
 
 〔template |defer|defer [$O$] $C|defer evaluation of content after the document was processed|
-〔variable |O|"$input $output"〕
-〔variable |C|"..."〕
+  〔variable |O|"$input $output"〕
+  〔variable |C|"..."〕
 〕
 
 〔template |define|define [$O$]$M$($P$)=$V$|Define a Jamal user defined macro|
-〔variable |O|"verbatim tail optional fail pure global export class"〕
-〔variable |M|"MACRO_NAME"〕
-〔variable |P|"$p1,$p2,..."〕
-〔variable |V|"..."〕
+  〔variable |O|"verbatim tail optional fail pure global export class"〕
+  〔variable |M|"MACRO_NAME"〕
+  〔variable |P|"$p1,$p2,..."〕
+  〔variable |V|"..."〕
 〕
 
 〔template |end|end $M$|mark the end of a named or anonymous block|
-〔variable |M|"[marker]"〕
+  〔variable |M|"[marker]"〕
 〕
 
 〔template |env|env $P$ $C$|get the value of an environment variable|
-〔variable |P|enum("?","!","")〕
-〔variable |C|"..."〕
+  〔variable |P|enum("?","!","")〕
+  〔variable |C|"..."〕
 〕
 
-〔template |escape|escape$S$ `$P$` $C$`$P$`|escape the evaluation of the content|
-〔variable |S|enum("*","")〕
-〔variable |P|"..."〕
-〔variable |C|"..."〕
+〔template |escape|escape$S$ `$P$`$C$`$P$`|escape the evaluation of the content|
+  〔variable |S|enum("*","")〕
+  〔variable |P|"..."〕
+  〔variable |C|"..."〕
 〕
 
 〔template |eval|eval/$S$ $C$|evaluate the content as script|
-〔variable |S|"script"〕
-〔variable |C|"..."〕
+  〔variable |S|"script"〕
+  〔variable |C|"..."〕
 〕
 
 〔template |export|export $C$|export the macro one level up|
-〔variable |C|"m1, m2, m3"〕
+  〔variable |C|"m1, m2, m3"〕
 〕
 
 〔template |for|for [$O$]($A$) in ($V$)=$C$|repeat the content with different values|
-〔variable :O:"$forsep=, $forsubsep=| trim skipEmpty lenient evalist"〕
-〔variable |A|"$a, $b, $c"〕
-〔variable :V:"a1|a2|a3,b1|b2|b3,c1|c2|c3"〕
-〔variable |C|"..."〕
+  〔variable :O:"$forsep=, $forsubsep=| trim skipEmpty lenient evalist"〕
+  〔variable |A|"$a, $b, $c"〕
+  〔variable :V:"a1|a2|a3,b1|b2|b3,c1|c2|c3"〕
+  〔variable |C|"..."〕
 〕
 
 〔template |ident|ident $C$|return the content without evaluation|
-〔variable |C|"..."〕
+  〔variable |C|"..."〕
 〕
 
 〔template |if|if [$O$] /$C$/$T$/$E$|If statement|
-〔variable |O|"not empty blank and or defined global local lessThan greaterThan equals"〕
-〔variable |C|"CONDITION"〕
-〔variable |T|"THEN"〕{%@define MACRO_NAME()=%}
-〔variable |E|"ELSE"〕
+  〔variable |O|"not empty blank and or defined global local lessThan greaterThan equals"〕
+  〔variable |C|"CONDITION"〕
+  〔variable |T|"THEN"〕{%@define MACRO_NAME()=%}
+  〔variable |E|"ELSE"〕
 〕
 
 〔template |import|import [$O$] $F$|import definitions from the file|
-〔variable |O|"top noCache"〕
-〔variable |F|fileRelativePath()〕
+  〔variable |O|"top noCache"〕
+  〔variable |F|fileRelativePath()〕
 〕
 
 〔template |include|include [$O$] $F$|include a file|
-〔variable |O|"top noCache verbatim lines=m..n"〕
-〔variable |F|fileRelativePath()〕
+  〔variable |O|"top noCache verbatim lines=m..n"〕
+  〔variable |F|fileRelativePath()〕
 〕
 
 〔template |JShell|JShell $E$|define script for the JShell engine|
-〔variable |E|"..."〕
+  〔variable |E|"..."〕
 〕
 
 〔template |log|log [$O$] $C$|log a message|
-〔variable |O|"log=info"〕
-〔variable |C|"..."〕
+  〔variable |O|"log=info"〕
+  〔variable |C|"..."〕
 〕
 
 〔template |macro|macro [type=$T$ $O$] $C$|reference a macro with irregular name|
-〔variable :T:enum("","userdefined","builtin")〕
-〔variable :O:"alias="" global"〕
-〔variable |C|"macro-name"〕
+  〔variable :T:enum("","userdefined","builtin")〕
+  〔variable :O:"alias="" global"〕
+  〔variable |C|"macro-name"〕
 〕
 
 〔template |options|options $C$|set or reset options|
-〔variable |C|"o1  ~o2"〕
+  〔variable |C|"o1  ~o2"〕
 〕
 
 〔template |require|require $R$ $V$|require a certain version of Jamal|
-〔variable |R|enum("&lt;=","&lt;","=","&gt;=","&gt;")〕
-〔variable |V|"〔VERSION〕"〕
+  〔variable |R|enum("&lt;=","&lt;","=","&gt;=","&gt;")〕
+  〔variable |V|"〔VERSION〕"〕
 〕
 
 〔template |script|script$SL$ $E$|execute script|
-〔variable |E|"..."〕
-〔variable :SL:"/script_lang〕
+  〔variable |E|"..."〕
+  〔variable :SL:"/script_lang〕
 〕
 
 〔template |sep|sep $O$ $C$|define opening and closing string|
-〔variable |O|"{!"〕
-〔variable |C|"!}"〕
+  〔variable |O|"{!"〕
+  〔variable |C|"!}"〕
 〕
 
 〔template |try|try$M$$C$|define opening and closing string|
-〔variable |M|enum("","!","?")〕
-〔variable |C|"..."〕
+  〔variable |M|enum("","!","?")〕
+  〔variable |C|"..."〕
 〕
 
 〔template |undefine|undefine $C$|undefine a macro|
-〔variable |C|"macro_name"〕
+  〔variable |C|"macro_name"〕
 〕
 
 〔template |use|use  [$O$] $C$ $ALI$|use a class as macro|
-〔variable |O|"global"〕
-〔variable |ALI|"as alias"〕
-〔variable |C|"com.package.name.MacroClass"〕
+  〔variable |O|"global"〕
+  〔variable |ALI|"as alias"〕
+  〔variable |C|"com.package.name.MacroClass"〕
 〕
+
+〔template |base64|base64 ($O$) $C$|base64 encode the content|
+  〔variable |O|"quote compress url"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |case|case:$TO$ $C$|undefine a macro|
+  〔variable |TO|enum("lower","upper","cap","decap")〕
+  〔variable |C|"..."〕
+〕
+
+〔template |clear|snip:clear|clear the snippets|
+〕
+
+〔template |collect|snip:collect $O$ from=$FROM$|collect snippets|
+  〔variable |O|"include=.* exclude=.* scanDepth=1 onceAs asciidoc ignoreErrors"〕
+  〔variable |FROM|fileRelativePath()〕
+〕
+
+〔template |counter|counter:define $O$ |define a counter|
+  〔variable |O|"id=... format=%02d start=1 step=1 IIII"〕
+〕
+
+〔template |date|date $F$ |current date and time formatted|
+  〔variable |F|"yyyy-MM-dd hh:mm:ss:SSS"〕
+〕
+
+〔template |download|download file=$F$ $URL$|download file from the net|
+  〔variable |F|fileRelativePath()〕
+  〔variable |URL|"https://"〕
+〕
+
+〔@define FORMAT=$name $absolutePath $parent $simpleName $canonicalPath $bareNaked $naked1 $naked2 $naked3 $naked4 $naked5 $extensions $extension1 $extension2 $extension3 $extension4 $extension5〕
+
+〔template |directory|directory ($O$) $F$|check the existence of directory and format|
+  〔variable |O|"format=... root=..."〕
+  〔variable |F|fileRelativePath()〕
+〕
+
+〔template |file|file ($O$) $F$|check the existence of file and format|
+  〔variable |O|" root=... format=〔FORMAT〕"〕
+  〔variable |F|fileRelativePath()〕
+〕
+
+〔template |format|format /$F$/$P1$/$P2/$P3$|format parameters|
+  〔variable |F|"%d %s"〕
+  〔variable |P1|"..."〕
+  〔variable |P2|"..."〕
+  〔variable |P3|"..."〕
+〕
+
+〔template |hashCode|hashCode|calculate the hash code of the input|
+〕
+
+〔@define FORMAT=$simpleName $name $canonicalName $packageName $typeName 〕
+〔template |class|java:class ($O$) $C$|format the name of a class|
+  〔variable |O|"format=〔FORMAT〕"〕
+  〔variable |C|"com.mymy.Class"〕
+〕
+
+〔@define FORMAT=$name $classSimpleName $className $classCanonicalName $classTypeName $packageName $typeClass $modifiers $value 〕
+〔template |field|java:field ($O$) $C$|format the name of a field|
+  〔variable |O|"format=〔FORMAT〕"〕
+  〔variable |C|"com.mymy.Class#field"〕
+〕
+
+〔@define FORMAT=$name $classSimpleName $className $classCanonicalName $classTypeName $packageName $typeClass $modifiers $value〕
+〔template |method|java:method ($O$) $C$|format the name of a method|
+  〔variable |O|"format=〔FORMAT〕"〕
+  〔variable |C|"com.mymy.Class#method"〕
+〕
+
+〔template |java:insert|java:insert $O$ &#10;&#10; $C$|insert Java code into Java source|
+  〔variable |O|"to id check failOnUpdate"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |java:template|java:template $O$ &#10;&#10; $C$|insert Java code into Java source|
+  〔variable |O|"path template check debug apply failOnUpdate"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |filterLines|filterLines $O$ &#10;&#10; $C$|filter lines out of the content|
+  〔variable :O:"keep kill|pattern=..."〕
+  〔variable |C|"..."〕
+〕
+
+〔template |lineCount|lineCount  $C$|count the lines|
+  〔variable :O:"keep kill|pattern=..."〕
+  〔variable |C|"..."〕
+〕
+
+〔template |listDir|listDir ($O$) $D$|count the lines|
+  〔variable :O:"format separator grep pattern maxDepth followSymlinks countOnly"〕
+  〔variable |D|fileRelativePath()〕
+〕
+
+〔template |memoize|memoize ($O$) $C$|memoize the result of the content execution|
+  〔variable |O|"file hashFile hashCode"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |numberLines|numberLines $O$ &#10;&#10; $C$|number the lines|
+  〔variable |O|"format start step"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |numbers|numbers $O$|create comma separated number list|
+  〔variable |O|"start end step"〕
+〕
+
+〔template |pos|pos $O$|file line column position|
+  〔variable |O|"top parent all format up sep"〕
+〕
+
+〔template |range|range $O$ &#10;&#10; $C$|select ranges from the input|
+  〔variable :O:"lines=n..m,k..l"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |ref|ref $ID$ $REF$|define a referenced macro|
+  〔variable :ID:"..."〕
+  〔variable |REF|"> xrefs"〕
+〕
+
+〔template |references|references $O$|declare the reference repository|
+  〔variable :O:"file= holder=xrefs"〕
+  〔variable |REF|"> xrefs"〕
+〕
+
+〔template |reflow|reflow $O$|reflow the text|
+  〔variable :O:"width=n"〕
+〕
+
+〔template |replace|replace ($O$) $S$$string$$S$src1$S$replace1$S$src2$S$replace2$S$|replace the text|
+  〔variable :O:"enum("regex","")〕
+  〔variable :S:enum("/","~","`...`")〕
+  〔variable :string:""〕
+  〔variable :src1:"search_1"〕
+  〔variable :replace1:"replace_1"〕
+  〔variable :src2:"search_x"〕
+  〔variable :replace2:"replace_x"〕
+〕
+
+〔template |rot13|rot13|calculate rot13 encoding|
+〕
+
+〔template |shell:var|shell:var (variables=&quot;&quot;&quot;&#10;v1_...&#10;v2=...&#10;...&quot;&quot;&quot;) $C$|handle shell variable syntax|
+  〔variable |C|"..."〕
+〕
+
+〔template |skipLines|slipLines $O$ &#10; $C$|skip lines|
+  〔variable |O|"skip= endSkip="〕
+  〔variable |C|"..."〕
+〕
+
+〔template |snip|snip ($O$) $C$|snippet|
+  〔variable |O|"poly hash="〕
+  〔variable |C|"snippet_name"〕
+〕
+
+
+〔template |snip:check|snip:check ($O$) $C$|check snippet consistency|
+ 〔variable |O|"hash= lines= id= file= message= warning error"〕
+ 〔variable |C|"snippet_name"〕
+〕
+
+〔template |snip:file|snip:file $C$|get the file name of the snippet|
+ 〔variable |C|"snippet_name"〕
+〕
+
+〔template |snip:line|snip:line $C$|get the line number of the snippet|
+ 〔variable |C|"snippet_name"〕
+〕
+
+〔template |snip:list|snip:list $O$|list selected snippets|
+ 〔variable |O|"id=.* file=.* text=.* listSeparator=,"〕
+〕
+
+〔template |snip:load|snip:load $O$|load snippets|
+ 〔variable |O|"id=.* file=.* text=.* input="〕
+〕
+
+〔template |snip:define|snip:define $S$=$C$|define a snippet snippets|
+  〔variable :S:"snippet_name"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |snip:properties|snip:properties $F$|load snippets from properties file|
+  〔variable |F|fileRelativePath()〕
+〕
+
+〔template |snip:save|snip:save $O$|save snippets|
+  〔variable |O|"id=.* file=.* text=.* output= tab=n"〕
+〕
+
+〔template |snip:transform|snip:transform $A$ $O$ &#10; $C$|transform snippets|
+  〔variable |A|"actions=kill,skip,replace,trim,reflow,number,untab,range"〕
+  〔variable |O|"pattern=.* keep format=%2d start=n step=n width=n replace=... detectNoChange skip=... endSkip=... margin=n trimVertical verticalTrimOnly tabSize=n range=n...m"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |snip:xml|snip:xml $V$=$F$|load xml from file|
+  〔variable |V|"name"〕
+  〔variable |F|fileRelativePath()〕
+〕
+
+〔template |sort|sort $O$ &#10; $C$|sort the lines|
+〔variable |O|"separator=... join=... locale=UTF-8 columns=n..m pattern=.* numeric reverse"〕
+〔variable |C|"..."〕
+〕
+
+〔template |string:chop|string:chop ($O$) $C$|chop off the start/end|
+  〔variable |O|"prefix=... postfix=... ignoreCase"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |string:contains|string:contains ($O$) $C$|chop off the start/end|
+  〔variable |O|"text=... regex"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |string:endsWith|string:endsWith /$FX$/$C$|true if string ends with|
+  〔variable |FX|"..postfix.."〕
+  〔variable |C|"..."〕
+〕
+
+〔template |string:startsWith|string:startsWith /$FX$/$C$|true if string starts with|
+  〔variable |FX|"..prefix.."〕
+  〔variable |C|"..."〕
+〕
+
+〔template |string:equals|string:equals ($O$) /$A$/$B$|test string equality|
+  〔variable |O|"ignoreCase"〕
+  〔variable |A|"..."〕
+  〔variable |B|"..."〕
+〕
+
+〔template |string:length|string:length ($O$) $A$|string length|
+  〔variable |O|"trim left right"〕
+  〔variable |A|"..."〕
+〕
+
+〔template |string:quote|string:quote $A$|quote a string|
+  〔variable |A|"..."〕
+〕
+
+〔template |string:reverse|string:reverse $A$|reverse a string|
+  〔variable |A|"..."〕
+〕
+
+〔template |string:substring|string:substring ($O$) $A$|substring|
+  〔variable |O|"begin=n end=m"〕
+  〔variable |A|"..."〕
+〕
+
+〔template |thinXml|thinXml $C$|convert thinXML to XML|
+  〔variable |C|"..."〕
+〕
+
+〔template |trimLines|trimLines $O$ &#10; $C$|trim lines|
+  〔variable |O|"margin=n verticalTrimOnly trimVertical"〕
+  〔variable |C|"..."〕
+〕
+
+〔template |unicode|unicode $C$|convert character from unicode|
+  〔variable |C|"&amp;#xNM"〕
+〕
+
+〔template |untab|untab $O$ &#10; $C$|replace tab with spaces|
+〔variable |O|"tab=n"〕
+〔variable |C|"..."〕
+〕
+
+〔template |urlEncode|urlEncode ($O$) $C$|replace tab with spaces|
+〔variable |O|"charset=UTF-8"〕
+〔variable |C|"..."〕
+〕
+
+〔template |xmlFormat|xmlFormat ($O$) &#10; $C$|replace tab with spaces|
+〔variable |O|"tabsize=n thin wrong"〕
+〔variable |C|"..."〕
+〕
+
+〔template |xml:insert|xml:insert ($O$) $C$|replace tab with spaces|
+〔variable |O|"path=... id=... optional tabsize=4"〕
+〔variable |C|"..."〕
+〕
+
+〔template |do|do $O$ &#10; $C$|use basic syntax|
+〔variable |O|"stepLimit=10000"〕
+〔variable |C|"..."〕
+〕
+
+〔template |expression|expression $C$|evaluate expression|
+〔variable |C|"..."〕
+〕
+
+〔template |maven:load|maven:load ($O$) $C$|load macros from maven repo|
+〔variable |O|"repo=... noDependencies reload local=... exclude=..."〕
+〔variable |C|"groupId:artifactId:version"〕
+〕
+
+〔template |json:define|json:define ($O$)$M$=$C$|define a JSON structure|
+〔variable |O|enum("jsonl","")〕
+〔variable |M|"name"〕
+〔variable |C|"json content"〕
+〕
+
+〔template |json:get|json:get $M$/$C$|get data from JSON|
+〔variable |M|"json macro name"〕
+〔variable |C|"JSON pointer"〕
+〕
+
+〔template |json:length|json:length $M$/$C$|get length of a JSON array|
+〔variable |M|"json macro name"〕
+〔variable |C|"JSON pointer"〕
+〕
+
+〔template |json:keys|json:keys $M$/$C$|get the keys of a JSON Object|
+〔variable |M|"json macro name"〕
+〔variable |C|"JSON pointer"〕
+〕
+
+〔template |json:set|json:set $M$/$C$/$K$=$V$|set data to JSON|
+〔variable |M|"json macro name"〕
+〔variable |C|"JSON pointer"〕
+〔variable |K|"key"〕
+〔variable |V|"..."〕
+〕
+
+〔template |platUml|plantUml ($O$) $I$ #&10; $C$|create a PlantUml diagram|
+〔variable |O|"folder=... format=... template=..."〕
+〔variable |I|"xyz.svg"〕
+〔variable |C|"..."〕
+〕
+
 
 </templateSet>
 〔@xmlFormat〕

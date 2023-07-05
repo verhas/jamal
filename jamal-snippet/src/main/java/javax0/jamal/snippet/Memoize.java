@@ -121,10 +121,6 @@ public class Memoize implements Macro {
         return hash;
     }
 
-    @Override
-    public String getId() {
-        return Macro.super.getId();
-    }
 }
 /* snippet Memoize
 
