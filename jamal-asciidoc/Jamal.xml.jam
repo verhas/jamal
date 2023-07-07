@@ -3,7 +3,7 @@
 {%@sep 〔 〕%}
 〔@comment This is a definition for the Jamal live macro templates for IntelliJ〕
 〔@define template($name,$content,$desc,$variables)=
-<template name="jm-$name" value="{%〔#if /〔@string:startsWith/$content/#〕//@〕$content%}" description="$desc" toReformat="false" toShortenFQNames="true">
+<template name="jm-$name" value="{%〔#if /〔@string:startsWith/$content/#〕//@〕〔@replace /$content/\n/&#10;〕%}" description="$desc" toReformat="false" toShortenFQNames="true">
 $variables
 <context>
 <option name="AsciiDoc" value="true" />
@@ -220,17 +220,17 @@ $variables
   〔variable |C|"com.mymy.Class#method"〕
 〕
 
-〔template |java:insert|java:insert $O$ &#10;&#10; $C$|insert Java code into Java source|
+〔template |java:insert|java:insert $O$ \n\n $C$|insert Java code into Java source|
   〔variable |O|"to id check failOnUpdate"〕
   〔variable |C|"..."〕
 〕
 
-〔template |java:template|java:template $O$ &#10;&#10; $C$|insert Java code into Java source|
+〔template |java:template|java:template $O$ \n\n $C$|insert Java code into Java source|
   〔variable |O|"path template check debug apply failOnUpdate"〕
   〔variable |C|"..."〕
 〕
 
-〔template |filterLines|filterLines $O$ &#10;&#10; $C$|filter lines out of the content|
+〔template |filterLines|filterLines $O$ \n\n $C$|filter lines out of the content|
   〔variable :O:"keep kill|pattern=..."〕
   〔variable |C|"..."〕
 〕
@@ -250,7 +250,7 @@ $variables
   〔variable |C|"..."〕
 〕
 
-〔template |numberLines|numberLines $O$ &#10;&#10; $C$|number the lines|
+〔template |numberLines|numberLines $O$ \n\n $C$|number the lines|
   〔variable |O|"format start step"〕
   〔variable |C|"..."〕
 〕
@@ -263,7 +263,7 @@ $variables
   〔variable |O|"top parent all format up sep"〕
 〕
 
-〔template |range|range $O$ &#10;&#10; $C$|select ranges from the input|
+〔template |range|range $O$ \n\n $C$|select ranges from the input|
   〔variable :O:"lines=n..m,k..l"〕
   〔variable |C|"..."〕
 〕
@@ -295,11 +295,11 @@ $variables
 〔template |rot13|rot13|calculate rot13 encoding|
 〕
 
-〔template |shell:var|shell:var (variables=&quot;&quot;&quot;&#10;v1_...&#10;v2=...&#10;...&quot;&quot;&quot;) $C$|handle shell variable syntax|
+〔template |shell:var|shell:var (variables=&quot;&quot;&quot;\nv1_...\nv2=...\n...&quot;&quot;&quot;) $C$|handle shell variable syntax|
   〔variable |C|"..."〕
 〕
 
-〔template |skipLines|slipLines $O$ &#10; $C$|skip lines|
+〔template |skipLines|slipLines $O$ \n $C$|skip lines|
   〔variable |O|"skip= endSkip="〕
   〔variable |C|"..."〕
 〕
@@ -344,7 +344,7 @@ $variables
   〔variable |O|"id=.* file=.* text=.* output= tab=n"〕
 〕
 
-〔template |snip:transform|snip:transform $A$ $O$ &#10; $C$|transform snippets|
+〔template |snip:transform|snip:transform $A$ $O$ \n $C$|transform snippets|
   〔variable |A|"actions=kill,skip,replace,trim,reflow,number,untab,range"〕
   〔variable |O|"pattern=.* keep format=%2d start=n step=n width=n replace=... detectNoChange skip=... endSkip=... margin=n trimVertical verticalTrimOnly tabSize=n range=n...m"〕
   〔variable |C|"..."〕
@@ -355,7 +355,7 @@ $variables
   〔variable |F|fileRelativePath()〕
 〕
 
-〔template |sort|sort $O$ &#10; $C$|sort the lines|
+〔template |sort|sort $O$ \n $C$|sort the lines|
 〔variable |O|"separator=... join=... locale=UTF-8 columns=n..m pattern=.* numeric reverse"〕
 〔variable |C|"..."〕
 〕
@@ -408,7 +408,7 @@ $variables
   〔variable |C|"..."〕
 〕
 
-〔template |trimLines|trimLines $O$ &#10; $C$|trim lines|
+〔template |trimLines|trimLines $O$ \n $C$|trim lines|
   〔variable |O|"margin=n verticalTrimOnly trimVertical"〕
   〔variable |C|"..."〕
 〕
@@ -417,7 +417,7 @@ $variables
   〔variable |C|"&amp;#xNM"〕
 〕
 
-〔template |untab|untab $O$ &#10; $C$|replace tab with spaces|
+〔template |untab|untab $O$ \n $C$|replace tab with spaces|
 〔variable |O|"tab=n"〕
 〔variable |C|"..."〕
 〕
@@ -427,7 +427,7 @@ $variables
 〔variable |C|"..."〕
 〕
 
-〔template |xmlFormat|xmlFormat ($O$) &#10; $C$|replace tab with spaces|
+〔template |xmlFormat|xmlFormat ($O$) \n $C$|replace tab with spaces|
 〔variable |O|"tabsize=n thin wrong"〕
 〔variable |C|"..."〕
 〕
@@ -437,7 +437,7 @@ $variables
 〔variable |C|"..."〕
 〕
 
-〔template |do|do $O$ &#10; $C$|use basic syntax|
+〔template |do|do $O$ \n $C$|use basic syntax|
 〔variable |O|"stepLimit=10000"〕
 〔variable |C|"..."〕
 〕
@@ -479,12 +479,70 @@ $variables
 〔variable |V|"..."〕
 〕
 
-〔template |platUml|plantUml ($O$) $I$ #&10; $C$|create a PlantUml diagram|
+〔template |platUml|plantUml ($O$) $I$ \n $C$|create a PlantUml diagram|
 〔variable |O|"folder=... format=... template=..."〕
 〔variable |I|"xyz.svg"〕
 〔variable |C|"..."〕
 〕
 
+〔template |mock|mock ($O$) $I$ \n $C$|mock a built-in macro|
+〔variable |O|"macro=... when=.* repeat=n inf"〕
+〔variable |I|"xyz.svg"〕
+〔variable |C|"..."〕
+〕
+
+〔template |yaml:define|yaml:define $YAMLNAME$=$YAMLCONTENT$|define a yaml structure|
+〔variable |YAMLNAME|"..."〕
+〔variable |YAMLCONTENT|"..."〕
+〕
+
+〔template |yaml:resolve|yaml:resolve ($O$) $N$|resolve a yaml structure|
+〔variable |O|"clone copy"〕
+〔variable |N|"..."〕
+〕
+
+〔template |yaml:isResolved|yaml:isResolved $N$|true if resolved|
+〔variable |O|"clone copy"〕
+〔variable |N|"..."〕
+〕
+
+〔template |yaml:get|yaml:get (from=$Y$) $OGNL$|true if resolved|
+〔variable |Y|"..."〕
+〔variable |OGNL|"x.y[2].z..."〕
+〕
+
+〔template |yaml:set|yaml:set ($Y$) $M$=$OGNL$|define a yaml pointing to another|
+〔variable |Y|"clone copy from=..."〕
+〔variable |M|"..."〕
+〔variable |OGNL|"x.y[2].z..."〕
+〕
+
+〔template |yaml:add|yaml:add $T$ $K$ $F$\n $Y$|add a substructure|
+〔variable |T|"to=..."〕
+〔variable |K|"key=..."〕
+〔variable |F|"flat=..."〕
+〔variable |Y|"..."〕
+〕
+
+
+〔template |yaml:format|yaml:format $O$|format options for the output|
+〔variable :O:"allowUnicode canonical explicitEnd explicitStart prettyFlow splitLines flowStyle=FLOW|BLOCK|AUTO scalarStyle=DOUBLE_QUOTED|SINGLE_QUOTED|LITERAL|FOLDED|PLAIN lineBreak indent=4 indicatorIndent width=80"〕
+〕
+
+〔template |yaml:dump|yaml:dump $O$ $M$ to $F$|save to file|
+〔variable |M|"..."〕
+〔variable |O|enum("(clone)","")〕
+〔variable |F|fileRelativePath()〕
+〕
+
+〔template |yaml:xml|yaml:xml ($O$) $M$|convert to XML|
+〔variable |M|"..."〕
+〔variable |O|"tag attributes"〕
+〕
+
+〔template |yaml:output|yaml:output $M$|set the output|
+〔variable |M|"..."〕
+〕
 
 </templateSet>
-〔@xmlFormat〕
+〔@xmlFormat ()〕

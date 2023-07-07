@@ -159,7 +159,7 @@ The same example as above, but resolving the Yaml macro before using it
 ----
 {#yaml:define b=- x
 - y
-- {@yaml:ref a}}
+- !ref a}
 {@yaml:define a=[a,b,c]}
 {@yaml:resolve b}
 {b}
@@ -207,8 +207,9 @@ For more information on macro evaluation order, see the core documentation of Ja
 === ii. `yaml:ref`
 
 The use of this macro has been deprecated since Jamal version 2.0.0.
-Use this macro to reference another Yaml definition.
-With that release, the local tag `!ref` is defined, which is a much cleaner and shorter way to reference another Yaml definition.
+
+This macro will reference another Yaml definition.
+With the release 2.0.0, the local tag `!ref` is defined, which is a much cleaner and shorter way to reference another Yaml definition.
 
 [source]
 ----
@@ -245,11 +246,11 @@ The example
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}}
+{#yaml:define aqt=z: !ref a}
 {#yaml:define xyz=
 a: 1
 b: 3
-c: {@yaml:ref aqt}}
+c: !ref aqt}
 {@yaml:resolve (clone) xyz}
 Resolved:
 {xyz}
@@ -281,11 +282,11 @@ The same example doing the resolve without the `clone` option, however
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}}
+{#yaml:define aqt=z: !ref a}
 {#yaml:define xyz=
 a: 1
 b: 3
-c: {@yaml:ref aqt}}
+c: !ref aqt}
 {@yaml:resolve xyz}
 Resolved:
 {xyz}
@@ -315,13 +316,13 @@ Unless you have a specific need, use the `yaml:resolve` macro without cloning.
 There is another option that alters the behaviour of the resolving process.
 This is `yamlResolveCopy` with the alias `copy`.
 This option creates a copy of the referenced structures, cloned or not.
-To understand this we can have a look at the following example:
+To understand this, we can have a look at the following example:
 
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}
-y: {@yaml:ref a}
+{#yaml:define aqt=z: !ref a
+y: !ref a
 }
 {@yaml:resolve aqt}
 {aqt}
@@ -343,8 +344,8 @@ The resolving process can circumvent this creating a copy for every reference.
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}
-y: {@yaml:ref a}
+{#yaml:define aqt=z: !ref a
+y: !ref a
 }
 {@yaml:resolve (copy) aqt}
 {aqt}
@@ -367,7 +368,7 @@ For example
 
 [source]
 ----
-{#yaml:define a=[ a, b ,c, {@yaml:ref a}]}
+{#yaml:define a=[ a, b ,c, !ref a]}
 {@yaml:resolve (copy clone) a}
 {a}
 ----
@@ -388,7 +389,7 @@ However, when trying to resolve the following:
 
 [source]
 ----
-{#yaml:define a=[ a, b ,c, {@yaml:ref a}, {@yaml:ref a}]}
+{#yaml:define a=[ a, b ,c, !ref a, !ref a]}
 {@try! {@yaml:resolve (copy clone) a}}
 {a}
 ----
@@ -617,10 +618,11 @@ The syntax of the macro is
  ** `yamlResolveCopy` (alias `copy`) to copy resolve
  ** `yamlDataSource` (alias `from`) the name of the user defined macro which is the source of the data
 
-If the `from` value is missing then the macro interprets the `OGNL` expression using the start of it as the name of the macro.
-It has to have the form `/macroname.` at the start.
-The identifier between the starting `/` and the `.` is used as the name of the macro from which the data is to be fetched.
-The `macroName` is the name of the macro to assign the new object value.
+If the `from` value is missing then the macro interprets the `OGNL` expression star as the name of the macro.
+It should start as `/xxxx.`.
+The identifier `xxxx` between the starting `/` and the `.` is used as the name of the macro, from which the data is to be fetched.
+
+The `macroName` is the name of the macro to assign the new object value to.
 
 ===== Example
 
@@ -1092,7 +1094,7 @@ h: [
 
 ===== splitLines
 
-The option `splitLines` instructs snake yaml to output the yaml structure in pretty flow.
+The option `splitLines` instructs snake yaml to output the yaml structure splitting the lines.
 
 [source]
 ----
@@ -1100,7 +1102,7 @@ The option `splitLines` instructs snake yaml to output the yaml structure in pre
 {yaml}
 ----
 
-For some reason it does not split the lines
+For some reason, it does not split the lines, may be later versions of snakeYaml will do.
 
 [source]
 ----
