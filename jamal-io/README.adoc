@@ -267,7 +267,6 @@ This will start the program without any argument, defined timeout or input text.
 
 The options of the macro are defined as follows:
 
-
 *  `osOnly`, `os`
 defines a pattern for the operating system's name.
 The execution will only start if the operating system's name matches the pattern.
@@ -595,7 +594,7 @@ These are `id` and `name`.
 *  `wait`, `waitMax`, `timeOut`
 This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
 If the process does not finish in the specified time, a BadSyntax exception will be thrown.
-If this option is not present the macro will wait for the process to finish without time limit.
+If this option is not present, the macro will wait for the process to finish without time limit.
 *  `destroy`, `kill`
 This option can be used to destroy the process if it has not finished within the specified time.
 This option can only be used together with the wait option.
@@ -633,4 +632,3 @@ exec -> sleep
 
 
 ----
-

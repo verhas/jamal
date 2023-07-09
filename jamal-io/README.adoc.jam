@@ -246,9 +246,8 @@ After this you can execute the macro
 This will start the program without any argument, defined timeout or input text.
 
 The options of the macro are defined as follows:
-
 {%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*.*?\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
 {%@snip exec_options%}
 %}%}
 
@@ -422,7 +421,7 @@ In this case the output is typically redirected to a file and the result can be 
 The macro `waitFor` uses a subset of the options of the `exec` macro.{%ALIAS$ONLY%}
 
 {%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*.*?\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
 {%@snip waitFor_options%}
 %}%}
 
