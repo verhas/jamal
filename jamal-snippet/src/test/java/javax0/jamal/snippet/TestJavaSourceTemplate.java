@@ -12,7 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class TestJavaSourceTemplate {
 
@@ -31,12 +33,16 @@ public class TestJavaSourceTemplate {
         }
         Files.createDirectories(path.getParent());
         Files.writeString(path, content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-
     }
 
     private void assertResult(final String fileContent) throws IOException {
         final var result = Files.readString(path);
+        if( !fileContent.equals(result) ){
+            final var sb = new StringBuilder();
+            sb.append("Expected: ").append(fileContent.chars().mapToObj(c-> String.format("%02X",c)).collect(Collectors.joining(" ")));
+            sb.append("Actual: ").append(result.chars().mapToObj(c-> String.format("%02X",c)).collect(Collectors.joining(" ")));
         Assertions.assertEquals(fileContent, result);
+        }
     }
 
     @Test

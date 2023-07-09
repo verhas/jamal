@@ -4,6 +4,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ import static javax0.jamal.tools.InputHandler.*;
  * See the documentation of the "for" loop in the README.doc in the project root.
  */
 @Macro.Stateful
-public class For implements Macro, InnerScopeDependent, OptionsControlled.Core {
+public class For implements Macro, InnerScopeDependent, OptionsControlled.Core, Scanner.Core {
 
     Params.Param<String> separator;
     Params.Param<String> subSeparator;
@@ -35,13 +36,14 @@ public class For implements Macro, InnerScopeDependent, OptionsControlled.Core {
         Position pos = input.getPosition();
         final var it = new For();
         it.processor = processor;
-        it.separator = Params.<String>holder("$forsep", "separator", "sep").orElse(",");
-        it.subSeparator = Params.<String>holder("$forsubsep", "subseparator", "subsep").orElse("\\|");
-        it.trim = Params.<Boolean>holder("trimForValues", "trim").asBoolean();
-        it.skipEmpty = Params.<Boolean>holder("skipForEmpty", "skipEmpty").asBoolean();
-        it.lenient = Params.<Boolean>holder("lenient").asBoolean();
-        it.evalValueList = Params.<Boolean>holder("evaluateValueList", "evalist").asBoolean();
-        Scan.using(processor).from(this).between("[]").keys(it.subSeparator, it.separator, it.trim, it.skipEmpty, it.lenient, it.evalValueList).parse(input);
+        final var scanner = newScanner(input, processor);
+        it.separator = scanner.str("$forsep", "separator", "sep").defaultValue(",");
+        it.subSeparator = scanner.str("$forsubsep", "subseparator", "subsep").defaultValue("\\|");
+        it.trim = scanner.bool("trimForValues", "trim");
+        it.skipEmpty = scanner.bool("skipForEmpty", "skipEmpty");
+        it.lenient = scanner.bool("lenient");
+        it.evalValueList = scanner.bool("evaluateValueList", "evalist");
+        scanner.done();
 
         skipWhiteSpaces(input);
 

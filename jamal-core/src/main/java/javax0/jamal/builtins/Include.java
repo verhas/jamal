@@ -1,11 +1,10 @@
 package javax0.jamal.builtins;
 
 import javax0.jamal.api.*;
+import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.tools.*;
 import javax0.jamal.tools.Marker;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Range;
-import javax0.jamal.tools.Scan;
 
 import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
@@ -16,7 +15,7 @@ import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 @Macro.Stateful
-public class Include implements Macro, OptionsControlled.Core {
+public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
     /**
      * Count the depth of the includes. In case this is more than 100 stop the processing. Most likely this is a wrong
      * recursive include that would cause stack overflow.
@@ -37,11 +36,12 @@ public class Include implements Macro, OptionsControlled.Core {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         var position = input.getPosition();
-        final var top = Params.<Boolean>holder(null, "top").asBoolean();
-        final var verbatim = Params.<Boolean>holder("includeVerbatim", "verbatim").asBoolean();
-        final var lines = Params.<Boolean>holder(null, "lines").asString();
-        final var noCache = Params.<Boolean>holder(null, "noCache").asBoolean();
-        Scan.using(processor).from(this).between("[]").keys(verbatim, top, lines, noCache).parse(input);
+        final var scanner = newScanner(input,processor);
+        final var top = scanner.bool(null, "top");
+        final var verbatim = scanner.bool("includeVerbatim", "verbatim");
+        final var lines = scanner.str(null, "lines");
+        final var noCache = scanner.bool(null, "noCache");
+        scanner.done();
         position = repositionToTop(position, top);
 
         skipWhiteSpaces(input);

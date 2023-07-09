@@ -5,13 +5,15 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
-public class Defer implements Macro, InnerScopeDependent, OptionsControlled.Core {
+public class Defer implements Macro, InnerScopeDependent, OptionsControlled.Core, Scanner.Core {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var inputName = Params.<String>holder("$input", "input", "inputName").orElse("$input");
-        final var outputName = Params.<String>holder("$output", "output", "outputName").orElse("$output");
-        Scan.using(processor).from(this).between("[]").keys(inputName, outputName).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var inputName = scanner.str("$input", "input", "inputName").defaultValue("$input");
+        final var outputName = scanner.str("$output", "output", "outputName").defaultValue("$output");
+        scanner.done();
         processor.deferredClose(new DeferredCloser(in, inputName.get(), outputName.get()));
         return "";
     }

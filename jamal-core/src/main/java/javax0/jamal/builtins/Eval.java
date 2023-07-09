@@ -1,17 +1,16 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 import static javax0.jamal.tools.ScriptingTools.getEngine;
 import static javax0.jamal.tools.ScriptingTools.resultToString;
 
-public class Eval implements Macro, InnerScopeDependent, OptionsControlled.Core {
+public class Eval implements Macro, InnerScopeDependent, OptionsControlled.Core, Scanner.Core {
     //snippet DEFAULT_LOOP_LIMIT
     private static final int DEFAULT_LOOP_LIMIT = 100;
     // end snippet
@@ -27,10 +26,11 @@ public class Eval implements Macro, InnerScopeDependent, OptionsControlled.Core 
         processor.getRegister().lock();
         switch (scriptType) {
             case "*":
+                final var scanner = newScanner(input, processor);
                 // snippet evaluateLoopLimit
-                final var limit = Params.holder("evaluateLoopLimit", "limit", "max").orElseInt(DEFAULT_LOOP_LIMIT);
+                final var limit = scanner.number("evaluateLoopLimit", "limit", "max").defaultValue(DEFAULT_LOOP_LIMIT);
                 // end snippet
-                Scan.using(processor).from(this).between("[]").keys(limit).parse(input);
+                scanner.done();
                 int loopCounter = limit.get();
                 String result;
                 final Position pos = input.getPosition();

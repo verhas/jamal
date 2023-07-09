@@ -3,25 +3,25 @@ package javax0.jamal.builtins;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static javax0.jamal.tools.InputHandler.convertGlobal;
-import static javax0.jamal.tools.InputHandler.isGlobalMacro;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
-public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core {
+public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Scanner.Core {
 
     public static final String USERDEFINED = "userdefined";
 
     @Override
     public String evaluate(final Input input, final Processor processor) throws BadSyntax {
-        final var type = Params.<String>holder(null, "type").orElse(USERDEFINED);
-        final var alias = Params.<String>holder(null, "alias").orElse("");
-        final var global = Params.<Boolean>holder(null, "global").asBoolean();
-        Scan.using(processor).from(this).between("[]").keys(type, global, alias).parse(input);
+        final var scanner = newScanner(input, processor);
+        final var type = scanner.str(null, "type").defaultValue(USERDEFINED);
+        final var alias = scanner.str(null, "alias").defaultValue("");
+        final var global = scanner.bool(null, "global");
+        scanner.done();
         skipWhiteSpaces(input);
 
         final var macroType = type.get().toLowerCase();
@@ -48,17 +48,17 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core {
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, macro);
         }
-        BadSyntax.when(macro == null,  "Unknown built-in macro{@%s}", input);
+        BadSyntax.when(macro == null, "Unknown built-in macro{@%s}", input);
         return macro.evaluate(EMPTY_INPUT, processor);
     }
 
     private String getUserDefined(final Input input, final Processor processor, final boolean global, final Params.Param<String> alias) throws BadSyntax {
         final var macro = getMacro(input, global, UserDefinedMacro.class,
-                id -> processor.getRegister().getUserDefined(id,Identified.DEFAULT_MACRO));
+                id -> processor.getRegister().getUserDefined(id, Identified.DEFAULT_MACRO));
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, (Identified) macro);
         } else {
-            BadSyntax.when(macro == null,  "Unknown user-defined macro {%s}", input);
+            BadSyntax.when(macro == null, "Unknown user-defined macro {%s}", input);
             return macro.evaluate();
         }
     }

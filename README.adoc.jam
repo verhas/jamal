@@ -1690,7 +1690,7 @@ You can use any scripting language that
 If the script type is `jamal`, then it is the same as if there was no script type specified.
 You may need the explicit specification of `jamal` when the content of the macro to be evaluated starts with the `/` character.
 
-{%#define evaluateLoopLimit={%#replace (regex) /{%@snip evaluateLoopLimit /(".*?")/%}/"/`/%}%}\
+{%#define evaluateLoopLimit={%#replace (regex) /{%@snip evaluateLoopLimit /(".*?")/%}/"//%}%}\
 {%@define evaluateLoopLimitAliases={%#replace (regex) /{%@snip evaluateLoopLimit /".*?"\s*,\s*(".*")/%}/"/`/(.*),\s/$1, and /%}%}\
 {%@define firstAlias={%#replace (regex) /{%@snip evaluateLoopLimit /".*?"\s*,\s*"(.*?)"/%}/"/`/%}%}\
 {%#assert:intEquals /{%#string:length {%#replace (regex) /{%evaluateLoopLimitAliases%}/[\w`\s]//%}%}/1/there are more than two aliases%}\
@@ -1699,7 +1699,7 @@ If character following the keyword `eval` is `\*`, then the scripting type is `j
 The macro assumes that all the macros are resolved when the evaluation of the text does not change any more.
 This may lead to infinite loop, therefore, there is a built-in limit.
 `eval*` evaluates the macro input at most {%@snip DEFAULT_LOOP_LIMIT /(\d+)/%} times.
-This limit can be changed with the option {%evaluateLoopLimit%}.
+This limit can be changed with the option `{%evaluateLoopLimit%}`.
 This name can also be used as a user defined macro to set this option globally, for example:
 
 [source]
@@ -1726,7 +1726,7 @@ That way `{a}` and `{b}` are replaced with their defined values and `eval` itsel
 
 will result
 
-{ %output% }
+{%output%}
 
 NOTE: Versions prior 1.5.0 used the Nashorn JavaScript interpreter as the default interpreter.
 
@@ -2039,7 +2039,7 @@ The more local configuration overrules the broader one using this algorithm.
 
 [[import]]
 ==== {%macroChapter%}`import`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=360a6d81%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=7d78f122%}
 since 1.0.0 (core)
 
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
@@ -2115,7 +2115,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=5511cd33%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=dd8e1f77%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
@@ -2686,7 +2686,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=7fd83854%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=775d3ac8%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -3825,7 +3825,7 @@ The version of the documented code is in the `pom.xml` file: `{%VERSION%}`.
 [[macro]]
 ==== {%macroChapter%}`macro`
 since 1.11.0
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=a7dc0106%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=1f05dce1%}
 
 The macro named `macro` is a special one that is needed only in rare cases.
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
@@ -3989,7 +3989,7 @@ If you want to emphasize that you use the macro for user-defined macros, you can
 [[log]]
 ==== {%macroChapter%}`log`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=cb7a03ca%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=adf981c6%}
 
 This macro results and empty string and sends the input to the log output.
 The macro has one parameter, `level` that may specify the logging level.
@@ -4028,7 +4028,7 @@ The usage of the macro is, for example
 [[debug]]
 ==== {%macroChapter%}`debug`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=6ee4575c%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=bd9f421b%}
 
 The macro `debug` can be used to start the debugger from the Jamal source code.
 It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.
@@ -4180,9 +4180,10 @@ The core macro `debug` uses the whole input, therefore it does not use any of th
 It simply fails when the number of files using Params is not the same as expected.
 And it already saved the consistency of this documentation many times.
 %}\
-{%#define nrCoreMacrosUsingParams={%@listDir (grep="(?:Params|Scan).using\\(processor\\).from\\(this\\)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
+{%#define nrCoreMacrosUsingParams={%@listDir (grep="(?:Scanner.Core)" pattern=".*\\.java$" countOnly) ./jamal-core/src/main/java/javax0/jamal/builtins%}%}\
 {%#define nrCoreMacrosUsingParamsDocumented=11%}\
-{%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
+{%#assert:intEquals /{%nrCoreMacrosUsingParamsDocumented%}/{%nrCoreMacrosUsingParams%}/There are more or less than {%nrCoreMacrosUsingParamsDocumented%} core macros using params, update the text above and the number.%}\
+
 ====
 
 

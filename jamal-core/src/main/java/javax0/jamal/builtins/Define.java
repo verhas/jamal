@@ -1,11 +1,9 @@
 package javax0.jamal.builtins;
 
+import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.*;
-import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
-import javax0.jamal.tools.Throwing;
+import javax0.jamal.tools.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -13,20 +11,22 @@ import java.util.Arrays;
 import static javax0.jamal.api.SpecialCharacters.*;
 import static javax0.jamal.tools.InputHandler.*;
 
-public class Define implements Macro, OptionsControlled.Core {
+public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var verbatimParam = Params.<Boolean>holder(null, "verbatim").asBoolean();
-        final var tailParamsParam = Params.<Boolean>holder(null, "tail").asBoolean();
-        final var optionalParam = Params.<Boolean>holder(null, "optional", "ifNotDefined").asBoolean();
-        final var noRedefineParam = Params.<Boolean>holder(null, "fail", "noRedefine", "noRedef", "failIfDefined").asBoolean();
-        final var pureParam = Params.<Boolean>holder(null, "pure").asBoolean();
-        final var globalParam = Params.<Boolean>holder(null, "global").asBoolean();
-        final var exportParam = Params.<Boolean>holder(null, "export").asBoolean();
-        final var javaDefined = Params.<Boolean>holder(null, "class").asString();
+        final var scanner = newScanner(input, processor);
+        final var verbatimParam = scanner.bool(null, "verbatim");
+        final var tailParamsParam = scanner.bool(null, "tail");
+        final var optionalParam = scanner.bool(null, "optional", "ifNotDefined");
+        final var noRedefineParam = scanner.bool(null, "fail", "noRedefine", "noRedef", "failIfDefined");
+        final var pureParam = scanner.bool(null, "pure");
+        final var globalParam = scanner.bool(null, "global");
+        final var exportParam = scanner.bool(null, "export");
+        final var javaDefined = scanner.str(null, "class");
         // snipline RestrictedDefineParameters filter="(.*)"
-        final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
-        Scan.using(processor).from(this).between("[]").keys(verbatimParam, tailParamsParam, optionalParam, noRedefineParam, pureParam, globalParam, exportParam, IdOnly, javaDefined).parse(input);
+        final var IdOnly = scanner.bool("RestrictedDefineParameters");
+        scanner.done();
+
         BadSyntax.when(noRedefineParam.is() && optionalParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         BadSyntax.when(globalParam.is() && exportParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         skipWhiteSpaces(input);

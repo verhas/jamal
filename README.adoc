@@ -1947,7 +1947,7 @@ This name can also be used as a user defined macro to set this option globally, 
 
 [source]
 ----
-{@define `evaluateLoopLimit`=60}
+{@define evaluateLoopLimit=60}
 ----
 This option has two aliases `limit`, and `max`.
 The aliases can be used interchanged between `[` and `]` characters following the `\*` character, for example:
@@ -1970,7 +1970,12 @@ That way `{a}` and `{b}` are replaced with their defined values and `eval` itsel
 
 will result
 
-{ %output% }
+[source]
+----
+4
+3
+----
+
 
 NOTE: Versions prior 1.5.0 used the Nashorn JavaScript interpreter as the default interpreter.
 
@@ -4716,6 +4721,7 @@ Because of that options between `(` and `)` could not be distinguished from the 
 To be consistent the macros `block`,`include`, `import`, `eval`, `if`, `macro`, `define`, `log` and `defer` also use the `[` and the `]` characters.
 This is also a clear visual separation of core macros from other macros provided by extra modules.
 The core macro `debug` uses the whole input, therefore it does not use any of the brackets around the parameters.
+
 
 ====
 

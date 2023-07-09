@@ -93,7 +93,7 @@ As we have seen, the `include` macro with the parameters
 uses the `[` and `]` characters.
 
 The built-in core macros use these separator characters.
-Currently 11 built-in core macros have parameters.
+Currently 0 built-in core macros have parameters.
 
 The class `Params` provides the tools to ease parameter parsing.
 

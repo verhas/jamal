@@ -1,11 +1,9 @@
 package javax0.jamal.builtins;
 
 import javax0.jamal.api.*;
+import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.tools.MinimumAffinityDebuggerSelector;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.ProxyDebugger;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.*;
 
 import java.util.List;
 
@@ -13,17 +11,18 @@ import java.util.List;
  * This macro sets and switches on and off the debugger.
  * It only works if a debugger is available and no debugger is configured globally.
  */
-public class Debug implements Macro, OptionsControlled.Core {
+public class Debug implements Macro, OptionsControlled.Core, Scanner.Core {
     final static List<Debugger> DEBUGGERS = Debugger.getInstances();
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final Params.Param<Boolean> on = Params.<Boolean>holder(null, "on").asBoolean();
-        final Params.Param<Boolean> off = Params.<Boolean>holder(null, "off").asBoolean();
-        final Params.Param<Boolean> noDebug = Params.<Boolean>holder("noDebug").asBoolean();
-        final Params.Param<Boolean> lenient = Params.<Boolean>holder("lenient").asBoolean();
-        final Params.Param<String> selector = Params.<String>holder(null, "using", "debugger", "selector").asString();
-        Scan.using(processor).from(this).tillEnd().keys(on, off, selector).parse(in);
+        final var scanner = newScanner(in, processor);
+        final Params.Param<Boolean> on = scanner.bool(null, "on");
+        final Params.Param<Boolean> off = scanner.bool(null, "off");
+        final Params.Param<Boolean> noDebug = scanner.bool("noDebug");
+        final Params.Param<Boolean> lenient = scanner.bool("lenient");
+        final Params.Param<String> selector = scanner.str(null, "using", "debugger", "selector");
+        scanner.done();
 
         BadSyntax.when(on.is() && off.is(), "The 'on' and 'off' parameters cannot be used together.");
 

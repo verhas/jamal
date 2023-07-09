@@ -1,11 +1,10 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Identified;
+import javax0.jamal.api.*;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Processor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -68,6 +67,17 @@ public interface Scanner {
             final var param = Params.<T>holder(keys);
             params.add(param);
             return param;
+        }
+
+        /**
+         * Define a list of strings parameter.
+         * @param keys the name and the aliases of the parameter
+         * @return the parameter object
+         */
+        public Params.Param<List<String>> list(String... keys) {
+            final var param = Params.<Boolean>holder(keys).asBoolean();
+            params.add(param);
+            return param.asList(String.class);
         }
 
         /**
@@ -158,6 +168,12 @@ public interface Scanner {
      */
     default ScannerObject newScanner(Input in, Processor processor) {
         return nso(processor, in, this).delimiterSetter(p -> p.between("()"));
+    }
+
+    interface Core extends Scanner {
+        default ScannerObject newScanner(Input in, Processor processor) {
+            return nso(processor, in, this).delimiterSetter(p -> p.between("[]"));
+        }
     }
 
     /**
