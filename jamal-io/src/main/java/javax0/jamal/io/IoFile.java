@@ -3,11 +3,12 @@ package javax0.jamal.io;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.nio.file.Files;
 
-public class IoFile implements Macro, InnerScopeDependent {
+public class IoFile implements Macro, InnerScopeDependent, Scanner.WholeInput {
 
     private enum Condition {
         exists, isDirectory, isFile, canExecute, canRead, canWrite, isHidden
@@ -15,9 +16,10 @@ public class IoFile implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var file = Params.holder("io:file", "file").asString();
-        final var condition = Params.holder(null, "isHidden", "exists", "isDirectory", "isFile", "canExecute", "canRead", "canWrite").asBoolean();
-        Scan.using(processor).from(this).tillEnd().keys(file, condition).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var file = scanner.str("io:file", "file");
+        final var condition = scanner.bool(null, "isHidden", "exists", "isDirectory", "isFile", "canExecute", "canRead", "canWrite");
+        scanner.done();
 
 
         final var fileName = Utils.getFile(file, in);

@@ -2,6 +2,7 @@ package javax0.jamal.io;
 
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +14,13 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Remove implements Macro, InnerScopeDependent {
+public class Remove implements Macro, InnerScopeDependent, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var file = Utils.getFile();
-        final var recursive = Utils.getRecursive();
-        Scan.using(processor).from(this).firstLine().keys(file, recursive).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var file = Utils.getFile(scanner);
+        final var recursive = Utils.getRecursive(scanner);
+        scanner.done();
 
         final var fileName = Utils.getFile(file, in);
 
