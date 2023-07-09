@@ -8,15 +8,17 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.PrintStream;
 
-public class Print implements Macro, InnerScopeDependent {
+public class Print implements Macro, InnerScopeDependent, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var err = Params.holder("io:err", "err").asBoolean();
-        Scan.using(processor).from(this).between("()").keys(err).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var err = scanner.bool("io:err", "err");
+        scanner.done();
 
         final PrintStream out;
         if (err.is()) {
