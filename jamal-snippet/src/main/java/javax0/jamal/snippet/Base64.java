@@ -6,20 +6,22 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.nio.charset.StandardCharsets;
 import java.util.zip.Deflater;
 
 public class Base64 {
 
-    public static class Encode implements Macro {
+    public static class Encode implements Macro, Scanner {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var quote = Params.holder("quote").asBoolean();
-            final var compress = Params.holder("compress").asBoolean();
-            final var url = Params.holder("url").asBoolean();
-            Scan.using(processor).from(this).between("()").keys(quote, compress, url).parse(in);
+            final var scanner = newScanner(in, processor);
+            final var quote = scanner.bool("quote");
+            final var compress = scanner.bool("compress");
+            final var url = scanner.bool("url");
+            scanner.done();
 
             final var plainText = getBytes(in, quote.is(), compress.is());
             final var encoder = url.is() ? java.util.Base64.getUrlEncoder() : java.util.Base64.getEncoder();
@@ -41,7 +43,7 @@ public class Base64 {
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var quote = Params.holder("quote").asBoolean();
             final var url = Params.holder("url").asBoolean();
-            Scan.using(processor).from(this).between("()").keys(quote,url).parse(in);
+            Scan.using(processor).from(this).between("()").keys(quote, url).parse(in);
             try {
                 final var plainText = getBytes(in, quote.is(), false);
                 final var decoder = url.is() ? java.util.Base64.getUrlDecoder() : java.util.Base64.getDecoder();

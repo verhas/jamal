@@ -160,7 +160,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in l
 %}
 [[snip_collect]]
 === {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=0ff9361c%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=542e490d%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -178,7 +178,7 @@ If the `fileName` is a directory, then the macro will collect the snippets from 
 
 The file name is relative to the Jamal source, which contains the `snip:collect` macro.
 The file name can start with `res:` or `https://`.
-In these cases the content of the file will be loaded from a resource or through the net respectively.
+In these cases, the content of the file will be loaded from a resource or through the net respectively.
 
 A snippet in a file is a series of lines that happen between
 
@@ -242,7 +242,7 @@ For example
 ----
 
 will store `Hello World` as the content of the snippet `MY_CONSTANT_SNIPPET_NAME`.
-Unfortunately it is easy to misread the line above and to think that the capture group will match the whole line.
+Unfortunately, it is easy to misread the line above and to think that the capture group will match the whole line.
 However, the filter on the `snipline` is not a macro parameter.
 It is processed in a different way.
 The whole part following the `filter=` is part of the regular expression, including the `"` characters in the above example.
@@ -276,7 +276,7 @@ The collector, sooner or later, will find that definition, and it will assume th
 It is still okay when the snippet collection finds these two snippets in the opposite order.
 If there is already a correct, error-free snippet collected and the collection finds an erroneous one of the same name, it ignores that.
 
-This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the mal-formed snippets.
+This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the malformed snippets.
 
 If you look at the {%@file src/main/java/javax0/jamal/snippet/TrimLines.java%} in version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
 Because there is also an accidental `snippet` line before it, the collection would not find this line.
@@ -307,7 +307,7 @@ The macro behaviour can be altered using options.
 These options are parsed using the Standard Parameter Parsing as defined in link:{%@file ../documentation/PARAMS.adoc%}[PARAMS].
 
 {%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(.*?\"(.*?)\".*~* `$1`~.*//\\s*~"
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*scanner\\..*?\\(.*?\"(.*?)\".*~* `$1`~.*//\\s*~"
 {%@snip collect_options%}
 %}%}
 
@@ -414,7 +414,7 @@ The syntax of the command is
 
 {%XML_MACRO_USE%}
 
-For example this document contains the following macros at the start:
+For example, this document contains the following macros at the start:
 
 {%sample/
 {@snip:xml pom=pom.xml}\
@@ -1179,7 +1179,7 @@ The format and the meaning of the option `lines` is exactly the same as the opti
 
 [[Base64]]
 === {%macroChapter%}`base64` encode and decode
-{%#snip:check file={%JAVA_DIR%}Base64.java hash=def63361.676a6b28.4255aa9b%}
+{%#snip:check file={%JAVA_DIR%}Base64.java hash=981658e9%}
 
 There are two macros that can encode and decode the input using the Base64 algorithm.
 The encoding macro is called `base64`.
@@ -1523,7 +1523,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 === {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=c6272662%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=ae1cb0ce%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -2268,7 +2268,7 @@ results
 
 [[listDir]]
 === {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=7c05a283%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=ab444c68%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 

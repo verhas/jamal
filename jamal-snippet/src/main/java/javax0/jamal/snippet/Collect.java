@@ -1,15 +1,8 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import javax0.javalex.JavaLexed;
 import javax0.javalex.MatchResult;
 
@@ -32,7 +25,7 @@ import java.util.stream.Stream;
 /**
  * Scan a file or the directory tree and collect the snippets from the files.
  */
-public class Collect implements Macro, InnerScopeDependent {
+public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
     private enum State {IN, OUT}
 
     private static final String IMPOSSIBLE_TO_MATCH = "a^";
@@ -45,36 +38,36 @@ public class Collect implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reference = in.getReference();
         //<editor-fold desc="Collection Options" default="collapsed">
         final var pos = in.getPosition();
+        final var scanner = newScanner(in, processor);
         // snippet collect_options
-        final var include = Params.<Predicate<String>>holder("include").orElse(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
+        final var include = scanner.<Predicate<String>>param("include").defaultValue(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
         // can define a regular expression. Only those files will be collected that match partially the regular expression.
-        final var exclude = Params.<Predicate<String>>holder("exclude").orElse(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
+        final var exclude = scanner.<Predicate<String>>param("exclude").defaultValue(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
         // can define a regular expression. Only those files will be collected that do not match partially the regular expression.
         // For example, the test file
-        //
+        // +
         //[source]
         //----
         //    {%@include ./src/test/resources/javax0/jamal/snippet/test3.jam%}
         //----
-        //
+        // +
         //excludes any file that contains the character `2` in its name.
         //
-        final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").asPattern();
+        final var start = scanner.pattern("start").defaultValue("snippet\\s+([a-zA-Z0-9_$]+)");
         // can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
-        final var liner = Params.<Pattern>holder("liner").orElse("snipline\\s+([a-zA-Z0-9_$]+)").asPattern();
-        // can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
-        final var lineFilter = Params.<Predicate<String>>holder("lineFilter", "filter").orElse("filter=(.*)").asPattern();
+        final var liner = scanner.pattern("liner").defaultValue("snipline\\s+([a-zA-Z0-9_$]+)");
+        // can define a regular expression. The lines that match the regular expression will signal the start of a one-liner snippet.
+        final var lineFilter = scanner.<Predicate<String>>param("lineFilter", "filter").defaultValue("filter=(.*)").asPattern();
         // can define a regular expression. The pattern will be used against any 'snipline' lines, to find the regular expression that will be used to filter the content of the line
-        final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").asPattern();
+        final var stop = scanner.pattern("stop").defaultValue("end\\s+snippet");
         // can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
-        final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
+        final var scanDepth = scanner.number("scanDepth").defaultValue(Integer.MAX_VALUE);
         // can limit the directory traversing to a certain depth.
-        final var from = Params.<String>holder("from").as(s -> FileTools.absolute(reference, s));
+        final var from = scanner.file("from");
         // can specify the start directory for the traversing.
-        final var setName = Params.<String>holder(null, "onceAs").orElseNull();
+        final var setName = scanner.str(null, "onceAs").defaultValue(null);
         // You can use the parameter `onceAs` to avoid repeated snippet collections.
         // Your collect macro may be in an included file, or the Jamal source structure is complex.
         // At a certain point, it may happen that Jamal already collected the snippets you need.
@@ -83,11 +76,11 @@ public class Collect implements Macro, InnerScopeDependent {
         // If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
         // If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
         // It was already collected.
-        final var prefix = Params.<String>holder("prefix").orElse("");
+        final var prefix = scanner.str("prefix").defaultValue("");
         // You can define a prefix, which is prepended to the snippet names.
         // The snippets will be stored with this prefix, and the macros should use these prefixed names to reference the snippets.
         // For example, if you define the prefix as `myprefix::` then the snippet named `mysnippet` will be stored as `myprefix::mysnippet`.
-        final var postfix = Params.<String>holder("postfix").orElse("");
+        final var postfix = scanner.str("postfix").defaultValue("");
         // You can define a postfix, which is appended to the snippet names.
         // The snippets will be stored with this postfix, and the macros should use these postfixed names to reference the snippets.
         // For example, if you define the postfix as `::mypostfix` then the snippet named `mysnippet` will be stored as `mysnippet::mypostfix`.
@@ -95,23 +88,22 @@ public class Collect implements Macro, InnerScopeDependent {
         //+
         // The parameter `prefix` and `postfix` can be used together.
         // The use case is when you collect snippets from different sources where the names may collide.
-        final var java = Params.<Boolean>holder(null, "java").asBoolean();
+        final var java = scanner.bool(null, "java");
         // Collect snippets from the Java sources based on the Java syntax without any special tag.
-        final var javaSnippetCollectors = Params.<String>holder("javaSnippetCollectors").asString().orElseNull();
+        final var javaSnippetCollectors = scanner.str("javaSnippetCollectors").asString().defaultValue(null);
         // You can define a comma-separated list of Java snip{%@comment%}pet collectors.
-        final var asciidoc = Params.<Boolean>holder("asciidoc", "asciidoctor").asBoolean();
+        final var asciidoc = scanner.bool("asciidoc", "asciidoctor");
         // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
         // This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
         // Using these start and stop delimiters, the snippets can also be nested arbitrarily, and they can also overlap.
-        final var ignoreIOEx = Params.<Boolean>holder("ignoreErrors").asBoolean();
+        final var ignoreIOEx = scanner.bool("ignoreErrors");
         // Using this parameter, the macro will ignore IOExceptions.
         // An IOException typically occurs when a file is binary and by accident it contains an invalid UTF-8 sequence.
         // Use this option only as a last resort.
         // Better do not mix binary files with ASCII files.
         // Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.
         // end snippet
-        Scan.using(processor).from(this)
-                .tillEnd().keys(include, exclude, start, liner, lineFilter, stop, from, scanDepth, setName, prefix, postfix, asciidoc, java, javaSnippetCollectors, ignoreIOEx).parse(in);
+        scanner.done();
         //</editor-fold>
 
         BadSyntax.when(asciidoc.is() && java.is(), "You cannot use both 'asciidoc' and 'java' parameters in the same collect macro.");

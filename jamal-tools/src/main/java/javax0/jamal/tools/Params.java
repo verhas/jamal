@@ -60,10 +60,30 @@ public class Params {
 
         void set(String value);
 
+        default Param<T> defaultValue(String i) {
+            return orElse(i);
+        }
+
+        /**
+         * @deprecated use {@link #defaultValue(String)} instead
+         */
+        @Deprecated(since = "2.4.0")
         Param<T> orElse(String i);
 
+        /**
+         * @deprecated use {@link #defaultValue(String) defaultValue(null)} instead
+         */
+        @Deprecated(since = "2.4.0")
         Param<T> orElseNull();
 
+        default Param<Integer> defaultValue(int i) {
+            return orElseInt(i);
+        }
+
+        /**
+         * @deprecated use {@link #defaultValue(int)} instead
+         */
+        @Deprecated(since = "2.4.0")
         Param<Integer> orElseInt(int i);
 
         Param<T> as(Function<String, T> converter);

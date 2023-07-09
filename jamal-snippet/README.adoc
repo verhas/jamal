@@ -169,7 +169,7 @@ If the `fileName` is a directory, then the macro will collect the snippets from 
 
 The file name is relative to the Jamal source, which contains the `snip:collect` macro.
 The file name can start with `res:` or `https://`.
-In these cases the content of the file will be loaded from a resource or through the net respectively.
+In these cases, the content of the file will be loaded from a resource or through the net respectively.
 
 A snippet in a file is a series of lines that happen between
 
@@ -233,7 +233,7 @@ For example
 ----
 
 will store `Hello World` as the content of the snippet `MY_CONSTANT_SNIPPET_NAME`.
-Unfortunately it is easy to misread the line above and to think that the capture group will match the whole line.
+Unfortunately, it is easy to misread the line above and to think that the capture group will match the whole line.
 However, the filter on the `snipline` is not a macro parameter.
 It is processed in a different way.
 The whole part following the `filter=` is part of the regular expression, including the `"` characters in the above example.
@@ -267,7 +267,7 @@ The collector, sooner or later, will find that definition, and it will assume th
 It is still okay when the snippet collection finds these two snippets in the opposite order.
 If there is already a correct, error-free snippet collected and the collection finds an erroneous one of the same name, it ignores that.
 
-This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the mal-formed snippets.
+This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the malformed snippets.
 
 If you look at the src/main/java/javax0/jamal/snippet/TrimLines.java in version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
 Because there is also an accidental `snippet` line before it, the collection would not find this line.
@@ -311,7 +311,7 @@ can define a regular expression. Only those files will be collected that match p
 * `exclude`
 can define a regular expression. Only those files will be collected that do not match partially the regular expression.
 For example, the test file
-
++
 [source]
 ----
 {#snip:collect from="." exclude=2 include=SnippetSource-\d\.txt}
@@ -325,13 +325,13 @@ Second snippet {@snip seconda_snippet_uniconde}
 }
 and this is the end
 ----
-
++
 excludes any file that contains the character `2` in its name.
 
 * `start`
 can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
 * `liner`
-can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
+can define a regular expression. The lines that match the regular expression will signal the start of a one-liner snippet.
 * `lineFilter`
 can define a regular expression. The pattern will be used against any 'snipline' lines, to find the regular expression that will be used to filter the content of the line
 * `stop`
@@ -499,7 +499,7 @@ It uses the argument as an XPath expression and returns the value from the XML d
 If the XPath expression is missing then the whole XML content is converted to text formatted.
 
 
-For example this document contains the following macros at the start:
+For example, this document contains the following macros at the start:
 
 [source]
 ----
@@ -2511,7 +2511,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 52.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 45.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2964,9 +2964,9 @@ will result
 - MethodTool.java: 7,761 bytes
 - Update.java: 1,640 bytes
 - SnipTransform.java: 17,149 bytes
-- Base64.java: 3,470 bytes
+- Base64.java: 3,466 bytes
 - FilesMacro.java: 8,162 bytes
-- Collect.java: 24,444 bytes
+- Collect.java: 23,868 bytes
 - SnipFile.java: 680 bytes
 - HashCode.java: 497 bytes
 - TrimLines.java: 5,379 bytes
@@ -2991,12 +2991,12 @@ will result
 - JavaSourceTemplate.java: 7,568 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
-- KillLines.java: 1,778 bytes
+- KillLines.java: 1,763 bytes
 - SnipLoad.java: 3,540 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
-- Download.java: 2,251 bytes
-- ListDir.java: 5,369 bytes
+- Download.java: 2,156 bytes
+- ListDir.java: 5,321 bytes
 - XmlFormat.java: 3,544 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 6,316 bytes
@@ -3267,7 +3267,7 @@ will result in the output
 
 [source]
 ----
-2023-07-07 11:31:50
+2023-07-09 16:58:52
 ----
 
 

@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 
+@Deprecated(since = "2.4.0")
 public class ScanInterfaces {
     public interface AfterUsing {
         AfterFrom from(Identified macro);

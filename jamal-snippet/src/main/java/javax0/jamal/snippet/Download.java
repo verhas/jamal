@@ -5,31 +5,29 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Download implements Macro {
+public class Download implements Macro, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var to = Params.holder(null, "file").asString();
-
-        Scan.using(processor).from(this).between("()").keys(to).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var to = scanner.file(null, "file");
+        scanner.done();
 
         final var reference = in.getReference();
-        final var toName = FileTools.absolute(reference, to.get());
         final var fromName = FileTools.absolute(reference, in.toString().trim());
-        final var f = new File(toName);
+        final var f = new File(to.get());
 
         try (final var fos = new FileOutputStream(f)) {
             final var bytes = FileTools.getFileBinaryContent(fromName, true, processor);
             fos.write(bytes);
         } catch (IOException ioException) {
-            throw new BadSyntax(String.format("There was an IOException downloading the file '%s' to '%s'", fromName, toName), ioException);
+            throw new BadSyntax(String.format("There was an IOException downloading the file '%s' to '%s'", fromName, to.get()), ioException);
         }
         return "";
     }

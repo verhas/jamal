@@ -32,7 +32,7 @@ class ExceptionDumper {
         }else{
             extension = inputFileName.substring(i+1);
         }
-        me.output.append("sed -i ").append(extension).append(" '").append(me.sedCommand).append("' ").append(inputFileName);
+        me.output.append("sed -i.bak ").append(" '").append(me.sedCommand).append("' ").append(inputFileName);
         return me.output;
     }
 
