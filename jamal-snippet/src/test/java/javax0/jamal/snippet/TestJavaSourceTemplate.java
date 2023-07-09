@@ -7,12 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -37,11 +35,13 @@ public class TestJavaSourceTemplate {
 
     private void assertResult(final String fileContent) throws IOException {
         final var result = Files.readString(path);
-        if( !fileContent.equals(result) ){
+        if (!fileContent.equals(result)) {
             final var sb = new StringBuilder();
-            sb.append("Expected: ").append(fileContent.chars().mapToObj(c-> String.format("%02X",c)).collect(Collectors.joining(" ")));
-            sb.append("Actual: ").append(result.chars().mapToObj(c-> String.format("%02X",c)).collect(Collectors.joining(" ")));
-        Assertions.assertEquals(fileContent, result);
+            sb.append("Expected: ").append(fileContent.chars().mapToObj(c -> String.format("%02X", c)).collect(Collectors.joining(" ")));
+            sb.append("\n");
+            sb.append("Actual: ").append(result.chars().mapToObj(c -> String.format("%02X", c)).collect(Collectors.joining(" ")));
+            sb.append("\n");
+            Assertions.fail(sb.toString());
         }
     }
 
@@ -323,7 +323,7 @@ public class TestJavaSourceTemplate {
                 "  public void setReferences(String references){\n" +
                 "    this.references=references;\n" +
                 "  }\n" +
-                " //</editor-fold>\n" );
+                " //</editor-fold>\n");
         assertResult("package javax0.jamal.templated;\n" +
                 "\n" +
                 "public class Templated1 {\n" +

@@ -7,9 +7,10 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 @Macro.Stateful
-public class Output implements Macro {
+public class Output implements Macro, Scanner {
     /**
      * Instantiating a processor also instantiates all macro classes via the ServiceLoader. Instantiating here the
      * processor would instantiate a new instance of all the macros including this one and that would mean an infinite
@@ -19,8 +20,9 @@ public class Output implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var isolate = Params.<Boolean>holder("isolatedOutput","isolate").asBoolean();
-        Scan.using(processor).from(this).between("()").keys(isolate).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var isolate = scanner.bool("isolatedOutput","isolate");
+        scanner.done();
         InputHandler.skipWhiteSpaces2EOL(in);
         if (isolate.is()) {
             try (var isolatedProc = new javax0.jamal.engine.Processor("{", "}")) {
