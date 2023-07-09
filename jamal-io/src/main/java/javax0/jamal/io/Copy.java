@@ -5,30 +5,29 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Copy implements Macro {
+public class Copy implements Macro, Scanner.WholeInput {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var from = Params.holder(null, "from").asString();
-        final var to = Params.holder(null, "to").asString();
-        final var append = Params.holder("io:append", "append").asBoolean();
-        final var mkdir = Params.holder("io:mkdir", "mkdir").asBoolean();
-        final var useCache = Params.holder("cache").asBoolean();
-        final var overwrite = Params.holder("overwrite").asBoolean();
-
-        Scan.using(processor).from(this).tillEnd().keys(from, to, append, mkdir, useCache,overwrite).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var from = scanner.str(null, "from");
+        final var to = scanner.str(null, "to");
+        final var append = scanner.bool("io:append", "append");
+        final var mkdir = scanner.bool("io:mkdir", "mkdir");
+        final var useCache = scanner.bool("cache");
+        final var overwrite = scanner.bool("overwrite");
+        scanner.done();
 
         final var toName = Utils.getFile(to, in);
         final var fromName = Utils.getFile(from, in);
         final var f = new File(toName);
-        if( f.exists() && !overwrite.is() ){
+        if (f.exists() && !overwrite.is()) {
             return "";
         }
         if (mkdir.is()) {
