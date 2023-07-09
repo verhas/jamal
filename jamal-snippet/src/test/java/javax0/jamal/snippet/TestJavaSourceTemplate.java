@@ -30,7 +30,7 @@ public class TestJavaSourceTemplate {
                     .forEach(File::delete);
         }
         Files.createDirectories(path.getParent());
-        Files.write(path, (content).getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        Files.writeString(path, content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
     }
 
