@@ -58,7 +58,7 @@ public class TestJavaSourceTemplate {
                 "{@java:template debug path=\"target/TestJavaSourceTemplates\" template=\"testTemplate\"\n" +
                         "this will be inserted as new value from the template\n" +
                         "}\n" +
-                        "").results("//" + "target/TestJavaSourceTemplates/Test.java\n".replaceAll("/", File.separator) +
+                        "").results("//" + "target/TestJavaSourceTemplates/Test.java\n".replace("/", File.separator) +
                 "this will be inserted as new value from the template\n" +
                 " this text will remain and will also be put after this line without the leading // characters\n" +
                 "\n");
@@ -90,7 +90,7 @@ public class TestJavaSourceTemplate {
                 "%}\n" +
                 "%}\n" +
                 "").usingTheSeparators("{%", "%}").results("//" +
-                "target/TestJavaSourceTemplates/Test.java\n".replaceAll("/", File.separator) +
+                "target/TestJavaSourceTemplates/Test.java\n".replace("/", File.separator) +
                 "\n" +
                 " \n" +
                 "private int jakab;\n" +
@@ -170,7 +170,7 @@ public class TestJavaSourceTemplate {
                         "    this.$name=$name;\n" +
                         "  }%}\n" +
                         "%}").usingTheSeparators("{%", "%}").results("//"+
-                "target/TestJavaSourceTemplates/Test.java\n".replaceAll("/", File.separator) +
+                "target/TestJavaSourceTemplates/Test.java\n".replace("/", File.separator) +
                 "\n" +
                 " //<editor-fold desc=\"generated fields\">\n" +
                 " \n" +
