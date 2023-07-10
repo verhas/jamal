@@ -10,11 +10,11 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.Locale;
 
-public class SnipCheck implements Macro {
+public class SnipCheck implements Macro, Scanner.WholeInput {
 
     // snipline SnipCheck_MIN_LINE
     public static final int MIN_LENGTH = 6;
@@ -27,16 +27,17 @@ public class SnipCheck implements Macro {
             return "";
         }
         final var pos = in.getPosition();
-        final var hashString = Params.<String>holder("hash", "hashCode").orElse("");
-        final var lines = Params.<String>holder("lines").asInt();
-        final var id = Params.<String>holder("id");
-        final var fileName = Params.<String>holder("file", "files");
-        final var message = Params.<String>holder("message").orElse("");
-        final var warning = Params.<Boolean>holder("snipCheckWarningOnly", "warning", "warningOnly").asBoolean();
-        final var error = Params.<Boolean>holder("snipCheckError", "error", "errorLog").asBoolean();
-        Scan.using(processor).from(this).tillEnd().keys(hashString, lines, id, fileName, message, warning, error).parse(in);
-        BadSyntax.when(lines.isPresent() && hashString.isPresent(), "You cannot specify 'lines' and 'hash' the same time for snip:check");
+        final var scanner = newScanner(in, processor);
+        final var hashString = scanner.str("hash", "hashCode").defaultValue("");
+        final var lines      = scanner.number("lines");
+        final var id         = scanner.str("id");
+        final var fileName   = scanner.str("file", "files");
+        final var message    = scanner.str("message").defaultValue("");
+        final var warning    = scanner.bool("snipCheckWarningOnly", "warning", "warningOnly");
+        final var error      = scanner.bool("snipCheckError", "error", "errorLog");
+        scanner.done();
 
+        BadSyntax.when(lines.isPresent() && hashString.isPresent(), "You cannot specify 'lines' and 'hash' the same time for snip:check");
         BadSyntax.when(warning.is() && error.is(), "You cannot specify 'warning' and 'error' the same time for snip:check");
 
         final String snippet = getSnippetContent(in, processor, id, fileName, message);

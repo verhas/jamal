@@ -1,7 +1,6 @@
 package javax0.jamal.prog.commands;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Processor;
 
 public class If implements Command {
     private final Expression condition;

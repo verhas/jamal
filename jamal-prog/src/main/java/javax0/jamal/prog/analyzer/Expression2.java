@@ -3,8 +3,6 @@ package javax0.jamal.prog.analyzer;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.prog.commands.Operation;
 
-import static javax0.jamal.prog.analyzer.Expression.getExpressionBetweenParenthese;
-
 /**
  * An expression2 is
  * <pre>

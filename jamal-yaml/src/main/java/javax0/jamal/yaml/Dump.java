@@ -1,23 +1,28 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class Dump implements Macro, InnerScopeDependent {
+public class Dump implements Macro, InnerScopeDependent, Scanner {
     final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        Scan.using(processor).from(this).between("()").keys(clone, copy).parse(input);
+        final var scanner = newScanner(input,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        scanner.done();
 
         InputHandler.skipWhiteSpaces(input);
         final var id = InputHandler.fetchId(input);

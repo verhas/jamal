@@ -1,10 +1,16 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.tools.*;
+import javax0.jamal.api.OptionsControlled;
+import javax0.jamal.api.Position;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Marker;
+import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Range;
+import javax0.jamal.tools.Scanner;
 
 import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;

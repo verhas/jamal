@@ -6,7 +6,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import javax0.javalex.JavaSourceDiff;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Input.makeInput;
 
-public class JavaSourceTemplate implements Macro {
+public class JavaSourceTemplate implements Macro, Scanner.FirstLine {
     private static final Pattern segmentStartPattern = Pattern.compile("^\\s*//\\s*<\\s*editor-fold(.*>)");
     private static final Pattern segmentEndPattern = Pattern.compile("^\\s*//\\s*</\\s*editor-fold\\s*>");
     private static final Pattern segmentHeaderPattern = Pattern.compile("^\\s*//(.*)$");
@@ -28,13 +28,14 @@ public class JavaSourceTemplate implements Macro {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var path = Params.<String>holder(null, "path").orElseNull();
-        final var template = Params.<String>holder(null, "template", "name", "id");
-        final var update = Params.<Boolean>holder(null, "check", "checkUpdate", "update", "updateOnly").asBoolean();
-        final var debug = Params.<Boolean>holder(null, "debug").asBoolean();
-        final var apply = Params.<Boolean>holder(null, "apply").asBoolean();
-        final var throwUp = Params.<Boolean>holder(null, "failOnUpdate", "failUpdate", "updateError").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(path, template, update, throwUp, debug, apply).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var path = scanner.str(null, "path").defaultValue(null);
+        final var template = scanner.str(null, "template", "name", "id");
+        final var update = scanner.bool(null, "check", "checkUpdate", "update", "updateOnly");
+        final var debug = scanner.bool(null, "debug");
+        final var apply = scanner.bool(null, "apply");
+        final var throwUp = scanner.bool(null, "failOnUpdate", "failUpdate", "updateError");
+        scanner.done();
 
         final String templateContent;
         if (apply.is()) {

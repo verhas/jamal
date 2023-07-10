@@ -5,8 +5,9 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Scanner;
 
-public class RubyEval implements Macro, InnerScopeDependent {
+public class RubyEval implements Macro, InnerScopeDependent, Scanner {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         try {
             final var shell = Shell.getShell(in, processor, this);

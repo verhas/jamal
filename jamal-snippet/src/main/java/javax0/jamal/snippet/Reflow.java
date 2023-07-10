@@ -7,13 +7,14 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
-public class Reflow implements Macro, InnerScopeDependent, BlockConverter {
+public class Reflow implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var width = Params.holder("width").orElseInt(0);
-        Scan.using(processor).from(this).firstLine().keys(width).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var width = scanner.number("width").defaultValue(0);
+        scanner.done();
         convertTextBlock(in.getSB(), in.getPosition(), width);
         return in.toString();
     }

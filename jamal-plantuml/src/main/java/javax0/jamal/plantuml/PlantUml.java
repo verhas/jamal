@@ -5,7 +5,11 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.*;
+import javax0.jamal.tools.Cache;
+import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.IndexedPlaceHolders;
+import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.Scanner;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
@@ -17,7 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-public class PlantUml implements Macro, InnerScopeDependent {
+public class PlantUml implements Macro, InnerScopeDependent, Scanner {
     private static class Trie {
         static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                 "$file"
@@ -26,10 +30,11 @@ public class PlantUml implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var root = Params.<String>holder("pu$folder", "folder").orElse("./");
-        final var format = Params.<String>holder("pu$format", "format").orElse("SVG");
-        final var template = Params.<String>holder("pu$template", "template").orElse("$file");
-        Scan.using(processor).from(this).between("()").keys(root, format, template).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var root     = scanner.str("pu$folder", "folder").defaultValue("./");
+        final var format   = scanner.str("pu$format", "format").defaultValue("SVG");
+        final var template = scanner.str("pu$template", "template").defaultValue("$file");
+        scanner.done();
         final var fileName = InputHandler.fetch2EOL(in).trim();
         final var imageDir = root.get().endsWith("/") ? root.get() : root.get() + "/";
         final var absoluteFileName = FileTools.absolute(in.getReference(), imageDir + fileName);

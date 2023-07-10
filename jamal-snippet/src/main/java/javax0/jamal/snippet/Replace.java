@@ -6,15 +6,14 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
-import static javax0.jamal.tools.Params.holder;
-
-public class Replace implements Macro, InnerScopeDependent {
+public class Replace implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var isRegex = holder("regex").asBoolean();
-        Scan.using(processor).from(this).between("()").keys(isRegex).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var isRegex = scanner.bool("regex");
+        scanner.done();
         InputHandler.skipWhiteSpaces(in);
         final var parts = InputHandler.getParts(in);
         BadSyntax.when(parts.length < 2, () -> String.format("Marco 'replace' needs at least two arguments, got only %d:\n%s\n----------",

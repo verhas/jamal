@@ -5,22 +5,21 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import ognl.Ognl;
 import ognl.OgnlException;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.Params.holder;
 
 
-public class Get implements Macro, InnerScopeDependent {
+public class Get implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        final var from = holder("yamlDataSource", "from").asString();
-        Scan.using(processor).from(this).between("()").keys(clone, copy, from).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        final var from = scanner.str("yamlDataSource", "from");
+        scanner.done();
         final var fromId = Set.getFromId(in,from,this);
         skipWhiteSpaces(in);
         try {

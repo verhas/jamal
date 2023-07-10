@@ -6,7 +6,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.math.BigDecimal;
 import java.text.Collator;
@@ -21,20 +21,20 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.Params.holder;
 
-public class Sort implements Macro {
+public class Sort implements Macro, Scanner.FirstLine {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var scanner = newScanner(in,processor);
         // snippet sort_options
-        final var separator = holder("separator").orElse("\n").asPattern();
+        final var separator = scanner.pattern("separator").defaultValue("\n");
         // specifies the separator regular expression, that separates the individual records.
         // The default value if `\n`, which means the lines are the records.
-        final var join = holder(null, "join").orElse("\n").asString();
+        final var join = scanner.str(null, "join").defaultValue("\n");
         // is the string to use to join the records together after the sorting was done.
         // The default value is the `\n` string (not pattern); that means the records will be individual lines in the output.
-        final var locale = holder(null, "locale", "collatingOrder", "collator").asString();
+        final var locale = scanner.str(null, "locale", "collatingOrder", "collator");
         // can define the locale for the sorting.
         // The default locale `en-US.UTF-8`.
         // Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
@@ -42,27 +42,23 @@ public class Sort implements Macro {
         // The class will be instantiated and used to sort the records.
         // Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
         // This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.
-        final var columns = holder(null, "columns").asString();
+        final var columns = scanner.str(null, "columns");
         // can specify the part of the textual record to be used as a sorting key.
         // The format of the parameter is `n..m` where `n` is the first character position and `m-1` is the last character position to be used.
         // The values can run from 1 to the maximum number of characters.
         // If you specify column values that run out of the line length, then the macro will result in an error.
-        final var pattern = holder(null, "pattern").asPattern();
+        final var pattern = scanner.pattern(null, "pattern");
         // can specify a regular expression pattern to define the part of the line as a sort key.
         // The expression may contain matching groups.
         // In that case, the strings matching the parts between the parentheses are appended from left to right and used as a key.
         // This option must not be used together with the option `columns`.
-        final var numeric = holder(null, "numeric").asBoolean();
+        final var numeric = scanner.bool(null, "numeric");
         // will sort based on the numeric order of the keys.
         // In this case, the keys must be numeric or else the conversion to `BigDecimal` before the sort will fail.
-        final var reverse = holder(null, "reverse").asBoolean();
+        final var reverse = scanner.bool(null, "reverse");
         // do the sorting in reverse order.
         // end snippet
-        Scan.using(processor)
-                .from(this)
-                .firstLine()
-                .keys(separator, join, locale, columns, pattern, numeric, reverse)
-                .parse(in);
+        scanner.done();
         Collator collator = getCollator(locale);
 
         BadSyntax.when(pattern.isPresent() && columns.isPresent(),  "Can not use both options '%s' and '%s' together.", pattern.name(), columns.name());

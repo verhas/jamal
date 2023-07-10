@@ -7,12 +7,13 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.SHA256;
+import javax0.jamal.tools.Scanner;
 
 import java.io.IOException;
 
 public class LowLevelApi {
 
-    public static class Get implements Macro, InnerScopeDependent {
+    public static class Get implements Macro, InnerScopeDependent, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var opt = new Options(processor, in, this);
@@ -32,7 +33,7 @@ public class LowLevelApi {
         }
     }
 
-    public static class Post implements Macro, InnerScopeDependent {
+    public static class Post implements Macro, InnerScopeDependent, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var opt = new Options(processor, in, this);

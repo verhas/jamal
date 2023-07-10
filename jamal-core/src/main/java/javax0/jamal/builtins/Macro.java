@@ -1,15 +1,21 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Identified;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.OptionsControlled;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
 import javax0.jamal.tools.Scanner;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static javax0.jamal.tools.InputHandler.*;
+import static javax0.jamal.tools.InputHandler.convertGlobal;
+import static javax0.jamal.tools.InputHandler.isGlobalMacro;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Scanner.Core {
 

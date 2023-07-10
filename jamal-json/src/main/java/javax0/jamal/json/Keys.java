@@ -6,13 +6,9 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
-import org.json.JSONArray;
+import javax0.jamal.tools.Scanner;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.stream.Collectors;
 
 /* snippet Keys_macro_documentation
 This macro will fetch one value or a "sub" json from a JSON structure and returns the keys of the structure.
@@ -50,14 +46,15 @@ will result
 
 end snippet
 */
-public class Keys implements Macro, InnerScopeDependent {
+public class Keys implements Macro, InnerScopeDependent, Scanner {
 
     private static final String INVALID_PATH = "The path '%s' is not valid, is not a structure or cannot be evaluated for the given JSON.";
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var sep = Params.<String>holder("separator", "sep").orElse(",");
-        Scan.using(processor).from(this).between("()").keys(sep).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var sep = scanner.str("separator", "sep").defaultValue(",");
+        scanner.done();
 
         InputHandler.skipWhiteSpaces(in);
         final var paths = in.toString().trim().split("\\|");
@@ -68,7 +65,7 @@ public class Keys implements Macro, InnerScopeDependent {
                 BadSyntax.when(paths.length == 1 && mkp.json == null, "There is no macro named '%s' in the registry containing a JSON object", mkp.macroId);
                 if (mkp.json != null) {
                     final var json = tools.getJsonFromPath(mkp);
-                    BadSyntax.when(!(json instanceof JSONObject),INVALID_PATH, in);
+                    BadSyntax.when(!(json instanceof JSONObject), INVALID_PATH, in);
                     return String.join(sep.get(), ((JSONObject) json).keySet());
                 }
             } catch (JSONException | IllegalArgumentException e) {

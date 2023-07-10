@@ -1,17 +1,31 @@
 package javax0.jamal.builtins;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.*;
+import javax0.jamal.api.ObjectHolder;
+import javax0.jamal.api.OptionsControlled;
+import javax0.jamal.api.Position;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
 import javax0.jamal.tools.Scanner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
-import static javax0.jamal.tools.InputHandler.*;
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.firstCharIs;
+import static javax0.jamal.tools.InputHandler.getParameters;
+import static javax0.jamal.tools.InputHandler.skip;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 /**
  * See the documentation of the "for" loop in the README.doc in the project root.

@@ -1,22 +1,29 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import static javax0.jamal.tools.InputHandler.*;
-import static javax0.jamal.tools.Params.holder;
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.skip;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.startsWith;
 
 
-public class Set implements Macro, InnerScopeDependent {
+public class Set implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        final var from = holder("yamlDataSource", "from").orElseNull().asString();
-        Scan.using(processor).from(this).between("()").keys(clone, copy, from).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        final var from = scanner.str("yamlDataSource", "from").defaultValue(null);
+        scanner.done();
 
         skipWhiteSpaces(in);
         final var id = fetchId(in);

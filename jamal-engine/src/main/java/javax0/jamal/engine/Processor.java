@@ -1,7 +1,19 @@
 package javax0.jamal.engine;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Closer;
+import javax0.jamal.api.Context;
+import javax0.jamal.api.Debugger;
+import javax0.jamal.api.EnvironmentVariables;
+import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.Identified;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.MacroRegister;
+import javax0.jamal.api.Position;
+import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.api.*;
 import javax0.jamal.engine.debugger.DebuggerFactory;
 import javax0.jamal.engine.util.ExceptionDumper;
 import javax0.jamal.engine.util.MacroBodyFetcher;
@@ -16,13 +28,25 @@ import javax0.jamal.tracer.TraceRecordFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.api.Macro.validIdChar;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
-import static javax0.jamal.tools.InputHandler.*;
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.firstCharIs;
+import static javax0.jamal.tools.InputHandler.getParts;
+import static javax0.jamal.tools.InputHandler.skip;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Processor implements javax0.jamal.api.Processor {
 

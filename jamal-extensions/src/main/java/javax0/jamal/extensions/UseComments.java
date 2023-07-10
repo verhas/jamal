@@ -1,6 +1,5 @@
 package javax0.jamal.extensions;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;

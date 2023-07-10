@@ -111,11 +111,10 @@ The options `trackChanges`, `readOnly`, `forms`, and `comments` are mutually exc
 Exactly one of them has to be specified.
 
 
-* `pass`, `password`
+final var password = scanner.str(null, "pass`, `password");
 This option specifies the password needed to switch off the protection.
-If option is not specified then the user can switch off the protection with just a few mouse clicks.
-
-* `alg`, `algo`, `algorithm`
+If the option is not specified, then the user can switch off the protection with just a few mouse clicks.
+        final var algo = scanner.str(null, "alg`, `algo`, `algorithm");
 This option specifies the algorithm used to encode the password.
 The name of the algorithm is the official ECMA name of the algorithm.
 Any of the algorithms can be used implemented by the DOCX format and supported by the underlying Apache POI library.
@@ -135,21 +134,17 @@ The algorithm names are:
 * `RIPEMD-256`
 
 The list of algorithms may change in the future.
-To see the actual list of algorithms specify an invalid algorithm.
+To see the actual list of algorithms, specify an invalid algorithm.
 The error will list all the currently available algorithms.
-
-* `track`, `trackChanges`
+        final var track = scanner.bool(null, "track`, `trackChanges");
 Specify the protection level so that the document can be changed without changing the state of change tracking.
-Reasonably you want to have the tracking switched on.
+Reasonably, you want to have the tracking switched on.
 To do that you can switch it on in the source document or use the `docx:trackChanges` macro without the `off` option.
-
-* `read`, `readOnly`, `readonly`
+        final var readOnly = scanner.bool(null, "read`, `readOnly`, `readonly");
 Specify the protection level so that the document is read only.
-
-* `comments`
+        final var comments = scanner.bool(null, "comments");
 Specify the protection level so that the user can edit only the comments.
-
-* `forms`
+        final var forms = scanner.bool(null, "forms");
 Specify the protection level so that the user can edit only the forms of the document.
 
 
@@ -221,18 +216,16 @@ In this case it makes perfect sense to use the macro.
 If not for these cases then just insert the picture into the document using the Word built-in functionality.
 The options that can modify the behavior of the picture handling are:
 
-* `width`
+final var width = scanner.number(null, "width");
 can define the width of the picture.
 The default value is the actual width of the picture, or a scaled width in case the height is defined and the picture is not distorted.
-
-* `height`
+        final var height = scanner.number(null, "height");
 can define the height of the picture.
 The default value is the actual height of the picture, or a scaled height in case the width is defined and the picture is not distorted.
-
-* `distort`, `distorted`
+        final var distorted = scanner.bool(null, "distort`, `distorted");
 can define if the picture is distorted or not.
 If a picture is not distorted and only one of the `width` and `height` is defined, the non-defined parameter will be calculated.
-In this case the picture aspect ratio is preserved.
+In this case, the picture aspect ratio is preserved.
 When this option is used and either `width` or `height` is defined, the other parameter will keep the value given by the picture itself.ß
 
 

@@ -1,6 +1,5 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Processor;

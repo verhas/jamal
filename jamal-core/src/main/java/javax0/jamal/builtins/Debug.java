@@ -1,9 +1,15 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Debugger;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.tools.*;
+import javax0.jamal.api.OptionsControlled;
+import javax0.jamal.api.Processor;
+import javax0.jamal.tools.MinimumAffinityDebuggerSelector;
+import javax0.jamal.tools.Params;
+import javax0.jamal.tools.ProxyDebugger;
+import javax0.jamal.tools.Scanner;
 
 import java.util.List;
 

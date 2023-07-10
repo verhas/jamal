@@ -1,6 +1,5 @@
 package javax0.jamal.poi.word;
 
-import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Test;
 
 public class TestXWPFProcessor {

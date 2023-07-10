@@ -1,7 +1,10 @@
 package javax0.jamal.io;
 
-import javax0.jamal.api.*;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Scanner;
 
 import java.io.File;

@@ -4,27 +4,27 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
-public class Pos implements Macro {
+public class Pos implements Macro, Scanner {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         var pos = in.getPosition();
+        final var scanner = newScanner(in,processor);
         // snippet pos_options
-        final var top = Params.<Boolean>holder(null, "top").asBoolean();
+        final var top = scanner.bool(null, "top");
         // will instruct the macro to use the location no of the top level.
         // It is the same as the current file if there were no imports or includes.
         // This option cannot be used together with `parent`, `all` or `up`
-        final var parent = Params.<Boolean>holder(null, "parent").asBoolean();
+        final var parent = scanner.bool(null, "parent");
         // will use the location of the `include` or `import` macro that was used to include or import the current file.
         // This option cannot be used together with `top`, `all` or `up`
-        final var all = Params.<Boolean>holder(null, "all").asBoolean();
+        final var all = scanner.bool(null, "all");
         // list all the locations in the hierarchy from the current to the top level.
         // The locations will be separated by a comma `,` or by the string specified in the option `sep`.
         // This option cannot be used together with `top`, `parent` or `up`
-        final var format = Params.<String>holder(null, "format").orElse("%f:%l:%c");
+        final var format = scanner.str(null, "format").defaultValue("%f:%l:%c");
         // specifies the format of the location.
         // The format can be any string and the formatting escape sequences `%f`, `%l` and `%l` are placeholders for the name of the file, line and column.
         // The default is `%f:%l:%c`.
@@ -32,17 +32,17 @@ public class Pos implements Macro {
         // These cannot be used together with the `format` macro.
         // They are the short forms for `format="%f"`, `format="%l"`, and `format="%c"`.
         // The format is also used with the option `all`.
-        final var up = Params.<Integer>holder(null, "up").orElseInt(0);
+        final var up = scanner.number(null, "up").defaultValue(0);
         // specifies the number of steps up in the hierarchy.
         // `up=0` is the default.
         // `up=1` is the same as `parent`.
         // This option cannot be used together with `top`, `parent` or `all`
-        final var sep = Params.<String>holder(null, "sep").orElse(",");
+        final var sep = scanner.str(null, "sep").defaultValue(",");
         // specifies the string used to concatenate the locations when the option `all` is used.
         // The default value is a comma `,`.
         // This option must be used together with the option `all`.
         // end snippet
-        Scan.using(processor).from(this).between("()").keys(parent, up, top, format, all, sep).parse(in);
+        scanner.done();
         final var what = in.toString().trim();
         final String formatString;
         if (what.length() > 0 && format.isPresent()) {

@@ -11,21 +11,21 @@ import javax0.jamal.api.Xml.CDATATEXT;
 import javax0.jamal.api.Xml.TAG;
 import javax0.jamal.api.Xml.TEXT;
 import javax0.jamal.engine.StackLimiter;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.List;
 import java.util.Map;
 
 @Macro.Stateful
-public class Xml implements Macro, InnerScopeDependent {
+public class Xml implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        final var topTag = Params.<String>holder("yamlXmlTopTag", "tag").orElse("xml");
-        final var attributes = Params.<String>holder("yamlXmlAttributes", "attributes").orElseNull();
-        Scan.using(processor).from(this).between("()").keys(clone, copy, topTag, attributes).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        final var topTag = scanner.str("yamlXmlTopTag", "tag").defaultValue("xml");
+        final var attributes = scanner.str("yamlXmlAttributes", "attributes").defaultValue(null);
+        scanner.done();
 
         final var yamlObject = Resolve.getYaml(processor, in.toString().trim());
         Resolver.resolve(yamlObject, processor, clone.is(), copy.is());

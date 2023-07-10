@@ -1,11 +1,8 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class TestCounter {
 

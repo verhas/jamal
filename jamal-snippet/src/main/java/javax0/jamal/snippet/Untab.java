@@ -7,7 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.Collections;
 
@@ -18,7 +18,7 @@ import java.util.Collections;
  * This can be used, when a snippet is included into the macro file and some program code is tabulated. In that case
  * this snippet will be moved to the left as much as possible.
  */
-public class Untab implements Macro, InnerScopeDependent, BlockConverter {
+public class Untab implements Macro, InnerScopeDependent, BlockConverter , Scanner.FirstLine {
     @Override
     public String getId() {
         return "untab";
@@ -26,8 +26,9 @@ public class Untab implements Macro, InnerScopeDependent, BlockConverter {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var tabSize = Params.<Integer>holder("tabSize", "tab", "size").orElseInt(8);
-        Scan.using(processor).from(this).firstLine().keys(tabSize).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var tabSize = scanner.number("tabSize", "tab", "size").defaultValue(8);
+        scanner.done();
         final var sb = in.getSB();
         convertTextBlock(sb, in.getPosition(), tabSize);
         return sb.toString();

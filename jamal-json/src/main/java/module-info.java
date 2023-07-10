@@ -1,9 +1,9 @@
 import javax0.jamal.api.Macro;
+import javax0.jamal.json.Define;
+import javax0.jamal.json.Get;
 import javax0.jamal.json.Keys;
 import javax0.jamal.json.Length;
 import javax0.jamal.json.Set;
-import javax0.jamal.json.Define;
-import javax0.jamal.json.Get;
 
 module jamal.json {
     exports javax0.jamal.json;

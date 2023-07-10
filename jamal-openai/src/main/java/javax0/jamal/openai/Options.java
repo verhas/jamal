@@ -2,10 +2,8 @@ package javax0.jamal.openai;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 
@@ -70,23 +68,23 @@ public class Options {
      * @param macro     used by the underlying processor to report error messages
      * @throws BadSyntax if there is some error with the options
      */
-    public Options(Processor processor, Input in, Macro macro) throws BadSyntax {
+    public Options(Processor processor, Input in, Scanner macro) throws BadSyntax {
+        final var scanner = macro.newScanner(in,processor);
         //snipline openai_url filter="(.*?)"
-        final var url = Params.<String>holder("openai:url", "url").asString();
+        final var url = scanner.str("openai:url", "url");
         //snipline openai_seed filter="(.*?)"
-        final var cacheSeed = Params.<String>holder("openai:seed", "seed").asString();
+        final var cacheSeed = scanner.str("openai:seed", "seed");
         //snipline openai_local filter="(.*?)"
-        final var local = Params.<Boolean>holder("openai:local", "local").asBoolean();
+        final var local = scanner.bool("openai:local", "local");
         //snipline openai_sealed filter="(.*?)"
-        final var sealed = Params.<Boolean>holder("openai:sealed", "sealed").asBoolean();
+        final var sealed = scanner.bool("openai:sealed", "sealed");
         //snipline openai_hash filter="(.*?)"
-        final var hash = Params.<String>holder("openai:hash", "hash").orElse(null);
+        final var hash = scanner.str("openai:hash", "hash").defaultValue(null);
         //snipline openai_fallible filter="(.*?)"
-        final var fallible = Params.<Boolean>holder("openai:fallible", "fallible").asBoolean();
+        final var fallible = scanner.bool("openai:fallible", "fallible");
         //snipline openai_asynch filter="(.*?)"
-        final var asynch = Params.<Boolean>holder("openai:asynch", "asynch").asBoolean();
-
-        Scan.using(processor).from(macro).firstLine().keys(url, cacheSeed, local, sealed, hash, fallible, asynch).parse(in);
+        final var asynch = scanner.bool("openai:asynch", "asynch");
+        scanner.done();
         this.url = url.get();
         this.cacheSeed = cacheSeed.get();
         this.local = local.is();

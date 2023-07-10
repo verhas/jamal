@@ -1,20 +1,23 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Scanner;
 
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.Params.holder;
-
-public class SnipList implements Macro, InnerScopeDependent {
+public class SnipList implements Macro, InnerScopeDependent, Scanner.WholeInput {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var idRegex = holder("name", "id").orElse("").asString();
-        final var fnRegex = holder("file", "fileName").orElse("").asString();
-        final var textRegex = holder("text", "contains").orElse("").asString();
-        final var listSeparator = holder("listSeparator").orElse(",").asString();
-        Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, listSeparator).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var idRegex = scanner.str("name", "id").defaultValue("");
+        final var fnRegex = scanner.str("file", "fileName").defaultValue("");
+        final var textRegex = scanner.str("text", "contains").defaultValue("");
+        final var listSeparator = scanner.str("listSeparator").defaultValue(",");
+        scanner.done();
         final var store = SnippetStore.getInstance(processor);
         return store.snippetList(idRegex.get(), fnRegex.get(), textRegex.get())
                 .filter(snip -> snip.exception == null)

@@ -1,12 +1,31 @@
 package javax0.jamal.engine.macro;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Counted;
+import javax0.jamal.api.Debuggable;
+import javax0.jamal.api.Delimiters;
+import javax0.jamal.api.EnvironmentVariables;
+import javax0.jamal.api.Identified;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Marker;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.Stackable;
 import javax0.jamal.tools.InputHandler;
 import javax0.levenshtein.Levenshtein;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;

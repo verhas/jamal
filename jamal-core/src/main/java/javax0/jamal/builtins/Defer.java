@@ -1,10 +1,14 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Closer;
+import javax0.jamal.api.Identified;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.OptionsControlled;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
 import javax0.jamal.tools.Scanner;
 
 public class Defer implements Macro, InnerScopeDependent, OptionsControlled.Core, Scanner.Core {

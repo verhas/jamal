@@ -4,8 +4,6 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
 import javax0.jamal.tools.Scanner;
 
 import java.nio.charset.StandardCharsets;
@@ -37,13 +35,14 @@ public class Base64 {
 
     }
 
-    public static class Decode implements Macro {
+    public static class Decode implements Macro, Scanner {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var quote = Params.holder("quote").asBoolean();
-            final var url = Params.holder("url").asBoolean();
-            Scan.using(processor).from(this).between("()").keys(quote, url).parse(in);
+            final var scanner = newScanner(in, processor);
+            final var quote = scanner.bool("quote");
+            final var url = scanner.bool("url");
+            scanner.done();
             try {
                 final var plainText = getBytes(in, quote.is(), false);
                 final var decoder = url.is() ? java.util.Base64.getUrlDecoder() : java.util.Base64.getDecoder();

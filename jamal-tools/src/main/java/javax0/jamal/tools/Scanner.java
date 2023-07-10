@@ -1,7 +1,9 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Processor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,8 @@ public interface Scanner {
 
         private final ArrayList<Params.Param<?>> params = new ArrayList<>();
 
+        private Params.ExtraParams extraParams = null;
+
         public ScannerObject(Processor processor, Input in, Identified macro) {
             this.processor = processor;
             this.in = in;
@@ -71,6 +75,7 @@ public interface Scanner {
 
         /**
          * Define a list of strings parameter.
+         *
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
@@ -140,6 +145,11 @@ public interface Scanner {
             return param;
         }
 
+        public Params.ExtraParams extra() {
+            extraParams = new Params.ExtraParams();
+            return extraParams;
+        }
+
         /**
          * Finish the parameter parsing.
          * This method should be called after all the parameters are defined.
@@ -147,7 +157,15 @@ public interface Scanner {
          * @throws BadSyntax if the input does not match the parameter definitions
          */
         public void done() throws BadSyntax {
-            setDelimiters.apply(Params.using(processor).from(macro)).keys(params.toArray(new Params.Param<?>[0])).parse(in);
+
+            final var p = setDelimiters.apply(Params.using(processor).from(macro));
+            final Params z;
+            if (extraParams == null) {
+                z = p.keys(params.toArray(new Params.Param<?>[0]));
+            } else {
+                z = p.keys(extraParams, params.toArray(new Params.Param<?>[0]));
+            }
+            z.parse(in);
         }
 
         public ScannerObject delimiterSetter(Function<Params, Params> setDelimiters) {

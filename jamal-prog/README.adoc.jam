@@ -64,7 +64,7 @@ There are two macros in the package:
 * `expression` is the macro that evaluates an expression
 
 === Program
-{%@snip:check file="./src/main/java/javax0/jamal/prog/Program.java" hashCode="0749eb3f"%}
+{%@snip:check file="./src/main/java/javax0/jamal/prog/Program.java" hashCode="ba4f3ddd"%}
 The macro `program` takes the input of the macro and interprets it as a program.
 The result of the macro is the concatenated strings of the output `<<` commands.
 

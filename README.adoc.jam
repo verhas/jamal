@@ -2039,7 +2039,7 @@ The more local configuration overrules the broader one using this algorithm.
 
 [[import]]
 ==== {%macroChapter%}`import`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=7d78f122%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=9029025b%}
 since 1.0.0 (core)
 
 `import` opens a file and reads the content of the file and interprets it as Jamal macro file.
@@ -2115,7 +2115,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=dd8e1f77%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=895d7c11%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
@@ -2686,7 +2686,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=775d3ac8%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=53f9a463%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -3825,7 +3825,7 @@ The version of the documented code is in the `pom.xml` file: `{%VERSION%}`.
 [[macro]]
 ==== {%macroChapter%}`macro`
 since 1.11.0
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=1f05dce1%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=1246a90a%}
 
 The macro named `macro` is a special one that is needed only in rare cases.
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
@@ -3989,7 +3989,7 @@ If you want to emphasize that you use the macro for user-defined macros, you can
 [[log]]
 ==== {%macroChapter%}`log`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=adf981c6%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=3ab8337d%}
 
 This macro results and empty string and sends the input to the log output.
 The macro has one parameter, `level` that may specify the logging level.
@@ -4028,7 +4028,7 @@ The usage of the macro is, for example
 [[debug]]
 ==== {%macroChapter%}`debug`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=bd9f421b%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=f55be525%}
 
 The macro `debug` can be used to start the debugger from the Jamal source code.
 It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.

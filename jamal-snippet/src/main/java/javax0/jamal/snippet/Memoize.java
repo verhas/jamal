@@ -4,7 +4,11 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.*;
+import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.HexDumper;
+import javax0.jamal.tools.Params;
+import javax0.jamal.tools.SHA256;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +19,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class Memoize implements Macro {
+public class Memoize implements Macro, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var files = Params.holder(null, "file").asList(String.class);
-        final var hashFile = Params.holder(null, "hashFile").asString().orElseNull();
-        final var hashCode = Params.holder(null, "hashCode").asString().orElseNull();
-        Scan.using(processor).from(this).between("()").keys(files, hashFile, hashCode).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var files    = scanner.list(null, "file");
+        final var hashFile = scanner.str(null, "hashFile").defaultValue(null);
+        final var hashCode = scanner.str(null, "hashCode").defaultValue(null);
+        scanner.done();
 
         final String hash = getHashValue(in, hashFile, hashCode);
         final String fn = hashFile.isPresent() ? FileTools.absolute(in.getReference(), hashFile.get()) : null;

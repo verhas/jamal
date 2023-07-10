@@ -4,8 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /*
@@ -31,7 +30,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  *
  * end::trackChanges[]
  */
-public class MacroDocxTrackRevisions implements Macro {
+public class MacroDocxTrackRevisions implements Macro, Scanner.WholeInput {
     private static class CallBack implements XWPFContext.DocxTerminalCallBack {
         private XWPFDocument document;
         private final boolean off;
@@ -53,8 +52,9 @@ public class MacroDocxTrackRevisions implements Macro {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var off = Params.<Boolean>holder(null, "off").asBoolean();
-        Scan.using(processor).from(this).tillEnd().keys(off).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var off = scanner.bool(null, "off");
+        scanner.done();
         final var context = XWPFContext.getXWPFContext(processor);
         context.register(new CallBack(off.is()));
         return "";

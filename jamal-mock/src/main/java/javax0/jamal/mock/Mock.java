@@ -1,30 +1,34 @@
 package javax0.jamal.mock;
 
-import javax0.jamal.api.*;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.MacroRegister;
+import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Scanner;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class Mock implements Macro {
+public class Mock implements Macro, Scanner {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+        final var scanner = newScanner(in, processor);
         // snippet mock_options
-        final var id = Params.holder(null, "macro", "id").asString(); //| the identifier of the macro.
+        final var id = scanner.str(null, "macro", "id"); //| the identifier of the macro.
         //|This an option is mandatory and has to define the identifier of the macro to be mocked.
-        final var when = Params.<String>holder(null, "when").orElseNull(); //| regular expression when to apply the mock.
+        final var when = scanner.str(null, "when").defaultValue(null); //| regular expression when to apply the mock.
         //|This option is not mandatory.
         //|In case it is specified, the mock response will only be used when the input of the macro matches the regular expression specified.
         //|If the option is missing, the mock response will always be matched and used when it gets activated regardless of the input of the macro.
-        final var repeat = Params.holder(null, "repeat", "times").orElseInt(1); //| how many times the mock can be used.
+        final var repeat = scanner.number(null, "repeat", "times").defaultValue(1); //| how many times the mock can be used.
         //|Can specify how many times the mock can be used.
         //|It is an error to use a negative number.
         //|You can use zero to switch off the mock response in your text temporarily without deleting it.
-        final var infinite = Params.holder(null, "inf", "infinite", "forever").asBoolean(); //| if the mock be used infinite number of times.
+        final var infinite = scanner.bool(null, "inf", "infinite", "forever"); //| if the mock be used infinite number of times.
         //|Can be used to specify that the mock response can be used unlimited number of times.
         // end snippet
-        Scan.using(processor).from(this).between("()").keys(id, when, repeat, infinite).parse(in);
+        scanner.done();
 
         BadSyntax.when(repeat.isPresent() && infinite.isPresent(), "You cannot use options 'repeat' and 'infinite' at the same time.");
         BadSyntax.when(repeat.isPresent() && repeat.get() < 0, "The option 'repeat' should be non-negative.");

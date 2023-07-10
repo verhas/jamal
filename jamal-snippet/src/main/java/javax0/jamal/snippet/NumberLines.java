@@ -7,11 +7,9 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.IllegalFormatException;
-
-import static javax0.jamal.tools.Params.holder;
 
 /**
  * Number the lines of the input. For example:
@@ -45,7 +43,7 @@ import static javax0.jamal.tools.Params.holder;
  * <p>
  * are the default values.
  */
-public class NumberLines implements Macro, InnerScopeDependent, BlockConverter {
+public class NumberLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String getId() {
         return "numberLines";
@@ -53,14 +51,16 @@ public class NumberLines implements Macro, InnerScopeDependent, BlockConverter {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var format = holder("format").orElse("%d. ").asString();
-        final var start = holder("start").orElseInt(1);
-        final var step = holder("step").orElseInt(1);
-        Scan.using(processor).from(this).firstLine().keys(format, start, step).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var format = scanner.str("format").defaultValue("%d. ");
+        final var start = scanner.number("start").defaultValue(1);
+        final var step = scanner.number("step").defaultValue(1);
+        scanner.done();
 
-        convertTextBlock(in.getSB(),in.getPosition(),format,start,step);
+        convertTextBlock(in.getSB(), in.getPosition(), format, start, step);
         return in.toString();
     }
+
     public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(3, params);
         final var format = params[0].asString();
@@ -85,6 +85,7 @@ public class NumberLines implements Macro, InnerScopeDependent, BlockConverter {
             }
         }
     }
+
     private String getFormattedNr(int lineNr, String fmt) throws BadSyntax {
         final String formattedNr;
         try {

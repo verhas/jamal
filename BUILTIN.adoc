@@ -527,16 +527,21 @@ The first few lines of the method `evaluate()` are the followings:
 ----
 @Override
 public String evaluate(Input in, Processor processor) throws BadSyntax {
-    final var margin = Params.<Integer>holder("margin").orElseInt(0);
-    final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
-    final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
-    Scan.using(processor).from(this).firstLine().keys(margin, trimVertical, verticalTrimOnly).parse(in);
+    final var scanner = newScanner(in, processor);
+    final var margin = scanner.number("margin").defaultValue(0);
+    final var trimVertical =scanner.bool("trimVertical");
+    final var verticalTrimOnly = scanner.bool("verticalTrimOnly", "vtrimOnly");
+    scanner.done();
 ----
 
-It uses the `Params` class to parse the parameters.
-This utility class parses the content of the macro.
+The macro class implements the interface `javax0.jamal.tools.Scanner.FirstLine`.
+The method `newScanner()` is inherited from this interface and it creates a scanner object that is able to parse the first line of the macro.
+
 In this case it parses only the first line and scans for the parameters `margin`, `trimVertical` and so on.
-When a parameter is not defined in the macro then the class tries to use the value of the macro with the same name.
+If the macro fetches the input from between `()` characters then the class has to implement the `javax0.jamal.tools.Scanner` interface.
+There are interfaces for the core classes using the `[]` characters and for the macros that use the whole input.
+
+When a parameter is not defined in the macro, then the class tries to use the value of the macro with the same name.
 Thus, the value of the variable `margin` will be a configuration parameter holding the integer value 1.
 
 [NOTE]

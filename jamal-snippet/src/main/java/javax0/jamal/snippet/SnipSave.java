@@ -9,7 +9,7 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
-import static javax0.jamal.tools.Params.holder;
-
-public class SnipSave implements Macro, InnerScopeDependent {
+public class SnipSave implements Macro, InnerScopeDependent, Scanner.WholeInput {
     public static final String NS = "https://snippets.jamal.javax0.com/v1/snippets";
     public static final String SNIPPETS = "snippets";
     public static final String SNIPPET = "snippet";
@@ -36,13 +34,14 @@ public class SnipSave implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var ref = in.getReference();
-        final var idRegex = holder("name", "id").orElse("").asString();
-        final var fnRegex = holder("file", "fileName").orElse("").asString();
-        final var textRegex = holder("text", "contains").orElse("").asString();
-        final var output = holder("output").orElse("").asString();
-        final var format = holder("format").orElse("XML").asString();
-        final var tab = holder("tab", "tabSize").orElseInt(4);
-        Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, output, format, tab).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var idRegex = scanner.str("name", "id").defaultValue("");
+        final var fnRegex = scanner.str("file", "fileName").defaultValue("");
+        final var textRegex = scanner.str("text", "contains").defaultValue("");
+        final var output = scanner.str("output").defaultValue("");
+        final var format = scanner.str("format").defaultValue("XML");
+        final var tab = scanner.number("tab", "tabSize").defaultValue(4);
+        scanner.done();
         BadSyntax.when(!"XML".equals(format.get()), "The only supported format is XML");
         saveXML(processor, ref, idRegex, fnRegex, textRegex, output, tab);
         return "";

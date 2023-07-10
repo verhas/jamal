@@ -7,7 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 /**
  * Take the argument of the macro and removes N spaces from the start of each line so that there is at least one line
@@ -16,7 +16,7 @@ import javax0.jamal.tools.Scan;
  * This can be used, when a snippet is included into the macro file and some program code is tabulated. In that case
  * this snippet will be moved to the left as much as possible.
  */
-public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
+public class TrimLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String getId() {
         return "trimLines";
@@ -26,10 +26,11 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
     // snippet trimLinesStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var margin = Params.<Integer>holder("margin").orElseInt(0);
-        final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
-        final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(margin, trimVertical, verticalTrimOnly).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var margin = scanner.number("margin").defaultValue(0);
+        final var trimVertical =scanner.bool("trimVertical");
+        final var verticalTrimOnly = scanner.bool("verticalTrimOnly", "vtrimOnly");
+        scanner.done();
         //end snippet
         final var sb = in.getSB();
         convertTextBlock(sb, in.getPosition(), margin, trimVertical, verticalTrimOnly);

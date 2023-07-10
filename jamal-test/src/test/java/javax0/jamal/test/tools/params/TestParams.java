@@ -5,7 +5,6 @@ import javax0.jamal.engine.Processor;
 import javax0.jamal.testsupport.TestThat;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -637,7 +636,7 @@ public class TestParams {
     @DisplayName("Throws up for forbidden parameter while parsing")
     void testUnusedParameter() {
         final var processor = new Processor("{", "}");
-        Assertions.assertThrows(BadSyntax.class, () -> Scan.using(processor).from(() -> this.getClass().getSimpleName()).firstLine().keys().parse(Input.makeInput("margin")));
+        Assertions.assertThrows(BadSyntax.class, () -> Params.using(processor).from(() -> this.getClass().getSimpleName()).keys().parse(Input.makeInput("margin")));
     }
 
     @Test

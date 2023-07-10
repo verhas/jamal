@@ -5,46 +5,40 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.yaml.snakeyaml.DumperOptions;
 
-import static javax0.jamal.tools.Params.holder;
-
-public class Format implements Macro, InnerScopeDependent {
+public class Format implements Macro, InnerScopeDependent, Scanner.WholeInput {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var scanner = newScanner(in, processor);
         // snippet formatOptions
-        final var allowUnicode = holder(null, "allowUnicode").asBoolean();
+        final var allowUnicode = scanner.bool(null, "allowUnicode");
         // specify whether to emit non-ASCII printable Unicode characters.
-        final var canonical = holder(null, "canonical").asBoolean();
+        final var canonical = scanner.bool(null, "canonical");
         // force the emitter to produce a canonical YAML document.
-        final var explicitEnd = holder(null, "explicitEnd").asBoolean();
+        final var explicitEnd = scanner.bool(null, "explicitEnd");
         // force to add `...` at the end of the Yaml data
-        final var explicitStart = holder(null, "explicitStart").asBoolean();
+        final var explicitStart = scanner.bool(null, "explicitStart");
         // force to ass `---` at the start of the yaml data
-        final var prettyFlow = holder(null, "prettyFlow").asBoolean();
+        final var prettyFlow = scanner.bool(null, "prettyFlow");
         // instruct the output to follow pretty flow
-        final var splitLines = holder(null, "splitLines").asBoolean();
+        final var splitLines = scanner.bool(null, "splitLines");
         // instruct the output to split too long lines
-        final var defaultFlowStyle = holder(null, "defaultFlowStyle", "flowStyle").asString().orElseNull();
+        final var defaultFlowStyle = scanner.str(null, "defaultFlowStyle", "flowStyle").asString().defaultValue(null);
         // the flow style can be `FLOW`, `BLOCK` or `AUTO`
-        final var defaultScalarStyle = holder(null, "defaultScalarStyle", "scalarStyle").asString().orElseNull();
+        final var defaultScalarStyle = scanner.str(null, "defaultScalarStyle", "scalarStyle").asString().defaultValue(null);
         // the scalar style can be `DOUBLE_QUOTED`, `SINGLE_QUOTED`, `LITERAL`, `FOLDED`, or `PLAIN`,
-        final var lineBreak = holder(null, "lineBreak").asString().orElseNull();
+        final var lineBreak = scanner.str(null, "lineBreak").asString().defaultValue(null);
         // the output line break can be `WIN`, `MAC`, or `UNIX`
-        final var indent = holder(null, "indent").asInt().orElseNull();
+        final var indent = scanner.number(null, "indent").asInt().defaultValue(null);
         // sets the indentation size, should be max 10
-        final var indicatorIndent = holder(null, "indicatorIndent").asInt().orElseNull();
-        final var width = holder(null, "width").asInt().orElseNull();
+        final var indicatorIndent = scanner.number(null, "indicatorIndent").asInt().defaultValue(null);
+        final var width = scanner.number(null, "width").asInt().defaultValue(null);
         // sets the desired width
         // end snippet
 
-        Scan.using(processor).from(this).tillEnd().keys(
-            allowUnicode, canonical, explicitEnd, explicitStart, prettyFlow,
-            splitLines, defaultFlowStyle, defaultScalarStyle, lineBreak,
-            indent, indicatorIndent, width
-        ).parse(in);
+        scanner.done();
 
         final var options = YamlDumperOptions.defineExport(processor).getObject();
         options.setAllowUnicode(allowUnicode.is());

@@ -7,8 +7,7 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -74,9 +73,10 @@ public class JavaSourceMacro {
                 });
     }
 
-    private static String getId(final Input in, final Processor processor, Macro macro) throws BadSyntax {
-        final var id = Params.<String>holder(null, "id").orElse(DEFAULT_ID);
-        Scan.using(processor).from(macro).firstLine().keys(id).parse(in);
+    private static String getId(final Input in, final Processor processor, Scanner.FirstLine macro) throws BadSyntax {
+        final var scanner = macro.newScanner(in, processor);
+        final var id = scanner.str(null, "id").defaultValue(DEFAULT_ID);
+        scanner.done();
         return id.get();
     }
 
@@ -84,7 +84,7 @@ public class JavaSourceMacro {
      * Add a Java source file to the source set. The source file will be part of the code, loaded by the classloader,
      * but will not be registered as macro, even if it implements the {@link Macro} interface.
      */
-    public static class JavaClass implements Macro {
+    public static class JavaClass implements Macro, Scanner.FirstLine {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
@@ -103,7 +103,7 @@ public class JavaSourceMacro {
      * Add a Java source file to the source set. The source file will be part of the code, loaded by the classloader,
      * and will be registered as macro. It has to implement the {@link Macro} interface.
      */
-    public static class JavaMacroClass implements Macro {
+    public static class JavaMacroClass implements Macro, Scanner.FirstLine {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
@@ -125,7 +125,7 @@ public class JavaSourceMacro {
      * <p>
      * If the specified module info is zero length then no module info file will be created.
      */
-    public static class JavaModuleInfo implements Macro {
+    public static class JavaModuleInfo implements Macro, Scanner.FirstLine {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
@@ -146,7 +146,7 @@ public class JavaSourceMacro {
      * compiled classes are not written to the file system. After the compilation the classes are loaded by the
      * class loader and the macro classes are registered.
      */
-    public static class JavaCompile implements Macro {
+    public static class JavaCompile implements Macro, Scanner.FirstLine {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {

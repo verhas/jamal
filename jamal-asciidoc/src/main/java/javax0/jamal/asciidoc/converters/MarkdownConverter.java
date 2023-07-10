@@ -1,7 +1,5 @@
 package javax0.jamal.asciidoc.converters;
 
-import javax0.jamal.asciidoc.converters.AbstractConverter;
-
 import java.util.Arrays;
 import java.util.List;
 

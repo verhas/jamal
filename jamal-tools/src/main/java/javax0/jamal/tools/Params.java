@@ -7,14 +7,25 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.StringFetcher;
 import javax0.levenshtein.Levenshtein;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.InputHandler.*;
+import static javax0.jamal.tools.InputHandler.fetchId;
+import static javax0.jamal.tools.InputHandler.firstCharIs;
+import static javax0.jamal.tools.InputHandler.skip;
+import static javax0.jamal.tools.InputHandler.startsWith;
 
 /**
  * Parse the start of the input for macro parameters.

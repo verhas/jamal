@@ -7,14 +7,13 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
 
 @Macro.Stateful
-public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, Closer.ProcessorAware, AutoCloseable {
+public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, Closer.ProcessorAware, AutoCloseable, Scanner {
     final Yaml yaml = YamlFactory.newYaml();
 
     private Processor processor;
@@ -45,9 +44,10 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        Scan.using(processor).from(this).between("()").keys(clone, copy).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        scanner.done();
         // TODO create a new instance and defer closing to that one to be thread safe
         this.clone = clone.is();
         this.copy = copy.is();

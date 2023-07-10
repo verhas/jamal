@@ -1,6 +1,5 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.ObjectHolder;

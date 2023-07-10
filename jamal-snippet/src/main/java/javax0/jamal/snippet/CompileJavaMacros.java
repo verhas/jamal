@@ -2,20 +2,30 @@ package javax0.jamal.snippet;
 
 import com.javax0.sourcebuddy.Compiler;
 import com.javax0.sourcebuddy.Fluent;
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.ObjectHolder;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.snippet.tools.MethodTool;
 import javax0.jamal.snippet.tools.ReflectionTools;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IdentifiedObjectHolder;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import javax0.refi.selector.Selector;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -76,35 +86,36 @@ public class CompileJavaMacros {
                 .get();
     }
 
-    private static Params.Param<String> separatorParam() {
-        return Params.holder("sep", "separator").asString().orElse(",");
+    private static Params.Param<String> separatorParam(final Scanner.ScannerObject scanner) {
+        return scanner.str("sep", "separator").defaultValue(",");
     }
 
-    private static Params.Param<String> storeNameParam() {
-        return Params.holder("store").asString().orElse(LOADED_CLASSES);
+    private static Params.Param<String> storeNameParam(final Scanner.ScannerObject scanner) {
+        return scanner.str("store").defaultValue(LOADED_CLASSES);
     }
 
-    private static Params.Param<String> selectorParam() {
-        return Params.holder("selector", "only", "filter").asString().orElse(TRUE);
+    private static Params.Param<String> selectorParam(final Scanner.ScannerObject scanner) {
+        return scanner.str("selector", "only", "filter").defaultValue(TRUE);
     }
 
-    private static Params.Param<String> classParam() {
-        return Params.holder("class").asString().orElse(TRUE);
+    private static Params.Param<String> classParam(final Scanner.ScannerObject scanner) {
+        return scanner.str("class").defaultValue(TRUE);
     }
 
-    private static Params.Param<String> constructorParam() {
-        return Params.holder("constructor").asString().orElse(TRUE);
+    private static Params.Param<String> constructorParam(final Scanner.ScannerObject scanner) {
+        return scanner.str("constructor").defaultValue(TRUE);
     }
 
-    public static class Compile implements Macro {
+    public static class Compile implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var storeName = storeNameParam();
-            final var source = Params.<String>holder("source", "src", "sources").asString().orElseNull();
-            final var classes = Params.<String>holder("class", "classes").asString().orElseNull();
-            final var options = Params.<String>holder("options", "compilerOptions").asString().orElse("");
-            Scan.using(processor).from(this).tillEnd().keys(storeName, source, classes,options).parse(in);
+            final var scanner = newScanner(in,processor);
+            final var storeName = storeNameParam(scanner);
+            final var source  = scanner.str("source", "src", "sources").defaultValue(null);
+            final var classes = scanner.str("class", "classes").defaultValue(null);
+            final var options = scanner.str("options", "compilerOptions").defaultValue("");
+            scanner.done();
             try {
                 final var sourceLocations = source.get() == null ? null : source.get().split(",");
                 final var classLocations = classes.get() == null ? null : classes.get().split(",");
@@ -141,7 +152,7 @@ public class CompileJavaMacros {
             if (classLocations != null && classLocations.length > 0) {
                 try {
                     loadFromCompiledCode(in, processor, storeName, classLocations);
-                }catch (Exception e){
+                } catch (Exception e) {
                     final var ex = exceptionSupplier.get();
                     ex.addSuppressed(e);
                     throw ex;
@@ -251,14 +262,15 @@ public class CompileJavaMacros {
      * fields), there is no need to convert the classes to named objets and to hold them in object holders to retrieve
      * them later by the names. Just return the names comma separated.
      */
-    public static class ListClasses implements Macro {
+    public static class ListClasses implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var storeName = storeNameParam();
-            final var selectorParam = selectorParam();
-            final var sep = separatorParam();
-            Scan.using(processor).from(this).tillEnd().keys(storeName, sep, selectorParam).parse(in);
+            final var scanner = newScanner(in,processor);
+            final var storeName = storeNameParam(scanner);
+            final var selectorParam = selectorParam(scanner);
+            final var sep = separatorParam(scanner);
+            scanner.done();
             return getLoaded(processor, storeName.get()).stream()
                     .filter(Selector.compile(selectorParam.get())::match)
                     .map(Class::getName)
@@ -395,15 +407,16 @@ public class CompileJavaMacros {
                 Arrays.stream(parameters).skip(1).collect(Collectors.joining(",")));
     }
 
-    public static class ListMethods implements Macro {
+    public static class ListMethods implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var storeName = storeNameParam();
-            final var classParam = classParam();
-            final var methodParam = selectorParam();
-            final var sep = separatorParam();
-            Scan.using(processor).from(this).tillEnd().keys(storeName, sep, classParam, methodParam).parse(in);
+            final var scanner = newScanner(in,processor);
+            final var storeName = storeNameParam(scanner);
+            final var classParam = classParam(scanner);
+            final var methodParam = selectorParam(scanner);
+            final var sep = separatorParam(scanner);
+            scanner.done();
             final var methods = getMethods(processor, storeName.get());
             final var klassFilter = Selector.compile(classParam.get());
             final var methodFilter = Selector.compile(methodParam.get());
@@ -428,15 +441,16 @@ public class CompileJavaMacros {
         }
     }
 
-    public static class ListFields implements Macro {
+    public static class ListFields implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var storeName = storeNameParam();
-            final var classParam = classParam();
-            final var fieldParam = selectorParam();
-            final var sep = separatorParam();
-            Scan.using(processor).from(this).tillEnd().keys(storeName, sep, classParam, fieldParam).parse(in);
+            final var scanner = newScanner(in,processor);
+            final var storeName = storeNameParam(scanner);
+            final var classParam = classParam(scanner);
+            final var fieldParam = selectorParam(scanner);
+            final var sep = separatorParam(scanner);
+            scanner.done();
             final var fields = getFields(processor, storeName.get());
             final var klassFilter = Selector.compile(classParam.get());
             final var fieldFilter = Selector.compile(fieldParam.get());

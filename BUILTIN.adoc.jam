@@ -415,10 +415,14 @@ The first few lines of the method {%@java:method javax0.jamal.snippet.TrimLines#
 
 {%java trimLinesStart%}
 
-It uses the {%@java:class javax0.jamal.tools.Params%} class to parse the parameters.
-This utility class parses the content of the macro.
+The macro class implements the interface {%@java:class (format=`$canonicalName`) javax0.jamal.tools.Scanner$FirstLine%}.
+The method {%@java:method javax0.jamal.tools.Scanner$FirstLine#newScanner%} is inherited from this interface and it creates a scanner object that is able to parse the first line of the macro.
+
 In this case it parses only the first line and scans for the parameters `margin`, `trimVertical` and so on.
-When a parameter is not defined in the macro then the class tries to use the value of the macro with the same name.
+If the macro fetches the input from between `()` characters then the class has to implement the {%@java:class (format=`$canonicalName`) javax0.jamal.tools.Scanner%} interface.
+There are interfaces for the core classes using the `[]` characters and for the macros that use the whole input.
+
+When a parameter is not defined in the macro, then the class tries to use the value of the macro with the same name.
 Thus, the value of the variable `margin` will be a configuration parameter holding the integer value 1.
 
 [NOTE]

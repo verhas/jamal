@@ -1,17 +1,22 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShellVar implements Macro {
+public class ShellVar implements Macro, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var parameters = Params.<String>holder("variables").orElse("");
-        Scan.using(processor).from(this).between("()").keys(parameters).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var parameters = scanner.str("variables").defaultValue("");
+        scanner.done();
         final Map<String, String> values = new HashMap<>();
         // get the parameters without any key name constraint using the params handling tools
         Params.using(processor).tillEnd().parse(javax0.jamal.tools.Input.makeInput(parameters.get()), values::put, s -> true);

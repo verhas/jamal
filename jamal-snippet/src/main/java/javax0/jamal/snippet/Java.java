@@ -1,11 +1,17 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.ObjectHolder;
+import javax0.jamal.api.Position;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.IndexedPlaceHolders.ThrowingStringSupplier;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -15,10 +21,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.IndexedPlaceHolders.value;
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Java {
 
-    public static class ClassMacro implements Macro, InnerScopeDependent {
+    public static class ClassMacro implements Macro, InnerScopeDependent, Scanner {
         private static class Trie {
             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // snippet classFormats
@@ -33,9 +40,10 @@ public class Java {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var format = Params.<String>holder("classFormat", "format").orElse("$simpleName");
-            Scan.using(processor).from(this).between("()").keys(format).parse(in);
-            InputHandler.skipWhiteSpaces(in);
+            final var scanner = newScanner(in, processor);
+            final var format = scanner.str("classFormat", "format").defaultValue("$simpleName");
+            scanner.done();
+            skipWhiteSpaces(in);
             final var className = in.toString().trim();
             final var klass = classForName(className, processor, getId(), in.getPosition());
             try {
@@ -57,7 +65,7 @@ public class Java {
         }
     }
 
-    public static class FieldMacro implements Macro, InnerScopeDependent {
+    public static class FieldMacro implements Macro, InnerScopeDependent, Scanner {
         private static class Trie {
             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // OTFDC -> of the field's defining class
@@ -78,9 +86,10 @@ public class Java {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var format = Params.<String>holder("fieldFormat", "format").orElse("$name");
-            Scan.using(processor).from(this).between("()").keys(format).parse(in);
-            InputHandler.skipWhiteSpaces(in);
+            final var scanner = newScanner(in, processor);
+            final var format = scanner.str("fieldFormat", "format").defaultValue("$name");
+            scanner.done();
+            skipWhiteSpaces(in);
             final var fieldRef = in.toString().trim();
             final var parts = split(in, this);
             final var className = parts[0];
@@ -125,7 +134,7 @@ public class Java {
         }
     }
 
-    public static class MethodMacro implements Macro, InnerScopeDependent {
+    public static class MethodMacro implements Macro, InnerScopeDependent, Scanner {
         private static class Trie {
             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // OTMDC -> of the method's defining class
@@ -149,8 +158,9 @@ public class Java {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var pos = in.getPosition();
-            final var format = Params.<String>holder("methodFormat", "format").orElse("$name");
-            Scan.using(processor).from(this).between("()").keys(format).parse(in);
+            final var scanner = newScanner(in, processor);
+            final var format = scanner.str("methodFormat", "format").defaultValue("$name");
+            scanner.done();
             final var parts = split(in, this);
             final var className = parts[0];
             final var methodName = parts[1];

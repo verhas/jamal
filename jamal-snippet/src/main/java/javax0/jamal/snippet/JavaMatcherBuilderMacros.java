@@ -8,7 +8,7 @@ import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import javax0.javalex.JavaLexed;
 import javax0.javalex.LexMatcher;
 import javax0.javalex.matchers.Lexpression;
@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
-import static javax0.jamal.tools.Params.holder;
 import static javax0.javalex.LexpressionBuilder.anyTill;
 import static javax0.javalex.LexpressionBuilder.character;
 import static javax0.javalex.LexpressionBuilder.comment;
@@ -73,11 +72,12 @@ public class JavaMatcherBuilderMacros {
         final Params.Param<Pattern> pattern;
 
 
-        private Options(final Macro macro, final Input in, final Processor processor) throws BadSyntax {
-            string = holder(null, "string").asBoolean();
-            groupName = holder(null, "name").asString().orElseNull();
-            pattern = holder(null, "pattern").asPattern().orElseNull();
-            Scan.using(processor).from(macro).between("()").keys(string, groupName, pattern).parse(in);
+        private Options(final Scanner macro, final Input in, final Processor processor) throws BadSyntax {
+            final var scanner = macro.newScanner(in, processor);
+            string = scanner.bool(null, "string");
+            groupName = scanner.str(null, "name").defaultValue(null);
+            pattern = scanner.pattern(null, "pattern").defaultValue(null);
+            scanner.done();
         }
     }
 
@@ -116,7 +116,7 @@ public class JavaMatcherBuilderMacros {
                 ;
     }
 
-    public static class Keyword implements Macro {
+    public static class Keyword implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -138,7 +138,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class Not implements Macro {
+    public static class Not implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -159,7 +159,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class AnyTill implements Macro {
+    public static class AnyTill implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -186,7 +186,7 @@ public class JavaMatcherBuilderMacros {
      * This is generated code. DO NOT edit manually.
      */
 
-    public static class StringMacro implements Macro {
+    public static class StringMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -224,7 +224,7 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-    public static class Identifier implements Macro {
+    public static class Identifier implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -262,7 +262,7 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-    public static class CharacterMacro implements Macro {
+    public static class CharacterMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -291,7 +291,7 @@ public class JavaMatcherBuilderMacros {
             return paddedId(macro);
         }
 
-        private static final String[] IDS = new String[]{"j:character","j:char"};
+        private static final String[] IDS = new String[]{"j:character", "j:char"};
 
         @Override
         public String[] getIds() {
@@ -300,7 +300,7 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-    public static class Comment implements Macro {
+    public static class Comment implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -338,10 +338,9 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-
     //</editor-fold>
 
-    public static class Match implements Macro {
+    public static class Match implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -365,7 +364,7 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-    public static class OptionalMacro implements Macro {
+    public static class OptionalMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -381,7 +380,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class OneOf implements Macro {
+    public static class OneOf implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -402,7 +401,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class Unordered implements Macro {
+    public static class Unordered implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -423,7 +422,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class List implements Macro {
+    public static class List implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -444,7 +443,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class ZeroOrMore implements Macro {
+    public static class ZeroOrMore implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -465,7 +464,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class OneOrMore implements Macro {
+    public static class OneOrMore implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -486,7 +485,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class FloatMacro implements Macro {
+    public static class FloatMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -509,7 +508,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class IntegerMacro implements Macro {
+    public static class IntegerMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -527,7 +526,7 @@ public class JavaMatcherBuilderMacros {
         }
     }
 
-    public static class NumberMacro implements Macro {
+    public static class NumberMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);

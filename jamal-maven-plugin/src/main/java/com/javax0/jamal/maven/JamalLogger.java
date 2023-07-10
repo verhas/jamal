@@ -2,7 +2,6 @@ package com.javax0.jamal.maven;
 
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Position;
-import org.apache.maven.plugin.logging.Log;
 
 public class JamalLogger {
 

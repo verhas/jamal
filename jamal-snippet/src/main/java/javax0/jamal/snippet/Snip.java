@@ -9,7 +9,7 @@ import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -19,15 +19,16 @@ import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
-public class Snip implements Macro {
+public class Snip implements Macro, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var pos = in.getPosition();
-        final var poly = Params.holder(null, "poly").asBoolean();
-        final var hashString = Params.<String>holder("hash", "hashCode").orElse(null);
-        final var extraParams = new Params.ExtraParams();
-        Scan.using(processor).from(this).between("()").keys(extraParams, poly, hashString).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var poly = scanner.bool(null, "poly");
+        final var hashString = scanner.str("hash", "hashCode").defaultValue(null);
+        final var extraParams = scanner.extra();
+        scanner.done();
 
         final var transformer = processor.getRegister().getMacro("snip:transform")
                 .filter(m -> m instanceof SnipTransform).map(m -> (SnipTransform) m)

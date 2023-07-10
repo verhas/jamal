@@ -1584,18 +1584,18 @@ will result
 The version introduced after 1.12.4 also handles options between `(` and `)`:
 
 
-*  `top`
+        final var top = scanner.bool(null, `top`);
 will instruct the macro to use the location no of the top level.
 It is the same as the current file if there were no imports or includes.
 This option cannot be used together with `parent`, `all` or `up`
-*  `parent`
+        final var parent = scanner.bool(null, `parent`);
 will use the location of the `include` or `import` macro that was used to include or import the current file.
 This option cannot be used together with `top`, `all` or `up`
-*  `all`
+        final var all = scanner.bool(null, `all`);
 list all the locations in the hierarchy from the current to the top level.
 The locations will be separated by a comma `,` or by the string specified in the option `sep`.
 This option cannot be used together with `top`, `parent` or `up`
-*  `format`
+        final var format = scanner.str(null, `format`).defaultValue("%f:%l:%c`);
 specifies the format of the location.
 The format can be any string and the formatting escape sequences `%f`, `%l` and `%l` are placeholders for the name of the file, line and column.
 The default is `%f:%l:%c`.
@@ -1603,12 +1603,12 @@ This is also changed when the `.file`, `.line` or `.column` ending is used in th
 These cannot be used together with the `format` macro.
 They are the short forms for `format="%f``, `format="%l``, and `format="%c``.
 The format is also used with the option `all`.
-*  `up`
+        final var up = scanner.number(null, `up`).defaultValue(0);
 specifies the number of steps up in the hierarchy.
 `up=0` is the default.
 `up=1` is the same as `parent`.
 This option cannot be used together with `top`, `parent` or `all`
-*  `sep`
+        final var sep = scanner.str(null, `sep`).defaultValue(",");
 specifies the string used to concatenate the locations when the option `all` is used.
 The default value is a comma `,`.
 This option must be used together with the option `all`.
@@ -1650,13 +1650,13 @@ To have more flexibility you can use parameters on the first line of the input t
 
 The options are:
 
-* `separator`
+        final var separator = scanner.pattern("separator").defaultValue("\n");
          specifies the separator regular expression, that separates the individual records.
          The default value if `\n`, which means the lines are the records.
-* `join`
+        final var join = scanner.str(null, "join").defaultValue("\n");
          is the string to use to join the records together after the sorting was done.
          The default value is the `\n` string (not pattern); that means the records will be individual lines in the output.
-* `locale`, alias `collatingOrder`, alias `collator`
+        final var locale = scanner.str(null, "locale`, alias `collatingOrder`, alias `collator");
          can define the locale for the sorting.
          The default locale `en-US.UTF-8`.
          Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
@@ -1664,20 +1664,20 @@ The options are:
          The class will be instantiated and used to sort the records.
          Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
          This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.
-* `columns`
+        final var columns = scanner.str(null, "columns");
          can specify the part of the textual record to be used as a sorting key.
          The format of the parameter is `n..m` where `n` is the first character position and `m-1` is the last character position to be used.
          The values can run from 1 to the maximum number of characters.
          If you specify column values that run out of the line length, then the macro will result in an error.
-* `pattern`
+        final var pattern = scanner.pattern(null, "pattern");
          can specify a regular expression pattern to define the part of the line as a sort key.
          The expression may contain matching groups.
          In that case, the strings matching the parts between the parentheses are appended from left to right and used as a key.
          This option must not be used together with the option `columns`.
-* `numeric`
+        final var numeric = scanner.bool(null, "numeric");
          will sort based on the numeric order of the keys.
          In this case, the keys must be numeric or else the conversion to `BigDecimal` before the sort will fail.
-* `reverse`
+        final var reverse = scanner.bool(null, "reverse");
          do the sorting in reverse order.
 
 
@@ -2511,7 +2511,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 45.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 51.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2948,72 +2948,72 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 2,112 bytes
-- JavaMatcherBuilderMacros.java: 20,775 bytes
-- Snip.java: 4,904 bytes
-- SnipSave.java: 4,853 bytes
-- Sort.java: 8,806 bytes
+- JavaMatcherBuilderMacros.java: 20,871 bytes
+- Snip.java: 4,866 bytes
+- SnipSave.java: 4,800 bytes
+- Sort.java: 8,636 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,798 bytes
-- RangeMacro.java: 1,282 bytes
-- Untab.java: 2,327 bytes
+- NumberLines.java: 2,788 bytes
+- RangeMacro.java: 1,250 bytes
+- Untab.java: 2,346 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
 - tools: 160 bytes
 - ModifiersBuilder.java: 1,740 bytes
 - ReflectionTools.java: 26,140 bytes
 - MethodTool.java: 7,761 bytes
-- Update.java: 1,640 bytes
-- SnipTransform.java: 17,149 bytes
-- Base64.java: 3,466 bytes
-- FilesMacro.java: 8,162 bytes
-- Collect.java: 23,868 bytes
+- Update.java: 979 bytes
+- SnipTransform.java: 16,983 bytes
+- Base64.java: 3,383 bytes
+- FilesMacro.java: 8,154 bytes
+- Collect.java: 24,089 bytes
 - SnipFile.java: 680 bytes
-- HashCode.java: 497 bytes
-- TrimLines.java: 5,379 bytes
-- JavaSourceInsert.java: 7,884 bytes
+- HashCode.java: 462 bytes
+- TrimLines.java: 5,321 bytes
+- JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
-- Memoize.java: 8,020 bytes
+- Memoize.java: 8,124 bytes
 - LineCount.java: 552 bytes
-- Replace.java: 1,687 bytes
+- Replace.java: 1,642 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
 - SemVerCollator.java: 9,016 bytes
 - SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
-- UrlEncode.java: 923 bytes
+- UrlEncode.java: 855 bytes
 - Reference.java: 1,506 bytes
-- Numbers.java: 1,825 bytes
+- Numbers.java: 1,785 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 4,504 bytes
-- CompileJavaMacros.java: 23,008 bytes
-- StringMacros.java: 7,379 bytes
-- JavaSourceTemplate.java: 7,568 bytes
+- CompileJavaMacros.java: 23,495 bytes
+- StringMacros.java: 7,310 bytes
+- JavaSourceTemplate.java: 7,451 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,763 bytes
-- SnipLoad.java: 3,540 bytes
+- SnipLoad.java: 3,482 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
 - Download.java: 2,156 bytes
-- ListDir.java: 5,321 bytes
-- XmlFormat.java: 3,544 bytes
+- ListDir.java: 5,508 bytes
+- XmlFormat.java: 3,482 bytes
 - SnippetXmlReader.java: 6,515 bytes
-- XmlInsert.java: 6,316 bytes
+- XmlInsert.java: 6,204 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
-- CounterMacro.java: 1,938 bytes
-- SnipList.java: 1,136 bytes
-- ShellVar.java: 3,693 bytes
+- CounterMacro.java: 1,840 bytes
+- SnipList.java: 1,228 bytes
+- ShellVar.java: 3,837 bytes
 - XmlDocument.java: 5,671 bytes
-- References.java: 7,308 bytes
-- Java.java: 11,281 bytes
-- ReplaceLines.java: 2,889 bytes
-- SkipLines.java: 2,762 bytes
-- SnipCheck.java: 7,791 bytes
+- References.java: 7,745 bytes
+- Java.java: 11,573 bytes
+- ReplaceLines.java: 2,830 bytes
+- SkipLines.java: 2,747 bytes
+- SnipCheck.java: 7,707 bytes
 - IdempotencyFailed.java: 1,816 bytes
-- Reflow.java: 2,023 bytes
-- Pos.java: 5,392 bytes
+- Reflow.java: 2,051 bytes
+- Pos.java: 5,263 bytes
 - Snippet.java: 1,052 bytes
 ----
 
@@ -3267,7 +3267,7 @@ will result in the output
 
 [source]
 ----
-2023-07-09 20:12:41
+2023-07-10 15:48:38
 ----
 
 

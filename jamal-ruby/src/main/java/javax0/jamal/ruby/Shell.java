@@ -3,11 +3,9 @@ package javax0.jamal.ruby;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.jruby.embed.LocalContextScope;
 import org.jruby.embed.ScriptingContainer;
 
@@ -56,15 +54,16 @@ public class Shell implements Identified {
     public static final String RUBY_SHELL_NAMING_MACRO = "rubyShell";
 
     // end snippet
-    public static Shell getShell(final Input in, final Processor processor, final Macro macro) throws BadSyntax {
-        final var id = Params.<String>holder(Shell.RUBY_SHELL_NAMING_MACRO, "shell").orElse(Shell.DEFAULT_RUBY_SHELL_NAME);
-        Scan.using(processor).from(macro).between("()").keys(id).parse(in);
+    public static Shell getShell(final Input in, final Processor processor, final Scanner macro) throws BadSyntax {
+        final var scanner = macro.newScanner(in, processor);
+        final var id = scanner.str(Shell.RUBY_SHELL_NAMING_MACRO, "shell").defaultValue(Shell.DEFAULT_RUBY_SHELL_NAME);
+        scanner.done();
         return getShell(processor, id.get());
     }
 
     public static Shell getShell(final Processor processor, final String id) throws BadSyntax {
         final var opt = processor.getRegister().getUserDefined(id)
-            .filter(s -> s instanceof Shell);
+                .filter(s -> s instanceof Shell);
         final Shell shell;
         if (opt.isEmpty()) {
             final var gid = InputHandler.convertGlobal(id);

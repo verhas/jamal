@@ -2,10 +2,6 @@ package javax0.jamal.asciidoc;
 
 import javax0.jamal.snippet.SnipCheckFailed;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

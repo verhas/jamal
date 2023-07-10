@@ -5,8 +5,7 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
 import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
@@ -16,9 +15,8 @@ import static javax0.jamal.tools.InputHandler.firstCharIs;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
-import static javax0.jamal.tools.Params.holder;
 
-public class Define implements Macro, InnerScopeDependent {
+public class Define implements Macro, InnerScopeDependent, Scanner {
 
     /* snippet Define_macro_documentation
 You can use this macro to define a JSon structure.
@@ -91,8 +89,9 @@ end snippet
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var line = holder(null, "line", "JSONL", "jsonl").asBoolean();
-        Scan.using(processor).from(this).between("()").keys(line).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var line = scanner.bool(null, "line", "JSONL", "jsonl");
+        scanner.done();
 
         final String id = getMacroIdentifier(in, processor);
         if (id == null) return "";

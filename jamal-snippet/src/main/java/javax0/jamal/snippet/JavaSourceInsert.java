@@ -1,9 +1,14 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Closer;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import javax0.javalex.JavaSourceDiff;
 
 import java.util.ArrayList;
@@ -13,14 +18,15 @@ import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Input.makeInput;
 
-public class JavaSourceInsert implements Macro {
+public class JavaSourceInsert implements Macro, Scanner.FirstLine {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var file = Params.<String>holder(null, "to", "file", "into");
-        final var segment = Params.<String>holder("segment", "at", "id").orElseNull();
-        final var update = Params.<Boolean>holder(null, "check", "checkUpdate", "update", "updateOnly").asBoolean();
-        final var throwUp = Params.<Boolean>holder(null, "failOnUpdate", "failUpdate", "updateError").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(file, segment, update, throwUp).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var file = scanner.str(null, "to", "file", "into");
+        final var segment = scanner.str("segment", "at", "id").defaultValue(null);
+        final var update = scanner.bool(null, "check", "checkUpdate", "update", "updateOnly");
+        final var throwUp = scanner.bool(null, "failOnUpdate", "failUpdate", "updateError");
+        scanner.done();
         final JavaSourceInsertCloser closer;
         if (in.isEmpty()) {
             closer = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.is() || throwUp.is());

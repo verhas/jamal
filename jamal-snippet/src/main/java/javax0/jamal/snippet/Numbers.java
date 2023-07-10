@@ -4,8 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 /*
 snippet numbers
@@ -36,13 +35,14 @@ will result
 
 end snippet
  */
-public class Numbers implements Macro {
+public class Numbers implements Macro, Scanner.WholeInput {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var start = Params.<Integer>holder("start", "from").orElseInt(0);
-        final var end = Params.<Integer>holder("end", "to", "stop").asInt();
-        final var step = Params.<Integer>holder("step", "increment", "by").orElseInt(1);
-        Scan.using(processor).from(this).tillEnd().keys(start, end, step).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var start = scanner.number("start", "from").defaultValue(0);
+        final var end   = scanner.number("end", "to", "stop");
+        final var step  = scanner.number("step", "increment", "by").defaultValue(1);
+        scanner.done();
 
         final var startValue = start.get();
         final var endValue = end.get();

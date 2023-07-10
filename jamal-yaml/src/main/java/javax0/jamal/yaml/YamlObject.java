@@ -1,6 +1,5 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;

@@ -1,8 +1,12 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import ognl.Ognl;
 import ognl.OgnlException;
 import org.yaml.snakeyaml.Yaml;
@@ -10,17 +14,16 @@ import org.yaml.snakeyaml.Yaml;
 import java.util.List;
 import java.util.Map;
 
-import static javax0.jamal.tools.Params.holder;
-
-public class Add implements Macro, InnerScopeDependent {
+public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
     final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var to = holder("yamlDataTarget", "to").asString();
-        final var key = Params.<String>holder(null, "key").orElseNull();
-        final var flatten = holder(null, "flat", "flatten").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(to, key, flatten).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var to      = scanner.str("yamlDataTarget", "to");
+        final var key     = scanner.str(null, "key").defaultValue(null);
+        final var flatten = scanner.bool(null, "flat", "flatten");
+        scanner.done();
         final var dotIndex = to.get().indexOf('.');
         final String id = getId(to, dotIndex);
         final Object expression = getOgnlExpression(to, dotIndex);

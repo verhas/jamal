@@ -5,8 +5,9 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Scanner;
 
-public class GroovyCloser implements Macro, InnerScopeDependent {
+public class GroovyCloser implements Macro, InnerScopeDependent, Scanner {
     private static class Closer implements AutoCloseable, javax0.jamal.api.Closer.OutputAware {
         private Input result;
         private final Shell shell;

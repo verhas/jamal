@@ -9,7 +9,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.IndexedPlaceHolders.value;
-import static javax0.jamal.tools.Params.holder;
 
 /**
  * Inner classes implement macros that ease the handling of document references to files and directories.
@@ -49,13 +48,15 @@ public class FilesMacro {
     /**
      * Check that the directory exists, and it is a directory.
      */
-    public static class Directory implements Macro, InnerScopeDependent {
+    public static class Directory implements Macro, InnerScopeDependent, Scanner {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var format = holder("directoryFormat", "format").orElse("$name").asString();
-            final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Scan.using(processor).from(this).between("()").keys(format, root).parse(in);
+            final var scanner = newScanner(in, processor);
+            final var format = scanner.str("directoryFormat", "format").defaultValue("$name");
+            final var root = scanner.str("root").defaultValue("").as(String.class, FileTools::trailDirectory);
+            scanner.done();
+
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
             final var dir = new File(dirName.length() > 0 ? dirName : ".");
@@ -81,14 +82,15 @@ public class FilesMacro {
     /**
      * Check that the file exists, and it is a file.
      */
-    public static class FileMacro implements Macro, InnerScopeDependent {
+    public static class FileMacro implements Macro, InnerScopeDependent, Scanner {
 
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var format = holder("fileFormat", "format").orElse("$name").asString();
-            final var root = holder("root").orElse("").as(String.class, FileTools::trailDirectory);
-            Scan.using(processor).from(this).between("()").keys(format, root).parse(in);
+            final var scanner = newScanner(in, processor);
+            final var format = scanner.str("fileFormat", "format").defaultValue("$name");
+            final var root = scanner.str("root").defaultValue("").as(String.class, FileTools::trailDirectory);
+            scanner.done();
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
             final var file = new File(fileName);

@@ -1,9 +1,17 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Closer;
+import javax0.jamal.api.Evaluable;
+import javax0.jamal.api.Identified;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.ObjectHolder;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.Serializing;
+import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,11 +19,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 
-public class References implements Macro {
+public class References implements Macro, Scanner.WholeInput {
 
     // snipline XREFS filter="(.*)"
     public static final String XREFS = "xrefs";
@@ -25,9 +38,10 @@ public class References implements Macro {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var file = Params.<String>holder("file").orElse(REF_JRF);
-        final var holder = Params.<String>holder("holder").orElse(XREFS);
-        Scan.using(processor).from(this).tillEnd().keys(file, holder).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var file = scanner.str("file").defaultValue(REF_JRF);
+        final var holder = scanner.str("holder").defaultValue(XREFS);
+        scanner.done();
         final var id = holder.get();
         final var refHolder = new ReferenceHolder(id);
         if (isGlobalMacro(id)) {

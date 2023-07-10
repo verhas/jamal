@@ -7,26 +7,25 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static javax0.jamal.tools.Params.holder;
-
-public class SnipLoad implements Macro, InnerScopeDependent {
+public class SnipLoad implements Macro, InnerScopeDependent, Scanner.WholeInput {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var ref = in.getReference();
-        final var idRegex = holder("name", "id").orElse("").asString();
-        final var fnRegex = holder("file", "fileName").orElse("").asString();
-        final var textRegex = holder("text", "contains").orElse("").asString();
-        final var input = holder("input").orElse("").asString();
-        final var format = holder("format").orElse("XML").asString();
-        Scan.using(processor).from(this).tillEnd().keys(idRegex, fnRegex, textRegex, input, format).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var idRegex = scanner.str("name", "id").defaultValue("");
+        final var fnRegex = scanner.str("file", "fileName").defaultValue("");
+        final var textRegex = scanner.str("text", "contains").defaultValue("");
+        final var input = scanner.str("input").defaultValue("");
+        final var format = scanner.str("format").defaultValue("XML");
+        scanner.done();
         BadSyntax.when(!"XML".equals(format.get()), "The only supported format is XML");
         final var store = SnippetStore.getInstance(processor);
         final var is = new ByteArrayInputStream(FileTools.getFileContent(FileTools.absolute(ref, input.get()), processor).getBytes(StandardCharsets.UTF_8));

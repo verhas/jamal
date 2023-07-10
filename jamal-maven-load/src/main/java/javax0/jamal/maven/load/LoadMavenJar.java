@@ -1,12 +1,21 @@
 package javax0.jamal.maven.load;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.EnvironmentVariables;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Position;
+import javax0.jamal.api.Processor;
 import javax0.jamal.engine.NullMacro;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Option;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
-import javax0.maventools.download.*;
+import javax0.jamal.tools.Scanner;
+import javax0.maventools.download.ArtifactType;
+import javax0.maventools.download.Downloader;
+import javax0.maventools.download.MavenCoordinates;
+import javax0.maventools.download.Pom;
+import javax0.maventools.download.Repo;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,11 +26,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class LoadMavenJar implements Macro {
+public class LoadMavenJar implements Macro, Scanner {
 
     /**
      * The class loaders are reserved and reused when a single process executes different Jamal processors for the same source.
@@ -35,12 +50,13 @@ public class LoadMavenJar implements Macro {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final String nonce = in.toString();
-        final var repos = Params.<String>holder("repositories", "repository", "repo", "repos").orElse("central");
-        final var noDep = Params.<Boolean>holder("noDependencies", "noDeps").asBoolean();
-        final var reload = Params.<Boolean>holder("reload", "overwrite", "update").asBoolean();
-        final var local = Params.<String>holder("local").orElse(null);
-        final var exclude = Params.<String>holder("exclude").orElse(null);
-        Scan.using(processor).from(this).between("()").keys(repos, noDep, reload, local, exclude).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var repos = scanner.str("repositories", "repository", "repo", "repos").defaultValue("central");
+        final var noDep = scanner.bool("noDependencies", "noDeps").asBoolean();
+        final var reload = scanner.bool("reload", "overwrite", "update").asBoolean();
+        final var local = scanner.str("local").defaultValue(null);
+        final var exclude = scanner.str("exclude").defaultValue(null);
+        scanner.done();
         synchronized (classLoaders) {
             if (classLoaders.containsKey(nonce)) {
                 final var cl = classLoaders.get(nonce);
@@ -49,7 +65,7 @@ public class LoadMavenJar implements Macro {
                 } else {
                     loadNewMacros(cl, processor);
                 }
-                loadJimResources(processor,cl);
+                loadJimResources(processor, cl);
                 return "";
             }
         }
@@ -88,7 +104,7 @@ public class LoadMavenJar implements Macro {
             } else {
                 cl = loadNewMacros(urls, processor);
             }
-            loadJimResources(processor,cl);
+            loadJimResources(processor, cl);
             synchronized (classLoaders) {
                 classLoaders.put(nonce, cl);
             }
@@ -103,13 +119,13 @@ public class LoadMavenJar implements Macro {
             final var urls = cl.getResources(Processor.GLOBAL_INCLUDE_RESOURCE);
             while (urls.hasMoreElements()) {
                 try (final var is = urls.nextElement().openStream()) {
-                            final var input = javax0.jamal.tools.Input.makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8),
+                    final var input = javax0.jamal.tools.Input.makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8),
                             new Position("res:" + Processor.GLOBAL_INCLUDE_RESOURCE, 1, 1));
-                            processor.process(input);
-                        }
-                    }
-            } catch (IOException e) {
-                throw new BadSyntax("Cannot load resource " + Processor.GLOBAL_INCLUDE_RESOURCE, e);
+                    processor.process(input);
+                }
+            }
+        } catch (IOException e) {
+            throw new BadSyntax("Cannot load resource " + Processor.GLOBAL_INCLUDE_RESOURCE, e);
         }
     }
 
