@@ -20,7 +20,7 @@ public class CounterMacro implements Macro, InnerScopeDependent, Scanner.FirstLi
         final var id = scanner.str("id");
         final var start = scanner.number("start").defaultValue(1);
         final var step = scanner.number("step").defaultValue(1);
-        final var iiii = scanner.bool("IIII").asBoolean();
+        final var iiii = scanner.bool("IIII");
         scanner.done();
         skipWhiteSpaces(input);
         BadSyntaxAt.when(input.length() > 0, "There are extra characters after the counter definition", input.getPosition());

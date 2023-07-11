@@ -96,7 +96,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         // The use case is when you collect snippets from different sources where the names may collide.
         final var java = scanner.bool(null, "java");
         // Collect snippets from the Java sources based on the Java syntax without any special tag.
-        final var javaSnippetCollectors = scanner.str("javaSnippetCollectors").asString().defaultValue(null);
+        final var javaSnippetCollectors = scanner.str("javaSnippetCollectors").defaultValue(null);
         // You can define a comma-separated list of Java snip{%@comment%}pet collectors.
         final var asciidoc = scanner.bool("asciidoc", "asciidoctor");
         // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.

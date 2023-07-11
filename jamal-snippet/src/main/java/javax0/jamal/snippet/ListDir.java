@@ -27,13 +27,13 @@ public class ListDir implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var format = scanner.str("format").defaultValue("$name").asString();
-        final var separator = scanner.str("separator", "sep").defaultValue(",").asString();
-        final var grep = scanner.str("grep").defaultValue(null).asString();
-        final var glob = scanner.str("pattern").defaultValue(null).asString();
+        final var format = scanner.str("format").defaultValue("$name");
+        final var separator = scanner.str("separator", "sep").defaultValue(",");
+        final var grep = scanner.str("grep").defaultValue(null);
+        final var glob = scanner.str("pattern").defaultValue(null);
         final var maxDepth = scanner.number("maxDepth").defaultValue(Integer.MAX_VALUE);
-        final var isFollowSymlinks = scanner.bool("followSymlinks").asBoolean();
-        final var countOnly = scanner.bool("countOnly", "count").asBoolean();
+        final var isFollowSymlinks = scanner.bool("followSymlinks");
+        final var countOnly = scanner.bool("countOnly", "count");
         scanner.done();
 
         final FileVisitOption[] options;
