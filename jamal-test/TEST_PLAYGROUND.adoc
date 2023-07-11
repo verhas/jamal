@@ -1,18 +1,18 @@
 
 
-This is a sample asciidoc file that references a sample snippet from snips.sh
+**Th**is is a **sa**mple **asc**iidoc **fi**le **th**at **refe**rences a **sa**mple **sn**ippet **fr**om **sn**ips.**s**h
 
 [source,tetx]
 ----
-Developer Certificate of Origin
-Version 1.1
+**Developer** **Certific**ate **of** **Origin**
+**Ver**sion 1.1
 
-Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+**Copyr**ight (C) 2004, 2006 **T**he **Linux** **Found**ation **and** **i**ts **contributors**.
 
-Everyone is permitted to copy and distribute verbatim copies of this
-license document, but changing it is not allowed.
+**Every**one **is** **permitted** **to** **co**py **and** **distribute** **verbatim** **copies** **of** **th**is
+**license** **docu**ment, **but** **chang**ing **it** **is** **n**ot **allowed**.
 
 
-Developer's Certificate of Origin 1.1
+**Developer**'s **Certific**ate **of** **Origin** 1.1
 
 ----

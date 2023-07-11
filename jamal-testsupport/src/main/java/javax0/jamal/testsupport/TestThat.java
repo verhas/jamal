@@ -1,10 +1,6 @@
 package javax0.jamal.testsupport;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.engine.UserDefinedMacro;
 import javax0.jamal.tools.HexDumper;
@@ -13,11 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -411,9 +403,20 @@ public class TestThat implements AutoCloseable {
         }
     }
 
+    /**
+     * Convert the string to a regular expression that matches the string as is. It escapes all the special characters
+     * that have a meaning in regular expressions.
+     * <p>
+     * The reason to use this instead of {@link Pattern#quote(String)} is that this one does not escape the
+     * entire string enclosing it between {@code \Q} and {@code \E}. This way the regular expression can be easily
+     * edited by the user after it was copied from the error message to the test.
+     *
+     * @param string the string to convert
+     * @return a regular expression that matches the string as is
+     */
     private static String myQuote(String string) {
         //noinspection RegExpSingleCharAlternation,RegExpRedundantEscape
-        return string.replaceAll("(\\*|\\.|\\\\|\\(|\\)|\\{|\\}|\\|)", "\\\\$1");
+        return string.replaceAll("(\\*|\\.|\\\\|\\(|\\)|\\{|\\}|\\||\\+)", "\\\\$1");
     }
 
     private static Set<String> collect(final Throwable t) {

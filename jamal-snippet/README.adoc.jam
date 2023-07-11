@@ -160,7 +160,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in l
 %}
 [[snip_collect]]
 === {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=ef5a6453%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=24342c7e%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -1746,7 +1746,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 === {%macroChapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=0925799f%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=ec5335f2%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -2268,7 +2268,7 @@ results
 
 [[listDir]]
 === {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=2e9ead76%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=5a2fcf8e%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 

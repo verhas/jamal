@@ -1,9 +1,9 @@
 {%@comment %}
 
-This is a sample asciidoc file that references a sample snippet from snips.sh
+{%@bir This is a sample asciidoc file that references a sample snippet from snips.sh%}
 
 [source,tetx]
-----
-{%@include [verbatim] https://snips.sh/f/Xoc2u5J6pT?r=1%}
+----{%#bir (ratios="+ 0 1 1 2 1.9")
+{%@include [verbatim] https://snips.sh/f/Xoc2u5J6pT?r=1%}%}
 ----
 
