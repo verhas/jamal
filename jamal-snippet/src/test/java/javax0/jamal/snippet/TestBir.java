@@ -54,4 +54,26 @@ public class TestBir {
         TestThat.theInput("{@bir}").results("");
     }
 
+    @Test
+    void usingDictonary() throws Exception {
+        TestThat.theInput("{@bir:dictionary\n" +
+                "k*ivetel\n" +
+                "}" +
+                "{@bir kevetel kivetel}").results("**ke**vetel **k**ivetel");
+    }
+
+    @Test
+    void usingDictonaryNamed() throws Exception {
+        TestThat.theInput("{@bir:dictionary\n" +
+                "k*ivetel\n" +
+                "}" +
+                "{@bir:dictionary id=id\n" +
+                "k*evetel\n" +
+                "*krevetel\n" +
+                "kretek*\n" +
+                "kretes\n" +
+                "}" +
+                "{@bir (dictionary=id)kevetel kivetel krevetel kretek kretes}")
+                .results("**k**evetel **ki**vetel krevetel **kretek** **kretes**");
+    }
 }

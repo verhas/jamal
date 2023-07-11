@@ -31,7 +31,6 @@ public class Bir implements Macro, Scanner {
     );
 
     final static int RATIONES = 5;
-    private static final int MIN_PF_LENGTH = 3;
     private static final int MAX_PF_LENGTH = 5;
 
     @Override
@@ -41,6 +40,7 @@ public class Bir implements Macro, Scanner {
         final var prefix = scanner.str("bir$prefix", "prefix").defaultValue("**");
         final var postfix = scanner.str("bir$postfix", "postfix").defaultValue("**");
         final var ratios = scanner.str("bir$ratios", "ratios").defaultValue("- 0 1 1 2 0.4");
+        final var dictionary = scanner.str("bir$dictionary", "dictionary").defaultValue(BirDictionary.DEFAULT_DICTIONARY_NAME);
         scanner.done();
 
         BadSyntax.when(ratios.get().length() < 11,
@@ -49,27 +49,48 @@ public class Bir implements Macro, Scanner {
         BadSyntax.when(p != '+' && p != '-',
                 "The parameter \"ratios\" is malformed, it must look like '- 0 1 1 2 0.4', the first character must be '+' or '-'");
 
-        final var rationes = calculateRationes(ratios.get());
-        final var birrifyCommonWords = p == '+';
-
         final var input = in.toString();
         if (input.length() == 0) {
             return "";
         }
+
+        final var dictionaryName = dictionary.get();
+        final var dict = (BirDictionary.BirDictonary) processor
+                .getRegister()
+                .getUdMacroLocal(dictionaryName)
+                .filter(m -> m instanceof BirDictionary.BirDictonary).orElse(null);
+        BadSyntax.when(!BirDictionary.DEFAULT_DICTIONARY_NAME.equals(dictionaryName) && dict == null,
+                "The dictionary macro \"%s\" is not defined", dictionaryName);
+
+        final var rationes = calculateRationes(ratios.get());
+        final var birrifyCommonWords = p == '+';
+
 
         final var words = splitToWords(input);
         final String[] dPairs = getDelimiters(delimiters);
 
         for (int i = 0; i < words.length; i++) {
             if (!isSkip(words, i, dPairs)) {
-                words[i] = birify(words[i], prefix.get(), postfix.get(), rationes, birrifyCommonWords);
+                words[i] = birify(words[i], prefix.get(), postfix.get(), rationes, birrifyCommonWords, dict);
             }
         }
 
         return String.join("", words);
     }
 
-    private String birify(final String s, final String prefix, final String postfix, int[] rationes, final boolean birrifyCommonWords) {
+    private String birify(final String s,
+                          final String prefix,
+                          final String postfix,
+                          int[] rationes,
+                          final boolean birrifyCommonWords,
+                          final BirDictionary.BirDictonary dict
+                          ) {
+        if( dict != null ){
+            final var b = dict.get(s);
+            if( b != -1 ){
+                return b == 0 ? s : prefix + s.substring(0,b) + postfix + s.substring(b);
+            }
+        }
         if (commonWords.contains(s)) {
             return birrifyCommonWords ? prefix + s + postfix : s;
         }

@@ -13,8 +13,6 @@ After that, you can use the `kroki` macro to include pictures.
 
 ![](KROKI_MD.svg)
 
-
-
 ![](STR.svg)
 
 Using Jamal, you can even use macros inside the picture descriptions.

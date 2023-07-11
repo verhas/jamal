@@ -12,29 +12,12 @@ The `kroki.jim` file contains macros that to include pictures in a Markdown file
 After that, you can use the `kroki` macro to include pictures.
 
 {%kroki /KROKI_MD/plantuml/svg/
-skinparam ranksep 20
-skinparam dpi 125
-skinparam packageTitleAlignment left
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
 
-rectangle "Main" {
-(main.view)
-(singleton)
-}
-rectangle "Base" {
-(base.component)
-(component)
-(model)
-}
-rectangle "<b>main.ts</b>" as main_ts
-
-(component) ..> (base.component)
-main_ts ==> (main.view)
-(main.view) --> (component)
-(main.view) ...> (singleton)
-(singleton) ---> (model)
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: Another authentication Response
 %}
-
-
 
 {%kroki /STR/structurizr/svg/
 workspace {
