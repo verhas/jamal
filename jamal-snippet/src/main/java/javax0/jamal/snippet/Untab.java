@@ -30,7 +30,7 @@ public class Untab implements Macro, InnerScopeDependent, BlockConverter , Scann
         final var tabSize = scanner.number("tabSize", "tab", "size").defaultValue(8);
         scanner.done();
         final var sb = in.getSB();
-        convertTextBlock(sb, in.getPosition(), tabSize);
+        convertTextBlock(sb, in.getPosition(), tabSize.getParam());
         return sb.toString();
     }
 

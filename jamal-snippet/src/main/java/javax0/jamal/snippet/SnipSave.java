@@ -10,6 +10,7 @@ import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.IntegerParameter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -54,7 +55,7 @@ public class SnipSave implements Macro, InnerScopeDependent, Scanner.WholeInput 
                          final Params.Param<String> fnRegex,
                          final Params.Param<String> textRegex,
                          final Params.Param<String> output,
-                         final Params.Param<Integer> tab) throws BadSyntax {
+                         final IntegerParameter tab) throws BadSyntax {
         try {
             final var documentFactory = DocumentBuilderFactory.newInstance();
             final var documentBuilder = documentFactory.newDocumentBuilder();

@@ -12,6 +12,7 @@ import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.IntegerParameter;
 
 import java.util.Locale;
 
@@ -55,7 +56,7 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
         throw new BadSyntax("Neither lines, nor hash is checked in " + getId() + "'" + message.get() + "'");
     }
 
-    private void checkLineCount(final Params.Param<Integer> lines,
+    private void checkLineCount(final IntegerParameter lines,
                                 final Params.Param<String> id,
                                 final Params.Param<String> fileName,
                                 final Params.Param<String> message,

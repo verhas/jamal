@@ -6,6 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.BooleanParameter;
 import javax0.jamal.tools.param.EnumerationParameter;
+import javax0.jamal.tools.param.IntegerParameter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -180,10 +181,10 @@ public interface Scanner {
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
-        public Params.Param<Integer> number(String... keys) {
+        public IntegerParameter number(String... keys) {
             final var param = Params.<Pattern>holder(keys).asInt();
             params.add(param);
-            return param;
+            return new IntegerParameter(param);
         }
 
         /**

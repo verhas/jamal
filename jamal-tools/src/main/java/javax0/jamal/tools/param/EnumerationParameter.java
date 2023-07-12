@@ -5,7 +5,7 @@ import javax0.jamal.tools.Params;
 
 import java.util.Optional;
 
-public class EnumerationParameter extends AbstractTypedParameter{
+public class EnumerationParameter extends AbstractTypedParameter<Boolean>{
 
     public EnumerationParameter(Params.Param<Boolean> param) {
         super(param);

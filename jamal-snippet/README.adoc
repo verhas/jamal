@@ -2953,12 +2953,12 @@ will result
 - snippet: 2,208 bytes
 - JavaMatcherBuilderMacros.java: 20,916 bytes
 - Snip.java: 4,866 bytes
-- SnipSave.java: 4,800 bytes
+- SnipSave.java: 4,845 bytes
 - Sort.java: 8,636 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,788 bytes
+- NumberLines.java: 2,810 bytes
 - RangeMacro.java: 1,250 bytes
-- Untab.java: 2,346 bytes
+- Untab.java: 2,357 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
 - tools: 160 bytes
@@ -2972,7 +2972,7 @@ will result
 - Collect.java: 24,078 bytes
 - SnipFile.java: 680 bytes
 - HashCode.java: 462 bytes
-- TrimLines.java: 5,343 bytes
+- TrimLines.java: 5,354 bytes
 - JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
 - Memoize.java: 8,124 bytes
@@ -3016,9 +3016,9 @@ will result
 - Java.java: 11,573 bytes
 - ReplaceLines.java: 2,841 bytes
 - SkipLines.java: 2,747 bytes
-- SnipCheck.java: 7,737 bytes
+- SnipCheck.java: 7,782 bytes
 - IdempotencyFailed.java: 1,816 bytes
-- Reflow.java: 2,051 bytes
+- Reflow.java: 2,062 bytes
 - Pos.java: 5,263 bytes
 - Snippet.java: 1,052 bytes
 ----
@@ -3273,7 +3273,7 @@ will result in the output
 
 [source]
 ----
-2023-07-12 12:59:05
+2023-07-12 15:09:04
 ----
 
 

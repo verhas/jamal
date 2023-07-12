@@ -3,9 +3,8 @@ package javax0.jamal.tools.param;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.tools.Params;
 
-public class AbstractTypedParameter {
-    protected final Params.Param<?> param;
-
+public class AbstractTypedParameter<T> {
+    protected final Params.Param<T> param;
 
     /**
      * For compatibility reasons, sometimes you may need access to the underlying parameter.
@@ -17,7 +16,7 @@ public class AbstractTypedParameter {
     }
 
 
-    public AbstractTypedParameter(Params.Param<?> param) {
+    public AbstractTypedParameter(Params.Param<T> param) {
         this.param = param;
     }
 

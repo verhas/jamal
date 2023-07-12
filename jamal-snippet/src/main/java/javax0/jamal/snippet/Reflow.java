@@ -15,7 +15,7 @@ public class Reflow implements Macro, InnerScopeDependent, BlockConverter, Scann
         final var scanner = newScanner(in,processor);
         final var width = scanner.number("width").defaultValue(0);
         scanner.done();
-        convertTextBlock(in.getSB(), in.getPosition(), width);
+        convertTextBlock(in.getSB(), in.getPosition(), width.getParam());
         return in.toString();
     }
 

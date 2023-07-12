@@ -7,6 +7,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.IntegerParameter;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -119,7 +120,7 @@ public class MacroDocxPicture implements Macro, Scanner {
         }
     }
 
-    private static OptionalInt optional(Params.Param<Integer> param) throws BadSyntax {
+    private static OptionalInt optional(IntegerParameter param) throws BadSyntax {
         if (param.isPresent()) {
             return OptionalInt.of(param.get());
         } else {

@@ -3,7 +3,7 @@ package javax0.jamal.tools.param;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.tools.Params;
 
-public class BooleanParameter extends AbstractTypedParameter {
+public class BooleanParameter extends AbstractTypedParameter<Boolean> {
 
     public BooleanParameter(Params.Param<Boolean> param) {
         super(param);

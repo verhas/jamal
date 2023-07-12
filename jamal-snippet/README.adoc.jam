@@ -717,7 +717,7 @@ To do this the macro `snip` will accept all the options of the macro `snip:trans
 
 [[snip_check]]
 === {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=8d99cf8c%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=85b01935%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -910,7 +910,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 
 [[snipSave]]
 === {%macroChapter%}`snip:save`
-{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=7b914ba9%}
+{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=77ab2403%}
 This macro saves all the collected snippets to a file.
 {%parameterized%}
 The file name must be specified by the parameter `output`.
@@ -1037,7 +1037,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 === {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=36051976%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=e8aed8bc%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1109,7 +1109,7 @@ will result
 
 [[untab]]
 === {%macroChapter%}`untab`
-{%#snip:check file={%JAVA_DIR%}Untab.java hash=edd5a96e%}
+{%#snip:check file={%JAVA_DIR%}Untab.java hash=896e2f2e%}
 
 The syntax of the macro is:
 
@@ -1455,7 +1455,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 
 [[numberLines]]
 === {%macroChapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=a839b062%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=8861a80e%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 {%parameterized%}
 
@@ -1949,7 +1949,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 
 [[reflow]]
 === {%macroChapter%}`reflow`
-{%#snip:check file={%JAVA_DIR%}Reflow.java hash=7e645482%}
+{%#snip:check file={%JAVA_DIR%}Reflow.java hash=7521ef23%}
 This macro reflows the content.
 {%parameterized%}
 

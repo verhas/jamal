@@ -5,6 +5,7 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.IntegerParameter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -184,7 +185,7 @@ public class Exec implements Macro, Scanner.FirstLine {
     }
 
     private static void waitForTheProcessToFinish(final Process process,
-                                                  final Params.Param<Integer> wait,
+                                                  final IntegerParameter wait,
                                                   final BooleanParameter destroy,
                                                   final BooleanParameter force) throws BadSyntax {
         try {
@@ -203,7 +204,7 @@ public class Exec implements Macro, Scanner.FirstLine {
     }
 
     private static void waitForTheProcessToFinish(final Process process,
-                                                  final Params.Param<Integer> wait,
+                                                  final IntegerParameter wait,
                                                   final BooleanParameter destroy,
                                                   final BooleanParameter force,
                                                   final StringWriter sw) throws BadSyntax, InterruptedException {
