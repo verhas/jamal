@@ -11,10 +11,10 @@ public class BirDictionary implements Macro, Scanner.FirstLine {
 
     static class BirDictonary implements Identified {
         private final String name;
-        private final Map<String, Integer> dictionary;
+        final Map<String, Integer> dictionary;
 
         int get(String key) {
-            if( dictionary.containsKey(key) ){
+            if (dictionary.containsKey(key)) {
                 return dictionary.get(key);
             }
             return -1;
@@ -52,8 +52,7 @@ public class BirDictionary implements Macro, Scanner.FirstLine {
             }
             dictionary.put(line, pos);
         }
-        final var macro = new BirDictonary(macroName.get(), dictionary);
-        processor.getRegister().define(macro);
+        processor.getRegister().define(new BirDictonary(macroName.get(), dictionary));
         return "";
     }
 

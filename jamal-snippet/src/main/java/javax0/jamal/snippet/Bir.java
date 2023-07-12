@@ -8,30 +8,11 @@ import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class Bir implements Macro, Scanner {
 
-    private static final String[] postfixes = {
-            "ition", "ement", "ssion", "ional", "ction", "ation", "sion", "ning",
-            "ther", "ight", "tion", "ture", "ding", "tive", "ally", "rate",
-            "ting", "ance", "ence", "ment", "lity", "ical", "able", "onal",
-            "tly", "ose", "ast", "ess", "use", "est", "ion", "ice",
-            "ist", "hip", "tic", "der", "ate", "her", "ect", "nal",
-            "ite", "ral", "ter", "all", "ver", "ide", "ity", "ght",
-            "ely", "ain", "ous", "cal", "nce", "ial", "are", "low",
-            "tor", "and", "ear", "ian", "ive", "eat", "ere", "ble",
-            "end", "ire", "ine", "ual", "ing", "ore", "ant", "one",
-            "ure", "ary", "ent", "ase", "lly", "ise", "age", "ish",
-    };
-    final List<String> commonWords = List.of(
-            "the", "be", "to", "of", "and", "a", "an", "it", "at", "on", "he", "she", "but", "is", "my"
-    );
-
-    final static int RATIONES = 5;
-    private static final int MAX_PF_LENGTH = 5;
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -40,7 +21,9 @@ public class Bir implements Macro, Scanner {
         final var prefix = scanner.str("bir$prefix", "prefix").defaultValue("**");
         final var postfix = scanner.str("bir$postfix", "postfix").defaultValue("**");
         final var ratios = scanner.str("bir$ratios", "ratios").defaultValue("- 0 1 1 2 0.4");
-        final var dictionary = scanner.str("bir$dictionary", "dictionary").defaultValue(BirDictionary.DEFAULT_DICTIONARY_NAME);
+        final var dictionary = scanner.str("bir$dict", "dictionary", "dict").defaultValue(BirDictionary.DEFAULT_DICTIONARY_NAME);
+        final var pfDictionary = scanner.str("bir$ppDict", "ending", "endings", "pf").defaultValue(null);
+        final var cmDictionary = scanner.str("bir$cmDict", "common", "commons", "cm").defaultValue(null);
         scanner.done();
 
         BadSyntax.when(ratios.get().length() < 11,
@@ -55,89 +38,64 @@ public class Bir implements Macro, Scanner {
         }
 
         final var dictionaryName = dictionary.get();
-        final var dict = (BirDictionary.BirDictonary) processor
-                .getRegister()
-                .getUdMacroLocal(dictionaryName)
-                .filter(m -> m instanceof BirDictionary.BirDictonary).orElse(null);
-        BadSyntax.when(!BirDictionary.DEFAULT_DICTIONARY_NAME.equals(dictionaryName) && dict == null,
-                "The dictionary macro \"%s\" is not defined", dictionaryName);
+        final var dict = getBirDictonary(processor, dictionaryName, BirDictionary.DEFAULT_DICTIONARY_NAME.equals(dictionaryName));
+        final var pfDict = getBirDictonary(processor, pfDictionary.get(), true);
+        final var cmDict = getBirDictonary(processor, cmDictionary.get(), true);
 
         final var rationes = calculateRationes(ratios.get());
-        final var birrifyCommonWords = p == '+';
+        final var birifyCommonWords = p == '+';
 
 
         final var words = splitToWords(input);
         final String[] dPairs = getDelimiters(delimiters);
-
+        final var birifier = new Birifier(prefix.get(), postfix.get(), rationes, birifyCommonWords, dict, pfDict, cmDict);
         for (int i = 0; i < words.length; i++) {
             if (!isSkip(words, i, dPairs)) {
-                words[i] = birify(words[i], prefix.get(), postfix.get(), rationes, birrifyCommonWords, dict);
+                words[i] = birifier.birify(words[i]);
             }
         }
 
         return String.join("", words);
     }
 
-    private String birify(final String s,
-                          final String prefix,
-                          final String postfix,
-                          int[] rationes,
-                          final boolean birrifyCommonWords,
-                          final BirDictionary.BirDictonary dict
-                          ) {
-        if( dict != null ){
-            final var b = dict.get(s);
-            if( b != -1 ){
-                return b == 0 ? s : prefix + s.substring(0,b) + postfix + s.substring(b);
-            }
-        }
-        if (commonWords.contains(s)) {
-            return birrifyCommonWords ? prefix + s + postfix : s;
-        }
-        int birred = s.length();
-        if (birred > MAX_PF_LENGTH) {
-            for (final var p : postfixes) {
-                if (s.endsWith(p)) {
-                    birred = s.length() - p.length();
-                    break;
-                }
-            }
-        }
-        if (s.length() < RATIONES) {
-            birred = Math.min(birred, rationes[s.length() - 1]);
+    private static BirDictionary.BirDictonary getBirDictonary(Processor processor, String dictionaryName, boolean isDefault) throws BadSyntax {
+        if (dictionaryName == null) {
+            return null;
         } else {
-            birred = Math.min(birred, rationes[RATIONES - 1] * s.length() / 100);
-        }
-        if (birred > 0) {
-            return prefix + s.substring(0, birred) + postfix + s.substring(birred);
-        } else {
-            return s;
+            final var dict = (BirDictionary.BirDictonary) processor
+                    .getRegister()
+                    .getUserDefined(dictionaryName)
+                    .filter(m -> m instanceof BirDictionary.BirDictonary).orElse(null);
+            BadSyntax.when(!isDefault && dict == null,
+                    "The dictionary macro \"%s\" is not defined", dictionaryName);
+
+            return dict;
         }
     }
 
+
     private static int[] calculateRationes(String ratios) throws BadSyntax {
-        int[] rationes = new int[RATIONES];
+        int[] rationes = new int[Birifier.RATIONES];
         int i = 0;
         for (final var s : ratios.substring(1).split("\\s+")) {
-            if (s.length() == 0) {
-                continue;
+            if (0 != s.length()) {
+                BadSyntax.when(i == Birifier.RATIONES, "Too many ratios in the parameter \"%%s\"%s", ratios);
+                if (i < Birifier.RATIONES - 1) {
+                    rationes[i] = toInt(ratios, s, Integer::parseInt);
+                    BadSyntax.when(rationes[i] < 0 || rationes[i] > i + 1,
+                            "Invalid number %s at the position %d in the parameter \"%s\"", s, i + 1, ratios);
+                } else {
+                    rationes[i] = toInt(ratios, s, k -> (int) (Double.parseDouble(k) * 100));
+                    BadSyntax.when(rationes[i] < 0 || rationes[i] > 100,
+                            "Invalid number %s at the position %d in the parameter \"%s\"", s, i + 1, ratios);
+                }
+                i++;
             }
-            BadSyntax.when(i == RATIONES, "Too many ratios in the parameter \"%%s\"%s", ratios);
-            if (i < RATIONES - 1) {
-                rationes[i] = toInt(ratios, i, s, Integer::parseInt);
-                BadSyntax.when(rationes[i] < 0 || rationes[i] > i + 1,
-                        "Invalid number %s at the position %d in the parameter \"%s\"", s, i + 1, ratios);
-            } else {
-                rationes[i] = toInt(ratios, i, s, k -> (int) (Double.parseDouble(k) * 100));
-                BadSyntax.when(rationes[i] < 0 || rationes[i] > 100,
-                        "Invalid number %s at the position %d in the parameter \"%s\"", s, i + 1, ratios);
-            }
-            i++;
         }
         return rationes;
     }
 
-    private static int toInt(String ratios, int i, String s, Function<String, Integer> f) throws BadSyntax {
+    private static int toInt(String ratios, String s, Function<String, Integer> f) throws BadSyntax {
         try {
             return f.apply(s);
         } catch (NumberFormatException nfe) {
