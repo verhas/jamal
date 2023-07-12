@@ -1,15 +1,11 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.ListParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +32,7 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
     private static class Options {
         final ScannerObject scanner;
 
-        final BooleanParameter empty ;
+        final BooleanParameter empty;
         final BooleanParameter blank;
         final BooleanParameter not;
         final BooleanParameter and;
@@ -44,10 +40,10 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
         final BooleanParameter isDefined;
         final BooleanParameter isGlobal;
         final BooleanParameter isLocal;
-        final Params.Param<List<String>> lessThan;
-        final Params.Param<List<String>> greaterThan;
-        final Params.Param<List<String>> equals;
-        private final List<Params.Param<List<String>>> numericOptions;
+        final ListParameter lessThan;
+        final ListParameter greaterThan;
+        final ListParameter equals;
+        private final List<ListParameter> numericOptions;
 
         private Options(ScannerObject scnr) {
             scanner = scnr;
@@ -83,7 +79,7 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
 
         List<Boolean> numericOptionsPresent() throws BadSyntax {
             List<Boolean> list = new ArrayList<>();
-            for (Params.Param<List<String>> numericOption : numericOptions) {
+            for (final var numericOption : numericOptions) {
                 list.add(numericOption.isPresent());
             }
             return list;

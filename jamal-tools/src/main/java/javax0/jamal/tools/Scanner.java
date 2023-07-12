@@ -81,10 +81,10 @@ public interface Scanner {
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
-        public Params.Param<List<String>> list(String... keys) {
+        public ListParameter list(String... keys) {
             final var param = Params.<Boolean>holder(keys).asBoolean();
             params.add(param);
-            return param.asList(String.class);
+            return new ListParameter(param.asList(String.class));
         }
 
         /**
@@ -107,9 +107,7 @@ public interface Scanner {
                     .map(Enum::name).forEach(s -> keys[i.i++] = s);
             final var param = Params.<Boolean>holder(keys).asBoolean();
             params.add(param);
-            final var eparam = new EnumerationParameter(param);
-            eparam.setEnum(klass);
-            return eparam;
+            return new EnumerationParameter(param, klass);
         }
 
         /**

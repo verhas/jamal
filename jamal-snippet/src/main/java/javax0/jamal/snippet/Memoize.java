@@ -6,9 +6,9 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.HexDumper;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.ListParameter;
 import javax0.jamal.tools.param.StringParameter;
 
 import java.io.File;
@@ -16,15 +16,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Memoize implements Macro, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
-        final var files    = scanner.list(null, "file");
+        final var scanner = newScanner(in, processor);
+        final var files = scanner.list(null, "file");
         final var hashFile = scanner.str(null, "hashFile").defaultValue(null);
         final var hashCode = scanner.str(null, "hashCode").defaultValue(null);
         scanner.done();
@@ -93,7 +92,7 @@ public class Memoize implements Macro, Scanner {
      * @return {@code true} if any of the files does not exist. {@code false} otherwise.
      * @throws BadSyntax if there is some problem calculating the file name
      */
-    private static boolean fileMissing(String reference, Params.Param<List<String>> files) throws BadSyntax {
+    private static boolean fileMissing(String reference, ListParameter files) throws BadSyntax {
         return files.get().stream()
                 .map(f -> FileTools.absolute(reference, f))
                 .map(File::new)

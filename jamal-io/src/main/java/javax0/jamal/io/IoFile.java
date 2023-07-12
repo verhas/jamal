@@ -21,7 +21,7 @@ public class IoFile implements Macro, InnerScopeDependent, Scanner.WholeInput {
 
         final var fileName = Utils.getFile(file, in);
         final var f = new File(fileName);
-        final Condition cond = condition.enumeration(Condition.class);
+        final Condition cond = condition.get(Condition.class);
 
         switch (cond) {
             case exists:

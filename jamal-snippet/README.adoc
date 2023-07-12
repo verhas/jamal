@@ -2975,7 +2975,7 @@ will result
 - TrimLines.java: 5,354 bytes
 - JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
-- Memoize.java: 8,163 bytes
+- Memoize.java: 8,138 bytes
 - LineCount.java: 552 bytes
 - BirDictionary.java: 4,058 bytes
 - Replace.java: 1,641 bytes
@@ -3014,7 +3014,7 @@ will result
 - XmlDocument.java: 5,671 bytes
 - References.java: 7,745 bytes
 - Java.java: 11,573 bytes
-- ReplaceLines.java: 2,841 bytes
+- ReplaceLines.java: 2,852 bytes
 - SkipLines.java: 2,769 bytes
 - SnipCheck.java: 7,526 bytes
 - IdempotencyFailed.java: 1,816 bytes
@@ -3273,7 +3273,7 @@ will result in the output
 
 [source]
 ----
-2023-07-12 16:09:29
+2023-07-12 17:18:24
 ----
 
 

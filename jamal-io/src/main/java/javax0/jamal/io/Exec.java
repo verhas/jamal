@@ -2,24 +2,18 @@ package javax0.jamal.io;
 
 import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
-import javax0.jamal.tools.param.BooleanParameter;
-import javax0.jamal.tools.param.IntegerParameter;
-import javax0.jamal.tools.param.PatternParameter;
-import javax0.jamal.tools.param.StringParameter;
+import javax0.jamal.tools.param.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 
@@ -301,7 +295,7 @@ public class Exec implements Macro, Scanner.FirstLine {
      * @return {@code true} if the command is optional, and was not configured.
      * @throws BadSyntax if the command is not configured in the environment and is not optional or the parameter is missing.
      */
-    private static boolean setCommand(final StringParameter command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final BooleanParameter optional) throws BadSyntax {
+    private static boolean setCommand(final StringParameter command, final ListParameter arguments, final ProcessBuilder pb, final BooleanParameter optional) throws BadSyntax {
         BadSyntax.when(!command.isPresent(), "'command' for the macro 'exec' is mandatory.");
         final var commandArray = command.get().split("\n");
         BadSyntax.when(commandArray.length < 1, "There is no command symbolic name defined in the macro");

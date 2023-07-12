@@ -3,27 +3,22 @@ package javax0.jamal.tools.param;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.tools.Params;
 
-import java.util.Optional;
+public class EnumerationParameter extends AbstractTypedParameter<Boolean> {
 
-public class EnumerationParameter extends AbstractTypedParameter<Boolean>{
-
-    public EnumerationParameter(Params.Param<Boolean> param) {
+    public EnumerationParameter(Params.Param<Boolean> param, Class<?> enumClass) {
         super(param);
+        this.enumClass = enumClass;
     }
 
-    private Class<?> enumClass = null;
+    private final Class<?> enumClass;
     private Object enumDefault = null;
 
-    public void setEnum(Class<?> klass) {
-        this.enumClass = klass;
-    }
-
-    public <K> EnumerationParameter.WithDefault defaultValue(K enumDefault) {
+    public <K> EnumerationParameter defaultValue(K enumDefault) {
         if (enumDefault != null && !enumDefault.getClass().isAssignableFrom(enumClass)) {
             throw new IllegalArgumentException(String.format("The parameter '%s' is not '%s' type", param.name(), enumDefault.getClass().getName()));
         }
         this.enumDefault = enumDefault;
-        return new EnumerationParameter.WithDefault(this);
+        return this;
     }
 
     /**
@@ -38,52 +33,23 @@ public class EnumerationParameter extends AbstractTypedParameter<Boolean>{
      * @return the value of the parameter as an optional enumeration object.
      * @throws BadSyntax if the parameter was specified multiple times.
      */
-
-    public <K> Optional<K> enumeration(Class<K> klass) throws BadSyntax {
+    public <K> K get(Class<K> klass) throws BadSyntax {
         BadSyntax.when(enumClass == null, "The parameter '%s' is not an enumeration", param.name());
+        if (enumDefault == null) {
+            throw new IllegalArgumentException("The parameter '" + param.name() + "' has no default value.");
+        }
         if (!enumClass.isAssignableFrom(klass)) {
             throw new IllegalArgumentException(String.format("The parameter '%s' is not '%s' type", param.name(), klass.getName()));
         }
         if (param.is()) {
             try {
                 final var enumValue = Enum.valueOf((Class<Enum>) enumClass, param.name());
-                return Optional.of((K) enumValue);
+                return (K) enumValue;
             } catch (IllegalArgumentException e) {
                 throw new BadSyntax("The value '" + param.get() + "' is not a valid value for the enumeration " + enumClass.getName());
             }
         } else {
-            if (enumDefault != null) {
-                return Optional.of((K) enumDefault);
-            }
-            return Optional.empty();
-        }
-    }
-
-    public static class WithDefault extends AbstractTypedParameter<Boolean> {
-        private final EnumerationParameter supi;
-        public WithDefault(EnumerationParameter supi) {
-            super(supi.param);
-            this.supi = supi;
-        }
-
-        public <K> K enumeration(Class<K> klass) throws BadSyntax {
-            BadSyntax.when(supi.enumClass == null, "The parameter '%s' is not an enumeration", supi.param.name());
-            if (supi.enumDefault == null) {
-                throw new IllegalArgumentException("The parameter '" + supi.param.name() + "' has no default value.");
-            }
-            if (!supi.enumClass.isAssignableFrom(klass)) {
-                throw new IllegalArgumentException(String.format("The parameter '%s' is not '%s' type", supi.param.name(), klass.getName()));
-            }
-            if (supi.param.is()) {
-                try {
-                    final var enumValue = Enum.valueOf((Class<Enum>) supi.enumClass, supi.param.name());
-                    return (K) enumValue;
-                } catch (IllegalArgumentException e) {
-                    throw new BadSyntax("The value '" + supi.param.get() + "' is not a valid value for the enumeration " + supi.enumClass.getName());
-                }
-            } else {
-                return (K) supi.enumDefault;
-            }
+            return (K) enumDefault;
         }
     }
 }

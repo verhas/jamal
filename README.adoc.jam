@@ -2686,7 +2686,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=38aec00c%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=d086471d%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:

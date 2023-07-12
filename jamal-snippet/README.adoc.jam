@@ -1701,7 +1701,7 @@ but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
 === {%macroChapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=b64acf77%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=b2558440%}
 This macro replaces strings in the input.
 {%parameterized%}
 

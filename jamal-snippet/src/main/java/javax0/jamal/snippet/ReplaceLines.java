@@ -20,7 +20,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter,
         final var detectNoChange = scanner.bool("detectNoChange");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), replace, detectNoChange.getParam());
+        convertTextBlock(in.getSB(), in.getPosition(), replace.getParam(), detectNoChange.getParam());
         return in.toString();
     }
 
