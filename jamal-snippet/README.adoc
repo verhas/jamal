@@ -2511,7 +2511,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 51.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 45.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 [source]
@@ -2969,7 +2969,7 @@ will result
 - SnipTransform.java: 16,983 bytes
 - Base64.java: 3,383 bytes
 - FilesMacro.java: 8,220 bytes
-- Collect.java: 24,078 bytes
+- Collect.java: 23,699 bytes
 - SnipFile.java: 680 bytes
 - HashCode.java: 462 bytes
 - TrimLines.java: 5,354 bytes
@@ -3273,7 +3273,7 @@ will result in the output
 
 [source]
 ----
-2023-07-12 17:18:24
+2023-07-12 17:49:07
 ----
 
 

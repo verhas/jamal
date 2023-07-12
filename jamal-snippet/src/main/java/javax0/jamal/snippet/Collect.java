@@ -1,12 +1,6 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Scanner;
 import javax0.javalex.JavaLexed;
@@ -119,15 +113,9 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
             return "";
         }
         final var fn = from.get();
-        final var fromFile = new File(fn);
-        final boolean isRemote = FileTools.isRemote(fn);
-        final String normFn;
-        if (isRemote) {
-            normFn = fn;
-        } else {
-            normFn = Paths.get(fromFile.toURI()).normalize().toString();
-        }
-        if (isRemote || fromFile.isFile()) {
+        final String normFn = from.isRemote() ? from.get() : Paths.get(from.file().toURI()).normalize().toString();
+
+        if (from.isRemote() || from.isFile()) {
             if (asciidoc.is()) {
                 harvestAsciiDoc(normFn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             } else if (java.is()) {
@@ -212,11 +200,11 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
                              final String javaSnippetCollectors,
                              Processor processor) throws BadSyntax {
         List<BadSyntax> errors = new ArrayList<>();
-        BadSyntax.when(javaSnippetCollectors == null || javaSnippetCollectors.isEmpty(), "You must specify at least one Java snip"+"pet collector.");
+        BadSyntax.when(javaSnippetCollectors == null || javaSnippetCollectors.isEmpty(), "You must specify at least one Java snip" + "pet collector.");
         final String[] lines = getFileContent(file, ignoreIOEx, processor);
         final var javaLexed = new JavaLexed(String.join("\n", lines));
         for (final var collector : javaSnippetCollectors.split(",")) {
-            if( collector == null || collector.isEmpty() ) {
+            if (collector == null || collector.isEmpty()) {
                 continue;
             }
             final var matcher = JavaMatcherBuilderMacros.getMatcherFromMacro(processor, collector.trim());
@@ -229,7 +217,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
                 final String snippetName;
                 if (idGrp != null && idGrp.size() > 0) {
                     snippetName = idGrp.get(0).getLexeme();
-                } else if (idRgrp != null && idRgrp.isPresent() && idRgrp.get().groupCount() > 0 ) {
+                } else if (idRgrp != null && idRgrp.isPresent() && idRgrp.get().groupCount() > 0) {
                     snippetName = idRgrp.get().group(1);
                 } else {
                     throw new BadSyntax("Java collector found a matcher that does not have a 'snip' group defining the name of the snippet");

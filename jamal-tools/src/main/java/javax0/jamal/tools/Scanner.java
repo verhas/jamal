@@ -8,7 +8,6 @@ import javax0.jamal.tools.param.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -140,10 +139,10 @@ public interface Scanner {
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
-        public Params.Param<String> file(String... keys) {
+        public FileParameter file(String... keys) {
             final var param = Params.<String>holder(keys).asString();
             params.add(param);
-            return param.as(s -> FileTools.absolute(in.getReference(), s));
+            return new FileParameter(param.as(s -> FileTools.absolute(in.getReference(), s)));
         }
 
         /**
