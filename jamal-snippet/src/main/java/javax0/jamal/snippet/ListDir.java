@@ -37,7 +37,7 @@ public class ListDir implements Macro, InnerScopeDependent, Scanner {
         scanner.done();
 
         final FileVisitOption[] options;
-        if (isFollowSymlinks.get()) {
+        if (isFollowSymlinks.is()) {
             options = new FileVisitOption[]{FileVisitOption.FOLLOW_LINKS};
         } else {
             options = new FileVisitOption[0];

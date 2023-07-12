@@ -7,6 +7,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
 /**
  * Abstract class implementing the common parts of all concrete assertions.
@@ -54,7 +55,7 @@ abstract class AbstractAssert implements Macro, Scanner {
      */
     protected abstract boolean test(String[] parts) throws BadSyntax;
 
-    static boolean negateIfNeeded(boolean b, Params.Param<Boolean> not) throws BadSyntax {
+    static boolean negateIfNeeded(boolean b, BooleanParameter not) throws BadSyntax {
         return b == !not.is();
     }
 
@@ -106,7 +107,7 @@ abstract class AbstractAssert implements Macro, Scanner {
         return "assert:" + s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    private static String[] getParts(Input input, int N, Params.Param<Boolean> trim, Macro macro) throws BadSyntax {
+    private static String[] getParts(Input input, int N, BooleanParameter trim, Macro macro) throws BadSyntax {
         final var parts = InputHandler.getParts(input, N);
         BadSyntax.when(parts.length < N - 1, () -> macro.getId() + " needs at least " + (N - 1) + " arguments");
         if (trim.is()) {

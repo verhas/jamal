@@ -717,7 +717,7 @@ To do this the macro `snip` will accept all the options of the macro `snip:trans
 
 [[snip_check]]
 === {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=fe01b274%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=8d99cf8c%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -1037,7 +1037,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 === {%macroChapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=6ba80011%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=36051976%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1523,7 +1523,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 === {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=ae1cb0ce%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=aad97f9c%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1660,7 +1660,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 
 [[replace]]
 === {%macroChapter%}`replace`
-{%#snip:check file={%JAVA_DIR%}Replace.java hash=d6007169%}
+{%#snip:check file={%JAVA_DIR%}Replace.java hash=5f3f71c2%}
 The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
@@ -1701,7 +1701,7 @@ but this time, the replace used regular expression substitution.
 
 [[replaceLines]]
 === {%macroChapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=44e718d8%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=b64acf77%}
 This macro replaces strings in the input.
 {%parameterized%}
 
@@ -2268,7 +2268,7 @@ results
 
 [[listDir]]
 === {%macroChapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=5a2fcf8e%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=42019296%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 

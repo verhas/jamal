@@ -6,6 +6,7 @@ import javax0.jamal.api.Ref;
 import javax0.jamal.engine.StackLimiter;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
@@ -70,11 +71,11 @@ class Resolver {
         }
     }
 
-    static Params.Param<Boolean> cloneOption(final Scanner.ScannerObject scanner) {
+    static BooleanParameter cloneOption(final Scanner.ScannerObject scanner) {
         return scanner.bool("yamlResolveClone", "clone");
     }
 
-    static Params.Param<Boolean> copyOption(final Scanner.ScannerObject scanner) {
+    static BooleanParameter copyOption(final Scanner.ScannerObject scanner) {
         return scanner.bool("yamlResolveCopy", "copy");
     }
 

@@ -9,6 +9,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 import javax0.javalex.JavaLexed;
 import javax0.javalex.LexMatcher;
 import javax0.javalex.matchers.Lexpression;
@@ -67,7 +68,7 @@ public class JavaMatcherBuilderMacros {
     }
 
     private static class Options {
-        final Params.Param<Boolean> string;
+        final BooleanParameter string;
         final Params.Param<String> groupName;
         final Params.Param<Pattern> pattern;
 

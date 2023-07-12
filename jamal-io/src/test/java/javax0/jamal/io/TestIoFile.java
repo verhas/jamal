@@ -15,6 +15,7 @@ public class TestIoFile {
     @Test
     @DisplayName("Test different tests with existing file")
     void testFile() throws Exception {
+        TestThat.theInput("{@io:file file=src/test/resources/test.txt}").results("true");
         TestThat.theInput("{@io:file file=src/test/resources/test.txt exists}").results("true");
         // such a file should not be hidden in any environment
         TestThat.theInput("{@io:file file=src/test/resources/test.txt isHidden}").results("false");
@@ -29,6 +30,6 @@ public class TestIoFile {
     @Test
     @DisplayName("Test that only one option can be used")
     void testFileOneOnly() throws Exception {
-        TestThat.theInput("{@io:file file=src/test/resources/test.txt exists isHidden}").throwsBadSyntax("The key 'isHidden' must not be multi valued in the macro 'io:file'");
+        TestThat.theInput("{@io:file file=src/test/resources/test.txt exists isHidden}").throwsBadSyntax("The key '.*' must not be multi valued in the macro 'io:file'");
     }
 }

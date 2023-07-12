@@ -11,6 +11,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,10 +36,10 @@ public class For implements Macro, InnerScopeDependent, OptionsControlled.Core, 
 
     Params.Param<String> separator;
     Params.Param<String> subSeparator;
-    Params.Param<Boolean> trim;
-    Params.Param<Boolean> skipEmpty;
-    Params.Param<Boolean> lenient;
-    Params.Param<Boolean> evalValueList;
+    BooleanParameter trim;
+    BooleanParameter skipEmpty;
+    BooleanParameter lenient;
+    BooleanParameter evalValueList;
     Processor processor;
 
     private enum KeyWord {

@@ -4,8 +4,11 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.EnumerationParameter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -86,15 +89,53 @@ public interface Scanner {
         }
 
         /**
+         * Define a boolean parameter with the names of an enum class.
+         *
+         * @param klass is the enumeration class. The names of the enum constants are used as the aliases of the parameter.
+         * @return the parameter object
+         */
+        public <K> EnumerationParameter enumeration(Class<K> klass) {
+            if (klass.getEnumConstants().length == 0) {
+                throw new IllegalArgumentException("The enumeration class " + klass.getName() + " has no constants.");
+            }
+            final var keys = new String[klass.getEnumConstants().length + 1];
+            keys[0] = null; // the first element is the name, the enum names are all aliases
+            final var i = new Object() {
+                int i = 1;
+            };
+            Arrays.stream(klass.getEnumConstants())
+                    .map(e -> (Enum<?>) e)
+                    .map(Enum::name).forEach(s -> keys[i.i++] = s);
+            final var param = Params.<Boolean>holder(keys).asBoolean();
+            params.add(param);
+            final var eparam = new EnumerationParameter(param);
+            eparam.setEnum(klass);
+            return eparam;
+        }
+
+        /**
+         * Define a boolean parameter with the names of an enum class. The default value for the enum is the given
+         * value.
+         *
+         * @param defaultValue is the default value for the parameter
+         * @return the parameter object
+         */
+        public <K> EnumerationParameter.WithDefault enumeration(K defaultValue) {
+            final var param = enumeration(defaultValue.getClass());
+            param.setEnumDefault(defaultValue);
+            return new EnumerationParameter.WithDefault(param);
+        }
+
+        /**
          * Define a boolean parameter.
          *
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
-        public Params.Param<Boolean> bool(String... keys) {
+        public BooleanParameter bool(String... keys) {
             final var param = Params.<Boolean>holder(keys).asBoolean();
             params.add(param);
-            return param;
+            return new BooleanParameter(param);
         }
 
         /**
@@ -145,6 +186,12 @@ public interface Scanner {
             return param;
         }
 
+        /**
+         * Signal that the parsing accepts just any parameter and does not check the parameter names.
+         * These extra parameters are stored in a map and can be queried from the returned object.
+         *
+         * @return the extra parameter object
+         */
         public Params.ExtraParams extra() {
             extraParams = new Params.ExtraParams();
             return extraParams;

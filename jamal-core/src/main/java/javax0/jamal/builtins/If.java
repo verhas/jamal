@@ -9,6 +9,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +36,14 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
     private static class Options {
         final ScannerObject scanner;
 
-        final Params.Param<Boolean> empty ;
-        final Params.Param<Boolean> blank;
-        final Params.Param<Boolean> not;
-        final Params.Param<Boolean> and;
-        final Params.Param<Boolean> or;
-        final Params.Param<Boolean> isDefined;
-        final Params.Param<Boolean> isGlobal;
-        final Params.Param<Boolean> isLocal;
+        final BooleanParameter empty ;
+        final BooleanParameter blank;
+        final BooleanParameter not;
+        final BooleanParameter and;
+        final BooleanParameter or;
+        final BooleanParameter isDefined;
+        final BooleanParameter isGlobal;
+        final BooleanParameter isLocal;
         final Params.Param<List<String>> lessThan;
         final Params.Param<List<String>> greaterThan;
         final Params.Param<List<String>> equals;

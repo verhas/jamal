@@ -35,7 +35,7 @@ class Birifier {
              BirDictionary.BirDictonary dict,
              BirDictionary.BirDictonary postDict,
              BirDictionary.BirDictonary commonDict
-             ) {
+    ) {
         this.prefix = prefix;
         this.postfix = postfix;
         this.rationes = rationes;
@@ -50,6 +50,10 @@ class Birifier {
 
     /**
      * Transforms a given string into a "birified" version based on the specified rules and parameters.
+     * <p>
+     * Birification is to transform a string into a version that is easier to read and understand highlighting a few
+     * characters at the beginning of the string.
+     * <p>
      * If a dictionary is available, it attempts to retrieve a modified version of the string from the dictionary.
      * If a modified version is found, it applies prefix and postfix to the corresponding sections of the string.
      * If the string is a common word and birification of common words is enabled, it applies prefix and postfix to the whole word.
@@ -63,6 +67,7 @@ class Birifier {
      * @param s The input string to be birified.
      * @return The birified version of the input string.
      */
+
     String birify(final String s) {
         if (dict != null) {
             final var b = dict.get(s);

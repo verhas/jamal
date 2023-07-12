@@ -62,43 +62,39 @@ The following is a sample configuration used in the manual integration test of J
 
 [source, xml, title=JamalDoclet Maven Configuration]
 ----
- 1. <plugin>
- 2.     <groupId>org.apache.maven.plugins</groupId>
- 3.     <artifactId>maven-javadoc-plugin</artifactId>
- 4.     <version>3.3.1</version>
- 5.     <configuration>
- 6.         <detectOfflineLinks>false</detectOfflineLinks>
- 7.         <doclint>none</doclint>
- 8.         <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
- 9.         <docletArtifact>
-10.             <groupId>com.javax0.jamal</groupId>
-11.             <artifactId>jamal-doclet</artifactId>
-12.             <version>1.12.2-SNAPSHOT</version>
-13.         </docletArtifact>
-14.         <additionalOptions>
-15.             <additionalOption>--source-root</additionalOption>
-16.             <additionalOption>${project.build.sourceDirectory}</additionalOption>
-17.         </additionalOptions>
-18.         <taglets>
-19.             <taglet>
-20.                 <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
-21.                 <tagletArtifact>
-22.                     <groupId>com.javax0.jamal</groupId>
-23.                     <artifactId>jamal-all</artifactId>
-24.                     <version>1.12.2-SNAPSHOT</version>
-25.                 </tagletArtifact>
-26.             </taglet>
-27.         </taglets>
-28.     </configuration>
-29.     <executions>
-30.         <execution>
-31.             <id>attach-javadocs</id>
-32.             <goals>
-33.                 <goal>jar</goal>
-34.             </goals>
-35.         </execution>
-36.     </executions>
-37. </plugin>
+ 1.         <plugin>
+ 2. 
+ 3.     <groupId>org.apache.maven.plugins</groupId>
+ 4.     <artifactId>maven-javadoc-plugin</artifactId>
+ 5.     <version>3.4.1</version>
+ 6. 
+ 7.             <configuration>
+ 8.                 <detectOfflineLinks>false</detectOfflineLinks>
+ 9.                 <doclint>none</doclint>
+10.                 <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
+11.                 <docletArtifact>
+12.     <groupId>com.javax0.jamal</groupId>
+13.     <artifactId>jamal-doclet</artifactId>
+14.     <version>2.3.1-SNAPSHOT</version>
+15. </docletArtifact>
+16.                 <additionalOptions><additionalOption>--source-root</additionalOption>
+17.                     <additionalOption>${project.build.sourceDirectory}</additionalOption>
+18.                 </additionalOptions>
+19.                 <taglets>
+20.                     <taglet>
+21.                         <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+22.                         <tagletArtifact>
+23.     <groupId>com.javax0.jamal</groupId>
+24.     <artifactId>jamal-all</artifactId>
+25.     <version>2.3.1-SNAPSHOT</version>
+26. </tagletArtifact>
+27.                     </taglet>
+28.                 </taglets>
+29.             </configuration>
+30.             <executions><execution>
+31.                     <id>attach-javadocs</id>
+32.                     <goals><goal>jar</goal></goals></execution></executions>
+33.         </plugin>
 
 ----
 
@@ -163,10 +159,10 @@ When using Maven, specify this option as displayed on the example above
 +
 [source, xml, title=configuring source root]
 ----
-14.         <additionalOptions>
-15.             <additionalOption>--source-root</additionalOption>
-16.             <additionalOption>${project.build.sourceDirectory}</additionalOption>
-17.         </additionalOptions>
+14.     <version>2.3.1-SNAPSHOT</version>
+15. </docletArtifact>
+16.                 <additionalOptions><additionalOption>--source-root</additionalOption>
+17.                     <additionalOption>${project.build.sourceDirectory}</additionalOption>
 
 ----
 

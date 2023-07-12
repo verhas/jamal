@@ -1,10 +1,6 @@
 package javax0.jamal.io;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 
 import java.io.File;
@@ -19,13 +15,13 @@ public class IoFile implements Macro, InnerScopeDependent, Scanner.WholeInput {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
         final var file = scanner.str("io:file", "file");
-        final var condition = scanner.bool(null, "isHidden", "exists", "isDirectory", "isFile", "canExecute", "canRead", "canWrite");
+        final var condition = scanner.enumeration(Condition.exists);
         scanner.done();
 
 
         final var fileName = Utils.getFile(file, in);
         final var f = new File(fileName);
-        final Condition cond = condition.is() ? Condition.valueOf(condition.name()) : Condition.exists;
+        final Condition cond = condition.enumeration(Condition.class);
 
         switch (cond) {
             case exists:

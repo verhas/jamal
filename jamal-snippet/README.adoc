@@ -2837,11 +2837,13 @@ will result
 - ThinXml.java
 - Memoize.java
 - LineCount.java
+- BirDictionary.java
 - Replace.java
 - SnipLine.java
 - SnipCheckFailed.java
 - SemVerCollator.java
 - SnipXml.java
+- Birifier.java
 - ThinXmlMacro.java
 - BlockConverter.java
 - UrlEncode.java
@@ -2948,8 +2950,8 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 2,144 bytes
-- JavaMatcherBuilderMacros.java: 20,871 bytes
+- snippet: 2,208 bytes
+- JavaMatcherBuilderMacros.java: 20,916 bytes
 - Snip.java: 4,866 bytes
 - SnipSave.java: 4,800 bytes
 - Sort.java: 8,636 bytes
@@ -2970,16 +2972,18 @@ will result
 - Collect.java: 24,078 bytes
 - SnipFile.java: 680 bytes
 - HashCode.java: 462 bytes
-- TrimLines.java: 5,321 bytes
+- TrimLines.java: 5,343 bytes
 - JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
 - Memoize.java: 8,124 bytes
 - LineCount.java: 552 bytes
-- Replace.java: 1,642 bytes
+- BirDictionary.java: 4,058 bytes
+- Replace.java: 1,641 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
 - SemVerCollator.java: 9,016 bytes
 - SnipXml.java: 537 bytes
+- Birifier.java: 4,431 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
 - UrlEncode.java: 855 bytes
@@ -2992,13 +2996,13 @@ will result
 - JavaSourceTemplate.java: 7,451 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
-- KillLines.java: 1,763 bytes
-- Bir.java: 6,804 bytes
+- KillLines.java: 1,774 bytes
+- Bir.java: 11,339 bytes
 - SnipLoad.java: 3,482 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
 - Download.java: 2,156 bytes
-- ListDir.java: 5,440 bytes
+- ListDir.java: 5,439 bytes
 - XmlFormat.java: 3,482 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 6,204 bytes
@@ -3010,9 +3014,9 @@ will result
 - XmlDocument.java: 5,671 bytes
 - References.java: 7,745 bytes
 - Java.java: 11,573 bytes
-- ReplaceLines.java: 2,830 bytes
+- ReplaceLines.java: 2,841 bytes
 - SkipLines.java: 2,747 bytes
-- SnipCheck.java: 7,707 bytes
+- SnipCheck.java: 7,737 bytes
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,051 bytes
 - Pos.java: 5,263 bytes
@@ -3269,7 +3273,7 @@ will result in the output
 
 [source]
 ----
-2023-07-11 21:15:39
+2023-07-12 12:59:05
 ----
 
 

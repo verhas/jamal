@@ -7,25 +7,14 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.StringFetcher;
 import javax0.levenshtein.Levenshtein;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.startsWith;
+import static javax0.jamal.tools.InputHandler.*;
 
 /**
  * Parse the start of the input for macro parameters.
@@ -60,17 +49,55 @@ import static javax0.jamal.tools.InputHandler.startsWith;
 public class Params {
     public static class ExtraParams {
         private final Map<String, Param<?>> params = new HashMap<>();
+
+        /**
+         * Get the parameter with the given name or null if there is no such parameter.
+         *
+         * @param key the name of the parameter
+         * @param <T> the type of the parameter
+         * @return the parameter or null. If the parameter was a list, then the first element of the list is returned.
+         * @throws BadSyntax should not happen. The underlying methods could throw this exception when a parameter is
+         *                   configured as non-list but has multiple values. Since this class handles extra parameters,
+         *                   no such restriction is set.
+         */
+        public <T> T get(String key) throws BadSyntax {
+            return params.get(key).isPresent() ? (T) params.get(key).get() : null;
+        }
     }
 
     public interface Param<T> {
         String[] keys();
 
+        /**
+         * Copies the values of the provided parameter to this parameter.
+         *
+         * @param p The parameter to be copied.
+         */
         void copy(Param<?> p);
 
+        /**
+         * Inject the processor instance and the name of the processing macro into the parameter.
+         *
+         * @param processor the processor instance
+         * @param macroName the name of the macro that is being processed.
+         *                  It is exclusively used for error reporting purposes.
+         */
         void inject(Processor processor, String macroName);
 
+        /**
+         * Add a new value to the list
+         *
+         * @param value the new value to add to the list
+         */
         void set(String value);
 
+        /**
+         * Specify the default value for the parameter.
+         * When no default value is specified for a parameter the parameter is mandatory.
+         *
+         * @param i the default value
+         * @return the parameter itself
+         */
         default Param<T> defaultValue(String i) {
             return orElse(i);
         }
@@ -87,6 +114,13 @@ public class Params {
         @Deprecated(since = "2.4.0")
         Param<T> orElseNull();
 
+        /**
+         * Specify an int the default value for the parameter.
+         * When no default value is specified for a parameter, the parameter is mandatory.
+         *
+         * @param i the default value
+         * @return the parameter itself
+         */
         default Param<Integer> defaultValue(int i) {
             return orElseInt(i);
         }
@@ -97,8 +131,22 @@ public class Params {
         @Deprecated(since = "2.4.0")
         Param<Integer> orElseInt(int i);
 
+        /**
+         * Specify a type for the value of the parameter.
+         *
+         * @param converter the function that converts the string value to the type {@code T}
+         * @return the parameter itself
+         */
         Param<T> as(Function<String, T> converter);
 
+        /**
+         * Specify that the parameter is a pattern.
+         * It may be needed in some special cases.
+         * The recommended use is to call {@link javax0.jamal.tools.Scanner.ScannerObject#pattern(String...)
+         * scanner.patter()} to get a pattern parameter.
+         *
+         * @return the parameter itself
+         */
         Param<Pattern> asPattern();
 
         <K> Param<K> asType(Class<K> type);
@@ -413,6 +461,14 @@ public class Params {
         return suggestions;
     }
 
+    /**
+     * Parses the input, stores the parsed values, and validates them.
+     *
+     * @param input The input to be parsed.
+     * @param store The consumer to store the parsed values. The first String is the key, the second is the value.
+     * @param valid The predicate that decides if the key is acceptable and valid or not.
+     * @throws BadSyntax If the input syntax is invalid.
+     */
     public void parse(Input input, BiConsumer<String, String> store, Predicate<String> valid) throws BadSyntax {
         parse();
         skipStartingSpacesAndEscapedTerminal(input);

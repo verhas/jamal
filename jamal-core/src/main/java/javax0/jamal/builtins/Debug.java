@@ -23,10 +23,10 @@ public class Debug implements Macro, OptionsControlled.Core, Scanner.Core {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final Params.Param<Boolean> on = scanner.bool(null, "on");
-        final Params.Param<Boolean> off = scanner.bool(null, "off");
-        final Params.Param<Boolean> noDebug = scanner.bool("noDebug");
-        final Params.Param<Boolean> lenient = scanner.bool("lenient");
+        final var on = scanner.bool(null, "on");
+        final var off = scanner.bool(null, "off");
+        final var noDebug = scanner.bool("noDebug");
+        final var lenient = scanner.bool("lenient");
         final Params.Param<String> selector = scanner.str(null, "using", "debugger", "selector");
         scanner.done();
 

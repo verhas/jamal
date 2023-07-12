@@ -2115,7 +2115,7 @@ More precisely, it will download the resource from the network and update the ca
 
 [[include]]
 ==== {%macroChapter%}`include`
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=895d7c11%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=795ea0d6%}
 * since 1.0.0 (core)
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
@@ -2686,7 +2686,7 @@ Note that this alternative format can only be used for the values list and not f
 The variables of the for loop should always be listed between `(` and `)` characters.
 
 [[if]]
-==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=53f9a463%}
+==== {%macroChapter%}`if`{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=38aec00c%}
 
 The `if` macro makes it possible to evaluate the content conditionally.
 The syntax of the macro is:
@@ -4028,7 +4028,7 @@ The usage of the macro is, for example
 [[debug]]
 ==== {%macroChapter%}`debug`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=f55be525%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=30a4013f%}
 
 The macro `debug` can be used to start the debugger from the Jamal source code.
 It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.

@@ -11,6 +11,7 @@ import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
 import java.util.Locale;
 
@@ -58,8 +59,8 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
                                 final Params.Param<String> id,
                                 final Params.Param<String> fileName,
                                 final Params.Param<String> message,
-                                final Params.Param<Boolean> warning,
-                                final Params.Param<Boolean> error,
+                                final BooleanParameter warning,
+                                final BooleanParameter error,
                                 final String snippet,
                                 final Position pos,
                                 final Processor processor) throws BadSyntax {
@@ -82,8 +83,8 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
                                  final Params.Param<String> id,
                                  final Params.Param<String> fileName,
                                  final Params.Param<String> message,
-                                 final Params.Param<Boolean> warning,
-                                 final Params.Param<Boolean> error,
+                                 final BooleanParameter warning,
+                                 final BooleanParameter error,
                                  final String snippet,
                                  final Position pos,
                                  final Processor processor) throws BadSyntax {

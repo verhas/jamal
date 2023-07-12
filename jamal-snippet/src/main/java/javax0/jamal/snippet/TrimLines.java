@@ -33,7 +33,7 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         scanner.done();
         //end snippet
         final var sb = in.getSB();
-        convertTextBlock(sb, in.getPosition(), margin, trimVertical, verticalTrimOnly);
+        convertTextBlock(sb, in.getPosition(), margin, trimVertical.getParam(), verticalTrimOnly.getParam());
         return sb.toString();
     }
 

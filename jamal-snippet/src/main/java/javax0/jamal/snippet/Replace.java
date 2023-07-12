@@ -27,7 +27,7 @@ public class Replace implements Macro, InnerScopeDependent, Scanner {
             } else {
                 to = "";
             }
-            if (isRegex.get()) {
+            if (isRegex.is()) {
                 try {
                     string = string.replaceAll(from, to);
                 } catch (IllegalArgumentException e) {

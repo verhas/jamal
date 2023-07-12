@@ -5,13 +5,14 @@ import javax0.jamal.api.Input;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
 public class Utils {
     static Params.Param<String> getFile(final Scanner.ScannerObject scanner) {
         return scanner.str("io:outputFile", "io:output", "output", "io:file", "file");
     }
 
-    static Params.Param<Boolean> getRecursive(final Scanner.ScannerObject scanner) {
+    static BooleanParameter getRecursive(final Scanner.ScannerObject scanner) {
         return scanner.bool("io:recursive", "recursive");
     }
 

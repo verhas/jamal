@@ -19,7 +19,7 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         final var keep = scanner.bool("keep");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), pattern, keep);
+        convertTextBlock(in.getSB(), in.getPosition(), pattern, keep.getParam());
         return in.toString();
     }
 

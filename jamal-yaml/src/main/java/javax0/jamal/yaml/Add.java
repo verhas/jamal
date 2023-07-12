@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 import ognl.Ognl;
 import ognl.OgnlException;
 import org.yaml.snakeyaml.Yaml;
@@ -50,7 +51,7 @@ public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
         return "";
     }
 
-    private void assertConsistency(Params.Param<String> to, Params.Param<String> key, Params.Param<Boolean> flatten, Object anchor) throws BadSyntax {
+    private void assertConsistency(Params.Param<String> to, Params.Param<String> key, BooleanParameter flatten, Object anchor) throws BadSyntax {
         BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(), "You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get());
         BadSyntax.when(key.get() != null && anchor instanceof List, "You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get());
         BadSyntax.when(key.get() != null && flatten.is(), "You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get());

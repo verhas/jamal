@@ -1,62 +1,77 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <name>jamal doclet integration test</name>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <name>jamal doclet integration test</name>
+    
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-doclet-integration-test</artifactId>
-    <version>1.12.2-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
+
     <description>integration test module for Jamal Doclet</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
-                <configuration>
-                    <source>17</source>
-                    <target>11</target>
-                    <release>11</release>
-                </configuration>
-            </plugin>
-            <!-- snippet plugin_doclet -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.1</version>
-                <configuration>
-                    <detectOfflineLinks>false</detectOfflineLinks>
-                    <doclint>none</doclint>
-                    <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
-                    <docletArtifact>
-                        <groupId>com.javax0.jamal</groupId>
-                        <artifactId>jamal-doclet</artifactId>
-                        <version>1.12.2-SNAPSHOT</version>
-                    </docletArtifact>
-                    <additionalOptions>
-                        <additionalOption>--source-root</additionalOption>
-                        <additionalOption>${project.build.sourceDirectory}</additionalOption>
-                    </additionalOptions>
-                    <taglets>
-                        <taglet>
-                            <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
-                            <tagletArtifact>
-                                <groupId>com.javax0.jamal</groupId>
-                                <artifactId>jamal-all</artifactId>
-                                <version>1.12.2-SNAPSHOT</version>
-                            </tagletArtifact>
-                        </taglet>
-                    </taglets>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- end snippet -->
-        </plugins>
-    </build>
+
+    <build><plugins>
+        <plugin>
+            
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.11.0</version>
+
+            <configuration>
+                <source>17</source>
+                <target>11</target>
+                <release>11</release>
+            </configuration>
+        </plugin>
+        <!-- snippet plugin_doclet -->
+        <plugin>
+            
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <version>3.4.1</version>
+
+            <configuration>
+                <detectOfflineLinks>false</detectOfflineLinks>
+                <doclint>none</doclint>
+                <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
+                <docletArtifact>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-doclet</artifactId>
+    <version>2.3.1-SNAPSHOT</version>
+</docletArtifact>
+                <additionalOptions><additionalOption>--source-root</additionalOption>
+                    <additionalOption>${project.build.sourceDirectory}</additionalOption>
+                </additionalOptions>
+                <taglets>
+                    <taglet>
+                        <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+                        <tagletArtifact>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-all</artifactId>
+    <version>2.3.1-SNAPSHOT</version>
+</tagletArtifact>
+                    </taglet>
+                </taglets>
+            </configuration>
+            <executions><execution>
+                    <id>attach-javadocs</id>
+                    <goals><goal>jar</goal></goals></execution></executions>
+        </plugin>
+        <!-- end snippet -->
+    </plugins></build>
+
 </project>

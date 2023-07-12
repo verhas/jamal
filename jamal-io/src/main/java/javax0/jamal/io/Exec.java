@@ -1,23 +1,12 @@
 package javax0.jamal.io;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -196,8 +185,8 @@ public class Exec implements Macro, Scanner.FirstLine {
 
     private static void waitForTheProcessToFinish(final Process process,
                                                   final Params.Param<Integer> wait,
-                                                  final Params.Param<Boolean> destroy,
-                                                  final Params.Param<Boolean> force) throws BadSyntax {
+                                                  final BooleanParameter destroy,
+                                                  final BooleanParameter force) throws BadSyntax {
         try {
             if (wait.isPresent()) {
                 process.waitFor(wait.get(), TimeUnit.MILLISECONDS);
@@ -215,8 +204,8 @@ public class Exec implements Macro, Scanner.FirstLine {
 
     private static void waitForTheProcessToFinish(final Process process,
                                                   final Params.Param<Integer> wait,
-                                                  final Params.Param<Boolean> destroy,
-                                                  final Params.Param<Boolean> force,
+                                                  final BooleanParameter destroy,
+                                                  final BooleanParameter force,
                                                   final StringWriter sw) throws BadSyntax, InterruptedException {
         final var outputCollector = asyncOutputCollector(process, sw::write);
         if (wait.isPresent()) {
@@ -247,8 +236,8 @@ public class Exec implements Macro, Scanner.FirstLine {
     }
 
     private static void destroyTheRunawayProcess(final Process process,
-                                                 final Params.Param<Boolean> destroy,
-                                                 final Params.Param<Boolean> force) throws BadSyntax {
+                                                 final BooleanParameter destroy,
+                                                 final BooleanParameter force) throws BadSyntax {
         if (destroy.is()) {
             if (force.is()) {
                 process.destroyForcibly();
@@ -276,7 +265,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         }
     }
 
-    private static void setEnvironment(final Params.Param<String> environment, final Params.Param<Boolean> envReset, final ProcessBuilder pb) throws BadSyntax {
+    private static void setEnvironment(final Params.Param<String> environment, final BooleanParameter envReset, final ProcessBuilder pb) throws BadSyntax {
         if (environment.isPresent()) {
             final var env = pb.environment();
             if (envReset.is()) {
@@ -309,7 +298,7 @@ public class Exec implements Macro, Scanner.FirstLine {
      * @return {@code true} if the command is optional, and was not configured.
      * @throws BadSyntax if the command is not configured in the environment and is not optional or the parameter is missing.
      */
-    private static boolean setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final Params.Param<Boolean> optional) throws BadSyntax {
+    private static boolean setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final BooleanParameter optional) throws BadSyntax {
         BadSyntax.when(!command.isPresent(), "'command' for the macro 'exec' is mandatory.");
         final var commandArray = command.get().split("\n");
         BadSyntax.when(commandArray.length < 1, "There is no command symbolic name defined in the macro");

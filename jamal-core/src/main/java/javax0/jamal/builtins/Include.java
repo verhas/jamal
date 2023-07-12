@@ -11,6 +11,7 @@ import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
 import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
@@ -64,7 +65,7 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         if (lines.isPresent()) {
             Range.Lines.filter(in.getSB(), lines.get());
         }
-        if (verbatim.get()) {
+        if (verbatim.is()) {
             result = in.toString();
         } else {
             var marker = new Marker("{@include " + fileName + "}", position);
@@ -93,7 +94,7 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
      * relative file name
      * @throws BadSyntax if 'top' is erroneous and querying it throws exception
      */
-    private Position repositionToTop(Position position, final Params.Param<Boolean> top) throws BadSyntax {
+    private Position repositionToTop(Position position, final BooleanParameter top) throws BadSyntax {
         if (top.is()) {
             while (position.parent != null) {
                 position = position.parent;
