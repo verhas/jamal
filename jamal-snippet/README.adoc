@@ -2951,13 +2951,13 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 2,208 bytes
-- JavaMatcherBuilderMacros.java: 20,916 bytes
-- Snip.java: 4,866 bytes
-- SnipSave.java: 4,845 bytes
-- Sort.java: 8,636 bytes
+- JavaMatcherBuilderMacros.java: 19,777 bytes
+- Snip.java: 4,605 bytes
+- SnipSave.java: 4,690 bytes
+- Sort.java: 8,573 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,810 bytes
-- RangeMacro.java: 1,250 bytes
+- NumberLines.java: 2,821 bytes
+- RangeMacro.java: 1,261 bytes
 - Untab.java: 2,357 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
@@ -2968,14 +2968,14 @@ will result
 - Update.java: 979 bytes
 - SnipTransform.java: 16,983 bytes
 - Base64.java: 3,383 bytes
-- FilesMacro.java: 8,154 bytes
+- FilesMacro.java: 8,220 bytes
 - Collect.java: 24,078 bytes
 - SnipFile.java: 680 bytes
 - HashCode.java: 462 bytes
 - TrimLines.java: 5,354 bytes
 - JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
-- Memoize.java: 8,124 bytes
+- Memoize.java: 8,163 bytes
 - LineCount.java: 552 bytes
 - BirDictionary.java: 4,058 bytes
 - Replace.java: 1,641 bytes
@@ -2991,13 +2991,13 @@ will result
 - Numbers.java: 1,785 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 4,504 bytes
-- CompileJavaMacros.java: 23,495 bytes
+- CompileJavaMacros.java: 23,499 bytes
 - StringMacros.java: 7,310 bytes
 - JavaSourceTemplate.java: 7,451 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Clear.java: 399 bytes
-- KillLines.java: 1,774 bytes
-- Bir.java: 11,339 bytes
+- KillLines.java: 1,791 bytes
+- Bir.java: 11,383 bytes
 - SnipLoad.java: 3,482 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
@@ -3015,8 +3015,8 @@ will result
 - References.java: 7,745 bytes
 - Java.java: 11,573 bytes
 - ReplaceLines.java: 2,841 bytes
-- SkipLines.java: 2,747 bytes
-- SnipCheck.java: 7,782 bytes
+- SkipLines.java: 2,769 bytes
+- SnipCheck.java: 7,526 bytes
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,062 bytes
 - Pos.java: 5,263 bytes
@@ -3273,7 +3273,7 @@ will result in the output
 
 [source]
 ----
-2023-07-12 15:09:04
+2023-07-12 16:02:03
 ----
 
 

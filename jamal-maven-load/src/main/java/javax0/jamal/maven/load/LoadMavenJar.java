@@ -11,6 +11,7 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Option;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 import javax0.maventools.download.ArtifactType;
 import javax0.maventools.download.Downloader;
 import javax0.maventools.download.MavenCoordinates;
@@ -231,7 +232,7 @@ public class LoadMavenJar implements Macro, Scanner {
         return cl;
     }
 
-    private Repo[] getRepos(final Params.Param<String> repos, final Properties properties) throws BadSyntax {
+    private Repo[] getRepos(final StringParameter repos, final Properties properties) throws BadSyntax {
         final var lines = repos.get().split("\n");
         final Repo[] reps = new Repo[lines.length];
         int i = 0;
@@ -267,7 +268,7 @@ public class LoadMavenJar implements Macro, Scanner {
      * @return the path to the local repository
      * @throws BadSyntax when the local repo is not allowed in the configuration
      */
-    private Path getLocalPath(final Params.Param<String> local, final Position pos, final Properties properties) throws BadSyntax {
+    private Path getLocalPath(final StringParameter local, final Position pos, final Properties properties) throws BadSyntax {
         final Path localPath;
         if (local.isPresent() && local.get() != null) {
             final var fn = FileTools.absolute(pos.file, local.get());

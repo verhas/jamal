@@ -12,6 +12,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,8 +35,8 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 @Macro.Stateful
 public class For implements Macro, InnerScopeDependent, OptionsControlled.Core, Scanner.Core {
 
-    Params.Param<String> separator;
-    Params.Param<String> subSeparator;
+    StringParameter separator;
+    StringParameter subSeparator;
     BooleanParameter trim;
     BooleanParameter skipEmpty;
     BooleanParameter lenient;

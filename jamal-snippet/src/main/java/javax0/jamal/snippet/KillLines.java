@@ -15,11 +15,11 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter, Sc
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var pattern = scanner.pattern("kill", "pattern").orElse("^\\s*$");
+        final var pattern = scanner.pattern("kill", "pattern").defaultValue("^\\s*$");
         final var keep = scanner.bool("keep");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), pattern, keep.getParam());
+        convertTextBlock(in.getSB(), in.getPosition(), pattern.getParam(), keep.getParam());
         return in.toString();
     }
 

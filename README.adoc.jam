@@ -3825,7 +3825,7 @@ The version of the documented code is in the `pom.xml` file: `{%VERSION%}`.
 [[macro]]
 ==== {%macroChapter%}`macro`
 since 1.11.0
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=1246a90a%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=3c341784%}
 
 The macro named `macro` is a special one that is needed only in rare cases.
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
@@ -3989,7 +3989,7 @@ If you want to emphasize that you use the macro for user-defined macros, you can
 [[log]]
 ==== {%macroChapter%}`log`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=3ab8337d%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=949b6eee%}
 
 This macro results and empty string and sends the input to the log output.
 The macro has one parameter, `level` that may specify the logging level.
@@ -4028,7 +4028,7 @@ The usage of the macro is, for example
 [[debug]]
 ==== {%macroChapter%}`debug`
 since 1.12.3
-{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=30a4013f%}
+{%@snip:check file=jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=9aca8349%}
 
 The macro `debug` can be used to start the debugger from the Jamal source code.
 It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.

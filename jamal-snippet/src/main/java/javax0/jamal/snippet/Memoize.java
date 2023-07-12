@@ -9,6 +9,7 @@ import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,7 +113,7 @@ public class Memoize implements Macro, Scanner {
      * the hashFile is not present. In that case the method returns {@code null}.
      * @throws BadSyntax if there is some problem with the parameters handling.
      */
-    private static String getHashValue(Input in, Params.Param<String> hashFile, Params.Param<String> hashCode) throws BadSyntax {
+    private static String getHashValue(Input in, StringParameter hashFile, StringParameter hashCode) throws BadSyntax {
         final String hash;
         if (hashFile.isPresent()) {
             if (!hashCode.isPresent()) {

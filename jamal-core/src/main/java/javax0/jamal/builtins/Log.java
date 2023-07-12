@@ -13,7 +13,7 @@ public class Log implements Macro, Scanner.Core {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var levelString = scanner.str(null, "level").orElse("info");
+        final var levelString = scanner.str(null, "level").defaultValue("info");
         scanner.done();
         final Level level;
         try {

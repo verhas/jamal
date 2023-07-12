@@ -1,15 +1,11 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.PatternParameter;
+import javax0.jamal.tools.param.StringParameter;
 import javax0.javalex.JavaLexed;
 import javax0.javalex.LexMatcher;
 import javax0.javalex.matchers.Lexpression;
@@ -17,26 +13,8 @@ import javax0.javalex.matchers.Lexpression;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
-import java.util.regex.Pattern;
 
-import static javax0.javalex.LexpressionBuilder.anyTill;
-import static javax0.javalex.LexpressionBuilder.character;
-import static javax0.javalex.LexpressionBuilder.comment;
-import static javax0.javalex.LexpressionBuilder.floatNumber;
-import static javax0.javalex.LexpressionBuilder.group;
-import static javax0.javalex.LexpressionBuilder.identifier;
-import static javax0.javalex.LexpressionBuilder.integerNumber;
-import static javax0.javalex.LexpressionBuilder.keyword;
-import static javax0.javalex.LexpressionBuilder.list;
-import static javax0.javalex.LexpressionBuilder.match;
-import static javax0.javalex.LexpressionBuilder.not;
-import static javax0.javalex.LexpressionBuilder.number;
-import static javax0.javalex.LexpressionBuilder.oneOf;
-import static javax0.javalex.LexpressionBuilder.oneOrMore;
-import static javax0.javalex.LexpressionBuilder.optional;
-import static javax0.javalex.LexpressionBuilder.string;
-import static javax0.javalex.LexpressionBuilder.unordered;
-import static javax0.javalex.LexpressionBuilder.zeroOrMore;
+import static javax0.javalex.LexpressionBuilder.*;
 
 public class JavaMatcherBuilderMacros {
 
@@ -69,8 +47,8 @@ public class JavaMatcherBuilderMacros {
 
     private static class Options {
         final BooleanParameter string;
-        final Params.Param<String> groupName;
-        final Params.Param<Pattern> pattern;
+        final StringParameter groupName;
+        final PatternParameter pattern;
 
 
         private Options(final Scanner macro, final Input in, final Processor processor) throws BadSyntax {

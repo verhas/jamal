@@ -21,7 +21,7 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         final var skipEnd = scanner.pattern("endSkip").defaultValue("end\\s+skip");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), skipStart, skipEnd);
+        convertTextBlock(in.getSB(), in.getPosition(), skipStart.getParam(), skipEnd.getParam());
         return in.toString();
     }
 

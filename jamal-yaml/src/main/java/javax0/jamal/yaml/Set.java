@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -46,7 +47,7 @@ public class Set implements Macro, InnerScopeDependent, Scanner {
         }
     }
 
-    static String getFromId(Input in, Params.Param<String> from, Macro me) throws BadSyntax {
+    static String getFromId(Input in, StringParameter from, Macro me) throws BadSyntax {
         final String fromId;
         if (!from.isPresent() || from.get() == null) {
             if (startsWith(in, "/") == 0) {

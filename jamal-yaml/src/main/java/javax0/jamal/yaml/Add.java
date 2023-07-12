@@ -8,6 +8,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.StringParameter;
 import ognl.Ognl;
 import ognl.OgnlException;
 import org.yaml.snakeyaml.Yaml;
@@ -51,14 +52,14 @@ public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
         return "";
     }
 
-    private void assertConsistency(Params.Param<String> to, Params.Param<String> key, BooleanParameter flatten, Object anchor) throws BadSyntax {
+    private void assertConsistency(StringParameter to, StringParameter key, BooleanParameter flatten, Object anchor) throws BadSyntax {
         BadSyntax.when(key.get() == null && anchor instanceof Map && !flatten.is(), "You cannot '%s' without a 'key' parameter to a Map for '%s'", getId(), to.get());
         BadSyntax.when(key.get() != null && anchor instanceof List, "You cannot '%s' with a 'key' parameter to a List for '%s'", getId(), to.get());
         BadSyntax.when(key.get() != null && flatten.is(), "You cannot '%s' with a 'key' parameter when flattening for '%s'", getId(), to.get());
         BadSyntax.when((!(anchor instanceof Map)) && !(anchor instanceof List), "You can '%s' only to a List or Map for '%s'\nThe actual class is %s", getId(), to.get(), anchor.getClass());
     }
 
-    private Object getAnchor(Object expression, Params.Param<String> to, YamlObject yamlObject) throws BadSyntax {
+    private Object getAnchor(Object expression, StringParameter to, YamlObject yamlObject) throws BadSyntax {
         Object anchor;
         Exception exception = null;
         try {
@@ -87,7 +88,7 @@ public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
         return yamlStructure;
     }
 
-    private Object getOgnlExpression(Params.Param<String> to, int dotIndex) throws BadSyntax {
+    private Object getOgnlExpression(StringParameter to, int dotIndex) throws BadSyntax {
         final Object expression;
         if (dotIndex == -1) {
             expression = null;
@@ -101,7 +102,7 @@ public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
         return expression;
     }
 
-    private String getId(Params.Param<String> to, int dotIndex) throws BadSyntax {
+    private String getId(StringParameter to, int dotIndex) throws BadSyntax {
         final String id;
         if (dotIndex == -1) {
             id = to.get();

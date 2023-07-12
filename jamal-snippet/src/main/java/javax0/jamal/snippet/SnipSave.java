@@ -1,16 +1,12 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.HexDumper;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.IntegerParameter;
+import javax0.jamal.tools.param.StringParameter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,10 +47,10 @@ public class SnipSave implements Macro, InnerScopeDependent, Scanner.WholeInput 
 
     private void saveXML(final Processor processor,
                          final String ref,
-                         final Params.Param<String> idRegex,
-                         final Params.Param<String> fnRegex,
-                         final Params.Param<String> textRegex,
-                         final Params.Param<String> output,
+                         final StringParameter idRegex,
+                         final StringParameter fnRegex,
+                         final StringParameter textRegex,
+                         final StringParameter output,
                          final IntegerParameter tab) throws BadSyntax {
         try {
             final var documentFactory = DocumentBuilderFactory.newInstance();

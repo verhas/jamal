@@ -6,6 +6,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -158,7 +159,7 @@ public class Bir implements Macro, Scanner {
      * @return An array of strings representing the delimiters.
      * @throws BadSyntax If an error occurs while processing the delimiters.
      */
-    private String[] getDelimiters(Params.Param<String> delimiters) throws BadSyntax {
+    private String[] getDelimiters(StringParameter delimiters) throws BadSyntax {
         final String[] dPairs;
         if (delimiters.get().length() == 0) {
             dPairs = new String[0];

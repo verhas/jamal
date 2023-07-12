@@ -16,7 +16,7 @@ public class RangeMacro implements Macro, InnerScopeDependent, BlockConverter, S
         final var ranges = scanner.str(null, "range", "ranges", "lines");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), ranges);
+        convertTextBlock(in.getSB(), in.getPosition(), ranges.getParam());
         return in.toString();
     }
 

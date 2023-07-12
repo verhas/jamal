@@ -27,7 +27,7 @@ public class Debug implements Macro, OptionsControlled.Core, Scanner.Core {
         final var off = scanner.bool(null, "off");
         final var noDebug = scanner.bool("noDebug");
         final var lenient = scanner.bool("lenient");
-        final Params.Param<String> selector = scanner.str(null, "using", "debugger", "selector");
+        final var selector = scanner.str(null, "using", "debugger", "selector");
         scanner.done();
 
         BadSyntax.when(on.is() && off.is(), "The 'on' and 'off' parameters cannot be used together.");

@@ -10,6 +10,7 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -54,7 +55,7 @@ public class FilesMacro {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var scanner = newScanner(in, processor);
             final var format = scanner.str("directoryFormat", "format").defaultValue("$name");
-            final var root = scanner.str("root").defaultValue("").as(String.class, FileTools::trailDirectory);
+            final var root = scanner.str("root").defaultValue("").getParam().as(String.class, FileTools::trailDirectory);
             scanner.done();
 
             final var name = in.toString().trim();
@@ -89,7 +90,7 @@ public class FilesMacro {
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var scanner = newScanner(in, processor);
             final var format = scanner.str("fileFormat", "format").defaultValue("$name");
-            final var root = scanner.str("root").defaultValue("").as(String.class, FileTools::trailDirectory);
+            final var root = scanner.str("root").defaultValue("").getParam().as(String.class, FileTools::trailDirectory);
             scanner.done();
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
@@ -112,7 +113,7 @@ public class FilesMacro {
             return "file";
         }
     }
-    private static String formatString(final Params.Param<String> format, final String name, final File dir) throws Exception {
+    private static String formatString(final StringParameter format, final String name, final File dir) throws Exception {
         return Trie.formatter.format(format.get(),
                 value(name),
                 value(dir.getAbsolutePath()),

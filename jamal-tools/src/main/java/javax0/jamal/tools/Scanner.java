@@ -4,9 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.param.BooleanParameter;
-import javax0.jamal.tools.param.EnumerationParameter;
-import javax0.jamal.tools.param.IntegerParameter;
+import javax0.jamal.tools.param.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -145,10 +143,10 @@ public interface Scanner {
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
-        public Params.Param<String> str(String... keys) {
+        public StringParameter str(String... keys) {
             final var param = Params.<String>holder(keys).asString();
             params.add(param);
-            return param;
+            return new StringParameter(param);
         }
 
         /**
@@ -169,10 +167,10 @@ public interface Scanner {
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
-        public Params.Param<Pattern> pattern(String... keys) {
+        public PatternParameter pattern(String... keys) {
             final var param = Params.<Pattern>holder(keys).asPattern();
             params.add(param);
-            return param;
+            return new PatternParameter(param);
         }
 
         /**

@@ -569,7 +569,7 @@ The result of the macro is an empty string.
 
 [[snip]]
 === {%macroChapter%}`snip`
-{%#snip:check file={%JAVA_DIR%}Snip.java hash=2ff3c296%}
+{%#snip:check file={%JAVA_DIR%}Snip.java hash=0a652943%}
 
 You can use the `snip` macro to insert one or more snippets into the output.
 There are three different ways to use the macro.
@@ -717,7 +717,7 @@ To do this the macro `snip` will accept all the options of the macro `snip:trans
 
 [[snip_check]]
 === {%macroChapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=85b01935%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=af713bc8%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -910,7 +910,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 
 [[snipSave]]
 === {%macroChapter%}`snip:save`
-{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=77ab2403%}
+{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=c073733d%}
 This macro saves all the collected snippets to a file.
 {%parameterized%}
 The file name must be specified by the parameter `output`.
@@ -1158,7 +1158,7 @@ will be converted to
 
 [[range]]
 === {%macroChapter%}`range`
-{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=94d83a57%}
+{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=005a0ae6%}
 
 This macro can filter lines of its input by a range of numbers.
 The syntax of the macro is:
@@ -1361,7 +1361,7 @@ This is a known bug resulting in the line number larger than the actual.
 
 [[sort]]
 === {%macroChapter%}`sort`
-{%#snip:check file={%JAVA_DIR%}Sort.java hash=54c6e68f%}
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=4a1b694b%}
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
 For example
@@ -1455,7 +1455,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 
 [[numberLines]]
 === {%macroChapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=8861a80e%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=9080a6ce%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 {%parameterized%}
 
@@ -1523,7 +1523,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 === {%macroChapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=aad97f9c%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=c3fccc9d%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1595,7 +1595,7 @@ In this case only the comment lines remained that start with `//` at the start o
 
 [[skipLines]]
 === {%macroChapter%}`skipLines`
-{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=dca55288%}
+{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=da20c169%}
 You can use this macro to skip lines from the snippet.
 {%parameterized%}
 
@@ -2672,7 +2672,7 @@ These are:
 
 [[file]]
 === {%macroChapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=c4bea8fc%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=26a27a4c%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2720,7 +2720,7 @@ This may save some time when you are referring to many files in a deep directory
 
 [[directory]]
 === {%macroChapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=c4bea8fc%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=26a27a4c%}
 {%fileDirectory directory%}
 
 {%sample/

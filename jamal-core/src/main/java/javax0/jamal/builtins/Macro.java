@@ -8,6 +8,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,7 +50,7 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
 
     private static final Input EMPTY_INPUT = javax0.jamal.tools.Input.makeInput();
 
-    private String getBuitIn(final Input input, final Processor processor, final boolean global, final Params.Param<String> alias) throws BadSyntax {
+    private String getBuitIn(final Input input, final Processor processor, final boolean global, final StringParameter alias) throws BadSyntax {
         final var macro = getMacro(input, global, javax0.jamal.api.Macro.class, processor.getRegister()::getMacro);
         if (alias.isPresent()) {
             return aliasMacro(processor, alias, macro);
@@ -58,7 +59,7 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
         return macro.evaluate(EMPTY_INPUT, processor);
     }
 
-    private String getUserDefined(final Input input, final Processor processor, final boolean global, final Params.Param<String> alias) throws BadSyntax {
+    private String getUserDefined(final Input input, final Processor processor, final boolean global, final StringParameter alias) throws BadSyntax {
         final var macro = getMacro(input, global, UserDefinedMacro.class,
                 id -> processor.getRegister().getUserDefined(id, Identified.DEFAULT_MACRO));
         if (alias.isPresent()) {
@@ -69,7 +70,7 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
         }
     }
 
-    private <T extends Identified> String aliasMacro(final Processor processor, final Params.Param<String> alias, final T macro) throws BadSyntax {
+    private <T extends Identified> String aliasMacro(final Processor processor, final StringParameter alias, final T macro) throws BadSyntax {
         boolean export = isExportable(alias);
         final String name = calculateAlias(export, processor, alias);
         if (macro == null) {
@@ -114,11 +115,11 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
                 .orElse(null);
     }
 
-    private boolean isExportable(final Params.Param<String> alias) throws BadSyntax {
+    private boolean isExportable(final StringParameter alias) throws BadSyntax {
         return alias.get().length() > 0 && !alias.get().equals("true");
     }
 
-    private String calculateAlias(final boolean export, final Processor processor, final Params.Param<String> alias) throws BadSyntax {
+    private String calculateAlias(final boolean export, final Processor processor, final StringParameter alias) throws BadSyntax {
         final String name;
         if (!export) {
             String s;

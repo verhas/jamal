@@ -6,6 +6,8 @@ import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
 import javax0.jamal.tools.param.IntegerParameter;
+import javax0.jamal.tools.param.PatternParameter;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -177,7 +179,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         processor.define(new ProcessHolder(id, process));
     }
 
-    private static boolean thisOsIsNotOk(final Params.Param<Pattern> osOnly) throws BadSyntax {
+    private static boolean thisOsIsNotOk(final PatternParameter osOnly) throws BadSyntax {
         if (osOnly.isPresent()) {
             return !osOnly.get().matcher(System.getProperty("os.name")).find();
         }
@@ -248,7 +250,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         }
     }
 
-    private static void feedInputFromMacro(final Input in, final Params.Param<String> input, final Process process) throws BadSyntax {
+    private static void feedInputFromMacro(final Input in, final StringParameter input, final Process process) throws BadSyntax {
         if (!input.isPresent()) {
             try (OutputStream os = process.getOutputStream()) {
                 os.write(in.toString().getBytes(StandardCharsets.UTF_8));
@@ -266,7 +268,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         }
     }
 
-    private static void setEnvironment(final Params.Param<String> environment, final BooleanParameter envReset, final ProcessBuilder pb) throws BadSyntax {
+    private static void setEnvironment(final StringParameter environment, final BooleanParameter envReset, final ProcessBuilder pb) throws BadSyntax {
         if (environment.isPresent()) {
             final var env = pb.environment();
             if (envReset.is()) {
@@ -283,7 +285,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         }
     }
 
-    private static void setCWDIfPresent(final Input in, final Params.Param<String> cwd, final ProcessBuilder pb) throws BadSyntax {
+    private static void setCWDIfPresent(final Input in, final StringParameter cwd, final ProcessBuilder pb) throws BadSyntax {
         if (cwd.isPresent()) {
             pb.directory(getFile(cwd.get(), in));
         }
@@ -299,7 +301,7 @@ public class Exec implements Macro, Scanner.FirstLine {
      * @return {@code true} if the command is optional, and was not configured.
      * @throws BadSyntax if the command is not configured in the environment and is not optional or the parameter is missing.
      */
-    private static boolean setCommand(final Params.Param<String> command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final BooleanParameter optional) throws BadSyntax {
+    private static boolean setCommand(final StringParameter command, final Params.Param<List<String>> arguments, final ProcessBuilder pb, final BooleanParameter optional) throws BadSyntax {
         BadSyntax.when(!command.isPresent(), "'command' for the macro 'exec' is mandatory.");
         final var commandArray = command.get().split("\n");
         BadSyntax.when(commandArray.length < 1, "There is no command symbolic name defined in the macro");
@@ -318,7 +320,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         return false;
     }
 
-    private static void redirectIfPresent(Params.Param<String> stream, Input in, Consumer<File> store) throws BadSyntax {
+    private static void redirectIfPresent(StringParameter stream, Input in, Consumer<File> store) throws BadSyntax {
         if (stream.isPresent()) {
             store.accept(getFile(stream.get(), in));
         }

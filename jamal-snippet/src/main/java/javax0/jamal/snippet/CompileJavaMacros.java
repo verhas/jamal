@@ -14,6 +14,7 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IdentifiedObjectHolder;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 import javax0.refi.selector.Selector;
 
 import java.io.IOException;
@@ -86,23 +87,23 @@ public class CompileJavaMacros {
                 .get();
     }
 
-    private static Params.Param<String> separatorParam(final Scanner.ScannerObject scanner) {
+    private static StringParameter separatorParam(final Scanner.ScannerObject scanner) {
         return scanner.str("sep", "separator").defaultValue(",");
     }
 
-    private static Params.Param<String> storeNameParam(final Scanner.ScannerObject scanner) {
+    private static StringParameter storeNameParam(final Scanner.ScannerObject scanner) {
         return scanner.str("store").defaultValue(LOADED_CLASSES);
     }
 
-    private static Params.Param<String> selectorParam(final Scanner.ScannerObject scanner) {
+    private static StringParameter selectorParam(final Scanner.ScannerObject scanner) {
         return scanner.str("selector", "only", "filter").defaultValue(TRUE);
     }
 
-    private static Params.Param<String> classParam(final Scanner.ScannerObject scanner) {
+    private static StringParameter classParam(final Scanner.ScannerObject scanner) {
         return scanner.str("class").defaultValue(TRUE);
     }
 
-    private static Params.Param<String> constructorParam(final Scanner.ScannerObject scanner) {
+    private static StringParameter constructorParam(final Scanner.ScannerObject scanner) {
         return scanner.str("constructor").defaultValue(TRUE);
     }
 
@@ -146,7 +147,7 @@ public class CompileJavaMacros {
          * @throws Exception if the files cannot be compiled or loaded, or some other error occurs
          */
         private static void tryToLoadFromCompiledCode(Input in, Processor processor,
-                                                      Params.Param<String> storeName,
+                                                      StringParameter storeName,
                                                       String[] classLocations,
                                                       Supplier<Exception> exceptionSupplier) throws Exception {
             if (classLocations != null && classLocations.length > 0) {
@@ -176,7 +177,7 @@ public class CompileJavaMacros {
          */
         private static void tryToCompileAndLoadFromSources(Input in,
                                                            Processor processor,
-                                                           Params.Param<String> storeName,
+                                                           StringParameter storeName,
                                                            String[] sourceLocations,
                                                            String[] classLocations,
                                                            Fluent.AddSource compilerObject) throws Exception {
@@ -201,7 +202,7 @@ public class CompileJavaMacros {
          */
         private static void loadFromCompiledCode(Input in,
                                                  Processor processor,
-                                                 Params.Param<String> storeName,
+                                                 StringParameter storeName,
                                                  String[] classLocations) throws IOException, ClassNotFoundException, BadSyntax {
             final var compilerObject = Compiler.java();
             final var dir0 = FileTools.absolute(in.getReference(), classLocations[0]);
@@ -233,7 +234,7 @@ public class CompileJavaMacros {
          */
         private static void compileAndLoadFromSources(Input in,
                                                       Processor processor,
-                                                      Params.Param<String> storeName,
+                                                      StringParameter storeName,
                                                       String[] sourceLocations,
                                                       Fluent.AddSource compilerObject) throws IOException, ClassNotFoundException, BadSyntax {
             final var dir0 = FileTools.absolute(in.getReference(), sourceLocations[0]);

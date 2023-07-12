@@ -57,7 +57,7 @@ public class NumberLines implements Macro, InnerScopeDependent, BlockConverter, 
         final var step = scanner.number("step").defaultValue(1);
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), format, start.getParam(), step.getParam());
+        convertTextBlock(in.getSB(), in.getPosition(), format.getParam(), start.getParam(), step.getParam());
         return in.toString();
     }
 

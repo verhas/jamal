@@ -4,17 +4,14 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.PatternParameter;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.math.BigDecimal;
 import java.text.Collator;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -26,7 +23,7 @@ public class Sort implements Macro, Scanner.FirstLine {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         // snippet sort_options
         final var separator = scanner.pattern("separator").defaultValue("\n");
         // specifies the separator regular expression, that separates the individual records.
@@ -61,14 +58,14 @@ public class Sort implements Macro, Scanner.FirstLine {
         scanner.done();
         Collator collator = getCollator(locale);
 
-        BadSyntax.when(pattern.isPresent() && columns.isPresent(),  "Can not use both options '%s' and '%s' together.", pattern.name(), columns.name());
+        BadSyntax.when(pattern.isPresent() && columns.isPresent(), "Can not use both options '%s' and '%s' together.", pattern.name(), columns.name());
 
         skipWhiteSpaces(in);
         Stream<LineHolder<String>> lines = Arrays.stream(in.toString().split(separator.get().pattern(), -1))
                 .map(s -> new LineHolder<>(s, s));
         if (columns.isPresent()) {
             List<Range> ranges = Range.calculateFrom(columns.get(), Integer.MAX_VALUE);
-            BadSyntax.when(ranges.size() != 1,  "The option '%s' can only have a single range value!", columns.name());
+            BadSyntax.when(ranges.size() != 1, "The option '%s' can only have a single range value!", columns.name());
             Range range = ranges.get(0);
             lines = lines.map(line -> new LineHolder<>(line.original, line.original.substring(range.from - 1, range.to - 1)));
         } else if (pattern.isPresent()) {
@@ -95,7 +92,7 @@ public class Sort implements Macro, Scanner.FirstLine {
         return String.join(join.get(), values);
     }
 
-    private Collator getCollator(final Params.Param<String> locale) throws BadSyntax {
+    private Collator getCollator(final StringParameter locale) throws BadSyntax {
         if (locale.isPresent() && locale.name().equals("collator")) {
             try {
                 if ("semver".equalsIgnoreCase(locale.get())) {
@@ -114,7 +111,7 @@ public class Sort implements Macro, Scanner.FirstLine {
         return Collator.getInstance(getLocaleFromParam(locale));
     }
 
-    private Locale getLocaleFromParam(Params.Param<String> locale) throws BadSyntax {
+    private Locale getLocaleFromParam(StringParameter locale) throws BadSyntax {
         if (locale.isPresent()) {
             return Locale.forLanguageTag(locale.get());
         } else {
@@ -131,7 +128,7 @@ public class Sort implements Macro, Scanner.FirstLine {
      * @return the function to map the line holders to new line holders matching the patterns as key
      * @throws BadSyntax if the pattern cannot be acquired
      */
-    private Function<LineHolder<String>, LineHolder<String>> findMatches(Params.Param<Pattern> pattern) throws BadSyntax {
+    private Function<LineHolder<String>, LineHolder<String>> findMatches(PatternParameter pattern) throws BadSyntax {
         Pattern p = pattern.get();
         return line -> {
             var matcher = p.matcher(line.original);
