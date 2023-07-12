@@ -48,6 +48,21 @@ class Birifier {
     static final int RATIONES = 5;
     private static final int MAX_PF_LENGTH = 5;
 
+    /**
+     * Transforms a given string into a "birified" version based on the specified rules and parameters.
+     * If a dictionary is available, it attempts to retrieve a modified version of the string from the dictionary.
+     * If a modified version is found, it applies prefix and postfix to the corresponding sections of the string.
+     * If the string is a common word and birification of common words is enabled, it applies prefix and postfix to the whole word.
+     * If the length of the string exceeds the maximum prefix length, it checks if the string ends with any of the defined postfixes.
+     * If a postfix is found, it adjusts the length of the birred section accordingly.
+     * If the length of the string is within the predefined ratios, it adjusts the length of the birred section accordingly.
+     * If the length of the string exceeds the predefined ratios, it adjusts the length of the birred section proportionally.
+     * Finally, it constructs the birified string by combining the prefix, birred section, and postfix.
+     * If no birred section is determined, it returns the original string.
+     *
+     * @param s The input string to be birified.
+     * @return The birified version of the input string.
+     */
     String birify(final String s) {
         if (dict != null) {
             final var b = dict.get(s);
