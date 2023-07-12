@@ -18,11 +18,12 @@ public class EnumerationParameter extends AbstractTypedParameter<Boolean>{
         this.enumClass = klass;
     }
 
-    public <K> void setEnumDefault(K enumDefault) {
+    public <K> EnumerationParameter.WithDefault defaultValue(K enumDefault) {
         if (enumDefault != null && !enumDefault.getClass().isAssignableFrom(enumClass)) {
             throw new IllegalArgumentException(String.format("The parameter '%s' is not '%s' type", param.name(), enumDefault.getClass().getName()));
         }
         this.enumDefault = enumDefault;
+        return new EnumerationParameter.WithDefault(this);
     }
 
     /**
@@ -58,7 +59,7 @@ public class EnumerationParameter extends AbstractTypedParameter<Boolean>{
         }
     }
 
-    public static class WithDefault extends AbstractTypedParameter {
+    public static class WithDefault extends AbstractTypedParameter<Boolean> {
         private final EnumerationParameter supi;
         public WithDefault(EnumerationParameter supi) {
             super(supi.param);

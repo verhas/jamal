@@ -113,19 +113,6 @@ public interface Scanner {
         }
 
         /**
-         * Define a boolean parameter with the names of an enum class. The default value for the enum is the given
-         * value.
-         *
-         * @param defaultValue is the default value for the parameter
-         * @return the parameter object
-         */
-        public <K> EnumerationParameter.WithDefault enumeration(K defaultValue) {
-            final var param = enumeration(defaultValue.getClass());
-            param.setEnumDefault(defaultValue);
-            return new EnumerationParameter.WithDefault(param);
-        }
-
-        /**
          * Define a boolean parameter.
          *
          * @param keys the name and the aliases of the parameter

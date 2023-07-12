@@ -15,7 +15,7 @@ public class IoFile implements Macro, InnerScopeDependent, Scanner.WholeInput {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
         final var file = scanner.str("io:file", "file");
-        final var condition = scanner.enumeration(Condition.exists);
+        final var condition = scanner.enumeration(Condition.class).defaultValue(Condition.exists);
         scanner.done();
 
 
