@@ -6,16 +6,18 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 
-public class Defer implements Macro, InnerScopeDependent {
+public class Defer implements Macro, InnerScopeDependent, OptionsControlled.Core, Scanner.Core {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var inputName = Params.<String>holder("$input", "input", "inputName").orElse("$input");
-        final var outputName = Params.<String>holder("$output", "output", "outputName").orElse("$output");
-        Params.using(processor).from(this).between("[]").keys(inputName, outputName).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var inputName = scanner.str("$input", "input", "inputName").defaultValue("$input");
+        final var outputName = scanner.str("$output", "output", "outputName").defaultValue("$output");
+        scanner.done();
         processor.deferredClose(new DeferredCloser(in, inputName.get(), outputName.get()));
         return "";
     }
@@ -57,14 +59,13 @@ public class Defer implements Macro, InnerScopeDependent {
             this.output = output;
         }
 
-        private static final String[] NO_PARAMS = new String[0];
         private final String inputName;// = "$input";
         private final String outputName;// = "$output";
 
         @Override
         public void close() throws Exception {
             final String out = output.toString();
-            processor.defineGlobal(processor.newUserDefinedMacro(inputName, out, true, NO_PARAMS));
+            processor.defineGlobal(processor.newUserDefinedMacro(inputName, out, true));
             processor.defineGlobal(new Identified.Undefined(outputName));
             processor.process(input);
             if (processor.errors().size() > 0) {

@@ -1,0 +1,239 @@
+= Jamal Maven Load Module
+
+The Jamal Maven Load module contains a macro to download Java JAR files from Maven repositories during run-time and load the macro classes into the running application.
+
+I designed the library's security, balancing the ease of use and the application's security.
+Without security measures, a Jamal file could execute any Java code published online, which is not a good idea.
+The Jamal installation has to be adequately configured to use this module.
+The requirements of a proper configuration are described in the section about security.
+
+== Macro
+
+Currently, there is only one macro defined in this module.
+
+=== `maven:load`
+
+It loads the macros from a Maven artifact and its dependencies unless the `noDependencies` option is used.
+
+This macro reads its input and interprets it as a maven coordinate set.
+The format has to be
+
+          groupId:artifactId:version
+
+You have to specify all three coordinates.
+The macro works in two steps:
+
+1. First, it downloads the artifact JAR and all the dependencies.
+
+2. Using a class loader, it loads the macros from the JAR files (the specified one and the dependencies).
+
+Loading only the file without the dependencies is possible using the `noDependencies` option.
+
+[WARNING]
+====
+Loading a JAR file from the internet is a security risk.
+You must configure the security appropriately to mitigate this risk.
+For more information, see the section about security.
+====
+
+The behavior of the macro can be controlled using options.
+The options should follow the macro's name between `(` and `)` characters.
+The options are:
+
+* `repositories` (aliases are `repository`, `repo`, `repos`) define the Maven repositories used comma separated.
+The values are the repository URLs or symbolic names.
+The symbolic names can be
+- `central`
+- `jcenter-bintray`
+- `google-android`
+- `google-maven-central-americas`
+- `google-maven-central-europe`
+- `google-maven-central-asia`
++
+The default value is `central`.
+When a URL is specified, it is checked against the configuration.
+The symbolic names are permitted by default; they can be used without configuration.
+URLs must be configured in the `maven.load.repo` configuration property.
+For more information, see the section about security.
+
+* `noDependencies` (alias is `noDeps`) says that the dependencies of the JAR should not be loaded.
+The default value is `false`.
+
+* `reload` (aliases are `overwrite`, `update`) says that macros found in the JAR should be reloaded even if they were
+already loaded.
+
+* `local` can specify the location of the local Maven repository.
+The default value is `~/.m2/repository`.
+If this option is used, it is checked against the configuration.
+For more information, see the section about security.
+
+* `exclude` can specify a comma-separated list of maven coordinates that should not be loaded.
+This parameter will not stop loading the "root" artifact specified in the macro input.
+The coordinates format is the same as in the configuration file for the `maven.load.exclude` property regarding the wildcards.
+
+If the configuration or the security prevents the load, the macro throws an `IllegalStateException`.
+It means that the processing will stop.
+Also, it is impossible to catch and handle this error using the `{@try ...}` macro.
+
+== Security and Safe Configuration
+
+The macro `maven:load` reads the configuration of Jamal via an API that works only when the configuration is secure.
+
+=== Secure configuration
+
+This macro works only if your configuration files' access control is set correctly.
+Without that, someone accessing the computer in a different account could modify the configuration, potentially loading malicious code.
+
+The configuration must be secure, meaning:
+
+* There is no configuration.
+In that case, nothing can be opened, so there is no security risk.
+However, in this case, the macro cannot load any JAR file.
+OR
+
+The configuration directory and the files are _SAFE_
+====
+* `~/.jamal`, and the files
+* `~/.jamal/settings.properties`, and
+* `~/.jamal/settings.xml` are _SAFE_
+====
+
+
+A file or directory is _SAFE_ if
+====
+* it does not exist, or
+
+* owned by the current user and
+
+* not writable by anyone else, and
+
+* not readable by anyone else,
+
+* not listable (`x` flag) by anyone else.
+
+* In the case of a plain file, it is not executable (`x` flag) by anyone, including the current user.
+
+* It is a plain file when it is supposed to be a file, and it is a directory when it is supposed to be a directory.
+====
+
+When reading the configuration, if any of the
+
+====
+* `maven.load.include`
+
+* `maven.load.exclude`
+
+* `maven.load.local`
+
+* `maven.load.repo`
+
+properties point to files; these files should also be _SAFE_.
+====
+
+NOTE: Securing the configuration is not a must for Jamal's other parts and functionalities, although it is a good practice.
+The security is only checked before reading the configuration for the `maven:load` macro.
+
+Also, the `maven:load` macro uses a unique API to read the configuration.
+Every time the macro runs, the API rereads the files, checks the security of the configuration, and ignores the in-memory cached configuration.
+Also, note that while most of the macros and functionalities of Jamal read configuration via an API that consults the system properties first, environment variables second, and lastly, only
+the configuration files,
+
+====
+the API used by the `maven:load` macro reads only the configuration files in the directory `~/.jamal/`.
+These are `~/.jamal/settings.properties` or `~/.jamal/settings.xml`.
+====
+
+[NOTE]
+====
+When Jamal is executed in an interactive environment the security for a specific `maven:load` macro is checked only once.
+The security is checked only when the macro tries to load the classes.
+When the classes were loaded by the same JVM in a previous run, the security is not checked again.
+
+It also means that changing the configuration to prevent the load of a macro library that was already loaded is futile.
+On the other hand, changing the configuration to allow the load of a macro library that failed to load due to security settings is effective.
+There is no need to restart the application executing Jamal.
+====
+
+=== Configuration
+
+The `maven:load` macro has to be configured for security reasons.
+It can only load JAR files which are explicitly allowed by the configuration.
+Also, the remote and local repositories must be configured unless the well-known hardwired repositories are used with the default local location.
+
+The values for the property keys are
+
+* comma-separated list of maven coordinates + path,
+
+* absolute paths,
+
+* URLs, or
+
+* a file name that contains the list of the same information.
+
+When a key points to a file, the file also has to be _SAFE_ as defined in the previous section.
+It has to be in the same directory as the configuration file and has to be specified by the bare name and extension but without any path.
+The file contains the configuration information, one per line.
+
+[NOTE]
+====
+You can use the comma-separated list in the `.properties` file.
+However, it is better to use a file when you have many configuration items.
+The file contains the list of configuration items, one per line.
+====
+
+==== `maven.load.include`
+
+The configuration should always have the property `maven.load.include` set.
+The property gives the list of permitted maven coordinates.
+
+Every maven coordinate has to be in the format
+
+          groupId:artifactId:version
+
+or
+
+          groupId:artifactId:version:path
+
+The `groupId` cannot be a wildcard.
+The `artifactId` and `version` may be a wildcard `*`.
+The path part is optional.
+If the `artifactId` is a wildcard, then the `version` has to be a wildcard too.
+
+The path represents the path to the Jamal source.
+It can be the absolute path to the Jamal input file or the directory containing one or more Jamal input files.
+If the path is a directory, `maven:load` is also permitted for all subdirectories.
+When the value ends with a `/`, it is considered a directory.
+
+When the path is specified, it is compared against the path of the Jamal source.
+The Jamal source file has to be the same or has to be in the specified directory.
+
+The macro `maven:load` is sometimes used from a file included or imported by the top Jamal source directly or through other includes or imports.
+In this case, the path of the top-level Jamal file is used only.
+
+==== `maven.load.exclude`
+
+The key `maven.load.exclude` can exclude some maven coordinates from the list of allowed coordinates.
+If a coordinate is excluded, it cannot be used even if included in the `maven.load.include` list.
+
+A coordinate will also be skipped if one is present as a dependency.
+In this case, however, the download will not stop.
+The class loading, however, may still fail if classes are missing because of the exclusion.
+
+==== `maven.load.local`
+
+The key `maven.load.local` can be used to specify the location of the local Maven repository.
+It has to be configured when the option `local` is used.
+The values have to specify the absolute paths of the allowed directories that can be used as local repositories.
+
+WARNING: This is a security configuration.
+Specifying a location here will not change the default location.
+It merely lists the allowed locations.
+
+==== `maven.load.repo`
+
+The key `maven.load.repo` can be used to specify the list of allowed remote repositories in addition to the predefined ones.
+The values must be the URLs appearing in the `repositories` option of the `maven:load` macro.
+
+WARNING: This is a security configuration.
+Specifying a URL here will not change the default repository.
+It merely lists the allowed repositories.

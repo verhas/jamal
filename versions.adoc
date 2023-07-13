@@ -1,0 +1,80 @@
+= Jamal dependencies versions check
+
+This file can be used to check the Jamal dependency versions.
+It loads the versions from the `version.jim` file and has a macro comparing it against the current Maven repo.
+The rendering of this file is slow because it has to download the Maven metadata files from the Maven repository.
+If all dependencies are up-to-date, then the output should not contain any `*[red]#NO#*` text with upgrade instructions.
+
+
+
+
+* `OK`  `LEVENSHTEIN_VERSION` `1.0.0` 
+
+* `OK`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.11.0` 
+
+* `*[red]#NO#*`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.4.1` `*[red]#upgrade to 3.5.0#*`
++
+The JavaDoc plugin version 3.5.0 caused an exception during the compilation, that seems to be an internal error of the plugin.
+Sun Bug report ID `9074818` was assigned to this issue.
+Probably they will simply ignore this as the issue is with the Maven plugin.
+https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
+
+* `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.1.0` 
+
+* `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.6.0` 
+
+* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-7` 
+
+* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.9.0` 
+
+* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.9.0` 
+
+* `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
+
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.1.2` 
+
+* `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.0` 
+
+* `OK`  `APPASSEMBLER_PLUGIN_VERSION` `2.1.0` 
+
+* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.0` 
+
+* `OK`  `JUPITER_VERSION` `5.10.0-M1` 
+
+* `OK`  `MOCKITO_VERSION` `5.4.0` 
+
+* `OK`  `JRUBY_VERSION` `9.4.3.0` 
+
+* `OK`  `GROOVY_VERSION` `3.0.18` 
+
+* `OK`  `OGNL_VERSION` `3.3.4` 
+
+* `OK`  `SNAKEYAML_VERSION` `2.0` 
+
+* `OK`  `JSON_ORG_VERSION` `20230618` 
+
+* `OK`  `FLEXMARK_VERSION` `0.64.8` 
+
+* `OK`  `APACHE_POI_VERSION` `5.2.3` 
+
+* `OK`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` 
+
+* `OK`  `JSCRIPTBASIC_VERSION` `2.1.1` 
+
+* `OK`  `MAVEN_DOWNLOADER` `1.1.0` 
+
+* `OK`  `SOURCE_BUDDY` `2.4.0` 
+
+* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-7` 
+
+* `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.1.1` 
+
+* `OK`  `ASM_VERSION` `9.5` 
+
+* `OK`  `ASM_TREE_VERSION` `9.5` 
+
+* `??` `PLANTUML_VERSION` has to be checked manually from link:https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml[`https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml`].
+The `maven-metadata.xml` for this artifact is wrong.
+
+* `??` `MARKDOWN_TO_ASCIIDOC` has to be checkeed manually from link:https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/[`https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/`].
+The `maven-metadata.xml` for this artifact is missing.

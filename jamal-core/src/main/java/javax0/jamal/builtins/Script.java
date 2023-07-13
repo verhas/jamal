@@ -30,9 +30,7 @@ public class Script implements Macro {
         }
         skipWhiteSpaces(input);
         final String[] params = getParameters(input, id);
-        if (!firstCharIs(input, '=')) {
-            throw new BadSyntaxAt("script '" + id + "' has no '=' to body", ref);
-        }
+        BadSyntaxAt.when(!firstCharIs(input, '='), () -> String.format("script '%s' has no '=' to body", id), ref);
         skip(input, 1);
         final ScriptMacro macro;
         macro = processor.newScriptMacro(id, scriptType, input.toString(), params);

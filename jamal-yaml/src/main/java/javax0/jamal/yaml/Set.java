@@ -6,34 +6,33 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import static java.lang.String.format;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.startsWith;
-import static javax0.jamal.tools.Params.holder;
 
 
-public class Set implements Macro, InnerScopeDependent {
+public class Set implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        final var from = holder("yamlDataSource", "from").orElseNull().asString();
-        Params.using(processor).from(this).keys(clone, copy, from).between("()").parse(in);
+        final var scanner = newScanner(in,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        final var from = scanner.str("yamlDataSource", "from").defaultValue(null);
+        scanner.done();
 
         skipWhiteSpaces(in);
         final var id = fetchId(in);
-        if (in.length() == 0 || in.charAt(0) != '=') {
-            throw new BadSyntax(format("There is no '=' after the identifier in '%s'", getId()));
-        }
+        BadSyntax.when(in.length() == 0 || in.charAt(0) != '=', "There is no '=' after the identifier in '%s'", getId());
         skip(in, 1);
         skipWhiteSpaces(in);
 
-        final String fromId = getFromId(in, from,this);
+        final String fromId = getFromId(in, from, this);
 
         try {
             final var yamlObject = Resolve.getYaml(processor, fromId);
@@ -48,18 +47,16 @@ public class Set implements Macro, InnerScopeDependent {
         }
     }
 
-    static String getFromId(Input in, Params.Param<String> from, Macro me) throws BadSyntax {
+    static String getFromId(Input in, StringParameter from, Macro me) throws BadSyntax {
         final String fromId;
         if (!from.isPresent() || from.get() == null) {
             if (startsWith(in, "/") == 0) {
                 skip(in, 1);
                 fromId = fetchId(in);
-                if (startsWith(in, ".") == -1) {
-                    throw new BadSyntax(format("The macro name at the start of the OGNL expression must be followed by a . (dot) character in the macro %s", me.getId()));
-                }
+                BadSyntax.when(startsWith(in, ".") == -1, "The macro name at the start of the OGNL expression must be followed by a . (dot) character in the macro %s", me.getId());
                 skip(in, 1);
             } else {
-                throw new BadSyntax(format("The 'from' macro name is not specified in the macro %s", me.getId()));
+                throw new BadSyntax(String.format("The 'from' macro name is not specified in the macro %s", me.getId()));
             }
         } else {
             fromId = from.get();

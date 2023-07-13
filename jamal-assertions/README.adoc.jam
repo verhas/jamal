@@ -18,7 +18,7 @@ For example, the macro
 {%sample/
 {@snip:xml pom=pom.xml}
 %}
-{%#block {%output%} is needed to execute the sample macro because we use later the `pom` macro%}
+{%#block[] {%output%} is needed to execute the sample macro because we use later the `pom` macro%}
 
 reads the `pom.xml` file from the same directory where the document is.
 It stores the XML in the memory, and you can query it via the `pom` macro afterward.
@@ -33,11 +33,11 @@ This version currently is
 
 {%output%}
 
-If we create an assertion that this version is in the `1.xxx` range, we can write it as the following:
-{%@define MAJOR_VERSION=1.%}
+If we create an assertion that this version is in the `2.xxx` range, we can write it as the following:
+{%@define MAJOR_VERSION=2.%}
 {%sample/
 here we have an assertion
-{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are not in the 1.xxx range anymore}
+{#assert:startsWith /{pom //project/version}/{%MAJOR_VERSION%}/ERROR: we are not in the 2.xxx range anymore}
 assertion was okay
 %}
 
@@ -107,7 +107,7 @@ then the library and the macros are included and are usable without any further 
 All assertions have the same options and the same syntax.
 The options follow the macro's name between `(` and `)` characters.
 The rest of the macro is the parameters.
-The parameters are parsed using the link:../PARAMS.adoc[Standard Built-In Parameter Parsing].
+The parameters are parsed using the link:../documentation/PARAMS.adoc[Standard Built-In Parameter Parsing].
 The different assertions can have different number of parameters.
 The last parameter is always optional.
 If it is present, it specifies the error message for the failing assertion.

@@ -7,8 +7,9 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.Scanner;
 
-public class GroovyImport implements Macro, InnerScopeDependent {
+public class GroovyImport implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var shell = Shell.getShell(in, processor, this);

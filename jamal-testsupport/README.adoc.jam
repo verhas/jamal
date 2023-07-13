@@ -1,0 +1,59 @@
+= Jamal Test Support
+
+This project provides code that can be used to help test Jamal extension macros that are written in Java.
+
+A built-in macro most of the time converts the content to another string. To test that you need an
+instance of the macro class, a processor, an input object that contains the `StringBuilder`, and a `null`
+reference file name. Then the test just invokes the macro `Macro.evaluate(Input, javax0.jamal.api.Processor)`
+method and checks the returned string against the expected.
+
+To ease this task you can put this module on the test dependencies
+
+----
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-testsupport</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+
+----
+
+and have a test like
+
+----
+    var camelLowerCase = TestThat.forMacro(Camel.LowerCase.class);
+    camelLowerCase.fromInput("INPUT").results( "input");
+    camelLowerCase.fromInput("INpUT").results( "input");
+    camelLowerCase.fromInput("INpuT").results( "input");
+    camelLowerCase.fromInput("INput").results( "input");
+    camelLowerCase.fromInput("Input").results( "input");
+    camelLowerCase.fromInput("input").results( "input");
+    camelLowerCase.fromInput("IN-PUT").results( "inPut");
+    camelLowerCase.fromInput("I-N-P-U-T").results( "iNPUT");
+
+----
+
+If and when the macro is expected to throw exception (probably BadSyntaxAt) then you can write
+
+----
+    TestThat.forMacro(For.class).fromInput(" x in a,b,c,d= x is either a, b, c or d\n").throwsBadSyntax();
+
+----
+
+If you expect any other exception, other than `BadSyntaxAt` then you can also use `throwsUp(exception.class)` instead of
+`throwsBadSyntax()`.
+
+[source,java]
+----
+public class Test {
+
+    @TestFactory
+    Object testAll() {
+        return JamalYamlTest.factory(
+            String[]{ list all test files that are in the same resource directory and have .jyt extension}
+        );
+    }
+}
+----
+
+Then have the files with `.jyt` extension contain Jamal preprocessed Yaml files. Open and close are `{%` and `%}`.

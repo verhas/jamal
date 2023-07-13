@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+@SuppressWarnings("ConstantConditions")
 public class TestSnipLineAndFIle {
     final static String RESOURCE_ROOT = new File(TestSnippets.class.getClassLoader().getResource("javax0/jamal/snippet/test3.jam").getFile()).getParent();
 

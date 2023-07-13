@@ -1,5 +1,5 @@
 "verbatim include works defining a macro from a yaml file":
-  Input: "{#yaml:define a={@include [verbatim] res:sample.yaml}}{@verbatim a}"
+  Input: "{#yaml:define a={@include [verbatim] res:sample_verbatim.yaml}}{@verbatim a}"
   Output: |
     &id001
     a: this is a

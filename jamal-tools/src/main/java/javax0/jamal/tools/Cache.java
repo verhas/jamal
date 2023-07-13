@@ -3,6 +3,7 @@ package javax0.jamal.tools;
 import javax0.jamal.api.EnvironmentVariables;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,8 +19,8 @@ import java.util.Properties;
 
 /**
  * A cache implementation that can store the strings in file which are downloaded from certain HTTPS URLs. The cache
- * elements never expire. The assumption is that the resources downloaded from a web page are versioned and the URL url
- * contains the version number. When the URL contains the literal {@code SNAPSHOT} it is not cached. In all other cases
+ * elements never expire. The assumption is that the resources downloaded from a web page are versioned, and the URL url
+ * contains the version number. When the URL contains the literal {@code SNAPSHOT} it is not cached. In all other cases,
  * we assume that the resource will NEVER change.
  *
  * <p>
@@ -32,10 +33,11 @@ import java.util.Properties;
  * the cache.
  */
 public class Cache {
+
     /**
      * A cache entry. It contains the content File and the properties File and the Properties object. The properties are
      * loaded when the content is requested by the caller. There is no method to query the properties. The properties
-     * files exist for debug purposes and currently contains the date and time when the entry was created and last
+     * files exist for debug purposes and currently contain the date and time when the entry was created and last
      * read.
      */
     public static class Entry {
@@ -43,13 +45,27 @@ public class Cache {
         private final File propertiesFile;
         private final Properties properties;
         private final Properties effectiveProperties;
+        private final boolean flatProperties;
         private boolean propertiesLoaded = false;
 
         private Entry(File file, File propertiesFile) {
+            this(file, propertiesFile, false);
+        }
+
+        /**
+         * Create a new entry for the cache.
+         *
+         * @param file           the file that contains the content
+         * @param propertiesFile the file that contains the properties
+         * @param flat           {@code true} if the properties file is a flat file, {@code false} if the properties
+         *                       are to be collected from the directories up to the cache root directory.
+         */
+        public Entry(File file, File propertiesFile, boolean flat) {
             this.file = file;
             this.propertiesFile = propertiesFile;
             this.properties = new Properties();
             this.effectiveProperties = new Properties();
+            this.flatProperties = flat;
         }
 
         /**
@@ -78,7 +94,7 @@ public class Cache {
             return writeMillis + ttlMillis;
         }
 
-        private long parseTtl(final String ttl) {
+        public static long parseTtl(final String ttl) {
             final var sb = new StringBuilder(ttl);
             long seconds = 0L;
             try {
@@ -99,7 +115,7 @@ public class Cache {
             return seconds;
         }
 
-        public long chopSeconds(StringBuilder sb, String unit, long seconds) {
+        private static long chopSeconds(StringBuilder sb, String unit, long seconds) {
             final var index = sb.indexOf(unit);
             if (index == -1) {
                 return 0;
@@ -129,10 +145,34 @@ public class Cache {
             }
         }
 
+        public byte[] getBinaryContent() {
+            try {
+                assertPropertiesAreLoaded();
+                if (file.exists()) {
+                    properties.put("read", "" + System.currentTimeMillis());
+                    properties.put("read_formatted", now());
+                    properties.put("count", "" + (Integer.parseInt(Optional.ofNullable((String) properties.get("count")).orElse("0")) + 1));
+                    saveProperties();
+                    final var buffer = new ByteArrayOutputStream();
+                    try (final var is = new FileInputStream(file)) {
+                        is.transferTo(buffer);
+                        buffer.close();
+                        return buffer.toByteArray();
+                    }
+                } else {
+                    return null;
+                }
+            } catch (IOException ioex) {
+                return null;
+            }
+        }
+
         public String getProperty(String key) {
             try {
                 assertPropertiesAreLoaded();
-                effectiveProperties.putAll(collectEffectiveProperties(propertiesFile.getParentFile()));
+                if (!flatProperties) {
+                    effectiveProperties.putAll(collectEffectiveProperties(propertiesFile.getParentFile()));
+                }
                 effectiveProperties.putAll(properties);
                 return effectiveProperties.getProperty(key);
             } catch (IOException ignored) {
@@ -189,7 +229,7 @@ public class Cache {
         /**
          * Save the given content into a cache file. The saving may fail. In that case the failure will be silent and
          * does not throw an exception. This is designed that way not to prevent operation in case of a wrongly
-         * configured cache. In that case the file will be downloaded each time instead of using the cache, but Jamal
+         * configured cache. In that case, the file will be downloaded each time instead of using the cache, but Jamal
          * will still work.
          *
          * @param content to be saved into the cache file
@@ -197,6 +237,10 @@ public class Cache {
          */
         @SafeVarargs
         public final void save(String content, Map<String, String>... maps) {
+            save(content.getBytes(StandardCharsets.UTF_8), maps);
+        }
+
+        public final byte[] save(byte[] content, Map<String, String>... maps) {
             if (cacheExists()) {
                 try {
                     assertPropertiesAreLoaded();
@@ -209,11 +253,12 @@ public class Cache {
                     //noinspection ResultOfMethodCallIgnored
                     file.getParentFile().mkdirs();
                     try (final var fos = new FileOutputStream(file)) {
-                        fos.write(content.getBytes(StandardCharsets.UTF_8));
+                        fos.write(content);
                     }
                 } catch (IOException ignore) {
                 }
             }
+            return content;
         }
 
         /**

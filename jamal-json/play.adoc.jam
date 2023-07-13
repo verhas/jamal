@@ -1,0 +1,14 @@
+{@json:define docker={
+version: "3.6",
+services: ["http","https","jamal-debug"],
+zilch: { "nada": "nothing" }
+}}\
+
+{@json:add to=docker./services flat
+[{
+"com.javax0.jamal.title": "Non-relational DB Instance",
+"com.javax0.jamal.sizing": 1000,
+"com.javax0.jamal.nodeType": "primary"
+}]
+}
+{docker}

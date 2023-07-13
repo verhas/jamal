@@ -78,30 +78,21 @@ public class IndexStringTable implements Macro {
                     }
                 })
                 .orElse(DEFAULT);
-        if (splitters.length() == 0) {
-            throw new BadSyntax("$getsep defines a zero length separator");
-        }
+        BadSyntax.when(splitters.length() == 0, "$getsep defines a zero length separator");
         final var input = in.toString();
         final var index = input.indexOf(splitters.charAt(0));
-        if (index == -1) {
-            throw new BadSyntax("There is no separator '" + splitters.charAt(0) + "' in the input.");
-        }
+        BadSyntax.when(index == -1,  "There is no separator '%s' in the input.", splitters.charAt(0));
         final var indices = input.substring(0, index);
         var table = input.substring(index + 1);
         final var indexArray = Arrays.stream(indices.trim().split("\\s+")).mapToInt(Integer::parseInt).map(Math::abs).toArray();
         for (int i = 0; i < indexArray.length; i++) {
-            if (i >= splitters.length()) {
-                throw new BadSyntax("There are too many indices to get data from a string table");
-            }
+            BadSyntax.when(i >= splitters.length(), "There are too many indices to get data from a string table");
             final var splitter = splitters.substring(i, i + 1);
             final var cols = table.split(Pattern.quote(splitter));
-            if (indexArray[i] >= cols.length) {
-                throw new BadSyntax("There are only " + cols.length
-                        + " columns in the string \"" + table
-                        + "\" using the splitter " + splitter
-                        + " and macro 'get' wants to access "
-                        + indexArray[i]);
-            }
+            final var table_ = table;
+            final var i_ = i;
+            BadSyntax.when(indexArray[i] >= cols.length, () -> String.format("There are only %d columns in the string \"%s\" using the splitter %s and macro 'get' wants to access %d",
+                            cols.length, table_, splitter, indexArray[i_]));
             table = cols[indexArray[i]];
         }
         return table;

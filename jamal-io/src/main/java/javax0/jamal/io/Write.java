@@ -6,7 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,13 +14,14 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-public class Write implements Macro, InnerScopeDependent {
+public class Write implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var file = Utils.getFile();
-        final var append = Params.holder("io:append", "append").asBoolean();
-        final var mkdir = Params.holder("io:mkdir", "mkdir").asBoolean();
-        Params.using(processor).from(this).keys(file, append, mkdir).between("()").parse(in);
+        final var scanner = newScanner(in, processor);
+        final var file = Utils.getFile(scanner);
+        final var append = scanner.bool("io:append", "append");
+        final var mkdir = scanner.bool("io:mkdir", "mkdir");
+        scanner.done();
 
         InputHandler.skipWhiteSpaces(in);
 

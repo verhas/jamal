@@ -22,7 +22,7 @@ public class TestThatTest {
     @Test
     @DisplayName("TestThat asserts the result OK")
     void testResultOK() throws Exception {
-        TestThat.theMacro(TestingMacro.class).fromTheInput("").results(null);
+        TestThat.theMacro(TestingMacro.class).fromTheInput("").results((String)null);
     }
 
     @Test

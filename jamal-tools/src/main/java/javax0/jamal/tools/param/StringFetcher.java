@@ -23,9 +23,7 @@ public class StringFetcher {
         if (input.length() == 0 || input.charAt(0) != ENCLOSING_CH) {
             return getUnquotedString(input, terminal);
         }
-        if (input.length() < 2) {
-            throw new BadSyntax("String has to be at least two characters long.");
-        }
+        BadSyntax.when(input.length() < 2, "String has to be at least two characters long.");
         if (input.length() >= MLSD_LENGTH && input.subSequence(0, MLSD_LENGTH).equals(MULTI_LINE_STRING_DELIMITER)) {
             return getMultiLineString(input);
         } else {
@@ -36,9 +34,7 @@ public class StringFetcher {
     private static String getUnquotedString(Input input, Character terminal) throws BadSyntax {
         final var output = new StringBuilder();
         while (input.length() > 0 && !Character.isWhitespace(input.charAt(0)) && !Objects.equals(input.charAt(0), terminal)) {
-            if (input.charAt(0) == '=') {
-                throw new BadSyntax("Unquoted parameters must not contain '='. It is dangerous.");
-            }
+            BadSyntax.when(input.charAt(0) == '=', "Unquoted parameters must not contain '='. It is dangerous.");
             output.append(input.charAt(0));
             InputHandler.skip(input, 1);
         }
@@ -56,9 +52,7 @@ public class StringFetcher {
                 handleNormalMultiLineStringCharacter(input, output);
             }
         }
-        if (input.length() < MLSD_LENGTH) {
-            throw new BadSyntax("Multi-line string is not terminated before eof");
-        }
+        BadSyntax.when(input.length() < MLSD_LENGTH, "Multi-line string is not terminated before eof");
         InputHandler.skip(input, MLSD_LENGTH);
         return output.toString();
     }
@@ -74,9 +68,7 @@ public class StringFetcher {
                 handleNormalCharacter(input, output);
             }
         }
-        if (input.length() == 0) {
-            throw new BadSyntax("String is not terminated before eol");
-        }
+        BadSyntax.when(input.length() == 0, "String is not terminated before eol");
         input.deleteCharAt(0);
         return output.toString();
     }

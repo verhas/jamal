@@ -1,16 +1,17 @@
 = Jamal Mock module
 
 
-
 Using this module, you can mock built-in macros.
 The reason to mock a built-in macro is mainly for testing purposes.
-When you develop a macro package the built-in macros collecting information from different sources
+When you develop a macro package collecting information from different sources
 
-* may not be available at all in the test environment
+* those may not be available at all in the test environment
 
-* may function differently,
+* may function in the test environment differently,
 
 * may be expensive to set up an environment where these built-in macros function as needed for the test.
+
+The solution is to mock the built-in macros.
 
 The primary goal developing this module was to provide mocking possibility for the Java::Geci macros.
 That way you can develop the code generator templates in IntelliJ using the Asciidoc plugin.
@@ -23,9 +24,11 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-mock</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
 </dependency>
 ----
+
+or use the `maven:load` macro to load the dependency from Maven Central.
 
 == Macros in this library
 
@@ -207,11 +210,11 @@ In the next section we will describe all these options in details (reference) an
 ==== Options of `mock`
 
 * `macro` (alias `id`) the identifier of the macro.
-This option is mandatory and has to define the identifier of the macro to be mocked.
+This an option is mandatory and has to define the identifier of the macro to be mocked.
 * `when` regular expression when to apply the mock.
 This option is not mandatory.
 In case it is specified, the mock response will only be used when the input of the macro matches the regular expression specified.
-If the option is missing the mock response will always be matched and used when it gets activated regardless of the input of the macro.
+If the option is missing, the mock response will always be matched and used when it gets activated regardless of the input of the macro.
 * `repeat` (alias `times`) how many times the mock can be used.
 Can specify how many times the mock can be used.
 It is an error to use a negative number.

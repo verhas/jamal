@@ -1,6 +1,6 @@
 = Jamal Yaml integration module
 
-{%@import res:jamal.jim%}
+{%@import res:jamal.jim%}{%@import ../RELEASES.jim%}
 {%#counter:define id=macroChapter {%@define format=$roman. %}%}
 {%@snip:collect from=src/main/java%}
 Using this integration module, you can mix Jamal macro text with YAML data.
@@ -25,7 +25,6 @@ Following that, you can use the
 {%chap resolve%}
 . <<import,{%ImportingChapter%}>>
 {%chap isResolved%}
-{%chap get%}
 {%chap get%}
 {%chap set%}
 {%chap add%}
@@ -107,21 +106,13 @@ User-defined macros alone do not solve the problem of overcomplexity and deep ta
 The Jamal Yaml module allows you to have a partially defined Yaml file to overcome this problem.
 When a Yaml structure is read from the text representation, it is stored in the memory as a Java object structure.
 It utilizes primitive values, strings, lists, and maps.
-In addition to that, you can also use
 
-[source,yaml]
-----
-!!java.class.Name value
-----
-
-type of values that will tell the Yaml reader to create a value stored in an object of the class `java.class.Name`.
-It can only be used when the specified class is on the classpath, and it is rarely used in general Yaml.
 There is a particular class in the `javax0.jamal.api` package, called `Ref`.
 When you specify a value
 
 [source,yaml]
 ----
-!!javax0.jamal.api.Ref xyz
+!ref xyz
 ----
 
 it will create a `new Ref(xyz)` object.
@@ -133,28 +124,14 @@ These references can be recursive.
 
 The example:
 {%sample/
-{#yaml:define b=- x
-- y
-- {@yaml:ref a}}
-{@yaml:define a=[a,b,c]}
-{b}
-%}
-
-results
-
-{%output%}
-
-You can also write this example as
-
-{%sample/
 {@yaml:define b=- x
 - y
-- !!javax0.jamal.api.Ref a}{@comment DON'T DO THIS!}
+- !ref a}
 {@yaml:define a=[a,b,c]}
 {b}
 %}
 
-resulting in the same output
+resulting in the output
 
 {%output%}
 
@@ -169,7 +146,7 @@ The same example as above, but resolving the Yaml macro before using it
 {%sample/
 {#yaml:define b=- x
 - y
-- {@yaml:ref a}}
+- !ref a}
 {@yaml:define a=[a,b,c]}
 {@yaml:resolve b}
 {b}
@@ -181,7 +158,7 @@ will result
 
 When you invoke `yaml:resolve`, all the referenced Yaml macros have to be defined.
 
-Using this reference possibility, you can have several small Yaml fragments possibly referencing each others using the `!!javax0.jamal.api.Ref`.
+Using this reference possibility, you can have several small Yaml fragments possibly referencing each others using the `!ref`.
 When the small segments are done, you can apply `yaml:resolve` on the root one and create the output.
 
 [NOTE]
@@ -189,7 +166,7 @@ When the small segments are done, you can apply `yaml:resolve` on the root one a
 When processing Yaml input, you can use the `{` and `}` characters as macro opening and macro closing strings.
 When you edit a Yaml file, you do not usually use the JSON-compatible `{ ... }` format for mapped values.
 However, when you use a user-defined, named Yaml content, like `{yamlMacro}`, it is likely to happen that the underlying rendering will generate a textual representation of the Yaml data, which contains `{` and `}` characters.
-The values of the user-defined macros are evaluated after they were dereferenced.
+The values of the user-defined macros are evaluated after they were de-referenced.
 The Yaml macros are exempt from this.
 These user defined macros are defined verbatim, like a normal user defined macro was defined using the `~` character after the `define` keyword.
 The evaluation is not needed because Yaml data hardly ever contain Jamal macros to be processed.
@@ -201,37 +178,23 @@ Even if it found it, it would not likely to properly evaluate.
 One solution to this problem is to use a different opening and closing string that does not appear inside the Yaml output.
 If you can find one for your application, you can go for it.
 Usually, you cannot guarantee that none of the string fields will contain the macro opening string.
-The safe solution is that these macros are defined my the Yaml built-in macros as verbatim.
+The safe solution is that these macros are defined by the Yaml built-in macros as verbatim.
 If you need to evaluate the content of the Yaml structure with embedded macros you have to use the `{!yamlMacro}` format.
 
 For more information on macro evaluation order, see the core documentation of Jamal.
 ====
 
 {%chap ref%}
+The use of this macro has been deprecated since Jamal version {%RELEASE:BUDAPEST%}.
 
-Use this macro to reference another Yaml definition.
-The implementation of a reference is an object, instance of the class {%@java:class (format=`$name`) javax0.jamal.api.Ref%}.
-It, however, is a Java-specific way.
-You can reference another user defined Yaml definition in the form:
+This macro will reference another Yaml definition.
+With the release {%RELEASE:BUDAPEST%}, the local tag `!ref` is defined, which is a much cleaner and shorter way to reference another Yaml definition.
 
 {%sample/
 {@yaml:define x=
 a: this is a string
-b: !!javax0.jamal.api.Ref xyz}
+b: !ref xyz}
 %}
-
-It is more readable if you write:
-
-{%sample/
-{#yaml:define x=
-a: this is a string
-b: {@yaml:ref xyz}}
-%}
-
-NOTE: In this case, the `{\#yaml:define...}` macro starts with the `#` character because the macro `{@yaml:ref...}`, inside it, has to be evaluated.
-
-There is no guarantee that the implementation to reference another named, user-defined Yaml fragment will be compatible with the current implementation.
-Using the `yaml:ref` macro is the safe approach because it will always generate the Yaml reference sequence recognized by `yaml:resolve`.
 
 {%chap resolve%}
 
@@ -255,11 +218,11 @@ The example
 
 {%sample/
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}}
+{#yaml:define aqt=z: !ref a}
 {#yaml:define xyz=
 a: 1
 b: 3
-c: {@yaml:ref aqt}}
+c: !ref aqt}
 {@yaml:resolve (clone) xyz}
 Resolved:
 {xyz}
@@ -279,11 +242,11 @@ The same example doing the resolve without the `clone` option, however
 
 {%sample/
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}}
+{#yaml:define aqt=z: !ref a}
 {#yaml:define xyz=
 a: 1
 b: 3
-c: {@yaml:ref aqt}}
+c: !ref aqt}
 {@yaml:resolve xyz}
 Resolved:
 {xyz}
@@ -302,12 +265,12 @@ Unless you have a specific need, use the `yaml:resolve` macro without cloning.
 There is another option that alters the behaviour of the resolving process.
 This is `yamlResolveCopy` with the alias `copy`.
 This option creates a copy of the referenced structures, cloned or not.
-To understand this we can have a look at the following example:
+To understand this, we can have a look at the following example:
 
 {%sample/
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}
-y: {@yaml:ref a}
+{#yaml:define aqt=z: !ref a
+y: !ref a
 }
 {@yaml:resolve aqt}
 {aqt}
@@ -318,13 +281,13 @@ will result
 {%output%}
 
 When the underlying Snake Yaml library generates the text format of the Yaml data it realizes that both `z` and `y` fields refer to the same object.
-Thus SnakeYaml generates a label, something like `&id001` at the first occurrence and instead of repeating the same structure it on second occasion it only references that as `*id001`.
+Thus, SnakeYaml generates a label, something like `&id001` at the first occurrence and instead of repeating the same structure it on second occasion it only references that as `*id001`.
 The resolving process can circumvent this creating a copy for every reference.
 
 {%sample/
 {@yaml:define a=[ a, b ,c ]}
-{#yaml:define aqt=z: {@yaml:ref a}
-y: {@yaml:ref a}
+{#yaml:define aqt=z: !ref a
+y: !ref a
 }
 {@yaml:resolve (copy) aqt}
 {aqt}
@@ -341,7 +304,7 @@ The implementation of copy resolution can handle recursive data structures and i
 For example
 
 {%sample/
-{#yaml:define a=[ a, b ,c, {@yaml:ref a}]}
+{#yaml:define a=[ a, b ,c, !ref a]}
 {@yaml:resolve (copy clone) a}
 {a}
 %}
@@ -353,7 +316,7 @@ works as expected
 However, when trying to resolve the following:
 
 {%sample/
-{#yaml:define a=[ a, b ,c, {@yaml:ref a}, {@yaml:ref a}]}
+{#yaml:define a=[ a, b ,c, !ref a, !ref a]}
 {@try! {@yaml:resolve (copy clone) a}}
 {a}
 %}
@@ -367,21 +330,25 @@ Here we got an error message from the macro `try`, and the Yaml structure stored
 [[Import]]
 ==== {%macroChapter%}{%ImportingChapter%}
 
+{%#define RES($x)={%#if |{%@env intellij.asciidoctor.plugin?%}|../jamal-test/src/test/resources/|res:%}$x%}
 There is no import macro to read Yaml formatted data from a file.
 If you want to read data from a file, you should combine the `yaml:define` and the core `include` macros.
 For example, there is a resource file {%@file (format=`$name`) src/test/resources/sample.yaml%} in the project where this documentation is compiled.
-It ren be referenced from the test execution, which also converts this document as `res:sample.yaml`.
+It can be referenced from the test execution, which also converts this document as `res:sample.yaml`.
 The content of this file is
 
-{%sample/
-{%@include [verbatim] res:sample.yaml%}%}
+{%sample {%#include [verbatim] {%RES sample.yaml%}%}%}
 
 You can use the following structure to read it from the file and assign the Yaml data to the macro `aqt`:
+
 
 {%sample/
 {#yaml:define aqt={@include [verbatim] res:sample.yaml}}
 {aqt}
 %}
+{%#block[]{%sample/
+{#yaml:define aqt={@include [verbatim] {%RES sample.yaml%}}}
+{aqt}%}%}
 
 which will result
 
@@ -397,7 +364,7 @@ Other packages usually use `(` and `)`.
 The file {%@file (format=`$name`) src/test/resources/sample.yaml.jam%} contains Jamal macros:
 
 {%sample/
-{%@include [verbatim]res:sample.yaml.jam%}
+{%#include [verbatim]{%RES sample.yaml.jam%}%}
 %}
 
 You can include it with evaluation using the following macro sequence.
@@ -407,6 +374,12 @@ You can include it with evaluation using the following macro sequence.
 {#yaml:define h={@include res:sample.yaml.jam}}
 {h}
 %}
+{%#block
+{%sample/
+{@define a=wuff wuff}
+{#yaml:define h={@include {%RES sample.yaml.jam%}}}
+{h}
+%}%}
 
 which will result:
 
@@ -414,7 +387,7 @@ which will result:
 
 {%chap isResolved%}
 
-The macro `yaml:isResolved` results `true` or `false` if the Yaml macro given as argument is eihter resolved or not.
+The macro `yaml:isResolved` results `true` or `false` if the Yaml macro given as argument is either resolved or not.
 The syntax of the macro is
 
 {%sample/
@@ -506,10 +479,11 @@ The syntax of the macro is
  ** `yamlResolveCopy` (alias `copy`) to copy resolve
  ** `yamlDataSource` (alias `from`) the name of the user defined macro which is the source of the data
 
-If the `from` value is missing then the macro interprets the `OGNL` expression using the start of it as the name of the macro.
-It has to have the form `/macroname.` at the start.
-The identifier between the starting `/` and the `.` is used as the name of the macro from which the data is to be fetched.
-The `macroName` is the name of the macro to assign the new object value.
+If the `from` value is missing then the macro interprets the `OGNL` expression star as the name of the macro.
+It should start as `/xxxx.`.
+The identifier `xxxx` between the starting `/` and the `.` is used as the name of the macro, from which the data is to be fetched.
+
+The `macroName` is the name of the macro to assign the new object value to.
 
 ===== Example
 
@@ -782,14 +756,14 @@ The option `prettyFlow` instructs snake yaml to output the yaml structure in pre
 
 ===== splitLines
 
-The option `splitLines` instructs snake yaml to output the yaml structure in pretty flow.
+The option `splitLines` instructs snake yaml to output the yaml structure splitting the lines.
 
 {%sample/
 {@yaml:format splitLines}
 {yaml}
 %}
 
-For some reason it does not split the lines
+For some reason, it does not split the lines, may be later versions of snakeYaml will do.
 
 {%output%}
 
@@ -931,38 +905,99 @@ will be converted to
 
 You can also specify attributes, use of CDATA and tag names for list elements using special classes.
 Jamal contains five classes, which can be referred to in Yaml files, and they are treated special during the XML conversion.
-When referring to the class it has to use the fully qualified class name with the `!!` prefix as in the list below.
+When reading and writing Yaml files Jamal defines special tags for these classes.
+These tags start with a single `!` character and the name of the tag.
+The tags are listed here.
 
-* `!!javax0.jamal.api.Xml$ATTR` will be used as an attribute for the tag containing this object.
-When the containing object is a map, the `ATTR` object can be a simple string, or it can be a map.
-When the `ATTR` is a simple string, the key of it will be used as attribute name.
-If the `ATTR` object is a member of an array then it can only be a map.
-When the `ATTR` object is a map then the keys and values will be used as attribute keys and values.
+* `!attr` will be used as an attribute for the tag containing this object.
+When the containing object is a map, the `!attr` object can be a simple string, or it can be a map.
+When the `!attr` is a simple string, the key of it will be used as attribute name.
+If the `!attr` object is a member of an array then it can only be a map.
+When the `!attr` object is a map then the keys and values will be used as attribute keys and values.
 You have to use this form in a map if the name of the attribute is the same as one of the content keys.
 
-* `!!javax0.jamal.api.Xml$TEXT` will be used as the text value for the tag containing this object.
+{%sample/
+{@yaml:define z=
+tagValues:
+  myTag: !attr my name
+  yourTag: !attr your name
+  cAttributeMustBeAMap: !attr {c: colliding tag name}
+  c:
+    - !attr {name: my name}
+    - !tag cc
+    - 1
+    - 2
+}
+{#xmlFormat {@yaml:xml (tag="tag" attributes="a=\"53\"")z}}
+%}
+
+will be converted to
+
+{%output%}
+
+* `!text` will be used as the text value for the tag containing this object.
 In an ordinary situation this just happens when you specify a string.
 In those cases there is no need for this class.
-It is only needed when you specified an attribute for some object using an `ATTR` for an object, which is supposed to be a text.
-To use the `ATTR` you had to specify the object as a Map already containing a key with the attribute.
-When the conversion sees the `TEXT` object it knows that it must treat this Map as a special one and should convert it to a simple tag with a text content.
+It is only needed when you specified an attribute for some object using an `!attr` for an object, which is supposed to be a text.
+To use the `!attr` you had to specify the object as a Map already containing a key with the attribute.
+When the conversion sees the `!text` object it knows that it must treat this Map as a special one and should convert it to a simple tag with a text content.
 If you use this object type it has to be the last in the map.
 Any further keys will result error.
 
-* `!!javax0.jamal.api.Xml$CDATATEXT` is the same as the `TEXT`, but it will also enclose the text as CDATA.
+{%sample/
+{@yaml:define z=
+text_tag:
+  name: !attr Peter Muster
+  textContent: !text This is the text content
+}
+{#xmlFormat {@yaml:xml (tag="myXml")z}}
+%}
 
-* `!!javax0.jamal.api.Xml$CDATA` will instruct the converter to convert the actual node to CDATA.
+will result in:
 
-* `!!javax0.jamal.api.Xml$TAG` can specify a TAG name for the list members.
+{%output%}
+
+
+* `!cdatatext` is the same as the `TEXT`, but it will also enclose the text as CDATA.
+
+{%sample/
+{@yaml:define z=
+text_tag:
+  name: !attr Peter Muster
+  textContent: !cdatatext This is the text content
+}
+{#xmlFormat {@yaml:xml (tag="myXml")z}}
+%}
+
+will result in:
+
+{%output%}
+
+* `!cdata` will instruct the converter to convert the actual node to CDATA.
+
+{%sample/
+{@yaml:define z=
+text_tag:
+  name: !attr Peter Muster
+  textContent: !cdata This is the text content
+}
+{#xmlFormat {@yaml:xml (tag="myXml")z}}
+%}
+
+will result in:
+
+{%output%}
+
+* `!tag` can specify a TAG name for the list members.
 The default behaviour is that a list will be converted to a `<As><A></A><A></A>...</As>` structure.
 Here `As` is the plural form of a word, like `dependencies`.
 The conversion will calculate the singular in the very simple way chopping off the last character.
 In the example case it will be `dependencie`, which is eventually wrong.
 To save the day a object `TAG` can be used.
 The value of this object will be used as the tag for the list elements.
-The `TAG` object can be interleaved with `ATTR` objects, but it should never be specified twice for the same list and it always should preceed the first "real" list member.
+The `TAG` object can be interleaved with `!attr` objects, but it should never be specified twice for the same list and it always should preceed the first "real" list member.
 You MUST use a `TAG` if the enclosing object tag is a single character.
-
++
 You can find examples of the use of these classes in the file link:/jamal-test/src/test/resources/javax0/jamal/test/yaml/TestXml.jyt[TestXml.jyt]
 
 {%sample/

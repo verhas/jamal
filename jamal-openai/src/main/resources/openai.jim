@@ -1,0 +1,29 @@
+{@sep  < >}
+
+<@define openai:seed=1>
+
+<@define openai:query_models=<@openai:get url=https://api.openai.com/v1/models>>
+<@define openai:query_model($model)=<@openai:get url=https://api.openai.com/v1/models/$model>>
+
+<@define openai:completion($json)=<#openai:post url=https://api.openai.com/v1/completions
+{
+"model": "<openai:model>",
+$json
+}>>
+<@define openai:chat($json)=<#openai:post url=https://api.openai.com/v1/chat/completions 
+{
+"model": "<openai:model>",
+$json
+}>>
+<@define openai:edits($json)=<#openai:post url=https://api.openai.com/v1/edits
+{
+"model": "<openai:model>",
+$json
+}>>
+<@define openai:images:generations($json)=<#openai:post url=https://api.openai.com/v1/images/generations
+{
+$json
+}>>
+
+
+<@sep>

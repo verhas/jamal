@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.DocumentConverter.getRoot;
@@ -25,8 +23,13 @@ public class TestSnippetSaveAndLoad {
     @Test
     @DisplayName("Test that snippets can be saved as XML and then they can be loaded")
     void testSaveAllLoadAll() throws Exception {
-        // When this test fails, then check if there was any new snippet
-        // defined in the module in the main Java source dir
+        final var expected = Arrays.stream(TestThat
+                .theInput("" +
+                        "{@snip:collect from=\"src/main/java/\"}" +
+                        "{@snip:list listSeparator=\"\\n\"}"
+                )
+                .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
+                .results().split("\n")).sorted().collect(Collectors.joining("\n"));
         final var result = Arrays.stream(TestThat
                 .theInput("" +
                         "{@snip:collect from=\"src/main/java/\"}" +
@@ -36,10 +39,8 @@ public class TestSnippetSaveAndLoad {
                         "{@snip:list listSeparator=\"\\n\"}"
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
-                .results().split("\n")).collect(Collectors.toSet());
-        Assertions.assertEquals(new TreeSet(Set.of("is", "trimLinesStart", "store", "dirMacroFormatPlaceholders",
-                "fileMacroFormatPlaceholders", "collect_options", "defaultTimeForListDir", "listDirFormats",
-                "classFormats", "fieldFormats", "methodFormats", "SnipCheck_MIN_LINE", "SnipCheck_JAMAL_SNIPPET_CHECK","names")), new TreeSet<>(result));
+                .results().split("\n")).sorted().collect(Collectors.joining("\n"));
+        Assertions.assertEquals(expected,result);
     }
 
     @Test
@@ -112,14 +113,14 @@ public class TestSnippetSaveAndLoad {
         TestThat
                 .theInput("" +
                         "{@snip:collect from=\"src/main/java/\"}" +
-                        "{@snip:save output=target/dump2.xml name=dirMacroFormatPlaceholders}" +
+                        "{@snip:save output=target/dump2.xml name=fileMacroFormatPlaceholders}" +
                         "{@snip:clear}" +
                         "{@snip:load input=target/dump2.xml}" +
                         "{@snip:list listSeparator=\"\\n\"}"
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
                 .results("" +
-                        "dirMacroFormatPlaceholders");
+                        "fileMacroFormatPlaceholders");
     }
 
     @Test
@@ -130,12 +131,12 @@ public class TestSnippetSaveAndLoad {
                         "{@snip:collect from=\"src/main/java/\"}" +
                         "{@snip:save output=target/dump3.xml}" +
                         "{@snip:clear}" +
-                        "{@snip:load input=target/dump3.xml name=dirMacroFormatPlaceholders}" +
+                        "{@snip:load input=target/dump3.xml name=fileMacroFormatPlaceholders}" +
                         "{@snip:list listSeparator=\"\\n\"}"
                 )
                 .atPosition(root + "/jamal-snippet/README.adoc.jam", 1, 1)
                 .results("" +
-                        "dirMacroFormatPlaceholders");
+                        "fileMacroFormatPlaceholders");
     }
 
     @Test

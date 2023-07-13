@@ -9,7 +9,7 @@ import javax0.jamal.tools.Cache;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-public class PlantUml implements Macro, InnerScopeDependent {
+public class PlantUml implements Macro, InnerScopeDependent, Scanner {
     private static class Trie {
         static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                 "$file"
@@ -30,10 +30,11 @@ public class PlantUml implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var root = Params.<String>holder("pu$folder", "folder").orElse("./");
-        final var format = Params.<String>holder("pu$format", "format").orElse("SVG");
-        final var template = Params.<String>holder("pu$template", "template").orElse("$file");
-        Params.using(processor).from(this).keys(root, format, template).between("()").parse(in);
+        final var scanner = newScanner(in, processor);
+        final var root     = scanner.str("pu$folder", "folder").defaultValue("./");
+        final var format   = scanner.str("pu$format", "format").defaultValue("SVG");
+        final var template = scanner.str("pu$template", "template").defaultValue("$file");
+        scanner.done();
         final var fileName = InputHandler.fetch2EOL(in).trim();
         final var imageDir = root.get().endsWith("/") ? root.get() : root.get() + "/";
         final var absoluteFileName = FileTools.absolute(in.getReference(), imageDir + fileName);
@@ -52,9 +53,7 @@ public class PlantUml implements Macro, InnerScopeDependent {
             } else {
                 erred = "true".equals(entry.getProperty("error"));
             }
-            if (erred) {
-                throw new BadSyntax("There was an error processing diagram for '" + fileName + "' in PlantUml.");
-            }
+            BadSyntax.when(erred, "There was an error processing diagram for '%s' in PlantUml.", fileName);
             return Trie.formatter.format(template.get(), fileName);
         } catch (Exception e) {
             throw new BadSyntax("PlantUml diagram '" + fileName + "'cannot be created.", e);
@@ -76,8 +75,16 @@ public class PlantUml implements Macro, InnerScopeDependent {
         final var reader = new SourceStringReader(text);
         FileFormat fileFormat = convertFileFormat(format);
         final var os = new ByteArrayOutputStream();
+        final var headless = System.getProperty("java.awt.headless");
         try (os) {
+            System.setProperty("java.awt.headless", "true");
             erred = "(Error)".equals(reader.outputImage(os, new FileFormatOption(fileFormat)).getDescription());
+        } finally {
+            if (headless != null) {
+                System.setProperty("java.awt.headless", headless);
+            } else {
+                System.clearProperty("java.awt.headless");
+            }
         }
         //noinspection ResultOfMethodCallIgnored
         file.getParentFile().mkdirs();
@@ -130,6 +137,8 @@ public class PlantUml implements Macro, InnerScopeDependent {
      * }</pre>
      * <p>
      * lines, then leave it there. If they are not there, then the method prepends and appends the lines.
+     * If first line starts with {@code @} then it is assumed that the diagram description is already there.
+     * This allows the user to use other diagram types not only UML.
      *
      * @param in the input
      * @return the diagram describing string

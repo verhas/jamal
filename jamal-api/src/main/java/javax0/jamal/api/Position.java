@@ -47,6 +47,12 @@ public class Position {
         this(file, 1);
     }
 
+    /**
+     * Creates a new instance from this one.
+     *
+     * @return the new instance
+     */
+    @Override
     public Position clone() {
         return new Position(this);
     }
@@ -64,5 +70,19 @@ public class Position {
      */
     public Position fork() {
         return new Position(file, line, column,this);
+    }
+
+    /**
+     * Get the top position in the hierarchy.
+     *
+     * @return The top position is the one in the file that is on the top
+     * level of the processing.
+     */
+    public Position top(){
+        var top = parent;
+        while( top.parent != null ){
+            top = top.parent;
+        }
+        return top;
     }
 }

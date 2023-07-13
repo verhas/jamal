@@ -10,6 +10,7 @@
                           {opens/testsupport/testsupport}
                           {opens/testsupport/testsupport/org.junit.platform.commons}
                           {opens/testsupport/builtinstest/org.junit.platform.commons}
+                           --add-reads jamal.testsupport=jamal.core
                            --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
                            --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
                            }
@@ -23,3 +24,4 @@
         {dependency :org.yaml:snakeyaml:{SNAKEYAML_VERSION}}
     }
 {end project}
+{@xmlFormat}

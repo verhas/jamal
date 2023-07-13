@@ -16,12 +16,13 @@
     {packaging pom}
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
     {description Jamal macro library to process text files}
-    {modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions)=jamal-$M,}jamal-all}
-    {license|The Apache License, Version 2.0|http://www.apache.org/licenses/LICENSE-2.0.txt}
+    {modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,asciidoc258)=jamal-$M,}jamal-all}
+    {license|The Apache License, Version 2.0|https://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
     {github|verhas|jamal}
     {properties|
         {property :project.build.sourceEncoding:UTF-8}
+        {property :maven.plugin.validation:VERBOSE}
     }
     {distributionManagement|
         {snapshotRepository |ossrh|https://oss.sonatype.org/content/repositories/snapshots}
@@ -83,6 +84,9 @@
                     {GAV :org.apache.maven.plugins:maven-surefire-plugin:{SUREFIRE_PLUGIN_VERSION}}
                 }
                 {plugin|
+                    {GAV :org.slf4j:slf4j-api:{SLF4J}}
+                }
+                {plugin|
                       {GAV :org.sonatype.plugins:nexus-staging-maven-plugin:{SONATYPE_PLUGIN_VERSION}}
                       {extensions :true}
                       {configuration|
@@ -91,6 +95,38 @@
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                       }
                 }
+<plugin>
+<groupId>org.sahli.asciidoc.confluence.publisher</groupId>
+<artifactId>asciidoc-confluence-publisher-maven-plugin</artifactId>
+<version>0.17.1</version>
+<configuration>
+<asciidocRootFolder>.</asciidocRootFolder>
+<sourceEncoding>UTF-8</sourceEncoding> <!-- default -->
+<rootConfluenceUrl>https://javax0.atlassian.net/wiki/</rootConfluenceUrl>
+<skipSslVerification>false</skipSslVerification>
+<maxRequestsPerSecond>10</maxRequestsPerSecond>
+<spaceKey>asciidoc</spaceKey>
+<ancestorId>262145</ancestorId>
+<serverId>confluence</serverId>
+<pageTitlePrefix xml:space="preserve">Doc :: </pageTitlePrefix>
+<pageTitleSuffix xml:space="preserve"> [{VERSION}]</pageTitleSuffix>
+<versionMessage>Version {VERSION}</versionMessage>
+<notifyWatchers>false</notifyWatchers>
+<attributes>
+<version>{VERSION}</version>
+<someOtherKey>value</someOtherKey>
+</attributes>
+</configuration>
+<executions>
+<execution>
+<id>publish-documentation</id>
+<goals>
+<goal>publish</goal>
+</goals>
+<phase>site</phase>
+</execution>
+</executions>
+</plugin>
             }
         }
     }
@@ -98,7 +134,11 @@
         {@for [evalist] MODULE in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,all)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
         {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
+        {dependency|com.javax0.mavenDownload|mavenDownloader|{MAVEN_DOWNLOADER}}
         {dependency|org.mockito|mockito-core|{MOCKITO_VERSION}|test}
+        {dependency|com.javax0|refi|{REFI}}
+        {dependency|org.ow2.asm|asm|{ASM_VERSION}}
+        {dependency|org.ow2.asm|asm-tree|{ASM_VERSION}}
         }}
 
     {profiles|
@@ -118,3 +158,4 @@
         {end profile}
     }
 {end project}
+{@xmlFormat}

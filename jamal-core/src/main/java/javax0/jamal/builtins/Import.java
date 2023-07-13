@@ -3,9 +3,10 @@ package javax0.jamal.builtins;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,7 +58,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  * }</pre>
  */
 @Macro.Stateful
-public class Import implements Stackable {
+public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
     private final List<Set<String>> importedAlready = new ArrayList<>();
 
     /**
@@ -72,9 +73,10 @@ public class Import implements Stackable {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         var position = input.getPosition();
-        final var top = Params.<Boolean>holder(null, "top").asBoolean();
-        final var noCache = Params.<Boolean>holder(null, "noCache").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(top, noCache).parse(input);
+        final var scanner = newScanner(input, processor);
+        final var top = scanner.bool(null, "top");
+        final var noCache = scanner.bool(null, "noCache");
+        scanner.done();
         if (top.is()) {
             while (position.parent != null) {
                 position = position.parent;

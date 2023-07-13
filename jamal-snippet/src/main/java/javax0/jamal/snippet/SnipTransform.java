@@ -5,7 +5,6 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,24 +55,24 @@ public class SnipTransform implements Macro {
      */
     private class Parameters {
         // parameter that lists the actions in the order they should be performed. The list is comma delimited.
-        final Params.Param<String> actions = Params.holder(null, "action", "actions").orElse("").asString();
+        final Params.Param<String> actions = Params.holder(null, "action", "actions").defaultValue("").asString();
         // parameters of the killLines macro
-        final Params.Param<Pattern> pattern = Params.holder(null, "kill", "pattern").orElse("^\\s*$").asPattern();
+        final Params.Param<Pattern> pattern = Params.holder(null, "kill", "pattern").defaultValue("^\\s*$").asPattern();
         final Params.Param<Boolean> keep = Params.<Boolean>holder(null, "keep").asBoolean();
         // parameters for the number lines macro
-        final Params.Param<String> format = Params.holder(null, "format").orElse("%d. ").asString();
-        final Params.Param<Integer> start = Params.holder(null, "start").orElseInt(1);
-        final Params.Param<Integer> step = Params.holder(null, "step").orElseInt(1);
+        final Params.Param<String> format = Params.holder(null, "format").defaultValue("%d. ").asString();
+        final Params.Param<Integer> start = Params.holder(null, "start").defaultValue(1);
+        final Params.Param<Integer> step = Params.holder(null, "step").defaultValue(1);
         // parameters for reflow
-        final Params.Param<Integer> width = Params.holder(null, "width").orElseInt(0);
+        final Params.Param<Integer> width = Params.holder(null, "width").defaultValue(0);
         // parameters for replaceLines
         final Params.Param<List<String>> replace = Params.holder(null, "replace").asList(String.class);
         final Params.Param<Boolean> detectNoChange = Params.holder(null, "detectNoChange").asBoolean();
         // parameters for skipping lines
-        final Params.Param<Pattern> skipStart = Params.<Pattern>holder(null, "skip").orElse("skip").asPattern();
-        final Params.Param<Pattern> skipEnd = Params.<Pattern>holder(null, "endSkip").orElse("end\\s+skip").asPattern();
+        final Params.Param<Pattern> skipStart = Params.<Pattern>holder(null, "skip").defaultValue("skip").asPattern();
+        final Params.Param<Pattern> skipEnd = Params.<Pattern>holder(null, "endSkip").defaultValue("end\\s+skip").asPattern();
         // parameters for trim
-        final Params.Param<Integer> margin = Params.<Integer>holder(null, "margin", "trim").orElseInt(0);
+        final Params.Param<Integer> margin = Params.<Integer>holder(null, "margin", "trim").defaultValue(0);
         final Params.Param<Boolean> trimVertical = Params.<Boolean>holder(null, "trimVertical").asBoolean();
         final Params.Param<Boolean> verticalTrimOnly = Params.<Boolean>holder(null, "verticalTrimOnly", "vtrimOnly").asBoolean();
         final Params.Param<Integer> tabSize = Params.<Integer>holder("tabSize", "tab").asInt();
@@ -83,10 +82,9 @@ public class SnipTransform implements Macro {
 
         private void parse(final Params.ExtraParams extraParams, final Input in, final Processor processor) throws BadSyntax {
             if (extraParams == null) {
-                // there is no '(' and ')' around the parameters
-                Scan.using(processor)
+                // there are no '(' and ')' around the parameters
+                Params.using(processor)
                         .from(SnipTransform.this)
-                        .firstLine()
                         .keys(actions, pattern, keep, format, start, step, width, replace, detectNoChange,
                                 skipStart, skipEnd, margin, trimVertical, verticalTrimOnly, tabSize, ranges)
                         .parse(in);
@@ -100,10 +98,6 @@ public class SnipTransform implements Macro {
 
         }
 
-        Parameters(final Input in, final Processor processor) throws BadSyntax {
-            this(null, in, processor);
-        }
-
         Parameters(final Params.ExtraParams extraParams, final Input in, final Processor processor) throws BadSyntax {
             parse(extraParams, in, processor);
 
@@ -113,9 +107,7 @@ public class SnipTransform implements Macro {
             checkMissingActions();
 
             for (final String action : actionsSet) {
-                if (!knownActions.contains(action)) {
-                    throw new BadSyntax("Unknown action '" + action + "'");
-                }
+                BadSyntax.when(!knownActions.contains(action), "Unknown action '%s'", action);
             }
         }
 
@@ -128,9 +120,7 @@ public class SnipTransform implements Macro {
             }
             unaliasActions(actionsList);
             final var actionsSet = new LinkedHashSet<>(actionsList);
-            if (actionsSet.size() != actionsList.size()) {
-                throw new BadSyntax("Duplicate action(s) in " + actions.get());
-            }
+            BadSyntax.when(actionsSet.size() != actionsList.size(), "Duplicate action(s) in %s", actions.get());
             return actionsSet;
         }
 
@@ -258,11 +248,8 @@ public class SnipTransform implements Macro {
                 final var action = e.getKey();
                 if (!actionsSet.contains(action)) {
                     for (final var param : e.getValue()) {
-                        if (param.isPresent()) {
-                            throw new BadSyntax(
-                                    String.format("'%s' can be used only when '%s' specified as action or parameter.",
-                                            param.name(), action));
-                        }
+                        BadSyntax.when(param.isPresent(), () -> String.format("'%s' can be used only when '%s' specified as action or parameter.",
+                                param.name(), action));
                     }
                 }
             }

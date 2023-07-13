@@ -6,7 +6,8 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.IntegerParameter;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -17,7 +18,7 @@ import java.io.FileInputStream;
 import java.util.List;
 import java.util.OptionalInt;
 
-public class MacroDocxPicture implements Macro {
+public class MacroDocxPicture implements Macro, Scanner {
 
     private static class CallBack implements XWPFContext.DocxIntermediaryCallBack {
         final static List<Object> types = List.of(
@@ -119,7 +120,7 @@ public class MacroDocxPicture implements Macro {
         }
     }
 
-    private static OptionalInt optional(Params.Param<Integer> param) throws BadSyntax {
+    private static OptionalInt optional(IntegerParameter param) throws BadSyntax {
         if (param.isPresent()) {
             return OptionalInt.of(param.get());
         } else {
@@ -157,20 +158,21 @@ public class MacroDocxPicture implements Macro {
      */
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+        final var scanner = newScanner(in, processor);
         // tag::picture_options[]
-        final var width = Params.<Integer>holder(null, "width").asInt();
+        final var width = scanner.number(null, "width");
         // can define the width of the picture.
         // The default value is the actual width of the picture, or a scaled width in case the height is defined and the picture is not distorted.
-        final var height = Params.<Integer>holder(null, "height").asInt();
+        final var height = scanner.number(null, "height");
         // can define the height of the picture.
         // The default value is the actual height of the picture, or a scaled height in case the width is defined and the picture is not distorted.
-        final var distorted = Params.<Boolean>holder(null, "distort", "distorted").asBoolean();
+        final var distorted = scanner.bool(null, "distort", "distorted");
         // can define if the picture is distorted or not.
         // If a picture is not distorted and only one of the `width` and `height` is defined, the non-defined parameter will be calculated.
-        // In this case the picture aspect ratio is preserved.
+        // In this case, the picture aspect ratio is preserved.
         // When this option is used and either `width` or `height` is defined, the other parameter will keep the value given by the picture itself.ß
         // end::picture_options[]
-        Scan.using(processor).from(this).between("()").keys(width, height, distorted).parse(in);
+        scanner.done();
         var fileName = FileTools.absolute(in.getReference(), in.toString().trim());
         final var context = XWPFContext.getXWPFContext(processor);
         context.register(new CallBack(new File(fileName), optional(width), optional(height), distorted.is()));

@@ -1,0 +1,79 @@
+= Jamal Java Integration Module
+{%@snip:collect from="./src/main/java"%}
+
+The Jamal Java integration module is an experimental module allowing Jamal source to include Java classes implementing built-in macros.
+The macros
+
+* define
+
+** Java source classes supporting the macros,
+
+** java source classes implementing the macros,
+
+** module info file,
+
+* compile and load the classes and register the macros.
+{%#define MACRO_NS={%@snip MACRO_NS%}%}
+The JavaSource from the different macros are collected into a user-defined macro.
+The name of this macro is `{%MACRO_NS%}{%@snip DEFAULT_ID%}`.
+Every macro uses the option `id` to define the name of the macro.
+That way multiple Java macros can be built up and then later compiled and loaded.
+The macros use the first line of the input to collect the option and the rest of the lines is the input containing the Java source.
+
+== Security
+
+The use of this macro package poses several security risk.
+If you configure your Jamal installation to have this package on the class path then open only Jamal sources which come from a trusted source.
+
+You can also use this module loading it dynamically using the `maven:load` macro.
+
+
+{%#define macro($x)=`{%MACRO_NS%}$x`%}
+== Macros
+
+=== {%macro class%}
+
+Define a Java class.
+This class will be compiled and loaded, but will not be registered as a macro.
+
+=== {%macro macro%}
+
+Define a Java class.
+This class will be compiled, loaded, and registered as a macro.
+
+=== {%macro moduleinfo%} or {%macro moduleInfo%}
+
+Define a module info file.
+If the content of the module info is empty then a default module info file is created.
+If this macro is not used then no module info file is created.
+
+The default module-info file is:
+{%@snip:check id="addDefaultModuleInfo" hash="47e01f1f"%}
+
+[source,java]
+----
+module A'time' {
+    requires jamal.api;
+    exports 'package_1';
+    ...
+    exports 'package_n';
+  }
+----
+
+Here the `'time'` is the current time in milliseconds.
+The `'package_1'` to `'package_n'` are the packages of the Java classes defining macros.
+
+You can define only one module info for one set of sources.
+
+=== {%macro load%}
+
+Compile all the classes, load them and register the macros.
+The class loader will load the compiled classes first reversing the delegation order.
+This ensures that the classes already loaded and used in the application are defined in the source are loaded.
+Since the instances of the macros are registered in the macro register using the same name will not override the existing macros.
+Even though this is guaranteed, it is better avoid using the same name for different macros.
+
+== {%MACRO_NS%}
+{%@snip:check id=MACRO_NS hash="ca6e4dcf"%}
+
+The macro prefix `{%MACRO_NS%}` stands for Java Built-In Macros.

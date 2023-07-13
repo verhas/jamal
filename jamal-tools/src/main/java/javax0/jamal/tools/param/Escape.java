@@ -3,7 +3,7 @@ package javax0.jamal.tools.param;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 
-public class Escape {
+class Escape {
     private static char octal(Input input, int maxLen) {
         int i = maxLen;
         int occ = 0;
@@ -18,11 +18,21 @@ public class Escape {
     private static final String escapes = "btnfr\"'\\";
     private static final String escaped = "\b\t\n\f\r\"'\\";
 
+    /**
+     * Handle the escape sequence. The escape sequence is
+     *
+     * <ul>
+     *      <li>backslash and a 'b', 't', 'n', 'f', 'r', '"', '\' or an apostrophe, or</li>
+     *      <li>backslash and 2 or 3 octal characters.</li>
+     * </ul>
+     *
+     * @param input  the input string
+     * @param output the output string where the escaped character is appended
+     * @throws BadSyntax if the escape sequence is invalid
+     */
     static void handleEscape(Input input, StringBuilder output) throws BadSyntax {
         input.deleteCharAt(0);
-        if (input.length() == 0) {
-            throw new BadSyntax("Source ended inside a string.");
-        }
+        BadSyntax.when(input.length() == 0, "Source ended inside a string.");
         final var nextCh = input.charAt(0);
         final int esindex = escapes.indexOf(nextCh);
         if (esindex == -1) {
@@ -41,9 +51,8 @@ public class Escape {
 
     static void handleNormalCharacter(Input input, StringBuilder output) throws BadSyntax {
         final char ch = input.charAt(0);
-        if (ch == '\n' || ch == '\r') {
-            throw new BadSyntax("String not terminated before eol:\n" + input.substring(1, Math.min(input.length(), 60)) + "...");
-        }
+        BadSyntax.when(ch == '\n' || ch == '\r', () -> String.format("String not terminated before eol:\n%s...",
+                input.substring(1, Math.min(input.length(), 60))));
         output.append(ch);
         input.deleteCharAt(0);
     }

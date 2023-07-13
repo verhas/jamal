@@ -1,0 +1,28 @@
+{@sep 〖〗}\
+#!/bin/sh
+
+echo Integration test starts
+mkdir -p .m2
+mkdir -p .m2/repository
+git clone https://github.com/verhas/jamal.git
+cd jamal
+mvn clean install
+echo <<EOT
+
++-----------------------------------------------------------------------------------------------------------------------
+BUILD HAS FINISHED
+
+INTEGRATION TESTS START...
++-----------------------------------------------------------------------------------------------------------------------
+EOT
+
+mkdir -p ~/.jamal
+chmod 0700 ~/jamal/jamal.sh
+〖@comment〗
+cd jamal-maven-load
+〖@include [lines=3..inf] ../../jamal-maven-load/it.sh.jam〗
+cd ../jamal-test/IT_DOCKER
+
+〖@include [lines=2..inf] test_ruby.sh.jam〗
+〖@include [lines=2..inf] test_groovy.sh.jam〗
+〖@include [lines=2..inf] test_scriptbasic.sh.jam〗

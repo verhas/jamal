@@ -7,8 +7,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -29,21 +28,19 @@ import java.util.List;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
-public class XmlInsert implements Macro {
+public class XmlInsert implements Macro, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var pos = in.getPosition();
-        final var xpath = Params.<String>holder("xpath", "path");
-        final var into = Params.<String>holder("id", "to", "into");
-        final var needed = Params.<Boolean>holder("ifneeded", "optional").asBoolean();
-        final var tabsize = Params.holder("tabsize").orElseInt(4);
-        skipWhiteSpaces(in);
-        Scan.using(processor).from(this).between("()").keys(xpath, into,  needed, tabsize).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var xpath = scanner.str("xpath", "path");
+        final var into = scanner.str("id", "to", "into");
+        final var needed = scanner.bool("ifneeded", "optional");
+        final var tabsize = scanner.number("tabsize").defaultValue(4);
+        scanner.done();
         skipWhiteSpaces(in);
         final var xml = in.toString();
-        if (!xpath.isPresent()) {
-            throw new BadSyntax("The 'xpath' parameter is mandatory in '" + getId() + "'");
-        }
+        BadSyntax.when(!xpath.isPresent(),  "The 'xpath' parameter is mandatory in '%s'", getId());
         final var xpathString = xpath.get();
         if (into.isPresent()) {
             final var intoDocument = processor.getRegister().getUserDefined(into.get())
@@ -65,14 +62,17 @@ public class XmlInsert implements Macro {
         return "";
     }
 
-    static void insert(Document intoDocument, String xpath, String xml, boolean neeed) throws Exception {
+    static void insert(Document intoDocument, String xpath, String xml, boolean need) throws Exception {
         final var dbFactory = DocumentBuilderFactory.newInstance();
         final var dBuilder = dbFactory.newDocumentBuilder();
         final var doc = dBuilder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
         final var xPathEngine = XPathFactory.newInstance().newXPath();
         final var node = (Node) xPathEngine.evaluate(xpath, intoDocument, XPathConstants.NODE);
+        if( node == null ){
+            throw new BadSyntax("The XPath expression '"+xpath+"' did not match any node in the document.");
+        }
         final var importNode = intoDocument.importNode(doc.getFirstChild(), true);
-        if (neeed) {
+        if (need) {
             final var name = importNode.getNodeName();
             final var children = node.getChildNodes();
             final var nrChilds = children.getLength();

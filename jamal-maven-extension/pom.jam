@@ -24,10 +24,11 @@
 
 
     {dependencies#
-        {#for MODULE in ({modules:CORE},{modules:MACROS})=
+        {#for MODULE in ({modules:DEFAULT_JAMAL_MODULES})=
             {dependency|{GROUPID}|jamal-MODULE|{VERSION}}}
         {#for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
         {dependency :org.apache.maven:maven-core:{MAVEN_CORE_VERSION}:provided}
     }
 {end project}
+{@xmlFormat}

@@ -11,20 +11,21 @@ import javax0.jamal.api.Xml.CDATATEXT;
 import javax0.jamal.api.Xml.TAG;
 import javax0.jamal.api.Xml.TEXT;
 import javax0.jamal.engine.StackLimiter;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 
 import java.util.List;
 import java.util.Map;
 
 @Macro.Stateful
-public class Xml implements Macro, InnerScopeDependent {
+public class Xml implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        final var topTag = Params.<String>holder("yamlXmlTopTag", "tag").orElse("xml");
-        final var attributes = Params.<String>holder("yamlXmlAttributes", "attributes").orElseNull();
-        Params.using(processor).from(this).keys(clone, copy, topTag, attributes).between("()").parse(in);
+        final var scanner = newScanner(in,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        final var topTag = scanner.str("yamlXmlTopTag", "tag").defaultValue("xml");
+        final var attributes = scanner.str("yamlXmlAttributes", "attributes").defaultValue(null);
+        scanner.done();
 
         final var yamlObject = Resolve.getYaml(processor, in.toString().trim());
         Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
@@ -65,9 +66,7 @@ public class Xml implements Macro, InnerScopeDependent {
             final var tag = e.getKey();
             final var value = e.getValue();
             if (value instanceof ATTR) {
-                if (closed) {
-                    throw new BadSyntax("!!javax0.jamal.api.Xml$Attr cannot follow content node");
-                }
+                BadSyntax.when(closed, "!text cannot follow content node");
                 final var attrs = (ATTR) value;
                 if (attrs.size() != 0) {
                     attributesTo(sb, attrs);
@@ -80,7 +79,7 @@ public class Xml implements Macro, InnerScopeDependent {
                     closed = true;
                 }
                 if (value instanceof TEXT) {
-                    sb.append(escape(value.toString()));
+                    sb.append(escape(""+value));
                     ended = true;
                 } else if (value instanceof CDATATEXT) {
                     sb.append("<![CDATA[").append(value).append("]]>");
@@ -96,7 +95,7 @@ public class Xml implements Macro, InnerScopeDependent {
                     listToXml(sb, tag, tag.substring(0, tag.length() - 1), (List) value);
                 } else {
                     sb.append("<").append(tag).append(">");
-                    sb.append(escape(value.toString()));
+                    sb.append(escape(""+value));
                 }
             }
             if (closed && !ended) {
@@ -112,17 +111,11 @@ public class Xml implements Macro, InnerScopeDependent {
         boolean closed = false;
         for (final var e : list) {
             if (e instanceof ATTR) {
-                if (closed) {
-                    throw new BadSyntax("!!javax0.jamal.api.Xml$ATTR cannot follow content node.");
-                }
+                BadSyntax.when(closed, "!attr cannot follow content node.");
                 attributesTo(sb, (Map<String, String>) e);
             } else if (e instanceof TAG) {
-                if (closed) {
-                    throw new BadSyntax("!!javax0.jamal.api.Xml$TAG cannot follow content node.");
-                }
-                if( tagged ){
-                    throw new BadSyntax("!!javax0.jamal.api.Xml$TAG must not be repeated.");
-                }
+                BadSyntax.when(closed, "!tag cannot follow content node.");
+                BadSyntax.when(tagged, "!tag must not be repeated.");
                 tagged = true;
                 tagSingular = ((TAG) e).id;
             } else {
@@ -130,16 +123,13 @@ public class Xml implements Macro, InnerScopeDependent {
                     sb.append(">");
                     closed = true;
                 }
-                if (tagSingular.length() == 0) {
-                    throw new BadSyntax("Cannot create an XML list for the field '" + tagPlural + "' it is too short and no !!javax0.jamal.api.Xml$TAG was present.");
-                }
+                BadSyntax.when(tagSingular.length() == 0,  "Cannot create aní XML list for the field '%s' it is too short and no !tag was present.", tagPlural);
                 sb.append("<").append(tagSingular);
                 if (e instanceof Map<?, ?>) {
                     mapToXml(sb, (Map) e);
                 } else if (e instanceof List<?>) {
-                    if (tagSingular.length() < 2) {
-                        throw new BadSyntax("Cannot create an XML list for the field '" + tagSingular + "'");
-                    }
+                    final String ts = tagSingular;
+                    BadSyntax.when(tagSingular.length() < 2,  "Cannot create an XML list for the field '%s'", ts);
 
                     listToXml(sb, tagSingular, tagSingular.substring(0, tagSingular.length() - 1), (List) e);
                 } else if (e instanceof CDATA) {

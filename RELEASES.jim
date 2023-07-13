@@ -1,0 +1,32 @@
+{@comment }
+This file defines symbolic names for upcoming releases.
+
+During the development of the release 1.12.7 it was not sure if it will be a minor release or a major one.
+The documentation many times refers to this release as 1.12.7, but it is not sure if it will be 1.12.7 or 1.13.0 or 2.0.0
+
+To avoid global search and replace here we define symbolic names for the releases in the future.
+Past releases, when this practice was not used are left intact.
+After all, they are history and history does not change (rip Orwell).
+
+The symbolic names we use are city names.
+The first "next" release is named after the city where I lived in most of the my life.
+
+{@define RELEASE:BUDAPEST=2.0.0}
+
+Csepel is part of Budapest since January 1, 1950.
+Before that it was a separate town.
+It is district XXI now.
+
+{@define RELEASE:CSEPEL=2.0.1}
+
+District XXIII is Soroksar.
+
+{@define RELEASE:SOROKSAR=2.0.2}
+
+{@define RELEASE:BERLIN=2.1.0}
+
+{@define RELEASE:MELBOURNE=2.2.0}
+
+{@define RELEASE:MANAUS=2.3.0}
+
+{@define RELEASE:IZMIR=2.4.0}

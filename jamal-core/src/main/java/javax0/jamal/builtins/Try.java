@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Option;
 
 import java.util.Objects;
 
@@ -15,6 +16,10 @@ import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Try implements Macro {
+
+    // snipline tryoption filter="(.*)"
+    public static final String CAUGHT_ERROR_OPTION = "try$caught$error";
+
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final boolean query = firstCharIs(in, QUERY);
@@ -25,11 +30,17 @@ public class Try implements Macro {
         skipWhiteSpaces(in);
         final var markerStart = processor.getRegister().test();
         final int err = processor.errors().size();
+        String retval;
+        final var caught = new Option(CAUGHT_ERROR_OPTION);
+        processor.define(caught);
         try {
-            return processInput(in, processor, query, err);
+            retval = processInput(in, processor, query, err);
+            caught.set(false);
         } catch (BadSyntax bs) {
-            return handleBadSyntax(processor, query, report, markerStart, err, bs);
+            retval = handleBadSyntax(processor, query, report, markerStart, err, bs);
+            caught.set(true);
         }
+        return retval;
     }
 
     /**

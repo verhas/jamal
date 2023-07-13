@@ -1,24 +1,9 @@
-{%@for [separator="\n" evalist skipEmpty lenient] ($T,$M,$A) in `H`
+{%@comment %}
 
-{%@replaceLines replace="~^(\\w+)\\|~$1Statement|~"
-Return|ReturnValue
-Expression|Expression
-Yield|Expression
-Assert|AssertCondition%}
-{%@replaceLines replace="~^(\\w+)\\|~$1Expression|~"
-Resource|Expression%}
-ResourceVariable|Initializer
-{%@replaceLines replace="~^(\\w+)\\|~$1Expression|~"
-Polyadic|Operands|[0]
-InstanceOf|Operand
-Parenthesized|Expression
-Conditional|Condition %}
+{%@bir This is a sample asciidoc file that references a sample snippet from snips.sh%}
 
-`H`=
-  if( element instanceof Psi$T ){
-      return ((Psi$T)element).get$M()$A;
-      }
-%}
-
-
+[source,tetx]
+----{%#bir (ratios="+ 0 1 1 2 1.9")
+{%@include [verbatim] https://snips.sh/f/Xoc2u5J6pT?r=1%}%}
+----
 

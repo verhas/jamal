@@ -30,10 +30,7 @@ public class Regex {
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var part = getParts(in);
-            if (part.length != 3) {
-                throw new BadSyntax("replaceAll needs exactly 3 parts separated but the input has " +
-                    part.length);
-            }
+            BadSyntax.when(part.length != 3,  "replaceAll needs exactly 3 parts separated but the input has %d", part.length);
             return part[0].replaceAll(part[1], part[2]);
         }
 
@@ -65,9 +62,7 @@ public class Regex {
 
         @Override
         public String evaluate(String... parameters) throws BadSyntax {
-            if (parameters.length == 0) {
-                throw new BadSyntax("The generated macro " + name + " needs at least one argument");
-            }
+            BadSyntax.when(parameters.length == 0,  "The generated macro %s needs at least one argument", name);
             var command = parameters[0].trim();
             final String arg;
             if (parameters.length > 1) {
@@ -152,10 +147,7 @@ public class Regex {
             final var id = fetchId(in);
             skipWhiteSpaces(in);
             final var part = getParts(in, 2);
-            if (part.length != 2) {
-                throw new BadSyntax("matcher needs exactly 3 parts separated but the input has " +
-                    part.length + 1);
-            }
+            BadSyntax.when(part.length != 2,  "matcher needs exactly 3 parts separated but the input has %d%d", part.length, 1);
             var pattern = Pattern.compile(part[0]);
             var matcher = pattern.matcher(part[1]);
             var udm = new GroupUserDefinedMacro(id, matcher);

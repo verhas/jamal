@@ -1,0 +1,16 @@
+{%@comment fromFile%}\
+== Jamal OpenAI module Completion API
+{%@import samples.jim%}
+* Do some editing on the text
+{%@define openai:seed=36%}\
+{%@define openai:model=text-davinci-edit-001%}\
+
+{%@define ABRAKA_DABRA=He was not hey I want  able to finish the task that gibberish that she gave her the day before yesterday%}
+{%@define INSTRUCTION=rewrite the sentence to gender-neutral also fixing errors, removing repetitions and making it more concise%}
+* *input:* {%ABRAKA_DABRA%}
+* *instruction:* {%INSTRUCTION%}
+* *response:* __{%#json:define edit_response={%openai:edits |
+                                                   "input": "{%ABRAKA_DABRA%}",
+                                                   "instruction" : "{%INSTRUCTION%}",
+                                                   "temperature": 0.9
+%}%}{%@json:get edit_response/choices/0/text|edit_response%}__

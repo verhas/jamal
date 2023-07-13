@@ -16,3 +16,21 @@ Result is literal 'true' when ? and there is an error:
 "{x} is evaluated before 'try' to {undefinedMacro} and then try evaluates that":
   Input: "{@define ~ x={undefinedMacro}}{#try? {x}}"
   Output: "false"
+"Catch is executing when there was an error during the last try":
+  Input: "{@try {undefinedMacro}}{@catch 1}"
+  Output: "1"
+"Catch is not executing when there was no error during the last try even if there was an error before":
+  Input: "{@try {undefinedMacro}}{@try 1}{@catch try 1 is evaluated and this clears the error, this will not be evaluated}"
+  Output: "1"
+"Catch is not executing when the error was in a block":
+  Input: "{#ident {@try {undefinedMacro}}}{@catch abraka dabara will not be evaluated}"
+  Output: ""
+"Catch is executing in the block and after the block when there are two errors":
+  Input: "{@try {undefinedMacro}}{#ident {@try {undefinedMacro}}{@catch 2}}{@catch 3}"
+  Output: "23"
+"Catch is not executing twice after one error, only once":
+  Input: "{@try {undefinedMacro}}{@catch 1}{@catch 2}"
+  Output: "1"
+"Catch is executing inside a block catching an error from an outside block, but does not clear the error":
+  Input: "{@try {undefinedMacro}}{#ident {@catch 1}}{@catch 2}"
+  Output: "12"

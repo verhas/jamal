@@ -1,40 +1,18 @@
 
-  if( element instanceof PsiReturnStatement ){
-      return ((PsiReturnStatement)element).getReturnValue();
-      }
 
-  if( element instanceof PsiExpressionStatement ){
-      return ((PsiExpressionStatement)element).getExpression();
-      }
+**Th**is is a **sa**mple **asc**iidoc **fi**le **th**at **refe**rences a **sa**mple **sn**ippet **fr**om **sn**ips.**s**h
 
-  if( element instanceof PsiYieldStatement ){
-      return ((PsiYieldStatement)element).getExpression();
-      }
+[source,tetx]
+----
+**Developer** **Certific**ate **of** **Origin**
+**Ver**sion 1.1
 
-  if( element instanceof PsiAssertStatement ){
-      return ((PsiAssertStatement)element).getAssertCondition();
-      }
+**Copyr**ight (C) 2004, 2006 **T**he **Linux** **Found**ation **and** **i**ts **contributors**.
 
-  if( element instanceof PsiResourceExpression ){
-      return ((PsiResourceExpression)element).getExpression();
-      }
+**Every**one **is** **permitted** **to** **co**py **and** **distribute** **verbatim** **copies** **of** **th**is
+**license** **docu**ment, **but** **chang**ing **it** **is** **n**ot **allowed**.
 
-  if( element instanceof PsiResourceVariable ){
-      return ((PsiResourceVariable)element).getInitializer();
-      }
 
-  if( element instanceof PsiPolyadicExpression ){
-      return ((PsiPolyadicExpression)element).getOperands()[0];
-      }
+**Developer**'s **Certific**ate **of** **Origin** 1.1
 
-  if( element instanceof PsiInstanceOfExpression ){
-      return ((PsiInstanceOfExpression)element).getOperand();
-      }
-
-  if( element instanceof PsiParenthesizedExpression ){
-      return ((PsiParenthesizedExpression)element).getExpression();
-      }
-
-  if( element instanceof PsiConditionalExpression ){
-      return ((PsiConditionalExpression)element).getCondition ();
-      }
+----

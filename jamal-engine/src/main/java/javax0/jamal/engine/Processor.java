@@ -25,6 +25,9 @@ import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -76,8 +79,10 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public Optional<Debugger.Stub> getDebuggerStub() {
-        return Optional.ofNullable(debuggerStub);
+        return Optional.of(debuggerStub);
     }
+
+    private final BadSyntax initializationException;
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -100,14 +105,29 @@ public class Processor implements javax0.jamal.api.Processor {
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s ->
                 optionsStore.addOptions(getParts(makeInput(s, new Position(EnvironmentVariables.JAMAL_OPTIONS_ENV, 1, 1))))
         );
-        try {
-            macros.separators(macroOpen, macroClose);
-        } catch (BadSyntax badSyntax) {
-            throw new IllegalArgumentException(
-                    "neither the macroOpen nor the macroClose arguments to the constructor Processor() can be null");
-        }
         Macro.getInstances().forEach(macros::define);
         debugger = DebuggerFactory.build(this);
+        URL url = null;
+        try {
+            macros.separators("{", "}");
+            final var urls = getClass().getClassLoader().getResources(GLOBAL_INCLUDE_RESOURCE);
+            while (urls.hasMoreElements()) {
+                url = urls.nextElement();
+                try (final var is = url.openStream()) {
+                    final var in = makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8), new Position("res:" + GLOBAL_INCLUDE_RESOURCE, 1, 1));
+                    process(in);
+                }
+            }
+            macros.separators(macroOpen, macroClose);
+        } catch (IOException | RuntimeException e) {
+            System.out.printf("Cannot load the library files from .jim: from %s%n", url);
+            initializationException = new BadSyntax("", e);
+            return;
+        } catch (BadSyntax e) {
+            initializationException = e;
+            return;
+        }
+        initializationException = null;
     }
 
     public Processor(String macroOpen, String macroClose) {
@@ -126,12 +146,17 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, String... params) throws BadSyntax {
-        return newUserDefinedMacro(id, input, false, params);
+        return newUserDefinedMacro(id, input, false, false, params);
     }
 
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String... params) throws BadSyntax {
-        return new javax0.jamal.engine.UserDefinedMacro(this, id, input, verbatim, params);
+        return newUserDefinedMacro(id, input, verbatim, false, params);
+    }
+
+    @Override
+    public UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, boolean tailParameter, String... params) throws BadSyntax {
+        return new javax0.jamal.engine.UserDefinedMacro(this, id, input, verbatim, tailParameter, params);
     }
 
     @Override
@@ -157,6 +182,9 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public String process(final Input input) throws BadSyntax {
+        if (initializationException != null) {
+            throw initializationException;
+        }
         limiter.up();
         final var marker = macros.test();
         final var output = makeInput(input.getPosition());
@@ -352,9 +380,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 rawResult = evalUserDefinedMacro(qualifier.input, tr, qualifier);
                 locker.run();
                 if (qualifier.isVerbatim) {
-                    if (qualifier.postEvalCount > 0) {
-                        throw new BadSyntax("Verbatim and ! cannot be used together on a user defined macro.");
-                    }
+                    BadSyntax.when(qualifier.postEvalCount > 0, "Verbatim and ! cannot be used together on a user defined macro.");
                     tr.appendAfterEvaluation(rawResult);
                     popper.run();
                     return rawResult;
@@ -571,10 +597,8 @@ public class Processor implements javax0.jamal.api.Processor {
                 parameters[0] = process(input);
             } else {
                 skip(input, 1);
-                if (Character.isLetterOrDigit(separator)) {
-                    throw new BadSyntaxAt("Invalid separator character '" + separator + "' ", input.getPosition());
-                }
-                final Input[] paramInputs = splitParameterString(input, separator);
+                BadSyntaxAt.when(Character.isLetterOrDigit(separator), "Invalid separator character '" + separator + "' ", ref);
+                final Input[] paramInputs = splitParameterString(input, separator, expectedArgNr);
                 parameters = new String[paramInputs.length];
                 for (int i = 0; i < parameters.length; i++) {
                     parameters[i] = process(paramInputs[i]);
@@ -697,10 +721,7 @@ public class Processor implements javax0.jamal.api.Processor {
         while (i < output.length() && validIdChar(output.charAt(i))) {
             i++;
         }
-        if (i < output.length() && !Character.isWhitespace(output.charAt(i))) {
-            throw new BadSyntaxAt("Macro evaluated result user defined macro name contains the separator. Must not.",
-                    pos);
-        }
+        BadSyntaxAt.when(i < output.length() && !Character.isWhitespace(output.charAt(i)), "Macro evaluated result user defined macro name contains the separator. Must not.", pos);
     }
 
     /**
@@ -726,14 +747,16 @@ public class Processor implements javax0.jamal.api.Processor {
      * because of that then stay with version prior 1.2.0, e.g.: 1.1.0 and migrate your macros so that they do not use
      * tricks.
      *
-     * @param in        the input that starts after the first occurrence of the separator character
-     * @param separator the separator character
+     * @param in            the input that starts after the first occurrence of the separator character
+     * @param separator     the separator character
+     * @param expectedArgNr the expected number of arguments. If the number is negative, then the trailing parameters
+     *                      are parsed as a single string.
      * @return the parameter array as input, with correct positioning to where the parameters start
      * @throws BadSyntaxAt if the nesting of the macro opening and closing strings do not match. The implementation does
      *                     not check this purposefully. If there are unbalanced opening and closing strings it will not
      *                     be detected.
      */
-    private Input[] splitParameterString(final Input in, final char separator) throws BadSyntaxAt {
+    private Input[] splitParameterString(final Input in, final char separator, final int expectedArgNr) throws BadSyntaxAt {
         final var open = macros.open();
         final var close = macros.close();
         final var parameters = new ArrayList<Input>();
@@ -741,19 +764,18 @@ public class Processor implements javax0.jamal.api.Processor {
         final var pos = in.getPosition();
         int start = 0;
         int searchFrom = 0;
+        final boolean tailing = expectedArgNr < -1;
+        final int maxArgs = tailing ? -expectedArgNr : expectedArgNr;
         while (true) {
             final var separatorIndex = input.indexOf(separator, searchFrom);
-            if (separatorIndex == -1) {
+            if (separatorIndex == -1 || (parameters.size() == maxArgs - 1 && tailing)) {
                 checkForImbalance(input, searchFrom, pos);
                 appendTheLastParameter(parameters, input, start, pos);
                 break;
             }
             final var openIndex = input.indexOf(open, searchFrom);
             final var closeIndex = input.indexOf(close, searchFrom);
-            if (closeIndex < openIndex) {
-                throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                        pos);
-            }
+            BadSyntaxAt.when(closeIndex < openIndex, "Invalid macro nesting in the last argument of the user defined macro.", pos);
             if (openIndex == -1 || separatorIndex < openIndex) {
                 appendTheNextParameter(parameters, input, start, separatorIndex, pos);
                 start = separatorIndex + 1;
@@ -782,10 +804,7 @@ public class Processor implements javax0.jamal.api.Processor {
         var openIndex = input.indexOf(open, searchFrom);
         var closeIndex = input.indexOf(close, searchFrom);
         if (openIndex != -1) {
-            if (closeIndex < openIndex) {
-                throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                        pos);
-            }
+            BadSyntaxAt.when(closeIndex < openIndex, "Invalid macro nesting in the last argument of the user defined macro.", pos);
             while (true) {
                 openIndex = stepOverNestedMacros(input, openIndex, pos);
                 if (openIndex < input.length()) {
@@ -794,34 +813,37 @@ public class Processor implements javax0.jamal.api.Processor {
                 closeIndex = input.indexOf(close, openIndex);
                 openIndex = input.indexOf(open, openIndex);
                 if (openIndex == -1) {
-                    if (closeIndex != -1) {
-                        throw new BadSyntaxAt(
-                                "There are trailing macro closing strings in the last argument of the user defined macro.",
-                                pos);
-                    }
+                    BadSyntaxAt.when(closeIndex != -1, "There are trailing macro closing strings in the last argument of the user defined macro.", pos);
                     break;
                 }
             }
         } else {
-            if (input.indexOf(closeIndex, searchFrom) != -1) {
-                throw new BadSyntaxAt("Invalid macro nesting in the last argument of the user defined macro.",
-                        pos);
-            }
+            BadSyntaxAt.when(input.indexOf(closeIndex, searchFrom) != -1, "Invalid macro nesting in the last argument of the user defined macro.", pos);
         }
     }
 
-    private void appendTheNextParameter(final List<Input> parameters,
-                                        final String input,
-                                        final int start,
-                                        final int separatorIndex,
-                                        final Position pos) {
+    /**
+     * Appends the next parameter to the array list `parameters`. The parameter is the substring of the input string
+     * between the start index and the separator index.
+     *
+     * @param parameters     the list to append the new parameter to
+     * @param input          the input from which we gouge the parameter
+     * @param start          the start index of the parameter
+     * @param separatorIndex the index of the separator character
+     * @param pos            the position of the input. It gets forked for the returned new input object.
+     */
+    private static void appendTheNextParameter(final List<Input> parameters,
+                                               final String input,
+                                               final int start,
+                                               final int separatorIndex,
+                                               final Position pos) {
         parameters.add(makeInput(input.substring(start, separatorIndex), pos.fork()));
     }
 
-    private void appendTheLastParameter(final List<Input> parameters,
-                                        final String input,
-                                        final int start,
-                                        final Position pos) {
+    private static void appendTheLastParameter(final List<Input> parameters,
+                                               final String input,
+                                               final int start,
+                                               final Position pos) {
         if (start < input.length()) {
             parameters.add(makeInput(input.substring(start), pos.fork()));
         } else {
@@ -898,8 +920,8 @@ public class Processor implements javax0.jamal.api.Processor {
         final var closers = new LinkedList<>(openResources.keySet());
         try {
             currentlyClosing = true;
+            this.exceptions.clear();
             for (final var resource : closers) {
-                this.exceptions.clear();
                 try {
                     setAwares(resource, result);
                     resource.close();

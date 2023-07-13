@@ -4,8 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.poifs.crypt.HashAlgorithm;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -35,7 +34,7 @@ import java.util.function.Consumer;
  *
  * end::protect[]
  */
-public class MacroDocxProtect implements Macro {
+public class MacroDocxProtect implements Macro, Scanner.WholeInput {
     private static class CallBack implements XWPFContext.DocxTerminalCallBack {
         private XWPFDocument document;
         String password;
@@ -91,11 +90,12 @@ public class MacroDocxProtect implements Macro {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+        final var scanner = newScanner(in, processor);
         // tag::protect_options[]
-        final var password = Params.<String>holder(null, "pass", "password").asString();
+        final var password = scanner.str(null, "pass", "password");
         // This option specifies the password needed to switch off the protection.
-        // If option is not specified then the user can switch off the protection with just a few mouse clicks.
-        final var algo = Params.<String>holder(null, "alg", "algo", "algorithm").asString();
+        // If the option is not specified, then the user can switch off the protection with just a few mouse clicks.
+        final var algo = scanner.str(null, "alg", "algo", "algorithm");
         // This option specifies the algorithm used to encode the password.
         // The name of the algorithm is the official ECMA name of the algorithm.
         // Any of the algorithms can be used implemented by the DOCX format and supported by the underlying Apache POI library.
@@ -115,27 +115,23 @@ public class MacroDocxProtect implements Macro {
         // * `RIPEMD-256`
         //
         // The list of algorithms may change in the future.
-        // To see the actual list of algorithms specify an invalid algorithm.
+        // To see the actual list of algorithms, specify an invalid algorithm.
         // The error will list all the currently available algorithms.
-        final var track = Params.<Boolean>holder(null, "track", "trackChanges").asBoolean();
+        final var track = scanner.bool(null, "track", "trackChanges");
         // Specify the protection level so that the document can be changed without changing the state of change tracking.
-        // Reasonably you want to have the tracking switched on.
+        // Reasonably, you want to have the tracking switched on.
         // To do that you can switch it on in the source document or use the `docx:trackChanges` macro without the `off` option.
-        final var readOnly = Params.<Boolean>holder(null, "read", "readOnly", "readonly").asBoolean();
+        final var readOnly = scanner.bool(null, "read", "readOnly", "readonly");
         // Specify the protection level so that the document is read only.
-        final var comments = Params.<Boolean>holder(null, "comments").asBoolean();
+        final var comments = scanner.bool(null, "comments");
         // Specify the protection level so that the user can edit only the comments.
-        final var forms = Params.<Boolean>holder(null, "forms").asBoolean();
+        final var forms = scanner.bool(null, "forms");
         // Specify the protection level so that the user can edit only the forms of the document.
         // end::protect_options[]
-        Scan.using(processor).from(this).tillEnd().keys(password, algo, track, readOnly, comments, forms).parse(in);
-        if (x(track.is()) + x(readOnly.is()) + x(comments.is()) + x(forms.is()) != 1) {
-            throw new BadSyntax("Exactly one of the protection types must be specified.");
-        }
+        scanner.done();
+        BadSyntax.when(x(track.is()) + x(readOnly.is()) + x(comments.is()) + x(forms.is()) != 1, "Exactly one of the protection types must be specified.");
         final var t = Type.of(x(track.is()) + x(readOnly.is()) * 2 + x(comments.is()) * 3 + x(forms.is()) * 4);
-        if (password.isPresent() != algo.isPresent()) {
-            throw new BadSyntax("The parameter 'algorithm' and 'password' must be used together.");
-        }
+        BadSyntax.when(password.isPresent() != algo.isPresent(), "The parameter 'algorithm' and 'password' must be used together.");
         final var context = XWPFContext.getXWPFContext(processor);
         final var callBack = new CallBack();
         callBack.t = t;

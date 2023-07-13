@@ -1,29 +1,29 @@
+{@options trimVertical}
 This file contains macros, which are used in readme files.
 These macros help embedding Jamal macro samples and run them.
 
-{%@options trimVertical%}
 
-{%@define sample(code)={%#define :lastCode=code%}[source]
+{@define sample(code)={#define :lastCode=code}[source]
 ----
-{%#trimLines
-code%}
-----%}
+{#trimLines
+code}
+----}
 
-{%@define output=[source]
+{@define output=[source]
 ----
-{%#trimLines trimVertical
-{%!#output {%lastCode%}%}%}
+{#trimLines trimVertical
+{!#output {lastCode}}}
 ----
-%}
+}
 
-{%@define untrimmedSample(code)={%@define :lastCode=code%}[source]
+{@define untrimmedSample(code)={@define :lastCode=code}[source]
 ----
-{%@trimLines verticalTrimOnly
-code%}
-----%}
+{@trimLines verticalTrimOnly
+code}
+----}
 
-{%@define untrimmedOutput=[source]
+{@define untrimmedOutput=[source]
 ----
-{%#output {%lastCode%}%}
+{#output {lastCode}}
 ----
-%}
+}

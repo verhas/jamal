@@ -1,0 +1,53 @@
+# Using Kroki service
+
+This is a simple demonstration of how you can include pictures using the Kroki service into a Markdown file.
+
+You can import the resource `kroki.jim` into your Markdown file.
+
+{%@import src/main/resources/kroki.jim%}
+
+
+The `kroki.jim` file contains macros that to include pictures in a Markdown file.
+
+After that, you can use the `kroki` macro to include pictures.
+
+{%kroki /KROKI_MD/plantuml/svg/
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: Another authentication Response
+%}
+
+{%kroki /STR/structurizr/svg/
+workspace {
+model {
+user = person "User"
+softwareSystem = softwareSystem "Software System" {
+webapp = container "Web Application" {
+user -> this "Uses!!!"
+}
+database = container "Database" {
+webapp -> this "Reads from and writes to"
+}
+}
+}
+views {
+systemContext softwareSystem {
+include *
+autolayout lr
+}
+container softwareSystem {
+include *
+autolayout lr
+}
+theme default
+}
+}
+%}
+
+Using Jamal, you can even use macros inside the picture descriptions.
+They will be processed before the picture is rendered.
+
+
+

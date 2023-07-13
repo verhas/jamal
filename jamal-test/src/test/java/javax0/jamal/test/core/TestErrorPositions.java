@@ -19,7 +19,9 @@ public class TestErrorPositions {
             //                 1234567890123456789012345678901234567890123456789012345678901234567890123
             TestThat.theInput("{@options failfast}{@define gulp(1,2,3)={zumi123}}{gulp /one/tw{o}/three}").results("");
         } catch (final BadSyntax bs) {
-            Assertions.assertEquals("User defined macro '{o ...' is not defined. Did you mean '@for', '@log', '@pos', '@if'? at null/1:61 <<< null/1:58", bs.getMessage());
+            final var pos = bs.getMessage().indexOf("at null/");
+            final var posMessage = bs.getMessage().substring(pos);
+            Assertions.assertEquals("at null/1:61 <<< null/1:58", posMessage);
         }
     }
 

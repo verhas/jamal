@@ -1,0 +1,84 @@
+[WARNING]
+--
+* User defined macro '/a ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/src/test/resources/sample.json.jam/1:6
+--
+{@sep /.}
+[WARNING]
+--
+* User defined macro '/a ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/src/test/resources/sample.json.jam/1:6
+--
+{a:"/a.",b:2}
+[WARNING]
+--
+* User defined macro '/a ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/src/test/resources/sample.json.jam/1:6
+--
+[source]
+----
+User defined macro '/a ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/src/test/resources/sample.json.jam/1:6
+javax0.jamal.api.BadSyntaxAt: User defined macro '/a ...' is not defined. Did you mean '@md', '@do', '@if'? at /Users/verhasp/github/jamal/jamal-test/src/test/resources/sample.json.jam/1:6
+	at javax0.jamal.engine.Processor.throwForUndefinedUdMacro(Processor.java:544)
+	at javax0.jamal.engine.Processor.evalUserDefinedMacro(Processor.java:502)
+	at javax0.jamal.engine.Processor.evalMacro(Processor.java:357)
+	at javax0.jamal.engine.Processor.processMacro(Processor.java:267)
+	at javax0.jamal.engine.Processor.process(Processor.java:174)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:338)
+	at javax0.jamal.asciidoc.JamalPreprocessor.runJamalInProcess(JamalPreprocessor.java:201)
+	at javax0.jamal.asciidoc.JamalPreprocessor.process(JamalPreprocessor.java:132)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy.process(PreprocessorProxy.java:94)
+	at org.asciidoctor.jruby.extension.processorproxies.PreprocessorProxy$INVOKER$i$2$0$process.call(PreprocessorProxy$INVOKER$i$2$0$process.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodTwoOrN.call(JavaMethod.java:1035)
+	at org.jruby.RubyMethod.call(RubyMethod.java:124)
+	at org.jruby.RubyMethod$INVOKER$i$call.call(RubyMethod$INVOKER$i$call.gen)
+	at org.jruby.internal.runtime.methods.JavaMethod$JavaMethodZeroOrOneOrTwoOrNBlock.call(JavaMethod.java:376)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther2:\=\{\}(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$block$parse$1(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:533)
+	at org.jruby.runtime.CompiledIRBlockBody.yieldDirect(CompiledIRBlockBody.java:151)
+	at org.jruby.runtime.BlockBody.yield(BlockBody.java:106)
+	at org.jruby.runtime.Block.yield(Block.java:188)
+	at org.jruby.RubyArray.each(RubyArray.java:1865)
+	at org.jruby.RubyArray$INVOKER$i$0$0$each.call(RubyArray$INVOKER$i$0$0$each.gen)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:152)
+	at org.jruby.runtime.callsite.CachingCallSite.callIter(CachingCallSite.java:161)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.invokeOther24:each(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.document.RUBY$method$parse$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/document.rb:532)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:149)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:148)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:210)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:142)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.invokeOther83:parse(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.load.RUBY$method$load$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/load.rb:84)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:175)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:222)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:226)
+	at org.jruby.runtime.callsite.CachingCallSite.call(CachingCallSite.java:204)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.invokeOther27:load(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at uri_3a_classloader_3a_.gems.asciidoctor_minus_2_dot_0_dot_18.lib.asciidoctor.convert.RUBY$method$convert$0(uri:classloader:/gems/asciidoctor-2.0.18/lib/asciidoctor/convert.rb:78)
+	at org.jruby.internal.runtime.methods.CompiledIRMethod.call(CompiledIRMethod.java:139)
+	at org.jruby.internal.runtime.methods.MixedModeIRMethod.call(MixedModeIRMethod.java:112)
+	at org.jruby.internal.runtime.methods.DynamicMethod.call(DynamicMethod.java:192)
+	at org.jruby.RubyClass.finvoke(RubyClass.java:784)
+	at org.jruby.runtime.Helpers.invoke(Helpers.java:661)
+	at org.jruby.RubyBasicObject.callMethod(RubyBasicObject.java:370)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:311)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:336)
+	at org.asciidoctor.jruby.internal.JRubyAsciidoctor.convert(JRubyAsciidoctor.java:331)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:816)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:782)
+	at org.asciidoc.intellij.AsciiDocWrapper.render(AsciiDocWrapper.java:771)
+	at org.asciidoc.intellij.editor.AsciiDocPreviewEditor.lambda$render$0(AsciiDocPreviewEditor.java:149)
+	at org.asciidoc.intellij.editor.LazyApplicationPoolExecutor.lambda$execute$0(LazyApplicationPoolExecutor.java:66)
+	at com.intellij.openapi.application.impl.ApplicationImpl$1.run(ApplicationImpl.java:246)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:702)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1$1.run(Executors.java:699)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.util.concurrent.Executors$PrivilegedThreadFactory$1.run(Executors.java:699)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+sed -i jam '' /Users/verhasp/github/jamal/jamal-test/src/test/resources/sample.json.jam
+----

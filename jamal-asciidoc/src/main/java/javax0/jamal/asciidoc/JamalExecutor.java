@@ -32,14 +32,14 @@ public class JamalExecutor {
             final var process = pb.start();
             process.waitFor(5, TimeUnit.SECONDS);
         } catch (IOException | InterruptedException e) {
-            return List.of(ExceptionDumper.dump(e).toString().split("\n"));
+            return List.of(ExceptionDumper.dump(e,inputFileName).toString().split("\n"));
         }finally {
             input.delete();
         }
         try (final var reader = new BufferedReader(new FileReader(outputFileName, StandardCharsets.UTF_8))) {
             return reader.lines().collect(Collectors.toList());
         } catch (IOException e) {
-            return List.of(ExceptionDumper.dump(e).toString().split("\n"));
+            return List.of(ExceptionDumper.dump(e,inputFileName).toString().split("\n"));
         }
     }
 }

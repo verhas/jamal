@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal all</name>
     <artifactId>jamal-all</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>2.3.1-SNAPSHOT</version>
     </parent>
     <description>empty jar with dependencies on all macro libraries</description>
     <build>
@@ -49,23 +49,7 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-snippet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-scriptbasic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-ruby</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-plantuml</artifactId>
+            <artifactId>jamal-assertions</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
@@ -73,7 +57,39 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-markdown</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-mock</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-plantuml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-snippet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-prog</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-maven-load</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-groovy</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
@@ -81,11 +97,15 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-markdown</artifactId>
+            <artifactId>jamal-openai</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-assertions</artifactId>
+            <artifactId>jamal-ruby</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-scriptbasic</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
@@ -93,7 +113,7 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-mock</artifactId>
+            <artifactId>jamal-java</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
@@ -118,6 +138,14 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-debug</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-maven-input</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-jar-input</artifactId>
         </dependency>
     </dependencies>
 </project>

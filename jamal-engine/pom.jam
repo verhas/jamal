@@ -19,3 +19,4 @@
         {dependency|com.javax0|levenshtein}
     }
 {end project}
+{@xmlFormat}

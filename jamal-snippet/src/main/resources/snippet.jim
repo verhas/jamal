@@ -37,6 +37,9 @@ They will be included into the documentation and all the macros and everything w
 The snippets are concatenated in the order as they present in the source file.
 They are evaluated as one text block, therefore any macro defined in one snippet is also available in the later snippets.
 
+It is recommended to name the snippets with a prefix unique to the snippet collection and append some numbers.
+When doing that it is easier to use the option `poly` in the macro `snip`.
+
 {@define docFrom($file)=
 {!#for [skipEmpty] $snippet in ({#replace (regex) /
 {#replaceLines replace="/^.*snippet\\s+(\\w+).*$/$1,/"

@@ -393,9 +393,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private Map<String, Object> getJamalVersion() {
-        final var version = new Properties();
-        Processor.jamalVersion(version);
-        return Map.of("version", version.getProperty("version"));
+        return Map.of("version", Processor.jamalVersionString());
     }
 
     private Map<String, Object> getUserDefineds() {

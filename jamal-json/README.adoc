@@ -1,0 +1,354 @@
+= Jamal Json integration module
+
+
+
+
+
+
+Using this integration module, you can mix Jamal macro text with JSON data.
+To use this module, you have to add the dependency to your Maven project, as:
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-json</artifactId>
+    <version>2.3.1-SNAPSHOT</version>
+</dependency>
+----
+
+Following that, you can use the
+
+
+. <<define,`json:define`>>
+. <<get,`json:get`>>
+. <<set,`json:set`>>
+. <<length,`json:length`>>
+. <<keys,`json:keys`>>
+
+
+macros.
+This macro package was created refactoring the original `jamal-yaml` macro library.
+During the development, we created the macros so that they can be used in a similar manner to Yaml macros.
+Although we tried to be as close to the structure of the Yaml macros, there are differences.
+These differences come from the different nature of Json and Yaml.
+
+== Macros implemented in the package
+
+[[define]]
+=== i. `json:define`
+
+
+You can use this macro to define a JSon structure.
+A JSON structure can be a map, a list or a string.
+JSon supports other primitive values, but Jamal being a text macro processor handles all other primitive types as strings.
+
+The format of the macro is
+
+[source]
+----
+{@json:define jsonMacro=JSON content}
+----
+
+After the execution of this macro, the name `jsonMacro` will be defined as a user-defined macro and can be used as `pass:[{jsonMacro}]`.
+The value will replace the place of the use with the actual unformatted JSON content.
+
+NOTE: Internally, Jamal converts the JSON read in an object structure consisting of strings, primitives, maps, and lists.
+The structure is stored in an object of the type `JsonMacroObject`.
+This class technically is a user-defined macro.
+The `json:define` macro will register the structure among the user-defined macros.
+When the name is used the same way as any other user-defined macro (without any argument), the content of the JSON structure is converted to text.
+
+The `jsonMacro` is stored along with the "usual" user-defined macros.
+Any usual or other user-defined macro can be redefined any number of times.
+If you want to define a JSON macro only if it was not defined prior, use the `?` after the keyword `json:define`.
+If you want to get an error message if the macro was already defined, use the `!` after the keyword `json:define`.
+This functionality is implemented the same way as it is for the core built-in macro `define`.
+
+The core `define` macro also has options to drive these behaviour.
+The `json:define` macro does not.
+
+The example:
+
+[source]
+----
+{@json:define xyz={
+a: this is the string value of a,
+b:[ first value of b,second value in b],
+c: {a: this is c.a,b: this is c.b}}
+}\
+{xyz}
+----
+
+will result
+
+[source]
+----
+{"a":"this is the string value of a","b":["first value of b","second value in b"],"c":{"a":"this is c.a","b":"this is c.b"}}
+----
+
+
+The advantage of using this macro over just writing the JSON directly to the output is that:
+
+* You can use user-defined macro parameters mixing the json content with Jamal macros.
+
+* You can modify the structure using the `json:set` macro.
+
+Utilizing user-defined macros, you can use macros inside JSON code, and at the same time, you can use JSON code inside the macros.
+That way, you can pull out the part, repeat, and use only the macro as a reference.
+
+[NOTE]
+====
+When processing JSON input, you can use the `{` and `}` characters as macro opening and macro closing strings.
+These characters are paired in the JSON input, therefore they will not interfere with the macro processing.
+That is only if we assume that the JSON containing macros do not contain macros themselves, and they are invoked using the `@` in front of their name.
+However, when there is a need to evaluate macros before interpreting the JSON, the `{` and `}` characters may cause problems.
+You can overcome this setting the macro opening and closing stings to something else, like `{%` and `%}`.
+You can also modify the JSON using `{}` in place of every `{` and a `}` in place of every `}`.
+This will disturb the balance of the `{` and `}` characters, that may hinder some editor navigation.
+You can also use the `{@ident...}` to protect the parts that are pure JSON content without macros.
+
+The recommended way is to use something different from `{`and `}` as macro opening and closing strings.
+====
+
+
+[[get]]
+=== ii. `json:get`
+
+
+This macro will fetch one value or a "sub" json from a JSON structure.
+This can be useful when you want to document some configuration or other data structure that is present as a JSON file in your project.
+In that case you can import the JSON structure into your Jamal document and refer individual values in it.
+The format of the macro is:
+
+[source]
+----
+{@json:get macro_name/JSONPointer}
+----
+
+or
+
+[source]
+----
+{@json:get macro_name/JSONPointer | macro_name/JSONPointer | ...}
+----
+
+The second format will try to get the first, then the second and so on pointer from one or more JSON structures until one of them is found.
+
+The same result can be achieved simply writing the JSONPointer after the name of the JSON macro defined using <<define,`json:define`>>.
+In that case you can omit the `@json:get ` starting with the macro name, and you cannot use the second format.
+
+The `JSONPointer` is navigational path documented in the link:https://stleary.github.io/JSON-java/org/json/JSONPointer.html[JavaDoc] api of the JSON library this macro package uses:
+
+> A JSON Pointer is a simple query language defined for JSON documents by RFC 6901.
+In a nutshell, JSONPointer allows the user to navigate into a JSON document using strings, and retrieve targeted objects, like a simple form of XPATH.
+Path segments are separated by the '/' char, which signifies the root of the document when it appears as the first char of the string.
+Array elements are navigated using ordinals, counting from 0.
+JSONPointer strings may be extended to any arbitrary number of segments.
+
+If the navigation is successful, the matched item is returned.
+A matched item may be a JSONObject, a JSONArray, or a string.
+If the JSONPointer string building or the navigation fails a `BadSyntax` exception will happen.
+
+When getting a value out of a JSON user defined macro the macro will automatically be resolved.
+
+==== Examples
+
+[source]
+----
+{@json:define a={a:"alma",b:2,c: 3,d:[1,2,{q:{h:"deep h"}}]}}\
+@json:get a/d/2/q/h = "{@json:get a/d/2/q/h}"
+a d/2/q/h = "{a d/2/q/h}"
+----
+
+will result
+
+[source]
+----
+@json:get a/d/2/q/h = "deep h"
+a d/2/q/h = "deep h"
+----
+
+
+NOTE: The macro `json:get` is somewhat superfluous, because you can get the same result using the JSON user defined macro with the JSONPointer as parameter.
+However, as you can see from the example above, the different approaches provide different readability. Choose wisely.
+
+
+
+[[set]]
+=== iii. `json:set`
+
+
+Add some value to an already existing JSON structure.
+The format of the macro is:
+
+[source]
+----
+{@json:set X/path/c=value}
+----
+
+Here
+
+* `X` is the name of the JSON structure that is defined in the macro registry.
+  In other words, `X` is a macro defined using the macro <<define,`json:define`>>.
+
+* `path` is the path to the value that is added to the JSON structure, names of the keys along the paths `/`
+separated.
+If the path is empty, then the value is added to the root of the JSON structure.
+
+* `c` is the key of the value that is added to the JSON structure.
+If this value is numeric, then the value is added to the array at the given index.
+If this value is `*` then the value is added to the array at the end.
+
+The value can be a JSON structure, a string, a number or a boolean.
+
+==== Examples
+
+===== Adding a value to the top level Map
+
+This example adds a new value to the root of the JSON structure.
+
+[source]
+----
+{@json:define a={a: "this is a simple JSON with a top level Map"}}
+{@json:set a/b=
+"this is the value to be added to json structure a"}
+{a}
+----
+
+will result:
+
+[source]
+----
+{"a":"this is a simple JSON with a top level Map","b":"this is the value to be added to json structure a"}
+----
+
+
+===== Adding element to a Map in the JSON structure
+
+In this example, the value is added to the value of the map from the top level named `b`.
+
+[source]
+----
+{@json:define a={"a": "this is a simple JSON with a top level Map","b":{}}}
+{@json:set a/b/c="this is the value to be added to json structure a"}
+{a}
+----
+
+will result:
+
+[source]
+----
+{"a":"this is a simple JSON with a top level Map","b":{"c":"this is the value to be added to json structure a"}}
+----
+
+
+===== Adding elements to an array
+
+This example adds one element to an array.
+The added element itself is an array.
+
+[source]
+----
+{@json:define a=["this is a simple JSON with a top level Map","kukuruc"]}
+{@json:set a/*="this is one element"}
+{@json:set a/*="this is the second element"}
+{a}
+----
+
+will result:
+
+[source]
+----
+["this is a simple JSON with a top level Map","kukuruc","this is one element","this is the second element"]
+----
+
+
+
+
+[[length]]
+=== iv. `json:length`
+
+
+This macro can be used to get the length of a JSON array.
+The macro first fetches the JSON value using the argument the same way as `json:get` does, but instead of the value it returns the length of the array.
+If the value is a boolean, string, number or JSON objects, essentially anything else than an array, then an error will happen.
+
+The result can be used to iterate through the elements, for example using the macros of the module `jamal-prog`.
+
+[source]
+----
+{@json:length macro_name/JSONPointer}
+----
+
+or
+
+[source]
+----
+{@json:length macro_name/JSONPointer | macro_name/JSONPointer | ...}
+----
+
+The second format will try to get the first, then the second and so on pointer from one or more JSON structures until one of them is found.
+If one of the pointers finds a value but that is not an array then an error will happen.
+
+==== Examples
+
+[source]
+----
+{@json:define a={a:"alma",b:2,c: 3,d:[1,2,{q:{h:"deep h"}}]}}\
+@json:length a/d/ = "{@json:get a/d}"
+----
+
+will result
+
+[source]
+----
+@json:length a/d/ = "[1,2,{"q":{"h":"deep h"}}]"
+----
+
+
+
+
+[[keys]]
+=== v. `json:keys`
+
+
+This macro will fetch one value or a "sub" json from a JSON structure and returns the keys of the structure.
+If the result is a boolean, string, number or JSON objects, essentially anything else than an JSON structure, then an error will happen.
+
+The result can be used to iterate through the elements using the core macro `for`.
+
+[source]
+----
+{@json:keys macro_name/JSONPointer}
+----
+
+or
+
+[source]
+----
+{@json:keys macro_name/JSONPointer | macro_name/JSONPointer | ...}
+----
+
+The second format will try to get the first, then the second and so on pointer from one or more JSON structures until one of them is found.
+If one of the pointers finds a value but that is not a structure then an error will happen.
+
+The keys are separated by the separator character.
+The default separator is a comma.
+The separator can be changed by the parameter `separator` or `sep`.
+
+==== Examples
+
+[source]
+----
+{@json:define a={a:"alma",b:2,c: 3,d:[1,2,{q:{h:"deep h"}}]}}\
+@json:keys a/ = "{@json:keys a}"
+----
+
+will result
+
+[source]
+----
+@json:keys a/ = "a,b,c,d"
+----
+
+

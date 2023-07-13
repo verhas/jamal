@@ -2,9 +2,6 @@ package javax0.jamal.asciidoc;
 
 import javax0.jamal.snippet.SnipCheckFailed;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,11 +17,18 @@ class ExceptionDumper {
      * @return a StringBuilder that contains the message of the exception, the stack trace and then recursively
      * all the suppressed exceptions and the causing exception in a similar manner.
      */
-    public static StringBuilder dump(Exception t) {
+    public static StringBuilder dump(final Exception t, final String inputFileName) {
         final var me = new ExceptionDumper();
         me.output.append(t.getMessage()).append('\n');
         me.dumpIt(t, false);
-        me.output.append("sed '").append(me.sedCommand).append("'");
+        final String extension;
+        final int i = inputFileName.lastIndexOf('.');
+        if( i == -1 ){
+            extension = "jam";
+        }else{
+            extension = inputFileName.substring(i+1);
+        }
+        me.output.append("sed -i.bak ").append(" '").append(me.sedCommand).append("' ").append(inputFileName);
         return me.output;
     }
 
@@ -43,12 +47,14 @@ class ExceptionDumper {
         if (printMessage) {
             output.append(t.getMessage());
         }
-        try (final var sw = new StringWriter();
-             final var pw = new PrintWriter(sw)) {
-            t.printStackTrace(pw);
-            output.append(sw);
-        } catch (IOException ioException) {
-            // does not happen, StringWriter does not do anything in close
+        for( final var s : t.getStackTrace() ){
+            if( s.getClassName().startsWith("javax0.jamal")) {
+                output.append(String.format("\t%s(%s:%d)\n",s.getClassName(),s.getMethodName(),s.getLineNumber()));
+            }
+        }
+        if (t.getCause() != null) {
+            output.append("Causing Exception:\n");
+            dumpIt(t.getCause(), true);
         }
         if (t.getSuppressed().length > 0) {
             output.append("Suppressed exceptions:\n");
@@ -56,11 +62,5 @@ class ExceptionDumper {
                 dumpIt(sup, true);
             }
         }
-        if (t.getCause() != null) {
-            output.append("Causing Exception:\n");
-            dumpIt(t.getCause(), true);
-        }
     }
-
-
 }

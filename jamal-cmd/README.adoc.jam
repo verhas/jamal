@@ -18,9 +18,9 @@ To convert a single file you simply have to specify the input and the output fil
 {%sample/ jamal input output %}
 
 The conversion can automatically be done for multiple files in a directory structure.
-To do that program handles options.
+To do that, the program handles options.
 The options can be given in upper or lower case letters and have a `-` or `--` prefix.
-Options can be abbreviated to their shortest form which is still unambiguous.
+Options can be abbreviated to their shortest form, which is still unambiguous.
 
 When an option has a value, it has to follow the option name with `=`.
 In this case the `=` signals already that the parameter is an option.
@@ -84,9 +84,9 @@ The `regex` is used as the pattern and the replacement is the value of the optio
 {%OPT to=<replacement>%} replacement for the file name transformation.
 See also the option `-from`.
 
-{%OPT docx%} process the input as a DOCX, Microsoft Word file and also generate a Microsof Word document on the output.
+{%OPT docx%} process the input as a DOCX, Microsoft Word file and also generate a Microsoft Word document on the output.
 
-{%OPT shcnf%} show the configuration values from the `~/.jamal/setup.properties`, or from the `~/.jamal/setup.xml` file, whichever exists.
+{%OPT shcnf%} show the configuration values from the `~/.jamal/settings.properties`, or from the `~/.jamal/settings.xml` file, whichever exists.
 
 {%#assert:intEquals/{%optionCounter last%}/{%NR_OF_OPTIONS%}/There is a discrepancy between the number of optioins documented ({%optionCounter last%}) and the number of options ({%NR_OF_OPTIONS%})%}
 

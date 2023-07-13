@@ -35,10 +35,18 @@ import static jdk.jshell.Snippet.Status.REJECTED;
  */
 public class JShellEngine implements javax0.jamal.api.JShellEngine {
 
-    private JShell js = null;
-    private ByteArrayOutputStream output = null;
-    private final List<String> deferredDefines = new ArrayList<>();
-    private final AtomicBoolean isOpen = new AtomicBoolean(false);
+
+    private JShell js;
+    private ByteArrayOutputStream output;
+    private final List<String> deferredDefines;
+    private final AtomicBoolean isOpen;
+
+    public JShellEngine(){
+        js = null;
+        output = null;
+        deferredDefines = new ArrayList<>();
+        isOpen = new AtomicBoolean(false);
+    }
 
     /**
      * Initialize the JShell this engine used. It creates the JShell object, the byte array output stream that captures
@@ -158,9 +166,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
     }
 
     private List<SnippetEvent> evaluateAndGetEvents(String source) throws BadSyntax {
-        if (!isOpen.get()) {
-            throw new BadSyntax("The JShell interpreter was closed. Will not be recreated.");
-        }
+        BadSyntax.when(!isOpen.get(), "The JShell interpreter was closed. Will not be recreated.");
         final List<SnippetEvent> events;
         final var original = System.err;
         try {
@@ -172,9 +178,7 @@ public class JShellEngine implements javax0.jamal.api.JShellEngine {
         } finally {
             System.setErr(original);
         }
-        if (!isOpen.get()) {
-            throw new BadSyntax("The JShell snippet '" + source + "' closed the JShell interpreter. Will not be recreated.");
-        }
+        BadSyntax.when(!isOpen.get(),  "The JShell snippet '%s' closed the JShell interpreter. Will not be recreated.", source);
         return events;
     }
 

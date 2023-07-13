@@ -1,12 +1,11 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.ListParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +27,41 @@ import java.util.function.Predicate;
  * can be used as separator. The first non-space character following the {@code if} will be used as separator
  * character.
  */
-public class If implements Macro {
+public class If implements Macro, OptionsControlled.Core, Scanner.Core {
 
     private static class Options {
-        // snippet if_options
-        final Params.Param<Boolean> empty = Params.<Boolean>holder("empty").asBoolean();
-        final Params.Param<Boolean> blank = Params.<Boolean>holder("blank").asBoolean();
-        final Params.Param<Boolean> not = Params.<Boolean>holder("not").asBoolean();
-        final Params.Param<Boolean> and = Params.<Boolean>holder("and").asBoolean();
-        final Params.Param<Boolean> or = Params.<Boolean>holder("or").asBoolean();
-        final Params.Param<List<Integer>> lessThan = Params.<Integer>holder("lessThan", "less","smaller", "smallerThan").asList(Integer.class);
-        final Params.Param<List<Integer>> greaterThan = Params.<Integer>holder("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan").asList(Integer.class);
-        final Params.Param<List<Integer>> equals = Params.<Integer>holder("equals", "equal", "equalsTo", "equalTo").asList(Integer.class);
-        // end snippet
-        private final List<Params.Param<List<Integer>>> numericOptions = List.of(lessThan, greaterThan, equals);
+        final ScannerObject scanner;
+
+        final BooleanParameter empty;
+        final BooleanParameter blank;
+        final BooleanParameter not;
+        final BooleanParameter and;
+        final BooleanParameter or;
+        final BooleanParameter isDefined;
+        final BooleanParameter isGlobal;
+        final BooleanParameter isLocal;
+        final ListParameter lessThan;
+        final ListParameter greaterThan;
+        final ListParameter equals;
+        private final List<ListParameter> numericOptions;
+
+        private Options(ScannerObject scnr) {
+            scanner = scnr;
+            // snippet if_options
+            empty = scanner.bool("empty");
+            blank = scanner.bool("blank");
+            not = scanner.bool("not");
+            and = scanner.bool("and");
+            or = scanner.bool("or");
+            isDefined = scanner.bool("isDefined", "defined");
+            isGlobal = scanner.bool("isGlobal", "global");
+            isLocal = scanner.bool("isLocal", "local");
+            lessThan = scanner.list("lessThan", "less", "smaller", "smallerThan");
+            greaterThan = scanner.list("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan");
+            equals = scanner.list("equals", "equal", "equalsTo", "equalTo");
+            // end snippet
+            numericOptions = List.of(lessThan, greaterThan, equals);
+        }
 
         /**
          * Check that the options are used in a consistent manner and the user is not using options together which
@@ -50,27 +70,16 @@ public class If implements Macro {
          * @throws BadSyntax if the options are used in an inconsistent way
          */
         void assertConsistency() throws BadSyntax {
-            if (and.is() && or.is()) {
-                throw new BadSyntax("You cannot have both 'and' and 'or' options in an 'if' macro.");
-            }
-            if ((and.is() || or.is()) && countNumOptionsPresent() < 2) {
-                throw new BadSyntax("You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
-            }
-            if (blank.is() && empty.is()) {
-                throw new BadSyntax("You cannot have both 'blank' and 'empty' options in an 'if' macro.");
-            }
-            if ((empty.is() || blank.is()) && numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals)) {
-                throw new BadSyntax("You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
-            }
-        }
-
-        Params.Param<?>[] options() {
-            return new Params.Param[]{empty, blank, not, and, or, lessThan, greaterThan, equals};
+            BadSyntax.when((isDefined.is() || isGlobal.is() || isLocal.is()) && (blank.is() || empty.is() || countNumOptionsPresent() > 0), "'blank' or 'empty' cannot be used together with 'isDefined', 'isLocal', or 'isGlobal' or with numeric checks");
+            BadSyntax.when(and.is() && or.is(), "You cannot have both 'and' and 'or' options in an 'if' macro.");
+            BadSyntax.when((and.is() || or.is()) && countNumOptionsPresent() < 2, "You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
+            BadSyntax.when(blank.is() && empty.is(), "You cannot have both 'blank' and 'empty' options in an 'if' macro.");
+            BadSyntax.when((empty.is() || blank.is()) && numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals), "You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
         }
 
         List<Boolean> numericOptionsPresent() throws BadSyntax {
             List<Boolean> list = new ArrayList<>();
-            for (Params.Param<List<Integer>> numericOption : numericOptions) {
+            for (final var numericOption : numericOptions) {
                 list.add(numericOption.isPresent());
             }
             return list;
@@ -90,22 +99,21 @@ public class If implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var pos = input.getPosition();
-        final var opt = new Options();
-        Params.using(processor).from(this).between("[]").keys(opt.options()).parse(input);
+        final var scanner = newScanner(input, processor);
+        final var opt = new Options(scanner);
+        scanner.done();
         opt.assertConsistency();
         final var parts = InputHandler.getParts(input, 3);
-        if (parts.length < 1) {
-            throw new BadSyntaxAt("Macro 'if' needs 1, 2 or 3 arguments", pos);
-        }
+        BadSyntaxAt.when(parts.length < 1, "Macro 'if' needs 1, 2 or 3 arguments", pos);
 
-        if (opt.not.is() != isTrue(parts[0], opt)) {
+        if (opt.not.is() != isTrue(processor, parts[0], opt)) {
             return parts.length > 1 ? parts[1] : "";
         } else {
             return parts.length > 2 ? parts[2] : "";
         }
     }
 
-    private boolean compare(List<Integer> number, boolean and, Predicate<Integer> p) {
+    private static boolean compare(List<String> number, boolean and, Predicate<String> p) {
         if (and) {
             return number.stream().allMatch(p);
         } else {
@@ -113,27 +121,67 @@ public class If implements Macro {
         }
     }
 
-    private boolean isTrue(final String test,
-                           final Options opt) throws BadSyntax {
+    /**
+     * b is less than a
+     *
+     * @param a the first number
+     * @param b the second number
+     * @return true if b is less than a
+     */
+    private static boolean lt(final String a, final String b) {
+        try {
+            return Integer.parseInt(a) > Integer.parseInt(b);
+        } catch (NumberFormatException nfe) {
+            return a.compareTo(b) > 0;
+        }
+    }
+
+    private static boolean gt(final String a, final String b) {
+        try {
+            return Integer.parseInt(a) < Integer.parseInt(b);
+        } catch (NumberFormatException nfe) {
+            return a.compareTo(b) < 0;
+        }
+    }
+
+    private static boolean eq(final String a, final String b) {
+        try {
+            return Integer.parseInt(a) == Integer.parseInt(b);
+        } catch (NumberFormatException nfe) {
+            return a.compareTo(b) == 0;
+        }
+    }
+
+    private static boolean isTrue(final Processor processor,
+                                  final String test,
+                                  final Options opt) throws BadSyntax {
         if (opt.countNumOptionsPresent() > 0) {
-            final int testN;
-            try {
-                testN = Integer.parseInt(test);
-            } catch (NumberFormatException nfe) {
-                throw new BadSyntax("When macro 'if' uses a numeric option the test has to be an integer value.");
-            }
             if (opt.and.is()) {
-                return (!opt.lessThan.isPresent() || compare(opt.lessThan.get(), true, n -> n > testN))
-                    && (!opt.greaterThan.isPresent() || compare(opt.greaterThan.get(), true, n -> n < testN))
-                    && (!opt.equals.isPresent() || compare(opt.equals.get(), true, n -> n == testN))
-                    ;
+                return (!opt.lessThan.isPresent() || compare(opt.lessThan.get(), true, n -> lt(n, test)))
+                        && (!opt.greaterThan.isPresent() || compare(opt.greaterThan.get(), true, n -> gt(n, test)))
+                        && (!opt.equals.isPresent() || compare(opt.equals.get(), true, n -> eq(n, test)))
+                        ;
             } else {
-                return (opt.lessThan.isPresent() && compare(opt.lessThan.get(), false, n -> n > testN))
-                    || (opt.greaterThan.isPresent() && compare(opt.greaterThan.get(), false, n -> n < testN))
-                    || (opt.equals.isPresent() && compare(opt.equals.get(), false, n -> n == testN))
-                    ;
+                return (opt.lessThan.isPresent() && compare(opt.lessThan.get(), false, n -> lt(n, test)))
+                        || (opt.greaterThan.isPresent() && compare(opt.greaterThan.get(), false, n -> gt(n, test)))
+                        || (opt.equals.isPresent() && compare(opt.equals.get(), false, n -> eq(n, test)))
+                        ;
             }
         }
+        if (opt.isLocal.is()) {
+            return processor.getRegister().getUdMacroLocal(test).isPresent();
+        } else if (opt.isGlobal.is()) {
+            final String globalName;
+            if (InputHandler.isGlobalMacro(test)) {
+                globalName = test;
+            } else {
+                globalName = ":" + test;
+            }
+            return processor.getRegister().getUserDefined(globalName).isPresent();
+        } else if (opt.isDefined.is()) {
+            return processor.getRegister().getUserDefined(test).isPresent();
+        }
+
         if (opt.blank.is()) {
             return test.trim().length() == 0;
         }

@@ -76,17 +76,11 @@ public class MacroQualifier {
             var optMacro = processor.getRegister().getMacro(id);
             if (optMacro.isEmpty()) {
                 final Set<String> suggestions = processor.getRegister().suggest(id);
-                if (suggestions.isEmpty()) {
-                    throw new BadSyntaxAt(
-                        "There is no built-in macro with the id '"
-                            + id
-                            + "'", pos);
-                } else {
-                    throw new BadSyntaxAt(
-                        "There is no built-in macro with the id '"
-                            + id + "'; did you mean " + suggestions.stream()
-                            .map(s -> "'" + s + "'").collect(Collectors.joining(", ")) + "?", pos);
-                }
+                BadSyntaxAt.when(suggestions.isEmpty(), () -> String.format("There is no built-in macro with the id '%s'", id), pos);
+                BadSyntaxAt.when(true,
+                        String.format("There is no built-in macro with the id '%s'; did you mean %s?",
+                                id, suggestions.stream().map(s -> "'" + s + "'").collect(Collectors.joining(", "))), pos);
+
             }
             return optMacro.get();
         } else {

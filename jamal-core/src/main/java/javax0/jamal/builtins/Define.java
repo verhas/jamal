@@ -2,13 +2,17 @@ package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Configurable;
+import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.Throwing;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
@@ -22,35 +26,38 @@ import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
-public class Define implements Macro {
+public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var verbatimParam = Params.<Boolean>holder(null, "verbatim").asBoolean();
-        final var optionalParam = Params.<Boolean>holder(null, "optional", "ifNotDefined").asBoolean();
-        final var noRedefineParam = Params.<Boolean>holder(null, "fail", "noRedefine", "noRedef", "failIfDefined").asBoolean();
-        final var pureParam = Params.<Boolean>holder(null, "pure").asBoolean();
-        final var globalParam = Params.<Boolean>holder(null, "global").asBoolean();
+        final var scanner = newScanner(input, processor);
+        final var verbatimParam = scanner.bool(null, "verbatim");
+        final var tailParamsParam = scanner.bool(null, "tail");
+        final var optionalParam = scanner.bool(null, "optional", "ifNotDefined");
+        final var noRedefineParam = scanner.bool(null, "fail", "noRedefine", "noRedef", "failIfDefined");
+        final var pureParam = scanner.bool(null, "pure");
+        final var globalParam = scanner.bool(null, "global");
+        final var exportParam = scanner.bool(null, "export");
+        final var javaDefined = scanner.str(null, "class");
         // snipline RestrictedDefineParameters filter="(.*)"
-        final var IdOnly = Params.<Boolean>holder("RestrictedDefineParameters").asBoolean();
-        Params.using(processor).from(this).between("[]").keys(verbatimParam, optionalParam, noRedefineParam, pureParam, globalParam, IdOnly).parse(input);
-        if (noRedefineParam.is() && optionalParam.is()) {
-            throw new BadSyntax(String.format("You cannot use %s and %s", optionalParam.name(), noRedefineParam.name()));
-        }
+        final var IdOnly = scanner.bool("RestrictedDefineParameters");
+        scanner.done();
+
+        BadSyntax.when(noRedefineParam.is() && optionalParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
+        BadSyntax.when(globalParam.is() && exportParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
         skipWhiteSpaces(input);
         boolean verbatim = verbatimParam.is();
+        boolean tailParams = tailParamsParam.is();
         if (!verbatim && firstCharIs(input, DEFINE_VERBATIM)) {
             verbatim = true;
             skip(input, 1);
             skipWhiteSpaces(input);
         }
         var optional = firstCharIs(input, DEFINE_OPTIONALLY);
-        if (optionalParam.is() && optional) {
-            throw new BadSyntax(String.format("You cannot use %s and '?' in the define at the same time.", optionalParam.name()));
-        }
+        BadSyntax.when(optionalParam.is() && optional, "You cannot use %s and '?' in the define at the same time.", optionalParam.name());
+
         var noRedefine = firstCharIs(input, ERROR_REDEFINE);
-        if (noRedefineParam.is() && noRedefine) {
-            throw new BadSyntax(String.format("You cannot use %s and '!' in the define at the same time.", noRedefineParam.name()));
-        }
+        BadSyntax.when(noRedefineParam.is() && noRedefine, "You cannot use %s and '!' in the define at the same time.", noRedefineParam.name());
+
         if (optional || noRedefine) {
             skip(input, 1);
             skipWhiteSpaces(input);
@@ -68,40 +75,59 @@ public class Define implements Macro {
             if (optional) {
                 return "";
             }
-            if (noRedefine) {
-                throw new BadSyntax("The macro '" + id + "' was already defined.");
-            }
+            BadSyntax.when(noRedefine, "The macro '%s' was already defined.", id);
         }
         skipWhiteSpaces(input);
-        if (id.endsWith(":") && !firstCharIs(input, '(')) {
-            throw new BadSyntax("The () in define is not optional when the macro name ends with ':'.");
-        }
+        BadSyntax.when(id.endsWith(":") && !firstCharIs(input, '('), "The () in define is not optional when the macro name ends with ':'.");
 
         final String[] params = getParameters(input, id);
 
         if (IdOnly.is()) {
-            if (!Arrays.stream(params).allMatch(InputHandler::isIdentifier)) {
-                throw new BadSyntax("The parameters of the define must be identifiers.");
-            }
+            BadSyntax.when(!Arrays.stream(params).allMatch(InputHandler::isIdentifier), "The parameters of the define must be identifiers.");
         }
 
         final var pure = firstCharIs(input, ':');
         if (pure) {
             skip(input, 1);
         }
-        if (!firstCharIs(input, '=')) {
-            throw new BadSyntax("define '" + id + "' has no '=' to body");
-        }
+        BadSyntax.when(!firstCharIs(input, '='), "define '%s' has no '=' to body", id);
         skip(input, 1);
-        final var macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, params);
+        final Identified macro;
+        if (javaDefined.isPresent()) {
+            macro = createFromClass(processor, javaDefined.get(),convertGlobal(id), input, verbatim, tailParams, params);
+        } else {
+            macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, tailParams, params);
+        }
         if (globalParam.is() || isGlobalMacro(id)) {
             processor.defineGlobal(macro);
         } else {
             processor.define(macro);
+            if (exportParam.is()) {
+                processor.getRegister().export(macro.getId());
+            }
         }
         if ((pure || pureParam.is()) && macro instanceof Configurable) {
             ((Configurable) macro).configure("pure", true);
         }
         return "";
+    }
+
+    private Identified createFromClass(Processor processor, String className, String id, Input in, boolean verbatim, boolean tailParams, String... params) throws BadSyntax {
+        return Throwing.of(() -> Class.forName(className.trim()), "Class '%s' not found.", className)
+                .hurl("Class '%s' does not implement Identified and Evaluable.", className)
+                .when(klass -> !(Identified.class.isAssignableFrom(klass)) || !(Evaluable.class.isAssignableFrom(klass)))
+                .map(Class::getConstructor, "Class '%s' has no default constructor.", className)
+                .map(Constructor::newInstance, "Class '%s' cannot be instantiated.", className)
+                .when(Configurable.class, c -> {
+                    c.configure("id", id);
+                    c.configure("verbatim", verbatim);
+                    c.configure("tail", tailParams);
+                    c.configure("params", params);
+                    c.configure("processor", processor);
+                    c.configure("input", in);
+                })
+                .hurl("Class '%s' cannot be cast to Identified.", className)
+                .cast(Identified.class)
+                .get();
     }
 }

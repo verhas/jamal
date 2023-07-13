@@ -1,10 +1,6 @@
 package javax0.jamal.testsupport;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.engine.UserDefinedMacro;
 import javax0.jamal.tools.HexDumper;
@@ -13,11 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -66,6 +59,7 @@ public class TestThat implements AutoCloseable {
     private String input;
     private String macroOpen = "{", macroClose = "}";
     private boolean ignoreLineEndingFlag = false;
+    private boolean ignoreSpacesFlag = false;
 
     private TestThat(Class<? extends Macro> klass) {
         this.klass = klass;
@@ -91,6 +85,11 @@ public class TestThat implements AutoCloseable {
 
     public TestThat ignoreLineEnding() {
         ignoreLineEndingFlag = true;
+        return this;
+    }
+
+    public TestThat ignoreSpaces() {
+        ignoreSpacesFlag = true;
         return this;
     }
 
@@ -130,6 +129,11 @@ public class TestThat implements AutoCloseable {
     }
 
     private Position pos = null;
+
+    public TestThat atPosition(Position pos) {
+        this.pos = pos;
+        return this;
+    }
 
     public TestThat atPosition(String fileName, int line, int col) {
         pos = new Position(fileName, line, col);
@@ -184,6 +188,27 @@ public class TestThat implements AutoCloseable {
     }
 
     /**
+     * Create a new macro, a new processor and test that the input creates the expected output.
+     * If the test predicate does not accept the result then JUnit5 assertion failure will happen.
+     *
+     * @param test that checks the output
+     * @throws NoSuchMethodException     if the macro class can not be instantiated
+     * @throws IllegalAccessException    if the macro class can not be instantiated
+     * @throws InstantiationException    if the macro class can not be instantiated
+     * @throws InvocationTargetException if the macro class can not be instantiated
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
+     */
+    public void results(Predicate<String> test) throws
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
+        final var result = resultsClose();
+        Assertions.assertTrue(test.test(result));
+    }
+
+    /**
      * Create a new macro, a new processor and test that the input creates the expected output. If they are not the same
      * then JUnit5 assertion failure will happen.
      *
@@ -210,14 +235,26 @@ public class TestThat implements AutoCloseable {
             System.out.println("    Input: " + yamlStringify(input));
             System.out.println("    Output: " + yamlStringify(result == null ? "" : result));
         }
+        final String expectedNl;
+        final String resultNl;
         if (ignoreLineEndingFlag) {
-            final var expectedNl = expected.replaceAll("\r", "");
-            //noinspection ConstantConditions
-            final var resultNl = result.replaceAll("\r", "");
-            Assertions.assertEquals(expectedNl, resultNl);
+            expectedNl = expected.replaceAll("\r", "");
+            resultNl = result.replaceAll("\r", "");
         } else {
-            Assertions.assertEquals(expected, result);
+            expectedNl = expected;
+            resultNl = result;
         }
+        final String expectedSPC;
+        final String resultSPC;
+        if (ignoreSpacesFlag) {
+            expectedSPC = expectedNl.replaceAll("\\s", "");
+            resultSPC = resultNl.replaceAll("\\s", "");
+        } else {
+            expectedSPC = expectedNl;
+            resultSPC = resultNl;
+        }
+
+        Assertions.assertEquals(expectedSPC, resultSPC);
     }
 
     private static String yamlStringify(String s) {
@@ -366,9 +403,20 @@ public class TestThat implements AutoCloseable {
         }
     }
 
+    /**
+     * Convert the string to a regular expression that matches the string as is. It escapes all the special characters
+     * that have a meaning in regular expressions.
+     * <p>
+     * The reason to use this instead of {@link Pattern#quote(String)} is that this one does not escape the
+     * entire string enclosing it between {@code \Q} and {@code \E}. This way the regular expression can be easily
+     * edited by the user after it was copied from the error message to the test.
+     *
+     * @param string the string to convert
+     * @return a regular expression that matches the string as is
+     */
     private static String myQuote(String string) {
         //noinspection RegExpSingleCharAlternation,RegExpRedundantEscape
-        return string.replaceAll("(\\.|\\\\|\\(|\\)|\\{|\\}|\\|)", "\\\\$1");
+        return string.replaceAll("(\\*|\\.|\\\\|\\(|\\)|\\{|\\}|\\||\\+)", "\\\\$1");
     }
 
     private static Set<String> collect(final Throwable t) {

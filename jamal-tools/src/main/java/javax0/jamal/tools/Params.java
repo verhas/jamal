@@ -7,23 +7,14 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.StringFetcher;
 import javax0.levenshtein.Levenshtein;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.startsWith;
+import static javax0.jamal.tools.InputHandler.*;
 
 /**
  * Parse the start of the input for macro parameters.
@@ -58,26 +49,104 @@ import static javax0.jamal.tools.InputHandler.startsWith;
 public class Params {
     public static class ExtraParams {
         private final Map<String, Param<?>> params = new HashMap<>();
-        ;
+
+        /**
+         * Get the parameter with the given name or null if there is no such parameter.
+         *
+         * @param key the name of the parameter
+         * @param <T> the type of the parameter
+         * @return the parameter or null. If the parameter was a list, then the first element of the list is returned.
+         * @throws BadSyntax should not happen. The underlying methods could throw this exception when a parameter is
+         *                   configured as non-list but has multiple values. Since this class handles extra parameters,
+         *                   no such restriction is set.
+         */
+        public <T> T get(String key) throws BadSyntax {
+            return params.get(key).isPresent() ? (T) params.get(key).get() : null;
+        }
     }
 
     public interface Param<T> {
         String[] keys();
 
+        /**
+         * Copies the values of the provided parameter to this parameter.
+         *
+         * @param p The parameter to be copied.
+         */
         void copy(Param<?> p);
 
+        /**
+         * Inject the processor instance and the name of the processing macro into the parameter.
+         *
+         * @param processor the processor instance
+         * @param macroName the name of the macro that is being processed.
+         *                  It is exclusively used for error reporting purposes.
+         */
         void inject(Processor processor, String macroName);
 
+        /**
+         * Add a new value to the list
+         *
+         * @param value the new value to add to the list
+         */
         void set(String value);
 
+        /**
+         * Specify the default value for the parameter.
+         * When no default value is specified for a parameter the parameter is mandatory.
+         *
+         * @param i the default value
+         * @return the parameter itself
+         */
+        default Param<T> defaultValue(String i) {
+            return orElse(i);
+        }
+
+        /**
+         * @deprecated use {@link #defaultValue(String)} instead
+         */
+        @Deprecated(since = "2.4.0")
         Param<T> orElse(String i);
 
+        /**
+         * @deprecated use {@link #defaultValue(String) defaultValue(null)} instead
+         */
+        @Deprecated(since = "2.4.0")
         Param<T> orElseNull();
 
+        /**
+         * Specify an int the default value for the parameter.
+         * When no default value is specified for a parameter, the parameter is mandatory.
+         *
+         * @param i the default value
+         * @return the parameter itself
+         */
+        default Param<Integer> defaultValue(int i) {
+            return orElseInt(i);
+        }
+
+        /**
+         * @deprecated use {@link #defaultValue(int)} instead
+         */
+        @Deprecated(since = "2.4.0")
         Param<Integer> orElseInt(int i);
 
+        /**
+         * Specify a type for the value of the parameter.
+         *
+         * @param converter the function that converts the string value to the type {@code T}
+         * @return the parameter itself
+         */
         Param<T> as(Function<String, T> converter);
 
+        /**
+         * Specify that the parameter is a pattern.
+         * It may be needed in some special cases.
+         * The recommended use is to call {@link javax0.jamal.tools.Scanner.ScannerObject#pattern(String...)
+         * scanner.patter()} to get a pattern parameter.
+         *
+         * @return the parameter itself
+         */
         Param<Pattern> asPattern();
 
         <K> Param<K> asType(Class<K> type);
@@ -131,7 +200,7 @@ public class Params {
     // in some cases this is '(', for core macros it is '['
     private Character start = null;
 
-    private static class BadKey extends BadSyntax {
+    public static class BadKey extends BadSyntax {
         final String key;
 
         BadKey(String key, String message) {
@@ -379,53 +448,85 @@ public class Params {
      * @param keys     the set of the valid keys
      * @return the set of suggestions
      */
-    private Set<String> suggest(String spelling, Set<String> keys) {
-        final Set<String> suggestions = new HashSet<>();
-        int minDistance = 3;
+    public static Set<String> suggest(String spelling, Set<String> keys) {
+        final var map = new TreeMap<Integer, List<String>>();
         for (String key : keys) {
             final int distance = Levenshtein.distance(key, spelling);
-            if (distance < minDistance) {
-                minDistance = distance;
-                suggestions.clear();
-            }
-            if (distance <= minDistance) {
-                suggestions.add(key);
-            }
+            map.computeIfAbsent(distance, k -> new ArrayList<>()).add(key);
+        }
+        final Set<String> suggestions = new LinkedHashSet<>();
+        for (final var k : map.values()) {
+            suggestions.addAll(k);
         }
         return suggestions;
     }
 
+    /**
+     * Parses the input, stores the parsed values, and validates them.
+     *
+     * @param input The input to be parsed.
+     * @param store The consumer to store the parsed values. The first String is the key, the second is the value.
+     * @param valid The predicate that decides if the key is acceptable and valid or not.
+     * @throws BadSyntax If the input syntax is invalid.
+     */
     public void parse(Input input, BiConsumer<String, String> store, Predicate<String> valid) throws BadSyntax {
         parse();
         skipStartingSpacesAndEscapedTerminal(input);
-        if (start != null) {
+        var needClosingParen = false;
+        if (start == null) {
+            if (firstCharIs(input, '(')) {
+                skip(input, 1);
+                needClosingParen = true;
+                skipSpacesAndEscapedTerminal(input, ')');
+            }
+        } else {
             if (firstCharIs(input, start)) {
                 skip(input, 1);
             } else {
                 return;
             }
         }
-        while ((terminal == null || !firstCharIs(input, terminal)) && input.length() > 0) {
-            if (terminal != null && firstCharIs(input, terminal)) {
+
+        while ((terminal == null || !firstCharIs(input, terminal))) {
+            if (terminal == null) {
+                if (input.length() == 0) {
+                    break;
+                }
+            } else {
+                if (terminal == '\n' && input.length() == 0) {
+                    break;
+                }
+                if (firstCharIs(input, terminal) && (terminal != '\n' || !needClosingParen)) {
+                    break;
+                }
+            }
+            if (needClosingParen && firstCharIs(input, ')')) {
+                skip(input, 1);
+                while ((terminal == null || !firstCharIs(input, terminal)) && input.length() > 0) {
+                    BadSyntax.when(!Character.isWhitespace(input.charAt(0)), String.format("The macro '%s' has parameter content following the closing ')'.", macroName));
+                    skip(input, 1);
+                }
+                needClosingParen = false; // not anymore
                 break;
             }
-            skipSpacesAndEscapedTerminal(input);
+            skipSpacesAndEscapedTerminal(input, terminal);
             final var id = fetchId(input);
             if (!valid.test(id)) {
                 throw new BadKey(id, "The key '" + id + "' is not used by the macro '" + macroName + "'.");
             }
             final String param;
-            skipSpacesAndEscapedTerminal(input);
+            skipSpacesAndEscapedTerminal(input, terminal);
             if (firstCharIs(input, '=')) {
                 skip(input, 1);
-                skipSpacesAndEscapedTerminal(input);
-                param = StringFetcher.getString(input, terminal);
+                skipSpacesAndEscapedTerminal(input, terminal);
+                param = StringFetcher.getString(input, needClosingParen ? (Character) ')' : terminal);
             } else {
                 param = "true";
             }
             store.accept(id, param);
-            skipSpacesAndEscapedTerminal(input);
+            skipSpacesAndEscapedTerminal(input, needClosingParen ? (Character) ')' : terminal);
         }
+        BadSyntax.when(needClosingParen, String.format("The macro '%s' has parameters that starts with optional '(' but does not end with ')'.", macroName));
         skip(input, 1);
     }
 
@@ -466,7 +567,7 @@ public class Params {
      *
      * @param input the input that contains the next parameters with spaces optionally in front of them
      */
-    private void skipSpacesAndEscapedTerminal(Input input) {
+    private void skipSpacesAndEscapedTerminal(final Input input, final Character terminal) {
         skipper(input, i -> i.length() > 0 && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), terminal));
     }
 

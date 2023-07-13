@@ -1,0 +1,9 @@
+"verbatim include works defining a macro from a yaml file":
+  Input: "{#json:define a={@include [verbatim] res:sample_verbatim.json}}{@verbatim a}"
+  Output: |-
+    {"a":1,"b":2}
+
+"normal import from a resource":
+  Input: "{@define a=wuff wuff}{#json:define h={@include res:sample.json.jam}}{h}"
+  Output: |-
+    {"a":"wuff wuff","b":2}

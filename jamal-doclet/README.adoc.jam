@@ -1,4 +1,4 @@
-== Jamal Doclet/Taglet
+= Jamal Doclet/Taglet
 
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
@@ -18,7 +18,7 @@ Starting with Java 18 you can define code snippets in your JavaDoc files without
 This possibility will probably be developed in the future and become mor and more usable.
 As for the release Java 18 the feature seems to be experimental, and it is not really handy.
 
-Using Jamal JavaDoc extensions you can do more and easier than with the built-in feature.
+Using Jamal JavaDoc extensions you can do more, and easier than with the built-in feature.
 You can also use Jamal with Java version 11 and later.
 ====
 
@@ -55,7 +55,7 @@ The following example, where the tag is on a line without `{` preceeding it or `
 
 It starts at the beginning of a line and lasts till the next block tag.
 
-=== Using with Maven
+== Using with Maven
 
 To use the Jamal doclet and taglet with Jamal you have to configure it in the `pom.xml` file.
 This configuration will tell the Maven JavaDoc plugin to use the Jamal doclet and taglet instead of the standard one.
@@ -104,7 +104,7 @@ If you want to use other modules, snippets, Markdown formatting, RUby or Groovy 
 
 The rest of the lines from 29 is the standard plugin configuration detailed in the Maven documentation.
 
-=== Configuration options
+== Configuration options
 
 The lines 14-17 in the example above define one extra option.
 There are multiple options that you can configure for the Jamal doclet.
@@ -168,7 +168,7 @@ These will be not be treated inside a `{@code ...}` macro, because of the `@` ch
 This requirement exists exactly the same way in usual JavaDoc, thus there is nothing special doing that.
 ====
 
-=== Command Line `javadoc` configuration
+== Command Line `javadoc` configuration
 
 In this section we describe the use of the doclet through the command line tool.
 Because the majority of the use cases will be using the tool via Maven this section is less detailed.

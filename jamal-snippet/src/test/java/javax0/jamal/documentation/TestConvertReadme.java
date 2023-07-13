@@ -8,6 +8,7 @@ public class TestConvertReadme {
 
     @Test
     void convertSnippetArticle() throws Exception {
+        System.setProperty("java.awt.headless", "true");
         DocumentConverter.convert("./ARTICLE.wp.jam");
     }
 
@@ -23,7 +24,7 @@ public class TestConvertReadme {
 
     @Test
     void convertParams() throws Exception {
-        DocumentConverter.convert("../PARAMS.adoc.jam");
+        DocumentConverter.convert("../documentation/PARAMS.adoc.jam");
     }
 
     @Test
@@ -38,6 +39,7 @@ public class TestConvertReadme {
 
     @Test
     void convertTopReadme() throws Exception {
+        System.setProperty("java.awt.headless", "true");
         DocumentConverter.convert("../README.adoc.jam");
     }
 
@@ -47,16 +49,11 @@ public class TestConvertReadme {
     }
 
     @Test
-    void convertTutorials() throws Exception {
-        DocumentConverter.convert("../TUTORIALS.adoc.jam");
-    }
-
-    @Test
     void convertVideo() throws Exception {
-        DocumentConverter.convert("../VIDEO.adoc.jam");
+        DocumentConverter.convert("../documentation/VIDEO.adoc.jam");
     }
 
-    @Test
+   @Test
     void convertAsciiDocReadme() throws Exception {
         DocumentConverter.convert("../jamal-asciidoc/README.adoc.jam");
     }
@@ -88,6 +85,7 @@ public class TestConvertReadme {
 
     @Test
     void convertMavenExtensionReadme() throws Exception {
+        System.setProperty("java.awt.headless", "true");
         DocumentConverter.convert("../jamal-maven-extension/README.adoc.jam");
     }
 

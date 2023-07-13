@@ -4,11 +4,11 @@
     <name>jamal snippet</name>
     <packaging>jar</packaging>
     <artifactId>jamal-snippet</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>2.3.1-SNAPSHOT</version>
     </parent>
     <description>Jamal macro library snippet macros</description>
     <build>
@@ -67,14 +67,19 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-maven-input</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-assertions</artifactId>
-            <version>1.12.2</version>
+            <version>2.2.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-plantuml</artifactId>
-            <version>1.12.2</version>
+            <version>2.2.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -88,6 +93,36 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.javaLex</groupId>
+            <artifactId>javaLex</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.sourcebuddy</groupId>
+            <artifactId>SourceBuddy</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0</groupId>
+            <artifactId>refi</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-tree</artifactId>
+            <version>9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.4.0</version>
         </dependency>
     </dependencies>
 </project>

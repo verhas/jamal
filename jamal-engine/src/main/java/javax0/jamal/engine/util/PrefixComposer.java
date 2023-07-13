@@ -12,6 +12,11 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 /**
  * Compose a macro prefix object reading the input. The macro prefix is the string between the macro open string and the
  * macro starting {@code #} or  {@code @} character.
+ * <p>
+ * In the current version the prefix can contain {@code !} and {@code `} characters.
+ * The {@code !} characters mean extra post evaluation after the macro result is available.
+ * The {@code `} characters mean that the macro not be evaluated like it was surrounded by an identity macro.
+ *
  */
 public class PrefixComposer {
 

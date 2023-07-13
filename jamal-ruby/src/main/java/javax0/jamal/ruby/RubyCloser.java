@@ -5,9 +5,10 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Scanner;
 import org.jruby.RubyString;
 
-public class RubyCloser implements Macro, InnerScopeDependent {
+public class RubyCloser implements Macro, InnerScopeDependent, Scanner {
     private static class Closer implements AutoCloseable, javax0.jamal.api.Closer.OutputAware {
         private Input result;
         private final Shell shell;
@@ -23,15 +24,12 @@ public class RubyCloser implements Macro, InnerScopeDependent {
             shell.property("$result", RubyString.newString(shell.shell.getProvider().getRuntime(), result.getSB()));
             try {
                 final var sb = shell.evaluate(closerScript, null);
-                if (sb == null) {
-                    throw new BadSyntax("Ruby closer script '" + shell.getId() + "' returned null");
-                }
+                BadSyntax.when(sb == null, "Ruby closer script '%s' returned null", shell.getId());
                 result.getSB().setLength(0);
                 result.getSB().append(sb);
             } catch (Exception e) {
-                throw new BadSyntax("There was an exception '"
-                    + e.getMessage()
-                    + "' executing the ruby closer script in the shell '" + shell.getId() + "'.", e);
+                throw new BadSyntax(String.format("There was an exception '%s' executing the ruby closer script in the shell '%s'.",
+                        e.getMessage(), shell.getId()), e);
             }
         }
 

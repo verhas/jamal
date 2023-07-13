@@ -7,13 +7,13 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ObjectMacro implements Macro {
+public class ObjectMacro implements Macro, Scanner {
     public static class BBB implements UserDefinedMacro, ObjectHolder<Object> {
         final String id;
         final Object object;
@@ -46,8 +46,9 @@ public class ObjectMacro implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var type = Params.holder(null, "type").asString();
-        Params.using(processor).from(this).keys(type).between("()").parse(in);
+        final var scanner = newScanner(in, processor);
+        final var type = scanner.str(null, "type");
+        scanner.done();
         final Identified macro;
         switch (type.get()) {
             case "Array":

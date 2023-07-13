@@ -8,7 +8,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,23 +22,22 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.Params.holder;
 
-public class ListDir implements Macro, InnerScopeDependent {
+public class ListDir implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var format = holder("format").orElse("$name").asString();
-        final var separator = holder("separator", "sep").orElse(",").asString();
-        final var grep = holder("grep").orElse(null).asString();
-        final var glob = holder("pattern").orElse(null).asString();
-        final var maxDepth = holder("maxDepth").orElseInt(Integer.MAX_VALUE);
-        final var isFollowSymlinks = holder("followSymlinks").asBoolean();
-        final var countOnly = holder("countOnly").asBoolean();
-        Scan.using(processor).from(this).between("()")
-                .keys(format, maxDepth, isFollowSymlinks, separator, grep, glob, countOnly).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var format = scanner.str("format").defaultValue("$name");
+        final var separator = scanner.str("separator", "sep").defaultValue(",");
+        final var grep = scanner.str("grep").defaultValue(null);
+        final var glob = scanner.str("pattern").defaultValue(null);
+        final var maxDepth = scanner.number("maxDepth").defaultValue(Integer.MAX_VALUE);
+        final var isFollowSymlinks = scanner.bool("followSymlinks");
+        final var countOnly = scanner.bool("countOnly", "count");
+        scanner.done();
 
         final FileVisitOption[] options;
-        if (isFollowSymlinks.get()) {
+        if (isFollowSymlinks.is()) {
             options = new FileVisitOption[]{FileVisitOption.FOLLOW_LINKS};
         } else {
             options = new FileVisitOption[0];
@@ -52,14 +51,11 @@ public class ListDir implements Macro, InnerScopeDependent {
         var dirName = FileTools.absolute(reference, in.toString().trim());
 
         var dir = new File(dirName);
-        if (!dir.isDirectory()) {
-            throw new BadSyntaxAt("'" + dirName + "' does not seem to be a directory to list", in.getPosition());
-        }
+        BadSyntaxAt.when(!dir.isDirectory(), "'" + dirName + "' does not seem to be a directory to list", in.getPosition());
 
-        try {
-            final var fmt = format.get();
-            final var stream = Files.walk(Paths.get(dirName), maxDepth.get(), options)
-                    .filter(p -> grep(p, grepPattern))
+        final var fmt = format.get();
+        try (final var files = Files.walk(Paths.get(dirName), maxDepth.get(), options)) {
+            final var stream = files.filter(p -> grep(p, grepPattern))
                     .filter(p -> glob(p, globPattern))
                     .map(p -> format(p, fmt));
             if (countOnly.is()) {

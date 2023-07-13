@@ -4,11 +4,11 @@
     <name>jamal testsupport</name>
     <packaging>jar</packaging>
     <artifactId>jamal-testsupport</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>2.3.1-SNAPSHOT</version>
     </parent>
     <description>Jamal macro library macro test supporting classes</description>
     <build>
@@ -34,6 +34,7 @@
                           --add-opens jamal.testsupport/javax0.jamal.testsupport=ALL-UNNAMED
                           --add-opens jamal.testsupport/javax0.jamal.testsupport=org.junit.platform.commons
                           --add-opens jamal.testsupport/javax0.jamal.builtinstest=org.junit.platform.commons
+                           --add-reads jamal.testsupport=jamal.core
                            --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
                            --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
             </argLine>
@@ -71,7 +72,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.30</version>
+            <version>2.0</version>
         </dependency>
     </dependencies>
 </project>

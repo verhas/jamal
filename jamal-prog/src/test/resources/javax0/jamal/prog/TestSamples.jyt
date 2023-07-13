@@ -1,0 +1,103 @@
+Test negated condition:
+  Input: |-
+    {@program
+    if not 0 then
+            << "yes"
+    endif
+    if not 1 or 1 then
+            << "yes"
+    endif
+    if not(1 and 1) then
+            << "no"
+    endif
+    }
+  Output: "yesyes"
+
+Loop In a list of output commands:
+  Input: |-
+    {@program stepLimit=19
+      <<"this is the output "
+      <<"of the program "
+      for i=1 to 2
+      <<"and it is,.. "
+      next
+      <<"concatenated "
+      <<"together "
+    }
+  Output: "this is the output of the program and it is,.. and it is,.. concatenated together "
+
+If then else:
+  Input: |-
+    {@program
+    if 1==1 then
+            << "yes"
+    elseif "true" then
+            << "elseif yes"
+    endif
+    if """akarmi""" then
+            << "yes"
+    else
+            << "no"
+    endif
+    if 0 then
+            << "no"
+    else
+            << "yes"
+    endif
+    if 1 then
+            << "yes"
+    else
+            << "no"
+    endif
+    if "false" then
+            << "no"
+    else
+            << "yes"
+    endif
+    }
+  Output: "yesyesyesyesyes"
+
+"Failer":
+  Input: |-
+    {@define a(x)=this is x}
+    {@define b   =this is b }
+    {@program 
+        <<b + !"{a A}"
+    b = b + 1
+    evil = 666
+    } {b}
+  Output: |-
+  
+  
+    this is b this is A this is b 1
+"for.jam":
+  Input: |-
+    {@program
+    for i=1 to 3
+            << i
+    next
+    }
+  Output: "123"
+
+"While loop.jam":
+  Input: |-
+    {@program
+    i=1
+    while i<4
+            << i
+            i=i+1
+    wend
+    }
+  Output: "123"
+
+Inner Macro:
+  Input: |-
+    {@define h=there}\
+    {@program
+      << !"{@define k=33}"
+        << k + "44"
+    z = 55
+    << z + h
+    }{z}
+  Output: "7755there55"
+

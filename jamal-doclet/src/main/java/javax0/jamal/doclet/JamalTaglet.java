@@ -156,16 +156,16 @@ public class JamalTaglet implements Taglet {
     private final Map<String, String> memoize = new HashMap<>();
 
     /**
-     * Convert the tags processing using Jamal. First the elements of the {@code tags} are copied together and then they
+     * Convert the tags processing using Jamal. First the elements of the {@code tags} are copied together, and then they
      * are processed using Jamal. Because JavaDoc assumes that processing a string is cheap and calls this method many
-     * time for each and every taglet occurrence this method is memoized.
+     * times for each and every taglet occurrence, this method is memoized.
      * <p>
-     * If there is an error in the Jamal processing it will report an error to JavaDoc and will include the source
+     * If there is an error in the Jamal processing, it will report an error to JavaDoc and will include the source
      * unmodified (Jamal source) to the output.
      *
-     * @param tags
-     * @param element
-     * @return
+     * @param tags {@see Taglet#toString(List, Element)}
+     * @param element {@see Taglet#toString(List, Element)}
+     * @return the processed string
      */
     @Override
     public String toString(List<? extends DocTree> tags, Element element) {

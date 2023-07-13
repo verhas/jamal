@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal scriptbasic</name>
     <artifactId>jamal-scriptbasic</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>2.3.1-SNAPSHOT</version>
     </parent>
     <description>ScriptBasic support for Jamal</description>
     <build>
@@ -39,30 +39,30 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
-            <version>1.12.3-SNAPSHOT</version>
+            <version>2.3.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-api</artifactId>
-            <version>1.12.3-SNAPSHOT</version>
+            <version>2.3.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-engine</artifactId>
-            <version>1.12.3-SNAPSHOT</version>
+            <version>2.3.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.9.0-M1</version>
+            <version>5.10.0-M1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.9.0-M1</version>
+            <version>5.10.0-M1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -1,0 +1,10 @@
+== Jamal OpenAI module Completion API
+
+* Do some editing on the text
+
+
+
+* *input:* He was not hey I want  able to finish the task that gibberish that she gave her the day before yesterday
+* *instruction:* rewrite the sentence to gender-neutral also fixing errors, removing repetitions and making it more concise
+* *response:* __She was not able to finish the task that she was given the day before yesterday
+__

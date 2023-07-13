@@ -4,17 +4,17 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.lang.System.Logger.Level;
 
-public class Log implements Macro {
+public class Log implements Macro, Scanner.Core {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final Params.Param<String> levelString = Params.<String>holder(null, "level").orElse("info").asString();
-        Scan.using(processor).from(this).between("[]").keys(levelString).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var levelString = scanner.str(null, "level").defaultValue("info");
+        scanner.done();
         final Level level;
         try {
             level = Level.valueOf(levelString.get());

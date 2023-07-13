@@ -1,0 +1,465 @@
+= Jamal Prog Macro Module
+{%@import res:jamal.jim%}
+{%@snip:collect from=./src/main/java/%}
+The prog macro extends Jamal to execute a simple BASIC like programming language.
+
+Using this integration module, you can mix Jamal macro text with simple, imperative code snippets.
+To use this module, you have to add the dependency to your Maven project, as:
+
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>{%pom /project/artifactId/text()%}</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+The dependency is added to the different Jamal integrations.
+This module is available automatically when you use Jamal in Maven extension, JavaDoc, through JBang, or in the IntelliJ Asciidoctor plugin.
+In other environments you may need to add the dependency manually or load the module using the macro `maven:load`.
+
+The language is a subset of the BASIC language, and it is straightforward by design.
+It is far simpler than ScriptBasic, Ruby or Groovy, which are also integrated into Jamal by other modules.
+On the other hand, it is tightly integrated into Jamal.
+The other programming modules allow nesting programming code into Jamal text and then use macros to manage the input and the output of the snippets.
+
+This module also allows nesting code into Jamal and the other way around, but you do not need extra macros to transfer data between the macro and the program code.
+Program code can use macros as variables, function-, and method-calls.
+The output of the program is directly the output of the code macro.
+Thus, there is no need for extra macros to manage the input and the output of the code.
+
+The language is line oriented BASIC Like language.
+There are only a few commands:
+
+* variable assignment
+
+* if-then-else
+
+* for loops
+
+* while loops
+
+* output, denoted by `<<`
+
+* comment following `rem` or and `'` character till the end of the line
+
+Expressions can contain
+
+* the basic operations: `+`, `-`, `*`, `/`, `%`, `.`,
+* comparisons `==`, `!=`, `<`, `>`, `<`=`, `>=`
+* logical operations `and`, `or`, `not`
+* and parenthesis.
+
+In addition to these, there is a special operator `!` used to start evaluation of Jamal macros in strings.
+
+== Macros in the Package
+
+There are two macros in the package:
+
+* `program` is the macro that executes a program
+* `expression` is the macro that evaluates an expression
+
+=== Program
+{%@snip:check file="./src/main/java/javax0/jamal/prog/Program.java" hashCode="ba4f3ddd"%}
+The macro `program` takes the input of the macro and interprets it as a program.
+The result of the macro is the concatenated strings of the output `<<` commands.
+
+For example:
+
+{%sample/
+{@program
+     <<"this is the output "
+     <<"of the program "
+     ' here we start a loop
+     for i=1 to 2
+     rem this is also a comment
+     <<"and it is,.. "
+     next ' I can write comments at the end of the line
+     <<"concatenated "
+     <<"together "
+} %}
+
+will result in the output:
+
+{%output%}
+
+The language is elementary, documented below in the section about expressions and commands.
+
+The command `program` has the option `stepLimit`.
+This parameter has to be a number.
+It limits the number of steps that the program can execute.
+When the limit is reached, the program will throw an exception.
+The default value of the limit is 100000 (hundred-thousand).
+This limit is to prevent infinite loops.
+
+{%sample/
+{@try! {@program stepLimit=18
+<<"this is the output "
+<<"of the program "
+for i=1 to 2
+<<"and it is,.. "
+next
+<<"concatenated "
+<<"together "
+}} %}
+
+will result in the output:
+
+{%output%}
+
+[%collapsible,title=How the steps are counted]
+====
+Each code "block" is a step, each individual command is a step, and each operation in an expression is a step.
+In the example above, the steps are
+
+[start=0]
+. program start counts as one step
+. the first `<<`
+. {%@define ACSV=accessing the constant string value%}{%ACSV%}
+. the second `<<`
+. {%ACSV%}
+. starting the for loop
+. accessing constant `1` for the start value
+. accessing constant `2` for the end value
+. accessing constant `1` for the step value, which is implicit, still accessing it is a step
+{%@define LOOP($NUMBER)=
+. starting the code block of the for the $NUMBER loop execution
+. the $NUMBER execution `<<` in the for loop
+. the access to the constant string value in the $NUMBER loop execution%}\
+{%LOOP first%}
+{%LOOP second%}
+. {%ACSV%}
+. the `"concatenated "` `<<` fater the loop has finished
+. {%ACSV%}
+. the `"together "` `<<`
+. {%ACSV%}
+
+The command `next` does not calculate.
+That command is just a marker for the end of the loop, and it is used by the syntax analyser.
+If you change the `stepLimit` to 19 then the program will succeed.
+====
+
+The macro also supports the `prog`, `do` and `run` aliases.
+
+=== Expression
+
+The macro `expression` takes the input of the macro and interprets it as an expression.
+The result of the macro is the value of the expression.
+
+
+== Expression Syntax
+
+Expressions are composed of numeric constants, strings, variables, and operators.
+The operators are the basic arithmetic operators, the comparison operators, the logical operators and the `!` operator.
+
+The formal syntax of the expressions is:
+
+  expression ::= expression1 `and` expression |
+                 expression1 `or` expression |
+                 expression1
+
+  expression1 ::= expression2 `==` expression |
+                  expression2 `!=` expression |
+                  expression2 `<` expression |
+                  expression2 `>` expression |
+                  expression2 `<=` expression |
+                  expression2 `>=` expression |
+                  'not' expression1 |
+                  expression2
+
+    expression2 ::= expression3 `+` expression |
+                    expression3 `-` expression |
+                    expression3
+
+    expression3 ::= expression4 `*` expression |
+                    expression4 `/` expression |
+                    expression4 `%` expression |
+                    expresson4 `.` function_call |
+                    expression4
+
+    expression4 ::= `!` expression |
+                    `(` expression `)` |
+                    number |
+                    string |
+                    variable |
+                    function_call |
+                    `+` expression4 |
+                    '+' expression4 |
+                    '-' expression4
+
+    function_call ::= identifier `(` expression_list `)`
+
+
+The different operations are executed using BigDecimal numbers if the operands are both numeric.
+In other cases, string operations are used.
+In this case `-`, `*`, `/` and `%` are not defined and will cause syntax error.
+`+` is defined as string concatenation.
+When used as unary `+` it is a no-op resulting the same string as the operand.
+
+The operator `!` is used to evaluate a Jamal macros.
+It is applied to the expression that follows it, and it evaluates it as string.
+
+This evaluation is done in the same scope as the surrounding environment.
+If you `define` here a macro then it will be available in the surrounding environment.
+There is no need to `export` the macro.
+
+The same is true for the variables.
+If you assign a value to a variable here, then it will be available in the surrounding environment as a macro.
+The other way around, if you assign a value to a macro in the surrounding environment, then it will be available in the program as a variable.
+Such macros must not have parameters.
+
+The following code uses two macros.
+One with parameter and it is used in a `try` block to catch the exception.
+The other macro, `b` has no parameter, and it can be used in the program.
+
+The macro `b` is used as a variable, and it is outputted from the program.
+It is also modified.
+The character `1` is appended to the string.
+The variable `evil` is not defined in the program, but it is used outside.
+
+{%sample/
+{@define a(x)=this is x}
+{@define b   =this is b}
+{@try! {@program
+            <<a}}
+{@program
+     <<b + !"{a A}"
+     b = b + 1
+     evil = 666
+} {b}
+{evil}
+%}
+
+{%output%}
+
+== Commands
+
+The interpreted language has only a very few commands.
+These are
+
+* variable assignment
+* if-then-else
+* for loops
+* while loops
+* output
+
+In the following chapters we will discuss these commands.
+
+=== variable assignment
+
+The variable assignment has the form:
+
+    variable = expression
+
+The name of the variable can be any string, which is a valid Jamal user defined macro name.
+The value of the expression will be treated as a string and will be stored in the macro registry.
+
+{%sample/
+{@program
+     :z = 13
+     b = z + 17
+}{b}
+%}
+
+will result
+
+{%output%}
+
+The variable `:z` is registered in the global macro scope.
+It can later also be referenced as `z` unless there is a variable `z` in a lower scope.
+
+=== if-then-else
+
+If-then-else has the form:
+
+    if expression then
+        block
+    elseif expression then
+        block
+    else
+        block
+    endif
+
+The `else` and `elseif` parts are optional.
+The interpretation of the commands is the conventional.
+
+{%sample/
+{@program
+if "true" then
+    <<"if true"
+elseif true then
+    <<"elseif true"
+else
+    <<"else"
+endif
+}
+%}
+
+will result
+
+{%output%}
+
+You can write `endif` and `elseif` as `end if` and `else if`.
+
+=== for loops
+
+For loops execute the lines between the `for` and `next` commands.
+
+{%sample/
+{@program
+for i=0 to 9 step 1
+    <<i
+next
+}
+%}
+
+will output
+
+{%output%}
+
+The `step` part is optional.
+The values are evaluated when the loop is started.
+The `step` value can be negative.
+
+Note that the for loop uses the same operation as `+`.
+It means, if some values are strings then the loop will concatenate the step value.
+Unfortunately, in this case the loop cannot terminate.
+
+=== while loops
+
+{%sample/
+{@program
+i = 0
+while i < 10
+    <<i
+    i = i + 1
+wend
+}
+%}
+
+will result
+
+{%output%}
+
+=== output
+
+The output command, as you could see examples in the previous samples, is the `<<` command.
+The expression after the `<<` is evaluated and the result is appended to the result of the program macro.
+
+{%sample/{@program
+   a = "{@define z=55}"
+   a = !a
+   <<a
+   <<z
+
+} {z}%}
+
+{%output%}
+
+== Function and Method Calls
+
+As we discussed before, you can use parameterless macros by the name as a variables.
+You can also use a macro as a method or function call even when it has parameters.
+
+The syntax of a function call is
+
+{%sample/
+   macroName( expression, expression, ... )
+%}
+
+In this case, the expressions will be passed to the macro as argument or arguments.
+
+A method call is similar, but it has a receiver "object".
+
+{%sample/
+   receiver.macroName( expression, expression, ... )
+%}
+
+The receiver is an expression.
+The method call is a syntactic sugar only and it is equivalent to
+
+{%sample/
+   macroName( expression, expression, ... , receiver)
+%}
+
+CAUTION: The receiver is the last argument.
+It is not the same as usual.
+It makes sense when built-in macros are called this way chained.
+The macros work one after the other on each others output, and the options can be specified as parameter strings.
+
+The macro can be a user defined macro or a built-in macro.
+First, the user defined macro registry is consulted, and the built-in macros are only considered when the user defined macro is not found.
+
+The argument mapping is simple in the case of user defined macros.
+User defined macros have several arguments, and the arguments of the function call are mapped to the arguments of the macro in the order of the arguments.
+You can also use argument less macros, simply not writing anything between the `()` characters.
+This is almost the same as using the macro as a variable.
+The only difference is that putting `()` characters after the macro name will make it a function call to a built-in  macro in the case the user defined macro does not exist.
+Without the `()` an undefined macro will create an error even if a built-in macro exists with the same name.
+
+
+
+In the case of built-in macros, the mapping is not so trivial.
+Built-in macros have one single string parameters, which is not split up to separate arguments by default.
+The macro implementation may split up the string to separate arguments, but it is not the default behavior.
+Many macro implementations apply specific and unique syntax.
+
+The mapping joins the arguments of the call to a single string.
+It takes the arguments but the last one and joins them separating with a space each.
+After that this string is surrounded with `()` characters or whatever the macro can use to enclose options.
+Finally, the last argument is appended to the string.
+
+This way the arguments at the start are options for the macro call.
+Now this may also explain why the receiver is the last argument when the syntax is a method call.
+
+NOTE: You cannot call a macro that has a name, which is a keyword in the language.
+The keywords are {%#replace (regex) /{%@snip KEYWORDS%}/"/`/%}.
+
+There is one major difference between evaluating a user-defined macro in the macro environment and calling it as a function.
+User-defined macros are processed for further macros after they produce their result unless they are a verbatim type.
+Calling a macro as a function does not process the result further.
+If you need the result processed, you should use the `!` operator.
+
+Variable assignment automatically defines argument less macros.
+You can define macros with arguments using the `define` macro evaluating strings or calling the define macro as a function.
+
+Let's have a look at the following example.
+
+{%sample/
+{@prog
+<< "here we go\n"
+_ = define( "a(x)=this is x\n" )
+<< a( "A" )
+}
+{_} is empty
+{a /'is just a'}
+%}
+
+will result in
+
+{%output%}
+
+It also shows that the macros defined inside the program code part can also be used inside and outside in the same context.
+
+The following example will show macros chained as method calls.
+It also gives a good example explaining why the receiver is the last argument.
+
+{%sample/
+{@program
+<< "this is a string"
+<<"\n"
+<< "this is a string".string:substring("begin=1","end=5")
+<<"\n"
+<< "this is a string".string:substring("begin=1","end=5").case:upper()
+<<"\n"
+<< "this is a string".string:substring("begin=1","end=5").case:upper().string:chop("post=S")
+}
+%}
+
+will result in
+
+{%output%}

@@ -1,7 +1,7 @@
-== Jamal Extension Macros
+= Jamal Extension Macros
 
 The maven module `jamal-extensions` contain experimental macros.
-These macros are tested and they work, but they are not guaranteed to be feature stable.
+These macros are tested, and they work, but they are not guaranteed to be feature stable.
 It means that their inner working may change in later releases.
 
 Many of these macros in a more matured form can be found in other macro sets.

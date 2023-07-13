@@ -1,0 +1,18 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@import ../version.jim}
+{project jamal core}
+    {packaging jar}
+    {GAV ::jamal-core:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description|Jamal macro library built-in macros}
+
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies#
+        {@for MODULE in (api,tools)=
+            {dependency|{GROUPID}|jamal-MODULE}}
+        {@for MODULE in (api,engine)=
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+    }
+{end project}
+{@xmlFormat}

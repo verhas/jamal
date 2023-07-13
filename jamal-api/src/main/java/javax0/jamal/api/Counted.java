@@ -1,7 +1,11 @@
 package javax0.jamal.api;
 
 /**
- * Objects that want to keep track of how many times they were used implement this interface.
+ * Objects that want to keep track of how many times they were used implement this interface. The
+ * {@link UserDefinedMacro} class implements this interface. It is used to display a warning when a user defined
+ * macro is declared but is never used in a scope, which is not the global scope. Giving warning on the global scope
+ * would result too many warning for the imported macros that come in a package and the actual file may only use some
+ * of them only.
  */
 public interface Counted {
     /**

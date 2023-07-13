@@ -32,13 +32,25 @@ To use this module, you have to add the dependency to your Maven project, as:
     <artifactId>jamal-io</artifactId>
     <version>{%VERSION%}</version>
 </dependency>
-
 ----
+
+or as an alternative your macro file has to use the `maven:load` macro to load the module as
+
+{%sample/
+{@maven:load com.javax0.jamal:jamal-io:{%VERSION%}}%}
+
+before using any macro from this package for the first time.
+Also note, that using the `maven:load` macro requires that you configure the `jamal-io` package as safe in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
+
 
 Following that, you can use the macros
 {%@define chap($x)=. <<$x,`io:$x`>>%}
 
+{%chap cwd%}
+. <<name,`os:name`>>
 {%chap write%}
+{%chap copy%}
+{%chap file%}
 {%chap remove%}
 {%chap mkdir%}
 {%chap print%}
@@ -54,9 +66,24 @@ macros.
 
 == Macros implemented in the package
 
+{%chap cwd%}
+
+This macro can be used to get the current working directory.
+The format of the macro is
+
+{%sample/
+{@io:cwd}%}
+
+and the output is the actual working directory absolute path name.
+
+[[name]]
+=== {%macroChapter%}`os:name`
+
+This macro will return the actual operating system name, as it is contained in the system variable `os.name`.
+
 {%chap write%}
 
-Using this macro you can write some text into a file.
+Using this macro, you can write some text into a file.
 The format of the macro is
 
 {%sample/
@@ -75,9 +102,56 @@ Use the user defined macro if you want to write several different segments to th
 The default value is to truncate the file.
 
 * `io:mkdir` (alias `mkdir`) is a boolean option controlling if the directory where the file has to be is created before writing the file if it does not exist.
-The default is not to create the file.
+The default is not to create the directory and hence, neither the file.
 
 {%OPTIONS_NOTE%}
+
+{%chap copy%}
+
+This macro can be used to copy a file.
+It is usually useful when a source file is some binary information via the web, and you want to store it locally attached to the document.
+For example, the OpenAI can ask the service to generate a picture.
+The result is a downloadable picture.
+The picture is stored by the service only for a limited time.
+After that time, the picture us deleted and not available for the document.
+Using this macro, the picture can be downloaded and stored locally.
+
+The macro is controlled by options.
+The options are:
+
+* `from` should specify the source file.
+It is usually a URL starting with `https://`.
+Note that Jamal deliberately does not support `http://` URLs.
+
+* `to` the target file name.
+This is where the file will be saved.
+
+* `io:append`, `append` is a boolean parameter meaning that the file should be appended.
+
+* `io:mkdir`, `mkdir` is a boolean parameter meaning that the directory where the file should be saved should be created if it does not exist.
+
+* `cache` is a boolean parameter meaning that the file download cache implemented in Jamal should be used.
+
+
+* `overwrite` is a boolean parameter meaning that the file should be overwritten if it exists.
+If this parameter is not specified and the target file exists, then the macro will not even start the copy.
+The same effect could be reached surrounding the `io:copy` macro with an `if` macro using {%link file%} checking the existence of the target file.
+This option is for convenience.
+
+
+{%chap file%}
+
+This macro can be used to test a file.
+The result of the macro will be either `true` or `false` depending on the file test.
+
+The macro has two options:
+
+* `io:file` (alias `file`) names the file.
+The file name can be absolute or relative to the file where the macro is used.
+
+* `isHidden`, `exists`, `isDirectory`, `isFile`, `canExecute`, `canRead`, `canWrite` specifies the test.
+Technically, this option is boolean, but the macro tests the name you use instead of the existence.
+If you do not specify any of these tests then `exists` will be used.
 
 {%chap remove%}
 
@@ -152,10 +226,10 @@ The rest of the macro will be used as the input text to the program, and Jamal w
 Note that it is not possible to execute an arbitrary program from Jamal.
 Anything you want to execute as a separate process has to be configured in the system.
 For security reason, the command specification is a symbolic name.
-The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
-The recommended way to configure the executable is to use the `~/.jamal/setup.properties` or `~/.jamal/setup.xml` file.
+The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
+The recommended way to configure the executable is to use the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
 
-For example, if you want to execute the Graphviz program, you can configure it in the `~/.jamal/setup.properties` file as:
+For example, if you want to execute the Graphviz program, you can configure it in the `~/.jamal/settings.properties` file as:
 
 [source]
 ----
@@ -172,9 +246,8 @@ After this you can execute the macro
 This will start the program without any argument, defined timeout or input text.
 
 The options of the macro are defined as follows:
-
 {%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*.*?\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
 {%@snip exec_options%}
 %}%}
 
@@ -183,7 +256,7 @@ Note that all these options are technically aliases.
 It means that you cannot use a user defined macro to specify their values.
 They all have to be specified in the first line of the macro.%}{%ALIAS$ONLY%}
 
-{%@snip:collect asciidoc from=src/test/java/javax0/jamal/io/TestExec.java%}}
+{%@snip:collect asciidoc from=src/test/java/javax0/jamal/io/TestExec.java%}
 
 {%@define example($x)=[source]
 ----
@@ -214,11 +287,11 @@ When Jamal looks for some configuration it looks at the
 
 * environment variables
 
-* `~/.jamal.setup.(properties|xml)`
+* `~/.jamal/settings.(properties|xml)`
 
 whichever it finds first.
 The key given is used as is in the case of the environment variables.
-For example `JAVA_HOME` is used as is.
+For example, `JAVA_HOME` is used as is.
 However, when the code looks at the system properties, it looks for the key `java.home`.
 The transformation is to contert to lower case and replace the underscore characters with dot.
 In the configuration file the key is also lowe case and the underscore characters are replaced with dot but if the key has a `jamal.` prefix it is also removed.
@@ -309,14 +382,14 @@ On the other hand the external program will see this environment variable as und
 The next example shows how to use the option `optional`.
 This option tells the macro `exec` not to bother when the command is not configured in the Jamal environment.
 It can come handy in a few situations.
-For example you want to use Graphviz to create some nice looking diagrams.
+For example, you want to use Graphviz to create some nice looking diagrams.
 Some macros extract the Graphviz dot file from the document and then use Graphviz to create the image.
 The Jamal processing of the document runs as part of the unit test to ensure that the documentation just as well as the tests are correct and up-to-date.
 
 In this setup you may face the issue that Graphviz is not installed on the continous intergration server.
 The lack of the application will break the build, since Jamal cannot run the external process.
 As a workaround you can add the output of Graphviz to the source control and use the option `optional`.
-When you build your code on your local system Graphiz is available, configured in your `~/.jamal/setup.properties` and works.
+When you build your code on your local system Graphiz is available, configured in your `~/.jamal/settings.properties` and works.
 Whenever you change the graph description in your documentation file, the SVG or PNG of the graph will follow during the build.
 When the code is comitted to the CVS server the integration server kicks-in, runs the build.
 The build will see that the Graphviz application is not configured and will ignore the external process.
@@ -340,7 +413,7 @@ The test checks that the error message belongs to this case and not to the use o
 
 This macro can be used to wait for the completion of a proces started earlier asynchronously.
 A document may start some external process at an earlier point and needs the result only later.
-While the external processess runs the document processing can go on and the wait for the result when it is needed.
+While the external processess runs the document processing can go on and wait for the result when it is needed.
 The output of the external process cannot be collected from the result of the `exec` macro.
 Output of asynchronously started external processes do not appear as the result of the macro.
 In this case the output is typically redirected to a file and the result can be collected from the file after the `waitFor` was processed.
@@ -348,7 +421,7 @@ In this case the output is typically redirected to a file and the result can be 
 The macro `waitFor` uses a subset of the options of the `exec` macro.{%ALIAS$ONLY%}
 
 {%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*.*?\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
 {%@snip waitFor_options%}
 %}%}
 

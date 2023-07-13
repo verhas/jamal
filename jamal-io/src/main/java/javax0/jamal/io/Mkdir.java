@@ -5,16 +5,17 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 
-public class Mkdir implements Macro, InnerScopeDependent {
+public class Mkdir implements Macro, InnerScopeDependent, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var file = Utils.getFile();
-        final var recursive = Utils.getRecursive();
-        Params.using(processor).from(this).keys(file, recursive).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var file = Utils.getFile(scanner);
+        final var recursive = Utils.getRecursive(scanner);
+        scanner.done();
 
         final var fileName = Utils.getFile(file, in);
 
@@ -24,9 +25,7 @@ public class Mkdir implements Macro, InnerScopeDependent {
         } else {
             done = new File(fileName).mkdir();
         }
-        if (!done) {
-            throw new BadSyntax("Directory '" + fileName + "' cannot be created");
-        }
+        BadSyntax.when(!done, "Directory '%s' cannot be created", fileName);
         return "";
     }
 

@@ -21,6 +21,7 @@ public class Param<K> implements Params.Param<K> {
     private String macroName;
     private String defaultValue = null;
     private boolean mandatory = true;
+
     /**
      * When calculating the final value the actual string value from the parameter or the user defined macro is needed.
      * When we return a list or a boolean then we do not need the string. It is okay if it is there, and may be used,
@@ -31,8 +32,8 @@ public class Param<K> implements Params.Param<K> {
     private boolean stringNeeded = true;
 
     @Override
-    public void copy(Params.Param<?> p){
-        Param<K> it = (Param<K>)p;
+    public void copy(Params.Param<?> p) {
+        Param<K> it = (Param<K>) p;
         name = it.name;
         value.clear();
         value.addAll(it.value);
@@ -173,9 +174,7 @@ public class Param<K> implements Params.Param<K> {
      */
     private Optional<String> _get() throws BadSyntax {
         if (value.size() > 0) {
-            if (value.size() > 1 && stringNeeded) {
-                throw new BadSyntax("The key '" + reportingName(key) + "' must not be multi valued in the macro '" + macroName + "'");
-            }
+            BadSyntax.when(value.size() > 1 && stringNeeded, "The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName);
             return Optional.ofNullable(value.get(0));
         }
         final var reader = MacroReader.macro(processor);
@@ -188,9 +187,7 @@ public class Param<K> implements Params.Param<K> {
 
     private String getRaw() throws BadSyntax {
         final var opt = _get();
-        if (opt.isEmpty() && mandatory && stringNeeded) {
-            throw new BadSyntax("The key '" + reportingName(key) + "' for the macro '" + macroName + "' is mandatory");
-        }
+        BadSyntax.when(opt.isEmpty() && mandatory && stringNeeded, "The key '%s' for the macro '%s' is mandatory", reportingName(key), macroName);
         return opt.orElse(defaultValue);
     }
 
@@ -241,9 +238,7 @@ public class Param<K> implements Params.Param<K> {
      * @throws BadSyntax when the underlying call to {@link #_get()} throws
      */
     private boolean getBoolean() throws BadSyntax {
-        if (value.size() > 1) {
-            throw new BadSyntax("The key '" + reportingName(key) + "' must not be multi valued in the macro '" + macroName + "'");
-        }
+        BadSyntax.when(value.size() > 1, "The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName);
         if (value.size() > 0) {
             return !value.get(0).equals("false") && !value.get(0).equals("no") && !value.get(0).equals("0");
         } else {

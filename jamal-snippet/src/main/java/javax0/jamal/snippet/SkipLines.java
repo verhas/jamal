@@ -7,20 +7,21 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class SkipLines implements Macro, InnerScopeDependent, BlockConverter {
+public class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var skipStart = Params.<Pattern>holder("skip").orElse("skip").asPattern();
-        final var skipEnd = Params.<Pattern>holder("endSkip").orElse("end\\s+skip").asPattern();
-        Scan.using(processor).from(this).firstLine().keys(skipEnd, skipStart).parse(in);
+        final var scanner = newScanner(in,processor);
+        final var skipStart = scanner.pattern("skip").defaultValue("skip");
+        final var skipEnd = scanner.pattern("endSkip").defaultValue("end\\s+skip");
+        scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), skipStart, skipEnd);
+        convertTextBlock(in.getSB(), in.getPosition(), skipStart.getParam(), skipEnd.getParam());
         return in.toString();
     }
 

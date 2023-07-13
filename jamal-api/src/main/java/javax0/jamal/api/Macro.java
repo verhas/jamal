@@ -11,7 +11,7 @@ import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
 import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
 
 /**
- * Any class that wants to function as a macro implementation should implement this interface.
+ * Any class that wants to function as a built-in macro should implement this interface.
  * <p>
  * The built-in macro {@code use} implemented in {@code javax0.jamal.builtins.Use} in the core package also assumes that
  * the class has a zero-parameter (default) constructor.
@@ -23,10 +23,14 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
  * When a macro implementation has state then it has to be annotated using {@link Macro.Stateful}.
  */
 @FunctionalInterface
-public interface Macro extends Identified, ServiceLoaded {
+public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
 
     @Retention(RetentionPolicy.RUNTIME)
     @interface Stateful {
+    }
+
+    static List<Macro> getInstances(final ClassLoader cl) {
+        return ServiceLoaded.getInstances(Macro.class, cl);
     }
 
     /**
@@ -160,89 +164,132 @@ public interface Macro extends Identified, ServiceLoaded {
         var op = new PositionStack(input.getPosition());
         while (op.size() > 0) {// while there is any opened macro
             if (input.isEmpty()) {
-                var head = output.substring(0, Math.min(40, output.length()));
-                final var nlPos = head.indexOf('\n');
-                if (nlPos != -1) {
-                    head = head.substring(0, nlPos);
-                }
-                throw new BadSyntaxAt("Macro was not terminated in the file.\n" +
-                        head + "\n", op.pop());
+                throw macroNotTerminated(output, op);
             }
-
             if (input.indexOf(open) == 0) {
-                int offset = open.length();
-                while (offset < input.length() && input.charAt(offset) == IDENT
-                        || input.charAt(offset) == POST_VALUATE
-                        || Character.isWhitespace(input.charAt(offset))) {
-                    offset++;
-                }
+                final int offset = getStartIndexOfMacroIdentifier(input, open.length());
                 final var macro = getMacro(processor.getRegister(), input, offset);
                 if (macro.isPresent()) {
                     output.append(input.substring(0, offset));
                     input.delete(offset);
                     output.append(macro.get().prefetch(processor, input));
                 } else {
-                    output.append(input.substring(0, open.length()));
-                    input.delete(open.length());
+                    move(input,open.length(), output);
                     op.push(input.getPosition());
                 }
             } else if (input.indexOf(close) == 0) {
                 if (op.popAndEmpty()) {
                     input.delete(close.length());
-                    if (input.length() > 0 && input.charAt(0) == '\\') {
-                        int i = 1;
-                        while (i < input.length() && Character.isWhitespace(input.charAt(i)) && input.charAt(i) != '\n') {
-                            i++;
-                        }
-                        if (i >= input.length() || input.charAt(i) == '\n') {
-                            input.delete(i + 1);
-                        }
-                    }
+                    findFirstSignificantCharacter(input);
                 } else {
-                    output.append(input.substring(0, close.length()));
-                    input.delete(close.length());
+                    move(input,close.length(), output);
                 }
             } else {
                 final var before = input.indexOf(open);
                 final var cIndex = input.indexOf(close, before);
-                final int oIndex = before == -1 ? input.indexOf(open) : before;
+                final int oIndex = before == -1 && input.isLazy() ? input.indexOf(open) : before;
                 final int textEnd;
                 if (cIndex != -1 && (oIndex == -1 || cIndex < oIndex)) {
                     textEnd = cIndex;
-                } else if (oIndex > -1) {
+                } else if (oIndex != -1) {
                     textEnd = oIndex;
                 } else {
                     textEnd = input.length();
                 }
-                output.append(input.substring(0, textEnd));
-                input.delete(textEnd);
+                move(input,textEnd, output);
             }
         }
         return output.toString();
     }
+    
+    private static void move(Input input, int numberOfCharacters, StringBuilder sb) {
+        sb.append(input.substring(0, numberOfCharacters));
+        input.delete(numberOfCharacters);
+    }
+    static void findFirstSignificantCharacter(final Input input) {
+        if (input.length() > 0 && input.charAt(0) == '\\') {
+            int i = 1;
+            while (i < input.length() && Character.isWhitespace(input.charAt(i)) && input.charAt(i) != '\n') {
+                i++;
+            }
+            if (i >= input.length() || input.charAt(i) == '\n') {
+                input.delete(i + 1);
+            }
+        }
+    }
 
-    static Optional<Macro> getMacro(MacroRegister register, Input input, int offset) {
-        while (offset < input.length() && Character.isWhitespace(input.charAt(offset))) {
+    /**
+     * Get the string index of the macro identifier that comes after the macro opening string. This may also be the
+     * {@code @} character that indicates a post-valuate macro, or the {@code #} character that indicates a pre-valuate
+     * macro.
+     *
+     * @param input the input that starts with the macro opening string
+     * @param start the index of the first character after the macro opening string
+     * @return the index of the first character that following the opening string, not a white space and not pre- or
+     * post-valuation character
+     */
+    private static int getStartIndexOfMacroIdentifier(final Input input, final int start) {
+        int offset = start;
+        while (offset < input.length() && (input.charAt(offset) == IDENT
+                || input.charAt(offset) == POST_VALUATE
+                || Character.isWhitespace(input.charAt(offset)))) {
             offset++;
         }
-        if (offset < input.length() && (input.charAt(offset) == NO_PRE_EVALUATE || input.charAt(offset) == PRE_EVALUATE)) {
-            offset++;
-            while (offset < input.length() && Character.isWhitespace(input.charAt(offset))) {
-                offset++;
-            }
-            int i = offset;
-            if (input.length() > offset && validId1stChar(input.charAt(offset))) {
-                while (input.length() > i && validIdChar(input.charAt(i))) {
-                    i++;
-                }
+        return offset;
+    }
+
+    /**
+     * Creates an exception.
+     *
+     * @param output is the output, partial as fetch. The first 40 character or the first line will be used in the exception.
+     * @param pos    the position
+     * @return the BadSyntaxAt created.
+     */
+    private static BadSyntaxAt macroNotTerminated(final StringBuilder output, final PositionStack pos) {
+        var head = output.substring(0, Math.min(40, output.length()));
+        final var nlPos = head.indexOf('\n');
+        if (nlPos != -1) {
+            head = head.substring(0, nlPos);
+        }
+        return new BadSyntaxAt("Macro was not terminated in the file.\n" +
+                head + "\n", pos.pop());
+    }
+
+    static Optional<Macro> getMacro(MacroRegister register, Input input, int start) {
+        start = stepOverSpaces(input, start);
+        if (start < input.length() && (input.charAt(start) == NO_PRE_EVALUATE || input.charAt(start) == PRE_EVALUATE)) {
+            start++;
+            start = stepOverSpaces(input, start);
+            int end = start;
+            if (input.length() > start && validId1stChar(input.charAt(start))) {
+                end = findIdentifierEnd(input, end);
             } else {
-                while (input.length() > i && !Character.isWhitespace(input.charAt(i))) {
-                    i++;
-                }
+                end = findFirstSpace(input, end);
             }
-            return register.getMacro(input.substring(offset, i));
+            return register.getMacro(input.substring(start, end));
         } else {
             return Optional.empty();
         }
+    }
+
+    private static int findFirstSpace(final Input input, int end) {
+        while (input.length() > end && !Character.isWhitespace(input.charAt(end))) {
+            end++;
+        }
+        return end;
+    }
+
+    private static int findIdentifierEnd(final Input input, int end) {
+        while (input.length() > end && validIdChar(input.charAt(end))) {
+            end++;
+        }
+        return end;
+    }
+
+    private static int stepOverSpaces(final Input input, int offset) {
+        while (offset < input.length() && Character.isWhitespace(input.charAt(offset))) {
+            offset++;
+        }
+        return offset;
     }
 }

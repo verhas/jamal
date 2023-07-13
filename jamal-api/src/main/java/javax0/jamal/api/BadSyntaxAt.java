@@ -81,6 +81,24 @@ public class BadSyntaxAt extends BadSyntax {
         }
     }
 
+    public static void when(final boolean condition, final BadSyntax.ThrowingSupplier<String> messeger, final Position pos) throws BadSyntaxAt {
+        if (condition) {
+            final String message;
+            try {
+                message = messeger.get();
+            } catch (BadSyntax e) {
+                throw new BadSyntaxAt(e, pos); // message.get() may throw, but never will
+            }
+            throw new BadSyntaxAt(message, pos);
+        }
+    }
+
+    public static void when(final boolean condition, final String message, final Position pos) throws BadSyntaxAt {
+        if (condition) {
+            throw new BadSyntaxAt(message, pos);
+        }
+    }
+
     /**
      * Run a "runnable" that may throw a BadSyntax exception. In case it throws a {@link BadSyntax} exception but not a
      * {@link BadSyntaxAt}, which has the position information then return a {@link ThrowMayBe} instance that can be

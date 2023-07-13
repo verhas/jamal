@@ -1,0 +1,119 @@
+{@comment}
+{#define NUL={@unicode &#0}}
+{#define SOH={@unicode &#1}}
+start of header,
+{#define STX={@unicode &#2}}
+start of text,
+{#define ETX={@unicode &#3}}
+end of text,
+{#define EOT={@unicode &#4}}
+end of transmission,
+{#define ENQ={@unicode &#5}}
+enquiry,
+{#define ACK={@unicode &#6}}
+acknowledge,
+{#define BEL={@unicode &#7}}
+bell,
+{#define BS={@unicode &#8}}
+backspace,
+{#define HT={@unicode &#9}}
+horizontal tab,
+{#define LF={@unicode &#10}}
+line feed,
+{#define VT={@unicode &#11}}
+vertical tab,
+{#define FF={@unicode &#12}}
+form feed,
+{#define CR={@unicode &#13}}
+carriage return,
+{#define SO={@unicode &#14}}
+shift out,
+{#define SI={@unicode &#15}}
+shift in,
+{#define DLE={@unicode &#16}}
+data link escape,
+{#define DC1={@unicode &#17}}
+device control 1,
+{#define DC2={@unicode &#18}}
+device control 2,
+{#define DC3={@unicode &#19}}
+device control 3,
+{#define DC4={@unicode &#20}}
+device control 4,
+{#define NAK={@unicode &#21}}
+negative acknowledge,
+{#define SYN={@unicode &#22}}
+synchronous idle,
+{#define ETB={@unicode &#23}}
+end of transmission block,
+{#define CAN={@unicode &#24}}
+cancel,
+{#define EM={@unicode &#25}}
+end of medium,
+{#define SUB={@unicode &#26}}
+substitute,
+{#define ESC={@unicode &#27}}
+escape,
+{#define FS={@unicode &#28}}
+file separator,
+{#define GS={@unicode &#29}}
+group separator,
+{#define RS={@unicode &#30}}
+record separator,
+{#define US={@unicode &#31}}
+unit separator,
+{#define DEL={@unicode &#127}}
+delete,
+
+{#define SP={@unicode &#32}}
+space,
+{#define NBSP={@unicode &#160}}
+non breaking space,
+{#define ZWSP={@unicode &#8203}}
+zero width space,
+
+{#define BULLET={@unicode &#8226}} (.BULLET.)
+
+{#define TM={@unicode &#8482}} (.TM.)
+{#define TRADEMARK={@unicode &#8482}} (.TRADEMARK.)
+{#define COPYRIGHT={@unicode &#169}} (.COPYRIGHT.)
+{#define REGISTERED={@unicode &#174}} (.REGISTERED.)
+{#define DEGREE={@unicode &#176}} (.DEGREE.)
+{#define PLUSMINUS={@unicode &#177}} (.PLUSMINUS.)
+{#define MULTIPLY={@unicode &#215}} (.MULTIPLY.)
+{#define DIVIDE={@unicode &#247}} (.DIVIDE.)
+{#define APPROX={@unicode &#8776}} (.APPROX.)
+{#define NEQ={@unicode &#8800}} (.NEQ.)
+{#define LEQ={@unicode &#8804}} (.LEQ.)
+{#define GEQ={@unicode &#8805}} (.GEQ.)
+{#define INFINITY={@unicode &#8734}} (.INFINITY.)
+{#define NOT={@unicode &#172}} (.NOT.)
+{#define AND={@unicode &#8743}} (.AND.)
+{#define OR={@unicode &#8744}} (.OR.)
+{#define IMPLIES={@unicode &#8658}} (.IMPLIES.)
+{#define EQUIV={@unicode &#8660}} (.EQUIV.)
+{#define FORALL={@unicode &#8704}} (.FORALL.)
+{#define EXISTS={@unicode &#8707}} (.EXISTS.)
+{#define PARTIAL={@unicode &#8706}} (.PARTIAL.)
+{#define EMPTYSET={@unicode &#8709}} (.EMPTYSET.)
+{#define NABLA={@unicode &#8711}} (.NABLA.)
+{#define IN={@unicode &#8712}} (.IN.)
+{#define NOTIN={@unicode &#8713}} (.NOTIN.)
+{#define SUBSET={@unicode &#8834}} (.SUBSET.)
+{#define SUBSETEQ={@unicode &#8838}} (.SUBSETEQ.)
+{#define SUPSET={@unicode &#8835}} (.SUPSET.)
+{#define SUPSETEQ={@unicode &#8839}} (.SUPSETEQ.)
+{#define UNION={@unicode &#8746}} (.UNION.)
+{#define INTERSECTION={@unicode &#8745}} (.INTERSECTION.)
+{#define PROD={@unicode &#8719}} (.PROD.)
+{#define SUM={@unicode &#8721}} (.SUM.)
+{#define INTEGRAL={@unicode &#8747}} (.INTEGRAL.)
+{#define SQRT={@unicode &#8730}} (.SQRT.)
+{#define PERP={@unicode &#8869}} (.PERP.)
+{#define MID={@unicode &#8739}} (.MID.)
+{#define ANGLE={@unicode &#8736}} (.ANGLE.)
+{#define DIAMOND={@unicode &#8900}} (.DIAMOND.)
+{#define LOZENGE={@unicode &#9674}} (.LOZENGE.)
+{#define CLUB={@unicode &#9827}} (.CLUB.)
+{#define DIAMOND={@unicode &#9830}} (.DIAMOND.)
+{#define HEART={@unicode &#982}} (.HEART.)

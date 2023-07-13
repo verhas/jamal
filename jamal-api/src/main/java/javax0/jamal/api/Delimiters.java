@@ -1,7 +1,7 @@
 package javax0.jamal.api;
 
 /**
- * Simple macro delimiter string storage interface.
+ * Simple macro delimiter string storage.
  * <p>
  * The implementing classes store the actual macro open and macro close strings and provide means to alter the actual
  * values.

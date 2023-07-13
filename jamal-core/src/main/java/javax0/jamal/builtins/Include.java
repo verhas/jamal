@@ -4,19 +4,25 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
+import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
+import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
+import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG1;
+import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG2;
 import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 @Macro.Stateful
-public class Include implements Macro {
+public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
     /**
      * Count the depth of the includes. In case this is more than 100 stop the processing. Most likely this is a wrong
      * recursive include that would cause stack overflow.
@@ -37,11 +43,12 @@ public class Include implements Macro {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         var position = input.getPosition();
-        final var top = Params.<Boolean>holder(null, "top").asBoolean();
-        final var verbatim = Params.<Boolean>holder("includeVerbatim", "verbatim").asBoolean();
-        final var lines = Params.<Boolean>holder(null, "lines").asString();
-        final var noCache = Params.<Boolean>holder(null, "noCache").asBoolean();
-        Scan.using(processor).from(this).between("[]").keys(verbatim, top, lines, noCache).parse(input);
+        final var scanner = newScanner(input,processor);
+        final var top = scanner.bool(null, "top");
+        final var verbatim = scanner.bool("includeVerbatim", "verbatim");
+        final var lines = scanner.str(null, "lines");
+        final var noCache = scanner.bool(null, "noCache");
+        scanner.done();
         position = repositionToTop(position, top);
 
         skipWhiteSpaces(input);
@@ -52,16 +59,24 @@ public class Include implements Macro {
             throw new BadSyntax("Include depth is too deep");
         }
         final String result;
-        final var includedInput = getInput(fileName, position, noCache.is(), processor);
+        final var in = getInput(fileName, position, noCache.is(), processor);
+        final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
+        final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
         if (lines.isPresent()) {
-            Range.Lines.filter(includedInput.getSB(), lines.get());
+            Range.Lines.filter(in.getSB(), lines.get());
         }
-        if (verbatim.get()) {
-            result = includedInput.toString();
+        if (verbatim.is()) {
+            result = in.toString();
         } else {
             var marker = new Marker("{@include " + fileName + "}", position);
             processor.getRegister().push(marker);
-            result = processor.process(includedInput);
+            if (useDefaultSeparators) {
+                processor.separators(IMPORT_OPEN, IMPORT_CLOSE);
+                result = processor.process(in);
+                processor.separators(null, null);
+            } else {
+                result = processor.process(in);
+            }
             processor.getRegister().pop(marker);
         }
         depth++;
@@ -79,7 +94,7 @@ public class Include implements Macro {
      * relative file name
      * @throws BadSyntax if 'top' is erroneous and querying it throws exception
      */
-    private Position repositionToTop(Position position, final Params.Param<Boolean> top) throws BadSyntax {
+    private Position repositionToTop(Position position, final BooleanParameter top) throws BadSyntax {
         if (top.is()) {
             while (position.parent != null) {
                 position = position.parent;

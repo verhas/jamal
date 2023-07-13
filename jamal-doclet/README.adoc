@@ -1,4 +1,4 @@
-== Jamal Doclet/Taglet
+= Jamal Doclet/Taglet
 
 
 This library can be used to extend your JavaDoc documents to include Jamal macros.
@@ -16,7 +16,7 @@ Starting with Java 18 you can define code snippets in your JavaDoc files without
 This possibility will probably be developed in the future and become mor and more usable.
 As for the release Java 18 the feature seems to be experimental, and it is not really handy.
 
-Using Jamal JavaDoc extensions you can do more and easier than with the built-in feature.
+Using Jamal JavaDoc extensions you can do more, and easier than with the built-in feature.
 You can also use Jamal with Java version 11 and later.
 ====
 
@@ -53,7 +53,7 @@ The following example, where the tag is on a line without `{` preceeding it or `
 
 It starts at the beginning of a line and lasts till the next block tag.
 
-=== Using with Maven
+== Using with Maven
 
 To use the Jamal doclet and taglet with Jamal you have to configure it in the `pom.xml` file.
 This configuration will tell the Maven JavaDoc plugin to use the Jamal doclet and taglet instead of the standard one.
@@ -62,43 +62,39 @@ The following is a sample configuration used in the manual integration test of J
 
 [source, xml, title=JamalDoclet Maven Configuration]
 ----
- 1. <plugin>
- 2.     <groupId>org.apache.maven.plugins</groupId>
- 3.     <artifactId>maven-javadoc-plugin</artifactId>
- 4.     <version>3.3.1</version>
- 5.     <configuration>
- 6.         <detectOfflineLinks>false</detectOfflineLinks>
- 7.         <doclint>none</doclint>
- 8.         <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
- 9.         <docletArtifact>
-10.             <groupId>com.javax0.jamal</groupId>
-11.             <artifactId>jamal-doclet</artifactId>
-12.             <version>1.12.2-SNAPSHOT</version>
-13.         </docletArtifact>
-14.         <additionalOptions>
-15.             <additionalOption>--source-root</additionalOption>
-16.             <additionalOption>${project.build.sourceDirectory}</additionalOption>
-17.         </additionalOptions>
-18.         <taglets>
-19.             <taglet>
-20.                 <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
-21.                 <tagletArtifact>
-22.                     <groupId>com.javax0.jamal</groupId>
-23.                     <artifactId>jamal-all</artifactId>
-24.                     <version>1.12.2-SNAPSHOT</version>
-25.                 </tagletArtifact>
-26.             </taglet>
-27.         </taglets>
-28.     </configuration>
-29.     <executions>
-30.         <execution>
-31.             <id>attach-javadocs</id>
-32.             <goals>
-33.                 <goal>jar</goal>
-34.             </goals>
-35.         </execution>
-36.     </executions>
-37. </plugin>
+ 1.         <plugin>
+ 2. 
+ 3.     <groupId>org.apache.maven.plugins</groupId>
+ 4.     <artifactId>maven-javadoc-plugin</artifactId>
+ 5.     <version>3.4.1</version>
+ 6. 
+ 7.             <configuration>
+ 8.                 <detectOfflineLinks>false</detectOfflineLinks>
+ 9.                 <doclint>none</doclint>
+10.                 <doclet>javax0.jamal.doclet.JamalDoclet</doclet>
+11.                 <docletArtifact>
+12.     <groupId>com.javax0.jamal</groupId>
+13.     <artifactId>jamal-doclet</artifactId>
+14.     <version>2.3.1-SNAPSHOT</version>
+15. </docletArtifact>
+16.                 <additionalOptions><additionalOption>--source-root</additionalOption>
+17.                     <additionalOption>${project.build.sourceDirectory}</additionalOption>
+18.                 </additionalOptions>
+19.                 <taglets>
+20.                     <taglet>
+21.                         <tagletClass>javax0.jamal.doclet.JamalTaglet</tagletClass>
+22.                         <tagletArtifact>
+23.     <groupId>com.javax0.jamal</groupId>
+24.     <artifactId>jamal-all</artifactId>
+25.     <version>2.3.1-SNAPSHOT</version>
+26. </tagletArtifact>
+27.                     </taglet>
+28.                 </taglets>
+29.             </configuration>
+30.             <executions><execution>
+31.                     <id>attach-javadocs</id>
+32.                     <goals><goal>jar</goal></goals></execution></executions>
+33.         </plugin>
 
 ----
 
@@ -139,7 +135,7 @@ If you want to use other modules, snippets, Markdown formatting, RUby or Groovy 
 
 The rest of the lines from 29 is the standard plugin configuration detailed in the Maven documentation.
 
-=== Configuration options
+== Configuration options
 
 The lines 14-17 in the example above define one extra option.
 There are multiple options that you can configure for the Jamal doclet.
@@ -163,10 +159,10 @@ When using Maven, specify this option as displayed on the example above
 +
 [source, xml, title=configuring source root]
 ----
-14.         <additionalOptions>
-15.             <additionalOption>--source-root</additionalOption>
-16.             <additionalOption>${project.build.sourceDirectory}</additionalOption>
-17.         </additionalOptions>
+14.     <version>2.3.1-SNAPSHOT</version>
+15. </docletArtifact>
+16.                 <additionalOptions><additionalOption>--source-root</additionalOption>
+17.                     <additionalOption>${project.build.sourceDirectory}</additionalOption>
 
 ----
 
@@ -208,7 +204,7 @@ These will be not be treated inside a `{@code ...}` macro, because of the `@` ch
 This requirement exists exactly the same way in usual JavaDoc, thus there is nothing special doing that.
 ====
 
-=== Command Line `javadoc` configuration
+== Command Line `javadoc` configuration
 
 In this section we describe the use of the doclet through the command line tool.
 Because the majority of the use cases will be using the tool via Maven this section is less detailed.
@@ -226,13 +222,13 @@ The important options are:
 [source]
 ----
 --module-path
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.12.3-SNAPSHOT/jamal-tools-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.12.3-SNAPSHOT/jamal-core-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.12.3-SNAPSHOT/jamal-engine-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.12.3-SNAPSHOT/jamal-api-1.12.3-SNAPSHOT.jar'
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.1-SNAPSHOT/jamal-tools-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.1-SNAPSHOT/jamal-core-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.1-SNAPSHOT/jamal-engine-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.1-SNAPSHOT/jamal-api-2.3.1-SNAPSHOT.jar'
 --patch-module
 jamal.doclet='${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java:${PROJECT_ROOT}/jamal/jamal-doclet/target/generated-sources/annotations'
 -doclet
 'javax0.jamal.doclet.JamalDoclet'
 -docletpath
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.12.3-SNAPSHOT/jamal-api-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.12.3-SNAPSHOT/jamal-tools-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.12.3-SNAPSHOT/jamal-engine-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.12.3-SNAPSHOT/jamal-core-1.12.3-SNAPSHOT.jar:$USERHOME/
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.1-SNAPSHOT/jamal-api-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.1-SNAPSHOT/jamal-tools-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.1-SNAPSHOT/jamal-engine-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.1-SNAPSHOT/jamal-core-2.3.1-SNAPSHOT.jar:$USERHOME/
 -encoding
 'UTF-8'
 -protected
@@ -256,7 +252,7 @@ ${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java
 -taglet
 'javax0.jamal.doclet.JamalTaglet'
 -tagletpath
-'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/1.12.3-SNAPSHOT/jamal-api-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/1.12.3-SNAPSHOT/jamal-tools-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/1.12.3-SNAPSHOT/jamal-engine-1.12.3-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/1.12.3-SNAPSHOT/jamal-core-1.12.3-SNAPSHOT.jar'
+'${PROJECT_ROOT}/jamal/jamal-doclet/target/jamal-doclet-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-api/2.3.1-SNAPSHOT/jamal-api-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-tools/2.3.1-SNAPSHOT/jamal-tools-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-engine/2.3.1-SNAPSHOT/jamal-engine-2.3.1-SNAPSHOT.jar:$USERHOME/.m2/repository/com/javax0/jamal/jamal-core/2.3.1-SNAPSHOT/jamal-core-2.3.1-SNAPSHOT.jar'
 -use
 -version
 -windowtitle

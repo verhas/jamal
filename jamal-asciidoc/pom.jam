@@ -1,7 +1,7 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
 {@import ../version.jim}
-{@import modules.jim}
+{@import ../modules.jim}
 {project jamal asciidoc}
     {GAV ::jamal-asciidoc:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
@@ -29,13 +29,24 @@
     }
 
     {dependencies
-       {@for [evalist] MODULE in (api,tools,engine,core,{JAMAL_MODULES})=
+       {@for [evalist] MODULE in ({modules:ASCIIDOC})=
          {dependency|{GROUPID}|jamal-MODULE|}}
+      {dependency |com.javax0.jamal|jamal-asciidoc258|{VERSION}}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE||test}}
       {dependency |org.asciidoctor|asciidoctorj-api|{ASCIIDOCTORJ_VERSION}|provided}
       {dependency |org.asciidoctor|asciidoctorj|{ASCIIDOCTORJ_VERSION}|provided}
       {dependency |org.mockito|mockito-core|{MOCKITO_VERSION}}
+      {dependency |com.github.bodiam|markdown-to-asciidoc|{MARKDOWN_TO_ASCIIDOC}}
+      {@comment This dependency is needed for the markdown to asciidoc conversion.
+                It is not used directly and it is a transitive dependency of the markdown to asciidoc converter.
+                The version of the dependency is too old and has security issues.
+                Therefore, here we override the version to the latest one.
+      }
+      {dependency :org.jsoup:jsoup:1.15.3}
     }
 
+    {repositories{repository|jitpack|https://jitpack.io/}}
+
 {end project}
+{@xmlFormat}

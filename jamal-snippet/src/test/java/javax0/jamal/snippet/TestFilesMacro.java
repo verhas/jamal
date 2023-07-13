@@ -81,6 +81,7 @@ public class TestFilesMacro {
         TestThat.theInput("{@file (format=\"$naked3\")./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6}").results("fileName.ext1.ext2.ext3");
         TestThat.theInput("{@file (format=\"$naked4\")./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6}").results("fileName.ext1.ext2");
         TestThat.theInput("{@file (format=\"$naked5\")./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6}").results("fileName.ext1");
+        TestThat.theInput("{@file (format=\"$simpleName\")./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6}").results("fileName.ext1.ext2.ext3.ext4.ext5.ext6");
 
 
         TestThat.theInput("{@file (format=\"$extensions\")./src/test/resources/fileName}").results("");
@@ -113,6 +114,68 @@ public class TestFilesMacro {
     }
 
     @Test
+    @DisplayName("Directory is found and extension cutting off works")
+    void testDirectoryExtensions() throws Exception {
+        TestThat.theInput("{@directory (format=\"$bareNaked\")./src/test/resources/dirName}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked1\")./src/test/resources/dirName}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked2\")./src/test/resources/dirName}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked3\")./src/test/resources/dirName}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked4\")./src/test/resources/dirName}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked5\")./src/test/resources/dirName}").results("dirName");
+
+        TestThat.theInput("{@directory (format=\"$bareNaked\")./src/test/resources/dirName.ext}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked1\")./src/test/resources/dirName.ext}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked2\")./src/test/resources/dirName.ext}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked3\")./src/test/resources/dirName.ext}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked4\")./src/test/resources/dirName.ext}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked5\")./src/test/resources/dirName.ext}").results("dirName");
+
+        TestThat.theInput("{@directory (format=\"$bareNaked\")./src/test/resources/dirName.ext1.ext2}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked1\")./src/test/resources/dirName.ext1.ext2}").results("dirName.ext1");
+        TestThat.theInput("{@directory (format=\"$naked2\")./src/test/resources/dirName.ext1.ext2}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked3\")./src/test/resources/dirName.ext1.ext2}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked4\")./src/test/resources/dirName.ext1.ext2}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked5\")./src/test/resources/dirName.ext1.ext2}").results("dirName");
+
+        TestThat.theInput("{@directory (format=\"$bareNaked\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("dirName");
+        TestThat.theInput("{@directory (format=\"$naked1\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("dirName.ext1.ext2.ext3.ext4.ext5");
+        TestThat.theInput("{@directory (format=\"$naked2\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("dirName.ext1.ext2.ext3.ext4");
+        TestThat.theInput("{@directory (format=\"$naked3\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("dirName.ext1.ext2.ext3");
+        TestThat.theInput("{@directory (format=\"$naked4\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("dirName.ext1.ext2");
+        TestThat.theInput("{@directory (format=\"$naked5\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("dirName.ext1");
+        TestThat.theInput("{@directory (format=\"$simpleName\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("dirName.ext1.ext2.ext3.ext4.ext5.ext6");
+
+
+        TestThat.theInput("{@directory (format=\"$extensions\")./src/test/resources/dirName}").results("");
+        TestThat.theInput("{@directory (format=\"$extension1\")./src/test/resources/dirName}").results("");
+        TestThat.theInput("{@directory (format=\"$extension2\")./src/test/resources/dirName}").results("");
+        TestThat.theInput("{@directory (format=\"$extension3\")./src/test/resources/dirName}").results("");
+        TestThat.theInput("{@directory (format=\"$extension4\")./src/test/resources/dirName}").results("");
+        TestThat.theInput("{@directory (format=\"$extension5\")./src/test/resources/dirName}").results("");
+
+        TestThat.theInput("{@directory (format=\"$extensions\")./src/test/resources/dirName.ext}").results("ext");
+        TestThat.theInput("{@directory (format=\"$extension1\")./src/test/resources/dirName.ext}").results("ext");
+        TestThat.theInput("{@directory (format=\"$extension2\")./src/test/resources/dirName.ext}").results("ext");
+        TestThat.theInput("{@directory (format=\"$extension3\")./src/test/resources/dirName.ext}").results("ext");
+        TestThat.theInput("{@directory (format=\"$extension4\")./src/test/resources/dirName.ext}").results("ext");
+        TestThat.theInput("{@directory (format=\"$extension5\")./src/test/resources/dirName.ext}").results("ext");
+
+        TestThat.theInput("{@directory (format=\"$extensions\")./src/test/resources/dirName.ext1.ext2}").results("ext1.ext2");
+        TestThat.theInput("{@directory (format=\"$extension1\")./src/test/resources/dirName.ext1.ext2}").results("ext2");
+        TestThat.theInput("{@directory (format=\"$extension2\")./src/test/resources/dirName.ext1.ext2}").results("ext1.ext2");
+        TestThat.theInput("{@directory (format=\"$extension3\")./src/test/resources/dirName.ext1.ext2}").results("ext1.ext2");
+        TestThat.theInput("{@directory (format=\"$extension4\")./src/test/resources/dirName.ext1.ext2}").results("ext1.ext2");
+        TestThat.theInput("{@directory (format=\"$extension5\")./src/test/resources/dirName.ext1.ext2}").results("ext1.ext2");
+
+        TestThat.theInput("{@directory (format=\"$extensions\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext1.ext2.ext3.ext4.ext5.ext6");
+        TestThat.theInput("{@directory (format=\"$extension1\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext6");
+        TestThat.theInput("{@directory (format=\"$extension2\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext5.ext6");
+        TestThat.theInput("{@directory (format=\"$extension3\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext4.ext5.ext6");
+        TestThat.theInput("{@directory (format=\"$extension4\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext3.ext4.ext5.ext6");
+        TestThat.theInput("{@directory (format=\"$extension5\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext2.ext3.ext4.ext5.ext6");
+    }
+    
+    @Test
     @DisplayName("File is found and formatted using defined root")
     void testFileWithRoot() throws Exception {
         Assumptions.assumeTrue(new File("../../../github/jamal/README.adoc").exists());
@@ -126,7 +189,7 @@ public class TestFilesMacro {
     }
 
     @Test
-    @DisplayName("File macro throws exception if file exists biut is a directory")
+    @DisplayName("File macro throws exception if file exists but is a directory")
     void testFileThrowsForDirectory() throws Exception {
         TestThat.theInput("{@file ..}").throwsBadSyntax();
     }

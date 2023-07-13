@@ -4,11 +4,11 @@
     <name>jamal test</name>
     <packaging>jar</packaging>
     <artifactId>jamal-test</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>2.3.1-SNAPSHOT</version>
     </parent>
     <description>Jamal macro library integration tests</description>
     <build>
@@ -33,12 +33,16 @@
                 --add-opens jamal.test/javax0.jamal.test.extra=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.core=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.yaml=ALL-UNNAMED
+                          --add-opens jamal.test/javax0.jamal.test.json=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.tools.params=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.tools.junit=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.examples=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.statecheck=ALL-UNNAMED
                           --add-opens jamal.test/javax0.jamal.test.devpath=ALL-UNNAMED
                           --add-opens jamal.engine/javax0.jamal.engine=ALL-UNNAMED
+                          --add-opens jamal.engine/javax0.jamal.engine=jamal.snippet
+                          --add-exports jamal.test/javax0.jamal.test.core=jamal.core
+                          --add-exports jamal.test/javax0.jamal.test.examples=jamal.core
             </argLine>
                 </configuration>
             </plugin>
@@ -59,7 +63,15 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-json</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

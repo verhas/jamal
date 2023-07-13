@@ -7,7 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
 /**
  * Take the argument of the macro and removes N spaces from the start of each line so that there is at least one line
@@ -16,7 +16,7 @@ import javax0.jamal.tools.Scan;
  * This can be used, when a snippet is included into the macro file and some program code is tabulated. In that case
  * this snippet will be moved to the left as much as possible.
  */
-public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
+public class TrimLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String getId() {
         return "trimLines";
@@ -26,13 +26,14 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
     // snippet trimLinesStart
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var margin = Params.<Integer>holder("margin").orElseInt(0);
-        final var trimVertical = Params.<Boolean>holder("trimVertical").asBoolean();
-        final var verticalTrimOnly = Params.<Boolean>holder("verticalTrimOnly", "vtrimOnly").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(margin, trimVertical, verticalTrimOnly).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var margin = scanner.number("margin").defaultValue(0);
+        final var trimVertical =scanner.bool("trimVertical");
+        final var verticalTrimOnly = scanner.bool("verticalTrimOnly", "vtrimOnly");
+        scanner.done();
         //end snippet
         final var sb = in.getSB();
-        convertTextBlock(sb, in.getPosition(), margin, trimVertical, verticalTrimOnly);
+        convertTextBlock(sb, in.getPosition(), margin.getParam(), trimVertical.getParam(), verticalTrimOnly.getParam());
         return sb.toString();
     }
 
@@ -56,11 +57,11 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter {
     /**
      * Get the margin value. Margin value is usually a simple integer. In some cases, however, it can be specified using
      * the alias `trim`. When there is no number specified then the trimming is done to zero space on the left.
-     *
+     * <p>
      * This method simply looks at how margin was defined. If it was defined using the alias {@code trim} and the value
      * is "true", which usually means that the key-word {@code trim} was standing without any value then the value is
      * zero. In all other cases the string value of the parameter is parsed as an int.
-     *
+     * <p>
      * Note that you can also write {@code trim=true}, which will also mean zero margin.
      *
      * @param margin the parameter holder specifying the value of the margin

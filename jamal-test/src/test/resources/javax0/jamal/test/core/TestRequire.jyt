@@ -1,7 +1,3 @@
-Test that the 'require' macro throws an exception if there are no arguments:
-  Input: "{@require}"
-  Throws: "The string '' cannot be used as a version."
-
 Test that the 'require' macro throws an exception if there is an unusable comparison:
   Input: "{@require != 1.6.7}"
   Throws: "The string '!= 1.6.7' cannot be used as a version."

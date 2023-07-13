@@ -70,7 +70,7 @@ public class SnippetStore implements Identified {
         final Predicate<String> fnTest = convertRegex(fnRegex);
         final Predicate<String> textTest = convertRegex(textRegex);
         final Predicate<Snippet> snTest = s -> idTest.test(s.id) && fnTest.test(s.pos.file) &&
-            Arrays.stream(s.text.split("\n", -1)).anyMatch(textTest);
+                Arrays.stream(s.text.split("\n", -1)).anyMatch(textTest);
         return snippets.values().stream().filter(snTest);
     }
 
@@ -146,7 +146,7 @@ public class SnippetStore implements Identified {
         if (snippets.containsKey(id)) {
             if (snippets.get(id).exception == null && collectionException == null) {
                 final var snip = snippets.get(id);
-                throw new BadSyntax(String.format("Snippet '%s' is already defined originally at %s:%s and again at %s:%s",id,snip.pos.file,snip.pos.line, pos.file, pos.line));
+                throw new BadSyntax(String.format("Snippet '%s' is already defined originally at %s:%s and again at %s:%s", id, snip.pos.file, snip.pos.line, pos.file, pos.line));
             } else if (snippets.get(id).exception != null && collectionException == null) {
                 snippets.put(id, new Snippet(id, snippet, pos, null));
             } else if (snippets.get(id).exception != null && collectionException != null) {
@@ -169,16 +169,28 @@ public class SnippetStore implements Identified {
         return fetchSnippet(id).text;
     }
 
+    /**
+     * Get the content of all the snippets with names matching the pattern.
+     * The result will be the text of the snippets appended after each other in the alphabetical order of the names.
+     * <p>
+     * The typical use is when the snippets contain documentation and are named like {@code nameNNNN} where {@code NNNN} is a
+     * number. In this case the pattern {@code name\\d+} will match all the snippets with names starting with {@code name}
+     * and followed by one or more digits.
+     *
+     * @param pattern the pattern to match the snippet names
+     * @return the text of the snippets or empty string if there is no snippet matching the pattern. It is not an error
+     * when there is no snippet with matching name.
+     */
     public String snippet(final Pattern pattern) {
         final var snipSet = new TreeSet<String>();
-        for(final var entry : snippets.entrySet()) {
-            if(pattern.matcher(entry.getKey()).find()) {
+        for (final var entry : snippets.entrySet()) {
+            if (pattern.matcher(entry.getKey()).find()) {
                 snipSet.add(entry.getKey());
             }
         }
         final var sb = new StringBuilder();
-        for( final var snip : snipSet) {
-                sb.append(snippets.get(snip).text);
+        for (final var snip : snipSet) {
+            sb.append(snippets.get(snip).text);
         }
         return sb.toString();
     }
@@ -192,9 +204,7 @@ public class SnippetStore implements Identified {
     }
 
     public Snippet fetchSnippet(final String id) throws BadSyntax {
-        if (!snippets.containsKey(id)) {
-            throw new BadSyntax("Snippet '" + id + "' is not defined");
-        }
+        BadSyntax.when(!snippets.containsKey(id), "Snippet '%s' is not defined", id);
         final var snippet = snippets.get(id);
         if (snippet.exception != null) {
             throw new BadSyntax("There was an exception during the collection of the snippet '" + id + "'", snippet.exception);

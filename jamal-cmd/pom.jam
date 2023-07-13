@@ -10,7 +10,7 @@
         {plugins|
             {plugin|
                 {GAV :org.apache.maven.plugins:maven-assembly-plugin:{MAVEN_ASSEMBLY_PLUGIN_VERSION}}
-                   <configuration>
+                    {configuration>
                      <archive>
                        <manifest>
                          <mainClass>javax0.jamal.cmd.JamalMain</mainClass>
@@ -19,7 +19,7 @@
                      <descriptorRefs>
                        <descriptorRef>jar-with-dependencies</descriptorRef>
                      </descriptorRefs>
-                   </configuration>
+                   }
                    <executions>
                      <execution>
                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
@@ -65,10 +65,11 @@
     }
 
     {dependencies#
-        {#for MODULE in ({modules:CORE},{modules:MACROS})=
+        {#for MODULE in ({modules:DEFAULT_JAMAL_MODULES},word)=
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency :{GROUPID}:jamal-testsupport}
         {#for MODULE in (api,engine)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }
 {end project}
+{@xmlFormat}

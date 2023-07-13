@@ -35,9 +35,7 @@ public class StackLimiter {
 
 
     public void up() throws BadSyntax {
-        if (counter.addAndGet(1) > LIMIT) {
-            throw new BadSyntax("Jamal source seems to have infinite recursion");
-        }
+        BadSyntax.when(counter.addAndGet(1) > LIMIT, "Jamal source seems to have infinite recursion");
     }
 
     public int get() {

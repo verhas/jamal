@@ -6,6 +6,8 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.BooleanParameter;
 
 /**
  * Abstract class implementing the common parts of all concrete assertions.
@@ -22,7 +24,7 @@ import javax0.jamal.tools.Params;
  * The option {@code trim} will trim the white space from around the parameters before performing the assertion {@link #test(String[])}.
  * The option {@code not} will invert the result of the test.
  */
-abstract class AbstractAssert implements Macro {
+abstract class AbstractAssert implements Macro, Scanner {
 
     private final int N;
     private final String defaultMessage;
@@ -53,19 +55,20 @@ abstract class AbstractAssert implements Macro {
      */
     protected abstract boolean test(String[] parts) throws BadSyntax;
 
-    static boolean negateIfNeeded(boolean b, Params.Param<Boolean> not) throws BadSyntax {
+    static boolean negateIfNeeded(boolean b, BooleanParameter not) throws BadSyntax {
         return b == !not.is();
     }
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
+        final var scanner = newScanner(input, processor);
         // snippet Assertion_params
-        Params.Param<Boolean> trim = Params.<Boolean>holder("trim", "strip").asBoolean();
-        Params.Param<Boolean> not = Params.<Boolean>holder("not", "negate").asBoolean();
-        Params.Param<Boolean> test = Params.<Boolean>holder("test", "boolean", "bool").asBoolean();
+        final var trim = scanner.bool("trim", "strip");
+        final var not = scanner.bool("not", "negate");
+        final var test = scanner.bool("test", "boolean", "bool");
         //end snippet
+        scanner.done();
 
-        Params.using(processor).from(this).between("()").keys(trim, not, test).parse(input);
         String[] parts = getParts(input, N, trim, this);
         if (negateIfNeeded(test(parts), not)) {
             return test.is() ? "true" : "";
@@ -104,11 +107,9 @@ abstract class AbstractAssert implements Macro {
         return "assert:" + s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    private static String[] getParts(Input input, int N, Params.Param<Boolean> trim, Macro macro) throws BadSyntax {
+    private static String[] getParts(Input input, int N, BooleanParameter trim, Macro macro) throws BadSyntax {
         final var parts = InputHandler.getParts(input, N);
-        if (parts.length < N - 1) {
-            throw new BadSyntax(macro.getId() + " needs at least " + (N - 1) + " arguments");
-        }
+        BadSyntax.when(parts.length < N - 1, () -> macro.getId() + " needs at least " + (N - 1) + " arguments");
         if (trim.is()) {
             for (int i = 0; i < parts.length; i++) {
                 parts[i] = parts[i].strip();

@@ -39,7 +39,7 @@ public class SpecialCharacters {
     public static final char IDENT = '`';
     /**
      * The word "shebang" is used to denote the character sequence at the start of the UNIX script files that the shell
-     * uses to identify how to start the script. The characters {@code MPORT_SHEBANG1} and {@link #IMPORT_SHEBANG2}
+     * uses to identify how to start the script. The characters {@code IMPORT_SHEBANG1} and {@link #IMPORT_SHEBANG2}
      * may inform Jamal about how to import a file.
      * <p>
      * The macro opening and closing strings are not hard-wired. In {@code pom.jam} files it is usually opening and
@@ -54,7 +54,7 @@ public class SpecialCharacters {
      * <p>
      * When a file imported or included starts with the {@code IMPORT_SHEBANG1} and {@link #IMPORT_SHEBANG2} as the
      * very first two characters then Jamal will assume that the opening and the closing strings are the
-     * {@link #IMPORT_OPEN} and {@link #IMPORT_CLOSE} strings and it will automatically switch to those and back after
+     * {@link #IMPORT_OPEN} and {@link #IMPORT_CLOSE} strings, and it will automatically switch to those and back after
      * the import or include has finished.
      */
     public static final char IMPORT_SHEBANG1 = '{';

@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
@@ -37,7 +39,7 @@ end snippet
 */
     public static final String JAMAL_CONNECT_TIMEOUT_ENV = "JAMAL_CONNECT_TIMEOUT";
     /*
-    snippet JAMAL_READ_TIMEOUT_documentation
+snippet JAMAL_READ_TIMEOUT_documentation
 
 {%E%}{%JAMAL_READ_TIMEOUT_ENV%}
 This variable can define the read timeout value for the web download in millisecond as unit.
@@ -214,11 +216,15 @@ end snippet
 
     /**
      * Get a configuration parameter. The name {@code env} is the name of the environment variable.
-     * The method first looks at the system variables, to see if there is a value defined there and if there is none
-     * then it tries to read the environment variable. If the configuration parameter is not defined in either place
-     * then it tries to use the value from the properties file {@code ~/.jamal.settings.properties} or
-     * {@code ~/.jamal/settings.xml}.
      *
+     * <ol>
+     * <li>The method first looks at the system variables, to see if there is a value defined there and </li>
+     * <li>if there is none then it tries to read the environment variable.</li>
+     * <li>If the configuration parameter is not defined in either place
+     * then it tries to use the value from the properties file {@code ~/.jamal/settings.properties} or
+     * {@code ~/.jamal/settings.xml}.</li>
+     * </ol>
+     * <p>
      * The name {@code env} is capital letters, words concatenated using
      * {@code _}. The system variable name is the same as the environment variable name, but lower cased and using
      * {@code .} instead of {@code _}. The property name is the same as the system variable name, but without the
@@ -235,31 +241,118 @@ end snippet
     }
 
     private static Optional<String> getProperty(final String name) {
-        return Optional.ofNullable(PropertiesSingleton.INSTANCE.properties.getProperty(name));
+        return Optional.ofNullable(getProperties().getProperty(name));
     }
 
     public static Properties getProperties() {
         return PropertiesSingleton.INSTANCE.properties;
     }
 
+    /**
+     * Get a new instance of the properties freshly reading from the properties files.
+     * <p>
+     * This method reads the properties file to ensure that the freshly loaded properties contain nothing but the properties.
+     * An attacker may create a macro that somehow changes the properties singleton instance.
+     * There is no known such attack vector, but still here it is an extra safety measure.
+     * <p>
+     * This method also checks the permissions of the configuration and throws an exception if the configuration is not secure.
+     * <p>
+     * To have a secure configuration you:
+     *
+     * <ul>
+     *     <li>Have no {@code ~/.jamal} directory</li>
+     *     <li>If there is such directory then it has to be readable only by the current user, and not by others or group</li>
+     *     <li>The same holds for the {@code ~/.jamal.settings.properties} file and the {@code ~/.jamal/settings.xml} file</li>
+     * </ul>
+     *
+     * @return the properties
+     */
+    public static Properties getNewProperties() throws IOException {
+        assertSafeConfiguration();
+        return new PropertiesSingleton().properties;
+    }
+
+    public static final String INSECURE_CONFIGURATION = "INSECURE CONFIGURATION: ";
+
+    private static void assertPathPrivate(Path path) throws IOException {
+        final var ford = Files.isDirectory(path) ? "directory" : "file";
+        final var perm = Files.isDirectory(path) ? "0500" : "0400";
+        final var permissions = Files.getPosixFilePermissions(path);
+        final var owner = Files.getOwner(path);
+        final var user = System.getProperty("user.name");
+        if( !owner.getName().equals(user) ) {
+            throw new IllegalStateException(String.format("%sThe configuration %s '%s' is owned by '%s' but the current user is '%s'. 'chown %s %s' ", INSECURE_CONFIGURATION, ford, path, owner.getName(), user, user, path));
+        }
+        permissions.stream().filter(p ->
+                p.equals(PosixFilePermission.OTHERS_READ) ||
+                        p.equals(PosixFilePermission.OTHERS_WRITE) ||
+                        p.equals(PosixFilePermission.OTHERS_EXECUTE)
+        ).findAny().ifPresent(p -> {
+            throw new IllegalStateException(String.format("%sThe configuration %s '%s' is readable by others. 'chmod %s %s'", INSECURE_CONFIGURATION, ford, path, perm, path));
+        });
+        permissions.stream().filter(p ->
+                p.equals(PosixFilePermission.GROUP_READ) ||
+                        p.equals(PosixFilePermission.GROUP_WRITE) ||
+                        p.equals(PosixFilePermission.GROUP_EXECUTE)
+        ).findAny().ifPresent(p -> {
+            throw new IllegalStateException(String.format("%sThe configuration %s '%s' is readable by the group.", INSECURE_CONFIGURATION, ford, path));
+        });
+        if( Files.isRegularFile(path) && permissions.contains(PosixFilePermission.OWNER_EXECUTE) ) {
+            throw new IllegalStateException(String.format("%sThe configuration file '%s' is executable. 'chmod 0600 %s' or 'chmod 0400 %s'", INSECURE_CONFIGURATION, path,path,path));
+        }
+    }
+
+    public static void assertFileSafe(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            return;
+        }
+        if (!Files.isRegularFile(path)) {
+            throw new IllegalStateException(String.format("%sThe configuration file '%s' is not a regular file.", INSECURE_CONFIGURATION, path));
+        }
+        assertPathPrivate(path);
+    }
+
+
+    public static void assertSafeConfiguration() throws IOException {
+        final Path configDir = Paths.get(PropertiesSingleton.jamalDirectory);
+        if (!Files.exists(configDir)) {
+            return; // no configuration => should be safe
+        }
+        if (!Files.isDirectory(configDir)) {
+            throw new IllegalStateException(String.format("%sThe configuration directory is not a directory: %s", INSECURE_CONFIGURATION, configDir));
+        }
+        if (!Files.isReadable(configDir)) {
+            return; // we cannot read it, does not matter who can and what is there since we will not use it to work with
+        }
+        if (Files.isSymbolicLink(configDir)) {
+            throw new IllegalStateException(String.format("%sThe configuration directory is a symbolic link: %s", INSECURE_CONFIGURATION, configDir));
+        }
+        assertPathPrivate(configDir);
+        assertFileSafe(Paths.get(PropertiesSingleton.jamalPFile));
+        assertFileSafe(Paths.get(PropertiesSingleton.jamalXFile));
+    }
+
+
     private static class PropertiesSingleton {
         private final Properties properties = new Properties();
+
+        private static final String jamalDirectory = System.getProperty("user.home") + "/.jamal/";
+        private static final String jamalPFile = jamalDirectory + "settings.properties";
+        private static final String jamalXFile = jamalDirectory + "settings.xml";
+
         public static final PropertiesSingleton INSTANCE = new PropertiesSingleton();
 
         private PropertiesSingleton() {
             try {
-                final var jamalDirectory = System.getProperty("user.home") + "/.jamal/";
-                final var jamalPFile = jamalDirectory + "settings.properties";
-                final var jamalXFile = jamalDirectory + "settings.xml";
                 if (Files.exists(Path.of(jamalPFile))) {
                     properties.load(new FileInputStream(jamalPFile));
                 } else if (Files.isDirectory(Path.of(jamalXFile))) {
                     properties.loadFromXML(new FileInputStream(jamalXFile));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignore) {
             }
         }
+
     }
 
     public static void setenv(String env, String value) {

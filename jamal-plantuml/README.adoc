@@ -1,4 +1,4 @@
-== Jamal PlantUML Diagrams
+= Jamal PlantUML Diagrams
 :imagesdir: images
 
 PlantUML's integration supports PlantUML descriptions to be embedded into any Jamal file.
@@ -160,18 +160,18 @@ The maven coordinates for the Jamal module are:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-plantuml</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
 </dependency>
 ----
 
-The module has a dependency on the PlantUml binaries, and the currently used version of PlantUml is 1.2022.5:
+The module has a dependency on the PlantUml binaries, and the currently used version of PlantUml is 1.2023.8:
 
 [source,xml]
 ----
 <dependency>
     <groupId>net.sourceforge.plantuml</groupId>
     <artifactId>plantuml</artifactId>
-    <version>1.2022.5</version>
+    <version>1.2023.8</version>
 </dependency>
 ----
 

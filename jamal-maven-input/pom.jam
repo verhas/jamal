@@ -1,0 +1,21 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@import ../version.jim}
+{project jamal maven input}
+    {GAV ::jamal-maven-input:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description :Jamal Maven repo reading plugin}
+
+    {@define openForTests={opens/maven.input/maven.input}}
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies#
+        {#for MODULE in (engine,extensions,tools)=
+            {dependency|{GROUPID}|jamal-MODULE}}
+        {#for MODULE in (testsupport)=
+            {dependency|{GROUPID}|jamal-MODULE||test}}
+        {#for MODULE in (api,engine)=
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency :com.javax0.mavenDownload:mavenDownloader:{MAVEN_DOWNLOADER}}
+    }
+{end project}
+{@xmlFormat}

@@ -1,0 +1,3 @@
+{#if [not defined]/jim:core/
+{@define jim:core=true}
+}

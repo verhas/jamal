@@ -36,30 +36,53 @@ import static java.nio.file.StandardOpenOption.WRITE;
  */
 public class DocumentConverter {
     /**
-     * Create a JUnit test in your application that looks the following:
+     * Convert a document preprocessing and save the result into a file.
+     * The source file is supposed to have the {@code .jam} extension.
+     * The output file will have the same name as the input, but without the extension.
+     * This method can be used to execute Jamal programmatically.
+     * <p>
+     * For example, you can create a JUnit test in your application that looks the following:
      *
      * <pre>
-     *     @Test
+     *     \@Test
      *     void generateDoc() throws Exception {
      *         DocumentConverter.convert("./README.adoc.jam");
      *     }
      * </pre>
      * <p>
-     * This will convert the {@code README.adoc.jam} file to {@code README.adoc}. The name and the primary extension of
-     * the file can be different.
+     * This will convert the {@code README.adoc.jam} file to {@code README.adoc}.
+     * <p>
+     * The use of this method from Unit tests can be avoided after version 2.0.0 using the maven plugin and the
+     * dynamic macro package loading.
      *
      * @param file the name of the Jamal source documentation file.
      * @throws Exception if the file does not exist, cannot be read, cannot be processed by Jamal (syntax error)
      */
     public static void convert(final String file) throws Exception {
-        final var processor = new Processor("{%", "%}");
+        convert(file, false);
+    }
+
+    /**
+     * This method is the same as {@link #convert(String)} but it can also specify if the default separators should be
+     * used. When the {@code useDefaultSeparators} is {@code true} then the default separators {@code { } }.
+     * are used. When the {@code useDefaultSeparators} is {@code false} then the separators are
+     * {@code {% %}}.
+     *
+     * This method is used by the asciidoc plugin.
+     *
+     * @param file                 the name of the Jamal source documentation file.
+     * @param useDefaultSeparators signals if the processing should use the default separators.
+     * @throws Exception if the file does not exist, cannot be read, cannot be processed by Jamal (syntax error)
+     */
+    public static void convert(final String file, boolean useDefaultSeparators) throws Exception {
+        final var processor = useDefaultSeparators ? new Processor() : new Processor("{%", "%}");
         final var in = FileTools.getInput(file, processor);
         final var result = processor.process(in);
         final var output = file.substring(0, file.length() - ".jam".length());
         FileTools.writeFileContent(output, result, processor);
     }
 
-    private static class Includes {
+    public static class Includes {
         private final String[] includes;
 
         private Includes(String[] includes) {
@@ -71,7 +94,7 @@ public class DocumentConverter {
         }
     }
 
-    private static class Excludes {
+    public static class Excludes {
         private final String[] excludes;
 
         private Excludes(String[] excludes) {

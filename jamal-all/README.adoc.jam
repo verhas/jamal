@@ -23,8 +23,8 @@ The solution is to have a JAR project that has all the needed dependencies and a
 
 This will add the following dependencies to your project:
 
-{%@for [evalist]MODULE in ({%modules:ALL%})=
-* `jamal-MODULE`
+{%@for [evalist]$MODULE in ({%modules:ALL%})=
+* `jamal-$MODULE`
 %}
 
 [NOTE]

@@ -9,20 +9,18 @@ import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 
-import static javax0.jamal.tools.Params.holder;
-
-public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter {
+public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var replace = holder("replace").asList(String.class);
+        final var scanner = newScanner(in, processor);
+        final var replace = scanner.list("replace");
         // throw BadSyntax if there was nothing changed
-        final var detectNoChange = holder("detectNoChange").asBoolean();
-        Scan.using(processor).from(this).firstLine().keys(replace, detectNoChange).parse(in);
+        final var detectNoChange = scanner.bool("detectNoChange");
+        scanner.done();
 
-        final var lines = in.toString().split("\n", -1);
-        convertTextBlock(in.getSB(), in.getPosition(), replace, detectNoChange);
+        convertTextBlock(in.getSB(), in.getPosition(), replace.getParam(), detectNoChange.getParam());
         return in.toString();
     }
 
@@ -35,9 +33,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter 
         final var lines = sb.toString().split("\n", -1);
         for (final var replaceString : replace.get()) {
             final var parts = InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replaceString));
-            if (parts.length == 0) {
-                throw new BadSyntaxAt("The replace macro should have at least one part: '" + replace.get() + "'", pos);
-            }
+            BadSyntaxAt.when(parts.length == 0, "The replace macro should have at least one part: '" + replace.get() + "'", pos);
 
             for (int k = 0; k < lines.length; k++) {
                 for (int i = 0; i < parts.length; i += 2) {
@@ -61,9 +57,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter 
                 }
             }
         }
-        if (noChange) {
-            throw new BadSyntaxAt("{@replaceLines did not change any of the lines.", pos);
-        }
+        BadSyntaxAt.when(noChange, "{@replaceLines did not change any of the lines.", pos);
         sb.setLength(0);
         sb.append(String.join("\n", lines));
     }

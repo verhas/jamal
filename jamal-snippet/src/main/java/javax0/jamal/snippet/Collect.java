@@ -1,15 +1,10 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
+import javax0.javalex.JavaLexed;
+import javax0.javalex.MatchResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +25,7 @@ import java.util.stream.Stream;
 /**
  * Scan a file or the directory tree and collect the snippets from the files.
  */
-public class Collect implements Macro, InnerScopeDependent {
+public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
     private enum State {IN, OUT}
 
     private static final String IMPOSSIBLE_TO_MATCH = "a^";
@@ -43,85 +38,88 @@ public class Collect implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var reference = in.getReference();
+        //<editor-fold desc="Collection Options" default="collapsed">
         final var pos = in.getPosition();
+        final var scanner = newScanner(in, processor);
         // snippet collect_options
-        final var include = Params.<Predicate<String>>holder("include").orElse(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
+        final var include = scanner.<Predicate<String>>param("include").defaultValue(EVERYTHING_MATCHES).as(s -> Pattern.compile(s).asPredicate());
         // can define a regular expression. Only those files will be collected that match partially the regular expression.
-        final var exclude = Params.<Predicate<String>>holder("exclude").orElse(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
+        final var exclude = scanner.<Predicate<String>>param("exclude").defaultValue(IMPOSSIBLE_TO_MATCH).as(s -> Pattern.compile(s).asPredicate().negate());
         // can define a regular expression. Only those files will be collected that do not match partially the regular expression.
         // For example, the test file
-        //
+        // +
         //[source]
         //----
         //    {%@include ./src/test/resources/javax0/jamal/snippet/test3.jam%}
         //----
-        //
+        // +
         //excludes any file that contains the character `2` in its name.
         //
-        final var start = Params.<Pattern>holder("start").orElse("snippet\\s+([a-zA-Z0-9_$]+)").asPattern();
+        final var start = scanner.pattern("start").defaultValue("snippet\\s+([a-zA-Z0-9_$]+)");
         // can define a regular expression. The lines that match the regular expression will signal the start of a snippet.
-        final var liner = Params.<Pattern>holder("liner").orElse("snipline\\s+([a-zA-Z0-9_$]+)").asPattern();
-        // can define a regular expression. The lines that match the regular expression will signal the start of a one liner snippet.
-        final var lineFilter = Params.<Predicate<String>>holder("lineFilter", "filter").orElse("filter=(.*)").asPattern();
+        final var liner = scanner.pattern("liner").defaultValue("snipline\\s+([a-zA-Z0-9_$]+)");
+        // can define a regular expression. The lines that match the regular expression will signal the start of a one-liner snippet.
+        final var lineFilter = scanner.<Predicate<String>>param("lineFilter", "filter").defaultValue("filter=(.*)").asPattern();
         // can define a regular expression. The pattern will be used against any 'snipline' lines, to find the regular expression that will be used to filter the content of the line
-        final var stop = Params.<Pattern>holder("stop").orElse("end\\s+snippet").asPattern();
+        final var stop = scanner.pattern("stop").defaultValue("end\\s+snippet");
         // can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
-        final var scanDepth = Params.holder("scanDepth").orElseInt(Integer.MAX_VALUE);
+        final var scanDepth = scanner.number("scanDepth").defaultValue(Integer.MAX_VALUE);
         // can limit the directory traversing to a certain depth.
-        final var from = Params.<String>holder("from").as(s -> FileTools.absolute(reference, s));
+        final var from = scanner.file("from");
         // can specify the start directory for the traversing.
-        final var setName = Params.<String>holder(null, "onceAs").orElseNull();
+        final var setName = scanner.str(null, "onceAs").defaultValue(null);
         // You can use the parameter `onceAs` to avoid repeated snippet collections.
-        // Your collect macro may be in an included file, or the complexity of the structure of the Jamal source is complex.
+        // Your collect macro may be in an included file, or the Jamal source structure is complex.
         // At a certain point, it may happen that Jamal already collected the snippets you need.
         // Collecting it again would be erroneous.
         // When snippets are collected, you cannot redefine a snippet.
         // If you define a parameter as `onceAs="the Java samples from HPC"` then the collect macro will remember this name.
         // If you try to collect anything with the same `onceAs` parameter, the collection will ignore it.
         // It was already collected.
-        final var prefix = Params.<String>holder("prefix").orElse("");
+        final var prefix = scanner.str("prefix").defaultValue("");
         // You can define a prefix, which is prepended to the snippet names.
-        // The snippets will be stored with this prefix and the macros should use these prefixed names to reference the snippets.
+        // The snippets will be stored with this prefix, and the macros should use these prefixed names to reference the snippets.
         // For example, if you define the prefix as `myprefix::` then the snippet named `mysnippet` will be stored as `myprefix::mysnippet`.
-        final var postfix = Params.<String>holder("postfix").orElse("");
+        final var postfix = scanner.str("postfix").defaultValue("");
         // You can define a postfix, which is appended to the snippet names.
-        // The snippets will be stored with this postfix and the macros should use these postfixed names to reference the snippets.
+        // The snippets will be stored with this postfix, and the macros should use these postfixed names to reference the snippets.
         // For example, if you define the postfix as `::mypostfix` then the snippet named `mysnippet` will be stored as `mysnippet::mypostfix`.
         //
         //+
         // The parameter `prefix` and `postfix` can be used together.
         // The use case is when you collect snippets from different sources where the names may collide.
-        final var asciidoc = Params.<Boolean>holder("asciidoc", "asciidoctor").asBoolean();
+        final var java = scanner.bool(null, "java");
+        // Collect snippets from the Java sources based on the Java syntax without any special tag.
+        final var javaSnippetCollectors = scanner.str("javaSnippetCollectors").defaultValue(null);
+        // You can define a comma-separated list of Java snip{%@comment%}pet collectors.
+        final var asciidoc = scanner.bool("asciidoc", "asciidoctor");
         // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
         // This syntax starts a snippet with `tag::name[]` and ends it with `end::name[]`, where `name` is the name of the snippet.
-        // Using these start and stop delimiters the snippets can also be nested arbitrarily, and they can also overlap.
-        final var ignoreIOEx = Params.<Boolean>holder("ignoreErrors").asBoolean();
+        // Using these start and stop delimiters, the snippets can also be nested arbitrarily, and they can also overlap.
+        final var ignoreIOEx = scanner.bool("ignoreErrors");
         // Using this parameter, the macro will ignore IOExceptions.
-        // An IOException typically occur, when a file is binary and by accident it contains an invalid UTF-8 sequence.
+        // An IOException typically occurs when a file is binary and by accident it contains an invalid UTF-8 sequence.
         // Use this option only as a last resort.
         // Better do not mix binary files with ASCII files.
         // Even if there are binary files from where you collect snippets from ASCII files, use the option `exclude` to exclude the binaries.
         // end snippet
-        Scan.using(processor).from(this)
-                .tillEnd().keys(include, exclude, start, liner, lineFilter, stop, from, scanDepth, setName, prefix, postfix, asciidoc, ignoreIOEx).parse(in);
+        scanner.done();
+        //</editor-fold>
+
+        BadSyntax.when(asciidoc.is() && java.is(), "You cannot use both 'asciidoc' and 'java' parameters in the same collect macro.");
 
         final var store = SnippetStore.getInstance(processor);
         if (store.testAndSet(setName.get())) {
             return "";
         }
         final var fn = from.get();
-        final var fromFile = new File(fn);
-        final boolean isRemote = FileTools.isRemote(fn);
-        final String normFn;
-        if (isRemote) {
-            normFn = fn;
-        } else {
-            normFn = Paths.get(fromFile.toURI()).normalize().toString();
-        }
-        if (isRemote || fromFile.isFile()) {
+        final String normFn = from.isRemote() ? from.get() : Paths.get(from.file().toURI()).normalize().toString();
+
+        if (from.isRemote() || from.isFile()) {
             if (asciidoc.is()) {
                 harvestAsciiDoc(normFn, store, pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
+            } else if (java.is()) {
+                harvestJava(normFn, store, pos, ignoreIOEx.is(), prefix.get(), postfix.get(), javaSnippetCollectors.get(), processor);
             } else {
                 harvestSnippets(normFn, store, start.get(), liner.get(), lineFilter.get(), stop.get(), pos, prefix.get(), postfix.get(), ignoreIOEx.is(), processor);
             }
@@ -140,6 +138,13 @@ public class Collect implements Macro, InnerScopeDependent {
                                 prefix.get(),
                                 postfix.get(),
                                 ignoreIOEx.is(),
+                                processor);
+                    } else if (java.is()) {
+                        harvestJava(Paths.get(new File(file).toURI()).normalize().toString(),
+                                store,
+                                pos,
+                                ignoreIOEx.is(), prefix.get(), postfix.get(),
+                                javaSnippetCollectors.get(),
                                 processor);
                     } else {
                         harvestSnippets(Paths.get(new File(file).toURI()).normalize().toString(),
@@ -184,6 +189,59 @@ public class Collect implements Macro, InnerScopeDependent {
 
     private static final Pattern ASCIIDOC_START = Pattern.compile("tag::([\\w\\d_$]+)\\[.*?]");
     private static final Pattern ASCIIDOC_STOP = Pattern.compile("end::([\\w\\d_$]+)\\[.*?]");
+
+
+    private void harvestJava(final String file,
+                             final SnippetStore store,
+                             final Position pos,
+                             boolean ignoreIOEx,
+                             final String prefix,
+                             final String postfix,
+                             final String javaSnippetCollectors,
+                             Processor processor) throws BadSyntax {
+        List<BadSyntax> errors = new ArrayList<>();
+        BadSyntax.when(javaSnippetCollectors == null || javaSnippetCollectors.isEmpty(), "You must specify at least one Java snip" + "pet collector.");
+        final String[] lines = getFileContent(file, ignoreIOEx, processor);
+        final var javaLexed = new JavaLexed(String.join("\n", lines));
+        for (final var collector : javaSnippetCollectors.split(",")) {
+            if (collector == null || collector.isEmpty()) {
+                continue;
+            }
+            final var matcher = JavaMatcherBuilderMacros.getMatcherFromMacro(processor, collector.trim());
+            int i = 0;
+            MatchResult result;
+            while ((result = javaLexed.find(matcher).fromIndex(i).result()).matches) {
+                i = result.end;
+                final var idGrp = javaLexed.group("snippetName");
+                final var idRgrp = javaLexed.regexGroups("snippetName");
+                final String snippetName;
+                if (idGrp != null && idGrp.size() > 0) {
+                    snippetName = idGrp.get(0).getLexeme();
+                } else if (idRgrp != null && idRgrp.isPresent() && idRgrp.get().groupCount() > 0) {
+                    snippetName = idRgrp.get().group(1);
+                } else {
+                    throw new BadSyntax("Java collector found a matcher that does not have a 'snip' group defining the name of the snippet");
+                }
+
+                final var snipGrp = javaLexed.group("snippet");
+                final var snipRgrp = javaLexed.regexGroups("snippet");
+                final String snippetContent;
+                if (snipGrp != null && snipGrp.size() > 0) {
+                    snippetContent = snipGrp.get(0).getLexeme();
+                } else if (snipRgrp != null && snipRgrp.isPresent() && snipRgrp.get().groupCount() > 0) {
+                    snippetContent = snipRgrp.get().group(1);
+                } else {
+                    throw new BadSyntax("Java collector found a matcher that does not have a 'snip' group defining the name of the snippet");
+                }
+                try {
+                    store.snippet(prefix + snippetName + postfix, snippetContent, pos);
+                } catch (BadSyntax e) {
+                    errors.add(new BadSyntaxAt("Collection error", pos, e));
+                }
+            }
+            assertNoErrors(file, errors);
+        }
+    }
 
     /**
      * Harvest snippets from a file where the snippets are defined using the ASCIIDOC tag syntax.
@@ -256,7 +314,7 @@ public class Collect implements Macro, InnerScopeDependent {
      * @param file       the file to harvest from
      * @param store      the store to store the snippets in
      * @param start      the start pattern
-     * @param liner      the one line pattern that reads a one-line snippet
+     * @param liner      the one-line pattern that reads a one-line snippet
      * @param lineFilter to filter the line that is being harvested
      * @param stop       the stop pattern
      * @param pos        the position of the file
@@ -297,9 +355,8 @@ public class Collect implements Macro, InnerScopeDependent {
                     } else if (linerMatcher.find()) {
                         id = linerMatcher.group(1);
                         text.setLength(0);
-                        if (lineNr == lines.length - 1) {
-                            throw new BadSyntax("'snipline " + id + "' is on the last line of the file '" + file + "'");
-                        }
+                        final String id_ = id;
+                        BadSyntax.when(lineNr == lines.length - 1, "'snipline %s' is on the last line of the file '%s'", id_, file);
                         line = lines[++lineNr];
                         line = cutOffPartUsingMatcher(line, filterMatcher);
                         try {
@@ -334,7 +391,7 @@ public class Collect implements Macro, InnerScopeDependent {
     /**
      * cut off a part of the line using the filterMatcher.
      * If the filterMatcher finds a match, the part of the line is cut off.
-     * Otherwise the line is returned as it is.
+     * Otherwise, the line is returned as it is.
      *
      * @param line          the line to cut off
      * @param filterMatcher the pattern matcher on the line
@@ -347,9 +404,7 @@ public class Collect implements Macro, InnerScopeDependent {
             try {
                 final var matcher = Pattern.compile(regex).matcher(line);
                 if (matcher.find()) {
-                    if (matcher.groupCount() != 1) {
-                        throw new BadSyntax(String.format("The regex '%s' must have exactly one capturing group", regex));
-                    }
+                    BadSyntax.when(matcher.groupCount() != 1, "The regex '%s' must have exactly one capturing group", regex);
                     line = matcher.group(1);
                 } else {
                     throw new BadSyntax(String.format("The regex '%s' did not match the next line.", regex));

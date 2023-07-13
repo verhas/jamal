@@ -1,0 +1,23 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@import ../version.jim}
+{@define asciidoc:output=pom.xml}
+{project jamal java}
+    {GAV ::jamal-java:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description Jamal module for Java Run-Rime Compile and Load}
+
+    {@define openForTests={opens/java/java}}
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+      {dependency|com.javax0.sourcebuddy|SourceBuddy|{SOURCE_BUDDY}}
+      {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
+      {dependency |{GROUPID}|jamal-snippet|{LAST_RELEASE}|test}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
+    }
+{end project}
+{@xmlFormat}

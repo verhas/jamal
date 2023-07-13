@@ -2,6 +2,7 @@
 {%@comment this file is converted using runtime information from the module and therefore it cannot be processed by the asciidoctor plugin: off, as above%}\
 = Jamal Groovy integration module
 {%@import readmemacros.jim%}\
+{%@import ../RELEASES.jim%}\
 {%@snip:collect from="src/test/java/"%}\
 {%@snip:collect from="src/main/java/"%}\
 {%@snip:collect from="../jamal-snippet/src/test/java/javax0/jamal/documentation"%}\
@@ -414,5 +415,26 @@ NOTE: None of the sample codes in the source `README.adoc.jam` was manually copi
 This clearly demonstrates the power and flexibility of Jamal enhanced with the Groovy integration.
 If you like the idea, but Groovy is not your favourite scripting language have a look at the link:{%@file ../jamal-ruby/README.adoc%}[Ruby Integration] documentation and give it a try.
 
+== Loading the macros
 
-{%@snip:update%}
+Starting with the version `{%RELEASE:BUDAPEST%}` the library is not configured to be on the class path of the command line version or the Asciidoctor preprocessor.
+The reason is security.
+The interpreter, just as well as the Ruby and ScriptBasic interpreters, can execute arbitrary code.
+If you want to use the ScriptBasic interpreter you have to
+
+* modify the property `maven.load.include` and `maven.load.exclude` in the file `~/.jamal/settings.properties` to include the `groovy` module.
+For example:
+
+  maven.load.include=com.javax0.jamal:jamal-groovy:{%VERSION%}
+
+* add the line
+
+  {@maven:load com.javax0.jamal:jamal-groovy:{%VERSION%}}
++
+to the Jamal file where you want to use the ScriptBasic interpreter.
+
+* To include the resource file `groovy.jim` you have to add the line
+
+  {@import maven:com.javax0.jamal:jamal-groovy:{%VERSION%}::groovy.jim}
++
+instead importing it as a resource.

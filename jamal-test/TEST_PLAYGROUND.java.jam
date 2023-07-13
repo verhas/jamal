@@ -1,0 +1,8 @@
+{%@comment nosave%}
+
+dddd This is just Java Code
+{%@java:sources src=src/test/java classes=target/test-classes%}
+
+The class `{%@java:class javax0.jamal.test.tools.junit.IntelliJOnly%}` exists.
+
+{%#java:insert to=TEST_PLAYGORUND_MNI_O1G.java%}

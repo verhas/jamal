@@ -1,6 +1,5 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
@@ -36,12 +35,12 @@ public class YamlObject implements UserDefinedMacro, ObjectHolder<Object> {
     }
 
     @Override
-    public String evaluate(String... parameters) throws BadSyntax {
+    public String evaluate(String... parameters) {
         final var out = new StringWriter();
         final var macro = YamlDumperOptions.get(processor);
         final Yaml yaml;
         if (macro == null) {
-            yaml = new Yaml();
+            yaml = YamlFactory.newYaml();
         } else {
             final var options = macro.getObject();
             yaml = new Yaml(options);

@@ -5,6 +5,7 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 
+@Deprecated(since = "2.4.0")
 public class Scan {
 
     public static ScanInterfaces.AfterUsing using(final Processor processor) {

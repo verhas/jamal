@@ -12,9 +12,7 @@ public class IsResolved implements Macro {
         InputHandler.skipWhiteSpaces(in);
         final var id = InputHandler.fetchId(in);
         InputHandler.skipWhiteSpaces(in);
-        if (in.length() > 0) {
-            throw new BadSyntax(getId() + " needs only one single argument, the name of the macro to be tested");
-        }
+        BadSyntax.when(in.length() > 0,  "%s needs only one single argument, the name of the macro to be tested", getId());
         final var yamlObject = Resolve.getYaml(processor, id);
         return "" + yamlObject.resolved;
     }

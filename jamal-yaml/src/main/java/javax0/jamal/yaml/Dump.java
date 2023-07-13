@@ -7,29 +7,28 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class Dump implements Macro, InnerScopeDependent {
-    final Yaml yaml = new Yaml();
+public class Dump implements Macro, InnerScopeDependent, Scanner {
+    final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        Params.using(processor).from(this).keys(clone, copy).between("()").parse(input);
+        final var scanner = newScanner(input,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        scanner.done();
 
         InputHandler.skipWhiteSpaces(input);
         final var id = InputHandler.fetchId(input);
         InputHandler.skipWhiteSpaces(input);
         final var from = InputHandler.fetchId(input);
-        if (!"to".equals(from)) {
-            throw new BadSyntax("Yaml:dump needs a 'to' after the identifier");
-        }
+        BadSyntax.when(!"to".equals(from), "Yaml:dump needs a 'to' after the identifier");
         InputHandler.skipWhiteSpaces(input);
         var reference = input.getReference();
         var fileName = FileTools.absolute(reference, input.toString().trim());

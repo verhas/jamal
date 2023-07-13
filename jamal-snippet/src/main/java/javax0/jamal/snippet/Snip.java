@@ -1,33 +1,28 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.SHA256;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.StringParameter;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
-public class Snip implements Macro {
+public class Snip implements Macro, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var pos = in.getPosition();
-        final var poly = Params.holder(null, "poly").asBoolean();
-        final var hashString = Params.<String>holder("hash", "hashCode").orElse(null);
-        final var extraParams = new Params.ExtraParams();
-        Scan.using(processor).from(this).between("()").keys(extraParams, poly, hashString).parse(in);
+        final var scanner = newScanner(in, processor);
+        final var poly = scanner.bool(null, "poly");
+        final var hashString = scanner.str("hash", "hashCode").defaultValue(null);
+        final var extraParams = scanner.extra();
+        scanner.done();
 
         final var transformer = processor.getRegister().getMacro("snip:transform")
                 .filter(m -> m instanceof SnipTransform).map(m -> (SnipTransform) m)
@@ -40,7 +35,7 @@ public class Snip implements Macro {
             id = in.toString();
             text = SnippetStore.getInstance(processor).snippet(Pattern.compile(id));
             checkHashString(hashString, id, text, pos);
-            return transformer.evaluate(extraParams, javax0.jamal.tools.Input.makeInput(text,pos),processor);
+            return transformer.evaluate(extraParams, javax0.jamal.tools.Input.makeInput(text, pos), processor);
         } else {
             id = InputHandler.fetchId(in);
             skipWhiteSpaces(in);
@@ -50,7 +45,7 @@ public class Snip implements Macro {
             if (firstCharIs(in, '/')) {
                 return getRegexMatchedFromTheFirstLine(in, text);
             } else {
-                return transformer.evaluate(extraParams, javax0.jamal.tools.Input.makeInput(text,pos),processor);
+                return transformer.evaluate(extraParams, javax0.jamal.tools.Input.makeInput(text, pos), processor);
             }
         }
     }
@@ -59,9 +54,7 @@ public class Snip implements Macro {
         skip(in, 1);
         final var regexPart = in.toString();
         final var lastIndex = regexPart.lastIndexOf('/');
-        if (lastIndex == -1) {
-            throw new BadSyntax("The regular expression following the snippet ID should be enclosed between '/' characters");
-        }
+        BadSyntax.when(lastIndex == -1, "The regular expression following the snippet ID should be enclosed between '/' characters");
         final var lines = text.split("\n");
         final var regex = regexPart.substring(0, lastIndex);
         try {
@@ -84,7 +77,7 @@ public class Snip implements Macro {
         }
     }
 
-    private static void checkHashString(Params.Param<String> hashString,
+    private static void checkHashString(StringParameter hashString,
                                         String id,
                                         String text,
                                         Position pos) throws BadSyntax {
@@ -94,15 +87,9 @@ public class Snip implements Macro {
         final var hashStringCalculated = HexDumper.encode(SHA256.digest(text));
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < SnipCheck.MIN_LENGTH) {
-            if (hashStringCalculated.contains(hash)) {
-                throw new BadSyntax("The " + id + " hash is '" + SnipCheck.doted(hashStringCalculated) + "'. '" +
-                        hashString.get() + "' is too short, you need at least " + SnipCheck.MIN_LENGTH +
-                        " characters.\n");
-            } else {
-                throw new BadSyntax("The " + id + " hash is '" + SnipCheck.doted(hashStringCalculated) + "', not '" +
-                        hashString.get() + "', which is too short anyway, you need at least " + SnipCheck.MIN_LENGTH +
-                        " characters.\n");
-            }
+            BadSyntax.when(hashStringCalculated.contains(hash), () -> String.format("The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n",
+                    id, SnipCheck.doted(hashStringCalculated), hashString.get(), SnipCheck.MIN_LENGTH));
+            throw new BadSyntax(String.format("The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n", id, SnipCheck.doted(hashStringCalculated), hashString.get(), SnipCheck.MIN_LENGTH));
         }
         if (!hashStringCalculated.contains(hash)) {
             throw new SnipCheckFailed(id, SnipCheck.doted(hashStringCalculated), hashString.get(), null, pos);

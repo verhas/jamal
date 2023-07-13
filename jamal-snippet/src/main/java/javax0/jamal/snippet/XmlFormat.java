@@ -6,9 +6,7 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.Scan;
+import javax0.jamal.tools.Scanner;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -20,17 +18,18 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.StringReader;
 
+import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+
 @Macro.Stateful
-public class XmlFormat implements Macro, InnerScopeDependent {
+public class XmlFormat implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var tabsize = Params.holder("tabsize").orElseInt(4);
-        final var thin = Params.holder(null, "thin").asBoolean();
-        final var wrong = Params.holder(null, "wrong").asBoolean();
-        Scan.using(processor).from(this).between("()").keys(tabsize, thin, wrong).parse(in);
-
-
-        InputHandler.skipWhiteSpaces(in);
+        final var scanner = newScanner(in, processor);
+        final var tabsize = scanner.number("tabsize").defaultValue(4);
+        final var thin = scanner.bool(null, "thin");
+        final var wrong = scanner.bool(null, "wrong");
+        scanner.done();
+        skipWhiteSpaces(in);
         if (in.length() > 0) {
             final String input = in.toString();
             return formatXml(input, "" + tabsize.get(), thin.is(), wrong.is());
@@ -90,7 +89,7 @@ public class XmlFormat implements Macro, InnerScopeDependent {
         @Override
         public void close() throws BadSyntax {
             if (output != null) {
-                InputHandler.skipWhiteSpaces(output);
+                skipWhiteSpaces(output);
                 final var result = formatXml(output.toString(), tabsize, thin, wrong);
                 output.getSB().setLength(0);
                 output.getSB().append(result);

@@ -1,0 +1,109 @@
+= Jamal Maven Input Plugin
+
+This library can handle files which are in maven archives.
+Using this library any `inluce`, `import` or other macros that need to read a file can access maven archives.
+The only requirement is that this library has to be on the class path of the running Jamal implementation.
+This is the case by default for most of the configurations.
+
+== Resource Name Format
+
+To access a file from a Maven archive the file name has to be formatted
+
+.Maven resource format
+****
+`maven` : __groupId__ : __artifactId__ : __version__ : __dependency types__ : file path and name
+****
+
+* The `maven:` part is a fix prefix, like in the case of `res:` reading Java resources, or `https:` reading web files.
+
+* The __groupId__ : __artif actId__ : __version__ part should define the Maven coordinates of the artifact.
+
+* The __dependency types__ can be empty, or it can contain one or more of the following words comma separated: `COMPILE`, `PROVIDED`, `RUNTIME`, `TEST`, `SYSTEM`.
+When this part is empty, essentially having two `::` in this part, then only the archive specified is used to locate the file.
+When there is one or more dependency types specified then the process will download recursively all the dependencies and all of them will be consulted for the given resource.
+If there are more than one files in the different artifacts for a given name, then the first found is returned.
+There is no guaranteed order in which the artifacts are searched.
+
+.Examples
+[%collapsible]
+====
+****
+Example:
+
+[source]
+----
+{@include [verbatim] maven:com.javax0.jamal:jamal-groovy:1.12.5:compile:version.properties}
+----
+
+will result
+
+[source]
+----
+version=1.12.5
+----
+
+The file `version.properties` can be found in the `jamal-api` artifact.
+It is a dependency of the `jamal-groovy` artifact.
+
+If you try omitting the `compile` dependency
+
+[source]
+----
+{@include [verbatim] maven:com.javax0.jamal:jamal-groovy:1.12.5::version.properties}
+----
+
+you will get
+
+[source]
+----
+Cannot get the content of the file 'maven:com.javax0.jamal:jamal-groovy:1.12.5::version.properties'
+----
+
+but
+
+[source]
+----
+{@include [verbatim] maven:com.javax0.jamal:jamal-api:1.12.5::version.properties}
+----
+
+you will get
+
+[source]
+----
+version=1.12.5
+----
+
+will work.
+****
+====
+
+== Configuration
+
+When accessing a file with the `maven:` prefix the implementation will first consult the local Maven repository.
+If there is an artifact with the given name, then the file will be read from there.
+
+If the artifact cannot be found locally then the implementation will try to download it from one or more Maven repositories.
+
+The default value for the local repository is  `~/.m2/repository`.
+The location of the repository can be configured with the `JAMAL_LOCAL_REPO` environment variable or `jamal.local.repo` system property.
+
+The default value for the remote repositories is the Central Repository of Maven.
+The location of the remote repositories can be configured with the `JAMAL_REMOTE_REPOS` environment variable or `jamal.remote.repos` system property.
+(Note the 's' at the end of the property name.)
+The value of this configuration property is a comma separated list of URLs.
+
+The most well-known repositories have an abbreviation in the system.
+They can be used by their name instead of the full URL.
+
+.The repository abbreviations
+[%collapsible]
+====
+****
+* `central`, `https://repo.maven.apache.org/maven2/`
+* `jcenter-bintray`, `https://jcenter.bintray.com/`
+* `google-android`, `https://dl.google.com/dl/android/maven2/`
+* `google-maven-central`, `https://maven-central.storage-download.googleapis.com/repos/central/data/`
+* `google-maven-central`, `https://maven-central-eu.storage-download.googleapis.com/repos/central/data/`
+* `google-maven-central`, `https://maven-central-asia.storage-download.googleapis.com/repos/central/data/`
+****
+====

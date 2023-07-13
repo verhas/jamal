@@ -5,18 +5,19 @@ import javax0.jamal.api.InnerScopeDependent;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.Scanner;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class Resolve implements Macro, InnerScopeDependent {
+public class Resolve implements Macro, InnerScopeDependent, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var clone = Resolver.cloneOption();
-        final var copy = Resolver.copyOption();
-        Params.using(processor).from(this).keys(clone, copy).between("()").parse(in);
+        final var scanner = newScanner(in,processor);
+        final var clone = Resolver.cloneOption(scanner);
+        final var copy = Resolver.copyOption(scanner);
+        scanner.done();
 
         for (final var id : Arrays.stream(in.toString().split(",")).map(String::trim).collect(Collectors.toSet())) {
             final var yamlObject = getYaml(processor, id);
@@ -27,10 +28,8 @@ public class Resolve implements Macro, InnerScopeDependent {
 
     static YamlObject getYaml(Processor processor, String id) throws BadSyntax {
         final var identified = processor.getRegister().getUserDefined(id).orElseThrow(
-            () -> new BadSyntax("Cannot resolve yaml '" + id + "', does not exists"));
-        if (!(identified instanceof YamlObject)) {
-            throw new BadSyntax("The user defined macro '" + id + "' is not a YAML structure");
-        }
+                () -> new BadSyntax("Cannot resolve yaml '" + id + "', does not exists"));
+        BadSyntax.when(!(identified instanceof YamlObject),  "The user defined macro '%s' is not a YAML structure", id);
         return (YamlObject) identified;
     }
 

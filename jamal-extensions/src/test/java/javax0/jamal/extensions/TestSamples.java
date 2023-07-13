@@ -4,12 +4,14 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.testsupport.TestAll;
+import javax0.jamal.testsupport.TestThat;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
@@ -49,32 +51,38 @@ class TestSamples {
     @DisplayName("simple import")
     void testSimpleImport() throws IOException, BadSyntax {
         assertEquals("thisIsGood\n" +
-            "ThisIsAlsoGood\n" +
-            "THIS_IS_EXTRA_GOOD\n" +
-            "this is extra good\n" +
-            "This is extra good.", result("use.jam"));
+                "ThisIsAlsoGood\n" +
+                "THIS_IS_EXTRA_GOOD\n" +
+                "this is extra good\n" +
+                "This is extra good.", result("use.jam"));
     }
 
 
     @Test
     @DisplayName("matcher generates the groups")
-    void testMatcherLoop() throws IOException, BadSyntax {
-        assertEquals("\n\n" +
-            "true\n" +
-            "2\n" +
-            "1. before the slash\n" +
-            "2. after the slash\n", result("matcher.jam"));
+    void testMatcherLoop() throws BadSyntax, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+        TestThat.theInput("{@use global javax0.jamal.extensions.Regex.Matcher as matcher}\n" +
+                "{@matcher myMatcher ````(.*?)/(.*)`before the slash/after the slash}\n" +
+                "{myMatcher -matches}\n" +
+                "{myMatcher -nr}\n" +
+                "{!#for index in ({myMatcher -groupIndices})=index. {`myMatcher :group:index}\n" +
+                "}").results(
+                "\n\n" +
+                        "true\n" +
+                        "2\n" +
+                        "1. before the slash\n" +
+                        "2. after the slash\n");
     }
 
     final static String SNIPPET = "\n" +
-        "\n" +
-        "```\n" +
-        "    @DisplayName(\"snippets can be included from files\")\n" +
-        "    @Test\n" +
-        "    void testSnippetInclusion() throws IOException, BadSyntax {\n" +
-        "        assertEquals(SNIPPET, result(\"snippet_test.txt.jam\"));\n" +
-        "    }\n" +
-        "```";
+            "\n" +
+            "```\n" +
+            "    @DisplayName(\"snippets can be included from files\")\n" +
+            "    @Test\n" +
+            "    void testSnippetInclusion() throws IOException, BadSyntax {\n" +
+            "        assertEquals(SNIPPET, result(\"snippet_test.txt.jam\"));\n" +
+            "    }\n" +
+            "```";
 
     // snippet     testSnippetInclusion
     @DisplayName("snippets can be included from files")

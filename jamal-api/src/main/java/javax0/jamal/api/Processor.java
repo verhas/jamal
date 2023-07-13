@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
@@ -9,7 +10,7 @@ import java.util.Properties;
 /**
  * The processor object that can be used to process an input to generate the Jamal output.
  * <p>
- * Processor instances should not be used by multiple threads. They are not thread safe by design.
+ * Processor instances should not be used by multiple threads. They are <b>not</b> thread safe by design.
  * <p>
  * A processor is AutoClosable, and it has to be closed.
  * <p>
@@ -17,8 +18,12 @@ import java.util.Properties;
  * when you are going to need it.
  */
 public interface Processor extends AutoCloseable {
+
+    String GLOBAL_INCLUDE_RESOURCE = ".jim";
+
     /**
      * Get the debugger that is currently configured for the processor.
+     *
      * @return the current debugger
      */
     Optional<Debugger> getDebugger();
@@ -79,7 +84,24 @@ public interface Processor extends AutoCloseable {
      * @return the new user defined macro
      * @throws BadSyntax in case the parameter names contain each other
      */
-    UserDefinedMacro newUserDefinedMacro(String id, String input, String[] params) throws BadSyntax;
+    UserDefinedMacro newUserDefinedMacro(String id, String input, String... params) throws BadSyntax;
+
+    /**
+     * The same as {@link #newUserDefinedMacro(String, String, String[])} but it can also define when the macro is
+     * verbatim. The default implementation ignores the verbatim flag. See the note of {@link
+     * #newUserDefinedMacro(String, String, String[]) newUserDefinedMacro()}
+     *
+     * @param id            see {@link #newUserDefinedMacro(String, String, String[])}
+     * @param input         see {@link #newUserDefinedMacro(String, String, String[])}
+     * @param verbatim      {@code true} if the result of the macro should not be evaluated
+     * @param tailParameter {@code true} if the macro should accept a tail parameter
+     * @param params        see {@link #newUserDefinedMacro(String, String, String[])}
+     * @return see {@link #newUserDefinedMacro(String, String, String[])}
+     * @throws BadSyntax see {@link #newUserDefinedMacro(String, String, String[])}
+     */
+    default UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, boolean tailParameter, String... params) throws BadSyntax {
+        return newUserDefinedMacro(id, input, params);
+    }
 
     /**
      * The same as {@link #newUserDefinedMacro(String, String, String[])} but it can also define when the macro is
@@ -93,7 +115,7 @@ public interface Processor extends AutoCloseable {
      * @return see {@link #newUserDefinedMacro(String, String, String[])}
      * @throws BadSyntax see {@link #newUserDefinedMacro(String, String, String[])}
      */
-    default UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String[] params) throws BadSyntax {
+    default UserDefinedMacro newUserDefinedMacro(String id, String input, boolean verbatim, String... params) throws BadSyntax {
         return newUserDefinedMacro(id, input, params);
     }
 
@@ -179,14 +201,15 @@ public interface Processor extends AutoCloseable {
 
     /**
      * A very simple functional interface that the embedding applications can implement, provide to accommodate log
-     * messages from the Jama processing.
+     * messages from the Jamal processing.
      */
     @FunctionalInterface
     interface Logger {
         /**
          * A logger interface that the embedding application may provide for the processor.
-         * @param level the message level, standard JKD level
-         * @param pos position, may be null, and the implementation MUST NOT fail if it is null
+         *
+         * @param level  the message level, standard JKD level
+         * @param pos    position, may be null, and the implementation MUST NOT fail if it is null
          * @param format the message or the message format to be use in String.format()
          * @param params the parameters for the format
          */
@@ -194,12 +217,11 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
-     *
      * @return the logger implementation that was set by the embedding application. There is no method to set the logger
      * object, just as there is no metjod to set the context. Both of these objects are application specific and as the
      * embedding applications are using a specific implementation of this interface they will use the one that provides
      * the possibility to set the logger (context, {@link #getContext}).
-     *
+     * <p>
      * The default implementation returns a null logger that just does not log.
      */
     default Logger logger() {
@@ -234,6 +256,10 @@ public interface Processor extends AutoCloseable {
          */
         String get();
 
+        default byte[] getBinary() {
+            throw new RuntimeException("GetBinary for this hook is nNot implemented");
+        }
+
         /**
          * A singleton instance to be returned by FileReader implementations when the file reading is ignored by the
          * hook.
@@ -248,14 +274,24 @@ public interface Processor extends AutoCloseable {
             public String get() {
                 throw new IllegalStateException("IO hook result was IGNORE, nothing to \"get()\".");
             }
+
+            @Override
+            public byte[] getBinary() {
+                throw new IllegalStateException("IO hook result was IGNORE, nothing to \"getBinary()\".");
+            }
         };
     }
 
     class IOHookResultImpl implements IOHookResult {
         private final Type type;
-        private final String content;
+        private final byte[] content;
 
         public IOHookResultImpl(final Type type, final String content) {
+            this.type = type;
+            this.content = content == null ? null : content.getBytes(StandardCharsets.UTF_8);
+        }
+
+        public IOHookResultImpl(final Type type, final byte[] content) {
             this.type = type;
             this.content = content;
         }
@@ -267,6 +303,11 @@ public interface Processor extends AutoCloseable {
 
         @Override
         public String get() {
+            return new String(content, StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public byte[] getBinary() {
             return content;
         }
     }
@@ -277,7 +318,7 @@ public interface Processor extends AutoCloseable {
         }
 
         public IOHookResultDone() {
-            super(Type.DONE, null);
+            super(Type.DONE, (byte[]) null);
         }
     }
 
@@ -337,8 +378,8 @@ public interface Processor extends AutoCloseable {
          *     <li>The processor invokes the read hook again for the file name {@code f2}.</li>
          *     <li>The read hook returns {@link IOHookResult.Type#IGNORE}</li>
          *     <li>The processor reads the content of the file {@code f3}</li>
-         *     <li>The processor calls the read hook {@link #set(String, String) set("f3", "...")} with the content</li>
-         *     <li>The processor calls the read hook {@link #set(String, String) set("f2", "...")} with the content</li>
+         *     <li>The processor calls the read hook {@code set("f3", "...")} with the content</li>
+         *     <li>The processor calls the read hook {@code set("f2", "...")} with the content</li>
          * </ul>
          *
          * @param fileName the name of the file, which was passed to the {@link #read(String)} method (not the altered
@@ -347,10 +388,23 @@ public interface Processor extends AutoCloseable {
          */
         default void set(final String fileName, final String content) {
         }
+
+        default void set(final String fileName, final byte[] content) {
+        }
     }
 
+    /**
+     * Set a {@link FileReader} hook to work with a processor to intercept any file reading operations the macros may make.
+     *
+     * @param fileReader the file reader
+     */
     void setFileReader(FileReader fileReader);
 
+    /**
+     * Get the file reader hook.
+     *
+     * @return the file reader hook
+     */
     Optional<FileReader> getFileReader();
 
     /**
@@ -424,23 +478,41 @@ public interface Processor extends AutoCloseable {
     /**
      * Load the version property from the properties file and store it into the properties variable {@code version}. The
      * properties will contain one property named {@code "version"}.
+     * <p>
+     * The implementation loads all the {@code version.properties} files from the classpath and selects the one that
+     * contains the string {@code "jamal-api"} in the path. This is needed because there are some implementations, like
+     * the IntelliJ embedding where there is a {@code version.properties} file in the classpath, but it is not the one we want,
+     * and also it happens sooner in the classpath, so it is loaded first.
      *
      * @param version the properties that will hold the version property
      */
     static void jamalVersion(Properties version) {
         try {
-            version.load(Processor.class.getClassLoader().getResourceAsStream("version.properties"));
+            final var it = Processor.class.getClassLoader().getResources("version.properties").asIterator();
+            while (it.hasNext()) {
+                final var url = it.next();
+                if (url.getPath().contains("jamal-api")) {
+                    version.load(url.openStream());
+                }
+            }
         } catch (IOException e) {
             throw new IllegalArgumentException("Version information of Jamal cannot be identified.");
         }
     }
 
     /**
+     * @return the current Jamal version in the form of a string
+     */
+    static String jamalVersionString() {
+        final var version = new Properties();
+        jamalVersion(version);
+        return version.getProperty("version");
+    }
+
+    /**
      * @return the current Jamal version in the form of a {@link Runtime.Version}
      */
     static Runtime.Version jamalVersion() {
-        final var version = new Properties();
-        jamalVersion(version);
-        return jamalVersion(version.getProperty("version"));
+        return jamalVersion(jamalVersionString());
     }
 }

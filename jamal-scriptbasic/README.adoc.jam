@@ -1,5 +1,6 @@
 = Jamal ScriptBasic integration module
-{%@snip:collect from="src/test/java/"%}
+
+{%@snip:collect from="src/test/java/"%}{%@import ../RELEASES.jim%}\
 
 Using this integration module you can mix Jamal macro text with ScriptBasic code snippets.
 To use this module you have to add the dependency to your Maven project, as:
@@ -11,15 +12,11 @@ To use this module you have to add the dependency to your Maven project, as:
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-scriptbasic</artifactId>
+    <artifactId>{%pom /project/artifactId/text()%}</artifactId>
     <version>{%VERSION%}</version>
 </dependency>
 
 ----
-
-The library is also included in the command line version, therefore you can use the macros of this library when you process a Jamal file using the command line tools.
-The same is true for the Asciidoctor preprocessor integration.
-When you are editing your Asciidoc files with Jamal preprocessing in IntelliJ or in some other WYSIWYG editor configured to use Jamal then you can use BASIC commands.
 
 This library has one single built-in macro, `basic`.
 Using this macro you can embed BASIC programs into your Jamal file.
@@ -52,7 +49,7 @@ You can refer to this include file, as
 
 [source]
 ----
-{@import res:javax0/jamal/scriptbasic/scriptbasic.jim}
+{@import res:scriptbasic.jim}
 ----
 
 in your Jamal file. It will let you write things, like
@@ -69,3 +66,25 @@ It was demonstrated in the example above.
 The macro invocation `{\#basic ...}` was using the `#` character, therefore the content is evaluated before it is passed to the built-in macro `basic`.
 That way the macros `{start}` and `{end}` are evaluated first.
 The BASIC interpreter already gets `for i=1 to 13`.
+
+Starting with the version `{%RELEASE:BUDAPEST%}` the library is not configured to be on the class path of the command line version or the Asciidoctor preprocessor.
+The reason is security.
+The interpreter, just as well as the Groovy and Ruby interpreters, can execute arbitrary code.
+If you want to use the ScriptBasic interpreter you have to
+
+* modify the property `maven.load.include` and `maven.load.exclude` in the file `~/.jamal/settings.properties` to include the `scriptbasic` module.
+For example:
+
+  maven.load.include=com.javax0.jamal:jamal-scriptbasic:{%VERSION%}
+
+* add the line
+
+  {@maven:load com.javax0.jamal:jamal-scriptbasic:{%VERSION%}}
++
+to the Jamal file where you want to use the ScriptBasic interpreter.
+
+* To include the resource file `scriptbasic.jim` you have to add the line
+
+  {@import maven:com.javax0.jamal:jamal-scriptbasic:{%VERSION%}::scriptbasic.jim}
++
+instead importing it as a resource.

@@ -7,61 +7,61 @@ import org.junit.jupiter.api.TestFactory;
 public class TestCore {
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros1() {
+    JamalTests<?> testFor() {
         return JamalYamlTest.factory(
                 "TestFor");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros2() {
+    JamalTests<?> testSamples() {
         return JamalYamlTest.factory(
                 "TestSamples");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros3() {
+    JamalTests<?> testDefine() {
         return JamalYamlTest.factory(
                 "TestDefine");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros4() {
+    JamalTests<?> testBlock() {
         return JamalYamlTest.factory(
                 "TestBlock");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros5() {
+    JamalTests<?> testComment() {
         return JamalYamlTest.factory(
                 "TestComment");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros6() {
+    JamalTests<?> testEscapep() {
         return JamalYamlTest.factory(
                 "TestEscape");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros7() {
+    JamalTests<?> testEval() {
         return JamalYamlTest.factory(
                 "TestEval");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros8() {
+    JamalTests<?> testExport() {
         return JamalYamlTest.factory(
                 "TestExport");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacros9() {
+    JamalTests<?> testIdent() {
         return JamalYamlTest.factory(
                 "TestIdent");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosA() {
+    JamalTests<?> testIf() {
         return JamalYamlTest.factory(
                 "TestIf");
     }
@@ -73,86 +73,86 @@ public class TestCore {
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosD() {
+    JamalTests<?> testOptions() {
         return JamalYamlTest.factory(
                 "TestOptions");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosE() {
+    JamalTests<?> testRecursiveMacro() {
         return JamalYamlTest.factory(
                 "TestRecursiveMacro");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosF() {
+    JamalTests<?> testRequire() {
         return JamalYamlTest.factory(
                 "TestRequire");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosG() {
+    JamalTests<?> testTry() {
         return JamalYamlTest.factory(
                 "TestTry");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosH() {
+    JamalTests<?> testUndefine() {
         return JamalYamlTest.factory(
                 "TestUndefine");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosI() {
+    JamalTests<?> testUse() {
         return JamalYamlTest.factory(
                 "TestUse");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosJ() {
+    JamalTests<?> testSep() {
         return JamalYamlTest.factory(
                 "TestSep");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosK() {
+    JamalTests<?> testEngine() {
         return JamalYamlTest.factory(
                 "TestEngine");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosL() {
+    JamalTests<?> testNestedUserDefinedMacros() {
         return JamalYamlTest.factory(
                 "nested_ud_macros"
         );
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosM() {
+    JamalTests<?> testDeepEscape() {
         return JamalYamlTest.factory(
                 "TestDeepEscape");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosN() {
+    JamalTests<?> testDefer() {
         return JamalYamlTest.factory(
                 "TestDefer");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosO() {
+    JamalTests<?> testImport() {
         return JamalYamlTest.factory(
                 "TestImport");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosP() {
+    JamalTests<?> testDefineDefault() {
         return JamalYamlTest.factory(
                 "TestDefineDefault");
     }
 
     @TestFactory
-    JamalTests<?> testAllCoreMacrosQ() {
+    JamalTests<?> testMacroMacro() {
         return JamalYamlTest.factory(
                 "TestMacro");
     }

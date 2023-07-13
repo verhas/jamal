@@ -1,0 +1,46 @@
+{%@comment nosave%}
+{%#java:insert to="../java/javax0/jamal/snippet/JavaMatcherBuilderMacros.java" segment="stringType"
+    /*
+     * {%@rot13 Guvf vf trarengrq pbqr. QB ABG rqvg znahnyyl.%}
+     */
+{%!@for [sep=:]($CLASS,$macro) in (StringMacro|string:Identifier|identifier:CharacterMacro|character,char:Comment|comment)=
+{%!@for $m in ($macro)={%@define ? macro=$m%}%}\
+    public static class $CLASS implements Macro {
+        @Override
+        public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+            final var options = new Options(this, in, processor);
+            final var s = in.toString().trim();
+            final Identified macro;
+            if (options.groupName.isPresent()) {
+                if (options.pattern.isPresent()) {
+                    macro = new MatcherObjectHolder({%macro%}(group(options.groupName.get()), options.pattern.get()));
+                } else {
+                    if (s.length() > 0) {
+                        macro = new MatcherObjectHolder({%macro%}(group(options.groupName.get()), s));
+                    } else {
+                        macro = new MatcherObjectHolder({%macro%}(group(options.groupName.get())));
+                    }
+                }
+            } else {
+                if (s.length() > 0) {
+                    macro = new MatcherObjectHolder({%macro%}(s));
+                } else {
+                    macro = new MatcherObjectHolder({%macro%}());
+                }
+            }
+            processor.define(macro);
+            processor.getRegister().export(macro.getId());
+
+            return paddedId(macro);
+        }
+
+        private static final String[] IDS = new String[]{{%@define sep=%}{%!@for $m in ($macro)={%sep%}{%@define sep=,%}"j:$m"%}};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
+    }
+{%@undefine macro%}
+%}
+%}

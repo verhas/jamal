@@ -1,4 +1,4 @@
-== Writing Built-In Macros for Jamal
+= Writing Built-In Macros for Jamal
 {%@comment This is the ASCIIDOC version of the BUILTIN document.
 The source of the file is the BUILTIN.adoc.jam.
 This file is processed by the test javax0.jamal.documentation.TestConvertReadme in the module jamal-snippet.
@@ -316,7 +316,7 @@ This macro interpreted the input as an array of characters.
 Many times macros want to work with individual parameters.
 In the next chapter we will look at an example how we should do that.
 
-==== Splitting the Input
+=== Splitting the Input
 
 If you look at the core built-in macro `if` then you can see that it does not have a special syntax.
 It just has three parameters and in case the first parameter is true, then it returns the second parameter, otherwise the third.
@@ -376,9 +376,9 @@ This second exception also contains the reference to the input location.
 If the location of the error is not interesting inside the macro then it is good enough to throw a simple {%@java:class javax0.jamal.api.BadSyntax%} exception.
 The processor catches that exception and converts it to a {%@java:class javax0.jamal.api.BadSyntaxAt%} exception that will reference the character at the very start of the macro.
 
-=== General Structure of the {%@define methodFormat=`$name()`%}{%@java:method javax0.jamal.api.Macro::evaluate%} Method
+== General Structure of the {%@define methodFormat=`$name()`%}{%@java:method javax0.jamal.api.Macro::evaluate%} Method
 
-=== Macros that are {%@java:class javax0.jamal.api.InnerScopeDependent%}
+== Macros that are {%@java:class javax0.jamal.api.InnerScopeDependent%}
 
 The macro evaluation order is detailed in the link:{%@file README.adoc%}[README] of Jamal.
 When Jamal sees a built-in macro that starts with a `#` character at the start then it evaluates the content of it before invoking the macro itself.
@@ -415,10 +415,14 @@ The first few lines of the method {%@java:method javax0.jamal.snippet.TrimLines#
 
 {%java trimLinesStart%}
 
-It uses the {%@java:class javax0.jamal.tools.Params%} class to parse the parameters.
-This utility class parses the content of the macro.
+The macro class implements the interface {%@java:class (format=`$canonicalName`) javax0.jamal.tools.Scanner$FirstLine%}.
+The method {%@java:method javax0.jamal.tools.Scanner$FirstLine#newScanner%} is inherited from this interface and it creates a scanner object that is able to parse the first line of the macro.
+
 In this case it parses only the first line and scans for the parameters `margin`, `trimVertical` and so on.
-When a parameter is not defined in the macro then the class tries to use the value of the macro with the same name.
+If the macro fetches the input from between `()` characters then the class has to implement the {%@java:class (format=`$canonicalName`) javax0.jamal.tools.Scanner%} interface.
+There are interfaces for the core classes using the `[]` characters and for the macros that use the whole input.
+
+When a parameter is not defined in the macro, then the class tries to use the value of the macro with the same name.
 Thus, the value of the variable `margin` will be a configuration parameter holding the integer value 1.
 
 [NOTE]
@@ -465,18 +469,18 @@ The options, however, are not user defined macros.
 Macros that rely on user defined macros or options as parameters defined _inside_ should implement the interface {%@java:class javax0.jamal.api.InnerScopeDependent%}.
 It is recommended not to implement this interface anymore.
 
-=== Creating User Defined Macros
+== Creating User Defined Macros
 
 You can easily create user defined macros using the `define` macro.
 However, user defined macros can also be created programmatically.
 This chapter will describe the latter.
 
-=== Creating Your Own User Defined Macro Implementation
+== Creating Your Own User Defined Macro Implementation
 
 Programmatically created user defined macros can define their own evaluation.
 
 
-=== Strategies to Register Built-In Macros
+== Strategies to Register Built-In Macros
 
 In this chapter I will explain the advantages, and the disadvantages of the two strategies that you can follow to register your built-in macros.
 It is a more theoretical chapter with less example code.

@@ -1,0 +1,20 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@import ../version.jim}
+{project jamal tools}
+    {packaging jar}
+    {GAV ::jamal-tools:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description|-in Jamal macro library support tools}
+    {@define openForTests=
+        {opens/tools/tools}
+        {opens/tools/tools.param}
+    }
+    {build|{plugins| {@include ../plugins.jim}}}
+    {dependencies
+        {dependency :{GROUPID}:jamal-api}
+        {@for MODULE in (api,engine)=
+            {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
+        {dependency|com.javax0|levenshtein}
+    }
+{end project}
+{@xmlFormat}

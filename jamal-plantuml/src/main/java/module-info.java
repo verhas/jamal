@@ -7,6 +7,6 @@ module jamal.plantuml {
     requires jamal.tools;
     requires jamal.engine;
     requires java.xml;
-    requires plantuml;
+    requires net.sourceforge.plantuml;
     provides Macro with PlantUml;
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * This interface collects those interfaces that define the functionalities of certain types in the engine that
+ * This interface contains those interfaces that define the functionalities of certain types in the engine that
  * implement these methods only for the debugger and these methods are not needed and should not be used for the normal
  * operation.
  */

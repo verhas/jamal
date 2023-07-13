@@ -1,4 +1,4 @@
-pref
+{%@comment nosave%}pref
 
 {%@include /Users/verhasp/github/jamal/jamal-test/src/test/resources/devpath/devre.in%}
 

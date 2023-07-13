@@ -10,8 +10,8 @@ public class TestSnipCheck {
     @DisplayName("Throws exception when neither hash nor lines is specified")
     void norhashNeitherLine() throws Exception {
         TestThat.theInput("" +
-            "{@snip:define wubaba=}" +
-            "{@snip:check id=\"wubaba\"}"
+                "{@snip:define wubaba=}" +
+                "{@snip:check id=\"wubaba\"}"
         ).throwsBadSyntax("Neither lines, nor hash is checked in snip:check''");
     }
 
@@ -19,18 +19,26 @@ public class TestSnipCheck {
     @DisplayName("Throws exception when both hash and lines are specified")
     void hashAndLine() throws Exception {
         TestThat.theInput("" +
-            "{@snip:check hash=\"\" lines=2 id=\"wubaba\"}"
+                "{@snip:check hash=\"\" lines=2 id=\"wubaba\"}"
         ).throwsBadSyntax("You cannot specify 'lines' and 'hash' the same time for snip:check");
+    }
+
+    @Test
+    @DisplayName("Throws exception when both warning and error are specified")
+    void warningAndError() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:check error warning hash=\"\" id=\"wubaba\"}"
+        ).throwsBadSyntax("You cannot specify 'warning' and 'error' the same time for snip:check");
     }
 
     @Test
     @DisplayName("Throws exception when the lines value is wrong")
     void throwsForLineMismatch() throws Exception {
         TestThat.theInput("" +
-            "{@snip:define wubaba=1\n" +
-            "2\n" +
-            "3}" +
-            "{@snip:check id=\"wubaba\" lines=2}"
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3}" +
+                "{@snip:check id=\"wubaba\" lines=2}"
         ).throwsBadSyntax("The id\\(wubaba\\) has 3 lines and not 2\\..*");
     }
 
@@ -38,10 +46,10 @@ public class TestSnipCheck {
     @DisplayName("Throws exception when the hash is short")
     void throwsForHashShort() throws Exception {
         TestThat.theInput("" +
-            "{@snip:define wubaba=1\n" +
-            "2\n" +
-            "3}" +
-            "{@snip:check id=\"wubaba\" hash=2}"
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3}" +
+                "{@snip:check id=\"wubaba\" hash=2}"
         ).throwsBadSyntax("The id\\(wubaba\\) hash is 'ad53e880\\.6d17c82d\\.38902738\\.d1d47d96\\.bddaade2\\.75134663\\.22efa0f7\\.93149dd0'\\. '2' is too short, you need at least 6 characters\\..*");
     }
 
@@ -49,10 +57,32 @@ public class TestSnipCheck {
     @DisplayName("Throws exception when the hash is short and is not contained")
     void throwsForHashShortNotContained() throws Exception {
         TestThat.theInput("" +
-            "{@snip:define wubaba=1\n" +
-            "2\n" +
-            "3}" +
-            "{@snip:check id=\"wubaba\" hash=X}"
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3}" +
+                "{@snip:check id=\"wubaba\" hash=X}"
+        ).throwsBadSyntax("The id\\(wubaba\\) hash is 'ad53e880\\.6d17c82d\\.38902738\\.d1d47d96\\.bddaade2\\.75134663\\.22efa0f7\\.93149dd0', not 'X', which is too short anyway, you need at least 6 characters\\..*");
+    }
+
+    @Test
+    @DisplayName("Throws exception when the hash is short even when warning only")
+    void throwsForHashShortWarningSet() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3}" +
+                "{@snip:check id=\"wubaba\" hash=2 warning}"
+        ).throwsBadSyntax("The id\\(wubaba\\) hash is 'ad53e880\\.6d17c82d\\.38902738\\.d1d47d96\\.bddaade2\\.75134663\\.22efa0f7\\.93149dd0'\\. '2' is too short, you need at least 6 characters\\..*");
+    }
+
+    @Test
+    @DisplayName("Throws exception when the hash is short and is not contained even when warning only")
+    void throwsForHashShortNotContainedWarningSet() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3}" +
+                "{@snip:check id=\"wubaba\" hash=X warning}"
         ).throwsBadSyntax("The id\\(wubaba\\) hash is 'ad53e880\\.6d17c82d\\.38902738\\.d1d47d96\\.bddaade2\\.75134663\\.22efa0f7\\.93149dd0', not 'X', which is too short anyway, you need at least 6 characters\\..*");
     }
 
@@ -60,10 +90,10 @@ public class TestSnipCheck {
     @DisplayName("Throws exception when the hash is wrong")
     void throwsForHashWrong() throws Exception {
         TestThat.theInput("" +
-            "{@snip:define wubaba=1\n" +
-            "2\n" +
-            "3}" +
-            "{@snip:check id=\"wubaba\" hash=ad53e9}"
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3}" +
+                "{@snip:check id=\"wubaba\" hash=ad53e9}"
         ).throwsBadSyntax("The id\\(wubaba\\) hash is 'ad53e880\\.6d17c82d\\.38902738\\.d1d47d96\\.bddaade2\\.75134663\\.22efa0f7\\.93149dd0' does not contain 'ad53e9'\\..*");
     }
 
@@ -73,7 +103,7 @@ public class TestSnipCheck {
         final var save = System.getProperty("jamal.snippet.check");
         System.setProperty("jamal.snippet.check", "false");
         TestThat.theInput("" +
-            "{@snip:check hash=\"\" lines=2 id=\"wubaba\"}"
+                "{@snip:check hash=\"\" lines=2 id=\"wubaba\"}"
         ).results("");
         if (save == null) {
             System.clearProperty("jamal.snippet.check");
@@ -83,18 +113,42 @@ public class TestSnipCheck {
     }
 
     @Test
+    @DisplayName("Check is ignored totally when the warning only is set")
+    void ignoresWhenWarningOnly() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:define wubaba=this is wubabba}{@snip:check warning hash=\"000001\" id=\"wubaba\"}"
+        ).results("");
+    }
+
+    @Test
+    @DisplayName("Line check is ignored totally when the warning only is set")
+    void ignoreLinesWhenWarningOnly() throws Exception {
+        TestThat.theInput("" +
+                "{@snip:define wubaba=this is wubabba}{@snip:check warning lines=55 id=\"wubaba\"}"
+        ).results("");
+    }
+
+    @Test
+    @DisplayName("Check is ignored totally when the warning only is set in option")
+    void ignoresWhenWarningOnly2() throws Exception {
+        TestThat.theInput("" +
+                "{@options snipCheckWarningOnly}{@snip:define wubaba=this is wubabba}{@snip:check hash=\"000001\" id=\"wubaba\"}"
+        ).results("");
+    }
+
+    @Test
     @DisplayName("Checks the number of lines in the snippet")
     void checksTheNumberOfLines() throws Exception {
         TestThat.theInput("" +
-            "{@snip:define wubaba=1\n" +
-            "2\n" +
-            "3}" +
-            "{@snip:check id=\"wubaba\" lines=3}" +
-            "{@snip:clear}" +
-            "{@snip:define wubaba=1\n" +
-            "2\n" +
-            "3\n}" +
-            "{@snip:check id=\"wubaba\" lines=3}"
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3}" +
+                "{@snip:check id=\"wubaba\" lines=3}" +
+                "{@snip:clear}" +
+                "{@snip:define wubaba=1\n" +
+                "2\n" +
+                "3\n}" +
+                "{@snip:check id=\"wubaba\" lines=3}"
         ).results("");
     }
 

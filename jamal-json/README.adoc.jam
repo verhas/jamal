@@ -1,0 +1,66 @@
+= Jamal Json integration module
+{%@options failfast%}
+
+
+{%@import res:jamal.jim%}
+{%#counter:define id=macroChapter {%@define format=$roman. %}%}
+{%@snip:collect from=src/main/java%}
+Using this integration module, you can mix Jamal macro text with JSON data.
+To use this module, you have to add the dependency to your Maven project, as:
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+{%#define ARTIFACT_ID={%pom /project/artifactId/text()%}%}\
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>{%ARTIFACT_ID%}</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+Following that, you can use the
+{%@define ref($x)=<<$x,`json:$x`>>%}
+
+. {%ref define%}
+. {%ref get%}
+. {%ref set%}
+. {%ref length%}
+. {%ref keys%}
+
+{%@define chap($x)=[[$x]]
+=== {%macroChapter%}`json:$x`
+%}{%@define link($x)=<<$x,`json:$x`>>%}
+macros.
+This macro package was created refactoring the original `jamal-yaml` macro library.
+During the development, we created the macros so that they can be used in a similar manner to Yaml macros.
+Although we tried to be as close to the structure of the Yaml macros, there are differences.
+These differences come from the different nature of Json and Yaml.
+
+== Macros implemented in the package
+
+{%chap define%}
+
+{%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
+{%@snip Define_macro_documentation%}%}
+
+{%chap get%}
+
+{%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
+{%@snip Get_macro_documentation%}%}
+
+
+{%chap set%}
+
+{%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
+{%@snip Set_macro_documentation%}%}
+
+{%chap length%}
+
+{%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
+{%@snip Length_macro_documentation%}%}
+
+{%chap keys%}
+
+{%!#replaceLines replace="/^\\s+\\*\\s*//<p>//"
+{%@snip Keys_macro_documentation%}%}

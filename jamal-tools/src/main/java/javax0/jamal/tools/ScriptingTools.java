@@ -107,9 +107,7 @@ public class ScriptingTools {
      */
     public static ScriptEngine getEngine(String scriptType) throws BadSyntax {
         final var engine = new ScriptEngineManager().getEngineByName(scriptType);
-        if (engine == null) {
-            throw new BadSyntax("There is no script engine named '" + scriptType + "'");
-        }
+        BadSyntax.when(engine == null,  "There is no script engine named '%s'", scriptType);
         return engine;
     }
 

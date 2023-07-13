@@ -1,0 +1,24 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{#define PLUGIN=https://raw.githubusercontent.com/central7/pom/main/plugins}
+{@define asciidoc:output=pom.xml}
+{@import ../version.jim}
+{project jamal yaml}
+    {GAV ::jamal-yaml:{VERSION}}
+    {parent :{GROUPID}:jamal-parent}
+    {description yaml module for Jamal}
+
+    {@define openForTests={opens/yaml/yaml}
+    }
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
+      {dependency :org.yaml:snakeyaml:{SNAKEYAML_VERSION}}
+      {dependency :ognl:ognl:{OGNL_VERSION}}
+    }
+
+{end project}
+{@xmlFormat}

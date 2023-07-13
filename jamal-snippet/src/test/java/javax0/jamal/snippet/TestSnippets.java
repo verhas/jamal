@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ConstantConditions")
 public class TestSnippets {
 
     final static String RESOURCE_ROOT = new File(TestSnippets.class.getClassLoader().getResource("javax0/jamal/snippet/test3.jam").getFile()).getParent();

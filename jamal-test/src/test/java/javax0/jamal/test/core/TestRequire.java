@@ -8,6 +8,12 @@ import org.junit.jupiter.api.Test;
 public class TestRequire {
 
     @Test
+    @DisplayName("Using it without argument will return the current version")
+    void testCurrentVersionAsString() throws Exception {
+        TestThat.theInput("{@version}").results(Processor.jamalVersionString());
+    }
+
+    @Test
     @DisplayName("Test that requiring a future version throws exception")
     void testFutureVersion() throws Exception {
         final var current = Processor.jamalVersion();

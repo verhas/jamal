@@ -1,6 +1,6 @@
 {
   "name": "jamal-debug-ui",
-  "version": "1.12.3-SNAPSHOT",
+  "version": "2.3.1-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.3",
@@ -28,10 +28,10 @@
   },
   "scripts": {
     "deploy": "./deployprod",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
+    "test": "react-scripts --openssl-legacy-provider test",
+    "eject": "react-scripts --openssl-legacy-provider eject"
   },
   "eslintConfig": {
     "extends": [

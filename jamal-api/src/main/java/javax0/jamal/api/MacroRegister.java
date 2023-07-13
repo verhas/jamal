@@ -15,20 +15,36 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      * Get a macro based on the id of the macro.
      *
      * @param id the identifier (name) of the macro
-     * @return the macro in an optional. Optional.empty() if the macro can not be found.
+     * @return the macro. {@code Optional.empty()} if the macro can not be found.
      */
     Optional<Macro> getMacro(String id);
 
     /**
-     * Get a macro from the currently active local (writable) scope. That way a macro can define another macro if it is
-     * not defined yet in the current scope or use the existing one in case the macro is already defined in the
+     * Get a built-in macro from the currently active local (writable) scope. That way a macro can define another macro
+     * if it is not defined yet in the current scope or use the existing one in case the macro is already defined in the
      * current scope.
+     * <p>
+     * The default implementation always returns empty.
      *
      * @param id the identifier of the macro
-     * @return the optional macro. It will return empty in case there is a macro defined with the given name, but not in
+     * @return the macro. It will return empty in case there is a macro defined with the given name, but not in
      * the currently writable level (higher level or the one level below).
      */
-    default Optional<Macro> getMacroLocal(String id){
+    default Optional<Macro> getMacroLocal(String id) {
+        return Optional.empty();
+    }
+
+    /**
+     * Get a user defined macro from the currently active local (writable) scope. Used by the macro if to test that a
+     * macro is local.
+     * <p>
+     * The default implementation always returns empty.
+     *
+     * @param id the identifier of the macro
+     * @return the macro. It will return empty in case there is a macro defined with the given name, but not in
+     * the currently writable level (higher level or the one level below).
+     */
+    default Optional<Identified> getUdMacroLocal(String id) {
         return Optional.empty();
     }
 
@@ -37,16 +53,17 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      *
      * @param id  the identifier (name) of the macro
      * @param <T> some type that implements {@link Identified}
-     * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
+     * @return the user defined macro. {@code Optional.empty()} if the macro can not be found.
      */
     <T extends Identified> Optional<T> getUserDefined(String id);
 
     /**
-     * Get a user defined macro based on the id of the macro or a default macro.
+     * Get a user defined macro (or anything {@link Identified}) based on the id of the macro or a default macro.
      *
      * @param id  the identifier (name) of the macro
-     * @param def the identifier (name) of the macro used in case the one named {@code id} is not defined
-     * @param <T> some type that implements {@link Identified}
+     * @param def the identifier (name) of the macro used in the case macro for {@code id} is not defined
+     * @param <T> some type that implements {@link Identified}. Note that anything implementing {@link Identified}
+     *            can be stored in the macro registry.
      * @return the user defined macro in an optional. Optional.empty() if the macro can not be found.
      */
     default <T extends Identified> Optional<T> getUserDefined(String id, String def) {
@@ -60,35 +77,53 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      */
     void global(Identified macro);
 
+    /**
+     * Define a user defined macro on the global level, but instead of the identifier returned by the
+     * {@link Identified#getId()} use the alias provided as argument.
+     * <p>
+     * The default implementation throws exception.
+     *
+     * @param macro the user defined macro (or anything {@link Identified}) to be stored on the global level
+     * @param alias the alias to use as the id of the macro
+     */
     default void global(final Identified macro, final String alias) {
         throw new UnsupportedOperationException("This method is not supported by this implementation.");
     }
 
     /**
      * Define a macro on the global level.
+     * <p>
+     * Note that this is an overloaded method and since the {@link Macro} interface extends the {@link Identified}
+     * interface this overloading heavily relies on the Java overloading mechanism and resolution. The implementation
+     * of this method does extra checks before storing the macro. For example, the actual implementation in Jamal checks
+     * that the macro class is stateless.
      *
      * @param macro to store in the definition structure on the top level.
      */
-    void global(Macro macro);
+    void global(final Macro macro);
 
     /**
-     * Define a macro on the global level.
+     * Define a macro on the global level. It is the same as the {@link #global(Macro)} method, but instead of using the
+     * identifier returned by the method {@link Identified#getId()} is uses the {@code alias} as a name for the macro.
+     * <p>
+     * Also see the notes about overloading and extra checks at {@link #global(Macro)}.
      *
      * @param macro to store in the definition structure on the top level.
      * @param alias alias name to be used for the macro instead of the one provided by the macro itself via {@link
      *              Macro#getId()}
      */
-    void global(Macro macro, String alias);
+    void global(final Macro macro, final String alias);
 
     /**
      * Given a misspelled macro name suggest the closest possible currently defined and in scope user defined or
-     * build-it macro.
+     * build-it macro. This method is used to give suggestions in the error messages when the name of a macro is
+     * misspelled.
      *
      * @param spelling the misspelled macro name
      * @return the closest possible suggestions or an empty set if no suggestion can be found. The default implementation
      * returns an empty set.
      */
-    default Set<String> suggest(String spelling) {
+    default Set<String> suggest(final String spelling) {
         return Set.of();
     }
 
@@ -97,8 +132,16 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      *
      * @param macro to store in the definition structure.
      */
-    void define(Identified macro);
+    void define(final Identified macro);
 
+
+    /**
+     * Define a macro with the given alias. The method does the same as {@link #define(Identified)} but uses the
+     * {@code alias} instead of the identifier returned by the method {@link Identified#getId()}.
+     *
+     * @param macro the {@link Identified} object to store
+     * @param alias the identifier to use in the registry instead of the one the object claims
+     */
     default void define(final Identified macro, final String alias) {
         throw new UnsupportedOperationException("This method is not supported by this implementation.");
     }
@@ -108,7 +151,7 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      *
      * @param macro to store in the definition structure
      */
-    void define(Macro macro);
+    void define(final Macro macro);
 
     /**
      * Define a macro on the current evaluation level.
@@ -117,7 +160,7 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      * @param alias alias name to be used for the macro instead of the one provided by the macro itself via {@link
      *              Macro#getId()}
      */
-    void define(Macro macro, String alias);
+    void define(final Macro macro, final String alias);
 
     /**
      * Export a built-in or user defined macro {@code id}.
@@ -132,6 +175,16 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
      * @throws BadSyntax when there is some error exporting
      */
     void export(String id) throws BadSyntax;
+
+    /**
+     * Export all the user defined and built-in macros defined from the current evaluation level.
+     *
+     * @throws BadSyntax if any of the exports fail, for example, we are in the global scope
+     */
+    default void export() throws BadSyntax {
+        throw new IllegalArgumentException(String.format("export() is not implemented by this implementation '%s'", this.getClass().getName()));
+    }
+
 
     /**
      * Export all the user defined macros defined by the array {@code ids}
@@ -149,33 +202,34 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     /**
      * Start a new macro evaluation level.
      * <p>
-     * Macro evaluations can have side effect. For example the macro {@code define} is used to define a macro and it
+     * Macro evaluations can have side effect. For example, the macro {@code define} is used to define a macro, and it
      * returns an empty string. The side effect is that it defined a new user defined macro. To let different levels
-     * define macros without worrying about overwriting a macro on higher level the macro evaluation is done in levels.
+     * define macros without worrying about overwriting a macro on higher level, the macro evaluation is done in levels.
      * <p>
-     * For example there is a file {@code INC.txt} to be included into the main file. {@code INC.txt} needs a macro and
+     * For example, there is a file {@code INC.txt} to be included in the main file. {@code INC.txt} needs a macro and
      * the developer creating this file names this macro {@code COUNTER}. Without the evaluation levels we would have to
      * pay attention not to use the macro {@code COUNTER} in our own file, because the file we include uses it. This is,
      * however, the implementation detail of the included file and none of the business of the using file. This is a way
-     * of encapsulation. When the included file processing starts the macro level evaluation is increased and any macro
+     * of encapsulation. When the included file processing starts, the macro level evaluation is increased and any macro
      * definition that happens on that level will remain on that level. They will temporarily hide the macros of the
-     * same name in higher levels and they go out of scope as soon as the level goes one step up, when the method {@link
-     * #pop(Marker)} is called.
+     * same name in higher levels, and they go out of scope as soon as the level goes one step up, when the method
+     * {@link #pop(Marker)} is called.
      * <p>
      * Technically when the {@code push()} is called then the macro register creates a new level in the list of the
      * macros and in the list of the user defined macros. These elements are dropped by the method {@link #pop(Marker)}.
-     * Also,
-     * it saves the macro opening and closing string. These are also restored by {@link #pop(Marker)}. The method {@code
-     * push()} also adds a new layer to the definition of the macro opening and closing string definitions so no layer
-     * can "pop" back to a macro opening and closing string definition that way defined in a higher layer, but the same
-     * time the layers do not need to pop back all macro opening and closing string definitions.
+     * <p>
+     * {@code push()}  also saves the macro opening and closing string. These are also restored by {@link #pop(Marker)}.
+     * The method {@code push()} also adds a new layer to the definition of the macro opening and closing string
+     * definitions so no layer can "pop" back to a macro opening and closing string definition that way defined in a
+     * higher layer, but the same time the layers do not need to pop back all macro opening and closing string
+     * definitions.
      * <p>
      * Last, but not least the method {@code push()} calls the {@link Stackable#push()} method of all macros that are
      * also {@link Stackable}. Note that this method of a stackable macro is called even if currently the macro is
      * shadowed by a lower layer macro of the same name.
      * <p>
      * Similarly to {@code push()} the method {@code pop()} calls the {@link Stackable#pop()} method of all macros that
-     * are also {@link Stackable}. Note that this method of a stackable macro is called even if currently the macro is
+     * are {@link Stackable}. Note that this method of a stackable macro is called even if currently the macro is
      * shadowed by a lower layer macro of the same name. The {@link Stackable#pop()} method is not invoked for those
      * macros that are currently wiped off by the {@link #pop(Marker)}.
      *
@@ -213,7 +267,9 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     void test(Marker check) throws BadSyntax;
 
     /**
-     * @return the current {@link Marker} object
+     * @return the current {@link Marker} object.
+     * <p>
+     * See the documentation of the method {@link #push(Marker)}
      */
     Marker test();
 

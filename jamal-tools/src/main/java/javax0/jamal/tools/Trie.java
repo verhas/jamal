@@ -36,7 +36,7 @@ public class Trie {
         return find(key, 0);
     }
 
-    public Optional<Result> find(CharSequence key, int start) throws Exception {
+    public Optional<Result> find(CharSequence key, int start) {
         final var chars = key.toString().toCharArray();
         while (start < key.length()) {
             int end = start;

@@ -6,3 +6,5 @@ javax0.jamal.io.Cwd
 javax0.jamal.io.OsName
 javax0.jamal.io.Exec
 javax0.jamal.io.Exec$WaitFor
+javax0.jamal.io.IoFile
+javax0.jamal.io.Copy

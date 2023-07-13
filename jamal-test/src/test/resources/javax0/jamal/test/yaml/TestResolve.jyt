@@ -18,7 +18,7 @@ ClonedResolve:
   Output: |
     This is c before resolving
     b: this is c.b
-    refb: !!javax0.jamal.api.Ref {id: b}
+    refb: !ref {id: b}
 
 
     This is c after resolving
@@ -29,7 +29,7 @@ ClonedResolve:
 
     This is b after resolving
     b: this is b.b
-    refa: !!javax0.jamal.api.Ref {id: a}
+    refa: !ref {id: a}
 
 deep resolve:
   Input: |-
@@ -58,7 +58,7 @@ deep resolve:
   Output: |
     This is e before resolving
     b: this is e.b
-    refa: !!javax0.jamal.api.Ref {id: d}
+    refa: !ref {id: d}
 
 
     This is a after resolving
@@ -66,15 +66,15 @@ deep resolve:
 
     This is b after resolving
     b: this is b.b
-    refa: !!javax0.jamal.api.Ref {id: a}
+    refa: !ref {id: a}
 
     This is c after resolving
     b: this is c.b
-    refa: !!javax0.jamal.api.Ref {id: b}
+    refa: !ref {id: b}
 
     This is d after resolving
     b: this is d.b
-    refa: !!javax0.jamal.api.Ref {id: c}
+    refa: !ref {id: c}
 
     This is e after resolving
     b: this is e.b
@@ -94,11 +94,11 @@ deep resolve:
     {@yaml:define b=
     a: this is b.a
     b: this is b.b
-    refa: !!javax0.jamal.api.Ref a}\
+    refa: !ref a}\
     {@yaml:define c=
     a: this is c.a
     b: this is c.b
-    refb: !!javax0.jamal.api.Ref b}\
+    refb: !ref b}\
     This is c before resolving
     {@verbatim c}
     {@yaml:resolve c}
@@ -110,7 +110,7 @@ deep resolve:
     This is c before resolving
     a: this is c.a
     b: this is c.b
-    refb: !!javax0.jamal.api.Ref {id: b}
+    refb: !ref {id: b}
     
     
     This is c after resolving
@@ -142,7 +142,7 @@ deep resolve:
     a before resolve
     a: this is a
     b: this is b
-    c: !!javax0.jamal.api.Ref {id: a}
+    c: !ref {id: a}
 
 
     a after resolve
@@ -166,7 +166,7 @@ deep resolve:
     a before resolve
     a: this is a
     b: this is b
-    c: !!javax0.jamal.api.Ref {id: a}
+    c: !ref {id: a}
 
     a after resolve
     &id001
