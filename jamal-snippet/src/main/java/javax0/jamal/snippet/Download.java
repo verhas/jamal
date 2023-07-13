@@ -21,9 +21,8 @@ public class Download implements Macro, Scanner {
 
         final var reference = in.getReference();
         final var fromName = FileTools.absolute(reference, in.toString().trim());
-        final var f = new File(to.get());
 
-        try (final var fos = new FileOutputStream(f)) {
+        try (final var fos = new FileOutputStream(to.file())) {
             final var bytes = FileTools.getFileBinaryContent(fromName, true, processor);
             fos.write(bytes);
         } catch (IOException ioException) {

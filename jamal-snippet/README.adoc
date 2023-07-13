@@ -1577,7 +1577,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1351:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1350:30
 ----
 
 
@@ -3001,7 +3001,7 @@ will result
 - SnipLoad.java: 3,482 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
-- Download.java: 2,156 bytes
+- Download.java: 2,122 bytes
 - ListDir.java: 5,439 bytes
 - XmlFormat.java: 3,482 bytes
 - SnippetXmlReader.java: 6,515 bytes
@@ -3273,7 +3273,7 @@ will result in the output
 
 [source]
 ----
-2023-07-12 17:49:07
+2023-07-12 18:59:28
 ----
 
 
