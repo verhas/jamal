@@ -93,7 +93,7 @@ public class Memoize implements Macro, Scanner {
      * @throws BadSyntax if there is some problem calculating the file name
      */
     private static boolean fileMissing(String reference, ListParameter files) throws BadSyntax {
-        return files.get().stream()
+        return files.stream()
                 .map(f -> FileTools.absolute(reference, f))
                 .map(File::new)
                 .anyMatch(f -> !f.exists());
