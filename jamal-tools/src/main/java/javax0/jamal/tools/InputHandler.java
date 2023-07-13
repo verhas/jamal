@@ -203,14 +203,14 @@ public class InputHandler {
     }
 
     /**
-     * Convert a global macro name.
+     * Converts a global macro name.
      * <p>
-     * Macro names that contain the '{@code :}' character are global macros and automatically are defined on the top
-     * level. This provides a way to macro package developers to use name spacing, although Jamal does not handle name
-     * spaces, the names can be treated as 'namespace:localName' or even name space notations can be nested.
+     * Macro names that contain the '{@code :}' character are considered global macros and are automatically defined at the
+     * top level. This provides a way for macro package developers to use namespacing. Although Jamal does not handle
+     * namespaces directly, the names can be treated as 'namespace:localName', and namespace notations can be nested.
      * <p>
-     * A global macro without name space starts with a '{@code :}' character when defined but this character is removed
-     * by this conversion so later the macro can be referred to with the name without the {@code :} character.
+     * A global macro without a namespace starts with a '{@code :}' character when defined, but this character is removed
+     * by this conversion. Later the macro can be referred to using the name without the '{@code :}' character.
      *
      * @param id the identifier of the macro.
      * @return the converted identifier.

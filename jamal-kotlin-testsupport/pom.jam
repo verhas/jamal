@@ -1,16 +1,16 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {@sep 〔 〕}〔@xmlFormat〕
 〔@import ../version.jim〕
-〔project jamal kotlin〕
-    〔GAV ::jamal-kotlin:〔VERSION〕〕
+〔project jamal kotlin-testsupport〕
+    〔GAV ::jamal-kotlin-testsupport:〔VERSION〕〕
     〔parent :〔GROUPID〕:jamal-parent〕
-    〔description Kotlin support module for Jamal〕
+    〔description kotlin-testsupport support module for Jamal〕
 
     〔dependencies|
         〔dependency :org.jetbrains.kotlin:kotlin-stdlib:〔KOTLIN_VERSION〕〕
-        〔@for MODULE in (api,tools,kotlin-testsupport)=
+        〔@for MODULE in (api,tools,core,testsupport)=
             〔dependency|〔GROUPID〕|jamal-MODULE〕〕
-        〔@for MODULE in (testsupport,jamal,core)=
+        〔@for MODULE in (jamal)=
                     〔dependency|〔GROUPID〕|jamal-MODULE||test〕〕
     〕
     〔build|

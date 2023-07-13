@@ -41,8 +41,9 @@
         <module>jamal-testsupport</module>
         <module>jamal-extensions</module>
         <module>jamal-asciidoc258</module>
-        <module>jamal-all</module>
         <module>jamal-kotlin</module>
+        <module>jamal-kotlin-testsupport</module>
+        <module>jamal-all</module>
     </modules>
     <licenses>
         <license>
@@ -88,7 +89,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.2.1</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -161,7 +162,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.0.0-M5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.slf4j</groupId>
@@ -178,39 +179,6 @@
                         <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.sahli.asciidoc.confluence.publisher</groupId>
-                    <artifactId>asciidoc-confluence-publisher-maven-plugin</artifactId>
-                    <version>0.17.1</version>
-                    <configuration>
-                        <asciidocRootFolder>.</asciidocRootFolder>
-                        <sourceEncoding>UTF-8</sourceEncoding>
-                        <!-- default -->
-                        <rootConfluenceUrl>https://javax0.atlassian.net/wiki/</rootConfluenceUrl>
-                        <skipSslVerification>false</skipSslVerification>
-                        <maxRequestsPerSecond>10</maxRequestsPerSecond>
-                        <spaceKey>asciidoc</spaceKey>
-                        <ancestorId>262145</ancestorId>
-                        <serverId>confluence</serverId>
-                        <pageTitlePrefix xml:space="preserve">Doc :: </pageTitlePrefix>
-                        <pageTitleSuffix xml:space="preserve"> [2.3.1-SNAPSHOT]</pageTitleSuffix>
-                        <versionMessage>Version 2.3.1-SNAPSHOT</versionMessage>
-                        <notifyWatchers>false</notifyWatchers>
-                        <attributes>
-                            <version>2.3.1-SNAPSHOT</version>
-                            <someOtherKey>value</someOtherKey>
-                        </attributes>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>publish-documentation</id>
-                            <goals>
-                                <goal>publish</goal>
-                            </goals>
-                            <phase>site</phase>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -380,6 +348,16 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-all</artifactId>
+                <version>2.3.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-kotlin</artifactId>
+                <version>2.3.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-kotlin-testsupport</artifactId>
                 <version>2.3.1-SNAPSHOT</version>
             </dependency>
             <dependency>

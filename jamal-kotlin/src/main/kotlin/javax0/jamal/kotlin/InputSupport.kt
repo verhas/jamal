@@ -23,11 +23,15 @@ val Input.skipWhiteSpaces2EOL
         InputHandler.skipWhiteSpaces2EOL(this)
     }
 
-fun Input.moveWhiteSpaces(sb: StringBuilder) {
+fun Input.move(s: String, output: Input){
+    InputHandler.move(this, s, output)
+}
+
+infix fun Input.moveWhiteSpacesTo(sb: StringBuilder) {
     InputHandler.moveWhiteSpaces(this, sb)
 }
 
-fun Input.moveWhiteSpaces(sb: Input) {
+infix fun Input.moveWhiteSpacesTo(sb: Input) {
     InputHandler.moveWhiteSpaces(this, sb)
 }
 
@@ -65,22 +69,21 @@ val Input.getParts
         return InputHandler.getParts(this)
     }
 
-infix fun Input.getPartsMax(i: Int): Array<String> {
+infix fun Input.getParts(i: Int): Array<String> {
     return InputHandler.getParts(this, i)
 }
 
-
-val String.isGlobalMacro
+val String.isJamalGlobalMacro
     get():Boolean {
         return InputHandler.isGlobalMacro(this)
     }
 
-val String.convertGlobal
+val String.convertJamalGlobal
     get():String {
         return InputHandler.convertGlobal(this)
     }
 
-val String.isIdentifier
+val String.isJamalIdentifier
     get():Boolean {
         return InputHandler.isIdentifier(this)
     }

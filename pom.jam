@@ -16,7 +16,7 @@
     {packaging pom}
     {GAV :{GROUPID}:jamal-parent:{VERSION}}
     {description Jamal macro library to process text files}
-    {modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,asciidoc258)=jamal-$M,}jamal-all}
+    {modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,asciidoc258,{modules:KOTLIN_JAMAL_MODULES})=jamal-$M,}jamal-all}
     {license|The Apache License, Version 2.0|https://www.apache.org/licenses/LICENSE-2.0.txt}
     {developer|Peter Verhas|peter@verhas.com}
     {github|verhas|jamal}
@@ -95,43 +95,11 @@
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                       }
                 }
-<plugin>
-<groupId>org.sahli.asciidoc.confluence.publisher</groupId>
-<artifactId>asciidoc-confluence-publisher-maven-plugin</artifactId>
-<version>0.17.1</version>
-<configuration>
-<asciidocRootFolder>.</asciidocRootFolder>
-<sourceEncoding>UTF-8</sourceEncoding> <!-- default -->
-<rootConfluenceUrl>https://javax0.atlassian.net/wiki/</rootConfluenceUrl>
-<skipSslVerification>false</skipSslVerification>
-<maxRequestsPerSecond>10</maxRequestsPerSecond>
-<spaceKey>asciidoc</spaceKey>
-<ancestorId>262145</ancestorId>
-<serverId>confluence</serverId>
-<pageTitlePrefix xml:space="preserve">Doc :: </pageTitlePrefix>
-<pageTitleSuffix xml:space="preserve"> [{VERSION}]</pageTitleSuffix>
-<versionMessage>Version {VERSION}</versionMessage>
-<notifyWatchers>false</notifyWatchers>
-<attributes>
-<version>{VERSION}</version>
-<someOtherKey>value</someOtherKey>
-</attributes>
-</configuration>
-<executions>
-<execution>
-<id>publish-documentation</id>
-<goals>
-<goal>publish</goal>
-</goals>
-<phase>site</phase>
-</execution>
-</executions>
-</plugin>
             }
         }
     }
     {dependencyManagement|{dependencies|
-        {@for [evalist] MODULE in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,all)={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
+        {@for [evalist] MODULE in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,all,{modules:KOTLIN_JAMAL_MODULES})={dependency :{GROUPID}:jamal-MODULE:{VERSION}}}
         {@for MODULE in (api,engine,params)={dependency :org.junit.jupiter:junit-jupiter-MODULE:{JUPITER_VERSION}:test}}
         {dependency|com.javax0|levenshtein|{LEVENSHTEIN_VERSION}}
         {dependency|com.javax0.mavenDownload|mavenDownloader|{MAVEN_DOWNLOADER}}

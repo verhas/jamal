@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>jamal kotlin</name>
-    <artifactId>jamal-kotlin</artifactId>
+    <name>jamal kotlin-testsupport</name>
+    <artifactId>jamal-kotlin-testsupport</artifactId>
     <version>2.3.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
         <version>2.3.1-SNAPSHOT</version>
     </parent>
-    <description>Kotlin support module for Jamal</description>
+    <description>kotlin-testsupport support module for Jamal</description>
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -26,21 +26,15 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-kotlin-testsupport</artifactId>
+            <artifactId>jamal-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-jamal</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

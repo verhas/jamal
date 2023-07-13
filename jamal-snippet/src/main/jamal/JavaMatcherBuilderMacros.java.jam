@@ -5,7 +5,7 @@
      */
 {%!@for [sep=:]($CLASS,$macro) in (StringMacro|string:Identifier|identifier:CharacterMacro|character,char:Comment|comment)=
 {%!@for $m in ($macro)={%@define ? macro=$m%}%}\
-    public static class $CLASS implements Macro {
+    public static class $CLASS implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);

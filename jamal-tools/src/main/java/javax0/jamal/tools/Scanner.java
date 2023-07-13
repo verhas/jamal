@@ -1,9 +1,7 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Identified;
+import javax0.jamal.api.*;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.*;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package javax0.jamal.tools.param;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.tools.Params;
 
-public class AbstractTypedParameter<T> {
+public abstract class AbstractTypedParameter<T> {
     protected final Params.Param<T> param;
 
     /**
@@ -11,7 +11,7 @@ public class AbstractTypedParameter<T> {
      *
      * @return the underlying parameter
      */
-    public Params.Param<?> getParam() {
+    public Params.Param<T> getParam() {
         return param;
     }
 

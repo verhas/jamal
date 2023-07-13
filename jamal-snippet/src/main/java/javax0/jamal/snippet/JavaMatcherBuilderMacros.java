@@ -165,7 +165,7 @@ public class JavaMatcherBuilderMacros {
      * This is generated code. DO NOT edit manually.
      */
 
-    public static class StringMacro implements Macro, Scanner {
+    public static class StringMacro implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -203,7 +203,7 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-    public static class Identifier implements Macro, Scanner {
+    public static class Identifier implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -241,7 +241,7 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-    public static class CharacterMacro implements Macro, Scanner {
+    public static class CharacterMacro implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -270,7 +270,7 @@ public class JavaMatcherBuilderMacros {
             return paddedId(macro);
         }
 
-        private static final String[] IDS = new String[]{"j:character", "j:char"};
+        private static final String[] IDS = new String[]{"j:character","j:char"};
 
         @Override
         public String[] getIds() {
@@ -279,7 +279,7 @@ public class JavaMatcherBuilderMacros {
     }
 
 
-    public static class Comment implements Macro, Scanner {
+    public static class Comment implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -315,6 +315,7 @@ public class JavaMatcherBuilderMacros {
             return IDS;
         }
     }
+
 
 
     //</editor-fold>

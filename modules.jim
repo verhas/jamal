@@ -103,6 +103,14 @@ The modules implementing some application and embed Jamal use this in the pom.ja
 
 ------------------------------
 
+    KOTLIN
+
+------------------------------
+The modules supporting macro development in Kotlin.
+{#define modules:KOTLIN_JAMAL_MODULES=kotlin,kotlin-testsupport}
+
+------------------------------
+
     ALL
 
 ------------------------------

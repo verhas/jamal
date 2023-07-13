@@ -1577,7 +1577,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1350:30
+../jamal-snippet/README.adoc.jam:1351:30
 ----
 
 
@@ -2951,7 +2951,7 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 2,208 bytes
-- JavaMatcherBuilderMacros.java: 19,777 bytes
+- JavaMatcherBuilderMacros.java: 19,773 bytes
 - Snip.java: 4,605 bytes
 - SnipSave.java: 4,690 bytes
 - Sort.java: 8,573 bytes
@@ -2975,7 +2975,7 @@ will result
 - TrimLines.java: 5,354 bytes
 - JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
-- Memoize.java: 8,138 bytes
+- Memoize.java: 8,132 bytes
 - LineCount.java: 552 bytes
 - BirDictionary.java: 4,058 bytes
 - Replace.java: 1,641 bytes
@@ -3273,7 +3273,7 @@ will result in the output
 
 [source]
 ----
-2023-07-12 18:59:28
+2023-07-14 00:17:26
 ----
 
 
