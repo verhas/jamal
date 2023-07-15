@@ -1,10 +1,4 @@
 {%@comment %}
 
-{%@bir This is a sample asciidoc file that references a sample snippet from snips.sh%}
+{%@bir Fish is a This is a sample asciidoc file that references a sample snippet from snips.sh%}
 
-[source,tetx]
-----{%#bir (ratios="+ 0 1 1 2 1.9")
-{%@include [verbatim] https://snips.sh/f/Xoc2u5J6pT?r=1%}%}
-----
-
-latexmath:[\sqrt 5+3]

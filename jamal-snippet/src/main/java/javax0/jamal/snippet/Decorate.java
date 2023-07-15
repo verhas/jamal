@@ -4,36 +4,52 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.MacroConverter;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.StringParameter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-public class Bir implements Macro, Scanner {
+public class Decorate implements Macro, Scanner {
+    static final String DEFAULT_PF_DICTIONARY_NAME = "decor$pfDict";
+    static final String DEFAULT_CM_DICTIONARY_NAME = "decor$cmDict";
+
+    private static class SplitRatios {
+        final int[] charnums;
+        final int perc;
+
+        private SplitRatios(int[] charnums, int perc) {
+            this.charnums = charnums;
+            this.perc = perc;
+        }
+    }
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var delimiters = scanner.str("bir$delimiters", "delimiters").defaultValue(":~:~:_:_:[:]");
-        final var prefix = scanner.str("bir$prefix", "prefix").defaultValue("**");
-        final var postfix = scanner.str("bir$postfix", "postfix").defaultValue("**");
-        final var ratios = scanner.str("bir$ratios", "ratios").defaultValue("- 0 1 1 2 0.4");
-        final var dictionary = scanner.str(BirDictionary.DEFAULT_DICTIONARY_NAME, "dictionary", "dict")
-                .defaultValue(BirDictionary.DEFAULT_DICTIONARY_NAME);
-        final var pfDictionary = scanner.str(BirDictionary.DEFAULT_PF_DICTIONARY_NAME, "ending", "endings", "pf")
-                .defaultValue(BirDictionary.DEFAULT_PF_DICTIONARY_NAME);
-        final var cmDictionary = scanner.str(BirDictionary.DEFAULT_CM_DICTIONARY_NAME, "common", "commons", "cm")
-                .defaultValue(BirDictionary.DEFAULT_CM_DICTIONARY_NAME);
+        final var delimiters = scanner.str("decor$delimiters", "delimiters").defaultValue(":~:~:_:_:[:]");
+        final var decorMacros = scanner.list("decorator");
+        final var repeat = scanner.bool("repeat");
+        final var ratios = scanner.str("decor$ratios", "ratios").defaultValue("- 0 1 1 2 0.4");
+        final var dictionary = scanner.str(Dictionary.DEFAULT_DICTIONARY_NAME, "dictionary", "dict")
+                .defaultValue(Dictionary.DEFAULT_DICTIONARY_NAME);
+        final var pfDictionary = scanner.str(DEFAULT_PF_DICTIONARY_NAME, "ending", "endings", "pf")
+                .defaultValue(DEFAULT_PF_DICTIONARY_NAME);
+        final var cmDictionary = scanner.str(DEFAULT_CM_DICTIONARY_NAME, "common", "commons", "cm")
+                .defaultValue(DEFAULT_CM_DICTIONARY_NAME);
         scanner.done();
 
         BadSyntax.when(ratios.get().length() < 11,
                 "The parameter \"ratios\" is malformed, it must look like '- 0 1 1 2 0.4', at least 11 characters");
-        final var p = ratios.get().charAt(0);
-        BadSyntax.when(p != '+' && p != '-',
+        final var sig = ratios.get().charAt(0);
+        BadSyntax.when(sig != '+' && sig != '-',
                 "The parameter \"ratios\" is malformed, it must look like '- 0 1 1 2 0.4', the first character must be '+' or '-'");
+
 
         final var input = in.toString();
         if (input.length() == 0) {
@@ -41,24 +57,48 @@ public class Bir implements Macro, Scanner {
         }
 
         final var dictionaryName = dictionary.get();
-        final var dict = getBirDictonary(processor, dictionaryName, BirDictionary.DEFAULT_DICTIONARY_NAME);
-        final var pfDict = getBirDictonary(processor, pfDictionary.get(), BirDictionary.DEFAULT_PF_DICTIONARY_NAME);
-        final var cmDict = getBirDictonary(processor, cmDictionary.get(), BirDictionary.DEFAULT_CM_DICTIONARY_NAME);
+        final var dict = getDictionary(processor, dictionaryName, Dictionary.DEFAULT_DICTIONARY_NAME);
+        final var pfDict = getDictionary(processor, pfDictionary.get(), DEFAULT_PF_DICTIONARY_NAME);
+        final var cmDict = getDictionary(processor, cmDictionary.get(), DEFAULT_CM_DICTIONARY_NAME);
+        final var decorators = getDecorators(processor, decorMacros.get());
 
-        final var rationes = calculateRationes(ratios.get());
-        final var birifyCommonWords = p == '+';
+        final var chsAndRat = calculateRationes(ratios.get());
+        final var decorCommonWords = sig == '+';
 
 
         final var words = splitToWords(input);
         final String[] dPairs = getDelimiters(delimiters);
-        final var birifier = new Birifier(prefix.get(), postfix.get(), rationes, birifyCommonWords, dict, pfDict, cmDict);
+        final var decorator = new Decorator(decorators,
+                chsAndRat.charnums,
+                chsAndRat.perc,
+                repeat.is() || decorators.size() > 2,
+                decorCommonWords,
+                dict,
+                pfDict,
+                cmDict);
         for (int i = 0; i < words.length; i++) {
             if (!isSkip(words, i, dPairs)) {
-                words[i] = birifier.birify(words[i]);
+                words[i] = decorator.decorate(words[i], 0);
             }
         }
 
         return String.join("", words);
+    }
+
+    private static final List<Function<String, String>> DEFAULT_DECORATORS = List.of(s -> "**" + s + "**", s ->s );
+
+    private List<Function<String, String>> getDecorators(Processor processor, List<String> macros) {
+        if (macros.size() == 0) {
+            return DEFAULT_DECORATORS;
+        }
+        final var decorators = macros.stream()
+                .map(s -> MacroConverter.toFunction(processor, s))
+                .map(f -> (Function<String, String>) (String a) -> f.apply(new String[]{a}))
+                .collect(Collectors.toCollection(ArrayList::new));
+        if( decorators.size() == 1 ){
+            decorators.add(s -> s);
+        }
+        return decorators;
     }
 
     /**
@@ -67,23 +107,23 @@ public class Bir implements Macro, Scanner {
      * In other cases, when the name comes from explicit parameter, then the dictionary must exist.
      * If it does not, then the method throws BadSyntax exception.
      *
-     * @param processor      The Processor object from which to retrieve the dictionary.
+     * @param processor      The Processor object from which to retrieve the dictionary holding macro.
      * @param dictionaryName The name of the dictionary to retrieve.
      * @param defaultName    The default name to compare against the dictionary name.
-     * @return The BirDictionary object corresponding to the given dictionary name,
+     * @return The dictionary macro corresponding to the given dictionary name,
      * or null if the dictionary name is null or the dictionary is not defined.
      * @throws BadSyntax If the dictionary name is not equal to the default name and the dictionary is not defined.
      */
-    private static BirDictionary.BirDictonary getBirDictonary(Processor processor,
-                                                              String dictionaryName,
-                                                              final String defaultName) throws BadSyntax {
+    private static Decorator.Dictionary getDictionary(Processor processor,
+                                                      String dictionaryName,
+                                                      final String defaultName) throws BadSyntax {
         if (dictionaryName == null) {
             return null;
         } else {
-            final var dict = (BirDictionary.BirDictonary) processor
+            final var dict = (Decorator.Dictionary) processor
                     .getRegister()
                     .getUserDefined(dictionaryName)
-                    .filter(m -> m instanceof BirDictionary.BirDictonary).orElse(null);
+                    .filter(m -> m instanceof Decorator.Dictionary).orElse(null);
             BadSyntax.when(!defaultName.equals(dictionaryName) && dict == null,
                     "The dictionary macro \"%s\" is not defined", dictionaryName);
 
@@ -96,40 +136,35 @@ public class Bir implements Macro, Scanner {
      * Calculates an array of ratios based on the provided string.
      * The string contains ratio values separated by spaces.
      * The first character of the string is either '+' or '-', but this is ignored and skipped in this method.
-     * The number of ratios is limited by the constant Birifier.RATIONES.
-     * The first Biri.RATIONES - 1 ratios are integers meaning the number of characters, the last one is a double value.
+     * <p>
+     * The ratios are integers meaning the number of characters, the last one is a double value.
      * The last value means the number of characters to be bolded at the start of the word when the number of the
-     * characters is more than Biri.RATIONES - 1.
+     * characters is more than the number of the digits.
      * <p>
      * The typical value of the parameter is "- 0 1 1 2 0.4".
      * <p>
-     * This formatting is used by the Chrome extension Bionify, https://github.com/Cveinnt/bionify
-     * I do not think the format itself is intellectual property, and it is nice to be somewhat compatible.
      *
      * @param rs The string containing the ratios.
      * @return An array of integers representing the calculated ratios.
-     * @throws BadSyntax If there are too many ratios in the parameter, if a ratio is invalid,
-     *                   or if the number of ratios exceeds the limit specified by Birifier.RATIONES.
+     * @throws BadSyntax If the string is malformed.
      */
-    private static int[] calculateRationes(String rs) throws BadSyntax {
-        int[] rationes = new int[Birifier.RATIONES];
-        int i = 0;
-        for (final var s : rs.substring(1).split("\\s+")) {
+    private static SplitRatios calculateRationes(String rs) throws BadSyntax {
+        final var parts = rs.substring(1).split("\\s+");
+        final List<Integer> charnums = new ArrayList<>();
+        for (int i = 0, j = 0; i < parts.length - 1; i++) {
+            final var s = parts[i];
             if (0 != s.length()) {
-                BadSyntax.when(i == Birifier.RATIONES, "Too many ratios in the parameter \"%%s\"%s", rs);
-                if (i < Birifier.RATIONES - 1) {
-                    rationes[i] = toInt(rs, s, Integer::parseInt);
-                    BadSyntax.when(rationes[i] < 0 || rationes[i] > i + 1,
-                            "Invalid number %s at the position %d in the parameter \"%s\"", s, i + 1, rs);
-                } else {
-                    rationes[i] = toInt(rs, s, k -> (int) (Double.parseDouble(k) * 100));
-                    BadSyntax.when(rationes[i] < 0 || rationes[i] > 100,
-                            "Invalid number %s at the position %d in the parameter \"%s\"", s, i + 1, rs);
-                }
-                i++;
+                int n = toInt(rs, s, Integer::parseInt);
+                charnums.add(n);
+                BadSyntax.when(n < 0 || n > j + 1,
+                        "Invalid number %s at the position %d in the parameter \"%s\"", s, j + 1, rs);
+                j++;
             }
         }
-        return rationes;
+        int perc = toInt(rs, parts[parts.length - 1], k -> (int) (Double.parseDouble(k) * 100));
+        BadSyntax.when(perc < 0 || perc > 100,
+                "Invalid number %s at the last position in the parameter \"%s\"", parts[parts.length - 1], rs);
+        return new SplitRatios(charnums.stream().mapToInt(Integer::intValue).toArray(), perc);
     }
 
     /**
@@ -151,7 +186,7 @@ public class Bir implements Macro, Scanner {
 
     /**
      * Retrieves an array of delimiters from the provided parameter.
-     * Delimiters are string pairs that prevent the birification of words between them.
+     * Delimiters are string pairs that prevent the decoration of words between them.
      * If the parameter is an empty string, an empty array is returned.
      * Otherwise, the parameter is split into pairs of delimiters using the first character as a separator.
      *
@@ -173,7 +208,7 @@ public class Bir implements Macro, Scanner {
     /**
      * Checks if a word at a specific index should be skipped based on the provided word array and dependency pairs.
      * <p>
-     * A word is skipped and not birified when the
+     * A word is skipped and not decorated when the
      *
      * <ul>
      *     <li>word is not a letter,</li>
@@ -241,6 +276,6 @@ public class Bir implements Macro, Scanner {
 
     @Override
     public String getId() {
-        return "bir";
+        return "decorate";
     }
 }

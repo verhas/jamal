@@ -111,7 +111,7 @@ module jamal.snippet {
             Memoize,
             Download,
             UrlEncode,
-            Bir,
-            BirDictionary
+            Decorate,
+            Dictionary
             ;
 }

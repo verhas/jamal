@@ -4,86 +4,116 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class TestBir {
+public class TestDecorate {
 
     @Test
-    void testBir() throws Exception {
-        TestThat.theInput("{@bir (ratios=\"- 0 1 1 2 0.4\" prefix=< postfix=>)" +
-                "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}").results("<vac>ation a n <t>h <vac>mztjxn <arbi>tracion ~anrakadabra~ <ia>cion <vu>lture");
+    void testDecor() throws Exception {
+        TestThat.theInput("{@define d(x)=<x>}" +
+                        "{@decorate (ratios=\"- 0 1 1 2 0.4\" decorator=d)" +
+                        "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}")
+                .results("<vac>ation a n <t>h <vac>mztjxn <arbi>tracion ~anrakadabra~ <ia>cion <vu>lture");
     }
 
     @Test
-    void testBirNoDeli() throws Exception {
-        TestThat.theInput("{@bir (ratios=\"- 0 1 1 2 0.4\" prefix=< postfix=> delimiters=)" +
+    void testTwoDecors() throws Exception {
+        TestThat.theInput("{@define d1(x)=<x>}{@define d2(x)=/x/}" +
+                        "{@decorate (ratios=\"- 0 1 1 2 0.4\" decorator=d1 decorator=d2)" +
+                        "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}")
+                .results("<vac>/ation/ a n <t>/h/ <vac>/mztjxn/ <arbi>/tracion/ ~anrakadabra~ <ia>/cion/ <vu>/lture/");
+    }
+
+    @Test
+    void testTwoDecorsRepeated() throws Exception {
+        TestThat.theInput("{@define d1(x)=<x>}{@define d2(x)=/x/}" +
+                        "{@decorate (repeat ratios=\"- 0 1 1 2 0.4\" decorator=d1 decorator=d2)" +
+                        "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}")
+                .results("<vac>ation a n <t>h <vac>/mz/tjxn <arbi>/tr/acion ~anrakadabra~ <ia>/c/ion <vu>/l/ture");
+    }
+
+    @Test
+    void testThreeDecors() throws Exception {
+        TestThat.theInput("{@define d1(x)=<x>}{@define d2(x)=/x/}" +
+                        "{@decorate (ratios=\"- 0 1 1 2 0.4\" decorator=d1 decorator=d2 decorator=d1)" +
+                        "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}")
+                .results("<vac>ation a n <t>h <vac>/mz/<t>jxn <arbi>/tr/<ac>ion ~anrakadabra~ <ia>/c/<i>on <vu>/l/ture");
+    }
+
+    @Test
+    void testDecorNoDeli() throws Exception {
+        TestThat.theInput("{@define d(x)=<x>}" +
+                "{@decorate (ratios=\"- 0 1 1 2 0.4\" decorator=d delimiters=)" +
                 "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}").results("<vac>ation a n <t>h <vac>mztjxn <arbi>tracion ~<anra>kadabra~ <ia>cion <vu>lture");
     }
 
     @Test
     void testBdNF() throws Exception {
-        TestThat.theInput("{@bir (ratios=\"- Y 1 1 2 0.4\" prefix=< postfix=>)" +
+        TestThat.theInput("{@define d(x)=<x>}" +
+                "{@decorate (ratios=\"- Y 1 1 2 0.4\" decorator=d)" +
                 " vulture}").throwsBadSyntax("Invalid number 'Y' in the parameter '- Y 1 1 2 0\\.4'");
     }
 
     @Test
     void testBdNF2() throws Exception {
-        TestThat.theInput("{@bir (ratios=\"- 0 1 1 2 1.4\" prefix=< postfix=>)" +
-                " vulture}").throwsBadSyntax("Invalid number 1\\.4 at the position 5 in the parameter \"- 0 1 1 2 1\\.4\"");
+        TestThat.theInput("{@define d(x)=<x>}" +
+                "{@decorate (ratios=\"- 0 1 1 2 1.4\" decorator=d)" +
+                " vulture}").throwsBadSyntax("Invalid number 1\\.4 at the last position in the parameter \"- 0 1 1 2 1\\.4\"");
     }
 
     @Test
     void testBdNF3() throws Exception {
-        TestThat.theInput("{@bir (ratios=\"- 0 3 1 2 0.4\" prefix=< postfix=>)" +
+        TestThat.theInput("{@decorate (ratios=\"- 0 3 1 2 0.4\")" +
                 " vulture}").throwsBadSyntax("Invalid number 3 at the position 2 in the parameter \"- 0 3 1 2 0\\.4\"");
     }
 
     @Test
     void testBdSF() throws Exception {
-        TestThat.theInput("{@bir (ratios=\"* Y 1 1 2 0.4\" prefix=< postfix=>)" +
+        TestThat.theInput("{@decorate (ratios=\"* Y 1 1 2 0.4\")" +
                 " vulture}").throwsBadSyntax("The parameter \"ratios\" is malformed, it must look like '- 0 1 1 2 0.4', the first character must be '\\+' or '-'");
     }
 
     @Test
     @DisplayName("common words bolded")
-    void testBirra() throws Exception {
-        TestThat.theInput("{@bir (ratios=\"+ 0 1 1 2 0.4\" prefix=< postfix=>)" +
+    void testDecorra() throws Exception {
+        TestThat.theInput("{@define d(x)=<x>}" +
+                "{@decorate (ratios=\"+ 0 1 1 2 0.4\" decorator=d)" +
                 "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}").results("<vac>ation <a> n <t>h <vac>mztjxn <arbi>tracion ~anrakadabra~ <ia>cion <vu>lture");
     }
 
     @Test
     @DisplayName("returns one character not bolded")
-    void testBirA() throws Exception {
-        TestThat.theInput("{@bir ()a}"
+    void testDecorA() throws Exception {
+        TestThat.theInput("{@decorate ()a}"
         ).results("a");
     }
 
     @Test
     @DisplayName("empty input")
     void returnsEmpty() throws Exception {
-        TestThat.theInput("{@bir}").results("");
+        TestThat.theInput("{@decorate}").results("");
     }
 
     @Test
-    @DisplayName("using dictonary")
+    @DisplayName("using dictionary")
     void usingDictonary() throws Exception {
-        TestThat.theInput("{@bir:dictionary\n" +
+        TestThat.theInput("{@dictionary\n" +
                 "k*ivetel\n" +
                 "}" +
-                "{@bir kevetel kivetel}").results("**ke**vetel **k**ivetel");
+                "{@decorate kevetel kivetel}").results("**ke**vetel **k**ivetel");
     }
 
     @Test
-    @DisplayName("using dictonary named when there is also 'unnamed' dictionary")
+    @DisplayName("using dictionary named when there is also 'unnamed' dictionary")
     void usingDictonaryNamed() throws Exception {
-        TestThat.theInput("{@bir:dictionary\n" +
+        TestThat.theInput("{@dictionary\n" +
                         "k*ivetel\n" +
                         "}" +
-                        "{@bir:dictionary id=id\n" +
+                        "{@dictionary id=id\n" +
                         "k*evetel\n" +
                         "*krevetel\n" +
                         "kretek*\n" +
                         "kretes\n" +
                         "}" +
-                        "{@bir (dict=id)kevetel kivetel krevetel kretek kretes}")
+                        "{@decorate (dict=id)kevetel kivetel krevetel kretek kretes}")
                 .results("**k**evetel **ki**vetel krevetel **kretek** **kretes**");
     }
 
@@ -91,19 +121,19 @@ public class TestBir {
     @DisplayName("using all three dictionaries named")
     void usingAllDictionariesNamed() throws Exception {
         TestThat.theInput(
-                        "{@bir:dictionary id=dict\n" +
+                        "{@dictionary id=dict\n" +
                                 "k*ivetel\n" +
                                 "}" +
-                                "{@bir:dictionary id=pf\n" +
+                                "{@dictionary id=pf\n" +
                                 "abcdefgh\n" +
                                 "xyzhubbababubba\n" +
                                 "}" +
-                                "{@bir:dictionary id=cm\n" +
+                                "{@dictionary id=cm\n" +
                                 "z\n" +
                                 "n\n" +
                                 "h\n" +
                                 "}" +
-                                "{@bir (dict=dict pf=pf cm=cm ratios=\"+ 0 1 1 2 0.4\")" +
+                                "{@decorate (dict=dict pf=pf cm=cm ratios=\"+ 0 1 1 2 0.4\")" +
                                 "kevetel a b z n t kivetel krevetel kretek kretes aabcdefgh vition}")
                 .results(
                         "**ke**vetel " + // 7 chars, 40% is 2.8char -> 2 chars are bold

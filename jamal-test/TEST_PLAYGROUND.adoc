@@ -1,20 +1,3 @@
 
 
-**Th**is is a **sa**mple **asc**iidoc **fi**le **th**at **refe**rences a **sa**mple **sn**ippet **fr**om **sn**ips.**s**h
-
-[source,tetx]
-----
-**Developer** **Certific**ate **of** **Origin**
-**Ver**sion 1.1
-
-**Copyr**ight (C) 2004, 2006 **T**he **Linux** **Found**ation **and** **i**ts **contributors**.
-
-**Every**one **is** **permitted** **to** **co**py **and** **distribute** **verbatim** **copies** **of** **th**is
-**license** **docu**ment, **but** **chang**ing **it** **is** **n**ot **allowed**.
-
-
-**Developer**'s **Certific**ate **of** **Origin** 1.1
-
-----
-
-latexmath:[\sqrt 5+3]
+**Fi**sh is a **Th**is is a **sa**mple **asc**iidoc **fi**le **th**at **refe**rences a **sa**mple **sn**ippet **fr**om **sn**ips.**s**h
