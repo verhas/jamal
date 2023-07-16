@@ -118,10 +118,12 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:substring,`string:substring`>>
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
-... <<shell:var,`shell:var`>>
-... <<hashCode,`hashCode`>>
-... <<memoize,`memoize`>>
-... <<download,`download`>>
+.. <<shell:var,`shell:var`>>
+.. <<hashCode,`hashCode`>>
+.. <<memoize,`memoize`>>
+.. <<download,`download`>>
+.. <<dictionary,`dictionary`>>
+.. <<decorate,`decorate`>>
 .. <<snip_update,`snip:update`>>
 . <<kroki,Kroki>>
 
@@ -1577,7 +1579,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1351:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1352:30
 ----
 
 
@@ -2815,6 +2817,7 @@ will result
 - Snip.java
 - SnipSave.java
 - Sort.java
+- Decorate.java
 - Case.java
 - NumberLines.java
 - RangeMacro.java
@@ -2835,15 +2838,14 @@ will result
 - TrimLines.java
 - JavaSourceInsert.java
 - ThinXml.java
+- Decorator.java
 - Memoize.java
 - LineCount.java
-- BirDictionary.java
 - Replace.java
 - SnipLine.java
 - SnipCheckFailed.java
 - SemVerCollator.java
 - SnipXml.java
-- Birifier.java
 - ThinXmlMacro.java
 - BlockConverter.java
 - UrlEncode.java
@@ -2855,9 +2857,9 @@ will result
 - StringMacros.java
 - JavaSourceTemplate.java
 - AbstractXmlDefine.java
+- Dictionary.java
 - Clear.java
 - KillLines.java
-- Bir.java
 - SnipLoad.java
 - Rot13.java
 - SnippetStore.java
@@ -2955,6 +2957,7 @@ will result
 - Snip.java: 4,605 bytes
 - SnipSave.java: 4,690 bytes
 - Sort.java: 8,573 bytes
+- Decorate.java: 12,591 bytes
 - Case.java: 2,273 bytes
 - NumberLines.java: 2,821 bytes
 - RangeMacro.java: 1,261 bytes
@@ -2975,15 +2978,14 @@ will result
 - TrimLines.java: 5,354 bytes
 - JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
+- Decorator.java: 9,094 bytes
 - Memoize.java: 8,132 bytes
 - LineCount.java: 552 bytes
-- BirDictionary.java: 4,058 bytes
 - Replace.java: 1,641 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
 - SemVerCollator.java: 9,016 bytes
 - SnipXml.java: 537 bytes
-- Birifier.java: 4,431 bytes
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,858 bytes
 - UrlEncode.java: 855 bytes
@@ -2995,9 +2997,9 @@ will result
 - StringMacros.java: 7,310 bytes
 - JavaSourceTemplate.java: 7,451 bytes
 - AbstractXmlDefine.java: 1,484 bytes
+- Dictionary.java: 1,527 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,791 bytes
-- Bir.java: 11,383 bytes
 - SnipLoad.java: 3,482 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
@@ -3273,7 +3275,7 @@ will result in the output
 
 [source]
 ----
-2023-07-14 12:05:22
+2023-07-16 18:45:56
 ----
 
 
@@ -4476,8 +4478,130 @@ When this happens, you can keep backward compatibility with
 
 This will render the current, no operation functionality of the macro.
 
+[[dictionary]]
+=== l.`dictionary`
+
+This macro can be used to define a dictionary.
+Dictionaries are used by the decorator macro, but other macros can also use them.
+A dictionary is a set of words associated with a position inside the word.
+The macro input consists of the words separated by new lines.
+Each word can have a position specified after the word separated by a non-letter character.
+For example, the dictionary:
+
+[source]
+----
+{@dictionary
+  a.braka
+  da.bra
+  bubabo.
+  .sholano
+  molano
+}
+----
+
+will define the word `abraka` with the position `1`, the word `dabra` with the position `2`, the word `bubabo` with the position `6`, the word `sholano` with the position `0` and the word `molano` with the position `6`.
+The position is denoted using a dot in this example, but you can use any non-letter character.
+
+The macro has one parameter `id` or `name` that specifies the name of the dictionary.
+The default name is `decor$dictionary`.
+This is also the default name of the dictionary used by the <<decorate,`decorate`>> macro.
+
+
+[[decorate]]
+=== li.`decorate`
+
+This macro can be used to decorate a text.
+The decoration happens for each word separately.
+You can use this to make the text more appealing, or less readable used for obfuscation.
+
+The decoration first splits the input into words.
+The words are separated by non-letter characters.
+The non-words and words, which are delimited by special characters seen below,() are not decorated.
+
+The decoration of the words is done in two steps.
+The first step splits the word into parts.
+The second step decorates the parts individually.
+
+Decoration is done by user-defined macros.
+These macros should have exactly one argument.
+For example, the macro
+
+[source]
+----
+{@define decor(x)={@rot13 x}.}
+----
+
+will decorate the input by ROT13 encoding.
+After this, the decoration macro can be used as
+
+[source]
+----
+{@decorate (decorator=decor)abraka dabra}
+----
+
+resulting in
+
+[source]
+----
+no.raka qn.bra
+----
+
+
+The macro has the following parameters between `(` and `)`:
+
+* `decor$delimiters` aliased as `delimiters` defines the delimiter strings that surrounding a word make them not decorated.
+The default value is `"pass:[:~:~:_:_:[:]]"`.
+It means that any word delimited by `~`, `_` oe `[` and `]` will not be decorated.
+The first character of the string is used to separate the strings that follow.
+Note that the default value uses single characters, but you can use any string as a delimiter.
+
+* `decorator` defines one or more macros used as decorators.
+You can repeat this option multiple times.
+When a word is split into multiple parts, the first part will be decorated using the first decorator, the second part will be decorated using the second decorator, and so on.
+The default decorator puts a space after the decorated part.
+The words will be split into no more parts than the number of decorators plus one.
+In this case, the past part of the word will ot be decorated.
+
+* `repeat` is a boolean parameter.
+If it is present on the macro splitting will be repeated as many times as needed.
+Without this option the words will be split into two parts at most, or to as many parts as the number of decorators.
+
+* `decor$ratios` aliased as `ratios` defines the number of characters and the ratio of the characters used to split the word.
+The default value is `"pass:[- 0 1 1 2 0.4]"`.
+The first character is either '-' or '+' signalling if common words should be decorated or not.
+Common words can be defined in a <<dictionary,`dictionary`>> or are defined as             "the", "be", "to", "of", "and", "a", "an", "it", "at", "on", "he", "she", "but", "is", "my"
+.
++
+The following integers define the number of characters used to split the word if the word is 1, 2, 3 and so on characters.
++
+The last number defines the ratio of the characters used when the word is longer than the last number position. In the example above, one character words will not be split, two and three character words will be split after the first character, four character words will be split after the second character. Any word longer than four characters will be split at 40%.
++
+The last number will be rounded to two decimals.
+
+* `decor$dictionary` aliased as `dictionary` or `dict` defines the name of the dictionary used to define words with predefined splitting position.
+If this option is not present the macro will try to use the dictionary named `decor$dictionary`.
+If this dictionary does not exist, the macro will use the default splitting position defined by the `decor$ratios` option and the postfixes.
+If this option is defined, the dictionary named must exist.
+
+* `decor$pfDict` aliased as `ending`, `endings`, `pf` defines the postfix dictionary.
+When a word ends with a word present in the postfix dictionary, the word will be split earlier or at last at the start of the postfix.
+If the option is not present a default set of postfixes will be used:
+            "ition", "ement", "ssion", "ional", "ction", "ation", "sion", "ning",
+            "ther", "ight", "tion", "ture", "ding", "tive", "ally", "rate",
+            "ting", "ance", "ence", "ment", "lity", "ical", "able", "onal",
+            "tly", "ose", "ast", "ess", "use", "est", "ion", "ice",
+            "ist", "hip", "tic", "der", "ate", "her", "ect", "nal",
+            "ite", "ral", "ter", "all", "ver", "ide", "ity", "ght",
+            "ely", "ain", "ous", "cal", "nce", "ial", "are", "low",
+            "tor", "and", "ear", "ian", "ive", "eat", "ere", "ble",
+            "end", "ire", "ine", "ual", "ing", "ore", "ant", "one",
+            "ure", "ary", "ent", "ase", "lly", "ise", "age", "ish"
+.
+
+* `decor$cmDict` aliased as `common`, `commons`, `cm` defines the common words dictionary.
+
 [[kroki]]
-=== l.Kroki
+=== lii.Kroki
 
 In this section, we will describe how to use the snippet handling macros together with the Kroki service.
 

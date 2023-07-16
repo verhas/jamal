@@ -20,6 +20,7 @@ class Decorator {
     private final String[] postfixes;
     final int minPfLength;
     private static final String[] POSTFIXES = {
+            // snippet DEFAULT_POSTFIXES
             "ition", "ement", "ssion", "ional", "ction", "ation", "sion", "ning",
             "ther", "ight", "tion", "ture", "ding", "tive", "ally", "rate",
             "ting", "ance", "ence", "ment", "lity", "ical", "able", "onal",
@@ -29,11 +30,14 @@ class Decorator {
             "ely", "ain", "ous", "cal", "nce", "ial", "are", "low",
             "tor", "and", "ear", "ian", "ive", "eat", "ere", "ble",
             "end", "ire", "ine", "ual", "ing", "ore", "ant", "one",
-            "ure", "ary", "ent", "ase", "lly", "ise", "age", "ish",
+            "ure", "ary", "ent", "ase", "lly", "ise", "age", "ish"
+            // end snippet
     };
     final Set<String> commonWords;
     final static Set<String> COMMONG_WORDS = Set.of(
+            // snippet DEFAULT_COMMON_WORDS
             "the", "be", "to", "of", "and", "a", "an", "it", "at", "on", "he", "she", "but", "is", "my"
+            // end snippet
     );
 
     /**

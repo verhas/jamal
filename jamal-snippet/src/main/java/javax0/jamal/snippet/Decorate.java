@@ -32,9 +32,11 @@ public class Decorate implements Macro, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
+        // snipline DEFAULT_DELIMITERS filter=defaultValue."(.*)"
         final var delimiters = scanner.str("decor$delimiters", "delimiters").defaultValue(":~:~:_:_:[:]");
         final var decorMacros = scanner.list("decorator");
         final var repeat = scanner.bool("repeat");
+        // snipline DEFAULT_RATIOS filter=defaultValue."(.*)"
         final var ratios = scanner.str("decor$ratios", "ratios").defaultValue("- 0 1 1 2 0.4");
         final var dictionary = scanner.str(Dictionary.DEFAULT_DICTIONARY_NAME, "dictionary", "dict")
                 .defaultValue(Dictionary.DEFAULT_DICTIONARY_NAME);
@@ -85,7 +87,7 @@ public class Decorate implements Macro, Scanner {
         return String.join("", words);
     }
 
-    private static final List<Function<String, String>> DEFAULT_DECORATORS = List.of(s -> "**" + s + "**", s ->s );
+    private static final List<Function<String, String>> DEFAULT_DECORATORS = List.of(s ->  s + " ", s ->s );
 
     private List<Function<String, String>> getDecorators(Processor processor, List<String> macros) {
         if (macros.size() == 0) {
@@ -94,6 +96,13 @@ public class Decorate implements Macro, Scanner {
         final var decorators = macros.stream()
                 .map(s -> MacroConverter.toFunction(processor, s))
                 .map(f -> (Function<String, String>) (String a) -> f.apply(new String[]{a}))
+                .map( f -> (Function<String, String>)(String s)-> {
+                    try {
+                        return processor.process(javax0.jamal.tools.Input.makeInput(f.apply(s)));
+                    } catch (BadSyntax e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toCollection(ArrayList::new));
         if( decorators.size() == 1 ){
             decorators.add(s -> s);

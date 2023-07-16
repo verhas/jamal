@@ -127,10 +127,12 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:substring,`string:substring`>>
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
-... <<shell:var,`shell:var`>>
-... <<hashCode,`hashCode`>>
-... <<memoize,`memoize`>>
-... <<download,`download`>>
+.. <<shell:var,`shell:var`>>
+.. <<hashCode,`hashCode`>>
+.. <<memoize,`memoize`>>
+.. <<download,`download`>>
+.. <<dictionary,`dictionary`>>
+.. <<decorate,`decorate`>>
 .. <<snip_update,`snip:update`>>
 . <<kroki,Kroki>>
 {%@counter:define id=chapter format=%d. %}
@@ -3409,6 +3411,109 @@ When this happens, you can keep backward compatibility with
   {@use global comment as snip:update}
 
 This will render the current, no operation functionality of the macro.
+
+[[dictionary]]
+=== {%macroChapter%}`dictionary`
+
+This macro can be used to define a dictionary.
+Dictionaries are used by the decorator macro, but other macros can also use them.
+A dictionary is a set of words associated with a position inside the word.
+The macro input consists of the words separated by new lines.
+Each word can have a position specified after the word separated by a non-letter character.
+For example, the dictionary:
+
+{%sample/
+{@dictionary
+  a.braka
+  da.bra
+  bubabo.
+  .sholano
+  molano
+}%}
+
+will define the word `abraka` with the position `1`, the word `dabra` with the position `2`, the word `bubabo` with the position `6`, the word `sholano` with the position `0` and the word `molano` with the position `6`.
+The position is denoted using a dot in this example, but you can use any non-letter character.
+
+The macro has one parameter `id` or `name` that specifies the name of the dictionary.
+The default name is `{%@snip DEFAULT_DICTIONARY_NAME%}`.
+This is also the default name of the dictionary used by the <<decorate,`decorate`>> macro.
+
+
+[[decorate]]
+=== {%macroChapter%}`decorate`
+
+This macro can be used to decorate a text.
+The decoration happens for each word separately.
+You can use this to make the text more appealing, or less readable used for obfuscation.
+
+The decoration first splits the input into words.
+The words are separated by non-letter characters.
+The non-words and words, which are delimited by special characters seen below,() are not decorated.
+
+The decoration of the words is done in two steps.
+The first step splits the word into parts.
+The second step decorates the parts individually.
+
+Decoration is done by user-defined macros.
+These macros should have exactly one argument.
+For example, the macro
+
+{%sample/
+{@define decor(x)={@rot13 x}.}
+%}{%#comment {%output%}%}
+
+will decorate the input by ROT13 encoding.
+After this, the decoration macro can be used as
+
+{%sample/
+{@decorate (decorator=decor)abraka dabra}
+%}
+
+resulting in
+
+{%output%}
+
+The macro has the following parameters between `(` and `)`:
+
+* `decor$delimiters` aliased as `delimiters` defines the delimiter strings that surrounding a word make them not decorated.
+The default value is `"pass:[{%@snip DEFAULT_DELIMITERS%}]"`.
+It means that any word delimited by `~`, `_` oe `[` and `]` will not be decorated.
+The first character of the string is used to separate the strings that follow.
+Note that the default value uses single characters, but you can use any string as a delimiter.
+
+* `decorator` defines one or more macros used as decorators.
+You can repeat this option multiple times.
+When a word is split into multiple parts, the first part will be decorated using the first decorator, the second part will be decorated using the second decorator, and so on.
+The default decorator puts a space after the decorated part.
+The words will be split into no more parts than the number of decorators plus one.
+In this case, the past part of the word will ot be decorated.
+
+* `repeat` is a boolean parameter.
+If it is present on the macro splitting will be repeated as many times as needed.
+Without this option the words will be split into two parts at most, or to as many parts as the number of decorators.
+
+* `decor$ratios` aliased as `ratios` defines the number of characters and the ratio of the characters used to split the word.
+The default value is `"pass:[{%@snip DEFAULT_RATIOS%}]"`.
+The first character is either '-' or '+' signalling if common words should be decorated or not.
+Common words can be defined in a <<dictionary,`dictionary`>> or are defined as {%@snip DEFAULT_COMMON_WORDS%}.
++
+The following integers define the number of characters used to split the word if the word is 1, 2, 3 and so on characters.
++
+The last number defines the ratio of the characters used when the word is longer than the last number position. In the example above, one character words will not be split, two and three character words will be split after the first character, four character words will be split after the second character. Any word longer than four characters will be split at 40%.
++
+The last number will be rounded to two decimals.
+
+* `decor$dictionary` aliased as `dictionary` or `dict` defines the name of the dictionary used to define words with predefined splitting position.
+If this option is not present the macro will try to use the dictionary named `{%@snip DEFAULT_DICTIONARY_NAME%}`.
+If this dictionary does not exist, the macro will use the default splitting position defined by the `decor$ratios` option and the postfixes.
+If this option is defined, the dictionary named must exist.
+
+* `decor$pfDict` aliased as `ending`, `endings`, `pf` defines the postfix dictionary.
+When a word ends with a word present in the postfix dictionary, the word will be split earlier or at last at the start of the postfix.
+If the option is not present a default set of postfixes will be used:
+{%@snip DEFAULT_POSTFIXES%}.
+
+* `decor$cmDict` aliased as `common`, `commons`, `cm` defines the common words dictionary.
 
 [[kroki]]
 === {%macroChapter%}Kroki

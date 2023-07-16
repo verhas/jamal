@@ -6,6 +6,7 @@ import javax0.jamal.tools.Scanner;
 import java.util.HashMap;
 
 public class Dictionary implements Macro, Scanner.FirstLine {
+    // snipline DEFAULT_DICTIONARY_NAME filter="(.*)"
     static final String DEFAULT_DICTIONARY_NAME = "decor$dictionary";
 
     @Override

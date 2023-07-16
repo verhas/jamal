@@ -98,7 +98,7 @@ public class TestDecorate {
         TestThat.theInput("{@dictionary\n" +
                 "k*ivetel\n" +
                 "}" +
-                "{@decorate kevetel kivetel}").results("**ke**vetel **k**ivetel");
+                "{@decorate kevetel kivetel}").results("ke vetel k ivetel");
     }
 
     @Test
@@ -114,7 +114,7 @@ public class TestDecorate {
                         "kretes\n" +
                         "}" +
                         "{@decorate (dict=id)kevetel kivetel krevetel kretek kretes}")
-                .results("**k**evetel **ki**vetel krevetel **kretek** **kretes**");
+                .results("k evetel ki vetel krevetel kretek  kretes ");
     }
 
     @Test
@@ -136,14 +136,14 @@ public class TestDecorate {
                                 "{@decorate (dict=dict pf=pf cm=cm ratios=\"+ 0 1 1 2 0.4\")" +
                                 "kevetel a b z n t kivetel krevetel kretek kretes aabcdefgh vition}")
                 .results(
-                        "**ke**vetel " + // 7 chars, 40% is 2.8char -> 2 chars are bold
+                        "ke vetel " + // 7 chars, 40% is 2.8char -> 2 chars are bold
                                 "a b " + // 1 char, not common, not bold
-                                "**z** **n** " + // 1 char, listed as common, bold
+                                "z  n  " + // 1 char, listed as common, bold
                                 "t " + // 1 char, not common, not bold
-                                "**k**ivetel " + // 7 chars, in the dictionary, 1 char is bold
-                                "**kre**vetel " + // 8 chars, 40% is 3.2char -> 3 chars are bold
-                                "**kr**etek **kr**etes " + // 6 chars, 40% is 2.4char -> 2 chars are bold
-                                "**a**abcdefgh " + // 9 chars, postfix is recognized, postfix is not bold
-                                "**vi**tion"); // postfix is not recognized, 6 chars, 40% is 2.4char -> 2 chars are bold
+                                "k ivetel " + // 7 chars, in the dictionary, 1 char is bold
+                                "kre vetel " + // 8 chars, 40% is 3.2char -> 3 chars are bold
+                                "kr etek kr etes " + // 6 chars, 40% is 2.4char -> 2 chars are bold
+                                "a abcdefgh " + // 9 chars, postfix is recognized, postfix is not bold
+                                "vi tion"); // postfix is not recognized, 6 chars, 40% is 2.4char -> 2 chars are bold
     }
 }
