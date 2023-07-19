@@ -536,4 +536,45 @@ public class TestCounter {
         );
     }
 
+    @Test
+    @DisplayName("Formatting as latin")
+    void testLatin() throws Exception {
+        TestThat.theInput("{#counter:define format=$latin id=f}{f}{f}{f}{f}"
+        ).results("abcd");
+    }
+
+    @Test
+    @DisplayName("Formatting as LATIN")
+    void testLATIN() throws Exception {
+        TestThat.theInput("{#counter:define format=$LATIN id=f}{f}{f}{f}{f}"
+        ).results("ABCD");
+    }
+
+    @Test
+    @DisplayName("Formatting as greek")
+    void testGreek() throws Exception {
+        TestThat.theInput("{#counter:define format=$greek id=f}{f}{f}{f}{f}"
+        ).results("αβγδ");
+    }
+
+    @Test
+    @DisplayName("Formatting as GREEK")
+    void testGREEK() throws Exception {
+        TestThat.theInput("{#counter:define format=$GREEK id=f}{f}{f}{f}{f}"
+        ).results("ΑΒΓΔ");
+    }    @Test
+    @DisplayName("Formatting as cyrillic")
+    void testCyrillic() throws Exception {
+        TestThat.theInput("{#counter:define format=$cyrillic id=f}{f}{f}{f}{f}"
+        ).results("абвг");
+    }
+
+    @Test
+    @DisplayName("Formatting as CIRILLIC")
+    void testCYRILLIC() throws Exception {
+        TestThat.theInput("{#counter:define format=$CYRILLIC id=f}{f}{f}{f}{f}"
+        ).results("АБВГ");
+    }
+
+
 }

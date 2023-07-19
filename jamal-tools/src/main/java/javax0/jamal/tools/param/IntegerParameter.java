@@ -13,6 +13,14 @@ public class IntegerParameter extends AbstractTypedParameter<Integer> {
         return param.get();
     }
 
+    public IntegerParameter required() {
+        return this;
+    }
+
+    public IntegerParameter optional() {
+        return defaultValue(0);
+    }
+
     public IntegerParameter defaultValue(Integer dV) {
         if (dV == null) {
             param.orElseNull();

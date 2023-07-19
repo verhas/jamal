@@ -13,6 +13,13 @@ public class StringParameter extends AbstractTypedParameter<String> {
         return param.get();
     }
 
+    public StringParameter required() {
+        return this;
+    }
+    public StringParameter optional() {
+        return defaultValue(null);
+    }
+
     public StringParameter defaultValue(String dV) {
         if (dV == null) {
             param.orElseNull();

@@ -13,6 +13,15 @@ public class EnumerationParameter extends AbstractTypedParameter<Boolean> {
     private final Class<?> enumClass;
     private Object enumDefault = null;
 
+    public EnumerationParameter required() {
+        return this;
+    }
+
+    public EnumerationParameter optional() {
+        enumDefault = enumClass.getEnumConstants()[0];
+        return this;
+    }
+
     public <K> EnumerationParameter defaultValue(K enumDefault) {
         if (enumDefault != null && !enumDefault.getClass().isAssignableFrom(enumClass)) {
             throw new IllegalArgumentException(String.format("The parameter '%s' is not '%s' type", param.name(), enumDefault.getClass().getName()));
@@ -35,13 +44,14 @@ public class EnumerationParameter extends AbstractTypedParameter<Boolean> {
      */
     public <K> K get(Class<K> klass) throws BadSyntax {
         BadSyntax.when(enumClass == null, "The parameter '%s' is not an enumeration", param.name());
+        final var ignore = param.get();
         if (enumDefault == null) {
             throw new IllegalArgumentException("The parameter '" + param.name() + "' has no default value.");
         }
         if (!enumClass.isAssignableFrom(klass)) {
             throw new IllegalArgumentException(String.format("The parameter '%s' is not '%s' type", param.name(), klass.getName()));
         }
-        if (param.is()) {
+        if (param.isPresent()) {
             try {
                 final var enumValue = Enum.valueOf((Class<Enum>) enumClass, param.name());
                 return (K) enumValue;

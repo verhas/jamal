@@ -202,7 +202,12 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         List<BadSyntax> errors = new ArrayList<>();
         BadSyntax.when(javaSnippetCollectors == null || javaSnippetCollectors.isEmpty(), "You must specify at least one Java snip" + "pet collector.");
         final String[] lines = getFileContent(file, ignoreIOEx, processor);
-        final var javaLexed = new JavaLexed(String.join("\n", lines));
+        final JavaLexed javaLexed;
+        try {
+            javaLexed = new JavaLexed(String.join("\n", lines));
+        } catch (Exception e) {
+            throw new BadSyntax("There is some problem collecting snippets from file '" + file + "'", e)    ;
+        }
         for (final var collector : javaSnippetCollectors.split(",")) {
             if (collector == null || collector.isEmpty()) {
                 continue;

@@ -12,6 +12,10 @@ public class ListParameter extends AbstractTypedParameter<List<String>> {
         super(param);
     }
 
+    public ListParameter optional() {
+        return this;
+    }
+
     public List<String> get() throws BadSyntax {
         return param.get();
     }

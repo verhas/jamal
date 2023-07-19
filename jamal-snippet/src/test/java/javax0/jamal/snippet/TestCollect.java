@@ -94,7 +94,7 @@ public class TestCollect {
                 "{#j:identifier (name=snippetName)harvestJava}\\\n" +
                 "{#j:anyTill {#j:string (name=snippet)}}\\\n" +
                 "}}\\\n" +
-                "{@snip:collect from=\"src/main/java\" java}\\\n" +
+                "{@snip:collect from=\"src/main/java\" exclude=\"CounterFormatter\" java}\\\n" +
                 "{@snip harvestJava}\n").results("You must specify at least one Java snip\n");
     }
 

@@ -136,7 +136,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<snip_update,`snip:update`>>
 . <<kroki,Kroki>>
 {%@counter:define id=chapter format=%d. %}
-{%@counter:define id=macroChapter format=$roman. %}
+{%@counter:define id=macroChapter format=$ROMAN. %}
 
 [[usage]]
 == {%chapter%}Usage
@@ -162,7 +162,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in l
 %}
 [[snip_collect]]
 === {%macroChapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=ec0bd200%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=9ea89c13%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -1748,7 +1748,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 === {%macroChapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=ec5335f2%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=36b34ffd%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -1840,7 +1840,7 @@ MMMCCXIII. MMMCCXIV. MMMCCXV.
 
 Sometimes you want to use the current value of the counter multiple times.
 It is possible to define a macro using the counter and then use the macro referring to the value.
-For example the following code
+For example, the following code
 
 {%sample/
 {@counter:define id=c}{c} {#define second={c}}{second} {second} {c}
@@ -1850,7 +1850,7 @@ will result
 
 {%output%}
 
-The implemented counters, however provide a simplified approach for this.
+The implemented counters provide a simplified approach for this.
 
 {%sample/
 {@counter:define id=c}{c} {c} {c last} {c}
@@ -1860,9 +1860,9 @@ will have the same output:
 
 {%output%}
 
-In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without increment.
+In this case we used the word `last` as an argument to the counter macro `c`, which instructs the macro to return the last value without an increment.
 
-Sometimes you want to refer to a value of the counter much later, when the counter was already increased multiple times.
+Sometimes you want to refer to the value of the counter much later when the counter was already increased multiple times.
 In that case you can still use the `define` as used above, but the macro counter also gives a shortcut to do that.
 If you write
 
@@ -3516,7 +3516,7 @@ If the option is not present a default set of postfixes will be used:
 * `decor$cmDict` aliased as `common`, `commons`, `cm` defines the common words dictionary.
 
 [[kroki]]
-=== {%macroChapter%}Kroki
+=== {%chapter%}Kroki
 
 In this section, we will describe how to use the snippet handling macros together with the Kroki service.
 

@@ -24,6 +24,10 @@ public class FileParameter extends AbstractTypedParameter<String> {
         }
     }
 
+    public FileParameter required() {
+        return this;
+    }
+
     public File file() throws BadSyntax {
         init();
         return file;

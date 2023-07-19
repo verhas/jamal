@@ -13,11 +13,23 @@ public class MacroConverter {
         return processor.getRegister().getUserDefined(macroName)
                 .filter(m -> m instanceof Evaluable)
                 .map(m -> (Evaluable) m)
-                .map(m -> (Function<String[], String>) args -> {
-                            try {
-                                return m.evaluate(args);
-                            } catch (BadSyntax e) {
-                                throw new RuntimeException(e);
+                .map(m -> {
+                            if (m.isVerbatim()) {
+                                return (Function<String[], String>) args -> {
+                                    try {
+                                        return m.evaluate(args);
+                                    } catch (BadSyntax e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                };
+                            } else {
+                                return (Function<String[], String>) args -> {
+                                    try {
+                                        return processor.process(javax0.jamal.tools.Input.makeInput(m.evaluate(args)));
+                                    } catch (BadSyntax e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                };
                             }
                         }
                 ).orElseThrow(() -> new IllegalArgumentException("Macro " + macroName + " is not defined"));

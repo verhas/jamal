@@ -23,11 +23,11 @@ public class Param<K> implements Params.Param<K> {
     private boolean mandatory = true;
 
     /**
-     * When calculating the final value the actual string value from the parameter or the user defined macro is needed.
-     * When we return a list or a boolean then we do not need the string. It is okay if it is there, and may be used,
-     * but it is not a problem, if neither the parameter nor a user defined macro defines the value.
+     * When calculating the final value, the actual string value from the parameter or the user defined macro is needed.
+     * When we return a list or a boolean, we do not need the string. It is okay if it is there, and may be used,
+     * but it is not a problem if neither the parameter nor a user defined macro defines the value.
      * <p>
-     * In that case the value of the option or an empty list is returned.
+     * In that case, the value of the option or an empty list is returned.
      */
     private boolean stringNeeded = true;
 

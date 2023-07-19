@@ -115,6 +115,11 @@ class StringParameter(val delegate: javax0.jamal.tools.param.StringParameter) : 
         return delegate.get()
     }
 
+    fun optional(): StringParameter {
+        delegate.optional()
+        return this
+    }
+
     infix fun default(dV: String): StringParameter {
         delegate.defaultValue(dV)
         return this
@@ -129,6 +134,11 @@ class IntegerParameter(val delegate: javax0.jamal.tools.param.IntegerParameter) 
 
     operator fun invoke(): Int {
         return delegate.get()
+    }
+
+    fun optional(): IntegerParameter {
+        delegate.optional()
+        return this
     }
 
     infix fun default(dV: Int): IntegerParameter {

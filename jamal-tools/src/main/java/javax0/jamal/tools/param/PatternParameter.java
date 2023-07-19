@@ -15,6 +15,10 @@ public class PatternParameter extends AbstractTypedParameter<Pattern> {
         return param.get();
     }
 
+    public PatternParameter required() {
+        return this;
+    }
+
     public PatternParameter defaultValue(String dV) {
         if (dV == null) {
             param.orElseNull();

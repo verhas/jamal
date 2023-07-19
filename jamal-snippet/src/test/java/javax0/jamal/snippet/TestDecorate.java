@@ -15,6 +15,23 @@ public class TestDecorate {
     }
 
     @Test
+    void testDecorNonVerbatim() throws Exception {
+        TestThat.theInput("{@define d(x)={@rot13 x}:}" +
+                        "{@decorate (ratios=\"- 0 1 1 2 0.4\" decorator=d)" +
+                        "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}")
+                .results("inp:ation a n g:h inp:mztjxn neov:tracion ~anrakadabra~ vn:cion ih:lture");
+    }
+
+    @Test
+    void testDecorVerbatim() throws Exception {
+        TestThat.theInput("{@define [verbatim]d(x)={@rot13 x}}" +
+                        "{@decorate (ratios=\"- 0 1 1 2 0.4\" decorator=d)" +
+                        "vacation a n th vacmztjxn arbitracion ~anrakadabra~ iacion vulture}")
+                .results("{@rot13 vac}ation a n {@rot13 t}h {@rot13 vac}mztjxn {@rot13 arbi}tracion ~anrakadabra~ {@rot13 ia}cion {@rot13 vu}lture");
+    }
+
+
+    @Test
     void testTwoDecors() throws Exception {
         TestThat.theInput("{@define d1(x)=<x>}{@define d2(x)=/x/}" +
                         "{@decorate (ratios=\"- 0 1 1 2 0.4\" decorator=d1 decorator=d2)" +

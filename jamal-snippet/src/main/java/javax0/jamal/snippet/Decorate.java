@@ -96,13 +96,6 @@ public class Decorate implements Macro, Scanner {
         final var decorators = macros.stream()
                 .map(s -> MacroConverter.toFunction(processor, s))
                 .map(f -> (Function<String, String>) (String a) -> f.apply(new String[]{a}))
-                .map( f -> (Function<String, String>)(String s)-> {
-                    try {
-                        return processor.process(javax0.jamal.tools.Input.makeInput(f.apply(s)));
-                    } catch (BadSyntax e) {
-                        throw new RuntimeException(e);
-                    }
-                })
                 .collect(Collectors.toCollection(ArrayList::new));
         if( decorators.size() == 1 ){
             decorators.add(s -> s);
