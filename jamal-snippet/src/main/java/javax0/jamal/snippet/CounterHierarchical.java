@@ -55,7 +55,7 @@ public class CounterHierarchical implements Identified, Evaluable, Scanner.Whole
     public String evaluate(String... parameters) throws BadSyntax {
         final var scanner = newScanner(Input.makeInput(parameters.length > 0 ? parameters[0] : ""), processor);
         final var command = scanner.enumeration(Command.class).optional();
-        final var format = scanner.str(null, "format").defaultValue(this.format);
+        final var format = scanner.str(getId()+"$format", "format").defaultValue(this.format);
         final var saveAs = scanner.str(null, "save", "saveAs").optional();
         final var title = scanner.str(null, "title").defaultValue("");
         scanner.done();
