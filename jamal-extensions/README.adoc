@@ -5,7 +5,7 @@ These macros are tested, and they work, but they are not guaranteed to be featur
 It means that their inner working may change in later releases.
 
 Many of these macros in a more matured form can be found in other macro sets.
-For example the macros in the class `javax0.jamal.extensions.Case` is repeated and made part of the Jamal snippet library.
+For example, the macros in the class `javax0.jamal.extensions.Case` is repeated and made part of the Jamal snippet library.
 Even if that happens, these macros do not get deleted but remain here as experiments.
 
 These macros are experiments, and thus their documentation is not complete.

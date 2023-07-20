@@ -1,29 +1,23 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Configurable;
-import javax0.jamal.api.Counted;
-import javax0.jamal.api.Debuggable;
-import javax0.jamal.api.Identified;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
 import javax0.jamal.engine.util.Replacer;
 import javax0.jamal.engine.util.SeparatorCalculator;
+import javax0.jamal.tools.Input;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
+import javax0.jamal.tools.Scanner;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
  */
-public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable, Debuggable.UserDefinedMacro, Counted {
-    private static final String ESCAPE = "@escape ";
+public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Configurable, Debuggable.UserDefinedMacro, Counted, Scanner.WholeInput {
     final private String id;
     final private boolean verbatim;
     final private boolean tailParameter;
@@ -35,6 +29,10 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     private Segment root = null;
     private boolean pure = false;
 
+    private boolean xtended = false;
+    private Map<String, String> defaults = new HashMap<>();
+    private static final String ESCAPE = "@escape ";
+
     @Override
     public Optional<UserDefinedMacro> debuggable() {
         return Optional.of(this);
@@ -42,9 +40,38 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
 
     @Override
     public void configure(String key, Object object) {
-        if ("pure".equals(key)) {
-            pure = true;
+        switch (key) {
+            case "xtended":
+                xtended = true;
+                break;
+            case "defaults":
+                defaults.putAll(convertToMap(object.toString()));
+                break;
+            case "pure":
+                pure = true;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown configuration key: " + key);
         }
+    }
+
+    /**
+     * Convert a multi-line string into a map. The string is a list of lines. Each line is a key value pair separated
+     * by the first {@code =} character. The key is the string before the {@code =} character and the value is the
+     * string after the {@code =} character. The keys are trimmed, the values are not.
+     *
+     * @param s the input string
+     * @return the new Map
+     */
+    private static Map<String, String> convertToMap(String s) {
+        final var map = new HashMap<String, String>();
+        for (final var line : s.split("\n")) {
+            final var parts = line.split("=", 2);
+            if (parts.length == 2) {
+                map.put(parts[0].trim(), parts[1]);
+            }
+        }
+        return map;
     }
 
     /**
@@ -97,7 +124,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     }
 
     /**
-     * Evaluate the content of the user defined macro using the actual values for the parameter values.
+     * Evaluate the content of the user-defined macro using the actual values for the parameter values.
      *
      * @param parameters the actual string values for the parameters
      * @return the string that is the result of the evaluation
@@ -107,8 +134,23 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      */
     @Override
     public String evaluate(final String... parameters) throws BadSyntax {
-        final var adjustedValues = argumentHandler.adjustActualValues(parameters, optionsStore.is(Processor.LENIENT));
-        var values = argumentHandler.buildValueMap(adjustedValues);
+        final Map<String, String> values;
+        if (xtended) {
+            final var scanner = newScanner(Input.makeInput(parameters.length > 0 ? parameters[0] : ""), processor);
+            for (final var parameter : argumentHandler.parameters) {
+                scanner.str(parameter).defaultValue(defaults.get(parameter));
+            }
+            scanner.done();
+            values = new HashMap<>();
+            for (final var param : scanner.getParMap().entrySet()) {
+                final var name = param.getKey();
+                final var value = param.getValue().isPresent() ? param.getValue().get().toString() : Objects.requireNonNullElse(defaults.get(name),"");
+                values.put(name, value);
+            }
+        } else {
+            final var adjustedValues = argumentHandler.adjustActualValues(parameters, optionsStore.is(Processor.LENIENT));
+            values = argumentHandler.buildValueMap(adjustedValues);
+        }
         if (root == null) {
             root = createSegmentList();
         }
@@ -146,7 +188,9 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     private int segmentsLengthSum(Segment root, Map<String, String> values) {
         int size = 0;
         for (Segment segment = root; segment != null; segment = segment.next()) {
-            size += segment.content(values).length();
+            if (segment.content(values) != null) {
+                size += segment.content(values).length();
+            }
         }
         return size;
     }
@@ -183,8 +227,8 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      * The reason for that is that the result of this method is used to count the number of the argument provided when
      * the macro is invoked. In case the macro is named {@code default} and the first argument is named as above this
      * parameter will get the name of the original macro, which was used in the Jamal source file and which was not
-     * defined. When a macro is not defined, Jamal try to call the macro named "default" and if the first argument is as
-     * named above it will insert the name of the original and undefined macro name in front of the other parameters.
+     * defined. When a macro is not defined, Jamal tries to call the macro named "default" and if the first argument is as
+     * named above, it will insert the name of the original and undefined macro name in front of the other parameters.
      *
      * @return the number of values expected on the call of the macro.
      */
@@ -196,7 +240,11 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
                         || Identified.MACRO_NAME_ARG2.equals(argumentHandler.parameters[0]))) {
             return argumentHandler.parameters.length - 1;
         }
-        return tailParameter ? -argumentHandler.parameters.length : argumentHandler.parameters.length;
+        if (xtended) {
+            return 1;
+        } else {
+            return tailParameter ? -argumentHandler.parameters.length : argumentHandler.parameters.length;
+        }
     }
 
     @Override

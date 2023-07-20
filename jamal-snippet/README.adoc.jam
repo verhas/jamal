@@ -1925,6 +1925,85 @@ resulting in:
 {%output%}
 
 The hierarchical nature comes to life when you `open` and `close` a hierarchy level.
+Opening a new level is done simply writing the word `open` as an argument to the counter macro.
+Similarly, closing a level is done by writing the word `close`.
+
+Continuing the previous example:
+
+{%sample/
+{h open} {h} {h open} {h} {h open} {h} {h close} {h} {h close} {h} {h close} {h}
+%}
+
+will result in:
+
+{%output%}
+
+Opening and closing are not the only difference and possibility of the hierarchical counter.
+A hierarchical counter can have a different format for each level in a single format string.
+The format string can contain all the formatting elements that the flat counter can use.
+However, in addition to that, it can also contain parts between `{` and `}`.
+
+The syntax of these parts is `{<level>:<format>}`.
+The `<level>` is a number starting with 1.
+When the actual level of the counter is smaller than the `<level>` the format is ignored.
+When the actual level is equal or larger than the `<level>` the format is used.
+The `<format>` is the format string that is used for the counter.
+The format can also contain the placeholder `$title` or `$TITLE` that will be replaced by the title of the level as defined in the argument `title` (see later).
+
+
+The format can be defined using the macro `define`, inherited from the `counter:define` or as an argument to the counter macro in this order.
+When using the macro `define` the name of the user defined macro is the name of the counter and appending `$format` to it.
+
+To demonstrate all these possibilities, we use the following example:
+
+{%sample/
+{@counter:define id=k hierarchical format="%d{2:.$greek}{3:.$roman}"}\
+format inherited: {k}{k open}
+format inherited: {k}{k open}
+format inherited: {k}
+format inherited: {k}
+format defined as parameter: {k format="%d{@ident {2:.%02d}{3:.%03d}} $title" title="This is the title"}
+format defined in k$format: {@define [verbatim]k$format=$ROMAN{2:.$roman}{3:.$roman}}{k}
+%}
+
+which will result in:
+
+{%output%}
+
+NOTE: When the format string is defined as a user defined macro, it is better a `verbatim` macro to avoid the macro interpretation of the parts between the `{` and `}` characters.
+When the macro start and stop strings are not `{` and `}` it is not so crucial.
+
+The hierarchical counter can also have a title.
+The title is defined using the parameter `title` and can be used in the format string using the placeholder `$title` or `$TITLE`.
+
+Similarly to flat counter, you can also refer to the last value of the counter using the argument `last`.
+
+{%sample/
+{k last}
+%}
+
+will result in:
+
+{%output%}
+
+You may want to refer to a counter value other than the last one.
+In this case, you can use a `define` macro to store the formatted value of the counter, or you can "save" the counter.
+Using the parameter `save` (also aliased as `saveAs`) with a string argument you clone a freezed version of the counter.
+For example:
+
+{%sample/
+{k save=z} {z} {z format="%d.{@ident {2:%d}.{3:%d}}"}
+%}
+
+will result in:
+
+{%output%}
+
+The frozen version will retain its value and will not be incremented.
+On the other hand, it can be formatted.
+
+NOTE: Counters flat or hierarchical are technically user defined macros, but they will not be saved or loaded by the macro `references`.
+If you need a forward reference to a counter, you should define a user defined macro via the macro `define` and use that to reference the counter.
 
 [[references]]
 === {%chapter%}`references`

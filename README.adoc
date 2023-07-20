@@ -855,6 +855,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 * since 1.12.5 option `export` can be used as a shorthand instead of define and export one after the other
 * since 2.0.0 option `tail` to parse the tail parameters as a single string
 * since 2.3.0 option `class` to define a macro by the implementing class
+* since 2.4.0 option `default` to define a macro by the implementing class
 
 ===== Define basics
 

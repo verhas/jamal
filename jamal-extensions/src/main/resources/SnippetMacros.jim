@@ -1,2 +1,0 @@
-{@use javax0.jamal.extensions.SnippetMacros.Trim as trim}
-{@use javax0.jamal.extensions.SnippetMacros.Number as number}

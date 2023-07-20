@@ -1,4 +1,4 @@
-package javax0.jamal.birred;
+package javax0.jamal.decored;
 
 import org.junit.jupiter.api.Test;
 

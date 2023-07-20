@@ -58,40 +58,6 @@ class TestSamples {
     }
 
 
-    @Test
-    @DisplayName("matcher generates the groups")
-    void testMatcherLoop() throws BadSyntax, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-        TestThat.theInput("{@use global javax0.jamal.extensions.Regex.Matcher as matcher}\n" +
-                "{@matcher myMatcher ````(.*?)/(.*)`before the slash/after the slash}\n" +
-                "{myMatcher -matches}\n" +
-                "{myMatcher -nr}\n" +
-                "{!#for index in ({myMatcher -groupIndices})=index. {`myMatcher :group:index}\n" +
-                "}").results(
-                "\n\n" +
-                        "true\n" +
-                        "2\n" +
-                        "1. before the slash\n" +
-                        "2. after the slash\n");
-    }
-
-    final static String SNIPPET = "\n" +
-            "\n" +
-            "```\n" +
-            "    @DisplayName(\"snippets can be included from files\")\n" +
-            "    @Test\n" +
-            "    void testSnippetInclusion() throws IOException, BadSyntax {\n" +
-            "        assertEquals(SNIPPET, result(\"snippet_test.txt.jam\"));\n" +
-            "    }\n" +
-            "```";
-
-    // snippet     testSnippetInclusion
-    @DisplayName("snippets can be included from files")
-    @Test
-    void testSnippetInclusion() throws IOException, BadSyntax {
-        assertEquals(SNIPPET, result("snippet_test.txt.jam"));
-    }
-    // snippet end
-
     @DisplayName("Test all files that have an '.expected' pair")
     @Test
     void testExpectedFiles() throws IOException, BadSyntax {

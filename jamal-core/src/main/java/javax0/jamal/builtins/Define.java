@@ -1,13 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Configurable;
-import javax0.jamal.api.Evaluable;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.Throwing;
@@ -15,16 +9,8 @@ import javax0.jamal.tools.Throwing;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
-import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
-import static javax0.jamal.api.SpecialCharacters.DEFINE_VERBATIM;
-import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
-import static javax0.jamal.tools.InputHandler.convertGlobal;
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.getParameters;
-import static javax0.jamal.tools.InputHandler.isGlobalMacro;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.api.SpecialCharacters.*;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
     @Override
@@ -38,6 +24,7 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         final var globalParam = scanner.bool(null, "global");
         final var exportParam = scanner.bool(null, "export");
         final var javaDefined = scanner.str(null, "class");
+        final var defaults = scanner.str(null, "default", "defaults", "named");
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = scanner.bool("RestrictedDefineParameters");
         scanner.done();
@@ -106,8 +93,15 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
                 processor.getRegister().export(macro.getId());
             }
         }
-        if ((pure || pureParam.is()) && macro instanceof Configurable) {
-            ((Configurable) macro).configure("pure", true);
+        if (macro instanceof Configurable) {
+            final var configurable = (Configurable) macro;
+            if (pure || pureParam.is()) {
+                configurable.configure("pure", true);
+            }
+            if(defaults.isPresent()){
+                configurable.configure("xtended", true);
+                configurable.configure("defaults", defaults.get());
+            }
         }
         return "";
     }

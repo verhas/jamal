@@ -25,6 +25,12 @@ public class TestCore {
     }
 
     @TestFactory
+    JamalTests<?> testDefineXtended() {
+        return JamalYamlTest.factory(
+                "TestDefineXtended");
+    }
+
+    @TestFactory
     JamalTests<?> testBlock() {
         return JamalYamlTest.factory(
                 "TestBlock");

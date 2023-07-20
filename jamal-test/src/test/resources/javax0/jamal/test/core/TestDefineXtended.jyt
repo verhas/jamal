@@ -1,0 +1,32 @@
+
+Define an extended macro without default parameters:
+  Input: |-
+    {@define [named]w(a,b,c)=.a b c.}{w}
+    {w a=XXX}
+    {w b=XXX}
+    {w c=XXX}
+    {w a=XXX b=YYY c=ZZZ}
+  Output: |-
+    .  .
+    .XXX  .
+    . XXX .
+    .  XXX.
+    .XXX YYY ZZZ.
+
+Define an extended macro with default parameters:
+  Input: |-
+    {@define [defaults="""
+    a=AAA
+    b=BBB
+    c=CCC
+    """]w(a,b,c)=a b c}{w}
+    {w a=XXX}
+    {w b=XXX}
+    {w c=XXX}
+    {w a=XXX b=YYY c=ZZZ}
+  Output: |-
+    AAA BBB CCC
+    XXX BBB CCC
+    AAA XXX CCC
+    AAA BBB XXX
+    XXX YYY ZZZ

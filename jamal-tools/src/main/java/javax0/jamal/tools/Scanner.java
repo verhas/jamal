@@ -1,11 +1,15 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Identified;
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -31,7 +35,7 @@ import java.util.regex.Pattern;
  * macro definition and once in the scanner call.
  * <p>
  * The delimiter specification works so that the scanner object will use {@code ()} as the delimiters. However, when the
- * class implements the {@link FirstLine} interface then the parameter parsing is delimited by the first line of.
+ * class implements the {@link FirstLine} interface then the parameter parsing is delimited by a new line character.
  * When the class implements the {@link WholeInput} interface then the parameter parsing goes to the end of the input.
  * Changing the delimiter is simply changing the interface name the macro implements.
  */
@@ -50,6 +54,7 @@ public interface Scanner {
         private Function<Params, Params> setDelimiters;
 
         private final ArrayList<Params.Param<?>> params = new ArrayList<>();
+        private final Map<String, Params.Param<?>> parmap = new HashMap<>();
 
         private Params.ExtraParams extraParams = null;
 
@@ -57,6 +62,10 @@ public interface Scanner {
             this.processor = processor;
             this.in = in;
             this.macro = macro;
+        }
+
+        public Map<String, Params.Param<?>> getParMap() {
+            return parmap;
         }
 
         /**
@@ -68,19 +77,19 @@ public interface Scanner {
          */
         public <T> Params.Param<T> param(String... keys) {
             final var param = Params.<T>holder(keys);
-            params.add(param);
+            add(param);
             return param;
         }
 
         /**
-         * Define a list of strings parameter.
+         * Define a list of string parameter.
          *
          * @param keys the name and the aliases of the parameter
          * @return the parameter object
          */
         public ListParameter list(String... keys) {
             final var param = Params.<Boolean>holder(keys).asBoolean();
-            params.add(param);
+            add(param);
             return new ListParameter(param.asList(String.class));
         }
 
@@ -90,7 +99,7 @@ public interface Scanner {
          * @param klass is the enumeration class. The names of the enum constants are used as the aliases of the parameter.
          * @return the parameter object
          */
-        public <K> EnumerationParameter enumeration(Class<K> klass) {
+        public <K> EnumerationParameter enumeration(Class<K> klass) throws BadSyntax {
             if (klass.getEnumConstants().length == 0) {
                 throw new IllegalArgumentException("The enumeration class " + klass.getName() + " has no constants.");
             }
@@ -103,7 +112,7 @@ public interface Scanner {
                     .map(e -> (Enum<?>) e)
                     .map(Enum::name).forEach(s -> keys[i.i++] = s);
             final var param = Params.<Boolean>holder(keys).asBoolean();
-            params.add(param);
+            add(param);
             return new EnumerationParameter(param, klass);
         }
 
@@ -115,7 +124,7 @@ public interface Scanner {
          */
         public BooleanParameter bool(String... keys) {
             final var param = Params.<Boolean>holder(keys).asBoolean();
-            params.add(param);
+            add(param);
             return new BooleanParameter(param);
         }
 
@@ -127,7 +136,7 @@ public interface Scanner {
          */
         public StringParameter str(String... keys) {
             final var param = Params.<String>holder(keys).asString();
-            params.add(param);
+            add(param);
             return new StringParameter(param);
         }
 
@@ -139,7 +148,7 @@ public interface Scanner {
          */
         public FileParameter file(String... keys) {
             final var param = Params.<String>holder(keys).asString();
-            params.add(param);
+            add(param);
             return new FileParameter(param.as(s -> FileTools.absolute(in.getReference(), s)));
         }
 
@@ -151,7 +160,7 @@ public interface Scanner {
          */
         public PatternParameter pattern(String... keys) {
             final var param = Params.<Pattern>holder(keys).asPattern();
-            params.add(param);
+            add(param);
             return new PatternParameter(param);
         }
 
@@ -163,10 +172,23 @@ public interface Scanner {
          */
         public IntegerParameter number(String... keys) {
             final var param = Params.<Pattern>holder(keys).asInt();
-            params.add(param);
+            add(param);
             return new IntegerParameter(param);
         }
 
+        private <T> void add(Params.Param<T> param) {
+            params.add(param);
+            final var keys = param.keys();
+            if (keys != null) {
+                if (keys.length > 0 && keys[0] != null) {
+                    parmap.put(keys[0], param);
+                } else if (keys.length > 1 && keys[1] != null) {
+                    parmap.put(keys[1], param);
+                }else{
+                    throw new IllegalArgumentException("Parameter has no name.");
+                }
+            }
+        }
         /**
          * Signal that the parsing accepts just any parameter and does not check the parameter names.
          * These extra parameters are stored in a map and can be queried from the returned object.
