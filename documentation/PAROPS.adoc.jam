@@ -1,0 +1,321 @@
+= Standard Built-In Parop Parsing
+{%@define methodFormat=`$name()`%}\
+
+Parops (parameter options) are usually used to give extra parameters/options to built-in macros.
+They are key/value pars at the start of the input of the built-in macro.
+The parsing of these parops is supported by Java classes that the built-in macros can use.
+The parsing implemented is also used for user-defined macros when the macro is defined with the `define` parameter option.
+
+.Name of the game
+[NOTE]
+====
+User defined macros have parameters.
+Jamal uses options defined using the macro `options`.
+Parameter options are used as options or parameters for the built-in macros and in some cases for user-defined macros.
+Naming them "parameters" or "options" would be confusing; especially that boolean parops can also get value from options defined using the macro `options`.
+Therefore, these parameters or options are called parameter options, or in short parops.
+I wish I could figure out something less intricate
+====
+
+== Rationale for Parops
+
+Even though built-in macros are free to parse their input any way they want, there are support classes to ease this task.
+The advantages of using these classes are twofold.
+
+. These classes are thoroughly tested, documented, and easy to use, saving development time and effort.
+
+. The macros are more coherent and easier to understand for the users when they follow similar patterns.
+
+This document describes the format and use of the options which are parsed using these supporting Java classes.
+
+== Introduction
+
+Macro options are name-value pairs that modify the behavior of a macro.
+They are not to be confused with global options set using the macro `options`.
+
+For example, the line
+
+[source]
+----
+{@include [verbatim lines=1..13] otherContent.txt}
+----
+
+will instruct Jamal to include the file verbatim and only the lines from 1 to 13.
+
+The options in this case are between the `[` and `]` characters.
+They have to form `name=value` pairs separated by spaces.
+
+The enclosing characters for the parops are not hard-wired.
+Each macro can declare the characters it uses to enclose the parops.
+We use `[` and `]` for the core macros, and it is customary to use `(` and `)` for the macros in other packages.
+
+[NOTE]
+====
+The use of the `[` and `]` characters in the case of the core macros was a decision late in the development process.
+The macro `for` was the first one to support parops, and it already used the `(` and `)` characters to enclose the loop parameters.
+The list of the parameters follows the macro name, `for`.
+This would make the parops indistinguishable from the parameters.
+
+To keep backward compatibility, the decision was made: the core macros will use `[` and `]`.
+There is nothing to stop a non-core macro from using these characters, but it is strongly discouraged.
+====
+
+There are macros that do not need any content other than the parops.
+In this case, the parops are the whole input and are not enclosed in any characters.
+Some macros use line oriented input, and they assume no input on the first line.
+These macros use the first line options, also not needing any enclosing characters.
+
+When a macro implements the option parsing specifying the first line or the whole input, as an option source, the macro still can be used with parops enclosed in `(` and `)` characters.
+
+The options can be mandatory and optional.
+Parops have types and can have default values.
+Specifying a parop not handled by the macro is an error.
+
+The macro Java implementation declares the parop names, types, and optionally default values.
+The helper tool automatically parses the input.
+The macro Java code gets the values for the parops parsed and converted.
+This ensures conformity for the option parsing.
+
+Options can be
+
+* integer numbers,
+* strings,
+* enumerated values,
+* boolean values (always have a default value ˛false`),
+* regular expression patterns, and
+* lists (multiple string values).
+
+Some parops may have multiple values.
+
+The Java code can define a name and also aliases for the same parop.
+The names and aliases can be used interchangeably, though the Java code can query the actual name used.
+The use of this feature is acceptable in some special cases only.
+Generally, macros are encouraged to be implemented in a way that it should make no difference which alias the user uses.
+
+Names and aliases are case-sensitive.
+
+The option _name_ is also the name of the user-defined macro that can be used to define the value of the parop.
+Aliases are not considered as macro names when searching for values.
+An option may be declared in a way that it has no names, only aliases.
+In this case, the option value cannot be defined globally only as a case by case option.
+
+TIP: Let's say that a parop has the name `globalFormat` an the alias `format`.
+In that case the user defined macro `globalFormat` can be used to define the value of the parop.
+The parop name `globalFormat` can also be used as a parop name on the input and so can the alias `format`.
+However, even if there is a macro defined and named `format` it will not be used to define the value of the parop.
+Aliases work only in the input of the macro.
+
+NOTE: The options start and end with an opening and closing character.
+The macros have opening and closing strings.
+Macro parop parsing uses single characters.
+
+As we have seen, the `include` macro with the parops
+
+[source]
+----
+{@include [verbatim lines=1..13] otherContent.txt}
+----
+
+uses the `[` and `]` characters.
+
+The built-in core macros use these separator characters.
+Currently {%@listDir (
+              grep="(?:scanner)\\." pattern=".*\\.java$"
+              countOnly
+              )
+../jamal-core/src/main/java/javax0/jamal/builtins%} built-in core macros have parops.
+
+The class `{%@java:class javax0.jamal.tools.Scanner%}` provides the tools to ease parop parsing.
+
+== parop Sources
+
+When macros need parops using the support classes, they look at different sources for the values.
+First, they look at the macro's input and try to find the parops.
+The parops are specified in the format
+
+[source,text]
+----
+name1=value1 name2=value2 ... nameN=valueN
+----
+
+The names are the parop names that the macro may use.
+
+The macro first passes the input to the parsing method.
+When a parop is not defined, the algorithm tries to look up a user-defined macro with the name.
+If you set `{@define margin=2}` somewhere in your Jamal source, this value will be used by every `trimLine` following it.
+If the value is not defined as a parop or a user-defined macro, then the built-in macros can use default values.
+
+NOTE: The macro `default` usually steps into the place of an undefined macro.
+Not in this case.
+It is also an error if the macro used as the configuration has parameters unless the option `{@options lenient}` is specified.
+
+The parops have types.
+
+* In the case of boolean parops, the values `false`, `0`, or `no` are treated as false.
+Everything else will result `true`.
+The usual way to use boolean parops is to specify the name only.
+If a required boolean parop is not present, then the option of the same name is taken into account.
+The option is the one that you can set using the macro `{@options ...}`.
+For example, you can specify `{@options trimVertical}` if you want all uses of the macro `trimLine` to trim vertically.
+User-defined macros for a boolean parops are NOT used.
+All boolean options are `false` by default; hence there are no mandatory boolean parops.
+Undefined boolean parops are `false`.
+
+* parops can be strings and integers.
+These can be defined in a parop or as the value of a macro, as described above.
+A parop is string or integer when it is declared like that in the Java source.
+You can freely enclose integer parops in quotes and specify a string without quotes.
+Note, however, that in the latter case you cannot use some special characters in the string, like spaces or `=`.
+
+* Some parops can have more than one value.
+The `name` can appear more than once with multiple values assigned to it.
+In this case, the name or an alias appears multiple times a value assigned.
+The names and the aliases can be mixed arbitrarily.
+
+Macros may decide whether to define any default value for a parop.
+If not, the macro will error if the parop is not defined and there is no user-defined macro.
+
+The parop names can have aliases.
+These are used solely inside the macro as parops.
+Alias names do not play a role as user-defined macros.
+In other words, the "main" name of the parop can also be a macro; aliases cannot.
+
+The core macro uses `$forsep` as a parop name and has an alias `separator`.
+If neither is specified in the macro, only the user-defined macro `$forsep` is consulted.
+If there is a `{@define separator=;}` in the code, it will not alter the `for` macro execution.
+In the parop list, however, the names and the aliases are interchangeable.
+
+Macros can define parops using only aliases.
+Technically they specify `null` as the name and give meaningful strings only for one or more aliases.
+In that case, there is no way to define a global value for the parop as a macro.
+
+Aliases are specific to the macro.
+Different macros may use the same parop name for different purposes, providing different or the same aliases.
+It is up to the macro implementation what parop names and aliases they use.
+However, the parop names and the aliases are unique in a single macro implementation.
+
+== Details
+
+In the parop definition
+
+[source,text]
+----
+name1=value1 name2=value2 ... nameN=valueN
+----
+
+the `value1, value2, ..., valueN` values are either _numeric_, _boolean_ or _string_ values.
+The type depends on what the macro awaiting for the specific parop.
+
+You can enclose the values between `"`, `"""` or without any delimiter.
+`"..."` is a typical string representation.
+Using the `"` is optional if there is no space or a particular escape sequence in the value.
+For example, `margin=1` is just as good as `margin="1"`.
+On the other hand, `name=Peter Verhas` is not valid.
+It has to be represented as `name="Peter Verhas"` because it contains a space.
+
+A string starting and ending with a `"` character must not contain a new-line character.
+If you need multi-line strings, use the `\n` characters or a triple-quoted multi-line string.
+A multi-line string starts and ends with `"""`, three quote characters.
+
+Some macros use only the first line for parops.
+Even in this case, the new-line character inside a triple-quoted string is part of the value and does not stop the parsing.
+The parsing stops only at the first new-line character, which is not part of any value and not escaped.
+
+If there are many parops, and the first line becomes too long, then the `\` character escapes the new line.
+Subsequent lines can also escape the new-line character using the `\` character.
+It makes the parser skip the new line and go on parsing on the following line.
+
+Let's assume that we have a macro `someMacro` and the Java class `SomeMacro` declares the parops to be on the first line of the input.
+
+[source,text]
+----
+{@someMacro header="""
+This is the header
+text and it is
+multi-line
+""" paging=true skip="A" skip="DD" skip="3.145" \
+comment="this is still a parop because of the \\ at the end of the previous line"
+this is the input the macro will use for its result; everything else until here are parops
+}
+----
+
+When the macro declares that the parops are on the first line or until the end of the input you can still optionally use `(` and `)` to enclose the parops.
+
+When the macro asks the parser to parse the input, it also specifies the parop names it can handle.
+An error will occur if there is any parop the macro does not handle.
+
+The macro also specifies the type of the parop.
+If Jamal cannot convert the parop value to the required type, an error will occur.
+
+* Numeric parops are integers. You can enclose them between `"` or `"""`.
+
+* Boolean parops are `true` if they are present without any value.
+Using the string values `false`, `0`, or `no` will mean a `false` value.
+They are `false` if they are not present as a parop, and the name (not an alias) is also `false` as an option.
+A name is `false` as an option if the macro `{@options name}` was not invoked in the current or higher scope or if you invoked the option in the form `{@options ~name}`.
+You can set a boolean parop to `true` by mentioning the name without `=` and any value.
+Any value other than that listed for `false` will mean a `true` value.
+We recommend using only the name without any value assigned to it.
+
+As you can see in the example, some parops can have multiple values.
+An error will occur if multiple parops are defined, but the macro accepts only one.
+If only one value is defined, but the macro needs a list, it will get a one-element list.
+You cannot specify multiple values for such parops using user-defined macros.
+Jamal will not add the global or locally defined user macro to the parop list if the parop is specified at least once on the input.
+If there are parops, those values are used; the macro values are ignored.
+
+Single-line and multi-line strings have similar syntax as Java strings.
+You can use the same escape sequences.
+
+== Examples
+
+In this chapter, we list some syntax examples and the use of the parops.
+These examples come from the unit test file
+
+    {%@file ../jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java%}
+
+The display of each example contains a definition line, an _INPUT_ part, and a _RESULT_ part.
+The "INPUT" part shows the code that defines the values of the parops.
+It may also contain at the start some `options` or `define` macro in case some parops get value from this source.
+The "RESULT" part shows the calculated value of every parop.
+
+The definition line contains the parops' names comma separated.
+Each parop has at least one name.
+In case the parop has an alias that can be used as a parop name instead of the original name, it is given after a `|` character.
+The parop type is either `I` integer, `S` string, `B` boolean, or `L` list.
+The last part following the last `:` is the default value, if there is any.
+
+The test parses this definition string and calls the appropriate `orElse()`, `orElseInt()`, `asString()` and so on methods, which define the type of the parop.
+
+The RESULT part shows the parops with the values as `key=value`.
+When the returned value is a string, the result is enclosed between quotes.
+When the value has some other type, it is shown like a casting operation `(type)` in front of the value.
+
+{%@define section($X)=
+=== $X%}
+
+{%@snip:collect from="../jamal-test/src/test/java/javax0/jamal/test/tools/params/TestParams.java"%}
+{%@define example($XXX)=
+{%#replaceLines replace=/<p>//^\s*\*\s*//
+{%@snip head_$XXX%}%}
+[source,text]
+----
+{%#replaceLines replace="/input:/----\nINPUT\n\n[source,text]\n----\n/result:/----\n\nRESULT\n\n[source,text]\n----\n/<p>//"
+{%#replaceLines replace=/^\s*"//(\\n)?"\s?\+?$//\\"/"/\\\\/\\/
+{%@snip $XXX%}%}
+----
+%}
+{%#replaceLines replace=/<p>//^\s*\*\s*//
+{%@snip doc_$XXX%}%}%}
+{%@comment
+Get the snippets that are in the file `TestParams.java`.
+Get only those that do not contain a `_` character in the name.
+The snippets are named `header_testMethodName`, `testMethodName`, and `doc_testMethodName` for the three parts for each example.
+
+We use # in the 'for' loop because we want the snip:list to be evaluated to get the snippet ids.
+After the iteration, we want to evaluate the 'example' macros, protected by a ` back-tick.
+After Jamal evaluated them, we evaluate the result as the snippets may also use macros, like 'section'.
+%}
+{%!!#for $snippet in ({%@snip:list file="TestParams.java" name="^[^_]+$"%})=
+{%`example $snippet%}
+%}

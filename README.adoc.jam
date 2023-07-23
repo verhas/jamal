@@ -719,7 +719,7 @@ Only after this, the macro we are looking at is evaluated.
 
 {%@define forMoreAboutEvaluationOrder=
 For more about definition scopes and exporting, read the section about <<export,`export`>>.
-In that section we discuss the evaluation order of the macros in great detail.
+In that section, we discuss the evaluation order of the macros in great detail.
 %}{%forMoreAboutEvaluationOrder%}
 
 [[comment]]
@@ -1019,7 +1019,7 @@ will result
 {%output%}
 
 It is possible to use a question mark `?` after the macro keyword `define`.
-In that case the macro is only defined if is NOT yet defined in the current scope or any other outer scope.
+In that case, the macro is only defined if is NOT yet defined in the current scope or any other outer scope.
 
 {%sample/
 {@define a=1}{@define ? a=2}{a}
@@ -1228,7 +1228,7 @@ If we selected the first option, then the `{?...}` macro would not have and alte
 results
 
 {%output%}
-{%#define NO_UNDEFAULT={%@snip NO_UNDEFAULT /"(.*)"/%}%}
+{%#define NO_UNDEFAULT={%@snip NO_UNDEFAULT%}%}
 Because it is cumbersome to write `{#ident {@undefine default}{?...}}` every time the option `{%NO_UNDEFAULT%}` can also be used.
 
 {%sample/
@@ -3382,7 +3382,7 @@ exporting one or more macros, comma separated.
 
 When a macro is defined it is defined in the current scope (unless the name contains one or more `:`, or it starts with `:`).
 
-The Jamal input file is one scope and if there is a macro defined in the file on the top-level, then that macro can be used anywhere inside the file.
+The Jamal input file is one scope, and if there is a macro defined in the file on the top-level, then that macro can be used anywhere inside the file.
 However, when Jamal includes a file into another it opens a new scope.
 The macro `include` should include some text in the output.
 It can be used, for example, to split up a long document into chapters and, then use Jamal to create the final output.
@@ -4189,7 +4189,7 @@ And it already saved the consistency of this documentation many times.
 
 
 The documentation of the parameter handling in these macros is not part of this readme.
-It can be found in the separate link:documentation/PARAMS.adoc[PARAMS] document.
+It can be found in the separate link:documentation/PAROPS.adoc[PAROPS] document.
 
 [[JamalENV]]
 === {%chapter%}Jamal Environment Variables

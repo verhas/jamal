@@ -27,3 +27,13 @@ code}
 {#output {lastCode}}
 ----
 }
+
+define a macro with a name and a since version
+
+{@define [defaults="""
+name=NAME OF THE MACRO
+since=VERSION SINCE WHICH THE MACRO IS AVAILABLE
+"""] MACRO(name,since)== `name`
+
+sinc{@comment}e version `since`
+}

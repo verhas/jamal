@@ -704,7 +704,7 @@ Only after this, the macro we are looking at is evaluated.
 
 
 For more about definition scopes and exporting, read the section about <<export,`export`>>.
-In that section we discuss the evaluation order of the macros in great detail.
+In that section, we discuss the evaluation order of the macros in great detail.
 
 
 [[comment]]
@@ -718,7 +718,7 @@ For that purpose, use the [`block`](#block) macro.
 
 
 For more about definition scopes and exporting, read the section about <<export,`export`>>.
-In that section we discuss the evaluation order of the macros in great detail.
+In that section, we discuss the evaluation order of the macros in great detail.
 
 
 [source]
@@ -762,7 +762,7 @@ The `block` macro is started using the `#` character.
 
 
 For more about definition scopes and exporting, read the section about <<export,`export`>>.
-In that section we discuss the evaluation order of the macros in great detail.
+In that section, we discuss the evaluation order of the macros in great detail.
 
 
 [source]
@@ -832,7 +832,7 @@ Now `S` is `2`, because it was exported and `Z` is `1`, because it was defined t
 
 
 For more about definition scopes and exporting, read the section about <<export,`export`>>.
-In that section we discuss the evaluation order of the macros in great detail.
+In that section, we discuss the evaluation order of the macros in great detail.
 
 
 Scopes are nested, stacked into each other any levels.
@@ -862,7 +862,7 @@ It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the
 `define` defines a user-defined macro in the current scope.
 
 For more about definition scopes and exporting, read the section about <<export,`export`>>.
-In that section we discuss the evaluation order of the macros in great detail.
+In that section, we discuss the evaluation order of the macros in great detail.
 
 
 The syntax is
@@ -1053,7 +1053,7 @@ will result
 
 
 It is possible to use a question mark `?` after the macro keyword `define`.
-In that case the macro is only defined if is NOT yet defined in the current scope or any other outer scope.
+In that case, the macro is only defined if is NOT yet defined in the current scope or any other outer scope.
 
 [source]
 ----
@@ -3860,7 +3860,7 @@ exporting one or more macros, comma separated.
 
 When a macro is defined it is defined in the current scope (unless the name contains one or more `:`, or it starts with `:`).
 
-The Jamal input file is one scope and if there is a macro defined in the file on the top-level, then that macro can be used anywhere inside the file.
+The Jamal input file is one scope, and if there is a macro defined in the file on the top-level, then that macro can be used anywhere inside the file.
 However, when Jamal includes a file into another it opens a new scope.
 The macro `include` should include some text in the output.
 It can be used, for example, to split up a long document into chapters and, then use Jamal to create the final output.
@@ -4728,7 +4728,7 @@ The core macro `debug` uses the whole input, therefore it does not use any of th
 
 
 The documentation of the parameter handling in these macros is not part of this readme.
-It can be found in the separate link:documentation/PARAMS.adoc[PARAMS] document.
+It can be found in the separate link:documentation/PAROPS.adoc[PAROPS] document.
 
 [[JamalENV]]
 === 7. Jamal Environment Variables

@@ -1,0 +1,51 @@
+{%@import macrodoc.jim%}
+{%MACRO name="begin/end" since=1.0.0%}
+
+{%sample/
+{@begin}
+ macros evaluated in local scope
+{@end}
+%}
+
+The macros `begin` and `end` start and close a local definition scope.
+This is similar as using an {%$ ident%} macro with `#` to create a new scope for the evaluation of the macros inside it.
+
+The text between the `{@begin}` and `{@end}` will be evaluated in a new scope.
+Any user defined macro in this scope is going to be local, unless exported or has a `:` in the name.
+
+It is recommended to use `begin` and `end` when the structure is complex, and it is more readable to use the `begin`, `end` macros than a simple `block`.
+To ensure that all `begin` has an `end` you can name the blocks.
+You can put an arbitrary string after the macro name `begin` and if you do, then you have to repeat the same string after the macro name `end`.
+
+{%sample/
+{@define Z=1}
+{@begin alma}
+{@define Z=2}{Z}
+{@define S=2}{@export S}\
+{@end alma }{Z}{S}
+%}
+
+will result in:
+
+{%output%}
+
+First `Z` is defined to be the string `"1"` (without the quotes).
+Then we start a new scope, named `alma`.
+Inside this new scope we redefine the macro `Z` to be `2`.
+When we use `Z` writing `{Z}`, then it will output `2` here.
+We also define `S` to be `2` and we also <<export,`export`>> it.
+Exporting means that the definition will get to the surrounding scope.
+After that we close the scope named `alma`.
+When closing the scope, there is an extra space after the name, but it does not matter.
+Now `S` is `2`, because it was exported and `Z` is `1`, because it was defined to be `1` on this level and was not exported from the nested level.
+
+{%forMoreAboutEvaluationOrder%}
+
+Scopes are nested into each other any levels.
+Scopes are opened by many things, like macro start, or including a file.
+You can close a scope using the macro `end` that was opened with a matching `begin`.
+You cannot not close a scope using `end` that was opened by something else.
+For example, you cannot get into the scope of the including file putting a pair-less `end` macro into an included file.
+This will trigger a processing error.
+
+It is also an error if a `{@begin...}` does not have its `{@end...}` pair in the main file or in any included or imported file.

@@ -24,7 +24,7 @@ public class TestConvertReadme {
 
     @Test
     void convertParams() throws Exception {
-        DocumentConverter.convert("../documentation/PARAMS.adoc.jam");
+        DocumentConverter.convert("../documentation/PAROPS.adoc.jam");
     }
 
     @Test

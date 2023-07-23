@@ -1,0 +1,137 @@
+{%@import macrodoc.jim%}
+= Macro Evaluation Order
+
+The macro evaluation order is a complex algorithm designed to fit all necessary needs.
+
+== Left to Right, Inside to Out
+
+The general rule is that macros are evaluated
+
+. from the start of the file towards the end, and also
+. from inside towards outside.
+
+For example, when we write
+
+{%sample/
+{#define a=1}{a}
+%}
+{%#block []{%output%}%}
+first the macro {%$ define%} is evaluated and then the user defined macro `a`.
+If we have more complex, nested macro uses, like in the example:
+
+{%sample/
+{#define b(x)=x x}{b {a}}
+%}
+
+then the result is
+
+{%output%}
+
+In this case first the macro `a` is evaluated before evaluating `b` (inside first).
+
+== Built-in macro prefix
+
+You use the built-in macros with `#` or `@` in front of the macro's name.
+These characters signal that the macro is built-in (as opposed to user defined,) but also they control the evaluation order.
+
+The typical use is to start a macro with the `@` character.
+This will instruct Jamal not to evaluate the input of the macro before the macro itself is evaluated.
+
+When we use the `#` character in front of the built-in macro's name then the input is evaluated and after that the macro itself is invoked to process the pre-processed input.
+
+image::{%@plantuml evaluationorder.svg
+@startuml
+
+skinparam monochrome true
+
+title Macro Evaluation
+
+(*) --> "Macro Start String"
+
+if " # or @ character?", then
+-->[ #] "evaluate the\nmacro input"
+--> "evaluate built-in macro"
+else
+-->[ @] "evaluate built-in macro"
+endif
+
+@enduml
+%}[]
+
+For example:
+
+{%sample/
+{@define a=1}
+{@define b={a}}
+{#define c={a}}
+{@define a=2}
+{b}{c}
+%}
+
+will result
+
+{%output%}
+
+When `b` is defined the macro used inside it is not evaluated.
+That is because the character before the macro name `define` is `@`.
+Therefore, the value of `b` is literally `pass:[{a}]`.
+The macro `a` is already 2 by the time `b` is evaluated.
+On the other hand, the definition of `c` uses the `#`.
+It means, that the macro use `pass:[{a}]` is evaluated before `c` gets defined.
+This way the value of the macro is 1.
+
+== Verbatim Macros
+
+The results of user-defined macros are also evaluated.
+This can be controlled and prevented in two ways:
+
+. At the use of it can be inside the `verbatim` constructs.
+. During the definition, the macro can be defined as a "verbatim" one.
+
+For example, writing:
+
+{%sample/
+{@verbatim b}
+%}
+
+will result in
+
+{%output%}
+
+There is also a shorthand to denote verbatim evaluation of user-defined macros.
+If you write a back-tick character in front of the macro name, like in
+
+{%sample/
+{`b}
+%}
+
+You get the same result:
+
+{%output%}
+
+We can also define `b` to be a verbatim macro:
+
+{%sample/
+{@define [verbatim]b={a}}
+{b}
+%}
+
+and it will also result in
+
+{%output%}
+
+== Other Evaluation Controlling Tools
+
+There are other tools that can be used to modify the evaluation order of the macros.
+These include:
+
+- {%$ ident%} macro, which s
+- {%$ eval%} macro that evaluates the input
+- Using `!` in front of the macro identifier or in front of the `@` or `#` character.
+It is a shorthand for the {%$ eval%} macro, and it is described there.
+- The {%$ escape%} macro can prevent macro evaluation.
+- Other built-in macros can also evaluate their input.
+
+
+
+

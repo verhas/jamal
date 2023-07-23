@@ -1,0 +1,40 @@
+{%@import res:jamal.jim%}
+{%@import ../../RELEASES.jim%}
+
+{%@define forMoreAboutEvaluationOrder=
+For more about definition scopes and exporting, read the section about <<export,`export`>>.
+In that section we discuss the evaluation order of the macros in great detail.
+%}
+
+{%@define [defaults="""
+name=NAME OF THE MACRO
+since=VERSION SINCE WHICH THE MACRO IS AVAILABLE
+"""] MACRO(name,since)== `name`
+
+sinc{%@comment%}e version `since`
+%}
+
+
+this macro is to be used to reference other macros inside the documentation of the package
+{%@define $($name)=link:{%@replace /$name/:/_%}.adoc[`$name`]%}
+
+{%#define MacroEvaluationOrder=For more information about about the macro evaluation order, please consult the {%$ evaluation:order%} documentation page.%}
+
+{%@define MACROSRC=../../jamal-core/src/main/java/javax0/jamal/builtins%}
+{%@define ENGINESRC=../../jamal-engine/src/main/java/javax0/jamal/engine%}
+
+
+{%@define sample(code)={%#define :lastCode=code%}.Jamal source
+[source]
+----
+{%#trimLines
+code%}
+----%}
+
+{%@define output=.output
+[source]
+----
+{%#trimLines trimVertical
+{%!#output {%lastCode%}%}%}
+----
+%}

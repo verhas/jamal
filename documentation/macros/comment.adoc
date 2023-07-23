@@ -1,0 +1,43 @@
+
+= `comment`
+
+since version `1.0.0`
+
+
+[source]
+----
+{@comment anything here is a comment}
+----
+
+`comment` is used to insert comments to the input.
+When you use the macro `comment` you usually want to use the `@` character at the start.
+This will prevent the content of the macro from being evaluated before the macro is processed.
+
+For more information about about the macro evaluation order, please consult the <<evaluation_order,`evaluation:order`>> documentation page.
+
+NOTE: It can also be used to enclose definitions without side effects, but this is not recommended.
+For that purpose, use the <<block,`block`>> macro.
+
+Example:
+
+[source]
+----
+this is some {@comment this text
+will not appear in the output}text
+----
+
+will generate
+
+[source]
+----
+this is some text
+----
+
+
+NOTE: It is important to use the `@` character in front of the keyword `comment` to make it a real comment.
+If the macro character `#` is used, like `{#comment comment_text}`, then the `comment_text` part will be evaluated.
+If there is some macro in the `comment_text` that modifies the evaluation state, then the modification will happen.
+For example, if the `comment_text` defines some global macro, then the defined macro can be used after the `comment` block.
+
+It is safe to say always to use `{@comment ...}`.
+When the code needs the evaluation, then use the <<block,`block`>> macro.

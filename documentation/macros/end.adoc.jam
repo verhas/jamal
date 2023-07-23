@@ -1,0 +1,4 @@
+{%@import macrodoc.jim%}
+{%MACRO name="end" since=1.0.0%}
+
+The macro closes a scope opened using the macro {%$ begin%} and it is documented there.

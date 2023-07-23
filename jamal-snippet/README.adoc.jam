@@ -157,7 +157,7 @@ There is no need to invoke the `use` command to get access to these macros.
 == {%chapter%}Macros
 {%@define parameterized=
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:{%@file ../documentation/PARAMS.adoc%}[PARAMS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:{%@file ../documentation/PAROPS.adoc%}[PAROPS].
 %}\
 
 {%chapter open%}{%@define chapter$format={2:$ROMAN. }%}\
@@ -307,7 +307,7 @@ The snippets can be used later using the <<snip,`snip`>> macro.
 The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
-These options are parsed using the Standard Parameter Parsing as defined in link:{%@file ../documentation/PARAMS.adoc%}[PARAMS].
+These options are parsed using the Standard Parameter Parsing as defined in link:{%@file ../documentation/PAROPS.adoc%}[PAROPS].
 
 {%#eval {%`@comment%}
 {%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*scanner\\..*?\\(.*?\"(.*?)\".*~* `$1`~.*//\\s*~"

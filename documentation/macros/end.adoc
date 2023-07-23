@@ -1,0 +1,7 @@
+
+= `end`
+
+since version `1.0.0`
+
+
+The macro closes a scope opened using the macro <<begin,`begin`>> and it is documented there.

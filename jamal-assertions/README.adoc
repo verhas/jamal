@@ -123,7 +123,7 @@ then the library and the macros are included and are usable without any further 
 All assertions have the same options and the same syntax.
 The options follow the macro's name between `(` and `)` characters.
 The rest of the macro is the parameters.
-The parameters are parsed using the link:../documentation/PARAMS.adoc[Standard Built-In Parameter Parsing].
+The parameters are parsed using the link:../documentation/PAROPS.adoc[Standard Built-In Parameter Parsing].
 The different assertions can have different number of parameters.
 The last parameter is always optional.
 If it is present, it specifies the error message for the failing assertion.

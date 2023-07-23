@@ -50,7 +50,7 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Processor implements javax0.jamal.api.Processor {
 
-    // snipline NO_UNDEFAULT
+    // snipline NO_UNDEFAULT filter="(.*)"
     public static final String NO_UNDEFAULT = ":noUndefault";
     // snipline EMPTY_UNDEF
     public static final String EMPTY_UNDEF = ":emptyUndef";

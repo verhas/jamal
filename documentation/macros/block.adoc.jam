@@ -1,0 +1,36 @@
+{%@import macrodoc.jim%}
+{%MACRO name=block since=1.0.0%}
+
+
+`block` is a macro that can be used to enclose a block of macro.
+The common practice is to use it with the `#` starting character.
+That way the macros inside the `block` are evaluated, but their output is dropped.
+The macro `block` always result an empty string.
+It is used to have the state-altering effects of the macros without the output.
+
+
+NOTE: `block` has a similar functionality as {%$ comment%}.
+It is recommended to use the {%$ comment%} macro with the `@` starting character.
+Jamal does not interpret the macro content in that case.
+Use the `block` with `#` to have the content interpreted.
+`block` should be used to enclose definitions to a scope level.
+
+When defining macros inside a block, do not forget to export them if you want to use them outside the block.
+The macro can be used with the option `flat` or `export` (since release {%RELEASE:MANAUS%}).
+In this case, Jamal will automatically export all the macros defined inside the block.
+
+Examples:
+
+{%sample/
+{@block it is like comment {@define x=1} is not evaluated}
+{#block it is like comment {@define x=1}{@define y=1} is evaluated{@export y}}
+x is not exported, value is not defined: "{?x}" <-- empty string
+y is exported, value is defined: "{y}" <-- not empty string, it is 1
+{#block [flat] {@define H=1}{@define K=1} exports automatically}
+H is exported, value is defined: "{H}" <-- not empty string
+K is exported, value is defined: "{K}" <-- not empty string, it is 1
+%}
+
+results in:
+
+{%output%}
