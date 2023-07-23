@@ -12,6 +12,7 @@ The general rule is that macros are evaluated
 
 For example, when we write
 
+.Jamal source
 [source]
 ----
 {#define a=1}{a}
@@ -20,6 +21,7 @@ For example, when we write
 first the macro link:define.adoc[`define`] is evaluated and then the user defined macro `a`.
 If we have more complex, nested macro uses, like in the example:
 
+.Jamal source
 [source]
 ----
 {#define b(x)=x x}{b {a}}
@@ -27,6 +29,7 @@ If we have more complex, nested macro uses, like in the example:
 
 then the result is
 
+.output
 [source]
 ----
 1 1
@@ -49,6 +52,7 @@ image::evaluationorder.svg[]
 
 For example:
 
+.Jamal source
 [source]
 ----
 {@define a=1}
@@ -60,6 +64,7 @@ For example:
 
 will result
 
+.output
 [source]
 ----
 21
@@ -84,6 +89,7 @@ This can be controlled and prevented in two ways:
 
 For example, writing:
 
+.Jamal source
 [source]
 ----
 {@verbatim b}
@@ -91,6 +97,7 @@ For example, writing:
 
 will result in
 
+.output
 [source]
 ----
 {a}
@@ -100,6 +107,7 @@ will result in
 There is also a shorthand to denote verbatim evaluation of user-defined macros.
 If you write a back-tick character in front of the macro name, like in
 
+.Jamal source
 [source]
 ----
 {`b}
@@ -107,6 +115,7 @@ If you write a back-tick character in front of the macro name, like in
 
 You get the same result:
 
+.output
 [source]
 ----
 {b}
@@ -115,6 +124,7 @@ You get the same result:
 
 We can also define `b` to be a verbatim macro:
 
+.Jamal source
 [source]
 ----
 {@define [verbatim]b={a}}
@@ -123,6 +133,7 @@ We can also define `b` to be a verbatim macro:
 
 and it will also result in
 
+.output
 [source]
 ----
 {a}

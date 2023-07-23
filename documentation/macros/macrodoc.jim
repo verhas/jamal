@@ -22,7 +22,7 @@ this macro is to be used to reference other macros inside the documentation of t
 
 {%@define MACROSRC=../../jamal-core/src/main/java/javax0/jamal/builtins%}
 {%@define ENGINESRC=../../jamal-engine/src/main/java/javax0/jamal/engine%}
-
+{%@define PAROPS=link:../PAROPS.adoc[Parameter Options]%}
 
 {%@define sample(code)={%#define :lastCode=code%}.Jamal source
 [source]

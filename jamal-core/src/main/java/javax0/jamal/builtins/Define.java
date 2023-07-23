@@ -99,8 +99,13 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
                 configurable.configure("pure", true);
             }
             if(defaults.isPresent()){
-                configurable.configure("xtended", true);
-                configurable.configure("defaults", defaults.get());
+                try {
+                    ;
+                    configurable.configure("xtended", true);
+                    configurable.configure("defaults", defaults.get());
+                }catch(Exception e){
+                    throw new BadSyntax("The defaults parameter is invalid.",e);
+                }
             }
         }
         return "";

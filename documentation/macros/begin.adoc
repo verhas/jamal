@@ -40,7 +40,6 @@ will result in:
 2
 12
 ----
-#
 
 
 First `Z` is defined to be the string `"1"` (without the quotes).

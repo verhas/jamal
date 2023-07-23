@@ -1,0 +1,116 @@
+{%@import macrodoc.jim%}
+{%MACRO name="undefine" since=1.0.0%}
+{%#snip:collect from="{%MACROSRC%}/Eval.java"%}
+{%@comment safeoutput is used to execute JShell because JShell may not be available in IntelliJ%}
+{%@define safeoutput=.output
+[source]
+----
+{%#trimLines trimVertical
+{%@try!
+{%!#output {%lastCode%}%}%}%}
+----
+%}
+`eval` interprets the content of the macro.
+The text written after the macro keyword `eval` is evaluated as a script.
+The scripting language can be defined following a `/` character.
+If there is no script type defined (or `jamal` is defined), then the content will be evaluated as normal Jamal macro text.
+Otherwise, the script engine named is used.
+
+There are three ways to use the macro in one of the following formats:
+
+{%sample/
+{@eval macro text}
+{@eval/scripttype script}
+{@eval* text}
+%}
+
+If `eval` is followed by `/` character, then the next identifier is the type of the script.
+You can use any scripting language, which
+
+* implements the Java scripting API, and
+* the interpreter is available on the classpath when Jamal is executed.
+
+If the script type is `jamal`, then it is the same as if there was no script type specified.
+You may need the explicit specification of `jamal` when the content of the macro to be evaluated starts with the `/` character.
+
+{%#define evaluateLoopLimit={%#replace (regex) /{%@snip evaluateLoopLimit /(".*?")/%}/"//%}%}\
+{%@define evaluateLoopLimitAliases={%#replace (regex) /{%@snip evaluateLoopLimit /".*?"\s*,\s*(".*")/%}/"/`/(.*),\s/$1, and /%}%}\
+{%@define firstAlias={%#replace (regex) /{%@snip evaluateLoopLimit /".*?"\s*,\s*"(.*?)"/%}/"/`/%}%}\
+{%#assert:intEquals /{%#string:length {%#replace (regex) /{%evaluateLoopLimitAliases%}/[\w`\s]//%}%}/1/there are more than two aliases%}\
+
+If character following the keyword `eval` is `\*`, then the scripting type is `jamal` and the evaluation is repeated until all macros are resolved.
+The macro assumes that all the macros are resolved when the evaluation of the text does not change any more.
+This may lead to infinite loop, therefore, there is a built-in limit.
+`eval*` evaluates the macro input at most {%@snip DEFAULT_LOOP_LIMIT /(\d+)/%} times.
+This limit can be changed with the option `{%evaluateLoopLimit%}`.
+This name can also be used as a user defined macro to set this option globally, for example:
+
+[source]
+----
+{@define {%evaluateLoopLimit%}=60}
+----
+This option has two aliases {%evaluateLoopLimitAliases%}.
+The name or the aliases can be used between `[` and `]` characters following the `\*` character, for example:
+
+[source]
+----
+{@eval* [{%firstAlias%}=60] evaluate this max 60 times}
+----
+
+The following two examples show how `eval` can be used to evaluate simple arithmetic expressions using the Java built-in JShell interpreter.
+Note that in the second example the macro `eval` is preceded with the character `#` therefore the body of the macro is parsed for other macros before `eval` itself is invoked.
+That way `{a}` and `{b}` are replaced with their defined values and `eval` itself sees `1+2`.
+
+{%sample/
+{@eval/JShell 1+3}
+{@define a=1}{@define b=2}\
+{#eval/JShell {a}+{b}}
+%}
+
+will result
+
+{%safeoutput%}
+
+[sidebar]
+__If you see an error message in the output above, it means that Jamal was running in an environment that had no JShell.
+For example the Asciidoctor IntelliJ plugin runs in a JRE that does not support starting the JShell engine.__
+
+NOTE: Versions prior 1.5.0 used the Nashorn JavaScript interpreter as the default interpreter.
+
+Starting with version 1.5.0 Jamal introduces the `!` modification character.
+When this character is used in front of a macro, then the result of the macro will be evaluated like it was surrounded with `{#eval ... }`.
+This can be used in the case of user-defined macros as well as in the case of built-in macros.
+Note, that in the case of user-defined macros the result of the macro will be evaluated by default.
+Using the `!` in front of a user-defined macro will repeat the evaluation.
+You can use more than one `!` characters in front of a macro.
+The macro result will be evaluated so many times as many `!` characters there are.
+In case of a user-defined macro the "so many times" should be interpreted as one, by default plus N times.
+
+For example:
+
+{%sample/
+{@define a=this is it}
+{@define b={`a}}
+{@define c={`b}}
+{@define userDefined={`c}}
+{userDefined}
+{!userDefined}
+{!!userDefined}
+{!!!userDefined}
+%}
+
+and the output is
+
+{%output%}
+
+In this example the macro `userDefined` is `{`c}`.
+User defined macros values are evaluated after the evaluation of the macro itself, therefore when we use `{userDefined}` we get `{c}`.
+The back-tick character before the macro after the `{` is identical to the use of an <<ident,`ident`>> macro: `{@ident {c}}`.
+
+When there is a single `!` in front of it, then the repeated evaluation results `{b}`, and so on.
+To get the final result, in this case we need three `!` characters, meaning four post evaluation.
+
+You can use this character together with the back-tick macro modifying character.
+They do not eliminate each other, because the back-tick prevents pre-evaluation and `!` provides extra post evaluation.
+When using `!` to evaluate the result of a macro you cannot specify any scripting language.
+The evaluation will be Jamal macros evaluation.

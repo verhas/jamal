@@ -768,6 +768,9 @@ You can use this option instead of the `!` character.
 In this case, the syntax of the macro invocation is different from the usual one.
 
 These options are technically aliases, meaning that none of them can be defined as a global option or as a macro.
+Was it a name, the special macro `default` would collide with the parop `default`.
+
+NOTE: It is especially important that all these parops only have aliases in the case of `default`.
 
 It is generally recommended to use the options instead of the modifying characters.
 The modifying characters remain part of the language for backward compatibility only.
@@ -782,9 +785,11 @@ This option can be used together with the name containing `:`.
 The option `tail` can be used to signal that the input string should be split into exactly to the number of the arguments.
 If the last part after the splitting still contains one or more argument separator character or string, it will be part of the last argument.
 
+== Default Parameters
+
 The option `default` can be used to define default values for the arguments.
 When this option is used, the macro invocation has a different syntax.
-In this case, the parameters must be named in arbitrary order just like the options for the built-in macros.
+In this case, the parameters must be named in arbitrary order just like the parops for the built-in macros.
 
 For example:
 
@@ -799,4 +804,27 @@ c=3
 will result in
 
 {%output%}
+
+The parameter option parsing, as described in the document {%PAROPS%}, is used to fetch the values of the parameters.
+The default values are used only if the parameter is not provided.
+The format for the default value is a multi-line string with the format:
+
+{%sample/
+name1=value1
+...
+%}
+
+for the arguments.
+Each line can define a default value for a parameter.
+It is an error to specify the same parameter name more than once.
+It is also an error to specify a string that is not a parameter name.
+
+The values for the default values are somewhat restricted, because they cannot be multi-line strings.
+This is usually not needed for this type of macro.
+A possible workaround is to define a global macro with the content and then use that macro as the default value.
+It will be evaluated following the macro evaluation unless the macro is also declared as, or used verbatim.
+
+The macros defined using the `default` option can not be serialized.
+It means that they cannot be used, for example, with the snippet library `reference` macro.
+
 

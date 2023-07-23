@@ -453,7 +453,7 @@ When you start Jamal using `jbang jamal@verhas ...` and you see an old version s
 ~/.jbang/cache/urls/d917b991facb86b9860fa179df2c804fc2090cc76a83fb15b49f47cc2e885f7c/jbangstarter.java
 ```
 
-After that you can start jbang again.
+After that, you can start jbang again.
 It will download the new catalog, always pointing to the latest release.
 You will find the command that deletes this file in the root of the project in the shell script `jbang-cache-evict`.
 ====

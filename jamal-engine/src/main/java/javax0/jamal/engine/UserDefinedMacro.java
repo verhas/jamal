@@ -45,7 +45,8 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
                 xtended = true;
                 break;
             case "defaults":
-                defaults.putAll(convertToMap(object.toString()));
+                final var str = object.toString();
+                defaults.putAll(convertToMap("true".equals(str) ? "" : str));
                 break;
             case "pure":
                 pure = true;
@@ -63,12 +64,25 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      * @param s the input string
      * @return the new Map
      */
-    private static Map<String, String> convertToMap(String s) {
+    private Map<String, String> convertToMap(String s) {
         final var map = new HashMap<String, String>();
+        final var keys = new HashSet<String>(Arrays.asList(argumentHandler.parameters));
         for (final var line : s.split("\n")) {
+            if (line.trim().length() == 0) {
+                continue;
+            }
             final var parts = line.split("=", 2);
+            String key = parts[0].trim();
+            if (!keys.contains(key)) {
+                throw new IllegalArgumentException("Default parameter '" + key + "' is not defined in the parameter list.");
+            }
+            if (map.containsKey(key)) {
+                throw new IllegalArgumentException("Default parameter '" + key + "' is defined more than once.");
+            }
             if (parts.length == 2) {
-                map.put(parts[0].trim(), parts[1]);
+                map.put(key, parts[1]);
+            } else {
+                map.put(key, "");
             }
         }
         return map;
@@ -144,7 +158,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
             values = new HashMap<>();
             for (final var param : scanner.getParMap().entrySet()) {
                 final var name = param.getKey();
-                final var value = param.getValue().isPresent() ? param.getValue().get().toString() : Objects.requireNonNullElse(defaults.get(name),"");
+                final var value = param.getValue().isPresent() ? param.getValue().get().toString() : Objects.requireNonNullElse(defaults.get(name), "");
                 values.put(name, value);
             }
         } else {
