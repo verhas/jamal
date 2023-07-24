@@ -1,0 +1,260 @@
+
+
+= `sep`
+
+since version `1.0.0`
+
+
+== Syntax
+
+  {@sep {! !}} change the separator strings
+  {!@sep!} restore the separator strings
+
+This macro can be used to change the macro opening and closing strings.
+In the examples, in this documentation, we use `{` as the opening string and `}` as the closing string.
+Jamal itself does not impose any such predefined setting.
+The embedding systems, however, do.
+For example,
+
+* The command line version,
+* the JavaDoc doclet and taglet implementation,
+* the Maven plugin and extension use `{` and `}` as the macro opening and closing strings.
+* The Asciidoctor preprocessor usually uses `{%` and `%}` as the macro opening and closing strings.
+* Other applications embedding Jamal may use other strings most fitting to their needs.
+
+The syntax of the command is
+
+.Jamal source
+[source]
+----
+{@sep /startString/endString}
+----
+
+If both the start and end strings are a single character, For example, `[` and `]`, then you can use the simple form:
+
+.Jamal source
+[source]
+----
+{@sep []}
+----
+
+A two-character argument to the macro `sep` will use the first character as macro opening string and the second as macro closing string.
+You can also use three characters.
+For example:
+
+.Jamal source
+[source]
+----
+{@sep [.]}
+----
+
+The separating character between the opening and closing string characters can be any character except the opening or the closing character.
+It is also possible to use the format
+
+.Jamal source
+[source]
+----
+{@sep openingString  \s+   closingString}
+----
+
+separating the opening and closing strings with spaces.
+This format is very readable and convenient in many cases.
+For example, you can specify
+
+.Jamal source
+[source]
+----
+{@sep (( )) }
+{@sep ([ ]) }
+----
+
+and other, similar opening and closing strings.
+There are some definitions that can be misleading.
+For example, the following declarations can be interpreted by humans in multiple ways.
+
+.Jamal source
+[source]
+----
+{@sep/[/ ] }   <- is it "/[/" and "]" or "[" and "]" ?
+{@sep/[ /]}    <- is it "/[" and "/]" or "[" and "]" ?
+----
+
+Many human readers would tend to think the second.
+The syntax however matches the `\S+\s+\S+` pattern.
+To avoid any such ambiguous situations, Jamal does not allow the use of this form when
+
+* the opening string
+** starts and ends with the same character
+** is at least three characters long, and
+** it does not contain the first character inside
+
+or
+
+* the closing string
+** starts with the same character as the opening string
+** at least two characters long
+** does not contain this character after the first character.
+
+These seem to be complex rules.
+They contain a bit of heuristics.
+They were designed to let the users use the most readable format of the `sep` macro.
+The same time they help avoid unreadable declarations and errors.
+
+If in doubt, then you can always use the last, definitive syntax that does not rely on any heuristics.
+This syntax is described in the following.
+
+If the syntax does not match any of the previous cases, Jamal will use the syntax that is defined with the following "regular expression" like line:
+
+.Jamal source
+[source]
+----
+{@sep \s* (\S) opening_string (\1) closing_string \s*}
+----
+
+There can be whitespace characters after the macro name `sep`, and at the end, but these are optional.
+The first non-space character is used as a separator character that separates the macro opening string from the macro closing string.
+It is usually the `/` character, but it can be anything that does not appear in the opening string.
+Prior to 1.3.0 this character could appear in the closing string, although it is not recommended.
+Starting with 1.3.0 it is an error.
+It is possible to use spaces inside the macro opening and closing strings, but it is not recommended.
+Leading and trailing spaces of the opening and closing strings will be trimmed off.
+That way
+
+.Jamal source
+[source]
+----
+{@sep /[[/]]}
+{@sep /[[ / ]]}
+{@sep /[[ / ]] }
+{@sep / [[ / ]] }
+----
+
+are all the same.
+Note though that `{@sep / [[ /]]}` would be logical in the above list, but it is missing.
+There is only one space (`\s+`) separator between the `/` and `/]]` strings, and it matches the
+
+.Jamal source
+[source]
+----
+{@sep openingString  \s+   closingString}
+----
+
+format, and it will set the separators to `/ [[` and `/]]`.
+
+Note that the macro `sep` should be terminated with the original macro closing string.
+The macros after it already have to use the altered opening and closing strings.
+This makes it a bit tricky when you want to use a closing string that happens to contain the original closing string.
+
+Assume that the current opening string is `{` and the current closing string is `}`.
+You want to have `{{` as an opening string and `}}` as a closing string.
+In this case
+
+.Jamal source
+[source]
+----
+{@sep/{{/}}}
+----
+
+will not work.
+It will set the closing string empty which is not valid and will raise an error.
+To overcome the situation you have to change the separator strings in two steps:
+
+.Jamal source
+[source]
+----
+{@sep/[/]}[@sep/{{/}}]
+----
+
+Also, do not forget that the end you should call `sep` without an argument twice:
+
+.Jamal source
+[source]
+----
+{{@sep}}[@sep]
+----
+
+unless you want this change till the end of the scope.
+
+The change of the opening and the closing strings always happens in pairs.
+You cannot change only the closing or only the opening string.
+You can, however, redefine one of them to be something that is different from the current value, and the other one to be the same as the current value.
+To do that, you will need two steps for the reason described above.
+Even in this case, the definitions should specify both strings.
+
+The change of the opening and closing strings is valid only for the current scope.
+Closing the scope, the original value is restored even if the strings were set to different values multiple times.
+
+Neither the opening nor the closing string can be empty.
+Trying to set it to an empty string will raise an error.
+
+[NOTE]
+====
+* Jamal 1.0.0 got into an infinite loop in case of an empty opening string.
+Later versions will signal an error.
+* Jamal 1.3.0 extended the `sep` macro.
+====
+
+When the opening and the closing strings are set, the original values are stored in a list.
+It is possible to use the macro `sep` without any separator string specification.
+In this case the macro call is nothing more than the macro name, like `{@sep}`.
+In this case, the last opening and closing strings are restored.
+The strings are stored in a stack, so you can define new strings and return to the previous one many times nesting the redefinitions.
+
+The following sample is executed with `{` and `}` as opening and closing string at the beginning.
+After that, it sets the strings to `[[` and `]]`.
+This is used to define the macro `apple`.
+After this when the scope of the next macro, `comment` starts the opening and closing strings are still `[[` and `]]`.
+Starting a new scope does not change the macro opening and closing strings.
+
+It would be an error to use `[[@sep]]` inside the scope of the macro `comment` at this point trying to restore the original macro opening and closing strings.
+In that scope at the start, there are no opening and closing strings to be restored.
+The opening and closing strings do not belong to this scope, they are simply inherited from the outer scope.
+On the other hand, the sample can change the strings, as it does to `<<` and `>>`.
+Using these it defines the macro `z`.
+Note that `z` is not exported from this scope.
+
+After that the `<<@sep>>` restores the opening and closing strings to the inherited one and with these, it defines `a1`
+and `a2` and exports them.
+Note, that `a1` will have the actual value of the macro `z` evaluated inside the scope of the `comment` macro.
+The macro `a2` starts with `@` thus the body is not parsed during the macro definition and thus the value of `a2` is `[[``z``]]` unevaluated, as it is.
+Similarly, the macro `a3` will have the value `{z}`.
+
+All these macros are evaluated because the macro `comment` is started with the character `#`.
+It means that Jamal will evaluate the body of the macro before evaluating the macro itself.
+
+After the `comment` macro the separators are set back to the original value `{` and `}` automatically.
+Then we have a simple macro definition that defines `z` and, then this `z` is used, and the exported `a1`, `a2`, and `a3`.
+
+`z` is now, as defined in the outer scope is `SSS`.
+`a1` has the value that came from the macro `z` as it was defined inside the scope of the macro `comment`.
+Macro `a2` has the value ``[[``z``]]`` that has nothing special in the current scope.
+The macro `a3` has the value `{z}` which is evaluated after the macro `a3` is replaced with its value.
+
+.Jamal source
+[source]
+----
+{@sep/[[/]]}
+[[@define apple=fruit]]
+[[apple]]
+[[#comment [[@sep/<</>>]]
+<<@define z=zazi>>
+<<#sep>>
+[[#define a1=[[z]]]]
+[[@define a2=[[z]]]]
+[[@define a3={z}]]
+[[@export a1,a2,a3]]
+]]
+[[@sep]]
+{@define z=SSS}
+{z}{a1}{a2}{a3}{@verbatim a3}
+----
+
+.output
+[source]
+----
+fruit
+
+
+
+SSSzaziSSS{z}{@escape `a`{`a`}z{@escape `a`}`a`}
+----

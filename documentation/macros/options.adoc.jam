@@ -1,0 +1,155 @@
+{%@import macrodoc.jim%}
+{%MACRO name="options" since=1.0.3%}
+{%@snip:collect from=../../jamal-engine/src/main/java%}
+
+== Syntax
+
+  {@options o1  ~o2}
+
+The `options` macro can be used to alter the behavior of Jamal.
+The options can be listed `|` or space separated as an argument to the macro.
+Using the `~` character in front of the option name will switch off the option.
+
+== History
+
+since 2.1.0 it is possible to query the values of options.
+
+== Description
+
+The `options` macro can be used to alter the behavior of Jamal.
+It simply defines named boolean values in the Jamal processing that the different built-in macros can query.
+
+For example the following macro sets three options:
+
+{%sample/
+{@options lenient|failfast|mySpecialOption}
+%}
+
+The first one is used by many core macros not to raise an error if the number of parameters does not match the number of arguments.
+It is used by Jamal itself and by the `for` macro.
+The second will instruct the Jamal engine not to try to recover from errors.
+The third one is a custom option that can be used by any other macro.
+Since this third one is created for this example only it will not have any effect on the processing.
+
+The macro does not check the option's name.
+
+If you type `{@options lenuent}` misspelled the `options` macro will not recognize it as an error.
+The option `lenuent`{%@comment DELIBERATELY MISTYPED!!!%} could be used by some other macros and the `options` macro just treats it as a new option.
+It stores the options specified, and they can be queried by any other built-in macros.
+Any extension can define and use any options it likes.
+
+The scope of the options is local, or global the same way as the scope of user-defined macros.
+
+[NOTE]
+====
+Technically, the options are stored along the user-defined macros.
+These objects can be evaluated.
+Their value is either `true` or `false`.
+For example,
+
+{%sample/
+{@options applePie|~humblePie}applePie is {?applePie}, humblePie is {?humblePie}
+%}
+
+will result in the following output:
+
+{%output%}
+
+It is possible to export the options to higher layers the same way as you can export macros.
+====
+
+{%sample/
+{@define macro($a,$b,$c)=$a is $a, $b is $b{#if :$c:, and $c is $c}}\
+{macro :apple:pie:truffle}{@comment if there are three arguments, we handle it}
+{macro :apple:pie:}{@comment here we need : at end, default is not lenient}
+{#ident {@options lenient}{macro :apple:pie:}}{@comment options is local, but lenient is a global option}
+{macro :apple:pie:}{@comment here we must have the trailing : because we still do not have a globally defined option options is local}
+{#ident {#ident {@options lenient}{macro :apple:pie:}{@export lenient}}{@comment local but gets exported one level up, still not global}
+{macro :apple:pie:}{@comment still not global}}
+{macro :apple:pie:}{@comment was not exported to this level, only to inside the outer ident block}
+{@options lenient}{@comment now this is on the global level}{macro :apple:pie}{@comment nice and easy, global}
+{@options ~lenient}{@comment and we can switch it off}
+{macro :apple:pie:}
+{@options any|option|can  | go | ~go | no go}
+%}
+
+An option can be switched off using the `~` character in front of the options name.
+There can be no space between the `~` character and the name of the option.
+
+Similar to user defined macros, options containing a `:` are global.
+You can define a global value for an option using the `:` prefix in front of the name of the option.
+This character will be removed from the name, the same way as it is removed from the name of global user defined macros.
+If the `:` is inside the name, then it remains part of the name, and it is not possible to have a local definition for the option.
+
+The options implemented currently:
+
+=== `:lenient`
+
+In the lenient mode, the number of the arguments to a user-defined macro do not need to be exactly the same as it is defined.
+If there are fewer values provided, then the rest of the arguments will be an empty string in the lenient mode.
+Similarly, if there are more arguments than needed the extra arguments will be ignored.
+The option `lenient` is global.
+Nothing will stop you to redefined the option in a local scope, but macro evaluation will use the global value even in that scope.
+
+The lenient mode also applies to the multi variable for loops.
+In lenient mode there may be more or less actual values than the number of loop variables.
+
+=== `omasalgotm` (since 1.2.0 < 1.10.0)
+
+Jamal 1.2.0 changed a lot from 1.0.0 in the way how macros are evaluated.
+The version 1.2.0 is safer and more flexible and is compatible with the older versions in most of the cases.
+There may be some cases when the macros are not compatible with the old version.
+In this case, it is recommended to alter the macros so that they do not rely on the old evaluation algorithm.
+In the meantime, it is possible to use the option `omasalgotm` to force Jamal to the old evaluation style.
+
+Version 1.10.0 and later versions do not implement this option.
+The code providing compatibility with the old evaluation style is not included in the distribution.
+
+=== `nl` (since 1.3.0)
+
+* 1.3.0 till 1.7.6 introduces the option `nl`.
+* 1.7.7 removes this option
+
+When this option is in effect, then all new-line characters are copied into the output.
+This was the default and non-changeable behavior prior to 1.3.0.
+
+In versions 1.3.0, and later, it is possible to escape a newline character that is following a macro closing string.
+For example, the macro `{@define z=1}` can be followed by a `\` character before the newline.
+That way `{@define z=1}\` will tell Jamal that the next newline character is not needed in the output.
+The backslash, the newline character following it and the spaces that may be between the two will be skipped.
+
+The `\` character has to follow the macro closing string immediately, spaces are not allowed.
+There can be spaces between the `\` character and the following new-line character.
+
+{%sample/
+{@define z=1}\n          <- new line will get into the output
+
+{@define z=1}\\n         <- the \ and new-line will be skipped, it does not get into the output
+
+{@define z=1}\ ... \n    <- there can be spaces between the \ and the \n, still the
+\ and new-line characters will be skipped
+
+{@define z=1} ... \\n    <- nothing is skipped, there are spaces before the \ character
+%}
+
+A backslash in any other places is just a character and will not escape a newline.
+This escaping works only following built-in and user defined macros.
+
+NOTE: Since this is a slight behavioral change in the input processing, therefore it may break some of the source files.
+We decided to change the default behavior because there is a little chance to have escaped new-line characters in existing `jam` files.
+On the other hand, we envision that with the introduction of this feature most of the Jamal source files will use this feature.
+We wanted to avoid starting every new Jamal source file with the `nl` option setting.
+
+With the release 1.7.7 this option is not available anymore.
+The default behavior, skipping new lines after a `\` character that follows a macro close string cannot be switched off.
+
+=== `{%@snip FAIL_FAST /":(.\w+)"/%}` (since 1.7.8)
+
+This option tells the Jamal processor to stop at the first error.
+With the version 1.7.8 and later, the Jamal processor does not stop the processing at the first syntax error.
+This helps the discovery of more syntax errors in the input.
+Prior to 1.7.8, Jamal stopped at the first error.
+The user could fix the error, restart Jamal and repeat this process for each error one by one.
+The feature introduced in 1.7.8 tries to collect all the errors and displays them at the end of the processing as an aggregate error.
+
+Using this option, Jamal 1.7.8 and later revert to the old behavior.

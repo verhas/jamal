@@ -1,0 +1,56 @@
+
+= `try`
+
+since version `1.5.0`
+
+
+The macro try will evaluate its content and return the result.
+The evaluation does not open a new scope, just like in the case of the macro `{@eval }`.
+In case the evaluation results an error, then the result will be empty string.
+
+For example, the following macro will produce an empty string.
+
+.Jamal source
+[source]
+----
+{@try {macro}}
+----
+
+The macro `macro` is not defined, but the error is caught with the macro `try`.
+
+The macro `try` can also be used to include the error message in the output.
+If we use an `!` character right after (no spaces) the `try` keyword the result will be the error message.
+
+.Jamal source
+[source]
+----
+{@try! {macro}}{@define macro=hay macro}
+{@try! {macro}}
+----
+
+will result in
+
+.output
+[source]
+----
+User defined macro '{macro' is not defined. Did you want to use built-in '{@macro' instead?
+hay macro
+----
+
+
+If there is no error, then the output is the result of the evaluated text inside the macro.
+
+NOTE: Jamal usually allows you to have spaces in places like the keyword `try` and the following `!` or `?`.
+For example, you can have spaces between the macro name `define` and the `!`, `?` or `~` character.
+In the case of `try` there must be no space.
+The reason for this strictness is that `try` is followed by arbitrary text evaluated by the macro itself.
+Allowing space between the macro name and the `!` or `?` character would result in ambiguous syntax.
+We could not tell if the `!` or `?` character is part of the macro use or already the first starting character of the text to be evaluated.
+
+If we use a `?` character right after (no spaces) the `try` keyword, then the result will be the string `true` if there was no error and `false` is there was an error.
+This can be used to test the "computability" of the text.
+
+The macro `try` should only be used to debug certain macro files.
+When an error happens, and the `try` macro catches the error the scopes may not be properly closed.
+
+There is also a link:catch[`catch`] macro that can be used to catch errors.

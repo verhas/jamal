@@ -105,8 +105,8 @@ snippet JAMAL_DEBUG_documentation
 {%E%}{%JAMAL_DEBUG_ENV%}
 
 This environment variable can switch on debugging of Jamal.
-To use the debugger this variable has to set to a value, which is recognized by a debugger on the classpath.
-The web based debugger recognizes the `http:port` format variables.
+To use the debugger, this variable has to set to a value, which is recognized by a debugger on the classpath.
+The web-based debugger recognizes the `http:port` format variables.
 Set this variable to `http:8080`, put the `jamal-debug` module on the classpath and after starting Jamal processing open your browser at `http://localhost:8080`.
 The debugger and the use of it is detailed in a separate section.
 end snippet
@@ -117,7 +117,7 @@ snippet JAMAL_INCLUDE_DEPTH_documentation
 
 {%E%}{%JAMAL_INCLUDE_DEPTH_ENV%}
 
-This variable can set the maximum number of file include nesting.
+This variable can set the maximum number of files include nesting.
 The default value is 100.
 end snippet
 */

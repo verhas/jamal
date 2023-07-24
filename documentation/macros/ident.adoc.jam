@@ -1,0 +1,119 @@
+{%@import macrodoc.jim%}
+{%MACRO name="ident" since=1.0.0%}
+
+`ident` is an extremely simple macro.
+It just returns the body of the macro.
+The name stands for _identity_.
+It is helpful in some complex cases when you need to fine-tune the macro evaluation order.
+It is the case when Jamal should not evaluate some macro while it should evaluate others in a local scope.
+For example:
+
+{%sample/
+{@define b=92}{#define c={@ident {a}}{b}}{@define a=14}{c}
+%}
+
+When we define the macro `c` we do not want to evaluate `{a}`.
+There are two reasons for this.
+One is that at that point, `a` is not defined.
+The other is to use the actual definition of `a` whenever the macro `c` is used.
+On the other hand, we want to evaluate `b`.
+This way, `c` will become `{a}92`.
+When later `c` is used, and we already defined `a` as `14`, then the final result will be `1492`.
+
+{%output%}
+
+Note that `c` is defined using the `#` character before `define`.
+At the same time, we used `@` in front of `ident`.
+Jamal evaluates the content of `define`.
+In this evaluation `{@ident {a}}` is evaluated and `{b}` is also evaluated.
+`{@ident {a}}` becomes `{a}`.
+`{b}` becomes '92`.
+This way `c` will become `{a}92`.
+
+If we redefine later `a` to some different value, then `c` will follow this change.
+If we redefine `b` the value of `c`
+will still remain `1492` assuming `a` is still `14`.
+
+You can also use this macro to enclose some text into a block where the definitions are local.
+For example, you may want to modify the macro start and end strings temporarily.
+In that case, you can use the `sep` macro at the start and use the `sep` macro without argument to reset the previous value.
+You can also enclose the setting of the macro start and end string into an `ident` block.
+
+Specific use of `ident` is to insert a "null length separator" into the text.
+Imagine that the macro start and close strings should be `++((++` and `++))++`.
+We may want to use those because the curly braces are used in the text frequently, and so are the single `(` and `)` characters.
+
+.Note about why not to use `++((++` and `++))++` as macro start and end strings in real life
+[%collapsible]
+=====
+[NOTE]
+====
+Generally, it is not a good idea to use opening and closing strings that contain repeated characters.
+The reason for this is precisely the situation we describe in the example below.
+It isn't easy to read the closing strings when there is more than one.
+For example, how many `)))))))` double closing `))` are there in this string?
+In the example, we use these strings to demonstrate how you can deal with a situation like that in case you have to.
+The possibility shows Jamal's power, but it does not mean that you should utilize all these tricks.
+It is wiser to choose better opening and closing strings if the "default" `{` and `}` do not work.
+Many times `{{%@ident%}%` and `%{%@ident%}}` are good choices.
+The source of this document also uses these opening and closing strings.
+I used the `ident` macro between the characters of these strings to have them in the output.
+====
+=====
+As an example, we may want to define a macro that creates a markdown image reference:
+
+{%sample/
+((@define image($ref)=![](images/$ref.png) ))
+%}
+
+This example needs a space after the closing `)` character at the end of the image url.
+If we did not have this space, the macro would be closed one `)` sooner than needed.
+To avoid that, we insert an extra space after the image reference.
+Usually, it is not a problem.
+In some situations, however, we do not want to have that extra space there.
+It is possible using `ident`.
+
+{%sample/
+((@define image($ref)=![](images/$ref.png)((@ident))))
+%}
+
+The macro `((@ident))` will prevent Jamal from interpreting the `)` character after the `.png` as the first character of a macro closing string.
+At the same time `((@ident))` produces no character, not even a space in the output.
+You can also use the macros `comment` and `block` the same way.
+
+Be aware that the macro `ident` consumes the white spaces (including newlines) that follow the `ident` keyword.
+It is to avoid extra white spaces when tabulation gives better readability.
+If you need the whitespace (e.g., newline) in the output, you can put those in the `ident` macro.
+
+Starting with Jamal 1.5.0, there is a built-in language syntax similar to `ident`.
+If a macro is preceded with a `++`++` backtick character, then the macro will not be evaluated.
+The above example, which is
+
+{%sample/
+{@define b=92}{#define c={@ident {a}}{b}}{@define a=14}{c}
+%}
+
+can also be written as:
+
+{%sample/
+{@define b=92}{#define c={`a}{b}}{@define a=14}{c}
+%}
+
+This built-in "ident" can be used many times if you want to postpone the macro evaluation multiple times.
+You can have
+
+{%sample/
+{``c}
+%}
+
+or
+
+{%sample/
+{``````c}
+%}
+
+as many times as it makes sense.
+You can use this macro modification character together with the `!` character.
+There is no restriction on ordering the `!` and the backtick characters in case they are used together.
+If you use many of them in extreme cases, you can mix them.
+Note, if the macro does not get evaluated fully, Jamal may not preserve the order of these characters in the output.

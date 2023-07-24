@@ -1,0 +1,78 @@
+
+= `export`
+
+since version `1.0.0`
+
+
+
+== Syntax
+
+.Jamal source
+[source]
+----
+{@export macroname,macroname, ... ,macroname}
+----
+
+`export` moves the definition of one or more user-defined macros to a higher scope.
+
+== Description
+
+Jamal evaluates the macros in scopes.
+A macro is defined in the current scope unless the name contains `:`.
+Macros with `:` in their name are defined in the top-level scope and are global.
+
+The Jamal input file is one scope, and if there is a macro defined in the file on the top-level, then that macro can be used anywhere inside the file.
+However, when Jamal includes a file into another, it opens a new scope.
+The macro `include` is usually used to include some text in the output.
+For example, to split up a long document into chapters and, then use Jamal to create the final output.
+In that case, the macros defined in the included files should not interfere with the definitions in the file that includes the other one.
+
+To accomplish this separation, Jamal starts a new scope when it includes a file.
+Scopes are embedded into each other like a call stack in a programming languages.
+When a macro is defined in scope, it is available in that scope and all other scopes that are opened from that scope.
+When a macro is redefined in a scope, the redefined value is used until the scope closes.
+In the case of an included file, the user-defined macros defined in the included file disappear as soon as the included file processing is finished.
+
+The setting and resetting of the separator characters is also limited to the scope.
+
+Jamal opens a new scope in the following cases:
+
+* When a file is processed with the `include` macro.
+
+* When macros are evaluated inside other macros.
+This is the case of user-defined macros or in the case of built-in macros when they are started with the character `#`.
+
+Note that the macro `import` does NOT open a new scope to process the imported file.
+This is because of the aim of `import` is to have the macros defined in the imported file available in the file that imports them.
+
+In the following example, we define the macro `Z` in the scope of the macro `comment`.
+The `{@define Z=13}` is evaluated before the `comment` macro because we use the `#` in front of the `comment` macro.
+When the `comment` evaluation finishes the scope is closed and `Z` is not defined anymore.
+In the second case the macro `Z` is exported using the `export` macro.
+The `export` macro moves the definition of the macro from the scope of the `comment` to the enclosing scope.
+
+The example:
+
+.Jamal source
+[source]
+----
+A comment starts a new scope {#comment {@define Z=13}} Z {?Z} is not defined here unless...
+{#comment {@define Z=14}{@export Z}}Z is exported. In that case Z is {Z}.
+----
+
+will result:
+
+.output
+[source]
+----
+A comment starts a new scope  Z  is not defined here unless...
+Z is exported. In that case Z is 14.
+----
+
+
+You cannot export a macro defined in a higher scope.
+You can use those macros, and you can reference them.
+It is just that you cannot export them to the enclosing scope because they do not belong to the current scope.
+You can export a macro that was defined in a lower scope and was exported to the current scope.
+However, you cannot export a macro that was defined in a lower scope but was not exported to the current scope, simply because they do not exist anymore when the export is executed.
+You cannot export macros from the top-level scope, because there is no enclosing scope above that.

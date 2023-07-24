@@ -1,0 +1,74 @@
+{%@import macrodoc.jim%}
+{%MACRO name="JShell" since=1.0.0%}
+
+The Java built-in scripting engine JShell can be used to define macros.
+The macro {%$ script%} and the macro `JShell` can be used to define JShell scripts.
+
+The macro `JShell` can be used to define methods, classes, variables and so on.
+The macro {%$ script%} is to define a script macro that later can be invoked like any other used defined script macro.
+
+When the macro `JShell` or {%$ script%} is used the result is empty string.
+When the script is invoked the output of the macro will be what the script prints out to the standard output.
+
+The following example defines a global method, a script using the method and, then it invokes the script.
+
+{%sample/
+{@JShell
+void hello(){
+System.out.println("Hello, " + world);
+}
+}{@script hello/JShell(world)=hello();}
+{hello My Dear}
+%}
+
+It simply prints
+
+{%safeoutput%}
+
+The macro `JShell` defines the method `hello()`.
+The macro `script` is a script macro that has one argument.
+Note that this argument is also the name of the global variable `world`.
+This global variable is used in the JShell snippet defined above but this is not an argument to the method.
+When we use the line
+
+{%sample/
+{hello My Dear}
+%}
+
+Jamal will invoke the JShell interpreter executing
+
+{%sample/
+String world = "My Dear";
+%}
+
+first, and, then
+
+{%sample/
+hello();
+%}
+
+Since the method `hello()` prints out to the standard output `Hello, My Dear` this is the result of this macro.
+
+If there is some error in the code of the snippet, then Jamal will throw a `BadSyntax` exception.
+In this exception the causing exception is included if there is any.
+This causing exception should give some clue to find out what the issue is.
+If that does not help, then using the interactive JShell program should help.
+
+Creating a JShell execution environment is expensive.
+To do that the Java starts a new JVM process for the JShell.
+Many Jamal macro processing do not need the extra JShell.
+It would slow down Jamal if we created the JShell process for each and every processor even when it is not needed.
+The JShell environment is created only when it is unavoidable.
+It is when the processing _uses_ the first time a JShell type script.
+It not when the script is defined.
+It is when the defined script is used.
+In the above example the JShell interpreter is created when the `{hello ...}` macro is evaluated.
+Only at that point all the prior definitions that were defined in any `{@JShell }` macro are fed into the JShell interpreter.
+
+The consequence is that you do not need to worry about the performance when you design a macro library.
+The processed files can bravely import the macros even if they declare JShell usage.
+It will not slow down the processing creating a JShell engine, only when the JShell engine is needed.
+
+Another important side effect of this optimization is that you will not get an error message for an erroneous `{@JShell }` macro until the JShell interpreter is used.
+When you design a macro library it is not enough to import the library to discover possible errors in the JShell scrips.
+The scripts have to be used to manifest the error.

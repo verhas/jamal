@@ -1,0 +1,220 @@
+
+= `verbatim`
+
+since version `1.0.0`
+
+
+
+`verbatim` is a special macro, which affects macro evaluation order and is used for advanced macro evaluation.
+To understand what it does, we have to discuss first how Jamal evaluates the different macros.
+
+== Macro Evaluation Order in Details
+
+Jamal parses the input from the start towards the end and copies the characters from the input to the output.
+Whenever, when it sees a macro, then it evaluates the macro, and the result of the evaluation is copied to the output.
+This evaluation is done in three steps, two of those are recursive.
+Let's have a simple example:
+
+.Jamal source
+[source]
+----
+{@define a=this is it}{@define b={a}}{#define c={b}}{c}
+----
+
+The macro `a` is defined simply.
+It is `this is it`.
+Whenever `a` is evaluated it will result the string `this is it`.
+
+The macro `b` has the value `{a}`.
+When macro `b` is defined the content `{a}` is not evaluated before the definition because there is a `@` in front of the `define`.
+When `b` is evaluated it results `{a}` and, then before using this output, the result is evaluated by Jamal as a new input.
+This second recursive evaluation will result in the string `this is it`.
+
+The macro `c` is defined using the `#` character, therefore, Jamal will process the body of the macro before processing the built-in macro link:define[`define`] itself.
+Essentially, it will evaluate `{b}` first.
+It will put the resulting characters after the `=` sign in the definition of `c` and, then it will evaluate the `define` built-in macro.
+
+As we discussed above when this time `{b}` is evaluated it results `{a}`, which also gets evaluated and, then it results `this is it`.
+Therefore, the value of the macro `c` is `this is it` and that is what we see in the output:
+
+.output
+[source]
+----
+this is it
+----
+
+
+This way the evaluation of a macro is done in three steps:
+
+
+
+1. Evaluate the body of the macro unless the macro is built-in and starts with the character `@`.
+For this evaluation Jamal starts a new scope and evaluate the macros following these three steps.
+
+2. Evaluate the macro itself.
+If it is a built-in macro, then it calls the `evaluate()` method of the Java class that implements the macro.
+If the macro is user defined, then it evaluates as described in the document link:define[`define`].
+
+3. If the macro is non-verbatim user-defined, or starts with a `!` character, then Jamal evaluates the output of the macro.
+If it contains macros, then evaluate those using these three steps.
+
+
+As you can see, the first, and the last steps are recursive.
+The first step can be skipped using the `@` character, but only in case of built-in macros.
+The second step cannot be skipped, and after all, there is no reason to do so.
+Executing the second step is the core essence of Jamal.
+However, the third step can be
+
+* skipped using the macro link:verbatim[`verbatim`] if the macro is user defined, or
+* enforced using a `!` in front of the `@` or `#` character if the macro is built-in.
+
+The use of the `!` character in front of a built-in macro is similar to the use of the macro link:eval[`eval`].
+For example
+
+.Jamal source
+[source]
+----
+{@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
+{#eval {@for _tag in (groupId,artifactId,version)=
+{tag/_tag}}}
+----
+
+can be shortened as
+
+.Jamal source
+[source]
+----
+{@define tag(_x)={@define _x(_y)=<_x>_y</_x>}}
+{!@for _tag in (groupId,artifactId,version)=
+{tag/_tag}}
+----
+
+The only difference is that the `eval` macro consumes the white-space characters at the start of its argument.
+In the example above the `{#eval macro ...}` before its evaluation is
+
+.Jamal source
+[source]
+----
+{#eval
+{@define groupId(_y)=<groupId></groupId>}
+{@define artifactId(_y)=<artifactId></artifactId>}
+{@define version(_y)=<version></version>}}
+----
+
+The body starts with a new line.
+The macro link:eval[`eval`] deletes this new line, while using the `!` in front of the macro does not.
+
+The syntax of the `verbatim` macro is the following:
+
+.Jamal source
+[source]
+----
+{@verbatim userDefinedMacroUse}
+----
+
+The `verbatim` macro has to be followed by a user defined macro use.
+If we modify the previous example to use `verbatim` we can do it the following way:
+
+.Jamal source
+[source]
+----
+{@define a=this is it}{@define b={a}}{#define c={@verbatim b}}{c} {@verbatim c}
+----
+
+In this example `{@verbatim b}` is the same as `{b}` in the previous example.
+The only exception is that after `b` is evaluated the result is not processed further for macros.
+It is used directly as the value of the new macro `c` because of the `verbatim` keyword.
+The value of `c` will be `{a}`.
+Also, when we use `{c}` the result of `c` is scanned as a third step for further macros.
+In this case, there is one because the value of the macro `c` is `{a}`, that further evaluates to `this is it`.
+On the other hand when we use `{@verbatim c}`, then the result `{a}` is not processed any further.
+
+.output
+[source]
+----
+this is it {a}
+----
+
+
+Note that the macro link:verbatim[`verbatim`] is a special one because it is hardwired into the evaluation logic of Jamal and it is not a "real" built-in macro.
+In other words, if there are user-defined macros and built-in macros, then `verbatim` is one level deeper built-in than the other built-in macros.
+To understand this may be important if you want to write your own built-in macros as Java classes.
+You cannot "redefine" `verbatim`.
+
+You cannot use `verbatim` together with the `!` macro modifying character.
+Their meaning is exactly opposite.
+
+== Fine points of macro evaluation
+
+NOTE: This section does not apply to any version prior 1.2.0
+
+Recall the three steps of macro evaluation:
+
+
+
+1. Evaluate the body of the macro unless the macro is built-in and starts with the character `@`.
+For this evaluation Jamal starts a new scope and evaluate the macros following these three steps.
+
+2. Evaluate the macro itself.
+If it is a built-in macro, then it calls the `evaluate()` method of the Java class that implements the macro.
+If the macro is user defined, then it evaluates as described in the document link:define[`define`].
+
+3. If the macro is non-verbatim user-defined, or starts with a `!` character, then Jamal evaluates the output of the macro.
+If it contains macros, then evaluate those using these three steps.
+
+
+These points are simplified, not the whole truth, and the first step can be refined further.
+The macro body evaluation is done in three complex steps:
+
+1. First the beginning of the macro text is evaluated if the text contains macros.
+The user-defined macro name itself in the text can be the result of another macro.
+For example, calling the macro named `white` can be `{white}`.
+If there is another macro `{@define black=white}`, then using `{{black}}` will result the same as `{white}`.
+In this case first `{black}` is evaluated to `white` and, then `{white}` is evaluated.
+There may be multiple macros at the start.
+For example, we can have `{@define bla=whi}` and `{@define ck=te}`.
+Using these we can get `{{bla}{ck}}` to `{white}`.
+
+2. The second step is that the content of the macro is split up into the macro name and the parameters.
+Recall that the first character that is not part of the name of the macro is used as a parameter separator character.
+This is a non-space character that cannot be part of a macro name, or the first character that follows the spaces after the macro name.
+The splitting process takes care of the macro calls that are in the arguments.
+For example, the macro `{q/a/{b|c/g}}` will get two parameters.
+The first parameter to `q` is `a`, the second is `{b|c/g}`.
+The first `/` character separates the name of the macro from the parameters.
+At the same time, it defines which character is used as a separator character.
+The second `/` character separates the first and second parameters.
+The third `/` is not used as a separator character because it is inside a macro use.
+This character is not used as a separator character, even when the macro `{b|c/g}` is evaluated, because in that macro use the separator character is `|`.
+Similarly, if we look at the macro `{q/a/{b/c}}`, then the parameters are `a` and `{b/c}`.
+In this case, the third `/` is ignored and is not considered as a parameter separator.
+Although this character is a parameter separator when the macro `b` is evaluated.
+The characters that are inside further macro calls are not used as parameter separators.
+
+3. When the parameter strings are identified, then they are evaluated one after the other.
+In the previous example `a` and `{b|c/g}` are evaluted before `q` is evaluated.
+When the macro `q` is evaluated, the parameters already contain the result of the evaluation of these macro uses.
+
+The versions of Jamal prior 1.2.0 (so up to and including 1.1.0) evaluated user-defined macros simpler.
+In those versions, the body of the macro was evaluated as a whole in one simple step.
+The parameter separator character was used in a basic splitting operation.
+Those versions did not check if the separation character was inside an embedded macro use.
+
+That way it may have happened that some macro was evaluated, and the resulting string contained the separator character.
+This is usually not what the users intend, and creates a bug that is hard to find.
+In the previous examples the evaluation of the macro use `{q/a/{b/c}}` would evaluate first `a/{b/c}`.
+After that, the splitting takes place on the resulting string.
+
+Usually, this results in the same as the new algorithm.
+However, if the definition of `b` is, for example, `{@define b(Z)=shoot/Z}`, then the evaluated string will be `a/shoot/c`.
+In this case the final evaluation will get (prior 1.2.0) `{q/a/shoot/c}`.
+It will result in three parameters.
+This is probably an error because `q` in the example needs only two.
+Even, if the option `lenient` was declared the result is not the one the author of the text expected.
+
+The versions 1.2.0 and later till 1.10.0 can revert to the earlier algorithm if the Jamal code defines the option `omasalgotm`.
+Using the macro link:options[`options`] as `{@options omasalgotm}` you can switch to the old algorithm.
+The name of the option is an abbreviation, and is hard to remember to distract from the use of it.
+If you need this option, then your Jamal source file does some shady thing that it should not.
+This option is obsolete from the very start of the introduction and is meant as a last resort to keep backward compatibility.
+It was removed from Jamal versions 1.10.0 and later.

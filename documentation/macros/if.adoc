@@ -1,0 +1,180 @@
+
+= `for`
+
+since version `1.0.0`
+
+
+
+
+
+The `if` macro makes it possible to evaluate the content conditionally.
+The syntax of the macro is:
+
+.Jamal source
+[source]
+----
+{#if [options]/test/then content/else content}
+----
+
+Here we use `/` as a separator character but this is not hardwired.
+The `if` macro uses the link:../ARGSPLIT.adoc[Standard Built-In Macro Argument Splitting] to parse the body of the macro.
+
+The result of the evaluated macro will be the `then content` when the `test` is true, and the `else content` otherwise.
+
+When no options are specified the `test` is true, if
+
+* it is the literal string `true` (case-insensitive),
+
+* it is a signed or unsigned integer number, and the value is not zero,
+
+* it is any other string that contains at least one non-space character, except
+
+* when the `test` is the literal string `false` (case-insensitive).
+
+The literal `false` is false using any combination of upper and lower case letters with or without surrounding spaces.
+
+The evaluation of the test string can be modified using options.
+There are  11 options.
+
+
+The first three options are "boolean" options.
+It is enough to use their keyword between the `[` and `]`.
+(See examples later.)
+
+* `blank` will test true if the test string is blank, it is empty or contains spaces only.
+* `empty` will test true if the test string is zero lengths and does not contain even spaces.
+* `not`  will negate the test result.
+* `or` can be used with the comparing options when more than one test is needed.
+When you specify more than one `equals`, `lessThan`, or `greaterThan` option the test is true if any of the tests is true.
+This is the default behavior, so this option is not needed.
+Setting `or=false` has no effect and is not the same as using the option `and`.
+This option is included only to add readability if needed.
+* `and` can be used with the comparing options when more than one test is needed.
+When you specify more than one `equals`, `lessThan`, or `greaterThan` option test is true if all the tests are true.
+This option cannot be used together with the option `or` and it also needs multiple comparison options.
+
+Note that the options `and` and `or` are simple boolean options.
+They can appear only once in the list of the macro options.
+You cannot write `{@if [equals=3 or equals=4 or equals=6] /9/a/b}`.
+It is recommended to use the `or` or the `and` option following the first comparing option.
+For example, `{@if [lessThan=7 and greaterThan=2] /6/it is in (2,7)/out of range}` .
+If you feel it is more readable, you can put these options at any place in the list.
+
+The following options will do numerical comparison when the test string is a number.
+When any of them are used, then the test string is converted to a number.
+If the test string is not a number, the comparison will be done alphabetically.
+
+* `lessThan` (aliases `less`,`smaller`, `smallerThan`) is true if the condition is less than the test value.
+* `greaterThan` (aliases `greater`, `bigger`, `biggerThan`, `larger`, `largerThan`) is true if the condition is greater than the test value.
+* `equals` (aliases `equal`, `equalsTo`, `equalTo`) is true if the condition is equal to the value.
+
+There is no separate "less than or equal" and "greater or equal" option.
+If, for example, you want to test that a number is greater than or equal to a certain value, then you can use the `greaterThan` and the `equals` options together.
+An alternative is to use the `lessThan` option along with the boolean `not` option.
+
+[NOTE]
+====
+The option `blank` is needed in case you have a special case when the literal `false` should be treated positively.
+The need for this option arose when we wanted to create a macro supporting XML documents.
+The link:default.adoc[`default`] macro generated `<tag>` from `{tag}` when the tag was not defined.
+At the same time `{tag something}` was converted to `<tag>something</tag>`.
+The two different cases were separated using an `if` macro.
+The definition was something like this:
+
+.Jamal source
+[source]
+----
+{@define default($_,...$x)={#if
+`/SEPARATOR/`$x/SEPARATOR/<$_>$x</$_>/SEPARATOR/<$_>}}\
+{tag false}
+----
+
+The only problem was that the `if` macro was not able to handle the case `{tag false}`.
+In that case, the evaluation results
+
+.output
+[source]
+----
+<tag>
+----
+
+
+instead of `<tag>false</tag>`.
+
+To fix that, we need to use the option `blank` as in the following sample:
+
+.Jamal source
+[source]
+----
+{@define default($_,...$x)={#if [not blank]
+`/SEPARATOR/`$x/SEPARATOR/<$_>$x</$_>/SEPARATOR/<$_>}}\
+{tag false}
+----
+
+This will result the desired
+
+.output
+[source]
+----
+<tag>false</tag>
+----
+
+====
+
+The options
+
+* `isDefined` (alias `defined`),
+* `isLocal` (alias `local`),
+* `isGlobal` (alias `global`),
+
+test that the string given as the first parameter is a defined user defined macro, a locally defined macro, or a globally defined macro.
+A macro is locally defined if it was defined in the same scope where the `if` is used.
+
+
+The following examples show a few cases, as demonstrations:
+
+
+
+
+.output
+[source]
+----
+{@if /1/true/false}=true non-zero integer
+{@if /true/true/false}=true literal true
+{@if /0/true/false}=false zero integer
+{@if ::true:false}=false condition is empty string
+{@if :false:true:false}=false literal false
+{@if :FaLSe:true:false}=false literal false
+{@if :avraka kedabra:true:false}=true condition is non-empty string
+{@if/0/anything can come here}= 'else' part is missing, output is empty
+{@if/+1/true}=true  non-zero integer
+{@if/-1/true}=true  non-zero integer
+{@if/0.000/true}=true  non-empty string, floating points don't work
+{@if [not blank]/false/true/false}=true true because 'false' is not blank
+{@if [not empty]/false/true/false}=true true because 'false' is not empty
+{@if [not]/1/true/false}=false the option 'not' can be used solitary
+{@if /  /true/false}=false spaces mean false by default, but
+{@if [not empty]/  /true/false}=true not empty
+{@if [not blank]/  /true/false}=false is the same in this case as no option
+{@if [empty]/  /true/false}=false no, not empty
+{@if [not]/  /true/false}=true blank is false by default, but it is negated
+{@if [blank]/  /true/false}=true is the same as the above in this case
+{@if [lessThan=13]/12/true/false}=true 12 is really less than 13
+{@if [lessThan=13]/13/true/false}=false 13 is not less than 13
+{@if [lessThan=13 equals=13]/13/true/false}=true 13 is less than or equals 13, note the value twice
+{@if [greaterThan=13 not]/13/true/false}=true 13 is not greater than 13, it is the same logic as the previous
+{@if [lessThan=13 equals=14]/13/true/false}=false 13 is not less than 13 and does not equal 14
+{@if [lessThan=13 and largerThan=2]/12/true/false}=true 12 is in the range (2,13)
+----
+
+
+[NOTE]
+====
+The above example is generated running the samples.
+The composition of the sample is somewhat complex.
+It uses sophisticated macros that heavily use the macro evaluation order.
+These macros also check that the `if` macro really works the way it is supposed to.
+If you are interested in how it looks, check the file `if.adoc.jam`.
+This string appears only once in the Jamal source file.
+
+====

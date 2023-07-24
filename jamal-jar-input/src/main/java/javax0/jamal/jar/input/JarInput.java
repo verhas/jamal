@@ -20,6 +20,19 @@ public class JarInput implements ResourceReader {
     public static final String PREFIX = "jar:file:";
     private static final int PREFIX_LENGTH = PREFIX.length();
 
+    /**
+     * A class representing the coordinates of a resource within a JAR file.
+     * Instances of this class hold information about the JAR file and the specific resource
+     * within the JAR file that can be accessed through a given URL format.
+     *
+     * The format of the URL should follow the pattern:
+     *
+     * <pre>{@code
+     * jar:file:path_to_the_JAR_file!path_inside_the_jar_to_the_file
+     * }</pre>
+     *
+     * It is assumed that the URL provided to the constructor adheres to this format, otherwise, an IllegalArgumentException will be thrown.
+     */
     private static class ResourceCoordinates {
         final String jarFile;
         final String resourceName;
@@ -37,11 +50,14 @@ public class JarInput implements ResourceReader {
                 throw new IllegalArgumentException(String.format("The format of a JAR resource is '%spath_to_the_JAR_file!path_inside_the_jar_to_the_file'", PREFIX));
             }
             var jarPart = url.substring(0, excl);
+            // remove all leading slashes
             while (jarPart.startsWith("//")) {
                 jarPart = jarPart.substring(1);
                 jarFileStart++;
             }
-            if (jarPart.length() >= 3 && jarPart.charAt(0) == '/' && Character.isAlphabetic(jarPart.charAt(1)) && jarPart.charAt(2) == ':') {
+            // remove the leading slash if it is a Windows drive letter
+            if (jarPart.length() >= 3 && jarPart.charAt(0) == '/'
+                    && Character.isAlphabetic(jarPart.charAt(1)) && jarPart.charAt(2) == ':') {
                 jarFileStart++;
                 jarPart = jarPart.substring(1);
             }
@@ -56,7 +72,6 @@ public class JarInput implements ResourceReader {
     public boolean canRead(final String fileName) {
         return fileName.startsWith(PREFIX);
     }
-
 
     @Override
     public int fileStart(final String fileName) {

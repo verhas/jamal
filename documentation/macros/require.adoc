@@ -1,0 +1,82 @@
+
+= `require`
+
+since version `1.6.4`
+
+
+== Syntax
+
+.Jamal source
+[source]
+----
+{@require [<|>|<=|>=|=] version }
+----
+
+It requires that the running version of Jamal is greater than or equal to the specified version.
+
+== Description
+
+The evaluation of this built-in macro will check that the currently running version of Jamal is
+
+* less-than
+
+* greater-than
+
+* lees-then or equal
+
+* greater than or equal, or
+
+* equal
+
+to/than the version specified after the comparison sign.
+The use of the comparison sign is optional.
+The default comparison is greater than or equal.
+
+If the comparison fails, the evaluation of the macro will result in an error.
+If the current version matches the requirement, then the result of the macro is an empty string.
+
+For example:
+
+.Jamal source
+[source]
+----
+{@try!{@require 6666.5.3}}
+----
+
+will result
+
+.output
+[source]
+----
+The current version 2.3.1-SNAPSHOT is older than the required version. It has to be newer.
+----
+
+
+You can specify only one version in a `require` macro.
+If you want to specify a minimum and a maximum version, you should use two `require` macros.
+
+Using a version before `1.6.4` in the `require` argument is an error.
+
+Starting with version `2.0.0` you can use the alias `version` for this macro.
+With this release, if you use the macro without any argument, it will result in the current version.
+For example
+
+.Jamal source
+[source]
+----
+This documentation was processed using the version {@version}
+----
+
+will result in
+
+.output
+[source]
+----
+This documentation was processed using the version 2.3.1-SNAPSHOT
+----
+
+
+NOTE: In the documentation of Jamal (this document and other modules) we do not use this macro.
+The documentation is about the version of Jamal, which is the source code and not the one running.
+They may be different.
+The version of the documented code is in the `pom.xml` file: `2.3.1-SNAPSHOT`.

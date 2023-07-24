@@ -1,0 +1,69 @@
+= Standard Built-In Macro Argument Splitting
+
+== Introduction
+This document describes the Standard Built-in Macro Argument splitting.
+
+It is essential when you use macros using this algorith, for example, the core `if` macro.
+The text also mentions some Java internals that may be valuable if you intend to develop your built-in macros.
+
+Built-in macros access the input as one single string.
+They are implemented in Java and the code can interpret the string in any way they want.
+It means that there is no restriction on the "syntax" of a built-in macro.
+Some of these macros can opt to use a service that Jamal provides to split the input into parts.
+This documentation describes the Java details and the syntax the splitting uses.
+
+== Details
+
+=== Java Background
+
+Built-in macros are implemented in Java.
+Each macro is a class that implements the interface `Macro`.
+The interface has the method named `evaluate()`.
+This method is invoked to process the input and result in the output.
+
+Technically the `input` parameter of the method `evaluate()` is not a string.
+It is an instance of the class `Input` implementing the Java interface `CharSequence`.
+That way, we can think of it as a string, although it can also deliver location information.
+The location information is used usually to report errors.
+
+The Java code of the macro is free to interpret this string the way it wants.
+Different macros implement their syntax analysis differently.
+
+To manage the input and ease the format analysis and interpretation of the input, there is a utility class named `InputHandler`.
+This class defines a method named `getParts()` which does a simple analysis.
+It splits the input into an array of strings in a "standard" way.
+
+This method is used, for example, by the implementation of the `if` built-in macro.
+I recommend using this method when there is no special requirement for a macro.
+Using this method provides a concise way for macro argument separation.
+The way it splits the arguments is defined here so that the macro documentation can refer to this section.
+
+The splitting offers three syntax variations:
+
+1. `macroName / a / b / c / ... /x`
+
+2. `macroName   a   b   c   ...  x`
+
+3.  `++macroName `regex` separator a separator b separator ... separator x++`
+
+In the first case, the argument separator character is the first special character.
+This character can be any unicode character except
+
+* letter or digit,
+
+* back-tick character,
+
+* white space character.
+
+If the first non-white space character is a letter or digit character, then the second syntax is used.
+In this case, the input is split up along the white space characters.
+Multiple adjacent white space characters are counted as one.
+The splitting does not create empty parameters.
+
+The third possibility is when the fist non-space character is backtick (`++`++`).
+
+In this case, the parsing expects a regular expression between backticks.
+After the regular expression and after the closing backtick, the rest of the input is split up using the regular expression as separator.
+
+Backtick was selected during the design of the syntax to enclose the regular expression because this character is very rare in Java regular expression.
+In case you need one inside the regular expression, then you have to simply double it, and the parsing will single it back.

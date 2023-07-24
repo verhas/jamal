@@ -1,0 +1,54 @@
+{%@import macrodoc.jim%}
+{%MACRO name="catch" since=2.1.0%}
+{%@snip:collect from=../../jamal-core/src/main/java%}\
+
+{%@define CATCH=`catch`%}
+
+This macro will execute its input if there was an error caught by a {%$ try%} macro.
+The macro {%CATCH%} can be used to handle errors in a macro file.
+
+The general rule is that you should use the {%CATCH%} macro in the same scope where the {%$ try%} macro is used.
+However, it can be used a bit more complexly than that.
+Here are the detailed rules:
+
+* A {%CATCH%} executes the content if there was an error executing a {%$ try%} on the same level as the catch, and it was not caught by another {%CATCH%} on the same level.
+
+* A {%CATCH%} executes the content is there was an error executing a {%$ try%} on a higher level, and it was not caught by another {%CATCH%} on the same or higher level as the {%CATCH%} is.
+
+* When a {%CATCH%} executes the content the error is cleared on the level where the {%CATCH%} is.
+
+* Errors are automatically cleared when a scope closes.
+
+{%sample/
+{@try {@include} file name is missing}{@catch there was an error}
+%}
+
+will result in
+
+{%output%}
+
+[NOTE]
+====
+The error handling is implemented using the option `{%@snip tryoption%}`.
+When an error is detected by a {%$ try%} macro, this option is set.
+If there is no error, then the option is reset, hence clearing any error on the same level.
+When {%CATCH%} is executed, it checks the value of the option and resets it.
+When executing in a nested scope, the reset will not clear the error on the higher level.
+
+The name of the option was chosen to be user-friendly so that you can
+
+* export it to higher scopes,
+* query its value, presumably in an `if` macro,
+* set and reset it using the <<options,`options`>> macro.
+
+{%sample/
+{@try {@include}}{#if/{{%@snip tryoption%}}/there was an error}
+{#if/{{%@snip tryoption%}}/still there is an error, not cleared}{@catch}
+{#if/{{%@snip tryoption%}}/no, this one will not be displayed/error cleared}
+%}
+
+will result in
+
+{%output%}
+
+====

@@ -1,15 +1,7 @@
 {%@import macrodoc.jim%}
 {%MACRO name="undefine" since=1.0.0%}
 {%#snip:collect from="{%MACROSRC%}/Eval.java"%}
-{%@comment safeoutput is used to execute JShell because JShell may not be available in IntelliJ%}
-{%@define safeoutput=.output
-[source]
-----
-{%#trimLines trimVertical
-{%@try!
-{%!#output {%lastCode%}%}%}%}
-----
-%}
+
 `eval` interprets the content of the macro.
 The text written after the macro keyword `eval` is evaluated as a script.
 The scripting language can be defined following a `/` character.

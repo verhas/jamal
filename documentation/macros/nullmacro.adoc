@@ -1,0 +1,56 @@
+
+= `Special NoName User Defined Macro`
+
+since version `2.0.0`
+
+
+There is a special user defined macro that has no name.
+It is automatically created by Jamal every time it is needed.
+This user defined macro is used whenever the macro closing string follows the macro opening string directly.
+It can be used when you want to insert the macro opening string into the text, but you do not want it to be interpreted as a macro opening.
+For example, the following input
+
+.Jamal source
+[source]
+----
+{}
+----
+
+will result in the following output:
+
+.output
+[source]
+----
+{
+----
+
+
+If you use this macro inside another macro, then the result will be evaluated after the macro itself was evaluated.
+For example
+
+.Jamal source
+[source]
+----
+{@define z={} this is an opening}
+{@try!{!z}}
+----
+
+will result in the following output:
+
+.output
+[source]
+----
+Macro was not terminated in the file.
+this is an opening
+----
+
+
+The recommendation is to use this macro only on the top level instead of the longer
+
+.Jamal source
+[source]
+----
+{@escape ``{``}
+----
+
+Also, the macro closing string can be used without any escaping on the top level.

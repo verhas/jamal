@@ -1,0 +1,37 @@
+{%@import macrodoc.jim%}
+{%MACRO name="log" since=1.12.3%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=949b6eee%}
+
+This macro results and empty string and sends the input to the log output.
+The macro has one paropt, `level` that may specify the logging level.
+
+The possible values for the level are given by the Java JDK logging levels.
+These currently are:
+
+* `ALL`
+
+* `TRACE`
+
+* `FINER`
+
+* `DEBUG`
+
+* `FINE`
+
+* `INFO`
+
+* `WARNING`
+
+* `ERROR`
+
+* `SEVERE`
+
+* `OFF`
+
+The default level is `INFO`.
+
+The usage of the macro is, for example
+
+{%sample/
+{@log [level=DEBUG]this is a debug message}
+%}
