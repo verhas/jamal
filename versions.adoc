@@ -39,7 +39,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.0` 
 
-* `OK`  `JUPITER_VERSION` `5.10.0-M1` 
+* `OK`  `JUPITER_VERSION` `5.10.0` 
 
 * `OK`  `MOCKITO_VERSION` `5.4.0` 
 
@@ -47,7 +47,7 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `GROOVY_VERSION` `3.0.18` 
 
-* `OK`  `OGNL_VERSION` `3.3.4` 
+* `OK`  `OGNL_VERSION` `3.4.0` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.0` 
 
