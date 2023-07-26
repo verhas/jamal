@@ -41,3 +41,6 @@ It is possible to use this option as a parameter to the macro, however, in this 
 
 * `lenient` is an option that can be used via the `options` macro.
 When this option is on, the fact that a global and external debugger is defined will not result in an error.
+
+
+

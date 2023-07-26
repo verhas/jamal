@@ -5,12 +5,12 @@ since version `1.0.0`
 
 
 The Java built-in scripting engine JShell can be used to define macros.
-The macro link:script.adoc[`script`] and the macro `JShell` can be used to define JShell scripts.
+The macro link:script[`script`] and the macro `JShell` can be used to define JShell scripts.
 
 The macro `JShell` can be used to define methods, classes, variables and so on.
-The macro link:script.adoc[`script`] is to define a script macro that later can be invoked like any other used defined script macro.
+The macro link:script[`script`] is to define a script macro that later can be invoked like any other used defined script macro.
 
-When the macro `JShell` or link:script.adoc[`script`] is used the result is empty string.
+When the macro `JShell` or link:script[`script`] is used the result is empty string.
 When the script is invoked the output of the macro will be what the script prints out to the standard output.
 
 The following example defines a global method, a script using the method and, then it invokes the script.
@@ -31,9 +31,7 @@ It simply prints
 .output
 [source]
 ----
-There were 2 syntax errors processing the Jamal input:
-1. The processor could not load the JShell engine. at /Users/verhasp/github/jamal/documentation/macros/jshell.adoc.jam/31:9 <<< /Users/verhasp/github/jamal/documentation/macros/jshell.adoc.jam/28:3 <<< /Users/verhasp/github/jamal/documentation/macros/jshell.adoc.jam/25:13
-2. The JShell engine is not available at /Users/verhasp/github/jamal/documentation/macros/jshell.adoc.jam/36:2 <<< /Users/verhasp/github/jamal/documentation/macros/jshell.adoc.jam/28:3 <<< /Users/verhasp/github/jamal/documentation/macros/jshell.adoc.jam/25:13
+Hello, My Dear
 ----
 
 

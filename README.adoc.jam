@@ -4113,7 +4113,7 @@ The text describes the syntax used by some of the built-in macros, which do not 
 It is essential when you use these macros, for example, the core `if` macro.
 The text also mentions some Java internals that may be valuable if you intend to develop your built-in macros.
 
-A built-in macro accesses the input as one single string.
+Built-in macro accesses the input as one single string.
 Technically the input parameter of the method `evaluate()` is not a string.
 It is an instance of the class `Input` implementing the Java interface `CharSequence`.
 That way, we can think of it as a string.

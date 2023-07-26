@@ -67,9 +67,8 @@ will result
 .output
 [source]
 ----
-There were 2 syntax errors processing the Jamal input:
-1. JShell engine is not available at /Users/verhasp/github/jamal/documentation/macros/eval.adoc.jam/69:7 <<< /Users/verhasp/github/jamal/documentation/macros/eval.adoc.jam/66:3 <<< /Users/verhasp/github/jamal/documentation/macros/eval.adoc.jam/63:13
-2. JShell engine is not available at /Users/verhasp/github/jamal/documentation/macros/eval.adoc.jam/71:7 <<< /Users/verhasp/github/jamal/documentation/macros/eval.adoc.jam/66:3 <<< /Users/verhasp/github/jamal/documentation/macros/eval.adoc.jam/63:13
+4
+3
 ----
 
 

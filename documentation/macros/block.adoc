@@ -12,8 +12,8 @@ The macro `block` always result an empty string.
 It is used to have the state-altering effects of the macros without the output.
 
 
-NOTE: `block` has a similar functionality as <<comment,`comment`>>.
-It is recommended to use the <<comment,`comment`>> macro with the `@` starting character.
+NOTE: `block` has a similar functionality as link:comment[`comment`].
+It is recommended to use the link:comment[`comment`] macro with the `@` starting character.
 Jamal does not interpret the macro content in that case.
 Use the `block` with `#` to have the content interpreted.
 `block` should be used to enclose definitions to a scope level.
@@ -24,6 +24,7 @@ In this case, Jamal will automatically export all the macros defined inside the 
 
 Examples:
 
+.Jamal source
 [source]
 ----
 {@block it is like comment {@define x=1} is not evaluated}
@@ -37,6 +38,7 @@ K is exported, value is defined: "{K}" <-- not empty string, it is 1
 
 results in:
 
+.output
 [source]
 ----
 x is not exported, value is not defined: "" <-- empty string
@@ -45,3 +47,4 @@ y is exported, value is defined: "1" <-- not empty string, it is 1
 H is exported, value is defined: "1" <-- not empty string
 K is exported, value is defined: "1" <-- not empty string, it is 1
 ----
+

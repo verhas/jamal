@@ -94,3 +94,4 @@ The limit can be modified setting the environment variable `JAMAL_INCLUDE_DEPTH`
 Starting with version 2.0.0 the include macro looks into the file before evaluating it.
 If the very first two characters in the file are `{@`, then it evaluates the content using `{` as macro opening string and `}` as macro closing string.
 This way you can freely include resource files provided in JAR file or through the net even if you use different macro opening and closing strings.
+

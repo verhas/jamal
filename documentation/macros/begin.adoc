@@ -13,7 +13,7 @@ since version `1.0.0`
 ----
 
 The macros `begin` and `end` start and close a local definition scope.
-This is similar as using an link:ident.adoc[`ident`] macro with `#` to create a new scope for the evaluation of the macros inside it.
+This is similar as using an link:ident[`ident`] macro with `#` to create a new scope for the evaluation of the macros inside it.
 
 The text between the `{@begin}` and `{@end}` will be evaluated in a new scope.
 Any user defined macro in this scope is going to be local, unless exported or has a `:` in the name.

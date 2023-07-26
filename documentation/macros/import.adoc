@@ -87,3 +87,4 @@ Starting with version 1.11.0 the import macro has the option `noCache`.
 
 * `noCache` will ignore the cache when downloading resources using `https:` protocol.
 More precisely, it will download the resource from the network and update the cache file with the new content every time.
+

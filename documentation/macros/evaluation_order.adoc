@@ -18,7 +18,7 @@ For example, when we write
 {#define a=1}{a}
 ----
 
-first the macro link:define.adoc[`define`] is evaluated and then the user defined macro `a`.
+first the macro link:define[`define`] is evaluated and then the user defined macro `a`.
 If we have more complex, nested macro uses, like in the example:
 
 .Jamal source
@@ -145,9 +145,13 @@ and it will also result in
 There are other tools that can be used to modify the evaluation order of the macros.
 These include:
 
-- link:ident.adoc[`ident`] macro, which s
-- link:eval.adoc[`eval`] macro that evaluates the input
+- link:ident[`ident`] macro, which s
+- link:eval[`eval`] macro that evaluates the input
 - Using `!` in front of the macro identifier or in front of the `@` or `#` character.
-It is a shorthand for the link:eval.adoc[`eval`] macro, and it is described there.
-- The link:escape.adoc[`escape`] macro can prevent macro evaluation.
+It is a shorthand for the link:eval[`eval`] macro, and it is described there.
+- The link:escape[`escape`] macro can prevent macro evaluation.
 - Other built-in macros can also evaluate their input.
+
+
+
+

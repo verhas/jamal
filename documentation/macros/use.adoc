@@ -88,3 +88,4 @@ The macro may be reachable via the original name.
 
 The alias will refer to the built-in macro, which is the closest reachable in the current scope even if the `global` keyword is used.
 In this case the alias will be global, and the macro will be reachable via the alias even if the original name was not registered global and goes out of scope.
+

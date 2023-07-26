@@ -189,9 +189,9 @@ This section is important for you only if you want to understand how user-define
 In Jamal user defined macros are defined using the `define` macro.
 The Java code implementing the macro `define` create Java objects for every defined user defined macro.
 Other macros can also create "user defined" macros.
-The Jamal engine will handle any Java object that is of a class implementing two interfaces:
+The Jamal engine will handle any Java object that is of a class implementing two interfaces: 
 
-* `Identified`, and
+* `Identified`, and 
 * `Evaluable`.
 
 These are the major features required from a user defined macro.
@@ -281,8 +281,8 @@ This is mainly used for debugging and, in this case, for documentation purposes.
 == Verbatim Macros
 
 When a user defined macro is evaluated, the result of the macro is evaluated, resolving all the macros that happen to be in the result.
-This can be prevented using the link:verbatim.adoc[`verbatim`] macro.
-You can also read more details on the macro evaluation order in link:evaluation_order.adoc[`evaluation:order`].
+This can be prevented using the link:verbatim[`verbatim`] macro.
+You can also read more details on the macro evaluation order in link:evaluation:order[`evaluation:order`].
 
 If you use the `~` (tilde) character after the keyword `define`, then the macro will be evaluated "verbatim" by default.
 It means that the result of the user-defined macro will not be evaluated, just like if it was used with the macro `verbatim`.
@@ -315,7 +315,7 @@ or
 ----
 
 
-If, for any reason, you need to evaluate the result of such a macro you can use the macro link:eval.adoc[`eval`] or `!` when using th e macro.
+If, for any reason, you need to evaluate the result of such a macro you can use the macro link:eval[`eval`] or `!` when using th e macro.
 
 .Jamal source
 [source]
@@ -349,7 +349,7 @@ To prevent this, these Yaml data containing user defined macros are verbatim by 
 When the name of the macro contains at least one colon character `:`, then the macro will be defined in the global scope.
 Global scope is the top-level scope, and it means that a macro like that can be used everywhere in the text after it was defined.
 
-For example, modifying our example from the link:begin.adoc[`begin`] section:
+For example, modifying our example from the link:begin[`begin`] section:
 
 .Jamal source
 [source]
@@ -431,7 +431,7 @@ A macro is undefined if
 
 * it was not defined at all, or
 * it was defined in a scope, and the scope is not active when the macro is used, or
-* it was explicitly undefined using the link:undefine.adoc[`undefine`] macro.
+* it was explicitly undefined using the link:undefine[`undefine`] macro.
 
 You can add a `?` character in front to avoid the error.
 
@@ -1116,3 +1116,5 @@ It will be evaluated following the macro evaluation unless the macro is also dec
 
 The macros defined using the `default` option can not be serialized.
 It means that they cannot be used, for example, with the snippet library `reference` macro.
+
+

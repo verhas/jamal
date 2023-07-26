@@ -76,7 +76,7 @@ An alternative is to use the `lessThan` option along with the boolean `not` opti
 ====
 The option `blank` is needed in case you have a special case when the literal `false` should be treated positively.
 The need for this option arose when we wanted to create a macro supporting XML documents.
-The link:default.adoc[`default`] macro generated `<tag>` from `{tag}` when the tag was not defined.
+The default macro generated `<tag>` from `{tag}` when the tag was not defined.
 At the same time `{tag something}` was converted to `<tag>something</tag>`.
 The two different cases were separated using an `if` macro.
 The definition was something like this:

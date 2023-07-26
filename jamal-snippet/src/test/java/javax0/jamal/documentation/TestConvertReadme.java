@@ -4,8 +4,22 @@ import javax0.jamal.DocumentConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Files;
+
 public class TestConvertReadme {
 
+    @Test
+    void convertCoreMacrosDocumentation() throws Exception {
+        Files.walk(new java.io.File("../documentation/macros").toPath())
+            .filter(p -> p.toString().endsWith(".adoc.jam"))
+            .forEach(p -> {
+                try {
+                    DocumentConverter.convert(p.toString());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
     @Test
     void convertSnippetArticle() throws Exception {
         System.setProperty("java.awt.headless", "true");
