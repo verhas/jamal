@@ -8,7 +8,7 @@ package javax0.jamal.api;
  * It is a design choice that the evaluation does not have access to the macro processor.
  * The user defined macro does not need it.
  * When some other code creates an instance of a class implementing this interface where the access to the macro
- * processor is needed then the processor reference has to be injected into that object at or soon after the creation,
+ * processor is needed, then the processor reference has to be injected into that object at or soon after the creation,
  * before evaluate could be called.
  */
 public interface Evaluable extends Identified {

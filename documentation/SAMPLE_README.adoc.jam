@@ -1,0 +1,11 @@
+= README.adoc.jam
+
+//{%@rot13 QB ABG RQVG GUVF SVYR; GUVF VF TRARENGRQ SEBZ FNZCYR_ERNQZR.nqbp.wnz%}
+
+{%@snip:xml pom=../pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+How to use Jamal in five minutes.
+This is a sample readme of the version `{%VERSION%}`.
+
+

@@ -1,0 +1,61 @@
+= Starting with Jamal in 5 minutes
+
+The easiest way is to use Jamal is the IntelliJ IDEA Asciidoctor plugin with the Jamal extension.
+
+== Installing the plugin
+
+The installation of Jamal needs downloading the ZIP file
+
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip``]
+
+and extracting it to the project directory under `.asciidoctor/lib` directory.
+You may need to configure the Asciidoctor plugin to recognize the files with the extension `.jam` as Asciidoc files.
+The detailed steps are described in the documentation link:../jamal-asciidoc/README.adoc[Jamal Asciidoc extension].
+
+Optionally, you can also install the live templates, also described in the documentation.
+
+== Starting up
+
+After the configuration you just need to start IntelliJ and create a new file named `README.adoc.jam` in the project.
+The plugin and the preprocessor will automatically start.
+
+The content of the file can be the following:
+
+[source,asciidoc]
+----------------------------------------
+{%@include [verbatim]SAMPLE_README.adoc.jam%}
+----------------------------------------
+
+This file contains a comment line.
+It is encrypted in the source code and decrypted in the generated file.
+It uses the `rot13` macro to encode the text.
+The encoded text is:
+----
+{%@include [lines=3]SAMPLE_README.adoc.jam%}
+----
+
+This is a neat trick to have this text in the generated file without having the same in the source.
+When you read the source, it is a gibberish.
+When you read in the generated file, it is a rclear warning.
+
+It is also a simple demonstration of a simple macro.
+
+The next thing is a snippet collection.
+In this case  we collect an XML snippet into the snippet named `pom`.
+The next line uses the `define` macro to define `VERSION`.
+The content of the macro is the version from the `pom.xml` file.
+
+The last line shows how to use this defined macro.
+
+The result, processed by Jamal finally is:
+
+[source,asciidoc]
+----------------------------------------
+{%@include []SAMPLE_README.adoc.jam%}
+----------------------------------------
+
+With this, you started using Jamal in five minutes.
+Here we used three macros, but there are around 200 different macros in the library.
+You can also create your own macros.
+
+For further information, read the documents listed in the link:../README.adoc[README].
