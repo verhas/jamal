@@ -441,8 +441,6 @@ See the separate document: link:FAQ.adoc[FAQ].
 {%#counter:define id=chapter {%@define format=%d. %}%}
 {%#counter:define id=macroChapter {%@define format=$roman. %}%}
 
-
-
 ==== Debugging Macro Conversions
 
 When something goes wrong, Jamal gives you a detailed error message.
@@ -461,7 +459,7 @@ The trace information is structured with nested structures.
 XML is a format that can accommodate such nested structures and has very extensive editor support.
 
 The debugging functionality can execute the macro transformation step-by-step providing interactive debugger user interface.
-The tracing functionality was developed earlier and its importance lessens by the introduction of the debugger.
+The tracing functionality was developed earlier, and its importance lessens by the introduction of the debugger.
 
 ===== Tracing
 
