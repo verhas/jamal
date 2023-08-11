@@ -3122,7 +3122,7 @@ will result
 - Update.java: 979 bytes
 - SnipTransform.java: 16,983 bytes
 - Base64.java: 3,383 bytes
-- FilesMacro.java: 8,627 bytes
+- FilesMacro.java: 8,873 bytes
 - Collect.java: 23,894 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
@@ -3428,7 +3428,7 @@ will result in the output
 
 [source]
 ----
-2023-08-11 18:09:04
+2023-08-11 18:34:02
 ----
 
 
@@ -3750,6 +3750,10 @@ In the format you can use the following placeholders:
 
 
 
+When the placeholder `$time` is used the macro will replace it with the last modified time of the file.
+The time will be formatted as `yyyy-MM-dd HH:mm:ss` by default.
+This format can also be changed by defining the macro/option `dateFormat`.
+
 The macro also supports the option `root`.
 This can be used to define the root directory for the files' and directories' location.
 The usual use is to define `root` as a global macro and all `file` macros should use file names relative to that following the definition.
@@ -3809,6 +3813,10 @@ In the format you can use the following placeholders:
 * `$time` the time of the last modification
 
 
+
+When the placeholder `$time` is used the macro will replace it with the last modified time of the directory.
+The time will be formatted as `yyyy-MM-dd HH:mm:ss` by default.
+This format can also be changed by defining the macro/option `dateFormat`.
 
 The macro also supports the option `root`.
 This can be used to define the root directory for the files' and directories' location.
