@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 import static javax0.jamal.DocumentConverter.getRoot;
 
@@ -111,6 +112,17 @@ public class TestFilesMacro {
         TestThat.theInput("{@file (format=\"$extension3\")./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext4.ext5.ext6");
         TestThat.theInput("{@file (format=\"$extension4\")./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext3.ext4.ext5.ext6");
         TestThat.theInput("{@file (format=\"$extension5\")./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext2.ext3.ext4.ext5.ext6");
+
+    }
+
+    @Test
+    @DisplayName("File time can be displayed")
+    void testFileTime() throws Exception {
+        final var testFile = "./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6";
+        final var format = "yyyy";
+        final var f = new File(testFile);
+        TestThat.theInput("{@file (format=\"$time\" dateFormat="+format+")"+testFile+"}")
+                .results(new SimpleDateFormat(format).format(f.lastModified()));
     }
 
     @Test
@@ -174,7 +186,7 @@ public class TestFilesMacro {
         TestThat.theInput("{@directory (format=\"$extension4\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext3.ext4.ext5.ext6");
         TestThat.theInput("{@directory (format=\"$extension5\")./src/test/resources/dirName.ext1.ext2.ext3.ext4.ext5.ext6}").results("ext2.ext3.ext4.ext5.ext6");
     }
-    
+
     @Test
     @DisplayName("File is found and formatted using defined root")
     void testFileWithRoot() throws Exception {

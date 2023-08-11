@@ -1,20 +1,16 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.StringParameter;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.IndexedPlaceHolders.value;
@@ -26,26 +22,28 @@ public class FilesMacro {
     private static class Trie {
         static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                 // snippet fileMacroFormatPlaceholders
-                "$name", // gives the name of the file as was specified on the macro
-                "$absolutePath", // the absolute path to the file
-                "$parent", // the parent directory where the file is
-                "$simpleName", // the name of the file without the path
+                "$name",    // gives the name of the file as was specified on the macro
+                "$absolutePath",  // the absolute path to the file
+                "$parent",        // the parent directory where the file is
+                "$simpleName",    // the name of the file without the path
                 "$canonicalPath", // the canonical path
-                "$bareNaked", // the file name without the extensions
-                "$naked1", // the file name without the last extension
-                "$naked2", // the file name without the last 2 extensions
-                "$naked3", // the file name without the last 3 extensions
-                "$naked4", // the file name without the last 4 extensions
-                "$naked5", // the file name without the last 5 extensions
-                "$extensions", // the file name extensions
-                "$extension1", // the file name last extension
-                "$extension2", // the file name last 2 extensions
-                "$extension3", // the file name last 3 extensions
-                "$extension4", // the file name last 4 extensions
-                "$extension5"  // the file name last 5 extensions
+                "$bareNaked",     // the file name without the extensions
+                "$naked1",        // the file name without the last extension
+                "$naked2",        // the file name without the last 2 extensions
+                "$naked3",        // the file name without the last 3 extensions
+                "$naked4",        // the file name without the last 4 extensions
+                "$naked5",        // the file name without the last 5 extensions
+                "$extensions",    // the file name extensions
+                "$extension1",    // the file name last extension
+                "$extension2",    // the file name last 2 extensions
+                "$extension3",    // the file name last 3 extensions
+                "$extension4",    // the file name last 4 extensions
+                "$extension5",    // the file name last 5 extensions
+                "$time"           // the time of the last modification
                 // end snippet
         );
     }
+
     /**
      * Check that the directory exists, and it is a directory.
      */
@@ -56,16 +54,17 @@ public class FilesMacro {
             final var scanner = newScanner(in, processor);
             final var format = scanner.str("directoryFormat", "format").defaultValue("$name");
             final var root = scanner.str("root").defaultValue("").getParam().as(String.class, FileTools::trailDirectory);
+            final var dateFormat = scanner.str("dateFormat").defaultValue("yyyy-MM-dd HH:mm:ss");
             scanner.done();
 
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
             final var dir = new File(dirName.length() > 0 ? dirName : ".");
-            BadSyntaxAt.when(!dir.exists(),"The directory '" + dirName + "' does not exist.",in.getPosition());
-            BadSyntaxAt.when(!dir.isDirectory(),"The directory '" + dirName + "' exists but it is not a directory.",in.getPosition());
+            BadSyntaxAt.when(!dir.exists(), "The directory '" + dirName + "' does not exist.", in.getPosition());
+            BadSyntaxAt.when(!dir.isDirectory(), "The directory '" + dirName + "' exists but it is not a directory.", in.getPosition());
 
             try {
-                return formatString(format, name, dir);
+                return formatString(format, name, dir, dateFormat.get());
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + dirName
@@ -91,15 +90,16 @@ public class FilesMacro {
             final var scanner = newScanner(in, processor);
             final var format = scanner.str("fileFormat", "format").defaultValue("$name");
             final var root = scanner.str("root").defaultValue("").getParam().as(String.class, FileTools::trailDirectory);
+            final var dateFormat = scanner.str("dateFormat").defaultValue("yyyy-MM-dd HH:mm:ss");
             scanner.done();
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
             final var file = new File(fileName);
-            BadSyntaxAt.when(!file.exists(),"The file '" + file.getAbsolutePath() + "' does not exist.",in.getPosition());
-            BadSyntaxAt.when(!file.isFile(),"The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.",in.getPosition());
+            BadSyntaxAt.when(!file.exists(), "The file '" + file.getAbsolutePath() + "' does not exist.", in.getPosition());
+            BadSyntaxAt.when(!file.isFile(), "The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.", in.getPosition());
 
             try {
-                return formatString(format, name, file);
+                return formatString(format, name, file, dateFormat.get());
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + fileName
@@ -113,7 +113,8 @@ public class FilesMacro {
             return "file";
         }
     }
-    private static String formatString(final StringParameter format, final String name, final File dir) throws Exception {
+
+    private static String formatString(final StringParameter format, final String name, final File dir, final String dateFormat) throws Exception {
         return Trie.formatter.format(format.get(),
                 value(name),
                 value(dir.getAbsolutePath()),
@@ -131,16 +132,31 @@ public class FilesMacro {
                 value(new FileClosure(dir, 2)::extensionsN),
                 value(new FileClosure(dir, 3)::extensionsN),
                 value(new FileClosure(dir, 4)::extensionsN),
-                value(new FileClosure(dir, 5)::extensionsN)
+                value(new FileClosure(dir, 5)::extensionsN),
+                value(new FileClosure(dir, new SimpleDateFormat(dateFormat))::time)
         );
     }
+
     private static class FileClosure {
         final File f;
         final int i;
 
+        final SimpleDateFormat df;
+
         private FileClosure(final File f, final int i) {
             this.f = f;
             this.i = i;
+            this.df = null;
+        }
+
+        private FileClosure(final File f, final SimpleDateFormat df) {
+            this.f = f;
+            this.i = 0;
+            this.df = df;
+        }
+
+        private String time() {
+            return df.format(new Date(f.lastModified()));
         }
 
         /**

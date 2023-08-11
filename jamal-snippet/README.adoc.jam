@@ -2795,7 +2795,7 @@ These are:
 
 [[file]]
 === {%chapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=26a27a4c%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=de5c7196%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2843,7 +2843,7 @@ This may save some time when you are referring to many files in a deep directory
 
 [[directory]]
 === {%chapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=26a27a4c%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=de5c7196%}
 {%fileDirectory directory%}
 
 {%sample/
