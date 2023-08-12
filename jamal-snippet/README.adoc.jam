@@ -2795,7 +2795,7 @@ These are:
 
 [[file]]
 === {%chapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=8cd9677e%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=be0bfe6b%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2836,8 +2836,7 @@ In the format you can use the following placeholders:
 %}
 
 {%@define SUPPORT_ROOT($macro)=
-When the placeholder `$time` is used the macro will replace it with the last modified time of the $macro.
-The time will be formatted as `yyyy-MM-dd HH:mm:ss` by default.
+When the placeholder `$time`, `$ctime`, or `$atime` is used the time will be formatted as `yyyy-MM-dd HH:mm:ss` by default.
 This format can also be changed by defining the macro/option `dateFormat`.
 
 The macro also supports the option `root`.
@@ -2847,7 +2846,7 @@ This may save some time when you are referring to many files in a deep directory
 
 [[directory]]
 === {%chapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=8cd9677e%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=be0bfe6b%}
 {%fileDirectory directory%}
 
 {%sample/

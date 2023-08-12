@@ -7,10 +7,15 @@ import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.StringParameter;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.IndexedPlaceHolders.value;
@@ -39,7 +44,9 @@ public class FilesMacro {
                 "$extension3",    // the file name last 3 extensions
                 "$extension4",    // the file name last 4 extensions
                 "$extension5",    // the file name last 5 extensions
-                "$time"           // the time of the last modification
+                "$time",          // the time of the last modification
+                "$ctime",         // the creation time
+                "$atime"         // the last access time
                 // end snippet
         );
     }
@@ -115,6 +122,7 @@ public class FilesMacro {
     }
 
     private static String formatString(final StringParameter format, final String name, final File dir, final String dateFormat) throws Exception {
+        final var df = new SimpleDateFormat(dateFormat);
         return Trie.formatter.format(format.get(),
                 value(name),
                 value(dir.getAbsolutePath()),
@@ -133,7 +141,9 @@ public class FilesMacro {
                 value(new FileClosure(dir, 3)::extensionsN),
                 value(new FileClosure(dir, 4)::extensionsN),
                 value(new FileClosure(dir, 5)::extensionsN),
-                value(new FileClosure(dir, new SimpleDateFormat(dateFormat))::time)
+                value(new FileClosure(dir, df)::mtime),
+                value(new FileClosure(dir, df)::ctime),
+                value(new FileClosure(dir, df)::atime)
         );
     }
 
@@ -155,8 +165,28 @@ public class FilesMacro {
             this.df = df;
         }
 
-        private String time() {
-            return df.format(new Date(f.lastModified()));
+        private String mtime() throws BadSyntax {
+            return time(BasicFileAttributes::lastModifiedTime);
+        }
+
+        private String atime() throws BadSyntax {
+            return time(BasicFileAttributes::lastAccessTime);
+        }
+
+        private String ctime() throws BadSyntax {
+            return time(BasicFileAttributes::creationTime);
+        }
+
+        private String time(Function<BasicFileAttributes, FileTime> timeGetter) throws BadSyntax {
+            return df.format(new Date(timeGetter.apply(getAttrs(f)).toMillis()));
+        }
+
+        private static BasicFileAttributes getAttrs(final File f) throws BadSyntax {
+            try {
+                return Files.readAttributes(Paths.get(f.getAbsolutePath()), BasicFileAttributes.class);
+            } catch (IOException e) {
+                throw new BadSyntax("Cannot read creation time", e);
+            }
         }
 
         /**
