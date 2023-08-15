@@ -1,0 +1,25 @@
+= Jamal Environment Variables
+
+This document describes the environment variables that you may set to modify the behavior of Jamal.
+The documentation file is less than 20 lines, the real documentation is in the source.
+Jamal collects the documentation from the source files and generates the ascii doc file from the source comments.
+
+{%@snip:collect from=../jamal-api/src/main/java%}\
+{%@snip:collect from=../jamal-engine/src/main/java%}\
+{%@import ../environmentvariables.jim%}\
+
+
+The general rule is that you do not need to configure Jamal.
+But you can.
+
+All environment variables start with the prefix "`JAMAL_`".
+For every environment variable, there is a corresponding system property.
+The name of the system property is the same as the environment variable lower-case converted and replacing the `_` to `.` characters.
+For example, for the environment variable {%JAMAL_CHECKSTATE_ENV%}, the system property is `jamal.checkstate`.
+
+    {%#replace /{%JAMAL_CHECKSTATE_ENV%}/`/%}  --> jamal.checkstate
+
+First, the system property is consulted, and the environment variable has only effect when the system property is not defined.
+The following sections describe the individual environment variables.
+{%@import res:snippet.jim%}\
+{%docFrom {%@include [verbatim] ../jamal-api/src/main/java/javax0/jamal/api/EnvironmentVariables.java%}%}

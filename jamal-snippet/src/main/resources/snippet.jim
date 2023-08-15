@@ -34,7 +34,7 @@ When the text of all these snippets are put together then it evaluates the resul
 That way the snippets can act as normal documentation content.
 They will be included into the documentation and all the macros and everything will be usable there.
 
-The snippets are concatenated in the order as they present in the source file.
+The snippets are concatenated in the order they present in the source file.
 They are evaluated as one text block, therefore any macro defined in one snippet is also available in the later snippets.
 
 It is recommended to name the snippets with a prefix unique to the snippet collection and append some numbers.

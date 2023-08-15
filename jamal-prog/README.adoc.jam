@@ -197,8 +197,8 @@ The formal syntax of the expressions is:
 The different operations are executed using BigDecimal numbers if the operands are both numeric.
 In other cases, string operations are used.
 In this case `-`, `*`, `/` and `%` are not defined and will cause syntax error.
-`+` is defined as string concatenation.
-When used as unary `+` it is a no-op resulting the same string as the operand.
+`pass:[+]` is defined as string concatenation.
+When used as unary `pass:[+]` it is a no-op resulting the same string as the operand.
 
 The operator `!` is used to evaluate a Jamal macros.
 It is applied to the expression that follows it, and it evaluates it as string.
@@ -247,7 +247,7 @@ These are
 * while loops
 * output
 
-In the following chapters we will discuss these commands.
+In the following chapters, we will discuss these commands.
 
 === variable assignment
 
@@ -386,7 +386,7 @@ The method call is a syntactic sugar only and it is equivalent to
    macroName( expression, expression, ... , receiver)
 %}
 
-CAUTION: The receiver is the last argument.
+CAUTION: [red]+The receiver is the last argument, not the first+.
 It is not the same as usual.
 It makes sense when built-in macros are called this way chained.
 The macros work one after the other on each others output, and the options can be specified as parameter strings.

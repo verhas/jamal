@@ -1,11 +1,11 @@
 = Jamal JAR Input Plugin
 
 This library can handle files which are in JAR archives.
-Using this library any `inluce`, `import` or other macros that need to read a file can access JAR archives.
+Using this library any link:../documentation/macros/include.adoc[`include`], link:../documentation/macros/import.adoc[`import`] or other macros that need to read a file can access JAR archives.
 
 == Resource Name Format
 
-To access a file from a Maven JAR the file name has to be formatted
+To access a file from a JAR the file name has to be formatted
 
 .JAR resource format
 ****

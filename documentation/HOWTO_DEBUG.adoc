@@ -1,0 +1,121 @@
+= Debugging
+
+To debug the Jamal macro processing, you have to start Jamal in debugging mode.
+Jamal switches on debugging mode if the system property `jamal.debug` or the environment variable `JAMAL_DEBUG` is defined.
+The value of the property or the variable controls which debugger starts and how.
+
+== Debugger
+
+Currently, there are two debuggers implemented:
+
+. web-based debugger with UI written in React.js
+. a TCP/telnet based debugger.
+
+The detailed technical documentation of the server side of the debuggers is described in the document link:../jamal-debug/README.adoc[debugger readme].
+The TCP-based debugger is only for experimental purposes or when the web-based debugger is not available.
+Also, the TCP-based debugger is not actively developed and lacking many features implemented in the web-based one.
+
+Here we briefly describe the web-based debugger.
+Since the UI can best be described with pictures, especially with moving pictures, the documentation is created in screen capture videos.
+
+To start Jamal in debugger mode you can specify
+
+[source]
+----
+-Djamal.debug=http:8080
+----
+
+on the command line that starts Jamal.
+
+It will specify the web-based debugger, hence the `http` and the port, in this case `8080`.
+If it is more convenient, you can also specify the `http:8080` debug option file using the environment variable:
+
+[source]
+----
+export JAMAL_DEBUG=http:8080
+----
+
+The environment variable is taken into account only if the `jamal.debug` system property is not defined.
+
+If you do not want to debug anymore, do not forget to unset the environment variable typing
+
+[source]
+----
+unset JAMAL_DEBUG
+----
+
+In debug mode, Jamal stops twice for each macro evaluation.
+Once when it selects the next text without a macro from the actual start of the input, or a macro at the start of the input.
+Second time when the macro was evaluated, and the text is appended to the output.
+
+If you open your browser after you started Jamal in debug mode and try to open the url `http://localhost:8080` you will get the debugger UI in your browser.
+This user interface will let you see the current input, the current output, the defined built-in and user-defined macros.
+You can let the code run, make one step macro evaluation, go into nested macro evaluation, evaluate text interactively in the current evaluation environment, and so on.
+
+If you stop the execution in the debugger, sometimes you also have to stop the Jamal processing pressing Control-C or killing the process.
+This is a known issue, and we could not identify the cause.
+If you know any fix, please let us know.
+(We tried all the trivial and imaginable concurrency issues.)
+
+Other than that, the debugger is quite stable, happy debugging!
+
+
+== Error Handling
+
+There are two types of issues you may face with Jamal that need debugging.
+
+. Jamal does not work as expected. It does not signal an error, but the output is not what you expect.
+. Jamal stops with an error message.
+
+When something goes wrong, Jamal gives you a detailed error message.
+The message will include the file name, line number, and character count where the error happened.
+This is the easier case.
+
+When there is no error message, you have to find out what is wrong.
+In cases like that, you can try to debug the execution of the macro engine.
+There are two possibilities:
+
+. use the trace functionality, or
+. use the debugger, that we have already described.
+
+The trace functionality can create a detailed XML trace of the execution that can later be examined.
+The trace information is structured with nested structures.
+XML is a format that can accommodate such nested structures and has very extensive editor support easing the hierarchical navigation.
+This is the sole reason XML was chosen.
+
+The debugging functionality can execute the macro transformation step-by-step providing interactive debugger user interface.
+The tracing functionality was developed earlier, and its importance lessens by the introduction of the debugger.
+
+== Tracing
+
+To get a trace file during the execution of Jamal you can
+
+[source]
+----
+-Djamal.trace=tracefile.xml
+----
+
+on the command line that starts Jamal.
+It will specify a trace file, in this case, `tracefile.xml`.
+If it is more convenient, you can also specify the trace file using the environment variable:
+
+[source]
+----
+export JAMAL_TRACE=tracefile.xml
+----
+
+The environment variable is taken into account only if the `jamal.trace` system property is not defined.
+
+The trace file will contain all the macro evaluations' inputs and outputs.
+Since there can be many Jamal evaluations one after the other, Jamal does not overwrite old trace information.
+It appends the new trace information.
+Before starting Jamal, you can manually delete the trace file.
+Trace files grow large quickly.
+If you do not want to trace anymore, do not forget to unset the environment variable typing
+
+[source]
+----
+unset JAMAL_TRACE
+----
+
+to avoid an excessively large trace file growing on your disk.

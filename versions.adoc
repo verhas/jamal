@@ -47,9 +47,9 @@ https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 
 * `OK`  `GROOVY_VERSION` `3.0.18` 
 
-* `OK`  `OGNL_VERSION` `3.4.0` 
+* `OK`  `OGNL_VERSION` `3.4.1` 
 
-* `OK`  `SNAKEYAML_VERSION` `2.0` 
+* `OK`  `SNAKEYAML_VERSION` `2.1` 
 
 * `OK`  `JSON_ORG_VERSION` `20230618` 
 

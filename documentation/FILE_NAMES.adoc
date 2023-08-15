@@ -1,0 +1,194 @@
+= Resource Files and Web Resources
+
+
+
+= Resource Files and Web Resources
+
+Jamal macros can reference files.
+For example, the core macros link:macros/include.adoc[`include`] and link:macros/import.adoc[`import`] use file names and include and import those files.
+A file name can be absolute file name and relative to the file in which it is used.
+The file names should be denoted the usual UNIX way, using forwards slash characters `/` as directory separators.
+This is supported by the different Windows operating systems as well, as Linux and MacOS.
+
+In addition to the local files, Jamal can also load files from other locations.
+To do that, Jamal implements an extensible mechanism.
+Whenever a file name starts with a special prefix, then Jamal uses a special handler to load the file.
+There are handlers implemented for the following prefixes:
+
+* `res:` to load files from the Java resources,
+* `https:` to download files from the web,
+* `maven:` to load files from the Maven repository,
+* `jar:file:` to load files from a JAR file, or
+* `__some other prefix:__` to load files using a custom handler.
+
+These files are treated in a special way.
+
+The handlers, even those implemented in Jamal already, are loaded automatically via the ServiceLoader mechanism.
+It means that anyone can extend Jamal implementing new handlers reading files from different sources.
+
+NOTE: The prefix used by a custom handler has to be at least three characters long not to confuse the syntax with the Windows drive letters.
+
+The following subsections detail the mechanism for the implemented handlers.
+
+== Java Resource Files
+
+When the file name starts with the characters `res:` it is a Java resource file.
+The typical use of it is when a macro package contains built-in as well as user-defined macros.
+In this case the user-defined macros are defined in `jim` files, inside the Java JAR.
+
+Technically, any resource can be loaded from the classpath.
+
+== Loading Resources from `maven:load` loaded libraries
+
+Starting with version 2.0.0, it is possible to load macros from Maven artifacts using the macro `maven:load`.
+The resources in these artifacts are not on the classpath.
+In this case, the application uses different classloaders to load the macro classes that are usable by default and those loaded with the `maven:load` macro.
+Jamal uses the application class loader to load resources using the `res:` prefix unless otherwise instructed (see below).
+This classloader does not see the dynamically loaded classes and resources.
+
+To load a resource from a dynamically loaded library, the `res:` prefix has to be followed by the name of a macro enclosed between `pass:[`]` backtick characters before the resource name.
+That way, the resource loading will use the class loader, which loaded the macro and will eventually find the resource in the dynamically loaded library.
+
+== Web Resources
+
+Web resources can be downloaded using the `https:` prefix.
+The only protocol supported is `https`.
+Jamal does not download any resource using the unencrypted `HTTP` protocol.
+
+=== Caching Web Resources
+
+It is possible to cache the downloaded files.
+The environment variable
+
+  JAMAL_HTTPS_CACHE
+
+can define a directory to store the web resources.
+The default cache directory is
+
+  ~/.jamal/cache/
+
+If the cache directory exists, Jamal will store the downloaded files in it.
+Jamal will create the subdirectories it needs, but Jamal will never create the cache directory itself.
+
+NOTE: If you do not want to use the caching, then do not create the cache directory.
+
+=== Cache eviction and expiration
+
+Jamal will not cache a downloaded files that has `SNAPSHOT` in the URL (all capital letters).
+There is no cache eviction or expiration by default.
+You can find the files in the cache directory in the
+
+  ~/.jamal/cache/https
+
+subdirectory.
+For each cached file under the `https` directory there is a property file under the
+
+  ~/.jamal/cache/properties
+
+directory.
+The name of the file is exactly the same as the named of the cached file.
+There is no "properties" or any special extension.
+For example, the cache file
+
+
+  ~/.jamal/cache/https/com/githubusercontent/raw/verhas/jamal/master/jamal-snippet/src/main/resources/kroki.jim
+
+contains the downloaded content of the file
+
+  https://raw.githubusercontent.com/verhas/jamal/master/jamal-snippet/src/main/resources/kroki.jim
+
+and the properties file is
+
+  ~/.jamal/cache/properties/com/githubusercontent/raw/verhas/jamal/master/jamal-snippet/src/main/resources/kroki.jim
+
+The properties files contain information about when a file was stored in the cache and also when it was last time read.
+It is also possible to define Time To Live (TTL) for the cache items.
+
+Ttl value can be defined with the `ttl` property key.
+The value can be a raw number expressing the ttl in seconds or a string with time unit(s).
+The units are:
+
+* `y` for year(s) (365 days)
+
+* `M` for month(s) (31 days)
+
+* `w` for week(s) (7 days)
+
+* `d` for day(s) (24 hours)
+
+* `h` for hour(s) (60 minutes)
+
+* `m` for minute(s) (60 seconds)
+
+* `s` for second(s)
+
+If you use multiple time units, then the value is the sum of the time units.
+The units should be used in `Y`, `M`, `w`, `d`, `h`, `m`, `s` order.
+You can omit the units that have zero value.
+You can use any number in front of a unit, you are not limited with the natural number of time units.
+For example, you can say `1d25h` for 1 day and 25 hours, which is exactly the same as `2d1h`
+
+Examples:
+
+* `13y` means 13 years
+
+* `13y1M3h` means 13 years, 1 month and 3 hours
+
+=== TTL hierarchy
+
+You can define TTL values for the whole cache, for a group of files and for a single file.
+When you define a TTL value for a single file, you edit the properties file of the file.
+When you define a TTL value for a group of files, you edit the properties file of the directory.
+When you define a TTL value for the whole cache, you edit the properties file of the cache root directory.
+
+The name of the properties file for a directory is `.properties` and it is in the directory.
+These files are not created by Jamal, but you are free to create them with different keys and values.
+
+The property values, `ttl` or other values, are read from the property file and are inherited from `.properties` files.
+The `.properties` files can be created in the different cache directories up to the root directory of the properties.
+When a key is defined in multiple `.properties` files, then the value closer to the properties file of the cached item is used.
+If the key is defined in the properties file of the cached item, then the value is used.
+This way you can define the TTL for a specific cache item, a group of items and for the whole cache.
+
+The connection to the web can also be configured if needed.
+The environment variables that can be used are the following:
+
+* `JAMAL_CONNECT_TIMEOUT`, and
+
+* `JAMAL_READ_TIMEOUT`
+
+can define two timeout values for the web download in millisecond as unit.
+
+The default value for the timeouts is 5000, meaning five seconds.
+
+The proxy setting can be configured using standard Java system properties.
+For more information see the JavaDoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
+Jamal does not set any proxy settings.
+
+== Maven resources
+
+When the name of the file stats with the characters `maven:`, then Jamal tries to find the file in the Maven repository.
+You can use file names like
+
+[source]
+----
+{@include [verbatim] maven:com.javax0.jamal:jamal-groovy:1.12.5:compile:version.properties}
+----
+
+
+which will result
+
+[source]
+----
+version=1.12.5
+----
+
+
+For more information read the link:../jamal-maven-input/README.adoc[documentation] of the module implementing the `maven:` prefix.
+
+== JAR resources
+
+Jamal can read files from JAR files.
+In this case the prefix has to be `jar:file:` and the file name has to be the name of the JAR file followed by the name of the file inside the JAR file following a `!` character.
+
+For more information read the link:../jamal-jar-input/README.adoc[documentation] of the module implementing the `jar:file:` prefix.

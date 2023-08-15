@@ -1,0 +1,106 @@
+= Jamal API
+
+
+You can embed Jamal into Java application using Java 11 and later.
+
+You need the Jamal libraries on your classpath.
+If you use Maven, you can simply have
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-engine</artifactId>
+    <version>2.3.1-SNAPSHOT</version>
+</dependency>
+----
+
+in your pom file.
+
+The library `jamal-engine` transitively depends on the other libraries that are needed (`jamal-core`, `jamal-api` and `jamal-tools`).
+
+You also have to specify that you use the modules if your code uses modules.
+
+[source]
+----
+module jamal.maven {
+requires jamal.api;
+requires jamal.tools;
+requires jamal.engine;
+}
+----
+
+You can instantiate a `Processor` object to process the input.
+
+[source,java]
+----
+import javax0.jamal.engine.Processor;
+
+var processor=new Processor(macroOpen,macroClose);
+var result=processor.process(input);
+----
+
+The `macroOpen` and `macroClose` parameters are `String` values.
+The parameter `input` to the method `process()` has to be an object that implements the `javax0.jamal.api.Input` interface.
+The easiest way to do that is to use the readily available class `javax0.jamal.tools.Input`.
+
+You can see an example to create an `Input` from an existing file in the `jamal-maven-plugin` module:
+
+[source,java]
+----
+result = processor.process(
+        new javax0.jamal.tools.Input(
+                Files.readString(inputPath, StandardCharsets.UTF_8),
+                new Position(inputPath.toString(), 1)));
+----
+
+An `Input` holds the content the processor has to process.
+It also has a reference file name used to resolve the absolute names of the included and imported files.
+It also keeps track of the line number, and the column of the actual character as the macro evaluation progresses.
+A `new Position(s,1)` creates a new position that identifies the file by the name `s` and the line number 1.
+
+When a new processor is instantiated, it uses the `ServiceLoader` mechanism to find all the built-in macros that are on the classpath.
+If your application has special macros implemented in Java, then you can just put the library on the `modulepath`.
+If the classes are defined in the `provides` directive of the module, then Jamal will find and load them automatically.
+
+It is also possible to define user-defined and built-in macros via API.
+To do that you need access to the `MacroRegister` object that the `Processor` object has.
+To get that you can invoke the method `getRegister()` on the processor object:
+
+[source]
+----
+var register=processor.getRegister();
+----
+
+The register has API to define macros and user-defined macros.
+For further information, see the API JavaDoc documentation.
+
+== Using Jamal as a templating engine
+
+There is a very simple API class that makes it possible to use Jamal as a templating engine.
+The utility class `javax0.jamal.Format` has the method
+`public static String format(String content, Map<String, String> predefinedMacros)`
+that can format the `content` string using the entries of the `predefinedMacros` as user-defined macros.
+These macros eventually cannot have arguments.
+This is a simplified interface to access the functionality of Jamal.
+
+== Document Converter API
+
+The class, `DocumentConverter` supports document converting.
+This is usually done during the build process in the unit test phase.
+The practice is to create one or more unit tests converting the project `.jam` files.
+
+The method `convert(file)` converts the file given as argument.
+The resulting file will be created in the same directory as the original file with the `.jam` extra extension chopped off.
+For example, if you convert `README.adoc.jam`, then the resulting file will be `README.adoc`.
+
+The other method `convertAll(file)` converts many files.
+It takes two arguments, both are lists of file name endings.
+The first is the file endings (extensions) to include, the second one is the file endings (extensions) to exclude.
+The two static methods `include()` and `exclude()` can be used to create these arguments.
+
+== JavaDoc and API
+
+The current and past versions of the JavaDoc can be read online at the address:
+
+link:https://javadoc.io/doc/com.javax0.jamal[`https://javadoc.io/doc/com.javax0.jamal`]
