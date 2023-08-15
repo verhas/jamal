@@ -18,32 +18,19 @@
 {%@snip:collect from=./jamal-api/src/main/java%}\
 {%@snip:collect from=./jamal-engine/src/main/java%}\
 {%@import environmentvariables.jim%}\
+{%@references file=README.jrf%}
 
 = image:logo.svg[width=100px] Jamal Macro Language
 
 Jamal is a meta markup language enhancing the features of Asciidoc, Markdown, XML, JSON, YAML, JavaDoc, and any other markup languages.
 It can work as a preprocessor or integrated into the toolset of the editing/processing interactively or in batch mode.
 The conversion is done as a preprocessing step prior to the markup processing, the use of Jamal is non-invasive.
-It can be inserted into any tool chain without risk, as it can also be removed any time.
+It can be inserted into any tool chain without risk, as it can also be removed at any time.
 
 TOC
 
-. <<Installation,Installation, and Usage>>
-. <<GS,Getting Started / Quick Start>>
-. <<Configuration,Configuration>>
-. <<Features,Features>>
-. <<Contributing,Contributing>>
-. <<Documentation,Documentation>>
-. <<License,License>>
-. <<Changelog,Changelog>>
-. <<Roadmap,Roadmap>>
-. <<Authors,Authors>>
-. <<Acknowledgments,Acknowledgments>>
-. <<Support,Support>>
-. <<FAQ,FAQ>>
-. <<Maintenance,Maintenance of this document>>
-
-[[Badges]]
+{%@ref TOC%}
+{%TOC%}
 
 [cols="a,a,a", frame=none, grid=none]
 |===
@@ -68,8 +55,14 @@ If you want to read the latest release, please visit link:{jamal_home}/tree/v{%L
 end if
 %}%}
 
-[[Installation]]
-== Installation, and Usage
+{%@define :TOC=%}
+{%@define section($id,$label)=
+== $label [[$id]]
+{%#define :TOC={%:TOC%}
+. <<$id>>%}
+%}
+
+{%section /Installation/Installation, and Usage%}
 
 Jamal is implemented as a Java library and it is embedded in different applications.
 It can be used as a command line tool, as a Maven plugin, as a Maven extension, as a JavaDoc doclet, as a JShell script, as a JBang script, as a Java library, and as a JSR223 script engine.
@@ -194,13 +187,11 @@ If you want to use AsciidocFX, the same package should be used.
 The installation is similar, downloading the ZIP file and extracting it to a directory.
 The detailed documentation is in the link:jamal-asciidoc/README.adoc[documentation].
 
-[[GS]]
-== Getting Started / Quick Start
+{%section |GS|Getting Started / Quick Start%}
 
 You can start using Jamal in five minutes as described in link:documentation/TUTORIAL-5min.adoc[the tutorial], __"{%#string:substring (begin=1 end=-1) {%@include [lines=1]documentation/TUTORIAL-5min.adoc.jam%}%}"__.
 
-[[Configuration]]
-== Configuration
+{%section /Configuration/Configuration%}
 
 Jamal has a lot of configuration parameters, but each of these has reasonable default values.
 It means that you do not need to configure Jamal before using it.
@@ -218,8 +209,7 @@ They are documented along with the macro documentation.
 
 The environment variables and their meanings are documented in their link:../documentation/ENVIRONMENT_VARIABLES.adoc[documentation].
 
-[[Features]]
-== Features
+{%section /Features/Features%}
 
 Jamal is a meta markup language that extends existing markup languages in a transparent way.
 The language is designed so that it will not interfere with any existing or future markup.
@@ -267,8 +257,7 @@ The largest module is the document maintenance module (snippet macros), but ther
 The use of Jamal makes it possible to include automatically generated images, for example, from PlantUML, Graphviz, or other tools into any markup-formatted document.
 You can also include programmatic formatting and content calculation using Groovy, Ruby, and other languages.
 
-[[Contributing]]
-== Contributing
+{%section /Contributing/Contributing%}
 
 Jamal is an open-source project, and the developers welcome any contribution.
 We treat all suggestions, requests, comments or any other contribution as with respect.
@@ -340,8 +329,7 @@ Create your own macros for your own use.
 If you think that your macros are useful for others, then create a new module and publish it.
 We will be happy to reference it in the Jamal project.
 
-[[Documentation]]
-== Documentation
+{%section /Documentation/Documentation%}
 
 Since Jamal is a complex program, the documentation is split into several parts.
 The modules, each has its documentation in the form of a README file in the module directory.
@@ -404,42 +392,29 @@ image::jamaldebugger2559x1089.png[]
 
 * link:./jamal-testsupport/README.adoc[Jamal Test Module README], Use this module to test your own Java or Kotlin implemented macros.
 
-[[License]]
-== License
+{%section /License/License%}
 
 Jamal is distributed under the Apache 2.0 license.
 
-[[Changelog]]
-== Changelog
+{%section /Changelog/Changelog%}
 
 Jamal uses GitHub.
 The change log is maintained online in the link:https://github.com/verhas/jamal/releases[GitHub releases page].
 There is also a link:RELEASES.adoc[local copy] of the release notes.
 
-[[Roadmap]]
-== Roadmap
+{%section /Roadmap/Roadmap%}
 
 The roadmap is maintained in the document: link:RODMAP.adoc[ROADMAP].
 It is more like a collection of ideas and plans than a strict roadmap.
 
-[[Authors]]
-== Authors
-
-[[Acknowledgments]]
-== Acknowledgments
-
-
-[[Support]]
-== Support
+{%section /Support/Support%}
 
 Jamal is an open source project and currently not backed by any company.
 
-[[FAQ]]
-== FAQ
+{%section /FAQ/FAQ%}
 
 See the separate document: link:FAQ.adoc[FAQ].
 
-[[Maintenance]]
-== Maintenance of this document
+{%section /Maintenance/Maintenance of this document%}
 
 The documents of this project are formatted as Asciidoc documents with Jamal meta markup.
