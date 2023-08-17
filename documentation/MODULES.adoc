@@ -1,4 +1,3 @@
-{chapter :jar-input:debugger}
 = Modules of the Jamal Project
 :toc:
 
@@ -228,25 +227,38 @@ This module is included in the command line version, thus you can convert Micros
 
 This module implements macros that support the reading and processing of JSON format data.
 
-=== 32. link:https://github.com/verhas/jamal/blob/master/jamal-yaml/README.adoc[YAML] ^_macro_^
+=== 32. link:https://github.com/verhas/jamal/blob/master/jamal-kotlin/README.adoc[KOTLIN] ^_macro_^
+
+
+This module provides a complimentary API to ease the creation of macros in Kotlin.
+
+=== 33. link:https://github.com/verhas/jamal/blob/master/jamal-kotlin-testsupport/README.adoc[KOTLIN-TESTSUPPORT] ^_macro_^
+
+
+This module provides test support for macros implemented in Kotlin.
+
+=== 34. link:https://github.com/verhas/jamal/blob/master/jamal-yaml/README.adoc[YAML] ^_macro_^
 
 
 This module implements macros that support the reading and processing of YAML format data.
 It may be useful when you have to maintain large YAML data files.
 Using these macros, you can split up a Yaml file into smaller pieces and use macros to simplify repetitive parts.
 
-=== 33. link:https://github.com/verhas/jamal/blob/master/jamal-openai/README.adoc[OPENAI] ^_macro_^
+=== 35. link:https://github.com/verhas/jamal/blob/master/jamal-openai/README.adoc[OPENAI] ^_macro_^
 
 
 Macros implementing interface to OpenAI.
 
-=== 34. link:https://github.com/verhas/jamal/blob/master/jamal-java/README.adoc[JAVA] ^_debugger_^
+=== 36. link:https://github.com/verhas/jamal/blob/master/jamal-java/README.adoc[JAVA] ^_debugger_^
 
 
 Experimental module integrating the Java compiler into Jamal as macros.
 
-=== 35. link:https://github.com/verhas/jamal/blob/master/jamal-debug-ui/README.adoc[DEBUG-UI] ^_debugger_^
+=== 37. link:https://github.com/verhas/jamal/blob/master/jamal-debug-ui/README.adoc[DEBUG-UI] ^_debugger_^
 
 
 This is not a module.
 The code in the directory `jamal-debug-ui` contains the REACT.js based ui for the debugger.
+
+
+

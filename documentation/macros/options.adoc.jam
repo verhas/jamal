@@ -96,7 +96,7 @@ In lenient mode there may be more or less actual values than the number of loop 
 
 === `omasalgotm` (since 1.2.0 < 1.10.0)
 
-Jamal 1.2.0 changed a lot from 1.0.0 in the way how macros are evaluated.
+Jamal 1.2.0 changed a lot from {%RELEASE:ZURICH%} in the way how macros are evaluated.
 The version 1.2.0 is safer and more flexible and is compatible with the older versions in most of the cases.
 There may be some cases when the macros are not compatible with the old version.
 In this case, it is recommended to alter the macros so that they do not rely on the old evaluation algorithm.

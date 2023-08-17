@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class TestConvertReadme {
 
@@ -56,6 +57,21 @@ public class TestConvertReadme {
         System.setProperty("java.awt.headless", "true");
         DocumentConverter.convert("../README.adoc.jam");
     }
+
+    @Test
+    void convertDocumentationDirectory() throws Exception {
+        System.setProperty("java.awt.headless", "true");
+        Files.walk(Paths.get("../documentation"), Integer.MAX_VALUE)
+            .filter(p -> p.toString().endsWith(".adoc.jam"))
+            .forEach(p -> {
+                try {
+                    DocumentConverter.convert(p.toString());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
+
 
     @Test
     void convertTopFAQ() throws Exception {

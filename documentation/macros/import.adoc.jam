@@ -1,6 +1,6 @@
 
 {%@import macrodoc.jim%}
-{%MACRO name="import" since=1.0.0%}
+{%MACRO name="import" since={%RELEASE:ZURICH%}%}
 
 {%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=9029025b%}
 
@@ -52,7 +52,7 @@ The global file, however, can not import the local file using the `top` option e
 Because the textual output from the evaluation of the file is discarded, feel free to use text in the file to be imported as documentation.
 There is no need to enclose such a text into a `{@comment ...}` macro.
 
-{%DEFAULTOPEN/1.5.0/import%}
+{%DEFAULTOPEN/{%RELEASE:SZEGED%}/import%}
 
 [NOTE]
 ====

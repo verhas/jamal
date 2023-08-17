@@ -14,7 +14,9 @@ since version `1.0.0`
 This macro defines a user-defined macro in the current scope.
 
 == History
-
+[%collapsible, title=Releases history]
+====
+* since 1.0.0 initial version
 * since 1.6.4 `default` as special macro
 * since 1.7.4 `default` macro first argument, macro can be defined to evaluate verbatim
 * since 1.7.6 optional and extra ignored arguments
@@ -24,6 +26,7 @@ This macro defines a user-defined macro in the current scope.
 * since 2.0.0 option `tail` to parse the tail parameters as a single string
 * since 2.3.0 option `class` to define a macro by the implementing class
 * since 2.4.0 option `default` to define a macro by the implementing class
+====
 
 == Syntax
 
@@ -32,7 +35,7 @@ The syntax of the macro is the following:
 .Jamal source
 [source]
 ----
-@define [options] macro(arguments)=value}
+{@define [options] macro(arguments)=value}
 ----
 
 The options and the arguments are optional.
@@ -41,7 +44,7 @@ In that case, the format of the macro is
 .Jamal source
 [source]
 ----
-@define macro=value}
+{@define macro=value}
 ----
 
 or
@@ -49,13 +52,13 @@ or
 .Jamal source
 [source]
 ----
-@define macro()=value}
+{@define macro()=value}
 ----
 
 Using the `()` characters after the identifier of the macro is optional, and the result is exactly the same as if it omitted.
 The two definitions are equivalent.
 
-NOTE: There is one exception, when you have to use `()` even for an empty parameter list.
+NOTE: There is one exception, when you __have to__ use `()` even for an empty parameter list.
 This is the case, when the `id` ends with a colon `:`.
 In this case the definition `{@define id:=...}` would be ambiguous, because using `:=` instead of `=` has a special meaning (see it later).
 
@@ -71,7 +74,12 @@ They are usually identifiers, and it is recommended to use identifiers as argume
 [IMPORTANT]
 ====
 The arguments do not have any special syntax.
-The only requirement is that they do not contain a comma `,`, a closing parenthesis `)` and they do not start or end with `...`.
+The only requirement is that they do not contain
+
+* a comma `,`,
+* a closing parenthesis `)`, and
+* they do not start or end with `...`.
+
 That is because the list is
 
 * comma-separated,
@@ -110,7 +118,24 @@ The brown fofence jumps over the high fence
 
 
 This is probably not the result that the macro creator wanted.
-They probably missed the point that the word `fox` also contains an `x`.
+They probably missed the point that the word `fox` also contains an `x` character.
+One solution can be to use `$x` as the argument name.
+
+.Jamal source
+[source]
+----
+{@define fox($x)=The brown fox jumps over the high $x}{fox fence}
+----
+
+will result correctly
+
+.output
+[source]
+----
+The brown fox jumps over the high fence
+----
+
+
 
 To ensure that the argument replacing is consistent, the argument names cannot contain each other as a substring.
 
@@ -122,7 +147,7 @@ In this case the occurrences of `aa` in the body could be replaced to `twoAs` or
 
 Although Jamal could define some rules, like left-to-right, or right-to-left, or longer-first evaluation, but these could still lead to hard-to-read situations.
 Jamal suffers from hard to read situations already without this extra headache.
-To avoid that Jamal does not allow you `a` and `aa` as argument names to a macro definition the same time.
+To avoid that Jamal does not allow `a` and `aa` as argument names to a macro definition the same time.
 ====
 
 During the replacement, a parameter value may be a string that contains the name of one or more argument names.
@@ -176,48 +201,6 @@ When a leopard and a $c can run, then fish can fly
 
 
 but the previous sample, using parameter names starting with the character `*` would result in an error.
-
-== Special User Defined Macros
-
-[WARNING]
-====
-This section is about "user-defined" macros returned by some built-in macros of some external packages.
-They behave like special user-defined macros, but they are not defined using the `define` macro.
-This section is important for you only if you want to understand how user-defined macros work under the hood, or want to create your own user-defined macros in Java.
-====
-
-In Jamal user defined macros are defined using the `define` macro.
-The Java code implementing the macro `define` create Java objects for every defined user defined macro.
-Other macros can also create "user defined" macros.
-The Jamal engine will handle any Java object that is of a class implementing two interfaces: 
-
-* `Identified`, and 
-* `Evaluable`.
-
-These are the major features required from a user defined macro.
-They have to be registered by a name in the Jama engine, hence they need to implement the `Identified` interface, and they have to evaluate to a string, hence they need to implement the `Evaluable` interface.
-
-Some built-in macros implemented in external packages, like the Yaml package, or the counters in the snippet package have their own implementation.
-It means that they create user defined macros that you can pass parameters to, and their evaluation results some output, but they are not "classical" user defined macros.
-They just behave like the macros that are defined using `define`.
-
-For example, the macro `counter:define` from the Snippet package creates a "user-defined" macro that results a number when used, but it also changes the value at every invocation.
-
-Starting with the release 2.3.0 the macro supports the option `class`.
-This option can provide the class name that implements the macro.
-The class has to implement the `Identified` and `Evaluable` interfaces.
-It optionally can implement the `Configurable` interface.
-If it does, then it will be configured with the parameters:
-
-* `"id"` providing a string with the macro identifier as defined in the `define` macro.
-* `"verbatim"` will be either `true` or `false` depending on the value of the `verbatim` option of the `define` macro.
-* `"tail"`  will be either `true` or `false` depending on the value of the `tail` option of the `define` macro.
-* `"params"` will be an array of strings with the parameter names as defined in the `define` macro.
-* `"processor"` will be the processor that is used to evaluate the `define` macro.
-* `"input"` will be the input of the `define` macro following the `=` sign.
-
-The configuration calls the method `configure()` with the listed configuration keys as a strings and object values as parameters.
-
 
 == Macro redefine
 
@@ -282,7 +265,7 @@ This is mainly used for debugging and, in this case, for documentation purposes.
 
 When a user defined macro is evaluated, the result of the macro is evaluated, resolving all the macros that happen to be in the result.
 This can be prevented using the link:verbatim[`verbatim`] macro.
-You can also read more details on the macro evaluation order in link:evaluation:order[`evaluation:order`].
+You can also read more details on the macro evaluation order in link:evaluation_order[`evaluation_order`].
 
 If you use the `~` (tilde) character after the keyword `define`, then the macro will be evaluated "verbatim" by default.
 It means that the result of the user-defined macro will not be evaluated, just like if it was used with the macro `verbatim`.
@@ -315,7 +298,8 @@ or
 ----
 
 
-If, for any reason, you need to evaluate the result of such a macro you can use the macro link:eval[`eval`] or `!` when using th e macro.
+If, for any reason, you need to evaluate the result of such a macro you can use the macro link:eval[`eval`] or the `!` character.
+For example:
 
 .Jamal source
 [source]
@@ -349,7 +333,7 @@ To prevent this, these Yaml data containing user defined macros are verbatim by 
 When the name of the macro contains at least one colon character `:`, then the macro will be defined in the global scope.
 Global scope is the top-level scope, and it means that a macro like that can be used everywhere in the text after it was defined.
 
-For example, modifying our example from the link:begin[`begin`] section:
+For example, modifying our example from the documentation of the macro link:begin[`begin`]:
 
 .Jamal source
 [source]
@@ -386,7 +370,7 @@ Another version of the example:
 {@end alma }{Z}
 ----
 
-will result:
+will also result:
 
 .output
 [source]
@@ -426,7 +410,7 @@ It defines a scope local macro, which gets out of scope with the macro `end`.
 
 == Using Undefined Macros
 
-If you use a user-defined macro that is undefined, it will result in an error.
+If you use a user-defined macro undefined, it will result in an error.
 A macro is undefined if
 
 * it was not defined at all, or
@@ -484,9 +468,9 @@ Example:
 .Jamal source
 [source]
 ----
->>{?hoppala}<<
+>>{?hoppala}<< not defined, empty string
 {@define default=wupppss}{hoppala}
->>{?hoppala}<<
+>>{?hoppala}<< default macro used
 ----
 
 Result:
@@ -494,9 +478,9 @@ Result:
 .output
 [source]
 ----
->><<
+>><< not defined, empty string
 wupppss
->>wupppss<<
+>>wupppss<< default macro used
 ----
 
 
@@ -505,7 +489,7 @@ wupppss
 During the design, there were two possibilities.
 One, to let the `{?...}` macro use perform the same way as if there was no defined `default` macro.
 The other, to let the `{?...}` use the `default` macro.
-We selected the second option because in that case there is a fallback.
+We selected the second option because in that case, there is a fallback.
 You can simply write `{#ident {@undefine default}{?...}}`.
 If we selected the first option, then the `{?...}` macro would not have and alternative way to use the default macro.
 ====
@@ -572,7 +556,7 @@ If the number of the actual parameters is not the same as what the defined `defa
 Consider the use `{@options :lenient}` along with the definition of the `default` macro, or a default macro with optional arguments.
 
 Starting with the version 1.7.4 the macro `default` can have a special first parameter.
-If the first argument of the macro is either `$macro` or `$_`, then this parameter will hold the macro name used.
+If the first argument of the macro is named either `$macro` or `$_`, then this parameter will hold the actual macro name.
 That way the `default` macro can use the name of the macro in its evaluation.
 
 Example:
@@ -595,7 +579,7 @@ Result:
 ----
 
 
-Starting with the version 1.7.6 Jamal introduced optional arguments to user defined macros.
+Starting with the version 1.7.6 Jamal introduced optional arguments to user-defined macros.
 (Details are a bit later.)
 You can use optional arguments when you define a `default` macro.
 For example:
@@ -624,7 +608,7 @@ DEFAULT
 
 When you define a macro, it gets into the local scope unless you define it global.
 It is possible to export a macro after it was defined.
-Exporting a macro right after the definition is so common that the option `export` does the same.
+Exporting a macro right after the definition is so common that the option `export` of the macro `define` does the same.
 For example, the following sample
 
 .Jamal source
@@ -653,18 +637,27 @@ C: exported using option
 
 == Macro Parameters
 
+When a macro is used, the parameters are the actual values for the argument symbolic names to replace them in the body of the macro.
+
 The parameters stand after the name of the macro separated by a separator character.
 The first non-whitespace and non-alphanumeric character after the name of the macro is the separator character.
 It can be `/` as in the examples below, but it can also be any non-alphanumeric character.
-The number of parameters should be exactly the same as the number of arguments unless the `{@options :lenient}` was specified, or the `...` was used to denote optional arguments.
+The number of parameters should be exactly the same as the number of arguments unless
+
+* the `{@options :lenient}` was specified, or
+* the `...` was used to denote optional arguments.
+
 In the case of optional arguments, the missing arguments will be zero-length strings.
 If there are extra parameters, they will be ignored.
 
 The separator character cannot be an alphanumeric character (letter or digit, Unicode categories Lu, Ll, Lt, Lm, Lo, and Nd).
 Any other Unicode character can be used as a parameter separator character.
 
-If the user-defined macro has exactly one argument, then there is no need to use a separator character.
-The sole parameter of the macro can start after the name of the macro at the first non-whitespace, alphanumeric character.
+There is a special case, when a macro has exactly one argument.
+In this case, it is possible to omit the separator character if the parameter starts with an alphanumeric character.
+
+The one parameter of the macro can start after the name of the macro with the first non-whitespace, alphanumeric character.
+
 For example,
 
 .Jamal source
@@ -705,6 +698,7 @@ will result
 
 
 Writing
+
 .Jamal source
 [source]
 ----
@@ -796,7 +790,12 @@ Macro 'x' needs 2 arguments and got 3
 ----
 
 
-The rule that the separator character is not considered as another separator in the rest of the argument is valid only when there is only one argument.
+The rule that the separator character is not considered as another separator in the rest of the argument is valid only
+
+* for single argument macros, and
+
+* when the macro was defined using the option `tail` in the `define` macro.
+
 In the case of multiple arguments, this could easily lead to unreadable macro use.
 The above example modified to be lenient demonstrates this:
 
@@ -821,7 +820,7 @@ The provided third value, `t` is ignored.
 
 There are situations where the use of a separator character is not a must, but the use of it helps the readability.
 Consider, For example, `{enclose/a/b/v}`.
-We know  from earlier that `enclose` has only one argument, however the use of it looks like it has three.
+We know  from earlier that `enclose` has only one argument, however, the use of it looks like it has three.
 The one argument it has is `a/b/v`.
 
 Omitting the separator character, `/` in this case, does not help the readability or only a bit.
@@ -889,6 +888,8 @@ It may happen that the macro opening and closing strings are different when the 
 In a situation like that, the macro evaluation replaces the macro opening and closing strings in the macro definition to the actual macro opening and closing strings.
 Use `:=` instead of a `=` between the name, or parameter list and the body of the macro to prevent this replacement, or use the `[pure]` option.
 
+In the following example we will set the macro opening and closing string to `|` and `.` using the link:sep[`sep`] macro.
+
 .Jamal source
 [source]
 ----
@@ -897,7 +898,7 @@ Use `:=` instead of a `=` between the name, or parameter list and the body of th
 {@sep | .}|@define [pure]a=|z.{z}.|@sep.{@define z=3}{a}
 ----
 
-results
+results in
 
 .output
 [source]
@@ -1020,7 +1021,7 @@ Appending `...` after some other argument, which is not the last one or using `.
 It is also an error to add `...` postfix after the first argument when the macro has one argument.
 One argument macros are treated in a special way and all the text following the macro will be treated as a single argument, thus it is meaningless to use `...` after a single argument.
 
-== Options
+== Options (parops)
 
 The version 1.12.3 introduced options to the macro `define`.
 The options you can use are:
@@ -1037,34 +1038,33 @@ You can use this option instead of the `:=` assignment.
 * `fail`, `noRedefine`, `noRedef`, `failIfDefined` says that the macro should not be redefined.
 You can use this option instead of the `!` character.
 
-* `tail` says that the macro should be parsed as a tail macro.
+* `tail` says that the macro parameters should be parsed splitting the input string into exactly the number of the arguments.
+If there are more separator characters, then those became part of the last argument.
+Care should be exercised when using this option because it can lead to hard to read macro invocations.
 
 * `global` says that the macro should be defined in the global scope.
 
-* `export` says that the macro should be exported.
+* `export` says that the macro should be exported right after it was defined.
+In other words, the macro will be defined in the surrounding scope instead of the current one.
 
 * `class` says that the macro should be defined by the implementing class.
 
 * `default`, `defaults`, `named` gives default values to the parameters.
 In this case, the syntax of the macro invocation is different from the usual one.
+The use of this parop is described in detail in the next section.
 
 These options are technically aliases, meaning that none of them can be defined as a global option or as a macro.
 Was it a name, the special macro `default` would collide with the parop `default`.
 
-NOTE: It is especially important that all these parops only have aliases in the case of `default`.
-
 It is generally recommended to use the options instead of the modifying characters.
-The modifying characters remain part of the language for backward compatibility only.
+The modifying characters remain part of the language for backward compatibility.
 
 You cannot use an option and the respective modifying character at the same time.
 However, you can use one of the modifying characters and the other option, unless they are mutually exclusive (`?` and `!`).
 
 The option `global` makes the macro global, even if the macro does not have a `:` in the name.
-Using the option as `global=false`, however, will not make a macro containing `:` local.
+Using the option as `global=false`, however, will not make a macro containing one or more `:` characters local.
 This option can be used together with the name containing `:`.
-
-The option `tail` can be used to signal that the input string should be split into exactly to the number of the arguments.
-If the last part after the splitting still contains one or more argument separator character or string, it will be part of the last argument.
 
 == Default Parameters
 
@@ -1101,10 +1101,12 @@ The format for the default value is a multi-line string with the format:
 [source]
 ----
 name1=value1
+name2=value2
+name3=value3
 ...
+nameN=valueN
 ----
 
-for the arguments.
 Each line can define a default value for a parameter.
 It is an error to specify the same parameter name more than once.
 It is also an error to specify a string that is not a parameter name.
@@ -1116,5 +1118,49 @@ It will be evaluated following the macro evaluation unless the macro is also dec
 
 The macros defined using the `default` option can not be serialized.
 It means that they cannot be used, for example, with the snippet library `reference` macro.
+
+The syntax and use of default parameters is experimental as of the release 2.4.0 and it may change in the future.
+The change may also break backward compatibility.
+
+== Special User Defined Macros
+
+[WARNING]
+====
+This section is about "user-defined" macros returned by some built-in macros of some external packages.
+They behave like special user-defined macros, but they are not defined using the `define` macro.
+This section is important for you only if you want to understand how user-defined macros work under the hood, or want to create your own user-defined macros in Java.
+====
+
+In Jamal user defined macros are defined using the `define` macro.
+The Java code implementing the macro `define` create Java objects for every defined user defined macro.
+Other macros can also create "user defined" macros.
+The Jamal engine will handle any Java object that is of a class implementing two interfaces:
+
+* `Identified`, and
+* `Evaluable`.
+
+These are the major features required from a user defined macro.
+They have to be registered by a name in the Jamal engine, hence they need to implement the `Identified` interface, and they have to evaluate to a string, hence they need to implement the `Evaluable` interface.
+
+Some built-in macros implemented in external packages, like the Yaml package, or the counters in the snippet package have their own implementation.
+It means that they create user defined macros that you can pass parameters to, and their evaluation results some output, but they are not "classical" user defined macros.
+They just behave like the macros that are defined using `define`.
+
+For example, the macro `counter:define` from the Snippet package creates a "user-defined" macro that results a number when used, but it also changes the value at every invocation magically.
+
+Starting with the release 2.3.0 the macro `define` supports the option `class`.
+This option can provide the class name that implements the macro.
+The class, eventually has to implement the `Identified` and `Evaluable` interfaces.
+It can implement the `Configurable` interface.
+If it does, then it will be configured with the parameters:
+
+* `"id"` providing a string with the macro identifier as defined in the `define` macro.
+* `"verbatim"` will be either `true` or `false` depending on the value of the `verbatim` option of the `define` macro.
+* `"tail"`  will be either `true` or `false` depending on the value of the `tail` option of the `define` macro.
+* `"params"` will be an array of strings with the parameter names as defined in the `define` macro.
+* `"processor"` will be the processor that is used to evaluate the `define` macro.
+* `"input"` will be the input of the `define` macro following the `=` sign.
+
+The configuration calls the method `configure()` with the listed configuration keys as a strings and object values as parameters.
 
 

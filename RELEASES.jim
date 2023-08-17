@@ -2,14 +2,32 @@
 This file defines symbolic names for upcoming releases.
 
 During the development of the release 1.12.7 it was not sure if it will be a minor release or a major one.
-The documentation many times refers to this release as 1.12.7, but it is not sure if it will be 1.12.7 or 1.13.0 or 2.0.0
+The documentation many times refers to this release as 1.12.7, but it was not sure if it would be 1.12.7 or 1.13.0 or 2.0.0
 
 To avoid global search and replace here we define symbolic names for the releases in the future.
 Past releases, when this practice was not used are left intact.
 After all, they are history and history does not change (rip Orwell).
 
 The symbolic names we use are city names.
-The first "next" release is named after the city where I lived in most of the my life.
+
+Some releases got symbolic names retrospectively.
+This is the case when the release was already published and the symbolic name was not used in the documentation.
+You can find some bare release numbers in the documentation even though the existence of the symbolic name.
+{@define RELEASE:ZURICH=1.0.0}
+{@define RELEASE:KLOTEN=1.3.0}
+{@define RELEASE:SZEGED=1.5.0}
+{@define RELEASE:RORBAS=1.5.4}
+{@define RELEASE:BERN=1.6.4}
+{@define RELEASE:LUZERN=1.7.4}
+{@define RELEASE:BASEL=1.7.6}
+{@define RELEASE:OBERGLATT=1.9.0}
+{@define RELEASE:EMBRACH=1.9.1}
+{@define RELEASE:LUGANO=1.12.3}
+
+my parents were there once
+{@define RELEASE:ULANBATOR=1.12.3}
+
+The first "next" (non-retrospect) release is named after the city where I lived in most of the my life.
 
 {@define RELEASE:BUDAPEST=2.0.0}
 
@@ -27,6 +45,10 @@ District XXIII is Soroksar.
 
 {@define RELEASE:MELBOURNE=2.2.0}
 
+Is a large city in Brazil.
 {@define RELEASE:MANAUS=2.3.0}
 
+Izmir is a Turkish city, famous for its film festival.
+I was lucky to meet Roger Worrod who was frequent visitor of the festival.
+I have never been there.
 {@define RELEASE:IZMIR=2.4.0}

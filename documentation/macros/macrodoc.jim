@@ -20,7 +20,7 @@ this macro is to be used to reference other macros inside the documentation of t
 
 
 
-{%#define MacroEvaluationOrder=For more information about about the macro evaluation order, please consult the {%$ evaluation:order%} documentation page.%}
+{%#define MacroEvaluationOrder=For more information about about the macro evaluation order, please consult the {%$ evaluation_order%} documentation page.%}
 
 {%@define fileNameExplanationFor($action$)=
 The name of the file can be absolute, or it can be relative to the file that $action$s the other file.

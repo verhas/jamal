@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="JShell" since=1.0.0%}
+{%MACRO name="JShell" since={%RELEASE:ZURICH%}%}
 
 The Java built-in scripting engine JShell can be used to define macros.
 The macro {%$ script%} and the macro `JShell` can be used to define JShell scripts.

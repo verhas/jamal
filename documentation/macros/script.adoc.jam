@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="script" since=1.0.0%}
+{%MACRO name="script" since={%RELEASE:ZURICH%}%}
 
 The macro `script` defines a user-defined macro interpreted as a script.
 The syntax of the command is

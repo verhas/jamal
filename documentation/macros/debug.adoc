@@ -9,16 +9,17 @@ since version `1.12.3`
 The macro `debug` can be used to start the debugger from the Jamal source code.
 It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.
 
-It is important to note, it will only work if the debugger is on the module path or on the classpath.
-It is also important to note that the macro only works if there is no debugger configured in the environment variables, or in the system properties or configured in the `.jamal` directory.
-
 The macro has the following syntax:
 
 .Jamal source
 [source]
 ----
-{@debug options}
+{@debug on/off using="..."}
 ----
+
+It is important to note, it will only work if the debugger is on the module path or on the classpath.
+It is also important to note that the macro only works if there is no debugger configured in the environment variables, or in the system properties or configured in the `.jamal` directory.
+If there is already a debugger configured, then the macro will result in error unless the option `lenient` is set.
 
 The macro has the following options:
 
@@ -26,14 +27,17 @@ The macro has the following options:
 * `using` (aliases `debugger`, `selector`) can specify the debugger connection string.
 This is the same connection string that you can use in the environment variable `JAMAL_DEBUG` or system property.
 
-YOu can switch off and on the debugger inside the input using the options `on` and `off`.
++
+You can switch off and on the debugger inside the input using the options `on` and `off`.
 
 * `on` the debugger is switched on.
 * `off` the debugger is switched off.
 
++
 You cannot use the `on` and `off` options together.
 Doing so will result in an error.
 
++
 The options `on`, `off`, and `using` are technically all aliases, which means that a user defined macro or option of the same name does not affect the macro.
 
 * `noDebug` is an option that can be used via the `options` macro to switch the debugger off globally for the whole file, or for the part where the option is in effect.

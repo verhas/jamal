@@ -14,7 +14,7 @@ since version `1.0.0`
 When you use the macro `comment` you usually want to use the `@` character at the start.
 This will prevent the content of the macro from being evaluated before the macro is processed.
 
-For more information about about the macro evaluation order, please consult the link:evaluation:order[`evaluation:order`] documentation page.
+For more information about about the macro evaluation order, please consult the link:evaluation_order[`evaluation_order`] documentation page.
 
 NOTE: It can also be used to enclose definitions without side effects, but this is not recommended.
 For that purpose, use the link:block[`block`] macro.

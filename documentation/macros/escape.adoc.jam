@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="escape" since=1.5.4%}
+{%MACRO name="escape" since={%RELEASE:RORBAS%}%}
 
 == Syntax
 
@@ -11,19 +11,33 @@ The `++`SEP`++` is any string that does not appear in the content of the macro.
 
 == History
 
-- since 1.9.1 (`escape*`)
+- since {%RELEASE:EMBRACH%} (`escape*`)
 
 == Description
 
-This macro is parsed specially and overrides the macro parsing.
-Using `escpe` the macro nesting can be avoided.
+When you want to include something into the output that looks like a Jamal macro but should not be evaluated as such, you can use the `escape` macro.
+An example is a reference to a Maven property in a `pom.jam` file, like `${project.build.sourceDirectory}`.
+In `pom.jam` files the convention is to use `{` and `}` as macro opening and closing strings.
+This collides with the Maven property reference.
+Jamal may interpret the Maven property reference as a macro and try to evaluate it.
 
-The part `SEP` between the back-tick characters can be any string, which does not appear inside the escaped string.
+You can use some special macro opening and closing string, but it may be cumbersome.
+It may be the right choice when there are many Maven property references in the file.
+On the other than, when you already have a complex and relatively large `pom.jam` file, and you need to reference only one property in it, it may be simpler to use the `escape` macro.
+
+This macro is parsed specially and overrides the macro parsing.
+When Jamal sees a macro, it has to find the end of the macro before evaluating the macro.
+It does that by looking up the macro closing string, taking all opening strings and the proper nesting into account on the way.
+This logic is implemented in the interface `Macro` as a default method.
+
+The implementation of the `escape` macro overrides this default method.
+It simply looks at the `++`SEP`++` string at the start and then seeks forward ignoring all macro opening and closing strings or nesting logic until it finds the same `++`SEP`++` string again.
+
+The part `SEP` between the back-tick characters can be any string, which does not appear inside the escaped part of the file.
 This string along with the back-ticks has to be repeated at the end of the macro before the macro end string.
+This kind of string enclosure is similar to the shell "here string" syntax.
 
 The result of the macro is the escaped string without any modification.
-The macro itself is very simple.
-The speciality of the macro is that it overrides  the text parsing that locates the end of the macro.
 
 {%sample/
 {@escape `a`{`a`}
@@ -45,19 +59,24 @@ They get protected using the `escape` macro automatically.
 ====
 
 There is another way to escape content from macro evaluation.
-You can write a `*` right after the `escape` keyword, as
+You can write a `*` right after the `escape` keyword (no space between), as
 
 {%sample/
 {@escape* `a`{`a`}
 %}
 
-In this case, the escape not only escapes the macro opening and any other otherwise processable content but also results in the protecting shell around the escaped string.
+In this case, the escape does not only escape the macro opening and any other otherwise processable content but also results in the protecting shell around the escaped string.
 The result in this case will be
 
 [source,text]
 ----
 {@escape*`a`{`a`}
 ----
+
+The macro finally will result the escaped string when the processing of the whole input is finished in a final phase.
+This is useful when the escaped part is inside a macro and due to the complex macro evaluation, it is evaluated multiple times.
+You could enclose the escaped string into surrounding escapes, and putting a `*` is similar to that.
+It is infinitely deep, and it is not necessary to know how deep the escaping is until the whole file was processed.
 
 [NOTE]
 ====
@@ -68,15 +87,6 @@ The closer object is automatically created and registered by Jamal when the `esc
 You can use the closer functionality of Jamal via the {%$ defer%} macro.
 ====
 
-This macro comes in handy when you want to protect something from evaluation that should never be interpreted as a macro text.
-For example, you can have a Maven property in a `pom.jam` file, like `${project.build.sourceDirectory}`.
-You can redefine at the start of the file the macro open and macro close strings, but it may be simpler to protect the one or few special strings.
-A normal escape, without the `\*` after the keyword hides the content from evaluation only once.
-When the `*` character is used the content will be protected even when it is deep inside macros and target for many different evaluations.
-It should only be eliminated at the very end of the processing on the top level, which is done automatically.
-
-The macro `escape*` will liberate the content.
-The liberation will happen after the whole content was already processed in a so called "closer".
 Built-in macros implemented in Java have the possibility to register an object to be executed after the processing of the whole content.
 Such an object is a closer, and it can be used to close resources that were open by the macro during processing.
 During the execution of this closer the code can access and modify the final result.
@@ -102,4 +112,4 @@ It essentially escapes an empty string delimited by two backtick delimited empty
 After the content liberation the result will be an empty string, thus there is no harm using this before any {%$ defer%} macro.
 
 The closer registered by `escape*` is simple.
-It simply evaluates the result setting a flag that tells `escape*` that this time it should ignore the `\*` character.
+It simply evaluates the result setting a flag that tells `escape*` that this time it should ignore the `*`.

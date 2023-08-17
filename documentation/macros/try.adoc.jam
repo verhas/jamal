@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="try" since=1.5.0%}
+{%MACRO name="try" since={%RELEASE:SZEGED%}%}
 
 The macro try will evaluate its content and return the result.
 The evaluation does not open a new scope, just like in the case of the macro `{@eval }`.

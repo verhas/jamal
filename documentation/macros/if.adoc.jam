@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="for" since=1.0.0%}
+{%MACRO name="for" since={%RELEASE:ZURICH%}%}
 
 
 {%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=d086471d%}

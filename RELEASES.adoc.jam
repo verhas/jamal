@@ -6,6 +6,15 @@
 {%@define RELEASE_N($x)=== https://github.com/verhas/jamal/tree/$x[$x]%}
 {%@define RELEASE($x)={%RELEASE_N {%RELEASE:$x%}%}%}
 
+{%RELEASE IZMIR%}
+
+* Kotlin support to make Macro creation in Kotlin a breeze.
+* Scan interface usage to parse parotps was eliminated
+* Word decorator macro was developed
+* counter macro was extended to support hierarchical counters and also other than latin characters
+* User-defined macro can have default parameters for better readability
+* New `$time`, `$atime`, and `$ctime` placeholders for the `file` macro
+
 {%RELEASE MANAUS%}
 
 * Core macro supports the option `flat` (alias as `export`) to evaluate the content in the same scope as the surrounding macro.

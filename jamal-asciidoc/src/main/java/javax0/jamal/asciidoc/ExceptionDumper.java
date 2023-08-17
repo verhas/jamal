@@ -21,13 +21,6 @@ class ExceptionDumper {
         final var me = new ExceptionDumper();
         me.output.append(t.getMessage()).append('\n');
         me.dumpIt(t, false);
-        final String extension;
-        final int i = inputFileName.lastIndexOf('.');
-        if( i == -1 ){
-            extension = "jam";
-        }else{
-            extension = inputFileName.substring(i+1);
-        }
         me.output.append("sed -i.bak ").append(" '").append(me.sedCommand).append("' ").append(inputFileName);
         return me.output;
     }

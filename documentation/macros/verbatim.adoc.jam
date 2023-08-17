@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="verbatim" since=1.0.0%}
+{%MACRO name="verbatim" since={%RELEASE:ZURICH%}%}
 
 
 `verbatim` is a special macro, which affects macro evaluation order and is used for advanced macro evaluation.

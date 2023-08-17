@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="include" since=1.0.0%}
+{%MACRO name="include" since={%RELEASE:ZURICH%}%}
 {%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=795ea0d6%}
 {%@import ../../environmentvariables.jim%}
 == Syntax

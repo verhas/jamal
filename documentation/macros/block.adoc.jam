@@ -1,8 +1,8 @@
 {%@import macrodoc.jim%}
-{%MACRO name=block since=1.0.0%}
+{%MACRO name=block since={%RELEASE:ZURICH%}%}
 
 
-`block` is a macro that can be used to enclose a block of macro.
+`block` is a macro that can be used to enclose a block of macros.
 The common practice is to use it with the `#` starting character.
 That way the macros inside the `block` are evaluated, but their output is dropped.
 The macro `block` always result an empty string.
@@ -16,7 +16,7 @@ Use the `block` with `#` to have the content interpreted.
 `block` should be used to enclose definitions to a scope level.
 
 When defining macros inside a block, do not forget to export them if you want to use them outside the block.
-The macro can be used with the option `flat` or `export` (since release {%RELEASE:MANAUS%}).
+The macro can be used with the option `flat` (also aliased as `export`) since the release {%RELEASE:MANAUS%}.
 In this case, Jamal will automatically export all the macros defined inside the block.
 
 Examples:

@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="for" since=1.0.0%}
+{%MACRO name="for" since={%RELEASE:ZURICH%}%}
 
 
 == Syntax
@@ -21,7 +21,7 @@ containing v1 v2 and v3}
 
 == History
 
-- since 1.5.0 multi-argument `for`
+- since {%RELEASE:SZEGED%} multi-argument `for`
 - since 1.6.3 backtick string separator value list
 - since 1.7.3 options between `[` and `]`
 - since 1.7.8 option `evalist`

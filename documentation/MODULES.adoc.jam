@@ -1,4 +1,3 @@
-{chapter :jar-input:debugger}
 = Modules of the Jamal Project
 :toc:
 
@@ -170,6 +169,12 @@ This module is included in the command line version, thus you can convert Micros
 {chapter :json:macro}
 This module implements macros that support the reading and processing of JSON format data.
 
+{chapter :kotlin:macro}
+This module provides a complimentary API to ease the creation of macros in Kotlin.
+
+{chapter :kotlin-testsupport:macro}
+This module provides test support for macros implemented in Kotlin.
+
 {chapter :yaml:macro}
 This module implements macros that support the reading and processing of YAML format data.
 It may be useful when you have to maintain large YAML data files.
@@ -186,6 +191,7 @@ This is not a module.
 The code in the directory `jamal-debug-ui` contains the REACT.js based ui for the debugger.
 
 {#define module_directory_count={@listDir  (maxDepth=1 pattern=jamal-[\w\-]*$ countOnly) ..}}
+
 {!#if [not equals={module_directory_count}]/{chapter_counter last}/
    {`@error There are {#do
        << ({module_directory_count}-{chapter_counter last})

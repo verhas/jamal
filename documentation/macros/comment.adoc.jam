@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name=comment since=1.0.0%}
+{%MACRO name=comment since={%RELEASE:ZURICH%}%}
 
 {%sample/
 

@@ -29,6 +29,10 @@ User-defined macro classes are instantiated many times and may contain a state.
 The instance of the class `javax0.jamal.engine.UserDefinedMacro` is created by the built-in macro `define`.
 Other built-in macros can create instances of different classes, so long as long they implement the `javax0.jamal.api.UserDefinedMacro` interface.
 
+Identifier:: In Jamal macro names are identifiers.
+Identifiers in Jamal start with the letters `a-z` or `A-Z`, `$`, `:`, or underscore `_` and can contain any of these on consecutive positions. The second and other positions can also contain digits.
+Identifiers in Jamal start with the letters `a-z` or `A-Z`, `$`, `:`, or underscore `_` and can contain any of these on consecutive positions. The second and other positions can also contain digits.
+
 Core:: The core package defines __built-in__ macros, which are essential for the use of Jamal.
 Some of these macros are directly tied to the source parsing process.
 For example, the macro `verbatim` cannot be redefined.
@@ -96,7 +100,11 @@ You can define these as the `snip:collect` macro parameters.
 Maco Input:: The input of a macro is the text that follows the macro name and lasts to the macro closing.
 For example, the `{@trimLine this is the macro input}` has the text `this is the macro input` as macro input.
 
-Macro Option, Macro Parameter:: These two things have the same meaning and both are used in the documentation.
+Parops:: Macro parameter options.
+This terminology was invented in a later version to distinguish the macro options you use between `[` anf `]` or between `(` anf `)` in the macro use and options defined using the macro `options`.
+These are also mentioned as "macro options" or "macro parameters" in the documentation.
+
+Macro Option, Macro Parameter:: These two things have the same meaning, and both are used in the documentation.
 Built-in macros can use the option parsing routines for the syntax analysis of the input of the macro.
 In that case options can be defined at the start of the input between `(` and `)` (or some other) characters.
 The options usually have the format `name=value`.

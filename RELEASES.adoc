@@ -6,6 +6,15 @@
 
 
 
+== https://github.com/verhas/jamal/tree/2.4.0[2.4.0]
+
+* Kotlin support to make Macro creation in Kotlin a breeze.
+* Scan interface usage to parse parotps was eliminated
+* Word decorator macro was developed
+* counter macro was extended to support hierarchical counters and also other than latin characters
+* User-defined macro can have default parameters for better readability
+* New `$time`, `$atime`, and `$ctime` placeholders for the `file` macro
+
 == https://github.com/verhas/jamal/tree/2.3.0[2.3.0]
 
 * Core macro supports the option `flat` (alias as `export`) to evaluate the content in the same scope as the surrounding macro.

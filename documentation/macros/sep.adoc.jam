@@ -1,6 +1,6 @@
 
 {%@import macrodoc.jim%}
-{%MACRO name="sep" since=1.0.0%}
+{%MACRO name="sep" since={%RELEASE:ZURICH%}%}
 
 == Syntax
 
@@ -162,7 +162,7 @@ Trying to set it to an empty string will raise an error.
 
 [NOTE]
 ====
-* Jamal 1.0.0 got into an infinite loop in case of an empty opening string.
+* Jamal {%RELEASE:ZURICH%} got into an infinite loop in case of an empty opening string.
 Later versions will signal an error.
 * Jamal 1.3.0 extended the `sep` macro.
 ====

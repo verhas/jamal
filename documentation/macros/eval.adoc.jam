@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="undefine" since=1.0.0%}
+{%MACRO name="eval" since={%RELEASE:ZURICH%}%}
 {%#snip:collect from="{%MACROSRC%}/Eval.java"%}
 
 `eval` interprets the content of the macro.
@@ -41,7 +41,7 @@ This name can also be used as a user defined macro to set this option globally, 
 ----
 {@define {%evaluateLoopLimit%}=60}
 ----
-This option has two aliases {%evaluateLoopLimitAliases%}.
+This option has aliases {%evaluateLoopLimitAliases%}.
 The name or the aliases can be used between `[` and `]` characters following the `\*` character, for example:
 
 [source]
@@ -65,18 +65,18 @@ will result
 
 [sidebar]
 __If you see an error message in the output above, it means that Jamal was running in an environment that had no JShell.
-For example the Asciidoctor IntelliJ plugin runs in a JRE that does not support starting the JShell engine.__
+For example, the Asciidoctor IntelliJ plugin runs in a JRE that does not support starting the JShell engine.__
 
-NOTE: Versions prior 1.5.0 used the Nashorn JavaScript interpreter as the default interpreter.
+NOTE: Versions prior {%RELEASE:SZEGED%} used the Nashorn JavaScript interpreter as the default interpreter.
 
-Starting with version 1.5.0 Jamal introduces the `!` modification character.
+Starting with version {%RELEASE:SZEGED%} Jamal introduces the `!` modification character.
 When this character is used in front of a macro, then the result of the macro will be evaluated like it was surrounded with `{#eval ... }`.
 This can be used in the case of user-defined macros as well as in the case of built-in macros.
-Note, that in the case of user-defined macros the result of the macro will be evaluated by default.
+Note that in the case of user-defined macros, the result of the macro will be evaluated by default.
 Using the `!` in front of a user-defined macro will repeat the evaluation.
 You can use more than one `!` characters in front of a macro.
 The macro result will be evaluated so many times as many `!` characters there are.
-In case of a user-defined macro the "so many times" should be interpreted as one, by default plus N times.
+In the case of a user-defined macro the "so many times" should be interpreted as one, by default plus N times.
 
 For example:
 

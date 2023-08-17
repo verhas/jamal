@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%MACRO name="ident" since=1.0.0%}
+{%MACRO name="ident" since={%RELEASE:ZURICH%}%}
 
 `ident` is an extremely simple macro.
 It just returns the body of the macro.
@@ -85,7 +85,7 @@ Be aware that the macro `ident` consumes the white spaces (including newlines) t
 It is to avoid extra white spaces when tabulation gives better readability.
 If you need the whitespace (e.g., newline) in the output, you can put those in the `ident` macro.
 
-Starting with Jamal 1.5.0, there is a built-in language syntax similar to `ident`.
+Starting with Jamal {%RELEASE:SZEGED%}, there is a built-in language syntax similar to `ident`.
 If a macro is preceded with a `++`++` backtick character, then the macro will not be evaluated.
 The above example, which is
 

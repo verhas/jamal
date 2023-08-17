@@ -135,3 +135,5 @@ The typical use of this possibility is to set the option `failfast`.
 This option alters the error processing, and it is more "bound" to the execution than to the document.
 It may be a better option to include it in an environment variable, or system property than in the document itself.
 Both approaches work.
+
+

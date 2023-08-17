@@ -9,18 +9,6 @@ since version `2.1.0`
 This macro will execute its input if there was an error caught by a link:try[`try`] macro.
 The macro `catch` can be used to handle errors in a macro file.
 
-The general rule is that you should use the `catch` macro in the same scope where the link:try[`try`] macro is used.
-However, it can be used a bit more complexly than that.
-Here are the detailed rules:
-
-* A `catch` executes the content if there was an error executing a link:try[`try`] on the same level as the catch, and it was not caught by another `catch` on the same level.
-
-* A `catch` executes the content is there was an error executing a link:try[`try`] on a higher level, and it was not caught by another `catch` on the same or higher level as the `catch` is.
-
-* When a `catch` executes the content the error is cleared on the level where the `catch` is.
-
-* Errors are automatically cleared when a scope closes.
-
 .Jamal source
 [source]
 ----
@@ -36,8 +24,20 @@ there was an error
 ----
 
 
-[NOTE]
-====
+The general rule is that you should use the `catch` macro in the same scope where the link:try[`try`] macro is used.
+However, it can also be used a bit more complex than that.
+Here are the detailed rules:
+
+* A `catch` executes the content if there was an error executing the last link:try[`try`] on the same level as the catch, and it was not caught yet by another `catch` on the same level.
+
+* A `catch` executes the content is there was an error executing a link:try[`try`] on a higher level, and it was not caught by another `catch` on the same or higher level as the `catch` is and there was no non-failing link:try[`try`].
+
+* A `catch` executing clears the error on the level where the `catch` is.
+
+* Errors are automatically cleared when a scope closes.
+
+These rules may seem complex, but it is easy to understand if you know how the error handling is implemented.
+
 The error handling is implemented using the option `try$caught$error`.
 When an error is detected by a link:try[`try`] macro, this option is set.
 If there is no error, then the option is reset, hence clearing any error on the same level.
@@ -48,7 +48,9 @@ The name of the option was chosen to be user-friendly so that you can
 
 * export it to higher scopes,
 * query its value, presumably in an `if` macro,
-* set and reset it using the <<options,`options`>> macro.
+* set and reset it using the link:options[`options`] macro.
+
+Here is a simple example that uses this option by the name directly:
 
 .Jamal source
 [source]
@@ -68,5 +70,3 @@ still there is an error, not cleared
 error cleared
 ----
 
-
-====
