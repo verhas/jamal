@@ -1,14 +1,12 @@
+s////
+////
 = Resource Files and Web Resources
 
-
-
-= Resource Files and Web Resources
-
-Jamal macros can reference files.
+Macros can reference files.
 For example, the core macros link:macros/include.adoc[`include`] and link:macros/import.adoc[`import`] use file names and include and import those files.
 A file name can be absolute file name and relative to the file in which it is used.
 The file names should be denoted the usual UNIX way, using forwards slash characters `/` as directory separators.
-This is supported by the different Windows operating systems as well, as Linux and MacOS.
+This is supported by the different Windows operating systems as well, as Linux and macOS.
 
 In addition to the local files, Jamal can also load files from other locations.
 To do that, Jamal implements an extensible mechanism.
@@ -192,6 +190,3 @@ Jamal can read files from JAR files.
 In this case the prefix has to be `jar:file:` and the file name has to be the name of the JAR file followed by the name of the file inside the JAR file following a `!` character.
 
 For more information read the link:../jamal-jar-input/README.adoc[documentation] of the module implementing the `jar:file:` prefix.
-
-
-

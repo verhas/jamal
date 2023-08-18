@@ -1,18 +1,17 @@
-= Resource Files and Web Resources
-
+s////
 {%@import res:jamal.jim%}\
 {%@snip:xml pom=../pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
-{%@import ../RELEASES.jim%}
+{%@import ../RELEASES.jim%}\
 {%@import ../environmentvariables.jim%}\
-
+////
 = Resource Files and Web Resources
 
-Jamal macros can reference files.
+Macros can reference files.
 For example, the core macros link:macros/include.adoc[`include`] and link:macros/import.adoc[`import`] use file names and include and import those files.
 A file name can be absolute file name and relative to the file in which it is used.
 The file names should be denoted the usual UNIX way, using forwards slash characters `/` as directory separators.
-This is supported by the different Windows operating systems as well, as Linux and MacOS.
+This is supported by the different Windows operating systems as well, as Linux and macOS.
 
 In addition to the local files, Jamal can also load files from other locations.
 To do that, Jamal implements an extensible mechanism.
