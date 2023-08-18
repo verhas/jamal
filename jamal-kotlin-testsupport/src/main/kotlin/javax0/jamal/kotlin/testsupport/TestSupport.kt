@@ -1,4 +1,4 @@
-package javax0.jamal.kotlin
+package javax0.jamal.kotlin.testsupport
 
 import javax0.jamal.api.Processor
 import javax0.jamal.builtins.Macro

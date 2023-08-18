@@ -1,5 +1,7 @@
 package javax0.jamal.kotlin
 
+import javax0.jamal.kotlin.testsupport.Position
+import javax0.jamal.kotlin.testsupport.testTheInput
 import org.junit.jupiter.api.Test
 
 class TestHelloKotlin {
