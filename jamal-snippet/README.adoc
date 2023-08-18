@@ -23,7 +23,7 @@ For example, if you want to use the latest version of Jamal Snippet macro as a d
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.4.0</version>
 </dependency>
 ----
 
@@ -137,7 +137,7 @@ If you are using Jamal programmatically or from Maven then the dependency you ha
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.4.0</version>
 </dependency>
 ----
 
@@ -477,7 +477,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.3.1-SNAPSHOT</version>
+<version>2.4.0</version>
 ...
 ----
 
@@ -516,7 +516,7 @@ The result is:
 [source]
 ----
 ...
-<version>2.3.1-SNAPSHOT</version>
+<version>2.4.0</version>
 ...
 ----
 
@@ -594,7 +594,7 @@ The following example demonstrates how the result of the processing can be modif
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.4.0</version>
 </dependency>}
 <plugins><plugin>
 <artifactId>my-imaginary</artifactId>
@@ -624,7 +624,7 @@ will result
     <dependency>
       <groupId>com.javax0.jamal</groupId>
       <artifactId>jamal-snippet</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.4.0</version>
     </dependency>
   </dependencies>
   <pluginManagement/>
@@ -3218,7 +3218,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.3.1-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.4.0</version>
 </project>
 }
 ----
@@ -3234,7 +3234,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.4.0</version>
 </project>
 ----
 
@@ -3249,7 +3249,7 @@ For example,
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>{@define tabsize=0}
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.3.1-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.4.0</version>
 </project>
 }
 ----
@@ -3265,7 +3265,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.3.1-SNAPSHOT</version>
+<version>2.4.0</version>
 </project>
 ----
 
@@ -3286,7 +3286,7 @@ The previous example that we used before can also be formulated this way.
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion><name>jamal snippet</name><packaging>jar</packaging>
-<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.3.1-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId><artifactId>jamal-snippet</artifactId><version>2.4.0</version>
 </project>
 ----
 
@@ -3303,7 +3303,7 @@ It will result in the same output as before:
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.4.0</version>
 </project>
 ----
 
@@ -3326,7 +3326,7 @@ project>
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.3.1-SNAPSHOT
+  version>2.4.0
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3346,7 +3346,7 @@ will result
     <packaging>jar</packaging>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-snippet</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.4.0</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
@@ -3378,7 +3378,7 @@ For example:
   packaging>jar
   groupId>com.javax0.jamal
   artifactId>jamal-snippet
-  version>2.3.1-SNAPSHOT
+  version>2.4.0
   parent>
     groupId>com.javax0.jamal
     artifactId>jamal-parent
@@ -3396,7 +3396,7 @@ will result
 <packaging>jar</packaging>
 <groupId>com.javax0.jamal</groupId>
 <artifactId>jamal-snippet</artifactId>
-<version>2.3.1-SNAPSHOT</version>
+<version>2.4.0</version>
 <parent>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-parent</artifactId>
@@ -3428,7 +3428,7 @@ will result in the output
 
 [source]
 ----
-2023-08-17 16:54:31
+2023-08-18 11:36:41
 ----
 
 
