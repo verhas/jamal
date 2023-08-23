@@ -36,6 +36,9 @@ TOC
 |===
 
 
+NOTE: This is the latest development documentation.
+This is a SNAPSHOT version (2.4.1-SNAPSHOT).
+ If you want to read the latest release, please visit link:{jamal_home}/tree/v2.3.0[Jamal 2.3.0]
 
 
 
@@ -70,7 +73,7 @@ Having that you can issue the command:
 
 [source]
 ----
-mvn com.javax0.jamal:jamal-maven-plugin:2.4.0:jamal
+mvn com.javax0.jamal:jamal-maven-plugin:2.4.1-SNAPSHOT:jamal
 ----
 
 if you have a `pom.xml` file in your directory.
@@ -93,7 +96,7 @@ Create a `.mvn` directory with an `extensions.xml` file in your project root.
     <extension>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-maven-extension</artifactId>
-        <version>2.4.0</version>
+        <version>2.4.1-SNAPSHOT</version>
     </extension>
 </extensions>
 ---

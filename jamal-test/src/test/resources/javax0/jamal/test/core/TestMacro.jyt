@@ -22,4 +22,7 @@ A macro can result an ordinary user defined macro globally explicitly defined a 
   Input: "{@define a=yayy}{#ident {@define a=value of a}{@macro [global type=\"user defined\"]a}}"
   Output: "yayy"
 
+A macro can result an ordinary user defined macro globally explicitly defined a userdefined:
+  Input: "{@define a=yayy}{#ident {@define a=value of a}{@macro [global userdefined]a}}"
+  Output: "yayy"
 

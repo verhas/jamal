@@ -4,6 +4,6 @@
 
 
 How to use Jamal in five minutes.
-This is a sample readme of the version `2.4.0`.
+This is a sample readme of the version `2.4.1-SNAPSHOT`.
 
 

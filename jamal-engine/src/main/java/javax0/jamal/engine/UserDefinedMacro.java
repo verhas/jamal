@@ -45,8 +45,10 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
                 xtended = true;
                 break;
             case "defaults":
-                final var str = object.toString();
-                defaults.putAll(convertToMap("true".equals(str) ? "" : str));
+                if (!(object instanceof Map)) {
+                    throw new IllegalArgumentException("The value of the 'defaults' configuration key must be a map.");
+                }
+                defaults.putAll((Map) object);
                 break;
             case "pure":
                 pure = true;
@@ -66,9 +68,9 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
      */
     private Map<String, String> convertToMap(String s) {
         final var map = new HashMap<String, String>();
-        final var keys = new HashSet<String>(Arrays.asList(argumentHandler.parameters));
+        final var keys = new HashSet<>(Arrays.asList(argumentHandler.parameters));
         for (final var line : s.split("\n")) {
-            if (line.trim().length() == 0) {
+            if (line.trim().isEmpty()) {
                 continue;
             }
             final var parts = line.split("=", 2);
@@ -192,7 +194,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
                 segment.split(argumentHandler.parameters[i]);
             }
         }
-        if (root.content(null).length() == 0) {
+        if (root.content(null).isEmpty()) {
             return root.next();
         } else {
             return root;

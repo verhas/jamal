@@ -586,7 +586,7 @@ public class Processor implements javax0.jamal.api.Processor {
      */
     private String[] getParameters(Position ref, Input input, Evaluable macro, String id) throws BadSyntax {
         final String[] parameters;
-        if (input.length() > 0) {
+        if (!input.isEmpty()) {
             final var separator = input.charAt(0);
             final var expectedArgNr = macro.expectedNumberOfArguments();
             if (expectedArgNr == 0 || expectedArgNr == 1) {// note, that -1 means no limit

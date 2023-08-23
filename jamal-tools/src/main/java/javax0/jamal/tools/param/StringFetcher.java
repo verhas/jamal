@@ -20,8 +20,12 @@ public class StringFetcher {
     }
 
     public static String getString(Input input, Character terminal) throws BadSyntax {
-        if (input.length() == 0 || input.charAt(0) != ENCLOSING_CH) {
-            return getUnquotedString(input, terminal);
+        return getString(input, terminal, true);
+    }
+
+    public static String getString(Input input, Character terminal, boolean commaAllowed) throws BadSyntax {
+        if (input.isEmpty() || input.charAt(0) != ENCLOSING_CH) {
+            return getUnquotedString(input, terminal, commaAllowed);
         }
         BadSyntax.when(input.length() < 2, "String has to be at least two characters long.");
         if (input.length() >= MLSD_LENGTH && input.subSequence(0, MLSD_LENGTH).equals(MULTI_LINE_STRING_DELIMITER)) {
@@ -31,9 +35,15 @@ public class StringFetcher {
         }
     }
 
-    private static String getUnquotedString(Input input, Character terminal) throws BadSyntax {
+    private static String getUnquotedString(Input input, Character terminal, boolean commaAllowed) throws BadSyntax {
         final var output = new StringBuilder();
-        while (input.length() > 0 && !Character.isWhitespace(input.charAt(0)) && !Objects.equals(input.charAt(0), terminal)) {
+        while (true) {
+            if (input.isEmpty() || Character.isWhitespace(input.charAt(0)) || Objects.equals(input.charAt(0), terminal)) {
+                break;
+            }
+            if( !commaAllowed && input.charAt(0) == ','){
+                break;
+            }
             BadSyntax.when(input.charAt(0) == '=', "Unquoted parameters must not contain '='. It is dangerous.");
             output.append(input.charAt(0));
             InputHandler.skip(input, 1);

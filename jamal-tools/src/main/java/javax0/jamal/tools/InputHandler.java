@@ -1,12 +1,11 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.*;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.SpecialCharacters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
@@ -355,11 +354,11 @@ public class InputHandler {
      */
     public static String fetch2EOL(Input input) {
         final var sb = new StringBuilder();
-        while (input.length() > 0 && input.charAt(0) != '\n') {
+        while (!input.isEmpty() && input.charAt(0) != '\n') {
             sb.append(input.charAt(0));
             input.delete(1);
         }
-        if (input.length() > 0 && input.charAt(0) == '\n') {
+        if (!input.isEmpty() && input.charAt(0) == '\n') {
             input.delete(1);
         }
         return sb.toString();
@@ -394,13 +393,30 @@ public class InputHandler {
             var param = input.substring(0, closingParen);
             skip(input, closingParen + 1);
             skipWhiteSpaces(input);
-            if (param.length() == 0) {
+            if (param.isEmpty()) {
                 return new String[0];
             } else {
                 return ensure(Arrays.stream(param.split(",")).map(String::trim).toArray(String[]::new), ref);
             }
         } else {
             return new String[0];
+        }
+    }
+
+    public static LinkedHashMap<String,String> getParametersWithDefaults(Processor processor, Input input, String id) throws BadSyntax {
+        final var ref = input.getPosition();
+        if (firstCharIs(input, '(')) {
+            final var parser = Params.using(processor,true);
+            final var map = new LinkedHashMap<String,String>();
+            parser.parse(input, map::put, k -> true);
+            if (map.isEmpty()) {
+                return new LinkedHashMap<>();
+            } else {
+                ensure(map.keySet().stream().map(String::trim).toArray(String[]::new), ref);
+                return map;
+            }
+        } else {
+            return new LinkedHashMap<>();
         }
     }
 
@@ -424,7 +440,7 @@ public class InputHandler {
     }
 
     public static boolean isNumber(final String id) {
-        if (id.length() == 0) {
+        if (id.isEmpty()) {
             return false;
         }
         for (int i = id.charAt(0) == '-' || id.charAt(0) == '+' ? 1 : 0; i < id.length(); i++) {
@@ -447,14 +463,14 @@ public class InputHandler {
      * @return the parameters themselves
      * @throws BadSyntaxAt is any of the parameter names contain another parameter name.
      */
-    public static String[] ensure(String[] parameters, Position ref) throws BadSyntaxAt {
+    public static String[] ensure(final String[] parameters, Position ref) throws BadSyntaxAt {
         final var exceptionParameters = new ArrayList<String>();
         for (int i = 0; i < parameters.length; i++) {
-            BadSyntaxAt.when(requireNonNull(parameters[i]).length() == 0, "User defined macro argument cannot be empty string.", ref);
+            BadSyntaxAt.when(requireNonNull(parameters[i]).isEmpty(), "User defined macro argument cannot be empty string.", ref);
             for (int j = 0; j < parameters.length; j++) {
                 if (i != j) {
                     if (parameters[i].contains(parameters[j])) {
-                        exceptionParameters.add("" + i + ". parameter '" + parameters[i] + "' contains the "
+                        exceptionParameters.add(i + ". parameter '" + parameters[i] + "' contains the "
                                 + j + ". parameter '" + parameters[j] + "'");
                     }
                 }

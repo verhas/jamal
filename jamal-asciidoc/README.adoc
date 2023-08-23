@@ -5,7 +5,7 @@ Use Jamal in IntelliJ or AsciidocFX interactively with AsciiDoc utilizing the As
 
 image:images/splash.png[width=100%]
 
-This document is the readme file for the Jamal Asciidoc extension version `2.4.0`.
+This document is the readme file for the Jamal Asciidoc extension version `2.4.1-SNAPSHOT`.
 
 == Introduction
 
@@ -37,19 +37,19 @@ It works only with the Asciidoc plugin in IntelliJ.
 ====
 
 
-To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip`.
+To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip`.
 
 You can download this file from the central Maven repository using the URLs:
 
 
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.asc``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.md5``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.sha1``]
 
 The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files are standard checksum files to check the integrity of the archive.
 
@@ -103,13 +103,13 @@ It is added only to the text for the display.
 The installation for AsciidocFX needs to copy all the JAR files downloadable from Maven central
 
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.asc``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.md5``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip.sha1``]
 
 into the `lib` directory of your AsciidocFX installation.
 It is 

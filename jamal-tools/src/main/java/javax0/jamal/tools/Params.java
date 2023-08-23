@@ -80,7 +80,7 @@ public class Params {
          *
          * @param processor the processor instance
          * @param macroName the name of the macro that is being processed.
-         *                  It is exclusively used for error reporting purposes.
+         *                  It is exclusively used for error reporting.
          */
         void inject(Processor processor, String macroName);
 
@@ -200,6 +200,8 @@ public class Params {
     // in some cases this is '(', for core macros it is '['
     private Character start = null;
 
+    private final boolean defaultList;
+
     public static class BadKey extends BadSyntax {
         final String key;
 
@@ -210,7 +212,12 @@ public class Params {
     }
 
     private Params(Processor processor) {
+        this(processor, false);
+    }
+
+    private Params(Processor processor, final boolean defaultList) {
         this.processor = processor;
+        this.defaultList = defaultList;
     }
 
     /**
@@ -223,9 +230,13 @@ public class Params {
         return new Params(processor);
     }
 
+    public static Params using(Processor processor, final boolean defaultList) {
+        return new Params(processor, defaultList);
+    }
+
     /**
      * This method identifies the macro that uses the services of the class. Only the name of the macro is used for
-     * error reporting purposes. The format of the use of this method is usually {@code from(this)}.
+     * error reporting. Use this method as {@code from(this)}.
      *
      * @param macro the macro that is the caller object of this method
      * @return {@code this} for chaining
@@ -489,11 +500,11 @@ public class Params {
 
         while ((terminal == null || !firstCharIs(input, terminal))) {
             if (terminal == null) {
-                if (input.length() == 0) {
+                if (input.isEmpty()) {
                     break;
                 }
             } else {
-                if (terminal == '\n' && input.length() == 0) {
+                if (terminal == '\n' && input.isEmpty()) {
                     break;
                 }
                 if (firstCharIs(input, terminal) && (terminal != '\n' || !needClosingParen)) {
@@ -501,10 +512,12 @@ public class Params {
                 }
             }
             if (needClosingParen && firstCharIs(input, ')')) {
-                skip(input, 1);
-                while ((terminal == null || !firstCharIs(input, terminal)) && input.length() > 0) {
-                    BadSyntax.when(!Character.isWhitespace(input.charAt(0)), String.format("The macro '%s' has parameter content following the closing ')'.", macroName));
+                if (!defaultList) {
                     skip(input, 1);
+                    while ((terminal == null || !firstCharIs(input, terminal)) && !input.isEmpty()) {
+                        BadSyntax.when(!Character.isWhitespace(input.charAt(0)), String.format("The macro '%s' has parameter content following the closing ')'.", macroName));
+                        skip(input, 1);
+                    }
                 }
                 needClosingParen = false; // not anymore
                 break;
@@ -519,12 +532,12 @@ public class Params {
             if (firstCharIs(input, '=')) {
                 skip(input, 1);
                 skipSpacesAndEscapedTerminal(input, terminal);
-                param = StringFetcher.getString(input, needClosingParen ? (Character) ')' : terminal);
+                param = StringFetcher.getString(input, needClosingParen ? (Character) ')' : terminal, !defaultList);
             } else {
-                param = "true";
+                param = defaultList ? "" : "true";
             }
             store.accept(id, param);
-            skipSpacesAndEscapedTerminal(input, needClosingParen ? (Character) ')' : terminal);
+            skipSeparatorChars(input, needClosingParen ? (Character) ')' : terminal);
         }
         BadSyntax.when(needClosingParen, String.format("The macro '%s' has parameters that starts with optional '(' but does not end with ')'.", macroName));
         skip(input, 1);
@@ -541,7 +554,7 @@ public class Params {
      * If the next character after all the skipped characters are {@code \} and {@code \n} (escaped new line) then
      * step over these and start the skipping again.
      * <p>
-     * Skipping a character means deleting it from the front of theinput.
+     * Skipping a character means deleting it from the front of the input.
      *
      * @param input   to input to delete the characters from
      * @param skipper the predicate deciding if a chavater is to be skipped or not
@@ -557,7 +570,32 @@ public class Params {
                 return;
             }
         }
+    }
 
+    private static void commaSkipper(Input input, Predicate<Input> skipper) throws BadSyntax {
+        boolean commaSkipped = false;
+        while (true) {
+            if (startsWith(input, ",") == 0) {
+                BadSyntax.when(commaSkipped, "Comma separated parameter list contains empty parameter.");
+                commaSkipped = true;
+                skip(input, 1);
+                continue;
+            }
+            if (skipper.test(input)) {
+                input.delete(1);
+                continue;
+            }
+            if (startsWith(input, "\\\n") != -1) {
+                skip(input, 2);
+                continue;
+            }
+            if( startsWith(input, ")") == 0){
+                BadSyntax.when(commaSkipped, "Trailing comma in parameter list is not allowed before the ')'");
+                return;
+            }
+            BadSyntax.when(!commaSkipped, "Comma is missing between parameters");
+            return;
+        }
     }
 
     /**
@@ -568,7 +606,15 @@ public class Params {
      * @param input the input that contains the next parameters with spaces optionally in front of them
      */
     private void skipSpacesAndEscapedTerminal(final Input input, final Character terminal) {
-        skipper(input, i -> i.length() > 0 && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), terminal));
+        skipper(input, i -> !i.isEmpty() && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), terminal));
+    }
+
+    private void skipSeparatorChars(final Input input, final Character terminal) throws BadSyntax {
+        if (defaultList) {
+            commaSkipper(input, i -> !i.isEmpty() && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), terminal));
+        } else {
+            skipSpacesAndEscapedTerminal(input, terminal);
+        }
     }
 
     /**
@@ -578,6 +624,6 @@ public class Params {
      * @param input that contains the parameters with spaces optionally in front of them
      */
     private void skipStartingSpacesAndEscapedTerminal(Input input) {
-        skipper(input, i -> i.length() > 0 && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), '\n'));
+        skipper(input, i -> !i.isEmpty() && Character.isWhitespace(i.charAt(0)) && !Objects.equals(i.charAt(0), '\n'));
     }
 }

@@ -6,10 +6,7 @@ For more about definition scopes and exporting, read the section about <<export,
 In that section we discuss the evaluation order of the macros in great detail.
 %}
 
-{%@define [defaults="""
-name=NAME OF THE MACRO
-since=VERSION SINCE WHICH THE MACRO IS AVAILABLE
-"""] MACRO(name,since)== `name`
+{%@define [named] MACRO(name="NAME OF THE MACRO",since="VERSION SINCE WHICH THE MACRO IS AVAILABLE")== `name`
 
 sinc{%@comment%}e version `since`
 %}

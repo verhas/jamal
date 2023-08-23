@@ -5,7 +5,7 @@ since version `1.12.3`
 
 
 
-This macro results and empty string and sends the input to the log output.
+This macro results sends the input to the log output.
 The macro has one paropt, `level` that may specify the logging level.
 
 The possible values for the level are given by the Java JDK logging levels.
@@ -40,3 +40,7 @@ The usage of the macro is, for example
 ----
 {@log [level=DEBUG]this is a debug message}
 ----
+
+The debugging level and output is controlled by the logging configuration of the JVM.
+
+The result of the macro is an empty string.

@@ -8,6 +8,8 @@ import javax0.jamal.tools.Throwing;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static javax0.jamal.api.SpecialCharacters.*;
 import static javax0.jamal.tools.InputHandler.*;
@@ -24,7 +26,7 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         final var globalParam = scanner.bool(null, "global");
         final var exportParam = scanner.bool(null, "export");
         final var javaDefined = scanner.str(null, "class");
-        final var defaults = scanner.str(null, "default", "defaults", "named");
+        final var defaults = scanner.bool(null, "named");
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = scanner.bool("RestrictedDefineParameters");
         scanner.done();
@@ -66,8 +68,15 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         }
         skipWhiteSpaces(input);
         BadSyntax.when(id.endsWith(":") && !firstCharIs(input, '('), "The () in define is not optional when the macro name ends with ':'.");
-
-        final String[] params = getParameters(input, id);
+        final String[] params;
+        final Map<String,String> paramDefaults;
+        if (defaults.isPresent()) {
+            paramDefaults = getParametersWithDefaults(processor,input, id);
+            params = paramDefaults.keySet().toArray(String[]::new);
+        } else {
+            paramDefaults = new LinkedHashMap<>();
+            params = getParameters(input, id);
+        }
 
         if (IdOnly.is()) {
             BadSyntax.when(!Arrays.stream(params).allMatch(InputHandler::isIdentifier), "The parameters of the define must be identifiers.");
@@ -81,7 +90,7 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         skip(input, 1);
         final Identified macro;
         if (javaDefined.isPresent()) {
-            macro = createFromClass(processor, javaDefined.get(),convertGlobal(id), input, verbatim, tailParams, params);
+            macro = createFromClass(processor, javaDefined.get(), convertGlobal(id), input, verbatim, tailParams, params);
         } else {
             macro = processor.newUserDefinedMacro(convertGlobal(id), input.toString(), verbatim, tailParams, params);
         }
@@ -98,13 +107,12 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
             if (pure || pureParam.is()) {
                 configurable.configure("pure", true);
             }
-            if(defaults.isPresent()){
+            if (defaults.is()) {
                 try {
-                    ;
                     configurable.configure("xtended", true);
-                    configurable.configure("defaults", defaults.get());
-                }catch(Exception e){
-                    throw new BadSyntax("The defaults parameter is invalid.",e);
+                    configurable.configure("defaults", paramDefaults);
+                } catch (Exception e) {
+                    throw new BadSyntax("The defaults parameter is invalid.", e);
                 }
             }
         }

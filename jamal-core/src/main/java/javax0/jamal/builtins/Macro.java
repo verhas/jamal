@@ -1,12 +1,6 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.UserDefinedMacro;
-import javax0.jamal.tools.Params;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.StringParameter;
 
@@ -14,13 +8,15 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static javax0.jamal.tools.InputHandler.convertGlobal;
-import static javax0.jamal.tools.InputHandler.isGlobalMacro;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Scanner.Core {
 
     public static final String USERDEFINED = "userdefined";
+
+    private enum MacroType {
+        userdefined, builtin
+    }
 
     @Override
     public String evaluate(final Input input, final Processor processor) throws BadSyntax {
@@ -28,10 +24,16 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
         final var type = scanner.str(null, "type").defaultValue(USERDEFINED);
         final var alias = scanner.str(null, "alias").defaultValue("");
         final var global = scanner.bool(null, "global");
+        final var btype = scanner.enumeration(MacroType.class).defaultValue(MacroType.userdefined);
         scanner.done();
-        skipWhiteSpaces(input);
+        BadSyntax.when(btype.isPresent() && type.isPresent(), "You cannot specify both 'type' and 'builtin' or 'userdefined' in the same macro definition");
 
-        final var macroType = type.get().toLowerCase();
+        if (type.isPresent()) {
+            processor.logger().log(System.Logger.Level.WARNING, input.getPosition(), "The 'type' parameter of the macro is deprecated. Use 'builtin' or 'userdefined' instead.");
+        }
+
+        skipWhiteSpaces(input);
+        final var macroType = btype.isPresent() ? btype.get(MacroType.class).name() : type.get().toLowerCase();
         switch (macroType) {
             case USERDEFINED:
             case "user defined":
@@ -74,7 +76,7 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
         boolean export = isExportable(alias);
         final String name = calculateAlias(export, processor, alias);
         if (macro == null) {
-            // just return the name, which is undefined and the use will throw an exception or call the defaulr macro
+            // just return the name, which is undefined, and the use will throw an exception or call the default macro
             return name;
         } else if (macro instanceof javax0.jamal.api.Macro) {
             if (isGlobalMacro(name)) {
@@ -116,7 +118,7 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
     }
 
     private boolean isExportable(final StringParameter alias) throws BadSyntax {
-        return alias.get().length() > 0 && !alias.get().equals("true");
+        return !alias.get().isEmpty() && !alias.get().equals("true");
     }
 
     private String calculateAlias(final boolean export, final Processor processor, final StringParameter alias) throws BadSyntax {

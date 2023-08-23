@@ -3,21 +3,23 @@
 
 
 == Syntax
-The macro `for` can be used to repeat the same text many times.
-This macro has two forms.
+The macro `for` can be used to create repetitive text.
+It has two forms.
 The syntax of the macro is either
 
 {%sample/
-{@for variable in (a,b,c,d)= content to be repeated
+{@for variable in (a,b,c,...,d)= content to be repeated
 containing variable}
 %}
 
 or
 
 {%sample/
-{@for (v1,v2,v3) in (a|w|1,b|q|2,c|r|5,d|t|9)= content to be repeated
+{@for (v1,v2,...,vN) in (a|w|...|1,b|q|...|2,c|r|...|5,d|t|...|9)= content to be repeated
 containing v1 v2 and v3}
 %}
+
+
 
 == History
 
@@ -29,9 +31,9 @@ containing v1 v2 and v3}
 
 == Description
 
-The `variable` or the multiple variables can be used in the content and will be replaced for each iteration with the respective element on the comma-separated list.
+The `variable` or the multiple variables can be used in the __content__ and will be replaced for each iteration with the respective element on the comma-separated list.
 When there are multiple variables, then the sub-list of the values is separated using the `|` character.
-Both the command and the `|` character can be modified to use something else instead of these characters.
+Both the `,` and the `|` character can be modified to use something else instead of these characters.
 
 The list of the values can also be separated by other strings.
 If the macro `$forsep` is defined, like in
@@ -51,10 +53,7 @@ Similarly, if the macro `$forsubsep` is defined, like in
 
 then the values for the different variables will be separated by a semicolon.
 
-Note that the macros `$forsep` and `$forsubsep` can also be defined inside the `for` macro body in case the macro is used with the `#` character at the start.
-In this case the definition of these macros is limited to the evaluation of this very `for` macro.
-
-Starting with version 1.7.3 you can also define these options locally using the format
+Starting with version {%RELEASE:SZIKSZO%} you can also define these options locally using the format
 
 {%sample/
 {@for [options] x in (a,b,c)=...}
@@ -62,31 +61,29 @@ Starting with version 1.7.3 you can also define these options locally using the 
 
 where the options can be
 
-* `$forsep`, `separator` to specify the separator regular expression
+* `$forsep`, `separator` or `sep` to specify the separator regular expression
 * `$forsubsep`, `subseparator` to specify the sub separator regular expression
-* `trimForValues`, `trim` to trim off the sapces from the values
+* `trimForValues`, `trim` to trim off the spaces from the values
 * `skipForEmpty`, `skipEmpty` to skip empty parameter list (see below)
 * `lenient` for lenient operation (see below)
 * `evaluateValueList`, or `evalist` to instruct the loop that the list of the values between the `(` and `)` has to be evaluated.
+Not the variables, only the values.
 
 For example, the macros:
 
 {%sample/
-{#for $a in (a:b:c)={@define $forsep=:}a is $a
-}{?$forsep}
+{@for [sep=:]$a in (a:b:c)=a is $a
+}
 %}
 
 will result
 
 {%output%}
 
-In this case the value of the macro `$forsep` is effective inside the `for`, but it is undefined outside.
 Another example:
 
 {%sample/
-{#for {@options trimForValues}{@define $forsep=:} $a in ( a : b :c )=a is $a
-}
-{@for [trim separator=":"] $a in ( a : b :c )=a is $a
+{@for [trim sep=":"] $a in ( a : b :c )=a is $a
 }
 %}
 
@@ -94,54 +91,29 @@ will result the same output:
 
 {%output%}
 
-[NOTE]
-====
-Using the `#` character in front of a built-in macro in the first version instead of `@` will make the content evaluated before the macro.
-The content evaluates in a freshly opened scope, which is usually closed before the built-in macro evaluation.
-It means that any local definitions inside the macro use go out of scope when the built-in macro evaluates.
-
-However, some built-in macros, like `for`, rely on the macros' value defined inside.
-We call these built-in macros "inner scope dependent" macros because they depend on the inner scope.
-If you look at the Java implementation of such macros, you can see that they implement the interface `InnerScopeDependent`.
-If a built-in macro is inner scope dependent, it evaluates while the internal scope is still open.
-In this case, the scope closes after the built-in macro evaluation finishes.
-
-If the built-in macro is surrounded with an `{@eval ...}` macro, that is already evaluated in the outer scope.
-Using the `{#!macro ...}` way, where the `!` character directs Jamal to execute the macro's result is the same as using the `{@eval...}` surrounding the macro.
-The "post evaluation" runs in the outer scope.
-
-The macro `for` is inner scope dependent.
-
-Also, the second example shows that the same effect can also be reached using the macro options.
-Macro options are always between `[` and `]` characters in case of the core built-in macros.
-The `(` and `)` characters are used in case of extension package macros.
-Some extensions package macros use the first line of the macro content to fetch parameters.
-Note, however, that the use of the `(` and `)` characters to enclose options is only a convention.
-A 3rd party macro can decide to use any character pair as they like.
-====
-
 The number of the actual values separated by `|` character should be the same as the number of the variables in the for loop.
 If this is not the case, then the macro evaluation will throw a bad syntax exception.
 This can be suppressed with the option `lenient`.
 If the option `lenient` is used, then extra values are ignored and missing values are presented as empty strings.
 Note that this same option controls how user defined macro arguments are paired to the parameters.
 
-Starting with version 1.5.3 you can fine tune how a `for` loop treats the empty elements.
+Starting with version {%RELEASE:BUELACH%} you can fine-tune how a `for` loop treats the empty elements.
 By default, the empty elements in a for loop value list represent empty strings.
 The loop body will be rendered with these values replacing the loop variable with an empty string.
-In a situation like that the use of the option `lenient` is also a must if the loop has multiple variables.
-In that case the empty value will be split into a one, empty string value for the empty value in the loop and this has to be assigned to the multipled loop variables.
+In a situation like that the use of the option `lenient` is also necessary if the loop has multiple variables.
+In that case, and empty value cannot be split into multiple strings.
+It is one empty string, and if there are multiple variables, then an error will occur unless the option or parop lenient is used.
 For example
 
 {%sample/
 {#for (k,z) in ()=wukz}
 %}
 
-will not work, because the empty string cannot be split into two strings (it results one empty string when it is split).
-On the other hand the following code will work
+it will not work because the empty string cannot be split into two strings.
+It results in one empty string when it is split.
+On the other hand, the following code will work
 
 {%sample/
-{#for (k,z) in ()=wukz{@options lenient}}
 {@for [lenient] (k,z) in ()=wukz}
 %}
 
@@ -150,29 +122,25 @@ and it will result
 {%output%}
 
 as both `k` and `z` are empty strings.
-Here, you can see two versions.
-The first one is declaring the `lenient` option inside the `for` macro, the second one is using the option, which is more coincise and shorter.
 
 This default behaviour can be altered using the option `skipForEmpty`.
 If this option is used the `for` loop will skip the empty values.
 The previous example with this option:
 
 {%sample/
-{#for (k,z) in ()=wukz{@options skipForEmpty}}\
 {@for [skipEmpty] (k,z) in ()=wukz}\
 %}
 
 will evaluate to an empty string.
 Also note that in this case there is no need to use the option `lenient`.
-That is because the empty value is skipped and there is no issue splitting it up into a less number of values than the number of the loop variables.
+That is because the empty value is skipped and there is no issue splitting it up into a lesser number of values than the number of the loop variables.
 
-The example above contains one loop value and that loop value is an empty string.
-There can be more than one empty values in a for loop and empty and non-empty values can be mixed.
+The example above contains one loop value, and that loop value is an empty string.
+There can be multiple empty values in a for loop and empty and non-empty values can be mixed.
 The option `skipForEmpty` and the alias `skipEmpty` works in any of those cases.
 For example:
 
 {%sample/
-{#for k in (,)=wuk{@options skipForEmpty}}\
 {@for [skipEmpty] k in (,)=wuk}
 %}
 
@@ -188,7 +156,8 @@ will result
 
 Sometimes the values for the `for` loop come from some macro.
 In that case the `for` macro should start with the `#` character, otherwise the macro will not be evaluated to the list of values.
-For example: {%#block[] {%sample/{@undefine x}{@undefine y}{@undefine z}%}{%output%}%}
+For example: {%#block[] make sure that x, y, and z are undefined before we start the next sample
+{%sample/{@undefine x}{@undefine y}{@undefine z}%}{%output%}%}
 
 {%sample/
 {@define list=x,y,z}{@for z in ({list})={@define z=zz}}{?x}{?y}{?z}
@@ -215,7 +184,7 @@ The reason is that the content of the `for` macro is evaluated before executing 
 That way the macro reference `{list}` will become `x,y,z`, but the same time the part, which is after the `=` is also evaluated.
 The evaluation will define the macro `z` to be `zz`, but this macro is within the scope of the `for` macro.
 As soon as the `for` macro execution is finished the definition of `z` is lost.
-What we want is to protect the body of the `for` macro from evaluation before `for` the macro is executed and we want it to execute after.
+What we want is to protect the body of the `for` macro from evaluation before `for` the macro is executed, and we want it to execute after.
 
 {%sample/
 {@define list=x,y,z}{!#for z in ({list})={@ident {@define z=zz}}}{?x}{?y}{?z}
@@ -225,8 +194,8 @@ will result
 
 {%output%}
 
-The macro `{@ident ...}` is evaluated and its result is the content of the macro and it is not evaluated further before the evaluation of the macro `for`.
-The macro `for` gets evaluated and, then the output is evaluated because the macro is preceeded with the back-tick character, which is a shorthand for the core built-in macro `eval`.
+The macro `{@ident ...}` is evaluated, and its result is the content of the macro, and it is not evaluated further before the evaluation of the macro `for`.
+The macro `for` gets evaluated and, then the output is evaluated because the macro is preceeded with the `!` character, which is a shorthand for the core built-in macro `eval`.
 This evaluation defines `x`, `y` and `z`.
 
 Because the case that we want to evaluate the list part of the `for` loop but not the body part is so common there is an option that helps with this.
@@ -244,7 +213,7 @@ We still need the `!` character in front of the `for` but we could get rid of th
 
 [NOTE]
 ====
-The use of `evalist` and using `#` along with `ident` is not exactly the same.
+The use of `evalist` and using `pass:[#]` along with `ident` is not exactly the same.
 Using `#` will evaluate the part not protected by `ident` before the `for` macro evaluates its input.
 The option `evalist` tells the macro to evaluate the string it has already found that time between the opening `(` and closing `)`.
 

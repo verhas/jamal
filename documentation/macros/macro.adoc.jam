@@ -1,15 +1,21 @@
 {%@import macrodoc.jim%}
-{%MACRO name="macro" since=1.11.0%}
+{%MACRO name="macro" since={%RELEASE:ZOLLIKOFEN%}%}
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=3c341784%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=6be590ac%}
 
-The macro named `macro` is a special one that is needed only in rare cases.
+Using this built-in macro, you can use user-defined macros which have arbitrary names.
+These macros may be created by other macros other than using the built-in macro `define`.
+
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
-A hypothetical library, built-in macro package may import macros from a property file, where the property names contain `.` dots.
-These names are not permitted in Jamal.
-The implementation, then either provides extra built-in macros to access the values or converts the names to conforming ones.
-The first approach loses the aim of the pure import.
-The second approach forces the users to remember the transformations, and it may be a source of name collisions.
+A hypothetical library may import macros from a property file.
+The property names can contain `.` dots.
+Such names are not permitted in Jamal.
+The implementation, then either provides extra built-in macros, like the snippet handling, or it may convert the names to Jamal conforming ones.
+The first approach loses the aim of the pure import and makes sense when the access built-in macros, like `snip` has valuable extra features.
+
+NOTE: `snip` is not a core macro, it is in the snippet package.
+
+The second approach forces the users to remember the transformations, and it may also be a source of name collisions.
 
 The solution is the use of the macro `macro`, which, in some sense, is the mixture of the two approaches.
 The syntax of the macro is
@@ -32,7 +38,11 @@ For example
 %}
 
 will evaluate the macro `my.weird.macro` with the arguments `1` and `2` and `3`.
-When the parameter `alias` is used the macro `macro` does not evaluate the macro, but instead it creates an alias to the macro.
+
+What really happens here is that `macro` sees the option `alias` and it creates an alias for the macro `my.weird.macro`.
+It also returns this alias, and then it is used as a macro name.
+
+When the parameter `alias` is used the macro `macro` does not evaluate the macro.
 The alias is also returned and can be used as in the example.
 If the automatically generated alias is `_1`, then the above example will evaluate through the intermediary step:
 
@@ -43,10 +53,11 @@ If the automatically generated alias is `_1`, then the above example will evalua
 and the macro at this point will be the same user defined macro, which is named `my.weird.macro`.
 The automatically generated macro has the format `_n` where `nnn` is a number usually starting with 1 and increasing by one for each macro.
 If it happens to be defined, then the counting skips the number.
-This alias has a scope inside the user defined macro use, and it is not exported from there.
 
-If you want to use the alias many times you can select a name yourself.
-In this case the format is:
+In the example above, this alias has a scope inside the user defined macro use, and it is not exported from there.
+
+If you want to use the alias multiple times, you can select a name yourself.
+In this case, the format is:
 
 {%sample/
 {#block {@macro [alias=my_weird_macro]my.weird.macro}}
@@ -58,8 +69,8 @@ After this you can write
 {my_weird_macro /1/2/3}
 %}
 
-When the name of the alias is given and not generated the name is exported and can be used later.
-Note that the macro `#block` is used to omit the output of the macro, which is the alias itself in this case.
+When the name of the alias is given, the name is exported and can be used later.
+Note that the macro {%$ block%} is used to omit the output of the macro, which is the alias itself in this case.
 
 The macro `macro` does not care if the original macro is defined in a higher scope.
 The only thing that matters is that the macro is defined.
@@ -67,19 +78,23 @@ The only thing that matters is that the macro is defined.
 You can force the macro `macro` to search for the original macro only in the global level.
 To do that use the option `global`.
 This option, however, does not alter the scope of the new aliases in case an alias is created.
-The alias will be created in the current scope for generated aliases, or one level higher (exported) for specified aliases.
+The alias will still be created in the current scope for generated aliases, or one level higher (exported) for specified aliases.
 If the specified alias contains one or more `:` characters, then the macro will be defined with the alias in the global scope.
-This is the same behaviour that the macro `define` follows.
+This is the same behaviour that the macro {%$ define%} follows.
 
 Note that there is no restriction on the alias.
 You can use any string as alias, however, there is no point to use and alias that you cannot use later as a Jamal compliant macro name.
 
-When `macro` tries to evaluate an undefined original macro, it will revert to the `default` in case of a user-defined macro, or will result an error if the macro is built-in.
+When `macro` tries to evaluate an undefined original macro, it will revert to the `default`. in case of a user-defined macro, or will result an error if the macro is built-in.
 
 You can use this macro to create aliases for standard macros with proper names.
 It is not a requirement to alias a macro that has a non-identifier string as a name.
 
 The macro `macro` can invoke weirdly named built-in macros directly or create aliases for them.
-To do that, the parameter `type` has to be set to `builtin`, `built-in`, or `built in`.
+To do that, the parop `builtin` has to be used.
 The behavior will be the same as for user-defined macros.
-If you want to emphasize that you use the macro for user-defined macros, you can set the parameter `type` to `userdefined`, `user-defined`, or `user defined`.
+If you want to emphasize that you use the macro for user-defined macros, you specify `userdefined`.
+
+{%@require < 3.0.0%}{%@comment remove any reference to type after it was removed in the code in release 3.0.0%}
+NOTE: The parop `type` with string parameters is supported for compatibility reasons only and is deprecated.
+It will be removed in release 3.0.0

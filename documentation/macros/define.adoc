@@ -1068,20 +1068,16 @@ This option can be used together with the name containing `:`.
 
 == Default Parameters
 
-The option `default` can be used to define default values for the arguments.
+The option `named` can be used to create a user-defined macro that ues named parameters.
 When this option is used, the macro invocation has a different syntax.
-In this case, the parameters must be named in arbitrary order just like the parops for the built-in macros.
+In this case, the parameters are given with the names in a similar syntax to the parops of the built-in macros.
 
 For example:
 
 .Jamal source
 [source]
 ----
-{@define [defaults="""
-a=1
-b=2
-c=3
-"""] Z(a,b,c)=a b c}{Z a=4 c=5}
+{@define [named] Z(a=1,b=2,c=3)=a b c}{Z a=4 c=5}
 ----
 
 will result in
@@ -1095,32 +1091,11 @@ will result in
 
 The parameter option parsing, as described in the document link:../PAROPS.adoc[Parameter Options], is used to fetch the values of the parameters.
 The default values are used only if the parameter is not provided.
-The format for the default value is a multi-line string with the format:
 
-.Jamal source
-[source]
-----
-name1=value1
-name2=value2
-name3=value3
-...
-nameN=valueN
-----
-
-Each line can define a default value for a parameter.
-It is an error to specify the same parameter name more than once.
-It is also an error to specify a string that is not a parameter name.
-
-The values for the default values are somewhat restricted, because they cannot be multi-line strings.
-This is usually not needed for this type of macro.
-A possible workaround is to define a global macro with the content and then use that macro as the default value.
-It will be evaluated following the macro evaluation unless the macro is also declared as, or used verbatim.
-
-The macros defined using the `default` option can not be serialized.
+The macros defined using the `named` option can not be serialized.
 It means that they cannot be used, for example, with the snippet library `reference` macro.
 
-The syntax and use of default parameters is experimental as of the release 2.4.0 and it may change in the future.
-The change may also break backward compatibility.
+NOTE: The syntax and use of default parameters was experimental in the release 2.4.0 and it changed.
 
 == Special User Defined Macros
 

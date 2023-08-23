@@ -1,49 +1,62 @@
-Define an extended macro without default parameters:
-  Input: |-
-    {@define [named]w(a,b,c)=.a b c.}{w}
-    {w a=XXX}
-    {w b=XXX}
-    {w c=XXX}
-    {w a=XXX b=YYY c=ZZZ}
-  Output: |-
-    .  .
-    .XXX  .
-    . XXX .
-    .  XXX.
-    .XXX YYY ZZZ.
+Success Cases:
+  Define an extended macro without default parameters:
+    Input: |-
+      {@define [named]w(a,b,c)=.a b c.}{w}
+      {w a=XXX}
+      {w b=XXX}
+      {w c=XXX}
+      {w a=XXX b=YYY c=ZZZ}
+    Output: |-
+      .  .
+      .XXX  .
+      . XXX .
+      .  XXX.
+      .XXX YYY ZZZ.
 
-Define an extended macro with default parameters:
-  Input: |-
-    {@define [defaults="""
-    a=AAA
-    b=BBB
-    c=CCC
-    """]w(a,b,c)=a b c}{w}
-    {w a=XXX}
-    {w b=XXX}
-    {w c=XXX}
-    {w a=XXX b=YYY c=ZZZ}
-  Output: |-
-    AAA BBB CCC
-    XXX BBB CCC
-    AAA XXX CCC
-    AAA BBB XXX
-    XXX YYY ZZZ
-Define an extended macro with wrong default parameters:
-  Input: |-
-    {@define [defaults="""
-    a=1
-    c=2
-    d=3
-    """]w(a,b,c)=.a b c.}
-  Throws: |-
-    Default parameter 'd' is not defined in the parameter list.
-Define an extended macro with duplicated default parameters:
-  Input: |-
-    {@define [defaults="""
-    a=1
-    c=2
-    a=3
-    """]w(a,b,c)=.a b c.}
-  Throws: |-
-    Default parameter 'a' is defined more than once.
+  Define an extended macro with default parameters:
+    Input: |-
+      {@define [named]w(a=AAA,b=BBB,c=CCC)=a b c}{w}
+      {w a=XXX}
+      {w b=XXX}
+      {w c=XXX}
+      {w a=XXX b=YYY c=ZZZ}
+    Output: |-
+      AAA BBB CCC
+      XXX BBB CCC
+      AAA XXX CCC
+      AAA BBB XXX
+      XXX YYY ZZZ
+  Define an extended macro with default parameters multiple lines:
+    Input: |-
+      {@define [named]w(a=AAA,
+                        b=BBB,
+                        c=CCC)=a b c}{w}
+      {w a=XXX}
+      {w b=XXX}
+      {w c=XXX}
+      {w a=XXX b=YYY c=ZZZ}
+    Output: |-
+      AAA BBB CCC
+      XXX BBB CCC
+      AAA XXX CCC
+      AAA BBB XXX
+      XXX YYY ZZZ
+Error Cases:
+  Comma is missing between the parameters:
+    Input: |-
+      {@define [named]w(a=AAA,b=BBB c=CCC)=a b c}{w}
+    Throws: Comma is missing between parameters
+  There are double commas between the parameters:
+    Input: |-
+      {@define [named]w(a=AAA,b=BBB , , c=CCC)=a b c}{w}
+    Throws: Comma separated parameter list contains empty parameter\.
+
+  Duplicated name in the case of named parameters:
+      Input: |-
+        {@define [named]w(a=AAA,b=BBB ,aa=CCC)=a b c}{w}
+      Throws: User defined macro parameter name should not be a substring of another parameter.*
+
+  Comma after the last parameter:
+    Input: |-
+      {@define [named]w(a=AAA,b=BBB ,a=CCC,)=a b c}{w}
+    Throws: Trailing comma in parameter list is not allowed before the '\)'
