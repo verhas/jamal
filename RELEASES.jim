@@ -32,29 +32,29 @@ my parents were there once
 
 The first "next" (non-retrospect) release is named after the city where I lived in most of the my life.
 
-{@define RELEASE:BUDAPEST=2.0.0}
+{@define ! RELEASE:BUDAPEST=2.0.0}
 
 Csepel is part of Budapest since January 1, 1950.
 Before that it was a separate town.
 It is district XXI now.
 
-{@define RELEASE:CSEPEL=2.0.1}
+{@define ! RELEASE:CSEPEL=2.0.1}
 
 District XXIII is Soroksar.
 
-{@define RELEASE:SOROKSAR=2.0.2}
+{@define ! RELEASE:SOROKSAR=2.0.2}
 
-{@define RELEASE:BERLIN=2.1.0}
+{@define ! RELEASE:BERLIN=2.1.0}
 
-{@define RELEASE:MELBOURNE=2.2.0}
+{@define ! RELEASE:MELBOURNE=2.2.0}
 
 Is a large city in Brazil.
-{@define RELEASE:MANAUS=2.3.0}
+{@define ! RELEASE:MANAUS=2.3.0}
 
 Izmir is a Turkish city, famous for its film festival.
 I was lucky to meet Roger Worrod who was frequent visitor of the festival.
 I have never been there.
-{@define RELEASE:IZMIR=2.4.0}
+{@define ! RELEASE:IZMIR=2.4.0}
 
 a town very north in Russia
-{@define RELEASE:ROGACHEVO=2.4.1-SNAPSHOT}
+{@define ! RELEASE:ROGACHEVO=2.4.1-SNAPSHOT}
