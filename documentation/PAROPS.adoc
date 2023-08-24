@@ -118,7 +118,7 @@ As we have seen, the `include` macro with the parops
 uses the `[` and `]` characters.
 
 The built-in core macros use these separator characters.
-Currently 11 built-in core macros have parops.
+Currently 12 built-in core macros have parops.
 
 The class `Scanner` provides the tools to ease parop parsing.
 

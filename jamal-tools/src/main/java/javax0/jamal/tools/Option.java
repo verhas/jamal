@@ -1,8 +1,14 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Evaluable;
 import javax0.jamal.api.Identified;
 import javax0.jamal.api.ObjectHolder;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
 /**
  * Options are stored as user defined macros. Note that the macro storage the processor manages allows anything
@@ -13,6 +19,9 @@ import javax0.jamal.api.ObjectHolder;
 public class Option implements Evaluable, ObjectHolder<Boolean> {
     private final String name;
     private boolean value;
+
+    private final Deque<Boolean> history = new ArrayDeque<>();
+
     public Option(String name) {
         this.name = name;
     }
@@ -27,6 +36,14 @@ public class Option implements Evaluable, ObjectHolder<Boolean> {
         return value;
     }
 
+    public void push(final boolean value) {
+        history.push(this.value);
+        this.value = value;
+    }
+    public void pop() throws BadSyntax {
+        BadSyntax.when(history.isEmpty(), "Cannot pop from empty option stack for option '%s'", name);
+        this.value = history.pop();
+    }
     public void set(boolean value) {
         this.value = value;
     }

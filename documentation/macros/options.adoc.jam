@@ -7,12 +7,15 @@
   {@options o1  ~o2}
 
 The `options` macro can be used to alter the behavior of Jamal.
-The options can be listed `|` or space separated as an argument to the macro.
+The options can be listed `|` or space separated after the macro name `options`.
 Using the `~` character in front of the option name will switch off the option.
+
+You can also use the `option` (singular) alias, which makes sense when you set or reset only a single option.
 
 == History
 
-since 2.1.0 it is possible to query the values of options.
+* Since the release {%RELEASE:BERLIN%} it is possible to query the values of options.
+* Since the release {%RELEASE:ROGACHEVO%} options can be pushed and popped.
 
 == Description
 
@@ -25,7 +28,7 @@ For example the following macro sets three options:
 {@options lenient|failfast|mySpecialOption}
 %}
 
-The first one is used by many core macros not to raise an error if the number of parameters does not match the number of arguments.
+The first one is used by many core macros not to raise an error if the number of the parameters does not match the number of arguments.
 It is used by Jamal itself and by the `for` macro.
 The second will instruct the Jamal engine not to try to recover from errors.
 The third one is a custom option that can be used by any other macro.
@@ -76,10 +79,71 @@ It is possible to export the options to higher layers the same way as you can ex
 An option can be switched off using the `~` character in front of the options name.
 There can be no space between the `~` character and the name of the option.
 
-Similar to user defined macros, options containing a `:` are global.
+Similar to the user defined macros, options containing a `:` are global.
 You can define a global value for an option using the `:` prefix in front of the name of the option.
 This character will be removed from the name, the same way as it is removed from the name of global user defined macros.
 If the `:` is inside the name, then it remains part of the name, and it is not possible to have a local definition for the option.
+
+== Pushing and Popping options
+
+With the release {%RELEASE:ROGACHEVO%} it is possible to push and pop options.
+This is useful when you want to set an option for a short time without opening a new evaluation scope.
+The format of pushing new values for options is the same as setting except the parop `push` is used.
+
+  {@options [push] o1  ~o2}
+
+When you pop the old value you do not specify the value of the option, the names of the options are simply a list.
+Because of that it is an error to precede an option name with the `~` character when popping.
+
+  {@options [pop] o1 o2}
+
+It is an error popping an option that was not pushed before.
+The options keep their history in a boolean stack.
+Pushing and popping can be mixed with evaluation scopes keeping the following simple rules in mind:
+
+- Global options having `:` in their names are always updated in the top level scope and are not affected by the local scopes.
+
+. Setting and pushing a local option creates a new option instance if the option was not defined in the current scope.
+
+. When a new option instance is created in the current scope it inherits the value of the option from the parent scopes.
+This is an intermediary step before the set or push is executed and not visible from the outside.
+However, if the option was defined `true` then the saved value
+
+- If the option was defined in the same or in a higher scope, then the option is updated.
+
+The following example shows a complex use case that demonstrates the behavior of pushing and popping options mixed with different scopes.
+
+{%sample/
+{@option w}true:{w}
+{@option q}true:{q}
+{@option r}true:{r}
+{#ident {@undefine w}
+  {@option [push] ~w}false:{w} {@option [pop] w}false:{w}
+  {@option [push] ~q}false:{q} {@option [pop] q}true:{q}
+{@option [push]~r}\
+}\
+true:{w}
+true:{q}
+true:{r}
+%}
+
+will result in:
+
+{%output%}
+
+The option `w` and `q` are defined in the top level scope.
+When we open a new scope using the macro {%$ ident%} the option `w` is undefined in the new scope.
+Because of that the option `w` is created in the new scope.
+On the other hand the option `q` is defined in the top level scope, so it is not created in the new scope.
+When we redefined both of them using the push parop, the option `w` is created in the new scope, but the option `q` is updated in the top level scope.
+When we pop the option `w` it gets the default `false` value, but the option `q` is updated in the value inherited from the top level scope.
+When we leave the scope, both `q` and `w` has the same value as before.
+
+The definition of the option `r` demonstrates that the inner scope changes do not effect the value of the option in the outer scope.
+
+== Jamal Core Options
+
+In this section we list all the options which are currently used by the Jamal engine or the core macros.
 
 The options implemented currently:
 
@@ -94,62 +158,13 @@ Nothing will stop you to redefined the option in a local scope, but macro evalua
 The lenient mode also applies to the multi variable for loops.
 In lenient mode there may be more or less actual values than the number of loop variables.
 
-=== `omasalgotm` (since 1.2.0 < 1.10.0)
-
-Jamal 1.2.0 changed a lot from {%RELEASE:ZURICH%} in the way how macros are evaluated.
-The version 1.2.0 is safer and more flexible and is compatible with the older versions in most of the cases.
-There may be some cases when the macros are not compatible with the old version.
-In this case, it is recommended to alter the macros so that they do not rely on the old evaluation algorithm.
-In the meantime, it is possible to use the option `omasalgotm` to force Jamal to the old evaluation style.
-
-Version 1.10.0 and later versions do not implement this option.
-The code providing compatibility with the old evaluation style is not included in the distribution.
-
-=== `nl` (since 1.3.0)
-
-* 1.3.0 till 1.7.6 introduces the option `nl`.
-* 1.7.7 removes this option
-
-When this option is in effect, then all new-line characters are copied into the output.
-This was the default and non-changeable behavior prior to 1.3.0.
-
-In versions 1.3.0, and later, it is possible to escape a newline character that is following a macro closing string.
-For example, the macro `{@define z=1}` can be followed by a `\` character before the newline.
-That way `{@define z=1}\` will tell Jamal that the next newline character is not needed in the output.
-The backslash, the newline character following it and the spaces that may be between the two will be skipped.
-
-The `\` character has to follow the macro closing string immediately, spaces are not allowed.
-There can be spaces between the `\` character and the following new-line character.
-
-{%sample/
-{@define z=1}\n          <- new line will get into the output
-
-{@define z=1}\\n         <- the \ and new-line will be skipped, it does not get into the output
-
-{@define z=1}\ ... \n    <- there can be spaces between the \ and the \n, still the
-\ and new-line characters will be skipped
-
-{@define z=1} ... \\n    <- nothing is skipped, there are spaces before the \ character
-%}
-
-A backslash in any other places is just a character and will not escape a newline.
-This escaping works only following built-in and user defined macros.
-
-NOTE: Since this is a slight behavioral change in the input processing, therefore it may break some of the source files.
-We decided to change the default behavior because there is a little chance to have escaped new-line characters in existing `jam` files.
-On the other hand, we envision that with the introduction of this feature most of the Jamal source files will use this feature.
-We wanted to avoid starting every new Jamal source file with the `nl` option setting.
-
-With the release 1.7.7 this option is not available anymore.
-The default behavior, skipping new lines after a `\` character that follows a macro close string cannot be switched off.
-
-=== `{%@snip FAIL_FAST /":(.\w+)"/%}` (since 1.7.8)
+=== `{%@snip FAIL_FAST /":(.\w+)"/%}` (since {%RELEASE:CHICHAGO%})
 
 This option tells the Jamal processor to stop at the first error.
-With the version 1.7.8 and later, the Jamal processor does not stop the processing at the first syntax error.
+With the version {%RELEASE:CHICHAGO%} and later, the Jamal processor does not stop the processing at the first syntax error.
 This helps the discovery of more syntax errors in the input.
-Prior to 1.7.8, Jamal stopped at the first error.
+Prior to {%RELEASE:CHICHAGO%}, Jamal stopped at the first error.
 The user could fix the error, restart Jamal and repeat this process for each error one by one.
-The feature introduced in 1.7.8 tries to collect all the errors and displays them at the end of the processing as an aggregate error.
+The feature introduced in {%RELEASE:CHICHAGO%} tries to collect all the errors and displays them at the end of the processing as an aggregate error.
 
-Using this option, Jamal 1.7.8 and later revert to the old behavior.
+Using this option, Jamal {%RELEASE:CHICHAGO%} and later revert to the old behavior.

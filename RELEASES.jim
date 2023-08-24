@@ -22,6 +22,7 @@ You can find some bare release numbers in the documentation even though the exis
 {@define ! RELEASE:SZIKSZO=1.7.3}
 {@define ! RELEASE:LUZERN=1.7.4}
 {@define ! RELEASE:BASEL=1.7.6}
+{@define ! RELEASE:CHICHAGO=1.7.8}
 {@define ! RELEASE:OBERGLATT=1.9.0}
 {@define ! RELEASE:EMBRACH=1.9.1}
 {@define ! RELEASE:ZOLLIKOFEN=1.11.0}

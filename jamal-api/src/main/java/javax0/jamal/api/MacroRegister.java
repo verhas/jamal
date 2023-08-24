@@ -35,8 +35,8 @@ public interface MacroRegister extends Delimiters, Debuggable<Debuggable.MacroRe
     }
 
     /**
-     * Get a user defined macro from the currently active local (writable) scope. Used by the macro if to test that a
-     * macro is local.
+     * Get a user defined macro from the currently active local (writable) scope.
+     * Used to test that a macro is local.
      * <p>
      * The default implementation always returns empty.
      *

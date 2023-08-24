@@ -24,3 +24,30 @@ test options:
 
     apple is apple, pie is pie
 
+Options are local defined in local scope:
+    Input: |-
+      {@options a|b|c}{a} {b} {c} {#ident {@options ~a|~b} {a} {b} {c}} {a} {b} {c}
+    Output: |-
+      true true true false false true true true true
+
+Options can pop through local scope:
+    Input: |-
+      {@option q}{#ident {@option [push] ~q}{@option [pop] q}{q}}
+    Output: "true"
+
+Options can be pushed and popped:
+    Input: |-
+      {@options a|~b|c}{a} {b} {c} {@options [push] ~a|b}{a} {b} {c} {@options [pop] a b}{a} {b} {c}
+    Output: |-
+      true false true false true true true false true
+
+Cannot pop an option that was not pushed:
+  Input: |-
+    {@options a}{@options [pop] a}
+  Throws: "Cannot pop from empty option stack for option 'a'"
+
+Cannot pop an inverted option:
+  Input: |-
+    {@options [push] a}{@option [pop] ~a}
+  Throws: "Cannot pop negated options"
+

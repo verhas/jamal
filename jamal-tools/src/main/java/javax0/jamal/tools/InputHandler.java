@@ -215,7 +215,7 @@ public class InputHandler {
      * @return the converted identifier.
      */
     public static String convertGlobal(String id) {
-        if (id.length() > 0 && id.charAt(0) == SpecialCharacters.GLOBAL_NAME_CHAR) {
+        if (!id.isEmpty() && id.charAt(0) == SpecialCharacters.GLOBAL_NAME_CHAR) {
             return id.substring(1);
         } else {
             return id;
