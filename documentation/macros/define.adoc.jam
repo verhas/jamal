@@ -747,8 +747,9 @@ You can use this option instead of the `?` character.
 * `pure` says that the macro is pure.
 You can use this option instead of the `:=` assignment.
 
-* `fail`, `noRedefine`, `noRedef`, `failIfDefined` says that the macro should not be redefined.
+* `noRedefine`, `fail`, `noRedef`, `failIfDefined` says that the macro should not be redefined.
 You can use this option instead of the `!` character.
+The option `noRedefine` can also be used in the {%$ options%} macro setting this behaviour for all the macros defined after it within the scope of the option.
 
 * `tail` says that the macro parameters should be parsed splitting the input string into exactly the number of the arguments.
 If there are more separator characters, then those became part of the last argument.

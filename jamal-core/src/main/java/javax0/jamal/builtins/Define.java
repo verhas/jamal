@@ -21,7 +21,7 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         final var verbatimParam = scanner.bool(null, "verbatim");
         final var tailParamsParam = scanner.bool(null, "tail");
         final var optionalParam = scanner.bool(null, "optional", "ifNotDefined");
-        final var noRedefineParam = scanner.bool(null, "fail", "noRedefine", "noRedef", "failIfDefined");
+        final var noRedefineParam = scanner.bool("noRedefine", "fail", "noRedef", "failIfDefined");
         final var pureParam = scanner.bool(null, "pure");
         final var globalParam = scanner.bool(null, "global");
         final var exportParam = scanner.bool(null, "export");
@@ -69,9 +69,9 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         skipWhiteSpaces(input);
         BadSyntax.when(id.endsWith(":") && !firstCharIs(input, '('), "The () in define is not optional when the macro name ends with ':'.");
         final String[] params;
-        final Map<String,String> paramDefaults;
+        final Map<String, String> paramDefaults;
         if (defaults.isPresent()) {
-            paramDefaults = getParametersWithDefaults(processor,input, id);
+            paramDefaults = getParametersWithDefaults(processor, input, id);
             params = paramDefaults.keySet().toArray(String[]::new);
         } else {
             paramDefaults = new LinkedHashMap<>();

@@ -29,7 +29,7 @@ You can find some bare release numbers in the documentation even though the exis
 {@define ! RELEASE:LUGANO=1.12.3}
 
 my parents were there once
-{@define RELEASE:ULANBATOR=1.12.3}
+{@define ! RELEASE:ULANBATOR=1.12.3}
 
 The first "next" (non-retrospect) release is named after the city where I lived in most of the my life.
 
