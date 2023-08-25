@@ -8,7 +8,7 @@
   {!@sep!} restore the separator strings
 
 This macro can be used to change the macro opening and closing strings.
-In the examples, in this documentation, we use `{` as the opening string and `}` as the closing string.
+In the examples, we use `{` as the opening string and `}` as the closing string.
 Jamal itself does not impose any such predefined setting.
 The embedding systems, however, do.
 For example,

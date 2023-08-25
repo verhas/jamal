@@ -19,6 +19,7 @@ When you undefine a macro, it will be undefined only for the current scope and l
 Undefining a macro does not affect the definition of the macro at any higher level.
 
 You can undefine a macro on the global level the same way as you can define a macro on the global level.
+Using a name that has `:` in it.
 
 == Simple undefine on one single scope
 
@@ -31,7 +32,7 @@ You can undefine a macro on the global level the same way as you can define a ma
 Here we define the macro `fruit` to be `apple`, and we use it once.
 Following it, we undefine the macro.
 When we use it next time, it is undefined.
-The use of it is not an error because we use the `?` in front of the macro name, but the result is the empty.
+The use of it is not an error because we use the `?` in front of the macro name, but the result is empty.
 
 .output
 [source]
@@ -129,7 +130,7 @@ Jamal stores user-defined macros in maps.
 The key in the map is the id of the macro.
 The value in the map is a Java object that represents the user-defined macro.
 The maps are organized in a stack.
-The stack has one element for each scope.
+The stack has one map for each scope.
 When a new scope opens in the Jamal source, the stack grows.
 When a scope is closed, the stack shrinks.
 Searching for a macro starts in the map stored at the top of the stack (opened latest).
