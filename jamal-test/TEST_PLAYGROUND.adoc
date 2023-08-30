@@ -1,3 +1,5 @@
 
 
-**Fi**sh is a **Th**is is a **sa**mple **asc**iidoc **fi**le **th**at **refe**rences a **sa**mple **sn**ippet **fr**om **sn**ips.**s**h
+
+
+_T_his is a _sa_mple _asc_iidoc _f_ile _t_hat _refe_rences a _sa_mple _sn_ippet _f_rom _sn_ips._s_h

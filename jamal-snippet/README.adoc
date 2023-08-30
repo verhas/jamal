@@ -1578,7 +1578,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1354:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1353:30
 ----
 
 
@@ -3428,7 +3428,7 @@ will result in the output
 
 [source]
 ----
-2023-08-30 15:51:12
+2023-08-30 16:27:27
 ----
 
 
@@ -4681,7 +4681,7 @@ You can use this to make the text more appealing, or less readable used for obfu
 
 The decoration first splits the input into words.
 The words are separated by non-letter characters.
-The non-words and words, which are delimited by special characters seen below,() are not decorated.
+The non-words and words, which are delimited by special characters (see below), are not decorated.
 
 The decoration of the words is done in two steps.
 The first step splits the word into parts.
@@ -4722,18 +4722,18 @@ Note that the default value uses single characters, but you can use any string a
 
 * `decorator` defines one or more macros used as decorators.
 You can repeat this option multiple times.
-When a word is split into multiple parts, the first part will be decorated using the first decorator, the second part will be decorated using the second decorator, and so on.
+When a word is split into multiple parts, the first part will be decorated using the first decorator, the second part using the second, and so on.
 The default decorator puts a space after the decorated part.
 The words will be split into no more parts than the number of decorators plus one.
-In this case, the past part of the word will ot be decorated.
+In this case, the last part of the word will not be decorated.
 
 * `repeat` is a boolean parameter.
 If it is present on the macro splitting will be repeated as many times as needed.
-Without this option the words will be split into two parts at most, or to as many parts as the number of decorators.
+Without this option, the words will be split into two parts at most, or to as many parts as the number of decorators.
 
 * `decor$ratios` aliased as `ratios` defines the number of characters and the ratio of the characters used to split the word.
 The default value is `"pass:[- 0 1 1 2 0.4]"`.
-The first character is either '-' or '+' signalling if common words should be decorated or not.
+The first character is either '-' or '+' signaling if common words should be decorated or not.
 Common words can be defined in a <<dictionary,`dictionary`>> or are defined as             "the", "be", "to", "of", "and", "a", "an", "it", "at", "on", "he", "she", "but", "is", "my"
 .
 +

@@ -1,4 +1,7 @@
 {%@comment %}
 
-{%@bir Fish is a This is a sample asciidoc file that references a sample snippet from snips.sh%}
+{%@define d(x)=_x_%}
+{%@decorate (decorator=d)
+This is a sample asciidoc file that references a sample snippet from snips.sh
+%}
 
