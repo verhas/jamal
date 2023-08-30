@@ -136,6 +136,7 @@ Usage: jamal [options] input output
   -dry-dry-run               run dry, do not execute Jamal
   -dry-run                   run dry, do not write result to output file
   -docx                      treat the input as a docx, Microsoft Word file
+  -jamalize                  create the .asciidoctor/lib directory and download the Jamal Asciidoctor extension
 
 
 ----

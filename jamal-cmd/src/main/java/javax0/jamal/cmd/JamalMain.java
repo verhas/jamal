@@ -47,12 +47,21 @@ public class JamalMain {
             "dry-run",
             "docx",
             "help",
-            "shcnf"
+            "shcnf",
+            "jamalize"
             // end snippet
     );
 
     public static void main(String[] args) {
         final var params = CmdParser.parse(args, parameters);
+        if( params.get("jamalize").isPresent()){
+            try {
+                Jamalizer.jamalize(params.get("version").orElse(null));
+            } catch (Exception e) {
+                throw new RuntimeException("Cannot jamalize the project", e);
+            }
+            return;
+        }
         if (params.get("version").isPresent()) {
             System.out.printf("Jamal Version %s", javax0.jamal.api.Processor.jamalVersionString());
             return;
@@ -81,6 +90,7 @@ public class JamalMain {
                     "  -dry-dry-run               run dry, do not execute Jamal\n" +
                     "  -dry-run                   run dry, do not write result to output file\n" +
                     "  -docx                      treat the input as a docx, Microsoft Word file\n" +
+                    "  -jamalize                  create the .asciidoctor/lib directory and download the Jamal Asciidoctor extension\n" +
                     // end snippet
                     "");
             return;

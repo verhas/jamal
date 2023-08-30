@@ -88,6 +88,11 @@ See also the option `-from`.
 
 {%OPT shcnf%} show the configuration values from the `~/.jamal/settings.properties`, or from the `~/.jamal/settings.xml` file, whichever exists.
 
-{%#assert:intEquals/{%optionCounter last%}/{%NR_OF_OPTIONS%}/There is a discrepancy between the number of optioins documented ({%optionCounter last%}) and the number of options ({%NR_OF_OPTIONS%})%}
+
+{%OPT jamalize%}  will install Jamal in the `.asciidoctor/lib` directory.
+It version of the installed Jamal is the same as the one installing it.
+It can also install a different version if the option `-version=xxx` is specifying a specific versions.
+
+{%#assert:intEquals/{%optionCounter last%}/{%NR_OF_OPTIONS%}/There is a discrepancy between the number of options documented ({%optionCounter last%}) and the number of options ({%NR_OF_OPTIONS%})%}
 
 

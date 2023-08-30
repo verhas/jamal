@@ -29,11 +29,7 @@ public class Jamalizer extends AbstractMojo {
     public static final String LIB_DIR = "lib";
 
 
-    private final String version;
-
-    public Jamalizer() {
-        this.version = System.getProperty("jamal.version") == null ? Processor.jamalVersionString() : System.getProperty("jamal.version");
-    }
+    private static final String version = System.getProperty("jamal.version") == null ? Processor.jamalVersionString() : System.getProperty("jamal.version");
 
     void jamalize() throws IOException {
         LOG.info("Jamalizing the project using the version {} of Jamal", version);

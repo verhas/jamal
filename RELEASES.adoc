@@ -6,10 +6,16 @@
 
 
 
+== https://github.com/verhas/jamal/tree/2.4.1-SNAPSHOT[2.4.1-SNAPSHOT]
+
+* Macro `options` can also be used as `option` singular
+* Macro `options` has the parops `push` and `pop`
+* Macro `define` parot `noRedefine` can also be used as an option not only as a parop.
+
 == https://github.com/verhas/jamal/tree/2.4.0[2.4.0]
 
 * Kotlin support to make Macro creation in Kotlin a breeze.
-* Scan interface usage to parse parotps was eliminated
+* Scan interface usage to parse parops was eliminated
 * Word decorator macro was developed
 * counter macro was extended to support hierarchical counters and also other than latin characters
 * User-defined macro can have default parameters for better readability

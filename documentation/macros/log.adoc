@@ -6,7 +6,7 @@ since version `1.12.3`
 
 
 This macro results sends the input to the log output.
-The macro has one paropt, `level` that may specify the logging level.
+The macro has one parop, `level` that may specify the logging level.
 
 The possible values for the level are given by the Java JDK logging levels.
 These currently are:

@@ -30,9 +30,11 @@ public class CmdParser {
      * The keys, in case they are defined in the argument {@code parameters} are case-insensitive.
      *
      * @param parts      the line that contains the keys and also the arguments
-     * @param parameters a set of parameter names that are allowed on the line. In case this parameter is null any
-     *                   parameter is allowed. If this set is empty then no parameter is allowed. If the set contains
-     *                   the parameter names then the line may use any non-ambiguous prefix of any parameter and the
+     * @param parameters a set of parameter names that are allowed on the line.
+     *                   In case this parameter is null, any parameter is allowed.
+     *                   If this set is empty, then no parameter is allowed.
+     *                   If the set contains
+     *                   the parameter names, then the line may use any non-ambiguous prefix of any parameter, and the
      *                   parsed structure will contain the full parameter name even if the user typed a short prefix.
      * @return the parsed structure object that can later be queried
      * @throws IllegalArgumentException if the line is not properly formatted
