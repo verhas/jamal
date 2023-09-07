@@ -10,7 +10,8 @@
 
 * Macro `options` can also be used as `option` singular
 * Macro `options` has the parops `push` and `pop`
-* Macro `define` parot `noRedefine` can also be used as an option not only as a parop.
+* Macro `define` parop `noRedefine` can also be used as an option not only as a parop.
+* Macro `repeat` was developed in the snippet library.
 
 {%RELEASE IZMIR%}
 
@@ -376,7 +377,7 @@ This also means that options can individually be exported, and the whole options
 The macro `escape` was extended.
 Now if the macro name `escape` is followed by a `*` character then the escaping works multiple levels and is unescaped only when the whole processing is finished.
 There is a new option for the Maven plugin of Jama.
-If you specify the system option `jamalify` to be `true` then the plugin will create all the `.env` directories and `extensions.xml` files.
+If you specify the system option `jamalize` to be `true` then the plugin will create all the `.env` directories and `extensions.xml` files.
 There was a bug in the macro `plantuml` in release 1.9.0, which prevented its working when no folder was defined explicitly.
 
 {%RELEASE_N/1.9.0%}

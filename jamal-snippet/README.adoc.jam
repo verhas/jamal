@@ -82,6 +82,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<untab,`untab`>>
 .. <<range,`range`>>
 .. <<Base64,`base64`>>
+.. <<repeat,`repeat`>>
 .. <<rot13,`rot13`>>
 .. <<urlencode,`urlencode`>>
 .. <<pos,`pos`>>
@@ -1281,6 +1282,10 @@ which will result in
 {%#killLines pattern="source|----"
 {%output%}%}
 
+[[repeat]]
+=== {%chapter%}`repeat`
+
+{%@snip Repeat_documentation%}
 
 [[rot13]]
 === {%chapter%}`rot13`

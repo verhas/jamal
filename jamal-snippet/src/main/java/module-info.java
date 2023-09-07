@@ -112,6 +112,7 @@ module jamal.snippet {
             Download,
             UrlEncode,
             Decorate,
-            Dictionary
+            Dictionary,
+            Repeat
             ;
 }

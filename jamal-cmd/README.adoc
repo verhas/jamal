@@ -4,7 +4,9 @@
 
 
 
-With the command line version you can start Jamal to convert a single file or to traverse a directory structure.
+With the command line version of Jamal you can convert files processing the Jamal meta markup.
+You can process a single file or multiple files traversing in a directory structure.
+
 To convert a single file you simply have to specify the input and the output file:
 
 [source]
@@ -12,14 +14,21 @@ To convert a single file you simply have to specify the input and the output fil
 jamal input output 
 ----
 
-The conversion can automatically be done for multiple files in a directory structure.
-To do that, the program handles options.
+This is the simplest use of Jamal.
+When you want to convert multiple files from a single command need to specify options controlling the directory traversal.
+
 The options can be given in upper or lower case letters and have a `-` or `--` prefix.
 Options can be abbreviated to their shortest form, which is still unambiguous.
 
 When an option has a value, it has to follow the option name with `=`.
-In this case the `=` signals already that the parameter is an option.
-In this case the leading `-` or `--` is optional.
+For example
+
+    jamal -jamalize version=2.4.0
+    jamal -jamalize -version=2.4.0
+    jamal -jamalize --version=2.4.0
+
+These command lines do the same: install Jamal version 2.4.0 into the `.asciidoctor/lib` directory.
+When the option has a value the prefix `-` or `--` is optional.
 
 The options are the followings:
 
@@ -28,6 +37,7 @@ The options are the followings:
 * `-shcnf` prints out the configuration values, which are in the file `~/.jamal/settings.(properties|xml)`  file.
 
 * `-version`  displays the version of Jamal currently running and then the application quits.
+If this option is used together with the option -jamalize` it must have a value, which is the version of Jamal to be installed.
 
 * `-verbose`  instructs the application to print out the individual file conversions.
 This is useful, when the application is started to convert multiple files in a directory structure.
@@ -38,21 +48,26 @@ The default string is `{`.
 * `-close=<macroClose>`  can specify the macro closing string.
 The default string is `}`.
 
++
+Note that the different operating systems may interpret the characters you specify as a value.
+You should use the operating system specific escape sequences when needed.
+
 * `-depth=<depth>`  can specify the maximum traversal depth while scanning the directories for files to convert.
 The default value is `Integer.MAX_VALUE`, which is practically infinite.
 
 * `-debug=<debug>`  using this option you can specify the debugger connection string.
 It usually should be `http:8080`.
-Specifying the debugger connection string to start Jamal is debug mode, however, is not enough.
+Specifying the debugger connection string to start Jamal in debug mode may not be enough.
 A debugger implementation capable interpreting the connection string has to be on the classpath.
 The command line version does not do that by default.
-The recommended mode is to use `jbang` to start the application.
+The recommended mode is to use `jbang` to start the application, which puts the debugger on the classpath.
 
-* `-dry-run`  run dry, do not write result to output file.
-This can be interesting to see if the conversion is correct.
+* `-dry-run`  run dry, do not write the result to output file.
+Using this option you will see all the error messages that may be printed, but the output files will not be created or overwritten.
 
 * `-dry-dry-run`  run dry, do not execute Jamal.
-This can be interesting with the option `-verbose` to see the individual file conversions.
+Using this option you may see what commands would be executed, but the commands will not be executed.
+Use this option together with the option `-verbose`.
 
 The following options control the directory parsing.
 If any of the following options are used, Jamal will collect the files from the source directory and process them.

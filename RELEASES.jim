@@ -58,4 +58,4 @@ I have never been there.
 {@define ! RELEASE:IZMIR=2.4.0}
 
 a town very north in Russia
-{@define ! RELEASE:ROGACHEVO=2.4.1-SNAPSHOT}
+{@define ! RELEASE:ROGACHEVO=2.5.0}
