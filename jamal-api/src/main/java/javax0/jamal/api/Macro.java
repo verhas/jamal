@@ -42,6 +42,9 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
         return ServiceLoaded.getInstances(Macro.class);
     }
 
+    /**
+     * A global macro instance, that does nothing, however, you can still invoke the default methods on it.
+     */
     Macro FETCH = (Input in, Processor processor) -> null;
 
     /**

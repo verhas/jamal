@@ -39,8 +39,11 @@ public interface Processor extends AutoCloseable {
      */
     String process(final Input in) throws BadSyntax;
 
+    ASTNode getAST();
+
     /**
-     * A convenience method that executes the Jamal process for a String. It may be handy when the processor is
+     * A convenience method that executes the Jamal process for a String.
+     * It may be handy when the processor is
      * used to process some input that is not a file.
      *
      * @param in the input string

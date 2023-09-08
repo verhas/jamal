@@ -1,5 +1,6 @@
 package javax0.jamal.engine;
 
+import javax0.jamal.api.ASTNode.Type;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Closer;
@@ -26,7 +27,6 @@ import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
 import java.io.IOException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -35,12 +35,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.api.Macro.validIdChar;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
+import static javax0.jamal.tools.Input.makeGeneratedInput;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.fetchId;
 import static javax0.jamal.tools.InputHandler.firstCharIs;
@@ -72,6 +74,10 @@ public class Processor implements javax0.jamal.api.Processor {
     private final OptionsStore optionsStore;
     private boolean currentlyClosing = false;
 
+    private javax0.jamal.api.ASTNode rootAST;
+
+    private final boolean buildAST;
+
     @Override
     public Optional<Debugger> getDebugger() {
         return Optional.ofNullable(debugger);
@@ -83,6 +89,14 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private final BadSyntax initializationException;
+
+    @Override
+    public javax0.jamal.api.ASTNode getAST() {
+        if (rootAST instanceof ASTNode) {
+            ((ASTNode) rootAST).normalize();
+        }
+        return rootAST;
+    }
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -98,8 +112,10 @@ public class Processor implements javax0.jamal.api.Processor {
      * @param macroOpen  the macro opening string
      * @param macroClose the macro closing string
      * @param context    is the embedding context
+     * @param buildAST   if {@code true} then the AST will be built and can be retrieved using {@link #getAST()}
      */
-    public Processor(String macroOpen, String macroClose, Context context) {
+    public Processor(String macroOpen, String macroClose, Context context, boolean buildAST) {
+        this.buildAST = buildAST;
         this.context = context;
         optionsStore = OptionsStore.getInstance(this);
         EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_OPTIONS_ENV).ifPresent(s ->
@@ -107,20 +123,10 @@ public class Processor implements javax0.jamal.api.Processor {
         );
         Macro.getInstances().forEach(macros::define);
         debugger = DebuggerFactory.build(this);
-        URL url = null;
         try {
-            macros.separators("{", "}");
-            final var urls = getClass().getClassLoader().getResources(GLOBAL_INCLUDE_RESOURCE);
-            while (urls.hasMoreElements()) {
-                url = urls.nextElement();
-                try (final var is = url.openStream()) {
-                    final var in = makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8), new Position("res:" + GLOBAL_INCLUDE_RESOURCE, 1, 1));
-                    process(in);
-                }
-            }
+            loadJimFiles();
             macros.separators(macroOpen, macroClose);
         } catch (IOException | RuntimeException e) {
-            System.out.printf("Cannot load the library files from .jim: from %s%n", url);
             initializationException = new BadSyntax("", e);
             return;
         } catch (BadSyntax e) {
@@ -130,6 +136,45 @@ public class Processor implements javax0.jamal.api.Processor {
         initializationException = null;
     }
 
+    /**
+     * Load the {@code jim} files from the resources that are on the classpath.
+     * That way, the macro implementations can provide startup macros loaded by all the files that use that package.
+     *
+     * @throws BadSyntax   when there is some problem interpreting the jim files
+     * @throws IOException when there is some problem with the resources
+     */
+    private void loadJimFiles() throws BadSyntax, IOException {
+
+        macros.separators("{", "}");
+        final var urls = getClass().getClassLoader().getResources(GLOBAL_INCLUDE_RESOURCE);
+        while (urls.hasMoreElements()) {
+            final var url = urls.nextElement();
+            try (final var is = url.openStream()) {
+                final var in = makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8), new Position("res:" + GLOBAL_INCLUDE_RESOURCE, 1, 1));
+                process(in);
+            } catch (IOException | RuntimeException e) {
+                System.out.printf("Cannot load the library files from .jim: from %s%n", url);
+                throw new BadSyntax("", e);
+            }
+        }
+    }
+
+    /**
+     * Complimentary constructor that creates a processor so that it does not build the AST.
+     * <p>
+     * Other than the missing {@code buildAST} parameter this constructor is identical to the constructor with the
+     * full parameter list.
+     */
+    public Processor(String macroOpen, String macroClose, Context context) {
+        this(macroOpen, macroClose, context, false);
+    }
+
+    /**
+     * Complimentary constructor that creates a processor with null context and not building an AST.
+     *
+     * @param macroOpen
+     * @param macroClose
+     */
     public Processor(String macroOpen, String macroClose) {
         this(macroOpen, macroClose, null);
     }
@@ -185,6 +230,8 @@ public class Processor implements javax0.jamal.api.Processor {
         if (initializationException != null) {
             throw initializationException;
         }
+        rootAST = null;
+        final var root = buildAST ? new ASTNode(input, Type.list, input.toString()) : new ASTNode.Null(input, Type.list, input.toString());
         limiter.up();
         final var marker = macros.test();
         final var output = makeInput(input.getPosition());
@@ -192,11 +239,30 @@ public class Processor implements javax0.jamal.api.Processor {
             while (input.length() > 0) {
                 debugger.setBefore(limiter.get(), input);
                 if (input.indexOf(macros.open()) == 0) {
+                    final var lengthBefore = input.length();
+                    final var is = input.toString();
                     skip(input, macros.open());
+                    int spcBefore = input.length();
                     skipWhiteSpaces(input);
+                    int spcLength = spcBefore - input.length();
+                    final var nodeOpen = root.newNode(input, Type.open, () -> macros.open() + " ".repeat(spcLength));
                     processMacro(input, output);
+                    final var eaten = lengthBefore - input.length();
+                    final javax0.jamal.api.ASTNode node;
+                    if (rootAST == null) {
+                        node = root.newNode(input, Type.macro, () -> is.substring(0, eaten));
+                    } else {
+                        node = root.newNode(input, Type.macro, input.getPosition().file, rootAST.children(), () -> is.substring(0, eaten), nodeOpen);
+                        rootAST = null;
+                    }
+                    root.add(node);
                 } else {
+                    final var is = input.toString();
+                    final var lengthBefore = input.length();
                     processText(input, output);
+                    final var eaten = lengthBefore - input.length();
+                    final var node = new ASTNode(input, Type.text, is.substring(0, eaten));
+                    root.add(node);
                 }
                 debugger.setAfter(limiter.get(), output);
             }
@@ -213,6 +279,7 @@ public class Processor implements javax0.jamal.api.Processor {
         }
         traceRecordFactory.dump(null);
         macros.test(marker);
+        rootAST = root;
         return output.toString();
     }
 
@@ -270,11 +337,16 @@ public class Processor implements javax0.jamal.api.Processor {
 
             final var marker = new Marker(macroRaw, position);
             macros.push(marker);
-            final String macroProcessed;
+            final String macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
             final MacroQualifier qualifiers;
-            macroProcessed = getMacroPreProcessed(macroRaw, pos, tr);
             try {
-                qualifiers = new MacroQualifier(this, makeInput(macroProcessed, pos), prefix.postEvalCount);
+                final Input in;
+                if (Objects.equals(macroRaw, macroProcessed)) {
+                    in = makeInput(macroRaw, pos);
+                } else {
+                    in = makeGeneratedInput(macroProcessed, pos);
+                }
+                qualifiers = new MacroQualifier(this, in, prefix.postEvalCount);
             } catch (BadSyntax bs) {
                 pushBadSyntax(bs, pos);
                 return;
@@ -396,7 +468,7 @@ public class Processor implements javax0.jamal.api.Processor {
                         popper.run();
                         return rawResult;
                     } else {
-                        return evaluateUserDefinedMacro(rawResult, qualifier, popper, tr);
+                        return evaluateUserDefinedMacro(makeGeneratedInput(rawResult, qualifier.input.getPosition().fork()), qualifier, popper, tr);
                     }
                 }
             } catch (BadSyntaxAt bsAt) {
@@ -407,11 +479,15 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
-    private String evaluateUserDefinedMacro(String rawResult, MacroQualifier qualifier, Runnable popper, TraceRecord tr) throws BadSyntax {
-        String result = safeEvaluate(() -> process(makeInput(rawResult, qualifier.input.getPosition().fork())), popper);
+    private String evaluateUserDefinedMacro(Input rawResult, MacroQualifier qualifier, Runnable popper, TraceRecord tr) throws BadSyntax {
+        String result = safeEvaluate(() -> process(rawResult), popper);
         final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, qualifier.input.getPosition().fork());
         tr.appendAfterEvaluation(postEvaluated);
         return postEvaluated;
+    }
+
+    private String evaluateUserDefinedMacro(String rawResult, MacroQualifier qualifier, Runnable popper, TraceRecord tr) throws BadSyntax {
+        return evaluateUserDefinedMacro(makeInput(rawResult, qualifier.input.getPosition().fork()), qualifier, popper, tr);
     }
 
     private String evaluateBuiltInMacro(TraceRecord tr, MacroQualifier qualifier, Runnable popper) throws BadSyntax {
@@ -686,7 +762,7 @@ public class Processor implements javax0.jamal.api.Processor {
      * @throws BadSyntax if some macro cannot be evaluated
      */
     private Input evaluateMacroStart(Input input) throws BadSyntax {
-        final Input output = makeInput("", input.getPosition().fork());
+        final Input output = makeGeneratedInput("", input.getPosition().fork());
         if (input.indexOf(macros.open()) == 0) {
             while (input.length() > 0 && input.indexOf(macros.open()) == 0) {
                 skip(input, macros.open());
@@ -706,7 +782,7 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     /**
-     * Checks that the user defined macro name, which is the result of macro evaluation does not contain the separator
+     * Checks that the user defined macro name, which is the result of macro evaluation, does not contain the separator
      * character.
      *
      * @param output the output that we check

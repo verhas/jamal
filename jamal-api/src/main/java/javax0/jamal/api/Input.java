@@ -182,4 +182,8 @@ public interface Input extends CharSequence {
     default void deleteCharAt(int i) {
         getSB().deleteCharAt(i);
     }
+
+    default boolean generated(){
+        return false;
+    }
 }

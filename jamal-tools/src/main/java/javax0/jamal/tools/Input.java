@@ -9,6 +9,12 @@ public class Input implements javax0.jamal.api.Input {
     private final StringBuilder input;
     private final Position pos;
 
+    boolean generated = false;
+
+    @Override
+    public boolean generated() {
+        return generated;
+    }
 
     /**
      * Create an empty input, which may also serve as an output where the characters are collected.
@@ -64,7 +70,9 @@ public class Input implements javax0.jamal.api.Input {
      * @return the new input
      */
     public static Input makeInput() {
-        return new Input();
+        Input input = new Input();
+        input.generated = true;
+        return input;
     }
 
     /**
@@ -74,7 +82,9 @@ public class Input implements javax0.jamal.api.Input {
      * @return the new input
      */
     public static Input makeInput(Position parent) {
-        return new Input(parent);
+        Input input = new Input(parent);
+        input.generated = true;
+        return input;
     }
 
     /**
@@ -109,6 +119,12 @@ public class Input implements javax0.jamal.api.Input {
      */
     public static Input makeInput(String input, Position pos) {
         return new Input(input, pos);
+    }
+
+    public static Input makeGeneratedInput(String input, Position pos) {
+        Input in = new Input(input, pos);
+        in.generated = true;
+        return in;
     }
 
     /**
