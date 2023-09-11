@@ -1,6 +1,7 @@
 package javax0.jamal.engine;
 
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,21 +11,24 @@ import java.util.function.Supplier;
 public class ASTNode implements javax0.jamal.api.ASTNode {
 
     public static class Null extends ASTNode {
+        private static final Null instance = new Null();
+
+        Null() {
+        }
 
         @Override
         public Null newNode(Input input, Type type, Supplier<String> text) {
-            return new Null(null, Type.text, null);
+            return instance;
         }
 
-        public Null(Input input, Type type, String text) {
+        @Override
+        public Null newNode(Input input, Type type, Supplier<String> text, javax0.jamal.api.ASTNode nodeOpen) {
+            return instance;
         }
 
         @Override
         public Null newNode(Input input, Type type, String file, List<javax0.jamal.api.ASTNode> children, Supplier<String> text, javax0.jamal.api.ASTNode nodeOpen) {
-            return new Null(null, Type.text, null, null, null, null);
-        }
-
-        public Null(Input input, Type type, String file, List<javax0.jamal.api.ASTNode> children, String text, javax0.jamal.api.ASTNode nodeOpen) {
+            return instance;
         }
 
         @Override
@@ -50,21 +54,6 @@ public class ASTNode implements javax0.jamal.api.ASTNode {
         type = Type.text;
     }
 
-    @Override
-    public String text() {
-        return text;
-    }
-
-    @Override
-    public String file() {
-        return file;
-    }
-
-    @Override
-    public Input input() {
-        return input;
-    }
-
     final List<javax0.jamal.api.ASTNode> children = new ArrayList<>();
 
 
@@ -73,9 +62,27 @@ public class ASTNode implements javax0.jamal.api.ASTNode {
         return new ASTNode(input, type, text.get());
     }
 
+    public ASTNode newNode(Position pos, Type type, Supplier<String> text) {
+        return new ASTNode(pos, type, text.get());
+    }
+
+
+    @Override
+    public ASTNode newNode(Input input, Type type, Supplier<String> text, javax0.jamal.api.ASTNode nodeOpen) {
+        ASTNode node = new ASTNode(input, type, text.get());
+        node.add(nodeOpen);
+        return node;
+    }
+
     public ASTNode(Input input, Type type, String text) {
         this.input = input;
-        this.file = input.getReference();
+        this.file = input == null ? null : input.getReference();
+        this.type = type;
+        this.text = text;
+    }
+    public ASTNode(Position pos, Type type, String text) {
+        this.input = null;
+        this.file = pos.file;
         this.type = type;
         this.text = text;
     }
@@ -93,7 +100,7 @@ public class ASTNode implements javax0.jamal.api.ASTNode {
             this.children.add(nodeOpen);
         }
         for (final var child : children) {
-            if (!child.input().generated() && Objects.equals(child.file(), file)) {
+            if (!((ASTNode)child).input.generated() && Objects.equals(((ASTNode)child).file, file)) {
                 this.children.add(child);
             }
         }
@@ -129,15 +136,19 @@ public class ASTNode implements javax0.jamal.api.ASTNode {
     }
 
     private static void place(final ASTNode node, int pos, String text) {
-        node.start = text.indexOf(node.text(), pos);
+        node.start = text.indexOf(node.text, pos);
         if (node.start != -1) {
-            node.end = node.start + node.text().length();
+            node.end = node.start + node.text.length();
+            node.text = null; // can be collected
+            node.input = null; // can be collected
+            node.file = null; // can be collected
         } else {
-            throw new IllegalArgumentException("Cannot find node text '" + node.text() + "' in the input '" + text + "' from " + pos);
+            throw new IllegalArgumentException("Cannot find node text '" + node.text + "' in the input '" + text + "' from " + pos);
         }
         for (final var child : node.children) {
+            final var l = ((ASTNode)child).text.length();
             place((ASTNode) child, pos, text);
-            pos += child.text().length();
+            pos += l;
         }
     }
 
@@ -147,8 +158,9 @@ public class ASTNode implements javax0.jamal.api.ASTNode {
 
         int pos = 0;
         for (final var child : children) {
+            final var l = ((ASTNode)child).text.length();
             place((ASTNode) child, pos, text);
-            pos += child.text().length();
+            pos += l;
         }
 
     }

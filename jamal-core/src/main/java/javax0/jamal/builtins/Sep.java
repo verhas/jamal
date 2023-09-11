@@ -65,7 +65,7 @@ public class Sep implements Macro {
             }
         }
 
-        BadSyntax.when(openMacro.length() == 0 || closeMacro.length() == 0, "using macro 'sep' you cannot define zero length macro open and/or macro close strings");
+        BadSyntax.when(openMacro.isEmpty() || closeMacro.isEmpty(), "using macro 'sep' you cannot define zero length macro open and/or macro close strings");
         BadSyntax.when(openMacro.equals(closeMacro), "using macro 'sep' you cannot use the same string as macro opening and macro closing string");
         processor.separators(openMacro, closeMacro);
         return "";

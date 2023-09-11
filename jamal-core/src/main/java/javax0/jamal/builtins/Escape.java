@@ -176,7 +176,7 @@ public class Escape implements Macro {
             OptionsStore.getInstance(processor).addOptions(UNESCAPE_OPTION);
             final String result = processor.process(output);
             OptionsStore.getInstance(processor).addOptions("~" + UNESCAPE_OPTION);
-            if (processor.errors().size() > 0) {
+            if (!processor.errors().isEmpty()) {
                 processor.throwUp();
             }
             output.getSB().setLength(0);

@@ -11,9 +11,9 @@ public class DebugTool {
 
     public static void debugDoc(final String prefix, final XWPFInput input) {
         counter++;
-        StringBuilder sb = new StringBuilder("" + counter + ": ");
-        final var SP = input.paragraphs.get(input.paragraphStartIndex);
-        final var EP = input.paragraphs.get(input.paragraphEndIndex);
+        final var sb = new StringBuilder(counter + ": ");
+        final var SP = input.paragraphs.get(Math.min(input.paragraphStartIndex,input.paragraphs.size()-1));
+        final var EP = input.paragraphs.get(Math.min(input.paragraphEndIndex,input.paragraphs.size()-1));
         for (int i = 0; i < input.document.getBodyElements().size(); i++) {
             final var element = input.document.getBodyElements().get(i);
             final String paragraphSString = element == SP ? "S*" : "  ";
