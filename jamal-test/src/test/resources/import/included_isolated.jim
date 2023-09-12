@@ -1,0 +1,3 @@
+the macro MyMacro is defined in the importING file, but this file is imported isolated
+therefore tme macro Isolated will be empty
+{#define Isolated={?MyMacro}}

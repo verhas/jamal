@@ -9,7 +9,7 @@ since version `1.0.0`
 
 == Syntax
 
- {@import [top noCache] impoted_file.jim}
+ {@import [top noCache isolate] impoted_file.jim}
 
 `import` opens a file and reads the content of the file interpreting as Jamal macro file.
 Anything defined in that file will be imported into the scope of the current file.
@@ -42,6 +42,8 @@ Any file name starting with the letters `https:` are downloaded from the net.
 In addition to these Jamal comes with a JAR and a Maven reader that can read files from JAR files and from Maven repositories.
 In these cases the file name starts with `jar:file:` or `maven:`.
 
+
+== `top`
 
 The option `top` can be used along with the `import`.
 In this case, a relative file name is relative to the main file that imports the other files.
@@ -83,8 +85,16 @@ If the importing file uses the `{` and `}` characters, then the imported file wi
 In this case the `{@sep <>}` change the macro opening and closing strings and this change will be in effect in the importing file.
 ====
 
+== `noCache`
+
 Starting with version 1.11.0 the import macro has the option `noCache`.
 
 * `noCache` will ignore the cache when downloading resources using `https:` protocol.
 More precisely, it will download the resource from the network and update the cache file with the new content every time.
 
+== `isolate`
+
+The relase 2.5.0 introduced the option `isolate`.
+Using this option will process the imported file in a new processor.
+It means that the macros defined in the importING file will not be available in the importED file.
+The macros defined in the imported file will be available in the importing file after the import the same way as if the `isolate` option was not used.

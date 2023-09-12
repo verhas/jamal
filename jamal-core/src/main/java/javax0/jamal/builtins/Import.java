@@ -3,6 +3,7 @@ package javax0.jamal.builtins;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Marker;
 import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
@@ -76,6 +77,7 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         final var scanner = newScanner(input, processor);
         final var top = scanner.bool(null, "top");
         final var noCache = scanner.bool(null, "noCache");
+        final var isolate = scanner.bool(null, "isolate", "isolated");
         scanner.done();
         if (top.is()) {
             while (position.parent != null) {
@@ -90,15 +92,33 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
             final var in = getInput(fileName, position, noCache.is(), processor);
             final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
             final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
-            final var marker = processor.getRegister().test();
-            if (useDefaultSeparators) {
-                processor.separators(IMPORT_OPEN, IMPORT_CLOSE);
-                processor.process(in);
-                processor.separators(null, null);
+            final Processor myProcessor;
+            final Marker marker;
+            if (isolate.is()) {
+                myProcessor = processor.spawn();
+                marker = null;
             } else {
-                processor.process(in);
+                marker = processor.getRegister().test();
+                myProcessor = processor;
             }
-            processor.getRegister().test(marker);
+            if (useDefaultSeparators) {
+                myProcessor.separators(IMPORT_OPEN, IMPORT_CLOSE);
+                myProcessor.process(in);
+                myProcessor.separators(null, null);
+            } else {
+                myProcessor.process(in);
+            }
+            if (isolate.is()) {
+                final var topLevelScope = myProcessor.getRegister().debuggable().get().getScopes().get(0);
+                for (final var entry : topLevelScope.getUdMacros().entrySet()) {
+                    processor.getRegister().define(entry.getValue(), entry.getKey());
+                }
+                for (final var entry : topLevelScope.getMacros().entrySet()) {
+                    processor.getRegister().define(entry.getValue(), entry.getKey());
+                }
+            } else {
+                processor.getRegister().test(marker);
+            }
         }
         return "";
     }

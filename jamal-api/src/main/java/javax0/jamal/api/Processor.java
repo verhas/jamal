@@ -52,6 +52,19 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
+     * Create a new instance of the same processor.
+     * The new instance will have the same configuration as the original
+     * one, but it does not inherit the defined macros (only the separator and the context).
+     *
+     * The macro opening and closing strings will be the same as the spawning processor at the time of the spawning.
+     *
+     * @return the new processor instance
+     */
+    default Processor spawn() {
+        throw new IllegalArgumentException("The method spawn() is not supported by this processor");
+    }
+
+    /**
      * Get the macro register of this processor. See {@link MacroRegister}
      *
      * @return the register

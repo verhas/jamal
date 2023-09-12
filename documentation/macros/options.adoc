@@ -18,7 +18,7 @@ You can also use the `option` (singular) alias, which makes sense when you set o
 == History
 
 * Since the release 2.1.0 it is possible to query the values of options.
-* Since the release 2.4.1-SNAPSHOT options can be pushed and popped.
+* Since the release 2.5.0 options can be pushed and popped.
 
 == Description
 
@@ -100,7 +100,7 @@ If the `:` is inside the name, then it remains part of the name, and it is not p
 
 == Pushing and Popping options
 
-With the release 2.4.1-SNAPSHOT it is possible to push and pop options.
+With the release 2.5.0 it is possible to push and pop options.
 This is useful when you want to set an option for a short time without opening a new evaluation scope.
 The format of pushing new values for options is the same as setting except the parop `push` is used.
 

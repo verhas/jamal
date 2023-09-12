@@ -3,3 +3,12 @@ Imported file macros can be used in the importing file:
     {@import res:import/included_as_resource.jim}
     {hello World}{hella me}
   Output: "\nHello, World!Hella, me!"
+
+Import a resource isolated:
+    Input: |-
+      {@define MyMacro=Hello, World!}
+      {@import [isolate] res:import/included_isolated.jim}
+      {Isolated}{@comment empty string}
+      {@import res:import/included_isolated.jim}
+      {Isolated}{@comment Hello, World!}
+    Output: "\n\n\n\nHello, World!"

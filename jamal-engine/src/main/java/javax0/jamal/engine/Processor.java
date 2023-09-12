@@ -165,6 +165,11 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
+    public Processor spawn(){
+        return new Processor(macros.open(), macros.close(), context);
+    }
+
+    @Override
     public String process(final String input) throws BadSyntax {
         return process(javax0.jamal.tools.Input.makeInput(input));
     }

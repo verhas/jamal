@@ -2,11 +2,11 @@
 {%@import macrodoc.jim%}
 {%MACRO name="import" since={%RELEASE:ZURICH%}%}
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=9029025b%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=57051a81 %}
 
 == Syntax
 
- {@import [top noCache] impoted_file.jim}
+ {@import [top noCache isolate] impoted_file.jim}
 
 `import` opens a file and reads the content of the file interpreting as Jamal macro file.
 Anything defined in that file will be imported into the scope of the current file.
@@ -32,6 +32,8 @@ The syntax of the command is
 `{@import file_name}`
 
 {%fileNameExplanationFor/import%}
+
+== `top`
 
 The option `top` can be used along with the `import`.
 In this case, a relative file name is relative to the main file that imports the other files.
@@ -70,6 +72,14 @@ If the importing file uses the `{` and `}` characters, then the imported file wi
 In this case the `{@sep <>}` change the macro opening and closing strings and this change will be in effect in the importing file.
 ====
 
-Starting with version 1.11.0 the import macro has the option `noCache`.
+== `noCache`
+
+Starting with version {%RELEASE:ZOLLIKOFEN%} the import macro has the option `noCache`.
 {%noCacheExplanation%}
 
+== `isolate`
+
+The relase {%RELEASE:ROGACHEVO%} introduced the option `isolate`.
+Using this option will process the imported file in a new processor.
+It means that the macros defined in the importING file will not be available in the importED file.
+The macros defined in the imported file will be available in the importing file after the import the same way as if the `isolate` option was not used.
