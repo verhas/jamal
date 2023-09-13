@@ -79,7 +79,7 @@ Starting with version {%RELEASE:ZOLLIKOFEN%} the import macro has the option `no
 
 == `isolate`
 
-The relase {%RELEASE:ROGACHEVO%} introduced the option `isolate`.
+The release {%RELEASE:ROGACHEVO%} introduced the option `isolate`.
 Using this option will process the imported file in a new processor.
 It means that the macros defined in the importING file will not be available in the importED file.
 The macros defined in the imported file will be available in the importing file after the import the same way as if the `isolate` option was not used.
