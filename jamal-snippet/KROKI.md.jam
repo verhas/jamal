@@ -22,7 +22,7 @@ Alice <-- Bob: Another authentication Response
 {%kroki /STR/structurizr/svg/
 workspace {
 model {
-user = person "User"
+user = person "Usar"
 softwareSystem = softwareSystem "Software System" {
 webapp = container "Web Application" {
 user -> this "Uses!!!"

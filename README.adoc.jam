@@ -3,6 +3,7 @@
 //{%@rot13 QB ABG RQVG GUVF SVYR; GUVF VF TRARENGRQ SEBZ ERNQZR.nqbp.wnz%}
 {%@import res:jamal.jim%}\
 {%@import RELEASES.jim%}\
+{%@import version.jim%}\
 {%@define output=[source]
 ----
 {%#trimLines trimVertical
@@ -39,21 +40,14 @@ TOC
 |image:{jamal_home}actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link={jamal_home}actions/workflows/jamal-build.yml]
 |===
 
-{%#if|{%#string:contains (text=SNAPSHOT){%VERSION%}%}|
-NOTE: This is the latest development documentation.
-This is a SNAPSHOT version ({%VERSION%}).{%@import version.jim%}
- If you want to read the latest release, please visit link:{jamal_home}/tree/v{%LAST_RELEASE%}[Jamal {%LAST_RELEASE%}]%}
-
-{%@comment when the last release will support already methods we will use this one more readable
 {%#do
 if VERSION.string:contains("text=SNAPSHOT") then
 << "NOTE: "
 << """This is the latest development documentation.
 To see the documentation of a release you have to follow the link in the documentation link:{%@file RELEASES.adoc%}[`RELEASES.adoc`]
-If you want to read the latest release, please visit link:{jamal_home}/tree/v{%LAST_RELEASE%}[Jamal {%LAST_RELEASE%}]
-"""
+If you want to read the latest release, please visit link:{jamal_home}/tree/v"""+LAST_RELEASE+"[Jamal"+LAST_RELEASE+"]"
 end if
-%}%}
+%}
 
 {%@define :TOC=%}
 {%@define section($id,$label)=

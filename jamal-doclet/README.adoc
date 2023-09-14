@@ -75,7 +75,7 @@ The following is a sample configuration used in the manual integration test of J
 11.                 <docletArtifact>
 12.     <groupId>com.javax0.jamal</groupId>
 13.     <artifactId>jamal-doclet</artifactId>
-14.     <version>2.3.1-SNAPSHOT</version>
+14.     <version>2.5.0-SNAPSHOT</version>
 15. </docletArtifact>
 16.                 <additionalOptions><additionalOption>--source-root</additionalOption>
 17.                     <additionalOption>${project.build.sourceDirectory}</additionalOption>
@@ -86,7 +86,7 @@ The following is a sample configuration used in the manual integration test of J
 22.                         <tagletArtifact>
 23.     <groupId>com.javax0.jamal</groupId>
 24.     <artifactId>jamal-all</artifactId>
-25.     <version>2.3.1-SNAPSHOT</version>
+25.     <version>2.5.0-SNAPSHOT</version>
 26. </tagletArtifact>
 27.                     </taglet>
 28.                 </taglets>
@@ -159,7 +159,7 @@ When using Maven, specify this option as displayed on the example above
 +
 [source, xml, title=configuring source root]
 ----
-14.     <version>2.3.1-SNAPSHOT</version>
+14.     <version>2.5.0-SNAPSHOT</version>
 15. </docletArtifact>
 16.                 <additionalOptions><additionalOption>--source-root</additionalOption>
 17.                     <additionalOption>${project.build.sourceDirectory}</additionalOption>

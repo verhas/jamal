@@ -105,11 +105,15 @@ public class CustomModelProcessor implements ModelProcessor {
         }
 
         final File output = new File(directory, sourceName + ".xml");
+        // noinspection ResultOfMethodCallIgnored
+        output.setWritable(true);
         try (final OutputStream os = new FileOutputStream(output)) {
             os.write(formattedXml.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new RuntimeException("Cannot write the '" + sourceName + ".xml' file.", e);
         }
+        // noinspection ResultOfMethodCallIgnored
+        output.setWritable(false);
     }
 
     private String dumpException(Throwable e) {

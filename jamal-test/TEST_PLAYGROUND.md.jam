@@ -1,3 +1,22 @@
-{@bir (prefix=<b> postfix=</b>) this text will be bionic
+{@counter:define hierarchical id=chapter}
+# {chapter}
 
-}
+This is **th**e chapter {chapter last}.
+
+# {chapter}
+
+This is the chapter {chapter last}.
+
+# {chapter}
+
+{chapter open}
+## {chapter}
+{chapter close}
+
+# {chapter}
+
+
+
+
+
+

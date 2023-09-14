@@ -29,19 +29,21 @@
 [source]
 ----
 Cannot insert XML at '/project' at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/7:21 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/6:10 <<< /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam/3:9
-	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:142)
-	javax0.jamal.engine.Processor(closeProcess:904)
-	javax0.jamal.engine.Processor(process:188)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:338)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(runJamalInProcess:201)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:132)
+	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:141)
+	javax0.jamal.engine.Processor(closeProcess:927)
+	javax0.jamal.engine.Processor(process:211)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:427)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:290)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:211)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:33)
 Causing Exception:
-Content is not allowed in trailing section.	javax0.jamal.snippet.XmlInsert(insert:69)
-	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:140)
-	javax0.jamal.engine.Processor(closeProcess:904)
-	javax0.jamal.engine.Processor(process:188)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:338)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(runJamalInProcess:201)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:132)
-sed -i jam '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam
+Content is not allowed in trailing section.	javax0.jamal.snippet.XmlInsert(insert:68)
+	javax0.jamal.snippet.XmlInsert$XmlInsertCloser(close:139)
+	javax0.jamal.engine.Processor(closeProcess:927)
+	javax0.jamal.engine.Processor(process:211)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:427)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:290)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:211)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:33)
+sed -i.bak  '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.xml.jam
 ----

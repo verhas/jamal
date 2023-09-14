@@ -18,17 +18,21 @@ public class Output implements Macro, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
-        final var isolate = scanner.bool("isolatedOutput","isolate");
+        final var scanner = newScanner(in, processor);
+        final var isolate = scanner.bool("isolatedOutput", "isolate");
         scanner.done();
         InputHandler.skipWhiteSpaces2EOL(in);
         if (isolate.is()) {
-            try (var isolatedProc = new javax0.jamal.engine.Processor("{", "}")) {
+            try (var isolatedProc = processor.spawn()) {
+                isolatedProc.separators("{", "}");
                 return isolatedProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
+            } catch (Exception e) {
+                throw new BadSyntax("There was an error running isolated Jamal instance", e);
             }
         } else {
             if (localProc == null) {
-                localProc = new javax0.jamal.engine.Processor("{", "}");
+                localProc = processor.spawn();
+                localProc.separators("{", "}");
             }
             return localProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
         }

@@ -35,12 +35,9 @@ TOC
 |image:{jamal_home}actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link={jamal_home}actions/workflows/jamal-build.yml]
 |===
 
-
 NOTE: This is the latest development documentation.
-This is a SNAPSHOT version (2.5.0-SNAPSHOT).
- If you want to read the latest release, please visit link:{jamal_home}/tree/v2.3.0[Jamal 2.3.0]
-
-
+To see the documentation of a release you have to follow the link in the documentation link:RELEASES.adoc[`RELEASES.adoc`]
+If you want to read the latest release, please visit link:{jamal_home}/tree/v2.3.0[Jamal2.3.0]
 
 
 

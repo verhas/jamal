@@ -105,6 +105,17 @@ public class JamalMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * Write the result to the output file.
+     * <p>
+     * The method writes the content of the {@code result} string to the {@code output} file. The method creates the
+     * parent directories if they do not exist. The method sets the file to read/write before writing and sets it back
+     * to read only after writing. This is to avoid accidental modification of the file.
+     *
+     * @param output the file to write the result to
+     * @param result the result to write
+     * @throws IOException if the file cannot be written
+     */
     private void writeOutput(Path output, String result) throws IOException {
         try {
             Files.createDirectories(output.getParent());
@@ -112,10 +123,15 @@ public class JamalMojo extends AbstractMojo {
             logException(e);
             processingSuccessful = false;
         }
+        final var file = output.toFile();
+        //noinspection ResultOfMethodCallIgnored
+        file.setWritable(true);
         Files.write(output, result.getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.WRITE,
                 StandardOpenOption.TRUNCATE_EXISTING,
                 StandardOpenOption.CREATE);
+        //noinspection ResultOfMethodCallIgnored
+        file.setWritable(false);
     }
 
     private void logException(Exception e) {

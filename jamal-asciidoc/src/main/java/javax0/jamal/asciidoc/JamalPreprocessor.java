@@ -293,11 +293,25 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         return r;
     }
 
+    /**
+     * Write the output file and set it to read only for the owner of the file.
+     * It may prevent accidental editing of the generated file.
+     *
+     * @param outputFileName    the name of the output file
+     * @param log               the logger
+     * @param cachingFileReader the file reader that contains the list of the files that were read. It is used to log.
+     * @param newLines          the lines that are to be written to the output file
+     */
     private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines) {
         try (final var writer = new BufferedWriter(new FileWriter(outputFileName))) {
+            final var file = new File(outputFileName);
+            //noinspection ResultOfMethodCallIgnored
+            file.setWritable(true);
             for (String newLine : newLines) {
                 writer.write(newLine + "\n");
             }
+            //noinspection ResultOfMethodCallIgnored
+            file.setWritable(false);
         } catch (Exception e) {
             // there is not much we can do here
         }
