@@ -12,13 +12,16 @@
 * Macro `options` has the parops `push` and `pop`
 * Macro `define` parop `noRedefine` can also be used as an option not only as a parop.
 * Macro `repeat` was developed in the snippet library.
+* Macro `import` has a new parop, `isolate` that makes the import isolated.
+* Generated files are set to be read only, so that they are not accidentally edited.
+* Command line option `-jamalize` can install the Jamal Asciidoc extension into the current project.
 
 {%RELEASE IZMIR%}
 
 * Kotlin support to make Macro creation in Kotlin a breeze.
 * Scan interface usage to parse parops was eliminated
-* Word decorator macro was developed
-* counter macro was extended to support hierarchical counters and also other than latin characters
+* Word `decorator` macro was developed due to popular demand.
+* Macro `counter` was extended to support hierarchical counters and also other than latin characters
 * User-defined macro can have default parameters for better readability
 * New `$time`, `$atime`, and `$ctime` placeholders for the `file` macro
 

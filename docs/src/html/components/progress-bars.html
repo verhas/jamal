@@ -1,0 +1,60 @@
+<!--
+
+=========================================================
+* Neumorphism UI - v1.0.0
+=========================================================
+
+* Product Page: https://themesberg.com/product/ui-kits/neumorphism-ui
+* Copyright 2020 Themesberg MIT LICENSE (https://www.themesberg.com/licensing#mit)
+
+* Coded by https://themesberg.com
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @@include('./_head.html', {
+        "path": "../..",
+        "title": "Neumorphism Components - Progress Bars"
+    })
+</head>
+
+<body>
+    @@include('./_navigation.html', {
+        "path": "../..",
+        "classes": "navbar-light"
+    })
+    <main>
+        <!-- Hero -->
+        <div class="section-header pb-6 bg-primary overflow-hidden text-center border-bottom border-light">
+            <div class="container z-2">
+                <div class="row mb-4 justify-content-center">
+                    <div class="col-12 col-md-8 col-lg-7">
+                        <h1 class="display-3 mb-4">Progress Bars</h1>
+                        <p class="lead">Progress components are built with two HTML elements, some CSS to set the width, and a few attributes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Hero -->
+        @@include('./components/_progress-bars.html', {
+            "path": "../..",
+            "classes": "bg-primary text-dark"
+        })
+    </main>
+    @@include('./_footer.html', {
+        "path": "../..",
+        "classes": "bg-primary"
+    })
+
+    @@include('./_scripts.html', {
+        "path": "../.."
+    })
+</body>
+
+</html>

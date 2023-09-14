@@ -1,0 +1,27 @@
+/**
+ * = Profile cards
+ */
+
+
+
+.card-image{
+    .dropdown {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+    }
+}
+
+.profile-cover{
+    @include background-image(no-repeat, cover); 
+    height: 175px;
+}
+.profile-image{
+    width: 10rem;
+    height: 10rem;
+}
+.profile-image-small{
+    width: 8rem;
+    height: 8rem;
+}
+       
