@@ -23,9 +23,15 @@
 
 = image:logo.svg[width=100px] Jamal Macro Language
 
-Jamal is a meta markup language enhancing the features of Asciidoc, Markdown, XML, JSON, YAML, JavaDoc, and any other markup languages.
-It can work as a preprocessor or integrated into the toolset of the editing/processing interactively or in batch mode.
-The conversion is done as a preprocessing step prior to the markup processing, the use of Jamal is non-invasive.
+Jamal is a tool to automate documentation maintenance.
+You can avoid copying information from your documented system into the documentation, and repeatedly copy it when the system is updated.
+It lessens the risk of outdated documentation automating the maintenance of the documentation.
+
+Jamal can be used with Asciidoc, Markdown, XML, JSON, YAML, JavaDoc, and any other markup languages.
+The application integrates seamlessly into the processing pipeline of the document processing tools in the least intrusive, non-invasive way.
+
+Technically, Jamal is a meta-markup language enhancing the features of the original markup language.
+The conversion is done as a preprocessing step prior to the markup processing.
 It can be inserted into any tool chain without risk, as it can also be removed at any time.
 
 TOC
