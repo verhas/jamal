@@ -28,7 +28,7 @@
     },
     "license": "https://www.themesberg.com/licensing#mit",
     "devDependencies": {
-        "browser-sync": "2.26.7",
+        "browser-sync": "2.29.3",
         "del": "4.1.1",
         "gulp": "4.0.2",
         "gulp-autoprefixer": "6.1.0",
