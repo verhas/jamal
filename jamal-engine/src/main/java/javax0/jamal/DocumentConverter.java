@@ -79,7 +79,12 @@ public class DocumentConverter {
         final var in = FileTools.getInput(file, processor);
         final var result = processor.process(in);
         final var output = file.substring(0, file.length() - ".jam".length());
+        final var f = new File(output);
+        //noinspection ResultOfMethodCallIgnored
+        f.setWritable(true);
         FileTools.writeFileContent(output, result, processor);
+        //noinspection ResultOfMethodCallIgnored
+        f.setWritable(false);
     }
 
     public static class Includes {
