@@ -7,6 +7,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.poi.word.XWPFProcessor;
 import javax0.jamal.tools.CmdParser;
+import javax0.jamal.tools.OutputFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,24 +184,10 @@ public class JamalMain {
      */
     private static void writeOutput(Path output, String result) throws IOException {
         try {
-            final var parent = output.getParent();
-            if (parent != null) {
-                if (!Files.exists(parent)) {
-                    Files.createDirectories(parent);
-                }
-            }
+            OutputFile.save(output, result);
         } catch (Exception e) {
             logException(e);
         }
-        final var file = output.toFile();
-        //noinspection ResultOfMethodCallIgnored
-        file.setWritable(true);
-        Files.write(output, result.getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.WRITE,
-                StandardOpenOption.TRUNCATE_EXISTING,
-                StandardOpenOption.CREATE);
-        //noinspection ResultOfMethodCallIgnored
-        file.setWritable(false);
     }
 
 

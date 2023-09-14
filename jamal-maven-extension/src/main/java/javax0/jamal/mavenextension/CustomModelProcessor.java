@@ -3,6 +3,7 @@ package javax0.jamal.mavenextension;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
+import javax0.jamal.tools.OutputFile;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.io.ModelReader;
@@ -93,7 +94,7 @@ public class CustomModelProcessor implements ModelProcessor {
         final String fileName = jamFile.getAbsolutePath();
         final String xml;
         try {
-            xml = processor.process(FileTools.getInput(fileName,processor));
+            xml = processor.process(FileTools.getInput(fileName, processor));
         } catch (BadSyntax e) {
             throw new RuntimeException("Jamal error processing the file " + fileName + "\n" + dumpException(e), e);
         }
@@ -112,8 +113,6 @@ public class CustomModelProcessor implements ModelProcessor {
         } catch (IOException e) {
             throw new RuntimeException("Cannot write the '" + sourceName + ".xml' file.", e);
         }
-        // noinspection ResultOfMethodCallIgnored
-        output.setWritable(false);
     }
 
     private String dumpException(Throwable e) {

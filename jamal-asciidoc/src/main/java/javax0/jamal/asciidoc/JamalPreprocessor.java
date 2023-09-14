@@ -11,6 +11,7 @@ import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.MacroReader;
+import javax0.jamal.tools.OutputFile;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.extension.JavaExtensionRegistry;
@@ -19,9 +20,7 @@ import org.asciidoctor.extension.PreprocessorReader;
 import org.asciidoctor.extension.Reader;
 import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -303,15 +302,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * @param newLines          the lines that are to be written to the output file
      */
     private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines) {
-        try (final var writer = new BufferedWriter(new FileWriter(outputFileName))) {
-            final var file = new File(outputFileName);
-            //noinspection ResultOfMethodCallIgnored
-            file.setWritable(true);
-            for (String newLine : newLines) {
-                writer.write(newLine + "\n");
-            }
-            //noinspection ResultOfMethodCallIgnored
-            file.setWritable(false);
+        try {
+            OutputFile.save(Path.of(outputFileName), String.join("\n", newLines));
         } catch (Exception e) {
             // there is not much we can do here
         }

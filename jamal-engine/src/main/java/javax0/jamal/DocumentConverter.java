@@ -4,6 +4,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
+import javax0.jamal.tools.OutputFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,12 +80,7 @@ public class DocumentConverter {
         final var in = FileTools.getInput(file, processor);
         final var result = processor.process(in);
         final var output = file.substring(0, file.length() - ".jam".length());
-        final var f = new File(output);
-        //noinspection ResultOfMethodCallIgnored
-        f.setWritable(true);
-        FileTools.writeFileContent(output, result, processor);
-        //noinspection ResultOfMethodCallIgnored
-        f.setWritable(false);
+        OutputFile.save(Paths.get(output), result);
     }
 
     public static class Includes {

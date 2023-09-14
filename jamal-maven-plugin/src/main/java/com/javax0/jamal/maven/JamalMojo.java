@@ -2,6 +2,7 @@ package com.javax0.jamal.maven;
 
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.tools.OutputFile;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -118,20 +119,11 @@ public class JamalMojo extends AbstractMojo {
      */
     private void writeOutput(Path output, String result) throws IOException {
         try {
-            Files.createDirectories(output.getParent());
+            OutputFile.save(output, result);
         } catch (Exception e) {
             logException(e);
             processingSuccessful = false;
         }
-        final var file = output.toFile();
-        //noinspection ResultOfMethodCallIgnored
-        file.setWritable(true);
-        Files.write(output, result.getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.WRITE,
-                StandardOpenOption.TRUNCATE_EXISTING,
-                StandardOpenOption.CREATE);
-        //noinspection ResultOfMethodCallIgnored
-        file.setWritable(false);
     }
 
     private void logException(Exception e) {
