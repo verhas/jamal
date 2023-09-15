@@ -12,6 +12,7 @@ public class Position {
     public final String file;
     public int line;
     public int column;
+    public int charpos = 0;
     public final Position parent;
 
     public Position(String file, int line, int column, Position parent) {
@@ -26,12 +27,14 @@ public class Position {
             file = null;
             line = 1;
             column = 1;
+            charpos = 0;
             parent = null;
         }else {
             file = clone.file;
             line = clone.line;
             column = clone.column;
             parent = clone.parent;
+            charpos = clone.charpos;
         }
     }
 

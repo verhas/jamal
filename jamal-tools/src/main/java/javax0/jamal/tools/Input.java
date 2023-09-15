@@ -137,12 +137,14 @@ public class Input implements javax0.jamal.api.Input {
     @Override
     public void stepLine() {
         pos.line++;
+        pos.charpos++;
         pos.column = 1;
     }
 
     @Override
     public void stepColumn() {
         pos.column++;
+        pos.charpos++;
     }
 
 

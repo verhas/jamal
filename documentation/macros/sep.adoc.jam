@@ -8,6 +8,7 @@
   {!@sep!} restore the separator strings
 
 This macro can be used to change the macro opening and closing strings.
+
 In the examples, we use `{` as the opening string and `}` as the closing string.
 Jamal itself does not impose any such predefined setting.
 The embedding systems, however, do.
@@ -134,7 +135,7 @@ In this case
 
 will not work.
 It will set the closing string empty which is not valid and will raise an error.
-To overcome the situation you have to change the separator strings in two steps:
+To overcome the situation, you have to change the separator strings in two steps:
 
 {%sample/
 {@sep/[/]}[@sep/{{/}}]
@@ -221,3 +222,6 @@ The macro `a3` has the value `{z}` which is evaluated after the macro `a3` is re
 %}
 
 {%output%}
+
+NOTE: Although it is technically possible to use this macro with the `#` character and have the input of the macro evaluated before the macro, it is not recommended.
+Later versions may explicitly forbid this usage.
