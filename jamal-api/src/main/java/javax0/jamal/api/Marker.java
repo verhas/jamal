@@ -1,5 +1,7 @@
 package javax0.jamal.api;
 
+import java.util.function.Function;
+
 /**
  * When a code is starting and ending a scope it has to pass a marker object to the call to {@link
  * MacroRegister#push(Marker)} and {@link MacroRegister#pop(Marker)}. The {@code Marker} object passed to {@link
@@ -14,4 +16,20 @@ public interface Marker {
      * @return the position where the input was when the marker was created to start a new scope.
      */
     Position getPosition();
+
+    /**
+     * Create a **new** marker instance that can be used when there is no need for name, or position.
+     * <p>
+     * Since this method creates a new instance, every time it is called it cannot be replaced by a lambda expression.
+     *
+     * @return the new marker instance.
+     */
+    static Marker nullMarker() {
+        return new Marker() {
+            @Override
+            public Position getPosition() {
+                return null;
+            }
+        };
+    }
 }

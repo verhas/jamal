@@ -25,6 +25,16 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
 @FunctionalInterface
 public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
 
+    /**
+     * A signal interface implemented by the macro 'escape' and should also be implemented by all macros
+     * that fetch their content from the input in a way that does not conform to the standard parsing.
+     * When the engine builds the abstract syntax tree (not needed for executing Jamal, it is used for editor support)
+     * it checks if the macro implements this interface and if it does, then the macro content is not parsed (unless the
+     * character {@code #} is used in front of the macro name, which is the pre-evaluation character).
+     */
+    interface Escape {
+    }
+
     @Retention(RetentionPolicy.RUNTIME)
     @interface Stateful {
     }

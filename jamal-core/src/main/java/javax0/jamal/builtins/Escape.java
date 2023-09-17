@@ -48,20 +48,19 @@ import static javax0.jamal.tools.InputHandler.skip;
  * <p>
  * will fetch "{@code @escape `st` }} {@code `st`}" because it skips the counting in the part between the {@code `st`}.
  * <p>
- * This way, this macro is "implemented" not only here but also in the macro body fetcher.
+ * [OBSOLETE
+ * This way, this macro is "implemented" not only here but also in the macro body fetcher.]
+ * <p>
+ * The macro body fetcher was split into two parts. The first part is the {@code MacroBodyFetcher} that is responsible
+ * for some high-level governance of body fetching. The main functionality was moved into the method {@code fetch}.
+ * This method has a default implementation in the interface {@link Macro} and also here, overriding the default.
  */
-public class Escape implements Macro {
+public class Escape implements Macro, Macro.Escape {
     private static final String UNESCAPE_OPTION = "4a616d616c206973206b696e67";
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final boolean fullPreserve;
-        if (in.charAt(0) == '*') {
-            InputHandler.skip(in, 1);
-            fullPreserve = !OptionsStore.getInstance(processor).is(UNESCAPE_OPTION);
-        } else {
-            fullPreserve = false;
-        }
+        final boolean fullPreserve = isFullPreserve(in, processor);
         InputHandler.skipWhiteSpaces(in);
         BadSyntaxAt.when(in.charAt(0) != '`', "The macro escape needs an escape string enclosed between ` characters.", in.getPosition());
         InputHandler.skip(in, 1);
@@ -81,6 +80,40 @@ public class Escape implements Macro {
             return processor.getRegister().open() + "@escape*" + escapeSequence + escapedString + escapeSequence + processor.getRegister().close();
         }
         return escapedString;
+    }
+
+    /**
+     * Decide if the result of the macro has to be the full macro or only the content.
+     * <p>
+     * The full macro is deserved when the macro is used as {@code {@escape* `x` ...}}. In this case, the macro will
+     * return the full macro, but the macro closer will be invoked with an option that will make the macro closer
+     * return only the content.
+     * <p>
+     * The macro will return only the content when the macro is used as {@code {@escape `x` ...}}. In this case, the
+     * macro closer will not be invoked.
+     * <p>
+     * The macro closer also calls the macro processor to process the content. To ignore the {@code *} option in this
+     * special case, the macro processor is invoked with the option {@code UNESCAPE_OPTION}.
+     * <p>
+     * The option {@code UNESCAPE_OPTION} is just a random name, not likely to be set by the user. It is used only to
+     * signal the macro processor that the macro closer is invoked from the {@code escape} macro.
+     * <p>
+     * In this case this method returns {@code false}.
+     *
+     * @param in        the input to check for the {@code *} at the first character position. If there is a {@code *} then it
+     *                  is also skipped.
+     * @param processor the processor used to get the option store.
+     * @return {@code true} if the macro has to return the full macro, {@code false} if only the content.
+     */
+    private static boolean isFullPreserve(Input in, Processor processor) {
+        final boolean fullPreserve;
+        if (in.charAt(0) == '*') {
+            InputHandler.skip(in, 1);
+            fullPreserve = !OptionsStore.getInstance(processor).is(UNESCAPE_OPTION);
+        } else {
+            fullPreserve = false;
+        }
+        return fullPreserve;
     }
 
 
@@ -176,7 +209,7 @@ public class Escape implements Macro {
             OptionsStore.getInstance(processor).addOptions(UNESCAPE_OPTION);
             final String result = processor.process(output);
             OptionsStore.getInstance(processor).addOptions("~" + UNESCAPE_OPTION);
-            if (processor.errors().size() > 0) {
+            if (!processor.errors().isEmpty()) {
                 processor.throwUp();
             }
             output.getSB().setLength(0);

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestParser {
 
-    private static void assertNodeText(final Parser.ASTnode node, final String input) {
+    private static void assertNodeText(final Parser.ASTNode node, final String input) {
         final String fmt = "%s[%s,%s]'%s'";
         Assertions.assertEquals(
                 String.format(fmt, node.type, node.start, node.end, node.text),
@@ -39,7 +39,8 @@ public class TestParser {
                         "  OPEN[32,33] '{'\n" +
                         "  BIMCHAR[33,34] '@'\n" +
                         "  ID[34,40] 'define'\n" +
-                        "  TEXT[40,44] ' aaa'\n" +
+                        "  LIST[40,44] ' aaa'\n" +
+                        "    TEXT[40,44] ' aaa'\n" +
                         "  CLOSE[44,45] '}'\n" +
                         "  TEXT[45,50] ' jupp'\n");
     }
@@ -81,7 +82,8 @@ public class TestParser {
                         "  OPEN[3,4] '{'\n" +
                         "  BIMCHAR[4,5] '@'\n" +
                         "  ID[5,8] 'sep'\n" +
-                        "  TEXT[8,12] ' [ ]'\n" +
+                        "  LIST[8,12] ' [ ]'\n" +
+                        "    TEXT[8,12] ' [ ]'\n" +
                         "  TEXT[13,14] ' '\n" +
                         "  OPEN[14,15] '['\n" +
                         "  ID[15,19] 'alma'\n" +
@@ -98,7 +100,8 @@ public class TestParser {
                         "  OPEN[3,4] '{'\n" +
                         "  BIMCHAR[4,5] '@'\n" +
                         "  ID[5,8] 'sep'\n" +
-                        "  TEXT[8,12] ' [ ]'\n" +
+                        "  LIST[8,12] ' [ ]'\n" +
+                        "    TEXT[8,12] ' [ ]'\n" +
                         "  TEXT[13,14] ' '\n" +
                         "  OPEN[14,15] '['\n" +
                         "  ID[15,19] 'alma'\n" +
@@ -127,7 +130,8 @@ public class TestParser {
                         "    OPEN[10,11] '{'\n" +
                         "    BIMCHAR[11,12] '@'\n" +
                         "    ID[12,15] 'sep'\n" +
-                        "    TEXT[15,19] ' [ ]'\n" +
+                        "    LIST[15,19] ' [ ]'\n" +
+                        "      TEXT[15,19] ' [ ]'\n" +
                         "    TEXT[20,21] ' '\n" +
                         "    OPEN[21,22] '['\n" +
                         "    ID[22,26] 'alma'\n" +
@@ -136,6 +140,35 @@ public class TestParser {
                         "  OPEN[36,37] '{'\n" +
                         "  ID[37,42] 'birma'\n" +
                         "  CLOSE[42,43] '}'\n");
+    }
+
+    @Test
+    @DisplayName("Test with macro deeply nested")
+    void testDeeplyNested() throws Exception {
+        test("{@define zima(a)={@define k={@ident jajja}} {zupp}}",
+                "LIST[0,51] '{@define zima(a)={@define k={@ident jajja}} {zupp}}'\n" +
+                        "  OPEN[0,1] '{'\n" +
+                        "  BIMCHAR[1,2] '@'\n" +
+                        "  ID[2,8] 'define'\n" +
+                        "  LIST[8,50] ' zima(a)={@define k={@ident jajja}} {zupp}'\n" +
+                        "    TEXT[8,17] ' zima(a)='\n" +
+                        "    OPEN[17,18] '{'\n" +
+                        "    BIMCHAR[18,19] '@'\n" +
+                        "    ID[19,25] 'define'\n" +
+                        "    LIST[25,42] ' k={@ident jajja}'\n" +
+                        "      TEXT[25,28] ' k='\n" +
+                        "      OPEN[28,29] '{'\n" +
+                        "      BIMCHAR[29,30] '@'\n" +
+                        "      ID[30,35] 'ident'\n" +
+                        "      LIST[35,41] ' jajja'\n" +
+                        "        TEXT[35,41] ' jajja'\n" +
+                        "      CLOSE[41,42] '}'\n" +
+                        "    CLOSE[42,43] '}'\n" +
+                        "    TEXT[43,44] ' '\n" +
+                        "    OPEN[44,45] '{'\n" +
+                        "    ID[45,49] 'zupp'\n" +
+                        "    CLOSE[49,50] '}'\n" +
+                        "  CLOSE[50,51] '}'\n");
     }
 
 }
