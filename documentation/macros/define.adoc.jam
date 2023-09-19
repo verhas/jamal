@@ -17,7 +17,7 @@ This macro defines a user-defined macro in the current scope.
 * since {%RELEASE:BASEL%} optional and extra ignored arguments
 * since {%RELEASE:ULANBATOR%} options can also be used to define optional, failing, pure and verbatim macros
 * since {%RELEASE:ULANBATOR%} option `{%@snip RestrictedDefineParameters%}` can be used to restrict parameters to be only identifiers
-* since 1.12.5 option `export` can be used as a shorthand instead of define and export one after the other
+* since {%RELEASE:KYIV%} option `export` can be used as a shorthand instead of define and export one after the other
 * since {%RELEASE:BUDAPEST%} option `tail` to parse the tail parameters as a single string
 * since {%RELEASE:MANAUS%} option `class` to define a macro by the implementing class
 * since {%RELEASE:IZMIR%} option `default` to define a macro by the implementing class

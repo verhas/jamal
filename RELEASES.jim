@@ -27,6 +27,7 @@ You can find some bare release numbers in the documentation even though the exis
 {@define ! RELEASE:EMBRACH=1.9.1}
 {@define ! RELEASE:ZOLLIKOFEN=1.11.0}
 {@define ! RELEASE:LUGANO=1.12.3}
+{@define ! RELEASE:KYIV=1.12.5}
 
 my parents were there once
 {@define ! RELEASE:ULANBATOR=1.12.3}
