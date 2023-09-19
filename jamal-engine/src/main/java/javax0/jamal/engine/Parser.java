@@ -9,6 +9,7 @@ import javax0.jamal.tools.Input;
 import javax0.jamal.tools.InputHandler;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,10 +82,8 @@ public class Parser {
 
         public String toStringList() {
             final var sb = new StringBuilder();
-            var it = this;
-            while (it != null) {
-                sb.append(String.format("%s[%s,%s] '%s'\n", it.type, it.start, it.end, it.text));
-                it = it.next;
+            for( final var it : this ){
+                sb.append(String.format("%s[%s,%s] '%s'\n", it.getType(), it.getStart(), it.getEnd(), it.getText()));
             }
             return sb.toString();
         }
@@ -110,18 +109,43 @@ public class Parser {
         }
 
         @Override
-        public javax0.jamal.api.ASTNode getNext() {
-            return next;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return next != null;
-        }
-
-        @Override
         public List<javax0.jamal.api.ASTNode> getChildren() {
             return children.stream().map(n -> (javax0.jamal.api.ASTNode) n).collect(Collectors.toList());
+        }
+
+        private static class ASTNodeIterator implements Iterator<javax0.jamal.api.ASTNode> {
+
+            ASTNode currentNode;
+
+            private ASTNodeIterator(ASTNode currentNode) {
+                this.currentNode = currentNode;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return currentNode != null;
+            }
+
+            @Override
+            public javax0.jamal.api.ASTNode next() {
+                final var result = currentNode;
+                currentNode = currentNode.next;
+                return result;
+            }
+        }
+
+        /**
+         * Return an iterator that iterates over the children of the node.
+         *
+         * @return the iterator
+         */
+        @Override
+        public Iterator<javax0.jamal.api.ASTNode> iterator() {
+            if (this.next == null) {
+                return new ASTNodeIterator(null);
+            } else {
+                return new ASTNodeIterator(this.next);
+            }
         }
     }
 
@@ -164,11 +188,11 @@ public class Parser {
      */
     private static void skipLists(ASTNode root) {
         var it = root;
-        while (it.hasNext()) {
-            while (it.hasNext() && it.next.type == ASTNode.Type.LIST) {
+        while (it.next != null) {
+            while (it.next != null && it.next.type == ASTNode.Type.LIST) {
                 it.next = it.next.next;
             }
-            if (it.hasNext()) {
+            if (it.next != null) {
                 it = it.next;
             }
         }

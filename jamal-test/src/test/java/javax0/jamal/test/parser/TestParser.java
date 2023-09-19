@@ -22,7 +22,7 @@ public class TestParser {
     private static void test(final String input, final String expected) throws BadSyntax {
         final var processor = new Processor();
         final var node = Parser.parse(processor, input);
-        Assertions.assertEquals(expected, node+node.toStringList());
+        Assertions.assertEquals(expected, node + node.toStringList());
         assertNodeText(node, input);
     }
 
@@ -43,7 +43,6 @@ public class TestParser {
                         "    TEXT[40,44] ' aaa'\n" +
                         "  CLOSE[44,45] '}'\n" +
                         "  TEXT[45,50] ' jupp'\n" +
-                        "LIST[0,50] 'some text {macro} some more text{@define aaa} jupp'\n" +
                         "TEXT[0,10] 'some text '\n" +
                         "OPEN[10,11] '{'\n" +
                         "ID[11,16] 'macro'\n" +
@@ -69,7 +68,6 @@ public class TestParser {
                         "  TEXT[24,48] ' lippiti makkiti hombres'\n" +
                         "  CLOSE[48,49] '}'\n" +
                         "  TEXT[49,53] 'jupp'\n" +
-                        "LIST[0,53] 'aa{@wuppalashanakitorkak lippiti makkiti hombres}jupp'\n" +
                         "TEXT[0,2] 'aa'\n" +
                         "OPEN[2,3] '{'\n" +
                         "BIMCHAR[3,4] '@'\n" +
@@ -91,7 +89,6 @@ public class TestParser {
                         "  TEXT[10,22] ' `aa` { `aa`'\n" +
                         "  CLOSE[22,23] '}'\n" +
                         "  TEXT[23,27] 'jupp'\n" +
-                        "LIST[0,27] 'aa{@escape `aa` { `aa`}jupp'\n" +
                         "TEXT[0,2] 'aa'\n" +
                         "OPEN[2,3] '{'\n" +
                         "BIMCHAR[3,4] '@'\n" +
@@ -117,7 +114,6 @@ public class TestParser {
                         "  ID[15,19] 'alma'\n" +
                         "  CLOSE[19,20] ']'\n" +
                         "  TEXT[20,26] ' birma'\n" +
-                        "LIST[0,26] 'aa {@sep [ ]} [alma] birma'\n" +
                         "TEXT[0,3] 'aa '\n" +
                         "OPEN[3,4] '{'\n" +
                         "BIMCHAR[4,5] '@'\n" +
@@ -153,7 +149,6 @@ public class TestParser {
                         "  OPEN[28,29] '{'\n" +
                         "  ID[29,34] 'birma'\n" +
                         "  CLOSE[34,35] '}'\n" +
-                        "LIST[0,35] 'aa {@sep [ ]} [alma] [#sep] {birma}'\n" +
                         "TEXT[0,3] 'aa '\n" +
                         "OPEN[3,4] '{'\n" +
                         "BIMCHAR[4,5] '@'\n" +
@@ -197,7 +192,6 @@ public class TestParser {
                         "  OPEN[36,37] '{'\n" +
                         "  ID[37,42] 'birma'\n" +
                         "  CLOSE[42,43] '}'\n" +
-                        "LIST[0,43] 'aa { here {@sep [ ]} [alma]} [#sep] {birma}'\n" +
                         "TEXT[0,3] 'aa '\n" +
                         "OPEN[3,4] '{'\n" +
                         "TEXT[4,5] ' '\n" +
@@ -244,7 +238,6 @@ public class TestParser {
                         "    ID[45,49] 'zupp'\n" +
                         "    CLOSE[49,50] '}'\n" +
                         "  CLOSE[50,51] '}'\n" +
-                        "LIST[0,51] '{@define zima(a)={@define k={@ident jajja}} {zupp}}'\n" +
                         "OPEN[0,1] '{'\n" +
                         "BIMCHAR[1,2] '@'\n" +
                         "ID[2,8] 'define'\n" +

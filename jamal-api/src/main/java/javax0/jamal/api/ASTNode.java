@@ -10,7 +10,7 @@ import java.util.List;
  * The parsing was developed before the LSP implementation but with editor support in mind when preparing the
  * release 2.5.0.
  */
-public interface ASTNode {
+public interface ASTNode extends Iterable<ASTNode> {
     Type getType();
 
     String getText();
@@ -18,10 +18,6 @@ public interface ASTNode {
     int getStart();
 
     int getEnd();
-
-    ASTNode getNext();
-
-    boolean hasNext();
 
     List<ASTNode> getChildren();
 
