@@ -2,7 +2,7 @@
 {#define RELEASE={V //metadata/versioning/release}}\
 {@define asciidoc:output=extensions.xml}\
 <!--
-This file was generated from extensions.jam in the same directory as extensions.xml
+{@rot13 Guvf svyr jnf trarengrq sebz rkgrafvbaf.wnz va gur fnzr qverpgbel nf rkgrafvbaf.kzy}
 
 The latest version is {RELEASE}.
 -->
@@ -12,4 +12,4 @@ extensions>
     groupId>com.javax0.jamal
     artifactId>jamal-maven-extension
     version>{RELEASE}
-}
+}{@xmlFormat}

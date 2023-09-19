@@ -19,6 +19,10 @@ public interface ASTNode {
 
     int getEnd();
 
+    ASTNode getNext();
+
+    boolean hasNext();
+
     List<ASTNode> getChildren();
 
     /**

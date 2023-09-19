@@ -3,7 +3,6 @@ package javax0.jamal.engine;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
-import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.engine.util.MacroBodyFetcher;
 import javax0.jamal.tools.Input;
@@ -54,6 +53,7 @@ public class Parser {
         public final Type type;
         public final String text;
         public final int start, end;
+        public ASTNode next;
         public final List<ASTNode> children = new ArrayList<>();
 
         public ASTNode(Type type, int start, String text) {
@@ -79,8 +79,18 @@ public class Parser {
                     children.stream().map(c -> c.toString(margin + 1)).collect(Collectors.joining(""));
         }
 
+        public String toStringList() {
+            final var sb = new StringBuilder();
+            var it = this;
+            while (it != null) {
+                sb.append(String.format("%s[%s,%s] '%s'\n", it.type, it.start, it.end, it.text));
+                it = it.next;
+            }
+            return sb.toString();
+        }
+
         @Override
-        public javax0.jamal.api.ASTNode.Type getType() {
+        public ASTNode.Type getType() {
             return type;
         }
 
@@ -97,6 +107,16 @@ public class Parser {
         @Override
         public int getEnd() {
             return end;
+        }
+
+        @Override
+        public javax0.jamal.api.ASTNode getNext() {
+            return next;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
         }
 
         @Override
@@ -122,7 +142,53 @@ public class Parser {
      *                   fail.
      */
     public static ASTNode parse(final Processor processor, final String input) throws BadSyntax {
-        return parse(processor, Input.makeInput(input), 0);
+        final var result = parse(processor, Input.makeInput(input), 0);
+        chain(result);
+        return result;
+    }
+
+    /**
+     * Chain up all the nodes and skip the LISTS except the top level list, which is a starting node.
+     *
+     * @param root the root node of the AST
+     */
+    private static void chain(ASTNode root) {
+        chainAll(root);
+        skipLists(root);
+    }
+
+    /**
+     * Skip all the lists in the AST.
+     *
+     * @param root the root node of the AST
+     */
+    private static void skipLists(ASTNode root) {
+        var it = root;
+        while (it.hasNext()) {
+            while (it.hasNext() && it.next.type == ASTNode.Type.LIST) {
+                it.next = it.next.next;
+            }
+            if (it.hasNext()) {
+                it = it.next;
+            }
+        }
+    }
+
+    /**
+     * Chain up all the nodes in the AST under the actual node and return the last node.
+     *
+     * @param root the node to start chaining from
+     * @return the last node in the chain
+     */
+    private static ASTNode chainAll(final ASTNode root) {
+        var it = root;
+        if (!root.children.isEmpty()) {
+            for (int i = 0; i < root.children.size(); i++) {
+                it.next = root.children.get(i);
+                it = chainAll(it.next);
+            }
+        }
+        return it;
     }
 
     private static ASTNode parse(final Processor processor, final Input in, int offset) throws BadSyntax {
