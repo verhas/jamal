@@ -1,0 +1,3 @@
+= Jamal JAR Input Plugin
+
+This module contains the interfaces and a few classes that belong to the public API of Jamal.

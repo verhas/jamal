@@ -1,4 +1,5 @@
 
+
 = Jamal Command Line
 
 
@@ -102,7 +103,3 @@ See also the option `-from`.
 * `-jamalize`   will install Jamal in the `.asciidoctor/lib` directory.
 It version of the installed Jamal is the same as the one installing it.
 It can also install a different version if the option `-version=xxx` is specifying a specific versions.
-
-
-
-

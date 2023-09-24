@@ -1,0 +1,5 @@
+= Jamal JAR Input Plugin
+
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+This module contains the interfaces and a few classes that belong to the public API of Jamal.

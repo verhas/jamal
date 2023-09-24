@@ -82,7 +82,7 @@ public class Parser {
 
         public String toStringList() {
             final var sb = new StringBuilder();
-            for( final var it : this ){
+            for (final var it : this) {
                 sb.append(String.format("%s[%s,%s] '%s'\n", it.getType(), it.getStart(), it.getEnd(), it.getText()));
             }
             return sb.toString();
@@ -113,10 +113,18 @@ public class Parser {
             return children.stream().map(n -> (javax0.jamal.api.ASTNode) n).collect(Collectors.toList());
         }
 
+        /**
+         * See the documentation of the method {@link #iterator()} returning instances of this class.
+         */
         private static class ASTNodeIterator implements Iterator<javax0.jamal.api.ASTNode> {
 
             ASTNode currentNode;
 
+            /**
+             * Create a new iterator that will start at the given node and go on the links via the "next" field.
+             *
+             * @param currentNode the starting node for the iterator
+             */
             private ASTNodeIterator(ASTNode currentNode) {
                 this.currentNode = currentNode;
             }
@@ -136,6 +144,10 @@ public class Parser {
 
         /**
          * Return an iterator that iterates over the children of the node.
+         * <p>
+         * The sequence of the nodes starts with the first child of the root node and contains all the nodes as they
+         * cover the source code without any gap without the LIST nodes. In other words, when an element contains the
+         * token from {@code (n,M)}, then the next token will start at {@code M}.
          *
          * @return the iterator
          */

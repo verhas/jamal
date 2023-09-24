@@ -1,4 +1,5 @@
 {%@import res:jamal.jim%}\
+{%@import ../version.jim%}
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@snip:collect from=./src/main/java/javax0/jamal/cmd%}
@@ -27,11 +28,11 @@ Options can be abbreviated to their shortest form, which is still unambiguous.
 When an option has a value, it has to follow the option name with `=`.
 For example
 
-    jamal -jamalize version=2.4.0
-    jamal -jamalize -version=2.4.0
-    jamal -jamalize --version=2.4.0
+    jamal -jamalize version={%LAST_RELEASE%}
+    jamal -jamalize -version={%LAST_RELEASE%}
+    jamal -jamalize --version={%LAST_RELEASE%}
 
-These command lines do the same: install Jamal version 2.4.0 into the `.asciidoctor/lib` directory.
+These command lines do the same: install Jamal version {%LAST_RELEASE%} into the `.asciidoctor/lib` directory.
 When the option has a value the prefix `-` or `--` is optional.
 
 The options are the followings:

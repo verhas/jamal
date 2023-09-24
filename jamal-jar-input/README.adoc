@@ -5,7 +5,7 @@ Using this library any link:../documentation/macros/include.adoc[`include`], lin
 
 == Resource Name Format
 
-To access a file from a JAR the file name has to be formatted
+To access a file from a JAR, the file name has to be formatted
 
 .JAR resource format
 ****
@@ -29,3 +29,6 @@ Example:
 {@include [verbatim] jar:file://C:/Users/PincoPalino/myJar.jar!/Bing.txt}
 ----
 ====
+
+The JAR file simply has to be on the class path, and Jamal will find it using the service loader facility.
+The standard modules embedding Jamal do it.

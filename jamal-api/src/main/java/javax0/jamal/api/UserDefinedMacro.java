@@ -3,7 +3,8 @@ package javax0.jamal.api;
 import java.util.Optional;
 
 /**
- * User defined macros. User defined macros have an identifier and are evaluable. They are also debuggable.
+ * User defined macros. User defined macros have an identifier and are evaluable.
+ * They are also debuggable, and they can be serialized and loaded from serialized form.
  */
 public interface UserDefinedMacro extends Evaluable, Debuggable<Debuggable.UserDefinedMacro>, Serializing<UserDefinedMacro> {
     default Optional<UserDefinedMacro> debuggable() {

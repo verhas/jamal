@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * This class defined all the strings for the environment variables that Jamal uses in the engine or in the core
+ * This class defines all the strings for the environment variables that Jamal uses in the engine or in the core
  * macros.
  * <p>
  * The symbolic name for the environment variables is always the name and {@code _ENV} prefix.
@@ -34,7 +34,7 @@ Jamal can download resources when the name of a file starts with the prefix `htt
 The default value for the timeouts is 5000, meaning five seconds.
 
 The proxy setting can be configured using standard Java system properties.
-For more information see the JavaDoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
+For more information, see the JavaDoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
 end snippet
 */
     public static final String JAMAL_CONNECT_TIMEOUT_ENV = "JAMAL_CONNECT_TIMEOUT";
@@ -53,7 +53,7 @@ snippet JAMAL_TRACE_documentation
 
 {%E%}{%JAMAL_TRACE_ENV%}
 This environment variable defines the name of the trace file.
-When a trace file is defined the evaluation and all the partial evaluations are logged to this file during processing.
+When a trace file is defined, the evaluation and all the partial evaluations are logged to this file during processing.
 This file can grow very fast, and it is not purged or deleted by Jamal.
 end snippet
 */
@@ -64,12 +64,12 @@ snippet JAMAL_STACK_LIMIT_documentation
 {%E%}{%JAMAL_STACK_LIMIT_ENV%}
 
 sets the recursive call depth in macro evaluation.
-Macros may be recursive and in some cases it may create infinite recursive calls in Jamal.
+Macros may be recursive, and in some cases it may create infinite recursive calls in Jamal.
 Try a simple Jamal file that contains `{@define a={a}}{a}`.
 This will drive Jamal into an infinite recursive call.
 During the macro evaluation `{a}` will result `{a}` again and this will be evaluated again and again.
 Infinite recursive calls result `StackOverflowError` which should not be caught by any program.
-To avoid this Jamal limits the recursive calls to the maximum depth 1000.
+To avoid this, Jamal limits the recursive calls to the maximum depth of 1000.
 This is a reasonable limit.
 
 * Most Jamal sources are not complex, and will not get above this limit recursively.
@@ -77,9 +77,9 @@ This is a reasonable limit.
 
 This limit may be too much in your environment.
 Jamal may still throw a `StackOverflowError`.
-In this case set this to a smaller value.
+In this case, set this to a smaller value.
 It may also happen that you deliberately create complex recursive macros.
-In that case this limit may be too small.
+In that case, this limit may be too small.
 Set your value to a limit that fits your need.
 
 end snippet
@@ -127,7 +127,7 @@ snippet JAMAL_HTTPS_CACHE_documentation
 
 {%E%}{%JAMAL_HTTPS_CACHE_ENV%}
 This variable can be set to point to a directory for cache files.
-When Jamal downloads web resources it stores them in a cache directory is the directory exists.
+When Jamal downloads web resources, it stores them in a cache directory if the directory exists.
 Jamal creates subdirectories under the cache directory, but the cache directory itself has to be created manually.
 
 The default location for the cache files is `~/.jamal/cache/`.
@@ -147,7 +147,7 @@ Only absolute file names can be replaced.
 
 For example, you include the file `https://raw.githubusercontent.com/central7/pom/1/pom.jim` in your Jamal file.
 You want to replace it with a local file `~/projects/jamal/pom.jim`.
-In that case you should set the environment variable
+In that case, you should set the environment variable
 
 [source]
 ----
@@ -159,7 +159,7 @@ The list is parsed using the standard `InputHandler.getParts(Input)` method.
 This is the reason why the first character in the example is the separator `|`
 
 An alternative use is to specify an existing text file in this variable.
-In that case the file will be read by Jamal, and the individual lines will be interpreted as `key=value` pairs.
+In that case, the file will be read by Jamal, and the individual lines will be interpreted as `key=value` pairs.
 Comment lines starting with `#` and empty lines are ignored.
 
 end snippet
@@ -172,12 +172,12 @@ snippet JAMAL_OPTIONS_documentation
 {%E%}{%JAMAL_OPTIONS_ENV%}
 
 This environment variable can define options for the Jamal processor.
-The value of the variable is interpreted as a multi-part input.
+The value of the variable is interpreted as a multipart input.
 The list is parsed using the standard `InputHandler.getParts(Input)` method.
-If you just have one option then you can define that with the name.
-If there are multiple options then you have to select a non-alphanumeric separator character and present it in front of the list.
+If you just have one option, then you can define that with the name.
+If there are multiple options, then you have to select a non-alphanumeric separator character and present it in front of the list.
 
-NOTE: that the usual `|` character has a special meaning for the bash, and therefore you may need escaping.
+NOTE: that the usual `|` character has a special meaning for the bash, and therefore you may need to escape.
 Also note that using `:` as a separator character may work, but it may be misleading as it can also be part of an option name.
 
 The options are set on the top level, there is no need to use a `:` prefix.
@@ -280,7 +280,7 @@ end snippet
         final var permissions = Files.getPosixFilePermissions(path);
         final var owner = Files.getOwner(path);
         final var user = System.getProperty("user.name");
-        if( !owner.getName().equals(user) ) {
+        if (!owner.getName().equals(user)) {
             throw new IllegalStateException(String.format("%sThe configuration %s '%s' is owned by '%s' but the current user is '%s'. 'chown %s %s' ", INSECURE_CONFIGURATION, ford, path, owner.getName(), user, user, path));
         }
         permissions.stream().filter(p ->
@@ -297,8 +297,8 @@ end snippet
         ).findAny().ifPresent(p -> {
             throw new IllegalStateException(String.format("%sThe configuration %s '%s' is readable by the group.", INSECURE_CONFIGURATION, ford, path));
         });
-        if( Files.isRegularFile(path) && permissions.contains(PosixFilePermission.OWNER_EXECUTE) ) {
-            throw new IllegalStateException(String.format("%sThe configuration file '%s' is executable. 'chmod 0600 %s' or 'chmod 0400 %s'", INSECURE_CONFIGURATION, path,path,path));
+        if (Files.isRegularFile(path) && permissions.contains(PosixFilePermission.OWNER_EXECUTE)) {
+            throw new IllegalStateException(String.format("%sThe configuration file '%s' is executable. 'chmod 0600 %s' or 'chmod 0400 %s'", INSECURE_CONFIGURATION, path, path, path));
         }
     }
 
@@ -333,6 +333,12 @@ end snippet
     }
 
 
+    /**
+     * A singleton holding the property values read from the {@code ¬/.jamal/settings.properties} or
+     * {@code ¬/.jamal/settings.xml} file.
+     * <p>
+     * The {@code PropertiesSingleton.INSTANCE.properties} field contains the loaded properties.
+     */
     private static class PropertiesSingleton {
         private final Properties properties = new Properties();
 
