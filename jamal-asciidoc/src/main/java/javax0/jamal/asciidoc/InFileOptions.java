@@ -18,6 +18,8 @@ class InFileOptions {
     boolean dual = false;
     boolean keepFrontMatter = Configuration.INSTANCE.keepFrontMatter;
 
+    boolean writableOutput = Configuration.INSTANCE.writableOutput;
+
     boolean prefixLog;
 
     InFileOptions(final String firstLine) {
@@ -25,6 +27,9 @@ class InFileOptions {
         final var options = matcher.find() ? List.of(matcher.group(1).split("\\s+")) : List.<String>of();
 
         // snippet OPTIONS
+        if (options.contains("writableOutput")) {
+            writableOutput = true;
+        }
         if (options.contains("dual")) {
             dual = true;
             save = false;
@@ -41,7 +46,7 @@ class InFileOptions {
         if (options.contains("log")) {
             log = true;
         }
-        if( options.contains("prefixLog")){
+        if (options.contains("prefixLog")) {
             prefixLog = true;
         }
         if (options.contains("external")) {

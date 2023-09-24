@@ -402,13 +402,13 @@ When running outside of the editor, the response will be retrieved synchronously
 NOTE: When the environment variable was introduced, I had no idea any use of it.
 
 === Options
-{%@snip:check id=OPTIONS hash=48c3323a%}\
+{%@snip:check id=OPTIONS hash=e9d7bf24%}\
 
 You can alter the auxiliary functions of the extension using options.
 You can place these options into the document's first line into a comment.
 If an option is defined for something controllable by configuration, then the option will take precedence.
 
-{%@define FIRST_LINE_OPTIONS=off noSave log external fromFile noDependencies keepFrontMatter dual%}
+{%@define FIRST_LINE_OPTIONS=off noSave log external fromFile noDependencies keepFrontMatter dual writableOutput%}
 
 [source]
 ----
@@ -474,6 +474,12 @@ Feel free to delete the log file.
 
 In some cases, you may need to execute the rendering using an external process.
 This option instructs the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+
+==== writableOutput
+
+The output file is usually saved as a read-only file.
+This is to prevent accidental editing of the file.
+This option instructs the extension to save the output file as a writable file.
 
 ==== fromFile
 

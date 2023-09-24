@@ -1,3 +1,4 @@
+{%@comment writableOutput%}
 {%@import ../version.jim%}
 {%@define asciidoc:output=live-templates/templates/Jamal.xml%}
 {%@sep 〔 〕%}
@@ -310,9 +311,8 @@ $variables
 〕
 
 
-〔template |snip:check|snip:check ($O$) $C$|check snippet consistency|
+〔template |snip:check|snip:check $O$|check snippet consistency|
  〔variable |O|"hash= lines= id= file= message= warning error"〕
- 〔variable |C|"snippet_name"〕
 〕
 
 〔template |snip:file|snip:file $C$|get the file name of the snippet|

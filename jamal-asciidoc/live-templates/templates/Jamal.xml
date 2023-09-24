@@ -150,7 +150,7 @@
     </template>
     <template description="require a certain version of Jamal" name="jm-require" toReformat="false" toShortenFQNames="true" value="{%@require $R$ $V$%}">
         <variable alwaysStopAt="true" expression="enum(&quot;&lt;=&quot;,&quot;&lt;&quot;,&quot;=&quot;,&quot;&gt;=&quot;,&quot;&gt;&quot;)" name="R"/>
-        <variable alwaysStopAt="true" expression="&quot;2.3.1-SNAPSHOT&quot;" name="V"/>
+        <variable alwaysStopAt="true" expression="&quot;2.5.0-SNAPSHOT&quot;" name="V"/>
         <context>
             <option name="AsciiDoc" value="true"/>
         </context>
@@ -409,9 +409,8 @@
             <option name="AsciiDoc" value="true"/>
         </context>
     </template>
-    <template description="check snippet consistency" name="jm-snip:check" toReformat="false" toShortenFQNames="true" value="{%@snip:check ($O$) $C$%}">
+    <template description="check snippet consistency" name="jm-snip:check" toReformat="false" toShortenFQNames="true" value="{%@snip:check $O$%}">
         <variable alwaysStopAt="true" expression="&quot;hash= lines= id= file= message= warning error&quot;" name="O"/>
-        <variable alwaysStopAt="true" expression="&quot;snippet_name&quot;" name="C"/>
         <context>
             <option name="AsciiDoc" value="true"/>
         </context>

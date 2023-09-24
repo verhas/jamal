@@ -22,6 +22,8 @@ import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -216,7 +218,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 }
             }
             if (opts.save) {
-                writeOutputFile(outputFileName, log, cachingFileReader, newLines);
+                writeOutputFile(outputFileName, log, cachingFileReader, newLines, opts);
             }
         }
         restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
@@ -300,15 +302,29 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * @param log               the logger
      * @param cachingFileReader the file reader that contains the list of the files that were read. It is used to log.
      * @param newLines          the lines that are to be written to the output file
+     * @param opts
      */
-    private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines) {
+    private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines, InFileOptions opts) {
         try {
-            OutputFile.save(Path.of(outputFileName), String.join("\n", newLines));
+            Path output = Path.of(outputFileName);
+            OutputFile.save(output, String.join("\n", newLines));
+            if (opts.writableOutput) {
+                final var success = output.toFile().setWritable(true);
+                if (!success) {
+                    log.info("Failed to set writable the output file " + outputFileName);
+                }
+            }
+            log.info("saved");
+            log.info("dependencies\n" + cachingFileReader.list());
         } catch (Exception e) {
-            // there is not much we can do here
+            log.info("Failed to save the output file " + outputFileName);
+            try (StringWriter sw = new StringWriter();
+                 PrintWriter pw = new PrintWriter(sw)) {
+                e.printStackTrace(pw);
+                log.info("Exception was:\n" + sw);
+            } catch (IOException ignore) {
+            }
         }
-        log.info("saved");
-        log.info("dependencies\n" + cachingFileReader.list());
     }
 
     private static final List<Converter> converters = Converter.getInstances();

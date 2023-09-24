@@ -13,6 +13,7 @@ public class Configuration {
     public final boolean noDependencies;
     public final String externalCommand;
     public boolean keepFrontMatter;
+    public boolean writableOutput;
 
     private Configuration() {
         // snipline ASCIIDOC_EXTENSION_OPEN filter="(\w+)"
@@ -33,5 +34,7 @@ public class Configuration {
         noDependencies = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_NO_DEPENDENCIES").map(Boolean::parseBoolean).orElse(false);
         // snipline ASCIIDOC_EXTENSION_KEEP_FRONT_MATTER filter="(\w+)"
         keepFrontMatter = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_KEEP_FRONT_MATTER").map(Boolean::parseBoolean).orElse(false);
+        // snipline ASCIIDOC_EXTENSION_WRITABLE_OUTPUT filter="(\w+)"
+        keepFrontMatter = EnvironmentVariables.getenv("ASCIIDOC_EXTENSION_WRITABLE_OUTPUT").map(Boolean::parseBoolean).orElse(false);
     }
 }

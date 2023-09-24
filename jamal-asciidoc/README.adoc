@@ -413,14 +413,14 @@ If an option is defined for something controllable by configuration, then the op
 
 [source]
 ----
-{@comment off noSave log external fromFile noDependencies keepFrontMatter dual}
+{@comment off noSave log external fromFile noDependencies keepFrontMatter dual writableOutput}
 ----
 
 or
 
 [source]
 ----
-{%@comment off noSave log external fromFile noDependencies keepFrontMatter dual%}
+{%@comment off noSave log external fromFile noDependencies keepFrontMatter dual writableOutput%}
 ----
 
 You can place any of the options listed in the above example separated by spaces in any order.
@@ -475,6 +475,12 @@ Feel free to delete the log file.
 
 In some cases, you may need to execute the rendering using an external process.
 This option instructs the extension to start Jamal as an external process, convert the input to the output and then read the lines of the generated file and return it for the Asciidoc plugin.
+
+==== writableOutput
+
+The output file is usually saved as a read-only file.
+This is to prevent accidental editing of the file.
+This option instructs the extension to save the output file as a writable file.
 
 ==== fromFile
 

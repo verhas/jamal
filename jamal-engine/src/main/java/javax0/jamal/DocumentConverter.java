@@ -68,7 +68,7 @@ public class DocumentConverter {
      * used. When the {@code useDefaultSeparators} is {@code true} then the default separators {@code { } }.
      * are used. When the {@code useDefaultSeparators} is {@code false} then the separators are
      * {@code {% %}}.
-     *
+     * <p>
      * This method is used by the asciidoc plugin.
      *
      * @param file                 the name of the Jamal source documentation file.
@@ -76,10 +76,36 @@ public class DocumentConverter {
      * @throws Exception if the file does not exist, cannot be read, cannot be processed by Jamal (syntax error)
      */
     public static void convert(final String file, boolean useDefaultSeparators) throws Exception {
+        final var output = file.substring(0, file.length() - ".jam".length());
+        convert(file, output, useDefaultSeparators);
+    }
+
+    /**
+     * Convert a document preprocessing and save the result into a file.
+     *
+     * @param file   the name of the Jamal source documentation file.
+     * @param output the name of the output file.
+     * @throws Exception if the file does not exist, cannot be read, cannot be processed by Jamal (syntax error)
+     */
+    public static void convert(final String file, final String output) throws Exception {
+        convert(file, output, false);
+    }
+
+    /**
+     * This method is the same as {@link #convert(String)} but it can also specify if the default separators should be
+     * used. When the {@code useDefaultSeparators} is {@code true} then the default separators {@code { } }.
+     * are used. When the {@code useDefaultSeparators} is {@code false} then the separators are
+     * {@code {% %}}.
+     *
+     * @param file                 the name of the Jamal source documentation file.
+     * @param output               the name of the output file.
+     * @param useDefaultSeparators signals if the processing should use the default separators.
+     * @throws Exception if the file does not exist, cannot be read, cannot be processed by Jamal (syntax error)
+     */
+    public static void convert(final String file, final String output, boolean useDefaultSeparators) throws Exception {
         final var processor = useDefaultSeparators ? new Processor() : new Processor("{%", "%}");
         final var in = FileTools.getInput(file, processor);
         final var result = processor.process(in);
-        final var output = file.substring(0, file.length() - ".jam".length());
         OutputFile.save(Paths.get(output), result);
     }
 
@@ -107,10 +133,26 @@ public class DocumentConverter {
         }
     }
 
+    /**
+     * Create an {@link Includes} object that can be used to specify the files that should be converted.
+     * <p>
+     * The resulting object can be used in the {@link #convertAll(Includes, Excludes)} method.
+     *
+     * @param s the patterns to include.
+     * @return the {@link Includes} object.
+     */
     public static Includes include(String... s) {
         return new Includes(s);
     }
 
+    /**
+     * Create an {@link Excludes} object that can be used to specify the files that should not be converted.
+     * <p>
+     * The resulting object can be used in the {@link #convertAll(Includes, Excludes)} method.
+     *
+     * @param s the patterns to exclude.
+     * @return the {@link Excludes} object.
+     */
     public static Excludes exclude(String... s) {
         return new Excludes(s);
     }
@@ -148,8 +190,9 @@ public class DocumentConverter {
         }
     }
 
+
     private static Optional<File> found(final StringBuilder sb) {
-        File rootDirFile = new File(sb.toString());
+        final File rootDirFile = new File(sb.toString());
         if (rootDirFile.exists()) {
             return Optional.of(rootDirFile);
         }
