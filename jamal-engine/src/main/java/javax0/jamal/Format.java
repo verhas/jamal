@@ -14,7 +14,6 @@ import java.util.Map;
  */
 public class Format {
 
-
     /**
      * The macro opening string is '{{' and the closing string is '}}' like in many other templating languages, however
      * in this case the whole weaponry of Jamal is available. Since the input does not come from a file and thus there

@@ -191,6 +191,16 @@ public class DocumentConverter {
     }
 
 
+    /**
+     * Check that the file pointed by the {@code sb} StringBuilder exists. If it does not exist, then go to one
+     * directory up, prepending {@code ../} to the {@code sb} and return an optional empty. The caller can create a
+     * loop calling the method many times.
+     * <p>
+     * If the file exists, then return an optional that contains the file.
+     *
+     * @param sb the StringBuilder that contains the path to the file
+     * @return an optional that contains the file if it exists or an empty optional if it does not exist
+     */
     private static Optional<File> found(final StringBuilder sb) {
         final File rootDirFile = new File(sb.toString());
         if (rootDirFile.exists()) {
