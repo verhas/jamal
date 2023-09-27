@@ -106,7 +106,7 @@ public class DocumentConverter {
         final var processor = useDefaultSeparators ? new Processor() : new Processor("{%", "%}");
         final var in = FileTools.getInput(file, processor);
         final var result = processor.process(in);
-        OutputFile.save(Paths.get(output), result);
+        new OutputFile(processor).save(Paths.get(output), result);
     }
 
     public static class Includes {

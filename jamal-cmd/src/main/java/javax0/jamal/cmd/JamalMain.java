@@ -13,11 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -158,9 +156,9 @@ public class JamalMain {
                     try (final var processor = new Processor(macroOpen, macroClose)) {
                         processor.setLogger(JamalMain::log);
                         result = processor.process(createInput(inputPath));
-                    }
-                    if (!dry) {
-                        writeOutput(outputPath, result);
+                        if (!dry) {
+                            writeOutput(processor, outputPath, result);
+                        }
                     }
                 }
             }
@@ -178,13 +176,14 @@ public class JamalMain {
      * parent directories if they do not exist. The method sets the file to read/write before writing and sets it back
      * to read only after writing. This is to avoid accidental modification of the file.
      *
-     * @param output the file to write the result to
-     * @param result the result to write
+     * @param processor the processor that was used to process the input
+     * @param output    the file to write the result to
+     * @param result    the result to write
      * @throws IOException if the file cannot be written
      */
-    private static void writeOutput(Path output, String result) throws IOException {
+    private static void writeOutput(Processor processor, Path output, String result) throws IOException {
         try {
-            OutputFile.save(output, result);
+            new OutputFile(processor).save(output, result);
         } catch (Exception e) {
             logException(e);
         }

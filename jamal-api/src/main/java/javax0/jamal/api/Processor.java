@@ -154,15 +154,15 @@ public interface Processor extends AutoCloseable {
      * resource.
      * <p>
      * Closing as an operation may be treated fairly liberal. Almost anything can be "closing". The macro
-     * {@code xmlFormat}, for example, "closes" the operation replacing the final output of Jamal with the XML formatted
+     * {@code xmlFormat}, for example, "closes" the operation replacing the final output of Jamal with the XML-formatted
      * version.
      * <p>
      * The {@code closer} may also implement the interfaces {@link javax0.jamal.api.Closer.ProcessorAware} or {@link
      * javax0.jamal.api.Closer.OutputAware} or both.
-     * In that case the
+     * In that case, the
      * {@link javax0.jamal.api.Closer.ProcessorAware#set(Processor) set(Processor)}
      * and/or
-     * {@link javax0.jamal.api.Closer.OutputAware#set(Input)}  set(Input)}
+     * {@link javax0.jamal.api.Closer.OutputAware#set(Input)  set(Input)}
      * methods will be called before calling {@link AutoCloseable#close() close()} passing the {@link Processor}
      * or the {@link Input} instance holding the final processed output as argument.
      * <p>

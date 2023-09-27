@@ -100,7 +100,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     final static Map<String, Integer> fileCounter = new HashMap<>();
 
-    private class FileConverter implements Runnable {
+    private static class FileConverter implements Runnable {
 
         private final String inputFile;
         private final int counter;
@@ -197,6 +197,9 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                 newLines = JamalExecutor.execute(fileName, lines);
                 log.info("setting cache");
                 JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
+                if (opts.save) {
+                    writeOutputFile(null, outputFileName, log, cachingFileReader, newLines, opts);
+                }
             } else {
                 final var logger = opts.prefixLog ? new StringColletingLogger() : new javax0.jamal.api.Processor.Logger() {
                     @Override
@@ -209,16 +212,16 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
                         return "";
                     }
                 };
-                final var result = runJamalInProcess(fileName, lines, opts.useDefaultSeparators, text, cachingFileReader, logger);
+                final var result = runJamalInProcess(fileName, lines, opts, text, cachingFileReader, logger);
                 newLines = result.lines;
                 outputFileName = getSaveToFileName(fileName, outputFileName, result);
                 if (!(result.exception instanceof TransientException)) {
                     log.info("setting cache");
                     JamalPreprocessor.cache.set(new ProcessingCache(md5, newLines, cachingFileReader));
                 }
-            }
-            if (opts.save) {
-                writeOutputFile(outputFileName, log, cachingFileReader, newLines, opts);
+                if (opts.save) {
+                    writeOutputFile(result.processor, outputFileName, log, cachingFileReader, newLines, opts);
+                }
             }
         }
         restoreTheLinesIntoThePlugin(reader, fileName, log, newLines, opts);
@@ -274,8 +277,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
     }
 
-    private Result runJamalInProcess(final String fileName, final List<String> lines, final boolean useDefaultSeparators, final String text, final CachingFileReader cachingFileReader, final javax0.jamal.api.Processor.Logger logger) {
-        final var processor = useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
+    private Result runJamalInProcess(final String fileName, final List<String> lines, final InFileOptions opts, final String text, final CachingFileReader cachingFileReader, final javax0.jamal.api.Processor.Logger logger) {
+        final var processor = opts.useDefaultSeparators ? new Processor() : new Processor(Configuration.INSTANCE.macroOpen, Configuration.INSTANCE.macroClose);
         processor.setLogger(logger);
         processor.setFileReader(cachingFileReader);
         final var input = Input.makeInput(text, new Position(fileName, 0, 0));
@@ -290,6 +293,12 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         }
         final var r = processJamal(processor, input);
         r.processor = processor;
+        if( opts.writableOutput ){
+            // we do not allow writableOutput when processing is internal
+            r.position = new Position("", 0);
+            r.exception = new BadSyntax("writableOutput can only be used when processing is external");
+            r.errorMessage = r.exception.getMessage();
+        }
         r.lines = postProcess(lines, r, fileName);
         return r;
     }
@@ -302,17 +311,16 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * @param log               the logger
      * @param cachingFileReader the file reader that contains the list of the files that were read. It is used to log.
      * @param newLines          the lines that are to be written to the output file
-     * @param opts
+     * @param opts              the options that were read from the first line of the input file
      */
-    private void writeOutputFile(final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines, InFileOptions opts) {
+    private void writeOutputFile(final Processor processor, final String outputFileName, final Log log, final CachingFileReader cachingFileReader, final List<String> newLines, InFileOptions opts) {
         try {
             Path output = Path.of(outputFileName);
-            OutputFile.save(output, String.join("\n", newLines));
-            if (opts.writableOutput) {
-                final var success = output.toFile().setWritable(true);
-                if (!success) {
-                    log.info("Failed to set writable the output file " + outputFileName);
-                }
+            final String out = String.join("\n", newLines);
+            if (processor == null) {
+                new OutputFile(StandardCharsets.UTF_8, opts.writableOutput).save(output, out);
+            } else {
+                new OutputFile(processor).save(output, out);
             }
             log.info("saved");
             log.info("dependencies\n" + cachingFileReader.list());

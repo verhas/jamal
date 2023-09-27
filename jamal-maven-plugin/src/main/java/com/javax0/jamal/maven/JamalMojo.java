@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -98,8 +97,8 @@ public class JamalMojo extends AbstractMojo {
                                 Files.readString(inputPath, StandardCharsets.UTF_8),
                                 new Position(inputPath.toString(), 1)));
                 // end snippet
+                writeOutput(processor, output, result);
             }
-            writeOutput(output, result);
         } catch (Exception e) {
             logException(e);
             processingSuccessful = false;
@@ -117,9 +116,9 @@ public class JamalMojo extends AbstractMojo {
      * @param result the result to write
      * @throws IOException if the file cannot be written
      */
-    private void writeOutput(Path output, String result) throws IOException {
+    private void writeOutput(Processor processor, Path output, String result) throws IOException {
         try {
-            OutputFile.save(output, result);
+            new OutputFile(processor).save(output, result);
         } catch (Exception e) {
             logException(e);
             processingSuccessful = false;

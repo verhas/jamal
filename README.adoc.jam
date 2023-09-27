@@ -348,6 +348,24 @@ They are
 * link:documentation/macros/$doc[`$doc`]
 %}
 
+There are two special user defined macros, `output:writable` and `output:charset`.
+These can control the output file creation.
+Note, that this is not a core feature of Jamal, but most current embeddings (Asciidoc, Maven plugin, and command line) support these macros.
+
+By default, the generated file is not writable.
+This is to prevent accidental editing of the generated files.
+Many times the generated files are stored along the Jamal files, and it is an easy mistake to edit the generated file.
+To prevent this, the generated file is read only by default
+
+There are cases when the output has to be readable.
+An example is the live template XML file that cannot be handled properly by IntelliJ if it is read only.
+If the value of the macro `output:writable` is `true`, then the generated file will be writable.
+
+The macro `output:charset` can be used to set the character set of the generated file.
+The default value is UTF-8.
+
+Note that even of you set the character set to `UTF-16LE` the generated file will not contain the BOM.
+
 === Applications, Embedding
 
 * link:./jamal-asciidoc/README.adoc[Jamal Asciidoc Documentation], How to configure and use Jamal to edit Asciidoc files using IntelliJ editor in a WYSIWYG way, or the AsciiDocFX editor.

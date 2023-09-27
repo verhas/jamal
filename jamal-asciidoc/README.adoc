@@ -482,6 +482,11 @@ The output file is usually saved as a read-only file.
 This is to prevent accidental editing of the file.
 This option instructs the extension to save the output file as a writable file.
 
+This option can only be used when the option `external` is also used.
+It is an error to use this option without the `external` option.
+
+If the processing is in-process (that is the usual way) the global macro `output:writable` controls the writable flag.
+
 ==== fromFile
 
 Will instruct Jamal to ignore the lines that the Asciidoctor plugin is providing and read the lines directly from the file.

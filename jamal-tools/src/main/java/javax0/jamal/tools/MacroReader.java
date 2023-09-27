@@ -9,17 +9,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 /**
- * Utility class to fetch the value of a user defined macro. This is used to get parameter strings, for example the
- * macro {@code NumberLines} has the following lines:
- *
- * <pre>{@code
- *         final var format = UDMacro.macro(processor).readValue("format").orElse("%d. ");
- *         final var start = UDMacro.macro(processor).integer().readValue("start").orElse(1);
- *         final var step = UDMacro.macro(processor).integer().readValue("step").orElse(1);
- * }</pre>
- * <p>
- * to fetch the string value of the macros {@code format}, {@code start}, {@code step}. When the method {@code
- * integer()} is inserted into the call chain then the returned value is converted to integer.
+ * Utility class to fetch the value of a user-defined macro. This is used to get the value of argument-less macros.
  */
 public class MacroReader {
     final private Processor processor;
@@ -37,12 +27,12 @@ public class MacroReader {
     }
 
     private Optional<String> _readValue(String id) throws BadSyntax {
-        if( id == null ){
+        if (id == null) {
             return Optional.empty();
         }
         final var evaluable = processor.getRegister().getUserDefined(id)
-            .filter(macro -> macro instanceof Evaluable)
-            .map(macro -> (Evaluable) macro);
+                .filter(macro -> macro instanceof Evaluable)
+                .map(macro -> (Evaluable) macro);
         if (evaluable.isPresent()) {
             return Optional.ofNullable(evaluable.get().evaluate());
         } else {
