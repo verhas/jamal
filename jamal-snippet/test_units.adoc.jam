@@ -1,0 +1,116 @@
+= This file is a manual test for `units.jim`
+
+The symbolic names and the unicode character images in the rendered output should match.
+
+The reason to have these macros is to help the maintenance of documents that are restricted to ASCII characters.
+It may also be easier to type the symbolic names than the unicode characters.
+
+Conventions in the symbolic names:
+
+* The unit name starts with the prefix `unit:`.
+It also makes the macro global.
+
+* The name of the unit is usually the unit preceded by metrix prefixes.
+Latin letters denote these prefixes except `{%@unicode &#x00B5%}` for `micro`.
+In the case of micro we use the letter `u`.
+
+* When the unit is a fraction, the slash is replaced by `_p_`.
+This middle part stands for __"per"__.
+
+* The capitalization of the letters in the unit name is the same as in the unicode picture of the character.
+
+* Not all SI units and SI prefixes are available in Unicode.
+
+* The characters that are in the code page but are not unit symbols are not included in this file.
+
+== Here are the units
+
+{%@import res:units.jim%}
+* hPa {%unit:hPa%}
+* da {%unit:da%}
+* AU {%unit:AU%}
+* bar {%unit:bar%}
+* oV {%unit:oV%}
+* pc {%unit:pc%}
+* pA {%unit:pA%}
+* nA {%unit:nA%}
+* uA {%unit:uA%}
+* mA {%unit:mA%}
+* kA {%unit:kA%}
+* KB {%unit:KB%}
+* MB {%unit:MB%}
+* GB {%unit:GB%}
+* cal {%unit:cal%}
+* kcal {%unit:kcal%}
+* pF {%unit:pF%}
+* nF {%unit:nF%}
+* uF {%unit:uF%}
+* ug {%unit:ug%}
+* mg {%unit:mg%}
+* kg {%unit:kg%}
+* Hz {%unit:Hz%}
+* kHz {%unit:kHz%}
+* MHz {%unit:MHz%}
+* GHz {%unit:GHz%}
+* THz {%unit:THz%}
+* ul {%unit:ul%}
+* ml {%unit:ml%}
+* dl {%unit:dl%}
+* kl {%unit:kl%}
+* fm {%unit:fm%}
+* nm {%unit:nm%}
+* um {%unit:um%}
+* mm {%unit:mm%}
+* cm {%unit:cm%}
+* km {%unit:km%}
+* m2 {%unit:m2%}
+* km2 {%unit:km2%}
+* mm3 {%unit:mm3%}
+* cm3 {%unit:cm3%}
+* m3 {%unit:m3%}
+* km3 {%unit:km3%}
+* m_p_s {%unit:m_p_s%}
+* m_p_s2 {%unit:m_p_s2%}
+* Pa {%unit:Pa%}
+* kPa {%unit:kPa%}
+* MPa {%unit:MPa%}
+* GPa {%unit:GPa%}
+* rad {%unit:rad%}
+* rad_p_s {%unit:rad_p_s%}
+* rad_p_s2 {%unit:rad_p_s2%}
+* ps {%unit:ps%}
+* ns {%unit:ns%}
+* us {%unit:us%}
+* ms {%unit:ms%}
+* pV {%unit:pV%}
+* nV {%unit:nV%}
+* uV {%unit:uV%}
+* mV {%unit:mV%}
+* kV {%unit:kV%}
+* MV {%unit:MV%}
+* pW {%unit:pW%}
+* nW {%unit:nW%}
+* uW {%unit:uW%}
+* mW {%unit:mW%}
+* kW {%unit:kW%}
+* MW {%unit:MW%}
+* kOhm {%unit:kOhm%}
+* MOhm {%unit:MOhm%}
+* Bq {%unit:Bq%}
+* cc {%unit:cc%}
+* cd {%unit:cd%}
+* c_p_kg {%unit:c_p_kg%}
+* CO {%unit:CO%}
+* dB {%unit:dB%}
+* Gy {%unit:Gy%}
+* ha {%unit:ha%}
+* in {%unit:in%}
+* kt {%unit:kt%}
+* mb {%unit:mb%}
+* mil {%unit:mil%}
+* mol {%unit:mol%}
+* pH {%unit:pH%}
+* ppm {%unit:PPM%}
+* sr {%unit:sr%}
+* Sv {%unit:Sv%}
+* Wb {%unit:Wb%}

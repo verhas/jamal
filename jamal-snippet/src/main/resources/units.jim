@@ -1,0 +1,107 @@
+{@comment}
+{#define unit:hPa={@unicode &#x3371}}
+{#define unit:da={@unicode &#x3372}}
+{#define unit:AU={@unicode &#x3373}}
+{#define unit:bar={@unicode &#x3374}}
+{#define unit:oV={@unicode &#x3375}}
+{#define unit:pc={@unicode &#x3376}}
+
+{#define unit:pA={@unicode &#x3380}}
+{#define unit:nA={@unicode &#x3381}}
+{#define unit:uA={@unicode &#x3382}}
+{#define unit:mA={@unicode &#x3383}}
+{#define unit:kA={@unicode &#x3384}}
+{#define unit:KB={@unicode &#x3385}}
+{#define unit:MB={@unicode &#x3386}}
+{#define unit:GB={@unicode &#x3387}}
+{#define unit:cal={@unicode &#x3388}}
+{#define unit:kcal={@unicode &#x3389}}
+{#define unit:pF={@unicode &#x338A}}
+{#define unit:nF={@unicode &#x338B}}
+{#define unit:uF={@unicode &#x338C}}
+{#define unit:ug={@unicode &#x338D}}
+{#define unit:mg={@unicode &#x338E}}
+{#define unit:kg={@unicode &#x338F}}
+
+{#define unit:Hz={@unicode &#x3390}}
+{#define unit:kHz={@unicode &#x3391}}
+{#define unit:MHz={@unicode &#x3392}}
+{#define unit:GHz={@unicode &#x3393}}
+{#define unit:THz={@unicode &#x3394}}
+{#define unit:ul={@unicode &#x3395}}
+{#define unit:ml={@unicode &#x3396}}
+{#define unit:dl={@unicode &#x3397}}
+{#define unit:kl={@unicode &#x3398}}
+{#define unit:fm={@unicode &#x3399}}
+{#define unit:nm={@unicode &#x339A}}
+{#define unit:um={@unicode &#x339B}}
+{#define unit:mm={@unicode &#x339C}}
+{#define unit:cm={@unicode &#x339D}}
+{#define unit:km={@unicode &#x339E}}
+{#define unit:mm2={@unicode &#x339F}}
+
+{#define unit:cm2={@unicode &#x33A0}}
+{#define unit:m2={@unicode &#x33A1}}
+{#define unit:km2={@unicode &#x33A2}}
+{#define unit:mm3={@unicode &#x33A3}}
+{#define unit:cm3={@unicode &#x33A4}}
+{#define unit:m3={@unicode &#x33A5}}
+{#define unit:km3={@unicode &#x33A6}}
+{#define unit:m_p_s={@unicode &#x33A7}}
+{#define unit:m_p_s2={@unicode &#x33A8}}
+{#define unit:Pa={@unicode &#x33A9}}
+{#define unit:kPa={@unicode &#x33AA}}
+{#define unit:MPa={@unicode &#x33AB}}
+{#define unit:GPa={@unicode &#x33AC}}
+{#define unit:rad={@unicode &#x33AD}}
+{#define unit:rad_p_s={@unicode &#x33AE}}
+{#define unit:rad_p_s2={@unicode &#x33AF}}
+
+{#define unit:ps={@unicode &#x33B0}}
+{#define unit:ns={@unicode &#x33B1}}
+{#define unit:us={@unicode &#x33B2}}
+{#define unit:ms={@unicode &#x33B3}}
+{#define unit:pV={@unicode &#x33B4}}
+{#define unit:nV={@unicode &#x33B5}}
+{#define unit:uV={@unicode &#x33B6}}
+{#define unit:mV={@unicode &#x33B7}}
+{#define unit:kV={@unicode &#x33B8}}
+{#define unit:MV={@unicode &#x33B9}}
+{#define unit:pW={@unicode &#x33BA}}
+{#define unit:nW={@unicode &#x33BB}}
+{#define unit:uW={@unicode &#x33BC}}
+{#define unit:mW={@unicode &#x33BD}}
+{#define unit:kW={@unicode &#x33BE}}
+{#define unit:MW={@unicode &#x33BF}}
+
+{#define unit:kOhm={@unicode &#x33C0}}
+{#define unit:MOhm={@unicode &#x33C1}}
+
+{#define unit:Bq={@unicode &#x33C3}}
+{#define unit:cc={@unicode &#x33C4}}
+{#define unit:cd={@unicode &#x33C5}}
+{#define unit:c_p_kg={@unicode &#x33C6}}
+{#define unit:CO={@unicode &#x33C7}}
+{#define unit:dB={@unicode &#x33C8}}
+{#define unit:Gy={@unicode &#x33C9}}
+{#define unit:ha={@unicode &#x33CA}}
+
+{#define unit:in={@unicode &#x33CC}}
+
+
+{#define unit:kt={@unicode &#x33CF}}
+
+
+
+
+
+{#define unit:mb={@unicode &#x33D4}}
+{#define unit:mil={@unicode &#x33D5}}
+{#define unit:mol={@unicode &#x33D6}}
+{#define unit:pH={@unicode &#x33D7}}
+
+{#define unit:PPM={@unicode &#x33D9}}
+
+{#define unit:sr={@unicode &#x33DB}}
+{#define unit:Sv={@unicode &#x33DC}}
+{#define unit:Wb={@unicode &#x33DD}}
