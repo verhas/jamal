@@ -14,7 +14,11 @@
 * Macro `repeat` was developed in the snippet library.
 * Macro `import` has a new parop, `isolate` that makes the import isolated.
 * Generated files are set to be read only, so that they are not accidentally edited.
+* `output:writable` can override this behavior.
 * Command line option `-jamalize` can install the Jamal Asciidoc extension into the current project.
+* experimental parser was developed to support editor plugins and LSE implementations in the future.
+* `output:charset` can be used to specify the output charset.
+* `units.jim` define the unicode metric units characters
 
 {%RELEASE IZMIR%}
 
