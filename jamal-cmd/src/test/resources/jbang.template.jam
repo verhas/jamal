@@ -4,16 +4,15 @@
 {#import {ROOT}/modules.jim}\
 {#define asciidoc:output={ROOT}/jbangstarter.java}\
 ///usr/bin/env jbang \"$0\" \"$@\" ; exit $? jaja
-//JAVA 11+
+//JAVA 17+
 {!@for[evalist] $module in ({modules:JBANG_DEPENDENCIES})=//DEPS com.javax0.jamal:jamal-$module:{VERSION}
-}
+}\
 
-{@escape `|||`
-import javax0.jamal.cmd.JamalMain;
+{@escape ``import javax0.jamal.cmd.JamalMain;
 
 class jbangstarter {
     public static void main(String... args) {
         JamalMain.main(args);
     }
 }
-`|||`}
+``}

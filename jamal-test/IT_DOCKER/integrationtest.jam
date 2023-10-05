@@ -1,5 +1,13 @@
-{@sep 〖〗}\
+{@sep 〔〕}\
 #!/bin/sh
+
+if [ -f /.dockerenv ]; then
+    echo "Running inside a Docker container."
+else
+    echo "Warning: This script is designed to run inside a Docker container. Do not run it outside."
+    echo "To execute the integration test start the do run ./test.sh"
+    exit 1
+fi
 
 echo Integration test starts
 mkdir -p .m2
@@ -18,11 +26,11 @@ EOT
 
 mkdir -p ~/.jamal
 chmod 0700 ~/jamal/jamal.sh
-〖@comment〗
+〔@comment〕
 cd jamal-maven-load
-〖@include [lines=3..inf] ../../jamal-maven-load/it.sh.jam〗
+〔@include [lines=3..inf] ../../jamal-maven-load/it.sh.jam〕
 cd ../jamal-test/IT_DOCKER
 
-〖@include [lines=2..inf] test_ruby.sh.jam〗
-〖@include [lines=2..inf] test_groovy.sh.jam〗
-〖@include [lines=2..inf] test_scriptbasic.sh.jam〗
+〔@include [lines=2..inf] test_ruby.sh.jam〕
+〔@include [lines=2..inf] test_groovy.sh.jam〕
+〔@include [lines=2..inf] test_scriptbasic.sh.jam〕

@@ -1,5 +1,13 @@
 #!/bin/sh
 
+if [ -f /.dockerenv ]; then
+    echo "Running inside a Docker container."
+else
+    echo "Warning: This script is designed to run inside a Docker container. Do not run it outside."
+    echo "To execute the integration test start the do run ./test.sh"
+    exit 1
+fi
+
 echo Integration test starts
 mkdir -p .m2
 mkdir -p .m2/repository

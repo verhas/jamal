@@ -102,7 +102,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.6.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <doclint>none</doclint>
@@ -402,12 +402,12 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
-                <version>9.5</version>
+                <version>9.6</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>9.5</version>
+                <version>9.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

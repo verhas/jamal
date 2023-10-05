@@ -23,11 +23,6 @@ endif〕〕
 〔CHECK :LEVENSHTEIN_VERSION:com/javax0/levenshtein〕
 〔CHECK :MAVEN_COMPILER_PLUGIN_VERSION:org/apache/maven/plugins/maven-compiler-plugin〕
 〔CHECK :MAVEN_JAVADOC_PLUGIN_VERSION:org/apache/maven/plugins/maven-javadoc-plugin〕
-+
-The JavaDoc plugin version 3.5.0 caused an exception during the compilation, that seems to be an internal error of the plugin.
-Sun Bug report ID `9074818` was assigned to this issue.
-Probably they will simply ignore this as the issue is with the Maven plugin.
-https://issues.apache.org/jira/projects/MJAVADOC/issues/MJAVADOC-742
 〔CHECK :MAVEN_GPG_PLUGIN_VERSION:org/apache/maven/plugins/maven-gpg-plugin〕
 〔CHECK :MAVEN_ASSEMBLY_PLUGIN_VERSION:org/apache/maven/plugins/maven-assembly-plugin〕
 〔CHECK :MAVEN_PLUGIN_API:org/apache/maven/maven-plugin-api〕

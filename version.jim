@@ -62,7 +62,7 @@ LEVENSHTEIN_VERSION=1.0.0                  -- https://repo.maven.apache.org/mave
 -- plugin dependencies
 MAVEN_COMPILER_PLUGIN_VERSION=3.11.0       -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin
 --- failing release
-MAVEN_JAVADOC_PLUGIN_VERSION=3.4.1         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
+MAVEN_JAVADOC_PLUGIN_VERSION=3.6.0         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
 MAVEN_GPG_PLUGIN_VERSION=3.1.0             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/
 MAVEN_ASSEMBLY_PLUGIN_VERSION=3.6.0        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/
 MAVEN_PLUGIN_API=4.0.0-alpha-7             -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/
@@ -89,17 +89,17 @@ OGNL_VERSION=3.4.2                         -- https://repo.maven.apache.org/mave
 SNAKEYAML_VERSION=2.2                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
 JSON_ORG_VERSION=20230618                  -- https://repo.maven.apache.org/maven2/org/json/json/
 FLEXMARK_VERSION=0.64.8                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
-APACHE_POI_VERSION=5.2.3                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
+APACHE_POI_VERSION=5.2.4                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 ASCIIDOCTORJ_VERSION=3.0.0-alpha.1         -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
 JSCRIPTBASIC_VERSION=2.1.1                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
 MARKDOWN_TO_ASCIIDOC=2.0                   -- https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/
 MAVEN_DOWNLOADER=1.1.0                     -- https://repo.maven.apache.org/maven2/com/javax0/mavenDownload/mavenDownloader/
-SOURCE_BUDDY=2.4.0                         -- https://repo.maven.apache.org/maven2/com/javax0/sourcebuddy/SourceBuddy/
+SOURCE_BUDDY=2.4.2                         -- https://repo.maven.apache.org/maven2/com/javax0/sourcebuddy/SourceBuddy/
 JAVA_LEX=1.0.2                             -- https://repo.maven.apache.org/maven2/com/javax0/javaLex/javaLex/
 REFI=1.0.1                                 -- https://repo.maven.apache.org/maven2/com/javax0/refi/
 SLF4J=2.0.7                                -- https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/
-ASM_VERSION=9.5                            -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm/
-ASM_TREE_VERSION=9.5                       -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/
+ASM_VERSION=9.6                            -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm/
+ASM_TREE_VERSION=9.6                       -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/
 
 -- dependencies needed for the Maven extension (not the plugin)
 MAVEN_CORE_VERSION=4.0.0-alpha-7           -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
