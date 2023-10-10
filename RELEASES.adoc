@@ -19,6 +19,7 @@
 * experimental parser was developed to support editor plugins and LSE implementations in the future.
 * `output:charset` can be used to specify the output charset.
 * `units.jim` define the unicode metric units characters
+* There is support to run Jamal from docker in the `jamal-docker` module.
 
 == https://github.com/verhas/jamal/tree/2.4.0[2.4.0]
 

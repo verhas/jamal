@@ -1,0 +1,159 @@
+= Running Jamal in a Docker Container
+
+This project contains files to support running Jamal in a docker container.
+
+To run Jamal from docker, you have to issue the commands:
+
+
+[source,sh]
+----
+docker build -t myContainer .
+docker run  --volume .:/home/jamal/q -it myContainer /jamal args
+----
+
+You can use any container name you like instead of ``myContainer``.
+
+``args`` are the arguments you would normally pass to the ``jamal`` command.
+Since the docker image sees only the mapped directory under the current working directory, you cannot use absolute paths.
+
+Example:
+
+[source,sh]
+----
+docker run  --volume .:/home/jamal/q -it myContainer /jamal test.txt.jam test.txt
+----
+
+The command above will convert the file ``test.txt.jam`` to ``test.txt``.
+
+== Files in the module
+
+=== `Dockerfile`
+
+This file is the description of the docker image.
+It is used by the `docker build` command to create the image.
+
+[source,dockerfile]
+----
+FROM alpine
+WORKDIR /home/jamal
+COPY prebuild.sh /home/jamal/prebuild.sh
+COPY build.sh /home/jamal/build.sh
+COPY jamal /jamal
+RUN sh /home/jamal/prebuild.sh
+USER jamal
+RUN sh /home/jamal/build.sh
+CMD [ "/jamal" ]
+----
+
+It copies the three shell scripts to the container image and then it runs
+
+* `prebuild.sh`
+
+* `build.sh`
+
+The third copied `jamal` script is the one that is run when the container is started.
+
+=== `jamal`
+
+This file is a shell script that will get copied to the container image as `/jamal`.
+
+[source,sh]
+----
+#!/bin/sh
+cd /home/jamal/q
+java -cp "$(find "/home/jamal/.m2/repository" -name "*.jar" | tr '\n' ':')" javax0.jamal.cmd.JamalMain "$@"
+----
+
+It assumes that the current working directory is mapped to the directory
+``/home/jamal/q
+``.
+That way the files passed as arguments to the ``docker run`` command will be passed to the `jamal` script.
+
+=== `prebuild.sh`
+
+This file installs all the needed programs that may be needed to run Jamal in the container.
+Some packages are needed by some of the extra Jamal modules.
+For example, the graphviz package is needed by the `plantUML` module.
+
+[source,sh]
+----
+#! /bin/bash
+
+#
+# Commands executed before the build as root
+#
+
+apk update
+apk add --no-cache openjdk17 maven graphviz git fontconfig ttf-droid bash
+addgroup JAMAL
+adduser -G JAMAL -D -s /bin/bash jamal
+chown jamal /home/jamal
+chown jamal /jamal
+chmod u+rx /jamal
+
+# create the empty repo, this is where we will create the application
+mkdir -p /home/jamal/.m2/repository
+chown jamal /home/jamal/.m2/repository
+chmod u+wxr /home/jamal/.m2/repository
+
+# we do not need the prebuild script anymore
+rm /home/jamal/prebuild.sh
+echo "READY TO BUILD"
+----
+
+=== `build.sh`
+
+This script builds Jamal.
+The result of the build process creates the files in the local repository.
+At the end of the build steps, the source code cloned from the repository is removed.
+
+[source,sh]
+----
+#! /bin/bash
+
+#
+# Commands executed to build Jamal executed as user jamal
+#
+
+# clone the source into the 'build' directory
+git clone https://github.com/verhas/jamal.git  build
+
+# We do not need to compile and run the tests here, this is not development, it is deployment.
+# After this command Jamal JARs and dependencies will be in the local Maven repository and nothing else.
+cd /home/jamal/build || exit 1
+mvn -Dmaven.test.skip=true install
+cd ..
+
+# we do not need the source any more, all the JAR files are in the local repo
+rm -rf build
+
+# we do not need the build script anymore
+rm /home/jamal/build.sh
+echo "DONE"
+----
+
+
+== Creating the Docker Image
+
+To create the docker image you can use to run Jamal, you have to issue the command:
+
+[source,sh]
+----
+docker build -t myContainer .
+----
+
+Here you can use any name you like for your container.
+
+== Running Jamal in a Docker Container
+
+To run Jamal from docker, you have to issue the command:
+
+[source,sh]
+----
+docker run  --volume .:/home/jamal/q -it myContainer /jamal args
+----
+
+This will map the current working directory to the directory `/home/jamal/q` in the container.
+This is assumed by the `/jamal` script.
+Before starting Jamal the script sets the current working directory to `/home/jamal/q`.
+That way, any file referenced on the command line will be found in the mapped directory.

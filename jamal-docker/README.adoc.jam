@@ -1,0 +1,108 @@
+= Running Jamal in a Docker Container
+
+This project contains files to support running Jamal in a docker container.
+
+To run Jamal from docker, you have to issue the commands:
+{%@define CONTAINER_NAME=myContainer%}
+
+[source,sh]
+----
+docker build -t {%CONTAINER_NAME%} .
+docker run  --volume .:/home/jamal/q -it {%CONTAINER_NAME%} /jamal args
+----
+
+You can use any container name you like instead of ``{%CONTAINER_NAME%}``.
+
+``args`` are the arguments you would normally pass to the ``jamal`` command.
+Since the docker image sees only the mapped directory under the current working directory, you cannot use absolute paths.
+
+Example:
+
+[source,sh]
+----
+docker run  --volume .:/home/jamal/q -it {%CONTAINER_NAME%} /jamal test.txt.jam test.txt
+----
+
+The command above will convert the file ``test.txt.jam`` to ``test.txt``.
+
+== Files in the module
+
+=== `Dockerfile`
+
+This file is the description of the docker image.
+It is used by the `docker build` command to create the image.
+
+[source,dockerfile]
+----
+{%@include [verbatim] Dockerfile%}
+----
+
+It copies the three shell scripts to the container image and then it runs
+
+* `prebuild.sh`
+
+* `build.sh`
+
+The third copied `jamal` script is the one that is run when the container is started.
+
+=== `jamal`
+
+This file is a shell script that will get copied to the container image as `/jamal`.
+
+[source,sh]
+----
+{%@include [verbatim] jamal%}
+----
+
+It assumes that the current working directory is mapped to the directory
+``{%#replace (regex) |{%@include [verbatim lines=2..2] jamal%}|cd ||%}``.
+That way the files passed as arguments to the ``docker run`` command will be passed to the `jamal` script.
+
+=== `prebuild.sh`
+
+This file installs all the needed programs that may be needed to run Jamal in the container.
+Some packages are needed by some of the extra Jamal modules.
+For example, the graphviz package is needed by the `plantUML` module.
+
+[source,sh]
+----
+{%@include [verbatim] prebuild.sh%}
+----
+
+=== `build.sh`
+
+This script builds Jamal.
+The result of the build process creates the files in the local repository.
+At the end of the build steps, the source code cloned from the repository is removed.
+
+[source,sh]
+----
+{%@include [verbatim] build.sh%}
+----
+
+
+== Creating the Docker Image
+
+To create the docker image you can use to run Jamal, you have to issue the command:
+
+[source,sh]
+----
+docker build -t {%CONTAINER_NAME%} .
+----
+
+Here you can use any name you like for your container.
+
+== Running Jamal in a Docker Container
+
+To run Jamal from docker, you have to issue the command:
+
+[source,sh]
+----
+docker run  --volume .:/home/jamal/q -it {%CONTAINER_NAME%} /jamal args
+----
+
+This will map the current working directory to the directory `/home/jamal/q` in the container.
+This is assumed by the `/jamal` script.
+Before starting Jamal the script sets the current working directory to `/home/jamal/q`.
+That way, any file referenced on the command line will be found in the mapped directory.
+

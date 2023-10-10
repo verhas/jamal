@@ -36,7 +36,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `JUPITER_VERSION` `5.10.0` 
 
-* `OK`  `MOCKITO_VERSION` `5.5.0` 
+* `*[red]#NO#*`  `MOCKITO_VERSION` `5.5.0` `*[red]#upgrade to 5.6.0#*`
 
 * `OK`  `JRUBY_VERSION` `9.4.3.0` 
 

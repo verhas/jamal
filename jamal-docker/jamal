@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /home/jamal/q
+java -cp "$(find "/home/jamal/.m2/repository" -name "*.jar" | tr '\n' ':')" javax0.jamal.cmd.JamalMain "$@"
