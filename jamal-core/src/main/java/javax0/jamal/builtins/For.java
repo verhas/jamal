@@ -9,7 +9,7 @@ import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
+import javax0.jamal.tools.MacroReader;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
 import javax0.jamal.tools.param.StringParameter;
@@ -183,14 +183,19 @@ public class For implements Macro, InnerScopeDependent, OptionsControlled.Core, 
                                                    String[] variables,
                                                    Position pos) throws BadSyntax {
         if (this.evalValueList.is()) {
-            valuesString = processor.process(javax0.jamal.tools.Input.makeInput(valuesString, pos));
+            final var macro = MacroReader.macro(processor).readValue(valuesString);
+            if (macro.isPresent()) {
+                valuesString = macro.get();
+            } else {
+                valuesString = processor.process(javax0.jamal.tools.Input.makeInput(valuesString, pos));
+            }
         }
         final String[] valueArray = valuesString.split(separator.get(), -1);
 
         final String[][] valueMatrix = new String[valueArray.length][];
         for (int j = 0; j < valueArray.length; j++) {
             final var value = valueArray[j];
-            if (value.length() > 0 || !skipEmpty.is()) {
+            if (!value.isEmpty() || !skipEmpty.is()) {
                 final String[] values = value.split(subSeparator.get(), -1);
                 BadSyntax.when(!lenient.is() && values.length != variables.length, () -> String.format("number of the values does not match the number of the parameters\n%s\n%s",
                         String.join(",", variables), value));
@@ -209,7 +214,7 @@ public class For implements Macro, InnerScopeDependent, OptionsControlled.Core, 
      * Split the content into segments. Each segment is either content text or a variable reference in the text. These
      * segments follow each other intermixed.
      * <p>
-     * The segments are linked one after the other and when the macro is evaluated all segments are processed one after
+     * The segments are linked one after the other, and when the macro is evaluated, all segments are processed one after
      * the other only one. This ensures that a string, that is the same as the name of a loop variable is not replaced
      * by the actual value of the variable in case the string was part of the value of another, or the same variable.
      *

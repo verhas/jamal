@@ -20,6 +20,7 @@
 * `output:charset` can be used to specify the output charset.
 * `units.jim` define the unicode metric units characters
 * There is support to run Jamal from docker in the `jamal-docker` module.
+* The core macro `for` with the parop `evalist` allows you to skip the macro opening and closing strings when the list is nothing but an argument-less macro invocation.
 
 {%RELEASE IZMIR%}
 

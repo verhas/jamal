@@ -287,6 +287,24 @@ xxyyzz
 ----
 
 
+In version 2.5.0 and later you can use a bare macro name between the parentheses, as
+
+.Jamal source
+[source]
+----
+{@define list=x,y,z}{!@for [evaluateValueList] z in (list)={@define z=zz}}{?x}{?y}{?z}
+----
+
+will result the same output:
+
+.output
+[source]
+----
+xxyyzz
+----
+
+
+
 We still need the `!` character in front of the `for` but we could get rid of the `ident` macro and the extra level of nesting.
 
 [NOTE]

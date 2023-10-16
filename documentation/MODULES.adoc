@@ -260,5 +260,8 @@ Experimental module integrating the Java compiler into Jamal as macros.
 This is not a module.
 The code in the directory `jamal-debug-ui` contains the REACT.js based ui for the debugger.
 
+=== 38. link:https://github.com/verhas/jamal/blob/master/jamal-docker/README.adoc[DOCKER] ^_embed_^
 
 
+This is not a module.
+The code in the directory `jamal-docker` contains a Dockerfile to build a Docker image with Jamal.

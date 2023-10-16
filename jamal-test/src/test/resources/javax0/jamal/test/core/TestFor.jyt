@@ -139,6 +139,12 @@ test evaluating the list:
     Output: |-
       a a ab b bc c c
 
+test evaluating the list with the macro name:
+  Input: |-
+    {@define x=a,b,c}{@for [evalist] z in (x)=z z z}
+  Output: |-
+    a a ab b bc c c
+
 Syntax error:
   Invalid keyword after the variables:
     Input: "{@for a iiiin (1,2,3)=$a, init}"

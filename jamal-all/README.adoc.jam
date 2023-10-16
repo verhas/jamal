@@ -33,8 +33,8 @@ Note that this list is maintained automatically using Jamal.
 The Jamal Maven extension works with the `pom.jam` file.
 This file imports the definition of the module list from `modules.jim`.
 Jamal creates the `README.adoc` file, from `README.adoc.jam`.
-If you can see the list of the modules above then you read the AsciiDoc version.
-If you read the `README.asdoc.jam` then you can see the Jamal macros that include the `modules.jim` file also used by the POM.
+If you can see the list of the modules above, then you read the AsciiDoc version.
+If you read the `README.adoc.jam` then you can see the Jamal macros that include the `modules.jim` file also used by the POM.
 
 This ensures that there is no manual editing of the list of the modules separately for the documentation.
 If the list of the modules changes in the project it will automatically change in the documentation as well.

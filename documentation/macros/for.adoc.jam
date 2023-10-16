@@ -209,6 +209,17 @@ will result
 
 {%output%}
 
+In version {%RELEASE:ROGACHEVO%} and later you can use a bare macro name between the parentheses, as
+
+{%sample/
+{@define list=x,y,z}{!@for [evaluateValueList] z in (list)={@define z=zz}}{?x}{?y}{?z}
+%}
+
+will result the same output:
+
+{%output%}
+
+
 We still need the `!` character in front of the `for` but we could get rid of the `ident` macro and the extra level of nesting.
 
 [NOTE]
