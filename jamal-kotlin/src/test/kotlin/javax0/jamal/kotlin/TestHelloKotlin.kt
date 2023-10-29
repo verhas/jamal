@@ -9,10 +9,11 @@ class TestHelloKotlin {
     @Test
     fun testHelloWorld() {
         (testTheInput("""
-            {@hellokotlin boolean list=1 list="haha" stringy="habakukk"}
+            {@hellokotlin boolean list=1 ONE list="haha"
+            zopa}
             """
         ) atPosition Position("rebarbara.txt")).usingTheSeparators("{", "}") results """
-            Hello stringy=habakukk Kotlin World YES 2 1 haha 
+            Hello string=Peter Kotlin ONE World YES 2 1 haha zopa 1
             """
     }
 }

@@ -194,9 +194,9 @@ The formal syntax of the expressions is:
     function_call ::= identifier `(` expression_list `)`
 
 
-The different operations are executed using BigDecimal numbers if the operands are both numeric.
+The different operations are executed using BigInteger numbers if the operands are both numeric.
 In other cases, string operations are used.
-In this case `-`, `*`, `/` and `%` are not defined and will cause syntax error.
+In this second case `-`, `*`, `/` and `%` are not defined and will cause syntax error.
 `pass:[+]` is defined as string concatenation.
 When used as unary `pass:[+]` it is a no-op resulting the same string as the operand.
 
@@ -463,3 +463,60 @@ It also gives a good example explaining why the receiver is the last argument.
 will result in
 
 {%output%}
+
+== Working with Decimals
+
+The implemented BASIC language itself supports only integers.
+To support floating point calculation, the package implements the macro `decimal`.
+This macro creates a named BigDecimal number.
+
+For example
+
+{%sample/
+{@do
+  x = decimal("pi=3.1415926")
+}
+%}
+
+will return
+
+{%output%}
+
+The macro `decimal` in the example above defines five global macros.
+
+* `pi`
+* `pi:add`
+* `pi:sub`
+* `pi:mul`
+* `pi:div`
+
+The macro `pi` returns the number itself in a string format.
+The other macros take the arguments and perform the operation on the number with the provided arguments.
+The result is always the string representation of the result, and it also changes the value of the number.
+
+The next example performs operations using these possibilities:
+
+{%sample/
+{@do
+  x = decimal("scale=4","pi=3.1415926")
+    << pi
+    << "\n"
+    << pi:add("1.0")
+    << "\n"
+    << pi:sub("0.141")
+    << "\n"
+    << pi:mul(2)
+    << "\n"
+    << pi:div(3)
+}
+%}
+
+will result in
+
+{%output%}
+
+The parop `scale` sets the `BigDecimal` scale of the number.
+This value is important for the `div` operation.
+Also, the rounding is set to `HALF_UP`.
+
+You can call these macros as real macros without using the BASIC interpreter, but originally they are meant to be used as functions in the BASIC language.

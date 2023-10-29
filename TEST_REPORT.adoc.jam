@@ -1,0 +1,27 @@
+{%@decimal (scale=4) timeFullTotal=0%}
+{%!@for [evalist] testFile in `A`{%@listDir (format="$name" separator="," pattern=".*TEST.*\\.xml$")
+
+./jamal-test/target/surefire-reports
+
+%}`A`=
+{%@snip:xml file=testFile%}
+== {%@file (format="$simpleName") testFile%}
+
+__{%@file (format="$parent") testFile%}__
+
+{%@do
+  _ = decimal("scale=4","timeTotal=0")
+  for i=1 to file("count(/testsuite/testcase)")
+    path = "/testsuite/testcase["+i+"]"
+    class = file(path+"/@classname" )
+    name  = file(path+"/@name" )
+    time  = file(path+"/@time" )
+    _ = timeTotal:add(time)
+    << "* `" + class + "#" + name + " " + time + "sec`\n"
+  next
+    << "* `Total: " + timeTotal + "sec`\n"
+    _ = timeFullTotal:add(timeTotal)
+  %}
+
+%}{%@comment end of for%}
+Total Test Time: `{%timeFullTotal%}sec`
