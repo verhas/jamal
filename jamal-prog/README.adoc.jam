@@ -62,6 +62,7 @@ There are two macros in the package:
 
 * `program` is the macro that executes a program
 * `expression` is the macro that evaluates an expression
+* `decimal` to support decimal number calculations, which is not part of the language, as it is needed only rarely.
 
 === Program
 {%@snip:check file="./src/main/java/javax0/jamal/prog/Program.java" hashCode="ba4f3ddd"%}
@@ -467,6 +468,9 @@ will result in
 == Working with Decimals
 
 The implemented BASIC language itself supports only integers.
+The reason for that was to keep the language simple.
+In most of the cases, integer arithmetic should be enough and there is less room for errors.
+
 To support floating point calculation, the package implements the macro `decimal`.
 This macro creates a named BigDecimal number.
 
@@ -484,15 +488,13 @@ will return
 
 The macro `decimal` in the example above defines five global macros.
 
-* `pi`
-* `pi:add`
-* `pi:sub`
-* `pi:mul`
-* `pi:div`
+* `pi` to return the value of the decimal number named _pi_
+* `pi:add` to add one or more decimal numbers to the number named _pi_
+* `pi:sub` to subtract one or more decimal numbers from the number named _pi_
+* `pi:mul` to multiply the number named _pi_ with one or more decimal numbers
+* `pi:div` to divide the number named _pi_ with one or more decimal numbers
 
-The macro `pi` returns the number itself in a string format.
-The other macros take the arguments and perform the operation on the number with the provided arguments.
-The result is always the string representation of the result, and it also changes the value of the number.
+The name of the macros is always the name of the decimal number as specified in the argument to the macro `decimal` followed by a colon and the operation.
 
 The next example performs operations using these possibilities:
 
@@ -519,4 +521,21 @@ The parop `scale` sets the `BigDecimal` scale of the number.
 This value is important for the `div` operation.
 Also, the rounding is set to `HALF_UP`.
 
-You can call these macros as real macros without using the BASIC interpreter, but originally they are meant to be used as functions in the BASIC language.
+You can call these macros as real macros without using the BASIC interpreter.
+The following example shows the traditional use of these macros:
+
+{%sample/
+{@decimal(scale=4)pi=3.1415926}
+{pi}
+{pi:add/1.0}
+{pi:sub/0.141}
+{pi:mul/2}
+{pi:div/3}
+%}
+
+It will result in the same output.
+
+{%output%}
+
+
+Originally, these macros are meant to be used as functions in the BASIC language.
