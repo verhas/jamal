@@ -1602,38 +1602,38 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1359:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1358:30
 ----
 
 
 The version introduced after 1.12.4 also handles options between `(` and `)`:
 
 
-        final var top = scanner.bool(null, `top`);
+*  `top`
 will instruct the macro to use the location no of the top level.
 It is the same as the current file if there were no imports or includes.
 This option cannot be used together with `parent`, `all` or `up`
-        final var parent = scanner.bool(null, `parent`);
+*  `parent`
 will use the location of the `include` or `import` macro that was used to include or import the current file.
 This option cannot be used together with `top`, `all` or `up`
-        final var all = scanner.bool(null, `all`);
+*  `all`
 list all the locations in the hierarchy from the current to the top level.
 The locations will be separated by a comma `,` or by the string specified in the option `sep`.
 This option cannot be used together with `top`, `parent` or `up`
-        final var format = scanner.str(null, `format`).defaultValue("%f:%l:%c`);
+*  `format`
 specifies the format of the location.
-The format can be any string and the formatting escape sequences `%f`, `%l` and `%l` are placeholders for the name of the file, line and column.
+The format can be any string, and the formatting escape sequences `%f`, `%l` and `%l` are placeholders for the name of the file, line and column.
 The default is `%f:%l:%c`.
 This is also changed when the `.file`, `.line` or `.column` ending is used in the macro.
 These cannot be used together with the `format` macro.
 They are the short forms for `format="%f``, `format="%l``, and `format="%c``.
 The format is also used with the option `all`.
-        final var up = scanner.number(null, `up`).defaultValue(0);
+*  `up`
 specifies the number of steps up in the hierarchy.
 `up=0` is the default.
 `up=1` is the same as `parent`.
 This option cannot be used together with `top`, `parent` or `all`
-        final var sep = scanner.str(null, `sep`).defaultValue(",");
+*  `sep`
 specifies the string used to concatenate the locations when the option `all` is used.
 The default value is a comma `,`.
 This option must be used together with the option `all`.
@@ -3200,7 +3200,7 @@ will result
 - SnipCheck.java: 7,526 bytes
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,062 bytes
-- Pos.java: 5,263 bytes
+- Pos.java: 5,264 bytes
 - Snippet.java: 1,052 bytes
 ----
 
@@ -3454,7 +3454,7 @@ will result in the output
 
 [source]
 ----
-2023-10-29 19:56:47
+2023-10-31 14:17:11
 ----
 
 

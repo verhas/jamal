@@ -1335,7 +1335,7 @@ The macro has one option parameter:
 
 [[pos]]
 === {%chapter%}`pos`
-{%#snip:check file={%JAVA_DIR%}Pos.java hash=d8ad4ce0%}
+{%#snip:check file={%JAVA_DIR%}Pos.java hash=59ad4bf3.57efde19%}
 
 This macro will result the
 
@@ -1357,7 +1357,7 @@ will result
 The version introduced after 1.12.4 also handles options between `(` and `)`:
 
 {%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*Params\\..*holder\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*scanner\\..*?\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
 {%@snip pos_options%}
 %}%}
 

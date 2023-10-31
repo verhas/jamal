@@ -3,9 +3,9 @@
 {%@comment
 
 The shell script converted from this file will compile Jamal and then install the resulting JAR files into the
-asciidoctor plugin directory. If there is any error then the original files will be reinstalled.
+asciidoctor plugin directory. If there is any error, then the original files will be reinstalled.
 
-This way the internal working of the AsciiDoctor plugin can manually test and the developers can use the latest
+This way, the internal working of the AsciiDoctor plugin can manually test and the developers can use the latest
 development version.
 
 Do not forget to restart IntelliJ after running this script.
@@ -13,7 +13,7 @@ Do not forget to restart IntelliJ after running this script.
 %}\
 #!/usr/bin/env bash
 #
-# This shell script was automatically compiled from install-asciidoc.jam
+# This shell script was automatically compiled from {%#file (format=$simpleName){%@pos (top format="%f")%}%}
 # It is used to automate the installation of the development version of jamal-asciidoc plugin
 # from inside the development environment.
 #

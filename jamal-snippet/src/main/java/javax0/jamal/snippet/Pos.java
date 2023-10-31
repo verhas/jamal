@@ -26,7 +26,7 @@ public class Pos implements Macro, Scanner {
         // This option cannot be used together with `top`, `parent` or `up`
         final var format = scanner.str(null, "format").defaultValue("%f:%l:%c");
         // specifies the format of the location.
-        // The format can be any string and the formatting escape sequences `%f`, `%l` and `%l` are placeholders for the name of the file, line and column.
+        // The format can be any string, and the formatting escape sequences `%f`, `%l` and `%l` are placeholders for the name of the file, line and column.
         // The default is `%f:%l:%c`.
         // This is also changed when the `.file`, `.line` or `.column` ending is used in the macro.
         // These cannot be used together with the `format` macro.
