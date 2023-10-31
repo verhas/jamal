@@ -1,6 +1,7 @@
 package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestReplaceLines {
@@ -58,10 +59,20 @@ public class TestReplaceLines {
         );
     }
 
+    @DisplayName("Detect no change when there is no change in the text")
     @Test
     void testNoReplaceError() throws Exception {
         TestThat.theInput(
             "{@replaceLines detectNoChange replace=\"/abra/kadabra\"\n" +
+                "zummm" +
+                "}").throwsBadSyntax();
+    }
+
+    @DisplayName("Detect no change even if one of the changes work")
+    @Test
+    void testNoReplaceError2() throws Exception {
+        TestThat.theInput(
+            "{@replaceLines detectNoChange replace=\"/abra/kadabra/zum/zim/\"\n" +
                 "zummm" +
                 "}").throwsBadSyntax();
     }

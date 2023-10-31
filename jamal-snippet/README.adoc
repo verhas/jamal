@@ -3,6 +3,7 @@
 
 
 
+
 Snippet handling macros help you to include information from program source code into the documentation automatically.
 This macro package also includes some XML handling, string, and text formatting macros, which are usually used together with snippets.
 
@@ -1602,7 +1603,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1358:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1359:30
 ----
 
 
@@ -1675,13 +1676,13 @@ To have more flexibility you can use parameters on the first line of the input t
 
 The options are:
 
-        final var separator = scanner.pattern("separator").defaultValue("\n");
+* `separator`
          specifies the separator regular expression, that separates the individual records.
          The default value if `\n`, which means the lines are the records.
-        final var join = scanner.str(null, "join").defaultValue("\n");
+* `join`
          is the string to use to join the records together after the sorting was done.
          The default value is the `\n` string (not pattern); that means the records will be individual lines in the output.
-        final var locale = scanner.str(null, "locale`, alias `collatingOrder`, alias `collator");
+* `locale`, alias `collatingOrder`, alias `collator`
          can define the locale for the sorting.
          The default locale `en-US.UTF-8`.
          Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
@@ -1689,20 +1690,20 @@ The options are:
          The class will be instantiated and used to sort the records.
          Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
          This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.
-        final var columns = scanner.str(null, "columns");
+* `columns`
          can specify the part of the textual record to be used as a sorting key.
          The format of the parameter is `n..m` where `n` is the first character position and `m-1` is the last character position to be used.
          The values can run from 1 to the maximum number of characters.
          If you specify column values that run out of the line length, then the macro will result in an error.
-        final var pattern = scanner.pattern(null, "pattern");
+* `pattern`
          can specify a regular expression pattern to define the part of the line as a sort key.
          The expression may contain matching groups.
          In that case, the strings matching the parts between the parentheses are appended from left to right and used as a key.
          This option must not be used together with the option `columns`.
-        final var numeric = scanner.bool(null, "numeric");
+* `numeric`
          will sort based on the numeric order of the keys.
          In this case, the keys must be numeric or else the conversion to `BigDecimal` before the sort will fail.
-        final var reverse = scanner.bool(null, "reverse");
+* `reverse`
          do the sorting in reverse order.
 
 
@@ -2057,7 +2058,7 @@ the pear has fallen off the bush
 ----
 
 
-If the option `regex` is active, then the search string is treated as regular expressions, and the replace string may also contain replacement parts.
+If the parop `regex` is true, then the search string is treated as regular expressions, and the replace string may also contain replacement parts.
 For example,
 
 [source]
@@ -2073,6 +2074,11 @@ the pear has fallen off the bush
 ----
 
 but this time, the replace used regular expression substitution.
+
+The macro also supports the parop `detectNoChange` to error when some of the search strings are not found in the input.
+This parop can also be defined as an option.
+In that case you can switch it off using the option `(detectNoChange=false)` in the macro.
+
 
 [[replaceLines]]
 === XXVI. `replaceLines`
@@ -2988,6 +2994,7 @@ will result
 - snippet
 - JavaMatcherBuilderMacros.java
 - Snip.java
+- ReplaceUtil.java
 - SnipSave.java
 - Sort.java
 - Decorate.java
@@ -3128,9 +3135,10 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 2,304 bytes
+- snippet: 2,336 bytes
 - JavaMatcherBuilderMacros.java: 19,773 bytes
 - Snip.java: 4,605 bytes
+- ReplaceUtil.java: 1,033 bytes
 - SnipSave.java: 4,690 bytes
 - Sort.java: 8,573 bytes
 - Decorate.java: 12,259 bytes
@@ -3159,7 +3167,7 @@ will result
 - Decorator.java: 9,094 bytes
 - Memoize.java: 8,132 bytes
 - LineCount.java: 552 bytes
-- Replace.java: 1,641 bytes
+- Replace.java: 3,201 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
 - SemVerCollator.java: 9,016 bytes
@@ -3195,7 +3203,7 @@ will result
 - XmlDocument.java: 5,671 bytes
 - References.java: 7,745 bytes
 - Java.java: 11,573 bytes
-- ReplaceLines.java: 2,852 bytes
+- ReplaceLines.java: 3,436 bytes
 - SkipLines.java: 2,769 bytes
 - SnipCheck.java: 7,526 bytes
 - IdempotencyFailed.java: 1,816 bytes
@@ -3454,7 +3462,7 @@ will result in the output
 
 [source]
 ----
-2023-10-31 14:17:11
+2023-10-31 18:22:23
 ----
 
 

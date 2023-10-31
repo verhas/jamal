@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# This shell script was automatically compiled from install-asciidoc.jam
+# This shell script was automatically compiled from install-asciidoc.sh.jam
 # It is used to automate the installation of the development version of jamal-asciidoc plugin
 # from inside the development environment.
 #

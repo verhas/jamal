@@ -4,7 +4,7 @@
 # It is used to automate the installation of the development version of jamal-asciidoc plugin
 # from inside the development environment.
 #
-echo "Compiling and installing the Jamal, the whole project"
+echo "Compiling and installing Jamal, the whole project"
 mvn clean install
 echo "Creating the JAMAL_PROJECT_HOME/.asciidoctor/lib directory"
 mkdir -p .asciidoctor/lib

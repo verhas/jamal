@@ -9,6 +9,7 @@
 {%@define JAVA_DIR=src/main/java/javax0/jamal/snippet/%}
 {%@define standardInput= The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.%}
 {%@define alias(x)=(can be aliased as `x`)%}
+{%@options detectNoChange%}
 
 Snippet handling macros help you to include information from program source code into the documentation automatically.
 This macro package also includes some XML handling, string, and text formatting macros, which are usually used together with snippets.
@@ -1389,7 +1390,7 @@ To have more flexibility you can use parameters on the first line of the input t
 
 The options are:
 
-{%#replaceLines replace="/^.*holder\\(.*?\"(.*?)\"\\).*$/* `$1`/" \
+{%#replaceLines replace="/^.*scanner\\..*?\\(.*?\"(.*?)\"\\).*$/* `$1`/" \
 replace="/\",\\s*\"/`, alias `/" replace="~//~~"
 {%@snip sort_options%}%}
 
@@ -1668,7 +1669,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 
 [[replace]]
 === {%chapter%}`replace`
-{%#snip:check file={%JAVA_DIR%}Replace.java hash=5f3f71c2%}
+{%#snip:check file={%JAVA_DIR%}Replace.java hash=34ef03c3%}
 The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
@@ -1689,7 +1690,7 @@ the pear has fallen off the bush
 ----
 %}
 
-If the option `regex` is active, then the search string is treated as regular expressions, and the replace string may also contain replacement parts.
+If the parop `regex` is true, then the search string is treated as regular expressions, and the replace string may also contain replacement parts.
 For example,
 
 {%sample/
@@ -1707,9 +1708,14 @@ the pear has fallen off the bush
 %}
 but this time, the replace used regular expression substitution.
 
+The macro also supports the parop `detectNoChange` to error when some of the search strings are not found in the input.
+This parop can also be defined as an option.
+In that case you can switch it off using the option `(detectNoChange=false)` in the macro.
+
+
 [[replaceLines]]
 === {%chapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=b2558440%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=0cb257a5%}
 This macro replaces strings in the input.
 {%parameterized%}
 
@@ -2745,7 +2751,7 @@ This format is similar to the cast syntax of Java and C.
 The `xxx` can be
 
 {%!@for type in (int,long,double,float,boolean,short,byte)=
-* `type`, the conversion will call {%#case:cap {%@replace /type/int/integer%}%}::parse{%@case:cap type%}.%}
+* `type`, the conversion will call {%#case:cap {%@replace (detectNoChange=false)/type/int/integer%}%}::parse{%@case:cap type%}.%}
 * `char`, the conversion will fetch the first character of the parameter.
 
 Examples:
@@ -2872,7 +2878,7 @@ In the format you can use the following placeholders:
 {%#snip:define fileMacroFormatPlaceholdersFormatted=
 {%@snip (replace="|^.*?\"(.*?)\"|* `$1`!|!.*?//||") fileMacroFormatPlaceholders %}%}
 
-{%#replace |{%@snip fileMacroFormatPlaceholdersFormatted%}|file|directory%}
+{%#replace (detectNoChange)|{%@snip fileMacroFormatPlaceholdersFormatted%}|file|directory%}
 
 {%SUPPORT_ROOT/directory%}
 
@@ -2985,21 +2991,10 @@ OTFDC
 of the fields' defining class
 OTF
 of the field
-\).and\(
 %}
 {%#snip:define fieldFormatFormatted={%#replaceLines
 {%@snip fieldFormats%}%}%}
-{%@snip fieldFormatFormatted
-* `$name` will be replaced by the name of the field
-* `$classSimpleName` will be replaced by the simple name of the fields's defining class
-* `$className` will be replaced by the name of the of the fields's defining class
-* `$classCanonicalName` will be replaced by the canonical name of the fields's defining class
-* `$classTypeName` will be replaced by the type name of the fields's defining class
-* `$packageName` will be replaced by the package where the method is
-* `$typeClass` will be replaced by the type of the field
-* `$modifiers` will be replaced by the modifiers list of the method
-* `$value` will be replaced by the value of the field in case the field is both `static` and `final`
-%}
+{%@snip fieldFormatFormatted%}
 
 [[java:method]]
 ==== `java:method`
