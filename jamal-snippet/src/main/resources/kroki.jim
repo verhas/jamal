@@ -1,5 +1,29 @@
-{@comment }
-define the macro kroki to download the image from kroki.io and reference it either Asciidoc or Markdown syntax
+{@comment
+This file defines macros that can be used to generate diagrams using kroki.io
+
+The macro `kroki` has four parameters:
+
+* name of the diagram. This will be used as a file name for the generated PNG and hash file.
+* diagram type. This is the type of diagram to generate. See https://kroki.io/#support for a list of supported diagram types.
+* file type, like `svg`, `png`. This is the type of file to generate. See https://kroki.io/#support for a list of supported file types.
+* the description of the diagram
+
+
+Usually you invoke this macro something like
+
+[%kroki /KROKI_ADOC/plantuml/svg/
+        skinparam ranksep 20
+        skinparam dpi 125
+%]
+
+Note that it is not a problem if there are '/' characters in the contents of the diagram. The macro 'kroki' is a _tail_ macro.
+It means that it knows that there are only 4 parameters and does not split the last parameters along the separators.
+You can use, of course, any other separator instead of '/' as you can do with user defined macros.
+
+The macro magically recognizes the type of the file and the output of the macro will be a Markdown or Asciidoc picture reference to the generated file.
+To determine the type of the file the macro looks at two extensions.
+If the file ending if '.md.jam' it is a markdown. Otherwise it is asciidoc.
+}
 
 {@define [tail] kroki($name,$dt,$ft,$x)={#if /{#string:equals/md.jam/{#file (format="$extension2") {@pos (top format=%f)}}}/![]({kroki:download |$name|$dt|$ft|$x})/image::{kroki:download |$name|$dt|$ft|$x}[]}}
 

@@ -26,7 +26,7 @@ Maintaining a separate `.adoc.jam` and the generated `.adoc` file is a good solu
 For example, when you maintain your project on GitHub, the `.adoc` file is rendered by the platform on the file.
 You can only do it if you have the Jamal preprocessed and generated `.adoc` file uploaded to GitHub.
 
-== Installation with IntelliJ IDEA
+== Installation with IntelliJ IDEA (and with other JetBrains IDEs)
 
 [NOTE]
 ====
@@ -36,6 +36,10 @@ It is an extension to Asciidoctor, which itself is an IntelliJ plugin.
 This way, this extension is an extension of a plugin.
 You cannot install this extension as a separate plugin to IntelliJ.
 It works only with the Asciidoc plugin in IntelliJ.
+
+A separate IntelliJ plugin for Jamal supporting code completion, documentation display for hovering is developed in an independent project by other developers.
+
+This preprocessor works for any JetBrains IDE that supports the Asciidoctor plugin.
 ====
 {%#snip:define LAST_RELEASE=
 {%#killLines pattern=".*LAST_RELEASE.*" keep

@@ -1,4 +1,9 @@
-{@comment}
+{@comment
+This file defines macros that are unicode measurement unit signs.
+Note that the structure of the unicode measurement units is not complete and not always consistent.
+The extra empty lines in the file are actual placeholders to codes that are NOT unit symbols.
+These lines can be deleted, it is there to help the maintenance if there is any error, the line number is proportional to the code.
+}
 {#define unit:hPa={@unicode &#x3371}}
 {#define unit:da={@unicode &#x3372}}
 {#define unit:AU={@unicode &#x3373}}

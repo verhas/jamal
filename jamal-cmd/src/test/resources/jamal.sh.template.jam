@@ -32,7 +32,7 @@ The following lines include the file dependencies.txt created by the dependency 
 and stra
 }
 
-{#replaceLines replace="/^\\s*(.*?):(.*?):jar:(.*?):compile.*$/download \"$1\" \"$2\" \"$3\"" replace="/^\\s*//"
+{#replaceLines replace="/^\\s*(.*?):(.*?):jar:(.*?):compile.*$/download \"$1\" \"$2\" \"$3\""
   {#killLines keep pattern=compile
     {#include [verbatim] {ROOT}/jamal-cmd/target/dependencies.txt}}}
 

@@ -1603,7 +1603,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1359:30
+../jamal-snippet/README.adoc.jam:1360:30
 ----
 
 
@@ -2092,7 +2092,7 @@ These parameters are parsed using the Standard Parameter Parsing as defined in l
 It works similarly to the macro <<replace,`replace`>>.
 The difference is that the `replaceLine`
 
-* is always works with regular expressions, and
+* always works with regular expressions, and
 
 * it works on the individual lines of the input in a loop.
 
@@ -2101,7 +2101,7 @@ For example,
 
 [source]
 ----
-{@define replace=/^\s+\*\s+//}
+{@define replace=/^\s*\*\s+//}
 {@replaceLines
 * this can be a snippet content
 * which was collected
@@ -2113,9 +2113,9 @@ will result
 
 [source]
 ----
-* this can be a snippet content
-* which was collected
-* from a Java or C program comment
+this can be a snippet content
+which was collected
+from a Java or C program comment
 ----
 
 
@@ -3192,7 +3192,7 @@ will result
 - SnippetStore.java: 11,433 bytes
 - Download.java: 2,122 bytes
 - ListDir.java: 5,439 bytes
-- XmlFormat.java: 3,482 bytes
+- XmlFormat.java: 3,927 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 6,204 bytes
 - SnipProperties.java: 1,485 bytes
@@ -3462,7 +3462,7 @@ will result in the output
 
 [source]
 ----
-2023-10-31 18:22:23
+2023-11-02 13:58:11
 ----
 
 
@@ -3591,6 +3591,15 @@ You can import this file as `{@import res:tab.jim}`.
 The constants defined in this file are:
 
 
+
+This file defines unicode control characters as macros and some extra character also as macros.
+Originally this file contained only the macro 'tab' and the content was a TAB character.
+Most editors replace TAB characters and sometimes you need the tab character, for example when you generate a Makefile.
+
+In the original version this file was edited using vim to preserve the tab and then the macro could be used in the Jamal source wherever the TAB was needed.
+With the introduction of the macro 'unicode' the maintenance of this file became simpler, and it also includes a lot of other control and other characters.
+The name of the file, however, remained 'tab.jim' for history and compatibility reasons.
+}
 
 `NUL` 
 `SOH` 
@@ -4107,7 +4116,7 @@ Since the macro does not use its input, the parameters can be specified in the m
 The macro will first try to compile the source files.
 It will try to load the classes from the class files if the compilation fails for any reason.
 
-Jamal may be running with a JDK that can provide a Java compiler instance for Java.
+Jamal may be running with a JDK that provides a Java compiler instance for Java.
 This is the case when Jamal is executed from the command line, from a Maven extension, etc.
 Executing Jamal inside IntelliJ as an Asciidoctor plugin preprocessor may not provide a Java compiler.
 The compilation may also fail when there are external dependencies needed for the compilation.

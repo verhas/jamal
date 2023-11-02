@@ -1722,7 +1722,7 @@ This macro replaces strings in the input.
 It works similarly to the macro <<replace,`replace`>>.
 The difference is that the `replaceLine`
 
-* is always works with regular expressions, and
+* always works with regular expressions, and
 
 * it works on the individual lines of the input in a loop.
 
@@ -1730,7 +1730,7 @@ The difference is significant when you want to match something line by line at t
 For example,
 
 {%sample/
-{@define replace=/^\s+\*\s+//}
+{@define replace=/^\s*\*\s+//}
 {@replaceLines
 * this can be a snippet content
 * which was collected
@@ -2588,7 +2588,7 @@ will result
 
 [[xmlFormat]]
 === {%chapter%}`xmlFormat`
-{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=aca81857%}
+{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=6adc6503%}
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
 For example,
@@ -3103,7 +3103,7 @@ Since the macro does not use its input, the parameters can be specified in the m
 The macro will first try to compile the source files.
 It will try to load the classes from the class files if the compilation fails for any reason.
 
-Jamal may be running with a JDK that can provide a Java compiler instance for Java.
+Jamal may be running with a JDK that provides a Java compiler instance for Java.
 This is the case when Jamal is executed from the command line, from a Maven extension, etc.
 Executing Jamal inside IntelliJ as an Asciidoctor plugin preprocessor may not provide a Java compiler.
 The compilation may also fail when there are external dependencies needed for the compilation.

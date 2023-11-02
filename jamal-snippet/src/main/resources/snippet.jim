@@ -41,8 +41,8 @@ It is recommended to name the snippets with a prefix unique to the snippet colle
 When doing that it is easier to use the option `poly` in the macro `snip`.
 
 {@define docFrom($file)=
-{!#for [skipEmpty] $snippet in ({#replace (regex) /
-{#replaceLines replace="/^.*snippet\\s+(\\w+).*$/$1,/"
+{!#for [skipEmpty] $snippet in ({#replace (regex detectNoChange=false) /
+{#replaceLines detectNoChange=false replace="/^.*snippet\\s+(\\w+).*$/$1,/"
 {#killLines keep pattern="^.*snippet\\s+\\w+.*$"
 $file}}/(\w)\n(\w)/$1,$2/\n//})={@ident {#eval/jamal {@snip $snippet}}
 }}}

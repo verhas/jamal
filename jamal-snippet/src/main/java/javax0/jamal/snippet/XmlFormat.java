@@ -16,12 +16,21 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.StringReader;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 @Macro.Stateful
 public class XmlFormat implements Macro, InnerScopeDependent, Scanner {
+
+    private static final PrintStream NULL_ERR = new PrintStream(new OutputStream() {
+        public void write(int b) {
+            // Do nothing
+        }
+    });
+
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -44,17 +53,21 @@ public class XmlFormat implements Macro, InnerScopeDependent, Scanner {
         if (thin) {
             input = new ThinXml(input).getXml();
         }
+        final var savedErr = System.err;
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setValidating(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(new StringReader(input)));
+            System.setErr(NULL_ERR);// format document sometimes vomits error to System.err when the XML is not well-formed
             return XmlDocument.formatDocument(doc, tabsize);
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
             if (wrong) {
                 return input;
             }
             throw new BadSyntax("There was an XML exception", e);
+        } finally {
+            System.setErr(savedErr);
         }
     }
 

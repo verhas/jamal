@@ -219,5 +219,5 @@
     - !tag B
     - h
     - k
-    }{#xmlFormat {@yaml:xml a}}
+    }{@yaml:xml a}
   Throws: "!tag must not be repeated."

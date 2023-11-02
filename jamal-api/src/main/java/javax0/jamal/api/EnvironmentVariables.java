@@ -272,6 +272,9 @@ end snippet
         return new PropertiesSingleton().properties;
     }
 
+    public static String getConfigDir() throws IOException {
+        return PropertiesSingleton.jamalDirectory;
+    }
     public static final String INSECURE_CONFIGURATION = "INSECURE CONFIGURATION: ";
 
     private static void assertPathPrivate(Path path) throws IOException {

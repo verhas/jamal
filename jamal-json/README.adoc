@@ -34,10 +34,11 @@ These differences come from the different nature of Json and Yaml.
 
 == Macros implemented in the package
 
+
+
+
 [[define]]
 === i. `json:define`
-
-
 You can use this macro to define a JSon structure.
 A JSON structure can be a map, a list or a string.
 JSon supports other primitive values, but Jamal being a text macro processor handles all other primitive types as strings.
@@ -113,8 +114,6 @@ The recommended way is to use something different from `{`and `}` as macro openi
 
 [[get]]
 === ii. `json:get`
-
-
 This macro will fetch one value or a "sub" json from a JSON structure.
 This can be useful when you want to document some configuration or other data structure that is present as a JSON file in your project.
 In that case you can import the JSON structure into your Jamal document and refer individual values in it.
@@ -173,11 +172,8 @@ NOTE: The macro `json:get` is somewhat superfluous, because you can get the same
 However, as you can see from the example above, the different approaches provide different readability. Choose wisely.
 
 
-
 [[set]]
 === iii. `json:set`
-
-
 Add some value to an already existing JSON structure.
 The format of the macro is:
 
@@ -267,8 +263,6 @@ will result:
 
 [[length]]
 === iv. `json:length`
-
-
 This macro can be used to get the length of a JSON array.
 The macro first fetches the JSON value using the argument the same way as `json:get` does, but instead of the value it returns the length of the array.
 If the value is a boolean, string, number or JSON objects, essentially anything else than an array, then an error will happen.
@@ -310,8 +304,6 @@ will result
 
 [[keys]]
 === v. `json:keys`
-
-
 This macro will fetch one value or a "sub" json from a JSON structure and returns the keys of the structure.
 If the result is a boolean, string, number or JSON objects, essentially anything else than an JSON structure, then an error will happen.
 

@@ -6,7 +6,7 @@
     Output: "${qqq}"
 
 "Testing deep escape in deferred XML":
-# when there are multiple closers it does not matter that the unescape closer recursively invokes the same Jamal processor
+# when there are multiple closers, it does not matter that the unescaping closer recursively invokes the same Jamal processor
     Input: |-
       {@define a(x)=x}{@escape* `.``.`}{@xmlFormat}\
       {a{a{a{a{a{a{a {@escape* ``<xml>${qqq}</xml>``}}}}}}}}
@@ -14,7 +14,7 @@
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <xml>${qqq}</xml>
 "Testing deep escape in deferred XML in wrong order":
-# when there are multiple closers it does not matter that the unescape closer recursively invokes the same Jamal processor
+# when there are multiple closers, it does not matter that the unescaping closer recursively invokes the same Jamal processor
     Input: |-
       {@define a(x)=x}{@xmlFormat}\
       {a{a{a{a{a{a{a {@escape* ``<xml>${qqq}</xml>``}}}}}}}}

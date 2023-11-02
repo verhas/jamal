@@ -20,6 +20,7 @@ First, the system property is consulted, and the environment variable has only e
 The following sections describe the individual environment variables.
 
 
+
 ==== `JAMAL_CONNECT_TIMEOUT`
 This variable can define the connection timeout value for the web download in millisecond as unit.
 Jamal can download resources when the name of a file starts with the prefix `https://`.

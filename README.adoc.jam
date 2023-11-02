@@ -207,7 +207,8 @@ The configuration values are searched for in this order.
 Different macros use different configuration keys.
 They are documented along with the macro documentation.
 
-The environment variables and their meanings are documented in their link:../documentation/ENVIRONMENT_VARIABLES.adoc[documentation].
+The environment variables and their meanings are documented in their
+link:./documentation/ENVIRONMENT_VARIABLES.adoc[documentation].
 
 {%section /Features/Features%}
 

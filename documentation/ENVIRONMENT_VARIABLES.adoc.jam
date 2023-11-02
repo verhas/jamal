@@ -17,9 +17,10 @@ For every environment variable, there is a corresponding system property.
 The name of the system property is the same as the environment variable lower-case converted and replacing the `_` to `.` characters.
 For example, for the environment variable {%JAMAL_CHECKSTATE_ENV%}, the system property is `jamal.checkstate`.
 
-    {%#replace /{%JAMAL_CHECKSTATE_ENV%}/`/%}  --> jamal.checkstate
+    {%#replace (detectNoChange=false)/{%JAMAL_CHECKSTATE_ENV%}/`/%}  --> jamal.checkstate
 
 First, the system property is consulted, and the environment variable has only effect when the system property is not defined.
 The following sections describe the individual environment variables.
 {%@import res:snippet.jim%}\
+{%@option ~detectNoChange%}
 {%docFrom {%@include [verbatim] ../jamal-api/src/main/java/javax0/jamal/api/EnvironmentVariables.java%}%}

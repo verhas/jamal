@@ -1,5 +1,6 @@
 = Standard Built-In Parop Parsing
 {%@define methodFormat=`$name()`%}\
+{%@option ~detectNoChange%}
 
 Parops (parameter options) are usually used to give extra parameters/options to built-in macros.
 They are key/value pars at the start of the input of the built-in macro.

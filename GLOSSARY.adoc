@@ -29,7 +29,7 @@ User-defined macro classes are instantiated many times and may contain a state.
 The instance of the class `javax0.jamal.engine.UserDefinedMacro` is created by the built-in macro `define`.
 Other built-in macros can create instances of different classes, so long as long they implement the `javax0.jamal.api.UserDefinedMacro` interface.
 
-Identifier:: In Jamal macro names are identifiers.
+Identifier:: In Jamal, macro names are identifiers.
 Identifiers in Jamal start with the letters `a-z` or `A-Z`, `$`, `:`, or underscore `_` and can contain any of these on consecutive positions. The second and other positions can also contain digits.
 Identifiers in Jamal start with the letters `a-z` or `A-Z`, `$`, `:`, or underscore `_` and can contain any of these on consecutive positions. The second and other positions can also contain digits.
 

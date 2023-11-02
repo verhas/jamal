@@ -25,7 +25,9 @@ import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
@@ -110,12 +112,17 @@ public class Processor implements javax0.jamal.api.Processor {
         URL url = null;
         try {
             macros.separators("{", "}");
+            final var globalIncludeFile = new File(EnvironmentVariables.getConfigDir() + "/" + GLOBAL_INCLUDE_RESOURCE);
+            if (globalIncludeFile.exists()) {
+                try (final var is = globalIncludeFile.toURI().toURL().openStream()) {
+                    processInputStream(is);
+                }
+            }
             final var urls = getClass().getClassLoader().getResources(GLOBAL_INCLUDE_RESOURCE);
             while (urls.hasMoreElements()) {
                 url = urls.nextElement();
                 try (final var is = url.openStream()) {
-                    final var in = makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8), new Position("res:" + GLOBAL_INCLUDE_RESOURCE, 1, 1));
-                    process(in);
+                    processInputStream(is);
                 }
             }
             macros.separators(macroOpen, macroClose);
@@ -144,6 +151,11 @@ public class Processor implements javax0.jamal.api.Processor {
         this("{", "}");
     }
 
+    private void processInputStream(InputStream is) throws IOException, BadSyntax {
+        final var in = makeInput(new String(is.readAllBytes(), StandardCharsets.UTF_8), new Position("res:" + GLOBAL_INCLUDE_RESOURCE, 1, 1));
+        process(in);
+    }
+
     @Override
     public UserDefinedMacro newUserDefinedMacro(String id, String input, String... params) throws BadSyntax {
         return newUserDefinedMacro(id, input, false, false, params);
@@ -165,7 +177,7 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public Processor spawn(){
+    public Processor spawn() {
         return new Processor(macros.open(), macros.close(), context);
     }
 
@@ -234,7 +246,7 @@ public class Processor implements javax0.jamal.api.Processor {
     /**
      * Process the text at the start of input till the first macro start.
      *
-     * @param input  where the text is read from and removed afterwards
+     * @param input  where the text is read from and removed afterward
      * @param output where the text is appended
      */
     private void processText(Input input, Input output) {
@@ -513,7 +525,7 @@ public class Processor implements javax0.jamal.api.Processor {
         qualifier.macroId = id;
         skipWhiteSpaces(evaluatedInput);
         final Optional<Identified> identifiedOpt;
-        if (id.length() == 0) {
+        if (id.isEmpty()) {
             identifiedOpt = Optional.of(new NullMacro(qualifier.processor));
         } else {
             if (reportUndef || !optionsStore.is(NO_UNDEFAULT)) {

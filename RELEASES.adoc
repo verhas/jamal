@@ -22,6 +22,9 @@
 * There is support to run Jamal from docker in the `jamal-docker` module.
 * The core macro `for` with the parop `evalist` allows you to miss the macro opening and closing strings when the list is nothing but an argument-less macro invocation.
 * The `jamal-prog` package contains a macro `decimal` to support `BigDecimal` calculation in BASIC code.
+* The `replace` and `replaceLines` macros in the snippet package result in error not only if the input was not changed, but also when some of the search/replace string-string or regular expression-string pairs made no effect on the input when the option `detectNoChange` is used.
+This helps to avoid situations when a snippet is heavily transformed to create documentation lines from source code and the source changes structurally and the transformation gets outdated.
+It is recommended to set the `detectNoChange` option to true globally at the start of the input file.w33
 
 == https://github.com/verhas/jamal/tree/2.4.0[2.4.0]
 

@@ -27,7 +27,7 @@ You may need the explicit specification of `jamal` when the content of the macro
 
 {%#define evaluateLoopLimit={%#replace (regex) /{%@snip evaluateLoopLimit /(".*?")/%}/"//%}%}\
 {%@define evaluateLoopLimitAliases={%#replace (regex) /{%@snip evaluateLoopLimit /".*?"\s*,\s*(".*")/%}/"/`/(.*),\s/$1, and /%}%}\
-{%@define firstAlias={%#replace (regex) /{%@snip evaluateLoopLimit /".*?"\s*,\s*"(.*?)"/%}/"/`/%}%}\
+{%@define firstAlias={%#replace (regex detectNoChange=false) /{%@snip evaluateLoopLimit /".*?"\s*,\s*"(.*?)"/%}/"/`/%}%}\
 {%#assert:intEquals /{%#string:length {%#replace (regex) /{%evaluateLoopLimitAliases%}/[\w`\s]//%}%}/1/there are more than two aliases%}\
 
 If character following the keyword `eval` is `\*`, then the scripting type is `jamal` and the evaluation is repeated until all macros are resolved.

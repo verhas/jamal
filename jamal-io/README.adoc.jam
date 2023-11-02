@@ -260,13 +260,14 @@ They all have to be specified in the first line of the macro.%}{%ALIAS$ONLY%}
 
 {%@define example($x)=[source]
 ----
-{%#replaceLines replace="~System\\.setProperty\\(\"(\\w+)\", \"(\\w+)\"\\);~$1 -> $2~" \
-                replace=~^\s*~~ \
-                replace="~([^\\\\])\"~$1~" \
-                replace="~^\"~~" \
-                replace="~\\+$~~" \
-                replace="~\\\\\"~\"~" \
-                replace="~\\\\n~\\n~"
+{%#replaceLines detectNoChange=false \
+                replace="~System\\.setProperty\\(\"(\\w+)\", \"(\\w+)\"\\);~$1 -> $2~" \
+                replace=/^\s* \
+                replace="/([^\\\\])\"/$1" \
+                replace="/^\"" \
+                replace=/\+$ \
+                replace=/\\"/\" \
+                replace=/\\n/\n
 {%@snip $x%}
 %}
 ----%}
@@ -421,7 +422,10 @@ In this case the output is typically redirected to a file and the result can be 
 The macro `waitFor` uses a subset of the options of the `exec` macro.{%ALIAS$ONLY%}
 
 {%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*.*?\\(null,(.*?)\\).*~* $1~.*//\\s*~" replace="~\"(\\w)~`$1~(\\w)\"~$1`~"
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*.*?\\(null,(.*?)\\).*~* $1" \
+                replace="~.*//\\s*~" \
+                replace="~\"(\\w)~`$1"\
+                replace="~(\\w)\"~$1`~"
 {%@snip waitFor_options%}
 %}%}
 

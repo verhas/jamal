@@ -42,7 +42,7 @@ __{input}__ is a module implementing an input handler for Jamal.
 Input handlers are loaded via the service loader and can load resource files, maven artifacts, files from JAR archives, etc.
 {@counter:define id=chapter_counter}
 {@define chapter($x,$y)==== {chapter_counter}. link:https://github.com/verhas/jamal/blob/master/jamal-$x/README.adoc[{@case:upper $x}] ^_{$y}_^
-{#define ! _{#replace/$x/-/_/}=.}{@comment makes chapter doubly define an error}
+{#define ! _{#replace(detectNoChange=false)/$x/-/_/}=.}{@comment makes chapter doubly define an error}
 }
 
 == Modules

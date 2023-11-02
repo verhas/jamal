@@ -13,7 +13,7 @@ sinc{%@comment%}e version `since`
 
 
 this macro is to be used to reference other macros inside the documentation of the package
-{%@define $($name)=link:{%#file (format=$name){%#case:lower {%@replace /$name/:/_%}%}.adoc%}[`$name`]%}
+{%@define $($name)=link:{%#file (format=$name){%#case:lower {%@replace (detectNoChange=false) /$name/:/_%}%}.adoc%}[`$name`]%}
 
 
 
