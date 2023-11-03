@@ -606,7 +606,7 @@ public class Processor implements javax0.jamal.api.Processor {
         if (!input.isEmpty()) {
             final var separator = input.charAt(0);
             final var expectedArgNr = macro.expectedNumberOfArguments();
-            if (expectedArgNr == 0 || expectedArgNr == 1) {// note, that -1 means no limit
+            if (expectedArgNr == 0 || expectedArgNr == 1) {// note, that -1 means no limit, can be simplified to < 2
                 if (!Character.isLetterOrDigit(separator) && input.indexOf(macros.open()) != 0) {
                     skip(input, 1);
                 }

@@ -4,15 +4,8 @@ The easiest way is to use Jamal is the IntelliJ IDEA Asciidoctor plugin with the
 
 == Installing the plugin
 
-The installation of Jamal needs downloading the ZIP file
-
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.3.0/jamal-asciidoc-2.3.0-jamal-asciidoc-distribution.zip``]
-
-and extracting it to the project directory under `.asciidoctor/lib` directory.
-You may need to configure the Asciidoctor plugin to recognize the files with the extension `.jam` as Asciidoc files.
-The detailed steps are described in the documentation link:../jamal-asciidoc/README.adoc[Jamal Asciidoc extension].
-
-Optionally, you can also install the live templates, also described in the documentation.
+The installation of the Jamal extension for the IntelliJ Asciidoctor plugin is a 2-minute process.
+The detailed steps are described in the link:../jamal-asciidoc/README.adoc[README] of the plugin.
 
 == Starting up
 

@@ -48,6 +48,8 @@ This preprocessor works for any JetBrains IDE that supports the Asciidoctor plug
 {%!#if/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/{%`#define V={%LAST_RELEASE%}%}%}\
 {%!#if [not]/{%#string:contains (text=SNAPSHOT){%VERSION%}%}/{%`#define V={%VERSION%}%}%}\
 
+=== Manual installation
+
 {%@define INSTALL_FOLDER=`.Asciidoctor/lib`%}
 To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-{%V%}-jamal-asciidoc-distribution.zip`.
 
@@ -67,25 +69,25 @@ The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files ar
 
 Extract the content of this zip file into your projects {%INSTALL_FOLDER%} folder.
 
-Restart IntelliJ.
-As soon as you open a file configured as Asciidoc and has the extension `.jam`, it will ask you:
+=== Automated Installation
 
-image::images/trust.png[]
+If you have JBang or Jamal command line version, you can ask Jamal itself to install the extension.
+To do that, execute the command
 
-__This project contains Asciidoctor Extensions in .asciidoctor/lib that can be executed to render the preview. As this Ruby code runs as your local user, don't run this code unchecked.__
+    jbang jamal@verhas -jamalize version={%V%}
 
-then select the first line that says
+or, if you installed Jamal so that you can start it from the command line as `jamal`:
 
-__I've checked the code and trust it, enable them!__
+    jamal -jamalize version={%V%}
 
-[NOTE]
-====
-Do not believe all that the message says.
-It is not Ruby code.
-This extension is written in Java.
-However, using the Jamal Ruby extension, you may execute some Ruby code in your Asciidoc document.
-But only if you want.
-====
+This command will install the extension into the {%INSTALL_FOLDER%} directory under the current directory.
+If you omit the `version` parameter, then the version of the installing Jamal will be used.
+
+NOTE: You can install only released versions.
+The installation downloads the ZIP file (see the next section) from the Maven repository.
+Only the released versions are available there.
+
+=== Configuring IntelliJ
 
 Open the Preferences window of IntelliJ and select `File Types`.
 Under the recognized file types, select `AsciiDoc files`.
@@ -108,6 +110,28 @@ It will make the asciidoctor plugin display the content as preformatted source c
 
 The extension does not add the prefix and postfix to the saved file.
 It is added only to the text for the display.
+====
+
+Restart IntelliJ.
+
+=== Start Up IntelliJ with Asciidoc after Jamal installed
+
+As soon as you open a file configured as Asciidoc, IntelliJ will ask you:
+
+image::images/trust.png[]
+
+__This project contains Asciidoctor Extensions in .asciidoctor/lib that can be executed to render the preview. As this Ruby code runs as your local user, don't run this code unchecked.__
+
+You have to click on the first link that says
+
+__I've checked the code and trust it, enable them!__
+
+[NOTE]
+====
+Although the message talks about Ruby, it is Java.
+From the user's point of view, it does not matter, but it is good to know.
+Don't let yourself confused.
+Asciidoctor itself is writen in Ruby, and it mistakenly thinks so is everything else.
 ====
 
 == Installation with AsciidocFX

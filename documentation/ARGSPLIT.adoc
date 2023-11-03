@@ -1,7 +1,11 @@
 = Standard Built-In Macro Argument Splitting
 
 == Introduction
-This document describes the Standard Built-in Macro Argument splitting.
+
+Many Built-in macros split the input into parts.
+They do this using the algorithm described in this document.
+
+It is the Standard Built-in Macro Argument splitting.
 
 It is essential when you use macros using this algorith, for example, the core `if` macro.
 The text also mentions some Java internals that may be valuable if you intend to develop your built-in macros.

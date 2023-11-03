@@ -23,7 +23,7 @@ val Input.skipWhiteSpaces2EOL
         InputHandler.skipWhiteSpaces2EOL(this)
     }
 
-fun Input.move(s: String, output: Input){
+fun Input.move(s: String, output: Input) {
     InputHandler.move(this, s, output)
 }
 
