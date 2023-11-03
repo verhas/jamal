@@ -38,7 +38,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in, 1);
+            String[] parts = InputHandler.getParts(in, processor,1);
             BadSyntax.when(parts.length != 1, "The string:quote macro expects exactly one argument");
             return parts[0]
                     .replace("\\", "\\\\")
@@ -65,7 +65,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in, 2);
+            String[] parts = InputHandler.getParts(in, processor,2);
             BadSyntax.when(parts.length != 2, "%s needs two parts", getId());
             return "" + with.test(parts[0], parts[1]);
         }
@@ -102,7 +102,7 @@ public class StringMacros {
             final var scanner = newScanner(in, processor);
             final var ignoreCase = scanner.bool("ignoreCase");
             scanner.done();
-            String[] parts = InputHandler.getParts(in, 2);
+            String[] parts = InputHandler.getParts(in, processor,2);
             BadSyntax.when(parts.length != 2, "%s needs two parts", getId());
             return "" + (ignoreCase.is() ? parts[0].equalsIgnoreCase(parts[1]) : parts[0].equals(parts[1]));
         }
@@ -117,7 +117,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in, 1);
+            String[] parts = InputHandler.getParts(in, processor,1);
             BadSyntax.when(parts.length != 1, "The string:reverse macro expects exactly one argument");
             return new StringBuilder(parts[0]).reverse().toString();
         }
@@ -161,7 +161,7 @@ public class StringMacros {
             final var begin = scanner.number(null, "begin").defaultValue(0);
             final var end = scanner.number(null, "end");
             scanner.done();
-            String[] parts = InputHandler.getParts(in, 1);
+            String[] parts = InputHandler.getParts(in, processor,1);
             BadSyntax.when(parts.length != 1, "The string:substring macro expects exactly one argument");
             final var beginIndex = begin.get() < 0 ? in.length() + begin.get() : begin.get();
             final var endIndex = end.isPresent() ? (end.get() < 0 ? in.length() + end.get() : end.get()) : in.length();

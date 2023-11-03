@@ -21,12 +21,12 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         final var skipEnd = scanner.pattern("endSkip").defaultValue("end\\s+skip");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), skipStart.getParam(), skipEnd.getParam());
+        convertTextBlock(processor, in.getSB(), in.getPosition(), skipStart.getParam(), skipEnd.getParam());
         return in.toString();
     }
 
     @Override
-    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(2, params);
         final var skipStart = params[0].asType(Pattern.class);
         final var skipEnd = params[1].asType(Pattern.class);

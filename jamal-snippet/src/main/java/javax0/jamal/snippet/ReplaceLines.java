@@ -23,12 +23,12 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter,
         final var detectNoChange = scanner.bool("detectNoChange");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), replace.getParam(), detectNoChange.getParam());
+        convertTextBlock(processor, in.getSB(), in.getPosition(), replace.getParam(), detectNoChange.getParam());
         return in.toString();
     }
 
     @Override
-    public void convertTextBlock(StringBuilder sb, Position pos, Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, StringBuilder sb, Position pos, Params.Param<?>... params) throws BadSyntax {
         assertParams(2, params);
         final var replace = params[0].asList(String.class);
         final var detectNoChange = params[1].asBoolean();
@@ -36,7 +36,7 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter,
         List<String> fromList = new ArrayList<>();
         final var lines = sb.toString().split("\n", -1);
         for (final var replaceString : replace.get()) {
-            final var parts = ReplaceUtil.chop(InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replaceString)));
+            final var parts = ReplaceUtil.chop(InputHandler.getParts(javax0.jamal.tools.Input.makeInput(replaceString), processor));
             BadSyntaxAt.when(parts.length == 0, "The replace macro should have at least one part: '" + replace.get() + "'", pos);
             for (int i = 0; i < parts.length; i += 2) {
                 var noChange = detectNoChange.is();

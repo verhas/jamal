@@ -311,28 +311,28 @@ public class SnipTransform implements Macro {
         for (final String action : params.actionsSet) {
             switch (action) {
                 case "kill":
-                    macros.killLines.convertTextBlock(sb, pos, params.pattern, params.keep);
+                    macros.killLines.convertTextBlock(processor, sb, pos, params.pattern, params.keep);
                     break;
                 case "skip":
-                    macros.skipLines.convertTextBlock(sb, pos, params.skipStart, params.skipEnd);
+                    macros.skipLines.convertTextBlock(processor, sb, pos, params.skipStart, params.skipEnd);
                     break;
                 case "replace":
-                    macros.replaceLines.convertTextBlock(sb, pos, params.replace, params.detectNoChange);
+                    macros.replaceLines.convertTextBlock(processor, sb, pos, params.replace, params.detectNoChange);
                     break;
                 case "trim":
-                    macros.trimLines.convertTextBlock(sb, pos, params.margin, params.trimVertical, params.verticalTrimOnly);
+                    macros.trimLines.convertTextBlock(processor, sb, pos, params.margin, params.trimVertical, params.verticalTrimOnly);
                     break;
                 case "reflow":
-                    macros.reflow.convertTextBlock(sb, pos, params.width);
+                    macros.reflow.convertTextBlock(processor, sb, pos, params.width);
                     break;
                 case "number":
-                    macros.numberLines.convertTextBlock(sb, pos, params.format, params.start, params.step);
+                    macros.numberLines.convertTextBlock(processor, sb, pos, params.format, params.start, params.step);
                     break;
                 case "untab":
-                    macros.untab.convertTextBlock(sb, pos, params.tabSize);
+                    macros.untab.convertTextBlock(processor, sb, pos, params.tabSize);
                     break;
                 case "range":
-                    macros.range.convertTextBlock(sb, pos, params.ranges);
+                    macros.range.convertTextBlock(processor, sb, pos, params.ranges);
                     break;
 
                 default:

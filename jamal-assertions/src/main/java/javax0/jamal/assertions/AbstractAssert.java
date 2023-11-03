@@ -69,7 +69,7 @@ abstract class AbstractAssert implements Macro, Scanner {
         //end snippet
         scanner.done();
 
-        String[] parts = getParts(input, N, trim, this);
+        String[] parts = getParts(input, processor, N, trim, this);
         if (negateIfNeeded(test(parts), not)) {
             return test.is() ? "true" : "";
         } else {
@@ -77,7 +77,7 @@ abstract class AbstractAssert implements Macro, Scanner {
                 return "false";
             } else {
                 final String format = not.is() ? negatedDefaultMessage : defaultMessage;
-                if (parts.length >= N && parts[N - 1].trim().length() > 0) {
+                if (parts.length >= N && !parts[N - 1].trim().isEmpty()) {
                     throw new BadSyntax(String.format(parts[N - 1], (Object[]) parts));
                 }
                 throw new BadSyntax(getId() + " has failed " + String.format(format, (Object[]) parts));
@@ -107,8 +107,8 @@ abstract class AbstractAssert implements Macro, Scanner {
         return "assert:" + s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    private static String[] getParts(Input input, int N, BooleanParameter trim, Macro macro) throws BadSyntax {
-        final var parts = InputHandler.getParts(input, N);
+    private static String[] getParts(Input input, Processor processor, int N, BooleanParameter trim, Macro macro) throws BadSyntax {
+        final var parts = InputHandler.getParts(input, processor, N);
         BadSyntax.when(parts.length < N - 1, () -> macro.getId() + " needs at least " + (N - 1) + " arguments");
         if (trim.is()) {
             for (int i = 0; i < parts.length; i++) {

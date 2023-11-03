@@ -7,7 +7,8 @@
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
 {%#snip:define lastUpdated={%lastUpdated%}%}\
 {%@define JAVA_DIR=src/main/java/javax0/jamal/snippet/%}
-{%@define standardInput= The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.%}
+{%@define ARGSPLIT=link:../documentation/ARGSPLIT.adoc[Standard Built-In Macro Argument Splitting]%}
+{%@define standardInput= The macro scans the input using the {%ARGSPLIT%}.%}
 {%@define alias(x)=(can be aliased as `x`)%}
 {%@options detectNoChange%}
 
@@ -1042,7 +1043,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 === {%chapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=e8aed8bc%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=672b79ac%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -1114,7 +1115,7 @@ will result
 
 [[untab]]
 === {%chapter%}`untab`
-{%#snip:check file={%JAVA_DIR%}Untab.java hash=896e2f2e%}
+{%#snip:check file={%JAVA_DIR%}Untab.java hash=3c83075b%}
 
 The syntax of the macro is:
 
@@ -1163,7 +1164,7 @@ will be converted to
 
 [[range]]
 === {%chapter%}`range`
-{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=005a0ae6%}
+{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=7f852d3a%}
 
 This macro can filter lines of its input by a range of numbers.
 The syntax of the macro is:
@@ -1464,7 +1465,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 
 [[numberLines]]
 === {%chapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=9080a6ce%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=db75d8d3%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 {%parameterized%}
 
@@ -1532,7 +1533,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 === {%chapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=c3fccc9d%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=1a8468e1%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1604,7 +1605,7 @@ In this case only the comment lines remained that start with `//` at the start o
 
 [[skipLines]]
 === {%chapter%}`skipLines`
-{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=da20c169%}
+{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=5015f291%}
 You can use this macro to skip lines from the snippet.
 {%parameterized%}
 
@@ -1669,7 +1670,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 
 [[replace]]
 === {%chapter%}`replace`
-{%#snip:check file={%JAVA_DIR%}Replace.java hash=34ef03c3%}
+{%#snip:check file={%JAVA_DIR%}Replace.java hash=a41a3951%}
 The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
@@ -1715,7 +1716,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 
 [[replaceLines]]
 === {%chapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=0cb257a5%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=042e57ce%}
 This macro replaces strings in the input.
 {%parameterized%}
 
@@ -1752,7 +1753,7 @@ will result
 
 The searched regular expressions and the replacement strings have to be defined in the parameter `replace`.
 This parameter can be defined inside the `replaceLines` macro.
-The macro scans the value of the parameter `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+The macro scans the value of the parameter `replace` using the {%ARGSPLIT%}.
 
 It is usually an error when no lines are replaced in a snippet.
 Use the parameter`detectNoChange` to detect this.
@@ -2083,7 +2084,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 
 [[reflow]]
 === {%chapter%}`reflow`
-{%#snip:check file={%JAVA_DIR%}Reflow.java hash=7521ef23%}
+{%#snip:check file={%JAVA_DIR%}Reflow.java hash=151bbf6c%}
 This macro reflows the content.
 {%parameterized%}
 
@@ -2219,7 +2220,7 @@ The syntax of the macro is
 
 [[snipTransform]]
 === {%chapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=cf639f9c%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=6994659b%}
 
 The `snip:transform` macro integrates the functionality of the macros
 
@@ -2884,7 +2885,7 @@ In the format you can use the following placeholders:
 
 [[Java]]
 === {%chapter%}Java Macros
-{%#snip:check file={%JAVA_DIR%}Java.java hash=2fab387d%}
+{%#snip:check file={%JAVA_DIR%}Java.java hash=88b7a841%}
 
 [[java:class]]
 ==== `java:class`
@@ -3305,7 +3306,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 
 [[String]]
 === {%chapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=6f0f6f85%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=77d59555%}
 
 [[string:contains]]
 ==== `string:contains`

@@ -33,12 +33,12 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         scanner.done();
         //end snippet
         final var sb = in.getSB();
-        convertTextBlock(sb, in.getPosition(), margin.getParam(), trimVertical.getParam(), verticalTrimOnly.getParam());
+        convertTextBlock(processor, sb, in.getPosition(), margin.getParam(), trimVertical.getParam(), verticalTrimOnly.getParam());
         return sb.toString();
     }
 
     @Override
-    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(3, params);
         final var margin = params[0];
         final var trimVertical = params[1].asBoolean();

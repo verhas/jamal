@@ -57,11 +57,11 @@ public class NumberLines implements Macro, InnerScopeDependent, BlockConverter, 
         final var step = scanner.number("step").defaultValue(1);
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), format.getParam(), start.getParam(), step.getParam());
+        convertTextBlock(processor, in.getSB(), in.getPosition(), format.getParam(), start.getParam(), step.getParam());
         return in.toString();
     }
 
-    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(3, params);
         final var format = params[0].asString();
         final var start = params[1].asInt();

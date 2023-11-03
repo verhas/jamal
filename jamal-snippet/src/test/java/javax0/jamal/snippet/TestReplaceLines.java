@@ -20,6 +20,24 @@ public class TestReplaceLines {
     }
 
     @Test
+    void testReplaceLinesExternalSeparatorRegex() throws Exception {
+        TestThat.theInput("{@define $REGEX=/|\\s*⇒\\s*}" +
+                "{@define replace=^appl(.) ⇒ p$1ar/" +
+                "^fox ⇒ whale/" +
+                "win(.)e(.)\\s ⇒ /" +
+                "f(.)rest ⇒ $1cean" +
+                "}" +
+                "{@replaceLines \n" +
+                "apple fell off the apple tree\n" +
+                "fox mating in the winter firest\n" +
+                "fox mating in the winter forest\n" +
+                "}").results("pear fell off the apple tree\n" +
+                "whale mating in the icean\n" +
+                "whale mating in the ocean\n"
+        );
+    }
+
+    @Test
     void testReplaceLinesWithRegexMultipleParameters() throws Exception {
         TestThat.theInput(
             "{@replaceLines replace=/^appl(.)/p$1ar/ replace=/^fox/whale/ replace=\"/win(.)e(.) //\" replace=/f(.)rest/$1cean\n" +

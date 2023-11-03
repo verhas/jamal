@@ -1,7 +1,11 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
+import javax0.jamal.api.Position;
+import javax0.jamal.api.Processor;
+import javax0.jamal.api.SpecialCharacters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -403,11 +407,11 @@ public class InputHandler {
         }
     }
 
-    public static LinkedHashMap<String,String> getParametersWithDefaults(Processor processor, Input input, String id) throws BadSyntax {
+    public static LinkedHashMap<String, String> getParametersWithDefaults(Processor processor, Input input, String id) throws BadSyntax {
         final var ref = input.getPosition();
         if (firstCharIs(input, '(')) {
-            final var parser = Params.using(processor,true);
-            final var map = new LinkedHashMap<String,String>();
+            final var parser = Params.using(processor, true);
+            final var map = new LinkedHashMap<String, String>();
             parser.parse(input, map::put, k -> true);
             if (map.isEmpty()) {
                 return new LinkedHashMap<>();
@@ -510,6 +514,7 @@ public class InputHandler {
      * @param input to be split up
      * @return the array of the strings created from the input
      */
+    //snipline getParts3 filter=(getParts.*?\))
     public static String[] getParts(Input input) {
         return getParts(input, -1);
     }
@@ -521,6 +526,7 @@ public class InputHandler {
      * @param limit the maximum number of parts we need
      * @return the parts of the input in an array
      */
+    //snipline getParts4 filter=(getParts.*?\))
     public static String[] getParts(Input input, int limit) {
         skipWhiteSpaces(input);
         if (input.length() == 0) {
@@ -537,13 +543,41 @@ public class InputHandler {
         return input.toString().split(Pattern.quote(separator), limit);
     }
 
+    //snipline getParts1 filter=(getParts.*?\))
+    public static String[] getParts(Input input, Processor processor) throws BadSyntax {
+        return getParts(input, processor, -1);
+    }
+
+    //snipline getParts2 filter=(getParts.*?\))
+    public static String[] getParts(Input input, Processor processor, int limit) throws BadSyntax {
+        final var regex = MacroReader.macro(processor).readValue("$REGEX");
+        if (regex.isEmpty()) {
+            return getParts(input, limit);
+        }
+        skipWhiteSpaces(input);
+        if (input.length() == 0) {
+            return EMPTY_STRING_ARRAY;
+        }
+        return skipEmptyFirst(input.toString().split(regex.get(), limit));
+    }
+
     private static String[] getPartsRegex(Input input, int limit) {
         final var regex = fetchRegex(input);
         return skipEmptyFirst(input.toString().split(regex, limit));
     }
 
+    /**
+     * It is absolutely legal to start the list with a separator.
+     * In this case, the list will start with an empty string.
+     * It can happen when the split is done using a regular expression.
+     * <p>
+     * We do not want that empty element at the start.
+     *
+     * @param values the array of strings that may start which may start with an empty element
+     * @return the array the first element removed when that element is an empty string
+     */
     private static String[] skipEmptyFirst(String[] values) {
-        if (values.length > 0 && values[0].length() == 0) {
+        if (values.length > 0 && values[0].isEmpty()) {
             return Arrays.copyOfRange(values, 1, values.length);
         } else {
             return values;

@@ -19,7 +19,7 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         final var keep = scanner.bool("keep");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), pattern.getParam(), keep.getParam());
+        convertTextBlock(processor, in.getSB(), in.getPosition(), pattern.getParam(), keep.getParam());
         return in.toString();
     }
 
@@ -30,7 +30,7 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter, Sc
     }
 
     @Override
-    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(2, params);
         final var pattern = params[0].asType(Pattern.class);
         final var keep = params[1].asBoolean();

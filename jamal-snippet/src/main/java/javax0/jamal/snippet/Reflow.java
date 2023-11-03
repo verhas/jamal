@@ -15,12 +15,12 @@ public class Reflow implements Macro, InnerScopeDependent, BlockConverter, Scann
         final var scanner = newScanner(in,processor);
         final var width = scanner.number("width").defaultValue(0);
         scanner.done();
-        convertTextBlock(in.getSB(), in.getPosition(), width.getParam());
+        convertTextBlock(processor, in.getSB(), in.getPosition(), width.getParam());
         return in.toString();
     }
 
     @Override
-    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(1, params);
         final var width = params[0].asInt();
         int index = 0;

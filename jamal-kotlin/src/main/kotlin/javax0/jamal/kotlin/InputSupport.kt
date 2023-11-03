@@ -1,6 +1,7 @@
 package javax0.jamal.kotlin
 
 import javax0.jamal.api.Input
+import javax0.jamal.api.Processor
 import javax0.jamal.tools.InputHandler
 
 val Input.fetchId
@@ -65,13 +66,13 @@ infix fun Input.getParameters(id: String): Array<String> {
 }
 
 val Input.getParts
-    get():Array<String> {
-        return InputHandler.getParts(this)
-    }
+    get():Array<String> = InputHandler.getParts(this)
 
-infix fun Input.getParts(i: Int): Array<String> {
-    return InputHandler.getParts(this, i)
-}
+fun Input.getParts(processor:Processor) = InputHandler.getParts(this,processor)
+
+infix fun Input.getParts(i: Int): Array<String> = InputHandler.getParts(this, i)
+
+fun Input.getParts(processor: Processor, i: Int): Array<String> =  InputHandler.getParts(this, processor, i)
 
 val String.isJamalGlobalMacro
     get():Boolean {

@@ -30,12 +30,12 @@ public class Untab implements Macro, InnerScopeDependent, BlockConverter , Scann
         final var tabSize = scanner.number("tabSize", "tab", "size").defaultValue(8);
         scanner.done();
         final var sb = in.getSB();
-        convertTextBlock(sb, in.getPosition(), tabSize.getParam());
+        convertTextBlock(processor, sb, in.getPosition(), tabSize.getParam());
         return sb.toString();
     }
 
     @Override
-    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(1, params);
         final var tabSize = params[0].asInt();
 

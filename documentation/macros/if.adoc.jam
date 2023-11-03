@@ -2,7 +2,7 @@
 {%MACRO name="for" since={%RELEASE:ZURICH%}%}
 
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=d086471d%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=fd7d63b0%}
 {%@snip:collect from=../../jamal-core/src/main/java%}\
 
 The `if` macro makes it possible to evaluate the content conditionally.

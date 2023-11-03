@@ -16,12 +16,12 @@ public class RangeMacro implements Macro, InnerScopeDependent, BlockConverter, S
         final var ranges = scanner.str(null, "range", "ranges", "lines");
         scanner.done();
 
-        convertTextBlock(in.getSB(), in.getPosition(), ranges.getParam());
+        convertTextBlock(processor, in.getSB(), in.getPosition(), ranges.getParam());
         return in.toString();
     }
 
     @Override
-    public void convertTextBlock(final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
+    public void convertTextBlock(Processor processor, final StringBuilder sb, final Position pos, final Params.Param<?>... params) throws BadSyntax {
         assertParams(1, params);
         final var ranges = params[0].asString();
 

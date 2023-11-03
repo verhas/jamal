@@ -18,12 +18,13 @@ public interface BlockConverter {
      * {@link javax0.jamal.api.Macro#evaluate(Input, Processor) evaluate()}, but it is also possible to invoked it
      * from other macros. It separates the input parsing for parameters and the actual processing of the block.
      *
-     * @param sb     the input and also the store for the output
-     * @param pos    the position where the input starts
-     * @param params the parameters for the processing. It is different for every block converter macro.
+     * @param processor
+     * @param sb        the input and also the store for the output
+     * @param pos       the position where the input starts
+     * @param params    the parameters for the processing. It is different for every block converter macro.
      * @throws BadSyntax when the underlying macro throws up
      */
-    void convertTextBlock(StringBuilder sb, Position pos, Params.Param<?>... params) throws BadSyntax;
+    void convertTextBlock(Processor processor, StringBuilder sb, Position pos, Params.Param<?>... params) throws BadSyntax;
 
     /**
      * Use this method in the macros implementing this interface to check that the caller was passing the right

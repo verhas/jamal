@@ -1,7 +1,11 @@
 package javax0.jamal.builtins;
 
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.*;
+import javax0.jamal.api.OptionsControlled;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
@@ -103,7 +107,7 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
         final var opt = new Options(scanner);
         scanner.done();
         opt.assertConsistency();
-        final var parts = InputHandler.getParts(input, 3);
+        final var parts = InputHandler.getParts(input, processor, 3);
         BadSyntaxAt.when(parts.length < 1, "Macro 'if' needs 1, 2 or 3 arguments", pos);
 
         if (opt.not.is() != isTrue(processor, parts[0], opt)) {

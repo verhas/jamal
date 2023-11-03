@@ -1,6 +1,11 @@
 {@define zima({zupp})=jajja {zupp}}
 {zima ZZZ}
-{@define zupp=SSS}
-{zima ZZZ}
+{#block
+{@define $REGEX=\s*THEN\s*|\s*ELSE\s*}
+{@if true THEN true ELSE false}
+}
+{@if true THEN true ELSE false}
+
+{?$REGEX}
 
 

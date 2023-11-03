@@ -91,7 +91,7 @@ public class Java {
             scanner.done();
             skipWhiteSpaces(in);
             final var fieldRef = in.toString().trim();
-            final var parts = split(in, this);
+            final var parts = split(in, processor, this);
             final var className = parts[0];
             final var fieldName = parts[1];
             final Class<?> klass;
@@ -161,7 +161,7 @@ public class Java {
             final var scanner = newScanner(in, processor);
             final var format = scanner.str("methodFormat", "format").defaultValue("$name");
             scanner.done();
-            final var parts = split(in, this);
+            final var parts = split(in, processor, this);
             final var className = parts[0];
             final var methodName = parts[1];
             final Class<?> klass;
@@ -225,11 +225,11 @@ public class Java {
 
     }
 
-    private static String[] split(Input in, Macro macro) throws BadSyntaxAt {
+    private static String[] split(Input in, Processor processor, Macro macro) throws BadSyntax {
         final var trimmed = in.toString().trim();
         final int fieldStart, classEnd;
         final String className, fieldName;
-        if (trimmed.length() > 0 && Character.isAlphabetic(trimmed.charAt(0))) {
+        if (!trimmed.isEmpty() && Character.isAlphabetic(trimmed.charAt(0))) {
             int j = trimmed.indexOf('#');
             if (j != -1) {
                 fieldStart = j + 1;
@@ -246,7 +246,7 @@ public class Java {
             className = trimmed.substring(0, classEnd);
             fieldName = trimmed.substring(fieldStart);
         } else {
-            final var parts = InputHandler.getParts(in, 2);
+            final var parts = InputHandler.getParts(in, processor, 2);
             BadSyntaxAt.when(parts.length < 2, "Macro '" + macro.getId() + "' needs exactly two arguments and got " + parts.length + " from '" + in + "'", in.getPosition());
             className = parts[0];
             fieldName = parts[1];

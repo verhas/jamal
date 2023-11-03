@@ -1,73 +1,151 @@
 = Standard Built-In Macro Argument Splitting
 
+
 == Introduction
 
-Many Built-in macros split the input into parts.
-They do this using the algorithm described in this document.
+Some Built-in macros use special syntax.
+Others split the input into parts and use the parts to work with.
+The splitting is standardized and is implemented by Jamal to support these macros.
+This way these macros use the same input splitting algorithm.
 
-It is the Standard Built-in Macro Argument splitting.
+In other words, the algorithm described in this document is how many built-in macros get their arguments.
+For example the macro `if` can be used as follows:
 
-It is essential when you use macros using this algorith, for example, the core `if` macro.
-The text also mentions some Java internals that may be valuable if you intend to develop your built-in macros.
+[source]
+----
+{@if /true/then/else}
+----
 
-Built-in macros access the input as one single string.
-They are implemented in Java and the code can interpret the string in any way they want.
-It means that there is no restriction on the "syntax" of a built-in macro.
-Some of these macros can opt to use a service that Jamal provides to split the input into parts.
-This documentation describes the Java details and the syntax the splitting uses.
+which will result in the output
 
-== Details
+[source]
+----
+then
+----
 
-=== Java Background
 
-Built-in macros are implemented in Java.
-Each macro is a class that implements the interface `Macro`.
+In this case the input `/true/then/else` is split into three parts `true`, `then` and `else`.
+The separation is done using the first character following the macro.
+This is the most common and simplest way to separate the arguments, but there is more to it.
+
+== The Algorithm
+
+The algorithm is defined in the following way:
+
+* If the first non-white space character is a letter or digit, then the input is split along the white space characters.
+Multiple adjacent white space characters are counted as one.
+The splitting does not create empty parameters.
++
+[source]
+----
+..{@if true then else}..
+----
++
+[source]
+----
+..then..
+----
+
++
+NOTE: No spaces around the output `then`.
+
+* If the first non-white space character is backtick (`++`++`), then the parsing expects a regular expression between backticks.
+After the regular expression and after the closing backtick, the rest of the input is split up using the regular expression as separator.
+Backticks inside the regular expression have to be doubled.
++
+[source]
+----
+{@if `\s*THEN\s*|\s*ELSE\s*` true THEN then ELSE else}
+----
++
+[source]
+----
+then
+----
+
+
+* If the first non-whitespace character is not a letter or digit or backtick (`++`++`), then the first non-whitespace character is the separator.
++
+[source]
+----
+..{@if /true/  then  /else}..
+----
++
+[source]
+----
+..  then  ..
+----
+
++
+NOTE: There are spaces around the output `then`.
+
+* If the macro `$REGEX` is defined (no arguments) then its content will be used as regular expression to split the input.
++
+[source]
+----
+{@define $REGEX=\s*THEN\s*|\s*ELSE\s*}
+{@if  true THEN then ELSE else}
+----
++
+[source]
+----
+then
+----
+
+
+Some macros may decide to use the splitting in a way that ignores the last rule.
+Unless it is documented so, you should assume that these four rules apply.
+
+== Java Background
+
+NOTE: You can ignore this part if you are not interested in the Java details.
+This section is for those who want to implement their own macros in Kotlin or Java.
+
+Built-in macros are implemented in Java or Kotlin.
+Jamal itself is implemented in Java.
+When you develop macros in Kotlin, you can call the Java methods, or you can use the Jamal Kotlin library.
+This library provides a lightweight facáde to the Java implementation enabling Kotlin style development.
+
+Each macro is a class implementing the interface `Macro`.
 The interface has the method named `evaluate()`.
 This method is invoked to process the input and result in the output.
 
 Technically the `input` parameter of the method `evaluate()` is not a string.
-It is an instance of the class `Input` implementing the Java interface `CharSequence`.
-That way, we can think of it as a string, although it can also deliver location information.
-The location information is used usually to report errors.
+It is an instance of some class implementing the interface `Input`.
+The interface `input` extends the Java interface `CharSequence`.
+That way, `input` behaves like a string.
 
 The Java code of the macro is free to interpret this string the way it wants.
 Different macros implement their syntax analysis differently.
 
-To manage the input and ease the format analysis and interpretation of the input, there is a utility class named `InputHandler`.
+To manage the input and ease the syntax analysis and interpretation of the input, there is a utility class named `InputHandler`.
 This class defines a method named `getParts()` which does a simple analysis.
-It splits the input into an array of strings in a "standard" way.
+It splits the input into an array of strings in a "standard" way, as described above.
 
 This method is used, for example, by the implementation of the `if` built-in macro.
 I recommend using this method when there is no special requirement for a macro.
 Using this method provides a concise way for macro argument separation.
-The way it splits the arguments is defined here so that the macro documentation can refer to this section.
 
-The splitting offers three syntax variations:
+The method `getParts()` is overloaded.
+It has four versions:
 
-1. `macroName / a / b / c / ... /x`
+* `getParts(Input input, Processor processor)` — This is the most general version.
+It splits the input to as many parts as possible according to the rules described above.
+It also uses the last rule looking up the macro `$REGEX`.
 
-2. `macroName   a   b   c   ...  x`
+* `getParts(Input input, Processor processor, int limit)` — This version splits the input as many partds as spossible, but not more than `limit` parts.
+That way, the last part may contain separators.
 
-3.  `++macroName `regex` separator a separator b separator ... separator x++`
+* `getParts(Input input)` — Same as the one with the `Processor` argument, but it does not care the `$REGEX` macro.
 
-In the first case, the argument separator character is the first special character.
-This character can be any unicode character except
+* `getParts(Input input, int limit)` — Same as the one with the `Processor` argument, but it does not care the `$REGEX` macro.
 
-* letter or digit,
+It is recommended to use one of the versions that do use the `$REGEX` macro.
 
-* back-tick character,
+Some of the built-in macros use this method to split the value of some parops.
+For example, the macros `replace`, and `replaceLine` use the method to split the value of the parop `replace` into parts.
+They enclose the string value of the parop in an `Input` object before calling `getParts()`.
 
-* white space character.
+For the Kotlin support methods have look at the Kotlin file
 
-If the first non-white space character is a letter or digit character, then the second syntax is used.
-In this case, the input is split up along the white space characters.
-Multiple adjacent white space characters are counted as one.
-The splitting does not create empty parameters.
-
-The third possibility is when the fist non-space character is backtick (`++`++`).
-
-In this case, the parsing expects a regular expression between backticks.
-After the regular expression and after the closing backtick, the rest of the input is split up using the regular expression as separator.
-
-Backtick was selected during the design of the syntax to enclose the regular expression because this character is very rare in Java regular expression.
-In case you need one inside the regular expression, then you have to simply double it, and the parsing will single it back.
+  ../jamal-kotlin/src/main/kotlin/javax0/jamal/kotlin/InputSupport.kt

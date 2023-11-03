@@ -18,7 +18,7 @@ public class Replace implements Macro, InnerScopeDependent, Scanner {
         final var detectNoChange = scanner.bool("detectNoChange");
         scanner.done();
         InputHandler.skipWhiteSpaces(in);
-        final var parts = ReplaceUtil.chop(InputHandler.getParts(in));
+        final var parts = ReplaceUtil.chop(InputHandler.getParts(in, processor));
 
         BadSyntax.when(parts.length < 2, () -> String.format("Marco 'replace' needs at least two arguments, got only %d:\n%s\n----------",
                 parts.length, String.join("\n", parts)));

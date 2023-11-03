@@ -1,10 +1,8 @@
-s////
 {%@import res:jamal.jim%}\
 {%@snip:xml pom=../pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%@import ../RELEASES.jim%}\
 {%@import ../environmentvariables.jim%}\
-////
 = Resource Files and Web Resources
 
 Macros can reference files.

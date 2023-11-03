@@ -58,7 +58,13 @@ public class TestReplace {
         TestThat.theInput("{#replace |{@options regex}alma     korte     barack|\\s+| }").results("alma korte barack");
     }
 
-    @DisplayName("Detect when tere are not enough parts of the macro")
+    @DisplayName("Use the global macro $REGEX to define the separator between the replace parts")
+    @Test
+    void testRegexDefinedByMacro() throws Exception {
+        TestThat.theInput("{@define $REGEX()=/|->}{#replace (regex)alma     korte     barack/\\s+ -> }").results("alma korte barack");
+    }
+
+    @DisplayName("Detect when there are not enough parts of the macro")
     @Test
     void testNotEnoughArgument() throws Exception {
         TestThat.theInput("{#replace |alma     korte     barack}").throwsBadSyntax();

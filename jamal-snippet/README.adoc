@@ -4,6 +4,7 @@
 
 
 
+
 Snippet handling macros help you to include information from program source code into the documentation automatically.
 This macro package also includes some XML handling, string, and text formatting macros, which are usually used together with snippets.
 
@@ -1603,7 +1604,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1360:30
+../jamal-snippet/README.adoc.jam:1361:30
 ----
 
 
@@ -2040,7 +2041,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 === XXV. `replace`
 
 The macro `replace` replaces strings with other strings in its input.
- The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+ The macro scans the input using the link:../documentation/ARGSPLIT.adoc[Standard Built-In Macro Argument Splitting].
 
 It uses the first argument as the input, and then every following argument pairs as search and replace strings.
 For example:
@@ -2121,7 +2122,7 @@ from a Java or C program comment
 
 The searched regular expressions and the replacement strings have to be defined in the parameter `replace`.
 This parameter can be defined inside the `replaceLines` macro.
-The macro scans the value of the parameter `replace` using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+The macro scans the value of the parameter `replace` using the link:../documentation/ARGSPLIT.adoc[Standard Built-In Macro Argument Splitting].
 
 It is usually an error when no lines are replaced in a snippet.
 Use the parameter`detectNoChange` to detect this.
@@ -3143,9 +3144,9 @@ will result
 - Sort.java: 8,573 bytes
 - Decorate.java: 12,259 bytes
 - Case.java: 2,273 bytes
-- NumberLines.java: 2,821 bytes
-- RangeMacro.java: 1,261 bytes
-- Untab.java: 2,357 bytes
+- NumberLines.java: 2,853 bytes
+- RangeMacro.java: 1,293 bytes
+- Untab.java: 2,389 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
 - tools: 160 bytes
@@ -3153,7 +3154,7 @@ will result
 - ReflectionTools.java: 26,140 bytes
 - MethodTool.java: 7,761 bytes
 - Update.java: 979 bytes
-- SnipTransform.java: 16,983 bytes
+- SnipTransform.java: 17,071 bytes
 - Base64.java: 3,383 bytes
 - FilesMacro.java: 10,109 bytes
 - Collect.java: 23,894 bytes
@@ -3161,32 +3162,32 @@ will result
 - CounterFormatter.java: 4,599 bytes
 - Repeat.java: 1,213 bytes
 - HashCode.java: 462 bytes
-- TrimLines.java: 5,354 bytes
+- TrimLines.java: 5,386 bytes
 - JavaSourceInsert.java: 7,996 bytes
 - ThinXml.java: 8,792 bytes
 - Decorator.java: 9,094 bytes
 - Memoize.java: 8,132 bytes
 - LineCount.java: 552 bytes
-- Replace.java: 3,201 bytes
+- Replace.java: 3,212 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 719 bytes
 - SemVerCollator.java: 9,016 bytes
 - CounterHierarchical.java: 6,611 bytes
 - SnipXml.java: 537 bytes
 - ThinXmlMacro.java: 603 bytes
-- BlockConverter.java: 1,858 bytes
+- BlockConverter.java: 1,912 bytes
 - UrlEncode.java: 855 bytes
 - Reference.java: 1,506 bytes
 - Numbers.java: 1,785 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 2,168 bytes
 - CompileJavaMacros.java: 23,499 bytes
-- StringMacros.java: 7,310 bytes
+- StringMacros.java: 7,360 bytes
 - JavaSourceTemplate.java: 7,451 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Dictionary.java: 1,527 bytes
 - Clear.java: 399 bytes
-- KillLines.java: 1,791 bytes
+- KillLines.java: 1,823 bytes
 - SnipLoad.java: 3,482 bytes
 - Rot13.java: 855 bytes
 - SnippetStore.java: 11,433 bytes
@@ -3202,12 +3203,12 @@ will result
 - ShellVar.java: 3,837 bytes
 - XmlDocument.java: 5,671 bytes
 - References.java: 7,745 bytes
-- Java.java: 11,573 bytes
-- ReplaceLines.java: 3,436 bytes
-- SkipLines.java: 2,769 bytes
+- Java.java: 11,623 bytes
+- ReplaceLines.java: 3,479 bytes
+- SkipLines.java: 2,801 bytes
 - SnipCheck.java: 7,526 bytes
 - IdempotencyFailed.java: 1,816 bytes
-- Reflow.java: 2,062 bytes
+- Reflow.java: 2,094 bytes
 - Pos.java: 5,264 bytes
 - Snippet.java: 1,052 bytes
 ----
@@ -3462,7 +3463,7 @@ will result in the output
 
 [source]
 ----
-2023-11-03 10:33:25
+2023-11-03 13:38:52
 ----
 
 
@@ -3470,7 +3471,7 @@ will result in the output
 === XXXVIII. `format`
 
 You can use the macro `format` to format the arguments.
- The macro scans the input using the <<../README.adoc#argsplit,Standard Built-In Macro Argument Splitting>>.
+ The macro scans the input using the link:../documentation/ARGSPLIT.adoc[Standard Built-In Macro Argument Splitting].
 
 The first argument will be interpreted as the format string.
 The rest of the arguments will be used as the values for the formatting.

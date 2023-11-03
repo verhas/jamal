@@ -1,41 +1,4 @@
 
+jajja ZZZ
 
-
-
-
-
-
-
-
-
-  private int a;
-  public int getA(){
-    return a;
-  }
-  public void setA(int a){
-    this.a=a;
-  }
-
-
-  private Double b;
-  public Double getB(){
-    return b;
-  }
-  public void setB(Double b){
-    this.b=b;
-  }
-
-
-  private Boolean c;
-  public Boolean isC(){
-    return c;
-  }
-  public void setC(Boolean c){
-    this.c=c;
-  }
-
-
-
-void passer(int a, Double b) {
-delegatedTo.passer(a, b);
-}
+THEN
