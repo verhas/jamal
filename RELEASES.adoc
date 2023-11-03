@@ -24,7 +24,8 @@
 * The `jamal-prog` package contains a macro `decimal` to support `BigDecimal` calculation in BASIC code.
 * The `replace` and `replaceLines` macros in the snippet package result in error not only if the input was not changed, but also when some of the search/replace string-string or regular expression-string pairs made no effect on the input when the option `detectNoChange` is used.
 This helps to avoid situations when a snippet is heavily transformed to create documentation lines from source code and the source changes structurally and the transformation gets outdated.
-It is recommended to set the `detectNoChange` option to true globally at the start of the input file.w33
+It is recommended to set the `detectNoChange` option to true globally at the start of the input file.
+* The argument splitting many built-in macro uses now looks at the macro `$REGEX` and uses it to split the arguments if defined.
 
 == https://github.com/verhas/jamal/tree/2.4.0[2.4.0]
 
