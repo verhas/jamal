@@ -19,7 +19,7 @@ attributes. (DONE)
 * Implement breakpoints in Jamal debugger. A Jamal breakpoint is a string, and the execution in the debugger stops when
  the string is part of the next part to be executed. (DONE)
 
-* Implement JSON reading and writing and structural construction similar to Yaml.
+* Implement JSON reading and writing and structural construction similar to Yaml. (DONE)
 
 * Implement XML reading and writing and structural construction similar to Yaml. (PARTIAL part of the snippet package)
 
@@ -31,10 +31,12 @@ attributes. (DONE)
 
 * Make it possible to use Jamal macros in Word DOCX files. (DONE)
 
-* Support Kotlin as macro development language (STARTED)
+* Support Kotlin as macro development language (DONE)
 
 * Implement JUnit plugin that does all the conversions of the `*.jam` files without individual unit tests.
 
 * Implement an annotation processor that can be used to generate Java code via Jamal macros.
 
 * Implement `res:` file loading so that ``res:`macroName` `` can be used to load a resource file from the classpath of the class implementing the macro `macroName`. (DONE)
+
+* read and write from and to SQL databases. Writing can be something like writing a log recording the fact of the conversion.
