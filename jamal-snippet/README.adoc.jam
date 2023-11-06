@@ -1,9 +1,10 @@
 = Jamal Snippet Handling Macros
 {%@import res:jamal.jim%}\
 {%@import ../shared_text.jim%}\
+{%@import documentation/doc.jim%}
 {%@import ../RELEASES.jim%}\
-{%@snip:collect from="src/main/java/"%}\
-{%@snip:collect from="src/test/java/" exclude="Sample.java"%}\
+{%@snip:collect onceAs="MAIN" from="src/main/java/"%}\
+{%@snip:collect onceAs="SAMPLE" from="src/test/java/" exclude="Sample.java"%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
 {%#snip:define lastUpdated={%lastUpdated%}%}\
 {%@define JAVA_DIR=src/main/java/javax0/jamal/snippet/%}
@@ -99,6 +100,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<reflow,`reflow`>>
 .. <<snipLine,`snip:line`>>
 .. <<snipFile,`snip:file`>>
+.. <<snipEval,`snip:eval`>>
 .. <<snipTransform,`snip:transform`>>
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
@@ -158,15 +160,11 @@ There is no need to invoke the `use` command to get access to these macros.
 
 [[macros]]
 == {%chapter%}Macros
-{%@define parameterized=
-The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:{%@file ../documentation/PAROPS.adoc%}[PAROPS].
-%}\
 
 {%chapter open%}{%@define chapter$format={2:$ROMAN. }%}\
 [[snip_collect]]
 === {%chapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=9ea89c13%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=312a29ec%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.
@@ -529,7 +527,7 @@ The fifth insertion adds a dependency to the `dependencies` tag.
 
 [[snip_define]]
 === {%chapter%}`snip:define`
-{%#snip:check file={%JAVA_DIR%}Snippet.java hash=20b912f2%}
+{%#snip:check file={%JAVA_DIR%}Snippet.java hash=396c9262%}
 You can use this macro to define a snippet.
 Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
 For example,
@@ -546,11 +544,11 @@ will result
 
 {%output%}
 
-Snippets are typically contain several lines and the leading spaces may be important.
-To accommodate this when you define a snippet using this macro the spaces following the `=` sign up to, and including the new line will be skipped.
-As you can see in the example above there is no new line before the sentence `It is the...`.
+Snippets typically contain several lines, and the leading spaces may be important.
+To accommodate this when you define a snippet using this macro, spaces following the `=` sign up to, and including the new line will be skipped.
+As you can see in the example above, there is no new line before the sentence `It is the...`.
 It is recommended to have a new line after the `=` character and start the snippet content on the next line.
-If you start the snippet right after the ``=` character then the spaces between the first non-space characted and the `=` sign will be skipped.
+If you start the snippet right after the ``=` character then the spaces between the first non-space character and the `=` sign will be skipped.
 For example:
 
 {%sample/
@@ -567,10 +565,30 @@ will result
 
 As you can see there are no spaces before the characters `It is the...`.
 
+A snippet always holds the reference to the file and line number where it was defined.
+When you `snip:define` a snippet you can either specify the file name and the line number using parops, or you can name an already existing snippet to inherit the location from.
+This is useful when you create a new snippet replacing some part of an existing one.
+The file name and the line number is used
+
+* to report error if there is any, and
+* to calculate the file name in the case the snippet gets evaluated and contains an `include` or `import` macro.
+
+{%sample/
+{@snip:define (file="./snippy.txt" line=6379) mySnippetA=abra kadabra badir kebi}
+{@snip:define mySnippetB=abra kadabra badir kebi}
+{@snip:file mySnippetA}
+{@snip:file mySnippetB}
+%}
+
+
+will result in
+
+{%output%}
+
 [[snip_clear]]
 === {%chapter%}`snip:clear`
 {%#snip:check file={%JAVA_DIR%}Clear.java hash=060e1237%}
-Calling this macro deletes all collected snippets from memory.
+The call to this macro deletes all collected snippets from memory.
 The result of the macro is an empty string.
 
 [[snip]]
@@ -2217,6 +2235,41 @@ The syntax of the macro is
 %}
 
 {%SNIPLINE_NOCOMMENT%}
+
+[[snipEval]]
+=== {%chapter%}`snip:eval`
+{%#snip:check file={%JAVA_DIR%}Eval.java hash=5103b83f%}
+
+This macro will evaluate the content of a snippet as Jamal macro.
+The functionality is very close to the core macro `eval` but
+
+* it evaluates ONLY using Jamal
+* takes into account the position of the snippet.
+
+When a snippet is evaluated using the core `eval` macro the text of the snippet is evaluated.
+It means that the evaluation has no idea where the text was coming from.
+If the text contains an `include` or `import` macro with a relative file name then the file name will be interpreter as relative to the Jamal file and not relative to the file where the snippet came from.
+This way, when you write the code of the sippet, you have to know where it will be evaluated.
+
+To avoid this, the macro `snip:eval` should be used.
+This macro has three parops to specify the snippet location.
+These are:
+
+* `snippet` can specify the snippet to be evaluated.
+When this parameter is specified, the other parameters must not be.
+
+* `file` can specify the file name of the tex to be evaluated.
+It must be specified if the parop `snippet` is not.
+
+* `line` can specify the line number of the text to be evaluated.
+The default value is 1.
+
+When the input of the macro (the text after the parameters, specified between `(` and `)` characters) is empty, then the macro will use the text of the snippet text.
+If the input contains text then that text will be evaluated and the `snippet` parameter will only be used for the location.
+
+You may want to use the `snippet` to specify the location and a text when you want to evaluate the snippet after some transformation.
+For example, the snippet is part of some JavaDoc, and you want to remove the leading `*` characters from the lines.
+In that case yur `snip:eval` can reference the snippet by the name for the file and line number location, but then the actual text is the result of the transformation.
 
 [[snipTransform]]
 === {%chapter%}`snip:transform`

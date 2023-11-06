@@ -225,16 +225,9 @@ They are documented along with the macro documentation.
 The environment variables and their meanings are documented in their
 link:./documentation/ENVIRONMENT_VARIABLES.adoc[documentation].
 
-Modules can contain each a `.jim` file that the processor will load when the module is loaded.
-The Jamal installation can also contain a `~/.jamal/.jim` file that is loaded when a Jamal processor is started.
-These files can contain macros and are treated like if they were imported from the source code.
-
-NOTE: While the `.jim` files in the modules may be part of the functionality that the modules deliver, the one in the `~/.jamal` directory is not.
-Putting any macro into this file makes Jamal execution installation specific.
-This feature is there to provide a way to set some options globally for a whole project temporary.
-The actual need igniting the implementation of this feature was to have a global `detectNoChange` option, while all the erroneous regular expressions were fixed in the different files.
 
 == Features [[Features]]
+
 
 
 Jamal is a meta markup language that extends existing markup languages in a transparent way.

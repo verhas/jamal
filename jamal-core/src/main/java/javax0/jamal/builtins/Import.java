@@ -78,18 +78,15 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         final var top = scanner.bool(null, "top");
         final var noCache = scanner.bool(null, "noCache");
         final var isolate = scanner.bool(null, "isolate", "isolated");
+        final var inDirs = scanner.str(null, "in");
         scanner.done();
-        if (top.is()) {
-            while (position.parent != null) {
-                position = position.parent;
-            }
-        }
+        position = Include.repositionToTop(position, top);
+        final var prefixes = Include.getPrefixes(inDirs);
         skipWhiteSpaces(input);
-        var reference = position.file;
-        var fileName = absolute(reference, input.toString().trim());
+        var fileName =  input.toString().trim();
         if (wasNotImported(fileName)) {
             importedAlready.get(importedAlready.size() - 1).add(fileName);
-            final var in = getInput(fileName, position, noCache.is(), processor);
+            final var in = getInput(prefixes, fileName, position, noCache.is(), processor);
             final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
             final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
             final Processor myProcessor;

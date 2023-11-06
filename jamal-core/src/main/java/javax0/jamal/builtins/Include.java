@@ -8,10 +8,10 @@ import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Marker;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
+import javax0.jamal.tools.param.StringParameter;
 
 import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
@@ -43,23 +43,24 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         var position = input.getPosition();
-        final var scanner = newScanner(input,processor);
+        final var scanner = newScanner(input, processor);
         final var top = scanner.bool(null, "top");
         final var verbatim = scanner.bool("includeVerbatim", "verbatim");
         final var lines = scanner.str(null, "lines");
         final var noCache = scanner.bool(null, "noCache");
+        final var inDirs = scanner.str(null, "in");
         scanner.done();
         position = repositionToTop(position, top);
+        final var prefixes = getPrefixes(inDirs);
 
         skipWhiteSpaces(input);
-        var reference = position.file;
-        var fileName = absolute(reference, input.toString().trim());
+        var fileName = input.toString().trim();
         if (depth-- == 0) {
             depth = getDepth(); // try macro may recover
             throw new BadSyntax("Include depth is too deep");
         }
         final String result;
-        final var in = getInput(fileName, position, noCache.is(), processor);
+        final var in = getInput(prefixes, fileName, position, noCache.is(), processor);
         final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
         if (lines.isPresent()) {
@@ -83,6 +84,16 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         return result;
     }
 
+    static String[] getPrefixes(StringParameter inDirs) throws BadSyntax {
+        final String[] prefixes;
+        if (inDirs.isPresent()) {
+            prefixes = inDirs.get().split("\\|");
+        } else {
+            prefixes = new String[]{""};
+        }
+        return prefixes;
+    }
+
 
     /**
      * Get the position of the 'include' from the input. When the 'top' parameter is true the position is the position
@@ -94,7 +105,7 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
      * relative file name
      * @throws BadSyntax if 'top' is erroneous and querying it throws exception
      */
-    private Position repositionToTop(Position position, final BooleanParameter top) throws BadSyntax {
+    static Position repositionToTop(Position position, final BooleanParameter top) throws BadSyntax {
         if (top.is()) {
             while (position.parent != null) {
                 position = position.parent;

@@ -75,3 +75,12 @@ code%}
 {%!#output {%lastCode%}%}%}%}
 ----
 %}
+
+{%@define PAROP_IN($x)=The release {%RELEASE:ROGACHEVO%} introduced the option `in`.
+The option can define multiple prefixes for the file name to be {%#if /{%@string:equals /$x/import%}/imported/included%}.
+These prefixes are separated by the `|` character.
+When performing the $x operation, the first prefix that matches the file name is used.
+
+The prefix is used at the start of the file name without any extra separator.
+
+This option can be used for relative file names, where the location of the file may be different depending on the context.%}

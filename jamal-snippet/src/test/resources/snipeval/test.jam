@@ -1,0 +1,7 @@
+{%@sep { } %}\
+{@comment this is a test file that uses a snippet. The snippet includes another file.
+The snippet evaluation is done calling snip:eval, so the included file is relative to the snippet file.}\
+{@snip:collect from="subdir/snippet.txt"}\
+{#eval {@snip abraki}}
+{#snip:eval (snippet=abraki)}
+{#snip:eval (file=./subdir/snippet.txt line=1){@snip abraki}}

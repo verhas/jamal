@@ -188,3 +188,6 @@ Jamal can read files from JAR files.
 In this case the prefix has to be `jar:file:` and the file name has to be the name of the JAR file followed by the name of the file inside the JAR file following a `!` character.
 
 For more information read the link:../jamal-jar-input/README.adoc[documentation] of the module implementing the `jar:file:` prefix.
+
+
+

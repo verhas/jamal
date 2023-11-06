@@ -1,6 +1,6 @@
 {%@import macrodoc.jim%}
 {%MACRO name="include" since={%RELEASE:ZURICH%}%}
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=795ea0d6%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=561c3a33%}
 {%@import ../../environmentvariables.jim%}
 == Syntax
 
@@ -70,3 +70,6 @@ The limit can be modified setting the environment variable {%JAMAL_INCLUDE_DEPTH
 
 {%DEFAULTOPEN/{%RELEASE:BUDAPEST%}/include%}
 
+== `in`
+
+{%PAROP_IN/include%}

@@ -50,7 +50,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         // +
         //[source]
         //----
-        //    {%@include ./src/test/resources/javax0/jamal/snippet/test3.jam%}
+        //    {%@include [in=.|../..] /src/test/resources/javax0/jamal/snippet/test3.jam%}
         //----
         // +
         //excludes any file that contains the character `2` in its name.

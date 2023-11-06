@@ -24,6 +24,13 @@ public class BadSyntax extends Exception {
         super(message, cause);
     }
 
+    public BadSyntax(String message, List<Throwable> suppressed) {
+        super(message);
+        for (final var s : suppressed) {
+            this.addSuppressed(s);
+        }
+    }
+
     final private List<String> parameters = new ArrayList<>();
 
     public List<String> getParameters() {

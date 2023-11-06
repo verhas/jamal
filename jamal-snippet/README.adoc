@@ -5,6 +5,7 @@
 
 
 
+
 Snippet handling macros help you to include information from program source code into the documentation automatically.
 This macro package also includes some XML handling, string, and text formatting macros, which are usually used together with snippets.
 
@@ -90,6 +91,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<reflow,`reflow`>>
 .. <<snipLine,`snip:line`>>
 .. <<snipFile,`snip:file`>>
+.. <<snipEval,`snip:eval`>>
 .. <<snipTransform,`snip:transform`>>
 .. <<lineCount,`lineCount`>>
 .. <<listDir,`listDir`>>
@@ -158,7 +160,7 @@ Since 1.7.4 option `onceAs`
 This macro collects text snippets from files.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 The syntax of the macro is
 
@@ -674,11 +676,11 @@ It is the snippet, which is defined inside the file and not collected from an ex
 ----
 
 
-Snippets are typically contain several lines and the leading spaces may be important.
-To accommodate this when you define a snippet using this macro the spaces following the `=` sign up to, and including the new line will be skipped.
-As you can see in the example above there is no new line before the sentence `It is the...`.
+Snippets typically contain several lines, and the leading spaces may be important.
+To accommodate this when you define a snippet using this macro, spaces following the `=` sign up to, and including the new line will be skipped.
+As you can see in the example above, there is no new line before the sentence `It is the...`.
 It is recommended to have a new line after the `=` character and start the snippet content on the next line.
-If you start the snippet right after the ``=` character then the spaces between the first non-space characted and the `=` sign will be skipped.
+If you start the snippet right after the ``=` character then the spaces between the first non-space character and the `=` sign will be skipped.
 For example:
 
 [source]
@@ -701,10 +703,36 @@ which is defined inside the file and not collected from an external file.
 
 As you can see there are no spaces before the characters `It is the...`.
 
+A snippet always holds the reference to the file and line number where it was defined.
+When you `snip:define` a snippet you can either specify the file name and the line number using parops, or you can name an already existing snippet to inherit the location from.
+This is useful when you create a new snippet replacing some part of an existing one.
+The file name and the line number is used
+
+* to report error if there is any, and
+* to calculate the file name in the case the snippet gets evaluated and contains an `include` or `import` macro.
+
+[source]
+----
+{@snip:define (file="./snippy.txt" line=6379) mySnippetA=abra kadabra badir kebi}
+{@snip:define mySnippetB=abra kadabra badir kebi}
+{@snip:file mySnippetA}
+{@snip:file mySnippetB}
+----
+
+
+will result in
+
+[source]
+----
+../jamal-snippet/snippy.txt
+../jamal-snippet/README.adoc.jam
+----
+
+
 [[snip_clear]]
 === VII. `snip:clear`
 
-Calling this macro deletes all collected snippets from memory.
+The call to this macro deletes all collected snippets from memory.
 The result of the macro is an empty string.
 
 [[snip]]
@@ -1012,7 +1040,7 @@ You cannot use `warning` and `error` together.
 This macro lists the defined snippets.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -1056,7 +1084,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 This macro saves all the collected snippets to a file.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 The file name must be specified by the parameter `output`.
 The general syntax of the macro is
@@ -1148,7 +1176,7 @@ It is saved as a `CDATA` section(s).
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -1198,7 +1226,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -1604,7 +1632,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1361:30
+../jamal-snippet/README.adoc.jam:1379:30
 ----
 
 
@@ -1818,7 +1846,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 This macro can put numbers in front of the lines, sequentially numbering them.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 The syntax of the macro is
@@ -1887,7 +1915,7 @@ Any illegal formatting will result in an error.
 This macro deletes, or keeps the selected lines from its input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 The format of the macro is
@@ -1976,7 +2004,7 @@ In this case only the comment lines remained that start with `//` at the start o
 You can use this macro to skip lines from the snippet.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -2087,7 +2115,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 This macro replaces strings in the input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 It works similarly to the macro <<replace,`replace`>>.
@@ -2522,7 +2550,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 This macro reflows the content.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -2732,8 +2760,43 @@ The syntax of the macro is
 
 The text following the snippet id is ignored, reserved for future development.
 
+[[snipEval]]
+=== XXXII. `snip:eval`
+
+
+This macro will evaluate the content of a snippet as Jamal macro.
+The functionality is very close to the core macro `eval` but
+
+* it evaluates ONLY using Jamal
+* takes into account the position of the snippet.
+
+When a snippet is evaluated using the core `eval` macro the text of the snippet is evaluated.
+It means that the evaluation has no idea where the text was coming from.
+If the text contains an `include` or `import` macro with a relative file name then the file name will be interpreter as relative to the Jamal file and not relative to the file where the snippet came from.
+This way, when you write the code of the sippet, you have to know where it will be evaluated.
+
+To avoid this, the macro `snip:eval` should be used.
+This macro has three parops to specify the snippet location.
+These are:
+
+* `snippet` can specify the snippet to be evaluated.
+When this parameter is specified, the other parameters must not be.
+
+* `file` can specify the file name of the tex to be evaluated.
+It must be specified if the parop `snippet` is not.
+
+* `line` can specify the line number of the text to be evaluated.
+The default value is 1.
+
+When the input of the macro (the text after the parameters, specified between `(` and `)` characters) is empty, then the macro will use the text of the snippet text.
+If the input contains text then that text will be evaluated and the `snippet` parameter will only be used for the location.
+
+You may want to use the `snippet` to specify the location and a text when you want to evaluate the snippet after some transformation.
+For example, the snippet is part of some JavaDoc, and you want to remove the leading `*` characters from the lines.
+In that case yur `snip:eval` can reference the snippet by the name for the file and line number location, but then the actual text is the result of the transformation.
+
 [[snipTransform]]
-=== XXXII. `snip:transform`
+=== XXXIII. `snip:transform`
 
 
 The `snip:transform` macro integrates the functionality of the macros
@@ -2751,7 +2814,7 @@ It can kill/keep lines, skip, replace, trim, lines, select line ranges; it can r
 
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../documentation/PAROPS.adoc[PAROPS].
 
 
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
@@ -2927,7 +2990,7 @@ The reason for that is readability. While `untab size` may be acceptable, it is 
 The meaning and the interpretation of the parameters is the same as for the underlying macros and documented there.
 
 [[lineCount]]
-=== XXXIII. `lineCount`
+=== XXXIV. `lineCount`
 
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
@@ -2948,7 +3011,7 @@ results
 
 
 [[listDir]]
-=== XXXIV. `listDir`
+=== XXXV. `listDir`
 
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
@@ -3010,6 +3073,7 @@ will result
 - ReflectionTools.java
 - MethodTool.java
 - Update.java
+- Eval.java
 - SnipTransform.java
 - Base64.java
 - FilesMacro.java
@@ -3136,7 +3200,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 2,336 bytes
+- snippet: 2,368 bytes
 - JavaMatcherBuilderMacros.java: 19,773 bytes
 - Snip.java: 4,605 bytes
 - ReplaceUtil.java: 1,033 bytes
@@ -3154,10 +3218,11 @@ will result
 - ReflectionTools.java: 26,140 bytes
 - MethodTool.java: 7,761 bytes
 - Update.java: 979 bytes
+- Eval.java: 2,025 bytes
 - SnipTransform.java: 17,071 bytes
 - Base64.java: 3,383 bytes
 - FilesMacro.java: 10,109 bytes
-- Collect.java: 23,894 bytes
+- Collect.java: 23,906 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
 - Repeat.java: 1,213 bytes
@@ -3210,7 +3275,7 @@ will result
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,094 bytes
 - Pos.java: 5,264 bytes
-- Snippet.java: 1,052 bytes
+- Snippet.java: 2,004 bytes
 ----
 
 
@@ -3241,7 +3306,7 @@ jamal*snippet
 
 
 [[xmlFormat]]
-=== XXXV. `xmlFormat`
+=== XXXVI. `xmlFormat`
 
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
@@ -3395,7 +3460,7 @@ will result
 For more examples and detailed explanation of the thin XML format, see the link:./THINXML.adoc[Thin XML Format] page.
 
 [[thinXml]]
-=== XXXVI. `thinXml`
+=== XXXVII. `thinXml`
 
 This macro converts thin XML to normal XML.
 Although the macro <<xmlFormat,`xmlFormat`>> can also do the conversion it works only for full XML files and not for XML fragments.
@@ -3447,7 +3512,7 @@ It is not formatted also and there is no leading ```<?xml version="1.0" encoding
 For more examples and detailed explanation of the thin XML format, see the link:./THINXML.adoc[Thin XML Format] page.
 
 [[date]]
-=== XXXVII. `date`
+=== XXXVIII. `date`
 
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
@@ -3463,12 +3528,12 @@ will result in the output
 
 [source]
 ----
-2023-11-03 13:38:52
+2023-11-06 03:31:01
 ----
 
 
 [[format]]
-=== XXXVIII. `format`
+=== XXXIX. `format`
 
 You can use the macro `format` to format the arguments.
  The macro scans the input using the link:../documentation/ARGSPLIT.adoc[Standard Built-In Macro Argument Splitting].
@@ -3519,7 +3584,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 
 [[numbers]]
-=== XXXIX. `numbers`
+=== XL. `numbers`
 
 
 The macro `numbers` can create a comma separated list of numbers.
@@ -3556,7 +3621,7 @@ will result
 
 
 [[unicode]]
-=== XL. `unicode`
+=== XLI. `unicode`
 
 
 This macro can insert unicode characters into the output.
@@ -3727,7 +3792,7 @@ These are symbolic names for some non-printable characters and for some commonly
 
 
 [[case]]
-=== XLI. `case:lower`, `case:upper`, ...
+=== XLII. `case:lower`, `case:upper`, ...
 
 There are a few character case-changing macros implemented in the snippet package.
 These are:
@@ -3740,7 +3805,7 @@ These are:
 * `case:decap` changes the first character in the input to lower case letter
 
 [[file]]
-=== XLII. `file`
+=== XLIII. `file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -3805,7 +3870,7 @@ The usual use is to define `root` as a global macro and all `file` macros should
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[directory]]
-=== XLIII. `directory`
+=== XLIV. `directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -3870,7 +3935,7 @@ The usual use is to define `root` as a global macro and all `directory` macros s
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[Java]]
-=== XLIV. Java Macros
+=== XLV. Java Macros
 
 
 [[java:class]]
@@ -4340,7 +4405,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 ====
 
 [[String]]
-=== XLV. String Macros
+=== XLVI. String Macros
 
 
 [[string:contains]]
@@ -4537,7 +4602,7 @@ The parameters are:
 * `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
 [[shell:var]]
-=== XLVI. `shell:var`
+=== XLVII. `shell:var`
 
 This macro is a convenience tool replacing `$variable` and `pass:[${variable}]` sequences with the values of the variables.
 The values of the variables can be provided and looked up from
@@ -4573,7 +4638,7 @@ Although `$` is a valid character in a macro name, you cannot reference a macro 
 Also, the macro must not require any parameter.
 
 [[hashCode]]
-=== XLVII. `hashCode`
+=== XLVIII. `hashCode`
 
 
 This macro returns the hash code of the macro input as a 64-character hexadecimal string.
@@ -4592,7 +4657,7 @@ will result in
 
 
 [[memoize]]
-=== XLVIII. `memoize`
+=== XLIX. `memoize`
 
 
 This macro can be used to evaluate some input only one and reevaluate only when it has been changed.
@@ -4640,7 +4705,7 @@ You can just use macros that generate no output if you do not need this feature.
 
 
 [[download]]
-=== XLIX. `download`
+=== L. `download`
 
 
 This macro downloads a resource from a URL and saves it to a file.
@@ -4674,7 +4739,7 @@ For this reason it does not use the cache mechanism of Jamal.
 
 
 [[snip_update]]
-=== L. `snip:update`
+=== LI. `snip:update`
 
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
@@ -4688,7 +4753,7 @@ When this happens, you can keep backward compatibility with
 This will render the current, no operation functionality of the macro.
 
 [[dictionary]]
-=== LI. `dictionary`
+=== LII. `dictionary`
 
 This macro can be used to define a dictionary.
 Dictionaries are used by the decorator macro, but other macros can also use them.
@@ -4717,7 +4782,7 @@ This is also the default name of the dictionary used by the <<decorate,`decorate
 
 
 [[decorate]]
-=== LII. `decorate`
+=== LIII. `decorate`
 
 This macro can be used to decorate a text.
 The decoration happens for each word separately.

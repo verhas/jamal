@@ -9,7 +9,7 @@ since version `1.0.0`
 
 == Syntax
 
- {@import [top noCache isolate] impoted_file.jim}
+ {@import [top noCache isolate in] imported_file.jim}
 
 `import` opens a file and reads the content of the file interpreting as Jamal macro file.
 Anything defined in that file will be imported into the scope of the current file.
@@ -98,3 +98,14 @@ The release 2.5.0 introduced the option `isolate`.
 Using this option will process the imported file in a new processor.
 It means that the macros defined in the importING file will not be available in the importED file.
 The macros defined in the imported file will be available in the importing file after the import the same way as if the `isolate` option was not used.
+
+== `in`
+
+The release 2.5.0 introduced the option `in`.
+The option can define multiple prefixes for the file name to be imported.
+These prefixes are separated by the `|` character.
+When performing the import operation, the first prefix that matches the file name is used.
+
+The prefix is used at the start of the file name without any extra separator.
+
+This option can be used for relative file names, where the location of the file may be different depending on the context.

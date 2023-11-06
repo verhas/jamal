@@ -1,0 +1,160 @@
+
+{%@snip:collect onceAs="MAIN" from="../../src/main/java/"%}\
+{%@snip:collect onceAs="SAMPLE" from="../../src/test/java/" exclude="Sample.java"%}\
+{%@import ../doc.jim%}
+This macro collects text snippets from files.
+{%parameterized%}
+The syntax of the macro is
+
+[source]
+----
+{@snip:collect from="fileName" ...options}
+----
+
+`fileName` can be the name of a text file, or it can be a directory.
+If the `fileName` is a text file, then the macro will collect the single file's snippets.
+If the `fileName` is a directory, then the macro will collect the snippets from the files in that directory and from directories beneath recursively.
+
+The file name is relative to the Jamal source, which contains the `snip:collect` macro.
+The file name can start with `res:` or `https://`.
+In these cases, the content of the file will be loaded from a resource or through the net respectively.
+
+A snippet in a file is a series of lines that happen between
+
+[source]
+----
+snippet name
+----
+
+and
+
+[source]
+----
+end snippet
+----
+
+lines.
+
+A special snippet containing only a single line can be specified preceding it with a line
+
+[source]
+----
+snipline name
+----
+
+In this case there is no need for `end snippet` line.
+This way
+
+[source]
+----
+// snippet MY_CONSTANT_SNIPPET_NAME
+  public static final MY_CONSTANT = "Hello World";
+// end snippet
+----
+
+is the same as
+
+[source]
+----
+// snipline MY_CONSTANT_SNIPPET_NAME
+  public static final MY_CONSTANT = "Hello World";
+----
+
+[NOTE]
+====
+The only difference is that the first version will contain a line with a trailing `\n` at the end of the line.
+The `snipline` version does not contain the trailing `\n`.
+====
+
+A snipline can also have a trailing `filter=regex` after the name of the snippet.
+The rest of the line after the `filter=` is a regular expression that will be used to filter the line.
+(Note that there is no space before or after the `=` character.)
+The regular expression should have exactly one capturing group, and it must match the next line.
+The capturing group will be used as snippet content.
+
+For example
+
+[source]
+----
+// snipline MY_CONSTANT_SNIPPET_NAME filter="(.*)"
+  public static final MY_CONSTANT = "Hello World";
+----
+
+will store `Hello World` as the content of the snippet `MY_CONSTANT_SNIPPET_NAME`.
+Unfortunately, it is easy to misread the line above and to think that the capture group will match the whole line.
+However, the filter on the `snipline` is not a macro parameter.
+It is processed in a different way.
+The whole part following the `filter=` is part of the regular expression, including the `"` characters in the above example.
+
+The possibility of `filter=` following the name of the snippet is a complimentary feature.
+Cutting off a part of the line using regular expression can also be done where the `snip` macro references the snippet.
+This complimentary feature exists to keep the filtering regular expression close to the line from which you want to cut a part off.
+
+There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
+The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.
+
+[NOTE]
+====
+The definition and matching criteria of the start and the end of the snippet are very liberal.
+The reason for that is to ease in recognizing these in different files.
+The regular expressions will find snippet start, and snippet ends in Java files, in XML, in Perl or Python code.
+Essentially, you should not have a problem signaling the start, and the end of the snippet in any program code that allows you to write some form of a comment.
+
+The disadvantage of this liberal definition is that sometimes it finds lines that accidentally contain the word snippet.
+If you look at the source code in the file {%@file ../../src/main/java/javax0/jamal/snippet/TrimLines.java%} you can see examples.
+The comment mentions snippets, and there is a word eligible to be an identifier after `snippet`, and the parsing thinks that this is a snippet start.
+Eventually, there is no `end snippet` on the lines following it, which is an error the snippet collection process recognizes.
+(Up to 1.7.2. Later versions use this file as a snippet source; thus, it has 'end snippet'.)
+Still, you do not receive an error message.
+
+That is because the collection process only recognizes this error but does not throw an exception.
+The exception is thrown only when you want to use the `snip` macro for an unterminated snippet.
+
+The possible situation may even be more complicated because the accidental word following `snippet` in a comment may also be used in other files as a snippet identifier.
+The collector, sooner or later, will find that definition, and it will assume that the one with the error was just an accidental comment and replaces the old with the correct, error-free snippet.
+It is still okay when the snippet collection finds these two snippets in the opposite order.
+If there is already a correct, error-free snippet collected and the collection finds an erroneous one of the same name, it ignores that.
+
+This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the malformed snippets.
+
+If you look at the {%@file ../../src/main/java/javax0/jamal/snippet/TrimLines.java%} in version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
+Because there is also an accidental `snippet` line before it, the collection would not find this line.
+Because of the previous `snippet` line, the real `// snippet` line becomes part of the previous snippet.
+The `// snippet` line is preceded by an `// end snippet` line to avoid this.
+Such a line out of a snippet is ignored, and in this case, it closes the accidental snippet.
+====
+
+As you can see, the regular expression contains a collection group, which Jamal uses as the name of the snippet.
+For example, the code
+
+{%@snip:collect onceAs="sample.Java" from="../../src/test/java/javax0/jamal/documentation/Sample.java"%}
+{%@snip:collect onceAs="sample.Java" from="../../src/test/java/javax0/jamal/documentation/Sample.java"%}
+
+[source]
+----
+// snippet sample
+{%@snip sample%}\
+// snippet end
+----
+
+defines a snippet that is named `sample`.
+The snippets can be used later using the <<snip,`snip`>> macro.
+
+The output of the `collect` macro is an empty string.
+
+The macro behaviour can be altered using options.
+These options are parsed using the Standard Parameter Parsing as defined in link:{@file ../../../PAROPS.adoc%}[PAROPS].
+
+{%#eval {%`@comment%}
+{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*scanner\\..*?\\(.*?\"(.*?)\".*~* `$1`~.*//\\s*~"
+{%@snip collect_options%}
+%}%}
+
+If the parameter `start` or `liner` are defined, the value will be used as a snippet start matching regular expression.
+They must have one collection group.
+
+NOTE: We introduced this option to the `snip:collect` macro along with the Jamal doclet implementation.
+When the individual documentation parts are processed in the same processor, the processing order is not guaranteed.
+To refer to some snippets, you have to collect them.
+To do that, you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
+That collect macro should name the collection to avoid redefinition error.

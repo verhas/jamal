@@ -1,0 +1,3 @@
+snippet abraki
+{@include inc.txt}
+end snippet

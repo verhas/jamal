@@ -113,6 +113,7 @@ module jamal.snippet {
             UrlEncode,
             Decorate,
             Dictionary,
-            Repeat
+            Repeat,
+            Eval
             ;
 }

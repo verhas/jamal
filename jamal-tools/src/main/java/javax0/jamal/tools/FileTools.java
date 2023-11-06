@@ -16,6 +16,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,55 @@ public class FileTools {
         return getInput(fileName, parent, false, processor);
     }
 
+    /**
+     * This method is the same as {@link #getInput(String, Position, boolean, Processor)} but it
+     * tries to load the file from different directories. The directories are specified in the {@code prefixes} array.
+     * <p>
+     * Technically, the method does not care if the strings represent a directory or not.
+     * It simply tries each prefix with the file name concatenated and tries to load the file.
+     * That way, the caller should care that the prefixes are directories, and if the file starts with '/', or the
+     * prefixes end with one.
+     *
+     * @param prefixes  the prefixes to try to load the file from
+     * @param fileName  the name of the file to be read. This file name is usually relative, and the absolute file name
+     *                  will be calculated from the parent file name and this file name, for each prefix.
+     * @param parent    the parent/including/importing file position. (See {@link #getInput(String, Position, boolean,
+     *                  Processor)})
+     * @param noCache   if {@code true} then the cache is not used to read the file.
+     * @param processor is used to invoke the callback hooks registered for file access
+     * @return the input containing the content of the file.
+     * @throws BadSyntax when there is no file with noen of the prefix. In this case, all the BadSyntax exceptions
+     *                   created during the different attempts are part of the final exception as suppressed exceptions.
+     */
+    public static Input getInput(final String[] prefixes,
+                                 final String fileName,
+                                 final Position parent,
+                                 final boolean noCache,
+                                 final Processor processor) throws BadSyntax {
+        final var exceptions = new ArrayList<Throwable>();
+        for (final var prefix : prefixes) {
+            try {
+                var absoluteFn = absolute(parent.file, prefix + fileName);
+                return getInput(absoluteFn, parent, noCache, processor);
+            } catch (BadSyntax e) {
+                exceptions.add(e);
+            }
+        }
+        throw new BadSyntax("Cannot read file '" + fileName + "' from any of the directories: "
+                + String.join(", ", prefixes), exceptions);
+    }
+
+    /**
+     * Get the input from the file.
+     *
+     * @param fileName  is the name of the file to get
+     * @param parent    is the position of the input that needs the content of this file. It is used to calclate the
+     *                  absolute file name in the case the file name is relative.
+     * @param noCache   if {@code true} then the cache is not used to read the file.
+     * @param processor is used to invoke the callback hooks registered for file access
+     * @return the input object
+     * @throws BadSyntax when the file cannot be read
+     */
     public static Input getInput(String fileName, Position parent, final boolean noCache, final Processor processor) throws BadSyntax {
         return makeInput(getFileContent(fileName, noCache, processor), new Position(fileName, 1, 1, parent));
     }
@@ -109,7 +159,7 @@ public class FileTools {
      *
      * @param fileName  the name of the file.
      * @param noCache   do not read the cache if this parameter is {@code true}. If there is cache configured the content
-     *                  is still saved into the cache. It is only teh reading controlled by the parameter.
+     *                  is still saved into the cache. It is only the reading controlled by the parameter.
      * @param processor is used to invoke the callback hooks registered for file access
      * @return the content of the file
      * @throws BadSyntax if the file cannot be read
@@ -155,6 +205,7 @@ public class FileTools {
             throw new BadSyntax("Cannot get the content of the file '" + fileName + "'", e);
         }
     }
+
     public static byte[] getFileBinaryContent(final String fileName, final boolean noCache, final Processor processor) throws BadSyntax {
         final var res = processor.getFileReader().map(reader -> reader.read(fileName)).orElse(Processor.IOHookResult.IGNORE);
         switch (res.type()) {

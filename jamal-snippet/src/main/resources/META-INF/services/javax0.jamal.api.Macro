@@ -88,3 +88,4 @@ javax0.jamal.snippet.UrlEncode
 javax0.jamal.snippet.Decorate
 javax0.jamal.snippet.Dictionary
 javax0.jamal.snippet.Repeat
+javax0.jamal.snippet.Eval
