@@ -1,5 +1,7 @@
 {@comment}
-{#define parameterized=
+{#define PAROPS_ABS={@file (format=$absolutePath)../../documentation/PAROPS.adoc}}
+{@define PAROPS_LINK=link:{#file (format=$relativePath){PAROPS_ABS}}[PAROPS]}
+{@define parameterized=
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:{@file ../../documentation/PAROPS.adoc}[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in {PAROPS_LINK}.
 }\

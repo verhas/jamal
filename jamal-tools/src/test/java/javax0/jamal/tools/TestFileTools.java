@@ -120,6 +120,14 @@ class TestFileTools {
 
     @Nested
     class TestRelativeFileName {
+        /**
+         * Test the relative file name calculation.
+         *
+         * @param base should be a directory unless it really exists, because the code checks if it is a file (isFile)
+         *             and it is not a file if it does not exist and then it assumes it is a directory.
+         * @param target the target file name
+         * @param expected the expected result
+         */
         private void testRelativeFileName(String base, String target, String expected) {
             var result = FileTools.getRelativePath(new File(base),
                     new File(target));
@@ -129,7 +137,7 @@ class TestFileTools {
         @Test
         @DisplayName("same directory")
         void testSameDirectory() {
-            testRelativeFileName("/Users/verhasp/github/jamal/anything.txt",
+            testRelativeFileName("/Users/verhasp/github/jamal/",
                     "/Users/verhasp/github/jamal/everything.txt",
                     "everything.txt");
         }
@@ -137,7 +145,7 @@ class TestFileTools {
         @Test
         @DisplayName("sub directory")
         void testSubdirectory() {
-            testRelativeFileName("/Users/verhasp/github/jamal/anything.txt",
+            testRelativeFileName("/Users/verhasp/github/jamal/",
                     "/Users/verhasp/github/jamal/sourcebuddy/everything.txt",
                     "sourcebuddy/everything.txt");
         }
@@ -145,10 +153,19 @@ class TestFileTools {
         @Test
         @DisplayName("one level up")
         void testOneLevelUp() {
-            testRelativeFileName("/Users/verhasp/github/jamal/anything.txt",
+            testRelativeFileName("/Users/verhasp/github/jamal/",
                     "/Users/verhasp/github/sourcebuddy/everything.txt",
                     "../sourcebuddy/everything.txt");
         }
-    }
 
+        @Test
+        @DisplayName("one level up filure")
+        void testOneFilure() {
+            testRelativeFileName("/A/B/C/D/",
+                    "/A/F/G.txt",
+                    "../../../F/G.txt");
+        }
+    }
 }
+
+

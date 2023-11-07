@@ -401,20 +401,27 @@ public class FileTools {
         final var base = baseFile.getAbsolutePath().split("[/\\\\]");
         final var baseLength = baseFile.isFile() ? base.length - 1 : base.length;
         final var target = targetFile.getAbsolutePath().split("[/\\\\]");
-        for (int i = 0; i < baseLength && i < target.length; i++) {
+        int i;
+        for (i = 0; i < baseLength && i < target.length; i++) {
             if (!base[i].equals(target[i])) {
-                final var sb = new StringBuilder();
-                sb.append("../".repeat(baseLength - 1 - i));
-                for (int j = i; j < target.length; j++) {
-                    sb.append(target[j]);
-                    if (j < target.length - 1) {
-                        sb.append("/");
-                    }
-                }
-                return sb.toString();
+                return getRelativePath(target, i, baseLength);
             }
         }
-        return target[target.length - 1];
+        return getRelativePath(target, i, baseLength);
+    }
+
+    private static String getRelativePath(String[] target, int sharedPrefixLength, int baseLength) {
+        final var sb = new StringBuilder();
+        if( sharedPrefixLength < baseLength ) {
+            sb.append("../".repeat(baseLength - sharedPrefixLength));
+        }
+        for (int j = sharedPrefixLength; j < target.length; j++) {
+            sb.append(target[j]);
+            if (j < target.length - 1) {
+                sb.append("/");
+            }
+        }
+        return sb.toString();
     }
 
     /**
