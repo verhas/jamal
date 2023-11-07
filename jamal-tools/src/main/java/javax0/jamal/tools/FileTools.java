@@ -490,7 +490,7 @@ public class FileTools {
      * @return the name of the directory guaranteed having a tailing {@code /} at the end
      */
     public static String trailDirectory(final String dir) {
-        return dir.length() == 0 || dir.endsWith("/") ? dir : dir + "/";
+        return dir.isEmpty() || dir.endsWith("/") ? dir : dir + "/";
     }
 
 }

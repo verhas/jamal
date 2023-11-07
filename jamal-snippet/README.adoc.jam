@@ -2446,13 +2446,17 @@ These are:
 
 [[file]]
 === {%chapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=286b0a77%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=83debe2a%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
 You can type in the name of the $what, and it will appear in the output.
 
-The real added value of the macro is that it checks that the $what exists.
+The real added values of the macro are that
+
+* it checks that the $what exists, and
+* it can format the name of the $what.
+
 The macro will error if the $what does not exist or is not a $what.
 It helps the maintenance of the documentation.
 If the $what gets renamed, moved, or deleted, the document will not compile until you follow the change.
@@ -2469,13 +2473,30 @@ When Jamal processes this file it will generate {@file (format=`$name`)README.ad
 
 will result
 
-{%#snip:define fileOutput={%output%}%}\
-{%@snip fileOutput
-[source]
-----
-When Jamal processes this file it will generate `README.adoc`.
-----
+{%output%}
+
+{%@define FILE_PAROPS($what)=
+The macro `$what` has the following parameters:
+
+* `format` can define the format of the name of the $what.
+   In the format you can use placeholders starting with `$`.
+   For the list of the placeholders see the documentation below.
+* `root` can specify the directory where the $what is. This parameter is prepended in front of the $what name.
+   The default value is an empty string.
+* `dateFormat` can specify the format to display the date and time when the format uses one of the time placeholders.
+   The default value is `yyyy-MM-dd HH:mm:ss`.
+* `relativeTo` can specify a file or directory to which the output should be relative to when the placeholder `$relativePath` is used in the format.
+   The default value is the directory where the top level file is.
+
+[NOTE]
+====
+The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own and it is also included in another document.
+Having a `link` in the file should be relative to the document on the top level, including directly or through other files the one containing the link.
+The placeholder `$relativePath` will generate a relative file name, which is relative to the actual top level document.
+====
+
 %}
+{%FILE_PAROPS(file%}
 
 In the format you can use the following placeholders:
 {%@comment the two replace commands are executed from left to right. The first one puts a ! after the `xxx` name, and the second one finds it.%}
@@ -2486,18 +2507,18 @@ In the format you can use the following placeholders:
          fileMacroFormatPlaceholders
 %}
 
-{%@define SUPPORT_ROOT($macro)=
+{%@define SUPPORT_ROOT($what)=
 When the placeholder `$time`, `$ctime`, or `$atime` is used the time will be formatted as `yyyy-MM-dd HH:mm:ss` by default.
 This format can also be changed by defining the macro/option `dateFormat`.
 
 The macro also supports the option `root`.
-This can be used to define the root directory for the files' and directories' location.
-The usual use is to define `root` as a global macro and all `$macro` macros should use file names relative to that following the definition.
+This can be used to define the root directory for the $whats' location.
+The usual use is to define `root` as a global macro and all `$what` macros should use file names relative to that following the definition.
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.%}{%SUPPORT_ROOT/file%}
 
 [[directory]]
 === {%chapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=286b0a77%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=83debe2a%}
 {%fileDirectory directory%}
 
 {%sample/
@@ -2513,6 +2534,8 @@ will result
 This file is in the directory `../jamal-snippet`.
 ----
 %}
+
+{%FILE_PAROPS(directory%}
 
 In the format you can use the following placeholders:
 {%#snip:define fileMacroFormatPlaceholdersFormatted=

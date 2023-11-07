@@ -777,8 +777,8 @@ will result in
 
 [source]
 ----
-../jamal-snippet/documentation/macros/snippy.txt
-../jamal-snippet/documentation/macros/snip_define.adoc.jam
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1697,7 +1697,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:965:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:964:30
 ----
 
 
@@ -3287,7 +3287,7 @@ will result
 - Eval.java: 2,009 bytes
 - SnipTransform.java: 17,071 bytes
 - Base64.java: 3,383 bytes
-- FilesMacro.java: 11,700 bytes
+- FilesMacro.java: 11,678 bytes
 - Collect.java: 23,894 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
@@ -3595,7 +3595,7 @@ will result in the output
 
 [source]
 ----
-2023-11-07 14:32:44
+2023-11-07 15:15:31
 ----
 
 
@@ -3879,7 +3879,11 @@ You can use this macro to include the name of a file in the documentation.
 First, it seems counterintuitive to have a macro for that.
 You can type in the name of the file, and it will appear in the output.
 
-The real added value of the macro is that it checks that the file exists.
+The real added values of the macro are that
+
+* it checks that the file exists, and
+* it can format the name of the file.
+
 The macro will error if the file does not exist or is not a file.
 It helps the maintenance of the documentation.
 If the file gets renamed, moved, or deleted, the document will not compile until you follow the change.
@@ -3902,12 +3906,35 @@ When Jamal processes this file it will generate `README.adoc`.
 ----
 
 
+
+
+The macro `file` has the following parameters:
+
+* `format` can define the format of the name of the file.
+   In the format you can use placeholders starting with `$`.
+   For the list of the placeholders see the documentation below.
+* `root` can specify the directory where the file is. This parameter is prepended in front of the file name.
+   The default value is an empty string.
+* `dateFormat` can specify the format to display the date and time when the format uses one of the time placeholders.
+   The default value is `yyyy-MM-dd HH:mm:ss`.
+* `relativeTo` can specify a file or directory to which the output should be relative to when the placeholder `$relativePath` is used in the format.
+   The default value is the directory where the top level file is.
+
+[NOTE]
+====
+The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own and it is also included in another document.
+Having a `link` in the file should be relative to the document on the top level, including directly or through other files the one containing the link.
+The placeholder `$relativePath` will generate a relative file name, which is relative to the actual top level document.
+====
+
+
+
 In the format you can use the following placeholders:
 
 
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
-* `$relativePath` the relative path to the file (absolute as for now)
+* `$relativePath` the relative path to the file
 * `$parent` the parent directory where the file is
 * `$simpleName` the name of the file without the path
 * `$canonicalPath` the canonical path
@@ -3933,7 +3960,7 @@ When the placeholder `$time`, `$ctime`, or `$atime` is used the time will be for
 This format can also be changed by defining the macro/option `dateFormat`.
 
 The macro also supports the option `root`.
-This can be used to define the root directory for the files' and directories' location.
+This can be used to define the root directory for the files' location.
 The usual use is to define `root` as a global macro and all `file` macros should use file names relative to that following the definition.
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
@@ -3945,7 +3972,11 @@ You can use this macro to include the name of a directory in the documentation.
 First, it seems counterintuitive to have a macro for that.
 You can type in the name of the directory, and it will appear in the output.
 
-The real added value of the macro is that it checks that the directory exists.
+The real added values of the macro are that
+
+* it checks that the directory exists, and
+* it can format the name of the directory.
+
 The macro will error if the directory does not exist or is not a directory.
 It helps the maintenance of the documentation.
 If the directory gets renamed, moved, or deleted, the document will not compile until you follow the change.
@@ -3968,12 +3999,34 @@ This file is in the directory `../jamal-snippet`.
 ----
 
 
+
+The macro `directory` has the following parameters:
+
+* `format` can define the format of the name of the directory.
+   In the format you can use placeholders starting with `$`.
+   For the list of the placeholders see the documentation below.
+* `root` can specify the directory where the directory is. This parameter is prepended in front of the directory name.
+   The default value is an empty string.
+* `dateFormat` can specify the format to display the date and time when the format uses one of the time placeholders.
+   The default value is `yyyy-MM-dd HH:mm:ss`.
+* `relativeTo` can specify a file or directory to which the output should be relative to when the placeholder `$relativePath` is used in the format.
+   The default value is the directory where the top level file is.
+
+[NOTE]
+====
+The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own and it is also included in another document.
+Having a `link` in the file should be relative to the document on the top level, including directly or through other files the one containing the link.
+The placeholder `$relativePath` will generate a relative file name, which is relative to the actual top level document.
+====
+
+
+
 In the format you can use the following placeholders:
 
 
 * `$name` gives the name of the directory as was specified on the macro
 * `$absolutePath` the absolute path to the directory
-* `$relativePath` the relative path to the directory (absolute as for now)
+* `$relativePath` the relative path to the directory
 * `$parent` the parent directory where the directory is
 * `$simpleName` the name of the directory without the path
 * `$canonicalPath` the canonical path
@@ -3999,7 +4052,7 @@ When the placeholder `$time`, `$ctime`, or `$atime` is used the time will be for
 This format can also be changed by defining the macro/option `dateFormat`.
 
 The macro also supports the option `root`.
-This can be used to define the root directory for the files' and directories' location.
+This can be used to define the root directory for the directorys' location.
 The usual use is to define `root` as a global macro and all `directory` macros should use file names relative to that following the definition.
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 

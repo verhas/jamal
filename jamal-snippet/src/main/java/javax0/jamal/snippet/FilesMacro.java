@@ -34,7 +34,7 @@ public class FilesMacro {
                 // snippet fileMacroFormatPlaceholders
                 "$name",    // gives the name of the file as was specified on the macro
                 "$absolutePath",  // the absolute path to the file
-                "$relativePath",  // the relative path to the file (absolute as for now)
+                "$relativePath",  // the relative path to the file
                 "$parent",        // the parent directory where the file is
                 "$simpleName",    // the name of the file without the path
                 "$canonicalPath", // the canonical path
