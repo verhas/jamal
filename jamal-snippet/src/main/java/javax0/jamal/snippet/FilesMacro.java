@@ -1,6 +1,11 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.InnerScopeDependent;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.IndexedPlaceHolders;
 import javax0.jamal.tools.Scanner;
@@ -52,6 +57,13 @@ public class FilesMacro {
         );
     }
 
+    private static String getInputFileLocation(Input in) {
+        if (in != null && in.getPosition() != null && in.getPosition().top() != null && in.getPosition().top().file != null) {
+            return in.getPosition().top().file;
+        }
+        return new File(".").getAbsolutePath();
+    }
+
     /**
      * Check that the directory exists, and it is a directory.
      */
@@ -63,16 +75,22 @@ public class FilesMacro {
             final var format = scanner.str("directoryFormat", "format").defaultValue("$name");
             final var root = scanner.str("root").defaultValue("").getParam().as(String.class, FileTools::trailDirectory);
             final var dateFormat = scanner.str("dateFormat").defaultValue("yyyy-MM-dd HH:mm:ss");
+            final var relativeTo = scanner.str("relativeTo").defaultValue(getInputFileLocation(in));
             scanner.done();
 
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
-            final var dir = new File(dirName.isEmpty() ? "." : dirName);
+            final File dir;
+            try {
+                dir = new File(dirName.isEmpty() ? "." : dirName).getCanonicalFile();
+            } catch (IOException e) {
+                throw new BadSyntax("Error reading the file '" + dirName + "'", e);
+            }
             BadSyntaxAt.when(!dir.exists(), "The directory '" + dirName + "' does not exist.", in.getPosition());
             BadSyntaxAt.when(!dir.isDirectory(), "The directory '" + dirName + "' exists but it is not a directory.", in.getPosition());
 
             try {
-                return formatString(format, name, dir, dateFormat.get());
+                return formatString(format, name, dir, dateFormat.get(), relativeTo.get());
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + dirName
@@ -99,15 +117,21 @@ public class FilesMacro {
             final var format = scanner.str("fileFormat", "format").defaultValue("$name");
             final var root = scanner.str("root").defaultValue("").getParam().as(String.class, FileTools::trailDirectory);
             final var dateFormat = scanner.str("dateFormat").defaultValue("yyyy-MM-dd HH:mm:ss");
+            final var relativeTo = scanner.str("relativeTo").defaultValue(getInputFileLocation(in));
             scanner.done();
             final var name = in.toString().trim();
             final var fileName = FileTools.absolute(in.getReference(), root.get() + name);
-            final var file = new File(fileName);
+            final File file;
+            try {
+                file = new File(fileName).getCanonicalFile();
+            } catch (IOException e) {
+                throw new BadSyntax("Error reading the file '" + fileName + "'", e);
+            }
             BadSyntaxAt.when(!file.exists(), "The file '" + file.getAbsolutePath() + "' does not exist.", in.getPosition());
             BadSyntaxAt.when(!file.isFile(), "The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.", in.getPosition());
 
             try {
-                return formatString(format, name, file, dateFormat.get());
+                return formatString(format, name, file, dateFormat.get(), relativeTo.get());
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + fileName
@@ -122,30 +146,35 @@ public class FilesMacro {
         }
     }
 
-    private static String formatString(final StringParameter format, final String name, final File dir, final String dateFormat) throws Exception {
+    private static String formatString(final StringParameter format,
+                                       final String name,
+                                       final File dirOrFile,
+                                       final String dateFormat,
+                                       final String relativeTo
+    ) throws Exception {
         final var df = new SimpleDateFormat(dateFormat);
         return Trie.formatter.format(format.get(),
                 value(name),
-                value(dir.getAbsolutePath()),
-                value(dir.getAbsolutePath()),
-                value(dir.getParent()),
-                value(dir::getName),
-                value(dir::getCanonicalPath),
-                value(new FileClosure(dir, 0)::nakedFileName),
-                value(new FileClosure(dir, 1)::nakedFileNameN),
-                value(new FileClosure(dir, 2)::nakedFileNameN),
-                value(new FileClosure(dir, 3)::nakedFileNameN),
-                value(new FileClosure(dir, 4)::nakedFileNameN),
-                value(new FileClosure(dir, 5)::nakedFileNameN),
-                value(new FileClosure(dir, 0)::extensions),
-                value(new FileClosure(dir, 1)::extensionsN),
-                value(new FileClosure(dir, 2)::extensionsN),
-                value(new FileClosure(dir, 3)::extensionsN),
-                value(new FileClosure(dir, 4)::extensionsN),
-                value(new FileClosure(dir, 5)::extensionsN),
-                value(new FileClosure(dir, df)::mtime),
-                value(new FileClosure(dir, df)::ctime),
-                value(new FileClosure(dir, df)::atime)
+                value(dirOrFile.getAbsolutePath()),
+                value(FileTools.getRelativePath( new File(relativeTo),dirOrFile)),
+                value(dirOrFile.getParent()),
+                value(dirOrFile::getName),
+                value(dirOrFile::getCanonicalPath),
+                value(new FileClosure(dirOrFile, 0)::nakedFileName),
+                value(new FileClosure(dirOrFile, 1)::nakedFileNameN),
+                value(new FileClosure(dirOrFile, 2)::nakedFileNameN),
+                value(new FileClosure(dirOrFile, 3)::nakedFileNameN),
+                value(new FileClosure(dirOrFile, 4)::nakedFileNameN),
+                value(new FileClosure(dirOrFile, 5)::nakedFileNameN),
+                value(new FileClosure(dirOrFile, 0)::extensions),
+                value(new FileClosure(dirOrFile, 1)::extensionsN),
+                value(new FileClosure(dirOrFile, 2)::extensionsN),
+                value(new FileClosure(dirOrFile, 3)::extensionsN),
+                value(new FileClosure(dirOrFile, 4)::extensionsN),
+                value(new FileClosure(dirOrFile, 5)::extensionsN),
+                value(new FileClosure(dirOrFile, df)::mtime),
+                value(new FileClosure(dirOrFile, df)::ctime),
+                value(new FileClosure(dirOrFile, df)::atime)
         );
     }
 

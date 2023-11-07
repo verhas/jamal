@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -380,6 +381,41 @@ public class FileTools {
         return fileName;
     }
 
+    /**
+     * Calculates the relative path of a file with respect to another file.
+     * <p>
+     * This version of the algorithm also calculates the target file is not under the directory of the base file.
+     * The {@link URI#relativize(URI)} method returns the absolute path and does not insert ".." parts into the returned path.
+     * <p>
+     * If the base and the target files are in totally different directories, meaning that there is no common part at the
+     * start of the path, then the result will contain so many ".." elements as many is needed to get to the root.
+     * This is not a realistic case, but it still may happen with some containerized environments.
+     * However, the generated file, where the relative path is used may not be containerized and the absolute path would
+     * not work there.
+     *
+     * @param baseFile   The base file to which the relative path is calculated.
+     * @param targetFile The target file whose relative path is to be found.
+     * @return The relative path of the target file with respect to the base file.
+     */
+    public static String getRelativePath(File baseFile, File targetFile) {
+        final var base = baseFile.getAbsolutePath().split("[/\\\\]");
+        final var baseLength = baseFile.isFile() ? base.length - 1 : base.length;
+        final var target = targetFile.getAbsolutePath().split("[/\\\\]");
+        for (int i = 0; i < baseLength && i < target.length; i++) {
+            if (!base[i].equals(target[i])) {
+                final var sb = new StringBuilder();
+                sb.append("../".repeat(baseLength - 1 - i));
+                for (int j = i; j < target.length; j++) {
+                    sb.append(target[j]);
+                    if (j < target.length - 1) {
+                        sb.append("/");
+                    }
+                }
+                return sb.toString();
+            }
+        }
+        return target[target.length - 1];
+    }
 
     /**
      * Check if the name of the file has to be interpreted as an absolute filename or not. This is not the same as any

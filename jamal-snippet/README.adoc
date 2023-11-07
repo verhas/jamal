@@ -777,8 +777,8 @@ will result in
 
 [source]
 ----
-../jamal-snippet/documentation/macros/snippy.txt
-../jamal-snippet/documentation/macros/snip_define.adoc.jam
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1697,7 +1697,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:965:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:964:30
 ----
 
 
@@ -3287,7 +3287,7 @@ will result
 - Eval.java: 2,009 bytes
 - SnipTransform.java: 17,071 bytes
 - Base64.java: 3,383 bytes
-- FilesMacro.java: 10,241 bytes
+- FilesMacro.java: 11,700 bytes
 - Collect.java: 23,894 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
@@ -3595,7 +3595,7 @@ will result in the output
 
 [source]
 ----
-2023-11-07 09:55:37
+2023-11-07 14:29:17
 ----
 
 

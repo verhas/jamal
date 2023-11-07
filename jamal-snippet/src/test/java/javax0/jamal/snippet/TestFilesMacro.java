@@ -121,7 +121,7 @@ public class TestFilesMacro {
         final var testFile = "./src/test/resources/fileName.ext1.ext2.ext3.ext4.ext5.ext6";
         final var format = "yyyy";
         final var f = new File(testFile);
-        TestThat.theInput("{@file (format=\"$time\" dateFormat="+format+")"+testFile+"}")
+        TestThat.theInput("{@file (format=\"$time\" dateFormat=" + format + ")" + testFile + "}")
                 .results(new SimpleDateFormat(format).format(f.lastModified()));
     }
 
@@ -204,5 +204,24 @@ public class TestFilesMacro {
     @DisplayName("File macro throws exception if file exists but is a directory")
     void testFileThrowsForDirectory() throws Exception {
         TestThat.theInput("{@file ..}").throwsBadSyntax();
+    }
+
+    @Test
+    @DisplayName("File relative name is calculated to the file from position")
+    void testRelativeFile() throws Exception {
+        TestThat.theInput("{@file (format=$relativePath) ../a/abra.kabarbra}")
+                .atPosition(getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/fileName.ext", 1, 1)
+                .results("../a/abra.kabarbra");
+    }
+
+    @Test
+    @DisplayName("File relative name is calculated to the file from defined location")
+    void testRelativeFile2() throws Exception {
+        TestThat.theInput(
+                "{@file (format=$relativePath " +
+                        "relativeTo=\""+getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/c/fileName.ext\")" +
+                        getRoot() + "/jamal-snippet/src/test/resources/reldirt1/a/abra.kabarbra}")
+                .atPosition(getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/fileName.ext", 1, 1)
+                .results("../../a/abra.kabarbra");
     }
 }

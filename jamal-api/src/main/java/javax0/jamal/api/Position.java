@@ -23,13 +23,13 @@ public class Position {
     }
 
     public Position(Position clone) {
-        if( clone == null ){
+        if (clone == null) {
             file = null;
             line = 1;
             column = 1;
             charpos = 0;
             parent = null;
-        }else {
+        } else {
             file = clone.file;
             line = clone.line;
             column = clone.column;
@@ -72,7 +72,7 @@ public class Position {
      * the same time the hierarchy will also contain the position of the character in the file where the macro started.
      */
     public Position fork() {
-        return new Position(file, line, column,this);
+        return new Position(file, line, column, this);
     }
 
     /**
@@ -81,9 +81,9 @@ public class Position {
      * @return The top position is the one in the file that is on the top
      * level of the processing.
      */
-    public Position top(){
-        var top = parent;
-        while( top.parent != null ){
+    public Position top() {
+        var top = this;
+        while ( top.parent != null) {
             top = top.parent;
         }
         return top;

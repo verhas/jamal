@@ -1,7 +1,10 @@
 package javax0.jamal.tools;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 import static javax0.jamal.tools.FileTools.absolute;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -113,4 +116,39 @@ class TestFileTools {
         var result = absolute("a/b/c/d/z", "../../../../../e/f/g");
         assertEquals("../e/f/g", result);
     }
+
+
+    @Nested
+    class TestRelativeFileName {
+        private void testRelativeFileName(String base, String target, String expected) {
+            var result = FileTools.getRelativePath(new File(base),
+                    new File(target));
+            assertEquals(expected, result);
+        }
+
+        @Test
+        @DisplayName("same directory")
+        void testSameDirectory() {
+            testRelativeFileName("/Users/verhasp/github/jamal/anything.txt",
+                    "/Users/verhasp/github/jamal/everything.txt",
+                    "everything.txt");
+        }
+
+        @Test
+        @DisplayName("sub directory")
+        void testSubdirectory() {
+            testRelativeFileName("/Users/verhasp/github/jamal/anything.txt",
+                    "/Users/verhasp/github/jamal/sourcebuddy/everything.txt",
+                    "sourcebuddy/everything.txt");
+        }
+
+        @Test
+        @DisplayName("one level up")
+        void testOneLevelUp() {
+            testRelativeFileName("/Users/verhasp/github/jamal/anything.txt",
+                    "/Users/verhasp/github/sourcebuddy/everything.txt",
+                    "../sourcebuddy/everything.txt");
+        }
+    }
+
 }
