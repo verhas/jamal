@@ -24,8 +24,8 @@ public class Memoize implements Macro, Scanner {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
         final var files = scanner.list(null, "file");
-        final var hashFile = scanner.str(null, "hashFile").defaultValue(null);
-        final var hashCode = scanner.str(null, "hashCode").defaultValue(null);
+        final var hashFile = scanner.str(null, "hashFile").optional();
+        final var hashCode = scanner.str(null, "hashCode").optional();
         scanner.done();
 
         final String hash = getHashValue(in, hashFile, hashCode);

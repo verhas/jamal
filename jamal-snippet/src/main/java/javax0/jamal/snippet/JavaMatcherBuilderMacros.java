@@ -54,8 +54,8 @@ public class JavaMatcherBuilderMacros {
         private Options(final Scanner macro, final Input in, final Processor processor) throws BadSyntax {
             final var scanner = macro.newScanner(in, processor);
             string = scanner.bool(null, "string");
-            groupName = scanner.str(null, "name").defaultValue(null);
-            pattern = scanner.pattern(null, "pattern").defaultValue(null);
+            groupName = scanner.str(null, "name").optional();
+            pattern = scanner.pattern(null, "pattern").optional();
             scanner.done();
         }
     }

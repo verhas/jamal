@@ -29,6 +29,7 @@ public class FilesMacro {
                 // snippet fileMacroFormatPlaceholders
                 "$name",    // gives the name of the file as was specified on the macro
                 "$absolutePath",  // the absolute path to the file
+                "$relativePath",  // the relative path to the file (absolute as for now)
                 "$parent",        // the parent directory where the file is
                 "$simpleName",    // the name of the file without the path
                 "$canonicalPath", // the canonical path
@@ -66,7 +67,7 @@ public class FilesMacro {
 
             final var name = in.toString().trim();
             final var dirName = Paths.get(FileTools.absolute(in.getReference(), root.get() + name)).normalize().toString();
-            final var dir = new File(dirName.length() > 0 ? dirName : ".");
+            final var dir = new File(dirName.isEmpty() ? "." : dirName);
             BadSyntaxAt.when(!dir.exists(), "The directory '" + dirName + "' does not exist.", in.getPosition());
             BadSyntaxAt.when(!dir.isDirectory(), "The directory '" + dirName + "' exists but it is not a directory.", in.getPosition());
 
@@ -125,6 +126,7 @@ public class FilesMacro {
         final var df = new SimpleDateFormat(dateFormat);
         return Trie.formatter.format(format.get(),
                 value(name),
+                value(dir.getAbsolutePath()),
                 value(dir.getAbsolutePath()),
                 value(dir.getParent()),
                 value(dir::getName),

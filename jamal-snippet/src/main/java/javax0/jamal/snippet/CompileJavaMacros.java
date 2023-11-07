@@ -113,8 +113,8 @@ public class CompileJavaMacros {
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var scanner = newScanner(in,processor);
             final var storeName = storeNameParam(scanner);
-            final var source  = scanner.str("source", "src", "sources").defaultValue(null);
-            final var classes = scanner.str("class", "classes").defaultValue(null);
+            final var source  = scanner.str("source", "src", "sources").optional();
+            final var classes = scanner.str("class", "classes").optional();
             final var options = scanner.str("options", "compilerOptions").defaultValue("");
             scanner.done();
             try {

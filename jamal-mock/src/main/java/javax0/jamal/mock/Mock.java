@@ -17,7 +17,7 @@ public class Mock implements Macro, Scanner {
         // snippet mock_options
         final var id = scanner.str(null, "macro", "id"); //| the identifier of the macro.
         //|This an option is mandatory and has to define the identifier of the macro to be mocked.
-        final var when = scanner.str(null, "when").defaultValue(null); //| regular expression when to apply the mock.
+        final var when = scanner.str(null, "when").optional(); //| regular expression when to apply the mock.
         //|This option is not mandatory.
         //|In case it is specified, the mock response will only be used when the input of the macro matches the regular expression specified.
         //|If the option is missing, the mock response will always be matched and used when it gets activated regardless of the input of the macro.

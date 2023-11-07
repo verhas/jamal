@@ -152,8 +152,13 @@ There is no need to invoke the `use` command to get access to these macros.
 [[macros]]
 == 2.Macros
 
+
+
+
 [[snip_collect]]
 === I. `snip:collect`
+
+
 
 Since 1.7.4 option `onceAs`
 
@@ -259,7 +264,7 @@ The regular expressions will find snippet start, and snippet ends in Java files,
 Essentially, you should not have a problem signaling the start, and the end of the snippet in any program code that allows you to write some form of a comment.
 
 The disadvantage of this liberal definition is that sometimes it finds lines that accidentally contain the word snippet.
-If you look at the source code in the file src/main/java/javax0/jamal/snippet/TrimLines.java you can see examples.
+If you look at the source code in the file ../../src/main/java/javax0/jamal/snippet/TrimLines.java you can see examples.
 The comment mentions snippets, and there is a word eligible to be an identifier after `snippet`, and the parsing thinks that this is a snippet start.
 Eventually, there is no `end snippet` on the lines following it, which is an error the snippet collection process recognizes.
 (Up to 1.7.2. Later versions use this file as a snippet source; thus, it has 'end snippet'.)
@@ -275,7 +280,7 @@ If there is already a correct, error-free snippet collected and the collection f
 
 This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the malformed snippets.
 
-If you look at the src/main/java/javax0/jamal/snippet/TrimLines.java in version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
+If you look at the ../../src/main/java/javax0/jamal/snippet/TrimLines.java in version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
 Because there is also an accidental `snippet` line before it, the collection would not find this line.
 Because of the previous `snippet` line, the real `// snippet` line becomes part of the previous snippet.
 The `// snippet` line is preceded by an `// end snippet` line to avoid this.
@@ -309,7 +314,8 @@ The snippets can be used later using the <<snip,`snip`>> macro.
 The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
-These options are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+
+These options are parsed using the Standard Parameter Parsing as defined in link: ../documentation/PAROPS.adoc[PAROPS].
 
 
 * `include`
@@ -393,8 +399,11 @@ To refer to some snippets, you have to collect them.
 To do that, you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
 That collect macro should name the collection to avoid redefinition error.
 
+
 [[snip_properties]]
 === II. `snip:properties`
+
+
 
 This macro will load properties from a "properties" file or an "XML" file.
 The names of the properties will become the names of the snippets and the values of the snippets.
@@ -403,9 +412,8 @@ For example, the sample
 
 [source]
 ----
-{@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.properties}
+{@snip:properties testproperties.properties}
 ----
-
 
 will load the content of the file `javax0/jamal/snippet/testproperties.properties`, which is
 
@@ -424,8 +432,6 @@ and thus using the `snip` macro, like
 ----
 
 will result
-
-
 
 [source]
 ----
@@ -448,8 +454,34 @@ For example, the same properties file in XML format looks like the following:
 </properties>
 ----
 
+Loading it using the macro
+
+[source]
+----
+{@snip:properties testproperties.xml}
+----
+
+and referencing this time the property `b` as
+
+[source]
+----
+{@snip b}
+----
+
+will result
+
+[source]
+----
+letter b
+----
+
+
+
+
 [[xml_define]]
 === III. `xml:define`
+
+
 
 This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
 The syntax of the command is:
@@ -463,11 +495,13 @@ The syntax of the command is:
 The defined `macroName` macro can be used as an ordinary user-defined macro that accepts one, optional argument.
 This user-defined macro evaluates in a particular way.
 It uses the argument as an XPath expression and returns the value from the XML document that matches the argument.
-If the XPath expression is missing then the whole XML content is converted to text formatted.
+If the XPath expression is missing, then the whole XML content is converted to formatted text and returned.
 
 
-For example the `pom.xml` can be read using the following macro use:
+A typical example is to retrieve some build parameters from the `pom.xml` file.
+You can read the content of the `pom.xml` file and reference the version of the project using the following lines:
 
+ 
 [source]
 ----
 {#xml:define pom={@include [verbatim]pom.xml}}\
@@ -490,6 +524,8 @@ The result is:
 [[snip_xml]]
 === IV. `snip:xml`
 
+
+
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
 
@@ -502,11 +538,12 @@ The syntax of the command is
 The defined `macroName` macro can be used as an ordinary user-defined macro that accepts one, optional argument.
 This user-defined macro evaluates in a particular way.
 It uses the argument as an XPath expression and returns the value from the XML document that matches the argument.
-If the XPath expression is missing then the whole XML content is converted to text formatted.
+If the XPath expression is missing, then the whole XML content is converted to formatted text and returned.
 
 
 For example, this document contains the following macros at the start:
 
+ 
 [source]
 ----
 {@snip:xml pom=pom.xml}\
@@ -515,6 +552,7 @@ For example, this document contains the following macros at the start:
 <version>{VERSION}</version>
 ...
 ----
+
 
 The result is:
 
@@ -528,17 +566,25 @@ The result is:
 
 which is the current version of the project as read from the `pom.xml` file.
 
+Note that you can have the same result using the `xml:define` macro and including the content of the XML file verbatim.
+When the XML content is in a file calling this macro is a bit more efficient.
+
+
 [[xml_insert]]
 === V. `xml:insert`
 
-This macro can modify an XML formatted user defined macro inserting content into the XML document.
-It can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
+
+
+This macro can modify an XML-formatted user defined macro inserting content into the XML document.
+XML-formatted user defined macros can be created using the `xml:define` and `snippet:xml` macros.
+
+This macro can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
 This latter use is for the case when the Jamal file processed creates an XML file.
 The syntax of the command is
 
 [source]
 ----
-{@xml:insert (options) xml_content}
+{@xml:insert (options) xml_content_to_insert}
 ----
 
 The options define the name of the xml formatted user defined macro the content should be inserted into as well as the xPath that defines the location of the insertion.
@@ -546,14 +592,14 @@ The options define the name of the xml formatted user defined macro the content 
 * `xpath` (can be aliased as `path`) defines the location in the original XML where to insert the content.
 
 * `id`, (can be aliased as `to`) defines the name of the XML user defined macro which will be modified.
-If this option is missing then the insertion will happen when the whole document processing is already finished.
-In that case the target XML is the one, which is the result of the Jamal processing.
+If this option is missing, the insertion will happen when the whole document processing is already finished.
+In that case, the target XML is the one, which is the result of the Jamal processing.
 This is usable when the Jamal processing creates an XML as a result.
-The insertions are done in the order of the `xml:insert` commands and after that the output will be the resulting XML formatted.
+The insertions are done in the order of the `xml:insert` commands, and after that the output will be the resulting XML formatted.
 
 * `ifneeded` (can be aliased as `optional`) defines whether the insertion is optional.
 If the location specified by the `path` already contains a tag with the given name, then the XML will not be modified.
-Without this option a new child is appended having the name that may already be there.
+Without this option, a new child is appended having the name that may already be there.
 
 * `tabsize` can specify the formatting tab size.
 This makes only sense if the insertion happens to the final XML content of the processing.
@@ -562,28 +608,30 @@ The following example shows how to insert a new child into the XML document.
 
 [source]
 ----
-{@xml:define myXml=<xml>
-<yml>babu</yml>
-</xml>}\
-{@xml:insert (to=myXml path=/xml) <zml>wuku</zml>}
+{@xml:define myXml=
+<xml>
+  <FamilyName>Muster</FamilyName>
+</xml>
+}\
+{@xml:insert (to=myXml path=/xml) <FirstName>Peter</FirstName>}
 {myXml}
 ----
 
-will result
+will result in
 
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xml>
-    <yml>babu</yml>
-    <zml>wuku</zml>
+    <FamilyName>Muster</FamilyName>
+    <FirstName>Peter</FirstName>
 </xml>
 ----
 
 
 The XML content is defined using the macro `xml:define`.
 Later the content of this XML is modified using the macro `xml:insert`.
-The content of the macro is converted to text and gets into the output when the name of the macro is used without the Xpath argument.
+The content of the macro is converted to text and gets into the output when the name of the macro is used without the an Xpath argument.
 
 The following example demonstrates how the result of the processing can be modified.
 
@@ -597,9 +645,9 @@ The following example demonstrates how the result of the processing can be modif
 
 {@xml:insert (path=/project/dependencies)
 <dependency>
-    <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-snippet</artifactId>
-    <version>2.5.0-SNAPSHOT</version>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-snippet</artifactId>
+<version>2.5.0-SNAPSHOT</version>
 </dependency>}
 <plugins><plugin>
 <artifactId>my-imaginary</artifactId>
@@ -647,13 +695,17 @@ They make not much sense in a simple XML file, like this, but in a larger XML, w
 Such insertions ensure that these parts are inserted if they are needed by other insertions.
 The first four lines could be in a separate file and included using the `include` macro to support pom structure.
 
-In the example, the fifth insertion can only be executed successfully because the first one is there.
+For example, the fifth insertion can only be executed successfully because the first one is there.
 Without this there would be no `/project/dependencies` location in the XML file.
 At the same time the second optional insertion for the `plugins` is ignored, because there is an explicit `plugins` tag in the content.
 The fifth insertion adds a dependency to the `dependencies` tag.
 
+
+
 [[snip_define]]
 === VI. `snip:define`
+
+
 
 You can use this macro to define a snippet.
 Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
@@ -664,8 +716,7 @@ For example,
 {@snip:define mySnippet=
 It is the snippet, which is defined inside the file and not collected from an external file.
 }
-{@snip mySnippet
-is used here, and then the rest of the text is ignored}
+{@snip mySnippet}
 ----
 
 will result
@@ -680,7 +731,7 @@ Snippets typically contain several lines, and the leading spaces may be importan
 To accommodate this when you define a snippet using this macro, spaces following the `=` sign up to, and including the new line will be skipped.
 As you can see in the example above, there is no new line before the sentence `It is the...`.
 It is recommended to have a new line after the `=` character and start the snippet content on the next line.
-If you start the snippet right after the ``=` character then the spaces between the first non-space character and the `=` sign will be skipped.
+If you start the snippet right after the `=` character then the spaces between the `=` and the first non-space character will be skipped.
 For example:
 
 [source]
@@ -688,8 +739,7 @@ For example:
 {@snip:define mySnippet1=     It is the snippet,
 which is defined inside the file and not collected from an external file.
 }
-{@snip mySnippet1
-is used here, and then the rest of the text is ignored}
+{@snip mySnippet1}
 ----
 
 will result
@@ -704,9 +754,12 @@ which is defined inside the file and not collected from an external file.
 As you can see there are no spaces before the characters `It is the...`.
 
 A snippet always holds the reference to the file and line number where it was defined.
-When you `snip:define` a snippet you can either specify the file name and the line number using parops, or you can name an already existing snippet to inherit the location from.
-This is useful when you create a new snippet replacing some part of an existing one.
-The file name and the line number is used
+You may want to have a different location from where the `snip:define` macro is called.
+For example, you create a new snippet from an already existing one replacing some parts of it.
+It is logical to inherit the location of the snippet to the transformed one.
+
+To do that, you can either specify the file name and the line number using parops, or you can name an already existing snippet to inherit the location from.
+The file name and the line number are used
 
 * to report error if there is any, and
 * to calculate the file name in the case the snippet gets evaluated and contains an `include` or `import` macro.
@@ -714,7 +767,7 @@ The file name and the line number is used
 [source]
 ----
 {@snip:define (file="./snippy.txt" line=6379) mySnippetA=abra kadabra badir kebi}
-{@snip:define mySnippetB=abra kadabra badir kebi}
+{@snip:define mySnippetB=badir kebi, alias Don Sakan}
 {@snip:file mySnippetA}
 {@snip:file mySnippetB}
 ----
@@ -724,16 +777,28 @@ will result in
 
 [source]
 ----
-../jamal-snippet/snippy.txt
-../jamal-snippet/README.adoc.jam
+../jamal-snippet/documentation/macros/snippy.txt
+../jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
+
 
 
 [[snip_clear]]
 === VII. `snip:clear`
 
-The call to this macro deletes all collected snippets from memory.
+
+
+This macro deletes all collected snippets from memory.
+
+Snippets are stored in a central structure, which is global for the whole processed file.
+Snippets cannot be overwritten.
+If a snippet is collected from a file, which was already collected, the action will raise an error.
+The same happens when you try to define a snippet for a name that already exists using the `snip:define` macro.
+
+Using this macro this central store can be deleted removing all the snippets from this central store.
+
 The result of the macro is an empty string.
+
 
 [[snip]]
 === VIII. `snip`
@@ -1632,7 +1697,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1379:30
+../jamal-snippet/README.adoc.jam:965:30
 ----
 
 
@@ -3121,6 +3186,7 @@ will result
 - CounterMacro.java
 - SnipList.java
 - ShellVar.java
+- Locate.java
 - XmlDocument.java
 - References.java
 - Java.java
@@ -3200,14 +3266,14 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 2,368 bytes
-- JavaMatcherBuilderMacros.java: 19,773 bytes
-- Snip.java: 4,605 bytes
+- snippet: 2,400 bytes
+- JavaMatcherBuilderMacros.java: 19,757 bytes
+- Snip.java: 4,597 bytes
 - ReplaceUtil.java: 1,033 bytes
 - SnipSave.java: 4,690 bytes
 - Sort.java: 8,573 bytes
 - Decorate.java: 12,259 bytes
-- Case.java: 2,273 bytes
+- Case.java: 2,269 bytes
 - NumberLines.java: 2,853 bytes
 - RangeMacro.java: 1,293 bytes
 - Untab.java: 2,389 bytes
@@ -3218,20 +3284,20 @@ will result
 - ReflectionTools.java: 26,140 bytes
 - MethodTool.java: 7,761 bytes
 - Update.java: 979 bytes
-- Eval.java: 2,025 bytes
+- Eval.java: 2,009 bytes
 - SnipTransform.java: 17,071 bytes
 - Base64.java: 3,383 bytes
-- FilesMacro.java: 10,109 bytes
-- Collect.java: 23,906 bytes
+- FilesMacro.java: 10,241 bytes
+- Collect.java: 23,894 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
 - Repeat.java: 1,213 bytes
 - HashCode.java: 462 bytes
 - TrimLines.java: 5,386 bytes
-- JavaSourceInsert.java: 7,996 bytes
+- JavaSourceInsert.java: 7,988 bytes
 - ThinXml.java: 8,792 bytes
 - Decorator.java: 9,094 bytes
-- Memoize.java: 8,132 bytes
+- Memoize.java: 8,116 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 3,212 bytes
 - SnipLine.java: 691 bytes
@@ -3246,26 +3312,27 @@ will result
 - Numbers.java: 1,785 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 2,168 bytes
-- CompileJavaMacros.java: 23,499 bytes
+- CompileJavaMacros.java: 23,483 bytes
 - StringMacros.java: 7,360 bytes
-- JavaSourceTemplate.java: 7,451 bytes
+- JavaSourceTemplate.java: 7,443 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Dictionary.java: 1,527 bytes
 - Clear.java: 399 bytes
 - KillLines.java: 1,823 bytes
 - SnipLoad.java: 3,482 bytes
 - Rot13.java: 855 bytes
-- SnippetStore.java: 11,433 bytes
+- SnippetStore.java: 11,428 bytes
 - Download.java: 2,122 bytes
-- ListDir.java: 5,439 bytes
+- ListDir.java: 5,423 bytes
 - XmlFormat.java: 3,927 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 6,204 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
-- CounterMacro.java: 3,893 bytes
+- CounterMacro.java: 3,885 bytes
 - SnipList.java: 1,228 bytes
 - ShellVar.java: 3,837 bytes
+- Locate.java: 868 bytes
 - XmlDocument.java: 5,671 bytes
 - References.java: 7,745 bytes
 - Java.java: 11,623 bytes
@@ -3275,7 +3342,7 @@ will result
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,094 bytes
 - Pos.java: 5,264 bytes
-- Snippet.java: 2,004 bytes
+- Snippet.java: 1,988 bytes
 ----
 
 
@@ -3528,7 +3595,7 @@ will result in the output
 
 [source]
 ----
-2023-11-06 03:31:01
+2023-11-07 09:55:37
 ----
 
 
@@ -3840,6 +3907,7 @@ In the format you can use the following placeholders:
 
 * `$name` gives the name of the file as was specified on the macro
 * `$absolutePath` the absolute path to the file
+* `$relativePath` the relative path to the file (absolute as for now)
 * `$parent` the parent directory where the file is
 * `$simpleName` the name of the file without the path
 * `$canonicalPath` the canonical path
@@ -3905,6 +3973,7 @@ In the format you can use the following placeholders:
 
 * `$name` gives the name of the directory as was specified on the macro
 * `$absolutePath` the absolute path to the directory
+* `$relativePath` the relative path to the directory (absolute as for now)
 * `$parent` the parent directory where the directory is
 * `$simpleName` the name of the directory without the path
 * `$canonicalPath` the canonical path

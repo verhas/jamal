@@ -29,7 +29,7 @@ public class JavaSourceTemplate implements Macro, Scanner.FirstLine {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var path = scanner.str(null, "path").defaultValue(null);
+        final var path = scanner.str(null, "path").optional();
         final var template = scanner.str(null, "template", "name", "id");
         final var update = scanner.bool(null, "check", "checkUpdate", "update", "updateOnly");
         final var debug = scanner.bool(null, "debug");

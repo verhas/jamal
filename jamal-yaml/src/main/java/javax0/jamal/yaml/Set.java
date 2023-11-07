@@ -23,7 +23,7 @@ public class Set implements Macro, InnerScopeDependent, Scanner {
         final var scanner = newScanner(in,processor);
         final var clone = Resolver.cloneOption(scanner);
         final var copy = Resolver.copyOption(scanner);
-        final var from = scanner.str("yamlDataSource", "from").defaultValue(null);
+        final var from = scanner.str("yamlDataSource", "from").optional();
         scanner.done();
 
         skipWhiteSpaces(in);

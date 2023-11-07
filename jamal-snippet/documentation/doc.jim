@@ -1,4 +1,5 @@
-{%#define parameterized=
+{@comment}
+{#define parameterized=
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:{%@file ../../documentation/PAROPS.adoc%}[PAROPS].
-%}\
+These parameters are parsed using the Standard Parameter Parsing as defined in link:{@file ../../documentation/PAROPS.adoc}[PAROPS].
+}\

@@ -19,6 +19,11 @@ public class PatternParameter extends AbstractTypedParameter<Pattern> {
         return this;
     }
 
+    public PatternParameter optional() {
+        param.orElseNull();
+        return this;
+    }
+
     public PatternParameter defaultValue(String dV) {
         if (dV == null) {
             param.orElseNull();

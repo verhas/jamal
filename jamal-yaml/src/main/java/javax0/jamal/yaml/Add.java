@@ -23,7 +23,7 @@ public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in,processor);
         final var to      = scanner.str("yamlDataTarget", "to");
-        final var key     = scanner.str(null, "key").defaultValue(null);
+        final var key     = scanner.str(null, "key").optional();
         final var flatten = scanner.bool(null, "flat", "flatten");
         scanner.done();
         final var dotIndex = to.get().indexOf('.');

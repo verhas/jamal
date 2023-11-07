@@ -19,8 +19,8 @@ public class Snippet implements Macro, OptionsControlled, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var snippet = scanner.str(null, "ref").defaultValue(null);
-        final var file = scanner.str(null, "file").defaultValue(null);
+        final var snippet = scanner.str(null, "ref").optional();
+        final var file = scanner.str(null, "file").optional();
         final var line = scanner.number(null, "line").defaultValue(1);
         scanner.done();
         BadSyntax.when((line.isPresent() || file.isPresent()) && snippet.isPresent(), "Either 'line' or 'file' or 'snippet' must be present");

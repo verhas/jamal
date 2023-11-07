@@ -79,7 +79,7 @@ public class Options {
         //snipline openai_sealed filter="(.*?)"
         final var sealed = scanner.bool("openai:sealed", "sealed");
         //snipline openai_hash filter="(.*?)"
-        final var hash = scanner.str("openai:hash", "hash").defaultValue(null);
+        final var hash = scanner.str("openai:hash", "hash").optional();
         //snipline openai_fallible filter="(.*?)"
         final var fallible = scanner.bool("openai:fallible", "fallible");
         //snipline openai_asynch filter="(.*?)"

@@ -24,7 +24,7 @@ public class Xml implements Macro, InnerScopeDependent, Scanner {
         final var clone = Resolver.cloneOption(scanner);
         final var copy = Resolver.copyOption(scanner);
         final var topTag = scanner.str("yamlXmlTopTag", "tag").defaultValue("xml");
-        final var attributes = scanner.str("yamlXmlAttributes", "attributes").defaultValue(null);
+        final var attributes = scanner.str("yamlXmlAttributes", "attributes").optional();
         scanner.done();
 
         final var yamlObject = Resolve.getYaml(processor, in.toString().trim());

@@ -11,14 +11,14 @@ import javax0.jamal.tools.InputHandler;
  */
 public class Case {
     private static String deCapitalize(String s) {
-        if (s != null && s.length() > 0) {
+        if (s != null && !s.isEmpty()) {
             return s.substring(0, 1).toLowerCase() + s.substring(1);
         }
         return s;
     }
 
     static String capitalize(String s) {
-        if (s != null && s.length() > 0) {
+        if (s != null && !s.isEmpty()) {
             return s.substring(0, 1).toUpperCase() + s.substring(1);
         }
         return s;

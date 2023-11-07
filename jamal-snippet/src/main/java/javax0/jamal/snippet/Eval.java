@@ -16,9 +16,9 @@ public class Eval implements Macro, OptionsControlled, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var file = scanner.str(null, "file").defaultValue(null);
+        final var file = scanner.str(null, "file").optional();
         final var line = scanner.number(null, "line").defaultValue(1);
-        final var snippet = scanner.str(null, "snippet").defaultValue(null);
+        final var snippet = scanner.str(null, "snippet").optional();
         scanner.done();
         BadSyntax.when((line.isPresent() || file.isPresent()) && snippet.isPresent(), "Either 'line' and/or 'file' or 'snippet' must be present as option on '\"+getId()+\"' macro.\"");
         BadSyntax.when(!file.isPresent() && !snippet.isPresent(),"Either 'file' or 'snippet' must be present as option on '"+getId()+"' macro.");

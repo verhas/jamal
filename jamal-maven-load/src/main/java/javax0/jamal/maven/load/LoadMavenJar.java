@@ -55,8 +55,8 @@ public class LoadMavenJar implements Macro, Scanner {
         final var repos = scanner.str("repositories", "repository", "repo", "repos").defaultValue("central");
         final var noDep = scanner.bool("noDependencies", "noDeps");
         final var reload = scanner.bool("reload", "overwrite", "update");
-        final var local = scanner.str("local").defaultValue(null);
-        final var exclude = scanner.str("exclude").defaultValue(null);
+        final var local = scanner.str("local").optional();
+        final var exclude = scanner.str("exclude").optional();
         scanner.done();
         synchronized (classLoaders) {
             if (classLoaders.containsKey(nonce)) {

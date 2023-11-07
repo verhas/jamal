@@ -16,6 +16,7 @@ public class StringParameter extends AbstractTypedParameter<String> {
     public StringParameter required() {
         return this;
     }
+
     public StringParameter optional() {
         return defaultValue(null);
     }

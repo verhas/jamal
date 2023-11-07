@@ -75,7 +75,7 @@ public class SnippetStore implements Identified {
     }
 
     private static Predicate<String> convertRegex(String regex) {
-        return regex == null || regex.length() == 0 ? x -> true : Pattern.compile(regex).asPredicate();
+        return regex == null || regex.isEmpty() ? x -> true : Pattern.compile(regex).asPredicate();
     }
 
 
@@ -88,7 +88,6 @@ public class SnippetStore implements Identified {
      * @return the constant string {@code `snippets}
      */
     @Override
-
     public String getId() {
         return SNIPPETS_MACRO_ID;
     }

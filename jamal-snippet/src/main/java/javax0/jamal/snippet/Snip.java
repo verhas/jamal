@@ -20,7 +20,7 @@ public class Snip implements Macro, Scanner {
         final var pos = in.getPosition();
         final var scanner = newScanner(in, processor);
         final var poly = scanner.bool(null, "poly");
-        final var hashString = scanner.str("hash", "hashCode").defaultValue(null);
+        final var hashString = scanner.str("hash", "hashCode").optional();
         final var extraParams = scanner.extra();
         scanner.done();
 

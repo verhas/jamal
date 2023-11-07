@@ -1,7 +1,7 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=ebd410d6%}
+Since 1.7.4 option `onceAs`
 
-{%@snip:collect onceAs="MAIN" from="../../src/main/java/"%}\
-{%@snip:collect onceAs="SAMPLE" from="../../src/test/java/" exclude="Sample.java"%}\
-{%@import ../doc.jim%}
 This macro collects text snippets from files.
 {%parameterized%}
 The syntax of the macro is
@@ -143,9 +143,10 @@ The snippets can be used later using the <<snip,`snip`>> macro.
 The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
-These options are parsed using the Standard Parameter Parsing as defined in link:{@file ../../../PAROPS.adoc%}[PAROPS].
 
-{%#eval {%`@comment%}
+These options are parsed using the Standard Parameter Parsing as defined in link: ../documentation/PAROPS.adoc[PAROPS].
+
+{%#snip:eval (snippet=collect_options) {%`@comment%}
 {%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*scanner\\..*?\\(.*?\"(.*?)\".*~* `$1`~.*//\\s*~"
 {%@snip collect_options%}
 %}%}

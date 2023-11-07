@@ -1,0 +1,94 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=57dcd8c6%}
+This macro can modify an XML-formatted user defined macro inserting content into the XML document.
+XML-formatted user defined macros can be created using the `xml:define` and `snippet:xml` macros.
+
+This macro can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
+This latter use is for the case when the Jamal file processed creates an XML file.
+The syntax of the command is
+
+{%sample/
+{@xml:insert (options) xml_content_to_insert}
+%}
+
+The options define the name of the xml formatted user defined macro the content should be inserted into as well as the xPath that defines the location of the insertion.
+
+* `xpath` {%alias path%} defines the location in the original XML where to insert the content.
+
+* `id`, {%alias to%} defines the name of the XML user defined macro which will be modified.
+If this option is missing, the insertion will happen when the whole document processing is already finished.
+In that case, the target XML is the one, which is the result of the Jamal processing.
+This is usable when the Jamal processing creates an XML as a result.
+The insertions are done in the order of the `xml:insert` commands, and after that the output will be the resulting XML formatted.
+
+* `ifneeded` {%alias optional%} defines whether the insertion is optional.
+If the location specified by the `path` already contains a tag with the given name, then the XML will not be modified.
+Without this option, a new child is appended having the name that may already be there.
+
+* `tabsize` can specify the formatting tab size.
+This makes only sense if the insertion happens to the final XML content of the processing.
+
+The following example shows how to insert a new child into the XML document.
+
+{%sample/
+{@xml:define myXml=
+<xml>
+  <FamilyName>Muster</FamilyName>
+</xml>
+}\
+{@xml:insert (to=myXml path=/xml) <FirstName>Peter</FirstName>}
+{myXml}
+%}
+
+will result in
+
+{%output%}
+
+The XML content is defined using the macro `xml:define`.
+Later the content of this XML is modified using the macro `xml:insert`.
+The content of the macro is converted to text and gets into the output when the name of the macro is used without the an Xpath argument.
+
+The following example demonstrates how the result of the processing can be modified.
+
+{%sample/
+<project>
+{@xml:insert (path=/project ifneeded)<dependencies></dependencies>}
+{@xml:insert (path=/project ifneeded)<plugins></plugins>}
+{@xml:insert (path=/project ifneeded tabsize=2)<pluginManagement></pluginManagement>}
+{@xml:insert (path=/project ifneeded)<dependencyManagement></dependencyManagement>}
+
+{@xml:insert (path=/project/dependencies)
+<dependency>
+<groupId>com.javax0.jamal</groupId>
+<artifactId>jamal-snippet</artifactId>
+<version>{%VERSION%}</version>
+</dependency>}
+<plugins><plugin>
+<artifactId>my-imaginary</artifactId>
+<groupId>plugin</groupId>
+<version>r65.1204-2021</version>
+</plugin>
+</plugins>
+
+</project>
+%}
+
+will result
+
+
+{%output%}
+
+The insert macros in this example do not specify any `id`.
+This means that all the modification is done to the XML, which is the whole document.
+Also, the modification happens at the end of the processing.
+
+The first four insertions are optional in the sense that they will modify the output if there is no such tag in the XML.
+They make not much sense in a simple XML file, like this, but in a larger XML, where the different parts come from different includes it may make sense.
+Such insertions ensure that these parts are inserted if they are needed by other insertions.
+The first four lines could be in a separate file and included using the `include` macro to support pom structure.
+
+For example, the fifth insertion can only be executed successfully because the first one is there.
+Without this there would be no `/project/dependencies` location in the XML file.
+At the same time the second optional insertion for the `plugins` is ignored, because there is an explicit `plugins` tag in the content.
+The fifth insertion adds a dependency to the `dependencies` tag.
+

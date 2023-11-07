@@ -1,0 +1,32 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=c48d0f2a%}
+This macro loads an XML file and assigns it to a "user-defined" macro.
+The syntax of the command is
+
+[source]
+----
+{@snip:xml macroName=xml_file.xml}
+----
+
+{%XML_MACRO_USE%}
+
+For example, this document contains the following macros at the start:
+
+{%#replace `///` {%@comment we do not want to show in the sample the root dir part of the path%}
+{%sample/
+{@snip:xml pom={%ROOT_DIR%}pom.xml}\
+{#define VERSION={pom /project/version/text()}}\
+...
+<version>{VERSION}</version>
+...
+%}///{%ROOT_DIR%}%}
+
+
+The result is:
+
+{%output%}
+
+which is the current version of the project as read from the `pom.xml` file.
+
+Note that you can have the same result using the `xml:define` macro and including the content of the XML file verbatim.
+When the XML content is in a file calling this macro is a bit more efficient.

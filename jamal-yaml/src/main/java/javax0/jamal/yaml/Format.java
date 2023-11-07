@@ -25,16 +25,16 @@ public class Format implements Macro, InnerScopeDependent, Scanner.WholeInput {
         // instruct the output to follow pretty flow
         final var splitLines = scanner.bool(null, "splitLines");
         // instruct the output to split too long lines
-        final var defaultFlowStyle = scanner.str(null, "defaultFlowStyle", "flowStyle").defaultValue(null);
+        final var defaultFlowStyle = scanner.str(null, "defaultFlowStyle", "flowStyle").optional();
         // the flow style can be `FLOW`, `BLOCK` or `AUTO`
-        final var defaultScalarStyle = scanner.str(null, "defaultScalarStyle", "scalarStyle").defaultValue(null);
+        final var defaultScalarStyle = scanner.str(null, "defaultScalarStyle", "scalarStyle").optional();
         // the scalar style can be `DOUBLE_QUOTED`, `SINGLE_QUOTED`, `LITERAL`, `FOLDED`, or `PLAIN`,
-        final var lineBreak = scanner.str(null, "lineBreak").defaultValue(null);
+        final var lineBreak = scanner.str(null, "lineBreak").optional();
         // the output line break can be `WIN`, `MAC`, or `UNIX`
-        final var indent = scanner.number(null, "indent").defaultValue(null);
+        final var indent = scanner.number(null, "indent").optional();
         // sets the indentation size, should be max 10
-        final var indicatorIndent = scanner.number(null, "indicatorIndent").defaultValue(null);
-        final var width = scanner.number(null, "width").defaultValue(null);
+        final var indicatorIndent = scanner.number(null, "indicatorIndent").optional();
+        final var width = scanner.number(null, "width").optional();
         // sets the desired width
         // end snippet
 

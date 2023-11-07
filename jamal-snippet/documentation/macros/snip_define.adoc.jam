@@ -1,0 +1,59 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}Snippet.java hash=b6499cb8%}
+You can use this macro to define a snippet.
+Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
+For example,
+
+{%sample/
+{@snip:define mySnippet=
+It is the snippet, which is defined inside the file and not collected from an external file.
+}
+{@snip mySnippet}
+%}
+
+will result
+
+{%output%}
+
+Snippets typically contain several lines, and the leading spaces may be important.
+To accommodate this when you define a snippet using this macro, spaces following the `=` sign up to, and including the new line will be skipped.
+As you can see in the example above, there is no new line before the sentence `It is the...`.
+It is recommended to have a new line after the `=` character and start the snippet content on the next line.
+If you start the snippet right after the `=` character then the spaces between the `=` and the first non-space character will be skipped.
+For example:
+
+{%sample/
+{@snip:define mySnippet1=     It is the snippet,
+which is defined inside the file and not collected from an external file.
+}
+{@snip mySnippet1}
+%}
+
+will result
+
+{%output%}
+
+As you can see there are no spaces before the characters `It is the...`.
+
+A snippet always holds the reference to the file and line number where it was defined.
+You may want to have a different location from where the `snip:define` macro is called.
+For example, you create a new snippet from an already existing one replacing some parts of it.
+It is logical to inherit the location of the snippet to the transformed one.
+
+To do that, you can either specify the file name and the line number using parops, or you can name an already existing snippet to inherit the location from.
+The file name and the line number are used
+
+* to report error if there is any, and
+* to calculate the file name in the case the snippet gets evaluated and contains an `include` or `import` macro.
+
+{%sample/
+{@snip:define (file="./snippy.txt" line=6379) mySnippetA=abra kadabra badir kebi}
+{@snip:define mySnippetB=badir kebi, alias Don Sakan}
+{@snip:file mySnippetA}
+{@snip:file mySnippetB}
+%}
+
+
+will result in
+
+{%output%}

@@ -1,0 +1,60 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}SnipProperties.java hash=0e8ee2e6%}
+This macro will load properties from a "properties" file or an "XML" file.
+The names of the properties will become the names of the snippets and the values of the snippets.
+
+For example, the sample
+
+{%sample/
+{@snip:properties testproperties.properties}
+%}
+{%#comment Now let's read it from the real file
+{%sample/ {@snip:properties {%ROOT_DIR%}src/test/resources/javax0/jamal/snippet/testproperties.properties}
+%} and calling {%output%} we also execute it.
+%}\
+
+will load the content of the file `javax0/jamal/snippet/testproperties.properties`, which is
+
+[source]
+----
+{%#include {%ROOT_DIR%}/src/test/resources/javax0/jamal/snippet/testproperties.properties%}
+----
+
+and thus using the `snip` macro, like
+
+{%sample/
+{@snip a}
+%}
+
+will result
+
+{%output%}
+
+If the file extension is `.xml`, the properties will be loaded as XML format properties.
+For example, the same properties file in XML format looks like the following:
+
+[source,xml]
+----
+{%#include {%ROOT_DIR%}/src/test/resources/javax0/jamal/snippet/testproperties.xml%}
+----
+
+Loading it using the macro
+
+{%sample/
+{@snip:properties testproperties.xml}
+%}
+{%#comment Now let's read it from the real file
+{%sample/ {@snip:clear}{@snip:properties {%ROOT_DIR%}src/test/resources/javax0/jamal/snippet/testproperties.xml}
+%} and calling {%output%} we also execute it.
+%}\
+
+and referencing this time the property `b` as
+
+{%sample/
+{@snip b}
+%}
+
+will result
+
+{%output%}
+

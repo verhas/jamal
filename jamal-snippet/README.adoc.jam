@@ -162,438 +162,24 @@ There is no need to invoke the `use` command to get access to these macros.
 == {%chapter%}Macros
 
 {%chapter open%}{%@define chapter$format={2:$ROMAN. }%}\
-[[snip_collect]]
-=== {%chapter%}`snip:collect`
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=312a29ec%}
-Since 1.7.4 option `onceAs`
+{%@define CH($X,$Y)=
+[[$X]]
+=== {%chapter%}`$Y`
+
+{%@include documentation/macros/$X.adoc.jam%}%}
+
+{%CH /snip_collect/snip:collect%}
+{%CH /snip_properties/snip:properties%}
+{%CH /xml_define/xml:define%}
+{%CH /snip_xml/snip:xml%}
+{%CH /xml_insert/xml:insert%}
+{%CH /snip_define/snip:define%}
+{%CH /snip_clear/snip:clear%}
 
-This macro collects text snippets from files.
-{%parameterized%}
-The syntax of the macro is
-
-[source]
-----
-{@snip:collect from="fileName" ...options}
-----
-
-`fileName` can be the name of a text file, or it can be a directory.
-If the `fileName` is a text file, then the macro will collect the single file's snippets.
-If the `fileName` is a directory, then the macro will collect the snippets from the files in that directory and from directories beneath recursively.
-
-The file name is relative to the Jamal source, which contains the `snip:collect` macro.
-The file name can start with `res:` or `https://`.
-In these cases, the content of the file will be loaded from a resource or through the net respectively.
-
-A snippet in a file is a series of lines that happen between
-
-[source]
-----
-snippet name
-----
-
-and
-
-[source]
-----
-end snippet
-----
-
-lines.
-
-A special snippet containing only a single line can be specified preceding it with a line
-
-[source]
-----
-snipline name
-----
-
-In this case there is no need for `end snippet` line.
-This way
-
-[source]
-----
-// snippet MY_CONSTANT_SNIPPET_NAME
-  public static final MY_CONSTANT = "Hello World";
-// end snippet
-----
-
-is the same as
-
-[source]
-----
-// snipline MY_CONSTANT_SNIPPET_NAME
-  public static final MY_CONSTANT = "Hello World";
-----
-
-[NOTE]
-====
-The only difference is that the first version will contain a line with a trailing `\n` at the end of the line.
-The `snipline` version does not contain the trailing `\n`.
-====
-
-A snipline can also have a trailing `filter=regex` after the name of the snippet.
-The rest of the line after the `filter=` is a regular expression that will be used to filter the line.
-(Note that there is no space before or after the `=` character.)
-The regular expression should have exactly one capturing group, and it must match the next line.
-The capturing group will be used as snippet content.
-
-For example
-
-[source]
-----
-// snipline MY_CONSTANT_SNIPPET_NAME filter="(.*)"
-  public static final MY_CONSTANT = "Hello World";
-----
-
-will store `Hello World` as the content of the snippet `MY_CONSTANT_SNIPPET_NAME`.
-Unfortunately, it is easy to misread the line above and to think that the capture group will match the whole line.
-However, the filter on the `snipline` is not a macro parameter.
-It is processed in a different way.
-The whole part following the `filter=` is part of the regular expression, including the `"` characters in the above example.
-
-The possibility of `filter=` following the name of the snippet is a complimentary feature.
-Cutting off a part of the line using regular expression can also be done where the `snip` macro references the snippet.
-This complimentary feature exists to keep the filtering regular expression close to the line from which you want to cut a part off.
-
-There can be extra characters before or after the `snippet name` and/or the `end snippet` strings.
-The only requirement is that the regular expression `snippet\s+([a-zA-Z0-9_$]+)` can be found in the starting line and `end\s+snippet` in the ending line.
-
-[NOTE]
-====
-The definition and matching criteria of the start and the end of the snippet are very liberal.
-The reason for that is to ease in recognizing these in different files.
-The regular expressions will find snippet start, and snippet ends in Java files, in XML, in Perl or Python code.
-Essentially, you should not have a problem signaling the start, and the end of the snippet in any program code that allows you to write some form of a comment.
-
-The disadvantage of this liberal definition is that sometimes it finds lines that accidentally contain the word snippet.
-If you look at the source code in the file {%@file src/main/java/javax0/jamal/snippet/TrimLines.java%} you can see examples.
-The comment mentions snippets, and there is a word eligible to be an identifier after `snippet`, and the parsing thinks that this is a snippet start.
-Eventually, there is no `end snippet` on the lines following it, which is an error the snippet collection process recognizes.
-(Up to 1.7.2. Later versions use this file as a snippet source; thus, it has 'end snippet'.)
-Still, you do not receive an error message.
-
-That is because the collection process only recognizes this error but does not throw an exception.
-The exception is thrown only when you want to use the `snip` macro for an unterminated snippet.
-
-The possible situation may even be more complicated because the accidental word following `snippet` in a comment may also be used in other files as a snippet identifier.
-The collector, sooner or later, will find that definition, and it will assume that the one with the error was just an accidental comment and replaces the old with the correct, error-free snippet.
-It is still okay when the snippet collection finds these two snippets in the opposite order.
-If there is already a correct, error-free snippet collected and the collection finds an erroneous one of the same name, it ignores that.
-
-This way, the collection and the use of the snippets ignores the accidental snippet definitions, but at the same time, it can detect the malformed snippets.
-
-If you look at the {%@file src/main/java/javax0/jamal/snippet/TrimLines.java%} in version 1.7.3 or later, you can see that there is a `// snippet` line in the code.
-Because there is also an accidental `snippet` line before it, the collection would not find this line.
-Because of the previous `snippet` line, the real `// snippet` line becomes part of the previous snippet.
-The `// snippet` line is preceded by an `// end snippet` line to avoid this.
-Such a line out of a snippet is ignored, and in this case, it closes the accidental snippet.
-====
-
-As you can see, the regular expression contains a collection group, which Jamal uses as the name of the snippet.
-For example, the code
-
-{%@snip:collect onceAs="sample.Java" from="src/test/java/javax0/jamal/documentation/Sample.java"%}
-{%@snip:collect onceAs="sample.Java" from="src/test/java/javax0/jamal/documentation/Sample.java"%}
-
-[source]
-----
-// snippet sample
-{%@snip sample%}\
-// snippet end
-----
-
-defines a snippet that is named `sample`.
-The snippets can be used later using the <<snip,`snip`>> macro.
-
-The output of the `collect` macro is an empty string.
-
-The macro behaviour can be altered using options.
-These options are parsed using the Standard Parameter Parsing as defined in link:{%@file ../documentation/PAROPS.adoc%}[PAROPS].
-
-{%#eval {%`@comment%}
-{%#replaceLines replace="~.*?final\\s+var\\s+\\w+\\s*=\\s*scanner\\..*?\\(.*?\"(.*?)\".*~* `$1`~.*//\\s*~"
-{%@snip collect_options%}
-%}%}
-
-If the parameter `start` or `liner` are defined, the value will be used as a snippet start matching regular expression.
-They must have one collection group.
-
-NOTE: We introduced this option to the `snip:collect` macro along with the Jamal doclet implementation.
-When the individual documentation parts are processed in the same processor, the processing order is not guaranteed.
-To refer to some snippets, you have to collect them.
-To do that, you have to have the `snip:collect` in every JavaDoc, presumably using an imported file.
-That collect macro should name the collection to avoid redefinition error.
-
-[[snip_properties]]
-=== {%chapter%}`snip:properties`
-{%#snip:check file={%JAVA_DIR%}SnipProperties.java hash=0e8ee2e6%}
-This macro will load properties from a "properties" file or an "XML" file.
-The names of the properties will become the names of the snippets and the values of the snippets.
-
-For example, the sample
-
-{%sample/
-{@snip:properties src/test/resources/javax0/jamal/snippet/testproperties.properties}
-%}
-
-{%#comment this output is evaluated because this is when the macro in the sample is evaluated
-{%output%} but there is no output. The later examples use the snippets that this macro evaluation
-was reading from the properties file.
-%}\
-
-will load the content of the file `javax0/jamal/snippet/testproperties.properties`, which is
-
-[source]
-----
-{%@include ./src/test/resources/javax0/jamal/snippet/testproperties.properties%}
-----
-
-and thus using the `snip` macro, like
-
-{%sample/
-{@snip a}
-%}
-
-will result
-
-{%#snip:define snipa={%output%}%}
-
-{%@snip snipa
-[source]
-----
-letter a
-----
-%}
-
-If the file extension is `.xml`, the properties will be loaded as XML format properties.
-For example, the same properties file in XML format looks like the following:
-
-[source,xml]
-----
-{%@include ./src/test/resources/javax0/jamal/snippet/testproperties.xml%}
-----
-
-[[xml_define]]
-=== {%chapter%}`xml:define`
-{%#snip:check file={%JAVA_DIR%}Xml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=d0fe9949%}
-This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
-The syntax of the command is:
-
-[source]
-----
-{@xml:define macroName=xmlcontent}
-----
-{%@define XML_MACRO_USE=
-The defined `macroName` macro can be used as an ordinary user-defined macro that accepts one, optional argument.
-This user-defined macro evaluates in a particular way.
-It uses the argument as an XPath expression and returns the value from the XML document that matches the argument.
-If the XPath expression is missing then the whole XML content is converted to text formatted.
-%}
-{%XML_MACRO_USE%}
-
-For example the `pom.xml` can be read using the following macro use:
-
-{%sample/
-{#xml:define pom={@include [verbatim]pom.xml}}\
-{#define VERSION={pom /project/version/text()}}\
-...
-<version>{VERSION}</version>
-...
-%}
-
-The result is:
-
-{%output%}
-
-[[snip_xml]]
-=== {%chapter%}`snip:xml`
-{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=c48d0f2a%}
-This macro loads an XML file and assigns it to a "user-defined" macro.
-The syntax of the command is
-
-[source]
-----
-{@snip:xml macroName=xml_file.xml}
-----
-
-{%XML_MACRO_USE%}
-
-For example, this document contains the following macros at the start:
-
-{%sample/
-{@snip:xml pom=pom.xml}\
-{#define VERSION={pom /project/version/text()}}\
-...
-<version>{VERSION}</version>
-...
-%}
-
-The result is:
-
-{%output%}
-
-which is the current version of the project as read from the `pom.xml` file.
-
-[[xml_insert]]
-=== {%chapter%}`xml:insert`
-{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=57dcd8c6%}
-This macro can modify an XML formatted user defined macro inserting content into the XML document.
-It can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
-This latter use is for the case when the Jamal file processed creates an XML file.
-The syntax of the command is
-
-{%sample/
-{@xml:insert (options) xml_content}
-%}
-
-The options define the name of the xml formatted user defined macro the content should be inserted into as well as the xPath that defines the location of the insertion.
-
-* `xpath` {%alias path%} defines the location in the original XML where to insert the content.
-
-* `id`, {%alias to%} defines the name of the XML user defined macro which will be modified.
-If this option is missing then the insertion will happen when the whole document processing is already finished.
-In that case the target XML is the one, which is the result of the Jamal processing.
-This is usable when the Jamal processing creates an XML as a result.
-The insertions are done in the order of the `xml:insert` commands and after that the output will be the resulting XML formatted.
-
-* `ifneeded` {%alias optional%} defines whether the insertion is optional.
-If the location specified by the `path` already contains a tag with the given name, then the XML will not be modified.
-Without this option a new child is appended having the name that may already be there.
-
-* `tabsize` can specify the formatting tab size.
-This makes only sense if the insertion happens to the final XML content of the processing.
-
-The following example shows how to insert a new child into the XML document.
-
-{%sample/
-{@xml:define myXml=<xml>
-<yml>babu</yml>
-</xml>}\
-{@xml:insert (to=myXml path=/xml) <zml>wuku</zml>}
-{myXml}
-%}
-
-will result
-
-{%output%}
-
-The XML content is defined using the macro `xml:define`.
-Later the content of this XML is modified using the macro `xml:insert`.
-The content of the macro is converted to text and gets into the output when the name of the macro is used without the Xpath argument.
-
-The following example demonstrates how the result of the processing can be modified.
-
-{%sample/
-<project>
-{@xml:insert (path=/project ifneeded)<dependencies></dependencies>}
-{@xml:insert (path=/project ifneeded)<plugins></plugins>}
-{@xml:insert (path=/project ifneeded tabsize=2)<pluginManagement></pluginManagement>}
-{@xml:insert (path=/project ifneeded)<dependencyManagement></dependencyManagement>}
-
-{@xml:insert (path=/project/dependencies)
-<dependency>
-    <groupId>com.javax0.jamal</groupId>
-    <artifactId>jamal-snippet</artifactId>
-    <version>{%VERSION%}</version>
-</dependency>}
-<plugins><plugin>
-<artifactId>my-imaginary</artifactId>
-<groupId>plugin</groupId>
-<version>r65.1204-2021</version>
-</plugin>
-</plugins>
-
-</project>
-%}
-
-will result
-
-
-{%output%}
-
-The insert macros in this example do not specify any `id`.
-This means that all the modification is done to the XML, which is the whole document.
-Also, the modification happens at the end of the processing.
-
-The first four insertions are optional in the sense that they will modify the output if there is no such tag in the XML.
-They make not much sense in a simple XML file, like this, but in a larger XML, where the different parts come from different includes it may make sense.
-Such insertions ensure that these parts are inserted if they are needed by other insertions.
-The first four lines could be in a separate file and included using the `include` macro to support pom structure.
-
-In the example, the fifth insertion can only be executed successfully because the first one is there.
-Without this there would be no `/project/dependencies` location in the XML file.
-At the same time the second optional insertion for the `plugins` is ignored, because there is an explicit `plugins` tag in the content.
-The fifth insertion adds a dependency to the `dependencies` tag.
-
-[[snip_define]]
-=== {%chapter%}`snip:define`
-{%#snip:check file={%JAVA_DIR%}Snippet.java hash=396c9262%}
-You can use this macro to define a snippet.
-Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
-For example,
-
-{%sample/
-{@snip:define mySnippet=
-It is the snippet, which is defined inside the file and not collected from an external file.
-}
-{@snip mySnippet
-is used here, and then the rest of the text is ignored}
-%}
-
-will result
-
-{%output%}
-
-Snippets typically contain several lines, and the leading spaces may be important.
-To accommodate this when you define a snippet using this macro, spaces following the `=` sign up to, and including the new line will be skipped.
-As you can see in the example above, there is no new line before the sentence `It is the...`.
-It is recommended to have a new line after the `=` character and start the snippet content on the next line.
-If you start the snippet right after the ``=` character then the spaces between the first non-space character and the `=` sign will be skipped.
-For example:
-
-{%sample/
-{@snip:define mySnippet1=     It is the snippet,
-which is defined inside the file and not collected from an external file.
-}
-{@snip mySnippet1
-is used here, and then the rest of the text is ignored}
-%}
-
-will result
-
-{%output%}
-
-As you can see there are no spaces before the characters `It is the...`.
-
-A snippet always holds the reference to the file and line number where it was defined.
-When you `snip:define` a snippet you can either specify the file name and the line number using parops, or you can name an already existing snippet to inherit the location from.
-This is useful when you create a new snippet replacing some part of an existing one.
-The file name and the line number is used
-
-* to report error if there is any, and
-* to calculate the file name in the case the snippet gets evaluated and contains an `include` or `import` macro.
-
-{%sample/
-{@snip:define (file="./snippy.txt" line=6379) mySnippetA=abra kadabra badir kebi}
-{@snip:define mySnippetB=abra kadabra badir kebi}
-{@snip:file mySnippetA}
-{@snip:file mySnippetB}
-%}
-
-
-will result in
-
-{%output%}
-
-[[snip_clear]]
-=== {%chapter%}`snip:clear`
-{%#snip:check file={%JAVA_DIR%}Clear.java hash=060e1237%}
-The call to this macro deletes all collected snippets from memory.
-The result of the macro is an empty string.
 
 [[snip]]
 === {%chapter%}`snip`
-{%#snip:check file={%JAVA_DIR%}Snip.java hash=0a652943%}
+{%#snip:check file={%JAVA_DIR%}Snip.java hash=5c4a28e1%}
 
 You can use the `snip` macro to insert one or more snippets into the output.
 There are three different ways to use the macro.
@@ -1779,7 +1365,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 === {%chapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=36b34ffd%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=862c2167%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -2238,7 +1824,7 @@ The syntax of the macro is
 
 [[snipEval]]
 === {%chapter%}`snip:eval`
-{%#snip:check file={%JAVA_DIR%}Eval.java hash=5103b83f%}
+{%#snip:check file={%JAVA_DIR%}Eval.java hash=20a638e1%}
 
 This macro will evaluate the content of a snippet as Jamal macro.
 The functionality is very close to the core macro `eval` but
@@ -2456,7 +2042,7 @@ results
 
 [[listDir]]
 === {%chapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=42019296%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=f34c4bcb%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 
@@ -2847,7 +2433,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 [[case]]
 === {%chapter%}`case:lower`, `case:upper`, ...
-{%#snip:check file={%JAVA_DIR%}Case.java hash=1dbb1c57%}
+{%#snip:check file={%JAVA_DIR%}Case.java hash=28aa6570%}
 There are a few character case-changing macros implemented in the snippet package.
 These are:
 
@@ -2860,7 +2446,7 @@ These are:
 
 [[file]]
 === {%chapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=be0bfe6b%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=b5422514%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2911,7 +2497,7 @@ This may save some time when you are referring to many files in a deep directory
 
 [[directory]]
 === {%chapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=be0bfe6b%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=b5422514%}
 {%fileDirectory directory%}
 
 {%sample/
@@ -3295,7 +2881,7 @@ This is also the case when there is no parameter defined.
 
 [[java:insert]]
 ==== `java:insert`
-{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=4d8fb2a1%}
+{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=a71a25ca%}
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
 The macro has three parameters:

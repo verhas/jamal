@@ -29,8 +29,8 @@ public class ListDir implements Macro, InnerScopeDependent, Scanner {
         final var scanner = newScanner(in, processor);
         final var format = scanner.str("format").defaultValue("$name");
         final var separator = scanner.str("separator", "sep").defaultValue(",");
-        final var grep = scanner.str("grep").defaultValue(null);
-        final var glob = scanner.str("pattern").defaultValue(null);
+        final var grep = scanner.str("grep").optional();
+        final var glob = scanner.str("pattern").optional();
         final var maxDepth = scanner.number("maxDepth").defaultValue(Integer.MAX_VALUE);
         final var isFollowSymlinks = scanner.bool("followSymlinks");
         final var countOnly = scanner.bool("countOnly", "count");

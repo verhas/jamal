@@ -1,0 +1,12 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}Clear.java hash=060e1237%}
+This macro deletes all collected snippets from memory.
+
+Snippets are stored in a central structure, which is global for the whole processed file.
+Snippets cannot be overwritten.
+If a snippet is collected from a file, which was already collected, the action will raise an error.
+The same happens when you try to define a snippet for a name that already exists using the `snip:define` macro.
+
+Using this macro this central store can be deleted removing all the snippets from this central store.
+
+The result of the macro is an empty string.

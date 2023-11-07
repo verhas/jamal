@@ -1,0 +1,18 @@
+{@import res:jamal.jim}
+{@define ROOT_DIR=../../}
+{@define JAVA_DIR={ROOT_DIR}src/main/java/javax0/jamal/snippet/}
+{@snip:collect onceAs="MAIN" from="../../src/main/java/"}\
+{@snip:collect onceAs="SAMPLE" from="../../src/test/java/" exclude="Sample.java"}\
+{@import ../doc.jim}
+{@define XML_MACRO_USE=
+The defined `macroName` macro can be used as an ordinary user-defined macro that accepts one, optional argument.
+This user-defined macro evaluates in a particular way.
+It uses the argument as an XPath expression and returns the value from the XML document that matches the argument.
+If the XPath expression is missing, then the whole XML content is converted to formatted text and returned.
+}
+{@define alias(x)=(can be aliased as `x`)}
+{#block
+  {@snip:xml pom=../../pom.xml}
+  {#define VERSION={pom /project/version/text()}}
+  {@export VERSION}
+}

@@ -23,7 +23,7 @@ public class JavaSourceInsert implements Macro, Scanner.FirstLine {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in,processor);
         final var file = scanner.str(null, "to", "file", "into");
-        final var segment = scanner.str("segment", "at", "id").defaultValue(null);
+        final var segment = scanner.str("segment", "at", "id").optional();
         final var update = scanner.bool(null, "check", "checkUpdate", "update", "updateOnly");
         final var throwUp = scanner.bool(null, "failOnUpdate", "failUpdate", "updateError");
         scanner.done();

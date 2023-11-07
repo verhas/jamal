@@ -1,0 +1,27 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}Xml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=d0fe9949%}
+This macro scans its input as an XML and assigns the parsed data to a "user-defined" macro.
+The syntax of the command is:
+
+[source]
+----
+{@xml:define macroName=xmlcontent}
+----
+
+{%XML_MACRO_USE%}
+
+A typical example is to retrieve some build parameters from the `pom.xml` file.
+You can read the content of the `pom.xml` file and reference the version of the project using the following lines:
+
+{%#replace `///` {%@comment we do not want to show in the sample the root dir part of the path%}
+{%sample/
+{#xml:define pom={@include [verbatim]{%ROOT_DIR%}pom.xml}}\
+{#define VERSION={pom /project/version/text()}}\
+...
+<version>{VERSION}</version>
+...
+%}///{%ROOT_DIR%}%}
+
+The result is:
+
+{%output%}

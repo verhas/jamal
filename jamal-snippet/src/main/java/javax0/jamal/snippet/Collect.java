@@ -50,7 +50,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         // +
         //[source]
         //----
-        //    {%@include [in=.|../..] /src/test/resources/javax0/jamal/snippet/test3.jam%}
+        //    {%@include ../../../../../../src/test/resources/javax0/jamal/snippet/test3.jam%}
         //----
         // +
         //excludes any file that contains the character `2` in its name.
@@ -67,7 +67,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         // can limit the directory traversing to a certain depth.
         final var from = scanner.file("from");
         // can specify the start directory for the traversing.
-        final var setName = scanner.str(null, "onceAs").defaultValue(null);
+        final var setName = scanner.str(null, "onceAs").optional();
         // You can use the parameter `onceAs` to avoid repeated snippet collections.
         // Your collect macro may be in an included file, or the Jamal source structure is complex.
         // At a certain point, it may happen that Jamal already collected the snippets you need.
@@ -90,7 +90,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         // The use case is when you collect snippets from different sources where the names may collide.
         final var java = scanner.bool(null, "java");
         // Collect snippets from the Java sources based on the Java syntax without any special tag.
-        final var javaSnippetCollectors = scanner.str("javaSnippetCollectors").defaultValue(null);
+        final var javaSnippetCollectors = scanner.str("javaSnippetCollectors").optional();
         // You can define a comma-separated list of Java snip{%@comment%}pet collectors.
         final var asciidoc = scanner.bool("asciidoc", "asciidoctor");
         // Using this parameter, the macro will collect snippets using the ASCIIDOC tag syntax.
@@ -220,7 +220,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
                 final var idGrp = javaLexed.group("snippetName");
                 final var idRgrp = javaLexed.regexGroups("snippetName");
                 final String snippetName;
-                if (idGrp != null && idGrp.size() > 0) {
+                if (idGrp != null && !idGrp.isEmpty()) {
                     snippetName = idGrp.get(0).getLexeme();
                 } else if (idRgrp != null && idRgrp.isPresent() && idRgrp.get().groupCount() > 0) {
                     snippetName = idRgrp.get().group(1);
@@ -231,7 +231,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
                 final var snipGrp = javaLexed.group("snippet");
                 final var snipRgrp = javaLexed.regexGroups("snippet");
                 final String snippetContent;
-                if (snipGrp != null && snipGrp.size() > 0) {
+                if (snipGrp != null && !snipGrp.isEmpty()) {
                     snippetContent = snipGrp.get(0).getLexeme();
                 } else if (snipRgrp != null && snipRgrp.isPresent() && snipRgrp.get().groupCount() > 0) {
                     snippetContent = snipRgrp.get().group(1);

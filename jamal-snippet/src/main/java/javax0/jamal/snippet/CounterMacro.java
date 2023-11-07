@@ -16,7 +16,7 @@ public class CounterMacro implements Macro, InnerScopeDependent, Scanner.FirstLi
     public String evaluate(Input input, Processor processor) throws BadSyntax {
         final var scanner = newScanner(input, processor);
         final var id = scanner.str("id", "name").required();
-        final var format = scanner.str("format").defaultValue(null);
+        final var format = scanner.str("format").optional();
         final var start = scanner.str("start").defaultValue("1");
         final var step = scanner.str("step").defaultValue("1");
         final var iiii = scanner.bool("IIII");
