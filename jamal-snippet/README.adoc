@@ -777,8 +777,8 @@ will result in
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
-/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
+../jamal-snippet/documentation/macros/snippy.txt
+../jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1697,7 +1697,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:964:30
+../jamal-snippet/README.adoc.jam:965:30
 ----
 
 
@@ -3595,7 +3595,7 @@ will result in the output
 
 [source]
 ----
-2023-11-07 14:29:17
+2023-11-07 14:32:44
 ----
 
 

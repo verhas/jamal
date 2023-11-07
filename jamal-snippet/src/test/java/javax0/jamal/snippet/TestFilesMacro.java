@@ -224,4 +224,23 @@ public class TestFilesMacro {
                 .atPosition(getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/fileName.ext", 1, 1)
                 .results("../../a/abra.kabarbra");
     }
+
+    @Test
+    @DisplayName("Directory relative name is calculated to the file from position")
+    void testRelativeDirectory() throws Exception {
+        TestThat.theInput("{@directory (format=$relativePath) ../a/}")
+                .atPosition(getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/fileName.ext", 1, 1)
+                .results("../a");
+    }
+
+    @Test
+    @DisplayName("Directory relative name is calculated to the file from defined location")
+    void testRelativeDirectory2() throws Exception {
+        TestThat.theInput(
+                        "{@directory (format=$relativePath " +
+                                "relativeTo=\""+getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/c/fileName.ext\")" +
+                                getRoot() + "/jamal-snippet/src/test/resources/reldirt1/a/}")
+                .atPosition(getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/fileName.ext", 1, 1)
+                .results("../../a");
+    }
 }
