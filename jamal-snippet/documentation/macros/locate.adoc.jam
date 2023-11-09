@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{ %#snip:check file={%JAVA_DIR%}Locate.java hash=108b7615.9fd1f6ea%}
+{%#snip:check file={%JAVA_DIR%}Locate.java hash=4502777a%}
 This macro finds a file in a directory tree.
 
 To find a file or directory, the macro has the following paropts:
