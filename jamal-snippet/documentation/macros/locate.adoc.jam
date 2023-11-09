@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}Locate.java hash=4502777a%}
+{%#snip:check file={%JAVA_DIR%}Locate.java hash=6622e280%}
 This macro finds a file in a directory tree.
 
 To find a file or directory, the macro has the following paropts:
@@ -43,7 +43,7 @@ Examples:
 The simplest example is to find the file, where this documentation is stored:
 
 {%sample/
-{@file:locate find="lo.*.adoc.jam"}
+{@file:locate find="lo.*.adoc.jam$"}
 %}
 
 will result in

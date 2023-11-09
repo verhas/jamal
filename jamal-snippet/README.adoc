@@ -3302,7 +3302,7 @@ will result
 - LineCount.java: 552 bytes
 - Replace.java: 3,212 bytes
 - SnipLine.java: 691 bytes
-- SnipCheckFailed.java: 719 bytes
+- SnipCheckFailed.java: 775 bytes
 - SemVerCollator.java: 9,016 bytes
 - CounterHierarchical.java: 6,611 bytes
 - SnipXml.java: 537 bytes
@@ -3596,7 +3596,7 @@ will result in the output
 
 [source]
 ----
-2023-11-09 19:53:02
+2023-11-09 20:40:18
 ----
 
 
@@ -3877,7 +3877,7 @@ These are:
 === XLIII. `file:locate`
 
 
-{ %#snip:check file=../../src/main/java/javax0/jamal/snippet/Locate.java hash=108b7615.9fd1f6ea%}
+
 This macro finds a file in a directory tree.
 
 To find a file or directory, the macro has the following paropts:
@@ -3922,7 +3922,7 @@ The simplest example is to find the file, where this documentation is stored:
 
 [source]
 ----
-{@file:locate find="lo.*.adoc.jam"}
+{@file:locate find="lo.*.adoc.jam$"}
 ----
 
 will result in

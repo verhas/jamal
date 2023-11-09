@@ -21,7 +21,9 @@ class ExceptionDumper {
         final var me = new ExceptionDumper();
         me.output.append(t.getMessage()).append('\n');
         me.dumpIt(t, false);
-        me.output.append("sed -i.bak ").append(" '").append(me.sedCommand).append("' ").append(inputFileName);
+
+        final var fn = t instanceof SnipCheckFailed ? ((SnipCheckFailed) t).getPosition().file : inputFileName;
+        me.output.append("sed -i.bak ").append(" '").append(me.sedCommand).append("' ").append(fn);
         return me.output;
     }
 
@@ -40,9 +42,9 @@ class ExceptionDumper {
         if (printMessage) {
             output.append(t.getMessage());
         }
-        for( final var s : t.getStackTrace() ){
-            if( s.getClassName().startsWith("javax0.jamal")) {
-                output.append(String.format("\t%s(%s:%d)\n",s.getClassName(),s.getMethodName(),s.getLineNumber()));
+        for (final var s : t.getStackTrace()) {
+            if (s.getClassName().startsWith("javax0.jamal")) {
+                output.append(String.format("\t%s(%s:%d)\n", s.getClassName(), s.getMethodName(), s.getLineNumber()));
             }
         }
         if (t.getCause() != null) {
