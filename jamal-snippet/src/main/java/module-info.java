@@ -114,6 +114,7 @@ module jamal.snippet {
             Decorate,
             Dictionary,
             Repeat,
-            Eval
+            Eval,
+            Locate
             ;
 }

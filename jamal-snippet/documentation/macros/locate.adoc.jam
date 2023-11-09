@@ -1,0 +1,62 @@
+{%@import macrodoc.jim%}
+{ %#snip:check file={%JAVA_DIR%}Locate.java hash=108b7615.9fd1f6ea%}
+This macro finds a file in a directory tree.
+
+To find a file or directory, the macro has the following paropts:
+
+* `in` (string) specifies the directory where the search for the file starts.
+  This can be an absolute file name, or relative to the file that contains the macro.
+
+* `depth` (number) is the maximum depth of directories to search.
+  The default value is infinity.
+
+* `find` (string) can specify the regular expression pattern.
+  The pattern should match part of the file name to find a file.
+  This is the opposite of `match`, which tries to match the entire file name.
+  For the comparison the full path or only the file name is used controlled by the paropt `fullPath`.
+
+* `match` (string) can specify the regular expression pattern.
+  The pattern should match the whole file name to find a file.
+  For the comparison the full path or only the file name is used controlled by the paropt `fullPath`.
+
+* `isFile` (boolean) specifies that only files should be found.
+  The default is to find both files and directories.
+
+* `isDir`, or `isDirectory` (boolean) specifies that only directories should be found.
+  The default is to find both files and directories.
+  You cannot use `isFile` and `isDir` at the same time.
+
+* `fullPath` (boolean) specifies that the full path has to be compared with the pattern.
+  The default is to compare only the file name.
+
+* `format` (string) specifies the format of the result.
+  This format is the same as the format of the `file` and `directory` macros.
+
+* `dateFormat` (string) specifies the format of the date and time.
+  This format is the same as the format of the `file` and `directory` macros.
+
+* `relativeTo` (string) specifies the directory that is used to make the path relative.
+  This option works the same way as in the macros `file` and `direcotry`.
+
+Examples:
+
+The simplest example is to find the file, where this documentation is stored:
+
+{%sample/
+{@file:locate find="lo.*.adoc.jam"}
+%}
+
+will result in
+
+{%output%}
+
+Finding the link:../../README.adoc[README.adoc] file in the module directory:
+
+
+{%sample/
+{@file:locate in="../../" format=$absolutePath find="READ..\\.adoc$"}
+%}
+
+will result in
+
+{%output%}

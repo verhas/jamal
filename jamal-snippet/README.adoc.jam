@@ -111,6 +111,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<numbers,`numbers`>>
 .. <<unicode,`unicode`>>
 .. <<case,`case:lower`, `case:upper`, ...>>
+.. <<locate,`file:locate`>>
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
@@ -2444,9 +2445,11 @@ These are:
 {%case/cap/upper%}
 {%case/decap/lower%}
 
+{%CH/locate/file:locate%}
+
 [[file]]
 === {%chapter%}`file`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=83debe2a%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=3ca91fb6%}
 {%@define fileDirectory($what)=
 You can use this macro to include the name of a $what in the documentation.
 First, it seems counterintuitive to have a macro for that.
@@ -2518,7 +2521,7 @@ This may save some time when you are referring to many files in a deep directory
 
 [[directory]]
 === {%chapter%}`directory`
-{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=83debe2a%}
+{%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=3ca91fb6%}
 {%fileDirectory directory%}
 
 {%sample/

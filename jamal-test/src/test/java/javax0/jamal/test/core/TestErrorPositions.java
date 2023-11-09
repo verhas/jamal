@@ -21,7 +21,7 @@ public class TestErrorPositions {
         } catch (final BadSyntax bs) {
             final var pos = bs.getMessage().indexOf("at null/");
             final var posMessage = bs.getMessage().substring(pos);
-            Assertions.assertEquals("at null/1:61 <<< null/1:58", posMessage);
+            Assertions.assertEquals("at null/1:61", posMessage);
         }
     }
 

@@ -6,7 +6,7 @@
 {%@define RELEASE_N($x)=== https://github.com/verhas/jamal/tree/$x[$x]%}
 {%@define RELEASE($x)={%RELEASE_N {%RELEASE:$x%}%}%}
 
-{%RELEASE ROGACHEVO%}
+{%RELEASE ROGACHEVO%} (upcoming)
 
 * Macro `options` can also be used as `option` singular
 * Macro `options` has the parops `push` and `pop`
@@ -28,6 +28,10 @@ It is recommended to set the `detectNoChange` option to true globally at the sta
 * The argument splitting many built-in macro uses now looks at the macro `$REGEX` and uses it to split the arguments if defined.
 * `snip:eval` can evaluate snippets using the location of the snippet for relative files referenced inside the snippet
 * `import` and `include` macros have parop `in`.
+* The macros `file` and `directory` in the snippet package has a new parop `relativeTo` that controls the formatting placeholder calculation `relativePath`.
+* The new macro `file:locate` can locate files
+* Exceptions insert the macro locations at the top of the stack trace
+
 
 {%RELEASE IZMIR%}
 

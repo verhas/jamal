@@ -57,7 +57,7 @@ public class FilesMacro {
         );
     }
 
-    private static String getInputFileLocation(Input in) {
+    static String getInputFileLocation(Input in) {
         if (in != null && in.getPosition() != null && in.getPosition().top() != null && in.getPosition().top().file != null) {
             return in.getPosition().top().file;
         }
@@ -84,13 +84,13 @@ public class FilesMacro {
             try {
                 dir = new File(dirName.isEmpty() ? "." : dirName).getCanonicalFile();
             } catch (IOException e) {
-                throw new BadSyntax("Error reading the file '" + dirName + "'", e);
+                throw new BadSyntax("Error accessing the directory '" + dirName + "'", e);
             }
             BadSyntaxAt.when(!dir.exists(), "The directory '" + dirName + "' does not exist.", in.getPosition());
             BadSyntaxAt.when(!dir.isDirectory(), "The directory '" + dirName + "' exists but it is not a directory.", in.getPosition());
 
             try {
-                return formatString(format, name, dir, dateFormat.get(), relativeTo.get());
+                return formatString(format.get(), name, dir, dateFormat.get(), relativeTo.get());
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + dirName
@@ -125,13 +125,13 @@ public class FilesMacro {
             try {
                 file = new File(fileName).getCanonicalFile();
             } catch (IOException e) {
-                throw new BadSyntax("Error reading the file '" + fileName + "'", e);
+                throw new BadSyntax("Error accessing the file '" + fileName + "'", e);
             }
             BadSyntaxAt.when(!file.exists(), "The file '" + file.getAbsolutePath() + "' does not exist.", in.getPosition());
             BadSyntaxAt.when(!file.isFile(), "The file '" + file.getAbsolutePath() + "' exists but it is not a plain file.", in.getPosition());
 
             try {
-                return formatString(format, name, file, dateFormat.get(), relativeTo.get());
+                return formatString(format.get(), name, file, dateFormat.get(), relativeTo.get());
             } catch (Exception e) {
                 // cannot really happen
                 throw new BadSyntaxAt("Directory name '" + fileName
@@ -146,17 +146,17 @@ public class FilesMacro {
         }
     }
 
-    private static String formatString(final StringParameter format,
-                                       final String name,
-                                       final File dirOrFile,
-                                       final String dateFormat,
-                                       final String relativeTo
+    static String formatString(final String format,
+                               final String name,
+                               final File dirOrFile,
+                               final String dateFormat,
+                               final String relativeTo
     ) throws Exception {
         final var df = new SimpleDateFormat(dateFormat);
-        return Trie.formatter.format(format.get(),
+        return Trie.formatter.format(format,
                 value(name),
                 value(dirOrFile.getAbsolutePath()),
-                value(FileTools.getRelativePath( new File(relativeTo),dirOrFile)),
+                value(FileTools.getRelativePath(new File(relativeTo), dirOrFile)),
                 value(dirOrFile.getParent()),
                 value(dirOrFile::getName),
                 value(dirOrFile::getCanonicalPath),

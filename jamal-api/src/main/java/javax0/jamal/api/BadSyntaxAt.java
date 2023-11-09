@@ -1,5 +1,7 @@
 package javax0.jamal.api;
 
+import java.util.Arrays;
+
 /**
  * This exception, as the name suggest, is thrown when the processor or a macro finds something it cannot interpret. The
  * 'At' at the end of the name suggest that the exception contains a {@link Position} object that tells exactly which
@@ -32,7 +34,19 @@ public class BadSyntaxAt extends BadSyntax {
         for (final var sup : bs.getSuppressed()) {
             addSuppressed(sup);
         }
-        setStackTrace(bs.getStackTrace());
+        int levels = 0;
+        for( var next = pos ; next != null ; next = next.parent){
+            levels++;
+        }
+        final var st = new StackTraceElement[bs.getStackTrace().length + levels];
+        int i = 0;
+        for( var next = pos ; next != null ; next = next.parent){
+            st[i++] = new StackTraceElement("jamal", "macro", next.file, next.line);
+        }
+        for( int j = 0; j < bs.getStackTrace().length ; j++){
+            st[i++] = bs.getStackTrace()[j];
+        }
+        setStackTrace(st);
         this.pos = pos;
     }
 
@@ -50,7 +64,7 @@ public class BadSyntaxAt extends BadSyntax {
         if (pos == null) {
             return "";
         } else {
-            return pos.file + "/" + pos.line + ":" + pos.column + (pos.parent == null ? "" : (" <<< " + posFormat(pos.parent)));
+            return pos.file + "/" + pos.line + ":" + pos.column;
         }
     }
 

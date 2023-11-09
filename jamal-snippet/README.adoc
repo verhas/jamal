@@ -102,6 +102,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<numbers,`numbers`>>
 .. <<unicode,`unicode`>>
 .. <<case,`case:lower`, `case:upper`, ...>>
+.. <<locate,`file:locate`>>
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
@@ -1697,7 +1698,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:965:30
+../jamal-snippet/README.adoc.jam:966:30
 ----
 
 
@@ -3287,7 +3288,7 @@ will result
 - Eval.java: 2,009 bytes
 - SnipTransform.java: 17,071 bytes
 - Base64.java: 3,383 bytes
-- FilesMacro.java: 11,678 bytes
+- FilesMacro.java: 11,636 bytes
 - Collect.java: 23,894 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
@@ -3332,7 +3333,7 @@ will result
 - CounterMacro.java: 3,885 bytes
 - SnipList.java: 1,228 bytes
 - ShellVar.java: 3,837 bytes
-- Locate.java: 868 bytes
+- Locate.java: 5,965 bytes
 - XmlDocument.java: 5,671 bytes
 - References.java: 7,745 bytes
 - Java.java: 11,623 bytes
@@ -3595,7 +3596,7 @@ will result in the output
 
 [source]
 ----
-2023-11-07 17:25:17
+2023-11-09 19:53:02
 ----
 
 
@@ -3871,8 +3872,85 @@ These are:
 * `case:cap` changes the first character in the input to upper case letter
 * `case:decap` changes the first character in the input to lower case letter
 
+
+[[locate]]
+=== XLIII. `file:locate`
+
+
+{ %#snip:check file=../../src/main/java/javax0/jamal/snippet/Locate.java hash=108b7615.9fd1f6ea%}
+This macro finds a file in a directory tree.
+
+To find a file or directory, the macro has the following paropts:
+
+* `in` (string) specifies the directory where the search for the file starts.
+  This can be an absolute file name, or relative to the file that contains the macro.
+
+* `depth` (number) is the maximum depth of directories to search.
+  The default value is infinity.
+
+* `find` (string) can specify the regular expression pattern.
+  The pattern should match part of the file name to find a file.
+  This is the opposite of `match`, which tries to match the entire file name.
+  For the comparison the full path or only the file name is used controlled by the paropt `fullPath`.
+
+* `match` (string) can specify the regular expression pattern.
+  The pattern should match the whole file name to find a file.
+  For the comparison the full path or only the file name is used controlled by the paropt `fullPath`.
+
+* `isFile` (boolean) specifies that only files should be found.
+  The default is to find both files and directories.
+
+* `isDir`, or `isDirectory` (boolean) specifies that only directories should be found.
+  The default is to find both files and directories.
+  You cannot use `isFile` and `isDir` at the same time.
+
+* `fullPath` (boolean) specifies that the full path has to be compared with the pattern.
+  The default is to compare only the file name.
+
+* `format` (string) specifies the format of the result.
+  This format is the same as the format of the `file` and `directory` macros.
+
+* `dateFormat` (string) specifies the format of the date and time.
+  This format is the same as the format of the `file` and `directory` macros.
+
+* `relativeTo` (string) specifies the directory that is used to make the path relative.
+  This option works the same way as in the macros `file` and `direcotry`.
+
+Examples:
+
+The simplest example is to find the file, where this documentation is stored:
+
+[source]
+----
+{@file:locate find="lo.*.adoc.jam"}
+----
+
+will result in
+
+[source]
+----
+locate.adoc.jam
+----
+
+
+Finding the link:../../README.adoc[README.adoc] file in the module directory:
+
+
+[source]
+----
+{@file:locate in="../../" format=$absolutePath find="READ..\\.adoc$"}
+----
+
+will result in
+
+[source]
+----
+/Users/verhasp/github/jamal/jamal-snippet/../jamal-snippet/README.adoc
+----
+
+
 [[file]]
-=== XLIII. `file`
+=== XLIV. `file`
 
 
 You can use this macro to include the name of a file in the documentation.
@@ -3965,7 +4043,7 @@ The usual use is to define `root` as a global macro and all `file` macros should
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[directory]]
-=== XLIV. `directory`
+=== XLV. `directory`
 
 
 You can use this macro to include the name of a directory in the documentation.
@@ -4057,7 +4135,7 @@ The usual use is to define `root` as a global macro and all `directory` macros s
 This may save some time when you are referring to many files in a deep directory structure relative to the document file.
 
 [[Java]]
-=== XLV. Java Macros
+=== XLVI. Java Macros
 
 
 [[java:class]]
@@ -4527,7 +4605,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 ====
 
 [[String]]
-=== XLVI. String Macros
+=== XLVII. String Macros
 
 
 [[string:contains]]
@@ -4724,7 +4802,7 @@ The parameters are:
 * `ignorecase` or `ignoreCase` tells the macro that the strings are case-insensitive.
 
 [[shell:var]]
-=== XLVII. `shell:var`
+=== XLVIII. `shell:var`
 
 This macro is a convenience tool replacing `$variable` and `pass:[${variable}]` sequences with the values of the variables.
 The values of the variables can be provided and looked up from
@@ -4760,7 +4838,7 @@ Although `$` is a valid character in a macro name, you cannot reference a macro 
 Also, the macro must not require any parameter.
 
 [[hashCode]]
-=== XLVIII. `hashCode`
+=== XLIX. `hashCode`
 
 
 This macro returns the hash code of the macro input as a 64-character hexadecimal string.
@@ -4779,7 +4857,7 @@ will result in
 
 
 [[memoize]]
-=== XLIX. `memoize`
+=== L. `memoize`
 
 
 This macro can be used to evaluate some input only one and reevaluate only when it has been changed.
@@ -4827,7 +4905,7 @@ You can just use macros that generate no output if you do not need this feature.
 
 
 [[download]]
-=== L. `download`
+=== LI. `download`
 
 
 This macro downloads a resource from a URL and saves it to a file.
@@ -4861,7 +4939,7 @@ For this reason it does not use the cache mechanism of Jamal.
 
 
 [[snip_update]]
-=== LI. `snip:update`
+=== LII. `snip:update`
 
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
@@ -4875,7 +4953,7 @@ When this happens, you can keep backward compatibility with
 This will render the current, no operation functionality of the macro.
 
 [[dictionary]]
-=== LII. `dictionary`
+=== LIII. `dictionary`
 
 This macro can be used to define a dictionary.
 Dictionaries are used by the decorator macro, but other macros can also use them.
@@ -4904,7 +4982,7 @@ This is also the default name of the dictionary used by the <<decorate,`decorate
 
 
 [[decorate]]
-=== LIII. `decorate`
+=== LIV. `decorate`
 
 This macro can be used to decorate a text.
 The decoration happens for each word separately.
