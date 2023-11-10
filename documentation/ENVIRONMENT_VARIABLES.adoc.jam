@@ -21,6 +21,6 @@ For example, for the environment variable {%JAMAL_CHECKSTATE_ENV%}, the system p
 
 First, the system property is consulted, and the environment variable has only effect when the system property is not defined.
 The following sections describe the individual environment variables.
-{%@import res:snippet.jim%}\
+{%@import ../jamal-snippet/src/main/resources/snippet.jim%}\
 {%@option ~detectNoChange%}
-{%docFrom {%@include [verbatim] ../jamal-api/src/main/java/javax0/jamal/api/EnvironmentVariables.java%}%}
+{%docFrom file=../jamal-api/src/main/java/javax0/jamal/api/EnvironmentVariables.java%}

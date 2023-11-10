@@ -23,26 +23,28 @@
 {@define java:method:parameterTypes:simpleName($x)={chop /{!#for $z in ({java:method:parameterTypes /$x})={`java:class:simpleName $z},}}}
 {@define java:method:exceptions:simpleName($x)={chop /{!#for $z in ({java:method:exceptions /$x})={`java:class:simpleName $z},}}}
 
++-----------------------------------------------------------------------------------------------------------------------
+MACRO: docFrom
+
+Automatically include all the snippets defined in a file in the order they are defined and also evaluate them.
+DOES NOT COLLECT THE SNIPPETS from the file. They have to be collected.
+
 This macro can be used to include documentation from a program source file.
 The macro argument has to be the file included with the option [verbatim].
 The macro selects the lines that start a snippet and creates a list from the snippet names.
-When it is done it iterates through the snippet names and calls the `snip` macro to include the snippets.
+When it is done it iterates through the snippet names and calls the `snip:eval` macro to include the snippets evaluated.
 
-NOTE: It is not enough to use this macro, the snippets should also be collected from the file!
-
-When the text of all these snippets are put together then it evaluates the resulting text.
-That way the snippets can act as normal documentation content.
-They will be included into the documentation and all the macros and everything will be usable there.
-
-The snippets are concatenated in the order they present in the source file.
-They are evaluated as one text block, therefore any macro defined in one snippet is also available in the later snippets.
-
-It is recommended to name the snippets with a prefix unique to the snippet collection and append some numbers.
-When doing that it is easier to use the option `poly` in the macro `snip`.
-
-{@define docFrom($file)=
-{!#for [skipEmpty] $snippet in ({#replace (regex detectNoChange=false) /
-{#replaceLines detectNoChange=false replace="/^.*snippet\\s+(\\w+).*$/$1,/"
-{#killLines keep pattern="^.*snippet\\s+\\w+.*$"
-$file}}/(\w)\n(\w)/$1,$2/\n//})={@ident {#eval/jamal {@snip $snippet}}
+{@define [named] docFrom(file)=
+    {@comment select the lines that contain a 'snippet name' string starting a snippet}\
+    {@define allSnippetStartLines={#killLines keep pattern="^.*snippet\\s+\\w+.*$"
+{#include [verbatim]file}}}
+    {@comment convert '...snippet name ...' -> 'name,' }\
+    {@define snipetNamesWithNewLines={#replaceLines detectNoChange=false replace="/^.*snippet\\s+(\\w+).*$/$1,/"
+        {allSnippetStartLines}}}
+    {@comment remove all the new lines from the list of snippet names}\
+    {@define snippetNames={#replace (regex detectNoChange=false) /
+        {snipetNamesWithNewLines}/\n//}}
+    {!#for [skipEmpty] $snippet in ({snippetNames})={@ident {#snip:eval (snippet=$snippet)}
 }}}
++-----------------------------------------------------------------------------------------------------------------------
+

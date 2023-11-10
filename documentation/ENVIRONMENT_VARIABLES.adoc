@@ -20,7 +20,10 @@ First, the system property is consulted, and the environment variable has only e
 The following sections describe the individual environment variables.
 
 
-
+        
+        
+        
+    
 ==== `JAMAL_CONNECT_TIMEOUT`
 This variable can define the connection timeout value for the web download in millisecond as unit.
 Jamal can download resources when the name of a file starts with the prefix `https://`.
@@ -30,15 +33,18 @@ The default value for the timeouts is 5000, meaning five seconds.
 The proxy setting can be configured using standard Java system properties.
 For more information, see the JavaDoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
 
+
 ==== `JAMAL_READ_TIMEOUT`
 This variable can define the read timeout value for the web download in millisecond as unit.
 
 The default value for the timeouts is 5000, meaning five seconds.
 
+
 ==== `JAMAL_TRACE`
 This environment variable defines the name of the trace file.
 When a trace file is defined, the evaluation and all the partial evaluations are logged to this file during processing.
 This file can grow very fast, and it is not purged or deleted by Jamal.
+
 
 ==== `JAMAL_STACK_LIMIT`
 
@@ -62,6 +68,7 @@ In that case, this limit may be too small.
 Set your value to a limit that fits your need.
 
 
+
 ==== `JAMAL_CHECKSTATE`
 
 This environment variable can switch off macro statefulness checking during macro registration.
@@ -71,6 +78,7 @@ The statelessness or annotation is checked during macro registering since Jamal 
 You can switch off the functionality setting this environment variable to `false`.
 It may be needed if you want to use an older, prior 1.8.0 library or a library that does not follow this rule.
 
+
 ==== `JAMAL_DEBUG`
 
 This environment variable can switch on debugging of Jamal.
@@ -79,10 +87,12 @@ The web-based debugger recognizes the `http:port` format variables.
 Set this variable to `http:8080`, put the `jamal-debug` module on the classpath and after starting Jamal processing open your browser at `http://localhost:8080`.
 The debugger and the use of it is detailed in a separate section.
 
+
 ==== `JAMAL_INCLUDE_DEPTH`
 
 This variable can set the maximum number of files include nesting.
 The default value is 100.
+
 
 ==== `JAMAL_HTTPS_CACHE`
 This variable can be set to point to a directory for cache files.
@@ -90,6 +100,7 @@ When Jamal downloads web resources, it stores them in a cache directory if the d
 Jamal creates subdirectories under the cache directory, but the cache directory itself has to be created manually.
 
 The default location for the cache files is `~/.jamal/cache/`.
+
 
 ==== `JAMAL_DEV_PATH`
 This environment variable can define replacements for files.
@@ -117,6 +128,7 @@ In that case, the file will be read by Jamal, and the individual lines will be i
 Comment lines starting with `#` and empty lines are ignored.
 
 
+
 ==== `JAMAL_OPTIONS`
 
 This environment variable can define options for the Jamal processor.
@@ -136,5 +148,3 @@ The typical use of this possibility is to set the option `failfast`.
 This option alters the error processing, and it is more "bound" to the execution than to the document.
 It may be a better option to include it in an environment variable, or system property than in the document itself.
 Both approaches work.
-
-

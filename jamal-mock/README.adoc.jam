@@ -113,7 +113,7 @@ If there are more than one mock that would match the input then the one first de
 {@q there is a bee}
 〕
 
-In the next section we will describe all these options in details (reference) and also the formal argument how a mock response is selected.
+In the next section, we will describe all these options in details (reference) and also the formal argument how a mock response is selected.
 
 ==== Options of `mock`
 

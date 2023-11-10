@@ -24,7 +24,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-mock</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.5.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -205,7 +205,7 @@ bee
 ====
 
 
-In the next section we will describe all these options in details (reference) and also the formal argument how a mock response is selected.
+In the next section, we will describe all these options in details (reference) and also the formal argument how a mock response is selected.
 
 ==== Options of `mock`
 

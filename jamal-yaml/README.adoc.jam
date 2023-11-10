@@ -565,7 +565,7 @@ will result:
 
 {%output%}
 
-===== Adding element to a Map in the Yaml structure
+===== Adding an element to a Map in the Yaml structure
 
 In this example the value is added to the value of the map from the top level named `b`.
 
@@ -640,7 +640,7 @@ will result:
 
 {%output%}
 
-If we use flattening we get different result
+If we use flattening, we get a different result
 
 {%sample/
 {@yaml:define a=
@@ -670,18 +670,19 @@ The format of the macro is
 
 The options of the macro are
 
-{%#replaceLines replace="~.*?\"(\\w+)\".*~* `$1`~^\\s*//~~"
-{%@snip formatOptions%}
-%}
+{%#replaceLines replace="`~|\\s*->\\s*`~.*?\"(\\w+)\",\\s*\"(\\w+)\".* -> * `$1`,`$2`"\
+                replace="`~|\\s*->\\s*`~.*?\"(\\w+)\".* -> * `$1`"\
+                replace="~^\\s*//"
+{%#snip:eval (snippet=formatOptions)%}%}
 
-Each of these options have a `setXXX` counterpart in SnakeYaml `DumperOption` class.
+Each of these options has a `setXXX` counterpart in SnakeYaml `DumperOption` class.
 ``setXXX`` methods with boolean argument need boolean option in this macro.
 Similarly, methods with in argument need integer options.
 Those options that have an enum `setXXX` counterpart should use the name of the individual enum values.
 
 ==== Examples
 
-In these example we will use the yaml structure:
+In these examples, we will use the yaml structure:
 
 {%sample/
 {@yaml:define yaml=

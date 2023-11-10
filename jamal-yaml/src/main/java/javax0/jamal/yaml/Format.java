@@ -34,6 +34,7 @@ public class Format implements Macro, InnerScopeDependent, Scanner.WholeInput {
         final var indent = scanner.number(null, "indent").optional();
         // sets the indentation size, should be max 10
         final var indicatorIndent = scanner.number(null, "indicatorIndent").optional();
+        // set the number of white-spaces to use for the sequence indicator '-'
         final var width = scanner.number(null, "width").optional();
         // sets the desired width
         // end snippet
