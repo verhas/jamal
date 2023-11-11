@@ -18,34 +18,70 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * A cache implementation that can store the strings in file which are downloaded from certain HTTPS URLs. The cache
- * elements never expire. The assumption is that the resources downloaded from a web page are versioned, and the URL url
- * contains the version number. When the URL contains the literal {@code SNAPSHOT} it is not cached. In all other cases,
- * we assume that the resource will NEVER change.
- *
+ * A cache implementation that can store the strings downloaded from certain https addresses in files.
+ * The cache elements never expire by default.
+ * The assumption is that the resources downloaded from a web page are versioned, and the url contains the version number.
  * <p>
- * The structure of the files and directories are influenced by the structure of the Maven local repository.
- *
+ * URLs containing the literal {@code SNAPSHOT} are not cached.
+ * In all other cases, we assume resources NEVER change.
  * <p>
- * The cached files are stored under the directory {@code ~/.jamal/cache/}. In this directory there are two
- * subdirectories {@code https/} and {@code properties/}. The directory {@code https/} contains the cached files. The
- * directory {@code properties/} contain properties files. The properties contain certain information about the file in
- * the cache.
+ * The structure of the files and directories were influenced by the structure of the Maven local repository.
+ * <p>
+ * The cached files are stored under the directory {@code ~/.jamal/cache/}.
+ * In this directory there are two subdirectories {@code https/} and {@code properties/}.
+ * The directory {@code https/} contains the cached files.
+ * The directory {@code properties/} contain properties files.
+ * The properties contain certain information about the file in the cache.
+ * <p>
+ * You can set certain entries to expire adding a {@code ttl} value to the properties file.
+ * <p>
+ * When a ttl value is badly formatter, not a number, it is ignored.
+ * The reason to ignore such an error instead of throwing an exception is that the cache is not a critical part of the system.
+ * Processing should go on even when the handcrafted time-to-live values are erroneous.
+ *
  */
 public class Cache {
 
     /**
-     * A cache entry. It contains the content File and the properties File and the Properties object. The properties are
-     * loaded when the content is requested by the caller. There is no method to query the properties. The properties
-     * files exist for debug purposes and currently contain the date and time when the entry was created and last
-     * read.
+     * A cache entry.
+     * It contains the content File and the properties File and the Properties object.
+     * The properties are loaded when the content is requested by the caller.
+     * There is no method to query the properties.
+     * <p>
+     * The properties are inherited from the containing directories.
+     * The close to the actual entry overwrites the farther elements.
+     * Properties contain time values, e.g., a cache element was written last time and also time to live value.
      */
     public static class Entry {
+
+        /**
+         * The entry file.
+         */
         private final File file;
+        /**
+         * The properties file of the entry.
+         */
         private final File propertiesFile;
+        /**
+         * Contains all the properties from the properties file of the entry.
+         * They are lazy loaded when the content is requested.
+         */
         private final Properties properties;
+        /**
+         * Contains all the properties from the properties file of the entry and also the properties from the
+         * {@code .properties} files in the directories up to the cache root directory.
+         */
         private final Properties effectiveProperties;
+
+        /**
+         * {@code true} if the properties file is a flat file, {@code false} if the properties are to be inherited from
+         * the directories up to the cache root directory.
+         */
         private final boolean flatProperties;
+        /**
+         * {@code true} if the properties are loaded.
+         * Used to load the properties only once and only when they are needed.
+         */
         private boolean propertiesLoaded = false;
 
         private Entry(File file, File propertiesFile) {
@@ -54,11 +90,14 @@ public class Cache {
 
         /**
          * Create a new entry for the cache.
+         * <p>
+         * NOTE: Flat is implemented, not tested and not used.
          *
          * @param file           the file that contains the content
          * @param propertiesFile the file that contains the properties
          * @param flat           {@code true} if the properties file is a flat file, {@code false} if the properties
-         *                       are to be collected from the directories up to the cache root directory.
+         *                       are to be inherited from the directories up to the cache root directory.
+         *                       <p>
          */
         public Entry(File file, File propertiesFile, boolean flat) {
             this.file = file;
@@ -69,7 +108,16 @@ public class Cache {
         }
 
         /**
-         * @return {@code true} if the file is not in the cache
+         * Check if the entry is a cache miss.
+         * <p>
+         * It is a miss if
+         *
+         * <ul>
+         *     <li>the file does not exist
+         *     <li>the file exists but expired
+         * </ul>
+         *
+         * @return {@code true} if the file is not in the cache.
          */
         public boolean isMiss() {
             if (!file.exists()) {
@@ -94,28 +142,60 @@ public class Cache {
             return writeMillis + ttlMillis;
         }
 
+        /**
+         * Parse the ttl string and return the number of seconds that the ttl means.
+         * <p>
+         * A time to live string can contain numbers with units.
+         * The units can be
+         * <ul>
+         *     <li>{@code Y} meaning years</li>
+         *     <li>{@code M} meaning months, 31 days exactly</li>
+         *     <li>{@code w} meaning weeks</li>
+         *     <li>{@code d} meaning days</li>
+         *     <li>{@code h} meaning hours</li>
+         *     <li>{@code m} meaning minutes</li>
+         *     <li>{@code s} meaning seconds</li>
+         * </ul>
+         * The units MUST be used in this order.
+         * The number {@code 2Y3M5s} is correct, and it means 2 years, 3 months and 5 seconds.
+         * On the other hand {@code 2Y5s3M} is not correct, and it will result zero TTL value.
+         *
+         * @param ttl the time to live string
+         * @return the number of seconds the ttl string means
+         */
         public static long parseTtl(final String ttl) {
             final var sb = new StringBuilder(ttl);
             long seconds = 0L;
             try {
                 seconds += chopSeconds(sb, "y", 365 * 24 * 60 * 60);
                 seconds += chopSeconds(sb, "M", 31 * 24 * 60 * 60);
-                seconds += chopSeconds(sb, "w", 37 * 24 * 60 * 60);
+                seconds += chopSeconds(sb, "w", 7 * 24 * 60 * 60);
                 seconds += chopSeconds(sb, "d", 24 * 60 * 60);
                 seconds += chopSeconds(sb, "h", 60 * 60);
                 seconds += chopSeconds(sb, "m", 60);
                 seconds += chopSeconds(sb, "s", 1);
                 final var value = sb.toString().trim();
-                if (value.length() > 0) {
+                if (!value.isEmpty()) {
                     seconds += Long.parseLong(value);
                 }
             } catch (NumberFormatException e) {
-                // ignore
+                return 0L;
             }
             return seconds;
         }
 
-        private static long chopSeconds(StringBuilder sb, String unit, long seconds) {
+        /**
+         * Find the unit in the string and take the number before it.
+         * Calculate the number of seconds that number means with the given unit.
+         * <p>
+         * Delete the number and the unit from the string.
+         *
+         * @param sb      string builder that contains the number and the unit
+         * @param unit    the unit to look for
+         * @param seconds the number of seconds that the unit means
+         * @return the number of seconds that the number and the unit means
+         */
+        private static long chopSeconds(StringBuilder sb, String unit, long seconds) throws NumberFormatException {
             final var index = sb.indexOf(unit);
             if (index == -1) {
                 return 0;
@@ -167,28 +247,49 @@ public class Cache {
             }
         }
 
+        /**
+         * Get the property value from the properties file of the entry.
+         * If the properties were not read then they will be read and loaded.
+         * The loading is done only once and only when the properties are needed.
+         * The loading reads the properties file and also the {@code .properties} files in the directories up to the
+         * cache root directory, unless the enty is flat.
+         *
+         * @param key the key of the property
+         * @return the value of the property or {@code null} if the property is not found or the properties cannot be
+         * read.
+         */
         public String getProperty(String key) {
             try {
                 assertPropertiesAreLoaded();
-                if (!flatProperties) {
-                    effectiveProperties.putAll(collectEffectiveProperties(propertiesFile.getParentFile()));
-                }
-                effectiveProperties.putAll(properties);
                 return effectiveProperties.getProperty(key);
             } catch (IOException ignored) {
                 return null;
             }
         }
 
+        /**
+         * Load the properties from the properties file. The properties are loaded only once and only when they are
+         * needed.
+         */
         private void assertPropertiesAreLoaded() throws IOException {
             if (!propertiesLoaded) {
                 if (propertiesFile.exists()) {
                     properties.load(new FileInputStream(propertiesFile));
                 }
                 propertiesLoaded = true;
+                if (!flatProperties) {
+                    effectiveProperties.putAll(collectEffectiveProperties(propertiesFile.getParentFile()));
+                }
+                effectiveProperties.putAll(properties);
             }
         }
 
+        /**
+         * Collect the properties from the {@code .properties} files in the directories up to the cache root directory.
+         *
+         * @param directory the directory from where to start collecting the properties
+         * @return the properties collected from the {@code .properties} files in the directories up to the cache root
+         */
         private Properties collectEffectiveProperties(final File directory) {
             final var properties = new Properties();
             if (!directory.getParentFile().equals(CACHE_ROOT_DIRECTORY)) {
