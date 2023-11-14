@@ -12,33 +12,33 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.11.0` 
 
-* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.6.0` 
+* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.6.2` 
 
 * `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.1.0` 
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.6.0` 
 
-* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-7` 
+* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-8` 
 
-* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.9.0` 
+* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.10.2` 
 
-* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.9.0` 
+* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.10.2` 
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.1.2` 
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.2.2` 
 
 * `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.0` 
 
 * `OK`  `APPASSEMBLER_PLUGIN_VERSION` `2.1.0` 
 
-* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.0` 
+* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.1` 
 
-* `OK`  `JUPITER_VERSION` `5.10.0` 
+* `OK`  `JUPITER_VERSION` `5.10.1` 
 
-* `*[red]#NO#*`  `MOCKITO_VERSION` `5.5.0` `*[red]#upgrade to 5.6.0#*`
+* `OK`  `MOCKITO_VERSION` `5.7.0` 
 
-* `OK`  `JRUBY_VERSION` `9.4.3.0` 
+* `OK`  `JRUBY_VERSION` `9.4.5.0` 
 
 * `OK`  `GROOVY_VERSION` `3.0.19` 
 
@@ -46,7 +46,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `SNAKEYAML_VERSION` `2.2` 
 
-* `OK`  `JSON_ORG_VERSION` `20230618` 
+* `OK`  `JSON_ORG_VERSION` `20231013` 
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
@@ -60,7 +60,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `SOURCE_BUDDY` `2.4.2` 
 
-* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-7` 
+* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-8` 
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.1.1` 
 

@@ -108,6 +108,8 @@ You can define these as the `snip:collect` macro parameters.
 Maco Input:: The input of a macro is the text that follows the macro name and lasts to the macro closing.
 For example, the `{@trimLine {%@define TITMI=this is the macro input%}{%TITMI%}}` has the text `{%TITMI%}` as macro input.
 
+Macro Prefix:: The macro prefix means the characters between the macro opening string and the macro name in the case of a user defined macro, or between the macro opening string and the `#` ot `@` character in the case of a built-in macro. Currently, these can be `pass:[`]` and `!` characters. Spaces are ignored.
+
 Parops:: Macro parameter options.
 This terminology was invented in a later version to distinguish the macro options you use between `[` anf `]` or between `(` anf `)` in the macro use and options defined using the macro `options`.
 These are also mentioned as "macro options" or "macro parameters" in the documentation.

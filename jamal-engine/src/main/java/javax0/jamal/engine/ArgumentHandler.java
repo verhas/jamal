@@ -29,6 +29,27 @@ class ArgumentHandler {
     private final int min;
     private static final String ELIPSIS = "...";
 
+    /**
+     * Constructs an ArgumentHandler object with the specified owner and parameters.
+     * <p>
+     * This constructor initializes the ArgumentHandler with the provided owner and an array of parameters.
+     * It parses the parameters to determine the minimum and maximum number of arguments accepted.
+     * The special syntax '...' (ellipsis) is used to indicate variable argument lengths.
+     *
+     * @param owner      The identified owner of the ArgumentHandler.
+     * @param parameters An array of Strings representing the parameters.
+     * @throws BadSyntax If the syntax of the parameters is incorrect. This exception is thrown in the following cases:
+     *                   - If more than one parameter contains the '...' syntax.
+     *                   - If the '...' syntax is used improperly, such as having 'xxx...' in a single parameter macro,
+     *                   or having a 'xxx...' argument that is not the last one in the array.
+     *                   <p>
+     *                   The constructor performs the following operations:
+     *                   1. If only one parameter is provided, and it equals '...', sets min to 0 and max to Integer.MAX_VALUE.
+     *                   2. If multiple parameters are provided, it checks each parameter for the presence of '...' at the start or end.
+     *                   - If '...' is found at the start (indicating a minimum number of arguments), the method sets the 'min' field.
+     *                   - If '...' is found at the end (indicating an unlimited maximum number of arguments), the method sets the 'max' field.
+     *                   3. If no special syntax is found, it sets 'min' and 'max' to the length of the 'parameters' array.
+     */
     public ArgumentHandler(Identified owner, String[] parameters) throws BadSyntax {
         this.owner = owner;
         if (parameters.length == 1 && parameters[0].equals(ELIPSIS)) {
@@ -103,16 +124,16 @@ class ArgumentHandler {
                         final BadSyntax badSyntax;
                         if (min == max) {
                             if (Objects.equals(owner.getId(), Identified.DEFAULT_MACRO) && parameters.length > 0 &&
-                                (parameters[0].equals(Identified.MACRO_NAME_ARG1) || parameters[0].equals(Identified.MACRO_NAME_ARG2))) {
+                                    (parameters[0].equals(Identified.MACRO_NAME_ARG1) || parameters[0].equals(Identified.MACRO_NAME_ARG2))) {
                                 badSyntax = new BadSyntax(format("Macro '%s' needs %d arguments and got %d",
-                                    actualValues[0], parameters.length, actualValues.length));
+                                        actualValues[0], parameters.length, actualValues.length));
                             } else {
                                 badSyntax = new BadSyntax(format("Macro '%s' needs %d arguments and got %d",
-                                    owner.getId(), parameters.length, actualValues.length));
+                                        owner.getId(), parameters.length, actualValues.length));
                             }
                         } else {
                             badSyntax = new BadSyntax(format("Macro '%s' needs (%s ... %s) arguments and got %d",
-                                owner.getId(), "" + min, (max == Integer.MAX_VALUE ? "inf" : "" + max), actualValues.length));
+                                    owner.getId(), "" + min, (max == Integer.MAX_VALUE ? "inf" : "" + max), actualValues.length));
                         }
                         for (final var actual : actualValues) {
                             badSyntax.parameter(actual);

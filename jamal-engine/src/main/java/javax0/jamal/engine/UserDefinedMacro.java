@@ -1,6 +1,11 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Configurable;
+import javax0.jamal.api.Counted;
+import javax0.jamal.api.Debuggable;
+import javax0.jamal.api.Identified;
 import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
@@ -12,7 +17,13 @@ import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tools.Scanner;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.
@@ -347,6 +358,29 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         return new javax0.jamal.engine.UserDefinedMacro(processor, serialized);
     }
 
+    /**
+     * Serializes the current object into a string representation.
+     * <p>
+     * This method converts the state of the object into a string format, using '|' as a delimiter between fields.
+     * The serialization includes various fields of the object, such as id, openStr, closeStr, and others,
+     * along with the parameters managed by the argumentHandler. Each field is encoded using the {@code encode()} method
+     * before appending to the serialized string. This encoding is base64 to have only ascii characters and to avoid
+     * having the separator character '|' in the encoded string.
+     * <p>
+     * Fields that are boolean values are represented as '1' for true and '0' for false.
+     *
+     * @return A string representing the serialized state of the object.
+     * <p>
+     * The serialization includes the following fields in order:
+     * 1. The encoded 'id' of the object.
+     * 2. The encoded 'openStr' string.
+     * 3. The encoded 'closeStr' string.
+     * 4. 'verbatim' flag (1 if true, 0 if false).
+     * 5. 'tailParameter' flag (1 if true, 0 if false).
+     * 6. 'pure' flag (1 if true, 0 if false).
+     * 7. The encoded 'content' of the object.
+     * 8. Each parameter in the 'argumentHandler.parameters' array, encoded and appended in sequence.
+     */
     @Override
     public String serialize() {
         final var sb = new StringBuilder();

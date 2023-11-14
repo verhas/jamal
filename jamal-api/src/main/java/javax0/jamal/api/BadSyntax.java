@@ -31,6 +31,14 @@ public class BadSyntax extends Exception {
         }
     }
 
+    public static RuntimeException rt(final String message) {
+        return new RuntimeException(new BadSyntax(message));
+    }
+
+    public static RuntimeException rt(final String message, Throwable cause) {
+        return new RuntimeException(new BadSyntax(message, cause));
+    }
+
     final private List<String> parameters = new ArrayList<>();
 
     public List<String> getParameters() {

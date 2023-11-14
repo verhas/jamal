@@ -9,13 +9,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * An output stream that filters the written bytes using Jamal.
+ * <p>
+ * The actual processing is done when the stream is closed.
+ * Until that point, the characters are collected in a buffer.
+ */
 public class JamalOutputStream extends FilterOutputStream {
     final Processor processor;
     final Position pos;
 
     /**
      * Creates an output stream that will filter the written bytes using Jamal.
-     * The processor wil be created with the "default" macro opening and closing strings.
+     * The processor will be created with the "default" macro opening and closing strings.
      *
      * @param out the underlying output stream to be assigned to
      *            the field {@code this.out} for later use, or
@@ -37,10 +43,10 @@ public class JamalOutputStream extends FilterOutputStream {
     }
 
     /**
-     * Same as {@link #JamalOutputStream(OutputStream out,Processor processor)} but with a {@link Position}
+     * Same as {@link #JamalOutputStream(OutputStream out, Processor processor)} but with a {@link Position}
      *
-     * @param out       see {@link #JamalOutputStream(OutputStream out,Processor processor)}
-     * @param processor see {@link #JamalOutputStream(OutputStream out,Processor processor)}
+     * @param out       see {@link #JamalOutputStream(OutputStream out, Processor processor)}
+     * @param processor see {@link #JamalOutputStream(OutputStream out, Processor processor)}
      * @param pos       the position where the process starts. Usually a file name and the line number 1, like
      *                  {@code new Position("file.jamal", 1)}
      */
@@ -57,6 +63,11 @@ public class JamalOutputStream extends FilterOutputStream {
         sb.append((char) b);
     }
 
+    /**
+     * Process the content of the buffer and write the result to the underlying stream.
+     *
+     * @throws IOException if the underlying stream throws an exception
+     */
     @Override
     public void close() throws IOException {
         final var input = Input.makeInput(sb, pos);

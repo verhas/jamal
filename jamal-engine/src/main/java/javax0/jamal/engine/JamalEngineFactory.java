@@ -8,7 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * An implementation of the {@link ScriptEngineFactory} that can be used to register Jamal as a scripting engine.
+ * The implementation follows the JSR-223 specification.
+ */
 public class JamalEngineFactory implements ScriptEngineFactory {
     @Override
     public String getEngineName() {

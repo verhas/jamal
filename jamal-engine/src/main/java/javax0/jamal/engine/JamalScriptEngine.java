@@ -15,6 +15,11 @@ import java.io.Reader;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * An actual extension of the {@link AbstractScriptEngine} that can be used to execute Jamal as a script engine.
+ * <p>
+ * This class is not used inside Jamal, it is provided as a public API.
+ */
 public class JamalScriptEngine extends AbstractScriptEngine {
 
     final ScriptEngineFactory factory;
@@ -49,9 +54,9 @@ public class JamalScriptEngine extends AbstractScriptEngine {
     @Override
     public Object eval(String script, ScriptContext context) throws ScriptException {
         try (final var processor = new javax0.jamal.engine.Processor()) {
-            final var open = Objects.toString(Objects.requireNonNullElse(context.getAttribute("open"),"{"));
-            final var close = Objects.toString(Objects.requireNonNullElse(context.getAttribute("close"),"}"));
-            processor.separators(open,close);
+            final var open = Objects.toString(Objects.requireNonNullElse(context.getAttribute("open"), "{"));
+            final var close = Objects.toString(Objects.requireNonNullElse(context.getAttribute("close"), "}"));
+            processor.separators(open, close);
             pullVariables(processor, context.getBindings(ScriptContext.ENGINE_SCOPE));
             pullVariables(processor, context.getBindings(ScriptContext.GLOBAL_SCOPE));
             final var result = processor.process(Input.makeInput(script));

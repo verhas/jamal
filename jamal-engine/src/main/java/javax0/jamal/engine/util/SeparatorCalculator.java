@@ -4,6 +4,14 @@ import static java.lang.Math.min;
 
 /**
  * Calculates a string using the characters given in the constructor argument that does not appear in a given string.
+ * <p>
+ * These strings are needed when a macro is evaluated that contains the current macro opening and closing strings,
+ * which were NOT the macro opening and closing strings when the macro was defined. In this case, the macro opening and
+ * closing strings must be escaped. The escaping is done using the macro 'escape' using a separator string, which is
+ * guaranteed not to appear inside the escaped string.
+ * <p>
+ * This class is a general utility to create a separator string using a given alphabet and the string in which the
+ * separator must not appear.
  */
 public class SeparatorCalculator {
 
@@ -58,7 +66,7 @@ public class SeparatorCalculator {
      * @return the separator string, that is as short as possible and the input does not contain it
      */
     public String calculate(final String input) {
-        layers = new Layer[min(N,input.length())];
+        layers = new Layer[min(N, input.length())];
         buildUpTrieFromInput(input);
         return getShort(top);
     }

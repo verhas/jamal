@@ -25,7 +25,7 @@ public class MathMacros {
             }
             return Double.parseDouble(s);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException("", new BadSyntax("The string '" + s + "' cannot be interpreted as a number"));
+            throw BadSyntax.rt("The string '" + s + "' cannot be interpreted as a number");
         }
     }
 

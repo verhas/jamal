@@ -21,6 +21,9 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
 /**
  * Parse the input string and create an AST (Abstract Syntax Tree) from it.
  * <p>
+ * Parsing is not needed to process macros. This class is here to support integration tools, like IntelliJ plugin
+ * to support code completions, syntax highlighting, and so on.
+ * <p>
  * The parsing is limited because it does not evaluate all the macros.
  * It may not work properly
  * <p>

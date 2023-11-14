@@ -3,14 +3,18 @@ package javax0.jamal.engine.macro;
 import java.util.Map;
 
 /**
- * A segment contains a small piece of text and segments are chained forward to be a linked list.
+ * A segment is a string and a "pointer" to the next segment.
  * <p>
- * During macro evaluation the names of the parameters in the content are replaced by the actual values. To avoid
- * non-deterministic macro evaluation the content of a user defined macro is split into segments. The segments contain
- * the parameters and the texts between the parameter names.
+ * During macro evaluation, the actual values replace the names of the parameters in the content.
+ * However, parameter names, which appear in the text during the evaluation of the macro, must not be replaced.
+ * In other words, if the actual value of a parameter contains the name of another, or the same parameter, then
+ * that name must not be replaced.
  * <p>
- * When a macro is evaluated the first time it's content is split into segments and then these segments are joined
- * together so that the parameter names are replaced with the actual values.
+ * To achieve this, the text of the macro is split into segments.
+ * The segments contain the parameters and the texts between the parameter names.
+ * <p>
+ * When a macro is evaluated, the first time, the content is split into segments and then these segments are joined
+ * together after replacing the parameter names to their corresponding values.
  */
 public abstract class Segment {
     Segment nextSeg;

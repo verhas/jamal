@@ -1,7 +1,9 @@
 package javax0.jamal.engine;
 
 /**
- * See {@code javax0.jamal.api.Delimiters}.
+ * See {@link javax0.jamal.api.Delimiters}.
+ * <p>
+ * This implementation stores the macro opening and closing Strings as {@link String} fields.
  */
 public class Delimiters implements javax0.jamal.api.Delimiters {
 
