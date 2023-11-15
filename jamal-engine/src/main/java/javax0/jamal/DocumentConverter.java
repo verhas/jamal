@@ -210,6 +210,24 @@ public class DocumentConverter {
         return Optional.empty();
     }
 
+    public static String getRoot() throws IOException {
+        return getRoot("ROOT.dir",
+                ".git",
+                ".mvn",
+                "package.json",
+                "requirements.txt",
+                "Pipfile",
+                "Gemfile",
+                "Cargo.toml",
+                "CMakeLists.txt",
+                ".sln",
+                "go.mod",
+                ".travis.yml",
+                ".gitlab-ci.yml",
+                "azure-pipelines.yml"
+        );
+    }
+
     /**
      * Get the root directory of the project.
      * <p>
@@ -220,11 +238,12 @@ public class DocumentConverter {
      * If the project is not in a git repository or in a project that does not have an {@code .mvn} directory then a
      * {@code ROOT.dir} placeholder has to be created in the root directory.
      *
+     * @param rootFiles the names of the files that are searched for in the root directory
      * @return the absolute path to the root directory of the project
      * @throws IOException when there is some error traversing the directories
      */
-    public static String getRoot() throws IOException {
-        final var dirs = Stream.of("ROOT.dir", ".git", ".mvn")
+    public static String getRoot(String... rootFiles) throws IOException {
+        final var dirs = Arrays.stream(rootFiles)
                 .map(StringBuilder::new)
                 .collect(Collectors.toList());
 
