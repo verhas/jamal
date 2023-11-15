@@ -210,6 +210,15 @@ public class DocumentConverter {
         return Optional.empty();
     }
 
+    /**
+     * Get the root directory of the project
+     * <p>
+     * This method calls {@link #getRoot(String...)} with an extensive predefined set of file names that are searched
+     * for. The set of files is stable for most programming projects and build systems.
+     *
+     * @return the absolute path to the root directory of the project
+     * @throws IOException when there is some error traversing the directories
+     */
     public static String getRoot() throws IOException {
         return getRoot("ROOT.dir",
                 ".git",
@@ -231,16 +240,13 @@ public class DocumentConverter {
     /**
      * Get the root directory of the project.
      * <p>
-     * The code is starting from the current working directory and going upward tries to find a directory that contains
-     * a {@code .git}, {@code .mvn} or {@code ROOT.dir} file.
-     * The directories {@code .git} and {@code .mvn} appear only in the root directory of a project and not in module
-     * directories.
-     * If the project is not in a git repository or in a project that does not have an {@code .mvn} directory then a
-     * {@code ROOT.dir} placeholder has to be created in the root directory.
+     * The code is starting from the current working directory, and going upward tries to find a directory that contains
+     * one of the files or directories given in the argument.
      *
      * @param rootFiles the names of the files that are searched for in the root directory
      * @return the absolute path to the root directory of the project
      * @throws IOException when there is some error traversing the directories
+     * @throws RuntimeException when the root directory cannot be found
      */
     public static String getRoot(String... rootFiles) throws IOException {
         final var dirs = Arrays.stream(rootFiles)
@@ -259,8 +265,8 @@ public class DocumentConverter {
                         .findFirst();
 
         if (file.isPresent()) {
-            final var parent = file.get().getParentFile();
-            return parent == null ? "." : parent.getCanonicalPath();
+            final var projectRoot = file.get().getParentFile();
+            return projectRoot == null ? "." : projectRoot.getCanonicalPath();
         } else {
             throw new RuntimeException("Cannot find the root directory of the project file.");
         }
