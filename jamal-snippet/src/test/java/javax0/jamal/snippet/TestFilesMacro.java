@@ -219,7 +219,7 @@ public class TestFilesMacro {
     void testRelativeFile2() throws Exception {
         TestThat.theInput(
                         "{@file (format=$relativePath " +
-                                "relativeTo=\"" + getRoot().replaceAll("\\\\", "\\\\") + "/jamal-snippet/src/test/resources/reldirt1/b/c/fileName.ext\")" +
+                                "relativeTo=\"" + getRoot().replaceAll("\\\\", "/") + "/jamal-snippet/src/test/resources/reldirt1/b/c/fileName.ext\")" +
                                 getRoot() + "/jamal-snippet/src/test/resources/reldirt1/a/abra.kabarbra}")
                 .atPosition(getRoot() + "/jamal-snippet/src/test/resources/reldirt1/b/fileName.ext", 1, 1)
                 .results("../../a/abra.kabarbra");
@@ -238,7 +238,7 @@ public class TestFilesMacro {
     void testRelativeDirectory2() throws Exception {
         TestThat.theInput(
                         "{@directory (format=$relativePath " +
-                                "relativeTo=\"" + getRoot(".mvn").replaceAll("\\\\", "\\\\") + "/jamal-snippet/src/test/resources/reldirt1/b/c/fileName.ext\")" +
+                                "relativeTo=\"" + getRoot(".mvn").replaceAll("\\\\", "/") + "/jamal-snippet/src/test/resources/reldirt1/b/c/fileName.ext\")" +
                                 getRoot() + "/jamal-snippet/src/test/resources/reldirt1/a/}")
                 .atPosition(getRoot(".mvn") + "/jamal-snippet/src/test/resources/reldirt1/b/fileName.ext", 1, 1)
                 .results("../../a");
