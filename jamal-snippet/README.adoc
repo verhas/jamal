@@ -3334,7 +3334,7 @@ will result
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 3,885 bytes
-- Variation.java: 6,690 bytes
+- Variation.java: 6,697 bytes
 - SnipList.java: 1,228 bytes
 - ShellVar.java: 3,837 bytes
 - Locate.java: 5,965 bytes
@@ -3600,7 +3600,7 @@ will result in the output
 
 [source]
 ----
-2023-11-17 18:28:09
+2023-11-18 18:20:49
 ----
 
 
