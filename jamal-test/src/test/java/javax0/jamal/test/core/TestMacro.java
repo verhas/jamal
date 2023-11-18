@@ -18,6 +18,10 @@ import java.util.Arrays;
  * macro that cannot be registered from a Jamal source, and that way these tests can only be written in Java.
  */
 public class TestMacro {
+
+    /**
+     * A user defined macro that has a non-standard name, and therefore makes sense aliasing it in the tests.
+     */
     final Identified ud = new UserDefinedMacro() {
 
         @Override
@@ -31,11 +35,6 @@ public class TestMacro {
                 return "no param";
             }
             return "" + Arrays.stream(parameters).mapToInt(Integer::parseInt).sum();
-        }
-
-        @Override
-        public int expectedNumberOfArguments() {
-            return -1;
         }
     };
 
@@ -115,7 +114,8 @@ public class TestMacro {
     @Test
     @DisplayName("Get the built in macro with given alias")
     void testBuiltInAliasDefined() throws Exception {
-        final var test = TestThat.theInput("{#{@macro [alias=add type=\"built in\"] not an identifier} 1,2,3}{@add 1,2,3}{@add 3,3}");
+        final var test = TestThat.theInput(
+                "{#{@macro [alias=add type=\"built in\"] not an identifier} 1,2,3}{@add 1,2,3}{@add 3,3}");
         test.getProcessor().getRegister().define(builtIn);
         test.results("666");
     }
@@ -123,7 +123,8 @@ public class TestMacro {
     @Test
     @DisplayName("Get the built in macro with given alias in block")
     void testBuiltInAliasDefined2() throws Exception {
-        final var test = TestThat.theInput("{#block {@macro [alias=add type=built-in] not an identifier}}{@add 1,2,3}{@add 3,3}");
+        final var test = TestThat.theInput(
+                "{#block {@macro [alias=add type=built-in] not an identifier}}{@add 1,2,3}{@add 3,3}");
         test.getProcessor().getRegister().define(builtIn);
         test.results("66");
     }
@@ -131,7 +132,8 @@ public class TestMacro {
     @Test
     @DisplayName("Get the built in macro with given alias global")
     void testBuiltInAliasDefinedGlobal() throws Exception {
-        final var test = TestThat.theInput("{#block {@macro [alias=:add type=built-in] not an identifier}}{@add 1,2,3}{@add 3,3}");
+        final var test = TestThat.theInput(
+                "{#block {@macro [alias=:add type=built-in] not an identifier}}{@add 1,2,3}{@add 3,3}");
         test.getProcessor().getRegister().define(builtIn);
         test.results("66");
     }
@@ -139,31 +141,27 @@ public class TestMacro {
     @Test
     @DisplayName("Evaluating undefined built-in macro will throw an exception")
     void testBuiltInUndefinedEvaluete() throws Exception {
-        final var test = TestThat.theInput("{@macro [type=built-in] abrakadabra}");
-        test.getProcessor().getRegister().define(builtIn);
-        test.throwsBadSyntax("Unknown built-in macro\\{@abrakadabra\\}");
+        TestThat.theInput("{@macro [type=built-in] undefined built-in macro}")
+                .throwsBadSyntax("Unknown built-in macro\\{@undefined built-in macro\\}");
     }
 
     @Test
     @DisplayName("Aliasing undefined built-in macro will return alias undefined")
     void testBuiltInUndefinedAlias() throws Exception {
-        final var test = TestThat.theInput("{@macro [alias=add type=built-in]abraka debra}");
-        test.getProcessor().getRegister().define(builtIn);
-        test.results("add");
+        TestThat.theInput("{@macro [alias=add builtin]undefined user defined macro}").results("add");
     }
 
     @Test
     @DisplayName("Evaluating undefined user defined macro will throw an exception")
     void testUserDefinedUndefinedEvaluete() throws Exception {
-        final var test = TestThat.theInput("{@macro abrakadabra}");
-        test.getProcessor().getRegister().define(builtIn);
-        test.throwsBadSyntax("Unknown user-defined macro \\{abrakadabra\\}");
+        TestThat.theInput("{@macro undefined user defined macro}")
+                .throwsBadSyntax("Unknown user-defined macro \\{undefined user defined macro\\}");
     }
 
     @Test
     @DisplayName("Using alias of undefined user defined macro will use default")
     void testUserDefinedUndefinedAliasUsedDefault() throws Exception {
-        final var test = TestThat.theInput("{@define default=aaa}{{@macro [alias] abrakadabra}}");
+        final var test = TestThat.theInput("{@define default=aaa}{{@macro [alias] undefined user defined macro}}");
         test.getProcessor().getRegister().define(builtIn);
         test.results("aaa");
     }
@@ -171,17 +169,19 @@ public class TestMacro {
     @Test
     @DisplayName("Evaluating undefined user defined macro will use default")
     void testUserDefinedUndefinedEvalueteDefault() throws Exception {
-        final var test = TestThat.theInput("{@define default=aaa}{@macro abrakadabra}");
-        test.getProcessor().getRegister().define(builtIn);
-        test.results("aaa");
+        TestThat.theInput("{@define default=aaa}{@macro abrakadabra}").results("aaa");
     }
 
     @Test
     @DisplayName("Aliasing undefined user defined macro will return alias undefined")
     void testUserDefinedUndefinedAlias() throws Exception {
-        final var test = TestThat.theInput("{@macro [alias=add]abraka debra}");
-        test.getProcessor().getRegister().define(builtIn);
-        test.results("add");
+        TestThat.theInput("{@macro [alias=add]undefined user defined macro}").results("add");
+    }
+
+    @Test
+    @DisplayName("Throws exception when used on top level with named alias of defined user defined macro")
+    void throwsExportException() throws Exception {
+        TestThat.theInput("{@define a=}{@macro [alias=add]a}").throwsBadSyntax("Macro 'add' cannot be exported from the top level");
     }
 
 }

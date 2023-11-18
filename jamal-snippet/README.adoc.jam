@@ -12,6 +12,7 @@
 {%@define standardInput= The macro scans the input using the {%ARGSPLIT%}.%}
 {%@define alias(x)=(can be aliased as `x`)%}
 {%@options detectNoChange%}
+{%@define CHPREFIX====%}
 
 Snippet handling macros help you to include information from program source code into the documentation automatically.
 This macro package also includes some XML handling, string, and text formatting macros, which are usually used together with snippets.
@@ -140,7 +141,8 @@ This way, it is easier to keep your documentation up to date.
 .. <<dictionary,`dictionary`>>
 .. <<decorate,`decorate`>>
 .. <<snip_update,`snip:update`>>
-. <<kroki,Kroki>>
+.. <<variation,`variation`>>
+. <<kroki,Kroki>
 {%@counter:define hierarchical id=chapter format=%d.{2:$ROMAN} %}
 
 [[usage]]
@@ -3201,6 +3203,8 @@ When this happens, you can keep backward compatibility with
   {@use global comment as snip:update}
 
 This will render the current, no operation functionality of the macro.
+
+{%CH /variation/variation%}
 
 [[dictionary]]
 === {%chapter%}`dictionary`

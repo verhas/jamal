@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * This demonstrates how a macro can implement {@link #fetch(Processor, Input)} that alters the input before the
  * macro is evaluated.
  */
-public class UseComments implements Macro {
+public class UseComments implements Macro, Macro.Escape {
     @Override
     public String evaluate(Input in, Processor processor) {
         return "";

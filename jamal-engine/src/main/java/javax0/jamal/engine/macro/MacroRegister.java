@@ -378,45 +378,65 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         writableScope().macros.put(alias, macro);
     }
 
-    private static final Map<Class<? extends Macro>, Boolean> macroClasses = Collections.synchronizedMap(new WeakHashMap<>());
+    /**
+     * Store all the macro classes that were already checked for tastefulness, so that further checks can
+     * ignore them.
+     * <p>
+     * The map contains a class as a key if it was checked and the value is {@code true} if the class is
+     * stateful but not annotated.
+     */
+    private static final Map<Class<? extends Macro>, Boolean> notAnnotatedStateful = Collections.synchronizedMap(new WeakHashMap<>());
 
     /**
      * This method will check that a macro class is either stateless (does not have any field) or is declared to be
      * stateful, which is not recommended, but sometimes may be a reasonable approach. A class is declared to be
      * stateful if it implements the {@link javax0.jamal.api.Macro.Stateful Stateful} interface.
      * <p>
-     * If the macro is not declared to be stateful, but has declared fields, which are neither final, nor static then
+     * If the macro is not declared to be stateful, but has declared fields, which are neither final, nor static, then
      * the method throws a run-time exception. This check is performed for the class and in the chain of the
-     * superclasses for each parent class excluding but up to the {@link Object} class.
+     * superclasses for each parent class up to the {@link Object} class. The {@link Object} class does have fields, and
+     * they are ignored. If we checked the Object class, every macro would be stateful.
      *
      * @param klass the macro class we check
+     * @throws RuntimeException if the macro class is not stateless and is not declared to be stateful
      */
     private void assertMacroClassIsStateless(Class<? extends Macro> klass) {
         if (!checkState) {
             return;
         }
-        final Boolean wronglyStateful = macroClasses.get(klass);
-        if (wronglyStateful != null) {
-            if (wronglyStateful) {
-                throwRTE(klass, klass, null);
+        final Boolean statefulAndWrong = notAnnotatedStateful.get(klass);
+        if (statefulAndWrong != null) {
+            if (statefulAndWrong) {
+                throwUp(klass, klass, null);
             }
             return;
         }
         for (Class<?> k = klass; k != Object.class; k = k.getSuperclass()) {
-            if (k.getDeclaredAnnotation(Macro.Stateful.class) == null && k.getDeclaredFields().length > 0) {
+            if (k.getDeclaredAnnotation(Macro.Stateful.class) == null) {
                 for (Field field : k.getDeclaredFields()) {
                     if ((field.getModifiers() & Modifier.FINAL) == 0 && (field.getModifiers() & Modifier.STATIC) == 0) {
-                        macroClasses.put(klass, true);
-                        throwRTE(klass, k, field);
+                        notAnnotatedStateful.put(klass, true);
+                        throwUp(klass, k, field);
                     }
                 }
             }
         }
-        macroClasses.put(klass, false);
+        notAnnotatedStateful.put(klass, false);
     }
 
-    private void throwRTE(final Class<? extends Macro> klass, final Class<?> k, final Field field) {
-        throw new RuntimeException(String.format("The macro class '%1$s' is not stateless, %2$s has non-final, non-static field%3$s.", klass.getName(), (k == klass ? "it " : "parent class " + k.getName()), (field == null ? "" : (" '" + field.getName() + "'"))));
+    /**
+     * Throws a run-time exception that the macro class is not stateless.
+     *
+     * @param klass the macro class
+     * @param k     the parent class that has the non-final, non-static field
+     * @param field the field that is non-final, non-static and violates the stateless requirement
+     * @throws RuntimeException always
+     */
+    private void throwUp(final Class<? extends Macro> klass, final Class<?> k, final Field field) {
+        throw new RuntimeException(String.format("The macro class '%1$s' is not stateless, %2$s has non-final, non-static field%3$s.",
+                klass.getName(),
+                (k == klass ? "it " : "parent class " + k.getName()),
+                (field == null ? "" : (" '" + field.getName() + "'"))));
     }
 
     /**

@@ -6,6 +6,7 @@
 
 
 
+
 Snippet handling macros help you to include information from program source code into the documentation automatically.
 This macro package also includes some XML handling, string, and text formatting macros, which are usually used together with snippets.
 
@@ -131,7 +132,8 @@ This way, it is easier to keep your documentation up to date.
 .. <<dictionary,`dictionary`>>
 .. <<decorate,`decorate`>>
 .. <<snip_update,`snip:update`>>
-. <<kroki,Kroki>>
+.. <<variation,`variation`>>
+. <<kroki,Kroki>
 
 
 [[usage]]
@@ -166,7 +168,7 @@ Since 1.7.4 option `onceAs`
 This macro collects text snippets from files.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The syntax of the macro is
 
@@ -316,7 +318,7 @@ The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
 
-These options are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These options are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 * `include`
@@ -778,8 +780,8 @@ will result in
 
 [source]
 ----
-../jamal-snippet/documentation/macros/snippy.txt
-../jamal-snippet/documentation/macros/snip_define.adoc.jam
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1106,7 +1108,7 @@ You cannot use `warning` and `error` together.
 This macro lists the defined snippets.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -1150,7 +1152,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 This macro saves all the collected snippets to a file.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file name must be specified by the parameter `output`.
 The general syntax of the macro is
@@ -1242,7 +1244,7 @@ It is saved as a `CDATA` section(s).
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -1292,7 +1294,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -1698,7 +1700,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:966:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:967:30
 ----
 
 
@@ -1912,7 +1914,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 This macro can put numbers in front of the lines, sequentially numbering them.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The syntax of the macro is
@@ -1981,7 +1983,7 @@ Any illegal formatting will result in an error.
 This macro deletes, or keeps the selected lines from its input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The format of the macro is
@@ -2070,7 +2072,7 @@ In this case only the comment lines remained that start with `//` at the start o
 You can use this macro to skip lines from the snippet.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -2181,7 +2183,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 This macro replaces strings in the input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It works similarly to the macro <<replace,`replace`>>.
@@ -2616,7 +2618,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 This macro reflows the content.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -2880,7 +2882,7 @@ It can kill/keep lines, skip, replace, trim, lines, select line ranges; it can r
 
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
@@ -3185,6 +3187,7 @@ will result
 - SnipProperties.java
 - Xml.java
 - CounterMacro.java
+- Variation.java
 - SnipList.java
 - ShellVar.java
 - Locate.java
@@ -3267,7 +3270,7 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 2,400 bytes
+- snippet: 2,432 bytes
 - JavaMatcherBuilderMacros.java: 19,757 bytes
 - Snip.java: 4,597 bytes
 - ReplaceUtil.java: 1,033 bytes
@@ -3331,6 +3334,7 @@ will result
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 3,885 bytes
+- Variation.java: 6,690 bytes
 - SnipList.java: 1,228 bytes
 - ShellVar.java: 3,837 bytes
 - Locate.java: 5,965 bytes
@@ -3596,7 +3600,7 @@ will result in the output
 
 [source]
 ----
-2023-11-14 15:23:07
+2023-11-17 18:28:09
 ----
 
 
@@ -3945,7 +3949,7 @@ will result in
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/../jamal-snippet/README.adoc
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc
 ----
 
 
@@ -4952,8 +4956,310 @@ When this happens, you can keep backward compatibility with
 
 This will render the current, no operation functionality of the macro.
 
+
+[[variation]]
+=== LIII. `variation`
+
+
+
+This macro helps not keep variations of repeated texts in the document consistent.
+
+Repeated texts are text fragments that appear in the document at multiple places repeated exactly as they are or with minimal variations.
+The macro helps you to create these texts separating the variable part from the constant part.
+If there is any discrepancy between the constant part of the text fragments, the macro will report an error.
+
+The macro is used in the following way (example):
+
+[source]
+----
+{@variation text that happens <<many>> times in the document}
+...
+{@variation text that happens <<multiple>> times in the document}
+----
+
+and it will result in the following text:
+
+[source]
+----
+text that happens many times in the document
+...
+text that happens multiple times in the document
+----
+
+
+In this case the variable parts are enclosed between `<<` and `>>` strings.
+These are the parts that may change.
+When the macro is used the second and further subsequent times, these parts are ignored during the comparison.
+If the constant parts, which are outside of these special parentheses, differ, the macro will report an error.
+
+__When you fix a typo or change in any way the constant part of the text, you will not forget to update the other occurrences.__
+
+The functionality of the macro is configurable and flexible.
+The opening and closing strings are `<<` and ``>>`` by default, but you can change them.
+You can also change the way the macro compares the constant parts.
+It can ignore the letter casing and also treat different multiple spaces as one.
+
+The parops the macro accepts between `(` and `)` characters are the following:
+
+* `id`
+         the identifier of the segment.
+         If you use only one variation, the default value for this paropt is `$vari` and you can omit the parameter.
+* `ignoreCase`
+         ignore the case of the characters during the comparison.
+* `ignoreSpace`
+         treat repeated spaces as one space during the comparison.
+         Also, treat new line and other white-space characters as ordinary spaces for the comparison.
+* `trim`
+         remove the training and leading spaces from the input before the comparison
+* `variation$start` (alias `start`)
+         the start string of the parts that will not be compared
+* `variation$end` (alias `end`)
+         the end of the string parts that will not be compared
+
+
+
+The parops are all "aliases", in other words you cannot globally define them with the exceptions of `variation$start` and `variation$end`.
+If you define any of these as user-defined macros then the value of the macro will be used as the value of the parop for subsequent calls.
+
+In the following, we will list some examples.
+
+
+==== Simple constant text
+
+
+This example shows a text used two times in the document.
+This one does not have variable parts, the whole text is contant and has to appear the second time exactly the same.
+
+[source]
+----
+{@variation (id=doubled_text)text that happens two times in the document}
+{@variation (id=doubled_text)text that happens two times in the document}
+----
+
+results in
+
+[source]
+----
+text that happens two times in the document
+text that happens two times in the document
+----
+
+
+
+==== Simple variable text
+
+
+This example has some variable part in the text.
+When the macro is used, the separator strings are removed.
+That way the output will not contain the `<<` and `>>` characters.
+
+[source]
+----
+{@variation (id=somany_text)text that happens <<some>> times in the document}
+{@variation (id=somany_text)text that happens <<any>> times in the document}
+----
+
+results in
+
+[source]
+----
+text that happens some times in the document
+text that happens any times in the document
+----
+
+
+NOTE:It is an error to have a start (`<<`) or end (`>>`) string in the text.
+If you need to have any of them as part of the constant or variable part of the text, you should define alternatives using the paropts `start` and `end` as demonstrated in the next example.
+
+
+==== Alternative start and end strings
+
+
+This example shows that you can define alternative start and end strings.
+If it is defined in the first occurrence of the text in the document, it will be used for all subsequent occurrences.
+Even in this case, start and end strings can be redefined in the subsequent calls, but those definitions are local.
+Also, redefinition of these strings does not affect the `variation` macros with other identifiers.
+
+[source]
+----
+{@variation (id=alter start=< end=>)text that happens <some> times in the document}
+{@variation (id=alter)text that happens <any> times in the document}
+{@variation (id=alter start=' end=')text that happens 'multiple' times in the document}
+{@variation (id=alter)text that happens <nonce> times in the document}
+{@variation (id=somany_text)text that happens <<some>> times in the document}
+{@variation (id=somany_text)text that happens <<any>> times in the document}
+----
+
+results in
+
+[source]
+----
+text that happens some times in the document
+text that happens any times in the document
+text that happens multiple times in the document
+text that happens nonce times in the document
+text that happens some times in the document
+text that happens any times in the document
+----
+
+
+
+==== Ignoring letter casing
+
+
+This example shows how to use the `ignoreCase` parop.
+When the comparison is done, the original text and the subsequent texts are compared ignoring the letter casing.
+The actual output is not affected by this option.
+Using this option, you can use upper case or lower case letters without enclosing those characters into variable parts.
+
+This option is not inherited from the first occurrence of the text in the document.
+It has to be applied in all subsequent uses that may differ from the first one in letter casing.
+
+Using this option in the first occurrence of the text is optional, but has no effect.
+
+[source]
+----
+{@variation (id=ignore_case)text that happens <<some>> TIMES in the document}
+{@variation (id=ignore_case ignoreCase)text that happens <<Some>> times in the document}
+----
+
+will result in
+
+[source]
+----
+text that happens some TIMES in the document
+text that happens Some times in the document
+----
+
+
+
+==== Ignoring multiple spaces
+
+
+This example demonstrates that the macro can ignore multiple spaces in the text.
+Using the parop `ignoreSpace` you can define that multiple spaces in the text are treated as one.
+Different white-space characters, like new-line, line-feed and so on are treated as ordinary space characters.
+The actual output is not affected by this option.
+All the different space characters that you apply to the text will get into the output.
+
+This option is not inherited from the first occurrence of the text in the document.
+It has to be applied in all subsequent uses that may differ from the first one in spacing.
+
+Using this option in the first occurrence of the text is optional, but has no effect.
+
+[source]
+----
+{@variation (id=ignore_spc)text that happens
+<<some>> times in         the document}
+{@variation (id=ignore_spc ignoreSpace)text that happens <<Some>> times in the document}
+----
+
+will result in
+
+[source]
+----
+text that happens
+some times in         the document
+text that happens Some times in the document
+----
+
+
+
+==== Ignoring spaces at the beginning and end of the text
+
+
+[source]
+----
+.{@variation (id=trimmed trim)      this is trimmed only for the comparison}.
+.{@variation (id=trimmed trim)  this is trimmed only for the comparison      }.
+----
+
+will result in the following text:
+
+[source]
+----
+.      this is trimmed only for the comparison.
+.  this is trimmed only for the comparison      .
+----
+
+
+
+
+==== Variable part is missing
+
+
+When some variable part becomes an empty string, you can omit that part.
+There is no need to write `<<>>` in the text.
+
+You should be careful paying attention to multiple spaces as in the example below.
+
+[source]
+----
+{@variation (id=missng)text that happens <<some times>> in the document}
+{@variation (id=missng ignoreSpace)text that happens in the document}
+----
+
+will result in:
+
+[source]
+----
+text that happens some times in the document
+text that happens in the document
+----
+
+
+
+==== Defining global start and end strings
+
+
+The start and end string by default is `<<` and `>>`.
+It is possible to define global start and end strings that will be used in all subsequent calls of the macro.
+Note, however, that the macros that have already been defined will not be affected by the change.
+In the example below the first call (1) to `variation` uses the default.
+After this we set the user defined macros `variation$start` and `variation$end` to `[` and `]` respectively.
+This will change any subsequent calls of `variation`, which create a _new_ text.
+On line (2) we still use the default, even though the user defined macros are already defined.
+The reason is that this inherits the default from the first call.
+This inheritance is stronger than the user defined macros.
+
+On line (3) we define a new variation text, and this time the start and end strings are `[` and `]`.
+So are they on line (4).
+
+[source]
+----
+{@variation (id=wuff) Here the <<variable>> part uses the default} (1)
+{@define variation$start=[}\
+{@define variation$end=]}\
+{@variation (id=wuff) Here the <<changing>> part uses the default} (2)
+{@variation (id=quackk) Here the [variable] part uses the newly defined} (3)
+{@variation (id=quackk) Here the [changling] part uses the newly defined} (4)
+{@variation (id=quackk start=' end=') Here the 'chang ling wong' part uses the newly defined} (5)
+{@variation (id=quackk variation$start=' variation$end=') Here the [chang ling wong] part uses the newly defined} (6)
+----
+
+will result in
+
+[source]
+----
+Here the variable part uses the default (1)
+Here the changing part uses the default (2)
+Here the variable part uses the newly defined (3)
+Here the changling part uses the newly defined (4)
+Here the chang ling wong part uses the newly defined (5)
+Here the chang ling wong part uses the newly defined (6)
+----
+
+
+NOTE: You can define the start and end string using the parops `start` and `end` as demonstrated in the example on line (5).
+To do this, you must use the `start` and `end` aliases and not the `variation$start` and `variation$end` macro names.
+As demonstrated on line (6), you can also use the `variation$start` and `variation$end` macro names, but they have no effect.
+The reason is that the code puts the inherited strings in front of the strings defined by these names.
+
+
+
+
 [[dictionary]]
-=== LIII. `dictionary`
+=== LIV. `dictionary`
 
 This macro can be used to define a dictionary.
 Dictionaries are used by the decorator macro, but other macros can also use them.
@@ -4982,7 +5288,7 @@ This is also the default name of the dictionary used by the <<decorate,`decorate
 
 
 [[decorate]]
-=== LIV. `decorate`
+=== LV. `decorate`
 
 This macro can be used to decorate a text.
 The decoration happens for each word separately.

@@ -16,3 +16,7 @@ If the XPath expression is missing, then the whole XML content is converted to f
   {#define VERSION={pom /project/version/text()}}
   {@export VERSION}
 }
+{@define ? CHPREFIX==}
+{#define ch($title)=
+{CHPREFIX}= $title
+}

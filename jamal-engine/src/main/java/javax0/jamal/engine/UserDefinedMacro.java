@@ -41,7 +41,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     private boolean pure = false;
 
     private boolean xtended = false;
-    private Map<String, String> defaults = new HashMap<>();
+    private final Map<String, String> defaults = new HashMap<>();
     private static final String ESCAPE = "@escape ";
 
     @Override
@@ -67,38 +67,6 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
             default:
                 throw new IllegalArgumentException("Unknown configuration key: " + key);
         }
-    }
-
-    /**
-     * Convert a multi-line string into a map. The string is a list of lines. Each line is a key value pair separated
-     * by the first {@code =} character. The key is the string before the {@code =} character and the value is the
-     * string after the {@code =} character. The keys are trimmed, the values are not.
-     *
-     * @param s the input string
-     * @return the new Map
-     */
-    private Map<String, String> convertToMap(String s) {
-        final var map = new HashMap<String, String>();
-        final var keys = new HashSet<>(Arrays.asList(argumentHandler.parameters));
-        for (final var line : s.split("\n")) {
-            if (line.trim().isEmpty()) {
-                continue;
-            }
-            final var parts = line.split("=", 2);
-            String key = parts[0].trim();
-            if (!keys.contains(key)) {
-                throw new IllegalArgumentException("Default parameter '" + key + "' is not defined in the parameter list.");
-            }
-            if (map.containsKey(key)) {
-                throw new IllegalArgumentException("Default parameter '" + key + "' is defined more than once.");
-            }
-            if (parts.length == 2) {
-                map.put(key, parts[1]);
-            } else {
-                map.put(key, "");
-            }
-        }
-        return map;
     }
 
     /**

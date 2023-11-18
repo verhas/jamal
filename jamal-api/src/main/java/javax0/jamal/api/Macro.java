@@ -18,9 +18,12 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
  * <p>
  * Macro implementations are supposed to be state-less, but they can have state. Be careful, however, that the macros
  * can have many instances while processing a single file if they come into life via the {@code use} macro. At the same
- * time multiple threads in some installations may use the same macro instance.
+ * time, multiple threads in some installations may use the same macro instance.
  * <p>
  * When a macro implementation has state then it has to be annotated using {@link Macro.Stateful}.
+ * There is an internal check in Jamal, that will throw an exception if a stateful macro is not annotated.
+ * The check assumes any macro to be stateful that has non-static non-final fields, or any parents excluding {@link
+ * Object} has.
  */
 @FunctionalInterface
 public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
@@ -73,29 +76,30 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
     }
 
     /**
-     * This method reads the input an returns the result of the macro as a String.
+     * This method reads the input and returns the result of the macro as a String.
      * <p>
      * When the macro is used, like
      * <pre>{@code
      *       {@builtInMacro this is the input}
      * }</pre>
      * <p>
-     * then the input will contain '{@code this is the input}' without the spaces that are between the macro name and
-     * the first non-space character, which is the word '{@code this}' as in the example.
+     * then the input will contain '{@code this is the input}' without the leading spaces.
      *
      * @param in        the input that is the "parameter" to the built-in macro
      * @param processor the processor that executes the macro. See {@link Processor}
      * @return the result string that will be inserted into the output in the place of the macro use
      * @throws BadSyntax the evaluation should throw this exception with reasonable message text in case the input has
-     *                   bad format.
+     *                   a bad format.
      */
     String evaluate(Input in, Processor processor) throws BadSyntax;
 
     /**
-     * When a built-in macro is registered then the name used in the source file will be the string returned by this
+     * When a built-in macro is registered, then the name used in the source file will be the string returned by this
      * method. When a macro is registered using the built-in macro {@code use} (see {@code javax0.jamal.builtins.Use})
      * the caller can provide an alias. Even when the proposed use is to be declared through the {@code use} macro
      * it is recommended to provide a reasonable id.
+     * <p>
+     * The default implementation returns the simple name of the class in lower case.
      *
      * @return the id/name of the macro
      */
@@ -106,6 +110,14 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
     // end snippet
 
 
+    /**
+     * When a macro has aliases, it should implement this method.
+     * The return value has to be the string array of the aliases.
+     * <p>
+     * The default implementation returns the array containing the id of the macro as returned by {@link #getId()}.
+     *
+     * @return the array of aliases
+     */
     // snippet getIds
     default String[] getIds() {
         return new String[]{getId()};
@@ -184,7 +196,7 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
                     input.delete(offset);
                     output.append(macro.get().prefetch(processor, input));
                 } else {
-                    move(input,open.length(), output);
+                    move(input, open.length(), output);
                     op.push(input.getPosition());
                 }
             } else if (input.indexOf(close) == 0) {
@@ -192,7 +204,7 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
                     input.delete(close.length());
                     findFirstSignificantCharacter(input);
                 } else {
-                    move(input,close.length(), output);
+                    move(input, close.length(), output);
                 }
             } else {
                 final var before = input.indexOf(open);
@@ -206,16 +218,17 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
                 } else {
                     textEnd = input.length();
                 }
-                move(input,textEnd, output);
+                move(input, textEnd, output);
             }
         }
         return output.toString();
     }
-    
+
     private static void move(Input input, int numberOfCharacters, StringBuilder sb) {
         sb.append(input.substring(0, numberOfCharacters));
         input.delete(numberOfCharacters);
     }
+
     static void findFirstSignificantCharacter(final Input input) {
         if (input.length() > 0 && input.charAt(0) == '\\') {
             int i = 1;
@@ -265,6 +278,26 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
                 head + "\n", pos.pop());
     }
 
+    /**
+     * Retrieves a {@link Macro} from the given {@link MacroRegister} based on the provided {@link Input} and starting
+     * index.
+     * <p>
+     * This method begins by skipping over any whitespace characters from the starting index in the input. It then checks
+     * if the current character is either {@code NO_PRE_EVALUATE} or {@code PRE_EVALUATE}. If so, it moves past this character,
+     * skips any following whitespace, and then identifies the next word or identifier in the input.
+     * <p>
+     * The method differentiates between a valid identifier (starting with a character that {@code validId1stChar} returns true for)
+     * and a general string of characters (ending at the first space or the end of the input). It then attempts to retrieve
+     * a {@code Macro} from the {@code MacroRegister} using this identified string.
+     * <p>
+     * If the initial character at the starting index after skipping whitespaces is not {@code NO_PRE_EVALUATE} or {@code PRE_EVALUATE},
+     * or if the starting index is beyond the length of the input, the method returns an empty {@link Optional}.
+     *
+     * @param register The {@link MacroRegister} from which to retrieve the macro.
+     * @param input    The {@link Input} object containing the text to be analyzed.
+     * @param start    The starting index in the input from which to begin searching for the macro.
+     * @return An {@link Optional} containing the found {@link Macro}, or an empty {@link Optional} if no suitable macro is found.
+     */
     static Optional<Macro> getMacro(MacroRegister register, Input input, int start) {
         start = stepOverSpaces(input, start);
         if (start < input.length() && (input.charAt(start) == NO_PRE_EVALUATE || input.charAt(start) == PRE_EVALUATE)) {

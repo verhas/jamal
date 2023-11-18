@@ -31,6 +31,7 @@ It is recommended to set the `detectNoChange` option to true globally at the sta
 * The macros `file` and `directory` in the snippet package has a new parop `relativeTo` that controls the formatting placeholder calculation `relativePath`.
 * The new macro `file:locate` can locate files
 * Exceptions insert the macro locations at the top of the stack trace
+* Macro `variation` was developed.
 
 
 {%RELEASE IZMIR%}

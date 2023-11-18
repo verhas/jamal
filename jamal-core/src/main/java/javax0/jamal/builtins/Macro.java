@@ -21,7 +21,7 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
     @Override
     public String evaluate(final Input input, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(input, processor);
-        final var type = scanner.str(null, "type").defaultValue(USERDEFINED);
+        final var type = scanner.str(null, "type").defaultValue(USERDEFINED);// kept here for backward compatibility
         final var alias = scanner.str(null, "alias").defaultValue("");
         final var global = scanner.bool(null, "global");
         final var btype = scanner.enumeration(MacroType.class).defaultValue(MacroType.userdefined);

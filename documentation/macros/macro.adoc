@@ -6,7 +6,7 @@ since version `1.11.0`
 
 
 
-Using this built-in macro, you can use user-defined macros which have arbitrary names.
+Using this built-in macro, you can __use__ user-defined macros which have arbitrary names.
 These macros may be created by other macros other than using the built-in macro `define`.
 
 The original purpose of the macro was to support the import of macros from sources where the macro names do not conform to Jamal macro naming.
@@ -96,9 +96,9 @@ If the specified alias contains one or more `:` characters, then the macro will 
 This is the same behaviour that the macro link:define[`define`] follows.
 
 Note that there is no restriction on the alias.
-You can use any string as alias, however, there is no point to use and alias that you cannot use later as a Jamal compliant macro name.
+You can use any string as alias; however, there is no point to using an alias that you cannot use later as a Jamal compliant macro name.
 
-When `macro` tries to evaluate an undefined original macro, it will revert to the `default`. in case of a user-defined macro, or will result an error if the macro is built-in.
+When `macro` tries to evaluate an undefined original macro, it will revert to the `default`. in the case of a user-defined macro, or will result an error if the macro is built-in.
 
 You can use this macro to create aliases for standard macros with proper names.
 It is not a requirement to alias a macro that has a non-identifier string as a name.

@@ -1,11 +1,7 @@
-{@define zima({zupp})=jajja {zupp}}
-{zima ZZZ}
-{#block
-{@define $REGEX=\s*THEN\s*|\s*ELSE\s*}
-{@if true THEN true ELSE false}
-}
-{@if true THEN true ELSE false}
-
-{?$REGEX}
-
+{@variation (id=wuff) Here the <<variable>> part uses the default}
+{@define variation$start=[}\
+{@define variation$end=]}\
+{@variation (id=wuff) Here the <<changing>> part uses the default}
+{@variation (id=quack) Here the <<variable>> part uses the newly defined}
+{@variation (id=quack) Here the <<changling>> part uses the newly defined}
 

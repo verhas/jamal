@@ -1,4 +1,4 @@
-
-jajja ZZZ
-
-THEN
+ Here the variable part uses the default
+ Here the changing part uses the default
+ Here the variable part uses the newly defined
+ Here the changling part uses the newly defined
