@@ -1,5 +1,7 @@
 = Jamal IO module
 
+
+
 Using this module, you can handle files from a Jamal source code.
 You can
 
@@ -120,24 +122,26 @@ Using this macro, the picture can be downloaded and stored locally.
 The macro is controlled by options.
 The options are:
 
-* `from` should specify the source file.
-It is usually a URL starting with `https://`.
-Note that Jamal deliberately does not support `http://` URLs.
+* `from`
+ should specify the source file.
+ It is usually a URL starting with `https:`.
+ Note that Jamal deliberately does not support `http:` URLs.
+* `to`
+ the target file name.
+ This is where the file will be saved.
+* `io:append` (alias `append`)
+ is a boolean parameter meaning that the file should be appended.
+* `io:mkdir` (alias `mkdir`)
+ is a boolean parameter meaning that the directory where the file
+ should be saved should be created if it does not exist.
+* `cache`
+  is a boolean parameter meaning that the file download cache implemented in Jamal should be used.
+* `overwrite`
+ is a boolean parameter meaning that the file should be overwritten if it exists.
+ If this parameter is not specified and the target file exists, then the macro will not even start the copy.
+ The same effect could be reached surrounding the `io:copy` macro with an `if` macro using {%link file%} checking the existence of the target file.
+ This option is for convenience.
 
-* `to` the target file name.
-This is where the file will be saved.
-
-* `io:append`, `append` is a boolean parameter meaning that the file should be appended.
-
-* `io:mkdir`, `mkdir` is a boolean parameter meaning that the directory where the file should be saved should be created if it does not exist.
-
-* `cache` is a boolean parameter meaning that the file download cache implemented in Jamal should be used.
-
-
-* `overwrite` is a boolean parameter meaning that the file should be overwritten if it exists.
-If this parameter is not specified and the target file exists, then the macro will not even start the copy.
-The same effect could be reached surrounding the `io:copy` macro with an `if` macro using <<file,`io::file`>> checking the existence of the target file.
-This option is for convenience.
 
 
 [[file]]
@@ -227,7 +231,6 @@ The aliases can only be used on the macro itself after the name of the macro bet
 
 [[exec]]
 === ix. `io:exec`
-
 
 
 This macro can start an external program.
@@ -357,8 +360,6 @@ Any `io:waitFor` macro waiting for this process should also use the `optional` o
 Note that all these options are technically aliases.
 It means that you cannot use a user defined macro to specify their values.
 They all have to be specified in the first line of the macro.
-
-
 
 
 
@@ -632,4 +633,3 @@ exec -> sleep
 
 
 ----
-

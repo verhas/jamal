@@ -1,4 +1,36 @@
- Here the variable part uses the default
- Here the changing part uses the default
- Here the variable part uses the newly defined
- Here the changling part uses the newly defined
+[WARNING]
+--
+* The copy/paste text 'quack' was already defined and the content is different. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/5:12
+--
+{@variation (id=wuff) Here the <<variable>> part uses the default}
+{@define variation$start=[}\
+{@define variation$end=]}\
+{@variation (id=wuff) Here the <<changing>> part uses the default}
+{@variation (id=quack) Here the <<variable>> part uses the newly defined}
+[WARNING]
+--
+* The copy/paste text 'quack' was already defined and the content is different. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/5:12
+--
+{@variation (id=quack) Here the <<changling>> part uses the newly defined}
+[WARNING]
+--
+* The copy/paste text 'quack' was already defined and the content is different. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/5:12
+--
+[source]
+----
+The copy/paste text 'quack' was already defined and the content is different. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam/5:12
+	javax0.jamal.api.BadSyntax(when:124)
+	javax0.jamal.snippet.Variation(evaluate:64)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:493)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:437)
+	javax0.jamal.engine.Processor(safeEvaluate:446)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:437)
+	javax0.jamal.engine.Processor(evalMacro:392)
+	javax0.jamal.engine.Processor(processMacro:305)
+	javax0.jamal.engine.Processor(process:214)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:33)
+sed -i.bak  '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.txt.jam
+----

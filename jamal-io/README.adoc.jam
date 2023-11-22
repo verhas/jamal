@@ -1,4 +1,6 @@
 = Jamal IO module
+{%@snip:collect asciidoc from=src/test/java/javax0/jamal/io%}
+{%@snip:collect from=src/main/java/javax0/jamal/io%}
 
 {%@import res:jamal.jim%}\
 {%#counter:define id=macroChapter {%@define format=$roman. %}%}\
@@ -119,25 +121,12 @@ Using this macro, the picture can be downloaded and stored locally.
 The macro is controlled by options.
 The options are:
 
-* `from` should specify the source file.
-It is usually a URL starting with `https://`.
-Note that Jamal deliberately does not support `http://` URLs.
-
-* `to` the target file name.
-This is where the file will be saved.
-
-* `io:append`, `append` is a boolean parameter meaning that the file should be appended.
-
-* `io:mkdir`, `mkdir` is a boolean parameter meaning that the directory where the file should be saved should be created if it does not exist.
-
-* `cache` is a boolean parameter meaning that the file download cache implemented in Jamal should be used.
-
-
-* `overwrite` is a boolean parameter meaning that the file should be overwritten if it exists.
-If this parameter is not specified and the target file exists, then the macro will not even start the copy.
-The same effect could be reached surrounding the `io:copy` macro with an `if` macro using {%link file%} checking the existence of the target file.
-This option is for convenience.
-
+{%#replaceLines \
+    replace="/^.*?\"(.+)\"\\s*,\\s*\"(.+)\".*$/* `$1` (alias `$2`)/" \
+    replace="/^.*?\"(.+)\".*$/* `$1`/" \
+    replace="~\\s*//"
+{%@snip copy_options%}
+%}
 
 {%chap file%}
 
@@ -208,7 +197,6 @@ The default is the standard output.
 {%OPTIONS_NOTE%}
 
 {%chap exec%}
-{%@snip:collect from=src/main/java/javax0/jamal/io/Exec.java%}
 
 This macro can start an external program.
 The typical use is to start an external document handling program, like Graphviz, which cannot be integrated in-process.
@@ -255,8 +243,6 @@ The options of the macro are defined as follows:
 Note that all these options are technically aliases.
 It means that you cannot use a user defined macro to specify their values.
 They all have to be specified in the first line of the macro.%}{%ALIAS$ONLY%}
-
-{%@snip:collect asciidoc from=src/test/java/javax0/jamal/io/TestExec.java%}
 
 {%@define example($x)=[source]
 ----
