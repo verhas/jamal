@@ -50,7 +50,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
-* `OK`  `APACHE_POI_VERSION` `5.2.4` 
+* `OK`  `APACHE_POI_VERSION` `5.2.5` 
 
 * `OK`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` 
 
