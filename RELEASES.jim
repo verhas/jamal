@@ -60,3 +60,5 @@ I have never been there.
 
 a town very north in Russia
 {@define ! RELEASE:ROGACHEVO=2.5.0}
+{@define ! RELEASE:OULU=2.5.1}
+

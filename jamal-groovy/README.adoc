@@ -9,7 +9,7 @@ To use this module you have to add the dependency to you Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-groovy</artifactId>
-    <version>2.5.0</version>
+    <version>2.5.1-SNAPSHOT</version>
 </dependency>
 
 ----
@@ -563,16 +563,16 @@ If you want to use the ScriptBasic interpreter you have to
 * modify the property `maven.load.include` and `maven.load.exclude` in the file `~/.jamal/settings.properties` to include the `groovy` module.
 For example:
 
-  maven.load.include=com.javax0.jamal:jamal-groovy:2.5.0
+  maven.load.include=com.javax0.jamal:jamal-groovy:2.5.1-SNAPSHOT
 
 * add the line
 
-  {@maven:load com.javax0.jamal:jamal-groovy:2.5.0}
+  {@maven:load com.javax0.jamal:jamal-groovy:2.5.1-SNAPSHOT}
 +
 to the Jamal file where you want to use the ScriptBasic interpreter.
 
 * To include the resource file `groovy.jim` you have to add the line
 
-  {@import maven:com.javax0.jamal:jamal-groovy:2.5.0::groovy.jim}
+  {@import maven:com.javax0.jamal:jamal-groovy:2.5.1-SNAPSHOT::groovy.jim}
 +
 instead importing it as a resource.
