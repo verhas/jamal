@@ -6,7 +6,9 @@
 {%@define RELEASE_N($x)=== https://github.com/verhas/jamal/tree/$x[$x]%}
 {%@define RELEASE($x)={%RELEASE_N {%RELEASE:$x%}%}%}
 
-{%RELEASE ROGACHEVO%} (upcoming)
+{%RELEASE OULU%}
+
+{%RELEASE ROGACHEVO%}
 
 * Macro `options` can also be used as `option` singular
 * Macro `options` has the parops `push` and `pop`

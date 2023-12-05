@@ -6,7 +6,9 @@
 
 
 
-== https://github.com/verhas/jamal/tree/2.5.0[2.5.0] (upcoming)
+== https://github.com/verhas/jamal/tree/2.5.1[2.5.1]
+
+== https://github.com/verhas/jamal/tree/2.5.0[2.5.0]
 
 * Macro `options` can also be used as `option` singular
 * Macro `options` has the parops `push` and `pop`
