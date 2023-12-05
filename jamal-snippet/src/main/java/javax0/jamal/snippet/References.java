@@ -57,7 +57,7 @@ public class References implements Macro, Scanner.WholeInput {
             closer.addSerializedLines(macrosSerialized);
             final var deserializer = getDeserializerMacroObject(processor);
             for (var macroSerialized : macrosSerialized) {
-                if (macroSerialized.length() > 0) {// empty lines are ignored
+                if (notComment(macroSerialized)) {// empty and comment lines are ignored
                     final var macro = deserializer.deserialize(macroSerialized);
                     processor.defineGlobal(macro);
                 }
@@ -68,6 +68,10 @@ public class References implements Macro, Scanner.WholeInput {
             throw new IdempotencyFailed(String.format("The reference file %s was not found.", xrefFile.getAbsolutePath()));
         }
         return "";
+    }
+
+    private static boolean notComment(String macroSerialized) {
+        return !macroSerialized.isEmpty() && macroSerialized.charAt(0) != '#';
     }
 
     /**
@@ -140,7 +144,8 @@ public class References implements Macro, Scanner.WholeInput {
 
         @Override
         public void close() throws Exception {
-            final var sb = new StringBuilder();
+            final var sb = new StringBuilder("# This is a Jama reference file containing serialized base64 encoded macros\n"
+                    + "# id|openStr|closeStr|verbatim|tailParameter|pure|content|parameters\n");
             final var missing = new ArrayList<String>();
             for (final var ref : holder.getObject()) {
                 final var serialized = processor.getRegister()
@@ -149,32 +154,50 @@ public class References implements Macro, Scanner.WholeInput {
                         .map(macro -> (UserDefinedMacro) macro)
                         .map(Serializing::serialize);
                 if (serialized.isPresent()) {
+                    sb.append("# ").append(ref).append('\n');
                     sb.append(serialized.get()).append('\n');
                 } else {
                     missing.add(ref);
                 }
             }
-            Files.writeString(Paths.get(file.toURI()), sb.toString(), StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-            BadSyntax.when(missing.size() > 0, "The following references are missing: " + String.join(", ", missing));
+            Files.writeString(Paths.get(file.toURI()), sb.toString(), StandardCharsets.UTF_8,
+                    StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+            BadSyntax.when(!missing.isEmpty(), "The following references are missing: " + String.join(", ", missing));
             if (macrosSerialized != null) {
                 final var diff = checkIdempotency(macrosSerialized, sb.toString().split("\n"));
-                IdempotencyFailed.when(diff.length() > 0, "The following references are not idempotent: " + diff);
+                IdempotencyFailed.when(!diff.isEmpty(), "The following references are not idempotent: " + diff);
             }
         }
 
+        /**
+         * Check if the two sets of serialized macros are idempotent. The first set is the old set, and the second set is
+         * the new set. The method returns a string that contains the list of the macros that are new, deleted or
+         * changed.
+         * <p>
+         * The serialization set may contain empty and comment lines. These are ignored.
+         *
+         * @param oldSet the old set of serialized macros as string
+         * @param newSet the new set of serialized macros as string
+         * @return the list of the macros that are new, deleted or changed, essentially a difference
+         * @throws BadSyntax if the deserialization of the serialized macro fails
+         */
         private String checkIdempotency(String[] oldSet, String[] newSet) throws BadSyntax {
             final var diffMap = new HashMap<String, String[]>();
             final var deserializer = getDeserializerMacroObject(processor);
             for (final var line : oldSet) {
-                final var id = deserializer.deserialize(line).getId();
-                diffMap.put(id, new String[]{line, null});
+                if (notComment(line)) {
+                    final var id = deserializer.deserialize(line).getId();
+                    diffMap.put(id, new String[]{line, null});
+                }
             }
             for (final var line : newSet) {
-                final var id = deserializer.deserialize(line).getId();
-                if (diffMap.containsKey(id)) {
-                    diffMap.get(id)[1] = line;
-                } else {
-                    diffMap.put(id, new String[]{null, line});
+                if (notComment(line)) {
+                    final var id = deserializer.deserialize(line).getId();
+                    if (diffMap.containsKey(id)) {
+                        diffMap.get(id)[1] = line;
+                    } else {
+                        diffMap.put(id, new String[]{null, line});
+                    }
                 }
             }
             final var err = new StringBuilder();

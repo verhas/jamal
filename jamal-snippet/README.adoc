@@ -3339,7 +3339,7 @@ will result
 - ShellVar.java: 3,837 bytes
 - Locate.java: 5,965 bytes
 - XmlDocument.java: 5,671 bytes
-- References.java: 7,745 bytes
+- References.java: 9,022 bytes
 - Java.java: 11,623 bytes
 - ReplaceLines.java: 3,479 bytes
 - SkipLines.java: 2,801 bytes
@@ -3600,7 +3600,7 @@ will result in the output
 
 [source]
 ----
-2023-12-05 15:42:11
+2023-12-05 17:02:16
 ----
 
 
