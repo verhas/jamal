@@ -43,7 +43,7 @@ TOC
 
 NOTE: This is the latest development documentation.
 To see the documentation of a release you have to follow the link in the documentation link:RELEASES.adoc[`RELEASES.adoc`]
-If you want to read the latest release, please visit link:{jamal_home}/tree/v2.4.0[Jamal2.4.0]
+If you want to read the latest release, please visit link:{jamal_home}/tree/v2.5.0[Jamal2.5.0]
 
 
 

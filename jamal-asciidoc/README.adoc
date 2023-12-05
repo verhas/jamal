@@ -43,19 +43,19 @@ This preprocessor works for any JetBrains IDE that supports the Asciidoctor plug
 === Manual installation
 
 
-To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip`.
+To use the plugin together with the IntelliJ Asciidoc plugin, you need the file `jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip`.
 
 You can download this file from the central Maven repository using the URLs:
 
 
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.asc``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.md5``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.sha1``]
 
 The ZIP file contains all the JAR files, the `.asc`, `.md5` and `.sha1` files are standard checksum files to check the integrity of the archive.
 
@@ -66,11 +66,11 @@ Extract the content of this zip file into your projects `.Asciidoctor/lib` folde
 If you have JBang or Jamal command line version, you can ask Jamal itself to install the extension.
 To do that, execute the command
 
-    jbang jamal@verhas -jamalize version=2.4.0
+    jbang jamal@verhas -jamalize version=2.5.0
 
 or, if you installed Jamal so that you can start it from the command line as `jamal`:
 
-    jamal -jamalize version=2.4.0
+    jamal -jamalize version=2.5.0
 
 This command will install the extension into the `.Asciidoctor/lib` directory under the current directory.
 If you omit the `version` parameter, then the version of the installing Jamal will be used.
@@ -131,13 +131,13 @@ Asciidoctor itself is writen in Ruby, and it mistakenly thinks so is everything 
 The installation for AsciidocFX needs to copy all the JAR files downloadable from Maven central
 
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.asc``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.asc``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.md5``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.md5``]
 
-https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.4.0/jamal-asciidoc-2.4.0-jamal-asciidoc-distribution.zip.sha1``]
+https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/2.5.0/jamal-asciidoc-2.5.0-jamal-asciidoc-distribution.zip.sha1``]
 
 into the `lib` directory of your AsciidocFX installation.
 It is 
