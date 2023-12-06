@@ -44,7 +44,7 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         final var clone = Resolver.cloneOption(scanner);
         final var copy = Resolver.copyOption(scanner);
         scanner.done();

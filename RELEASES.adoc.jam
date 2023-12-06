@@ -8,6 +8,12 @@
 
 {%RELEASE OULU%}
 
+* `jrf` (reference) files now can contain comments to make them more readable
+* `import` has a new parop `global` that makes the import global and mot imported again even if the file was imported from a local scope
+* `import` does not import a file again if it has the same content as an already imported file.
+Until now, different files with the same content could be imported parallel.
+* Bugfix invoking macro close for AutoCloseable macros that need processor and output.
+
 {%RELEASE ROGACHEVO%}
 
 * Macro `options` can also be used as `option` singular

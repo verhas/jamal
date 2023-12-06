@@ -68,7 +68,7 @@ public class Defer implements Macro, InnerScopeDependent, OptionsControlled.Core
             processor.defineGlobal(processor.newUserDefinedMacro(inputName, out, true));
             processor.defineGlobal(new Identified.Undefined(outputName));
             processor.process(input);
-            if (processor.errors().size() > 0) {
+            if (!processor.errors().isEmpty()) {
                 processor.throwUp();
             }
             final var reader = MacroReader.macro(processor);

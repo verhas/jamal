@@ -2,7 +2,7 @@
 {%@import res:jamal.jim%}\
 {%@import ../shared_text.jim%}\
 {%@import documentation/doc.jim%}
-{%@import ../RELEASES.jim%}\
+{%@import [global] ../RELEASES.jim%}\
 {%@snip:collect onceAs="MAIN" from="src/main/java/"%}\
 {%@snip:collect onceAs="SAMPLE" from="src/test/java/" exclude="Sample.java"%}\
 {%#define lastUpdated={%@date yyyy-MM-dd HH:mm:ss%}%}\
@@ -431,7 +431,7 @@ It also helps you select different parts if you want to have more than one refer
 The dots are not part of the code and are printed only for convenience and ignored when comparing.
 You can use as many or as few dots in the hash code as you like.
 
-The hash code is displayed using lower case hexadecimal characters, but you can use upper case or mixed case characters.
+The hash code is displayed using  lower case hexadecimal characters, but you can use upper case or mixed case characters.
 Before the check, the dots are removed, and the characters are converted to a lower case.
 ====
 
@@ -523,7 +523,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 
 [[snipSave]]
 === {%chapter%}`snip:save`
-{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=c073733d%}
+{%#snip:check file={%JAVA_DIR%}SnipSave.java hash=f5cec793%}
 This macro saves all the collected snippets to a file.
 {%parameterized%}
 The file name must be specified by the parameter `output`.
@@ -1624,70 +1624,7 @@ On the other hand, it can be formatted.
 NOTE: Counters flat or hierarchical are technically user defined macros, but they will not be saved or loaded by the macro `references`.
 If you need a forward reference to a counter, you should define a user defined macro via the macro `define` and use that to reference the counter.
 
-[[references]]
-=== {%chapter%}`references`
-
-From time to time, there may be a need to have a reference to a part of the text that is defined later.
-Macros, by their nature, cannot be used before they are defined.
-You cannot reference a section or chapter number before the section or chapter is defined.
-The macros provide powerful tools to overcome this limitation in many different ways.
-For example, you can define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
-The problem with this approach is that it separates parts of the document that belong together.
-It is 100% against the philosophy of Jamal.
-
-The `ref` and `references` macros give a different solution to this problem.
-These macros help to save the values of selected macros to an external file.
-Rendering the document the second time the file is read back and the macros are defined.
-
-Typically, you use the macro `references` at the start of the file to define the reference file.
-After that you can use the `ref` (or `reference` full name, but singular) to add specific macros to the set to be saved.
-
-{%sample/
-{@references file=sample.jrf}
-{@ref a}
-This is defined later, but can be used here: {a}
-{@define a=The value of a}
-%}
-
-will result in
-
-{%output%}
-
-The macro `references` has two parameters:
-
-* `file` can specify the file name to be used to save the references.
-The default file name is `{%@snip REF_JRF%}`.
-* `holder` is the name of the macro that will hold the list of macros to be saved.
-The default name is `{%@snip XREFS%}`.
-
-Using these options you can separate the references of different files and even in the same directory.
-You can also save multiple set of references from a single document.
-
-When using the macro `ref` you can specify the name of the macro to be saved.
-Following it by a `>` sign, you can specify the name of the holder macro, where you want the reference saved.
-
-{%sample/
-{@references file=sample.jrf holder="otherRefs"}
-{@ref a > otherRefs}
-This is defined later, but can be used here: {a}
-{@define a=The value of a}
-%}
-
-will result in
-
-{%output%}
-
-When using these macros, the rendering has to run twice.
-The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
-It is your responsibility to write macros that are stable, having values independent of the previous execution.
-Following the version {%RELEASE:MANAUS%}, the macro also signals an error if the macros change between processing.
-
-When the rendering runs the first time, or the reference file was deleted, the macros are not defined.
-To avoid errors the `?` can be used in front of the macro names defined later.
-This will result in an empty string when the macro is used.
-
-Another possibility is to use the `ref` macro before the first use of the referenced macro.
-This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
+{%CH /references/references%}
 
 [[reflow]]
 === {%chapter%}`reflow`

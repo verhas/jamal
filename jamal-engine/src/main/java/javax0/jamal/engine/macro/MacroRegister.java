@@ -2,6 +2,7 @@ package javax0.jamal.engine.macro;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
+import javax0.jamal.api.Closer;
 import javax0.jamal.api.Counted;
 import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Delimiters;
@@ -565,7 +566,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     private void tryCleanUpStack(Marker check) throws BadSyntax {
-        while (scopeStack.size() > 0 && !Objects.equals(check, currentScope().checkObject)) {
+        while (!scopeStack.isEmpty() && !Objects.equals(check, currentScope().checkObject)) {
             popStackOneLevel();
         }
     }
@@ -588,11 +589,14 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
      * @throws BadSyntax when there is an error
      */
     private void popStackOneLevel() throws BadSyntax {
-        if (scopeStack.size() > 0) {
+        if (!scopeStack.isEmpty()) {
             final var removedScope = scopeStack.remove(scopeStack.size() - 1);
             for (final var macro : removedScope.getMacros().values()) {
-                if (macro instanceof AutoCloseable) {
+                if (macroCanBeClosedWithoutOutput(macro)){
                     try {
+                        if( macro instanceof Closer.ProcessorAware ){
+                            ((Closer.ProcessorAware) macro).set(processor);
+                        }
                         ((AutoCloseable) macro).close();
                     } catch (Exception e) {
                         throw new BadSyntax("Closing AutoCloseable macro '" + macro.getId() + "' caused exception.", e);
@@ -605,8 +609,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                 }
             }
             for (final var macro : removedScope.getUdMacros().values()) {
-                if (macro instanceof AutoCloseable) {
+                if (macroCanBeClosedWithoutOutput(macro)){
                     try {
+                        if( macro instanceof Closer.ProcessorAware ){
+                            ((Closer.ProcessorAware) macro).set(processor);
+                        }
                         ((AutoCloseable) macro).close();
                     } catch (Exception e) {
                         throw new BadSyntax("Closing AutoCloseable user defined macro '" + macro.getId() + "' caused exception.", e);
@@ -621,6 +628,10 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
             poppedMarkers.add(removedScope.checkObject);
             scopeStack.forEach(scope -> scope.macros.values().forEach(macro -> stack(macro, Stackable::pop)));
         }
+    }
+
+    private static boolean macroCanBeClosedWithoutOutput(Object macro) {
+        return macro instanceof AutoCloseable && !(macro instanceof Closer.OutputAware);
     }
 
     @Override

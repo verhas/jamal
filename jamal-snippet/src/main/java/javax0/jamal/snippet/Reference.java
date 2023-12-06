@@ -25,7 +25,7 @@ public class Reference implements Macro {
                 .map(m -> (References.ReferenceHolder) m)
                 .orElseThrow(() -> new BadSyntax(String.format("The reference macro '%s' is not defined", ref)));
         xref.getObject().add(id);
-        if( !processor.getRegister().getUserDefined(id).isPresent())    {
+        if(processor.getRegister().getUserDefined(id).isEmpty())    {
             final var dummy = processor.newUserDefinedMacro(id,"UNDEFINED",false,true, new String[]{"..."});
             processor.defineGlobal(dummy);
         }

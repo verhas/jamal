@@ -63,7 +63,7 @@ public class SnipSave implements Macro, InnerScopeDependent, Scanner.WholeInput 
             timeStamp.setValue(currTime + "");
             root.setAttributeNode(timeStamp);
             final var date = document.createAttribute(DATE_TIME);
-            final var formatter = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ssZ");
+            final var formatter = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss Z");
             date.setValue(formatter.format(currTime));
             root.setAttributeNode(date);
 

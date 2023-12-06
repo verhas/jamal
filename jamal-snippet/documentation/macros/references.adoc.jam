@@ -1,0 +1,78 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}References.java hash=3793404e%}
+From time to time, there may be a need to have a reference to a part of the text that is defined later.
+Macros, by their nature, cannot be used before they are defined.
+You cannot reference a section or chapter number before the section or chapter is defined.
+
+Although the macros could provide ways to overcome this limitation, these may be a subpar solution.
+For example, you could define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
+The problem with this approach is that it separates the content from the document part that it belongs to.
+
+The `ref` and `references` macros give a different solution to this problem.
+They help save the values of selected macros to an external file.
+Rendering the document the second time the file is read back and the macros are defined.
+
+Typically, you use the macro `references` at the start of the file to define the reference file.
+After that you can use the `ref` (or `reference` full name, but singular) to add specific macros to the set to be saved.
+
+{%sample/
+{@references file=sample.jrf}
+{@ref a}
+This is defined later, but can be used here: {a}
+{@define a=The value of a}
+%}
+
+will result in
+
+{%output%}
+
+The macro `references` can have three parameters:
+
+* `file` can specify the file name to be used to save the references.
+The default file name is `{%@snip REF_JRF%}`.
+* `holder` is the name of the macro that will hold the list of macros to be saved.
+The default name is `{%@snip XREFS%}`.
++
+The holder is a special user defined macro that keeps track of the macros to be saved.
+At the end of the processing, the holder macro is used to know which macros are to be saved.
+The actual value of this holder macro is not interesting.
+The only important thing is that it is a user defined macro and as such, you should not use it for anything else.
++
+You can use this macro as an ordinary user defined macro if you are curious.
+It will return the names of the macros that are saved comma separated in alphabetic order.
+
+* `comment` or `comments` instructs the macro to save some comments into the reference file.
+These comments are ignored when the macros are loaded.
+To see these comments, use this parop and open the generated file in a text editor close to your heart.
+
+You can separate the references of different documents even in the same directory.
+The other way around, you can also save multiple sets of references from a single document.
+
+When using the macro `ref` you can specify the name of the holder macro.
+Following it by a `>` sign, you can specify the name of the holder macro, where you want the reference saved.
+
+{%sample/
+{@references file=sample.jrf holder="otherRefs"}
+{@ref a > otherRefs}
+This is defined later, but can be used here: {a}
+{@define a=The value of a}
+%}
+
+will result in
+
+{%output%}
+
+If you do not specify the holder macro, the default holder macro, `{%@snip XREFS%}` is used.
+
+When using these macros, the rendering has to run twice.
+The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
+It is your responsibility to write macros that are stable, having values independent of the previous execution.
+The macro also signals an error if the macros change between processing.
+
+When the rendering runs the first time, or the reference file was deleted, the macros are not defined.
+To avoid errors the `?` can be used in front of the macro names defined later.
+This will result in an empty string when the macro is used.
+
+Another possibility is to use the `ref` macro before the first use of the referenced macro.
+This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
+

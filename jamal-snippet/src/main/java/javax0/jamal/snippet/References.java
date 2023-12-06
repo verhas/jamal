@@ -19,7 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +45,7 @@ public class References implements Macro, Scanner.WholeInput {
         final var scanner = newScanner(in, processor);
         final var file = scanner.str("file").defaultValue(REF_JRF);
         final var holder = scanner.str("holder").defaultValue(XREFS);
+        final var comments = scanner.bool("jrf$comments", "comments", "comment");
         scanner.done();
         final var id = holder.get();
         final var refHolder = new ReferenceHolder(id);
@@ -50,7 +55,7 @@ public class References implements Macro, Scanner.WholeInput {
             processor.define(refHolder);
         }
         final File xrefFile = new File(FileTools.absolute(in.getReference(), file.get()));
-        final var closer = new ReferenceDumper(processor, xrefFile, refHolder);
+        final var closer = new ReferenceDumper(processor, xrefFile, refHolder, comments.is());
         processor.deferredClose(closer);
         try {
             final var macrosSerialized = Files.readAllLines(Paths.get(xrefFile.toURI()));
@@ -128,13 +133,15 @@ public class References implements Macro, Scanner.WholeInput {
         private final File file;
         private final Processor processor;
         private final ReferenceHolder holder;
+        private final boolean comments;
 
         private String[] macrosSerialized;
 
-        public ReferenceDumper(final Processor processor, final File file, final ReferenceHolder holder) {
+        public ReferenceDumper(final Processor processor, final File file, final ReferenceHolder holder, boolean comments) {
             this.file = file;
             this.processor = processor;
             this.holder = holder;
+            this.comments = comments;
         }
 
 
@@ -144,8 +151,14 @@ public class References implements Macro, Scanner.WholeInput {
 
         @Override
         public void close() throws Exception {
-            final var sb = new StringBuilder("# This is a Jama reference file containing serialized base64 encoded macros\n"
-                    + "# id|openStr|closeStr|verbatim|tailParameter|pure|content|parameters\n");
+            final var sb = new StringBuilder();
+            if (comments) {
+                sb.append("# This is a Jamal reference file containing serialized base64 encoded macros\n")
+                        .append("# Created: ")
+                        .append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z").format(Calendar.getInstance().getTime()))
+                        .append('\n')
+                        .append("# id|openStr|closeStr|verbatim|tailParameter|pure|content|parameters\n");
+            }
             final var missing = new ArrayList<String>();
             for (final var ref : holder.getObject()) {
                 final var serialized = processor.getRegister()
@@ -154,7 +167,9 @@ public class References implements Macro, Scanner.WholeInput {
                         .map(macro -> (UserDefinedMacro) macro)
                         .map(Serializing::serialize);
                 if (serialized.isPresent()) {
-                    sb.append("# ").append(ref).append('\n');
+                    if (comments) {
+                        sb.append("# ").append(ref).append('\n');
+                    }
                     sb.append(serialized.get()).append('\n');
                 } else {
                     missing.add(ref);

@@ -19,7 +19,7 @@
 {%@snip:collect from=./jamal-api/src/main/java%}\
 {%@snip:collect from=./jamal-engine/src/main/java%}\
 {%@import environmentvariables.jim%}\
-{%@references file=README.jrf%}
+{%@references file=README.jrf comment%}
 
 = image:logo.svg[width=100px] Jamal Macro Language
 

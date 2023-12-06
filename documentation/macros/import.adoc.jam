@@ -2,11 +2,11 @@
 {%@import macrodoc.jim%}
 {%MACRO name="import" since={%RELEASE:ZURICH%}%}
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=31239e9d %}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=7facbe21.20801c11.9f4ec5a6.7c7b4773.44f099ef %}
 
 == Syntax
 
- {@import [top noCache isolate in] imported_file.jim}
+ {@import [top noCache isolate in global] imported_file.jim}
 
 `import` opens a file and reads the content of the file interpreting as Jamal macro file.
 Anything defined in that file will be imported into the scope of the current file.
@@ -77,7 +77,7 @@ In this case the `{@sep <>}` change the macro opening and closing strings and th
 Starting with version {%RELEASE:ZOLLIKOFEN%} the import macro has the option `noCache`.
 {%noCacheExplanation%}
 
-== `isolate`
+== `isolate` (boolean)
 
 The release {%RELEASE:ROGACHEVO%} introduced the option `isolate`.
 Using this option will process the imported file in a new processor.
@@ -87,3 +87,9 @@ The macros defined in the imported file will be available in the importing file 
 == `in`
 
 {%PAROP_IN/import%}
+
+== `global` (boolean)
+
+This option signals that the import should be registered on the global level.
+It is useful when a file is imported in a local level, but it contains only global macro definitions.
+In that case, there is no need to import it even at higher levels.

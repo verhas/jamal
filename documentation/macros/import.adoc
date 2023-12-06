@@ -9,7 +9,7 @@ since version `1.0.0`
 
 == Syntax
 
- {@import [top noCache isolate in] imported_file.jim}
+ {@import [top noCache isolate in global] imported_file.jim}
 
 `import` opens a file and reads the content of the file interpreting as Jamal macro file.
 Anything defined in that file will be imported into the scope of the current file.
@@ -92,7 +92,7 @@ Starting with version 1.11.0 the import macro has the option `noCache`.
 * `noCache` will ignore the cache when downloading resources using `https:` protocol.
 More precisely, it will download the resource from the network and update the cache file with the new content every time.
 
-== `isolate`
+== `isolate` (boolean)
 
 The release 2.5.0 introduced the option `isolate`.
 Using this option will process the imported file in a new processor.
@@ -109,3 +109,9 @@ When performing the import operation, the first prefix that matches the file nam
 The prefix is used at the start of the file name without any extra separator.
 
 This option can be used for relative file names, where the location of the file may be different depending on the context.
+
+== `global` (boolean)
+
+This option signals that the import should be registered on the global level.
+It is useful when a file is imported in a local level, but it contains only global macro definitions.
+In that case, there is no need to import it even at higher levels.

@@ -4,4 +4,6 @@
 {@define parameterized=
 The first line following the macro identifier until the end of the line may contain parameters.
 These parameters are parsed using the Standard Parameter Parsing as defined in {PAROPS_LINK}.
-}\
+}
+
+{@import [global] ../../RELEASES.jim}

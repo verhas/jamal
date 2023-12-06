@@ -1,15 +1,19 @@
 package javax0.jamal.builtins;
 
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Marker;
 import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Stackable;
+import javax0.jamal.tools.HexDumper;
+import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +22,6 @@ import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG1;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG2;
-import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
@@ -60,12 +63,34 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  */
 @Macro.Stateful
 public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
-    private final List<Set<String>> importedAlready = new ArrayList<>();
+
+    private static class Hash {
+        private final byte[] hash;
+
+        private Hash(byte[] hash) {
+            this.hash = hash;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Hash hash1 = (Hash) o;
+            return Arrays.equals(hash, hash1.hash);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(hash);
+        }
+    }
+
+    private final List<Set<Hash>> importedAlready = new ArrayList<>();
 
     /**
-     * The constructor of this class is not implicit because it has to initialize the stack of Set that keeps tract of
-     * already imported files (one element of the set for the corresponding level of the stack). When the application
-     * starts the stack (implemented as an ArrayList) has to have one (empty set) element already.
+     * The constructor of this class is not implicit because it has to initialize the stack of the sets that keeps
+     * track of the already imported files (one element of the set for the corresponding level of the stack).
+     * When the application starts, the stack (implemented as an ArrayList) has to have one (empty set) element already.
      */
     public Import() {
         push();
@@ -79,14 +104,16 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         final var noCache = scanner.bool(null, "noCache");
         final var isolate = scanner.bool(null, "isolate", "isolated");
         final var inDirs = scanner.str(null, "in");
+        final var globalImport = scanner.bool(null, "global");
         scanner.done();
         position = Include.repositionToTop(position, top);
         final var prefixes = Include.getPrefixes(inDirs);
         skipWhiteSpaces(input);
-        var fileName =  input.toString().trim();
-        if (wasNotImported(fileName)) {
-            importedAlready.get(importedAlready.size() - 1).add(fileName);
-            final var in = getInput(prefixes, fileName, position, noCache.is(), processor);
+        var fileName = input.toString().trim();
+        final var in = getInput(prefixes, fileName, position, noCache.is(), processor);
+        final var hash = new Hash(SHA256.digest(in.toString()));
+        if (!wasImported(hash)) {
+            registerImport(hash, globalImport.is());
             final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
             final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
             final Processor myProcessor;
@@ -106,7 +133,9 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
                 myProcessor.process(in);
             }
             if (isolate.is()) {
-                final var topLevelScope = myProcessor.getRegister().debuggable().get().getScopes().get(0);
+                final var topLevelScope = myProcessor.getRegister().debuggable()
+                        .map(Debuggable.MacroRegister::getScopes)
+                        .map(t -> t.get(0)).orElseThrow(() -> new BadSyntax("Internal error: cannot get top level scope, debugger is not implemented"));
                 for (final var entry : topLevelScope.getUdMacros().entrySet()) {
                     processor.getRegister().define(entry.getValue(), entry.getKey());
                 }
@@ -121,8 +150,23 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
     }
 
     /**
-     * Check that the file was not imported yet. In case a file was already imported then it should not be processed
-     * again. A file was imported if the import macro was invoked on this level or any level higher. In these cases the
+     * Register that the file was imported. The file is registered on the current level. If the import is global then
+     * the file is registered on the top level.
+     *
+     * @param fileName the name of the file to be registered
+     * @param isGlobal if the import is global
+     */
+    private void registerImport(final Hash fileName, final boolean isGlobal) {
+        if (isGlobal) {
+            importedAlready.get(0).add(fileName);
+        } else {
+            importedAlready.get(importedAlready.size() - 1).add(fileName);
+        }
+    }
+
+    /**
+     * Check if the file was already imported. In case a file was already imported, it should not be processed
+     * again. A file was imported if the import macro was invoked on this level or any level higher. In these cases, the
      * macros that were imported have the effect at the current level, and thus there is no reason to import the file
      * again. <p>
      * <p>
@@ -133,14 +177,14 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
      * @param fileName the absolute name of the file to be imported now.
      * @return if the file was not imported yet.
      */
-    private boolean wasNotImported(String fileName) {
+    private boolean wasImported(Hash fileName) {
         for (int level = importedAlready.size() - 1; level > -1; level--) {
             var importSet = importedAlready.get(level);
             if (importSet.contains(fileName)) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Override
