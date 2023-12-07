@@ -68,8 +68,5 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `ASM_TREE_VERSION` `9.6` 
 
-* `??` `PLANTUML_VERSION` has to be checked manually from link:https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml[`https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml`].
-The `maven-metadata.xml` for this artifact is wrong.
-
 * `??` `MARKDOWN_TO_ASCIIDOC` has to be checkeed manually from link:https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/[`https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/`].
 The `maven-metadata.xml` for this artifact is missing.

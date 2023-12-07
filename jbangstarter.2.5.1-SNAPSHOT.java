@@ -4,7 +4,6 @@
 //DEPS com.javax0.jamal:jamal-jamal:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-markdown:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-mock:2.5.1-SNAPSHOT
-//DEPS com.javax0.jamal:jamal-plantuml:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-snippet:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-yaml:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-json:2.5.1-SNAPSHOT

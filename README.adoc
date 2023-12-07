@@ -164,7 +164,7 @@ jbang jamal@verhas ... options ...
 
 This command will invoke the command line version automatically.
 The syntax and meaning of the options are the same as in case of the command line version.
-This startup also loads all the safe Jamal extensions, including `snippet`, `plantuml`, and `debug` and some others.
+This startup also loads all the safe Jamal extensions, including `snippet`, and `debug` and some others.
 ,
 If you want to see the exact list of the modules this startup loads have a look at the link:jbangstarter.java[starter] file.
 
@@ -482,7 +482,6 @@ image::jamaldebugger2559x1089.png[]
 * link:./jamal-jamal/README.adoc[Jamal Jamal Module README], How to use Jamal inside Jamal as an embedded language
 * link:./jamal-markdown/README.adoc[Jamal Markdown Module README], Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
 * link:./jamal-mock/README.adoc[Jamal Mock Module README], Mock built-in macros to test macros that are to run in a specific environment
-* link:./jamal-plantuml/README.adoc[Jamal PlantUML Module README], Embed PlantUML pictures into your documentation
 * link:./jamal-snippet/README.adoc[Jamal Snippet Module README], Use snippets to compile your documentation
 * link:./jamal-yaml/README.adoc[Jamal Yaml Module README], Use data from Yaml files in your macros and use macros in your Yaml files
 * link:./jamal-json/README.adoc[Jamal JSon Module README], Use data from JSON files in your macros and use macros in your JSON files

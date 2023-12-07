@@ -662,8 +662,6 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-mock`
 
-* `jamal-plantuml`
-
 * `jamal-snippet`
 
 * `jamal-yaml`

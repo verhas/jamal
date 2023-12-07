@@ -51,7 +51,8 @@ When the Maven Platform Reader returns with the object model, the extension pass
 
 NOTE: This way you can have the `pom.xml` file and the implementation of the extension was simpler.
 
-image::{%@plantuml call-sequence.svg
+{%@import res:kroki.jim%}
+{%kroki/call-sequence/plantuml/SVG/
 @startuml
 actor User
 skinparam style strictuml
@@ -75,7 +76,7 @@ Maven <-- "Jamal Maven Extension" : pom structure
 Maven -> Maven : build
 User <-- Maven : done
 @enduml
-%}[]
+%}
 ====
 
 == Using the Generated `pom.xml`
@@ -220,12 +221,6 @@ This module provides snippet macros.
 
 {%further snippet%}
 
-=== {%#block {%depCounter%}%} `plantuml`
-This module lets you embed PlantUML diagrams into your `pom.xml.jam` file.
-I do not think that you would need anything like this, but if you need, there is no way to put it on the classpath other than listed here as a dependency.
-
-{%further plantuml%}
-
 === {%#block {%depCounter%}%} `jamal`
 
 This module lets you call Jamal processing some part of the code in a separate processor.
@@ -238,7 +233,7 @@ This module lets you call Jamal processing some part of the code in a separate p
 === {%#block {%depCounter%}%} `markdown`
 This module lets you convert Markdown to HTML.
 This module is mainly practical when you embed Jamal macros in a JavaDoc and use the Jamal doclet extension.
-I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
+I do not see much use here.
 
 {%further markdown%}
 

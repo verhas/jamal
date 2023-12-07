@@ -479,12 +479,6 @@ $variables
 〔variable |V|"..."〕
 〕
 
-〔template |platUml|plantUml ($O$) $I$ \n $C$|create a PlantUml diagram|
-〔variable |O|"folder=... format=... template=..."〕
-〔variable |I|"xyz.svg"〕
-〔variable |C|"..."〕
-〕
-
 〔template |mock|mock ($O$) $I$ \n $C$|mock a built-in macro|
 〔variable |O|"macro=... when=.* repeat=n inf"〕
 〔variable |I|"xyz.svg"〕

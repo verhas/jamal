@@ -51,8 +51,5 @@ endif〕〕
 〔CHECK :ASM_VERSION:org/ow2/asm/asm〕
 〔CHECK :ASM_TREE_VERSION:org/ow2/asm/asm-tree〕
 
-* `??` `PLANTUML_VERSION` has to be checked manually from link:https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml[`https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml`].
-The `maven-metadata.xml` for this artifact is wrong.
-
 * `??` `MARKDOWN_TO_ASCIIDOC` has to be checkeed manually from link:https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/[`https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/`].
 The `maven-metadata.xml` for this artifact is missing.

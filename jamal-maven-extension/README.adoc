@@ -49,7 +49,8 @@ When the Maven Platform Reader returns with the object model, the extension pass
 
 NOTE: This way you can have the `pom.xml` file and the implementation of the extension was simpler.
 
-image::call-sequence.svg[]
+
+image::call-sequence.SVG[]
 ====
 
 == Using the Generated `pom.xml`
@@ -194,12 +195,6 @@ This module provides snippet macros.
 
 For further information read the link:../jamal-snippet/README.adoc[documentation] of the module.
 
-===  `plantuml`
-This module lets you embed PlantUML diagrams into your `pom.xml.jam` file.
-I do not think that you would need anything like this, but if you need, there is no way to put it on the classpath other than listed here as a dependency.
-
-For further information read the link:../jamal-plantuml/README.adoc[documentation] of the module.
-
 ===  `jamal`
 
 This module lets you call Jamal processing some part of the code in a separate processor.
@@ -212,7 +207,7 @@ For further information read the link:../jamal-java/README.adoc[documentation] o
 ===  `markdown`
 This module lets you convert Markdown to HTML.
 This module is mainly practical when you embed Jamal macros in a JavaDoc and use the Jamal doclet extension.
-I do not see much use here, but the exact reason is to list it here as for the PlantUML module.
+I do not see much use here.
 
 For further information read the link:../jamal-markdown/README.adoc[documentation] of the module.
 

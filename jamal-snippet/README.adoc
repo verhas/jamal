@@ -168,7 +168,7 @@ Since 1.7.4 option `onceAs`
 This macro collects text snippets from files.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 The syntax of the macro is
 
@@ -318,7 +318,7 @@ The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
 
-These options are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These options are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 * `include`
@@ -780,8 +780,8 @@ will result in
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
-/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
+../jamal-snippet/documentation/macros/snippy.txt
+../jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1108,7 +1108,7 @@ You cannot use `warning` and `error` together.
 This macro lists the defined snippets.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -1152,7 +1152,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 This macro saves all the collected snippets to a file.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 The file name must be specified by the parameter `output`.
 The general syntax of the macro is
@@ -1244,7 +1244,7 @@ It is saved as a `CDATA` section(s).
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -1294,7 +1294,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -1700,7 +1700,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:967:30
+../jamal-snippet/README.adoc.jam:968:30
 ----
 
 
@@ -1914,7 +1914,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 This macro can put numbers in front of the lines, sequentially numbering them.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 The syntax of the macro is
@@ -1983,7 +1983,7 @@ Any illegal formatting will result in an error.
 This macro deletes, or keeps the selected lines from its input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 The format of the macro is
@@ -2072,7 +2072,7 @@ In this case only the comment lines remained that start with `//` at the start o
 You can use this macro to skip lines from the snippet.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -2183,7 +2183,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 This macro replaces strings in the input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 It works similarly to the macro <<replace,`replace`>>.
@@ -2546,13 +2546,13 @@ If you need a forward reference to a counter, you should define a user defined m
 From time to time, there may be a need to have a reference to a part of the text that is defined later.
 Macros, by their nature, cannot be used before they are defined.
 You cannot reference a section or chapter number before the section or chapter is defined.
-The macros provide powerful tools to overcome this limitation in many different ways.
-For example, you can define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
-The problem with this approach is that it separates parts of the document that belong together.
-It is 100% against the philosophy of Jamal.
+
+Although the macros could provide ways to overcome this limitation, these may be a subpar solution.
+For example, you could define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
+The problem with this approach is that it separates the content from the document part that it belongs to.
 
 The `ref` and `references` macros give a different solution to this problem.
-These macros help to save the values of selected macros to an external file.
+They help save the values of selected macros to an external file.
 Rendering the document the second time the file is read back and the macros are defined.
 
 Typically, you use the macro `references` at the start of the file to define the reference file.
@@ -2574,17 +2574,29 @@ This is defined later, but can be used here: The value of a
 ----
 
 
-The macro `references` has two parameters:
+The macro `references` can have three parameters:
 
 * `file` can specify the file name to be used to save the references.
 The default file name is `ref.jrf`.
 * `holder` is the name of the macro that will hold the list of macros to be saved.
 The default name is `xrefs`.
++
+The holder is a special user defined macro that keeps track of the macros to be saved.
+At the end of the processing, the holder macro is used to know which macros are to be saved.
+The actual value of this holder macro is not interesting.
+The only important thing is that it is a user defined macro and as such, you should not use it for anything else.
++
+You can use this macro as an ordinary user defined macro if you are curious.
+It will return the names of the macros that are saved comma separated in alphabetic order.
 
-Using these options you can separate the references of different files and even in the same directory.
-You can also save multiple set of references from a single document.
+* `comment` or `comments` instructs the macro to save some comments into the reference file.
+These comments are ignored when the macros are loaded.
+To see these comments, use this parop and open the generated file in a text editor close to your heart.
 
-When using the macro `ref` you can specify the name of the macro to be saved.
+You can separate the references of different documents even in the same directory.
+The other way around, you can also save multiple sets of references from a single document.
+
+When using the macro `ref` you can specify the name of the holder macro.
 Following it by a `>` sign, you can specify the name of the holder macro, where you want the reference saved.
 
 [source]
@@ -2603,10 +2615,12 @@ This is defined later, but can be used here: The value of a
 ----
 
 
+If you do not specify the holder macro, the default holder macro, `xrefs` is used.
+
 When using these macros, the rendering has to run twice.
 The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
 It is your responsibility to write macros that are stable, having values independent of the previous execution.
-Following the version 2.3.0, the macro also signals an error if the macros change between processing.
+The macro also signals an error if the macros change between processing.
 
 When the rendering runs the first time, or the reference file was deleted, the macros are not defined.
 To avoid errors the `?` can be used in front of the macro names defined later.
@@ -2623,7 +2637,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 This macro reflows the content.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -2887,7 +2901,7 @@ It can kill/keep lines, skip, replace, trim, lines, select line ranges; it can r
 
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
 
 
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
@@ -3317,7 +3331,7 @@ will result
 - ThinXmlMacro.java: 603 bytes
 - BlockConverter.java: 1,912 bytes
 - UrlEncode.java: 855 bytes
-- Reference.java: 1,506 bytes
+- Reference.java: 1,502 bytes
 - Numbers.java: 1,785 bytes
 - Unicode.java: 2,068 bytes
 - Counter.java: 2,168 bytes
@@ -3605,7 +3619,7 @@ will result in the output
 
 [source]
 ----
-2023-12-06 15:47:56
+2023-12-07 12:13:17
 ----
 
 
@@ -3954,7 +3968,7 @@ will result in
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc
+/Users/verhasp/github/jamal/jamal-snippet/../jamal-snippet/README.adoc
 ----
 
 

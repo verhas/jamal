@@ -38,8 +38,8 @@ The typical use is to start a macro with the `@` character.
 This will instruct Jamal not to evaluate the input of the macro before the macro itself is evaluated.
 
 When we use the `#` character in front of the built-in macro's name then the input is evaluated and after that the macro itself is invoked to process the pre-processed input.
-
-image::{%@plantuml evaluationorder.svg
+{%@import res:kroki.jim%}
+{%kroki/evaluationorder.svg/plantuml/SVG/
 @startuml
 
 skinparam monochrome true
@@ -56,7 +56,7 @@ else
 endif
 
 @enduml
-%}[]
+%}
 
 For example:
 

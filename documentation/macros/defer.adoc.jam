@@ -17,7 +17,8 @@ The naming may be strange at first, naming the  output of the processing "input"
 However, every output is the input of the next step in a processing chain.
 The content of `$input` is the text the deferred macro can work with, hence it is the input for this step.
 
-image::{%@plantuml input_output.svg
+{%@import res:kroki.jim%}
+{%kroki/input_output.svg/plantuml/SVG/
 @startuml
 start
 -> input;
@@ -29,7 +30,7 @@ start
 : $output;
 stop
 @enduml
-%}[]
+%}
 
 If this evaluation defines the global macro `$output` the value of the macro will be used instead of the original output.
 

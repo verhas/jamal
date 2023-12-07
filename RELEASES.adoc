@@ -13,6 +13,9 @@
 * `import` does not import a file again if it has the same content as an already imported file.
 Until now, different files with the same content could be imported parallel.
 * Bugfix invoking macro close for AutoCloseable macros that need processor and output.
+* Module plantUML was removed from the development.
+This module is not supported anymore.
+Using plant UML digagrams should be available through kroki either using the public service or using a local containerized kroki server.
 
 == https://github.com/verhas/jamal/tree/2.5.0[2.5.0]
 

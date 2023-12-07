@@ -18,7 +18,7 @@
         {@for MODULE in (testsupport,jamal,core,maven-input)=
             {dependency|{GROUPID}|jamal-MODULE||test}}
         {@comment specific release to avoid circular dependency, we use it only to generate documentation}
-        {@for MODULE in (assertions,plantuml,prog)=
+        {@for MODULE in (assertions,prog)=
             {dependency|{GROUPID}|jamal-MODULE|{LAST_RELEASE}|test}}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}

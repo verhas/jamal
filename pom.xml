@@ -16,7 +16,6 @@
         <module>jamal-jamal</module>
         <module>jamal-markdown</module>
         <module>jamal-mock</module>
-        <module>jamal-plantuml</module>
         <module>jamal-snippet</module>
         <module>jamal-yaml</module>
         <module>jamal-json</module>
@@ -223,11 +222,6 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-mock</artifactId>
-                <version>2.5.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.javax0.jamal</groupId>
-                <artifactId>jamal-plantuml</artifactId>
                 <version>2.5.1-SNAPSHOT</version>
             </dependency>
             <dependency>

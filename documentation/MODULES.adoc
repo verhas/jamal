@@ -171,96 +171,92 @@ This module implements a maven plugin, so you can start Jamal processing from in
 This module implements the macro `mock` to mock some built-in macros in a test environment where the given macro may not be available or behaves differently.
 Using `mock` you can create tests for your macro packages.
 
-=== 22. link:https://github.com/verhas/jamal/blob/master/jamal-plantuml/README.adoc[PLANTUML] ^_macro_^
 
-
-This module implements a macro that invokes PlantUML, generates the graphical file from the source code that you can reference as an image from your documentation.
-
-=== 23. link:https://github.com/verhas/jamal/blob/master/jamal-ruby/README.adoc[RUBY] ^_macro_^
+=== 22. link:https://github.com/verhas/jamal/blob/master/jamal-ruby/README.adoc[RUBY] ^_macro_^
 
 
 
 Use Ruby code in your macros using the macros implemented in this module.
 
-=== 24. link:https://github.com/verhas/jamal/blob/master/jamal-scriptbasic/README.adoc[SCRIPTBASIC] ^_macro_^
+=== 23. link:https://github.com/verhas/jamal/blob/master/jamal-scriptbasic/README.adoc[SCRIPTBASIC] ^_macro_^
 
 
 
 Use BASIC code in your macros using the macros implemented in this module.
 
-=== 25. link:https://github.com/verhas/jamal/blob/master/jamal-prog/README.adoc[PROG] ^_macro_^
+=== 24. link:https://github.com/verhas/jamal/blob/master/jamal-prog/README.adoc[PROG] ^_macro_^
 
 
 This module implements a simple BASIC like language integrated into Jamal.
 
-=== 26. link:https://github.com/verhas/jamal/blob/master/jamal-snippet/README.adoc[SNIPPET] ^_macro_^
+=== 25. link:https://github.com/verhas/jamal/blob/master/jamal-snippet/README.adoc[SNIPPET] ^_macro_^
 
 
 This module implements macros to help document programs.
 It includes advanced snippet handling, text transformation, text assertions, and many other features.
 
-=== 27. link:https://github.com/verhas/jamal/blob/master/jamal-test/README.adoc[TEST] ^_core_^
+=== 26. link:https://github.com/verhas/jamal/blob/master/jamal-test/README.adoc[TEST] ^_core_^
 
 
 This module contains only test code.
 During the build, these integration tests check the consistency of the application.
 
-=== 28. link:https://github.com/verhas/jamal/blob/master/jamal-testsupport/README.adoc[TESTSUPPORT] ^_core_^
+=== 27. link:https://github.com/verhas/jamal/blob/master/jamal-testsupport/README.adoc[TESTSUPPORT] ^_core_^
 
 
 This module contains classes that you can use to write unit tests to check the implementation of some macros.
 
-=== 29. link:https://github.com/verhas/jamal/blob/master/jamal-tools/README.adoc[TOOLS] ^_core_^
+=== 28. link:https://github.com/verhas/jamal/blob/master/jamal-tools/README.adoc[TOOLS] ^_core_^
 
 
 This module implements some auxiliary classes for the engine.
 It could be part of the engine.
 
-=== 30. link:https://github.com/verhas/jamal/blob/master/jamal-word/README.adoc[WORD] ^_embed_^
+=== 29. link:https://github.com/verhas/jamal/blob/master/jamal-word/README.adoc[WORD] ^_embed_^
 
 
 This implementation can read DOCX format files, process the Jamal macros and generate DOCX output.
 This module is included in the command line version, thus you can convert Microsoft Word documents from the command line version of Jamal.
 
-=== 31. link:https://github.com/verhas/jamal/blob/master/jamal-json/README.adoc[JSON] ^_macro_^
+=== 30. link:https://github.com/verhas/jamal/blob/master/jamal-json/README.adoc[JSON] ^_macro_^
 
 
 This module implements macros that support the reading and processing of JSON format data.
 
-=== 32. link:https://github.com/verhas/jamal/blob/master/jamal-kotlin/README.adoc[KOTLIN] ^_macro_^
+=== 31. link:https://github.com/verhas/jamal/blob/master/jamal-kotlin/README.adoc[KOTLIN] ^_macro_^
 
 
 This module provides a complimentary API to ease the creation of macros in Kotlin.
 
-=== 33. link:https://github.com/verhas/jamal/blob/master/jamal-kotlin-testsupport/README.adoc[KOTLIN-TESTSUPPORT] ^_macro_^
+=== 32. link:https://github.com/verhas/jamal/blob/master/jamal-kotlin-testsupport/README.adoc[KOTLIN-TESTSUPPORT] ^_macro_^
 
 
 This module provides test support for macros implemented in Kotlin.
 
-=== 34. link:https://github.com/verhas/jamal/blob/master/jamal-yaml/README.adoc[YAML] ^_macro_^
+=== 33. link:https://github.com/verhas/jamal/blob/master/jamal-yaml/README.adoc[YAML] ^_macro_^
 
 
 This module implements macros that support the reading and processing of YAML format data.
 It may be useful when you have to maintain large YAML data files.
 Using these macros, you can split up a Yaml file into smaller pieces and use macros to simplify repetitive parts.
 
-=== 35. link:https://github.com/verhas/jamal/blob/master/jamal-openai/README.adoc[OPENAI] ^_macro_^
+=== 34. link:https://github.com/verhas/jamal/blob/master/jamal-openai/README.adoc[OPENAI] ^_macro_^
 
 
 Macros implementing interface to OpenAI.
 
-=== 36. link:https://github.com/verhas/jamal/blob/master/jamal-java/README.adoc[JAVA] ^_debugger_^
+=== 35. link:https://github.com/verhas/jamal/blob/master/jamal-java/README.adoc[JAVA] ^_debugger_^
 
 
 Experimental module integrating the Java compiler into Jamal as macros.
 
-=== 37. link:https://github.com/verhas/jamal/blob/master/jamal-debug-ui/README.adoc[DEBUG-UI] ^_debugger_^
+=== 36. link:https://github.com/verhas/jamal/blob/master/jamal-debug-ui/README.adoc[DEBUG-UI] ^_debugger_^
 
 
 This is not a module.
 The code in the directory `jamal-debug-ui` contains the REACT.js based ui for the debugger.
 
-=== 38. link:https://github.com/verhas/jamal/blob/master/jamal-docker/README.adoc[DOCKER] ^_embed_^
+=== 37. link:https://github.com/verhas/jamal/blob/master/jamal-docker/README.adoc[DOCKER] ^_embed_^
 
 
 This is not a module.

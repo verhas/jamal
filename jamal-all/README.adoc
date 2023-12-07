@@ -38,8 +38,6 @@ This will add the following dependencies to your project:
 
 * `jamal-mock`
 
-* `jamal-plantuml`
-
 * `jamal-snippet`
 
 * `jamal-yaml`

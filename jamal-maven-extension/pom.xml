@@ -85,11 +85,6 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
-            <artifactId>jamal-plantuml</artifactId>
-            <version>2.5.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-snippet</artifactId>
             <version>2.5.1-SNAPSHOT</version>
         </dependency>

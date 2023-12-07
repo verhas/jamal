@@ -21,16 +21,6 @@ public class TestConvertReadme {
                 }
             });
     }
-    @Test
-    void convertSnippetArticle() throws Exception {
-        System.setProperty("java.awt.headless", "true");
-        DocumentConverter.convert("./ARTICLE.wp.jam");
-    }
-
-    @Test
-    void convertSnippetArticle2() throws Exception {
-        DocumentConverter.convert("./ARTICLE2.wp.jam");
-    }
 
     @Test
     void convertWritingBuiltIn() throws Exception {
