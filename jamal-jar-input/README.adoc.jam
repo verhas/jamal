@@ -1,7 +1,11 @@
 = Jamal JAR Input Plugin
 
-This library can handle files which are in JAR archives.
-Using this library any link:../documentation/macros/include.adoc[`include`], link:../documentation/macros/import.adoc[`import`] or other macros that need to read a file can access JAR archives.
+This library implements the classes that allow Jamal to read files from JAR archives.
+To enable the feature, the library has to be on the class path.
+The service loader facility will automatically load the plugin and Jamal file handling will automatically recognize the extension.
+Most of the Jamal applications, like JavaDoc, Asccidoctor, Maven plugin, command line, etc will automatically use the plugin.
+
+With this library, any link:../documentation/macros/include.adoc[`include`], link:../documentation/macros/import.adoc[`import`] or other macros reading files can access JAR archives.
 
 == Resource Name Format
 
@@ -18,17 +22,11 @@ To access a file from a JAR, the file name has to be formatted
 
 * The __path_inside_the_jar_to_the_file__ is the path inside the JAR file to the actual file.
 
-.Examples
+.Example
 [%collapsible]
 ====
-****
-Example:
-
 [source]
 ----
 {@include [verbatim] jar:file://C:/Users/PincoPalino/myJar.jar!/Bing.txt}
 ----
 ====
-
-The JAR file simply has to be on the class path, and Jamal will find it using the service loader facility.
-The standard modules embedding Jamal do it.

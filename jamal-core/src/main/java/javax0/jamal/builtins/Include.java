@@ -7,6 +7,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Position;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scanner;
@@ -17,8 +18,8 @@ import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG1;
 import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG2;
-import static javax0.jamal.tools.FileTools.absolute;
 import static javax0.jamal.tools.FileTools.getInput;
+import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 @Macro.Stateful
@@ -49,6 +50,7 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         final var lines = scanner.str(null, "lines");
         final var noCache = scanner.bool(null, "noCache");
         final var inDirs = scanner.str(null, "in");
+        final var optional = scanner.bool(null, "optional", "ifExists");
         scanner.done();
         position = repositionToTop(position, top);
         final var prefixes = getPrefixes(inDirs);
@@ -60,7 +62,7 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
             throw new BadSyntax("Include depth is too deep");
         }
         final String result;
-        final var in = getInput(prefixes, fileName, position, noCache.is(), processor);
+        final Input in = getInputOptional(processor, optional, prefixes, fileName, position, noCache);
         final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
         if (lines.isPresent()) {
@@ -82,6 +84,20 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         }
         depth++;
         return result;
+    }
+
+    private static Input getInputOptional(Processor processor, BooleanParameter optional, String[] prefixes, String fileName, Position position, BooleanParameter noCache) throws BadSyntax {
+        final Input in;
+        if (optional.is()) {
+            try {
+                in = getInput(prefixes, fileName, position, noCache.is(), processor);
+            } catch (BadSyntax bs) {
+                return makeInput("");
+            }
+        } else {
+            in = getInput(prefixes, fileName, position, noCache.is(), processor);
+        }
+        return in;
     }
 
     static String[] getPrefixes(StringParameter inDirs) throws BadSyntax {

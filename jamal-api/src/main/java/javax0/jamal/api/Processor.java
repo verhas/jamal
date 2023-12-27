@@ -6,6 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * The processor object that can be used to process an input to generate the Jamal output.
@@ -55,7 +56,7 @@ public interface Processor extends AutoCloseable {
      * Create a new instance of the same processor.
      * The new instance will have the same configuration as the original
      * one, but it does not inherit the defined macros (only the separator and the context).
-     *
+     * <p>
      * The macro opening and closing strings will be the same as the spawning processor at the time of the spawning.
      *
      * @return the new processor instance
@@ -474,6 +475,24 @@ public interface Processor extends AutoCloseable {
      */
     default void throwUp() throws BadSyntax {
     }
+
+    /**
+     * Get the state for a built-in macro.
+     * <p>
+     * Macros are supposed to be stateless, because different processors are allowed to share the same macro instances.
+     * On the other hand, some macros may need to maintain some state.
+     * This state, however, has to be different for different processors.
+     * <p>
+     * The processor maintains a state object for each built-in macro that has state.
+     * The state object is created upon the first request using the supplier.
+     *
+     * @param m             the macro object
+     * @param stateSupplier used to create the state upon the first call.
+     *                      It is usually a {@code T::next} method reference.
+     * @param <T>           the type of the state object
+     * @return the state object
+     */
+    <T> T state(Macro m, Supplier<T> stateSupplier);
 
     /**
      * Convert a Jamal version string to a {@link Runtime.Version}.

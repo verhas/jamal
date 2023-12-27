@@ -66,4 +66,14 @@ public class TestInclude {
         TestThat.theInput("{@include [lines=-100..+1] res:import/lineNumbers.txt}").ignoreLineEnding().results("01\n");
     }
 
+    @Test
+    @DisplayName("Optionally include non-existent file will result empty string and not an error")
+    void testOptionalInclude() throws Exception {
+        TestThat.theInput("{@include [optional] abraka-dabra.nonexistent.file}").results("");
+    }    @Test
+    @DisplayName("Include non-existent file will error")
+    void testMandatoryInclude() throws Exception {
+        TestThat.theInput("{@include abraka-dabra.nonexistent.file}").throwsBadSyntax("Cannot get the content of the file 'abraka-dabra\\.nonexistent\\.file'");
+    }
+
 }

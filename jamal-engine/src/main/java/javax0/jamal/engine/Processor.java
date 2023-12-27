@@ -22,6 +22,7 @@ import javax0.jamal.engine.util.PrefixComposer;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.NullDebugger;
 import javax0.jamal.tools.OptionsStore;
+import javax0.jamal.tools.Throwing;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
@@ -33,12 +34,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.api.Macro.validIdChar;
@@ -73,6 +76,8 @@ public class Processor implements javax0.jamal.api.Processor {
     private final DebuggerStub debuggerStub = new DebuggerStub(this);
     private final OptionsStore optionsStore;
     private boolean currentlyClosing = false;
+
+    private IdentityHashMap<Macro,Object> macroState = new IdentityHashMap<>();
 
     @Override
     public Optional<Debugger> getDebugger() {
@@ -241,6 +246,14 @@ public class Processor implements javax0.jamal.api.Processor {
     @Override
     public JShellEngine getJShellEngine() {
         return shellEngine;
+    }
+
+    @Override
+    public <T> T state(Macro macro, Supplier<T> defaultValue) {
+        if( !macroState.containsKey(macro) ) {
+            macroState.put(macro, defaultValue.get());
+        }
+        return (T)macroState.get(macro);
     }
 
     /**

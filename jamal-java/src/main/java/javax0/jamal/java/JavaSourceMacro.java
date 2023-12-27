@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Macros that implement the Java source integration.
+ * Macros that allow Java code included in the source code to define built-in macros using Java.
  */
 public class JavaSourceMacro {
     /**
@@ -27,7 +27,7 @@ public class JavaSourceMacro {
     private static final String DEFAULT_ID = MACRO_NS + "source";
 
     /**
-     * An instance of this class will be stored as macro. It is used when a source class,
+     * An instance of this class will be stored as a macro. It is used when a source class,
      * when a macro source, or module info file is added to the source set.
      */
     private static class JavaMacroSet implements Identified {
@@ -73,6 +73,14 @@ public class JavaSourceMacro {
                 });
     }
 
+    /**
+     * Get the ID parop from the input. If there is no ID parop, then the default ID is returned.
+     * @param in the input
+     * @param processor the processor used to process the input
+     * @param macro the macro that is used to create the scanner
+     * @return the ID
+     * @throws BadSyntax if there is a syntax error in the input parsing the parop
+     */
     private static String getId(final Input in, final Processor processor, Scanner.FirstLine macro) throws BadSyntax {
         final var scanner = macro.newScanner(in, processor);
         final var id = scanner.str(null, "id").defaultValue(DEFAULT_ID);
@@ -167,10 +175,10 @@ public class JavaSourceMacro {
                     }
                 }
                 if (set.moduleInfo != null) {
-                    if (set.moduleInfo.trim().length() > 0) {
-                        compiler.from("module-info", set.moduleInfo);
-                    } else {
+                    if (set.moduleInfo.trim().isEmpty()) {
                         addDefaultModuleInfo(compiler, pckgSet);
+                    } else {
+                        compiler.from("module-info", set.moduleInfo);
                     }
                 } else {
                     doNotAddModuleInfo();

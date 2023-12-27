@@ -8,10 +8,10 @@ import java.util.Map;
  */
 public class JsonConverter {
     /*
-     * Note about why I do not use a well established, external JSON library:
+     * Note about why I do not use a well-established, external JSON library:
      * <p>
      * When you are developing an application, you should usually opt for the use of a library. Writing a simple class
-     * like this takes no more than 30 minutes at the start. In an application, however, there comes the time when you
+     * like this takes no more than 30 minutes at the start. In an application, however, there comes a time when you
      * need more and more features. At a certain point in time, the cumulated maintenance effort will become more than
      * the difference between the initial 30min development time of the simple class and tasks needed to utilize an
      * external library. These are roughly careful library research, selection, learning, integration and library
@@ -22,22 +22,22 @@ public class JsonConverter {
      * <p>
      * When you are developing a library, you should consider the same costs. However, there is a multiplication factor
      * when you think of the library version change and security screening and follow-up in this case. This part of the
-     * cost, which uses an external library heavier, should be multiplied by the number of installations users will
+     * cost, which uses an external library heavier, should be multiplied by the number of installation users will
      * utilize your library. It means that you should consider using an external library
      * <li>if you intend to use a lot of features (the development is not 30min),
-     * <li>you expect the library to be highly stable, rarely changing, not even for security reason,
+     * <li>you expect the library to be highly stable, rarely changing, not even for security reasons,
      * <li>you wish only a very few users for your library.
      */
     static String object2Json(Object in) {
         final var sb = new StringBuilder();
         if (in instanceof Map) {
-            final var map = (Map<String, ?>) in;
+            final var map = (Map<?, ?>) in;
             String sep = "";
             sb.append("{");
             for (final var e : map.entrySet()) {
                 sb.append(sep);
                 sb.append("\"");
-                sb.append(escape(e.getKey()));
+                sb.append(escape(e.getKey().toString()));
                 sb.append("\": ");
                 sb.append(object2Json(e.getValue()));
                 sep = ", ";
@@ -46,7 +46,7 @@ public class JsonConverter {
             return sb.toString();
         }
         if (in instanceof List) {
-            final var list = (List) in;
+            final var list = (List<?>) in;
             String sep = "";
             sb.append("[");
             for (final var e : list) {

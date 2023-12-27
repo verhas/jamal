@@ -175,9 +175,9 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
      * @param processor the processor that executes the macro. See {@link Processor}
      * @param input     the input that is the "parameter" to the built-in macro. The position of the input is right
      *                  after the macro opening string. The method moved this to the return value. The result does not
-     *                  contain the closing macro closing string, but the it is removed from the input.
+     *                  contain the closing macro closing string, but it is removed from the input.
      * @return the macro body without the opening or closing string
-     * @throws BadSyntaxAt when the fetch cannot be performed, for example a macro is not terminated
+     * @throws BadSyntaxAt when the fetch cannot be performed, for example, a macro is not terminated
      */
     default String fetch(Processor processor, Input input) throws BadSyntaxAt {
         final var output = new StringBuilder();

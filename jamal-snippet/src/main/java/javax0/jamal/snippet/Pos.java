@@ -30,7 +30,7 @@ public class Pos implements Macro, Scanner {
         // The default is `%f:%l:%c`.
         // This is also changed when the `.file`, `.line` or `.column` ending is used in the macro.
         // These cannot be used together with the `format` macro.
-        // They are the short forms for `format="%f"`, `format="%l"`, and `format="%c"`.
+        // They are the short forms for `format=%f`, `format=%l`, and `format=%c`.
         // The format is also used with the option `all`.
         final var up = scanner.number(null, "up").defaultValue(0);
         // specifies the number of steps up in the hierarchy.

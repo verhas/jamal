@@ -1,5 +1,3 @@
 = Jamal Engine Module
 
-This module contains the core functionality of the Jamal engine.
-The other modules have dependency on this implementation, and it is automatically loaded when using dependency management.
-As a user of Jamal, you do not need to do anything directly with this module.
+This module houses the essential features of the Jamal engine. Other modules depend on this implementation, and it is automatically activated through dependency management. As a Jamal user, there is no need for direct interaction with this module.

@@ -944,7 +944,7 @@ The macro has one option parameter:
 
 [[pos]]
 === {%chapter%}`pos`
-{%#snip:check file={%JAVA_DIR%}Pos.java hash=59ad4bf3.57efde19%}
+{%#snip:check file={%JAVA_DIR%}Pos.java hash=01563aac%}
 
 This macro will result the
 
@@ -953,7 +953,7 @@ This macro will result the
 * column number
 
 of the actual location.
-The simple way using the macro is, for example
+The simple way of using the macro is, for example
 
 {%sample/
 {@pos.file}:{@pos.line}:{@pos.column}

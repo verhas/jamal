@@ -1,4 +1,4 @@
-# Asciidoctor Version Incompatibility Hack
+ # Asciidoctor Version Incompatibility Hack
 
 
 ## Problem Statement

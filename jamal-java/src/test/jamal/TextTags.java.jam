@@ -1,0 +1,63 @@
+{%@comment nosave%}
+{%#java:insert to="../java/javax0/jamal/java/TextTags.java" segment="text_tags"%}
+/*
+* {%@rot13 Guvf vf trarengrq pbqr. QB ABG rqvg znahnyyl.%}
+*/
+{%!@for $TAG in (DefaultGoal,Module,FinalName,TargetPath,Directory,Filter)=
+
+{%#define $tAG={%#case:lower {%@string:substring (begin=0 end=1) $TAG%}%}{%@string:substring (begin=1) $TAG%}%}
+    public static $TAG {%$tAG%}(CharSequence {%$tAG%}) {
+        return new $TAG({%$tAG%});
+    }
+
+    public static class $TAG extends TextTags.TextTag {
+        private $TAG(final CharSequence {%$tAG%}) {
+            super({%$tAG%});
+        }
+    }
+%}
+
+{%!@for $TAG in (Filtering)=
+
+{%#define $tAG={%#case:lower {%@string:substring (begin=0 end=1) $TAG%}%}{%@string:substring (begin=1) $TAG%}%}
+    public static $TAG {%$tAG%}(CharSequence {%$tAG%}) {
+        return new $TAG({%$tAG%});
+    }
+
+    public static $TAG {%$tAG%}(boolean {%$tAG%}) {
+        return new $TAG(""+{%$tAG%});
+    }
+
+    public static class $TAG extends TextTags.TextTag {
+        private $TAG(final CharSequence {%$tAG%}) {
+            super({%$tAG%});
+        }
+    }
+%}
+
+{%!@for $TAG in (Include)=
+
+{%#define $tAG={%#case:lower {%@string:substring (begin=0 end=1) $TAG%}%}{%@string:substring (begin=1) $TAG%}%}
+    public static $TAG {%$tAG%}(CharSequence {%$tAG%}) {
+        return new $TAG({%$tAG%});
+    }
+
+    public static class $TAG extends TextTags.TextTag {
+        private $TAG(final CharSequence {%$tAG%}) {
+            super({%$tAG%});
+        }
+    }
+
+    public static class $TAGs extends Xml {
+        private $TAGs() {
+            super();
+        }
+    }
+    /**
+     {%@include [optional] $TAGs.javadoc%}
+     */
+    public static $TAGs {%$tAG%}s(CharSequence ...{%$tAG%}s) {
+        return new $TAGs();
+    }
+
+%}

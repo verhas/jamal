@@ -1,13 +1,13 @@
 {%@import macrodoc.jim%}
 {%MACRO name="include" since={%RELEASE:ZURICH%}%}
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=561c3a33%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Include.java hash=19297e65%}
 {%@import ../../environmentvariables.jim%}
 == Syntax
 
-  {@include [top noCache verbatim lines=m..n] included_file.jam}
+  {@include [top noCache verbatim optional in="" lines=m..n] included_file.jam}
 
 == History
-
+* since {%RELEASE:OULU%} include can be optional to ignore missing files
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
 * since 1.11.0 noCache
@@ -41,6 +41,9 @@ They are:
 
 * `lines` - the option can list ranges of lines to include.
 {%TEXT:RANGE%}
+
+* `optional` or `ifExists` will return an empty string if the file does not exist.
+The normal operation is to result a BadSyntax exception if the file does not exist.
 
 {%noCacheExplanation%}
 

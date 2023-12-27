@@ -3,7 +3,7 @@ package javax0.jamal.api;
 /**
  * This interface is extended by the Macro interface to help parameter options parsing.
  * <p>
- * The parameters altering the behaviour of a macro are called parops (parop in singular).
+ * The parameters altering the behavior of a macro are called parops (parop in singular).
  * This special term is to distinguish it from the parameter or arguments that are passed to the macro.
  * <p>
  * The parops are usually parsed between '(' and ')' characters.

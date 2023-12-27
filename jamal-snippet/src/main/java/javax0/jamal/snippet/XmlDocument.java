@@ -124,6 +124,13 @@ public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document
         trimNode(root);
     }
 
+    /**
+     * Remove the blank text nodes from the XML. These are the nodes that result from the source formatting of the
+     * XML file. On the other hand, when we write them back to a file formatted, then they are treated as first-class
+     * citizen nodes, that deserve their separate lines and indentation.
+     *
+     * @param node the node to remove the blank text nodes from recursively
+     */
     private static void trimNode(Node node) {
         final var children = node.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {

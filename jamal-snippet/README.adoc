@@ -1466,7 +1466,7 @@ In that case that lines appear in reversed order from the start to the end.
 The lines are included in the order as the ranges specify.
 Using this option you can rearrange the order of the lines.
 When you want to specify a range lasting to the end of the lines you can write `13..inf` or `5..infinity`.
-
++
 This option cannot be defined as macro.
 
 [[Base64]]
@@ -1689,7 +1689,7 @@ This macro will result the
 * column number
 
 of the actual location.
-The simple way using the macro is, for example
+The simple way of using the macro is, for example
 
 [source]
 ----
@@ -1724,7 +1724,7 @@ The format can be any string, and the formatting escape sequences `%f`, `%l` and
 The default is `%f:%l:%c`.
 This is also changed when the `.file`, `.line` or `.column` ending is used in the macro.
 These cannot be used together with the `format` macro.
-They are the short forms for `format="%f``, `format="%l``, and `format="%c``.
+They are the short forms for `format=%f`, `format=%l`, and `format=%c`.
 The format is also used with the option `all`.
 *  `up`
 specifies the number of steps up in the hierarchy.
@@ -3357,7 +3357,7 @@ will result
 - SnipList.java: 1,228 bytes
 - ShellVar.java: 3,837 bytes
 - Locate.java: 5,965 bytes
-- XmlDocument.java: 5,671 bytes
+- XmlDocument.java: 6,076 bytes
 - References.java: 9,702 bytes
 - Java.java: 11,623 bytes
 - ReplaceLines.java: 3,479 bytes
@@ -3365,7 +3365,7 @@ will result
 - SnipCheck.java: 7,526 bytes
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,094 bytes
-- Pos.java: 5,264 bytes
+- Pos.java: 5,258 bytes
 - Snippet.java: 1,988 bytes
 ----
 
@@ -3619,7 +3619,7 @@ will result in the output
 
 [source]
 ----
-2023-12-08 12:58:26
+2023-12-27 19:49:52
 ----
 
 

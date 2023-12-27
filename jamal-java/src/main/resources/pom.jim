@@ -1,0 +1,35 @@
+{@sep 〔 〕 }
+〔@define import=
+javax0.jamal.java.Pom
+java.net.URL
+static javax0.jamal.java.Dependency.dependency
+static javax0.jamal.java.DistributionType.repo
+static javax0.jamal.java.License.MIT
+static javax0.jamal.java.Xml.path
+static javax0.jamal.java.Xml.tagValue
+static javax0.jamal.java.Exclusion.exclusion
+javax0.jamal.java.TextTags.*
+static javax0.jamal.java.TextTags.*
+〕
+〔@define requires=jamal.〕
+〔@define extends=Pom〕
+〔@define class=MyPom〕
+〔#define [pure] precode=
+    try {
+      final var project = new MyPom();
+      return project.build();
+      } catch (Exception e) {
+      throw new RuntimeException(e);
+      }
+  }
+
+  private MyPom() throws Exception {
+    super("〔@pos (top format=%f)〕");
+    }
+
+  private String build() throws Exception {
+〕
+〔@define [pure] postcode=
+          return format();
+〕
+〔@sep〕

@@ -10,6 +10,18 @@ class RequestUriParser {
     final String queryString;
     final String context;
 
+    /**
+     * A simple parser for the URL of the request sent to the debugger.
+     * The parsing cares only the query string and the context. It does not
+     * parse the context into parts.
+     *
+     * The query string is parsed into key-value pairs. The value may be
+     * empty string.
+     *
+     * The parsing also assumes that there are no repeated keys in the query.
+     * @param uri the URI of the request
+     * @return the parser object already containing the parsed data
+     */
     static RequestUriParser parse(final String uri){
         return new RequestUriParser(uri);
     }

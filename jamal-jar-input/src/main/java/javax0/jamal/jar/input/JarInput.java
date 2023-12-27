@@ -24,13 +24,13 @@ public class JarInput implements ResourceReader {
      * A class representing the coordinates of a resource within a JAR file.
      * Instances of this class hold information about the JAR file and the specific resource
      * within the JAR file that can be accessed through a given URL format.
-     *
+     * <p>
      * The format of the URL should follow the pattern:
      *
      * <pre>{@code
      * jar:file:path_to_the_JAR_file!path_inside_the_jar_to_the_file
      * }</pre>
-     *
+     * <p>
      * It is assumed that the URL provided to the constructor adheres to this format, otherwise, an IllegalArgumentException will be thrown.
      */
     private static class ResourceCoordinates {
@@ -39,17 +39,28 @@ public class JarInput implements ResourceReader {
 
         final int jarFileStart;
 
+        /**
+         * A class representing the coordinates of a resource within a JAR file.
+         * Instances of this class hold information about the JAR file and the specific resource
+         * within the JAR file that can be accessed through a given URL format.
+         * <p>
+         * The format of the URL should follow the pattern:
+         * <p>
+         * jar:file:path_to_the_JAR_file!path_inside_the_jar_to_the_file
+         * <p>
+         * It is assumed that the URL provided to the constructor adheres to this format, otherwise, an IllegalArgumentException will be thrown.
+         */
         ResourceCoordinates(String url) {
             if (!url.startsWith(PREFIX)) {
                 throw new IllegalArgumentException(String.format("The JAR resource should start with '%s'", PREFIX));
             }
             var jarFileStart = PREFIX_LENGTH;
             url = url.substring(jarFileStart);
-            int excl = url.indexOf('!');
-            if (excl < 0) {
+            int resourceStart = url.indexOf('!');
+            if (resourceStart < 0) {
                 throw new IllegalArgumentException(String.format("The format of a JAR resource is '%spath_to_the_JAR_file!path_inside_the_jar_to_the_file'", PREFIX));
             }
-            var jarPart = url.substring(0, excl);
+            var jarPart = url.substring(0, resourceStart);
             // remove all leading slashes
             while (jarPart.startsWith("//")) {
                 jarPart = jarPart.substring(1);
@@ -62,10 +73,9 @@ public class JarInput implements ResourceReader {
                 jarPart = jarPart.substring(1);
             }
             jarFile = jarPart;
-            resourceName = url.substring(excl + 1);
+            resourceName = url.substring(resourceStart + 1);
             this.jarFileStart = jarFileStart;
         }
-
     }
 
     @Override

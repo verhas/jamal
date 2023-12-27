@@ -5,16 +5,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class TestJarInput {
 
-    @DisplayName("MavenInput says it can read something that starts with 'jar:file:'")
+    @DisplayName("JarInput says it can read something that starts with 'jar:file:'")
     @Test
     void testCanRead() {
         final var sut = new JarInput();
         Assertions.assertTrue(sut.canRead("jar:file:///c:/Program Files/x86/Jamal/1.12.5/jamal-api-1.12.5.jar!/META-INF/MANIFEST.MF"));
     }
 
-    @DisplayName("MavenInput says it cannot read something that does not start with 'jar:file:'")
+    @DisplayName("JarInput says it cannot read something that does not start with 'jar:file:'")
     @Test
     void testCantRead() {
         final var sut = new JarInput();
