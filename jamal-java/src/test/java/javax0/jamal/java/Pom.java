@@ -149,7 +149,8 @@ public class Pom {
     }
 
     public String[] dirsWith(String file) throws IOException {
-        return Files.list(Path.of(CWD).getParent()).filter(Files::isDirectory)
+        final String normalizedCWD = CWD.startsWith("/") && File.separatorChar == '\\' ? CWD.substring(1) : CWD;
+        return Files.list(Path.of(normalizedCWD).getParent()).filter(Files::isDirectory)
                 .filter(p -> new File(p.toFile(), file).exists())
                 .map(p -> p.getFileName().toString())
                 .toArray(String[]::new);
