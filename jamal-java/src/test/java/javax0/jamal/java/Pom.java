@@ -16,6 +16,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
@@ -148,7 +149,7 @@ public class Pom {
     }
 
     public String[] dirsWith(String file) throws IOException {
-        return Files.list(Paths.get(CWD).getParent()).filter(Files::isDirectory)
+        return Files.list(Path.of(CWD).getParent()).filter(Files::isDirectory)
                 .filter(p -> new File(p.toFile(), file).exists())
                 .map(p -> p.getFileName().toString())
                 .toArray(String[]::new);
@@ -193,8 +194,9 @@ public class Pom {
      * Maven's default filter directory is {@code ${project.basedir}/src/main/filters/}.
      * For a more comprehensive look at what filters are and what they can do, take a look at the quick start guide.
      *
-     * @param filters
-     * @return
+     * @param filters the filters to add
+     * @return {@code null} so that you can invoke the method as an argument to the method {@code buld()} which will,
+     * then ignore the null values.
      */
     public Xml filters(CharSequence... filters) {
         for (var filter : filters) {
