@@ -15,7 +15,7 @@ public class TestJdsl {
         try( final var is = resource.openStream() ){
             input = new String(is.readAllBytes(), StandardCharsets.UTF_8);
         }
-        TestThat.theInput(input).atPosition(resource.toURI().toURL().getFile(),1,1)
+        TestThat.theInput(input).atPosition(resource.toURI().toURL().getFile(),1,1).ignoreLineEnding()
                 .results("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                         "<project>\n" +
                         "  <modelVersion>4.0.0</modelVersion>\n" +
