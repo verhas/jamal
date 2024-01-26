@@ -12,6 +12,7 @@
 * `import` has a new parop `global` that makes the import global and mot imported again even if the file was imported from a local scope
 * `import` does not import a file again if it has the same content as an already imported file.
 Until now, different files with the same content could be imported parallel.
+* Snippet library has a new macro `plural` that can be used to pluralize a word.
 * Bugfix invoking macro close for AutoCloseable macros that need processor and output.
 * Module plantUML was removed from the development.
 This module is not supported anymore.

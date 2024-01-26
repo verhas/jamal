@@ -21,18 +21,20 @@ import static javax0.jamal.tools.Input.makeInput;
 public class JavaSourceInsert implements Macro, Scanner.FirstLine {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         final var file = scanner.str(null, "to", "file", "into");
         final var segment = scanner.str("segment", "at", "id").optional();
         final var update = scanner.bool(null, "check", "checkUpdate", "update", "updateOnly");
         final var throwUp = scanner.bool(null, "failOnUpdate", "failUpdate", "updateError");
+        final var wholeFile = scanner.bool(null, "wholeFile");
         scanner.done();
+        BadSyntax.when(wholeFile.is() && segment.isPresent(), "When the whole file is updated then the segment should not be specified.");
         final JavaSourceInsertCloser closer;
         if (in.isEmpty()) {
-            closer = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.is() || throwUp.is());
+            closer = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.is() || throwUp.is(), wholeFile.is());
             processor.deferredClose(closer);
         } else {
-            try (final var _c = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.is() || throwUp.is())) {
+            try (final var _c = new JavaSourceInsertCloser(file.get(), segment.get(), in.getPosition(), update.is() || throwUp.is(), wholeFile.is())) {
                 closer = _c;
                 closer.set(in);
                 closer.set(processor);
@@ -61,11 +63,14 @@ public class JavaSourceInsert implements Macro, Scanner.FirstLine {
 
         private boolean updated = false;
 
-        private JavaSourceInsertCloser(final String file, final String segment, final Position pos, boolean update) {
+        private final boolean wholeFile;
+
+        private JavaSourceInsertCloser(final String file, final String segment, final Position pos, boolean update, final boolean wholeFile) {
             this.file = file;
             this.segment = segment;
             this.pos = pos;
             this.update = update;
+            this.wholeFile = wholeFile;
         }
 
         private static final Pattern segmentStartPattern = Pattern.compile("^\\s*//\\s*<\\s*editor-fold(.*>)");
@@ -74,23 +79,28 @@ public class JavaSourceInsert implements Macro, Scanner.FirstLine {
         @Override
         public void close() throws BadSyntax {
             final String fileName = FileTools.absolute(pos.file, file);
-            final var originalContent = FileTools.getFileContent(fileName, processor);
-            final var linesSrc = originalContent.split("\n", -1);
-            final var linesOut = new ArrayList<String>(linesSrc.length);
-            final var linesGen = Arrays.asList(output.toString().split("\n", -1));
-            boolean inSegment = false;
-            boolean segmentAdded = false;
-            for (final var line : linesSrc) {
-                if (inSegment) {
-                    inSegment = !segmentEndPattern.matcher(line).matches();
-                    segmentAdded = copyOrSkipLineInSegment(linesOut, linesGen, inSegment, line);
-                } else {
-                    inSegment = copyLineOutOfSegment(linesOut, segmentAdded, line);
+            final String newContent;
+            final var originalContent= getFileContent(fileName);
+            if (wholeFile) {
+                newContent = output.toString();
+            } else {
+                final var linesSrc = originalContent.split("\n", -1);
+                final var linesOut = new ArrayList<String>(linesSrc.length);
+                final var linesGen = Arrays.asList(output.toString().split("\n", -1));
+                boolean inSegment = false;
+                boolean segmentAdded = false;
+                for (final var line : linesSrc) {
+                    if (inSegment) {
+                        inSegment = !segmentEndPattern.matcher(line).matches();
+                        segmentAdded = copyOrSkipLineInSegment(linesOut, linesGen, inSegment, line);
+                    } else {
+                        inSegment = copyLineOutOfSegment(linesOut, segmentAdded, line);
+                    }
                 }
+                BadSyntax.when(inSegment, "The segment " + segment + " was not closed in the file " + file + ".");
+                BadSyntax.when(!segmentAdded, "The segment " + segment + " was not found in the file " + file + ".");
+                newContent = String.join("\n", linesOut.toArray(String[]::new));
             }
-            BadSyntax.when(inSegment, "The segment " + segment + " was not closed in the file " + file + ".");
-            BadSyntax.when(!segmentAdded, "The segment " + segment + " was not found in the file " + file + ".");
-            final var newContent = String.join("\n", linesOut.toArray(String[]::new));
             if (update) {
                 if (!new JavaSourceDiff().test(originalContent, newContent)) {
                     return;
@@ -98,6 +108,20 @@ public class JavaSourceInsert implements Macro, Scanner.FirstLine {
             }
             FileTools.writeFileContent(fileName, newContent, processor);
             updated = true;
+        }
+
+        /**
+         * Get the content of the file. If the file does not exist or is not readable, then the content is empty.
+         *
+         * @param fileName the name of the file
+         * @return the content of the file
+         */
+        private String getFileContent(String fileName) {
+            try {
+                return FileTools.getFileContent(fileName, processor);
+            } catch (BadSyntax e) {
+                return "";
+            }
         }
 
         /**

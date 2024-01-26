@@ -111,7 +111,7 @@ public class TestDecorate {
 
     @Test
     @DisplayName("using dictionary")
-    void usingDictonary() throws Exception {
+    void usingDictionary() throws Exception {
         TestThat.theInput("{@dictionary\n" +
                 "k*ivetel\n" +
                 "}" +
@@ -120,7 +120,7 @@ public class TestDecorate {
 
     @Test
     @DisplayName("using dictionary named when there is also 'unnamed' dictionary")
-    void usingDictonaryNamed() throws Exception {
+    void usingDictionaryNamed() throws Exception {
         TestThat.theInput("{@dictionary\n" +
                         "k*ivetel\n" +
                         "}" +

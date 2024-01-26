@@ -17,7 +17,7 @@ static javax0.jamal.java.TextTags.*
 〔#define [pure] precode=
     try {
       final var project = new MyPom();
-      return project.build();
+      return project.doit();
       } catch (Exception e) {
       throw new RuntimeException(e);
       }
@@ -27,7 +27,7 @@ static javax0.jamal.java.TextTags.*
     super("〔@pos (top format=%f)〕");
     }
 
-  private String build() throws Exception {
+  private String doit() throws Exception {
 〕
 〔@define [pure] postcode=
           return format();

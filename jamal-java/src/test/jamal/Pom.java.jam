@@ -1,0 +1,63 @@
+{%@comment nosave%}
+{%#java:insert to="../java/javax0/jamal/java/Pom.java" segment="text_tags"
+{%!@for $TAG in (modelVersion,groupId,artifactId,version,packaging,name,description,url,inceptionYear)=
+    public void $TAG(String $TAG) {
+      project.add("$TAG", $TAG);
+    }
+%}\
+%}\
+{%#java:insert to="../java/javax0/jamal/java/Pom.java" segment="typed_tags"
+{%!@for $TAG in (parent,organization,prerequisites,issueManagement,ciManagement,distributionManagement,dependencyManagement,build,reporting)=
+{%#define $CLASS={%#case:upper {%@string:substring (begin=0 end=1) $TAG%}%}{%@string:substring (begin=1) $TAG%}%}\
+    public {%$CLASS%} $TAG() {
+       var $TAG = project.get({%$CLASS%}.class, "$TAG");
+       if ($TAG != null) {
+            return $TAG;
+       }
+       $TAG = new {%$CLASS%}();
+       project.add("$TAG", $TAG);
+       return $TAG;
+    }
+%}
+%}
+
+{%#java:insert to="../java/javax0/jamal/java/DependencyManagement.java" wholeFile
+package javax0.jamal.java;
+import static javax0.jamal.java.Xml.path;
+public class DependencyManagement extends Xml {
+
+
+    public DependencyManagement dependency(CharSequence... dependencies) {
+        for (var dependency : dependencies) {
+            if (!(dependency instanceof Dependency)) {
+                dependency = Dependency.dependency(dependency);
+            }
+            add("dependencies", dependency);
+        }
+        return this;
+    }
+}
+
+%}
+{%#java:insert to="../java/javax0/jamal/java/Build.java" wholeFile
+package javax0.jamal.java;
+public class Build extends Xml {
+
+{%!@for $TAG in (sourceDirectory,scriptSourceDirectory,testSourceDirectory,outputDirectory,testOutputDirectory,extensions )=
+    public void $TAG(String $TAG) {
+        add("$TAG", $TAG);
+    }
+%}\
+
+    public Build extensions(CharSequence... extensions) {
+        for (var extension : extensions) {
+            if (!(extension instanceof Extension)) {
+                extension = Extension.extension(extension);
+            }
+            add("extensions", extension);
+        }
+        return this;
+    }
+}
+
+%}

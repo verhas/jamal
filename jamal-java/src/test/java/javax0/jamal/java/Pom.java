@@ -17,10 +17,10 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static javax0.jamal.java.Dependency.dependency;
+
 import static javax0.jamal.java.TextTags.filter;
 import static javax0.jamal.java.TextTags.module;
 import static javax0.jamal.java.Xml.path;
@@ -38,34 +38,145 @@ public class Pom {
         project.add("modelVersion", "4.0.0");
     }
 
+    //<editor-fold id="typed_tags">
+
+    public Parent parent() {
+       var parent = project.get(Parent.class, "parent");
+       if (parent != null) {
+            return parent;
+       }
+       parent = new Parent();
+       project.add("parent", parent);
+       return parent;
+    }
+
+    public Organization organization() {
+       var organization = project.get(Organization.class, "organization");
+       if (organization != null) {
+            return organization;
+       }
+       organization = new Organization();
+       project.add("organization", organization);
+       return organization;
+    }
+
+    public Prerequisites prerequisites() {
+       var prerequisites = project.get(Prerequisites.class, "prerequisites");
+       if (prerequisites != null) {
+            return prerequisites;
+       }
+       prerequisites = new Prerequisites();
+       project.add("prerequisites", prerequisites);
+       return prerequisites;
+    }
+
+    public IssueManagement issueManagement() {
+       var issueManagement = project.get(IssueManagement.class, "issueManagement");
+       if (issueManagement != null) {
+            return issueManagement;
+       }
+       issueManagement = new IssueManagement();
+       project.add("issueManagement", issueManagement);
+       return issueManagement;
+    }
+
+    public CiManagement ciManagement() {
+       var ciManagement = project.get(CiManagement.class, "ciManagement");
+       if (ciManagement != null) {
+            return ciManagement;
+       }
+       ciManagement = new CiManagement();
+       project.add("ciManagement", ciManagement);
+       return ciManagement;
+    }
+
+    public DistributionManagement distributionManagement() {
+       var distributionManagement = project.get(DistributionManagement.class, "distributionManagement");
+       if (distributionManagement != null) {
+            return distributionManagement;
+       }
+       distributionManagement = new DistributionManagement();
+       project.add("distributionManagement", distributionManagement);
+       return distributionManagement;
+    }
+
+    public DependencyManagement dependencyManagement() {
+       var dependencyManagement = project.get(DependencyManagement.class, "dependencyManagement");
+       if (dependencyManagement != null) {
+            return dependencyManagement;
+       }
+       dependencyManagement = new DependencyManagement();
+       project.add("dependencyManagement", dependencyManagement);
+       return dependencyManagement;
+    }
+
+    public Build build() {
+       var build = project.get(Build.class, "build");
+       if (build != null) {
+            return build;
+       }
+       build = new Build();
+       project.add("build", build);
+       return build;
+    }
+
+    public Reporting reporting() {
+       var reporting = project.get(Reporting.class, "reporting");
+       if (reporting != null) {
+            return reporting;
+       }
+       reporting = new Reporting();
+       project.add("reporting", reporting);
+       return reporting;
+    }
+
+
+    //</editor-fold>
+    //<editor-fold id="text_tags">
+
+    public void modelVersion(String modelVersion) {
+      project.add("modelVersion", modelVersion);
+    }
+
+    public void groupId(String groupId) {
+      project.add("groupId", groupId);
+    }
+
+    public void artifactId(String artifactId) {
+      project.add("artifactId", artifactId);
+    }
+
+    public void version(String version) {
+      project.add("version", version);
+    }
+
     public void packaging(String packaging) {
-        project.add("packaging", packaging);
+      project.add("packaging", packaging);
     }
 
-    public Pom description(String description) {
-        project.add("description", description);
-        return this;
+    public void name(String name) {
+      project.add("name", name);
     }
 
-    public Pom name(String name) {
-        project.add("name", name);
-        return this;
+    public void description(String description) {
+      project.add("description", description);
     }
+
+    public void url(String url) {
+      project.add("url", url);
+    }
+
+    public void inceptionYear(String inceptionYear) {
+      project.add("inceptionYear", inceptionYear);
+    }
+
+    //</editor-fold>
 
     public Pom url(URL url) {
         project.add("url", url.toString());
         return this;
     }
 
-    public Pom artifactId(String artifactId) {
-        project.add("artifactId", artifactId);
-        return this;
-    }
-
-    public Pom groupId(String groupId) {
-        project.add("groupId", groupId);
-        return this;
-    }
 
     public Pom coordinates(String coords) {
         final var s = coords.split(":");
@@ -88,6 +199,16 @@ public class Pom {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+        return this;
+    }
+
+    public Pom resource(CharSequence... elements) {
+        for (var e : elements) {
+            if (e.getClass() == String.class) {
+                throw new IllegalArgumentException("You cannot have a string argument to a resource tag");
+            }
+            project.add(path("build", "resources", "resource"), e);
         }
         return this;
     }
@@ -138,12 +259,6 @@ public class Pom {
 
     public Parent parent(String coords) {
         final var parent = new Parent().coordinates(coords);
-        project.add("parent", parent);
-        return parent;
-    }
-
-    public Parent parent() {
-        final var parent = new Parent();
         project.add("parent", parent);
         return parent;
     }

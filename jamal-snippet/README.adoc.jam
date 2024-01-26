@@ -142,6 +142,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<decorate,`decorate`>>
 .. <<snip_update,`snip:update`>>
 .. <<variation,`variation`>>
+.. <<plural,`plural`>>
 . <<kroki,Kroki>
 {%@counter:define hierarchical id=chapter format=%d.{2:$ROMAN} %}
 
@@ -2846,17 +2847,17 @@ This is also the case when there is no parameter defined.
 
 [[java:insert]]
 ==== `java:insert`
-{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=a71a25ca%}
+{%#snip:check file={%JAVA_DIR%}JavaSourceInsert.java hash=95fdeecd%}
 
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
 The macro has three parameters:
 
-* `file` is the name of the file where the segment is to be inserted.
-  It is also aliased as `to` and `into`.
+* `file` Is the name of the file where the segment is to be inserted.
+It is also aliased as `to` and `into`.
 
 * `segment` is the name of the segment where the content is to be inserted.
-  It is also aliased as `id` and `at`.
-  This parameter is optional and is not needed if there is only one segment in the file.
+It is also aliased as `id` and `at`.
+This parameter is optional and is not needed if there is only one segment in the file.
 
 * `check`, `checkUpdate`, `update`, `updateOnly` will do an extra step before updating the file.
 It will do a lexical analysis on the original file and on the new version and compare the two.
@@ -2877,6 +2878,9 @@ This option may be useful in a build process when the code generation runs after
 If the code was updated, then the compilation should fail.
 The code, however, was already updated and the compilation started again will be successful.
 
+* `wholeFile` is a boolean option.
+If it is present then no segment should be, and the whole file will be updated, all the lines.
+In this case it is not an error if the file does not exist yet.
 
 The parameters are not enclosed between any characters.
 They follow the macro name directly until the end of the line.
@@ -3142,6 +3146,8 @@ When this happens, you can keep backward compatibility with
 This will render the current, no operation functionality of the macro.
 
 {%CH /variation/variation%}
+
+{%CH /plural/plural%}
 
 [[dictionary]]
 === {%chapter%}`dictionary`

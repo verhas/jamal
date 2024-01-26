@@ -54,7 +54,7 @@ public class Decorate implements Macro, Scanner {
 
 
         final var input = in.toString();
-        if (input.length() == 0) {
+        if (input.isEmpty()) {
             return "";
         }
 
@@ -90,7 +90,7 @@ public class Decorate implements Macro, Scanner {
     private static final List<Function<String, String>> DEFAULT_DECORATORS = List.of(s ->  s + " ", s ->s );
 
     private List<Function<String, String>> getDecorators(Processor processor, List<String> macros) {
-        if (macros.size() == 0) {
+        if (macros.isEmpty()) {
             return DEFAULT_DECORATORS;
         }
         final var decorators = macros.stream()
@@ -155,7 +155,7 @@ public class Decorate implements Macro, Scanner {
         final List<Integer> charnums = new ArrayList<>();
         for (int i = 0, j = 0; i < parts.length - 1; i++) {
             final var s = parts[i];
-            if (0 != s.length()) {
+            if (!s.isEmpty()) {
                 int n = toInt(rs, s, Integer::parseInt);
                 charnums.add(n);
                 BadSyntax.when(n < 0 || n > j + 1,

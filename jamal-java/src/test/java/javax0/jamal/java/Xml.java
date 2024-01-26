@@ -1,17 +1,5 @@
 package javax0.jamal.java;
 
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,13 +8,22 @@ import java.util.Map;
 /**
  * A simple data structure to store XML data and manipulate it.
  * The data contains simplified XML good enough to store POM files.
- * It is not possible to add attributes to tags and content can only be text (bo CData).
+ * It is not possible to add attributes to tags and content can only be text.
  * <p>
  * The underlying implementation is a Map with string keys representing the tag names.
- * The values can be either a string, a list or an Xml (instance of this class).
+ * The values are always lists of
+ * <ul>
+ *     <li>strings, or</li>
+ *     <li>Xml values.</li>
+ * </ul>
+ *
  * <p>
- * List values are used when a tag is repeated in the XML.
- * The elements of the lists are either strings or Xml instances.
+ * List is used because a tag can appear several times at a certain level in the XML.
+ * When a tag appears only one time, the list has one element.
+ * Empty tags are represented with an empty list.
+ * <p>
+ * Using this representation, you can reserve the order of the elements, but you cannot reserve the position of a tag
+ * relative to other tags. The order of the different tags is not reserved.
  * <p>
  */
 public class Xml implements CharSequence {
@@ -40,16 +37,45 @@ public class Xml implements CharSequence {
         xml.put(tag, new ArrayList<>());
     }
 
+    /**
+     * Return a new Xml instance that represents
+     * <pre>{@code
+     * <tag>value</tag>
+     * }</pre>
+     *
+     * @param tag the name of the tag
+     * @param value the value in the tag
+     * @return the new Xml object
+     */
     public static Xml tagValue(String tag, CharSequence value) {
         final var xml = new Xml();
         xml.add(path(tag), value);
         return xml;
     }
 
+    /**
+     * Return the string array that contains the arguments.
+     * This method can be used to represent the path of tags in a call expecting a string array.
+     *
+     * @param tags the path of the tags
+     * @return the string array
+     */
     public static String[] path(String... tags) {
         return tags;
     }
 
+    public void add(final Xml sub){
+        for( final var entry : sub.xml.entrySet()){
+            for( final var value : entry.getValue()){
+                add(entry.getKey(),value);
+            }
+        }
+    }
+
+    /**
+     * Add an empty top tag to an existing Xml.
+     * @param tag the tag to add.
+     */
     public void add(String tag) {
         add(tag, null);
     }
@@ -69,7 +95,7 @@ public class Xml implements CharSequence {
     /**
      * Get the last value of the tag.
      * <p>
-     * If the tag is not present then null is returned.
+     * If the tag is not present, then null is returned.
      *
      * @param tag the tag to get the value of
      * @return the value of the tag or null
@@ -82,12 +108,26 @@ public class Xml implements CharSequence {
         return vlist.get(vlist.size() - 1);
     }
 
+    public <T> T get(Class<T> klass, String tag) {
+        return klass.cast(get(tag));
+    }
+
+    /**
+     * Add a new element or update an existing element in the XML structure represented by the Xml class.
+     *
+     * @param tags  An array of strings representing a path of tags in the XML structure. Each element in the array is a
+     *              tag name, and the sequence of names represents the hierarchical path in the XML tree.
+     * @param index The current position in the tags array that the method is processing. It is used in recursive calls
+     *              to navigate through the array.
+     * @param value The value to be associated with the tag specified by the last element in the tags array.
+     *              If this value is null, an empty list will be added to the Xml.
+     */
     public void add(String[] tags, int index, CharSequence value) {
         formatted = null;
         final var tag = tags[index];
         final var currentValue = get(tag);
         if (currentValue == null) {
-            if (index == tags.length - 1) {
+            if (isLastTag(tags, index)) {
                 if (value == null) {
                     xml.put(tag, new ArrayList<>());
                 } else {
@@ -99,16 +139,20 @@ public class Xml implements CharSequence {
                 sub.add(tags, index + 1, value);
             }
         } else {
-            if (index == tags.length - 1) {
-                xml.get(tag).add(value);
+            if (isLastTag(tags, index)) {
+                    xml.get(tag).add(value);
             } else {
                 if (currentValue instanceof Xml) {
                     ((Xml) currentValue).add(tags, index + 1, value);
                 } else {
-                    throw new IllegalArgumentException("Cannot add subtag to a tag that already has a value");
+                    throw new IllegalArgumentException("Cannot add subtag to a tag that already has a text value");
                 }
             }
         }
+    }
+
+    private static boolean isLastTag(String[] tags, int index) {
+        return index == tags.length - 1;
     }
 
     /**
@@ -156,7 +200,6 @@ public class Xml implements CharSequence {
         }
         return formatted;
     }
-
 
 
 }

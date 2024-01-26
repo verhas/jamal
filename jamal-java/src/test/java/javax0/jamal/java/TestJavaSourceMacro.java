@@ -33,4 +33,10 @@ public class TestJavaSourceMacro {
                 .results("maci");
     }
 
+
+    @Test
+    void createPomClasses(){
+
+    }
+
 }

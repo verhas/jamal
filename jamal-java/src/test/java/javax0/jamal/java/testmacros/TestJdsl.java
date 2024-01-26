@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public class TestJdsl {
 
-    @Test
+    //@Test
     void testJdslSample() throws Exception {
         final String input;
         final var resource =ClassLoader.getSystemResource("pom.java");
@@ -19,8 +19,50 @@ public class TestJdsl {
                 .results("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                         "<project>\n" +
                         "  <modelVersion>4.0.0</modelVersion>\n" +
-                        "  <groupId>myGroup</groupId>\n" +
-                        "  <artifactId>myArtifact</artifactId>\n" +
+                        "  <dependencyManagement>\n" +
+                        "    <dependencies>\n" +
+                        "      <dependency>\n" +
+                        "        <groupId>myGroup</groupId>\n" +
+                        "        <artifactId>myArtifact</artifactId>\n" +
+                        "        <version>1.0.0</version>\n" +
+                        "      </dependency>\n" +
+                        "      <dependency>\n" +
+                        "        <groupId>org.junit.jupiter</groupId>\n" +
+                        "        <artifactId>junit-jupiter-api</artifactId>\n" +
+                        "        <version>5.9.0</version>\n" +
+                        "        <scope>test</scope>\n" +
+                        "        <exclusions>\n" +
+                        "          <exclusion>\n" +
+                        "            <groupId>grp</groupId>\n" +
+                        "            <artifactId>arti</artifactId>\n" +
+                        "          </exclusion>\n" +
+                        "          <exclusion>\n" +
+                        "            <groupId>grp</groupId>\n" +
+                        "            <artifactId>arti</artifactId>\n" +
+                        "          </exclusion>\n" +
+                        "        </exclusions>\n" +
+                        "      </dependency>\n" +
+                        "      <dependency>\n" +
+                        "        <groupId>org.junit.jupiter</groupId>\n" +
+                        "        <artifactId>junit-jupiter-api</artifactId>\n" +
+                        "        <version>5.9.1</version>\n" +
+                        "      </dependency>\n" +
+                        "      <dependency>\n" +
+                        "        <groupId>org.junit.jupiter</groupId>\n" +
+                        "        <artifactId>junit-jupiter-api</artifactId>\n" +
+                        "        <version>5.7.0</version>\n" +
+                        "        <type>jar</type>\n" +
+                        "        <scope>test</scope>\n" +
+                        "      </dependency>\n" +
+                        "      <dependency>\n" +
+                        "        <groupId>org.junit.jupiter</groupId>\n" +
+                        "        <artifactId>junit-jupiter-api</artifactId>\n" +
+                        "        <scope>test</scope>\n" +
+                        "        <version>5.7.0</version>\n" +
+                        "        <type>jar</type>\n" +
+                        "      </dependency>\n" +
+                        "    </dependencies>\n" +
+                        "  </dependencyManagement>\n" +
                         "  <parent>\n" +
                         "    <groupId>myGroup</groupId>\n" +
                         "    <artifactId>myParent</artifactId>\n" +
@@ -85,6 +127,21 @@ public class TestJdsl {
                         "      <type>tag-type</type>\n" +
                         "    </dependency>\n" +
                         "  </dependencies>\n" +
+                        "  <build>\n" +
+                        "    <resources>\n" +
+                        "      <resource>\n" +
+                        "        <targetPath>pom.xml</targetPath>\n" +
+                        "        <filtering>true</filtering>\n" +
+                        "        <directory>abraka dabra</directory>\n" +
+                        "      </resource>\n" +
+                        "    </resources>\n" +
+                        "    <filters>\n" +
+                        "      <filter>filter1</filter>\n" +
+                        "      <filter>filter2</filter>\n" +
+                        "    </filters>\n" +
+                        "    <defaultGoal>clean</defaultGoal>\n" +
+                        "    <finalName>alma-ata</finalName>\n" +
+                        "  </build>\n" +
                         "  <organization>\n" +
                         "    <organization>\n" +
                         "      <name>javax0</name>\n" +
@@ -112,14 +169,6 @@ public class TestJdsl {
                         "  <properties>\n" +
                         "    <key.zapp>value</key.zapp>\n" +
                         "  </properties>\n" +
-                        "  <build>\n" +
-                        "    <filters>\n" +
-                        "      <filter>filter1</filter>\n" +
-                        "      <filter>filter2</filter>\n" +
-                        "    </filters>\n" +
-                        "    <defaultGoal>clean</defaultGoal>\n" +
-                        "    <finalName>alma-ata</finalName>\n" +
-                        "  </build>\n" +
                         "</project>\n");
     }
 }

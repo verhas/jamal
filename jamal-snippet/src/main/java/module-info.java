@@ -116,6 +116,7 @@ module jamal.snippet {
             Repeat,
             Eval,
             Locate,
-            Variation
+            Variation,
+            Plural
             ;
 }

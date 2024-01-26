@@ -133,6 +133,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<decorate,`decorate`>>
 .. <<snip_update,`snip:update`>>
 .. <<variation,`variation`>>
+.. <<plural,`plural`>>
 . <<kroki,Kroki>
 
 
@@ -1700,7 +1701,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:968:30
+../jamal-snippet/README.adoc.jam:969:30
 ----
 
 
@@ -3153,11 +3154,13 @@ will result
 - NumberLines.java
 - RangeMacro.java
 - Untab.java
+- Plural.java
 - DateMacro.java
 - Format.java
 - tools
 - ModifiersBuilder.java
 - ReflectionTools.java
+- Pluralizer.java
 - MethodTool.java
 - Update.java
 - Eval.java
@@ -3289,22 +3292,24 @@ will result
 [source]
 ----
 - jamal: 96 bytes
-- snippet: 2,432 bytes
+- snippet: 2,464 bytes
 - JavaMatcherBuilderMacros.java: 19,757 bytes
 - Snip.java: 4,597 bytes
 - ReplaceUtil.java: 1,033 bytes
 - SnipSave.java: 4,691 bytes
 - Sort.java: 8,573 bytes
-- Decorate.java: 12,259 bytes
+- Decorate.java: 12,250 bytes
 - Case.java: 2,269 bytes
 - NumberLines.java: 2,853 bytes
 - RangeMacro.java: 1,293 bytes
 - Untab.java: 2,389 bytes
+- Plural.java: 2,277 bytes
 - DateMacro.java: 578 bytes
 - Format.java: 930 bytes
-- tools: 160 bytes
+- tools: 192 bytes
 - ModifiersBuilder.java: 1,740 bytes
 - ReflectionTools.java: 26,140 bytes
+- Pluralizer.java: 1,561 bytes
 - MethodTool.java: 7,761 bytes
 - Update.java: 979 bytes
 - Eval.java: 2,009 bytes
@@ -3317,7 +3322,7 @@ will result
 - Repeat.java: 1,213 bytes
 - HashCode.java: 462 bytes
 - TrimLines.java: 5,386 bytes
-- JavaSourceInsert.java: 7,988 bytes
+- JavaSourceInsert.java: 8,984 bytes
 - ThinXml.java: 8,792 bytes
 - Decorator.java: 9,094 bytes
 - Memoize.java: 8,116 bytes
@@ -3619,7 +3624,7 @@ will result in the output
 
 [source]
 ----
-2023-12-27 19:49:52
+2024-01-26 12:29:49
 ----
 
 
@@ -4569,12 +4574,12 @@ This is also the case when there is no parameter defined.
 The macro `java:insert` can be used to insert the content of the macro into a Java source file into a segment.
 The macro has three parameters:
 
-* `file` is the name of the file where the segment is to be inserted.
-  It is also aliased as `to` and `into`.
+* `file` Is the name of the file where the segment is to be inserted.
+It is also aliased as `to` and `into`.
 
 * `segment` is the name of the segment where the content is to be inserted.
-  It is also aliased as `id` and `at`.
-  This parameter is optional and is not needed if there is only one segment in the file.
+It is also aliased as `id` and `at`.
+This parameter is optional and is not needed if there is only one segment in the file.
 
 * `check`, `checkUpdate`, `update`, `updateOnly` will do an extra step before updating the file.
 It will do a lexical analysis on the original file and on the new version and compare the two.
@@ -4595,6 +4600,9 @@ This option may be useful in a build process when the code generation runs after
 If the code was updated, then the compilation should fail.
 The code, however, was already updated and the compilation started again will be successful.
 
+* `wholeFile` is a boolean option.
+If it is present then no segment should be, and the whole file will be updated, all the lines.
+In this case it is not an error if the file does not exist yet.
 
 The parameters are not enclosed between any characters.
 They follow the macro name directly until the end of the line.
@@ -5277,8 +5285,119 @@ The reason is that the code puts the inherited strings in front of the strings d
 
 
 
+
+[[plural]]
+=== LIV. `plural`
+
+
+
+This macro helps to get the plural form of an English word.
+
+Having the plural form of a word is usually not a problem.
+In most cases, you just type the plural form.
+You may, however, need to get the plural form of a word dynamically.
+
+For example, you want to create a macro to generate a sentence like this:
+
+[source]
+----
+{@define search(whatnot)=The actual whatnot is searched.
+If there are multiple whatnots, the first one is used.}
+----
+
+}
+
+You start using your macro and call it as
+
+[source]
+----
+{search file}
+----
+
+and you get
+
+[source]
+----
+The actual file is searched.
+If there are multiple files, the first one is used.
+----
+.
+
+This is great so far.
+The next place you also want to use it as
+
+[source]
+----
+{search directory}
+----
+
+and you get
+
+[source]
+----
+The actual directory is searched.
+If there are multiple directorys, the first one is used.
+----
+.
+
+This is not what you want.
+You want "directories" instead of "directorys".
+To solve this issue the macro `plural` comes to rescue.
+Define the macro as
+
+[source]
+----
+{@define search(whatnot)=The actual whatnot is searched.
+If there are multiple {@plural whatnot}, the first one is used.}
+----
+
+}
+
+Now
+
+[source]
+----
+{search directory}
+----
+
+will result in
+
+[source]
+----
+The actual directory is searched.
+If there are multiple directories, the first one is used.
+----
+.
+
+The macro can be used to get the plural form of a word and also to define the plural format of a word.
+The latter is useful when the plural form of a word is not regular.
+In this case, for example, you can
+
+[source]
+----
+{@plural child=children}{@plural child}
+----
+
+will correctly result in
+
+[source]
+----
+children
+----
+.
+To get a short list of the most frequently used irregular pluras words, use
+
+[source]
+----
+{@import res:plurals.jim}
+----
+
+The resource file is part of the snippet package.
+
+
+
 [[dictionary]]
-=== LIV. `dictionary`
+=== LV. `dictionary`
 
 This macro can be used to define a dictionary.
 Dictionaries are used by the decorator macro, but other macros can also use them.
@@ -5307,7 +5426,7 @@ This is also the default name of the dictionary used by the <<decorate,`decorate
 
 
 [[decorate]]
-=== LV. `decorate`
+=== LVI. `decorate`
 
 This macro can be used to decorate a text.
 The decoration happens for each word separately.
