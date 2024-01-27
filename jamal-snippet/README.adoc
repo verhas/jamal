@@ -3624,7 +3624,7 @@ will result in the output
 
 [source]
 ----
-2024-01-26 12:29:49
+2024-01-26 20:45:07
 ----
 
 
@@ -5371,21 +5371,21 @@ If there are multiple directories, the first one is used.
 
 The macro can be used to get the plural form of a word and also to define the plural format of a word.
 The latter is useful when the plural form of a word is not regular.
-In this case, for example, you can
+In this case, for example, you can use it as
 
 [source]
 ----
 {@plural child=children}{@plural child}
 ----
 
-will correctly result in
+and it will correctly result in
 
 [source]
 ----
 children
 ----
-.
-To get a short list of the most frequently used irregular pluras words, use
+
+To get a short list of the most frequently used irregular plural words, use
 
 [source]
 ----
@@ -5394,7 +5394,16 @@ To get a short list of the most frequently used irregular pluras words, use
 
 The resource file is part of the snippet package.
 
+The algorithm implemented applies special rules when the word ending is `y`.
+This applies to words where 'y' is preceded by a consonant, (not a vowel). In English, such words are pluralized by replacing 'y' with 'ies'.
+The method first checks if the word ends with 'y' and if the preceding character is not a vowel (a, e, i, o, u).
+If the original word ends with an uppercase 'Y', it replaces 'Y' with 'IES'. If it ends with a lowercase 'y', it replaces 'y' with 'ies'.
 
+When the word ending is 's', 'sh', 'ch', 'x', or 'z' they are pluralized by adding 'es'.
+The method checks for these endings in both lowercase and uppercase forms.
+It then adds 'ES', 'Es', 'eS', or 'es' to the word, depending on the original case of the ending.
+
+In other cases the method simply adds 's' or 'S' to the word.
 
 [[dictionary]]
 === LV. `dictionary`
