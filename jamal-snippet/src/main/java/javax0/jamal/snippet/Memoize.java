@@ -129,45 +129,45 @@ public class Memoize implements Macro, Scanner {
 }
 /* snippet Memoize
 
-This macro can be used to evaluate some input only one and reevaluate only when it has been changed.
-This has been useful to execute macros that generate some external resources from some text in the document and do not want to repeat the generation if the text has not changed.
-You may want to memoize, for example, PlantUML or other picture generation.
-Using this macro, you can generate the picture only when the text influencing the generation has changed.
+This macro allows for the evaluation of input just once and subsequent reevaluation only if there has been a change.
+It proves beneficial in executing macros that produce external resources based on the document's text, preventing unnecessary repetition of resource generation if the text remains unchanged.
+It is particularly useful, for instance, in memoizing PlantUML or other image generation processes.
+By utilizing this macro, images are generated solely when the text that impacts the generation process is modified.
 
 The macro has three parameters:
 
-* `file` is the name of the file that is generated.
-You can have multiple files specified, this parameter can be repeated.
-The macro does not read this file or write this file.
-It simply checks that the file exists or not.
-If the file does not exist, then the macro will evaluate its input.
-The input evaluation is supposed to generate the file some way.
-The file generation is out of the scope of this macro.
+* The `file` parameter represents the name of the file that is generated.
+This parameter can be specified multiple times, allowing for multiple files.
+The macro neither reads nor writes this file.
+Instead, it checks for the file's existence.
+If the file does not exist, the macro will then evaluate its input, which is expected to generate the file in some manner.
+However, the actual generation of the file is beyond the scope of this macro.
 
 +
-When there is no `file` specified, then the macro will assume that the result is there.
-Some calculations may not generate file and the result is somewhere else.
-In that case, there is no point to check a file.
+When no `file` is specified, the macro assumes that the result already exists.
+This is applicable in scenarios where certain calculations do not result in file generation and the outcome is stored elsewhere.
+Under such circumstances, checking for a file is deemed unnecessary.
 
-* `hashCode` is the hash value the hash code of the text influencing the generation.
-If it is not defined, the value is calculated automatically from the input of the macro.
-You can use the macro `hashCode` in the document to make the calculation.
-Usually there is no point manually inserting a hash value into the document.
-You want to calculate it from some text other than the pure input of the macro.
+* The hashCode parameter allows for the specification of the hash value or the hash code of the text that influences the generation.
+If not explicitly defined, this value is automatically calculated based on the macro's input.
+The hashCode macro can be utilized within the document for this calculation.
+Generally, manually inserting a hash value into the document is unnecessary.
+Instead, it's more typical to calculate it based on text that differs from the macro's direct input.
 
 +
-For example, you generate a PlantUML picture, but it also includes some other files during the PlantUML generation.
-In this case, the text included will not be part of the input of the macro.
-You still want to execute the picture generation even when only the included text file is changed.
-In that case, you can use the `hashCode` macro on the verbatim included files and use the result as the `hashCode` parameter of the `memoize` macro.
+For instance, consider a scenario where you're generating a PlantUML diagram that also incorporates additional files during its creation process.
+The text from these included files won't be a part of the macro's direct input.
+Nevertheless, you'd want the diagram generation to occur even if only the included text files undergo modifications.
+In such situations, you can utilize the `hashCode` macro to compute the hash code of the verbatim text from the included files.
+Subsequently, this computed hash code can be employed as the `hashCode` parameter in the `memoize` macro, ensuring the diagram is regenerated when the included files change, even if the main input to the macro remains the same.
 
-* `hashFile` is the name of the file that contains the hash value.
-Before evaluating the input, the macro checks that the hash value is the same as the one in the file.
-The macro does not evaluate the input if they are the same.
-If they differ, including the special case, when the hash file does not exist, then the macro generates the file and evaluates the input.
+* The hashFile parameter denotes the name of the file that stores the hash value.
+Before the macro processes its input, it compares the current hash value with the one stored in the hashFile.
+If they match, indicating no changes, the macro does not reevaluate the input.
+Conversely, if the hash values differ, or in situations where the hashFile does not exist, the macro proceeds to create the file and reevaluates the input.
 
-The return value of the macro is the input evaluated when it is evaluated and an empty string when it is not evaluated.
-This functionality helps to see evidence during interactive editing then the macro was evaluated.
-You can just use macros that generate no output if you do not need this feature.
+The macro's return value is the result of the evaluated input when reevaluation occurs, and it returns an empty string if no evaluation is performed.
+This feature is particularly beneficial during interactive editing, as it provides a clear indication of whether the macro was executed.
+If you don't require this functionality, you can opt to use macros that don't produce any output.
 
 end snippet*/

@@ -25,7 +25,7 @@ To determine the type of the file the macro looks at two extensions.
 If the file ending if '.md.jam' it is a markdown. Otherwise it is asciidoc.
 }
 
-{@define [tail] kroki($name,$dt,$ft,$x)={#if /{#string:endsWith/md.jam/{@pos (top format=%f)}}/![]({kroki:download |$name|$dt|$ft|$x})/image::{kroki:download |$name|$dt|$ft|$x}[]}}
+{@define [tail] kroki($name,$dt,$ft,$x)={#if /{#string (ignoreCase)|{@pos (top format=%f)}|endsWith|md.jam}/![]({kroki:download |$name|$dt|$ft|$x})/image::{kroki:download |$name|$dt|$ft|$x}[]}}
 
 {@define kroki:download($name,$dt,$ft,$x)={#define URL={kroki:url|$dt|$ft|$x}}\
 {#memoize (file="$name.$ft" hashFile="$name.$ft.hash" hashCode="{#hashCode {URL}}")

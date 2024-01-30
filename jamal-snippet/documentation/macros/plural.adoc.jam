@@ -13,7 +13,7 @@ For example, you want to create a macro to generate a sentence like this:
 If there are multiple whatnots, the first one is used.}
 %}
 
-{%#comment {%output%}%}}
+{%#comment {%output%}%}
 
 You start using your macro and call it as
 
@@ -23,7 +23,7 @@ You start using your macro and call it as
 
 and you get
 
-{%output%}.
+{%output%}
 
 This is great so far.
 The next place you also want to use it as
@@ -34,7 +34,7 @@ The next place you also want to use it as
 
 and you get
 
-{%output%}.
+{%output%}
 
 This is not what you want.
 You want "directories" instead of "directorys".
@@ -46,7 +46,7 @@ Define the macro as
 If there are multiple {@plural whatnot}, the first one is used.}
 %}
 
-{%#comment {%output%}%}}
+{%#comment {%output%}%}
 
 Now
 
@@ -56,7 +56,7 @@ Now
 
 will result in
 
-{%output%}.
+{%output%}
 
 The macro can be used to get the plural form of a word and also to define the plural format of a word.
 The latter is useful when the plural form of a word is not regular.

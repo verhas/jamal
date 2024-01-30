@@ -88,7 +88,7 @@
     "strings equal ignoring case":
       Input: "{@string:equals (ignoreCase) /abraka dabra/AbrAkA dAbrA}"
       Output: "true"
-    "strings not equal":
+    "strings not equal ignore case":
       Input: "{@string:equals (ignoreCase) /abraka dabre/abraka dAbra}"
       Output: "false"
 
@@ -109,6 +109,76 @@
     "ends with":
       Input: "{@string:endsWith /abraka dabra/dabra}"
       Output: "true"
+
+"inline starts and ends with tests":
+    "starts with":
+      Input: "{@string /abraka dabra/startsWith/abraka}"
+      Output: "true"
+    "does not start with":
+      Input: "{@string /abraka dabra/startsWith/dabra}"
+      Output: "false"
+    "does not end with":
+      Input: "{@string /abraka dabra/endsWith/abraka}"
+      Output: "false"
+    "ends with":
+      Input: "{@string /abraka dabra/endsWith/dabra}"
+      Output: "true"
+    "equals":
+      Input: "{@string /abraka/equals/abraka}"
+      Output: "true"
+    "does not equal":
+      Input: "{@string /abraka/equals/dabra}"
+      Output: "false"
+    "contains":
+      Input: "{@string /abraka/contains/abrak}"
+      Output: "true"
+    "does not contain":
+      Input: "{@string /abraka/contains/dabra}"
+      Output: "false"
+    "ignore case starts with":
+      Input: "{@string (ignoreCase)/abraka dabra/startsWith/abRaka}"
+      Output: "true"
+    "ignore case does not start with":
+      Input: "{@string (ignoreCase)/abraka dabra/startsWith/daBra}"
+      Output: "false"
+    "ignore case does not end with":
+      Input: "{@string (ignoreCase)/abraka dabra/endsWith/abrBka}"
+      Output: "false"
+    "ignore case ends with":
+      Input: "{@string (ignoreCase)/abraka dabra/endsWith/daBra}"
+      Output: "true"
+    "ignore case equals":
+      Input: "{@string (ignoreCase)/abraka/equals/abRaka}"
+      Output: "true"
+    "ignore case does not equal":
+      Input: "{@string (ignoreCase)/abraka/equals/dabRa}"
+      Output: "false"
+    "ignore case contains":
+      Input: "{@string (ignoreCase)/abraka/contains/abRak}"
+      Output: "true"
+    "ignore case does not contain":
+      Input: "{@string (ignoreCase)/abraka/contains/dabRa}"
+      Output: "false"
+
+"find strings between":
+  "simple between":
+    Input: "{@string:between (after=a before=b)bacbdba}"
+    Output: "cbd"
+  "between only before":
+    Input: "{@string:between (before=b)alabalabamba}"
+    Output: "alabalabam"
+  "between only after":
+    Input: "{@string:between (after=a)alabalabamba}"
+    Output: "labalabamba"
+  "between before not found":
+    Input: "{@string:between (after=a before=z)alabalabamba}"
+    Output: ""
+  "between after not found":
+    Input: "{@string:between (after=z before=b)alabalabamba}"
+    Output: ""
+  "between before is smaller than after":
+    Input: "{@string:between (after=nyanya before=tunya)tunya ez a nyanya}"
+    Output: ""
 
 "chopping the start and the end strings":
   "case sensitive":

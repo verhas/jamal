@@ -17,6 +17,9 @@ Until now, different files with the same content could be imported parallel.
 * Module plantUML was removed from the development.
 This module is not supported anymore.
 Using plant UML digagrams should be available through kroki either using the public service or using a local containerized kroki server.
+* Bug fixed in `kroki.jim` resource file
+* String macro `string` can perform equals, startsWith and endsWith operations more readable and with ignoreCase option.
+* String macro `between` can be used to extract a substring between two strings.
 
 {%RELEASE ROGACHEVO%}
 

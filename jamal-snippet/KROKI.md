@@ -9,6 +9,7 @@ You can import the resource `kroki.jim` into your Markdown file.
 
 The `kroki.jim` file contains macros that to include pictures in a Markdown file.
 
+
 After that, you can use the `kroki` macro to include pictures.
 
 ![](KROKI_MD.svg)

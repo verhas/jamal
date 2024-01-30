@@ -72,8 +72,8 @@ results in
 
 {%output%}
 
-NOTE:It is an error to have a start (`<<`) or end (`>>`) string in the text.
-If you need to have any of them as part of the constant or variable part of the text, you should define alternatives using the paropts `start` and `end` as demonstrated in the next example.
+NOTE: It is an error to have a start (`<<`) or end (`>>`) string in the text.
+If you need to have any of them as part of the constant or variable part of the text, you should define alternatives using the parops `start` and `end` as demonstrated in the next example.
 
 {%ch Alternative start and end strings%}
 
@@ -108,8 +108,8 @@ It has to be applied in all subsequent uses that may differ from the first one i
 Using this option in the first occurrence of the text is optional, but has no effect.%}
 
 {%sample/
-{@variation (id=ignore_case)text that happens <<some>> TIMES in the document}
-{@variation (id=ignore_case ignoreCase)text that happens <<Some>> times in the document}
+{@variation (id=abrakaDabra)text that happens <<some>> TIMES in the document}
+{@variation (id=abrakaDabra ignoreCase)text that happens <<Some>> times in the document}
 %}
 
 will result in

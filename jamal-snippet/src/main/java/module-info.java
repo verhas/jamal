@@ -12,6 +12,8 @@ import javax0.jamal.snippet.StringMacros.Quote;
 import javax0.jamal.snippet.StringMacros.Reverse;
 import javax0.jamal.snippet.StringMacros.StartsWith;
 import javax0.jamal.snippet.StringMacros.Substring;
+import javax0.jamal.snippet.StringMacros.StringMacro;
+import javax0.jamal.snippet.StringMacros.Between;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;
@@ -117,6 +119,8 @@ module jamal.snippet {
             Eval,
             Locate,
             Variation,
-            Plural
+            Plural,
+            StringMacro,
+            Between
             ;
 }

@@ -121,8 +121,10 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:equals,`string:equals`>>
 ... <<string:startsWith,`string:startsWith`>>
 ... <<string:endsWith,`string:endsWith`>>
+... <<string,`string`>>
 ... <<string:reverse,`string:reverse`>>
 ... <<string:substring,`string:substring`>>
+... <<string:between,`string:between`>>
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
 .. <<shell:var,`shell:var`>>
@@ -169,7 +171,7 @@ Since 1.7.4 option `onceAs`
 This macro collects text snippets from files.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The syntax of the macro is
 
@@ -319,7 +321,7 @@ The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
 
-These options are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These options are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 * `include`
@@ -781,8 +783,8 @@ will result in
 
 [source]
 ----
-../jamal-snippet/documentation/macros/snippy.txt
-../jamal-snippet/documentation/macros/snip_define.adoc.jam
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1109,7 +1111,7 @@ You cannot use `warning` and `error` together.
 This macro lists the defined snippets.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -1153,7 +1155,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 This macro saves all the collected snippets to a file.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file name must be specified by the parameter `output`.
 The general syntax of the macro is
@@ -1245,7 +1247,7 @@ It is saved as a `CDATA` section(s).
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -1295,7 +1297,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -1701,7 +1703,7 @@ will result
 
 [source]
 ----
-../jamal-snippet/README.adoc.jam:969:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:970:30
 ----
 
 
@@ -1915,7 +1917,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 This macro can put numbers in front of the lines, sequentially numbering them.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The syntax of the macro is
@@ -1984,7 +1986,7 @@ Any illegal formatting will result in an error.
 This macro deletes, or keeps the selected lines from its input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The format of the macro is
@@ -2073,7 +2075,7 @@ In this case only the comment lines remained that start with `//` at the start o
 You can use this macro to skip lines from the snippet.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -2184,7 +2186,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 This macro replaces strings in the input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It works similarly to the macro <<replace,`replace`>>.
@@ -2638,7 +2640,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 This macro reflows the content.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -2902,7 +2904,7 @@ It can kill/keep lines, skip, replace, trim, lines, select line ranges; it can r
 
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
@@ -3325,7 +3327,7 @@ will result
 - JavaSourceInsert.java: 8,984 bytes
 - ThinXml.java: 8,792 bytes
 - Decorator.java: 9,094 bytes
-- Memoize.java: 8,116 bytes
+- Memoize.java: 8,760 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 3,212 bytes
 - SnipLine.java: 691 bytes
@@ -3341,7 +3343,7 @@ will result
 - Unicode.java: 2,068 bytes
 - Counter.java: 2,168 bytes
 - CompileJavaMacros.java: 23,483 bytes
-- StringMacros.java: 7,360 bytes
+- StringMacros.java: 10,467 bytes
 - JavaSourceTemplate.java: 7,443 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Dictionary.java: 1,527 bytes
@@ -3624,7 +3626,7 @@ will result in the output
 
 [source]
 ----
-2024-01-26 20:45:07
+2024-01-30 14:40:35
 ----
 
 
@@ -3973,7 +3975,7 @@ will result in
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/../jamal-snippet/README.adoc
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc
 ----
 
 
@@ -4019,8 +4021,9 @@ The macro `file` has the following parameters:
 * `format` can define the format of the name of the file.
    In the format you can use placeholders starting with `$`.
    For the list of the placeholders see the documentation below.
-* `root` can specify the directory where the file is. This parameter is prepended in front of the file name.
-   The default value is an empty string.
+* `root` can specify the directory where the file is.
+  This parameter is prepended in front of the file name.
+  The default value is an empty string.
 * `dateFormat` can specify the format to display the date and time when the format uses one of the time placeholders.
    The default value is `yyyy-MM-dd HH:mm:ss`.
 * `relativeTo` can specify a file or directory to which the output should be relative to when the placeholder `$relativePath` is used in the format.
@@ -4028,7 +4031,7 @@ The macro `file` has the following parameters:
 
 [NOTE]
 ====
-The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own and it is also included in another document.
+The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own, and it is also included in another document.
 Having a `link` in the file should be relative to the document on the top level, including directly or through other files the one containing the link.
 The placeholder `$relativePath` will generate a relative file name, which is relative to the actual top level document.
 ====
@@ -4111,8 +4114,9 @@ The macro `directory` has the following parameters:
 * `format` can define the format of the name of the directory.
    In the format you can use placeholders starting with `$`.
    For the list of the placeholders see the documentation below.
-* `root` can specify the directory where the directory is. This parameter is prepended in front of the directory name.
-   The default value is an empty string.
+* `root` can specify the directory where the directory is.
+  This parameter is prepended in front of the directory name.
+  The default value is an empty string.
 * `dateFormat` can specify the format to display the date and time when the format uses one of the time placeholders.
    The default value is `yyyy-MM-dd HH:mm:ss`.
 * `relativeTo` can specify a file or directory to which the output should be relative to when the placeholder `$relativePath` is used in the format.
@@ -4120,7 +4124,7 @@ The macro `directory` has the following parameters:
 
 [NOTE]
 ====
-The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own and it is also included in another document.
+The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own, and it is also included in another document.
 Having a `link` in the file should be relative to the document on the top level, including directly or through other files the one containing the link.
 The placeholder `$relativePath` will generate a relative file name, which is relative to the actual top level document.
 ====
@@ -4344,7 +4348,6 @@ The method's full name is the class's full name, and the method name separated b
 The format string can be any string with `$` prefixed placeholders.
 The placeholders that the macro handles are:
 
-
 * `$classSimpleName` will be replaced by the simple name of the method's defining class
 * `$className` will be replaced by the name of the of the method's defining class
 * `$classCanonicalName` will be replaced by the canonical name of the method's defining class
@@ -4356,7 +4359,6 @@ The placeholders that the macro handles are:
 * `$parameterTypes` will be replaced by the comma separated parameter types
 * `$parameterCount` will be replaced by the number of the parameters in decimal format
 * `$modifiers` will be replaced by the modifier list of the method
-
 
 These formats can be used in your macros directly or using the macros defined in the jim file `res:snippet.jim`.
 For example,
@@ -4755,6 +4757,22 @@ false
 ----
 
 
+[[string]]
+==== `string`
+
+This macro can perform the operations `startsWith`, `endsWith`, `equals`, and `contains`.
+The macro has three parameters:
+
+* the string the operation is performed on,
+* the operation to perform,
+* the string to compare to.
+
+The operation has to be given by the names `startsWith`, `endsWith`, `equals`, `equalsTo` or `contains`.
+The name of the operation is case-insensitive.
+
+The macro also handles the parop `ignoreCase`.
+When using this alternative format of the comparison, then all operations use this parameter.
+
 [[string:reverse]]
 ==== `string:reverse`
 
@@ -4802,6 +4820,37 @@ will result
 the whole string
 the only the'
 the
+----
+
+
+[[string:between]]
+==== `string:between`
+
+This macro extracts a substring from the input, confined between two specified strings. The parameters are:
+
+- `after`: Specifies the string after which the substring should begin. By default, the substring starts at the beginning of the input string if this parameter is not provided.
+- `before`: Specifies the string before which the substring should end. By default, the substring extends to the end of the input string if this parameter is not provided.
+
+The behavior of the macro under different conditions is as follows:
+
+1. If the `after` string is not found in the input, the macro returns an empty string.
+2. If the `before` string is not found in the input, the macro also returns an empty string.
+3. If the `after` string appears more than once in the input, the macro selects the substring starting after the first occurrence of the `after` string.
+4. If the `before` string appears more than once in the input, the macro selects the substring ending before the last occurrence of the `before` string.
+5. If the last occurrence of the `before` string is positioned before the first occurrence of the `after` string in the input, the macro returns an empty string.
+
+This macro is useful for parsing strings where specific delimiters define the boundaries of the desired content. For example, the macro can be used to extract the content of a JavaDoc comment:
+
+[source]
+----
+{@string:between (after="/**" before="*/")/** This is a JavaDoc comment. */}
+----
+
+will result in
+
+[source]
+----
+This is a JavaDoc comment.
 ----
 
 
@@ -4891,46 +4940,46 @@ will result in
 === L. `memoize`
 
 
-This macro can be used to evaluate some input only one and reevaluate only when it has been changed.
-This has been useful to execute macros that generate some external resources from some text in the document and do not want to repeat the generation if the text has not changed.
-You may want to memoize, for example, PlantUML or other picture generation.
-Using this macro, you can generate the picture only when the text influencing the generation has changed.
+This macro allows for the evaluation of input just once and subsequent reevaluation only if there has been a change.
+It proves beneficial in executing macros that produce external resources based on the document's text, preventing unnecessary repetition of resource generation if the text remains unchanged.
+It is particularly useful, for instance, in memoizing PlantUML or other image generation processes.
+By utilizing this macro, images are generated solely when the text that impacts the generation process is modified.
 
 The macro has three parameters:
 
-* `file` is the name of the file that is generated.
-You can have multiple files specified, this parameter can be repeated.
-The macro does not read this file or write this file.
-It simply checks that the file exists or not.
-If the file does not exist, then the macro will evaluate its input.
-The input evaluation is supposed to generate the file some way.
-The file generation is out of the scope of this macro.
+* The `file` parameter represents the name of the file that is generated.
+This parameter can be specified multiple times, allowing for multiple files.
+The macro neither reads nor writes this file.
+Instead, it checks for the file's existence.
+If the file does not exist, the macro will then evaluate its input, which is expected to generate the file in some manner.
+However, the actual generation of the file is beyond the scope of this macro.
 
 +
-When there is no `file` specified, then the macro will assume that the result is there.
-Some calculations may not generate file and the result is somewhere else.
-In that case, there is no point to check a file.
+When no `file` is specified, the macro assumes that the result already exists.
+This is applicable in scenarios where certain calculations do not result in file generation and the outcome is stored elsewhere.
+Under such circumstances, checking for a file is deemed unnecessary.
 
-* `hashCode` is the hash value the hash code of the text influencing the generation.
-If it is not defined, the value is calculated automatically from the input of the macro.
-You can use the macro `hashCode` in the document to make the calculation.
-Usually there is no point manually inserting a hash value into the document.
-You want to calculate it from some text other than the pure input of the macro.
+* The hashCode parameter allows for the specification of the hash value or the hash code of the text that influences the generation.
+If not explicitly defined, this value is automatically calculated based on the macro's input.
+The hashCode macro can be utilized within the document for this calculation.
+Generally, manually inserting a hash value into the document is unnecessary.
+Instead, it's more typical to calculate it based on text that differs from the macro's direct input.
 
 +
-For example, you generate a PlantUML picture, but it also includes some other files during the PlantUML generation.
-In this case, the text included will not be part of the input of the macro.
-You still want to execute the picture generation even when only the included text file is changed.
-In that case, you can use the `hashCode` macro on the verbatim included files and use the result as the `hashCode` parameter of the `memoize` macro.
+For instance, consider a scenario where you're generating a PlantUML diagram that also incorporates additional files during its creation process.
+The text from these included files won't be a part of the macro's direct input.
+Nevertheless, you'd want the diagram generation to occur even if only the included text files undergo modifications.
+In such situations, you can utilize the `hashCode` macro to compute the hash code of the verbatim text from the included files.
+Subsequently, this computed hash code can be employed as the `hashCode` parameter in the `memoize` macro, ensuring the diagram is regenerated when the included files change, even if the main input to the macro remains the same.
 
-* `hashFile` is the name of the file that contains the hash value.
-Before evaluating the input, the macro checks that the hash value is the same as the one in the file.
-The macro does not evaluate the input if they are the same.
-If they differ, including the special case, when the hash file does not exist, then the macro generates the file and evaluates the input.
+* The hashFile parameter denotes the name of the file that stores the hash value.
+Before the macro processes its input, it compares the current hash value with the one stored in the hashFile.
+If they match, indicating no changes, the macro does not reevaluate the input.
+Conversely, if the hash values differ, or in situations where the hashFile does not exist, the macro proceeds to create the file and reevaluates the input.
 
-The return value of the macro is the input evaluated when it is evaluated and an empty string when it is not evaluated.
-This functionality helps to see evidence during interactive editing then the macro was evaluated.
-You can just use macros that generate no output if you do not need this feature.
+The macro's return value is the result of the evaluated input when reevaluation occurs, and it returns an empty string if no evaluation is performed.
+This feature is particularly beneficial during interactive editing, as it provides a clear indication of whether the macro was executed.
+If you don't require this functionality, you can opt to use macros that don't produce any output.
 
 
 
@@ -5095,8 +5144,8 @@ text that happens any times in the document
 ----
 
 
-NOTE:It is an error to have a start (`<<`) or end (`>>`) string in the text.
-If you need to have any of them as part of the constant or variable part of the text, you should define alternatives using the paropts `start` and `end` as demonstrated in the next example.
+NOTE: It is an error to have a start (`<<`) or end (`>>`) string in the text.
+If you need to have any of them as part of the constant or variable part of the text, you should define alternatives using the parops `start` and `end` as demonstrated in the next example.
 
 
 ==== Alternative start and end strings
@@ -5146,8 +5195,8 @@ Using this option in the first occurrence of the text is optional, but has no ef
 
 [source]
 ----
-{@variation (id=ignore_case)text that happens <<some>> TIMES in the document}
-{@variation (id=ignore_case ignoreCase)text that happens <<Some>> times in the document}
+{@variation (id=abrakaDabra)text that happens <<some>> TIMES in the document}
+{@variation (id=abrakaDabra ignoreCase)text that happens <<Some>> times in the document}
 ----
 
 will result in
@@ -5305,7 +5354,7 @@ For example, you want to create a macro to generate a sentence like this:
 If there are multiple whatnots, the first one is used.}
 ----
 
-}
+
 
 You start using your macro and call it as
 
@@ -5321,7 +5370,7 @@ and you get
 The actual file is searched.
 If there are multiple files, the first one is used.
 ----
-.
+
 
 This is great so far.
 The next place you also want to use it as
@@ -5338,7 +5387,7 @@ and you get
 The actual directory is searched.
 If there are multiple directorys, the first one is used.
 ----
-.
+
 
 This is not what you want.
 You want "directories" instead of "directorys".
@@ -5351,7 +5400,7 @@ Define the macro as
 If there are multiple {@plural whatnot}, the first one is used.}
 ----
 
-}
+
 
 Now
 
@@ -5367,7 +5416,7 @@ will result in
 The actual directory is searched.
 If there are multiple directories, the first one is used.
 ----
-.
+
 
 The macro can be used to get the plural form of a word and also to define the plural format of a word.
 The latter is useful when the plural form of a word is not regular.
@@ -5525,45 +5574,39 @@ If the option is not present a default set of postfixes will be used:
             "ure", "ary", "ent", "ase", "lly", "ise", "age", "ish"
 .
 
-* `decor$cmDict` aliased as `common`, `commons`, `cm` defines the common words dictionary.
+* `decor$cmDict` aliased as `common`, `commons`, `cm` defines the common words' dictionary.
 
 
 [[kroki]]
 === 3.Kroki
 
-In this section, we will describe how to use the snippet handling macros together with the Kroki service.
+In this section, we will describe how to utilize the snippet handling macros in conjunction with the Kroki service.
 
-The Kroki service is a free online service that can render diagrams from a text.
-You can use the public service, or you can install the application in premise.
-In this section, we will use the public service, but using an in premise installation is very similar.
+The Kroki service is a free online platform capable of rendering diagrams from a text.
+Users can utilize the public service or to install the application on-premises.
+Although we will focus on using the public service in this section, the process for an on-premises installation is very similar.
 
-The documentation of the service and the supported diagram types are available at https://kroki.io/.
+The service's documentation and the types of diagrams it supports are accessible at [https://kroki.io/](https://kroki.io/).
 
-There is direct support to include Kroki generated pictures for AsciiDoc and into Markdown documents.
-There is a resource file in this module named `kroki.jim`.
-You can import this file into your document using `{@import res:kroki.jim}` and use the macro defined in it.
+Kroki provides direct support for incorporating generated images into AsciiDoc and Markdown documents.
+Within this module, there is a resource file named `kroki.jim`.
+You can integrate this file into your document by using `{@import res:kroki.jim}` and employ the macro defined within.
 
-The macro `kroki` has four parameters:
+The `kroki` macro requires four parameters:
 
-* The name of the diagram.
-This will be used to name the generated picture file.
+1. The name of the diagram, which will be utilized to title the generated image file.
+2. The diagram type, which can be any type supported by the Kroki service in use.
+3. The file type, options include `png`, `svg`, `jpeg`, etc. This parameter will not only be relayed to the Kroki service but also used as the file name extension.
+   The various file types that are supported are documented at [https://kroki.io/](https://kroki.io/).
+4. The diagram text.
 
-* The diagram type.
-This can be any supported by the used Kroki service.
+The macro encodes the diagram text, transmits it to the Kroki service, downloads the generated image, and embeds it into the document.
+If the including file's name ends with `md.jam`, the macro will employ Markdown syntax for the image. Otherwise, it will use AsciiDoc syntax.
 
-* The file type, which can be `png`, svg`, `jpeg` etc.
-This parameter will be passed to the Kroki service as well as used as a file name extension.
-The different possible file types are documented at https://kroki.io/.
+Should you require a different syntax, the `kroki:download` macro is available.
+This macro accepts the same arguments and returns the file name of the downloaded image.
 
-* The diagram text.
-
-The macro will encode the diagram text, send it to the Kroki service, download the generated picture and include it in the document.
-The macro will use Markdown syntax for the picture of the including file name ends with `md.jam` and AsciiDoc syntax otherwise.
-
-If you want some other syntax, you can use the macro `kroki:download`.
-This macro has the same arguments and will return the downloaded picture's file name.
-
-These macros will generate picture files with the given name and file type as an extension.
-In addition to that, the macros will also generate a file with the same name and an extra extension `.hash`.
-When the macro executes, it will invoke the web-based service only if the picture file does not exist, or if the diagram text has changed since the last execution.
-You may want to add these files to your source repository to avoid unnecessary network traffic on the CI/CD server.
+These macros generate image files named according to the provided name and append the file type as an extensions.
+Additionally, they create a file with the same name and an extra `.hash` extension.
+The macro will only call the web-based service if the image file does not exist or if the diagram text has changed since the last execution.
+It may be beneficial to include these files in your source repository to minimize unnecessary network traffic on the CI/CD server.

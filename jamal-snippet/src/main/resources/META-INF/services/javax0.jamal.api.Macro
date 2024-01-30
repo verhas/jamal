@@ -92,3 +92,5 @@ javax0.jamal.snippet.Eval
 javax0.jamal.snippet.Locate
 javax0.jamal.snippet.Variation
 javax0.jamal.snippet.Plural
+javax0.jamal.snippet.StringMacros$StringMacro
+javax0.jamal.snippet.StringMacros$Between

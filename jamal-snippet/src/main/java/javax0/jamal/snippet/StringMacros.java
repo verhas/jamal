@@ -38,7 +38,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in, processor,1);
+            String[] parts = InputHandler.getParts(in, processor, 1);
             BadSyntax.when(parts.length != 1, "The string:quote macro expects exactly one argument");
             return parts[0]
                     .replace("\\", "\\\\")
@@ -56,6 +56,37 @@ public class StringMacros {
         }
     }
 
+    public static class StringMacro implements Macro, InnerScopeDependent, Scanner {
+
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            final var scanner = newScanner(in, processor);
+            final var ignoreCase = scanner.bool("ignoreCase");
+            scanner.done();
+            String[] parts = InputHandler.getParts(in, processor, 3);
+            BadSyntax.when(parts.length != 3, "%s needs three parts", getId());
+            switch (parts[1].trim().toLowerCase()) {
+                case "startswith":
+                    return "" + (ignoreCase.is() ? parts[0].toLowerCase().startsWith(parts[2].toLowerCase()) : parts[0].startsWith(parts[2]));
+                case "endswith":
+                    return "" + (ignoreCase.is() ? parts[0].toLowerCase().endsWith(parts[2].toLowerCase()) : parts[0].endsWith(parts[2]));
+                case "equals":
+                case "equalsto":
+                    return "" + (ignoreCase.is() ? parts[0].equalsIgnoreCase(parts[2]) : parts[0].equals(parts[2]));
+                case "contains":
+                    return "" + (ignoreCase.is() ? parts[0].toLowerCase().contains(parts[2].toLowerCase()) : parts[0].contains(parts[2]));
+
+            }
+            throw new BadSyntax("Unknown string macro: " + parts[1]);
+        }
+
+        @Override
+        public String getId() {
+            return "string";
+        }
+    }
+
     private static abstract class XWith implements Macro, InnerScopeDependent {
         private final BiPredicate<String, String> with;
 
@@ -65,7 +96,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in, processor,2);
+            String[] parts = InputHandler.getParts(in, processor, 2);
             BadSyntax.when(parts.length != 2, "%s needs two parts", getId());
             return "" + with.test(parts[0], parts[1]);
         }
@@ -102,7 +133,7 @@ public class StringMacros {
             final var scanner = newScanner(in, processor);
             final var ignoreCase = scanner.bool("ignoreCase");
             scanner.done();
-            String[] parts = InputHandler.getParts(in, processor,2);
+            String[] parts = InputHandler.getParts(in, processor, 2);
             BadSyntax.when(parts.length != 2, "%s needs two parts", getId());
             return "" + (ignoreCase.is() ? parts[0].equalsIgnoreCase(parts[1]) : parts[0].equals(parts[1]));
         }
@@ -117,7 +148,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            String[] parts = InputHandler.getParts(in, processor,1);
+            String[] parts = InputHandler.getParts(in, processor, 1);
             BadSyntax.when(parts.length != 1, "The string:reverse macro expects exactly one argument");
             return new StringBuilder(parts[0]).reverse().toString();
         }
@@ -153,15 +184,60 @@ public class StringMacros {
         }
     }
 
+    public static class Between implements Macro, Scanner {
+
+        @Override
+        public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+            final var scanner = newScanner(in, processor);
+            final var after = scanner.str(null, "after").optional();
+            final var before = scanner.str(null, "before").optional();
+            final var ignore = scanner.bool(null, "ignorecase", "ignoreCase");
+            scanner.done();
+            var result = in.toString();
+
+            final int afterIndex;
+            if (after.isPresent()) {
+                afterIndex = (ignore.is() ?
+                        result.toLowerCase().indexOf(after.get().toLowerCase()) : result.indexOf(after.get()))
+                        + after.get().length();
+                if (afterIndex < after.get().length()) {
+                    return "";
+                }
+            } else {
+                afterIndex = 0;
+            }
+            final int beforeIndex;
+            if (before.isPresent()) {
+                beforeIndex = ignore.is() ?
+                        result.toLowerCase().lastIndexOf(before.get().toLowerCase()) : result.lastIndexOf(before.get());
+                if (beforeIndex < 0) {
+                    return "";
+                }
+            } else {
+                beforeIndex = result.length();
+            }
+            if (afterIndex >= beforeIndex) {
+                return "";
+            }
+            result = result.substring(afterIndex, beforeIndex);
+            return result;
+        }
+
+        @Override
+        public String getId() {
+            return "string:between";
+        }
+    }
+
     public static class Substring implements Macro, InnerScopeDependent, Scanner {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var scanner = newScanner(in,processor);
+            final var scanner = newScanner(in, processor);
             final var begin = scanner.number(null, "begin").defaultValue(0);
             final var end = scanner.number(null, "end");
             scanner.done();
-            String[] parts = InputHandler.getParts(in, processor,1);
+            String[] parts = InputHandler.getParts(in, processor, 1);
             BadSyntax.when(parts.length != 1, "The string:substring macro expects exactly one argument");
             final var beginIndex = begin.get() < 0 ? in.length() + begin.get() : begin.get();
             final var endIndex = end.isPresent() ? (end.get() < 0 ? in.length() + end.get() : end.get()) : in.length();
@@ -178,7 +254,7 @@ public class StringMacros {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
-            final var scanner = newScanner(in,processor);
+            final var scanner = newScanner(in, processor);
             final var trim = scanner.bool(null, "trim");
             final var left = scanner.bool(null, "left");
             final var right = scanner.bool(null, "right");

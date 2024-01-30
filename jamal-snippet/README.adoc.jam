@@ -130,8 +130,10 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:equals,`string:equals`>>
 ... <<string:startsWith,`string:startsWith`>>
 ... <<string:endsWith,`string:endsWith`>>
+... <<string,`string`>>
 ... <<string:reverse,`string:reverse`>>
 ... <<string:substring,`string:substring`>>
+... <<string:between,`string:between`>>
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
 .. <<shell:var,`shell:var`>>
@@ -2424,8 +2426,9 @@ The macro `$what` has the following parameters:
 * `format` can define the format of the name of the $what.
    In the format you can use placeholders starting with `$`.
    For the list of the placeholders see the documentation below.
-* `root` can specify the directory where the $what is. This parameter is prepended in front of the $what name.
-   The default value is an empty string.
+* `root` can specify the directory where the $what is.
+  This parameter is prepended in front of the $what name.
+  The default value is an empty string.
 * `dateFormat` can specify the format to display the date and time when the format uses one of the time placeholders.
    The default value is `yyyy-MM-dd HH:mm:ss`.
 * `relativeTo` can specify a file or directory to which the output should be relative to when the placeholder `$relativePath` is used in the format.
@@ -2433,7 +2436,7 @@ The macro `$what` has the following parameters:
 
 [NOTE]
 ====
-The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own and it is also included in another document.
+The formatting `$relativePath` is useful when you have a Jamal file which is a document in its own, and it is also included in another document.
 Having a `link` in the file should be relative to the document on the top level, including directly or through other files the one containing the link.
 The placeholder `$relativePath` will generate a relative file name, which is relative to the actual top level document.
 ====
@@ -2640,22 +2643,8 @@ of the method's defining class
 OTM
 of the method
 %}
-{%#snip:define methodFormatFormatted={%#replaceLines
-{%@snip methodFormats%}%}%}
-{%@snip methodFormatFormatted
-* `$classSimpleName` will be replaced by the simple name of the method's defining class
-* `$className` will be replaced by the name of the of the method's defining class
-* `$classCanonicalName` will be replaced by the canonical name of the method's defining class
-* `$classTypeName` will be replaced by the type name of the method's defining class
-* `$packageName` will be replaced by the package where the method is
-* `$name` will be replaced by the name of the method
-* `$typeClass` will be replaced by the return type of the method
-* `$exceptions` will be replaced by the comma separated values of the exception types the method throws
-* `$parameterTypes` will be replaced by the comma separated parameter types
-* `$parameterCount` will be replaced by the number of the parameters in decimal format
-* `$modifiers` will be replaced by the modifiers list of the method
-%}
-
+{%#replaceLines
+{%@snip methodFormats%}%}
 These formats can be used in your macros directly or using the macros defined in the jim file `res:snippet.jim`.
 For example,
 
@@ -2914,7 +2903,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 
 [[String]]
 === {%chapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=77d59555%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=5b0422a5%}
 
 [[string:contains]]
 ==== `string:contains`
@@ -3009,6 +2998,22 @@ will result
 
 {%output%}
 
+[[string]]
+==== `string`
+
+This macro can perform the operations `startsWith`, `endsWith`, `equals`, and `contains`.
+The macro has three parameters:
+
+* the string the operation is performed on,
+* the operation to perform,
+* the string to compare to.
+
+The operation has to be given by the names `startsWith`, `endsWith`, `equals`, `equalsTo` or `contains`.
+The name of the operation is case-insensitive.
+
+The macro also handles the parop `ignoreCase`.
+When using this alternative format of the comparison, then all operations use this parameter.
+
 [[string:reverse]]
 ==== `string:reverse`
 
@@ -3044,6 +3049,32 @@ Examples:
 %}
 
 will result
+
+{%output%}
+
+[[string:between]]
+==== `string:between`
+
+This macro extracts a substring from the input, confined between two specified strings. The parameters are:
+
+- `after`: Specifies the string after which the substring should begin. By default, the substring starts at the beginning of the input string if this parameter is not provided.
+- `before`: Specifies the string before which the substring should end. By default, the substring extends to the end of the input string if this parameter is not provided.
+
+The behavior of the macro under different conditions is as follows:
+
+1. If the `after` string is not found in the input, the macro returns an empty string.
+2. If the `before` string is not found in the input, the macro also returns an empty string.
+3. If the `after` string appears more than once in the input, the macro selects the substring starting after the first occurrence of the `after` string.
+4. If the `before` string appears more than once in the input, the macro selects the substring ending before the last occurrence of the `before` string.
+5. If the last occurrence of the `before` string is positioned before the first occurrence of the `after` string in the input, the macro returns an empty string.
+
+This macro is useful for parsing strings where specific delimiters define the boundaries of the desired content. For example, the macro can be used to extract the content of a JavaDoc comment:
+
+{%sample/
+{@string:between (after="/**" before="*/")/** This is a JavaDoc comment. */}
+%}
+
+will result in
 
 {%output%}
 
@@ -3250,45 +3281,39 @@ When a word ends with a word present in the postfix dictionary, the word will be
 If the option is not present a default set of postfixes will be used:
 {%@snip DEFAULT_POSTFIXES%}.
 
-* `decor$cmDict` aliased as `common`, `commons`, `cm` defines the common words dictionary.
+* `decor$cmDict` aliased as `common`, `commons`, `cm` defines the common words' dictionary.
 
 {%chapter close%}{%@undefine chapter$format%}
 [[kroki]]
 === {%chapter%}Kroki
 
-In this section, we will describe how to use the snippet handling macros together with the Kroki service.
+In this section, we will describe how to utilize the snippet handling macros in conjunction with the Kroki service.
 
-The Kroki service is a free online service that can render diagrams from a text.
-You can use the public service, or you can install the application in premise.
-In this section, we will use the public service, but using an in premise installation is very similar.
+The Kroki service is a free online platform capable of rendering diagrams from a text.
+Users can utilize the public service or to install the application on-premises.
+Although we will focus on using the public service in this section, the process for an on-premises installation is very similar.
 
-The documentation of the service and the supported diagram types are available at https://kroki.io/.
+The service's documentation and the types of diagrams it supports are accessible at [https://kroki.io/](https://kroki.io/).
 
-There is direct support to include Kroki generated pictures for AsciiDoc and into Markdown documents.
-There is a resource file in this module named `kroki.jim`.
-You can import this file into your document using `{@import res:kroki.jim}` and use the macro defined in it.
+Kroki provides direct support for incorporating generated images into AsciiDoc and Markdown documents.
+Within this module, there is a resource file named `kroki.jim`.
+You can integrate this file into your document by using `{@import res:kroki.jim}` and employ the macro defined within.
 
-The macro `kroki` has four parameters:
+The `kroki` macro requires four parameters:
 
-* The name of the diagram.
-This will be used to name the generated picture file.
+1. The name of the diagram, which will be utilized to title the generated image file.
+2. The diagram type, which can be any type supported by the Kroki service in use.
+3. The file type, options include `png`, `svg`, `jpeg`, etc. This parameter will not only be relayed to the Kroki service but also used as the file name extension.
+   The various file types that are supported are documented at [https://kroki.io/](https://kroki.io/).
+4. The diagram text.
 
-* The diagram type.
-This can be any supported by the used Kroki service.
+The macro encodes the diagram text, transmits it to the Kroki service, downloads the generated image, and embeds it into the document.
+If the including file's name ends with `md.jam`, the macro will employ Markdown syntax for the image. Otherwise, it will use AsciiDoc syntax.
 
-* The file type, which can be `png`, svg`, `jpeg` etc.
-This parameter will be passed to the Kroki service as well as used as a file name extension.
-The different possible file types are documented at https://kroki.io/.
+Should you require a different syntax, the `kroki:download` macro is available.
+This macro accepts the same arguments and returns the file name of the downloaded image.
 
-* The diagram text.
-
-The macro will encode the diagram text, send it to the Kroki service, download the generated picture and include it in the document.
-The macro will use Markdown syntax for the picture of the including file name ends with `md.jam` and AsciiDoc syntax otherwise.
-
-If you want some other syntax, you can use the macro `kroki:download`.
-This macro has the same arguments and will return the downloaded picture's file name.
-
-These macros will generate picture files with the given name and file type as an extension.
-In addition to that, the macros will also generate a file with the same name and an extra extension `.hash`.
-When the macro executes, it will invoke the web-based service only if the picture file does not exist, or if the diagram text has changed since the last execution.
-You may want to add these files to your source repository to avoid unnecessary network traffic on the CI/CD server.
+These macros generate image files named according to the provided name and append the file type as an extensions.
+Additionally, they create a file with the same name and an extra `.hash` extension.
+The macro will only call the web-based service if the image file does not exist or if the diagram text has changed since the last execution.
+It may be beneficial to include these files in your source repository to minimize unnecessary network traffic on the CI/CD server.
