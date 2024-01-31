@@ -79,6 +79,8 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private IdentityHashMap<Macro,Object> macroState = new IdentityHashMap<>();
 
+    private String lastInvokedBuiltInMacro = null;
+
     @Override
     public Optional<Debugger> getDebugger() {
         return Optional.ofNullable(debugger);
@@ -90,6 +92,10 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     private final BadSyntax initializationException;
+
+    public String getId(){
+        return lastInvokedBuiltInMacro;
+    }
 
     /**
      * Create a new Processor that can be used to process macros. It sets the separators to the specified values. These
@@ -447,7 +453,7 @@ public class Processor implements javax0.jamal.api.Processor {
     private String evaluateBuiltInMacro(TraceRecord tr, MacroQualifier qualifier, Runnable popper) throws BadSyntax {
         final var ref = qualifier.input.getPosition();
         tr.type(TraceRecord.Type.MACRO);
-        final String result = safeEvaluate(() -> evaluateBuiltinMacro(qualifier.input, ref, qualifier.macro), popper);
+        final String result = safeEvaluate(() -> evaluateBuiltinMacro(qualifier.input, ref, qualifier), popper);
         final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, ref.fork());
         tr.appendAfterEvaluation(postEvaluated);
         return postEvaluated;
@@ -501,9 +507,10 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
-    private String evaluateBuiltinMacro(final Input input, final Position ref, final Macro macro) throws BadSyntaxAt {
+    private String evaluateBuiltinMacro(final Input input, final Position ref, final MacroQualifier qualifier) throws BadSyntaxAt {
         try {
-            return macro.evaluate(input, this);
+            lastInvokedBuiltInMacro = qualifier.macroId;
+            return qualifier.macro.evaluate(input, this);
         } catch (BadSyntax bs) {
             pushBadSyntax(bs, ref);
             return "";

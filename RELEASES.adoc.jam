@@ -20,6 +20,8 @@ Using plant UML digagrams should be available through kroki either using the pub
 * Bug fixed in `kroki.jim` resource file
 * String macro `string` can perform equals, startsWith and endsWith operations more readable and with ignoreCase option.
 * String macro `between` can be used to extract a substring between two strings.
+* A macro Java code can query the ID used to invoke it via the processor `getId()` method.
+* Macro `strong:before` and `string:after`.
 
 {%RELEASE ROGACHEVO%}
 

@@ -160,7 +160,7 @@
       Input: "{@string (ignoreCase)/abraka/contains/dabRa}"
       Output: "false"
 
-"find strings between":
+"find string between":
   "simple between":
     Input: "{@string:between (after=a before=b)bacbdba}"
     Output: "cbd"
@@ -178,6 +178,142 @@
     Output: ""
   "between before is smaller than after":
     Input: "{@string:between (after=nyanya before=tunya)tunya ez a nyanya}"
+    Output: ""
+
+"fromEnd find string before":
+  "simple before":
+    Input: "{@string:before (first=a fromEnd)bacbdba}"
+    Throws: "You cannot use 'fromEnd' with 'first'. Simply use 'last'"
+  "before the second":
+    Input: "{@string:before (theSecond=a fromEnd)alabalabamba}"
+    Output: "alabalab"
+  "before the third":
+    Input: "{@string:before (third=a fromEnd)alabalabamba}"
+    Output: "alabal"
+  "before the n-th":
+    Input: "{@string:before (nth=a n=4 fromEnd)alabalabamba}"
+    Output: "alab"
+  "before the last":
+    Input: "{@string:before (last=a fromEnd)alabalabamba}"
+    Throws: "You cannot use 'fromEnd' with 'last'. Simply use 'first'"
+
+"find string after":
+  "simple after":
+    Input: "{@string:after (first=a)bacbdba}"
+    Output: "cbdba"
+  "after the second":
+    Input: "{@string:after (theSecond=a)alabalabamba}"
+    Output: "balabamba"
+  "after the third":
+    Input: "{@string:after (third=a)alabalabamba}"
+    Output: "labamba"
+  "after the n-th":
+    Input: "{@string:after (nth=a n=4)alabalabamba}"
+    Output: "bamba"
+  "after the last":
+    Input: "{@string:after (last=a)alabalabamba}"
+    Output: ""
+    
+"fromEnd find string before ignore case":
+  "simple before":
+    Input: "{@string:before (first=A ignoreCase fromEnd)bacbdba}"
+    Throws: "You cannot use 'fromEnd' with 'first'. Simply use 'last'"
+  "before the second":
+    Input: "{@string:before (theSecond=A ignoreCase fromEnd)alabalabamba}"
+    Output: "alabalab"
+  "before the third":
+    Input: "{@string:before (third=A ignoreCase fromEnd)alabalabamba}"
+    Output: "alabal"
+  "before the n-th":
+    Input: "{@string:before (nth=A n=4 ignoreCase fromEnd)alabalabamba}"
+    Output: "alab"
+  "before the last":
+    Input: "{@string:before (last=A ignoreCase fromEnd)alabalabamba}"
+    Throws: "You cannot use 'fromEnd' with 'last'. Simply use 'first'"
+
+"fromEnd find string after ignore case":
+  "simple after":
+    Input: "{@string:after (first=A ignoreCase fromEnd)bacbdba}"
+    Throws: "You cannot use 'fromEnd' with 'first'. Simply use 'last'"
+  "after the second":
+    Input: "{@string:after (theSecond=A ignoreCase fromEnd)alabalabamba}"
+    Output: "mba"
+  "after the third":
+    Input: "{@string:after (third=A ignoreCase fromEnd)alabalabamba}"
+    Output: "bamba"
+  "after the n-th":
+    Input: "{@string:after (nth=A n=4 ignoreCase fromEnd)alabalabamba}"
+    Output: "labamba"
+  "after the last":
+    Input: "{@string:after (last=A ignoreCase fromEnd)alabalabamba}"
+    Throws: "You cannot use 'fromEnd' with 'last'. Simply use 'first'"
+
+"find string before":
+  "simple before":
+    Input: "{@string:before (first=a)bacbdba}"
+    Output: "b"
+  "before the second":
+    Input: "{@string:before (theSecond=a)alabalabamba}"
+    Output: "al"
+  "before the third":
+    Input: "{@string:before (third=a)alabalabamba}"
+    Output: "alab"
+  "before the n-th":
+    Input: "{@string:before (nth=a n=4)alabalabamba}"
+    Output: "alabal"
+  "before the last":
+    Input: "{@string:before (last=a)alabalabamba}"
+    Output: "alabalabamb"
+
+"fromEnd find string after":
+  "simple after":
+    Input: "{@string:after (first=a fromEnd)bacbdba}"
+    Throws: "You cannot use 'fromEnd' with 'first'. Simply use 'last'"
+  "after the second":
+    Input: "{@string:after (theSecond=a fromEnd)alabalabamba}"
+    Output: "mba"
+  "after the third":
+    Input: "{@string:after (third=a fromEnd)alabalabamba}"
+    Output: "bamba"
+  "after the n-th":
+    Input: "{@string:after (nth=a n=4 fromEnd)alabalabamba}"
+    Output: "labamba"
+  "after the last":
+    Input: "{@string:after (last=a fromEnd)alabalabamba}"
+    Throws: "You cannot use 'fromEnd' with 'last'. Simply use 'first'"
+
+"find string before ignore case":
+  "simple before":
+    Input: "{@string:before (first=A ignoreCase)bacbdba}"
+    Output: "b"
+  "before the second":
+    Input: "{@string:before (theSecond=A ignoreCase)alabalabamba}"
+    Output: "al"
+  "before the third":
+    Input: "{@string:before (third=A ignoreCase)alabalabamba}"
+    Output: "alab"
+  "before the n-th":
+    Input: "{@string:before (nth=A n=4 ignoreCase)alabalabamba}"
+    Output: "alabal"
+  "before the last":
+    Input: "{@string:before (last=A ignoreCase)alabalabamba}"
+    Output: "alabalabamb"
+
+"find string after ignore case":
+  "simple after":
+    Input: "{@string:after (first=A ignoreCase)bacbdba}"
+    Output: "cbdba"
+  "after the second":
+    Input: "{@string:after (theSecond=A ignoreCase)alabalabamba}"
+    Output: "balabamba"
+  "after the third":
+    Input: "{@string:after (third=A ignoreCase)alabalabamba}"
+    Output: "labamba"
+  "after the n-th":
+    Input: "{@string:after (nth=A n=4 ignoreCase)alabalabamba}"
+    Output: "bamba"
+  "after the last":
+    Input: "{@string:after (last=A ignoreCase)alabalabamba}"
     Output: ""
 
 "chopping the start and the end strings":

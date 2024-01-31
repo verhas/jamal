@@ -125,6 +125,8 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:reverse,`string:reverse`>>
 ... <<string:substring,`string:substring`>>
 ... <<string:between,`string:between`>>
+... <<string:before,`string:before`>>
+... <<string:after,`string:after`>>
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
 .. <<shell:var,`shell:var`>>
@@ -1703,7 +1705,7 @@ will result
 
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:970:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:972:30
 ----
 
 
@@ -3343,7 +3345,7 @@ will result
 - Unicode.java: 2,068 bytes
 - Counter.java: 2,168 bytes
 - CompileJavaMacros.java: 23,483 bytes
-- StringMacros.java: 10,467 bytes
+- StringMacros.java: 16,254 bytes
 - JavaSourceTemplate.java: 7,443 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Dictionary.java: 1,527 bytes
@@ -3626,7 +3628,7 @@ will result in the output
 
 [source]
 ----
-2024-01-30 14:40:35
+2024-01-31 14:24:19
 ----
 
 
@@ -4851,6 +4853,72 @@ will result in
 [source]
 ----
 This is a JavaDoc comment.
+----
+
+
+[[string:before]]
+[[string:after]]
+==== `string:before`, `string:after`
+
+These macros extract a portion of the input string, starting before or after a specified occurrence of a given substring.
+They are highly configurable, allowing for precise control over which occurrence to consider and how to handle case sensitivity.
+The two macros are implemented as a single macro, which alters the behaviors depending on the alas (`string:after` or `string:before`) used to invoke it.
+The behaviour can be controlled using paops.
+
+Parameter options (parops):
+
+* `first`/`theFirst`, `second`/`theSecond`, `third`/`theThird`, `last`/`theLast`, `nth`/`theNth` specifies the searched string and which occurrence of the substring to consider.
+You can indicate a specific occurrence like `first`, `second`, `third`, or use `nth` to specify any occurrence.
+
+* `n` is used in conjunction with `nth`/`theNth` to specify the nth occurrence of the substring.
+
+* `fromEnd`/`fromTheEnd` When set, the search for the specified occurrence of the substring starts from the end of the string.
+Cannot be used together with `first`/`theFirst`, or `last`/`theLast`.
+Instead of using `fromEnd` and `last` you can use `first`.
+Similarly, instead of using `fromTheEnd` and `first` you can use `last`.
+
+* `ignorecase`/`ignoreCase`: When set, the search is case-insensitive.
+
+When the substring is not found, or there are less number of occurences than required, the resutn value is empty string.
+
+Examples:
+
+[source]
+----
+{@string:after (second="a") alabala bim bam bum}
+----
+
+will result in
+
+[source]
+----
+bala bim bam bum
+----
+
+
+[source]
+----
+{@string:before (theThird="a") alabala bim bam bum}
+----
+
+will result in
+
+[source]
+----
+alab
+----
+
+
+[source]
+----
+{@string:before (theSecond="A" ignoreCase fromEnd) alabala bim bam bum}
+----
+
+will result in
+
+[source]
+----
+alabal
 ----
 
 

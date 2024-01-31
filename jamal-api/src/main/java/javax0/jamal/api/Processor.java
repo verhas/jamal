@@ -533,6 +533,18 @@ public interface Processor extends AutoCloseable {
     }
 
     /**
+     * Get the id of the last invoked built-in macro.
+     * <p>
+     * Built-in macros may need the actual name used to invoke them. This method will return the ID used to invoke the
+     * last macro. Not that it may change during the execution of the built-in macro if it calles the processor.
+     * <p>
+     * Call this method in the built-in macro as soon as possible, perhaps the first call.
+     *
+     * @return the actual id of the macro used to invoke it.
+     */
+    public String getId();
+
+    /**
      * @return the current Jamal version in the form of a string
      */
     static String jamalVersionString() {

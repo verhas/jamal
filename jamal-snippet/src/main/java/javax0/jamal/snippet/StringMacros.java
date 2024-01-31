@@ -229,6 +229,129 @@ public class StringMacros {
         }
     }
 
+    public static class After implements Macro, Scanner {
+
+        @Override
+        public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+            final var action = processor.getId();
+            final var scanner = newScanner(in, processor);
+            final var str = scanner.str(null, "first", "theFirst", "second", "theSecond", "third", "theThird", "last", "theLast", "nth", "theNth");
+            final var fromEnd = scanner.bool(null, "fromEnd", "fromTheEnd");
+            final var nParameter = scanner.number(null, "n").optional();
+            final var ignore = scanner.bool(null, "ignorecase", "ignoreCase");
+            scanner.done();
+
+            int n;
+            boolean reverse = false;
+            switch (str.name()) {
+                case "first":
+                case "theFirst":
+                    n = 1;
+                    BadSyntax.when(nParameter.isPresent(), "You cannot use 'n' with 'first'");
+                    BadSyntax.when(fromEnd.isPresent(), "You cannot use 'fromEnd' with 'first'. Simply use 'last'");
+                    break;
+                case "second":
+                case "theSecond":
+                    n = 2;
+                    BadSyntax.when(nParameter.isPresent(), "You cannot use 'n' with 'second'");
+                    break;
+                case "third":
+                case "theThird":
+                    n = 3;
+                    BadSyntax.when(nParameter.isPresent(), "You cannot use 'n' with 'third'");
+                    break;
+                case "last":
+                case "theLast":
+                    n = 1;
+                    reverse = true;
+                    BadSyntax.when(nParameter.isPresent(), "You cannot use 'n' with 'last'");
+                    BadSyntax.when(fromEnd.is(), "You cannot use 'fromEnd' with 'last'. Simply use 'first'");
+                    break;
+                case "nth":
+                case "theNth":
+                    BadSyntax.when(!nParameter.isPresent(), "You must use 'n' with 'nth'");
+                    n = nParameter.get();
+                    break;
+                default:
+                    throw new BadSyntax("Unknown parameter name: " + str.name());
+            }
+            if (fromEnd.is()) {
+                reverse = true;
+            }
+            var searchedString = in.toString();
+
+            final int index;
+            final var findStr = str.get();
+            if (reverse) {
+                index = findNthOccurrenceFromEnd(searchedString, findStr, n, ignore.is());
+            } else {
+                index = findNthOccurrence(searchedString, findStr, n, ignore.is());
+            }
+            if (action.equals("string:before")) {
+                return searchedString.substring(0, index);
+            } else {
+                return searchedString.substring(index + findStr.length());
+            }
+        }
+
+        /**
+         * Finds the index of the n-th occurrence of a substring within a given string, searching from the end of the string.
+         * If the substring is found n times when searching backwards, the index (0-based) of the n-th occurrence is returned.
+         * If the substring does not occur n times when searching in this manner, -1 is returned.
+         *
+         * @param str     The string to search in.
+         * @param findStr The substring to find.
+         * @param n       The occurrence number to find (1 for the first occurrence from the end, 2 for the second, etc.).
+         * @return The index of the n-th occurrence of findStr in str when searching from the end, or -1 if findStr does not occur n times in str from the end.
+         * @throws NullPointerException     if str or findStr is null.
+         * @throws IllegalArgumentException if n is less than 1.
+         */
+        private static int findNthOccurrenceFromEnd(String str, String findStr, int n, boolean ignoreCase) {
+            if (ignoreCase) {
+                str = str.toLowerCase();
+                findStr = findStr.toLowerCase();
+            }
+            int index = str.length();
+            for (int i = 0; i < n; i++) {
+                index = str.lastIndexOf(findStr, index - 1); // Decrease index to search in the remaining part of the string from the end
+                if (index == -1) break; // If there are less than n occurrences
+            }
+            return index;
+        }
+
+        /**
+         * Finds the index of the n-th occurrence of a substring within a given string.
+         * If the substring is found n times, the index (0-based) of the n-th occurrence is returned.
+         * If the substring does not occur n times, -1 is returned.
+         *
+         * @param str     The string to search in.
+         * @param findStr The substring to find.
+         * @param n       The occurrence number to find (1 for the first occurrence, 2 for the second, etc.).
+         * @return The index of the n-th occurrence of findStr in str or -1 if findStr does not occur n times in str.
+         * @throws NullPointerException     if str or findStr is null.
+         * @throws IllegalArgumentException if n is less than 1.
+         */
+        private static int findNthOccurrence(String str, String findStr, int n, boolean ignoreCase) {
+            if (ignoreCase) {
+                str = str.toLowerCase();
+                findStr = findStr.toLowerCase();
+            }
+            int index = -1;
+            for (int i = 0; i < n; i++) {
+                index = str.indexOf(findStr, index + 1);
+                if (index == -1) break;
+            }
+            return index;
+        }
+
+        private static final String[] IDS = new String[]{"string:after", "string:before"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
+    }
+
     public static class Substring implements Macro, InnerScopeDependent, Scanner {
 
         @Override

@@ -14,6 +14,7 @@ import javax0.jamal.snippet.StringMacros.StartsWith;
 import javax0.jamal.snippet.StringMacros.Substring;
 import javax0.jamal.snippet.StringMacros.StringMacro;
 import javax0.jamal.snippet.StringMacros.Between;
+import javax0.jamal.snippet.StringMacros.After;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;
@@ -121,6 +122,7 @@ module jamal.snippet {
             Variation,
             Plural,
             StringMacro,
-            Between
+            Between,
+            After
             ;
 }

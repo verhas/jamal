@@ -24,6 +24,12 @@ public abstract class AbstractTypedParameter<T> {
         return param.isPresent();
     }
 
+    /**
+     * @return the name, which was actually used for the parameter. It is the same string as the name of the
+     * parameter or one of the aliases.
+     * <p>
+     * If the parameter is multi-values then the name used the last time will be returned.
+     */
     public String name() {
         return param.name();
     }

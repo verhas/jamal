@@ -134,6 +134,8 @@ This way, it is easier to keep your documentation up to date.
 ... <<string:reverse,`string:reverse`>>
 ... <<string:substring,`string:substring`>>
 ... <<string:between,`string:between`>>
+... <<string:before,`string:before`>>
+... <<string:after,`string:after`>>
 ... <<string:length,`string:length`>>
 ... <<string:chop,`string:chop`>>
 .. <<shell:var,`shell:var`>>
@@ -2903,7 +2905,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 
 [[String]]
 === {%chapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=5b0422a5%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=d64b0dae%}
 
 [[string:contains]]
 ==== `string:contains`
@@ -3072,6 +3074,57 @@ This macro is useful for parsing strings where specific delimiters define the bo
 
 {%sample/
 {@string:between (after="/**" before="*/")/** This is a JavaDoc comment. */}
+%}
+
+will result in
+
+{%output%}
+
+[[string:before]]
+[[string:after]]
+==== `string:before`, `string:after`
+
+These macros extract a portion of the input string, starting before or after a specified occurrence of a given substring.
+They are highly configurable, allowing for precise control over which occurrence to consider and how to handle case sensitivity.
+The two macros are implemented as a single macro, which alters the behaviors depending on the alas (`string:after` or `string:before`) used to invoke it.
+The behaviour can be controlled using paops.
+
+Parameter options (parops):
+
+* `first`/`theFirst`, `second`/`theSecond`, `third`/`theThird`, `last`/`theLast`, `nth`/`theNth` specifies the searched string and which occurrence of the substring to consider.
+You can indicate a specific occurrence like `first`, `second`, `third`, or use `nth` to specify any occurrence.
+
+* `n` is used in conjunction with `nth`/`theNth` to specify the nth occurrence of the substring.
+
+* `fromEnd`/`fromTheEnd` When set, the search for the specified occurrence of the substring starts from the end of the string.
+Cannot be used together with `first`/`theFirst`, or `last`/`theLast`.
+Instead of using `fromEnd` and `last` you can use `first`.
+Similarly, instead of using `fromTheEnd` and `first` you can use `last`.
+
+* `ignorecase`/`ignoreCase`: When set, the search is case-insensitive.
+
+When the substring is not found, or there are less number of occurences than required, the resutn value is empty string.
+
+Examples:
+
+{%sample/
+{@string:after (second="a") alabala bim bam bum}
+%}
+
+will result in
+
+{%output%}
+
+{%sample/
+{@string:before (theThird="a") alabala bim bam bum}
+%}
+
+will result in
+
+{%output%}
+
+{%sample/
+{@string:before (theSecond="A" ignoreCase fromEnd) alabala bim bam bum}
 %}
 
 will result in
