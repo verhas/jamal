@@ -16,18 +16,18 @@ public abstract class NumericAsserts extends AbstractAssert {
             p0 = Integer.parseInt(parts[0]);
         } catch (NumberFormatException nfe) {
             throw new BadSyntax(
-                String.format("The parameter in " + this.getId() + " is not a well formatted integer: '%s'", parts[0]));
+                    String.format("The parameter in " + this.getId() + " is not a well formatted integer: '%s'", parts[0]));
         }
         try {
             p1 = Integer.parseInt(parts[1]);
         } catch (NumberFormatException nfe) {
             throw new BadSyntax(
-                String.format("The parameter in " + this.getId() + " is not a well formatted integer: '%s'", parts[1]));
+                    String.format("The parameter in " + this.getId() + " is not a well formatted integer: '%s'", parts[1]));
         }
         return test(p0, p1);
     }
 
-
+    @Name({"assert:intEquals", "assert:intEqual"})
     public static class AssertIntEquals extends NumericAsserts {
         public AssertIntEquals() {
             super("'%s' does not equal '%s'", "'%s' equals '%s'");
@@ -36,15 +36,9 @@ public abstract class NumericAsserts extends AbstractAssert {
         protected boolean test(int a, int b) {
             return a == b;
         }
-
-        private static final String[] IDS = {"assert:intEquals", "assert:intEqual"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
     }
 
+    @Name("assert:less")
     public static class AssertLess extends NumericAsserts {
         public AssertLess() {
             super("'%s' is not less '%s'", "'%s' is less '%s'");
@@ -55,6 +49,7 @@ public abstract class NumericAsserts extends AbstractAssert {
         }
     }
 
+    @Name({"assert:lessOrEquals", "assert:lessOrEqual"})
     public static class AssertLessOrEqual extends NumericAsserts {
         public AssertLessOrEqual() {
             super("'%s' is not less or equal '%s'", "'%s' is less or equal '%s'");
@@ -63,14 +58,9 @@ public abstract class NumericAsserts extends AbstractAssert {
         protected boolean test(int a, int b) {
             return a <= b;
         }
-
-        private static final String[] IDS = {"assert:lessOrEquals", "assert:lessOrEqual"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
     }
+
+    @Name("assert:greater")
 
     public static class AssertGreater extends NumericAsserts {
         public AssertGreater() {
@@ -82,6 +72,7 @@ public abstract class NumericAsserts extends AbstractAssert {
         }
     }
 
+    @Name({"assert:greaterOrEquals", "assert:greaterOrEqual"})
     public static class AssertGreaterOrEqual extends NumericAsserts {
         public AssertGreaterOrEqual() {
             super("'%s' is not greater or equal '%s'", "'%s' is greater or equal '%s'");
@@ -90,16 +81,9 @@ public abstract class NumericAsserts extends AbstractAssert {
         protected boolean test(int a, int b) {
             return a >= b;
         }
-
-        private static final String[] IDS = {"assert:greaterOrEquals", "assert:greaterOrEqual"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
-
     }
 
+    @Name("assert:numeric")
     public static class AssertNumeric extends AbstractAssert {
         public AssertNumeric() {
             super(2, "'%s' not numeric", "'%s' numeric");
@@ -116,6 +100,7 @@ public abstract class NumericAsserts extends AbstractAssert {
         }
     }
 
+    @Name("assert:int")
     public static class AssertInt extends AbstractAssert {
         public AssertInt() {
             super(2, "'%s' not numeric", "'%s' numeric");

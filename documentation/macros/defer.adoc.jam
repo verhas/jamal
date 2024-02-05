@@ -18,7 +18,7 @@ However, every output is the input of the next step in a processing chain.
 The content of `$input` is the text the deferred macro can work with, hence it is the input for this step.
 
 {%@import res:kroki.jim%}
-{%kroki/input_output.svg/plantuml/SVG/
+{%kroki/input_output/plantuml/svg/
 @startuml
 start
 -> input;

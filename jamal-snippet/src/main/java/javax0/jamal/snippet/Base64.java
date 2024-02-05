@@ -3,6 +3,7 @@ package javax0.jamal.snippet;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Macro.Name;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Scanner;
 
@@ -10,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.Deflater;
 
 public class Base64 {
-
+    @Name({"base64", "base64:encode"})
     public static class Encode implements Macro, Scanner {
 
         @Override
@@ -25,16 +26,9 @@ public class Base64 {
             final var encoder = url.is() ? java.util.Base64.getUrlEncoder() : java.util.Base64.getEncoder();
             return encoder.encodeToString(plainText);
         }
-
-        private static final String[] names = {"base64", "base64:encode"};
-
-        @Override
-        public String[] getIds() {
-            return names;
-        }
-
     }
 
+    @Name("base64:decode")
     public static class Decode implements Macro, Scanner {
 
         @Override
@@ -52,12 +46,6 @@ public class Base64 {
             }
         }
 
-        private static final String[] names = {"base64:decode"};
-
-        @Override
-        public String[] getIds() {
-            return names;
-        }
     }
 
     private static byte[] getBytes(final Input in, final boolean quote, final boolean compress) throws BadSyntax {

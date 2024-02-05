@@ -9,10 +9,11 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 
+@Macro.Name({"range", "ranges"})
 public class RangeMacro implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         final var ranges = scanner.str(null, "range", "ranges", "lines");
         scanner.done();
 
@@ -28,13 +29,5 @@ public class RangeMacro implements Macro, InnerScopeDependent, BlockConverter, S
         if (ranges.isPresent()) {
             javax0.jamal.tools.Range.Lines.filter(sb, ranges.get());
         }
-    }
-
-
-    private static final String[] ids = new String[]{"range", "ranges"};
-
-    @Override
-    public String[] getIds() {
-        return ids;
     }
 }

@@ -100,7 +100,7 @@ It is to note that technically these tests are not unit tests, because they use 
 However, they test against a certain release, which is supposed to be bug free and any bug discovered should signal an error in the macro  implementation.
 These tests are more readable than a clean unit tests, they are fast, reproducible, and exhibit all the important aspects of a regular unit tests.
 
-To use the test support library you have to add the dependency to your `pom.xml` file:
+To use the test support library, you have to add the dependency to your `pom.xml` file:
 
 [source,xml]
 ----
@@ -130,9 +130,9 @@ You may also need to add a JVM command line parameter via the surefire plugin co
 ----
 
 This is needed if your library uses JPMS.
-When the tests are running they need access to your code using reflection, and therefore you need to "opens" the package.
+When the tests are running, they need access to your code using reflection, and therefore you need to "opens" the package.
 When you run the tests in the IDE it may ignore the JPMS settings and run your code as a plain library.
-In that case the fact that the package is not open for the reflective access is not important.
+In that case, the fact that the package is not open for the reflective access is not important.
 
 [NOTE]
 ====
@@ -143,7 +143,7 @@ In that case you have two choices.
 
 . Ignore the possibility to use JPMS, and create your macros as plan old classes in a plain old library, which will be available for Jamal from the `classpath`.
 
-. Learn JPMS from excellent book of Nicolai: https://www.manning.com/books/the-java-module-system
+. Learn JPMS from the excellent book of Nicolai: https://www.manning.com/books/the-java-module-system
 
 I recommend the second.
 ====
@@ -221,59 +221,95 @@ The processor has an API and it is possible to register a user defined or a buil
 
 === Name of a Built-In Macro
 
-In the <<helloworld,Creating a "Hello World" Macro>> chapter we did not discuss how the name of the macro is created.
-We just created a class implementing an interface and then magically it was usable in the Jamal source in the unit test with a reasonable name.
-There is no magic.
+There are four different ways to define one or more names for a macro.
 
-The name of the macro can be defined in the macro `use` when a macro class is explicitly declared for use.
+The recommended way is to name the macro class aptly as described in the following chapter.
+If that is not possible, use the annotation `@Name` as described below.
+In special cases implement one of the `getIds()` or `getId()` methods.
+As a last resort, the macro can be loaded using the macro `use` and the name can be defined there.
+
+==== Default Macro Name
+
+The simplest that we have already seen is to name the macro class aptly.
+It will be used as the name of the macro converting the first character to lower-case.
+We followed this approach in the example above in the <<helloworld,Creating a "Hello World" Macro>> chapter.
+
+==== Macro Name Defined in the Macro `use`
+
+The name of the macro can also be defined in the macro `use` when a macro class is explicitly declared for use.
 The syntax of the `use` macro is
 
     use [global] fully_class_name [ as macroname]
 
 The parts between `[` and `]` are optional.
 
-When the macro is registered via the service loader this is not a possibility.
-In this case, adn in cases when the `use` macro does not have the optional `as macroname` part the name of the macro will be the string, which is returned by the method `getId()`.
-This method is also part of the `javax0.jamal.api.Macro` interface, and it has a `default` implementations.
+==== Defining `getId(s)` in the Macro Class
 
-[source,java,title=`getId` from `Macro.java`]
-----
-default String getId() {
-    return this.getClass().getSimpleName().toLowerCase();
-}
-----
+When the macro is registered via the service loader, the name is decided calling the method `getIds()` of the macro class.
+You can override this method and return a list of names.
+As a convenience, you can also define the method `getId()` and return a single name.
+The default implementation of the method `getIds()` calls the method `getId()` and returns a list with a single element.
 
-In our case the name of the class was `HelloWorld` which converts to `helloworld` all lower case as a macro name.
-You are free to override the implementation of the default method, and there are real examples for that.
-For example the `jamal-snippet` library macros `trimLines`, or `killLines` override the method `getId()`.
-
-Starting with the version 1.9.0 a macro can define multiple names to register itself.
-The different names will serve as equal aliases for the same macro.
-To do that the macro can define the method `getIds()`.
-(note that the name is the plural of the previous `getId()`)
-The default implementation of this method simply calls `getId()` and returns a one element string array with the single name.
+Here is the implementation of the method `getIds()` and looking at it already foreshadows the fourth possibility.
 
 [source,java,title=`getIds` from `Macro.java`]
 ----
 default String[] getIds() {
+    final var ann = this.getClass().getAnnotation(Name.class);
+    if (ann != null && ann.value().length > 0) {
+        return ann.value();
+    }
     return new String[]{getId()};
 }
 ----
 
-When the method is overridden all the strings will be registered.
-It was first used to register `assert:equals`, `assert:lessOrEquals` and so on, with the 3rd person `equals` ending as well as with the simple `equal` ending.
-Modesty and discipline is recommended when defining multiple names for a macro.
+==== Name by Annotation `@Name`
+
+Following the version 2.5.1 it is possible and recommended to specify the name of the macro using the annotation `@Name`.
+The annotation can be used on the macro class.
+It can have one or more strings as arguments specifying the names of the macro.
+For example, the core macro JShell specifies the name this way:
+
+[source,java,title=`JShell` from `JShell.java`]
+----
+@Macro.Name("JShell")
+public class JShell implements Macro {
+----
+
+In this case, the annotation defines one name.
+It is needed because the casing of the macro name is different from the default, following the naming of JShell.
+The macro name is `JShell` and not `jshell`.
+
+=== Fetching the Used Name
+
+It is possible to query the name of the macro that was used to invoke the macro.
+This is useful when the macro has to behave differently depending on the name it was invoked with.
+For example, the macros `string:before` and `string:after` are implemented by the same class.
+The method `evaluate()` starts with the following code:
+
+[source,java,title=`GETID_AFTER` from `StringMacros.java`]
+----
+@Override
+public String evaluate(final Input in, final Processor processor) throws BadSyntax {
+    final var action = processor.getId();
+----
+
+The variable `action` will hold the name that was used to invoke the macro.
+
+NOTE: It is important to invoke this call at the start of the macro.
+The evaluation may invoke acro processing, and the macro name registered in the processor may change.
+The `getId()` method on the processor always returns the last invoked macro name.
+This feature is available since the release 2.5.1.
+
 
 === Handling the Input of the Macro
+In the `HelloWorld` macro, we completely disregarded the macro's input.
+Some built-in macros, such as `comment` or `block`, intentionally behave in this manner.
+Typically, this is not our usual practice.
+Macros generally require their input to function properly.
+It's advisable that even macros designed to ignore input should verify that no additional characters are present following the macro name.
 
-In the `HelloWorld` macro we totally ignored the input of the macro.
-There are some built-in macros, like `comment` or `block` which deliberately do this.
-It is usually not something we can do.
-Macros usually need their input to work with.
-Even macros ignoring the input are encouraged to check that there are no extra characters following the macro name.
-
-If we write another test, we can see that the macro really ignores its input.
-
+The following test demonstrates the behavior of the `HelloWorld` macro when it receives and ignores the input:
 
 [source,java,title=`TestHelloWorld_3` from `TestHelloWorld.java`]
 ----
@@ -286,10 +322,12 @@ void macroIgnoresInput() throws Exception {
 }
 ----
 
+In the next section, we will create a macro that uses its input.
+
 ==== Hello, Me Macro
 
-The next macro we will write is one that will not simply greet the whole word, but rather the person, who we tell it to.
-The code of the macro `Hello` will be the following:
+The subsequent macro we're going to create is designed to not merely extend greetings to the entire world, but specifically to an individual whom we specify.
+The code for the `Hello` macro will be as follows:
 
 [source,java,title=`Hello` from `Hello.java`]
 ----
@@ -301,8 +339,8 @@ public class Hello implements Macro {
 }
 ----
 
-It will use the `input`, convert it to string and cutting off the spaces from the start, and from the end of the string it uses it as a name for the greeting.
-The test is also straightforward and shows the direct use of the macro:
+It will utilize the `input`, transform it into a string, and trim the spaces from the beginning and end of the string, using it as the name in the greeting.
+The test is equally straightforward, demonstrating the direct application of the macro:
 
 [source,java,title=`TestHello_1` from `TestHello.java`]
 ----
@@ -316,31 +354,31 @@ void macroWorks() throws Exception {
 }
 ----
 
-We are handling the simplest possible way  in this example.
-We use it as it is, as a whole string, only cutting off the strings from the start and the end.
-In the next chapter we will look at an example that handles the input in a more complex way.
+In this example, we are addressing the scenario in the simplest possible manner.
+We are utilizing the input as it is, as an entire string, merely trimming the spaces from the beginning and the end.
+In the subsequent chapter, we will explore an example that processes the input in a more intricate way.
 
 === Working with the Input: Example: Spacer Macro
 
-Most of the macros use their input, and they use it in a more complex way.
-To do that macros can parse, split up the input into smaller pieces that the code can afterwards work with.
-To do that there are many possibilities.
+Most macros interact with their input in a complex manner.
+They may parse the input or divide it into smaller segments for subsequent processing.
+There are numerous methods to accomplish this.
 
-First of all, the interface `javax0.jamal.api.Input` extends the Java JDK `CharSequence` interface.
-You can use all the methods defined there.
-The characters in the underlying structure are stored in a `StringBuilder`, and you can get direct access to that calling `getSB()`.
+Firstly, the interface `javax0.jamal.api.Input` extends the `CharSequence` interface from the Java JDK.
+You can employ any methods defined there.
+The characters are stored in a `StringBuilder`, and you can directly access this by invoking `getSB()`.
 
-Built-in macros, however, rarely use these methods directly.
-They use the static methods implemented in the `InputHandler` instead.
+However, built-in macros seldom utilize these methods directly.
+Instead, they typically use the static methods provided by `InputHandler`.
 
-The `Input` object is essentially a character sequence, which also keeps track of the file name, and location the characters came from.
-If you directly access the underlying `StringBuilder` and modify it then you may lose track of the line number and column position.
+The `Input` object is fundamentally a sequence of characters, but it also records the file name and the source location of the characters.
+Directly modifying the underlying `StringBuilder` may result in losing track of the line number and column position.
 
-The class `InputHandler` defined methods that are safe to use for parsing the input.
-The definite reference is the up-to-date JavaDoc.
-In the following examples we will look at how to use some of these methods.
+The class `InputHandler` contains methods specifically designed for safely parsing the input.
+The authoritative reference is the current JavaDoc.
+In the upcoming examples, we'll explore how to utilize some of these methods.
 
-The following macro takes the input of the macro and inserts spaces between the characters.
+The next macro we will examine takes the macro's input and intersperses spaces between the characters.
 That way it will convert
 
 [source,text]
@@ -383,55 +421,61 @@ public class Spacer implements Macro {
 }
 ----
 
-The very first thing the macro does is that it skips the white spaces.
-It is customary to skip these spaces because one or more space has to be there after the id of the macro and they usually only separate the macro name and the content.
-Some macros skip spaces only to the end of the line and in case there are more spaces, but on the next line then they are taken into account.
-In this case all white spaces including new lines are skipped at the start of the input.
-It is important to understand that the skipping process also takes care of the line number and the column position of the actual character.
+The first action of the macro is to bypass any white spaces.
+This is a standard practice because spaces are typically present after the macro's identifier, serving mainly to separate the macro name from its content.
+Some macros might only skip spaces up to the end of a line, considering any additional spaces on the subsequent line.
+However, in this instance, all white spaces, including new lines, are omitted at the beginning of the input.
+It's crucial to note that this skipping process also adjusts the line number and the column position to reflect the actual character.
 
-The input keeps track of the file name, the line number and the column position of the character at the start of the character sequence.
-These three things make a `Position` object.
-The current position of an `Input` can be queried using the `getPosition()` method.
+The input maintains information about the file name, the line number, and the column position at the start of the character sequence.
+Together, these three pieces of information constitute a `Position` object.
+The current position within an `Input` can be obtained by calling the `getPosition()` method.
 
-If the input contained only spaces then we skipped them all and in that case we simply return the empty string.
-If there are characters in the input then we go through them one by one and we insert a space in front of each of them unless the character is at the start of a line.
-To do this we create a new `Input` object, which is empty at the start and inherits the position of the original input.
-Because `Input` is also a `CharacterSequence` we can easily get any character at a certain position calling `charAt()`.
-We can also `move` characters from one input to the other.
-The moving deletes the character from the `Input` `in` and it also modifies the current `Position` of the input.
+If the input consists solely of spaces, they are all skipped, and in such cases, the macro simply returns an empty string.
+If there are other characters in the input, the macro processes them individually, inserting a space before each character, except when the character is at the beginning of a line.
+This is achieved by creating a new, initially empty `Input` object, which inherits the position of the original input.
+Since `Input` also implements `CharacterSequence`, retrieving any character at a specific position is straightforward using `charAt()`.
+Characters can also be 'moved' from one input to another.
+This action removes the character from the `Input` `in` and simultaneously updates the current `Position` of the input.
 
-Finally, the `result` is converted to `String` and is returned.
+Eventually, the `result` is transformed into a `String` and returned.
 
-This macro interpreted the input as an array of characters.
-Many times macros want to work with individual parameters.
-In the next chapter we will look at an example how we should do that.
+This macro treats the input as a sequence of characters.
+Often, macros are designed to work with individual parameters.
+The next chapter will introduce an approach for handling such scenarios.
 
 === Splitting the Input
 
-If you look at the core built-in macro `if` then you can see that it does not have a special syntax.
-It just has three parameters and in case the first parameter is true, then it returns the second parameter, otherwise the third.
-In case there are just two parameters then it results empty string in case the first parameter is false.
-The syntax of the macro is:
+If you examine the core built-in macro `if`, you'll notice it doesn't adopt a special syntax.
+It calls the method `getParts()` to split the input into parts:
+
+[source,java,title=`if_parts` from `If.java`]
+----
+final var parts = InputHandler.getParts(input, processor, 3);
+----
+
+It simply operates with three parameters: if the first parameter evaluates to true, it returns the second parameter; otherwise, it returns the third.
+In scenarios with only two parameters, it yields an empty string if the first parameter is false.
+The syntax of the macro is presented as follows:
 
 [source]
 ----
 {@if 'sep' condition 'sep' then result [ 'sep'else result] }
 ----
 
-Here the `'sep'` is some kind of separator.
-It can be a space, some non-alphanumeric character or some complex separator.
-These three cases are handled by the method `getParts()`.
-This method is defined in the class `InputHandler`.
+In this syntax, `'sep'` represents a separator, which could vary.
+It might be a space, a non-alphanumeric character, or a more complex separator.
+The handling of these three cases is facilitated by the method `getParts()`, located in the class `InputHandler`.
 
-This method skips the white spaces at the start of the input and then looks at the first character.
-If it is a back-tick, then it fetches more characters until it finds a pairing back-tick character.
-The string it fetches is used as a regular expression to split up the rest of the input.
+This method begins by skipping any white spaces at the start of the input and then examines the first character.
+If it encounters a back-tick, it continues to retrieve characters until it identifies a corresponding back-tick.
+The fetched string is then utilized as a regular expression to segment the remainder of the input.
 
-If the first non-space character on the input is not a back-tick, but still a non-alphanumeric character then this character will be used as separator to split up the input.
+If the initial non-space character in the input isn't a back-tick but is still a non-alphanumeric character, this character serves as the separator to split the input.
 
-Last, but not least if the first non-space character is alphanumeric then the input will be split up along the spaces.
+Lastly, if the first non-space character is alphanumeric, the input is divided based on spaces.
 
-The following example uses this method to implement a macro that can fetch one string from many based on an index.
+The upcoming example employs this method to craft a macro capable of retrieving a specific string from a collection, based on an index.
 For example
 
 
@@ -522,6 +566,7 @@ The macro `trimLines` implements this interface because it uses parameters.
 Implementing this interface is simply adding the name of the interface after the `implements` keyword.
 There are no abstract methods in this interface to implement in the class.
 The first few lines of the method `evaluate()` are the followings:
+
 
 [source,java,title=`trimLinesStart` from `TrimLines.java`]
 ----

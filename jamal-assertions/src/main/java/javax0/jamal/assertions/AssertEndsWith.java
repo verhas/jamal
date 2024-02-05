@@ -1,5 +1,8 @@
 package javax0.jamal.assertions;
 
+import javax0.jamal.api.Macro;
+
+@Macro.Name({"assert:endsWith", "assert:endswith"})
 public class AssertEndsWith extends AbstractAssert {
 
     public AssertEndsWith() {

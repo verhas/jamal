@@ -390,8 +390,8 @@ results
 3. OK:
 4. OK:
 5. OK:
-6. ERROR: The parameter in assert:greaterOrEqual is not a well formatted integer: '3A'
-7. ERROR: The parameter in assert:greaterOrEqual is not a well formatted integer: ' 6 '
+6. ERROR: The parameter in assert:greaterOrEquals is not a well formatted integer: '3A'
+7. ERROR: The parameter in assert:greaterOrEquals is not a well formatted integer: ' 6 '
 8. ERROR:
 9. ERROR: three is not greater than three, three is three
 10. ERROR: this is numeric comparison, negative numbers are negative
@@ -463,8 +463,8 @@ results
 3. OK:
 4. OK:
 5. OK:
-6. ERROR: The parameter in assert:lessOrEqual is not a well formatted integer: '3A'
-7. ERROR: The parameter in assert:lessOrEqual is not a well formatted integer: ' 3 '
+6. ERROR: The parameter in assert:lessOrEquals is not a well formatted integer: '3A'
+7. ERROR: The parameter in assert:lessOrEquals is not a well formatted integer: ' 3 '
 8. ERROR: 666 is not less than six
 9. ERROR: three is not less than three, three is three
 10. ERROR: this is numeric comparison, negative numbers are negative

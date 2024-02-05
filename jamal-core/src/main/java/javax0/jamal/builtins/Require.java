@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Macro.Name;
 import javax0.jamal.api.Processor;
 
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import java.util.Properties;
 import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 import static javax0.jamal.tools.InputHandler.startsWith;
-
+@Name({"require", "version"})
 public class Require implements Macro {
 
     private enum Prefix {
@@ -33,15 +34,9 @@ public class Require implements Macro {
     }
 
     @Override
-    public String[] getIds() {
-        return new String[]{"require", "version"};
-    }
-
-    @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         skipWhiteSpaces(in);
         if (in.length() == 0) {
-            final var p = new Properties();
             return Processor.jamalVersionString();
         }
         final int exact;

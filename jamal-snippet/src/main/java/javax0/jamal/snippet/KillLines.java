@@ -11,6 +11,7 @@ import javax0.jamal.tools.Scanner;
 
 import java.util.regex.Pattern;
 
+@Macro.Name({"killLines", "filterLines"})
 public class KillLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -21,12 +22,6 @@ public class KillLines implements Macro, InnerScopeDependent, BlockConverter, Sc
 
         convertTextBlock(processor, in.getSB(), in.getPosition(), pattern.getParam(), keep.getParam());
         return in.toString();
-    }
-
-    private static final String[] IDS = new String[]{"killLines", "filterLines"};
-    @Override
-    public String[] getIds() {
-        return IDS;
     }
 
     @Override

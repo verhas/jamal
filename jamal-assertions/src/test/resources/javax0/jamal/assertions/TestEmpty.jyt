@@ -4,13 +4,13 @@
 "Test non empty string assertion":
     Input: "{@assert:empty /abba/should fail}"
     Throws: ".*should fail.*"
-"Test empty string assertion":
+"Test empty string assertion (not)":
     Input: "{@assert:empty (not) //should fail}"
     Throws: ".*should fail.*"
 "Test empty string assertion":
     Input: "{@assert:empty //should fail}"
     Output: ""
-"Test non empty string assertion":
+"Test non empty string assertion (not)":
     Input: "{@assert:empty(not) /abba/should fail}"
     Output: ""
 "Test empty string assertion with default message":

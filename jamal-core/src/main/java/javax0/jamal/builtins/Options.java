@@ -6,14 +6,8 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tools.Scanner;
-
+@Macro.Name({"options", "option"})
 public class Options implements Macro, Scanner.Core {
-
-    private static final String[] IDS = {"options", "option"};
-
-    private static boolean test(String s) {
-        return !s.isEmpty();
-    }
 
     private enum PushPop {
         push, pop, set
@@ -39,10 +33,4 @@ public class Options implements Macro, Scanner.Core {
         }
         return "";
     }
-
-    @Override
-    public String[] getIds(){
-        return IDS;
-    }
-
 }

@@ -6,6 +6,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 
+@Macro.Name({"ref", "reference"})
 public class Reference implements Macro {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
@@ -25,17 +26,10 @@ public class Reference implements Macro {
                 .map(m -> (References.ReferenceHolder) m)
                 .orElseThrow(() -> new BadSyntax(String.format("The reference macro '%s' is not defined", ref)));
         xref.getObject().add(id);
-        if(processor.getRegister().getUserDefined(id).isEmpty())    {
-            final var dummy = processor.newUserDefinedMacro(id,"UNDEFINED",false,true, new String[]{"..."});
+        if (processor.getRegister().getUserDefined(id).isEmpty()) {
+            final var dummy = processor.newUserDefinedMacro(id, "UNDEFINED", false, true, "...");
             processor.defineGlobal(dummy);
         }
         return "";
-    }
-
-    private static final String[] names = new String[]{"ref","reference"};
-
-    @Override
-    public String[] getIds() {
-        return names;
     }
 }

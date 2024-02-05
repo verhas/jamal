@@ -1,5 +1,8 @@
 package javax0.jamal.assertions;
 
+import javax0.jamal.api.Macro;
+
+@Macro.Name("assert:empty")
 public class AssertEmpty extends AbstractAssert {
 
     public AssertEmpty() {
@@ -8,6 +11,6 @@ public class AssertEmpty extends AbstractAssert {
 
     @Override
     protected boolean test(String[] parts) {
-        return parts[0].length() == 0;
+        return parts[0].isEmpty();
     }
 }

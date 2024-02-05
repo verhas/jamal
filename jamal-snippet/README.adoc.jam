@@ -776,7 +776,7 @@ will be converted to
 
 [[range]]
 === {%chapter%}`range`
-{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=7f852d3a%}
+{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=370471be%}
 
 This macro can filter lines of its input by a range of numbers.
 The syntax of the macro is:
@@ -797,7 +797,7 @@ The format and the meaning of the option `lines` is exactly the same as the opti
 
 [[Base64]]
 === {%chapter%}`base64` encode and decode
-{%#snip:check file={%JAVA_DIR%}Base64.java hash=78c1b71b%}
+{%#snip:check file={%JAVA_DIR%}Base64.java hash=01b6f7bc%}
 
 There are two macros that can encode and decode the input using the Base64 algorithm.
 The encoding macro is called `base64`.
@@ -1145,7 +1145,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 === {%chapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=1a8468e1%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=424c8b47%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -2905,7 +2905,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 
 [[String]]
 === {%chapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=d64b0dae%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=8f7c2c18%}
 
 [[string:contains]]
 ==== `string:contains`

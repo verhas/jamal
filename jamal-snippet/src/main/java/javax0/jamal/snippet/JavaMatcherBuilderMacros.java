@@ -1,6 +1,11 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.*;
+import javax0.jamal.api.BadSyntax;
+import javax0.jamal.api.Identified;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.api.ObjectHolder;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
@@ -14,7 +19,24 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
-import static javax0.javalex.LexpressionBuilder.*;
+import static javax0.javalex.LexpressionBuilder.anyTill;
+import static javax0.javalex.LexpressionBuilder.character;
+import static javax0.javalex.LexpressionBuilder.comment;
+import static javax0.javalex.LexpressionBuilder.floatNumber;
+import static javax0.javalex.LexpressionBuilder.group;
+import static javax0.javalex.LexpressionBuilder.identifier;
+import static javax0.javalex.LexpressionBuilder.integerNumber;
+import static javax0.javalex.LexpressionBuilder.keyword;
+import static javax0.javalex.LexpressionBuilder.list;
+import static javax0.javalex.LexpressionBuilder.match;
+import static javax0.javalex.LexpressionBuilder.not;
+import static javax0.javalex.LexpressionBuilder.number;
+import static javax0.javalex.LexpressionBuilder.oneOf;
+import static javax0.javalex.LexpressionBuilder.oneOrMore;
+import static javax0.javalex.LexpressionBuilder.optional;
+import static javax0.javalex.LexpressionBuilder.string;
+import static javax0.javalex.LexpressionBuilder.unordered;
+import static javax0.javalex.LexpressionBuilder.zeroOrMore;
 
 public class JavaMatcherBuilderMacros {
 
@@ -164,8 +186,8 @@ public class JavaMatcherBuilderMacros {
     /*
      * This is generated code. DO NOT edit manually.
      */
-
-    public static class StringMacro implements Macro,Scanner {
+    @Macro.Name("j:string")
+    public static class StringMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -175,14 +197,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(string(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (s.length() > 0) {
+                    if (!s.isEmpty()) {
                         macro = new MatcherObjectHolder(string(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(string(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (s.length() > 0) {
+                if (!s.isEmpty()) {
                     macro = new MatcherObjectHolder(string(s));
                 } else {
                     macro = new MatcherObjectHolder(string());
@@ -193,17 +215,11 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
-
-        private static final String[] IDS = new String[]{"j:string"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
     }
 
 
-    public static class Identifier implements Macro,Scanner {
+    @Macro.Name("j:identifier")
+    public static class Identifier implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -213,14 +229,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(identifier(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (s.length() > 0) {
+                    if (!s.isEmpty()) {
                         macro = new MatcherObjectHolder(identifier(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(identifier(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (s.length() > 0) {
+                if (!s.isEmpty()) {
                     macro = new MatcherObjectHolder(identifier(s));
                 } else {
                     macro = new MatcherObjectHolder(identifier());
@@ -231,17 +247,11 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
-
-        private static final String[] IDS = new String[]{"j:identifier"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
     }
 
 
-    public static class CharacterMacro implements Macro,Scanner {
+    @Macro.Name({"j:character", "j:char"})
+    public static class CharacterMacro implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -251,14 +261,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(character(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (s.length() > 0) {
+                    if (!s.isEmpty()) {
                         macro = new MatcherObjectHolder(character(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(character(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (s.length() > 0) {
+                if (!s.isEmpty()) {
                     macro = new MatcherObjectHolder(character(s));
                 } else {
                     macro = new MatcherObjectHolder(character());
@@ -269,17 +279,11 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
-
-        private static final String[] IDS = new String[]{"j:character","j:char"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
     }
 
 
-    public static class Comment implements Macro,Scanner {
+    @Macro.Name("j:comment")
+    public static class Comment implements Macro, Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -289,14 +293,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(comment(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (s.length() > 0) {
+                    if (!s.isEmpty()) {
                         macro = new MatcherObjectHolder(comment(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(comment(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (s.length() > 0) {
+                if (!s.isEmpty()) {
                     macro = new MatcherObjectHolder(comment(s));
                 } else {
                     macro = new MatcherObjectHolder(comment());
@@ -307,15 +311,7 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
-
-        private static final String[] IDS = new String[]{"j:comment"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
     }
-
 
 
     //</editor-fold>
@@ -469,7 +465,7 @@ public class JavaMatcherBuilderMacros {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
-            BadSyntax.when(in.toString().trim().length() > 0, "j:float does not take any arguments");
+            BadSyntax.when(!in.toString().trim().isEmpty(), "j:float does not take any arguments");
             final Identified macro;
             if (options.groupName.isPresent()) {
                 macro = new MatcherObjectHolder(floatNumber(group(options.groupName.get())));
@@ -492,7 +488,7 @@ public class JavaMatcherBuilderMacros {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
-            BadSyntax.when(in.toString().trim().length() > 0, "j:int does not take any arguments");
+            BadSyntax.when(!in.toString().trim().isEmpty(), "j:int does not take any arguments");
             final Identified macro;
             if (options.groupName.isPresent()) {
                 macro = new MatcherObjectHolder(integerNumber(group(options.groupName.get())));
@@ -510,7 +506,7 @@ public class JavaMatcherBuilderMacros {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
-            BadSyntax.when(in.toString().trim().length() > 0, "j:number does not take any arguments");
+            BadSyntax.when(!in.toString().trim().isEmpty(), "j:number does not take any arguments");
             final Identified macro;
             if (options.groupName.isPresent()) {
                 macro = new MatcherObjectHolder(number(group(options.groupName.get())));

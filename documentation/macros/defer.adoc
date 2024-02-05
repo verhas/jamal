@@ -21,7 +21,7 @@ However, every output is the input of the next step in a processing chain.
 The content of `$input` is the text the deferred macro can work with, hence it is the input for this step.
 
 
-image::input_output.svg.SVG[]
+image::input_output.svg[]
 
 If this evaluation defines the global macro `$output` the value of the macro will be used instead of the original output.
 

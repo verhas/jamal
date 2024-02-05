@@ -1,4 +1,4 @@
-"Test a space diff only assert:contains w/o trim":
+"Test a space diff only assert:contains with trim[ok]":
     Input: "{@assert:contains (trim) /abba/   abba   /should fail/}"
     Output: ""
 "Test a simple assert:contains":

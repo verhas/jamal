@@ -2,6 +2,7 @@ package javax0.jamal.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
  * time, multiple threads in some installations may use the same macro instance.
  * <p>
  * When a macro implementation has state then it has to be annotated using {@link Macro.Stateful}.
- * There is an internal check in Jamal, that will throw an exception if a stateful macro is not annotated.
+ * There is an internal check in Jamal that will throw an exception if a stateful macro is not annotated.
  * The check assumes any macro to be stateful that has non-static non-final fields, or any parents excluding {@link
  * Object} has.
  */
@@ -38,9 +39,43 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
     interface Escape {
     }
 
+    /**
+     * A signal interface to be implemented by all macros that implement state.
+     * Implementing state, a.k.a. having a non-static non-final field, is not recommended, but it is possible.
+     * When a macro is stateful then it has to be annotated using {@link Macro.Stateful}.
+     * <p>
+     * The use of this macro helps to ensure that the developer is aware of the fact that the macro is stateful.
+     */
+    @Target(java.lang.annotation.ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @interface Stateful {
     }
+
+    /**
+     * Annotation to be used on the macro implementation class to provide the name of the macro.
+     * <p>
+     * Macros can provide the name
+     *
+     * <ul>
+     *     <li>by implementing the method {@link #getId()}</li>
+     *     <li>by implementing the method {@link #getIds()}</li>
+     *     <li>by annotating the class with {@link Name}, or</li>
+     *     <li>relying on the default mechanism calculating the name from the class name.</li>
+     * </ul>
+     * <p>
+     * The recommended is to name the macro class so that the name is the same as the macro name.
+     * If that is not possible, then use the annotation.
+     * Implementing the method {@link #getId()} or {@link #getIds()} is possible for backward compatibility.
+     * <p>
+     * If both the annotation and the method are present, then the method is used.
+     * It may be an approach to create macros compatible with Jamal 2.5.0 and earlier versions.
+     */
+    @Target(java.lang.annotation.ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Name {
+        String[] value();
+    }
+
 
     static List<Macro> getInstances(final ClassLoader cl) {
         return ServiceLoaded.getInstances(Macro.class, cl);
@@ -105,6 +140,10 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
      */
     // snippet getId
     default String getId() {
+        final var ann = this.getClass().getAnnotation(Name.class);
+        if (ann != null && ann.value().length > 0) {
+            return ann.value()[0];
+        }
         return this.getClass().getSimpleName().toLowerCase();
     }
     // end snippet
@@ -120,6 +159,10 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
      */
     // snippet getIds
     default String[] getIds() {
+        final var ann = this.getClass().getAnnotation(Name.class);
+        if (ann != null && ann.value().length > 0) {
+            return ann.value();
+        }
         return new String[]{getId()};
     }
     // end snippet

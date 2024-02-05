@@ -133,6 +133,7 @@ public class JavaSourceMacro {
      * <p>
      * If the specified module info is zero length then no module info file will be created.
      */
+    @Macro.Name({MACRO_NS + "moduleInfo", MACRO_NS + "moduleinfo"})
     public static class JavaModuleInfo implements Macro, Scanner.FirstLine {
 
         @Override
@@ -140,12 +141,6 @@ public class JavaSourceMacro {
             final String name = JavaSourceMacro.getId(in, processor, this);
             getJavaMacroSet(processor, name).setModuleInfo(in.toString());
             return "";
-        }
-
-
-        @Override
-        public String[] getIds() {
-            return new String[]{MACRO_NS + "moduleInfo", MACRO_NS + "moduleinfo"};
         }
     }
 

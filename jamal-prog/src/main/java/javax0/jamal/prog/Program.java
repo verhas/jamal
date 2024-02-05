@@ -9,7 +9,7 @@ import javax0.jamal.prog.analyzer.Lexer;
 import javax0.jamal.prog.commands.Context;
 import javax0.jamal.tools.Scanner;
 
-
+@Macro.Name({"program", "prog", "do", "run"})
 public class Program implements Macro, Scanner.FirstLine {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
@@ -22,11 +22,6 @@ public class Program implements Macro, Scanner.FirstLine {
         final var limit = scanner.number("stepLimit").defaultValue(100_000);
         scanner.done();
         return limit.get();
-    }
-
-    @Override
-    public String[] getIds() {
-        return new String[]{"program", "prog", "do", "run"};
     }
 }
 

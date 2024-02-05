@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 public class StringMacros {
 
+    @Macro.Name("string:contains")
     public static class Contains implements Macro, InnerScopeDependent, Scanner {
 
         @Override
@@ -27,13 +28,9 @@ public class StringMacros {
                 return "" + in.toString().contains(text.get());
             }
         }
-
-        @Override
-        public String getId() {
-            return "string:contains";
-        }
     }
 
+    @Macro.Name("string:quote")
     public static class Quote implements Macro, InnerScopeDependent {
 
         @Override
@@ -48,11 +45,6 @@ public class StringMacros {
                     .replace("\r", "\\r")
                     .replace("\f", "\\f")
                     .replace("\"", "\\\"");
-        }
-
-        @Override
-        public String getId() {
-            return "string:quote";
         }
     }
 
@@ -114,18 +106,15 @@ public class StringMacros {
 
     }
 
+    @Macro.Name("string:endsWith")
     public static class EndsWith extends XWith {
         public EndsWith() {
             super(String::endsWith);
         }
 
-        @Override
-        public String getId() {
-            return "string:endsWith";
-        }
-
     }
 
+    @Macro.Name("string:equals")
     public static class Equals implements Macro, InnerScopeDependent, Scanner {
 
         @Override
@@ -137,13 +126,9 @@ public class StringMacros {
             BadSyntax.when(parts.length != 2, "%s needs two parts", getId());
             return "" + (ignoreCase.is() ? parts[0].equalsIgnoreCase(parts[1]) : parts[0].equals(parts[1]));
         }
-
-        @Override
-        public String getId() {
-            return "string:equals";
-        }
     }
 
+    @Macro.Name("string:reverse")
     public static class Reverse implements Macro, InnerScopeDependent {
 
         @Override
@@ -152,13 +137,9 @@ public class StringMacros {
             BadSyntax.when(parts.length != 1, "The string:reverse macro expects exactly one argument");
             return new StringBuilder(parts[0]).reverse().toString();
         }
-
-        @Override
-        public String getId() {
-            return "string:reverse";
-        }
     }
 
+    @Macro.Name("string:chop")
     public static class Chop implements Macro, Scanner {
 
         @Override
@@ -177,13 +158,9 @@ public class StringMacros {
             }
             return result;
         }
-
-        @Override
-        public String getId() {
-            return "string:chop";
-        }
     }
 
+    @Macro.Name("string:between")
     public static class Between implements Macro, Scanner {
 
         @Override
@@ -222,18 +199,15 @@ public class StringMacros {
             result = result.substring(afterIndex, beforeIndex);
             return result;
         }
-
-        @Override
-        public String getId() {
-            return "string:between";
-        }
     }
 
+    @Macro.Name({"string:after", "string:before"})
     public static class After implements Macro, Scanner {
-
+// snippet GETID_AFTER
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var action = processor.getId();
+// end snippet
             final var scanner = newScanner(in, processor);
             final var str = scanner.str(null, "first", "theFirst", "second", "theSecond", "third", "theThird", "last", "theLast", "nth", "theNth");
             final var fromEnd = scanner.bool(null, "fromEnd", "fromTheEnd");
@@ -343,13 +317,6 @@ public class StringMacros {
             }
             return index;
         }
-
-        private static final String[] IDS = new String[]{"string:after", "string:before"};
-
-        @Override
-        public String[] getIds() {
-            return IDS;
-        }
     }
 
     public static class Substring implements Macro, InnerScopeDependent, Scanner {
@@ -373,6 +340,7 @@ public class StringMacros {
         }
     }
 
+    @Macro.Name("string:length")
     public static class Length implements Macro, InnerScopeDependent, Scanner {
 
         @Override
@@ -394,11 +362,6 @@ public class StringMacros {
                 }
             }
             return "" + string.length();
-        }
-
-        @Override
-        public String getId() {
-            return "string:length";
         }
     }
 

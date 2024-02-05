@@ -107,6 +107,7 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
         final var opt = new Options(scanner);
         scanner.done();
         opt.assertConsistency();
+        // snipline if_parts
         final var parts = InputHandler.getParts(input, processor, 3);
         BadSyntaxAt.when(parts.length < 1, "Macro 'if' needs 1, 2 or 3 arguments", pos);
 
@@ -187,10 +188,10 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
         }
 
         if (opt.blank.is()) {
-            return test.trim().length() == 0;
+            return test.trim().isEmpty();
         }
         if (opt.empty.is()) {
-            return test.length() == 0;
+            return test.isEmpty();
         }
         if (test.trim().equalsIgnoreCase("true")) {
             return true;
@@ -201,7 +202,7 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
         if (test.trim().matches("[+-]?\\d+")) {
             return Integer.parseInt(test) != 0;
         }
-        return test.trim().length() > 0;
+        return !test.trim().isEmpty();
     }
 
 }

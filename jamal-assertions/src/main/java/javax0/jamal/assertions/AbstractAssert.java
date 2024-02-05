@@ -85,28 +85,6 @@ abstract class AbstractAssert implements Macro, Scanner {
         }
     }
 
-    /**
-     * The implementation of the naming assumes that the name of the class looks like {@code AsserXXX} where
-     * {@code Assert} is a six character prefix, usually it is literally {@code 'Assert'} and it is followed by
-     * the name of the assertion. The name of the macro will be {@code assert:} followed by the rest of the name of
-     * the class lowercasing the first characters. For example:
-     * <pre>{@code
-     * AssertEquals -> assert:equals
-     * AssertSomeFunnyName -> assert:somFunnyName
-     * AssireAny -> assert:any
-     * }</pre>
-     * <p>
-     * If the naming of the class does not conform to this schema or the macro implemented needs some special name then
-     * the method has to be overridden.
-     *
-     * @return the name of the macro
-     */
-    @Override
-    public String getId() {
-        final var s = this.getClass().getSimpleName().substring(6);
-        return "assert:" + s.substring(0, 1).toLowerCase() + s.substring(1);
-    }
-
     private static String[] getParts(Input input, Processor processor, int N, BooleanParameter trim, Macro macro) throws BadSyntax {
         final var parts = InputHandler.getParts(input, processor, N);
         BadSyntax.when(parts.length < N - 1, () -> macro.getId() + " needs at least " + (N - 1) + " arguments");

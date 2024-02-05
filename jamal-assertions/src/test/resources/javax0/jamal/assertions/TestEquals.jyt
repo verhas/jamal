@@ -1,5 +1,5 @@
-"Test a space diff only assert:equals w/o trim":
-    Input: "{@assert:equals (trim) /abba/   abba   /should fail/}"
+"Test a space diff only assert:equals with trim":
+    Input: "{@assert:equals (trim) /abba/   abba   /is okay/}"
     Output: ""
 "Test a simple assert:equals":
     Input: "{@assert:equals /abba/abba/should be ok/}"

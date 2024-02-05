@@ -48,7 +48,7 @@ This will instruct Jamal not to evaluate the input of the macro before the macro
 
 When we use the `#` character in front of the built-in macro's name then the input is evaluated and after that the macro itself is invoked to process the pre-processed input.
 
-image::evaluationorder.svg.SVG[]
+image::evaluationorder.svg[]
 
 For example:
 

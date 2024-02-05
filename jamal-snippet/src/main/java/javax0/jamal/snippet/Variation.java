@@ -11,11 +11,10 @@ import javax0.jamal.tools.Scanner;
 import static javax0.jamal.tools.InputHandler.convertGlobal;
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 
+@Macro.Name({"variation", "variations", "var"})
 public class Variation implements Macro, Scanner, OptionsControlled {
 
     private static final String SPACE = "\\s+|\n|\r|\t|\f";
-
-    private static final String[] NO_PARAMS = new String[0];
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -79,12 +78,6 @@ public class Variation implements Macro, Scanner, OptionsControlled {
         return clean(in.toString(), startStr, endStr, false);
     }
 
-    private static final String[] ids = {"variation","variations", "var"};
-    @Override
-    public String[] getIds() {
-        return ids;
-    }
-
     /**
      * Remove all the substrings that start with the 'start' and end with the 'end' strings.
      *
@@ -132,7 +125,7 @@ public class Variation implements Macro, Scanner, OptionsControlled {
         private String end;
 
         @Override
-        public String evaluate(String... parameters) throws BadSyntax {
+        public String evaluate(String... parameters) {
             counter++;
             return cleanedContent;
         }
