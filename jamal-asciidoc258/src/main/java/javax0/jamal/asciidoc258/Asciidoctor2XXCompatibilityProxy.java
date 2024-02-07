@@ -10,35 +10,40 @@ public class Asciidoctor2XXCompatibilityProxy extends Preprocessor {
     private final CompatibilityProcess process;
 
     /**
-     * Creates a compatibility proxy for Asciidoctor processing
-     * if the specified process object's class has a method named "process"
-     * with a void return type.
-     * This is intended for ensuring compatibility with Asciidoctor 2.X versions.
+     * Return a version of the process that is compatible with the version of the asciidoctor that is used.
      *
-     * <p>
-     * The method dynamically checks if the "org.asciidoctor.extension.Preprocessor" class has a declared method named "process"
-     * with a void return type. If such a method exists, it returns an instance of {@code Asciidoctor2XXCompatibilityProxy}
-     * wrapped around the provided {@code process} object. If the method does not exist, is not accessible, or any exception occurs
-     * during reflection, it simply returns the original {@code process} object.</p>
-     *
-     * @param process the object for which to create a compatibility proxy. It is expected that this object is
-     *                an instance of a class that would benefit from compatibility handling.
-     * @return an instance of {@code Asciidoctor2XXCompatibilityProxy} if the conditions are met, otherwise returns
-     * the original {@code process} object.
+     * @param process the process compatible with the versions 3XX and to be invoked by the version compatible with 2XX
+     * @return either the original process or a proxy that is compatible with the version of the asciidoctor
      */
     public static Object create(CompatibilityProcess process) {
+        if (isVersion2XX()) {
+            return new Asciidoctor2XXCompatibilityProxy(process);
+        } else {
+            return process;
+        }
+    }
+
+    /**
+     * Check if the version of the asciidoctor is 2XX or not.
+     * <p>
+     * The difference between the 2XX and 3XX versions is that the process method in the Preprocessor class has a
+     * different signature. In 2XX the method returns void, in 3XX it returns Reader.
+     *
+     * @return true if the version is 2XX
+     * @implNote This method uses reflection to check the version. It is not the most efficient way to do it, but it is
+     * the most reliable way.
+     */
+    private static boolean isVersion2XX() {
         try {
             final var abstractPreprocessor = Class.forName("org.asciidoctor.extension.Preprocessor");
             for (final var m : abstractPreprocessor.getDeclaredMethods()) {
                 if ("process".equals(m.getName())) {
-                    if (m.getReturnType() == void.class) {
-                        return new Asciidoctor2XXCompatibilityProxy(process);
-                    }
+                    return m.getReturnType() == void.class;
                 }
             }
         } catch (Exception ignore) {
         }
-        return process;
+        return false;
     }
 
     private Asciidoctor2XXCompatibilityProxy(CompatibilityProcess process) {
@@ -46,6 +51,14 @@ public class Asciidoctor2XXCompatibilityProxy extends Preprocessor {
         this.process = process;
     }
 
+    /**
+     * This method is called by the asciidoctor when the version is 2XX. It calls the process method of the 3XX
+     * compatible version and ignores the return value.
+     *
+     * @param document the document
+     * @param reader   the reader
+     */
+    @Override
     public void process(Document document, PreprocessorReader reader) {
         process.process(document, reader);
     }

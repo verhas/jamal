@@ -59,8 +59,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     @Override
     public void register(Asciidoctor asciidoctor) {
-        JavaExtensionRegistry javaExtensionRegistry = asciidoctor.javaExtensionRegistry();
-        javaExtensionRegistry.preprocessor((Preprocessor) Asciidoctor2XXCompatibilityProxy.create(this));
+        final var registry = asciidoctor.javaExtensionRegistry();
+        registry.preprocessor((Preprocessor) Asciidoctor2XXCompatibilityProxy.create(this));
     }
 
     private String getAsciidoctorJVersion() {
