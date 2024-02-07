@@ -3,16 +3,16 @@ package javax0.jamal.mavenextension;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.OutputFile;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.io.ModelReader;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -20,17 +20,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -41,9 +31,10 @@ import java.util.stream.Collectors;
 /**
  * This is the extension class that implements the maven macro extension
  */
-@Component(role = ModelProcessor.class)
+@Named
+@Singleton
 public class CustomModelProcessor implements ModelProcessor {
-    @Requirement
+    @Inject
     private ModelReader modelReader;
 
     @Override
@@ -150,7 +141,9 @@ public class CustomModelProcessor implements ModelProcessor {
         tf.setOutputProperty(OutputKeys.INDENT, "yes");
         Writer out = new StringWriter();
         tf.transform(new DOMSource(doc), new StreamResult(out));
-        return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
+        return Arrays.stream(out.toString().split(System.lineSeparator()))
+                .filter(s -> !s.trim().isEmpty())
+                .collect(Collectors.joining(System.lineSeparator()));
     }
 
     @Override

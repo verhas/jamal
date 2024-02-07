@@ -10,7 +10,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `LEVENSHTEIN_VERSION` `1.0.0` 
 
-* `OK`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.11.0` 
+* `OK`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.12.1` 
 
 * `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.6.3` 
 
@@ -18,15 +18,15 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.6.0` 
 
-* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-8` 
+* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-12` 
 
-* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.10.2` 
+* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.11.0` 
 
-* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.10.2` 
+* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.11.0` 
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.2.2` 
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.2.5` 
 
 * `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.0` 
 
@@ -34,25 +34,25 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.1` 
 
-* `OK`  `JUPITER_VERSION` `5.10.1` 
+* `OK`  `JUPITER_VERSION` `5.10.2` 
 
-* `OK`  `MOCKITO_VERSION` `5.8.0` 
+* `OK`  `MOCKITO_VERSION` `5.10.0` 
 
 * `OK`  `JRUBY_VERSION` `9.4.5.0` 
 
-* `OK`  `GROOVY_VERSION` `3.0.19` 
+* `OK`  `GROOVY_VERSION` `3.0.20` 
 
 * `OK`  `OGNL_VERSION` `3.4.2` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.2` 
 
-* `OK`  `JSON_ORG_VERSION` `20231013` 
+* `OK`  `JSON_ORG_VERSION` `20240205` 
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
 * `OK`  `APACHE_POI_VERSION` `5.2.5` 
 
-* `OK`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` 
+* `OK`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.2` 
 
 * `OK`  `JSCRIPTBASIC_VERSION` `2.1.1` 
 
@@ -60,9 +60,9 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `SOURCE_BUDDY` `2.4.5` 
 
-* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-8` 
+* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-12` 
 
-* `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.1.1` 
+* `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.2.0` 
 
 * `OK`  `ASM_VERSION` `9.6` 
 

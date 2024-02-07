@@ -11,12 +11,12 @@ module jamal.asciidoc {
     requires jamal.tools;
     requires jamal.engine;
     requires jamal.asciidoc_COMPAT;
-    requires asciidoctorj.api;
-    requires asciidoctorj;
     requires jdk.jshell;
     requires java.xml;
     requires jamal.snippet;
     requires markdown.to.asciidoc;
+    requires asciidoctorj;
+    requires asciidoctorj.api;
     provides ExtensionRegistry with javax0.jamal.asciidoc.JamalPreprocessor;
     uses Converter;
     provides Converter with AsciiDocConverter, MarkdownConverter, XmlConverter;
