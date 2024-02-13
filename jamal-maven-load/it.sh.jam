@@ -1,7 +1,7 @@
 {@comment}\
 #!/bin/sh
 {@sep 〖 〗}\
-〖@comment this file is included by $PROJECTHOME/jamal-maven-load/integration-test.jam
+〖@comment this file is included by $PROJECTHOME/jamal-test/integration-test.jam
 The first two lines of this file is skipped by the include.
 It is important not to insert anything before those lines or modify the include 'lines=3..' parameter.
 〗\

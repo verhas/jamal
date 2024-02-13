@@ -4,7 +4,7 @@
 {@define Dockerfile={@file (format=`$simpleName`) Dockerfile}}\
 {@define test_sh={@file (format=`$simpleName`) test.sh}}\
 
-= Integration Tests using Docker
+= Integration Tests using Docker/Podman
 
 This directory contains the integration tests.
 Integration tests are executed using Docker containers.
@@ -18,8 +18,9 @@ cd .../IT_DOCKER
 ----
 
 WARNING: Do NOT run `{I13T}` from this directory.
-It is to be executed inside docker.
+It is to be executed inside a container.
 If you run it from here, it will mess up the directory cloning the Jamal repository, creating a local repo `.m2/repository` and other nasty things.
+To avoid that, it checks if it is inside a container and stops when it feels it is not.
 
 The shell script {I13T} is created from the source {I13TJAM}.
 The Jamal source is the skeleton of the integration test script.
@@ -49,17 +50,19 @@ This script creates the test scripts from the local Jamal sources, builds the Do
 
 Prerequisites:
 
-* Docker must be installed and running.
+* Docker must be installed and the daemon running, or
+
+* Podman must be installed and the virtual machine running on Apple architecture
 
 * The script must be executed from the directory containing the {I13T} and the {Dockerfile}.
 
-* The docker instance running should have internet connection
+* The docker/podman instance running should have internet connection
 
 ** to GitHub for cloning Jamal source
 
-** Maven central for building Jamal
+** Maven central for building Jamal, downloading the dependencies
 
-Note that the processing of the Jamal sources to prepare the integration test is done with the locally installed development version, but the integration tests will be executed cloning the Jamal repository from GitHub.
+Note that the processing of the Jamal sources to prepare the integration test is done with the locally installed development version, but the integration tests will be executed by cloning the Jamal repository from GitHub.
 
 {C Integration tests implemented}
 
