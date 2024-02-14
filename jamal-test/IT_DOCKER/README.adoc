@@ -32,7 +32,7 @@ Those files are developed testing their functionality locally on the development
 When they work they are included into the top level `integrationtest.jam` file.
 
 
-== Executing the integration tests
+## Executing the integration tests
 
 The tests can be created and executed using the `test.sh` script.
 This script creates the test scripts from the local Jamal sources, builds the Docker image and runs the tests.
@@ -53,23 +53,23 @@ Prerequisites:
 
 Note that the processing of the Jamal sources to prepare the integration test is done with the locally installed development version, but the integration tests will be executed by cloning the Jamal repository from GitHub.
 
-== Integration tests implemented
+## Integration tests implemented
 
 This section describes the integration tests implemented.
 Each subsection is a test, part of, and executed by the `integrationtest` script.
 
 
-=== Basic Maven Compilation
+### Basic Maven Compilation
 
 The first step is to build Maven.
 Because the container does not have a local repo it will provide a fresh build downloading all dependencies from central.
 
-=== Setting Security
+### Setting Security
 
 When the macro `maven:load` is used, it requires that the configuration in `~/jamal` is secure.
 It must not be read or modified by other users.
 The test sets the file permissions to the directory and the configuration file in different ways and runs tests.
 
-=== Command Line execution
+### Command Line execution
 
 The test runs the command line tool `jamal` with different parameters.
