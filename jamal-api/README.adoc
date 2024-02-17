@@ -1,3 +1,5 @@
-= Jamal JAR Input Plugin
+= Jamal API
 
 This module contains the interfaces and a few classes that belong to the public API of Jamal.
+
+The most important interface is `Processor` implemented in the engine and it is the main interface for application embedding Jamal.

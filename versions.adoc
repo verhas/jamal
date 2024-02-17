@@ -52,7 +52,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `APACHE_POI_VERSION` `5.2.5` 
 
-* `OK`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.2` 
+* `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` `*[red]#upgrade to 3.0.0-alpha.2#*`
 
 * `OK`  `JSCRIPTBASIC_VERSION` `2.1.1` 
 
@@ -68,5 +68,4 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `ASM_TREE_VERSION` `9.6` 
 
-* `??` `MARKDOWN_TO_ASCIIDOC` has to be checkeed manually from link:https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/[`https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/`].
-The `maven-metadata.xml` for this artifact is missing.
+* `OK`  `MARKDOWN_TO_ASCIIDOC` `2.0.0` 

@@ -50,6 +50,4 @@ endif〕〕
 〔CHECK :PLEXUS_COMPONENT_METADATA_VERSION:org/codehaus/plexus/plexus-component-metadata〕
 〔CHECK :ASM_VERSION:org/ow2/asm/asm〕
 〔CHECK :ASM_TREE_VERSION:org/ow2/asm/asm-tree〕
-
-* `??` `MARKDOWN_TO_ASCIIDOC` has to be checkeed manually from link:https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/[`https://jitpack.io/com/github/bodiam/markdown-to-asciidoc/`].
-The `maven-metadata.xml` for this artifact is missing.
+〔CHECK :MARKDOWN_TO_ASCIIDOC:io/github/markdown-asciidoc/markdown-to-asciidoc〕
