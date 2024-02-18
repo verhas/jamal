@@ -54,6 +54,12 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` `*[red]#upgrade to 3.0.0-alpha.2#*`
 
+NOTE: Asciidoctor version after 3.0.0.-apha.1 use a different module name, not compatible with the old 2.X.X versions.
+This causes class loading problems when the compatibility module is used to automatically detect which version of Asciidoctor is using Jamal as a preprocessor.
+Since the version 3.0.0-alpha.1 is working fine with the old version, it can be used.
+When the new Asciidoctor version is released and used as an IntelliJ plugin we will get rid of the compatibility module.
+
+
 * `OK`  `JSCRIPTBASIC_VERSION` `2.1.1` 
 
 * `OK`  `MAVEN_DOWNLOADER` `1.1.0` 

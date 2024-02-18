@@ -1,9 +1,9 @@
 :imagesdir: images
 :jamal_home: https://github.com/verhas/jamal/
 //{%@rot13 QB ABG RQVG GUVF SVYR; GUVF VF TRARENGRQ SEBZ ERNQZR.nqbp.wnz%}
-{%@import res:jamal.jim%}\
-{%@import RELEASES.jim%}\
-{%@import version.jim%}\
+{%@import res:jamal.jim%}
+{%@import RELEASES.jim%}
+{%@import version.jim%}
 {%@define output=[source]
 ----
 {%#trimLines trimVertical
@@ -11,28 +11,28 @@
 {%!#output {%lastCode%}%}%}%}
 ----
 %}
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
-{%@define pu$folder=images%}\
-{%@define pu$template=%}\
-{%@snip:collect from=./jamal-maven-plugin/src/main/java/com/javax0/jamal/maven/JamalMojo.java%}\
-{%@snip:collect from=./jamal-api/src/main/java%}\
-{%@snip:collect from=./jamal-engine/src/main/java%}\
-{%@import environmentvariables.jim%}\
+{%@snip:xml pom=pom.xml%}
+{%#define VERSION={%pom /project/version/text()%}%}
+{%@define pu$folder=images%}
+{%@define pu$template=%}
+{%@snip:collect from=./jamal-maven-plugin/src/main/java/com/javax0/jamal/maven/JamalMojo.java%}
+{%@snip:collect from=./jamal-api/src/main/java%}
+{%@snip:collect from=./jamal-engine/src/main/java%}
+{%@import environmentvariables.jim%}
 {%@references file=README.jrf comment%}
 
 = image:logo.svg[width=100px] Jamal Macro Language
 
-Jamal is a tool to automate documentation maintenance.
-You can avoid copying information from your documented system into the documentation, and repeatedly copy it when the system is updated.
-It lessens the risk of outdated documentation automating the maintenance of the documentation.
+Jamal is a tool for automating documentation maintenance.
+You can avoid copying information from your documented system into the documentation and repeatedly copying it when the system is updated.
+It reduces the risk of outdated documentation by automating its maintenance.
 
 Jamal can be used with Asciidoc, Markdown, XML, JSON, YAML, JavaDoc, and any other markup languages.
-The application integrates seamlessly into the processing pipeline of the document processing tools in the least intrusive, non-invasive way.
+The application integrates seamlessly into the document processing tools' pipeline in the least intrusive, non-invasive way.
 
 Technically, Jamal is a meta-markup language enhancing the features of the original markup language.
 The conversion is done as a preprocessing step prior to the markup processing.
-It can be inserted into any tool chain without risk, as it can also be removed at any time.
+It can be inserted into any toolchain without risk, as it can also be removed at any time.
 
 TOC
 
@@ -50,7 +50,7 @@ TOC
 if VERSION.string:contains("text=SNAPSHOT") then
 << "NOTE: "
 << """This is the latest development documentation.
-To see the documentation of a release you have to follow the link in the documentation link:{%@file RELEASES.adoc%}[`RELEASES.adoc`]
+To see the documentation of a release, you have to follow the link in the documentation link:{%@file RELEASES.adoc%}[`RELEASES.adoc`].
 If you want to read the latest release, please visit link:{jamal_home}/tree/v"""+LAST_RELEASE+"[Jamal"+LAST_RELEASE+"]"
 end if
 %}
@@ -62,10 +62,10 @@ end if
 . <<$id>>%}
 %}
 
-{%section /Installation/Installation, and Usage%}
+{%section /Installation/Installation and Usage%}
 
-Jamal is implemented as a Java library and it is embedded in different applications.
-It can be used as a command line tool, as a Maven plugin, as a Maven extension, as a JavaDoc doclet, as a JShell script, as a JBang script, as a Java library, and as a JSR223 script engine.
+Jamal is implemented as a Java library and is embedded in different applications.
+It can be used as a command-line tool, as a Maven plugin, as a Maven extension, as a JavaDoc doclet, as a JShell script, as a JBang script, as a Java library, and as a JSR223 script engine.
 The installation may be as simple as starting it from the command line (JBang) when the embedding application is already installed.
 
 In the following sections, we will discuss how to install and use Jamal in the different applications it is embedded in.
@@ -82,8 +82,8 @@ In the following sections, we will discuss how to install and use Jamal in the d
 You can start Jamal from Maven as a plugin.
 The plugin is available in the Maven Central repository.
 
-To do that, you have to have Maven installed.
-Having that you can issue the command:
+To do that, you must have Maven installed.
+Having that, you can issue the command:
 
 [source]
 ----
@@ -92,7 +92,7 @@ mvn com.javax0.jamal:jamal-maven-plugin:{%VERSION%}:jamal
 
 if you have a `pom.xml` file in your directory.
 
-If you do not have, then read the documentation of the Jamal Maven plugin at
+If you do not have one, then read the documentation of the Jamal Maven plugin at
 link:jamal-maven-plugin/README.adoc[Jamal Maven Plugin README].
 It is short and straightforward.
 
@@ -100,11 +100,11 @@ It is short and straightforward.
 ==== Maven Extension
 
 You can use Jamal macros to maintain your Maven POM files.
-Move the content of the POM XML in the file `pom.jam` and extend it freely with Jamal macros.
+Move the content of the POM XML into the file `pom.jam` and extend it freely with Jamal macros.
 Create a `.mvn` directory with an `extensions.xml` file in your project root.
 
 [source,xml]
----
+----
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
     <extension>
@@ -113,10 +113,10 @@ Create a `.mvn` directory with an `extensions.xml` file in your project root.
         <version>{%VERSION%}</version>
     </extension>
 </extensions>
----
+----
 
 Next time you start Maven, it will include Jamal in the processing chain.
-It will also generate the `pom.xml` files from the `pom.jam` files, so your IDE and other tolls that depend on the XML format keep working.
+It will also generate the `pom.xml` files from the `pom.jam` files, so your IDE and other tools that depend on the XML format keep working.
 
 For more information about the Maven extension, read the link:jamal-maven-extension/README.adoc[documentation].
 
@@ -139,14 +139,16 @@ For more information about the command line version, read the link:jamal-cmd/REA
 
 ==== Starting with JBang
 
-JBang (https://www.jbang.dev) is a popular command line tool that eases the startup of Java applications.
+JBang (https://www.jbang.dev) is a popular command-line tool that eases the startup of Java applications.
 Jamal can be started using JBang.
 This is the recommended way to run Java from the command line if you have limited experience with Java.
-When running Jamal using JBang, Jbang will install everything that is needed to execute Jamal in a clean and non-intrusive way.
+When running Jamal using JBang, JBang will install everything that is needed to execute Jamal in a clean and non-intrusive way.
 
-JBang installaton is described on the documentation link:https://www.jbang.dev/documentation/guide/latest/installation.html[page] of JBang.
+JBang installation is described on the documentation link:https://www.jbang.dev/documentation/guide/latest/installation.html[page] of JBang.
 
-To start Jamal when you have JBang installed on your machine type:
+To start Jamal when you have J
+
+Bang installed on your machine, type:
 
 [source,bash]
 ----
@@ -154,21 +156,21 @@ jbang jamal@verhas ... options ...
 ----
 
 This command will invoke the command line version automatically.
-The syntax and meaning of the options are the same as in case of the command line version.
+The syntax and meaning of the options are the same as in the case of the command line version.
 This startup also loads all the safe Jamal extensions, including `snippet`, and `debug` and some others.
-,
-If you want to see the exact list of the modules this startup loads have a look at the link:jbangstarter.java[starter] file.
+
+If you want to see the exact list of the modules this startup loads, have a look at the link:jbangstarter.java[starter] file.
 
 [NOTE]
 ====
-If you have used Jamal with jbang before, then jbang will store its catalog file in the local cache.
+If you have used Jamal with JBang before, then JBang will store its catalog file in the local cache.
 When you start Jamal using `jbang jamal@verhas ...` and you see an old version starting, then delete the file
 
 ```
 ~/.jbang/cache/urls/d917b991facb86b9860fa179df2c804fc2090cc76a83fb15b49f47cc2e885f7c/jbangstarter.java
 ```
 
-After that, you can start jbang again.
+After that, you can start JBang again.
 It will download the new catalog, always pointing to the latest release.
 You will find the command that deletes this file in the root of the project in the shell script `jbang-cache-evict`.
 ====
@@ -176,12 +178,12 @@ You will find the command that deletes this file in the root of the project in t
 [[ASCIIDOC]]
 === IntelliJ, AsciidocFx
 
-Using Jamal in IntelliJ together with Asciidoctor plugin is fairly easy.
+Using Jamal in IntelliJ together with the Asciidoctor plugin is fairly easy.
 All you have to do is download a ZIP file from the Maven repository and explode it into a directory.
 The details are described in the link:jamal-asciidoc/README.adoc[documentation].
 
 When the installation is done, all you need to do is start IntelliJ and open the project.
-You can edit your Asciidoc files, and the plugin will automatically invoke Jamal to process the macros.
+You can edit your AsciiDoc files, and the plugin will automatically invoke Jamal to process the macros.
 
 If you want to use AsciidocFX, the same package should be used.
 The installation is similar, downloading the ZIP file and extracting it to a directory.
@@ -193,9 +195,9 @@ You can start using Jamal in five minutes as described in link:documentation/TUT
 
 {%section /Configuration/Configuration%}
 
-Jamal has a lot of configuration parameters, but each of these has reasonable default values.
+Jamal has many configuration parameters, but each of these has reasonable default values.
 It means that you do not need to configure Jamal before using it.
-Configuration is needed only when you want to change some of the default values, or use a macro package that without configuration could pose a security risk.
+Configuration is needed only when you want to change some of the default values or use a macro package that, without configuration, could pose a security risk.
 
 Configuration values can be set in the following ways:
 
@@ -217,8 +219,8 @@ The language is designed so that it will not interfere with any existing or futu
 
 image::text2text.png[align=center]
 
-The original markup, for example, Asciidoc or Markdown is responsible for formatting and semantic definition of the text.
-Jamal will do the extra task, which is not or in some case only partially supported by the document markup.
+The original markup, for example, AsciiDoc or Markdown, is responsible for formatting and semantic definition of the text.
+Jamal will do the extra task, which is not or in some cases only partially supported by the document markup.
 Without Jamal or some other similar tools, these tasks are performed manually.
 
 Jamal can
@@ -231,14 +233,14 @@ Jamal can
 ** the document format, and
 ** the document semantics.
 
-Jamal can include other files, parts of files, number the included lines, filter lines, replace part of the lines, reorder lines and many other things as needed.
+Jamal can include other files, parts of files, number the included lines, filter lines, replace parts of the lines, reorder lines, and many other things as needed.
 
 .Philosophy
-> When information exists in the documented system, or in the documentation, it must not be manually copied.
+> When information exists in the documented system or in the documentation, it must not be manually copied.
 The copy and the transformation of the information must be automated.
 
 Jamal is implemented in Java.
-You can write user defined macros in Jamal itself and built-in macros in Java, Kotlin or in other JVM languages.
+You can write user-defined macros in Jamal itself and built-in macros in Java, Kotlin, or other JVM languages.
 
 You can execute Jamal from Maven, Javadoc, CLI, AsciiDocFX, IntelliJ, and other applications.
 Jamal is extensible with multiple different SPIs.
@@ -261,7 +263,7 @@ You can also include programmatic formatting and content calculation using Groov
 {%section /Contributing/Contributing%}
 
 Jamal is an open-source project, and the developers welcome any contribution.
-We treat all suggestions, requests, comments or any other contribution as with respect.
+We treat all suggestions, requests, comments, or any other contribution with respect.
 
 === Use and Feedback
 
@@ -272,9 +274,9 @@ If you use Jamal, you are a contributor, and if you wish, we will include you as
 
 === Documentation
 
-You can contribute to Jamal reading the documentation.
+You can contribute to Jamal by reading the documentation.
 If you find a typo, a mistake, or something that is not clear, please tell us.
-The best way is forking the project, fixing the documentation, and sending us a pull request.
+The best way is to fork the project, fix the documentation, and send us a pull request.
 Even a single character correction is welcome as a full-blown pull request.
 
 You can also write documentation.
@@ -287,7 +289,7 @@ We are not using Jamal in the same way as you do.
 Every use is different, write about it.
 
 Jamal supports the JSR223 standard.
-That way Jamal can be used in any JSR223 compliant application that may need scripting.
+That way, Jamal can be used in any JSR223 compliant application that may need scripting.
 The macro opening and closing strings are `{` and `}` in this case unless the script attributes `open` and `close` are set.
 Script bindings are put into Jamal macros and are loaded from Jamal macros after execution.
 We would love a tutorial describing this feature.
@@ -308,7 +310,9 @@ Or just mention it at the coffee break or other social events.
 
 === Find bugs
 
-If something does not work as you expect, please tell us.
+If something does not work as you expect, please
+
+ tell us.
 It may be a code bug, or it may be a documentation bug.
 
 It is NEVER a user error.
@@ -334,7 +338,7 @@ We will be happy to reference it in the Jamal project.
 
 Since Jamal is a complex program, the documentation is split into several parts.
 The modules, each has its documentation in the form of a README file in the module directory.
-Jamal is eating its own dog food, so the documentation is written in Jamal and Asciidoc0.
+Jamal is eating its own dog food, so the documentation is written in Jamal and AsciiDoc.
 
 Here we will link the different documentation parts.
 
@@ -349,28 +353,28 @@ They are
 * link:documentation/macros/$doc[`$doc`]
 %}
 
-There are two special user defined macros, `output:writable` and `output:charset`.
+There are two special user-defined macros, `output:writable` and `output:charset`.
 These can control the output file creation.
-Note, that this is not a core feature of Jamal, but most current embeddings (Asciidoc, Maven plugin, and command line) support these macros.
+Note that this is not a core feature of Jamal, but most current embeddings (AsciiDoc, Maven plugin, and command line) support these macros.
 
 By default, the generated file is not writable.
 This is to prevent accidental editing of the generated files.
-Many times the generated files are stored along the Jamal files, and it is an easy mistake to edit the generated file.
-To prevent this, the generated file is read only by default
+Many times the generated files are stored along with the Jamal files, and it is an easy mistake to edit the generated file.
+To prevent this, the generated file is read-only by default.
 
-There are cases when the output has to be readable.
-An example is the live template XML file that cannot be handled properly by IntelliJ if it is read only.
+There are cases when the output has to be writable.
+An example is the live template XML file that cannot be handled properly by IntelliJ if it is read-only.
 If the value of the macro `output:writable` is `true`, then the generated file will be writable.
 
 The macro `output:charset` can be used to set the character set of the generated file.
 The default value is UTF-8.
 
-Note that even of you set the character set to `UTF-16LE` the generated file will not contain the BOM.
+Note that even if you set the character set to `UTF-16LE`, the generated file will not contain the BOM.
 
 === Applications, Embedding
 
-* link:./jamal-asciidoc/README.adoc[Jamal Asciidoc Documentation], How to configure and use Jamal to edit Asciidoc files using IntelliJ editor in a WYSIWYG way, or the AsciiDocFX editor.
-* link:./jamal-doclet/README.adoc[Jamal Doclet Documentation], How to use Jamal in JavaDoc.
+* link:./jamal-asciidoc/README.adoc[Jamal AsciiDoc Documentation], How to configure and use Jamal to edit AsciiDoc files using the IntelliJ editor in a WYSIWYG way, or the AsciiDocFX editor.
+* link:./jamal-doclet/README.adoc[Jamal Doclet Documentation], How to use Jamal in Javadoc.
 * link:./jamal-maven-plugin/README.adoc[Jamal Maven Plugin README], How to use Jamal as a Maven plugin.
 * link:./jamal-maven-extension/README.adoc[Jamal Maven Extension README], How to use Jamal as a Maven extension.
 * link:./documentation/JAMAL_API.adoc[Jamal API Documentation], How to use Jamal as a Java library.
@@ -392,17 +396,17 @@ image::jamaldebugger2559x1089.png[]
 {%LANGUAGE Ruby%}
 {%LANGUAGE Groovy%}
 {%LANGUAGE ScriptBasic%}
-{%LANGUAGE Prog%} is a simple BASIC like language tightly integrated with Jamal.
+{%LANGUAGE Prog%} is a simple BASIC-like language tightly integrated with Jamal.
 
 === Other External Modules
 
 * link:./jamal-io/README.adoc[Io Module README], How to read and write external files from Jamal macros
 * link:./jamal-jamal/README.adoc[Jamal Jamal Module README], How to use Jamal inside Jamal as an embedded language
-* link:./jamal-markdown/README.adoc[Jamal Markdown Module README], Convert markdown to HTML, main usable together with the Jamal Doclet to have Markdown in JavaDoc
+* link:./jamal-markdown/README.adoc[Jamal Markdown Module README], Convert markdown to HTML, mainly usable together with the Jamal Doclet to have Markdown in Javadoc
 * link:./jamal-mock/README.adoc[Jamal Mock Module README], Mock built-in macros to test macros that are to run in a specific environment
 * link:./jamal-snippet/README.adoc[Jamal Snippet Module README], Use snippets to compile your documentation
 * link:./jamal-yaml/README.adoc[Jamal Yaml Module README], Use data from Yaml files in your macros and use macros in your Yaml files
-* link:./jamal-json/README.adoc[Jamal JSon Module README], Use data from JSON files in your macros and use macros in your JSON files
+* link:./jamal-json/README.adoc[Jamal JSON Module README], Use data from JSON files in your macros and use macros in your JSON files
 * link:./jamal-assertions/README.adoc[Jamal Assertions Module README], contains macros to make assertions to ensure the consistency of your documentation
 * link:./jamal-word/README.adoc[DOCX Word Processing README], describes the Jamal Microsoft Word Processing module and the macros that are specific to DOCX processing
 
@@ -417,17 +421,17 @@ Jamal is distributed under the Apache 2.0 license.
 {%section /Changelog/Changelog%}
 
 Jamal uses GitHub.
-The change log is maintained online in the link:https://github.com/verhas/jamal/releases[GitHub releases page].
+The changelog is maintained online on the link:https://github.com/verhas/jamal/releases[GitHub releases page].
 There is also a link:RELEASES.adoc[local copy] of the release notes.
 
 {%section /Roadmap/Roadmap%}
 
-The roadmap is maintained in the document: link:RODMAP.adoc[ROADMAP].
+The roadmap is maintained in the document: link:ROADMAP.adoc[ROADMAP].
 It is more like a collection of ideas and plans than a strict roadmap.
 
 {%section /Support/Support%}
 
-Jamal is an open source project and currently not backed by any company.
+Jamal is an open-source project and is currently not backed by any company.
 
 {%section /FAQ/FAQ%}
 
@@ -435,4 +439,4 @@ See the separate document: link:FAQ.adoc[FAQ].
 
 {%section /Maintenance/Maintenance of this document%}
 
-The documents of this project are formatted as Asciidoc documents with Jamal meta markup.
+The documents of this project are formatted as AsciiDoc documents with Jamal meta markup.
