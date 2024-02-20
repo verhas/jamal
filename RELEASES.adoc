@@ -8,95 +8,97 @@
 
 == https://github.com/verhas/jamal/tree/2.5.1[2.5.1]
 
-* `jrf` (reference) files now can contain comments to make them more readable
-* `import` has a new parop `global` that makes the import global and mot imported again even if the file was imported from a local scope
+* `jrf` (reference) files now can contain comments to make them more readable.
+* `import` has a new parop `global` that makes the import global and not imported again even if the file was imported from a local scope.
 * `import` does not import a file again if it has the same content as an already imported file.
-Until now, different files with the same content could be imported parallel.
+Until now, different files with the same content could be imported in parallel.
 * Snippet library has a new macro `plural` that can be used to pluralize a word.
-* Bugfix invoking macro close for AutoCloseable macros that need processor and output.
-* Module plantUML was removed from the development.
+* Bugfix: invoking macro close for AutoCloseable macro0s that need a processor and output.
+* Module plantUML was removed from development.
 This module is not supported anymore.
-Using plant UML digagrams should be available through kroki either using the public service or using a local containerized kroki server.
-* Bug fixed in `kroki.jim` resource file
-* String macro `string` can perform equals, startsWith and endsWith operations more readable and with ignoreCase option.
+Using plant UML diagrams should be available through Kroki either using the public service or using a local containerized Kroki server.
+* Bug fixed in `kroki.jim` resource file.
+* String macro `string` can perform equals, startsWith, and endsWith operations more readably and with an ignoreCase option.
 * String macro `between` can be used to extract a substring between two strings.
-* A macro Java code can query the ID used to invoke it via the processor `getId()` method.
-* Macro `strong:before` and `string:after`.
+* A macro Java code can query the ID used to invoke it via the processor's `getId()` method.
+* Macro `string:before` and `string:after`.
 
 == https://github.com/verhas/jamal/tree/2.5.0[2.5.0]
 
-* Macro `options` can also be used as `option` singular
-* Macro `options` has the parops `push` and `pop`
-* Macro `define` parop `noRedefine` can also be used as an option not only as a parop.
+* Macro `options` can also be used as `option` in singular.
+* Macro `options` has the parops `push` and `pop`.
+* Macro `define` parop `noRedefine` can also be used as an option, not only as a parop.
 * Macro `repeat` was developed in the snippet library.
-* Macro `import` has a new parop, `isolate` that makes the import isolated.
-* Generated files are set to be read only, so that they are not accidentally edited.
+* Macro `import` has a new parop, `isolate`, that makes the import isolated.
+* Generated files are set to be read-only, so that they are not accidentally edited.
 * `output:writable` can override this behavior.
-* Command line option `-jamalize` can install the Jamal Asciidoc extension into the current project.
-* experimental parser was developed to support editor plugins and LSE implementations in the future.
+* Command-line option `-jamalize` can install the Jamal AsciiDoc extension into the current project.
+* An experimental parser was developed to support editor plugins and LSE implementations in the future.
 * `output:charset` can be used to specify the output charset.
-* `units.jim` define the unicode metric units characters
-* There is support to run Jamal from docker in the `jamal-docker` module.
-* The core macro `for` with the parop `evalist` allows you to miss the macro opening and closing strings when the list is nothing but an argument-less macro invocation.
+* `units.jim` defines the Unicode metric units characters.
+* There is support to run Jamal from Docker in the `jamal-docker` module.
+* The core macro `for` with the parop `evalist` allows you to omit the macro opening and closing strings when the list is nothing but an argument-less macro invocation.
 * The `jamal-prog` package contains a macro `decimal` to support `BigDecimal` calculation in BASIC code.
-* The `replace` and `replaceLines` macros in the snippet package result in error not only if the input was not changed, but also when some of the search/replace string-string or regular expression-string pairs made no effect on the input when the option `detectNoChange` is used.
-This helps to avoid situations when a snippet is heavily transformed to create documentation lines from source code and the source changes structurally and the transformation gets outdated.
+* The `replace` and `replaceLines` macros in the snippet package result in an error not only if the input was not changed, but also when some of the search/replace string-string or regular expression-string pairs made no effect on the input when the option `detectNoChange` is used.
+This helps to avoid situations when a snippet is heavily transformed to create documentation lines from source code and the source changes structurally, and the transformation gets outdated.
 It is recommended to set the `detectNoChange` option to true globally at the start of the input file.
-* The argument splitting many built-in macro uses now looks at the macro `$REGEX` and uses it to split the arguments if defined.
-* `snip:eval` can evaluate snippets using the location of the snippet for relative files referenced inside the snippet
-* `import` and `include` macros have parop `in`.
-* The macros `file` and `directory` in the snippet package has a new parop `relativeTo` that controls the formatting placeholder calculation `relativePath`.
-* The new macro `file:locate` can locate files
-* Exceptions insert the macro locations at the top of the stack trace
+* The argument splitting many built-in macros use now looks at the macro `$REGEX` and uses it to split the arguments if defined.
+* `snip:eval` can evaluate snippets using the location of the snippet for relative files referenced inside the snippet.
+* `import` and `include` macros have the parop `in`.
+* The macros `file` and `directory` in the snippet package have a new parop `relativeTo` that controls the formatting placeholder calculation `relativePath`.
+* The new macro `file:locate` can locate files.
+* Exceptions insert the macro locations at the top of the stack trace.
 * Macro `variation` was developed.
-
 
 == https://github.com/verhas/jamal/tree/2.4.0[2.4.0]
 
 * Kotlin support to make Macro creation in Kotlin a breeze.
-* Scan interface usage to parse parops was eliminated
+* Scan interface usage to parse parops was eliminated.
 * Word `decorator` macro was developed due to popular demand.
-* Macro `counter` was extended to support hierarchical counters and also other than latin characters
-* User-defined macro can have default parameters for better readability
-* New `$time`, `$atime`, and `$ctime` placeholders for the `file` macro
+* Macro `counter` was extended to support hierarchical counters and also other than Latin characters.
+* User-defined macros can have default parops for better readability.
+* New `$time`, `$atime`, and `$ctime` placeholders for the `file` macro.
 
 == https://github.com/verhas/jamal/tree/2.3.0[2.3.0]
 
 * Core macro supports the option `flat` (alias as `export`) to evaluate the content in the same scope as the surrounding macro.
-* `references` macro runs an idempotency check at the end of the execution
-* Macro parameters that do not need `(` and `)` can be specified with optional parentheses.
+* `references` macro runs an idempotency check at the end of the execution.
+* Macro parops that do not need `(` and `)` can be specified with optional parentheses.
 You do not need to remember not to use the parentheses.
 * Asciidoctor's extension supports both 2.5.10 and 3.0.0-alpha.1 versions of Asciidoctor.
-It is not integration tested for the 3.X.X versions because IntelliJ plugin currently supports 2.X.X versions only.
+It is not integration tested for the 3.X.X versions because the IntelliJ plugin currently supports 2.X.X versions only.
 * Asciidoctor integration defines `asciidoctorj:version` macro.
-* Upon start and macro load Jamal executes the `.jim` resource files.
-* Macro `define` can create a user defined macro being an instance of a given class.
+* Upon start and macro load, Jamal executes the `.jim` resource files.
+* Macro `define` can create a user-defined macro being an instance of a given class.
 * Macro `urlEncode` can encode a string to be used in a URL.
 * More Kroki support with `kroki` macro.
-* Built-in BASIC can call user defined and built-in macros.
+* Built-in BASIC can call user-defined and built-in macros.
 
 == https://github.com/verhas/jamal/tree/2.2.0[2.2.0]
 
-* Support for JSR223 scripting API. Now you can use Jamal in any application that can be scripted.
+* Support for JSR223 scripting API.
+Now you can use Jamal in any application that can be scripted.
 * New macro in the file module to test file existence, type (dir or plain file), readability, writable, executable, or hidden.
 * New macro in the file module to copy binary files.
 Useful to fetch ephemeral resources via HTTP to have them attached to the document.
 * New macro in the snippet library to memoize certain operations.
 * `snip_list` does not list erroneous snippets anymore.
 * `java:insert` can fail with error if it updates the file.
-* new environment variable `asciidocfx.asciidoctor.plugin` is usable, the same as `intellij.asciidoctor.plugin`
+* New environment variable `asciidocfx.asciidoctor.plugin` is usable, the same as `intellij.asciidoctor.plugin`.
 * Jamal works in AsciidocFX as well.
 This is not a feature of this release, but it was tested and documented in this release first.
 It requires AsciidocFX 1.8.5 or later.
 * Macro `download` in the snippet library can download files from the internet.
 * New macro `UrlEncode` in the snippet library.
 * Macros implement the `OptionControlled` interface to discover the option open and close characters.
-* MAcro `program` can be used with the alias `prog` and macros can be invoked from the BASIC script as functions or methods.
-* define can define a user-defined class specifying the class
+* Macro `program` can be used with the alias `prog`, and macros can be invoked from the BASIC script as functions or methods.
+* Define can define a user-defined class specifying the class.
 
 == https://github.com/verhas/jamal/tree/2.1.0[2.1.0]
 
-* `java:insert` macro can insert a macro result into a Java source file between
+* `java:insert` macro can
+
+ insert a macro result into a Java source file between
 
   <editor-fold id="">
   </editor-fold>
@@ -108,12 +110,11 @@ Macros `java:classes`, `java:methods`, `java:fields` can be used to list the cla
 
 * Jamal Maven plugin was rewritten and has new functionality.
 
-* Jamalize can be used to install asciidoctor library files for IntelliJ.
+* Jamalize can be used to install Asciidoctor library files for IntelliJ.
 
 * `shell:var` can replace `$xxx` and `$pass:[{xxx}]` references.
 
 * `io:exec` was extended to support multi-line command and arguments.
-
 
 == https://github.com/verhas/jamal/tree/2.0.2[2.0.2]
 
@@ -122,208 +123,218 @@ Experimental feature with a snippet collection from Java sources without specify
 == https://github.com/verhas/jamal/tree/2.0.1[2.0.1]
 
 Bug fix release.
-A bug driving the `prog` macro into infinite loop was fixed.
+A bug driving the `prog` macro into an infinite loop was fixed.
 
 == https://github.com/verhas/jamal/tree/2.0.0[2.0.0]
 
-* The 'extensions' plugin was removed from the Maven extension dependency and from the asciidoc extension.
+* The 'extensions' plugin was removed from the Maven extension dependency and from the AsciiDoc extension.
 
 * Macro `program` can also be used with `do` and `run` aliases.
 
 * File handling can read from a JAR file.
 
-* `maven:load` can load macros from maven repository.
+* `maven:load` can load macros from the Maven repository.
 
 * `jbim` macro package was developed that can compile and load Java code from the Jamal file.
 
-* Jbang, Asciidoctor, and command line versions do not package the scripting modules.
-Any script needing those, has to use the `maven:load` macro to load the modules.
+* Jbang, Asciidoctor, and command-line versions do not package the scripting modules.
+Any script needing those has to use the `maven:load` macro to load the modules.
 
 * Core macro include also uses the `{` and `}` characters to delimit the macro when the included file starts with `{@`.
 
-* when you specify a range, like in the macro `include` option `lines` you can use `inf` or `infinity` to denote the infinity as the start or end of a range (case-insensitive).
+* When you specify a range, like in the macro `include` option `lines`, you can use `inf` or `infinity` to denote infinity as the start or end of a range (case-insensitive).
 
-* docker is used to support integration level tests, especially the access control check of the configuration needed by the macro `maven:load`.
+* Docker is used to support integration-level tests, especially the access control check of the configuration needed by the macro `maven:load`.
 
-* The core macro `define` implements the option `tail` to have the last parameter containing the rest of the input instead of getting an error.
+* The core macro `define` implements the parop `tail` to have the last parameter containing the rest of the input instead of getting an error.
 
-* The snippet library implements Base64 encoding and decoding. Using this macro you can insert Kroki pictures into your document. There is also a `res:kroki.jim` importable resource script.
+* The snippet library implements Base64 encoding and decoding.
+Using this macro, you can insert Kroki pictures into your document.
+There is also a `res:kroki.jim` importable resource script.
 
 == https://github.com/verhas/jamal/tree/1.12.6[1.12.6]
-There is a new macro library `prog` that implements a simple BASIC like programming language.
+There is a new macro library `prog` that implements a simple BASIC-like programming language.
 
 Snippet library macro `directory` has the same formatting options as `file` macro.
 There are two new macros in the snippet library: `unicode` and `numbers`.
 The `snip:check` macro implements the options `warning` and `error`.
-JShell handling improved. When there is no JShell it causes BadSyntax and thus can be handled using the macro `try`.
+JShell handling improved.
+When there is no JShell, it causes BadSyntax and thus can be handled using the macro `try`.
 
 When closing, the processor exceptions are cleared not only when there are closers.
-This was a bug causing the exceptions reappearing using the macros `sample` and `output`.
+This was a bug causing the exceptions to reappear using the macros `sample` and `output`.
 
 The handling of external files, like `res:`, and `https:` were moved to services found using the service loader mechanism.
 Loading files from Maven artifacts was implementing this service.
 
-The prog macro package is implemented giving imperative simple BASIC like programming capabilities.
+The prog macro package is implemented, giving imperative simple BASIC-like programming capabilities.
 
-The Asciidoc preprocessor for the IntelliJ Asciidoctor plugin supports the `prefixLog` option.
+The AsciiDoc preprocessor for the IntelliJ Asciidoctor plugin supports the `prefixLog` option.
 
 == https://github.com/verhas/jamal/tree/1.12.5[1.12.5]
 
-* Asciidoctor extension works with any file and converts whatever it can to Asciidoc.
+* Asciidoctor extension works with any file and converts whatever it can to AsciiDoc.
 
-* There is a converter for Markdown, Xml and general text.
+* There is a converter for Markdown, XML, and general text.
 
-* It is possible to write a general converter for any file, which is edited as text and can be converted to asciidoc.
+* It is possible to write a general converter for any file, which is edited as text and can be converted to AsciiDoc.
 The converter will be picked up by the Asciidoctor plugin's Jamal preprocessor.
 
-* Asciidoctor preprocessor sets the classloader and that way Snakeyaml can load the Ref files and processing works in the editor as well.
+* Asciidoctor preprocessor sets the classloader, and that way, Snakeyaml can load the Ref files, and processing works in the editor as well.
 
-* There is a system property `intellij.asciidoctor.plugin` set only in IntelliJ Asciidoctor plugin.
+* There is a system property `intellij.asciidoctor.plugin` set only in the IntelliJ Asciidoctor plugin.
 
 == https://github.com/verhas/jamal/tree/1.12.4[1.12.4]
 
 * Asciidoctor extension works on all `*.jam` files.
-If the extension is not `.adoc.jam` it formats the display as preformatted Asciidoc text.
+If the extension is not `.adoc.jam`, it formats the display as preformatted AsciiDoc text.
 * Asciidoctor extension can read directly from the `.jam` file when the `fromFile` option is used.
 * Bug fixed that sometimes resulted in undefined counters.
-* Asciidoctor gracefully handles the front-matter when working with Jekyll files
-* Asciidoctor preprocessor can save the output to a file denoted by the macro `asciidoc:output`
-* core macro `if` has `isDefined`, `isLocal and isGlobal` options
+* Asciidoctor gracefully handles the front matter when working with Jekyll files.
+* Asciidoctor preprocessor can save the output to a file denoted by the macro `AsciiDoc:output`.
+* Core macro `if` has `isDefined`, `isLocal`, and `isGlobal` options.
 
 == https://github.com/verhas/jamal/tree/1.12.3[1.12.3]
 
-* Various bugfixes and dependency version updates.
+* Various bug fixes and dependency version updates.
 
-* Sorting macro is available in the snippet library, developed by Michael
+* Sorting macro is available in the snippet library, developed by Michael.
 
-* the macro `define` has options for all the different "define" types, like pure, verbatim etc.
-Originally these can be reached using special characters, which are less verbose, but cryptic.
-The old syntax is still usable, but not recommended.
+* The macro `define` has options for all the different "define" types, like pure, verbatim, etc.
+Originally, these could be reached using special characters, which are less verbose but cryptic.
+The old syntax is still usable but not recommended.
 
-* `file` macro in snippet package now has formatting placeholders `bareNaked` and `nakedN` as well as `extensions` and `extensionN` with the possible `N` values being 1,2,3,4, and 5.
+* `file` macro in the snippet package now has formatting placeholders `bareNaked` and `nakedN` as well as `extensions` and `extensionN` with the possible `N` values being 1,2,3,4, and 5.
 
-* the macro `counter` can save its actual value using `->` .
+* The macro `counter` can save its actual value using `->`.
 This is a shortcut to a series of macros.
 
-* The asciidoctor preprocessor caches the result of the last run and executes Jamal only when the  input changes.
+* The Asciidoctor preprocessor caches the result of the last run and executes Jamal only when the input changes.
 It also takes the included and imported files into account.
 
-* a bug in the core of the processing engine that caused in some rare cases over indexing exception
+* A bug in the core of the processing engine that caused, in some rare cases, an over-indexing exception.
 
-* the environment variable `JAMAL_DEV_PATH` now can point to a file instead of containing the replacements directly
+* The environment variable `JAMAL_DEV_PATH` now can point to a file instead of containing the replacements directly.
 
 * Macros reading and writing a file can go through a hook that the embedding application can provide.
-It is used by the asciidoctor implementation to list all the files read during the processing.
+It is used by the Asciidoctor implementation to list all the files read during the processing.
 
-* Jamal mock library is implemented, that can be used to mock some macro for user defined macro testing
+* Jamal mock library is implemented, which can be used to mock some macros for user-defined macro testing.
 
-* A warning is given when a macro is defined in a scope, but it is not used
+* A warning is given when a macro is defined in a scope, but it is not used.
 
-* Macro `for` supports the aliases `sep` and `subsep`
+* Macro `for` supports the aliases `sep` and `subsep`.
 
-* In addition to the special characters in the macro `define`, the behaviour can also be altered using options.
+* In addition to the special characters in the macro `define`, the behavior can also be altered using options.
 
-* the option `RestrictedDefineParameters` is now available for the `define` macro, to restrict parameter names to be identifiers
+* The option `RestrictedDefineParameters` is now available for the `define` macro, to restrict parameter names to be identifiers.
 
 == https://github.com/verhas/jamal/tree/1.12.2[1.12.2]
 
-* Doclet is fixed. It can use all modules.
+* Doclet is fixed.
+It can use all modules.
 
-* `snip` macro itself can transform, there is no need for an extra `snip:transform` macro around it
+* `snip` macro itself can transform; there is no need for an extra `snip:transform` macro around it.
 
 == https://github.com/verhas/jamal/tree/1.12.1[1.12.1]
 
-* When the macro `for` was used with the option `evalist` the list could not include file using a relative file name because the evaluation was done by the processor on an input that had no file reference. This is a bugfix release.
+* When the macro `for` was used with the option `evalist`, the list could not include files using a relative file name because the evaluation was done by the processor on an input that had no file reference.
+This is a
+
+ bugfix release.
 
 == https://github.com/verhas/jamal/tree/1.12.0[1.12.0]
 
-* It is possible to include a Word doc file into another word doc file using the `docx:include` macro.
+* It is possible to include a Word doc file into another Word doc file using the `docx:include` macro.
 
 * You can insert a picture into a Word document using a Jamal macro.
-Since picture insertion is a basic function of Microsoft Word this functionality is to be used for special purposes only.
+Since picture insertion is a basic function of Microsoft Word, this functionality is to be used for special purposes only.
 
-* The macro `snip` can also check if a snippet has changed using the `hash` parameter.
+* The macro `snip` can also check if a snippet has changed using the `hash` parop.
 There is no need to invoke a separate `snip:check` macro.
 
-* There is an Asciidoctor extension, which can be used in IntelliJ to edit Jamal extended Asciidoc in a WYSIWYG way.
+* There is an Asciidoctor extension, which can be used in IntelliJ to edit Jamal extended AsciiDoc in a WYSIWYG way.
 
 * The Asciidoctor extension emits a `sed` command at the end of the error report, just in case and to help the lazy.
 
 == https://github.com/verhas/jamal/tree/1.11.3[1.11.3]
 
-__This is a technical release. It must not be used.__
+__This is a technical release.
+It must not be used.__
 
-It is not present on GitHub only in Maven central.
+It is not present on GitHub, only in Maven central.
 
 == https://github.com/verhas/jamal/tree/1.11.2[1.11.2]
 
-* Bug fix release. The `jamal-word` module has now fixed a bug that caused index out of range error in some cases.
-The bug manifested if the word document contained a 'run' that contained no text in it.
+* Bug fix release.
+The `jamal-word` module has now fixed a bug that caused an index out of range error in some cases.
+The bug manifested if the Word document contained a 'run' that contained no text in it.
 
 * Some experimental `docx:` macros are also included in this release to control the generated output docx file to be protected from editing and to force track changes.
 
 == https://github.com/verhas/jamal/tree/1.11.1[1.11.1]
 
-* Fully reworked command-line interface
+* Fully reworked command-line interface.
 
-* Jamal macros can be used in Microsoft Word documents
+* Jamal macros can be used in Microsoft Word documents.
 
-* Io module implements `io:exec` and `io:waitFor` macros to start external processes
+* Io module implements `io:exec` and `io:waitFor` macros to start external processes.
 
-* `extension.xml` generation in Maven extension runs in a separate thread, so it does not delay the build
+* `extension.xml` generation in Maven extension runs in a separate thread, so it does not delay the build.
 
-* `~/.jamal/settings.(properties|xml)` can be used to configure Jamal in addition to system properties and environment variables
+* `~/.jamal/settings.(properties|xml)` can be used to configure Jamal in addition to system properties and environment variables.
 
-* Use of the external library picocli was eliminated
+* Use of the external library picocli was eliminated.
 
 * File input converts `\r\n` to `\n` on Windows.
 
-* Graphviz example was added to the integration tests, runs only on properly configured systems, it needs Graphviz installed eventually.
+* Graphviz example was added to the integration tests, runs only on properly configured systems; it needs Graphviz installed eventually.
 
 == https://github.com/verhas/jamal/tree/1.11.0[1.11.0]
 
-* Jamal provides suggestion in case a macro name is misspelled.
+* Jamal provides suggestions in case a macro name is misspelled.
 
 * Macro parameter handling provides suggestions when the parameter name is misspelled.
-  The suggestions are based on the Levenshtein distance.
+The suggestions are based on the Levenshtein distance.
 
-* Root directory finding and converting all jamal files with exclude/include list is part of the API.
-  This API is supposed to be used during unit test execution, which creates the documentation from the Jamal files.
-  Finding the project root directory is also part of the API.
+* Root directory finding and converting all Jamal files with exclude/include list is part of the API.
+This API is supposed to be used during unit test execution, which creates the documentation from the Jamal files.
+Finding the project root directory is also part of the API.
 
 * Macro statelessness was NOT checked by default in prior versions due to a bug.
-  This bug is fixed and the macro statelessness is now checked by default.
-  The macro statelessness check was also implemented when registering global macros.
+This bug is fixed, and the macro statelessness is now checked by default.
+The macro statelessness check was also implemented when registering global macros.
 
-* Macro `replaceLines` can have multiple `replace` parameters.
+* Macro `replaceLines` can have multiple `replace` parops.
 
 * The macro `snip:transform` was developed.
 
-* Built-in macros can query the actual name of a parameter, a.k.a. which alias was used.
+* Built-in macros can query the actual name of a parop, a.k.a.
+which alias was used.
 
 * `file` macro formatting supports `$simpleName`.
 
 * Template handling and Trie implementation was refactored to improve performance, and it did.
 
-* Macro register export also experts built-in macros.
+* Macro register export also exports built-in macros.
 
 * New core macro named `macro` was added.
 
 * New API class `JamalOutputStream` was added, which is a filtering output stream.
 
-* Macro `include` has a parameter `lines`, which can limit which lines to include.
+* Macro `include` has a parop `lines`, which can limit which lines to include.
 
-* Error reporting was fixed avoiding circular exceptio references when closers were running.
-For the user this means cleaner error report.
+* Error reporting was fixed, avoiding circular exception references when closers were running.
+For the user, this means a cleaner error report.
 
-* New macros `range`, and `untab` in the snippet library. It is also supported by the `snip:transform` macro.
+* New macros `range`, and `untab` in the snippet library.
+It is also supported by the `snip:transform` macro.
 
-* Macro `snip:collect` can collect snippets which start and stop with the asciidoc tag notation:
-`tag::name[]` and `end::name[]`.
+* Macro `snip:collect` can collect snippets that start and stop with the AsciiDoc tag notation: `tag::name[]` and `end::name[]`.
 
 * Macro `snip` implements the `poly` option to concatenate snippets.
 
-* dependencies following the latest releases
+* Dependencies following the latest releases.
 
 * `import` and `include` macros implement a new option `noCache`.
 
@@ -331,14 +342,14 @@ For the user this means cleaner error report.
 
 * `https` include and import cache can be configured to evict entries.
 
-* macro `rot13`
+* Macro `rot13`.
 
-* improved error reporting
+* Improved error reporting.
 
 == https://github.com/verhas/jamal/tree/1.10.4[1.10.4]
 
 * A bug fix in handling thin XML.
-* `thinXml`  macro was added.
+* `thinXml` macro was added.
 
 == https://github.com/verhas/jamal/tree/1.10.3[1.10.3]
 
@@ -346,21 +357,21 @@ For the user this means cleaner error report.
 
 == https://github.com/verhas/jamal/tree/1.10.2[1.10.2]
 
-* The position in error messages became hierarchical showing the position not only where the error is, but also where the actual file was imported, included from.
-* Snippets can be collected from resource and from teh web using file names that start with `res:` and `https://`.
+* The position in error messages became hierarchical, showing the position not only where the error is but also where the actual file was imported, included from.
+* Snippets can be collected from resources and from the web using file names that start with `res:` and `https://`.
 * Snippet collection still fails when trying to collect snippets from binary files, but the error message is more readable.
-* SnipCheck can be switched off using -Djamal.snippet.check=false
-* SnipLoad and SnipSave macros were developed letting the macro save and/or load snippets from an XML file
+* SnipCheck can be switched off using -Djamal.snippet.check=false.
+* SnipLoad and SnipSave macros were developed, letting the macro save and/or load snippets from an XML file.
 * `string:xxx` macros now properly handle their arguments and do not use the whole input as an argument.
-* It makes difference in case of leading spaces.
-* Xml formatting is fixed.
-* Former formatting deleted the new lines from the output, that adversely affected CDATA content.
-* The new format fixes this and also adds a trailing `\n` at the end of the XML file.
+It makes a difference in the case of leading spaces.
+* XML formatting is fixed.
+Former formatting deleted the new lines from the output, adversely affecting CDATA content.
+The new format fixes this and also adds a trailing `\n` at the end of the XML file.
 
 == https://github.com/verhas/jamal/tree/1.10.1[1.10.1]
 
 * The snippet library was extended with two new macros `xml:define` and `xml:insert`.
-* When an XML user-defined macro is used without an argument then the whole XML formatted is returned.
+When an XML user-defined macro is used without an argument, then the whole XML formatted is returned.
 
 == https://github.com/verhas/jamal/tree/1.10.0[1.10.0]
 
@@ -369,13 +380,14 @@ For the user this means cleaner error report.
 * Due to a bug, the backslash character did not escape the following newline after an `escape` macro (ironic).
 Fixed.
 
-* The old-style macro evaluation is not available anymore. This significantly sped up the processing.
+* The old-style macro evaluation is not available anymore.
+This significantly sped up the processing.
 * There were bug fixes for bugs that, in some situations, prevented the proper handling of `~/...` format file names.
 
 * Some environment variables did not have the system property pair.
 Fixed.
 
-* The maven plugin, when used to convert a project to a Jamalized project, does not create `.mvn/extensions.xml` in the subdirectories anymore.
+* The Maven plugin, when used to convert a project to a Jamalized project, does not create `.mvn/extensions.xml` in the subdirectories anymore.
 
 * There is a new environment variable `JAMAL_DEV_PATH` and system property `jamal.dev.path`.
 See the documentation.
@@ -383,7 +395,7 @@ See the documentation.
 * A bug prevented file `include` in Windows in some special cases.
 Fixed.
 
-`snipline NAME` can be used to define a single line snippet without an end snippet.
+`snipline NAME` can be used to define a single-line snippet without an end snippet.
 
 * Options `noUndefault` and `emptyUndef` are handled by macro evaluation.
 
@@ -394,227 +406,3 @@ Fixed.
 * The core macro `if` now has several options, and it is possible to test numeric comparisons as well as string emptiness.
 
 * JUNIT dependency upped to 5.2.0
-
-* The handling of the `lenient` option has changed. From now on, `lenient` has to be a global option.
-
-* Environment variable handling was refactored, and the documentation was moved to the class defined in the API module.
-
-* JavaScript dependencies were upped to newer versions to avoid security issues.
-
-* Counter macros (from snippet) can be invoked with the parameter `last` to simply return the last value.
-
-* KillLine macro has to option `keep` that reverses which lines to keep and which lines to keep.
-
-* There is a new `snip:lineCount` macro that returns the number of lines in a snippet.
-
-* Options are not stored in option stores anymore.
-* Options are simple `Identified` objects stored along with the user-defined macros.
-* This also means that options can individually be exported, and the whole options store cannot be exported anymore in one.
-
-== https://github.com/verhas/jamal/tree/1.9.1[1.9.1]
-
-* The macro `escape` was extended.
-* Now if the macro name `escape` is followed by a `*` character then the escaping works multiple levels and is unescaped only when the whole processing is finished.
-* There is a new option for the Maven plugin of Jama.
-* If you specify the system option `jamalize` to be `true` then the plugin will create all the `.env` directories and `extensions.xml` files.
-* There was a bug in the macro `plantuml` in release 1.9.0, which prevented its working when no folder was defined explicitly.
-
-== https://github.com/verhas/jamal/tree/1.9.0[1.9.0]
-
-* Maven extension module is developed.
-* Using this module there is no need to preprocess `pom.xml.jam` or `pom.jam` files.
-* Maven automatically reads those files instead of the `pom.xml` using the extension.
-* Ruby scripts do not share the global variables any more.
-* It was a bug that the differently named Ruby scripts used the same set of global variables.
-* Ruby and Groovy macros can be configured using options and not only user defined macros.
-* `plantuml` macro also uses options and not only user defined macros to define the parameters like the image directory.
-* Built-in macros can have multiple names, and the assertion package immediately starts to use it so `equals` and `equal` ending denote the same macro.
-* Evaluate can evaluate macros in its input in a loop till all macros get evaluated.
-* Environment variable can be queried to throw exception when the variable is not defined.
-
-== https://github.com/verhas/jamal/tree/1.8.0[1.8.0]
-
-* SnipCheck was introduced to enforce snippet and documentation consistency.
-* There is a new package to check consistency.
-* This is the assertions package.
-* The macro statefulness is checked during macro load an in case a macro is stateful and not annotated to signal this then the macro load fails.
-* XML snippet reading bug (using CWD instead of document dir) was fixed.
-* Different dependencies were updated to the latest releases.
-
-== https://github.com/verhas/jamal/tree/1.7.9[1.7.9]
-
-* Fully reworked, redesigned, and functionally extended debugger client
-* `{@undefined }` macros can be `{@define ! ...}` defined
-
-== https://github.com/verhas/jamal/tree/1.7.8[1.7.8]
-
-* This release opens the debugger package, and so it can be used from Java::Geci. It still needs investigation why this is needed, though, but this patch solves this issue.
-
-* `io:delete` gives more meaningful error messages
-
-* TestWrite did not check that the output was really written. Fixed.
-
-* Various documentation and JavaDoc fixes.
-* SNAKE Yaml now uses the latest version and not an outdated one.
-* Build runs with GitHub action
-* Various tests and some production code were fixed so that the build runs also on Windows and Linux.
-
-== https://github.com/verhas/jamal/tree/1.7.7[1.7.7]
-
-* Markdown module was added with one single macro. Using this you can use markdown in JavaDoc files.
-* Macro can implement its own fetching, and that way now escape macro can also be aliased.
-* Option nl is removed, does not exist any more. Any \ after a macro escapes the next new line character.
-* For has new keyword from to iterate through a collection that a user defined ObjectHolder macro can provide.
-
-== https://github.com/verhas/jamal/tree/1.7.6[1.7.6]
-
-* Yaml XML macro extended to have attributes and CDATA in the output when you design a Yaml, especially for XML.
-* Macro `define` can specify optional parameters.
-* It is an error to use `:=` on a parameterless macro without `()` to avoid ambiguity.
-* Even I, who created the whole shenanigans, could not remember if `a:=` defines a global or a pure macro.
-
-== https://github.com/verhas/jamal/tree/1.7.5[1.7.5]
-
-* yaml can be exported as XML
-* debugger can handle breakpoints, UI was changed
-* yaml macros Add and isResolved are added
-* macro tests can now be written an jyt (Jamal Yaml Test) files
-
-
-== https://github.com/verhas/jamal/tree/1.7.4[1.7.4]
-
-* JavaDoc support
-* Yaml support
-* jamal-io module writing file and stdout and stderr
-* various bugfixes
-* collect can collect onceAs
-* verbatim user-defined macros
-* default macro can get the actual macro name
-* snippet trim macro can verticalTrimOnly
-* macro use can define alias for already existing macro
-
-
-== https://github.com/verhas/jamal/tree/1.7.3[1.7.3]
-
-* An interactive debugger was developed for Jamal transformation to follow the transformation step-by-step.
-* Jamal can be started using jbang.
-* command-line parameters are refactored and much more user-friendly.
-
-
-== https://github.com/verhas/jamal/tree/1.7.2[1.7.2]
-
-* New module integrating the Ruby scripting language
-* A bug is fixed that caused reporting the wrong error when there was an error inside an included file.
-
-
-== https://github.com/verhas/jamal/tree/1.7.1[1.7.1] Groovy module
-
-* This release includes a Groovy module that you can use to embed Groovy code into the Jamal input.
-
-* Closer objects are invoked in the order they were (first) declared.
-* bug fixed and makes it possible to use :a user-defined macros when USED and not only when defined
-* Test support can set the separators after the input is specified.
-* Cast tool was created in the tool module and use was moved from snippet to there.
-
-
-== https://github.com/verhas/jamal/tree/1.7.0[1.7.0]
-
-* New macro to undefine a user-defined macro.
-* Built-in macros can do post-processing where they can modify the final result.
-* jamal-snippet macro xmlFormat uses the new functionality and can format the whole document at the end
-* Embedding application can use a general 'context' that can also be used by the macros
-
-
-== https://github.com/verhas/jamal/tree/1.6.5[1.6.5]
-
-* Macro and module plantuml was developed
-
-
-== https://github.com/verhas/jamal/tree/1.6.4[1.6.4]
-
-* Snippet collection throws an error when a snippet is not closed but only in case the snippet is used.
-* Unclosed macro opening character reported line number is correct after a bug fixed that reported the last opened macro line number.
-* documentation about how to write a built-in macro was started
-* phantom parameters are handled correctly in case a macro does not have a parameter but there are zero string resulting macros evaluated in the parameters
-* InputHandler got a new startWith method
-* ScriptBasic module was reintegrated, following the release and is now part of the release
-* it is possible to define a user defined macro default which is used in case a macro is not defined. The real good use of it is when the user defined macro is defined using Java support and has special logic.
-
-
-== https://github.com/verhas/jamal/tree/1.6.3[1.6.3]
-
-* A new format for the for loop macro that lets you have values that contain the ) character inside.
-
-
-== https://github.com/verhas/jamal/tree/1.6.2[1.6.2]
-
-* trimLine was not included in the META-INF. It is now fixed.
-
-
-== https://github.com/verhas/jamal/tree/1.6.1[1.6.1]
-
-* File and directory macros were added to the snippet module.
-
-== https://github.com/verhas/jamal/tree/1.6.0[1.6.0]
-
-* This release contains two new modules: snippet support and test.
-* Macro try cleans the macro nesting stack properly, more possibility to recover after `try` catches an error
-* `import` does not allow dangling `begin` macros new macro `escape` was implemented to support macro opening and closing escaping documentation samples are generated on the file and not just copied from tests
-
-
-== https://github.com/verhas/jamal/tree/1.5.3[1.5.3]
-
-* Option `skipForEmpty` was implemented for `for` macro error message fixed in for
-
-
-== https://github.com/verhas/jamal/tree/1.5.2[1.5.2]
-
-* FEATURE: `for` macro is inner scope dependent.
-* FIX: multi variable `for` works properly when some of the values are empty strings FEATURE: multi variable `for` accepts less or more than required arguments with option lenient
-
-
-== https://github.com/verhas/jamal/tree/1.5.1[1.5.1]
-
-* Fix a bug that prevented include or import using relative file name in case the including/importing file was downloaded from the net via https protocol.
-
-
-== https://github.com/verhas/jamal/tree/1.5.0[1.5.0] NOT STABLE, DO NOT USE
-
-* Introducing macro `try`, the `!` and ``` modification characters in front of built-in macros for built-in eval and ident functionality (see more in the README.md).
-
-* The for macro has a new syntax (backward compatible), and now it can have multiple loop variables.
-
-
-== https://github.com/verhas/jamal/tree/1.4.1[1.4.1]
-
-* There are new macros: env and jshell.
-* The default scripting engine is not JavaScript anymore, it is JShell.
-* bug fix over 1.3.0. DO NOT USE THAT RELEASE deployment fix from 1.4.0 which also failed to upload for mysterious reasons UPDATE: I have found the bug and fixed the pom for later releases.
-
-
-== https://github.com/verhas/jamal/tree/1.3.0[1.3.0] RELEASE IS CORRUPT, DO NOT USE
-
-* Failed release.
-
-
-== https://github.com/verhas/jamal/tree/1.1.0[1.1.0]
-
-* New release with extended extension macros and also including some bug fix.
-* The built-in macro can now depend on the inner scope defined user-defined macros.
-
-
-== https://github.com/verhas/jamal/tree/1.0.2[1.0.2]
-
-* This release introduces macros `for`, `if`, `use` and supports trace creation.
-* At the same time, it fixes several bugs.
-
-
-== https://github.com/verhas/jamal/tree/1.0.1[1.0.1]
-
-* Some minor bugs fixed.
-* This time parent pom is also released.
-
-
-== https://github.com/verhas/jamal/tree/1.0.0[1.0.0]
-
-* Initial release.
