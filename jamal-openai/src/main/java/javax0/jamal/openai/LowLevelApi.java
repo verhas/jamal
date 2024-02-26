@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class LowLevelApi {
 
-    public static class Get implements Macro, InnerScopeDependent, Scanner {
+    public static class Get implements Macro, InnerScopeDependent, Scanner.FirstLine {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var opt = new Options(processor, in, this);
@@ -33,7 +33,7 @@ public class LowLevelApi {
         }
     }
 
-    public static class Post implements Macro, InnerScopeDependent, Scanner {
+    public static class Post implements Macro, InnerScopeDependent, Scanner.FirstLine {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var opt = new Options(processor, in, this);

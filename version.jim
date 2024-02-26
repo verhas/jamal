@@ -82,7 +82,7 @@ JUPITER_VERSION=5.10.2                     -- https://repo.maven.apache.org/mave
 MOCKITO_VERSION=5.10.0                     -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 -- dependencies needed for the Jamal libraries
-JRUBY_VERSION=9.4.5.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
+JRUBY_VERSION=9.4.6.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
 GROOVY_VERSION=3.0.20                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
 OGNL_VERSION=3.4.2                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=2.2                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
