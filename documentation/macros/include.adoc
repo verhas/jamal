@@ -10,7 +10,7 @@ since version `1.0.0`
   {@include [top noCache verbatim optional in="" lines=m..n] included_file.jam}
 
 == History
-* since 2.5.1 include can be optional to ignore missing files
+* since 2.6.0 include can be optional to ignore missing files
 * since 1.7.3 verbatim include
 * since 1.11.0 lines
 * since 1.11.0 noCache

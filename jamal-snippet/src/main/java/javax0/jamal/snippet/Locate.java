@@ -1,10 +1,6 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Scanner;
 
@@ -45,9 +41,8 @@ public class Locate implements Macro, OptionsControlled, Scanner.WholeInput {
         final var pattern = filePattern.get();
         final var fullPath = full.is();
         final var isMatch = filePattern.name().equals("match");
-        try {
-            final var foundFile = Files.walk(start, depth.get(), FileVisitOption.FOLLOW_LINKS)
-                    .filter(f -> filter(f, fileOnly, dirOnly, fullPath, isMatch, pattern))
+        try (final var walker = Files.walk(start, depth.get(), FileVisitOption.FOLLOW_LINKS)) {
+            final var foundFile = walker.filter(f -> filter(f, fileOnly, dirOnly, fullPath, isMatch, pattern))
                     .map(Path::toFile).collect(Collectors.toList());
             BadSyntax.when(foundFile.isEmpty(), ("No file matching '" + pattern.pattern() + "' found in '" + start + "'"));
             BadSyntax.when(foundFile.size() > 1, ("There are multiple files matching '" + pattern.pattern() + "' found in '" + start + "'\n" +

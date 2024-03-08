@@ -69,7 +69,7 @@ The following is a sample configuration used in the manual integration test of J
  1. <plugin>
  2.     <groupId>org.apache.maven.plugins</groupId>
  3.     <artifactId>maven-javadoc-plugin</artifactId>
- 4.     <version>3.4.1</version>
+ 4.     <version>3.6.3</version>
  5.     <configuration>
  6.         <detectOfflineLinks>false</detectOfflineLinks>
  7.         <doclint>none</doclint>
@@ -77,7 +77,7 @@ The following is a sample configuration used in the manual integration test of J
  9.         <docletArtifact>
 10.             <groupId>com.javax0.jamal</groupId>
 11.             <artifactId>jamal-doclet</artifactId>
-12.             <version>2.5.0-SNAPSHOT</version>
+12.             <version>2.5.1-SNAPSHOT</version>
 13.         </docletArtifact>
 14.         <additionalOptions>
 15.             <additionalOption>--source-root</additionalOption>
@@ -89,7 +89,7 @@ The following is a sample configuration used in the manual integration test of J
 21.                 <tagletArtifact>
 22.                     <groupId>com.javax0.jamal</groupId>
 23.                     <artifactId>jamal-all</artifactId>
-24.                     <version>2.5.0-SNAPSHOT</version>
+24.                     <version>2.5.1-SNAPSHOT</version>
 25.                 </tagletArtifact>
 26.             </taglet>
 27.         </taglets>
@@ -128,7 +128,7 @@ The lines 9-13 define the `docletArtifact`.
  9.         <docletArtifact>
 10.             <groupId>com.javax0.jamal</groupId>
 11.             <artifactId>jamal-doclet</artifactId>
-12.             <version>2.5.0-SNAPSHOT</version>
+12.             <version>2.5.1-SNAPSHOT</version>
 13.         </docletArtifact>
 
 ----
@@ -171,7 +171,7 @@ The lines 18-27 define the Jamal taglet.
 21.                 <tagletArtifact>
 22.                     <groupId>com.javax0.jamal</groupId>
 23.                     <artifactId>jamal-all</artifactId>
-24.                     <version>2.5.0-SNAPSHOT</version>
+24.                     <version>2.5.1-SNAPSHOT</version>
 25.                 </tagletArtifact>
 26.             </taglet>
 27.         </taglets>
@@ -320,7 +320,7 @@ The important options are:
 
 * `-tagletpath`
 
-* `--source-root ${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java`
+* `--source-root $+{PROJECT_ROOT}+/jamal/jamal-doclet/src/main/java`
 
 [source]
 ----

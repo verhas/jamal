@@ -22,7 +22,7 @@ public class Variation implements Macro, Scanner, OptionsControlled {
         // snippet pasted_params
         final var id = scanner.str(null, "id").defaultValue("$vari");
         // the identifier of the segment.
-        // If you use only one variation, the default value for this paropt is `$vari` and you can omit the parameter.
+        // If you use only one variation, the default value for this parop is `$vari` and you can omit the parameter.
         final var ignoreCase = scanner.bool(null, "ignoreCase");
         // ignore the case of the characters during the comparison.
         final var ignoreSpace = scanner.bool(null, "ignoreSpace");

@@ -34,7 +34,7 @@ public class Counter implements Identified, Evaluable {
         if (parameters.length > 0) {
             if (parameters[0].equals("last")) {
                 s = new CounterFormatter(format, iiii, id).formatValue(lastValue);
-            } else if (parameters[0].length() > 0 && parameters[0].charAt(0) == '>') {
+            } else if (!parameters[0].isEmpty() && parameters[0].charAt(0) == '>') {
                 s = getAndIncrease();
                 final var id = parameters[0].substring(1).trim();
                 final var macro = processor.newUserDefinedMacro(convertGlobal(id), s, true);

@@ -79,7 +79,7 @@ The following is a sample configuration used in the manual integration test of J
 ----
 %}
 
-{%@snip:check hash=83253f0c message="doclet config in the sample has changed, follow with the documentation" id=plugin_doclet%}
+{%@snip:check hash=b645f019 message="doclet config in the sample has changed, follow with the documentation" id=plugin_doclet%}
 
 The tag `doclet` (line 8.) defines the Java class implementing the doclet.
 It has to be as it is shown in the example.
@@ -219,7 +219,7 @@ The important options are:
 
 * `-tagletpath`
 
-* `--source-root ${PROJECT_ROOT}/jamal/jamal-doclet/src/main/java`
+* `--source-root $+{PROJECT_ROOT}+/jamal/jamal-doclet/src/main/java`
 
 [source]
 ----

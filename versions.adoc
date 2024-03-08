@@ -36,17 +36,17 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `JUPITER_VERSION` `5.10.2` 
 
-* `OK`  `MOCKITO_VERSION` `5.10.0` 
+* `OK`  `MOCKITO_VERSION` `5.11.0` 
 
 * `OK`  `JRUBY_VERSION` `9.4.6.0` 
 
-* `OK`  `GROOVY_VERSION` `3.0.20` 
+* `OK`  `GROOVY_VERSION` `3.0.21` 
 
 * `OK`  `OGNL_VERSION` `3.4.2` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.2` 
 
-* `OK`  `JSON_ORG_VERSION` `20240205` 
+* `OK`  `JSON_ORG_VERSION` `20240303` 
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 

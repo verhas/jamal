@@ -79,14 +79,14 @@ KOTLIN_VERSION=1.7.10
 JUPITER_VERSION=5.10.2                     -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-params
-MOCKITO_VERSION=5.10.0                     -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
+MOCKITO_VERSION=5.11.0                     -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 -- dependencies needed for the Jamal libraries
 JRUBY_VERSION=9.4.6.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
-GROOVY_VERSION=3.0.20                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
+GROOVY_VERSION=3.0.21                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
 OGNL_VERSION=3.4.2                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=2.2                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
-JSON_ORG_VERSION=20240205                  -- https://repo.maven.apache.org/maven2/org/json/json/
+JSON_ORG_VERSION=20240303                  -- https://repo.maven.apache.org/maven2/org/json/json/
 FLEXMARK_VERSION=0.64.8                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
 APACHE_POI_VERSION=5.2.5                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 ASCIIDOCTORJ_VERSION=3.0.0-alpha.1         -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj

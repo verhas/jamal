@@ -1,0 +1,37 @@
+{%@import macrodoc.jim%}
+{%#snip:check file={%JAVA_DIR%}DevRoot.java hash=6d04913a
+%}
+This macro finds the root directory of a development project.
+
+To locate the root directory of a development project, the macro attempts to identify specific files or directories typically found only in the root directory of such projects.
+These include files or directories such as `.git` and `.mvn`.
+The search initiates from the directory of the Jamal source file and proceeds upwards.
+If none of these files can be located, indicating that the project's root directory cannot be determined, a syntax error is signaled.
+The value of the macro is the absolute path to the project root directory.
+
+To find the development root, the macro has the following parops:
+
+* `placeholders` can list the files that may work as a placeholder.
+Use this option if your project has something in the root directory, which is not in the default list.
+If this option is used, the default file names are not used, only those listed here.
+The option is multivalued, and each value can contain multiple file names comma separated.
++
+The default list is the following:
++
+{%@snip:collect onceAs="DOCUCONV" from="../../../jamal-engine/src/main/java/javax0/jamal/DocumentConverter.java"%}\
+{%#replaceLines replace="/\",/`/" replace="/\"/** `/"
+{%@snip PLACEHOLDERS%}%}
++
+As you can see, the list is quite extensive.
+It is recommended to place a `ROOT.dir` file in your root directory as a last resort and use this option if even that is not a good solution for your needs.
+
+* `format` (string) specifies the format of the result.
+This format is the same as the format of the `file` and `directory` macros.
+The default value is `$absolutePath`.
+
+* `dateFormat` (string) specifies the format of the date and time.
+This format is the same as the format of the `file` and `directory` macros.
+This is only needed if you want to have the date and time of the root directory as the macro result.
+
+* `relativeTo` (string) specifies the directory that is used to make the path relative.
+This option works the same way as in the macros `file` and `directory`.

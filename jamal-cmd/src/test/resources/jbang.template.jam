@@ -1,8 +1,7 @@
 {@comment}\
-{@define ? ROOT=../../../..}\
-{#import {ROOT}/version.jim}\
-{#import {ROOT}/modules.jim}\
-{#define asciidoc:output={ROOT}/jbangstarter.java}\
+{#import {@dev:root}/version.jim}\
+{#import {@dev:root}/modules.jim}\
+{#define asciidoc:output={@dev:root}/jbangstarter.java}\
 ///usr/bin/env jbang \"$0\" \"$@\" ; exit $? jaja
 //JAVA 17+
 {!@for[evalist] $module in ({modules:JBANG_DEPENDENCIES})=//DEPS com.javax0.jamal:jamal-$module:{VERSION}

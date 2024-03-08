@@ -123,6 +123,7 @@ module jamal.snippet {
             Plural,
             StringMacro,
             Between,
-            After
+            After,
+            DevRoot
             ;
 }

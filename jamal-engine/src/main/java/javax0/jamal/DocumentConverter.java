@@ -18,16 +18,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.nio.file.StandardOpenOption.CREATE;
-import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
-import static java.nio.file.StandardOpenOption.WRITE;
+import static java.nio.file.StandardOpenOption.*;
 
 /**
  * Convert one single document.
  * <p>
  * Use this class and method to maintain your documentation in Jamal format. The project documentation can use macros
  * that fetch data automatically from the Java code. For example the value of a {@code static final} can be retrieved
- * using reflection. The snippet macro {@code java:field} does that. It can work only if the application is loaded and
+ * using reflection. The s.nippet macro {@code java:field} does that. It can work only if the application is loaded and
  * on the classpath or module path.
  * <p>
  * The suggested practice is that you invoke {@link DocumentConverter#convert(String)} from your test code. That way the
@@ -36,6 +34,25 @@ import static java.nio.file.StandardOpenOption.WRITE;
  * you alter the name of a class, method or field and you forget to follow the change in the documentation.
  */
 public class DocumentConverter {
+    public static final String[] PLACEHOLDERS = {
+            // snippet PLACEHOLDERS
+            "ROOT.dir",
+            ".git",
+            ".mvn",
+            "package.json",
+            "requirements.txt",
+            "Pipfile",
+            "Gemfile",
+            "Cargo.toml",
+            "CMakeLists.txt",
+            ".sln",
+            "go.mod",
+            ".travis.yml",
+            ".gitlab-ci.yml",
+            "azure-pipelines.yml",
+            // end snippet
+    };
+
     /**
      * Convert a document preprocessing and save the result into a file.
      * The source file is supposed to have the {@code .jam} extension.
@@ -166,12 +183,12 @@ public class DocumentConverter {
      * @throws Exception when there is an error in the conversion.
      */
     public static void convertAll(Includes include, Excludes exclude) throws Exception {
-        for (final var p :
-                Files.walk(Paths.get(getRoot()), Integer.MAX_VALUE)
-                        .filter(Files::isRegularFile)
-                        .filter(s -> include.stream().anyMatch(z -> s.toString().endsWith(z)) && exclude.stream().noneMatch(z -> s.toString().endsWith(z)))
-                        .collect(Collectors.toList())) {
-            executeJamal(p, Paths.get(p.toString().replaceAll("\\.jam$", "")));
+        try (final var paths = Files.walk(Paths.get(getRoot()), Integer.MAX_VALUE)) {
+            for (final var p : paths.filter(Files::isRegularFile)
+                    .filter(s -> include.stream().anyMatch(z -> s.toString().endsWith(z)) && exclude.stream().noneMatch(z -> s.toString().endsWith(z)))
+                    .collect(Collectors.toList())) {
+                executeJamal(p, Paths.get(p.toString().replaceAll("\\.jam$", "")));
+            }
         }
     }
 
@@ -220,20 +237,7 @@ public class DocumentConverter {
      * @throws IOException when there is some error traversing the directories
      */
     public static String getRoot() throws IOException {
-        return getRoot("ROOT.dir",
-                ".git",
-                ".mvn",
-                "package.json",
-                "requirements.txt",
-                "Pipfile",
-                "Gemfile",
-                "Cargo.toml",
-                "CMakeLists.txt",
-                ".sln",
-                "go.mod",
-                ".travis.yml",
-                ".gitlab-ci.yml",
-                "azure-pipelines.yml"
+        return getRoot(PLACEHOLDERS
         );
     }
 
@@ -245,7 +249,7 @@ public class DocumentConverter {
      *
      * @param rootFiles the names of the files that are searched for in the root directory
      * @return the absolute path to the root directory of the project
-     * @throws IOException when there is some error traversing the directories
+     * @throws IOException      when there is some error traversing the directories
      * @throws RuntimeException when the root directory cannot be found
      */
     public static String getRoot(String... rootFiles) throws IOException {

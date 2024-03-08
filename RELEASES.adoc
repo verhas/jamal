@@ -6,22 +6,25 @@
 
 
 
-== https://github.com/verhas/jamal/tree/2.5.1[2.5.1]
+== https://github.com/verhas/jamal/tree/2.6.0[2.6.0]
 
 * `jrf` (reference) files now can contain comments to make them more readable.
 * `import` has a new parop `global` that makes the import global and not imported again even if the file was imported from a local scope.
 * `import` does not import a file again if it has the same content as an already imported file.
 Until now, different files with the same content could be imported in parallel.
 * Snippet library has a new macro `plural` that can be used to pluralize a word.
-* Bugfix: invoking macro close for AutoCloseable macro0s that need a processor and output.
+* Bugfix: invoking macro close for AutoCloseable macros that need a processor and output.
 * Module plantUML was removed from development.
 This module is not supported anymore.
 Using plant UML diagrams should be available through Kroki either using the public service or using a local containerized Kroki server.
 * Bug fixed in `kroki.jim` resource file.
-* String macro `string` can perform equals, startsWith, and endsWith operations more readably and with an ignoreCase option.
-* String macro `between` can be used to extract a substring between two strings.
+* String macro `string` can perform equals, startsWith, and endsWith operations more readably and with an `ignoreCase` option.
+* String macro `string:between` can be used to extract a substring between two strings.
 * A macro Java code can query the ID used to invoke it via the processor's `getId()` method.
+  It makes it possible to alter the behavior of a macro based on the ID used to invoke it.
 * Macro `string:before` and `string:after`.
+* Macro `dev:root` can be used to find the root directory of the project.
+* Macro `snip:update` is removed after long deprecated.
 
 == https://github.com/verhas/jamal/tree/2.5.0[2.5.0]
 

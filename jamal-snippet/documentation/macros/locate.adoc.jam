@@ -1,8 +1,8 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}Locate.java hash=6622e280%}
+{%#snip:check file={%JAVA_DIR%}Locate.java hash=e449c575%}
 This macro finds a file in a directory tree.
 
-To find a file or directory, the macro has the following paropts:
+To find a file or directory, the macro has the following parops:
 
 * `in` (string) specifies the directory where the search for the file starts.
   This can be an absolute file name, or relative to the file that contains the macro.
@@ -13,11 +13,11 @@ To find a file or directory, the macro has the following paropts:
 * `find` (string) can specify the regular expression pattern.
   The pattern should match part of the file name to find a file.
   This is the opposite of `match`, which tries to match the entire file name.
-  For the comparison the full path or only the file name is used controlled by the paropt `fullPath`.
+  For the comparison the full path or only the file name is used controlled by the parop `fullPath`.
 
 * `match` (string) can specify the regular expression pattern.
   The pattern should match the whole file name to find a file.
-  For the comparison the full path or only the file name is used controlled by the paropt `fullPath`.
+  For the comparison the full path or only the file name is used controlled by the parop `fullPath`.
 
 * `isFile` (boolean) specifies that only files should be found.
   The default is to find both files and directories.
@@ -36,7 +36,7 @@ To find a file or directory, the macro has the following paropts:
   This format is the same as the format of the `file` and `directory` macros.
 
 * `relativeTo` (string) specifies the directory that is used to make the path relative.
-  This option works the same way as in the macros `file` and `direcotry`.
+  This option works the same way as in the macros `file` and `directory`.
 
 Examples:
 

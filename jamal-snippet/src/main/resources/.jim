@@ -1,1 +1,2 @@
 {@define jim:snippet=true}
+{@use global comment as snip:update}

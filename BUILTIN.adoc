@@ -265,7 +265,7 @@ default String[] getIds() {
 
 ==== Name by Annotation `@Name`
 
-Following the version 2.5.1 it is possible and recommended to specify the name of the macro using the annotation `@Name`.
+Following the version 2.6.0 it is possible and recommended to specify the name of the macro using the annotation `@Name`.
 The annotation can be used on the macro class.
 It can have one or more strings as arguments specifying the names of the macro.
 For example, the core macro JShell specifies the name this way:
@@ -299,7 +299,7 @@ The variable `action` will hold the name that was used to invoke the macro.
 NOTE: It is important to invoke this call at the start of the macro.
 The evaluation may invoke acro processing, and the macro name registered in the processor may change.
 The `getId()` method on the processor always returns the last invoked macro name.
-This feature is available since the release 2.5.1.
+This feature is available since the release 2.6.0.
 
 
 === Handling the Input of the Macro

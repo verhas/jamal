@@ -29,7 +29,7 @@ public class Range {
                     if (i <= lines.length && i > 0) {
                         final var line = lines[i - 1];
                         sb.append(line);
-                        nlMissing = line.length() == 0 || line.charAt(line.length() - 1) != '\n';
+                        nlMissing = line.isEmpty() || line.charAt(line.length() - 1) != '\n';
                     }
                 }
             }

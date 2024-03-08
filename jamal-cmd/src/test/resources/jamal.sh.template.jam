@@ -1,8 +1,7 @@
 {@comment}\
 #!/bin/sh
-{@define ? ROOT=../../../..}\
-{#import {ROOT}/version.jim}\
-{#define asciidoc:output={ROOT}/jamal.sh}\
+{#import {@dev:root}/version.jim}\
+{#define asciidoc:output={@dev:root}/jamal.sh}\
 {@define REPO=$HOME/.m2/repository}\
 {@define CENTRAL=https://repo1.maven.org/maven2}\
 
@@ -34,6 +33,6 @@ and stra
 
 {#replaceLines replace="/^\\s*(.*?):(.*?):jar:(.*?):compile.*$/download \"$1\" \"$2\" \"$3\""
   {#killLines keep pattern=compile
-    {#include [verbatim] {ROOT}/jamal-cmd/target/dependencies.txt}}}
+    {#include [verbatim] {@dev:root}/jamal-cmd/target/dependencies.txt}}}
 
 java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain $*

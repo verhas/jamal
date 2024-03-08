@@ -113,6 +113,7 @@ This way, it is easier to keep your documentation up to date.
 .. <<unicode,`unicode`>>
 .. <<case,`case:lower`, `case:upper`, ...>>
 .. <<locate,`file:locate`>>
+.. <<dev_root,`dev:root`>>
 .. <<file,`file`>>
 .. <<directory,`directory`>>
 .. <<Java,Java Macros>>
@@ -1373,7 +1374,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 === {%chapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=862c2167%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=f645b1c0%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -2391,6 +2392,8 @@ These are:
 
 {%CH/locate/file:locate%}
 
+{%CH/dev_root/dev:root%}
+
 [[file]]
 === {%chapter%}`file`
 {%#snip:check file={%JAVA_DIR%}FilesMacro.java hash=3ca91fb6%}
@@ -3219,15 +3222,17 @@ will result in
 === {%chapter%}`snip:update`
 {%#snip:check file={%JAVA_DIR%}Update.java hash=917df28d%}
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
+It meant to update the edited source document.
+It was a temporary woraround till the time when the WYSIWYG editor was not available in IntelliJ.
 Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
-Currently, the macro exists only for backward compatibility and does nothing.
 
-Later releases will remove this macro.
-When this happens, you can keep backward compatibility with
+To keep backward compatibility the `.jim` resource file contains the line:
 
   {@use global comment as snip:update}
 
-This will render the current, no operation functionality of the macro.
+{%@snip:update this is comment%}
+
+This renders the current, no operation functionality of the macro.
 
 {%CH /variation/variation%}
 
