@@ -2521,7 +2521,7 @@ I.i.iv
 
 You may want to refer to a counter value other than the last one.
 In this case, you can use a `define` macro to store the formatted value of the counter, or you can "save" the counter.
-Using the parameter `save` (also aliased as `saveAs`) with a string argument you clone a freezed version of the counter.
+Using the parameter `save` (also aliased as `saveAs`) with a string argument you clone a frozen version of the counter.
 For example:
 
 [source]
