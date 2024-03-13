@@ -1,19 +1,7 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Closer;
-import javax0.jamal.api.Context;
-import javax0.jamal.api.Debugger;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Evaluable;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.MacroRegister;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.SpecialCharacters;
 import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.debugger.DebuggerFactory;
 import javax0.jamal.engine.util.ExceptionDumper;
 import javax0.jamal.engine.util.MacroBodyFetcher;
@@ -22,7 +10,6 @@ import javax0.jamal.engine.util.PrefixComposer;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.NullDebugger;
 import javax0.jamal.tools.OptionsStore;
-import javax0.jamal.tools.Throwing;
 import javax0.jamal.tracer.TraceRecord;
 import javax0.jamal.tracer.TraceRecordFactory;
 
@@ -31,27 +18,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static javax0.jamal.api.Macro.validIdChar;
 import static javax0.jamal.api.SpecialCharacters.REPORT_UNDEFINED;
 import static javax0.jamal.tools.Input.makeInput;
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.getParts;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Processor implements javax0.jamal.api.Processor {
 
@@ -77,7 +51,7 @@ public class Processor implements javax0.jamal.api.Processor {
     private final OptionsStore optionsStore;
     private boolean currentlyClosing = false;
 
-    private IdentityHashMap<Macro,Object> macroState = new IdentityHashMap<>();
+    private final IdentityHashMap<Macro, Object> macroState = new IdentityHashMap<>();
 
     private String lastInvokedBuiltInMacro = null;
 
@@ -93,7 +67,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     private final BadSyntax initializationException;
 
-    public String getId(){
+    public String getId() {
         return lastInvokedBuiltInMacro;
     }
 
@@ -216,6 +190,7 @@ public class Processor implements javax0.jamal.api.Processor {
         limiter.up();
         final var marker = macros.test();
         final var output = makeInput(input.getPosition());
+        BadSyntax processingException = null;
         try {
             while (input.length() > 0) {
                 debugger.setBefore(limiter.get(), input);
@@ -228,20 +203,41 @@ public class Processor implements javax0.jamal.api.Processor {
                 }
                 debugger.setAfter(limiter.get(), output);
             }
-        } catch (BadSyntaxAt bsAt) {
-            traceRecordFactory.dump(bsAt);
+        } catch (BadSyntaxAt badSyntax) {
+            traceRecordFactory.dump(badSyntax);
             if (!(debugger instanceof NullDebugger)) {
-                debugger.setAfter(limiter.get(), ExceptionDumper.dump(bsAt));
+                debugger.setAfter(limiter.get(), ExceptionDumper.dump(badSyntax));
             }
-            throw bsAt;
+            processingException = badSyntax;
+            throw badSyntax;
         } finally {
-            if (limiter.down() == 0) {
-                closeProcess(output);
-            }
+            closeProcessWithExceptionHandling(output, processingException);
         }
         traceRecordFactory.dump(null);
         macros.test(marker);
         return output.toString();
+    }
+
+    /**
+     * Handles the closing process of the processor with exception handling.
+     * If an exception occurs during the closing process, it is thrown after adding a possibly existing processing
+     * exception as a suppressed exception.
+     *
+     * @param output              The final state of the macro processing before the closers were started.
+     * @param processingException The exception that occurred during the processing of the macro.
+     * @throws BadSyntax If any exception occurs during the closing process.
+     */
+    private void closeProcessWithExceptionHandling(javax0.jamal.tools.Input output, BadSyntax processingException) throws BadSyntax {
+        try {
+            if (limiter.down() == 0) {
+                closeProcess(output);
+            }
+        } catch (Exception e) {
+            if (processingException != null) {
+                e.addSuppressed(processingException);
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -256,10 +252,10 @@ public class Processor implements javax0.jamal.api.Processor {
 
     @Override
     public <T> T state(Macro macro, Supplier<T> defaultValue) {
-        if( !macroState.containsKey(macro) ) {
+        if (!macroState.containsKey(macro)) {
             macroState.put(macro, defaultValue.get());
         }
-        return (T)macroState.get(macro);
+        return (T) macroState.get(macro);
     }
 
     /**

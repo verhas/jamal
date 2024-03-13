@@ -306,6 +306,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         this.processor = processor;
         this.optionsStore = OptionsStore.getInstance(processor);
         final var parts = serialized.split("\\|");
+        BadSyntax.when(parts.length < PARAMETERS_POS, "Serialized user defined macro is too short: '%s'", serialized);
         id = decode(parts[ID_POS]);
         openStr = decode(parts[OPEN_STR_POS]);
         closeStr = decode(parts[CLOSE_STR_POS]);

@@ -25,6 +25,8 @@ Using plant UML diagrams should be available through Kroki either using the publ
 * Macro `string:before` and `string:after`.
 * Macro `dev:root` can be used to find the root directory of the project.
 * Macro `snip:update` is removed after long deprecated.
+* A bug fixed in the macro references that caused index out of range exception if the `.jrf` reference file was corrupt.
+* The processor properly reports the syntax error even if there is a syntax error also in some of the closers (code that runs at the end of the processing).
 
 {%RELEASE ROGACHEVO%}
 

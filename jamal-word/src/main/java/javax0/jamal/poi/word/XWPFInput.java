@@ -146,7 +146,7 @@ public class XWPFInput extends Input {
      * otherwise. It also returns {@code true} if the index is after the last run.
      */
     private static boolean isEmptyAfter(final XWPFParagraph paragraph, final int runIndex) {
-        if (paragraph.getRuns().size() == 0) {
+        if (paragraph.getRuns().isEmpty()) {
             return true;
         }
         if (runIndex >= paragraph.getRuns().size()) {
@@ -154,7 +154,7 @@ public class XWPFInput extends Input {
         }
         for (int i = runIndex; i < paragraph.getRuns().size(); i++) {
             final var run = paragraph.getRuns().get(i);
-            if (run.getText(0) != null && run.getText(0).length() > 0) {
+            if (run.getText(0) != null && !run.getText(0).isEmpty()) {
                 return false;
             }
         }
@@ -171,11 +171,11 @@ public class XWPFInput extends Input {
      * @return {@code true} if the paragraph is empty, {@code false} otherwise.
      */
     private static boolean isEmpty(final XWPFParagraph paragraph) {
-        if (paragraph.getRuns().size() == 0) {
+        if (paragraph.getRuns().isEmpty()) {
             return true;
         }
         for (XWPFRun run : paragraph.getRuns()) {
-            if (run.getText(0) != null && run.getText(0).length() > 0) {
+            if (run.getText(0) != null && !run.getText(0).isEmpty()) {
                 return false;
             }
         }
@@ -271,7 +271,7 @@ public class XWPFInput extends Input {
      * {@link XWPFProcessor} would restart the processor again an star the processing with the characters {@code %j%>},
      * which, again, is just normal, non-macro character sequence.
      * <p>
-     * To handle this situation this implementation appends new runs to the buffer so long as long
+     * To handle this situation, this implementation appends new runs to the buffer so long as long
      * <ul>
      *     <li>the buffer is shorter than the searched string,</li>
      *     <li>there is something to append, in other words the doc file still has characters left,</li>
@@ -292,7 +292,7 @@ public class XWPFInput extends Input {
     }
 
     private boolean thereAreMOreRuns() {
-        return !(paragraphEndIndex == paragraphs.size() - 1 && runEndIndex >= paragraphs.get(paragraphEndIndex).getRuns().size() - 1);
+        return !(paragraphEndIndex == paragraphs.size() - 1 && runEndIndex > paragraphs.get(paragraphEndIndex).getRuns().size() - 1);
     }
 
     /**
@@ -321,7 +321,7 @@ public class XWPFInput extends Input {
             runEndIndex = 0;
             sb.append("\n");
             final var endRunsNext = paragraphs.get(paragraphEndIndex).getRuns();
-            if (0 < endRunsNext.size()) {
+            if (!endRunsNext.isEmpty()) {
                 final var text = endRunsNext.get(0).getText(0);
                 sb.append(text == null ? "" : text);
                 break;
@@ -580,7 +580,7 @@ public class XWPFInput extends Input {
      * @param p the CTP object that has the runs to be deleted
      */
     private void deleteAllRuns(CTP p) {
-        while (p.getRList().size() > 0) {
+        while (!p.getRList().isEmpty()) {
             p.getRList().remove(0);
         }
     }
@@ -611,7 +611,7 @@ public class XWPFInput extends Input {
             } else {
                 while (paragraphEndIndex < paragraphs.size() - 1) {
                     paragraphEndIndex++;
-                    if (paragraphs.get(paragraphEndIndex).getRuns().size() > 0) {
+                    if (!paragraphs.get(paragraphEndIndex).getRuns().isEmpty()) {
                         setStart(paragraphEndIndex, 0);
                         break;
                     }

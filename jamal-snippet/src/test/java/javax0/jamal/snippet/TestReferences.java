@@ -62,4 +62,14 @@ public class TestReferences {
         cleanRefFile();
     }
 
+    @Test@DisplayName("Test refrence closing gracefully when error occurs")
+    void testReferencesInError() throws Exception {
+        cleanRefFile();
+        // the first time it reports that there is no reference file, this is more an assumption, the preparation of the real test when there is a faulty reference file
+        TestThat.theInput("{@references}{@ref a}{a}{@define a=1{@define a=2}").throwsBadSyntax("The reference file .* was not found\\.");
+        // check that the real processing error is part of the exception message, not only the faulty reference file
+        TestThat.theInput("{@references}{@define z={@ref a}{a}{@define a=1}{@define a=2}").throwsBadSyntax("Macro was not terminated in the file.*");
+        cleanRefFile();
+    }
+
 }
