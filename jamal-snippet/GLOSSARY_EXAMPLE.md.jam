@@ -1,0 +1,105 @@
+# How to Create Glossary in Markdown
+{%@comment snippet definitions %}
+{%@define GLOSSARY=%}{%@define term($TERM,$DEFINITION)={%#define GLOSSARY={%GLOSSARY%}$TERM:: $DEFINITION
+%}{%@define $TERM=$DEFINITION%}%}
+{%@comment end snippet%}
+
+{%term/Jamal/a meta-markup language with macro capabilities%}
+In this document, we will describe how you can add glossary to your Markdown documents.
+
+Markdown is a simple markup language that does not support complex features like a glossary.
+However, you can automatically create a glossary using the Jamal meta-markup.
+If you add Jamal meta-markup to your Markdown document, you can define terms and their definitions.
+You can edit a `.md.jam` file and get the processed `.md` file with the glossary at the end of the document.
+
+Jamal is a free software and can be found at https://github.com/verhas/jamal
+
+## What is a Glossary?
+
+{%@comment snippet glossary_define_and_use %}\
+{%term/glossary/list of terms and their definitions%}\
+A glossary is a {%glossary%}.
+{%@comment end snippet%}\
+It is used to explain the meaning of terms used in a document.
+It is usually placed at the end of the document with definitions in alphabetical order.
+Often, technical documents also list abbreviations in the glossary.
+{%@comment snippet TLA %}\
+{%term/TLA/Three Letter Acronym%}\
+{%@comment end snippet%}\
+For example, if I use the term  TLA standing for {%TLA%}, I would add it to the glossary.
+It will appear in the glossary as:
+
+TLA::  Three Letter Acronym
+
+## Problem with Glossary Maintenance
+
+There are a few issues with maintaining glossaries:
+
+* Terms have to be edited at the end of the document for the glossary.
+It is not the place where the glossary is used in the text.
+Editors must switch between the glossary and its references throughout the document, which can disrupt the cohesion of related content.
+
+* This disjoint location of otherwise related content makes it difficult to maintain the glossary.
+When new terms appear, the editing may be postponed and missed.
+Similarly, when terms are removed from the text, the glossary may not be updated.
+
+* Glossary should be sorted alphabetically.
+This is a manual process and can be time-consuming.
+
+## How Jamal Comes to the Rescue for Glossaries
+
+Jamal is a meta-markup language that allows you to define macros.
+The markup undergoes preprocessing before the document's actual formatting is processed.
+This document is a Markdown document, and the Jamal markup is processed before the markdown is processed.
+That way, you can have `your_document.md.jam`, including all your markdown and Jamal markups, and you get the final `your_document.md` with all the macros processed.
+
+{%term/Jamal/meta-markup language with macro capabilities%}
+Using Jamal, you can define macros that will build the glossary while the text is processed, and the built glossary is then used at the end of the document.
+{%#snip:collect from="{%@pos.file%}"%}
+
+The macros defined in this file are the following
+
+```
+{%@snip definitions%}
+```
+
+First, it defines the macro `GLOSSARY` as an empty string.
+Then, it defines a macro `term` that takes two arguments, the term and its definition.
+When this macro is used, it replaces the `GLOSSARY` with the new term, and its definition is appended to the end.
+Each line will contain a term and a definition separated by `::`.
+In addition, the use of the macro `term` also defines the given term itself as a macro that will be replaced by its definition.
+
+When you want to define a new term anywhere inside the document, you can use the macro, like in the following example:
+
+```
+{%@snip TLA%}
+```
+
+The macro also defines the term itself to be a macro, thus you can use `{%@ident{%TLA%}%}` to get `{%TLA%}`, or
+
+```
+{%@snip glossary_define_and_use%}
+```
+
+as a second example.
+You can see the beauty of total document source code redundancy.
+
+At the end of the document, you can have a chapter
+
+```
+{%@snip glossary%}
+```
+
+The result can be seen at the end of this document.
+
+> NOTES:
+
+* When you sort the glossary, it is important that your definitions are one-liners.
+* To see an example of creating and using the macros have a look at the source code of this document, `{%#file (format="$simpleName"){%@pos.file%}%}`.
+
+{%@comment snippet glossary%}
+## Glossary
+
+{%#sort
+{%GLOSSARY%}%}
+{%@comment end snippet%}
