@@ -13,72 +13,55 @@
 {@define doclint($x)=<doclint>$x</doclint>}
 
 {project jamal-parent}
-    {packaging pom}
-    {GAV :{GROUPID}:jamal-parent:{VERSION}}
-    {description Jamal macro library to process text files}
-    {modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,asciidoc258,{modules:KOTLIN_JAMAL_MODULES})=jamal-$M,}jamal-all}
-    {license|The Apache License, Version 2.0|https://www.apache.org/licenses/LICENSE-2.0.txt}
-    {developer|Peter Verhas|peter@verhas.com}
-    {github|verhas|jamal}
-    {properties|
-        {property :project.build.sourceEncoding:UTF-8}
-        {property :maven.plugin.validation:VERBOSE}
-    }
-    {distributionManagement|
-        {snapshotRepository |ossrh|https://oss.sonatype.org/content/repositories/snapshots}
-        {repository |ossrh|https://oss.sonatype.org/service/local/staging/deploy/maven2/}
-    }
-    {build|
-        {plugins|
-            {plugin|{GAV :org.sonatype.plugins:nexus-staging-maven-plugin: }}
-        }
-        {pluginManagement|
-            {plugins|
-                {plugin|
-                    {GAV :org.apache.maven.plugins:maven-source-plugin:{MAVEN_SOURCE_PLUGIN_VERSION}}
-                    {executions|
-                        {execution|
-                            {id|attach-sources}
-                            {goals|{goal|jar}}
-                        }
-                    }
-                }
-                {plugin|
-                    {GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
-                    {configuration|
-                        {detectOfflineLinks false}
-                        {doclint none}
-                        {doclet javax0.jamal.doclet.JamalDoclet}
-                        {docletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}}
-                        {additionalOptions
-                            {additionalOption |--source-root}
-                            {additionalOption {@escape* ``${project.build.sourceDirectory}``}}
-                        }
-                        {taglets|
-                            {taglet|
-                                {tagletClass javax0.jamal.doclet.JamalTaglet}
-                                {tagletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}}
-                            }
-                        }
-                    }
-                    {executions|{execution|
-                            {id|attach-javadocs}
-                            {goals|{goal|jar}}}}
-                }
-                {plugin|
-                    {GAV :org.apache.maven.plugins:maven-compiler-plugin:{MAVEN_COMPILER_PLUGIN_VERSION}}
-                    <configuration>
-                        <source>{JAVA_SOURCE}</source>
-                        <target>{JAVA_TARGET}</target>
-                        <release>{JAVA_RELEASE}</release>
-                    </configuration>
-                }
-                {plugin|
-                    {GAV :org.apache.maven.plugins:maven-dependency-plugin:{MAVEN_DEPENDENCY_PLUGIN_VERSION}}
-                    {executions|{execution|
-                            {id|collect}
-                            {goals|{goal|collect}}}}
-                }
+{packaging pom}
+{GAV :{GROUPID}:jamal-parent:{VERSION}}
+{description Jamal macro library to process text files}
+{modules {@for [evalist] $M in ({modules:ALL},{modules:TEST},{modules:TESTSUPPORT},extensions,asciidoc258,{modules:KOTLIN_JAMAL_MODULES})=jamal-$M,}jamal-all}
+{license|The Apache License, Version 2.0|https://www.apache.org/licenses/LICENSE-2.0.txt}
+{developer|Peter Verhas|peter@verhas.com}
+{github|verhas|jamal}
+{properties|
+{property :project.build.sourceEncoding:UTF-8}
+{property :maven.plugin.validation:VERBOSE} }
+{distributionManagement|
+{snapshotRepository |ossrh|https://oss.sonatype.org/content/repositories/snapshots}
+{repository |ossrh|https://oss.sonatype.org/service/local/staging/deploy/maven2/}
+}
+{build|
+{plugins|
+{plugin|{GAV :org.sonatype.plugins:nexus-staging-maven-plugin: }} }
+{pluginManagement|
+{plugins|
+{plugin|
+{GAV :org.apache.maven.plugins:maven-source-plugin:{MAVEN_SOURCE_PLUGIN_VERSION}}
+{executions|
+{execution|
+{id|attach-sources}
+{goals|{goal|jar}} } } }
+{plugin|
+{GAV :org.apache.maven.plugins:maven-javadoc-plugin:{MAVEN_JAVADOC_PLUGIN_VERSION}}
+{configuration|
+{detectOfflineLinks false}
+{doclint none}
+{doclet javax0.jamal.doclet.JamalDoclet}
+{docletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}}
+{additionalOptions
+{additionalOption |--source-root}
+{additionalOption {@escape* ``${project.build.sourceDirectory}``}} }
+{taglets|
+{taglet|
+{tagletClass javax0.jamal.doclet.JamalTaglet}
+{tagletArtifact {GAV :com.javax0.jamal:jamal-doclet:{LAST_RELEASE}}} } } }
+{executions|{execution|
+{id|attach-javadocs}
+{goals|{goal|jar}}}} }
+{plugin|
+{GAV :org.apache.maven.plugins:maven-compiler-plugin:{MAVEN_COMPILER_PLUGIN_VERSION}} <configuration> <source>{JAVA_SOURCE}</source> <target>{JAVA_TARGET}</target> <release>{JAVA_RELEASE}</release> </configuration> }
+{plugin|
+{GAV :org.apache.maven.plugins:maven-dependency-plugin:{MAVEN_DEPENDENCY_PLUGIN_VERSION}}
+{executions|{execution|
+{id|collect}
+{goals|{goal|collect}}}} }
 
                 {plugin|
                     {GAV :org.apache.maven.plugins:maven-surefire-plugin:{SUREFIRE_PLUGIN_VERSION}}

@@ -83,6 +83,11 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         public int hashCode() {
             return Arrays.hashCode(hash);
         }
+
+        @Override
+        public String toString() {
+            return HexDumper.encode(hash);
+        }
     }
 
     private final List<Set<Hash>> importedAlready = new ArrayList<>();
@@ -174,13 +179,13 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
      * level to have the effect, macros defined on this level) and so are the elements of the list that keeps track of
      * the files imported on each level.<p>
      *
-     * @param fileName the absolute name of the file to be imported now.
-     * @return if the file was not imported yet.
+     * @param fileContentHash the hash code calculated from the file content.
+     * @return {@code true} if the file was imported already, {@code false} otherwise.
      */
-    private boolean wasImported(Hash fileName) {
+    private boolean wasImported(Hash fileContentHash) {
         for (int level = importedAlready.size() - 1; level > -1; level--) {
             var importSet = importedAlready.get(level);
-            if (importSet.contains(fileName)) {
+            if (importSet.contains(fileContentHash)) {
                 return true;
             }
         }

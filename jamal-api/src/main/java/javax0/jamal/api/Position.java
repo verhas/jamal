@@ -88,4 +88,10 @@ public class Position {
         }
         return top;
     }
+
+    @Override
+    public String toString() {
+        return file + ":" + line + ":" + column;
+    }
+
 }

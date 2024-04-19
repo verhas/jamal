@@ -18,7 +18,7 @@ Until now, different files with the same content could be imported in parallel.
 This module is not supported anymore.
 Using plant UML diagrams should be available through Kroki either using the public service or using a local containerized Kroki server.
 * Bug fixed in `kroki.jim` resource file.
-* String macro `string` can perform equals, startsWith, and endsWith operations more readably and with an `ignoreCase` option.
+* String macro `string` can perform `equals`, `startsWith`, and `endsWith` operations more readably and with an `ignoreCase` option.
 * String macro `string:between` can be used to extract a substring between two strings.
 * A macro Java code can query the ID used to invoke it via the processor's `getId()` method.
   It makes it possible to alter the behavior of a macro based on the ID used to invoke it.

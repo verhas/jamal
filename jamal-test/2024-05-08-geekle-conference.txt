@@ -1,0 +1,171 @@
+Hello,
+My name is Peter Verhas. I work at EPAM Systems. Today, I'll discuss integrating ChatGPT into our documentation tools.
+<CLICK>
+First, why use AI in documentation? What benefits does AI offer us?
+
+The answer: speed and quality.
+AI helps produce superior documents more quickly.
+I can't show speed, but I will demonstrate improved quality.
+<CLICK>
+Notice a typo in line two: "crate" instead of "create".
+Even Grammarly missed this error.
+
+AI tools can avoid such errors. They craft text quicker and more clearly than
+many of us, especially non-native speakers.
+<CLICK>
+Why should we integrate?
+ChatGPT and other LLM services have nice and easy to use interfaces.
+We can type, talk to them and copy the result to our document.
+As a matter of fact many people do it. Even I did it creating this presentation.
+I wrote the text what I wanted to say to have it on a teleprompter and then I asked ChatGPT to rewrite it in “proper” English.
+It is nice and works well for most of the cases, but
+
+Documents are not only created.
+<CLICK>
+Documents
+<CLICK>
+Must
+<CLICK>
+Be
+<CLICK>
+Maintained
+<CLICK>
+What is a maintained document?
+It has several versions by time.
+During the document creation, iterations and improvements were made.
+Therefore, the document will have versions.
+The documented system also changes, which also implies the need for a new version of the documentation.
+
+These versions have to maintained and tracked.
+It is similar to what we do for source code.
+Documentation is not really that much different from source code.
+
+Also, documentation is not literature.
+People writing it are responsible.
+You do not need to think about something very serious, but even that can happen in some environment.
+Imagine a large bank, a lot of clients, a lot of assets.
+A documentation bug may generate lawsuits and loss of money.
+In such an environment, it is only prudent to have proper tracking of who did what.
+Knowing what was generated using AI, what version, what prompt and by whom is essential.
+<CLICK>
+What is needed to have these, is an integrated documentation tool that is between the user who creates the documentation and the AI system.
+It should copy the AI response into the documentation output. This is the primary feature we need.
+However, it also needs to store the whole transaction to provide repeatability, source tracking, debugging if needed.
+<CLICK>
+What are the issues if we need such a system?
+If we just do copy and paste we lose information.
+We will not know the information source, the prompt that triggered the AI tool to generate the text.
+Any integration tool should also save the meta-data of the whole AI interaction.
+
+The tool should be able to handle document fragments.
+We should not try to run to the top floor of a 100-story building.
+We have to take the stairs one by one.
+Do not ask AI to write the whole documentation.
+
+If the tool is interactive, then the response time of the AI system may be slow.
+A WYSIWYG system should provide some way to delay the processing and cache the response.
+It cannot ask the AI system triggering a new interaction every time the user presses a key.
+It will be extremely slow and also costly.
+<CLICK>
+The suggested approach is to use the well-known Doc as Code aproach.
+It is widely accepted, and this practice says to use a markup language, commit the documentation source to the version control and process it with CI/CD as part of the application build and deplyoment.
+What we suggest is to add an extra step to the processing and enhance the document source with format independent meta-markup responsible for collecting information from different sources.
+Convetional document management lets the document maintainer to copy the information from the documented system into the document.
+For example, you look at the source code and type into the documentation the command line options of a tool along with the descriptions of each.
+Using the meta markup the processing tool can reach out to the source code, extract the information from the code and put into the output document, or perform certain checks.
+A simple meta markup can check if the source code the documentation part depends on was changed, it can check the number of the command line options and compare it to the number documented, it can check if all the names are present.
+It is done in a document meta programming that work over any formatting markup like markdown, Asciidoc or whatever is used.
+<CLICK>
+The actual tool chain in this demonstration contains Jamal, Asciidoc, IntelliJ and the Java JDK eventually running the whole shebang.
+All these tools are freely available, including the open-source program Jamal, which is my responsibility.
+I am to blame as open source author.
+<CLICK>
+As a build tool we will use Maven.
+I know that Gradle is also very popular, and there is no obstacle to use gradle with the same tool-chain.
+As a matter of fact my personal blog is build using Gradle, Jamal, asciidoc and Jekyll.
+It works.
+In this demonstration, however, we will use Maven.
+<CLICK>
+The next tool in the chain is IntelliJ.
+<CLICK>
+We will use it with the Asciidoctor plugin, which can be extended using Jamal as a preprocessor.
+<CLICK>
+To do that all we have to do is execute a maven command in the directory where our documentation is.
+This will download the Jamal Asciidoctor preprocessor version and copy the JAR files into the directory in the project where the Asciidoctor plugin looks for it.
+After this command you can start or restart IntelliJ.
+<CLICK>
+Before starting the demonstration, lets talk a bit about the core tool we use for the AI integration: Jamal.
+What is Jamal.
+Jamal is a Java application that reads a text and outputs a text.
+This is an extreme simplification, but this is the general structure.
+Between the two it processes the meta-markup, which is in the input text.
+
+Jamal can work as a command line tool for reading and writing files.
+It is also available as a Maven extension and also as a plugin.
+The latter we have already seen.
+It was the tool that jamalized the documentation project.
+It can also be started using jbang, which is a nice little Java tool and you should have it on your developer machine if you do not have it yet.
+It is also a doclet to let you use meta markup in your JavaDoc and an Asccidoctor prepprocessor letting you edit interactively Asciidoc and Markdown document in IntelliJ or in AsciidocFx.
+
+Jamal can also be started in debug mode and it has a Web based debugger if your meta markup becomes too complex and you lose track of what is happening beneath the covers.
+The tool is open source and is developed since 1996.
+<CLICK>
+The meta markup that Jamal supports is defined in independent packages.
+There are more than 200 meta markups handled by the different packages and it is very easy to develop new markup commands in Java or in Kotlin.
+We will not get into the details into that, but it should not be a surprise to see on the slide openAI listed among the markup packages.
+<CLICK>
+Jamal uses the terminology “macro” for the meta markup and the general aproach is to have a start string, macro name, macro input and then and end string.
+Everything else outside of the macros are untouched by Jamal.
+The start and end string can be anything, including unicode characters.
+It does not matter what your formatting markup uses. You can use any start and stop string that will not interfere with the formatting markup.
+<CLICK>
+The last tool we have to mention is the central part of the demonstration: ChatGPT and the OpenAI API macro package.
+Since this package communicates over the network, and it also needs a key for the communication, it needs a bit of configuration.
+The configuration is done in the Jamal configuration file as represented on the screen.
+It sets the key, and also configures the security of this package stating that this macro package with any version can be used in any project under my home directory on my machine.
+
+Usually macro packages do not need configuration, they just work out of the box.
+<CLICK>
+The usual processing in the what you see is what you get editor, IntelliJ is that IntelliJ calls the Asciidoctor plugin to process the document whenever there is any change in the document.
+This means that every time the user presses a key, the document is processed.
+The asciidoctor plugin calls Jamal to preprocess the document.
+Jamal processes the macros, including those that communicate over the network triggering AI content.
+This only works if the response time is less than one second, which we cannot guarantee in the case of information coming over the network.
+<CLICK>
+OpenAI is a REST service, the response time is typically way above one second.
+In addition to that, each call costs money.
+<CLICK>
+The solution is to make the synchronous call asynchronous.
+The macro supposed to get the AI response uses a cache layer that will return a made-up response in the case of a cache miss
+and the same time it starts to download the content using the prompt and the API.
+In a separate thread, it waits for the response, and stores the response in the cache.
+During this, the processing goes on and the document is rendered using the made-up response.
+Next time, when the cache is already updated the rendering will use the real response.
+The macros should recognize when the processing is off-line, non-interactive and wait for the cache to be updated.
+<CLICK>
+The OpenAI interface is a REST service using JSON formatted data.
+The actual Java based implementation is general, and it can be used for any REST service.
+The macros are open ai get and posts.
+The api specific macros are implemented as macros using the Jamal macro definition features.
+There is no need to change the Java code if the API is changed.
+<CLICK>
+The screen shows the actual definitions. Open AI "query models" is macro defined to execute a GET request.
+The model setting macro is another GET request.
+Completion is a POST request and so on.
+<CLICK>
+A sample file using the open ai services is shown on the screen.
+It loads the  actual version of the library on line three.
+Since this file is part of the development code of the library, it uses the actual version, and it does fecth the version from the pom.xml file utilizing some macro magic.
+It imports the macro definitions on line four.
+It also sets the option "fallible" if we run interactive, which means we will handle cache misses.
+<CLICK>
+HERE IS THE DEMONSTRATION
+<CLICK>
+What is the summary from this talk?
+Documents must be maintained.
+If your documentation is part of an enterprise application and you need to track the changes and the source of the information in your document, you need a tool that can handle the AI integration.
+Jamal is one of the tools that can do this.
+I do not dare to say that it is the best tool for the purpose, because I have a major part in the develpment, and it is my love child, but I do think it.
+<CLICK>
+Thank you for your attention.
+Go out and document.
