@@ -5,5 +5,28 @@
 
 [source]
 ----
-{"message":"Asynchronous download is running","counter":1,process : {"process-id":67537,"cmd":"/Applications/IntelliJ IDEA.app/Contents/MacOS/idea ","thread":"ApplicationImpl pooled thread 3254"},"id":"b136e0b1-ca7d8c6a-7463c48d-3a5ce4f9-00029528-965e5123-527a2f42-86124922","running-since":"2024-04-19 16:14:29.602","download-time":0}
+{
+  "id": "text-curie:001",
+  "object": "model",
+  "created": 1641955047,
+  "owned_by": "system",
+  "permission": [
+    {
+      "id": "snapperm-BI9TAT6SCj43JRsUb9CYadsz",
+      "object": "model_permission",
+      "created": 1641955123,
+      "allow_create_engine": false,
+      "allow_sampling": true,
+      "allow_logprobs": true,
+      "allow_search_indices": false,
+      "allow_view": true,
+      "allow_fine_tuning": false,
+      "organization": "*",
+      "group": null,
+      "is_blocking": false
+    }
+  ],
+  "root": "text-curie:001",
+  "parent": null
+}
 ----
