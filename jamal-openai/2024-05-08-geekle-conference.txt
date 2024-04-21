@@ -1,171 +1,185 @@
 Hello,
-My name is Peter Verhas. I work at EPAM Systems. Today, I'll discuss integrating ChatGPT into our documentation tools.
-<CLICK>
-First, why use AI in documentation? What benefits does AI offer us?
+My name is Peter Verhas. I work at EPAM Systems. Today, I will be discussing how we integrate ChatGPT into our documentation tools.
 
-The answer: speed and quality.
-AI helps produce superior documents more quickly.
-I can't show speed, but I will demonstrate improved quality.
-<CLICK>
-Notice a typo in line two: "crate" instead of "create".
-Even Grammarly missed this error.
+<CLICK 2>
+Why should we use AI in documentation? What are the benefits?
 
-AI tools can avoid such errors. They craft text quicker and more clearly than
-many of us, especially non-native speakers.
-<CLICK>
-Why should we integrate?
-ChatGPT and other LLM services have nice and easy to use interfaces.
-We can type, talk to them and copy the result to our document.
-As a matter of fact many people do it. Even I did it creating this presentation.
-I wrote the text what I wanted to say to have it on a teleprompter and then I asked ChatGPT to rewrite it in “proper” English.
-It is nice and works well for most of the cases, but
+The answer lies in two key advantages: speed and quality.
+AI significantly enhances our ability to produce superior documents more swiftly.
+While I cannot demonstrate speed here, I will showcase the improved quality.
 
-Documents are not only created.
-<CLICK>
+<CLICK 3>
+Notice the typo in the second line. I deliberately typed "crate" which is a correct English word, but in this case, the word "create" would make more sense.
+Even tools like Grammarly overlooked this mistake.
+
+AI can prevent such errors, providing clearer and faster text generation than many individuals, especially those who are not native speakers.
+
+<CLICK 4>
+Why should we integrate ChatGPT and similar large language model (LLM) services into our document management systems? These tools offer user-friendly interfaces that make it easy to type, converse, and directly transfer responses into our documents. So, why not just copy and paste the text into Markdown or AsciiDoc?
+
+Indeed, many of us, myself included, regularly employ this method. For example, I used ChatGPT to refine my initial drafts into the polished script you're hearing today. I wrote down the text and then, slide by slide, I asked ChatGPT to help me enhance it before loading them onto the teleprompter. Believe it or not, in just a year or two, I might not even need to read it out loud myself.
+
+But creating documents is just the beginning.
+
+<CLICK 5>
 Documents
-<CLICK>
+
+<CLICK 6>
 Must
-<CLICK>
+
+<CLICK 7>
 Be
-<CLICK>
-Maintained
-<CLICK>
-What is a maintained document?
-It has several versions by time.
-During the document creation, iterations and improvements were made.
-Therefore, the document will have versions.
-The documented system also changes, which also implies the need for a new version of the documentation.
 
-These versions have to maintained and tracked.
-It is similar to what we do for source code.
-Documentation is not really that much different from source code.
+<CLICK 8>
+Maintained.
 
-Also, documentation is not literature.
-People writing it are responsible.
-You do not need to think about something very serious, but even that can happen in some environment.
-Imagine a large bank, a lot of clients, a lot of assets.
-A documentation bug may generate lawsuits and loss of money.
-In such an environment, it is only prudent to have proper tracking of who did what.
-Knowing what was generated using AI, what version, what prompt and by whom is essential.
-<CLICK>
-What is needed to have these, is an integrated documentation tool that is between the user who creates the documentation and the AI system.
-It should copy the AI response into the documentation output. This is the primary feature we need.
-However, it also needs to store the whole transaction to provide repeatability, source tracking, debugging if needed.
-<CLICK>
-What are the issues if we need such a system?
-If we just do copy and paste we lose information.
-We will not know the information source, the prompt that triggered the AI tool to generate the text.
-Any integration tool should also save the meta-data of the whole AI interaction.
+<CLICK 9>
+What exactly is a maintained document? Over time, it undergoes several revisions. Each version emerges from a cycle of creation, iteration, and improvement. As the system described by the document evolves, updates to the documentation become necessary, leading to new versions.
 
-The tool should be able to handle document fragments.
-We should not try to run to the top floor of a 100-story building.
-We have to take the stairs one by one.
-Do not ask AI to write the whole documentation.
+These versions must be meticulously maintained and tracked, much like we manage source code. In fact, documentation is not all that different from source code in this regard.
 
-If the tool is interactive, then the response time of the AI system may be slow.
-A WYSIWYG system should provide some way to delay the processing and cache the response.
-It cannot ask the AI system triggering a new interaction every time the user presses a key.
-It will be extremely slow and also costly.
-<CLICK>
-The suggested approach is to use the well-known Doc as Code aproach.
-It is widely accepted, and this practice says to use a markup language, commit the documentation source to the version control and process it with CI/CD as part of the application build and deplyoment.
-What we suggest is to add an extra step to the processing and enhance the document source with format independent meta-markup responsible for collecting information from different sources.
-Convetional document management lets the document maintainer to copy the information from the documented system into the document.
-For example, you look at the source code and type into the documentation the command line options of a tool along with the descriptions of each.
-Using the meta markup the processing tool can reach out to the source code, extract the information from the code and put into the output document, or perform certain checks.
-A simple meta markup can check if the source code the documentation part depends on was changed, it can check the number of the command line options and compare it to the number documented, it can check if all the names are present.
-It is done in a document meta programming that work over any formatting markup like markdown, Asciidoc or whatever is used.
-<CLICK>
-The actual tool chain in this demonstration contains Jamal, Asciidoc, IntelliJ and the Java JDK eventually running the whole shebang.
-All these tools are freely available, including the open-source program Jamal, which is my responsibility.
-I am to blame as open source author.
-<CLICK>
-As a build tool we will use Maven.
-I know that Gradle is also very popular, and there is no obstacle to use gradle with the same tool-chain.
-As a matter of fact my personal blog is build using Gradle, Jamal, asciidoc and Jekyll.
-It works.
-In this demonstration, however, we will use Maven.
-<CLICK>
-The next tool in the chain is IntelliJ.
-<CLICK>
-We will use it with the Asciidoctor plugin, which can be extended using Jamal as a preprocessor.
-<CLICK>
-To do that all we have to do is execute a maven command in the directory where our documentation is.
-This will download the Jamal Asciidoctor preprocessor version and copy the JAR files into the directory in the project where the Asciidoctor plugin looks for it.
-After this command you can start or restart IntelliJ.
-<CLICK>
-Before starting the demonstration, lets talk a bit about the core tool we use for the AI integration: Jamal.
-What is Jamal.
-Jamal is a Java application that reads a text and outputs a text.
-This is an extreme simplification, but this is the general structure.
-Between the two it processes the meta-markup, which is in the input text.
+Moreover, documentation is a serious endeavor, not a work of fiction. Those who write it are accountable for its accuracy. While the subject matter may not always seem critical, the stakes can be quite high in certain settings. Consider a large bank, an insurance company, or any major enterprise with numerous clients and substantial assets. Errors in documentation can lead to lawsuits and financial losses. In such environments, it's vital to track precisely who made which changes. It's essential to know what was produced using AI, which version was used, what the prompt was, and who was responsible for it.
 
-Jamal can work as a command line tool for reading and writing files.
-It is also available as a Maven extension and also as a plugin.
-The latter we have already seen.
-It was the tool that jamalized the documentation project.
-It can also be started using jbang, which is a nice little Java tool and you should have it on your developer machine if you do not have it yet.
-It is also a doclet to let you use meta markup in your JavaDoc and an Asccidoctor prepprocessor letting you edit interactively Asciidoc and Markdown document in IntelliJ or in AsciidocFx.
+<CLICK 10>
+To achieve this, we need an integrated documentation tool that serves as a bridge between the user creating the documentation and the AI system. Its primary function should be to transfer the AI's responses directly into the documentation output. Additionally, this tool must also capture and store the entire transaction. This ensures repeatability, allows for tracking of sources, and facilitates debugging when necessary.
 
-Jamal can also be started in debug mode and it has a Web based debugger if your meta markup becomes too complex and you lose track of what is happening beneath the covers.
-The tool is open source and is developed since 1996.
-<CLICK>
-The meta markup that Jamal supports is defined in independent packages.
-There are more than 200 meta markups handled by the different packages and it is very easy to develop new markup commands in Java or in Kotlin.
-We will not get into the details into that, but it should not be a surprise to see on the slide openAI listed among the markup packages.
-<CLICK>
-Jamal uses the terminology “macro” for the meta markup and the general aproach is to have a start string, macro name, macro input and then and end string.
-Everything else outside of the macros are untouched by Jamal.
-The start and end string can be anything, including unicode characters.
-It does not matter what your formatting markup uses. You can use any start and stop string that will not interfere with the formatting markup.
-<CLICK>
-The last tool we have to mention is the central part of the demonstration: ChatGPT and the OpenAI API macro package.
-Since this package communicates over the network, and it also needs a key for the communication, it needs a bit of configuration.
-The configuration is done in the Jamal configuration file as represented on the screen.
-It sets the key, and also configures the security of this package stating that this macro package with any version can be used in any project under my home directory on my machine.
+<CLICK 11>
+What challenges arise when implementing such a system? Simply copying and pasting text can lead to lost information. For example, we wouldn't know the source of the information or the prompt that triggered the AI to generate the text. Thus, any integration tool must also store the metadata from the entire AI interaction.
 
-Usually macro packages do not need configuration, they just work out of the box.
-<CLICK>
-The usual processing in the what you see is what you get editor, IntelliJ is that IntelliJ calls the Asciidoctor plugin to process the document whenever there is any change in the document.
-This means that every time the user presses a key, the document is processed.
-The asciidoctor plugin calls Jamal to preprocess the document.
-Jamal processes the macros, including those that communicate over the network triggering AI content.
-This only works if the response time is less than one second, which we cannot guarantee in the case of information coming over the network.
-<CLICK>
-OpenAI is a REST service, the response time is typically way above one second.
-In addition to that, each call costs money.
-<CLICK>
-The solution is to make the synchronous call asynchronous.
-The macro supposed to get the AI response uses a cache layer that will return a made-up response in the case of a cache miss
-and the same time it starts to download the content using the prompt and the API.
-In a separate thread, it waits for the response, and stores the response in the cache.
-During this, the processing goes on and the document is rendered using the made-up response.
-Next time, when the cache is already updated the rendering will use the real response.
-The macros should recognize when the processing is off-line, non-interactive and wait for the cache to be updated.
-<CLICK>
-The OpenAI interface is a REST service using JSON formatted data.
-The actual Java based implementation is general, and it can be used for any REST service.
-The macros are open ai get and posts.
-The api specific macros are implemented as macros using the Jamal macro definition features.
-There is no need to change the Java code if the API is changed.
-<CLICK>
-The screen shows the actual definitions. Open AI "query models" is macro defined to execute a GET request.
-The model setting macro is another GET request.
-Completion is a POST request and so on.
-<CLICK>
-A sample file using the open ai services is shown on the screen.
-It loads the  actual version of the library on line three.
-Since this file is part of the development code of the library, it uses the actual version, and it does fecth the version from the pom.xml file utilizing some macro magic.
-It imports the macro definitions on line four.
-It also sets the option "fallible" if we run interactive, which means we will handle cache misses.
-<CLICK>
-HERE IS THE DEMONSTRATION
-<CLICK>
-What is the summary from this talk?
-Documents must be maintained.
-If your documentation is part of an enterprise application and you need to track the changes and the source of the information in your document, you need a tool that can handle the AI integration.
-Jamal is one of the tools that can do this.
-I do not dare to say that it is the best tool for the purpose, because I have a major part in the develpment, and it is my love child, but I do think it.
-<CLICK>
+The tool should be capable of handling fragments of documents. Should the entire document require AI support? Not necessarily. The tool should allow flexibility, enabling AI assistance where needed without mandating its use across the entire document. It's like climbing a 100-story building: one wouldn't sprint to the top but would instead take the stairs step by step. Similarly, we shouldn't expect the AI to write the entire documentation in one go.
+
+Furthermore, if the tool is interactive, we might face slow response times from the AI system. A WYSIWYG system should incorporate mechanisms to delay processing and cache responses, thereby preventing the initiation of a new interaction with every keystroke. Such constant interaction could be not only slow but also costly.
+
+<CLICK 12>
+The recommended strategy is to adopt the well-established "Docs as Code" approach. This method, which is widely accepted, involves using a markup language, committing the documentation source to version control, and incorporating it into the application's build and deployment processes through CI/CD. We propose an additional step in this process to enhance the document source with format-independent meta-markup. This meta-markup is responsible for gathering information from various sources.
+
+In conventional document management, the document maintainer manually copies information from the system being documented into the document. For instance, they might view the source code and manually type the command line options of a tool, along with descriptions of each, into the documentation.
+
+By using meta-markup, the processing tool can automatically reach out to the source code, extract relevant information, and integrate it directly into the output document, or perform certain verifications. A simple meta-markup could verify whether the source code on which the documentation depends has changed, check the number of command line options against what is documented, and ensure that all names are correctly presented. This is achieved through document meta programming that works across any formatting markup, such as Markdown or AsciiDoc.
+
+<CLICK 13>
+Our tool chain for today’s demo includes Jamal, Asciidoctor, IntelliJ, and the Java JDK.
+Jamal, which I maintain, plays a pivotal role in this setup.
+
+<CLICK 14>
+We will be using Maven but not as a build tool. During the demonstration, we will showcase an interactive version of this meta-markup tool. This setup allows us to illustrate how Jamal can be effectively integrated and utilized in real-time documentation scenarios. Maven is used to install Jamal and its dependencies via the Jamal Maven plugin.
+
+<CLICK 15>
+Next, we will utilize IntelliJ.
+IntelliJ is a widely used IDE that supports various programming languages, including Java, Kotlin, and Scala.
+
+<CLICK 16>
+It also provides support for Asciidoctor, a text processor that converts AsciiDoc files into HTML, PDF, and other formats.
+We'll extend its functionality employing Jamal as a preprocessor.
+
+<CLICK 17>
+To do this, we simply run a Maven command in our documentation directory. This action downloads the necessary Jamal preprocessor version and sets it up for use in IntelliJ.
+
+<CLICK 18>
+Before we proceed, let's briefly discuss Jamal, which is central to our demonstration today. What exactly is Jamal? At its simplest, Jamal is a Java application that reads text and outputs text. This is an oversimplification, but it captures the essence of its function. Jamal processes meta-markup embedded within the input text to produce its output.
+
+Jamal operates as a command-line tool for reading and writing files, and it's also available as both a Maven extension and a plugin. The latter has already been showcased today as the tool that "jamalized" our documentation project. Additionally, Jamal can be launched using jbang, a handy Java tool that every developer should consider having on their machine. Furthermore, it acts as a doclet, allowing the use of meta markup in JavaDoc, and as an AsciiDoctor preprocessor, enabling interactive editing of AsciiDoc and Markdown documents in IntelliJ or AsciiDocFX.
+
+For more complex scenarios, Jamal can be started in debug mode and comes with a web-based debugger to help trace the processing of intricate meta-markup. This tool is open source and has been under development since 1996.
+
+<CLICK 19>
+The meta-markup that Jamal supports is organized into independent packages. There are over 200 different meta-markups handled by these packages, and it's quite straightforward to develop new markup commands using Java or Kotlin. While we won't delve into the specifics of these developments today, it shouldn't come as a surprise to see OpenAI listed among the markup packages in our slides.
+
+<CLICK 20>
+Jamal employs the term "macro" to refer to its meta-markup. In the input text, there is a mixture of verbatim text and macro calls. "Verbatim" means that the meta-markup processing tool does not alter the text; it simply copies the characters exactly as they appear to the output.
+
+On the other hand, a macro in the text is processed. A macro begins with a specific string, often an opening parenthesis, and ends with another specific string, typically a closing parenthesis. Everything outside of these macros remains untouched by Jamal.
+
+The starting and ending strings for a macro can be any character or sequence of characters, including Unicode. These strings can even be changed throughout the document as often as necessary. This flexibility ensures that no current or future text-based markup language will interfere with the meta-markup. To avoid conflicts, simply use start and end strings that are not employed elsewhere in the text or by the formatting markup.
+
+<CLICK 21>
+The final tool we need to discuss is at the core of our demonstration: the ChatGPT and OpenAI API macro package. This package is essential for defining macros that communicate with the OpenAI API, ensuring results are cached and managing the asynchronous processing of responses.
+
+Typically, macro packages operate smoothly without the need for configuration. However, this package is somewhat more complex due to its functionalities. It communicates over the network and requires an API key.
+
+Concerning network communication, there is a potential risk it could be used maliciously to extract information from a user's machine. To mitigate this risk, the Jamal configuration file must specify which directories contain documents that are considered trusted.
+
+Furthermore, it is safer to source the API key from the configuration file rather than directly from the document itself. You certainly would not want to store your API key in a document that might be uploaded to a public or even a corporate repository.
+
+As shown on the screen, the configuration is managed within the Jamal configuration file. It's important to note that the API key displayed is not a real one, ensuring security during our demonstration.
+
+<CLICK 22>
+Typically, when using the IntelliJ editor, any change in the document triggers the Asciidoctor plugin to process the document. This means that each keystroke by the user initiates a document processing event. If Jamal is installed, the Asciidoctor plugin will invoke Jamal to preprocess the document each time it's activated. This preprocessing includes the processing of macros, some of which may communicate over the network to trigger AI-generated content.
+
+<CLICK 23>
+However, this setup is only effective if the response time is less than one second. Given that network communications are involved, such quick response times are not always guaranteed. This could lead to delays in document processing, which may affect the efficiency and usability of the editor in real-time scenarios. What we need is an asynchronous approach.
+
+<CLICK 24>
+The solution to handling delays in real-time document processing is to transition from synchronous to asynchronous calls. Specifically, the macro designed to retrieve the AI response should employ a caching strategy. Here’s how it works: if the cache doesn’t have the response immediately available (a cache miss), it will initially return a placeholder or made-up response. Simultaneously, it starts to download the actual content using the given prompt and the API.
+
+This process occurs in a separate thread that waits for the real response, which, once received, is stored in the cache. Meanwhile, the document continues to be processed and is rendered using the placeholder response. The next time the document is processed, and if the cache has been updated, it will display the real, cached response.
+
+Additionally, the macros need to be designed to recognize when the processing is offline or non-interactive and can afford to wait for the cache to be updated. This approach ensures that document rendering can proceed without waiting for network responses, thereby improving the user experience in interactive environments like IntelliJ.
+<CLICK 25>
+The OpenAI interface operates as a REST service, utilizing JSON-formatted data. Given that the specific calls to this service can change over time, we required a solution that is flexible enough to adapt to these changes without the need for constant updates to the Java code. Therefore, the Java-based implementation we developed is generic, allowing it to be used with any REST service.
+
+We have implemented only two basic macros: `open ai get` and `open ai post`. The API-specific macros are created as what we call user-defined macros, utilizing Jamal's macro definition features to adapt to specific needs. These will be demonstrated in more detail on the next slide.
+
+<CLICK 26>
+The screen now displays the actual definitions of the macros. The first line highlights an important aspect of configuration—the redefinition of the macro start and end strings. Since JSON inherently uses opening and closing curly braces, we have adjusted these strings to prevent conflicts.
+
+The subsequent lines on the screen illustrate how we utilize the Jamal core macro "define" to create user-defined macros. These definitions are crucial as they allow for flexible interactions with the OpenAI API using the foundational `open ai get` and `open ai post` macros.
+
+For instance, the "query models" macro is configured to perform a GET request, suited for fetching data without modifying it. Similarly, the model setting macro, which requires an argument, also uses a GET request to retrieve specific model details. On the other hand, operations like "Completion" are set up to execute through a POST request, which is appropriate for submitting data to the server. This setup ensures that each type of API interaction is correctly aligned with the appropriate HTTP method.
+
+<CLICK 27>
+In the demonstration session, all the sample files I will show include the file `samples.jim`. The ".jim" file extension stands for Jamal Include Markup, which is a development sample within Jamal that always utilizes the latest version of the library. This is achieved by fetching the version directly from the `pom.xml` file using a bit of macro magic.
+
+The macro definitions are imported at line four of the file. By line nine, an option is defined that modifies the library's behavior. The option `openai local` specifies that the library should use the `.cache` directory located in the document's directory, rather than using a central location. This ensures that caching is done locally, reducing dependencies on external paths.
+
+The `openai fallible` option is activated only when Jamal is executed within IntelliJ. This option is designed to handle cache misses, ensuring a smoother integration and user experience when using Jamal in conjunction with IntelliJ.
+
+<CLICK 28>
+The first example using the include file demonstrates how to list all models available through the API. The file is named `query models.adoc.jam` and, during processing, it is transformed into `query models.adoc`.
+
+This transformation involves a simple GET request, which is executed behind the scenes but appears as a macro call in the document. The first comment line in the document serves a dual purpose. It's a macro for Jamal resulting an empty string in the output, but it's also recognized by the Asciidoc integration layer. This comment, fromFile instructs the system to start Jamal only when the file is saved to disk, thus preventing the document from being processed with every keystroke, which greatly enhances performance.
+
+You might also observe in this file that the macro start and end strings are not merely a single curly brace; instead, they consist of a curly brace paired with a percent sign. This adjustment is a common practice and is established by default by the Asciidoctor integration layer. The purpose of this modification is to avoid conflicts with AsciiDoc attributes, ensuring that the macros are processed correctly without interfering with other document elements. This thoughtful design choice helps maintain the integrity of the document's formatting and functionality.
+
+Following the comment, the document then imports the previously mentioned `samples.jim`. Following this, there are two macros defined which we won't delve into now to conserve time, but their functions and usage are fully detailed in the documentation of the Jamal OpenAI package.
+
+A key line to note is line 12, where the `openAI` macro is invoked. This macro, defined in the `samples.jim` file, is responsible for querying the list of models. This line exemplifies how the macro system can simplify the integration of complex API queries directly into a document.
+
+<CLICK 29>
+The output from the processed `query models.adoc` file is displayed on the screen in both plain text and a rendered WYSIWYG format. This WYSIWYG rendering is also available for live viewing during the editing of the original document in IntelliJ, assuming the preview pane is configured to show the rendered document.
+
+The output of this macro is JSON text, used verbatim in this demonstration. However, in practical applications, incorporating raw JSON directly into final documents may not always be desirable. Instead, documents can employ JSON querying macros that extract essential information from the JSON data and present it in a more user-friendly format. This method enhances the readability and engagement of the document by presenting data in a way that is accessible and meaningful to human readers.
+
+<CLICK 30>
+The next example focuses on text correction. In this scenario, we intentionally create a flawed text and ask OpenAI to correct it, ensuring the revisions are gender-neutral. Both the text and the instructions are initially saved as macros. This setup is beneficial for two reasons: it enables us to easily call upon OpenAI for text correction, and it allows us to include these macros in the output as part of the demonstration.
+
+In this context, macros without an argument function similarly to variables in programming languages. When the `openai edits` macro completes its task and returns, we capture the JSON text result in another macro, named `edit response`. This macro is then used to selectively extract the specific part of the JSON text we are interested in. This method demonstrates a practical application of macros to manage and manipulate API responses effectively within a document.
+
+<CLICK 31>
+The output from this text correction example met our expectations, although achieving gender neutrality in the revised text appeared to be a challenge for OpenAI, or at least it was at the time I executed this query. This observation highlights that while AI tools have advanced capabilities, they may still face limitations in certain areas such as nuanced language tasks like ensuring gender-neutral language.
+
+<CLICK 32>
+In the previous slide that displayed the include file `samples.jim`, we observed the use of the `openai local` option. This option instructs the macro library to save the results in a local cache located in the same directory as the document. The name of this local cache directory, as we'll see in the next slide, is `.openai`.
+
+<CLICk 33>
+The local directory organizes all the responses into subdirectories. Since there's no need for regular human interaction with these files, they are named using the hash code of the prompt. This method of naming ensures a systematic and efficient way to store and retrieve data based on the unique identifier of each request.
+
+<CLICk 34>
+Each directory in this local cache contains a log file that records all interaction data, along with a response JSON file. This response JSON is utilized when there is a cache hit, meaning when an OpenAI macro that has been previously executed and remains unchanged is processed again. In such instances, there is no need to incur additional time and expenses by querying the OpenAI API anew.
+
+Storing cache data locally also facilitates the possibility of committing the cache alongside the document. This approach ensures that the document processing in a CI/CD system or on another participant's machine will be consistent with that on the original author's machine, eliminating the need for every maintainer to have an individual OpenAI account. This not only streamlines the process but also enhances collaboration and consistency across different environments.
+
+<CLICK 35>
+Today, we've explored several crucial aspects of integrating and utilizing the Docs as Code approach along with OpenAI APIs. We've demonstrated how this approach can be seamlessly applied to document markups that aren't initially set up for OpenAI integration.
+
+To facilitate this, we introduced Jamal, a versatile meta-markup language compatible with any document formatting markdown. We also showcased the OpenAI integration macro package through a simple demonstration.
+
+The advantages of this approach are clear: it ensures repeatability and traceability, which are essential in documentation processes. We also explored practical features, such as options for locating the cache either centrally or alongside the document.
+
+It’s important to remember that Jamal is not limited to OpenAI integration. It is a general-purpose meta-markup language with over 200 different macros ready to use and open for further extension. These macros can automate virtually any text processing task, eliminating the need for manual, repetitive efforts.
+
+So, don't just use ChatGPT or other AI tools as standalone solutions. Integrate them into your document processing flow to transform and enhance how you manage documentation. Let's put these tools to work and see how they can improve your projects!
+
+<CLICK 36>
 Thank you for your attention.
-Go out and document.
+Go out and document!
