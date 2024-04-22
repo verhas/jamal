@@ -1,1 +1,1 @@
-{@import ../included.jim}
+{@import [force] ../included.jim}

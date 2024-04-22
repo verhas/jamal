@@ -97,7 +97,7 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         final var isolate = scanner.bool(null, "isolate", "isolated");
         final var inDirs = scanner.str(null, "in");
         final var globalImport = scanner.bool(null, "global");
-        final var force = scanner.bool("import$force", "force");
+        final var force = scanner.bool("import$force", "force", "forced");
         scanner.done();
         position = Include.repositionToTop(position, top);
         final var prefixes = Include.getPrefixes(inDirs);
