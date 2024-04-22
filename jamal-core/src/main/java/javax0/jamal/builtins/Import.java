@@ -1,27 +1,14 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Debuggable;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Marker;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.Stackable;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.HexDumper;
 import javax0.jamal.tools.SHA256;
 import javax0.jamal.tools.Scanner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
-import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
-import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG1;
-import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG2;
+import static javax0.jamal.api.SpecialCharacters.*;
 import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
@@ -110,6 +97,7 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         final var isolate = scanner.bool(null, "isolate", "isolated");
         final var inDirs = scanner.str(null, "in");
         final var globalImport = scanner.bool(null, "global");
+        final var force = scanner.bool("import$force", "force");
         scanner.done();
         position = Include.repositionToTop(position, top);
         final var prefixes = Include.getPrefixes(inDirs);
@@ -117,7 +105,7 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         var fileName = input.toString().trim();
         final var in = getInput(prefixes, fileName, position, noCache.is(), processor);
         final var hash = new Hash(SHA256.digest(in.toString()));
-        if (!wasImported(hash)) {
+        if (!wasImported(hash) || force.is()) {
             registerImport(hash, globalImport.is());
             final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
             final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;

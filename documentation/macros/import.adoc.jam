@@ -2,7 +2,9 @@
 {%@import macrodoc.jim%}
 {%MACRO name="import" since={%RELEASE:ZURICH%}%}
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=7facbe21.20801c11.9f4ec5a6.7c7b4773.44f099ef %}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=c3b6503a
+
+ %}
 
 == Syntax
 
@@ -93,3 +95,13 @@ The macros defined in the imported file will be available in the importing file 
 This option signals that the import should be registered on the global level.
 It is useful when a file is imported in a local level, but it contains only global macro definitions.
 In that case, there is no need to import it even at higher levels.
+
+== `force` (boolean)
+
+This option enables the forceful import of a file, even if a file with identical content has already been imported.
+
+To prevent redundant imports, the `import` macro avoids executing the macros within the imported file if a file with the same hash code has been imported previously. This check is conducted at the same or higher levels than the current import. If the import occurs at a lower level, it has no impact because that level is already out of scope, along with any macros imported at that level, unless they are designated as global or exported. Utilizing hash codes for checks helps minimize memory usage by not storing the complete import files and effectively ensures that the same file is not imported more than once.
+
+However, there are scenarios where importing a file with the same content is necessary. For example, consider a situation where there is a global import file within a complex directory structure, and a file in the directory above merely imports the same file. This pattern continues up to the top-level directory.
+
+In such cases, to enforce the import, use the `force` parop. It can also be activated globally through the `import$force` option.
