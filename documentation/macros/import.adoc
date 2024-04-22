@@ -124,4 +124,5 @@ To prevent redundant imports, the `import` macro avoids executing the macros wit
 
 However, there are scenarios where importing a file with the same content is necessary. For example, consider a situation where there is a global import file within a complex directory structure, and a file in the directory above merely imports the same file. This pattern continues up to the top-level directory.
 
-In such cases, to enforce the import, use the `force` parop. It can also be activated globally through the `import$force` option.
+In such cases, to enforce the import, use the `force`, or `forced` parop.
+It can also be activated globally through the `import$force` option.
