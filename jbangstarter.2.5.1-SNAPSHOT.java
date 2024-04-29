@@ -9,6 +9,7 @@
 //DEPS com.javax0.jamal:jamal-json:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-prog:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-maven-load:2.5.1-SNAPSHOT
+//DEPS com.javax0.jamal:jamal-sql:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-engine:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-api:2.5.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-tools:2.5.1-SNAPSHOT

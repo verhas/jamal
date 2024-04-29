@@ -1,0 +1,35 @@
+
+= `begin/end`
+
+since version `2.6.0`
+
+
+
+This macro will cause an error.
+The error message is the input of the macro, with white spaces removed from the start.
+
+.Jamal source
+[source]
+----
+{@error This is the error message.}
+----
+
+will cause and report an error with the message "This is the error message.".
+To test it in a sample we can use the macro `try` with the `!` character after the macro name:
+
+.Jamal source
+[source]
+----
+{@try! {@error This is the error message.}}
+----
+
+will result in:
+
+.output
+[source]
+----
+This is the error message.
+----
+
+
+The use of this macro usually makes sense inside an link:if[`if`] macro, that checks some error condition.

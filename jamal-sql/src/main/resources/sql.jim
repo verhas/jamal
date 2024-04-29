@@ -1,0 +1,16 @@
+{@comment Well known JDBC drivers and their start of the connection string}
+
+{@define jdbc:mysql          =         com.mysql.cj.jdbc.Driver                     }
+{@define jdbc:mariadb        =         org.mariadb.jdbc.Driver                      }
+{@define jdbc:postgresql     =         org.postgresql.Driver                        }
+{@define jdbc:oracle         =         oracle.jdbc.driver.OracleDriver              }
+{@define jdbc:sqlserver      =         com.microsoft.sqlserver.jdbc.SQLServerDriver }
+{@define jdbc:jtds           =         net.sourceforge.jtds.jdbc.Driver             }
+{@define jdbc:sqlite         =         org.sqlite.JDBC                              }
+{@define jdbc:db2            =         com.ibm.db2.jcc.DB2Driver                    }
+{@define jdbc:derby          =         org.apache.derby.jdbc.ClientDriver           }
+{@define jdbc:h2             =         org.h2.Driver                                }
+{@define jdbc:sap            =         com.sap.db.jdbc.Driver                       }
+{@define jdbc:firebird       =         org.firebirdsql.jdbc.FBDriver                }
+{@define jdbc:informix       =         com.informix.jdbc.IfxDriver                  }
+{@define jdbc:hsqldb         =         org.hsqldb.jdbc.JDBCDriver                   }

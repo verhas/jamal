@@ -267,6 +267,12 @@ The library provides macros that can load Java Built-in Macros from Maven artifa
 
 For further information read the link:../jamal-maven-load/README.adoc[documentation] of the module.
 
+===  `sql`
+The library provides macros that can load Java Built-in Macros from Maven artifacts.
+
+
+For further information read the link:../jamal-sql/README.adoc[documentation] of the module.
+
 
 
 

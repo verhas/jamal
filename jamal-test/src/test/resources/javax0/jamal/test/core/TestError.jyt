@@ -1,0 +1,3 @@
+"Test that error is trown using try!":
+  Input: "{@try!{@error Error message}}"
+  Output: "Error message"

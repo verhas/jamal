@@ -1,0 +1,21 @@
+{%@import macrodoc.jim%}
+{%MACRO name="begin/end" since={%RELEASE:OULU%}%}
+
+
+This macro will cause an error.
+The error message is the input of the macro, with white spaces removed from the start.
+{%@define ERROR_MESSAGE=This is the error message.%}
+{%sample/{@error {%ERROR_MESSAGE%}}%}
+
+will cause and report an error with the message "{%ERROR_MESSAGE%}".
+To test it in a sample we can use the macro `try` with the `!` character after the macro name:
+
+{%sample/
+{@try! {@error {%ERROR_MESSAGE%}}}
+%}
+
+will result in:
+
+{%output%}
+
+The use of this macro usually makes sense inside an {%$ if%} macro, that checks some error condition.

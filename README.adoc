@@ -395,6 +395,8 @@ They are
 
 * link:documentation/macros/if.adoc[`if.adoc`]
 
+* link:documentation/macros/error.adoc[`error.adoc`]
+
 * link:documentation/macros/block.adoc[`block.adoc`]
 
 * link:documentation/macros/begin.adoc[`begin.adoc`]

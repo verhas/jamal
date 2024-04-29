@@ -1,0 +1,5 @@
+= Jamal SQL module
+
+== Introduction
+
+SQL module for Jamal to allow data collection from SQL databases.

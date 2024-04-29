@@ -181,6 +181,9 @@ Using these macros, you can split up a Yaml file into smaller pieces and use mac
 {chapter :openai:macro}
 Macros implementing interface to OpenAI.
 
+{chapter :sql:macro}
+Macros implementing SQL interface.
+
 {chapter :java:debugger}
 Experimental module integrating the Java compiler into Jamal as macros.
 
@@ -195,7 +198,7 @@ The code in the directory `jamal-docker` contains a Dockerfile to build a Docker
 {#define module_directory_count={@listDir  (maxDepth=1 pattern=jamal-[\w\-]*$ countOnly) ..}}
 
 {!#if [not equals={module_directory_count}]/{chapter_counter last}/
-   {`@error There are {#do
+   {`#error There are {#do
        << ({module_directory_count}-{chapter_counter last})
-   } modules not documented.`}
+   } modules not documented.}
 }

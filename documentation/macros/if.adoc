@@ -1,5 +1,5 @@
 
-= `for`
+= `if`
 
 since version `1.0.0`
 

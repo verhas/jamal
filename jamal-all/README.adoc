@@ -48,6 +48,8 @@ This will add the following dependencies to your project:
 
 * `jamal-maven-load`
 
+* `jamal-sql`
+
 * `jamal-groovy`
 
 * `jamal-io`

@@ -293,6 +293,12 @@ The library provides macros that can load Java Built-in Macros from Maven artifa
 
 {%further maven-load%}
 
+=== {%#block {%depCounter%}%} `sql`
+The library provides macros that can load Java Built-in Macros from Maven artifacts.
+
+
+{%further sql%}
+
 {%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more%}
 
 

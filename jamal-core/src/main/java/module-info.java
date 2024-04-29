@@ -27,7 +27,8 @@ module jamal.core {
         javax0.jamal.builtins.Macro,
         javax0.jamal.builtins.Debug,
         javax0.jamal.builtins.Log,
-        javax0.jamal.builtins.Catch
+        javax0.jamal.builtins.Catch,
+        javax0.jamal.builtins.Error
         ;
 
     requires jamal.api;

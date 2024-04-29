@@ -672,6 +672,8 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-maven-load`
 
+* `jamal-sql`
+
 * `jamal-test`
 
 * `jamal-debug`

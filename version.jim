@@ -99,6 +99,7 @@ REFI=1.0.1                                 -- https://repo.maven.apache.org/mave
 SLF4J=2.0.7                                -- https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/
 ASM_VERSION=9.6                            -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm/
 ASM_TREE_VERSION=9.6                       -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/
+H2_VERSION=2.2.224                         -- https://repo.maven.apache.org/maven2/com/h2database/h2/
 
 -- dependencies needed for the Maven extension (not the plugin)
 MAVEN_CORE_VERSION=4.0.0-alpha-12          -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core

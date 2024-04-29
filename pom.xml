@@ -21,6 +21,7 @@
         <module>jamal-json</module>
         <module>jamal-prog</module>
         <module>jamal-maven-load</module>
+        <module>jamal-sql</module>
         <module>jamal-groovy</module>
         <module>jamal-io</module>
         <module>jamal-openai</module>
@@ -247,6 +248,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-maven-load</artifactId>
+                <version>2.5.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-sql</artifactId>
                 <version>2.5.1-SNAPSHOT</version>
             </dependency>
             <dependency>
