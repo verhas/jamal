@@ -5,6 +5,7 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
+import org.apache.maven.model.io.ModelParseException;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.w3c.dom.Document;
@@ -22,6 +23,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,13 +41,41 @@ public class CustomModelProcessor implements ModelProcessor {
     @Inject
     private ModelReader modelReader;
 
+    @Deprecated
     @Override
     public File locatePom(File projectDirectory) {
+        Path path = locatePom(projectDirectory != null ? projectDirectory.toPath() : null);
+        return path != null ? path.toFile() : null;
+    }
+    @Override
+    public Path locatePom(Path projectDirectory) {
+        return projectDirectory != null ? projectDirectory : Paths.get(System.getProperty("user.dir"));
+    }
 
-        convertExtensionsJam(projectDirectory);
+    @Deprecated
+    @Override
+    public File locateExistingPom(File project) {
+        Path path = locateExistingPom(project != null ? project.toPath() : null);
+        return path != null ? path.toFile() : null;
+    }
 
-        jam2Xml(projectDirectory, "pom", false);
-        return new File(projectDirectory, "pom.xml");
+    @Override
+    public Path locateExistingPom(Path project) {
+        if (project == null || Files.isDirectory(project)) {
+            project = locatePom(project);
+        }
+
+        convertExtensionsJam(project);
+        jam2Xml(project, "pom", false);
+
+        if (Files.isDirectory(project)) {
+            Path pom = project.resolve("pom.xml");
+            return Files.isRegularFile(pom) ? pom : null;
+        } else if (Files.isRegularFile(project)) {
+            return project;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -52,14 +84,14 @@ public class CustomModelProcessor implements ModelProcessor {
      * Another side effect is the error report, which does happen if the extensions.jam has syntax errors but it does not stop the compilation.
      * <p>
      * The implementation creates a new thread.
-     * Since this task is started only once for a built, which is usually a few minutes typically, there is no need to use any executor service.
+     * Since this task is started only once for a built, which is usually a few minutes typically, there is no need to use any executor service or virtual thread.
      *
-     * @param projectDirectory is the root fo the project directory provided by Jamal
+     * @param project is the root of the project directory provided by Jamal
      */
-    private void convertExtensionsJam(final File projectDirectory) {
+    private void convertExtensionsJam(final Path project) {
         final var t = new Thread(() -> {
-            final var dotMvnDir = new File(projectDirectory, ".mvn");
-            if (dotMvnDir.exists()) {
+            final var dotMvnDir = project.resolve(".mvn");
+            if (Files.exists(dotMvnDir)) {
                 jam2Xml(dotMvnDir, "extensions", true);
             }
         });
@@ -68,11 +100,11 @@ public class CustomModelProcessor implements ModelProcessor {
         t.start();
     }
 
-    private void jam2Xml(final File directory, final String sourceName, final boolean optional) {
-        File jamFile = new File(directory, sourceName + ".xml.jam");
-        if (!jamFile.exists()) {
-            jamFile = new File(directory, sourceName + ".jam");
-            if (!jamFile.exists()) {
+    private void jam2Xml(final Path directory, final String sourceName, final boolean optional) {
+        var jamFile = directory.resolve( sourceName + ".xml.jam");
+        if (!Files.exists(jamFile)) {
+            jamFile = directory.resolve( sourceName + ".jam");
+            if (!Files.exists(jamFile)) {
                 if (optional) {
                     return;
                 } else {
@@ -82,7 +114,7 @@ public class CustomModelProcessor implements ModelProcessor {
         }
         Processor processor = new javax0.jamal.engine.Processor();
 
-        final String fileName = jamFile.getAbsolutePath();
+        final String fileName = jamFile.toFile().getAbsolutePath();
         final String xml;
         try {
             xml = processor.process(FileTools.getInput(fileName, processor));
@@ -96,7 +128,7 @@ public class CustomModelProcessor implements ModelProcessor {
             throw new RuntimeException("Cannot format the file " + fileName + "\n" + dumpException(e), e);
         }
 
-        final File output = new File(directory, sourceName + ".xml");
+        final File output = directory.resolve( sourceName + ".xml").toFile();
         // noinspection ResultOfMethodCallIgnored
         output.setWritable(true);
         try (final OutputStream os = new FileOutputStream(output)) {
@@ -161,5 +193,10 @@ public class CustomModelProcessor implements ModelProcessor {
     @Override
     public Model read(File input, Map<String, ?> options) throws IOException {
         return read(new FileInputStream(input), options);
+    }
+
+    @Override
+    public Model read(Path input, Map<String, ?> options) throws IOException, ModelParseException {
+        return read(input.toFile(),options);
     }
 }

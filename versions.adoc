@@ -10,39 +10,39 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `LEVENSHTEIN_VERSION` `1.0.0` 
 
-* `OK`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.12.1` 
+* `OK`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.13.0` 
 
 * `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.6.3` 
 
-* `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.1.0` 
+* `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.2.4` 
 
-* `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.6.0` 
+* `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.7.1` 
 
-* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-12` 
+* `OK`  `MAVEN_PLUGIN_API` `4.0.0-alpha-13` 
 
-* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.11.0` 
+* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.12.0` 
 
-* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.11.0` 
+* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.12.0` 
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.6.13` 
 
 * `OK`  `SUREFIRE_PLUGIN_VERSION` `3.2.5` 
 
-* `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.0` 
+* `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.1` 
 
 * `OK`  `APPASSEMBLER_PLUGIN_VERSION` `2.1.0` 
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.1` 
 
-* `OK`  `JUPITER_VERSION` `5.10.2` 
+* `OK`  `JUPITER_VERSION` `5.11.0-M1` 
 
 * `OK`  `MOCKITO_VERSION` `5.11.0` 
 
-* `OK`  `JRUBY_VERSION` `9.4.6.0` 
+* `OK`  `JRUBY_VERSION` `9.4.7.0` 
 
 * `OK`  `GROOVY_VERSION` `3.0.21` 
 
-* `OK`  `OGNL_VERSION` `3.4.2` 
+* `OK`  `OGNL_VERSION` `3.4.3` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.2` 
 
@@ -60,18 +60,22 @@ Since the version 3.0.0-alpha.1 is working fine with the old version, it can be 
 When the new Asciidoctor version is released and used as an IntelliJ plugin we will get rid of the compatibility module.
 
 
-* `OK`  `JSCRIPTBASIC_VERSION` `2.1.1` 
+* `OK`  `JSCRIPTBASIC_VERSION` `3.0.0` 
 
 * `OK`  `MAVEN_DOWNLOADER` `1.1.0` 
 
 * `OK`  `SOURCE_BUDDY` `2.4.5` 
 
-* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-12` 
+* `OK`  `MAVEN_CORE_VERSION` `4.0.0-alpha-13` 
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.2.0` 
 
-* `OK`  `ASM_VERSION` `9.6` 
+* `OK`  `ASM_VERSION` `9.7` 
 
-* `OK`  `ASM_TREE_VERSION` `9.6` 
+* `OK`  `ASM_TREE_VERSION` `9.7` 
 
-* `OK`  `MARKDOWN_TO_ASCIIDOC` `2.0.0` 
+* `OK`  `MARKDOWN_TO_ASCIIDOC` `2.0.1` 
+
+* `OK`  `H2_VERSION` `2.2.224` 
+
+* `OK`  `JSQLPARSER_VERSION` `4.9` 

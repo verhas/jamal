@@ -9,7 +9,7 @@ public class Loop implements Macro, Scanner, OptionsControlled {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var resultName = scanner.str(null, "rs", "resultSet", "result").defaultValue("sql$result");
+        final var resultName = SqlTools.getResultSetName(scanner);
         scanner.done();
         final var resultMacro = processor.getRegister().getUserDefined(resultName.get());
         BadSyntax.when(resultMacro.isEmpty() || !(resultMacro.get() instanceof Select.ResultSetHolder), "Result set is not defined or not a result set");

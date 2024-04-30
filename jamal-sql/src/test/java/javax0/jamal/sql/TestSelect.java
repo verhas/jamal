@@ -38,4 +38,15 @@ public class TestSelect {
                 );
     }
 
+    @Test
+    void testMaliciousCode() throws Exception {
+        final var root = DocumentConverter.getRoot();
+        String url = "jdbc:h2:" + root + "/target/testdb";
+
+        TestThat.theInput("{@option failfast}\" +\n" +
+                "{@import res:sql.jim}\n" +
+                "{@sql:connect " + url + "}" +
+                "{@sql:select * from Employees;select * Bbb }").throwsBadSyntax("SQL select query '\\* from Employees;select \\* Bbb' seems to be dangerous\\.");
+    }
+
 }

@@ -5,14 +5,15 @@ import javax0.jamal.tools.IdentifiedObjectHolder;
 import javax0.jamal.tools.Scanner;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Select implements Macro, Scanner, OptionsControlled {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var resultName = scanner.str(null, "rs", "resultSet", "result").defaultValue("sql$result");
-        final var statementName = scanner.str(null, "statement").defaultValue("sql$statement");
+        final var resultName = SqlTools.getResultSetName(scanner);
+        final var statementName = SqlTools.getStatementName(scanner);
         scanner.done();
         final var statementMacro = processor.getRegister().getUserDefined(statementName.get());
         BadSyntax.when(statementMacro.isEmpty(), "Statement is not prepared to execute select");
@@ -20,12 +21,12 @@ public class Select implements Macro, Scanner, OptionsControlled {
         final var statement = ((ObjectHolder<?>) statementMacro.get()).getObject();
         BadSyntax.when(!(statement instanceof Statement), "Statement macro '%s' is not a statement. It is an '%s'.", statementName.get(), statement.getClass().getName());
         final var sql = in.toString().trim();
+        SqlTools.assertSqlSelectSafe(sql);
         try {
-            //TODO make it safe
             final var resultSet = ((Statement) statement).executeQuery("SELECT " + sql);
             final var resultSetHolder = new ResultSetHolder(resultSet, resultName.get());
             processor.define(resultSetHolder);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new BadSyntax("Cannot execute 'select " + sql + "'", e);
         }
         return "";

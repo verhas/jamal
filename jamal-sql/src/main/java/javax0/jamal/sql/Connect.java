@@ -12,8 +12,8 @@ public class Connect implements Macro, Scanner, OptionsControlled {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var connectionName = scanner.str(null, "con", "connection").defaultValue("sql$connection");
-        final var statementName = scanner.str(null, "stmt", "statement").defaultValue("sql$statement");
+        final var connectionName = SqlTools.getConnectionName(scanner);
+        final var statementName = SqlTools.getStatementName(scanner);
         final var driverClass = scanner.str(null, "driver").optional();
         scanner.done();
         final var connectionString = in.toString().trim();

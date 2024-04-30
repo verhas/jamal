@@ -8,5 +8,6 @@ module jamal.sql {
     requires jamal.tools;
     requires jamal.engine;
     requires java.sql;
+    requires net.sf.jsqlparser;
     provides Macro with Connect, javax0.jamal.sql.SqlDriver, Select, Loop;
 }
