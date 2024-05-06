@@ -30,7 +30,6 @@ public class TestLoop {
         }
         TestThat.theInput("" +
                         "{@option failfast}" +
-                        "{@import res:sql.jim}" +
                         "{@sql:connect " + url + "}{@sql:select (rs=rs) * from Employees}{@sql:loop (rs=rs) {rs 1} {rs 2} {rs 3}\n}")
                 .atPosition("SelectTest.jamal", 1, 0)
                 .results(" 1 Name1 Position1\n" +

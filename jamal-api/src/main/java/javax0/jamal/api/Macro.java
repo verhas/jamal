@@ -6,13 +6,14 @@ import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Optional;
 
-import static javax0.jamal.api.SpecialCharacters.IDENT;
-import static javax0.jamal.api.SpecialCharacters.NO_PRE_EVALUATE;
-import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
-import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
+import static javax0.jamal.api.SpecialCharacters.*;
 
 /**
  * Any class that wants to function as a built-in macro should implement this interface.
+ * <p>
+ * Macro objects are created calling the ServiceLoader service of the JVM, and thus they have to have a zero-parameter
+ * constructor. Although ServiceLoader can create instances of classes that have some factory methods, it is not an
+ * option for macros to make them available for the core macro {@code use}.
  * <p>
  * The built-in macro {@code use} implemented in {@code javax0.jamal.builtins.Use} in the core package also assumes that
  * the class has a zero-parameter (default) constructor.

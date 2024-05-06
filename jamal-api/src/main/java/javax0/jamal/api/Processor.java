@@ -178,7 +178,7 @@ public interface Processor extends AutoCloseable {
      * The closer objects {@link AutoCloseable#close() close()} method may invoke the injected processors
      * {@link Processor#process(Input) process(Input)} method. In this case, however, the processor is already in a
      * state closing resources and processing the whole input again will not recursively invoke the closers. After
-     * the input is processed the invocation of the closers registered in the first round continues. Any closer
+     * the input is processed, the invocation of the closers registered in the first round continues. Any closer
      * registered during the call to {@link Processor#process(Input) process(Input)} from a closer will be ignored.
      * <p>
      * Calling this method the macro can register an {@link AutoCloseable} object. The method {@link
@@ -188,8 +188,19 @@ public interface Processor extends AutoCloseable {
      * <p>
      * The processor implementation guarantees that the processor will invoke the closers in the order registered.
      * The processor will never register an already registered closer. In other words, every closer is invoked only
-     * once. In the order of executions the first registering is relevant. A closer {@code c2} is treated as already
+     * once. In the order of executions, the first registering is relevant. A closer {@code c2} is treated as already
      * registered if there is a registered closer {@code c1} so that {@code c1.equals(c2)}.
+     * <p>
+     * It also means that any call to this method must use the return value of the method to reference the closer and
+     * not the object passed as argument, unless they are the same object. If you pass an object {@code c2} that is
+     * {@code c1.equals(c2)} but are not the exact same, then the method will return {@code c1} and the object {@code
+     * c2} will not be registered.
+     * <p>
+     * This approach was created to allow the macros to create cheap closer objects and call them from the macro
+     * evaluation. In this case, the macro can register the closer when it knows that a closer is needed, and it does
+     * not need to maintain a state and remember if there was already a closer registered. Also, the closer is not
+     * directly associated with the macro making it possible to register multiple closers assuming they are not
+     * equal to each other.
      * <p>
      * Note that this method, or any other method of the processor MUST NOT be invoked from other than the main thread
      * of the Jamal processing. Even if a macro spawns a new thread the new thread must not do anything with the

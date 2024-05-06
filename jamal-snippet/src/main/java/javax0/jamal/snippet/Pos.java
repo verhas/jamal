@@ -45,7 +45,7 @@ public class Pos implements Macro, Scanner {
         scanner.done();
         final var what = in.toString().trim();
         final String formatString;
-        if (what.length() > 0 && format.isPresent()) {
+        if (!what.isEmpty() && format.isPresent()) {
             throw new BadSyntax("Cannot use 'format' for 'pos' when there is .file, .line, or .column");
         }
         switch (what) {

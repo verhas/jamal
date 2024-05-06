@@ -24,7 +24,7 @@ public class Select implements Macro, Scanner, OptionsControlled {
         SqlTools.assertSqlSelectSafe(sql);
         try {
             final var resultSet = ((Statement) statement).executeQuery("SELECT " + sql);
-            final var resultSetHolder = new ResultSetHolder(resultSet, resultName.get());
+            final var resultSetHolder = new ResultSetHolder(resultSet, resultName.get(), processor);
             processor.define(resultSetHolder);
         } catch (SQLException e) {
             throw new BadSyntax("Cannot execute 'select " + sql + "'", e);
@@ -39,8 +39,9 @@ public class Select implements Macro, Scanner, OptionsControlled {
 
     static class ResultSetHolder extends IdentifiedObjectHolder<ResultSet> implements UserDefinedMacro, AutoCloseable {
 
-        ResultSetHolder(java.sql.ResultSet resultSet, String name) {
+        ResultSetHolder(final java.sql.ResultSet resultSet, final String name, final Processor processor) {
             super(resultSet, name);
+            processor.deferredClose(this);
         }
 
         @Override

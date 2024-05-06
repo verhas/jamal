@@ -1,5 +1,159 @@
-= Jamal SQL module
+{%@import res:jamal.jim%}{%@import ../RELEASES.jim%}{%@import ../version.jim%}\ = Jamal SQL module
+
+SQL module for Jamal to allow data collection from SQL databases.
 
 == Introduction
 
-SQL module for Jamal to allow data collection from SQL databases.
+Using this module, you can connect to a database from your document and get data directly injected into the output.
+The underlying technology is Java JDBC connection, and the macros follow the terminology and structure of JDBC.
+
+The usual JDBC way is to
+
+* connect to the database, (which also loads the driver)
+* create a statement, and
+* execute a query,
+* and then process the result set.
+
+You can do that in Jamal, and you can have multiple connections with various drivers loaded, and several statements for each connection.
+The usual way is much simpler:
+
+* You specify the connection to the database.
+* You execute a query.
+* Loop through the result set.
+
+For example:
+{%@define simple_sample=
+{%sample/
+{#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
+{@sql:select (rs=rs) * from JamalDocumentation}\
+{@sql:loop (rs=rs) {rs 1} {rs 2} } %} %}
+
+{%simple_sample%}
+
+will result in
+
+{%output%}
+
+as we are having a demo database in the same directory as this document.
+
+NOTE: Unfortunately you have to use `{#file (format=$parent){@pos.file}}` in the file name.
+JDBC does not find the file otherwise.
+
+== Installation
+
+There is no need to install anything for Jamal SQL module.
+It is part of the Jamal distribution, and because it is a safe module, it is part of the default dependencies.
+What you need to install, however, is the JDBC driver for your database.
+
+In the implementation of the `sql:*` macros the JDBC calls can only be executed of the JDBC driver can be loaded.
+To make it available for the `sql:connect` macro you have to put the driver in the classpath.
+
+This may be tricky and depend on the actual embedding of Jamal.
+In this section, we can only give you hints, and not definite instructions.
+Because the installation may vary from different embedding environment from version to version, it is not feasible to develop automatic installation support.
+
+=== Running from Code
+
+This is the simplest and most straightforward case.
+Simply add the driver to the classpath of your application using your favourite build tool, being it Maven, Gradle, Ant, or something else.
+
+=== Running from Command Line
+
+When you run Jamal from the command line, there is a shell script for the execution.
+This shell script defines the function `download()` that downloads the dependencies unless they are already available.
+Add the driver to the list of dependencies in the shell script.
+
+=== Running using JBang
+
+Starting the application using JBang is similar to running from the command line.
+You should use a local version of the `jbangstarter.java` file
+
+[source,java]
+----
+{%@include [verbatim] https://raw.githubusercontent.com/verhas/jamal/master/jbangstarter.java%}
+----
+
+and add a `//DEPS` line for your JDBC driver.
+
+=== Running from Maven Plugin
+
+When you run Jamal from the Maven plugin, you can add the driver to the dependencies of the plugin.
+
+=== Running from Maven Extension
+
+You will not really need this, because why would you need to have some data in a `pom.xml` file coming from an SQL database?
+If, however, you need, then you have to add the dependency to the `pom.xml` of Jamal maven extension source and recompile the extension.
+
+Unfortunately you cannot add dependencies to a Maven extension in the `.mvn/extensions.xml`.
+
+=== Running from JavaDoc
+
+When you configure the `jamal-doclet` plugin add the dependecy to the plugin configuration.
+
+=== Running from inside IntelliJ IDEA
+
+If you run Jamal from IntelliJ, you should copy the driver JAR along with all other JAR files the driver depends on to a directory from where the JDBC call can load it.
+On the machine we develop Jamal it is the project's `.asciidoctor/lib` directory for the community edition.
+It did not work, however, for the Professional Edition.
+In the Professional Edition, we had to put the driver JAR into the `lib` directory of the Asciidoctor plugin dependecies, that is
+
+  /Library/Application\ Support/JetBrains/IntelliJIdea{VERSION}//plugins/asciidoctor-intellij-plugin/lib/
+
+where `{VERSION}` is the version of IntelliJ IDEA you are using, in our case it was `2024.1`.
+
+== Macros in the package
+
+=== `sql:connect`
+
+You need this macro to connect to a database.
+The input of the macro is the JDBC URL of the database.
+For example, the code:
+
+{%simple_sample%}
+
+we have seen in the introduction, uses `h2` database and uses a file-based database residing in the same directory as the document.
+When the connection is made, a JDBC statement is created automatically.
+
+The macro call can have two parops to name the
+
+* connection (`con`, `connection` default is `sql$result`), and to name
+* the statement (`stmt`, `statement` default is `sql$statement`).
+
+(Technically the names are alias, if a macro is named `con` or `stmt` they have no effect on `sql:conect`.)
+
+The created connection and the statement are stored along with the user defined macros with the names given in the parops.
+They are, however, not macros.
+You cannot use them in the document other than passing their name to other macros.
+However, if you have a macro with the same name, the connection macro created item will hide or overwrite the macro.
+
+The sole use of the connection name is to pass it to the `sqL:statement` macro to create a new statement for the same connection.
+Similarly, when a `sql:select` the name of the statement can be specified.
+All these macros use the same default name if nothing is specified.
+
+When a name is reused in a `sql:connect` macro, the connection is closed and a new connection is created.
+If the name is defined in a higher scope, the old connection is kept alive and accessible from the higher scope.
+In this case, the new connection of the same name only hides the already existing connection.
+
+NOTE: There is no need to specify the jdbc driver.
+Jamal supports only drivers JDBC 4.0 and later, and they are supposed to be loaded automatically.
+
+=== `sql:statement`
+
+You need to call this macro if you want to use simultaneous multiple statements for the same connection.
+This is rarely needed, thus the following example may seem to be a bit contrived.
+
+{%sample/
+{#sql:connect (con=c) jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
+{@sql:statement (con=c stmt=stmt)}
+{@sql:select (rs=rs1) * from JamalDocumentation LIMIT 1}\
+{@sql:select (rs=rs2 stmt=stmt) * from JamalDocumentation LIMIT 2}\
+{@sql:loop (rs=rs1) {rs1 1} {rs1 2} }
+{@sql:loop (rs=rs2) {rs2 1} {rs2 2} } %}
+
+In this example, we are using the same connection, this time named as `c` for two different statements.
+The first statement is created implicitely by the `sql:connect` macro, and the second statement is created by the `sql:statement` macro.
+The socnd one gets the name explicitly, it is `stmt`, which is also the name of the parop used to define it.
+The sample will result
+
+{%output%}
+

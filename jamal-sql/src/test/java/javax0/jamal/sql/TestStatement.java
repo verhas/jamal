@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.DriverManager;
 
-public class TestSelect {
+public class TestStatement {
 
     @Test
     void testSqlSelect() throws Exception {
@@ -28,10 +28,12 @@ public class TestSelect {
                 statement.execute(insertSQL2);
             }
         }
-        TestThat.theInput("" +
+        TestThat.theInput("{#ident " +
                         "{@option failfast}" +
-                        "{@sql:connect " + url + "}{@sql:select (rs=rs) * from Employees}{rs next}{rs 1} {rs 2} {rs 3}\n" +
-                        "{rs next}{rs 1} {rs 2} {rs 3}\n").atPosition("SelectTest.jamal", 1, 0)
+                        "{@sql:connect " + url + "}" +
+                        "{@sql:statement stmt=qq}" +
+                        "{@sql:select (stmt=qq rs=rs) * from Employees}{rs next}{rs 1} {rs 2} {rs 3}\n" +
+                        "{rs next}{rs 1} {rs 2} {rs 3}}\n").atPosition("SelectTest.jamal", 1, 0)
                 .results("1 Alice Manager\n" +
                         "2 Bob Developer\n"
                 );

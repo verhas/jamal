@@ -44,6 +44,7 @@ public class Processor implements javax0.jamal.api.Processor {
     final private TraceRecordFactory traceRecordFactory = new TraceRecordFactory();
     final private StackLimiter limiter = new StackLimiter();
     final private JShellEngine shellEngine = getEngine();
+    // cannot be a set, you cannot easily retrieve the already stored value when you give a new closer 'equals' the existing
     final private Map<AutoCloseable, AutoCloseable> openResources = new LinkedHashMap<>();
     private final Context context;
     private final Debugger debugger;

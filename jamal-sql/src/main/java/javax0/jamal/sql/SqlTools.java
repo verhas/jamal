@@ -12,7 +12,7 @@ public class SqlTools {
     }
 
     static StringParameter getStatementName(Scanner.ScannerObject scanner) {
-        return scanner.str(null, "statement").defaultValue("sql$statement");
+        return scanner.str(null, "stmt", "statement").defaultValue("sql$statement");
     }
 
     static StringParameter getConnectionName(Scanner.ScannerObject scanner) {
