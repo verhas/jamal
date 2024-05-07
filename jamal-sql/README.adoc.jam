@@ -1,5 +1,6 @@
 {%@import res:jamal.jim%}{%@import ../RELEASES.jim%}{%@import ../version.jim%}\
 = Jamal SQL module
+{%option failfast%}
 
 SQL module for Jamal to allow data collection from SQL databases.
 
