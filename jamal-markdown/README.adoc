@@ -74,6 +74,7 @@ To use this macro together with the Jamal doclet you can configure the Maven Jav
 The module defines one single dependency at the moment: `md`.
 The argument of the macro is the
 
+.Jamal source
 [source]
 ----
 {@md this is *bold*}
@@ -81,6 +82,7 @@ The argument of the macro is the
 
 will output
 
+.output
 [source]
 ----
 <p>this is <em>bold</em></p>

@@ -21,6 +21,7 @@ The library `jamal-engine` transitively depends on the other libraries that are 
 
 You also have to specify that you use the modules if your code uses modules.
 
+.Jamal source
 [source]
 ----
 module jamal.maven {

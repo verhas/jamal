@@ -5,7 +5,7 @@
 #
 
 apk update
-apk add --no-cache openjdk17 maven graphviz git fontconfig ttf-droid bash
+apk add --no-cache openjdk17 maven git fontconfig ttf-droid bash
 addgroup JAMAL
 adduser -G JAMAL -D -s /bin/bash jamal
 chown jamal /home/jamal

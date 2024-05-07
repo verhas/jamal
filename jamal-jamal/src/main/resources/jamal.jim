@@ -3,13 +3,15 @@ This file contains macros, which are used in readme files.
 These macros help embedding Jamal macro samples and run them.
 
 
-{@define sample(code)={#define :lastCode=code}[source]
+{@define sample(code)={#define :lastCode=code}.Jamal source
+[source]
 ----
 {#trimLines
 code}
 ----}
 
-{@define output=[source]
+{@define output=.output
+[source]
 ----
 {#trimLines trimVertical
 {!#output {lastCode}}}

@@ -11,6 +11,7 @@ This way these macros use the same input splitting algorithm.
 In other words, the algorithm described in this document is how many built-in macros get their arguments.
 For example the macro `if` can be used as follows:
 
+.Jamal source
 [source]
 ----
 {@if /true/then/else}
@@ -18,6 +19,7 @@ For example the macro `if` can be used as follows:
 
 which will result in the output
 
+.output
 [source]
 ----
 then
@@ -36,11 +38,13 @@ The algorithm is defined in the following way:
 Multiple adjacent white space characters are counted as one.
 The splitting does not create empty parameters.
 +
+.Jamal source
 [source]
 ----
 ..{@if true then else}..
 ----
 +
+.output
 [source]
 ----
 ..then..
@@ -53,11 +57,13 @@ NOTE: No spaces around the output `then`.
 After the regular expression and after the closing backtick, the rest of the input is split up using the regular expression as separator.
 Backticks inside the regular expression have to be doubled.
 +
+.Jamal source
 [source]
 ----
 {@if `\s*THEN\s*|\s*ELSE\s*` true THEN then ELSE else}
 ----
 +
+.output
 [source]
 ----
 then
@@ -66,11 +72,13 @@ then
 
 * If the first non-whitespace character is not a letter or digit or backtick (`++`++`), then the first non-whitespace character is the separator.
 +
+.Jamal source
 [source]
 ----
 ..{@if /true/  then  /else}..
 ----
 +
+.output
 [source]
 ----
 ..  then  ..
@@ -81,12 +89,14 @@ NOTE: There are spaces around the output `then`.
 
 * If the macro `$REGEX` is defined (no arguments) then its content will be used as regular expression to split the input.
 +
+.Jamal source
 [source]
 ----
 {@define $REGEX=\s*THEN\s*|\s*ELSE\s*}
 {@if  true THEN then ELSE else}
 ----
 +
+.output
 [source]
 ----
 then

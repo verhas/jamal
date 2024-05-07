@@ -68,6 +68,7 @@ This functionality is implemented the same way as it is for the core built-in ma
 
 The example:
 
+.Jamal source
 [source]
 ----
 {@yaml:define xyz=
@@ -84,6 +85,7 @@ c:
 
 will result
 
+.output
 [source]
 ----
 a: this is the string value of a
@@ -128,6 +130,7 @@ What is more, the macro can also be the same as the one that contains it.
 These references can be recursive.
 
 The example:
+.Jamal source
 [source]
 ----
 {@yaml:define b=- x
@@ -139,6 +142,7 @@ The example:
 
 resulting in the output
 
+.output
 [source]
 ----
 - x
@@ -155,6 +159,7 @@ When you invoke the built-in macro `yaml:resolve`, these references will be repl
 
 The same example as above, but resolving the Yaml macro before using it
 
+.Jamal source
 [source]
 ----
 {#yaml:define b=- x
@@ -167,6 +172,7 @@ The same example as above, but resolving the Yaml macro before using it
 
 will result
 
+.output
 [source]
 ----
 - x
@@ -211,6 +217,7 @@ The use of this macro has been deprecated since Jamal version 2.0.0.
 This macro will reference another Yaml definition.
 With the release 2.0.0, the local tag `!ref` is defined, which is a much cleaner and shorter way to reference another Yaml definition.
 
+.Jamal source
 [source]
 ----
 {@yaml:define x=
@@ -226,6 +233,7 @@ Use this macro to resolve one or more user-defined Yaml macro.
 
 The format of the macro is
 
+.Jamal source
 [source]
 ----
 {@yaml:resolve macroName1, macroName2, ..., macroNameX}
@@ -243,6 +251,7 @@ This option also has a local parameter alias, `clone`, that can be used between 
 
 The example
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
@@ -260,6 +269,7 @@ Not resolved:
 
 will result
 
+.output
 [source]
 ----
 Resolved:
@@ -279,6 +289,7 @@ That way, `xyz` is still fully resolved and ready to be used.
 
 The same example doing the resolve without the `clone` option, however
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
@@ -296,6 +307,7 @@ Also resolved:
 
 will result
 
+.output
 [source]
 ----
 Resolved:
@@ -318,6 +330,7 @@ This is `yamlResolveCopy` with the alias `copy`.
 This option creates a copy of the referenced structures, cloned or not.
 To understand this, we can have a look at the following example:
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
@@ -330,6 +343,7 @@ y: !ref a
 
 will result
 
+.output
 [source]
 ----
 z: &id001 [a, b, c]
@@ -341,6 +355,7 @@ When the underlying Snake Yaml library generates the text format of the Yaml dat
 Thus, SnakeYaml generates a label, something like `&id001` at the first occurrence and instead of repeating the same structure it on second occasion it only references that as `*id001`.
 The resolving process can circumvent this creating a copy for every reference.
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=[ a, b ,c ]}
@@ -353,6 +368,7 @@ y: !ref a
 
 will result
 
+.output
 [source]
 ----
 z: [a, b, c]
@@ -366,6 +382,7 @@ The implementation of copy resolution can handle recursive data structures and i
 
 For example
 
+.Jamal source
 [source]
 ----
 {#yaml:define a=[ a, b ,c, !ref a]}
@@ -375,6 +392,7 @@ For example
 
 works as expected
 
+.output
 [source]
 ----
 &id001
@@ -387,6 +405,7 @@ works as expected
 
 However, when trying to resolve the following:
 
+.Jamal source
 [source]
 ----
 {#yaml:define a=[ a, b ,c, !ref a, !ref a]}
@@ -396,6 +415,7 @@ However, when trying to resolve the following:
 
 then the result is
 
+.output
 [source]
 ----
 Jamal source seems to have infinite recursion
@@ -419,6 +439,7 @@ For example, there is a resource file `src/test/resources/sample.yaml` in the pr
 It can be referenced from the test execution, which also converts this document as `res:sample.yaml`.
 The content of this file is
 
+.Jamal source
 [source]
 ----
 # this is a sample Yaml file that the test TestImport imports
@@ -438,6 +459,7 @@ q: *id
 You can use the following structure to read it from the file and assign the Yaml data to the macro `aqt`:
 
 
+.Jamal source
 [source]
 ----
 {#yaml:define aqt={@include [verbatim] res:sample.yaml}}
@@ -447,6 +469,7 @@ You can use the following structure to read it from the file and assign the Yaml
 
 which will result
 
+.output
 [source]
 ----
 &id001
@@ -466,6 +489,7 @@ Other packages usually use `(` and `)`.
 
 The file `src/test/resources/sample.yaml.jam` contains Jamal macros:
 
+.Jamal source
 [source]
 ----
 # this is a sample Yaml file that the test TestImport imports
@@ -484,6 +508,7 @@ q: *id
 
 You can include it with evaluation using the following macro sequence.
 
+.Jamal source
 [source]
 ----
 {@define a=wuff wuff}
@@ -494,6 +519,7 @@ You can include it with evaluation using the following macro sequence.
 
 which will result:
 
+.output
 [source]
 ----
 &id001
@@ -511,6 +537,7 @@ q: *id001
 The macro `yaml:isResolved` results `true` or `false` if the Yaml macro given as argument is either resolved or not.
 The syntax of the macro is
 
+.Jamal source
 [source]
 ----
 {@yaml:isResolved macro_name}
@@ -518,6 +545,7 @@ The syntax of the macro is
 
 Example:
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=
@@ -531,6 +559,7 @@ b: this is b
 
 results
 
+.output
 [source]
 ----
 false
@@ -556,6 +585,7 @@ This can be useful when you want to document some configuration or other data st
 In that case you can import the Yaml structure into your Jamal document and refer individual values in it.
 The format of the macro is:
 
+.Jamal source
 [source]
 ----
 {@yaml:get (from=yamlMacro) OGNL-PATH}
@@ -575,6 +605,7 @@ To control the resolution process the same options can be used as for the <<reso
 
 ===== Examples
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=
@@ -591,6 +622,7 @@ b:
 
 will result
 
+.output
 [source]
 ----
 deep h
@@ -607,6 +639,7 @@ Instead, it uses an already defined yaml user defined macro and uses some part o
 
 The syntax of the macro is
 
+.Jamal source
 [source]
 ----
 {@yaml:set (options) macroName=OGNL}
@@ -626,6 +659,7 @@ The `macroName` is the name of the macro to assign the new object value to.
 
 ===== Example
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=
@@ -645,6 +679,7 @@ b:
 
 will result
 
+.output
 [source]
 ----
 deep h
@@ -662,6 +697,7 @@ The macro `yaml:add` can modify an already parsed Yaml data structure.
 You can add elements to lists or maps inside the Yaml structure.
 The syntax of the macro is
 
+.Jamal source
 [source]
 ----
 {@yaml:add options
@@ -700,6 +736,7 @@ When this option is specified it is an error to specify any `key` since in this 
 
 This example adds a new value to the root of the Yaml structure.
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=
@@ -713,6 +750,7 @@ this is the value to be added to yaml structure a
 
 will result:
 
+.output
 [source]
 ----
 {a: this is a simple Yaml with a top level Map, b: this is the value to be added to
@@ -724,6 +762,7 @@ will result:
 
 In this example the value is added to the value of the map from the top level named `b`.
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=
@@ -738,6 +777,7 @@ this is the value to be added to yaml structure a
 
 will result:
 
+.output
 [source]
 ----
 a: this is a simple Yaml with a top level Map
@@ -749,6 +789,7 @@ b: {c: this is the value to be added to yaml structure a}
 
 This example will add multiple elements to a map inside the yaml structure.
 
+.Jamal source
 [source]
 ----
 {@yaml:define docker=
@@ -779,6 +820,7 @@ com.javax0.jamal.nodeType: primary
 
 will result:
 
+.output
 [source]
 ----
 version: '3.6'
@@ -803,6 +845,7 @@ This example adds one element to an array.
 The added element itself is an array.
 It is not flattened
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=
@@ -817,6 +860,7 @@ It is not flattened
 
 will result:
 
+.output
 [source]
 ----
 - this is a simple Yaml with a top level Map
@@ -827,6 +871,7 @@ will result:
 
 If we use flattening, we get a different result
 
+.Jamal source
 [source]
 ----
 {@yaml:define a=
@@ -843,6 +888,7 @@ If we use flattening, we get a different result
 
 will result:
 
+.output
 [source]
 ----
 - this is a simple Yaml with a top level Map
@@ -859,6 +905,7 @@ will result:
 This macro can be used to set the options for Snake Yaml.
 The format of the macro is
 
+.Jamal source
 [source]
 ----
 {@yaml:format options}
@@ -901,6 +948,7 @@ Those options that have an enum `setXXX` counterpart should use the name of the 
 
 In these examples, we will use the yaml structure:
 
+.Jamal source
 [source]
 ----
 {@yaml:define yaml=
@@ -927,6 +975,7 @@ h: [1,2,3]
 
 It prints as the following without specifying any format:
 
+.output
 [source]
 ----
 a: this is a euuu
@@ -951,12 +1000,14 @@ h: [1, 2, 3]
 
 `allowUnicode` instructs the snake yaml output to include the unicode characters into the output instead of using escape sequences in string.
 
+.Jamal source
 [source]
 ----
 {@yaml:format allowUnicode}
 {yaml}
 ----
 
+.output
 [source]
 ----
 a: this is a euuu
@@ -981,12 +1032,14 @@ h: [1, 2, 3]
 
 The option `canonical` instructs snake yaml to output the structure in a canonical format.
 
+.Jamal source
 [source]
 ----
 {@yaml:format canonical}
 {yaml}
 ----
 
+.output
 [source]
 ----
 ---
@@ -1028,12 +1081,14 @@ The option `canonical` instructs snake yaml to output the structure in a canonic
 
 The option `explicitStart` and `explicitEnd` instructs snake yaml to output the starting `---` and ending `...` characters.
 
+.Jamal source
 [source]
 ----
 {@yaml:format explicitEnd explicitStart}
 {yaml}
 ----
 
+.output
 [source]
 ----
 ---
@@ -1060,12 +1115,14 @@ h: [1, 2, 3]
 
 The option `prettyFlow` instructs snake yaml to output the yaml structure in pretty flow.
 
+.Jamal source
 [source]
 ----
 {@yaml:format prettyFlow}
 {yaml}
 ----
 
+.output
 [source]
 ----
 a: this is a euuu
@@ -1096,6 +1153,7 @@ h: [
 
 The option `splitLines` instructs snake yaml to output the yaml structure splitting the lines.
 
+.Jamal source
 [source]
 ----
 {@yaml:format splitLines}
@@ -1104,6 +1162,7 @@ The option `splitLines` instructs snake yaml to output the yaml structure splitt
 
 For some reason, it does not split the lines, may be later versions of snakeYaml will do.
 
+.output
 [source]
 ----
 a: this is a euuu
@@ -1126,6 +1185,7 @@ h: [1, 2, 3]
 
 ===== Flow Style
 
+.Jamal source
 [source]
 ----
 {@yaml:format flowStyle=FLOW}
@@ -1139,6 +1199,7 @@ AUTO
 {yaml}
 ----
 
+.output
 [source]
 ----
 FLOW
@@ -1188,6 +1249,7 @@ h: [1, 2, 3]
 
 ===== Scalar Style
 
+.Jamal source
 [source]
 ----
 {@yaml:format scalarStyle=DOUBLE_QUOTED}
@@ -1207,6 +1269,7 @@ PLAIN
 {yaml}
 ----
 
+.output
 [source]
 ----
 DOUBLE_QUOTED
@@ -1329,12 +1392,14 @@ h: [1, 2, 3]
 
 ===== Indenting
 
+.Jamal source
 [source]
 ----
 {@yaml:format indent=5}
 {yaml}
 ----
 
+.output
 [source]
 ----
 a: this is a euuu
@@ -1357,12 +1422,14 @@ h: [1, 2, 3]
 
 ===== Width
 
+.Jamal source
 [source]
 ----
 {@yaml:format width=20}
 {yaml}
 ----
 
+.output
 [source]
 ----
 a: this is a euuu
@@ -1390,6 +1457,7 @@ h: [1, 2, 3]
 The macro `yaml:dump` can dump the Yaml data structure to a file.
 The format of the macro is
 
+.Jamal source
 [source]
 ----
 {@yaml:dump yamlMacro to file_name}
@@ -1400,6 +1468,7 @@ where `yamlMacro` is the name of the macro that holds the Yaml data structure.
 The `to` separating them is a keyword to ease readability.
 The following structure presents an example:
 
+.Jamal source
 [source]
 ----
 {@yaml:define x=[a,b,c]}
@@ -1409,6 +1478,7 @@ The following structure presents an example:
 
 will result
 
+.output
 [source]
 ----
 [a, b, c]
@@ -1419,6 +1489,7 @@ There is no reason to dump an unresolved structure into a file.
 If the macro to be dumped to the file was not yet resolved, it will be resolved.
 The resolution process will be in-place unless the option `yamlResolveClone` (alias `clone`) is used before the name of the macro between `(` and `)` characters.
 
+.Jamal source
 [source]
 ----
 {@yaml:dump (clone) x to ./target/dump.yaml}
@@ -1432,6 +1503,7 @@ The resolution process will be in-place unless the option `yamlResolveClone` (al
 The macro `yaml:xml` converts a Yaml structure to XML format.
 The format of the macro is:
 
+.Jamal source
 [source]
 ----
 {@yaml:xml (options) yamlMacroName}
@@ -1462,6 +1534,7 @@ structure.
 Here `value` can be another map, a list or something else represented as a string.
 For example:
 
+.Jamal source
 [source]
 ----
 {@yaml:define z=
@@ -1474,6 +1547,7 @@ tagValues:
 
 will be converted to
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -1500,6 +1574,7 @@ If the `!attr` object is a member of an array then it can only be a map.
 When the `!attr` object is a map then the keys and values will be used as attribute keys and values.
 You have to use this form in a map if the name of the attribute is the same as one of the content keys.
 
+.Jamal source
 [source]
 ----
 {@yaml:define z=
@@ -1518,6 +1593,7 @@ tagValues:
 
 will be converted to
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -1541,6 +1617,7 @@ When the conversion sees the `!text` object it knows that it must treat this Map
 If you use this object type it has to be the last in the map.
 Any further keys will result error.
 
+.Jamal source
 [source]
 ----
 {@yaml:define z=
@@ -1553,6 +1630,7 @@ text_tag:
 
 will result in:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -1565,6 +1643,7 @@ will result in:
 
 * `!cdatatext` is the same as the `TEXT`, but it will also enclose the text as CDATA.
 
+.Jamal source
 [source]
 ----
 {@yaml:define z=
@@ -1577,6 +1656,7 @@ text_tag:
 
 will result in:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -1588,6 +1668,7 @@ will result in:
 
 * `!cdata` will instruct the converter to convert the actual node to CDATA.
 
+.Jamal source
 [source]
 ----
 {@yaml:define z=
@@ -1600,6 +1681,7 @@ text_tag:
 
 will result in:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -1623,6 +1705,7 @@ You MUST use a `TAG` if the enclosing object tag is a single character.
 +
 You can find examples of the use of these classes in the file link:/jamal-test/src/test/resources/javax0/jamal/test/yaml/TestXml.jyt[TestXml.jyt]
 
+.Jamal source
 [source]
 ----
 {@yaml:define z=
@@ -1635,6 +1718,7 @@ tagValues:
 
 will be converted to
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -1654,6 +1738,7 @@ The convention is that map members that contain lists should be some plural noun
 If a list element is a list itself then the iterated tag value will be the same as the enclosing one chopping off another character again.
 For example:
 
+.Jamal source
 [source]
 ----
 {@yaml:define z=
@@ -1666,6 +1751,7 @@ tagValues:
 
 will be converted to
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -1699,6 +1785,7 @@ Version 1.7.6 extended the conversion from Yaml to XML making it possible to use
 The macro `yaml:output` redefines the output of the Jamal processing.
 The format of the macro is:
 
+.Jamal source
 [source]
 ----
 {@yaml:output yamlMacro}

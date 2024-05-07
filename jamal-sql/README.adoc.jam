@@ -27,6 +27,7 @@ However, the usual approach is much simpler:
 For example:
 {%@define simple_sample=
 {%sample/
+{#file (format=$parent){@pos.file}}
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
 {@sql:select (rs=rs) * from JamalDocumentation}\
 {@sql:loop (rs=rs) {rs 1} {rs 2}

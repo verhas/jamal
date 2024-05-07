@@ -27,8 +27,10 @@ For example:
 
 
 
+.Jamal source
 [source]
 ----
+{#file (format=$parent){@pos.file}}
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
 {@sql:select (rs=rs) * from JamalDocumentation}\
 {@sql:loop (rs=rs) {rs 1} {rs 2}
@@ -37,17 +39,20 @@ For example:
 
 will result in
 
+.output
 [source]
 ----
-1 text1
-2 text2
-3 text3
-4 text4
-5 text5
-6 text6
-7 text7
-8 text8
-9 text9
+/Users/verhasp/github/jamal/jamal-sql
+
+ 1 text1
+ 2 text2
+ 3 text3
+ 4 text4
+ 5 text5
+ 6 text6
+ 7 text7
+ 8 text8
+ 9 text9
 ----
 
 
@@ -163,8 +168,10 @@ The macro's input is the JDBC URL of the database.
 For instance, the code:
 
 
+.Jamal source
 [source]
 ----
+{#file (format=$parent){@pos.file}}
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
 {@sql:select (rs=rs) * from JamalDocumentation}\
 {@sql:loop (rs=rs) {rs 1} {rs 2}
@@ -203,6 +210,7 @@ Jamal exclusively supports JDBC 4.0 drivers and later versions, which are expect
 You need to invoke this macro if you intend to utilize multiple statements simultaneously for the same connection.
 This need arises infrequently, hence the following example may appear somewhat contrived.
 
+.Jamal source
 [source]
 ----
 {#sql:connect (con=c) jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
@@ -218,6 +226,7 @@ The first statement is implicitly created by the `sql:connect` macro, while the 
 The second statement is explicitly named `stmt`, matching the parop used for its definition.
 The sample will yield
 
+.output
 [source]
 ----
 1 text1
@@ -229,6 +238,7 @@ The sample will yield
 
 This macro is used to execute a `SELECT` query.
 
+.Jamal source
 [source]
 ----
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
@@ -241,6 +251,7 @@ In this example, we do not use parops.
 The default connection, statement and result set names are employed.
 The sample will yield
 
+.output
 [source]
 ----
 1 text1
@@ -294,6 +305,7 @@ The result set macro is always verbatim.
 You are not likely to store Jamal macro enhanced text in the database usually.
 If you want to evaluate the text of the result set macro you can still use the `{#eval}` macro with the `#` character at the start.
 
+.Jamal source
 [source]
 ----
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
@@ -305,6 +317,7 @@ If you want to evaluate the text of the result set macro you can still use the `
 
 will result in
 
+.output
 [source]
 ----
 {@ident hello}
@@ -321,6 +334,7 @@ The macro `ident` is a core macro, and it returns the text of the argument.
 
 This macro can be used to loop through the result set of a `SELECT` query.
 
+.Jamal source
 [source]
 ----
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
@@ -344,6 +358,7 @@ If you invoke the macro as `{#sql:loop ...}` the input will be evaluated first a
 
 For example
 
+.Jamal source
 [source]
 ----
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
@@ -355,6 +370,7 @@ For example
 
 will result in
 
+.output
 [source]
 ----
 1 text1

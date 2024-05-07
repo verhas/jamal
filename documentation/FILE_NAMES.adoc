@@ -166,6 +166,7 @@ Jamal does not set any proxy settings.
 When the name of the file stats with the characters `maven:`, then Jamal tries to find the file in the Maven repository.
 You can use file names like
 
+.Jamal source
 [source]
 ----
 {@include [verbatim] maven:com.javax0.jamal:jamal-groovy:1.12.5:compile:version.properties}
@@ -174,6 +175,7 @@ You can use file names like
 
 which will result
 
+.output
 [source]
 ----
 version=1.12.5

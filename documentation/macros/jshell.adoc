@@ -8,7 +8,7 @@ The Java built-in scripting engine JShell can be used to define macros.
 The macro link:script[`script`] and the macro `JShell` can be used to define JShell scripts.
 
 The macro `JShell` can be used to define methods, classes, variables and so on.
-The macro link:script[`script`] is to define a script macro that later can be invoked like any other used defined script macro.
+The macro link:script[`script`] is to define a script macro that later can be invoked like any other user defined script macro.
 
 When the macro `JShell` or link:script[`script`] is used the result is empty string.
 When the script is invoked the output of the macro will be what the script prints out to the standard output.

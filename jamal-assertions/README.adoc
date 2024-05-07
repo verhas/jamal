@@ -14,6 +14,7 @@ The assertions can check that the gathered information is consistent.
 
 For example, the macro
 
+.Jamal source
 [source]
 ----
 {@snip:xml pom=pom.xml}
@@ -25,6 +26,7 @@ It stores the XML in the memory, and you can query it via the `pom` macro afterw
 You can use this `pom` macro with an XPath expression to get parts of the project description.
 For example, the following macro will get the version string of the project:
 
+.Jamal source
 [source]
 ----
 {pom //project/version}
@@ -32,6 +34,7 @@ For example, the following macro will get the version string of the project:
 
 This version currently is
 
+.output
 [source]
 ----
 2.6.0-SNAPSHOT
@@ -40,6 +43,7 @@ This version currently is
 
 If we create an assertion that this version is in the `2.xxx` range, we can write it as the following:
 
+.Jamal source
 [source]
 ----
 here we have an assertion
@@ -49,6 +53,7 @@ assertion was okay
 
 which results
 
+.output
 [source]
 ----
 here we have an assertion
@@ -61,6 +66,7 @@ The output of the assertion is an empty string when the condition is ok.
 Since the string `{pom //project/version}` starts with `2.`, the assertion does not fail.
 If we do a different assertion that tests that the version does NOT start with `2.`, the assertion will result in an error.
 
+.Jamal source
 [source]
 ----
 {@try! {#assert:startsWith (not) /{pom //project/version}/2./ERROR: we are still in the 1.xxx range}}
@@ -69,6 +75,7 @@ if the assertion was not okay, the macro try! displays the error message
 
 which results
 
+.output
 [source]
 ----
 ERROR: we are still in the 1.xxx range
@@ -130,6 +137,7 @@ If it is present, it specifies the error message for the failing assertion.
 
 Let us look at the sample we have already visited in the previous section.
 
+.Jamal source
 [source]
 ----
 {#assert:startsWith (not) /{pom //project/version}/2./ERROR: we are still in the 1.xxx range}
@@ -166,6 +174,7 @@ Instead, the return value of the assertion will be the literal string `true` or 
 Asserts that the first argument contains the second argument.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:contains /abba/bb/contains}
@@ -178,6 +187,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -196,6 +206,7 @@ Note that there is no `assert:blank` assertion.
 If you want to check that the argument is empty OR blank, you should use the `trim` option.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:empty //this is empty}
@@ -209,6 +220,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -226,6 +238,7 @@ results
 Asserts that the first argument starts with the second argument.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:startsWith /abba/abb/abba starts with abb}
@@ -237,6 +250,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -252,6 +266,7 @@ results
 Asserts that the first argument ends with the second argument.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:endsWith /abba/bba/abba ends with bba}
@@ -263,6 +278,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -278,6 +294,7 @@ results
 Asserts that the first and the second arguments are equal strings.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:equals /abba/abba/abba is abba}
@@ -290,6 +307,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -312,6 +330,7 @@ The option `not` is also interpreted.
 If the option `not` is used, the macro will result in an empty string and will not error.
 
 Example
+.Jamal source
 [source]
 ----
 1. ERROR: {@try! {@assert:fail just fail, okay? just fail}}
@@ -319,6 +338,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. ERROR: just fail, okay? just fail
@@ -332,6 +352,7 @@ This assertion interprets the first two arguments as integer values.
 It checks that the first argument is greater than the second.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:greater /6/3/six is greater than three}
@@ -348,6 +369,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -367,6 +389,7 @@ This assertion interprets the first two arguments as integer values.
 It checks that the first argument is greater or equal than the second.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:greaterOrEqual /6/3/six is greater than three}
@@ -383,6 +406,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -404,6 +428,7 @@ This assertion interprets the first two arguments as integer values.
 It checks that the first argument is less than the second.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:less /3/6/three is less than six}
@@ -420,6 +445,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -440,6 +466,7 @@ This assertion interprets the first two arguments as integer values.
 It checks that the first argument is less or equal than the second.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:lessOrEqual /3/6/three is less than six}
@@ -456,6 +483,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -476,6 +504,7 @@ This assertion interprets the first two arguments as integer values.
 It checks that the two arguments are equal as integer numbers.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:intEquals /3/3/three is three}
@@ -491,6 +520,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -509,6 +539,7 @@ results
 This macro checks that the first argument can be interpreted as an integer number.
 
 Example
+.Jamal source
 [source]
 ----
 1. OK: {@assert:int /3/3 is an int}
@@ -523,6 +554,7 @@ Example
 
 results
 
+.output
 [source]
 ----
 1. OK:
@@ -539,6 +571,7 @@ results
 === iv.m.  `assert:numeric`
 This macro checks that the first argument can be interpreted as a numeric (possibly floating-point) number.
 
+.Jamal source
 [source]
 ----
 1. OK: {@assert:numeric /3/3 is an int}
@@ -554,6 +587,7 @@ This macro checks that the first argument can be interpreted as a numeric (possi
 
 results
 
+.output
 [source]
 ----
 1. OK:

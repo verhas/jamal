@@ -69,6 +69,7 @@ The result of the macro is the concatenated strings of the output `<<` commands.
 
 For example:
 
+.Jamal source
 [source]
 ----
 {@program
@@ -86,6 +87,7 @@ For example:
 
 will result in the output:
 
+.output
 [source]
 ----
 this is the output of the program and it is,.. and it is,.. concatenated together  
@@ -101,6 +103,7 @@ When the limit is reached, the program will throw an exception.
 The default value of the limit is 100000 (hundred-thousand).
 This limit is to prevent infinite loops.
 
+.Jamal source
 [source]
 ----
 {@try! {@program stepLimit=18
@@ -116,6 +119,7 @@ next
 
 will result in the output:
 
+.output
 [source]
 ----
 Step limit reached 
@@ -234,6 +238,7 @@ It is also modified.
 The character `1` is appended to the string.
 The variable `evil` is not defined in the program, but it is used outside.
 
+.Jamal source
 [source]
 ----
 {@define a(x)=this is x}
@@ -248,6 +253,7 @@ The variable `evil` is not defined in the program, but it is used outside.
 {evil}
 ----
 
+.output
 [source]
 ----
 Macro 'a' needs 1 arguments and got 0
@@ -278,6 +284,7 @@ The variable assignment has the form:
 The name of the variable can be any string, which is a valid Jamal user defined macro name.
 The value of the expression will be treated as a string and will be stored in the macro registry.
 
+.Jamal source
 [source]
 ----
 {@program
@@ -288,6 +295,7 @@ The value of the expression will be treated as a string and will be stored in th
 
 will result
 
+.output
 [source]
 ----
 30
@@ -312,6 +320,7 @@ If-then-else has the form:
 The `else` and `elseif` parts are optional.
 The interpretation of the commands is the conventional.
 
+.Jamal source
 [source]
 ----
 {@program
@@ -327,6 +336,7 @@ endif
 
 will result
 
+.output
 [source]
 ----
 if true
@@ -339,6 +349,7 @@ You can write `endif` and `elseif` as `end if` and `else if`.
 
 For loops execute the lines between the `for` and `next` commands.
 
+.Jamal source
 [source]
 ----
 {@program
@@ -350,6 +361,7 @@ next
 
 will output
 
+.output
 [source]
 ----
 0123456789
@@ -366,6 +378,7 @@ Unfortunately, in this case the loop cannot terminate.
 
 === while loops
 
+.Jamal source
 [source]
 ----
 {@program
@@ -379,6 +392,7 @@ wend
 
 will result
 
+.output
 [source]
 ----
 0123456789
@@ -390,6 +404,7 @@ will result
 The output command, as you could see examples in the previous samples, is the `<<` command.
 The expression after the `<<` is evaluated and the result is appended to the result of the program macro.
 
+.Jamal source
 [source]
 ----
 {@program
@@ -401,6 +416,7 @@ The expression after the `<<` is evaluated and the result is appended to the res
 } {z}
 ----
 
+.output
 [source]
 ----
 55 55
@@ -414,6 +430,7 @@ You can also use a macro as a method or function call even when it has parameter
 
 The syntax of a function call is
 
+.Jamal source
 [source]
 ----
 macroName( expression, expression, ... )
@@ -423,6 +440,7 @@ In this case, the expressions will be passed to the macro as argument or argumen
 
 A method call is similar, but it has a receiver "object".
 
+.Jamal source
 [source]
 ----
 receiver.macroName( expression, expression, ... )
@@ -431,6 +449,7 @@ receiver.macroName( expression, expression, ... )
 The receiver is an expression.
 The method call is a syntactic sugar only and it is equivalent to
 
+.Jamal source
 [source]
 ----
 macroName( expression, expression, ... , receiver)
@@ -479,6 +498,7 @@ You can define macros with arguments using the `define` macro evaluating strings
 
 Let's have a look at the following example.
 
+.Jamal source
 [source]
 ----
 {@prog
@@ -492,6 +512,7 @@ _ = define( "a(x)=this is x\n" )
 
 will result in
 
+.output
 [source]
 ----
 here we go
@@ -507,6 +528,7 @@ It also shows that the macros defined inside the program code part can also be u
 The following example will show macros chained as method calls.
 It also gives a good example explaining why the receiver is the last argument.
 
+.Jamal source
 [source]
 ----
 {@program
@@ -522,6 +544,7 @@ It also gives a good example explaining why the receiver is the last argument.
 
 will result in
 
+.output
 [source]
 ----
 this is a string
@@ -542,6 +565,7 @@ This macro creates a named BigDecimal number.
 
 For example
 
+.Jamal source
 [source]
 ----
 {@do
@@ -551,6 +575,7 @@ For example
 
 will return
 
+.output
 [source]
 ----
 
@@ -569,6 +594,7 @@ The name of the macros is always the name of the decimal number as specified in 
 
 The next example performs operations using these possibilities:
 
+.Jamal source
 [source]
 ----
 {@do
@@ -587,6 +613,7 @@ The next example performs operations using these possibilities:
 
 will result in
 
+.output
 [source]
 ----
 3.1416
@@ -604,6 +631,7 @@ Also, the rounding is set to `HALF_UP`.
 You can call these macros as real macros without using the BASIC interpreter.
 The following example shows the traditional use of these macros:
 
+.Jamal source
 [source]
 ----
 {@decimal(scale=4)pi=3.1415926}
@@ -616,6 +644,7 @@ The following example shows the traditional use of these macros:
 
 It will result in the same output.
 
+.output
 [source]
 ----
 3.1416

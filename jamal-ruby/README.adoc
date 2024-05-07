@@ -63,6 +63,7 @@ Jamal will create one upon using one of the Ruby macros and utilize it throughou
 
 The macro `ruby:eval` uses its whole input as a ruby expression and evaluates it.
 For example the following macro call:
+.Jamal source
 [source]
 ----
 {@ruby:eval 1+1}
@@ -70,6 +71,7 @@ For example the following macro call:
 
 will result:
 
+.output
 [source]
 ----
 2
@@ -148,6 +150,7 @@ The embedding application can set and get variables of the Ruby script.
 
 For example, the following sample
 
+.Jamal source
 [source]
 ----
 {@ruby:property $myProp=(to_i)55}
@@ -156,6 +159,7 @@ For example, the following sample
 
 and it will result
 
+.output
 [source]
 ----
 100
@@ -165,6 +169,7 @@ and it will result
 You can also fetch the value of a variable set before by the Ruby script or by the `ruby:property` macro:
 
 
+.Jamal source
 [source]
 ----
 {@ruby:eval $yourProp=133}
@@ -173,6 +178,7 @@ You can also fetch the value of a variable set before by the Ruby script or by t
 
 will result
 
+.output
 [source]
 ----
 133
@@ -185,6 +191,7 @@ once by the result of the `ruby:eval` and once as the `ruby:property` also fetch
 Setting the value, you can specify the type of the property.
 In the sample above we wrote
 
+.Jamal source
 [source]
 ----
 {@ruby:property $myProp=(to_i)55}
@@ -221,6 +228,7 @@ It may also happen that you want to pass a *string* that starts with the charact
 
 Some examples:
 
+.Jamal source
 [source]
 ----
 {@ruby:property complex=(to_c)66+13i}
@@ -229,12 +237,14 @@ Some examples:
 
 will result
 
+.output
 [source]
 ----
 4187.0+1716.0i
 ----
 
 
+.Jamal source
 [source]
 ----
 {@ruby:property complex=(to_c/i)66+13i}
@@ -243,12 +253,14 @@ will result
 
 will result
 
+.output
 [source]
 ----
 4187+1716i
 ----
 
 
+.Jamal source
 [source]
 ----
 {@ruby:property ratio=(to_r)66/13}
@@ -257,6 +269,7 @@ will result
 
 will result
 
+.output
 [source]
 ----
 4356/169
@@ -288,6 +301,7 @@ The closer script should result in a string that will replace the original resul
 You can specify any number of closer scripts using different or the same Ruby shell.
 Jamal will invoke all scripts one after the other in the order they were defined in the Jamal source.
 
+.Jamal source
 [source]
 ----
 Hi, I am the content of the Jamal file.
@@ -297,6 +311,7 @@ The closer will kill me.
 
 will result
 
+.output
 [source]
 ----
 I do not care what the original text was, replace it with this one.
@@ -325,6 +340,7 @@ You can overwrite the name of the shell, defining the user-defined macro
 
 It can be done using the usual built-in macro `define`, as in the example
 
+.Jamal source
 [source]
 ----
 {@ruby:eval $z = 13}
@@ -334,6 +350,7 @@ It can be done using the usual built-in macro `define`, as in the example
 
 will result in the output:
 
+.output
 [source]
 ----
 13
@@ -363,6 +380,7 @@ The previous example will look the following:
 
 
 
+.Jamal source
 [source]
 ----
 {@import res:ruby.jim}
@@ -373,6 +391,7 @@ The previous example will look the following:
 
 will result in the output:
 
+.output
 [source]
 ----
 13
@@ -389,6 +408,7 @@ In that case, the definition following the Jamal rules will be local to the Ruby
 For example
 
 
+.Jamal source
 [source]
 ----
 {@import res:ruby.jim}
@@ -399,6 +419,7 @@ For example
 
 will result in the output:
 
+.output
 [source]
 ----
 13
@@ -414,6 +435,7 @@ The last example can also be written as
 
 
 
+.Jamal source
 [source]
 ----
 {@ruby:eval $z = 13}
@@ -423,6 +445,7 @@ The last example can also be written as
 
 will result in the same output:
 
+.output
 [source]
 ----
 13

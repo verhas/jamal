@@ -11,15 +11,15 @@ import java.util.Objects;
 import static java.lang.String.format;
 
 /**
- * A little utility class used solely in {@code UserDefinedMacro} and in {@code ScriptMacro} to ensure the proper use of
- * the macro arguments. In case of user defined macros none of the argument can contain any other argument. This
- * restriction is to avoid non-deterministic behavior. TO be honest the behaviour would not be non-deterministic but
- * rather a deterministic behaviour that is not intuitive. In user defined macros the parameters, as they appear in the
- * text are replaced by the actual string values that are specified for those parameters based on position. If a
- * parameter name contains another parameter name, then the macro evaluation will become ambiguous. Should it replace
- * the longer parameter with its value or the shorter one included in the longer one. This type of use would lead to
- * confusion and much less readability. Jamal, honestly, gives so much possibility to create unreadable and cryptic
- * macros, so we just avoid a pitfall that we can.
+ * This utility class is primarily used in both `UserDefinedMacro` and `ScriptMacro` to ensure proper handling of macro arguments.
+ * In user-defined macros, no argument should contain another argument to prevent what might appear as non-deterministic behavior.
+ * However, it's more accurate to describe this as a deterministic behavior that isn't intuitive.
+ * <p>
+ * In these macros, parameters are replaced in the text with the actual string values assigned to them based on their position.
+ * If one parameter name includes another, it creates ambiguity in the macro evaluation:
+ * it's unclear whether to replace the longer parameter name with its value, or the shorter one embedded within the longer one.
+ * Such scenarios could lead to confusion and reduce readability.
+ * Jamal, frankly, allows for the creation of cryptic and unreadable macros, so this restriction helps us avoid one potential complication.
  */
 class ArgumentHandler {
 
@@ -37,18 +37,21 @@ class ArgumentHandler {
      * The special syntax '...' (ellipsis) is used to indicate variable argument lengths.
      *
      * @param owner      The identified owner of the ArgumentHandler.
-     * @param parameters An array of Strings representing the parameters.
+     * @param parameters An array of Strings representing the parameter names.
      * @throws BadSyntax If the syntax of the parameters is incorrect. This exception is thrown in the following cases:
-     *                   - If more than one parameter contains the '...' syntax.
-     *                   - If the '...' syntax is used improperly, such as having 'xxx...' in a single parameter macro,
+     * <ul>
+     *
+     *                   <li> If more than one parameter contains the '...' syntax.
+     *                   <li> If the '...' syntax is used improperly, such as having 'xxx...' in a single parameter macro,
      *                   or having a 'xxx...' argument that is not the last one in the array.
      *                   <p>
-     *                   The constructor performs the following operations:
+     *                   <li>The constructor performs the following operations:
      *                   1. If only one parameter is provided, and it equals '...', sets min to 0 and max to Integer.MAX_VALUE.
      *                   2. If multiple parameters are provided, it checks each parameter for the presence of '...' at the start or end.
-     *                   - If '...' is found at the start (indicating a minimum number of arguments), the method sets the 'min' field.
-     *                   - If '...' is found at the end (indicating an unlimited maximum number of arguments), the method sets the 'max' field.
+     *                   <li> If '...' is found at the start (indicating a minimum number of arguments), the method sets the 'min' field.
+     *                   <li> If '...' is found at the end (indicating an unlimited maximum number of arguments), the method sets the 'max' field.
      *                   3. If no special syntax is found, it sets 'min' and 'max' to the length of the 'parameters' array.
+     * </ul>
      */
     public ArgumentHandler(Identified owner, String[] parameters) throws BadSyntax {
         this.owner = owner;

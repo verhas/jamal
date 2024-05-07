@@ -33,6 +33,7 @@ project>
 
 It is the same as the standard XML in the following way:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -79,6 +80,7 @@ project>
 
 we get the following:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -122,6 +124,7 @@ project>
 
 we get the following:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -169,6 +172,7 @@ project>
 
 will be
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -212,6 +216,7 @@ jb:project xmlns:jb="https://www.007.com">
 
 will result in:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -262,6 +267,7 @@ project>
 
 will result in:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -317,6 +323,7 @@ project name="prohibited" note="real POM XML does not have attributes">
 
 All the tags will have attributes surrounded with `"` characters in the output.
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -361,6 +368,7 @@ project>
 
 It is still correct and works as expected:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -420,6 +428,7 @@ project>
 
 It will result in the same as the previous example:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -489,6 +498,7 @@ project>
 
 and it still gets the same output:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -542,6 +552,7 @@ and finally something else]]>
 
 is representing the XML
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -570,6 +581,7 @@ and finally something else]]>
 
 will result in the following output:
 
+.output
 [source]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>

@@ -392,6 +392,7 @@ To avoid error use the `{?...}` format when referencing the macro.
 The system property `intellij.asciidoctor.plugin` and `asciidocfx.asciidoctor.plugin` are defined by the embedding environment.
 You can use this via the `env` macro to decide if the Jamal processor is running as an asciidoctor preprocessor.
 
+.Jamal source
 [source]
 ----
 {#if /{@env intellij.asciidoctor.plugin}/This was compiled in IntelliJ or AsciidocFX/This was compiled outside IntelliJ or AsciidocFX/}
@@ -399,6 +400,7 @@ You can use this via the `env` macro to decide if the Jamal processor is running
 
 will result in
 
+.output
 [source]
 ----
 This was compiled outside IntelliJ or AsciidocFX/

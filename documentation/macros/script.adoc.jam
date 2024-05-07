@@ -8,39 +8,23 @@ The syntax of the command is
 {@script/scripttype id(parameters)=body}
 %}
 
-If `script` is followed by `/` character, then the next identifier is the type of the script.
-If this is missing the default, `JShell` is assumed.
-You can use any scripting language that implements the Java scripting API and the interpreter is available on the classpath.
+If `+script+` is followed by a `+/+` character, then the subsequent identifier specifies the type of script. If omitted, `+JShell+` is used by default. Any scripting language that supports the Java scripting API and has its interpreter on the classpath can be utilized.
 
-The parameters are handled differently from the parameters of the user-defined macros defined using the `define` built-in macro.
-In that case, the parameter strings are replaced by the actual value strings during evaluation.
-In this case, the parameters are used as global variable names.
-Using these names, the actual values are injected into the context of the script before evaluation.
+The handling of parameters differs from that of user-defined macros created with the `+define+` built-in macro. For user-defined macros, parameter strings are replaced with their actual values during evaluation. In scripts, however, parameters are treated as global variable names, and their actual values are injected into the script's context before evaluation.
 
-This also implies that you do not have the total freedom of parameter names.
-For `define` we can use any string as a parameter id so long as long it contains no `,` and no `)`.
-In this case, you should care about the syntax of the scripting language used.
-The parameter names have to be valid identifiers in the scripting language as they are used as such.
+This approach limits the freedom in choosing parameter names. With `+define+`, any string can be used as a parameter identifier, provided it does not contain `+,+` or `+)+`. For scripts, parameter names must be valid identifiers within the scripting language since they are utilized as such.
 
-The value injection converts the actual value of the parameter to script values.
-Because the parameters are injected into global variables Jamal performs some conversions.
-Without this, all the scripts that use some integer or floating-point calculation were supposed to convert them first from the string.
+Value injection transforms the actual parameter values into script values. To facilitate this, Jamal performs several conversions:
 
-Therefore, Jamal tries to convert the actual parameters.
+* It first attempts to interpret the parameter as an integer. If successful, the corresponding global variable will store an integer value.
+* If integer conversion fails, it tries to convert the value to a double.
+* If neither numeric conversion is possible, it checks if the value is the lowercase `+true+` or `+false+`. If so, the variable will hold a `+Boolean+` value.
+* Otherwise, the global variable is assigned the actual value as a string.
 
-* First it tries treating it as an integer.
-If it succeeds, then the global variable having the name as the parameter will hold an integer value.
+The actual scripting implementation might not support `+Integer+`, `+Double+`, or `+Boolean+` types, but corresponding script types will be available.
 
-* If the conversion to an integer does not work, then it tries the same with double.
+Below is a sample script that demonstrates a looping construct in JShell.
 
-* If that is also not feasible, then it will check if the actual value is lower case `true` or `false`.
-In this case the global variable of the script will be a `Boolean` value.
-
-* In any other case, the global variable will get the actual value as a string assigned to it.
-
-The actual scripting implementation may not have `Integer`, `Double` or `Boolean` type but there will be some script type corresponding.
-
-The following sample shows a simple script that implements a looping construct using JavaScript.
 The source Jamal file:
 
 {%@comment  the four braces in the code are replaced with a single one before the JShell is executed%}\
@@ -64,7 +48,7 @@ Note that the script code itself contains the macro opening and closing strings.
 This does not do any harm so long as long these are in pairs.
 It is a better practice to change the separator characters to something that cannot appear in the body of the script macro.
 
-Starting with version 1.3.0, Jamal supports the JShell built-in scripting engine.
+Starting with version {%RELEASE:KLOTEN%}, Jamal supports the JShell built-in scripting engine.
 You can define `JShell` as a script type.
 In this case, the content will be passed to the Java built-in JShell engine.
 When the script is invoked, the result of the macro will be the string printed by the JShell script.

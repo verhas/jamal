@@ -10,6 +10,7 @@ You can process a single file or multiple files traversing in a directory struct
 
 To convert a single file you simply have to specify the input and the output file:
 
+.Jamal source
 [source]
 ----
 jamal input output 

@@ -62,7 +62,6 @@ That way the files passed as arguments to the ``docker run`` command will be pas
 
 This file installs all the needed programs that may be needed to run Jamal in the container.
 Some packages are needed by some of the extra Jamal modules.
-For example, the graphviz package is needed by the `plantUML` module.
 
 [source,sh]
 ----
@@ -105,4 +104,6 @@ This will map the current working directory to the directory `/home/jamal/q` in 
 This is assumed by the `/jamal` script.
 Before starting Jamal the script sets the current working directory to `/home/jamal/q`.
 That way, any file referenced on the command line will be found in the mapped directory.
+
+NOTE: Mounting a directory using podman may be tricky regarding readability and may require additional options.
 
