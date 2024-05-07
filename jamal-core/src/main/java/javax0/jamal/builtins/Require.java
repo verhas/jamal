@@ -62,7 +62,7 @@ public class Require implements Macro {
                     break;
                 }
                 BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0, "The current version " + currentVersion + " is the same as the required version. It has to be older.", in.getPosition());
-                BadSyntaxAt.when(true, "The current version " + currentVersion + " is newer than the required version. It has to be older.", in.getPosition());
+                BadSyntaxAt.format( "The current version " + currentVersion + " is newer than the required version. It has to be older.", in.getPosition());
 
             case LESS_OR_EQUAL:
                 if (currentVersion.compareTo(requiredVersion) <= 0) {

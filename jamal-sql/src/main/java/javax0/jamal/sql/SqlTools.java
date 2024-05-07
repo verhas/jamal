@@ -28,11 +28,12 @@ public class SqlTools {
     static void assertSqlSelectSafe(final String query) throws BadSyntax {
         final CCJSqlParser parser;
         try {
-            parser = new CCJSqlParser("SELECT "+query);
+            parser = new CCJSqlParser("SELECT " + query);
             final var statements = parser.Statements();
-            BadSyntax.when( statements.size() != 1 , "SQL select query '%s' seems to be dangerous.", query);
+            if (statements.size() != 1)
+                throw new IllegalArgumentException("SQL select query '" + query + "' seems to be dangerous.");
         } catch (ParseException e) {
-            throw new BadSyntax("SQL select query '"+query+"' is not safe and erroneous.", e);
+            throw new BadSyntax("SQL select query '" + query + "' is not safe and erroneous.", e);
         }
     }
 

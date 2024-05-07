@@ -1,9 +1,12 @@
 package javax0.jamal.sql;
 
 import javax0.jamal.DocumentConverter;
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.DriverManager;
 
 public class TestSelect {
@@ -44,7 +47,18 @@ public class TestSelect {
 
         TestThat.theInput("{@option failfast}\" +\n" +
                 "{@sql:connect " + url + "}" +
-                "{@sql:select * from Employees;select * Bbb }").throwsBadSyntax("SQL select query '\\* from Employees;select \\* Bbb' seems to be dangerous\\.");
+                "{@sql:select * from Employees;select * Bbb }").throwsUp(IllegalArgumentException.class);
+    }
+
+    @Test
+    void testVerbatimness() throws Exception {
+        final var root = DocumentConverter.getRoot();
+        String url = "jdbc:h2:" + root + "/target/testdb";
+        TestThat.theInput("{@option failfast}" +
+                "{@sql:connect " + url + "}" +
+                "{@sql:select (rs=rs) '{@ident hello}' AS result}" +
+                "{rs next}" +
+                "{#eval {rs 1}}").results("hello");
     }
 
 }

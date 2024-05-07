@@ -46,7 +46,7 @@ public class TestStatement {
 
         TestThat.theInput("{@option failfast}\" +\n" +
                 "{@sql:connect " + url + "}" +
-                "{@sql:select * from Employees;select * Bbb }").throwsBadSyntax("SQL select query '\\* from Employees;select \\* Bbb' seems to be dangerous\\.");
+                "{@sql:select * from Employees;select * Bbb }").throwsUp(IllegalArgumentException.class);
     }
 
 }

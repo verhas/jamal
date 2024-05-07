@@ -336,7 +336,7 @@ To do this the macro `snip` will accept all the options of the macro `snip:trans
 
 [[snip_check]]
 === {%chapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=af713bc8%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=e8e7074b%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.

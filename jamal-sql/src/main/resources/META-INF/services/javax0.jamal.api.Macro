@@ -2,3 +2,4 @@ javax0.jamal.sql.Select
 javax0.jamal.sql.Connect
 javax0.jamal.sql.Loop
 javax0.jamal.sql.Statement
+javax0.jamal.sql.Close

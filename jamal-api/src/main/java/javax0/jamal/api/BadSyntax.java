@@ -121,7 +121,11 @@ public class BadSyntax extends Exception {
      */
     public static void when(final boolean condition, final String format, final Object... parameters) throws BadSyntax {
         if (condition) {
-            throw new BadSyntax(String.format(format, parameters));
+            throw format(String.format(format, parameters));
         }
+    }
+
+    public static BadSyntax format(final String format, final Object... parameters) throws BadSyntax {
+        throw new BadSyntax(String.format(format, parameters));
     }
 }

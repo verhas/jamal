@@ -88,7 +88,7 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < MIN_LENGTH) {
             BadSyntax.when(hashStringCalculated.contains(hash), "The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
-            BadSyntax.when(true, "The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
+            BadSyntax.format( "The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
                     getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
         }
         if (hashStringCalculated.contains(hash)) {

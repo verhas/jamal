@@ -1,8 +1,5 @@
 import javax0.jamal.api.Macro;
-import javax0.jamal.sql.Connect;
-import javax0.jamal.sql.Loop;
-import javax0.jamal.sql.Select;
-import javax0.jamal.sql.Statement;
+import javax0.jamal.sql.*;
 
 module jamal.sql {
     requires jamal.api;
@@ -10,5 +7,5 @@ module jamal.sql {
     requires jamal.engine;
     requires java.sql;
     requires net.sf.jsqlparser;
-    provides Macro with Connect, Select, Loop, Statement;
+    provides Macro with Connect, Select, Loop, Statement, Close;
 }

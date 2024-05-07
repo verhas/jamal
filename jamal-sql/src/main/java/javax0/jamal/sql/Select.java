@@ -52,15 +52,21 @@ public class Select implements Macro, Scanner, OptionsControlled {
         @Override
         public String evaluate(String... parameters) throws BadSyntax {
             BadSyntax.when(parameters.length < 1, "The column name or number is missing");
-            var columnName = parameters[0].trim();
-            final String type = parameters.length > 1 ? parameters[1].trim() : "string";
+            var params = parameters[0].trim().split("\\s");
+            var columnName = params[0];
+            final String type = (parameters.length > 2 && "as".equals(parameters[1]))
+                    ? parameters[2]
+                    : (parameters.length > 1 ? parameters[1] : "string");
+
             final var resultSet = getObject();
             try {
                 if (columnName.equals("next")) {
+                    BadSyntax.when( params.length > 1, "Result set 'next' must ot have any parameter");
                     resultSet.next();
                     return "";
                 }
                 if (columnName.equals("close")) {
+                    BadSyntax.when( params.length > 1, "Result set 'close' must ot have any parameter");
                     resultSet.close();
                     return "";
                 }
@@ -91,12 +97,11 @@ public class Select implements Macro, Scanner, OptionsControlled {
                     case "timestamp":
                         return columnName.isEmpty() ? resultSet.getTimestamp(columnNumber).toString() : resultSet.getTimestamp(columnName).toString();
                     default:
-                        BadSyntax.when(true, "Unknown type '%s'", type);
+                        throw BadSyntax.format( "Unknown type '%s'", type);
                 }
             } catch (Exception e) {
-                BadSyntax.when(true, "Cannot read column '%s' as '%s'", columnName, type);
+                throw BadSyntax.format( "Cannot read column '%s' as '%s'", columnName, type);
             }
-            return "";
         }
 
         @Override

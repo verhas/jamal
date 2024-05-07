@@ -1,24 +1,25 @@
-\ = Jamal SQL module
+= Jamal SQL module
 
 SQL module for Jamal to allow data collection from SQL databases.
 
 == Introduction
 
-Using this module, you can connect to a database from your document and get data directly injected into the output.
-The underlying technology is Java JDBC connection, and the macros follow the terminology and structure of JDBC.
+Using this module, you can connect to a database directly from your document and inject the retrieved data into the output.
+The underlying technology is `Java JDBC connection`, and the macros use the terminology and structure of JDBC.
 
-The usual JDBC way is to
+The standard JDBC process involves the following steps:
 
-* connect to the database, (which also loads the driver)
-* create a statement, and
-* execute a query,
-* and then process the result set.
+* Connect to the database, which also loads the driver.
 
-You can do that in Jamal, and you can have multiple connections with various drivers loaded, and several statements for each connection.
-The usual way is much simpler:
+* Create a statement.
+* Execute a query.
+* Process the result set.
 
-* You specify the connection to the database.
-* You execute a query.
+In Jamal, you can follow this process while maintaining multiple connections with different drivers, and several statements for each connection.
+However, the usual approach is much simpler:
+
+* Specify the connection to the database.
+* Execute a query.
 * Loop through the result set.
 
 For example:
@@ -29,50 +30,59 @@ For example:
 ----
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
 {@sql:select (rs=rs) * from JamalDocumentation}\
-{@sql:loop (rs=rs) {rs 1} {rs 2} } 
----- 
+{@sql:loop (rs=rs) {rs 1} {rs 2}
+}
+----
 
 will result in
 
 [source]
 ----
-1 text1  2 text2  3 text3  4 text4  5 text5  6 text6  7 text7  8 text8  9 text9  
+1 text1
+2 text2
+3 text3
+4 text4
+5 text5
+6 text6
+7 text7
+8 text8
+9 text9
 ----
 
 
 as we are having a demo database in the same directory as this document.
 
-NOTE: Unfortunately you have to use `{#file (format=$parent){@pos.file}}` in the file name.
-JDBC does not find the file otherwise.
+NOTE: Regrettably, you must include `{#file (format=$parent){@pos.file}}` in the file name.
+JDBC fails to locate the file otherwise.
 
 == Installation
 
-There is no need to install anything for Jamal SQL module.
-It is part of the Jamal distribution, and because it is a safe module, it is part of the default dependencies.
-What you need to install, however, is the JDBC driver for your database.
+No additional installation is required for the Jamal SQL module.
+It's included in the Jamal distribution, and as a secure module, it's part of the default dependencies.
+However, you do need to install the JDBC driver specific to your database.
 
-In the implementation of the `sql:*` macros the JDBC calls can only be executed of the JDBC driver can be loaded.
-To make it available for the `sql:connect` macro you have to put the driver in the classpath.
+In the implementation of the `sql:*` macros, JDBC calls can only execute if the JDBC driver is loaded.
+To make it accessible for the `sql:connect` macro, you need to include the driver in the classpath.
 
-This may be tricky and depend on the actual embedding of Jamal.
-In this section, we can only give you hints, and not definite instructions.
-Because the installation may vary from different embedding environment from version to version, it is not feasible to develop automatic installation support.
+The process may be complex and depends on how Jamal is integrated.
+In this section, we can only provide guidelines, not definitive instructions.
+Due to potential variations in installation across different embedding environments and versions, automated installation support isn't feasible.
 
 === Running from Code
 
-This is the simplest and most straightforward case.
-Simply add the driver to the classpath of your application using your favourite build tool, being it Maven, Gradle, Ant, or something else.
+In the simplest and most straightforward scenario, you just need to add the driver to the classpath of your application using your preferred build tool, whether it's Maven, Gradle, Ant, or another tool of your choice.
 
 === Running from Command Line
 
-When you run Jamal from the command line, there is a shell script for the execution.
-This shell script defines the function `download()` that downloads the dependencies unless they are already available.
-Add the driver to the list of dependencies in the shell script.
+When executing Jamal from the command line, a shell script handles the execution.
+This script includes a function called `download()` which downloads dependencies if they're not already available.
+To ensure the JDBC driver is included, add it to the list of dependencies within the shell script.
 
 === Running using JBang
 
-Starting the application using JBang is similar to running from the command line.
-You should use a local version of the `jbangstarter.java` file
+To start the application using JBang, the process is akin to running from the command line.
+You'll need to use a local version of the `jbangstarter.java` file.
+Here's how you can include it:
 
 [source,java]
 ----
@@ -106,7 +116,8 @@ class jbangstarter {
 
 ----
 
-and add a `//DEPS` line for your JDBC driver.
+Additionally, ensure to add a `//DEPS` line in the `jbangstarter.java` file for your JDBC driver.
+This ensures that the required dependencies, including the JDBC driver, are properly included.
 
 === Running from Maven Plugin
 
@@ -125,61 +136,71 @@ When you configure the `jamal-doclet` plugin add the dependecy to the plugin con
 
 === Running from inside IntelliJ IDEA
 
-If you run Jamal from IntelliJ, you should copy the driver JAR along with all other JAR files the driver depends on to a directory from where the JDBC call can load it.
-On the machine we develop Jamal it is the project's `.asciidoctor/lib` directory for the community edition.
-It did not work, however, for the Professional Edition.
-In the Professional Edition, we had to put the driver JAR into the `lib` directory of the Asciidoctor plugin dependecies, that is
+When running Jamal from IntelliJ, you'll need to ensure that the JDBC driver JAR file, along with any other JAR files it depends on, are copied to a directory from which the JDBC call can load them.
 
-  /Library/Application\ Support/JetBrains/IntelliJIdea{VERSION}//plugins/asciidoctor-intellij-plugin/lib/
+For the Community Edition, this directory is typically the project's `.asciidoctor/lib` directory.
 
-where `{VERSION}` is the version of IntelliJ IDEA you are using, in our case it was `2024.1`.
+However, for the Professional Edition, the process differs.
+You'll need to place the driver JAR into the `lib` directory of the Asciidoctor plugin dependencies.
+This directory path usually looks like:
+
+  /Library/Application Support/JetBrains/IntelliJIdea{VERSION}/plugins/asciidoctor-intellij-plugin/lib/
+
+Replace `{VERSION}` with the version of IntelliJ IDEA you're using.
+For example, if you're using IntelliJ IDEA 2024.1, the directory path would be:
+
+  /Library/Application Support/JetBrains/IntelliJIdea2024.1/plugins/asciidoctor-intellij-plugin/lib/
+
+By placing the JDBC driver JAR in this directory, it ensures that IntelliJ IDEA's Asciidoctor plugin can access it during execution.
 
 == Macros in the package
 
 === `sql:connect`
 
-You need this macro to connect to a database.
-The input of the macro is the JDBC URL of the database.
-For example, the code:
+You need this macro to establish a connection with a database.
+The macro's input is the JDBC URL of the database.
+For instance, the code:
 
 
 [source]
 ----
 {#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
 {@sql:select (rs=rs) * from JamalDocumentation}\
-{@sql:loop (rs=rs) {rs 1} {rs 2} } 
----- 
+{@sql:loop (rs=rs) {rs 1} {rs 2}
+}
+----
 
-we have seen in the introduction, uses `h2` database and uses a file-based database residing in the same directory as the document.
-When the connection is made, a JDBC statement is created automatically.
+shown in the introduction, utilizes an `h2` database and accesses a file-based database located in the same directory as the document.
+Upon establishing the connection, a JDBC statement is automatically generated.
 
-The macro call can have two parops to name the
+The macro call can include two parops for naming the
 
-* connection (`con`, `connection` default is `sql$result`), and to name
-* the statement (`stmt`, `statement` default is `sql$statement`).
+* connection (`con`, `connection`, default is `sql$result`), and
+* the statement (`stmt`, `statement`, default is `sql$statement`).
 
-(Technically the names are alias, if a macro is named `con` or `stmt` they have no effect on `sql:conect`.)
+(Technically, these names act as aliases; if a macro is named `con` or `stmt`, they do not affect `sql:connect`.)
 
-The created connection and the statement are stored along with the user defined macros with the names given in the parops.
-They are, however, not macros.
-You cannot use them in the document other than passing their name to other macros.
-However, if you have a macro with the same name, the connection macro created item will hide or overwrite the macro.
+The established connection and statement are stored, along with user-defined macros, using the names provided in the parops.
+However, they are not macros themselves.
+You cannot utilize them within the document except for passing their names to other macros.
+Nevertheless, if there exists a macro with the same name, the connection macro's created item will either hide or overwrite the macro.
 
-The sole use of the connection name is to pass it to the `sqL:statement` macro to create a new statement for the same connection.
-Similarly, when a `sql:select` the name of the statement can be specified.
-All these macros use the same default name if nothing is specified.
+The connection name's sole purpose is to transmit it to the `sql:statement` macro to generate a new statement for the same connection.
+Similarly, when employing `sql:select`, the statement's name can be specified.
+If nothing is specified, all these macros employ the default names.
 
-When a name is reused in a `sql:connect` macro, the connection is closed and a new connection is created.
-If the name is defined in a higher scope, the old connection is kept alive and accessible from the higher scope.
-In this case, the new connection of the same name only hides the already existing connection.
+Upon reusing a name in a `sql:connect` macro, the previous connection is terminated, and a new connection is established.
+If the name is defined in a higher scope, the previous connection remains active and can be accessed from the higher scope.
+In this scenario, the new connection with the same name merely hides the pre-existing connection.
 
-NOTE: There is no need to specify the jdbc driver.
-Jamal supports only drivers JDBC 4.0 and later, and they are supposed to be loaded automatically.
+NOTE: Specifying the JDBC driver is unnecessary.
+Jamal exclusively supports JDBC 4.0 drivers and later versions, which are expected to load automatically.
+
 
 === `sql:statement`
 
-You need to call this macro if you want to use simultaneous multiple statements for the same connection.
-This is rarely needed, thus the following example may seem to be a bit contrived.
+You need to invoke this macro if you intend to utilize multiple statements simultaneously for the same connection.
+This need arises infrequently, hence the following example may appear somewhat contrived.
 
 [source]
 ----
@@ -191,13 +212,169 @@ This is rarely needed, thus the following example may seem to be a bit contrived
 {@sql:loop (rs=rs2) {rs2 1} {rs2 2} } 
 ----
 
-In this example, we are using the same connection, this time named as `c` for two different statements.
-The first statement is created implicitely by the `sql:connect` macro, and the second statement is created by the `sql:statement` macro.
-The socnd one gets the name explicitly, it is `stmt`, which is also the name of the parop used to define it.
-The sample will result
+In this example, we utilize the same connection, explicitly named `c`, for two distinct statements.
+The first statement is implicitly created by the `sql:connect` macro, while the second statement is created by the `sql:statement` macro.
+The second statement is explicitly named `stmt`, matching the parop used for its definition.
+The sample will yield
 
 [source]
 ----
 1 text1
 1 text1  2 text2  
 ----
+
+
+=== `sql:select`
+
+This macro is used to execute a `SELECT` query.
+
+[source]
+----
+{#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
+{@sql:select * from JamalDocumentation LIMIT 2}\
+{@sql:loop {sql$result 1 int} {sql$result some_text}
+}
+----
+
+In this example, we do not use parops.
+The default connection, statement and result set names are employed.
+The sample will yield
+
+[source]
+----
+1 text1
+2 text2
+----
+
+
+The input of the macro is the part of the query that follows the `SELECT` keyword.
+The `SELECT` keyword is prepended before the input separated by a space and tested before executing the query.
+To test the query, Jamal uses the `com.github.jsqlparser` library.
+If it finds more than one query in the string, the query is not executed.
+
+The `sql:select` macro can have two parops to name the statement to be used and to name the result set:
+
+* the statement is defined by `stmt`, `statement` the same as in the `sql:connect` or `sql:statement` macros, and
+* `resultSetName`, `resultSet`, `rs`, or `result` (default is `sql$result`) to name the result set.
+
+The result set name is used in the `sql:loop` macro to refer to the result set.
+As opposed to the connection and statement, the result set is a macro and can be used in the document.
+In the example above, it is used in the document using one argument each time.
+This argument can be
+
+* the number of the column (starting from 1), or
+* the name of the column, or
+* `next` to move to the next row, or
+* `close` to close the result set.
+
+When you use the macro `sql:loop` you do not need to use the parameter `next`.
+Also, you do not need to call `close` on the result set.
+The macro going out of scope will invoke `close` automatically.
+
+.Use "next",  "close" and "1" as column name
+NOTE: You may have a column named `next` or `close` or `1` or `2` or any other number.
+In that case you can use the column name as a string, like `{rs "next"}` or `{rs "close"}`.
+
+.SQL injection prevention
+NOTE: To keep the macro package safe, it is not possible to execute any other query than `SELECT`.
+Before executing the query the macro scans the SQL statement using `com.github.jsqlparser` library and aborts before executing the query if it finds more than one statement.
+If the SQL query is erroneous, a syntax error is thrown.
+It can be handled using the `try` macro.
+If the SQL query is not erroneous, but the result contains multiple statements, the code throws an IllegalArgumentException.
+It cannot be handled using the `try` macro.
+
+.Result set macros are verbatim
+[NOTE]
+====
+User defined macros are evaluated after their value was calculated.
+If the text of the macro contains other macros, they are not evaluated.
+To prevent this behavior, you can use the built-in macro `verbatim` or you can define a macro to be verbatim.
+The result set macro is always verbatim.
+You are not likely to store Jamal macro enhanced text in the database usually.
+If you want to evaluate the text of the result set macro you can still use the `{#eval}` macro with the `#` character at the start.
+
+[source]
+----
+{#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
+{@sql:select (rs=rs) '{@ident hello}' AS result}
+{rs next}
+{rs 1}
+{#eval {rs result}}
+----
+
+will result in
+
+[source]
+----
+{@ident hello}
+hello
+----
+
+
+The call to `{rs 1}` is not evaluated; therefore, it returns the string `{@ident hello}` verbatim.
+The call to `{rs result}` is evaluated, and it returns the string `hello`.
+The macro `ident` is a core macro, and it returns the text of the argument.
+====
+
+=== `sql:loop`
+
+This macro can be used to loop through the result set of a `SELECT` query.
+
+[source]
+----
+{#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
+{@sql:select (rs=rs) * from JamalDocumentation LIMIT 2}\
+{@sql:loop (rs=rs) {rs 1} {rs 2}
+}
+----
+
+The loop evaluates the body of the loop for each row in the result set calling `next()` on the result set.
+If the method `next()` returns `false`, the loop terminates.
+
+You can specify the result set using the parop:
+
+* `resultSetName`, `resultSet`, `rs`, or `result` (default is `sql$result`) to name the result set.
+
+The result set held by the macro will be used to invoke the method `next()`.
+Other than that, you are free to put any text into the input of the macro `sql:loop`.
+
+Usually you will invoke the macro as `{@sql:loop ...}` and not as `{#sql:loop ...}`.
+If you invoke the macro as `{#sql:loop ...}` the input will be evaluated first and the looping only afterward.
+
+For example
+
+[source]
+----
+{#sql:connect jdbc:h2:{#file (format=$parent){@pos.file}}/demodb}
+{@sql:select (rs=rs) * from JamalDocumentation LIMIT 4}\
+{rs next}
+{#sql:loop (rs=rs) {rs 1} {rs 2}
+}
+----
+
+will result in
+
+[source]
+----
+1 text1
+1 text1
+1 text1
+----
+
+
+To avoid error in the example, we have to call `{rs next}` before the loop.
+Without this the code `{rs 1} {rs 2}` would result an error.
+These can only be evaluated only after calling `{rs next}`, which is not done automatically in this case.
+The macros `{rs 1} {rs 2}` are evaluated before the loop starts.
+The input for the loop essentially becomes the text `1 text1`, which is then repeated three more times `sql:loop` calling next.
+
+If you have some code that you need to be evaluated before the loop starts and you still need to code evaluated by the loop you can use the core macro `ident` or `escape`.
+
+=== `sql:close`
+
+Use this macro to close some resources.
+The SQL macro resources are automatically closed when they go out of scope.
+If for any reason, you need to close a statement, a connection or result set before they go out of scope, or before Jamal exists, you can use this macro.
+
+This macro does not check the type of the resource.
+It can close anything so long as long it is in the macro register, it holds an object and the object is either `Closeable` or `AutoCloseable`.
