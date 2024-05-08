@@ -87,9 +87,9 @@ public class Pos implements Macro, Scanner {
             final var sb = new StringBuilder();
             for (var p = pos; p != null; p = p.parent) {
                 final var thisPos = formatString
-                        .replaceAll("%f", "" + p.file)
-                        .replaceAll("%l", "" + p.line)
-                        .replaceAll("%c", "" + p.column);
+                        .replace("%f", String.valueOf( p.file))
+                        .replace("%l", String.valueOf(  p.line))
+                        .replace("%c", String.valueOf(  p.column));
                 if (sb.length() > 0) {
                     sb.append(sep.get());
                 }
@@ -122,8 +122,8 @@ public class Pos implements Macro, Scanner {
             return "";
         }
         return formatString
-                .replaceAll("%f", "" + pos.file)
-                .replaceAll("%l", "" + pos.line)
-                .replaceAll("%c", "" + pos.column);
+                .replace("%f", String.valueOf( pos.file))
+                .replace("%l", String.valueOf(  pos.line))
+                .replace("%c", String.valueOf(  pos.column));
     }
 }

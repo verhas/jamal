@@ -95,7 +95,15 @@ public class TestPos {
         }
 
         @Test
-        @DisplayName("All pos test")
+        @DisplayName("test with windows sample")
+        void testWindowsSample() throws Exception {
+            TestThat.theInput("{@pos.file}")
+                    .atPosition(new Position("A:\\floppy_drive\\64kb.adoc.jam", 1, 1))
+                    .results("A:\\floppy_drive\\64kb.adoc.jam");
+        }
+
+        @Test
+        @DisplayName("parop \"all\" pos test")
         void testAllSample() throws Exception {
             TestThat.theInput("{@pos (all format=\"%f|%l|%c\")}")
                     .atPosition(new Position("mipsi", 1, 3,
