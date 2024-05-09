@@ -132,7 +132,7 @@ public class TestPos {
                     .atPosition(new Position("mipsi", 1, 3,
                             new Position("baksi", 1976, -70,
                                     new Position("wupsy", 666, 1937))))
-                    .throwsBadSyntax("Macro 'pos' can handle one 'top', 'parent', 'all' or 'up' parameter only\\. They cannot be used together");
+                    .throwsBadSyntax("In the macro 'pos' you cannot use 'top', 'up' together\\.");
         }
 
         @Test

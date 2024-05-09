@@ -173,7 +173,7 @@ public class Param<K> implements Params.Param<K> {
      * @throws BadSyntax if there are multiple values for this key or if the key is not allowed for this macro
      */
     private Optional<String> _get() throws BadSyntax {
-        if (value.size() > 0) {
+        if (!value.isEmpty()) {
             BadSyntax.when(value.size() > 1 && stringNeeded, "The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName);
             return Optional.ofNullable(value.get(0));
         }
@@ -202,6 +202,7 @@ public class Param<K> implements Params.Param<K> {
      */
     public K get() throws BadSyntax {
         if (processor == null) {
+            // this cannot happen with the new scanner build classes
             throw new IllegalArgumentException("The parameter variable '" + reportingName(key) + "' was not processed during parsing.");
         }
         try {
@@ -228,8 +229,8 @@ public class Param<K> implements Params.Param<K> {
         return (boolean) result;
     }
 
-    public boolean isPresent() throws BadSyntax {
-        return _get().isPresent();
+    public boolean isPresent() {
+        return !value.isEmpty() || (key != null && key.length >0 && key[0] != null && processor.getRegister().getUserDefined(key[0]).isPresent());
     }
 
     /**
@@ -239,7 +240,7 @@ public class Param<K> implements Params.Param<K> {
      */
     private boolean getBoolean() throws BadSyntax {
         BadSyntax.when(value.size() > 1, "The key '%s' must not be multi valued in the macro '%s'", reportingName(key), macroName);
-        if (value.size() > 0) {
+        if (!value.isEmpty()) {
             return !value.get(0).equals("false") && !value.get(0).equals("no") && !value.get(0).equals("0");
         } else {
             return key[0] != null && OptionsStore.getInstance(processor).is(key[0]);
@@ -252,7 +253,7 @@ public class Param<K> implements Params.Param<K> {
      *                   macro of the same name throws up.
      */
     private List<String> getList() throws BadSyntax {
-        if (value.size() > 0) {
+        if (!value.isEmpty()) {
             return value;
         } else {
             return MacroReader.macro(processor).readValue(key[0]).map(List::of).orElse(List.of());
@@ -265,7 +266,7 @@ public class Param<K> implements Params.Param<K> {
      *                   macro of the same name throws up.
      */
     private List<Integer> getIntList() throws BadSyntax {
-        if (value.size() > 0) {
+        if (!value.isEmpty()) {
             return value.stream().map(Integer::parseInt).collect(Collectors.toList());
         } else {
             return MacroReader.macro(processor).readValue(key[0]).map(Integer::parseInt).map(List::of).orElse(List.of());

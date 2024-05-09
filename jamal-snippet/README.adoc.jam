@@ -950,7 +950,7 @@ The macro has one option parameter:
 
 [[pos]]
 === {%chapter%}`pos`
-{%#snip:check file={%JAVA_DIR%}Pos.java hash=e70c3309%}
+{%#snip:check file={%JAVA_DIR%}Pos.java hash=f8a8cd1d%}
 
 This macro will result the
 

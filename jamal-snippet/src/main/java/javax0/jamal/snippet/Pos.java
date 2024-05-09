@@ -5,13 +5,14 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.ScannerTools;
 
 public class Pos implements Macro, Scanner {
 
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         var pos = in.getPosition();
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         // snippet pos_options
         final var top = scanner.bool(null, "top");
         // will instruct the macro to use the location no of the top level.
@@ -63,22 +64,8 @@ public class Pos implements Macro, Scanner {
                 break;
         }
 
-        int count = 0;
-        if (top.is()) {
-            count++;
-        }
-        if (parent.is()) {
-            count++;
-        }
-        if (all.is()) {
-            count++;
-        }
-        if (up.isPresent()) {
-            count++;
-        }
-        if (count > 1) {
-            throw new BadSyntax("Macro 'pos' can handle one 'top', 'parent', 'all' or 'up' parameter only. They cannot be used together");
-        }
+        ScannerTools.badSyntax(this).whenParameters(top, parent, all, up).multipleArePresent();
+
         if (sep.isPresent() && !all.is()) {
             processor.logger().log(System.Logger.Level.WARNING, pos, "There is no reason to specify separator unless the parameter 'all' is also used for the macro 'pos'");
         }
@@ -87,9 +74,9 @@ public class Pos implements Macro, Scanner {
             final var sb = new StringBuilder();
             for (var p = pos; p != null; p = p.parent) {
                 final var thisPos = formatString
-                        .replace("%f", String.valueOf( p.file))
-                        .replace("%l", String.valueOf(  p.line))
-                        .replace("%c", String.valueOf(  p.column));
+                        .replace("%f", String.valueOf(p.file))
+                        .replace("%l", String.valueOf(p.line))
+                        .replace("%c", String.valueOf(p.column));
                 if (sb.length() > 0) {
                     sb.append(sep.get());
                 }
@@ -118,12 +105,12 @@ public class Pos implements Macro, Scanner {
                 }
             }
         }
-        if( pos == null ){
+        if (pos == null) {
             return "";
         }
         return formatString
-                .replace("%f", String.valueOf( pos.file))
-                .replace("%l", String.valueOf(  pos.line))
-                .replace("%c", String.valueOf(  pos.column));
+                .replace("%f", String.valueOf(pos.file))
+                .replace("%l", String.valueOf(pos.line))
+                .replace("%c", String.valueOf(pos.column));
     }
 }

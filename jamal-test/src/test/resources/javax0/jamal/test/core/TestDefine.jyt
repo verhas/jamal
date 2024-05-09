@@ -238,7 +238,7 @@ Using option 'optional' together with '?' is error:
 
 You cannot use [optional failIfRedefined]:
   Input: "{@define [ifNotDefined failIfDefined] a=13}"
-  Throws: "You cannot use ifNotDefined and failIfDefined.*"
+  Throws: "In the macro 'define' only one of 'failIfDefined', 'ifNotDefined' can be true\\."
 
 Double verbatim character in define is an error:
   Input: "{@define ~?~ a={@code}}{a}"

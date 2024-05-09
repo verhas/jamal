@@ -1,6 +1,5 @@
 package javax0.jamal.tools.param;
 
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.tools.Params;
 
 public abstract class AbstractTypedParameter<T> {
@@ -20,7 +19,7 @@ public abstract class AbstractTypedParameter<T> {
         this.param = param;
     }
 
-    public boolean isPresent() throws BadSyntax {
+    public boolean isPresent() {
         return param.isPresent();
     }
 

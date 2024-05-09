@@ -36,10 +36,6 @@ public class Repeat implements Macro, Scanner {
         }else{
             string = in.toString();
         }
-        final var sb = new StringBuilder();
-        for( int i = 0 ; i < n.get() ; i++ ){
-            sb.append(string);
-        }
-        return sb.toString();
+        return String.valueOf(string).repeat(Math.max(0, n.get()));
     }
 }

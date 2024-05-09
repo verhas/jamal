@@ -167,7 +167,7 @@ public class Params {
 
         boolean is() throws BadSyntax;
 
-        boolean isPresent() throws BadSyntax;
+        boolean isPresent();
 
         /**
          * @return the name, which was actually used for the parameter. It is the same string as the name of the

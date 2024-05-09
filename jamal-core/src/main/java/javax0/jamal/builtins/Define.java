@@ -4,6 +4,7 @@ import javax0.jamal.api.Macro;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.ScannerTools;
 import javax0.jamal.tools.Throwing;
 
 import java.lang.reflect.Constructor;
@@ -31,8 +32,8 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         final var IdOnly = scanner.bool("RestrictedDefineParameters");
         scanner.done();
 
-        BadSyntax.when(noRedefineParam.is() && optionalParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
-        BadSyntax.when(globalParam.is() && exportParam.is(), "You cannot use %s and %s", optionalParam.name(), noRedefineParam.name());
+        ScannerTools.badSyntax(this).whenBooleans(noRedefineParam,optionalParam).multipleAreTrue();
+        ScannerTools.badSyntax(this).whenBooleans(globalParam,exportParam).multipleAreTrue();
         skipWhiteSpaces(input);
         boolean verbatim = verbatimParam.is();
         boolean tailParams = tailParamsParam.is();
