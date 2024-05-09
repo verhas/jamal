@@ -214,44 +214,7 @@ public class TestExec {
                         // using PRG001 as a macro will throw an exception, but not undefined macro
                         "{@io:exec command=abrakadabra optional async=PRG001}{PRG001}"
                 //end::undefined_command_optional_defines[]
-        ).results("");//.throwsBadSyntax("'PRG001' is a process reference and must not be used as a user defined macro\\.");
-    }
-
-    @Test
-    @DisplayName("Start graphviz for real")
-    void testGraphviz() throws Exception {
-        // configured in ~/.jamal/settings.properties
-        //System.setProperty("graphviz", "/usr/local/bin/dot");
-        TestThat.theInput("" +
-                "{@io:exec command=graphviz argument=-Tsvg argument=-o argument=target/a-b.svg\n" +
-                "digraph {\n" +
-                "    a -> b\n" +
-                "    a -> c \n" +
-                "    a -> d\n" +
-                "    a -> e\n" +
-                "    d -> b\n" +
-                "    d -> c\n" +
-                "    c -> e\n" +
-                "    k -> h\n" +
-                "    d -> e\n" +
-                "    b -> c \n" +
-                "    b -> d\n" +
-                "    b -> e\n" +
-                "    f -> c \n" +
-                "    b -> e\n" +
-                "    f -> c\n" +
-                "    f -> k\n" +
-                "    f -> d\n" +
-                "    f -> e\n" +
-                "    f -> f\n" +
-                "    f -> f\n" +
-                "    f -> f\n" +
-                "    f -> f\n" +
-                "    f -> f\n" +
-                "    f -> f\n" +
-                "    }\n" +
-                "}"
-        ).results("");
+        ).throwsBadSyntax("'PRG001' is a process reference and must not be used as a user defined macro\\.");
     }
 
     @Nested
@@ -302,7 +265,7 @@ public class TestExec {
             System.setProperty("exec", "sleep");
             TestThat.theInput("" +
                     "{@io:exec command=EXEC argument=1000 wait=1000 asynch=PROC001}"
-            ).throwsBadSyntax("The `wait` and `async` options cannot be used together\\.");
+            ).throwsBadSyntax("In the macro 'io:exec' you cannot use 'wait', 'asynch' together\\.");
         }
 
         @Test

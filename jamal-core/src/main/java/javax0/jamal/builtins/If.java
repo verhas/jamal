@@ -1,13 +1,10 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.ScannerTools;
 import javax0.jamal.tools.param.BooleanParameter;
 import javax0.jamal.tools.param.ListParameter;
 
@@ -75,10 +72,13 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
          */
         void assertConsistency() throws BadSyntax {
             BadSyntax.when((isDefined.is() || isGlobal.is() || isLocal.is()) && (blank.is() || empty.is() || countNumOptionsPresent() > 0), "'blank' or 'empty' cannot be used together with 'isDefined', 'isLocal', or 'isGlobal' or with numeric checks");
-            BadSyntax.when(and.is() && or.is(), "You cannot have both 'and' and 'or' options in an 'if' macro.");
-            BadSyntax.when((and.is() || or.is()) && countNumOptionsPresent() < 2, "You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
-            BadSyntax.when(blank.is() && empty.is(), "You cannot have both 'blank' and 'empty' options in an 'if' macro.");
-            BadSyntax.when((empty.is() || blank.is()) && numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals), "You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
+            ScannerTools.badSyntax("if").whenBooleans(and, or).multipleAreTrue();
+            if( countNumOptionsPresent() < 2 )
+                ScannerTools.badSyntax("if").whenBooleans(and, or).anyAreTrue("You cannot have 'and' or 'or' options without multiple numeric options in an 'if' macro.");
+            ScannerTools.badSyntax("if").whenBooleans(blank, empty).multipleAreTrue();
+            if( numericOptionsPresent().stream().anyMatch(Boolean.TRUE::equals))
+                ScannerTools.badSyntax("if").whenBooleans(empty, blank).anyAreTrue("You cannot have 'empty' or 'blank' options in an 'if' macro with numeric options.");
+
         }
 
         List<Boolean> numericOptionsPresent() throws BadSyntax {

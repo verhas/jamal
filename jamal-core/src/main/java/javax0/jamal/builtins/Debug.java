@@ -6,10 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.OptionsControlled;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.MinimumAffinityDebuggerSelector;
-import javax0.jamal.tools.Params;
-import javax0.jamal.tools.ProxyDebugger;
-import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.*;
 
 import java.util.List;
 
@@ -30,7 +27,7 @@ public class Debug implements Macro, OptionsControlled.Core, Scanner.Core {
         final var selector = scanner.str(null, "using", "debugger", "selector");
         scanner.done();
 
-        BadSyntax.when(on.is() && off.is(), "The 'on' and 'off' parameters cannot be used together.");
+        ScannerTools.badSyntax(this).whenBooleans(on,off).multipleAreTrue();
 
         final var proxyOpt = processor.getDebugger().filter(p -> p instanceof ProxyDebugger);
         final ProxyDebugger proxy;

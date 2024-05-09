@@ -14,7 +14,6 @@ import javax0.jamal.api.Processor;
 public class Export implements Macro {
 
     /**
-     * {@inheritDoc}
      *
      * <p> The input is treated as comma delimited list of the user defined names with optional spaces around the
      * commas, for example:

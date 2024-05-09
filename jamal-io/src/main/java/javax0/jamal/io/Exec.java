@@ -3,6 +3,7 @@ package javax0.jamal.io;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.ScannerTools;
 import javax0.jamal.tools.param.*;
 
 import java.io.*;
@@ -112,7 +113,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         // end snippet
         scanner.done();
 
-        BadSyntax.when(wait.isPresent() && async.isPresent(), "The `wait` and `async` options cannot be used together.");
+        ScannerTools.badSyntax(this).whenParameters(wait,async).multipleArePresent();
         BadSyntax.when(force.is() && !destroy.is(), "The `force` option can only be used together with the `destroy` option.");
         BadSyntax.when(destroy.is() && !wait.isPresent(), "The `destroy` option can only be used together with the `wait` option.");
 

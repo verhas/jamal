@@ -109,11 +109,11 @@ Testing numerical comparing 'lessThan and greaterThan and' throwing:
 
 Testing 'and' and 'or' together:
   Input: '{@if [lessThan=55wussy and greaterThan=53 or equals=13] /56/what?/56 is not between 53 and 55}'
-  Throws: You cannot have both 'and' and 'or' options in an 'if' macro\.
+  Throws: In the macro 'if' only one of 'and', 'or' can be true\.
 
 Testing 'blank' and 'empty':
   Input: '{@if [empty blank] /whatever/what?/56 is not between 53 and 55}'
-  Throws: You cannot have both 'blank' and 'empty' options in an 'if' macro\.
+  Throws: In the macro 'if' only one of 'blank', 'empty' can be true\.
 
 Testing 'blank' and numeric together:
   Input: '{@if [lessThan=55wussy blank] /56/what?/56 is not between 53 and 55}'

@@ -2,11 +2,7 @@ package javax0.jamal.debugger;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Debuggable;
-import javax0.jamal.api.Debugger;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.ConnectionStringParser;
 
 import java.io.ByteArrayOutputStream;
@@ -14,26 +10,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
-import static java.net.HttpURLConnection.HTTP_BAD_METHOD;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
-import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
+import static java.net.HttpURLConnection.*;
 
 public class HttpServerDebugger implements Debugger, AutoCloseable {
     private static final String MIME_PLAIN = "text/plain";
@@ -73,9 +53,11 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     /**
-     * The thread handling an HTTP request uses this queue to send a task to the Jamal main thread. Since this is not a
-     * heavy duty server the size of the queue is limited to one. There is no reason to increase this value because
-     * there should only be one client and every request should come from a human interaction.
+     * The thread that manages an HTTP request utilizes this queue to dispatch a task to the Jamal main thread.
+     * <p>
+     * Given that this server is not designed for heavy-duty use, the queue size is limited to one.
+     * There is no need to increase this capacity, as the server is intended to handle only one client, with each
+     * request originating from human interaction.
      */
     private final BlockingQueue<Task> requestQueue = new LinkedBlockingQueue<>(1);
 
@@ -334,17 +316,17 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                             if (!evalExceptions.isEmpty()) {
                                 final var nrOfExceptions = evalExceptions.size();
                                 final var sb = new StringBuilder(
-                                    "There " + (nrOfExceptions == 1 ? "was" : "were")
-                                        + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
+                                        "There " + (nrOfExceptions == 1 ? "was" : "were")
+                                                + " " + nrOfExceptions + " syntax error" + (nrOfExceptions == 1 ? "" : "s") + " processing the Jamal input:\n");
                                 int ser = nrOfExceptions;
                                 for (final var accumulated : evalExceptions) {
                                     sb.append(ser--).append(". ").append(accumulated.getMessage()).append("\n");
                                 }
                                 evalExceptions.clear();
                                 response = Map.of(
-                                    "message", sb.toString(),
-                                    "trace", "",
-                                    "status-link", "https://http.cat/405"
+                                        "message", sb.toString(),
+                                        "trace", "",
+                                        "status-link", "https://http.cat/405"
                                 );
                                 task.status = HTTP_BAD_METHOD;
                             }
@@ -352,9 +334,9 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                             try (final var baos = new ByteArrayOutputStream(); final var st = new PrintStream(baos)) {
                                 badSyntax.printStackTrace(st);
                                 response = Map.of(
-                                    "message", badSyntax.getMessage(),
-                                    "trace", baos.toString(StandardCharsets.UTF_8),
-                                    "status-link", "https://http.cat/405"
+                                        "message", badSyntax.getMessage(),
+                                        "trace", baos.toString(StandardCharsets.UTF_8),
+                                        "status-link", "https://http.cat/405"
                                 );
                                 task.status = HTTP_BAD_METHOD;
                             } catch (IOException e) {
@@ -407,18 +389,18 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             udList.add(macrosList);
             for (final var macro : macros.values()) {
                 macrosList.add(
-                    getDebuggable(macro).map(ud -> Map.of(
-                            "open", ud.getOpenStr(),
-                            "close", ud.getCloseStr(),
-                            "id", macro.getId(),
-                            "parameters", Arrays.asList(ud.getParameters()),
-                            "content", ud.getContent(),
-                            "type", macro.getClass().getName()
-                        )
-                    ).orElseGet(() -> Map.of(
-                        "id", macro.getId(),
-                        "type", macro.getClass().getName()
-                    )));
+                        getDebuggable(macro).map(ud -> Map.of(
+                                        "open", ud.getOpenStr(),
+                                        "close", ud.getCloseStr(),
+                                        "id", macro.getId(),
+                                        "parameters", Arrays.asList(ud.getParameters()),
+                                        "content", ud.getContent(),
+                                        "type", macro.getClass().getName()
+                                )
+                        ).orElseGet(() -> Map.of(
+                                "id", macro.getId(),
+                                "type", macro.getClass().getName()
+                        )));
             }
         }
         return response;
@@ -438,7 +420,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             }
             if (delimiters.open() != null && delimiters.close() != null) {
                 scopeList.add(Map.of("delimiters", Map.of("open", delimiters.open(), "close", delimiters.close()),
-                    "macros", macrosList));
+                        "macros", macrosList));
             }
         }
         return response;
@@ -447,8 +429,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     private Optional<Debuggable.UserDefinedMacro> getDebuggable(Identified macro) {
         final Optional<?> debuggable;
         if (macro instanceof Debuggable
-            && (debuggable = ((Debuggable<?>) macro).debuggable()).isPresent()
-            && debuggable.get() instanceof Debuggable.UserDefinedMacro) {
+                && (debuggable = ((Debuggable<?>) macro).debuggable()).isPresent()
+                && debuggable.get() instanceof Debuggable.UserDefinedMacro) {
             return (Optional<Debuggable.UserDefinedMacro>) debuggable;
         } else {
             return Optional.empty();
@@ -501,12 +483,12 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         createContext(server, Command.STEP_OUT);
         createContext(server, Command.QUIT);
         server.createContext("/client", e -> {
-                if (client == null || client.length() == 0) {
-                    respond(e, HTTP_OK, MIME_PLAIN, e.getRemoteAddress().getHostString());
-                } else {
-                    respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "404");
+                    if (client == null || client.length() == 0) {
+                        respond(e, HTTP_OK, MIME_PLAIN, e.getRemoteAddress().getHostString());
+                    } else {
+                        respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "404");
+                    }
                 }
-            }
         );
         createStaticContext(server);
         server.setExecutor(Executors.newSingleThreadExecutor());
@@ -564,7 +546,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             final var contextPath = e.getHttpContext().getPath();
             final var request = RequestUriParser.parse(e.getRequestURI().toString());
             if (!Objects.equals(contextPath, request.context) &&
-                !Objects.equals(contextPath + "/", request.context)) {
+                    !Objects.equals(contextPath + "/", request.context)) {
                 respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
                 return;
             }

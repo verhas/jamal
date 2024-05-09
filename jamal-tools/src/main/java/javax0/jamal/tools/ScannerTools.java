@@ -12,23 +12,19 @@ import java.util.stream.Collectors;
 
 public class ScannerTools {
 
-    private final String format;
-    private final Object[] formatParameters;
     private AbstractTypedParameter<?>[] parameters;
-    private final Identified identified;
+    private final String id;
 
-    private ScannerTools(Identified identified, String format, Object... parameters) {
-        this.format = format;
-        this.formatParameters = parameters;
-        this.identified = identified;
+    private ScannerTools(String id) {
+        this.id = id;
     }
 
     public static ScannerTools badSyntax(Identified macro) throws BadSyntax {
-        return new ScannerTools(macro, "");
+        return new ScannerTools(macro.getId());
     }
 
-    public static ScannerTools badSyntax(String format, Object... parameters) throws BadSyntax {
-        return new ScannerTools(null, format, parameters);
+    public static ScannerTools badSyntax(String id) throws BadSyntax {
+        return new ScannerTools(id);
     }
 
     public ScannerTools.Are whenParameters(AbstractTypedParameter<?>... parameters) {
@@ -42,28 +38,35 @@ public class ScannerTools {
     }
 
     public class BoolAre {
+        public void anyAreTrue(String msg) throws BadSyntax {
+            var found = 0;
+            for (var p : parameters) {
+                if (((BooleanParameter) p).is()) {
+                    found++;
+                }
+            }
+            if (found >= 1) {
+                throw new BadSyntax(msg);
+            }
+        }
+
         public void multipleAreTrue() throws BadSyntax {
             var found = 0;
             for (var p : parameters) {
-                if (((BooleanParameter)p).is()) {
+                if (((BooleanParameter) p).is()) {
                     found++;
                 }
             }
             if (found > 1) {
-                if (format.isEmpty()) {
-                    throw new BadSyntax(String.format("In the macro '%s' only one of %s can be true.",
-                            identified.getId(),
-                            parameterNameList(p -> {
-                                try {
-                                    return ((BooleanParameter)p).is();
-                                } catch (BadSyntax e) {
-                                    return true;
-                                }
-                            })));
-
-                } else {
-                    BadSyntax.format(format, formatParameters);
-                }
+                throw new BadSyntax(String.format("In the macro '%s' only one of %s can be true.",
+                        id,
+                        parameterNameList(p -> {
+                            try {
+                                return ((BooleanParameter) p).is();
+                            } catch (BadSyntax e) {
+                                return true;
+                            }
+                        })));
             }
         }
     }
@@ -77,14 +80,9 @@ public class ScannerTools {
                 }
             }
             if (found > 1) {
-                if (format.isEmpty()) {
-                    throw new BadSyntax(String.format("In the macro '%s' you cannot use %s together.",
-                            identified.getId(),
-                            parameterNameList(AbstractTypedParameter::isPresent)));
-
-                } else {
-                    BadSyntax.format(format, formatParameters);
-                }
+                throw new BadSyntax(String.format("In the macro '%s' you cannot use %s together.",
+                        id,
+                        parameterNameList(AbstractTypedParameter::isPresent)));
             }
         }
     }

@@ -1,7 +1,7 @@
 {%@import macrodoc.jim%}
 {%MACRO name="debug" since=1.12.3%}
 {%@import ../../environmentvariables.jim%}
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=9aca8349%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Debug.java hash=ca3253af%}
 
 The macro `debug` can be used to start the debugger from the Jamal source code.
 It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.
