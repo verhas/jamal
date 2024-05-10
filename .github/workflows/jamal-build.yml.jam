@@ -13,6 +13,9 @@
     languages: 'java'
 - name: Perform CodeQL Analysis
   uses: github/codeql-action/analyze@v2
+  with:
+   build-command: mvn-B package
+   language: java
 %}
 
 {%@define job($env,...$name)={%@if/$name/$name/$env%}:
