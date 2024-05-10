@@ -33,18 +33,18 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
  * creator of a JAR file or a macro package published online cannot anticipate the macro strings a user might choose,
  * it is advisable to use `{` and `@` to ensure a smooth import process.
  * <p>
- * Before version 1.5.0, importing such a file, assuming that the macro opening and closing strings were `((` and `))`,
+ * Before version 1.5.0, importing such a file, assuming that the macro opening and closing strings were `[` and `]`,
  * required:
  *
  * <pre>{@code
- * ((@sep { }))
+ * [@sep { }]
  * {@import re:my_resource.jim}
  * {@sep}
  * }</pre>
  * <p>
  * Using 1.5.0 or later the code is
  * <pre>{@code
- * ((@import re:my_resource.jim))
+ * [@import re:my_resource.jim]
  * }</pre>
  */
 @Macro.Stateful

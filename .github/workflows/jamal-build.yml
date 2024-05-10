@@ -8,40 +8,40 @@ jobs:
   ubuntu-latest:
     runs-on: ubuntu-latest
     steps:
-    - {uses: actions/checkout@v2}
+    - {uses: actions/checkout@v4}
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with: {java-version: '17', distribution: adopt}
+      uses: actions/setup-java@v4
+      with: {java-version: '17', distribution: zulu}
     - {name: Build with Maven, run: mvn -B package}
   windows-latest:
     runs-on: windows-latest
     steps:
-    - {uses: actions/checkout@v2}
+    - {uses: actions/checkout@v4}
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with: {java-version: '17', distribution: adopt}
+      uses: actions/setup-java@v4
+      with: {java-version: '17', distribution: zulu}
     - {name: Build with Maven, run: mvn -B package}
   windows-2022:
     runs-on: windows-2022
     steps:
-    - {uses: actions/checkout@v2}
+    - {uses: actions/checkout@v4}
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with: {java-version: '17', distribution: adopt}
+      uses: actions/setup-java@v4
+      with: {java-version: '17', distribution: zulu}
     - {name: Build with Maven, run: mvn -B package}
   macos-latest:
     runs-on: macos-latest
     steps:
-    - {uses: actions/checkout@v2}
+    - {uses: actions/checkout@v4}
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with: {java-version: '17', distribution: adopt}
+      uses: actions/setup-java@v4
+      with: {java-version: '17', distribution: zulu}
     - {name: Build with Maven, run: mvn -B package}
   macos-11:
     runs-on: macos-11
     steps:
-    - {uses: actions/checkout@v2}
+    - {uses: actions/checkout@v4}
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with: {java-version: '17', distribution: adopt}
+      uses: actions/setup-java@v4
+      with: {java-version: '17', distribution: zulu}
     - {name: Build with Maven, run: mvn -B package}

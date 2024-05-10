@@ -1,11 +1,16 @@
+[WARNING]
+--
+* The file(../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java) hash is '4cb2d870.fbbe2aa5.3b081fa1.aac6a421.bd22644a.b7e51910.8a1427d4.a182a8b6' does not contain 'd450b5ad'. at /Users/verhasp/github/jamal/documentation/macros/import.adoc.jam/4:14
+--
 
+{%@import macrodoc.jim%}
+{%MACRO name="import" since={%RELEASE:ZURICH%}%}
 
-= `import`
-
-since version `1.0.0`
-
-
-
+[WARNING]
+--
+* The file(../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java) hash is '4cb2d870.fbbe2aa5.3b081fa1.aac6a421.bd22644a.b7e51910.8a1427d4.a182a8b6' does not contain 'd450b5ad'. at /Users/verhasp/github/jamal/documentation/macros/import.adoc.jam/4:14
+--
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=d450b5ad%}
 
 == Syntax
 
@@ -34,14 +39,7 @@ The syntax of the command is
 
 `{@import file_name}`
 
-
-The name of the file can be absolute, or it can be relative to the file that imports the other file.
-Any file name starting with the letters `res:` are considered to be resource files in Java.
-This makes it possible to load macros that are provided with JAR libraries on the classpath.
-Any file name starting with the letters `https:` are downloaded from the net.
-In addition to these Jamal comes with a JAR and a Maven reader that can read files from JAR files and from Maven repositories.
-In these cases the file name starts with `jar:file:` or `maven:`.
-
+{%fileNameExplanationFor/import%}
 
 == `top`
 
@@ -64,10 +62,7 @@ The global file, however, can not import the local file using the `top` option e
 Because the textual output from the evaluation of the file is discarded, feel free to use text in the file to be imported as documentation.
 There is no need to enclose such a text into a `{@comment ...}` macro.
 
-
-Starting with version 1.5.0 the import macro looks into the file before evaluating it.
-If the very first two characters in the file are `{@`, then it evaluates the content using `{` as macro opening string and `}` as macro closing string.
-This way you can freely import resource files provided in JAR file or through the net even if you use different macro opening and closing strings.
+{%DEFAULTOPEN/{%RELEASE:SZEGED%}/import%}
 
 [NOTE]
 ====
@@ -87,28 +82,19 @@ In this case the `{@sep <>}` change the macro opening and closing strings and th
 
 == `noCache`
 
-Starting with version 1.11.0 the import macro has the option `noCache`.
-
-* `noCache` will ignore the cache when downloading resources using `https:` protocol.
-More precisely, it will download the resource from the network and update the cache file with the new content every time.
+Starting with version {%RELEASE:ZOLLIKOFEN%} the import macro has the option `noCache`.
+{%noCacheExplanation%}
 
 == `isolate` (boolean)
 
-The release 2.5.0 introduced the option `isolate`.
+The release {%RELEASE:ROGACHEVO%} introduced the option `isolate`.
 Using this option will process the imported file in a new processor.
 It means that the macros defined in the importING file will not be available in the importED file.
 The macros defined in the imported file will be available in the importing file after the import the same way as if the `isolate` option was not used.
 
 == `in`
 
-The release 2.5.0 introduced the option `in`.
-The option can define multiple prefixes for the file name to be imported.
-These prefixes are separated by the `|` character.
-When performing the import operation, the first prefix that matches the file name is used.
-
-The prefix is used at the start of the file name without any extra separator.
-
-This option can be used for relative file names, where the location of the file may be different depending on the context.
+{%PAROP_IN/import%}
 
 == `global` (boolean)
 
@@ -126,3 +112,25 @@ However, there are scenarios where importing a file with the same content is nec
 
 In such cases, to enforce the import, use the `force`, or `forced` parop.
 It can also be activated globally through the `import$force` option.
+[WARNING]
+--
+* The file(../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java) hash is '4cb2d870.fbbe2aa5.3b081fa1.aac6a421.bd22644a.b7e51910.8a1427d4.a182a8b6' does not contain 'd450b5ad'. at /Users/verhasp/github/jamal/documentation/macros/import.adoc.jam/4:14
+--
+[source]
+----
+The file(../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java) hash is '4cb2d870.fbbe2aa5.3b081fa1.aac6a421.bd22644a.b7e51910.8a1427d4.a182a8b6' does not contain 'd450b5ad'. at /Users/verhasp/github/jamal/documentation/macros/import.adoc.jam/4:14
+	javax0.jamal.snippet.SnipCheck(checkHashString:109)
+	javax0.jamal.snippet.SnipCheck(evaluate:43)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:510)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:453)
+	javax0.jamal.engine.Processor(safeEvaluate:462)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:453)
+	javax0.jamal.engine.Processor(evalMacro:408)
+	javax0.jamal.engine.Processor(processMacro:321)
+	javax0.jamal.engine.Processor(process:201)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
+sed -i.bak  's/d450b5ad/4cb2d870/g;' /Users/verhasp/github/jamal/documentation/macros/import.adoc.jam
+----
