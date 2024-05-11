@@ -15,6 +15,8 @@
   uses: github/codeql-action/analyze@v2
   with:
    build-command: mvn-B package
+   java-version: '17'
+   distribution: 'zulu'
    language: java
 %}
 
