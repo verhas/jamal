@@ -7,10 +7,14 @@
     distribution: 'zulu'
 - name: Build with Maven
   run: mvn -B package
-- name: Initialize CodeQL
-  uses: github/codeql-action/init@v2
+- name: Perform CodeQL Analysis
+  uses: github/codeql-action/analyze@v3
   with:
+    build-command: mvn-B package
     languages: 'java'
+    java-version: '17'
+    distribution: 'zulu'
+    language: java
 %}
 
 {%@define job($env,...$name)={%@if/$name/$name/$env%}:
