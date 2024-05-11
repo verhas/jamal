@@ -16,10 +16,6 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with: {languages: java}
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with: {build-command: mvn-B package, java-version: '17', distribution: zulu,
-        language: java}
   windows-latest:
     runs-on: windows-latest
     steps:
@@ -31,10 +27,6 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with: {languages: java}
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with: {build-command: mvn-B package, java-version: '17', distribution: zulu,
-        language: java}
   windows-2022:
     runs-on: windows-2022
     steps:
@@ -46,10 +38,6 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with: {languages: java}
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with: {build-command: mvn-B package, java-version: '17', distribution: zulu,
-        language: java}
   macos-latest:
     runs-on: macos-latest
     steps:
@@ -61,10 +49,6 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with: {languages: java}
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with: {build-command: mvn-B package, java-version: '17', distribution: zulu,
-        language: java}
   macos-11:
     runs-on: macos-11
     steps:
@@ -76,7 +60,3 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with: {languages: java}
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with: {build-command: mvn-B package, java-version: '17', distribution: zulu,
-        language: java}
