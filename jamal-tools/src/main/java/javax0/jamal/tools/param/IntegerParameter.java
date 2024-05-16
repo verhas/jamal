@@ -14,14 +14,18 @@ public class IntegerParameter extends AbstractTypedParameter<Integer> {
     }
 
     public IntegerParameter required() {
+        checkDone(DoneAction.REQUIRED);
         return this;
     }
 
     public IntegerParameter optional() {
-        return defaultValue(0);
+        checkDone(DoneAction.OPTIONAL);
+        param.orElseNull();
+        return this;
     }
 
     public IntegerParameter defaultValue(Integer dV) {
+        checkDone(DoneAction.DEFAULT);
         if (dV == null) {
             param.orElseNull();
         } else {

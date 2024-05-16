@@ -1,0 +1,5 @@
+= Jamal XLS module
+
+Jamal module to read and write Excel files.
+
+== Introduction

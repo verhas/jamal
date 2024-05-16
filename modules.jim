@@ -74,7 +74,7 @@ A JAR file that implements the handling of re,ote resources for the 'MAVEN:' pre
 
 ------------------------------
 Macro modules, which can be included into any installation being safe.
-{#define modules:SAFE_MACROS=assertions,jamal,markdown,mock,snippet,yaml,json,prog,maven-load,sql}
+{#define modules:SAFE_MACROS=assertions,jamal,markdown,mock,snippet,yaml,json,prog,maven-load,sql,xls}
 
 ------------------------------
 
@@ -82,6 +82,12 @@ Macro modules, which can be included into any installation being safe.
 
 ------------------------------
 Macro modules, which may not be included into any installation as they may not be safe.
+These macro packages acn be loaded using the 'maven-load' macro after configured as safe for the specific
+document, or directory that uses any of them.
+
+The scripting macros are unsafe as they can execute any code.
+Note that before they were forced to exile the scripting package 'prog' was created implementing a security limited BASIC interpreter.
+
 {#define modules:UNSAFE_MACROS=groovy,io,openai,ruby,scriptbasic,word,java}
 
 ------------------------------

@@ -184,6 +184,9 @@ Macros implementing interface to OpenAI.
 {chapter :sql:macro}
 Macros implementing SQL interface.
 
+{chapter :xls:macro}
+Macros implementing Excel interface.
+
 {chapter :java:debugger}
 Experimental module integrating the Java compiler into Jamal as macros.
 

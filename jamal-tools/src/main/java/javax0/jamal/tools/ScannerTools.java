@@ -72,6 +72,19 @@ public class ScannerTools {
     }
 
     public class Are {
+
+        public void anyPresent(final String format, Object ...prm) throws BadSyntax {
+            var found = 0;
+            for (var p : parameters) {
+                if (p.isPresent()) {
+                    found++;
+                }
+            }
+            if (found > 0) {
+                throw new BadSyntax(String.format(format,prm));
+            }
+        }
+
         public void multipleArePresent() throws BadSyntax {
             var found = 0;
             for (var p : parameters) {

@@ -125,6 +125,10 @@ public class BadSyntax extends Exception {
         }
     }
 
+    public static BadSyntax format(final Exception e, final String format, final Object... parameters) throws BadSyntax {
+        throw new BadSyntax(String.format(format, parameters), e);
+    }
+
     public static BadSyntax format(final String format, final Object... parameters) throws BadSyntax {
         throw new BadSyntax(String.format(format, parameters));
     }

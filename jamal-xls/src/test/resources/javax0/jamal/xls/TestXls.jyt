@@ -1,0 +1,39 @@
+"Get the models from the openAI API and assert that the JSON is longer than 10_000 characters":
+  Input: |-
+    {@import res:openai.jim}\
+    {#assert:less /10000/{#string:length {openai:query_models}}}
+  Output: ""
+"Get the babbage model description  from the openAI API and assert that the JSON is longer than 500 characters":
+  Input: |-
+    {@import res:openai.jim}\
+    {#assert:less /500/{#string:length {openai:query_model babbage}}}
+  Output: ""
+"Get Descartes completion":
+    Input: |-
+      {@import res:openai.jim}\
+      {openai:model babbage}\
+      {@options openai:local}\
+      {#json:define descartes_said={openai:completion |
+                                      "prompt": "Descartes said:",
+                                      "temperature": 0.2
+                                  }
+      }{@json:get descartes_said./choices/0/text}
+    Output: "this is a cached answer"
+
+"Get Descartes completion twice with different tabulation and hash still works":
+    Input: |- 
+      {@import res:openai.jim}\
+      {openai:model babbage}\
+      {@options openai:local}\
+      {openai:hash |e721ebd8}\
+      {#json:define descartes_said={openai:completion |
+                                      "prompt": "Descartes said:",
+                                      "temperature": 0.2
+                                  }
+      }\
+      {#json:define descartes_said={openai:completion |
+                                      "prompt": "Descartes said:",
+                             "temperature": 0.2
+                                  }
+      }{@json:get descartes_said./choices/0/text}
+    Output: "this is a cached answer"

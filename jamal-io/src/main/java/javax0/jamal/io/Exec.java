@@ -309,8 +309,8 @@ public class Exec implements Macro, Scanner.FirstLine {
         }
         final var cmd = new ArrayList<String>();
         cmd.add(executable.get());
-        Arrays.stream(commandArray).skip(1).filter(s -> s.trim().length() > 0).forEach(cmd::add);
-        arguments.get().stream().flatMap(s -> Arrays.stream(s.split("\n"))).filter(s -> s.trim().length() > 0).forEach(cmd::add);
+        Arrays.stream(commandArray).skip(1).filter(s -> !s.isBlank()).forEach(cmd::add);
+        arguments.get().stream().flatMap(s -> Arrays.stream(s.split("\n"))).filter(s -> !s.isBlank()).forEach(cmd::add);
         pb.command(cmd);
         return false;
     }
@@ -360,6 +360,9 @@ public class Exec implements Macro, Scanner.FirstLine {
             final var idMacro = processor.getRegister().getUserDefined(async.get());
             BadSyntax.when(idMacro.isEmpty(), "Process id '%s' is not defined.", async.get());
             BadSyntax.when(!(idMacro.get() instanceof ProcessHolder), "Process id '%s' is not a process name.", async.get());
+            if (thisOsIsNotOk(osOnly)) {
+                return "";
+            }
             final var process = ((ProcessHolder) idMacro.get()).getObject();
             if (process == null || optional.is()) {
                 return "";
@@ -396,11 +399,6 @@ public class Exec implements Macro, Scanner.FirstLine {
         @Override
         public String evaluate(final String... parameters) throws BadSyntax {
             throw new BadSyntax(String.format("'%s' is a process reference and must not be used as a user defined macro.", id));
-        }
-
-        @Override
-        public int expectedNumberOfArguments() {
-            return -1;
         }
     }
 

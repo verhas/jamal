@@ -22,6 +22,7 @@
         <module>jamal-prog</module>
         <module>jamal-maven-load</module>
         <module>jamal-sql</module>
+        <module>jamal-xls</module>
         <module>jamal-groovy</module>
         <module>jamal-io</module>
         <module>jamal-openai</module>
@@ -253,6 +254,11 @@
             <dependency>
                 <groupId>com.javax0.jamal</groupId>
                 <artifactId>jamal-sql</artifactId>
+                <version>2.6.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.javax0.jamal</groupId>
+                <artifactId>jamal-xls</artifactId>
                 <version>2.6.1-SNAPSHOT</version>
             </dependency>
             <dependency>

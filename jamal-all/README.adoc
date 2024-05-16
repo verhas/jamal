@@ -50,6 +50,8 @@ This will add the following dependencies to your project:
 
 * `jamal-sql`
 
+* `jamal-xls`
+
 * `jamal-groovy`
 
 * `jamal-io`

@@ -1,0 +1,62 @@
+{@xls:open file=resources/manual_test.xlsx WRITE}
+{@xls:set (cell=A1) created}
+
+{!@for ($N,$ALI) in (2|LEFT,3|CENTER,4|RIGHT,5|JUSTIFY,6|DISTRIBUTED)=
+  {@xls:set (cell=A$N) $ALI}{@xls:set (cell=A$N align) $ALI}}
+
+{!@for ($N,$ALI) in (2|TOP,3|CENTER,4|BOTTOM,5|JUSTIFY,6|DISTRIBUTED)=
+{@xls:set (cell=F$N) $ALI}{@xls:set (cell=F$N verticalAlignment) $ALI}}
+
+{!@for ($N,$SIDE) in (8|border,10|topBorder,12|rightBorder,14|bottomBorder,16|leftBorder)=
+  {@xls:set (cell=B$N) $SIDE}{@xls:set (cell=B$N style $SIDE) DOUBLE}}
+
+{!@for ($N,$SIDE) in (8|border,10|topBorder,12|rightBorder,14|bottomBorder,16|leftBorder)=
+  {@xls:set (cell=F$N) $SIDE}{@xls:set (cell=F$N style $SIDE) THICK}}
+
+{!@for ($N,$SIDE) in (8|borderColor,10|topBorderColor,12|rightBorderColor,14|bottomBorderColor,16|leftBorderColor)=
+  {@xls:set (cell=F$N) $SIDE}{@xls:set (cell=F$N $SIDE) RED}}
+
+{@xls:set (row=19 col=2 comment author="Paramputyi Mityi Bialko")
+This cell has
+a multiline comment.
+
+}
+{@xls:set (row=20 col=2 comment)
+This cell also has
+a multiline comment.
+
+}
+
+{@xls:set (cell=E10 NUMERIC)553.32}
+{@xls:set (cell=E10 format)###.##0}
+
+
+{@xls:set (cell=E5 fillPattern) BRICKS}
+{@xls:set (cell=E5 fillBackgroundColor) GREEN}
+{@xls:set (cell=E5 fillForegroundColor) BLUE}
+
+{@xls:set (cell=A1 hidden)}
+{@xls:set (cell=A2 locked)}
+{@xls:set (cell=A3 rotation) 90}
+{@xls:set (cell=A6 shrinkToFit)}
+
+{@xls:set (cell=E3 NUMERIC) 1}
+{@xls:set (cell=E4 NUMERIC) 1}
+{@xls:set (cell=E3 font) Arial, 16, italic}
+{@xls:set (cell=E4 font) Arial ; 16pt ; bold}
+
+{@xls:set (cell=E5 formula) E3+E4}
+{@xls:set (cell=E5 width) 200.3}
+{@xls:set (cell=E5 height) 200.3}
+{@xls:set (cell=E6 FORMULA) E3+E4}
+{@xls:set (cell=E7 BOOLEAN)}
+{@xls:set (cell=E8 BLANK)}
+{@xls:set (cell=E9 ERROR)#REF!}
+
+{@xls:set (cell=MySheet!A1) Abraka debra}
+{@xls:set (sheet=MyOtherSheet cell=A1) Abrak a kedavra}
+
+{#xls:set (sheet=MyThirdSheet row=0 col=0) dritte sheet {@comment
+} lorem ipsum tona lud atus vissa us megatus}
+{@xls:set (sheet=MyThirdSheet row=0 col=0 wrapText)}
+{@xls:set (sheet=MyThirdSheet row=0 col=0 zoom)200}

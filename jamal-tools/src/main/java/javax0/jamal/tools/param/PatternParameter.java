@@ -16,15 +16,18 @@ public class PatternParameter extends AbstractTypedParameter<Pattern> {
     }
 
     public PatternParameter required() {
+        checkDone(DoneAction.REQUIRED);
         return this;
     }
 
     public PatternParameter optional() {
+        checkDone(DoneAction.OPTIONAL);
         param.orElseNull();
         return this;
     }
 
     public PatternParameter defaultValue(String dV) {
+        checkDone(DoneAction.DEFAULT);
         if (dV == null) {
             param.orElseNull();
         } else {

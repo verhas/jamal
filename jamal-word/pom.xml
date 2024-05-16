@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.word/javax0.jamal.poi.word=ALL-UNNAMED
+    
             </argLine>
                 </configuration>
             </plugin>

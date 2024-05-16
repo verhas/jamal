@@ -13,15 +13,20 @@ public class StringParameter extends AbstractTypedParameter<String> {
         return param.get();
     }
 
+
     public StringParameter required() {
+        checkDone(DoneAction.REQUIRED);
         return this;
     }
 
     public StringParameter optional() {
-        return defaultValue(null);
+        checkDone(DoneAction.OPTIONAL);
+        param.orElseNull();
+        return this;
     }
 
     public StringParameter defaultValue(String dV) {
+        checkDone(DoneAction.DEFAULT);
         if (dV == null) {
             param.orElseNull();
         } else {

@@ -25,6 +25,7 @@ public class FileParameter extends AbstractTypedParameter<String> {
     }
 
     public FileParameter required() {
+        checkDone(DoneAction.REQUIRED);
         return this;
     }
 

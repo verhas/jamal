@@ -14,17 +14,20 @@ public class EnumerationParameter extends AbstractTypedParameter<Boolean> {
     private Object enumDefault = null;
 
     public EnumerationParameter required() {
+        checkDone(DoneAction.REQUIRED);
         return this;
     }
 
     public EnumerationParameter optional() {
+        checkDone(DoneAction.OPTIONAL);
         enumDefault = enumClass.getEnumConstants()[0];
         return this;
     }
 
     public <K> EnumerationParameter defaultValue(K enumDefault) {
+        checkDone(DoneAction.DEFAULT);
         if (enumDefault != null && !enumDefault.getClass().isAssignableFrom(enumClass)) {
-            throw new IllegalArgumentException(String.format("The parameter '%s' is not '%s' type", param.name(), enumDefault.getClass().getName()));
+            throw new IllegalArgumentException(String.format("The parameter '%s%%%s' is not '%s'. This is a coding error in the macro.", enumDefault, enumDefault.getClass(), enumClass.getName()));
         }
         this.enumDefault = enumDefault;
         return this;

@@ -1,0 +1,176 @@
+a1()=1
+a1(value)=1
+a1(content)=1
+a1(type)=STRING
+a1(format)=0
+a1(comment)=[Threaded comment]
+
+Your version of Excel allows you to read this threaded comment; however, any edits to it will get removed if the file is opened in a newer version of Excel. Learn more: https://go.microsoft.com/fwlink/?linkid=870924
+
+Comment:
+    Comment 1
+Reply:
+    Comment 2
+Reply:
+    Comment 3
+a1(commentAuthor)=tc={9E100B06-D0DA-E641-98F0-FF4C3011F30B}
+a1(hasComment)=true
+a1(isString)=true
+a1(isNumeric)=false
+a1(isBoolean)=false
+a1(isFormula)=false
+a1(isBlank)=false
+a1(isError)=false
+a1(isNull)=false
+a1(style)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=0, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a1(style toString)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=0, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a1(style align)=GENERAL
+a1(style border)=NONE
+a1(style fill)=NO_FILL
+a1(style dataFormat)=0
+a1(style hidden)=false
+a1(style locked)=true
+a1(style rotation)=0
+a1(style shrinkToFit)=false
+a1(style verticalAlignment)=BOTTOM
+a1(style wrapText)=false
+a2()=2.0
+a2(value)=2.0
+a2(content)=2.0
+a2(type)=NUMERIC
+a2(format)=General
+a2(comment)=This cell has a note.
+a2(commentAuthor)=Microsoft Office User
+a2(hasComment)=true
+a2(isString)=false
+a2(isNumeric)=true
+a2(isBoolean)=false
+a2(isFormula)=false
+a2(isBlank)=false
+a2(isError)=false
+a2(isNull)=false
+a2(style)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=General, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a2(style toString)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=General, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a2(style align)=GENERAL
+a2(style border)=NONE
+a2(style fill)=NO_FILL
+a2(style dataFormat)=General
+a2(style hidden)=false
+a2(style locked)=true
+a2(style rotation)=0
+a2(style shrinkToFit)=false
+a2(style verticalAlignment)=BOTTOM
+a2(style wrapText)=false
+a3()=3.0
+a3(value)=3.0
+a3(content)=A1+A2
+a3(type)=FORMULA
+a3(format)=0
+a3(comment)=[Threaded comment]
+
+Your version of Excel allows you to read this threaded comment; however, any edits to it will get removed if the file is opened in a newer version of Excel. Learn more: https://go.microsoft.com/fwlink/?linkid=870924
+
+Comment:
+    This cell has a comment
+a3(commentAuthor)=tc={E37D6C4B-9BDB-F84D-A5D3-50A53F7091AB}
+a3(hasComment)=true
+a3(isString)=false
+a3(isNumeric)=false
+a3(isBoolean)=false
+a3(isFormula)=true
+a3(isBlank)=false
+a3(isError)=false
+a3(isNull)=false
+a3(style)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=0, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a3(style toString)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=0, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a3(style align)=GENERAL
+a3(style border)=NONE
+a3(style fill)=NO_FILL
+a3(style dataFormat)=0
+a3(style hidden)=false
+a3(style locked)=true
+a3(style rotation)=0
+a3(style shrinkToFit)=false
+a3(style verticalAlignment)=BOTTOM
+a3(style wrapText)=false
+a4()=123
+a4(value)=123
+a4(content)=_xlfn.CONCAT(A1,A2,A3)
+a4(type)=FORMULA
+a4(format)=General
+a4(comment)=
+a4(commentAuthor)=
+a4(hasComment)=false
+a4(isString)=false
+a4(isNumeric)=false
+a4(isBoolean)=false
+a4(isFormula)=true
+a4(isBlank)=false
+a4(isError)=false
+a4(isNull)=false
+a4(style)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=General, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a4(style toString)=align=GENERAL, border=NONE, fill=NO_FILL, dataFormat=General, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+a4(style align)=GENERAL
+a4(style border)=NONE
+a4(style fill)=NO_FILL
+a4(style dataFormat)=General
+a4(style hidden)=false
+a4(style locked)=true
+a4(style rotation)=0
+a4(style shrinkToFit)=false
+a4(style verticalAlignment)=BOTTOM
+a4(style wrapText)=false
+a5()=
+a5(value)=
+a5(content)=
+a5(type)=
+a5(format)=
+a5(comment)=
+a5(commentAuthor)=
+a5(hasComment)=false
+a5(isString)=false
+a5(isNumeric)=false
+a5(isBoolean)=false
+a5(isFormula)=false
+a5(isBlank)=true
+a5(isError)=false
+a5(isNull)=true
+a5(style)=
+a5(style toString)=
+a5(style align)=
+a5(style border)=
+a5(style fill)=
+a5(style dataFormat)=
+a5(style hidden)=
+a5(style locked)=
+a5(style rotation)=
+a5(style shrinkToFit)=
+a5(style verticalAlignment)=
+a5(style wrapText)=
+a6()=
+a6(value)=
+a6(content)=
+a6(type)=
+a6(format)=
+a6(comment)=
+a6(commentAuthor)=
+a6(hasComment)=false
+a6(isString)=false
+a6(isNumeric)=false
+a6(isBoolean)=false
+a6(isFormula)=false
+a6(isBlank)=true
+a6(isError)=false
+a6(isNull)=true
+a6(style)=
+a6(style toString)=
+a6(style align)=
+a6(style border)=
+a6(style fill)=
+a6(style dataFormat)=
+a6(style hidden)=
+a6(style locked)=
+a6(style rotation)=
+a6(style shrinkToFit)=
+a6(style verticalAlignment)=
+a6(style wrapText)=

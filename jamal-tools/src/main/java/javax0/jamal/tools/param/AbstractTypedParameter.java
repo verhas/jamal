@@ -14,9 +14,18 @@ public abstract class AbstractTypedParameter<T> {
         return param;
     }
 
+    private boolean done = false;
 
     public AbstractTypedParameter(Params.Param<T> param) {
         this.param = param;
+    }
+
+    void checkDone(final DoneAction action) {
+        if (done) {
+            throw new IllegalStateException("Not possible to " + action
+                    + "  when the parameter is already defined as required, optional or default value is set.");
+        }
+        done = true;
     }
 
     public boolean isPresent() {
