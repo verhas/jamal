@@ -8,6 +8,7 @@ import javax0.jamal.tools.Scanner;
 
 import java.io.Closeable;
 
+@Macro.Name("xls:close")
 public class Close implements Macro, Scanner {
 
     @Override
@@ -28,8 +29,4 @@ public class Close implements Macro, Scanner {
         }
     }
 
-    @Override
-    public String getId() {
-        return "xls:close";
-    }
 }

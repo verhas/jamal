@@ -33,4 +33,15 @@ public class TestManual {
         Assertions.assertTrue(Files.exists(path));
     }
 
+    @Test
+    void testWrapper() throws Exception {
+        final var root = DocumentConverter.getRoot();
+        final var in = Path.of(root + "/jamal-xls/README.xlsx");
+        final var out = Path.of(root + "/jamal-xls/READYOU.xlsx");
+        TestThat.theInput("{@xls:open in=README.xlsx out=READYOU.xlsx}" +
+                        "{@xls:set (cell=A1 wrapText)}")
+                .atPosition(root + "/jamal-xls/README.adoc.jam", 1, 1)
+                .results();
+    }
+
 }

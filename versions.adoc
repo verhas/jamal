@@ -34,9 +34,9 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.1` 
 
-* `OK`  `JUPITER_VERSION` `5.11.0-M1` 
+* `OK`  `JUPITER_VERSION` `5.11.0-M2` 
 
-* `*[red]#NO#*`  `MOCKITO_VERSION` `5.11.0` `*[red]#upgrade to 5.12.0#*`
+* `OK`  `MOCKITO_VERSION` `5.12.0` 
 
 * `OK`  `JRUBY_VERSION` `9.4.7.0` 
 
@@ -51,6 +51,25 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
 * `OK`  `APACHE_POI_VERSION` `5.2.5` 
+
+* `OK`  `APACHE_POI_VERSION` `5.2.5` <- OOXML
+
+[NOTE]
+====
+When upgrading the newer version, check that the dependency on
+
+
+* `OK`  `COMMONS_COMPRESS_VERSION` `1.26.1` 
+
+of the OOXML package is higher than 1.25.0
+
+Version 1.25.0 has two vulnerabilities CVE-2024-26308 and CVE-2024-25710.
+The OOXML library version 5.2.5 depends on the vulnerable version.
+The version 1.26.1 of the compress library is explicitly added to the `jamal-xls` module as a dependency.
+It may not be needed when the poi-ooxml library also updates its dependency.
+
+====
+
 
 * `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` `*[red]#upgrade to 3.0.0-alpha.2#*`
 

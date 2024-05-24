@@ -64,5 +64,24 @@ public class TestCellRetrieval {
                 .results(TEST_XLSX_CONTENT);
     }
 
+    @Test
+    void testCellRetrievalBySheetName() throws Exception {
+        final var root = DocumentConverter.getRoot();
+        TestThat.theInput("{@xls:open file=resources/test.xlsx}" +
+                        "{@xls:cell (sheet=Sheet1)C2}")
+                .atPosition(root + "/jamal-xls/src/test/test.jam", 1, 1)
+                .results("Bambula");
+    }
+
+    @Test
+    void testCellRetrievalBBoolean() throws Exception {
+        final var root = DocumentConverter.getRoot();
+        TestThat.theInput("{@xls:open file=resources/test.xlsx}" +
+                        "{@xls:cell (content) E3}" +
+                        "{@xls:cell (content) E4}")
+                .atPosition(root + "/jamal-xls/src/test/test.jam", 1, 1)
+                .results("true");
+    }
+
 }
 

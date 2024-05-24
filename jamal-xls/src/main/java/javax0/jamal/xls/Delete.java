@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.param.IntegerParameter;
 import javax0.jamal.tools.param.StringParameter;
 import javax0.jamal.xls.utils.WorkbookUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -13,8 +14,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 
-import static javax0.jamal.xls.Set.*;
+import static javax0.jamal.xls.Set.Name;
 
+@Name("xls:delete")
 public class Delete implements Macro, Scanner.WholeInput {
 
     public enum What {
@@ -24,51 +26,53 @@ public class Delete implements Macro, Scanner.WholeInput {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var workbook = scanner.str(null, "workbook", "wb").defaultValue(Open.XLS_WORKBOOK);
-        final var sheetDef = scanner.str(XLS_SHEET, "sheet").defaultValue("");
-        final var rowDef = scanner.str(XLS_ROW, "row").optional();
-        final var colDef = scanner.str(XLS_COL, "col").optional();
-        final var cellDef = scanner.str(null, "cell").optional();
+        final var cellDef = new ParopsCell(scanner);
+        // snippet delete_parops
+        //{%@snip celldef_parops%}
+        final var cellRef = scanner.str(null, "cell").optional();
+        // * `cell` is the cell reference that is used to refer to the cell in the rest of the document.
         final var whatDef = scanner.enumeration(What.class).optional();
+        // * `SHEET`, `ROW`, `COL`, `COLUMN`, `CELL` is the type of the object that is to be deleted.
+        // end snippet
         scanner.done();
         final What what;
         if (whatDef.isPresent()) {
             what = whatDef.get(What.class);
         } else {
-            if (sheetDef.isPresent() && !rowDef.isPresent() && !colDef.isPresent() && !cellDef.isPresent()) {
+            if (cellDef.sheet.isPresent() && !cellDef.rowDef.isPresent() && !cellDef.colDef.isPresent() && !cellRef.isPresent()) {
                 what = What.SHEET;
-            } else if (rowDef.isPresent() && !colDef.isPresent() && !cellDef.isPresent()) {
+            } else if (cellDef.rowDef.isPresent() && !cellDef.colDef.isPresent() && !cellRef.isPresent()) {
                 what = What.ROW;
-            } else if (colDef.isPresent() && !rowDef.isPresent() && !cellDef.isPresent()) {
+            } else if (cellDef.colDef.isPresent() && !cellDef.rowDef.isPresent() && !cellRef.isPresent()) {
                 what = What.COLUMN;
-            } else if (cellDef.isPresent() && !rowDef.isPresent() && !colDef.isPresent()) {
+            } else if (cellRef.isPresent() && !cellDef.rowDef.isPresent() && !cellDef.colDef.isPresent()) {
                 what = What.CELL;
             } else {
                 throw new BadSyntax("Cannot decide what to delete");
             }
         }
 
-        final var wb = WorkbookUtils.get(workbook.get(), processor);
+        final var wb = WorkbookUtils.get(cellDef.workbook.get(), processor);
         switch (what) {
             case SHEET:
-                BadSyntax.when(colDef.isPresent() || rowDef.isPresent(), "Should not specify row or column when deleting a sheet");
-                deleteSheet(wb, sheetDef, cellDef);
+                BadSyntax.when(cellDef.colDef.isPresent() || cellDef.rowDef.isPresent(), "Should not specify row or column when deleting a sheet");
+                deleteSheet(wb, cellDef.sheet, cellRef);
                 return "";
             case ROW:
-                BadSyntax.when(colDef.isPresent(), "Should not specify column when deleting a row");
-                BadSyntax.when(rowDef.isPresent() && cellDef.isPresent(), "Should not specify both row and cell when deleting a row");
-                deleteRow(wb, sheetDef, rowDef, cellDef);
+                BadSyntax.when(cellDef.colDef.isPresent(), "Should not specify column when deleting a row");
+                BadSyntax.when(cellDef.rowDef.isPresent() && cellRef.isPresent(), "Should not specify both row and cell when deleting a row");
+                deleteRow(wb, cellDef.sheet, cellDef.rowDef, cellRef);
                 return "";
             case COLUMN:
             case COL:
-                BadSyntax.when(rowDef.isPresent(), "Should not specify row when deleting a column");
-                BadSyntax.when(colDef.isPresent() && cellDef.isPresent(), "Should not specify column and cell when deleting a column");
-                deleteCol(wb, sheetDef, colDef, cellDef);
+                BadSyntax.when(cellDef.rowDef.isPresent(), "Should not specify row when deleting a column");
+                BadSyntax.when(cellDef.colDef.isPresent() && cellRef.isPresent(), "Should not specify column and cell when deleting a column");
+                deleteCol(wb, cellDef.sheet, cellDef.colDef, cellRef);
                 return "";
             case CELL:
-                BadSyntax.when(colDef.isPresent() || rowDef.isPresent(), "Should not specify row or column when deleting a cell");
-                BadSyntax.when(!cellDef.isPresent(), "Should specify cell when deleting a cell");
-                deleteCell(wb, sheetDef, cellDef);
+                BadSyntax.when(cellDef.colDef.isPresent() || cellDef.rowDef.isPresent(), "Should not specify row or column when deleting a cell");
+                BadSyntax.when(!cellRef.isPresent(), "Should specify cell when deleting a cell");
+                deleteCell(wb, cellDef.sheet, cellRef);
                 return "";
         }
         return "";
@@ -76,14 +80,18 @@ public class Delete implements Macro, Scanner.WholeInput {
 
     private static void deleteCol(final Workbook wb,
                                   final StringParameter sheetDef,
-                                  final StringParameter colDef,
+                                  final IntegerParameter colDef,
                                   final StringParameter cellDef) throws BadSyntax {
         final Sheet sheet;
         final int col;
         try {
             if (cellDef.isPresent()) {
                 final var cr = getCellReference(sheetDef, cellDef);
-                sheet = wb.getSheet(cr.getSheetName());
+                if (cr.getSheetName() == null) {
+                    sheet = wb.getSheetAt(0);
+                } else {
+                    sheet = wb.getSheet(cr.getSheetName());
+                }
                 col = cr.getCol();
             } else {
                 if (sheetDef.isPresent()) {
@@ -91,7 +99,7 @@ public class Delete implements Macro, Scanner.WholeInput {
                 } else {
                     sheet = wb.getSheetAt(0);
                 }
-                col = Integer.parseInt(colDef.get());
+                col = colDef.get();
             }
             deleteColumn(sheet, col);
         } catch (Exception e) {
@@ -162,13 +170,20 @@ public class Delete implements Macro, Scanner.WholeInput {
 
     private static void deleteRow(final Workbook wb,
                                   final StringParameter sheetDef,
-                                  final StringParameter rowDef,
+                                  final IntegerParameter rowDef,
                                   final StringParameter cellDef) throws BadSyntax {
         final Sheet sheet;
         final Row rowToDelete;
         try {
             if (cellDef.isPresent()) {
-                final var cr = getCellReference(sheetDef, cellDef);
+                var cr = getCellReference(sheetDef, cellDef);
+                if (cr.getSheetName() == null) {
+                    if (sheetDef.get().isEmpty()) {
+                        cr = new CellReference(wb.getSheetAt(0).getSheetName() + "!" + cellDef.get());
+                    } else {
+                        cr = new CellReference(sheetDef.get() + "!" + cellDef.get());
+                    }
+                }
                 sheet = wb.getSheet(cr.getSheetName());
                 rowToDelete = sheet.getRow(cr.getRow());
             } else {
@@ -177,12 +192,14 @@ public class Delete implements Macro, Scanner.WholeInput {
                 } else {
                     sheet = wb.getSheetAt(0);
                 }
-                rowToDelete = sheet.getRow(Integer.parseInt(rowDef.get()));
+                rowToDelete = sheet.getRow(rowDef.get());
             }
-            final var rowToDeleteIndex = rowToDelete.getRowNum();
-            sheet.removeRow(rowToDelete);
-            if (rowToDeleteIndex != sheet.getLastRowNum()) {
-                sheet.shiftRows(rowToDeleteIndex + 1, sheet.getLastRowNum(), -1);
+            if (rowToDelete != null) {
+                final var rowToDeleteIndex = rowToDelete.getRowNum();
+                sheet.removeRow(rowToDelete);
+                if (rowToDeleteIndex < sheet.getLastRowNum()) {
+                    sheet.shiftRows(rowToDeleteIndex + 1, sheet.getLastRowNum(), -1);
+                }
             }
         } catch (Exception e) {
             throw new BadSyntax("Cannot delete row", e);
@@ -224,10 +241,5 @@ public class Delete implements Macro, Scanner.WholeInput {
         } else {
             return cr;
         }
-    }
-
-    @Override
-    public String getId() {
-        return "xls:delete";
     }
 }

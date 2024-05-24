@@ -1,32 +1,12 @@
 package javax0.jamal.engine.macro;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Closer;
-import javax0.jamal.api.Counted;
-import javax0.jamal.api.Debuggable;
-import javax0.jamal.api.Delimiters;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Marker;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.Stackable;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.levenshtein.Levenshtein;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -176,11 +156,11 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     /**
      * Return the last scope or the scope above that in case the last scope is locked.
      * <p>
-     * When th active scope is locked then the methods, like define, export and so on work with the scope that is above
+     * When the active scope is locked, then the methods, like 'define', 'export' and so on, work with the scope that is above
      * the last one. This is the case even if that scope is also locked. It may happen that some macro evaluation opens
      * a new scope even after the current scope was locked.
      * <p>
-     * If that happens the writing (user defined macros or something else) in the already locked one level higher scope
+     * If that happens, the writing (user defined macros or something else) in the already locked one level higher scope
      * just works until the scope gets closed. Locking a scope essentially means that we want to write new macros into
      * one level higher and not into this scope while the locked scope is the actual scope.
      * <p>
@@ -592,9 +572,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         if (!scopeStack.isEmpty()) {
             final var removedScope = scopeStack.remove(scopeStack.size() - 1);
             for (final var macro : removedScope.getMacros().values()) {
-                if (macroCanBeClosedWithoutOutput(macro)){
+                if (macroCanBeClosedWithoutOutput(macro)) {
                     try {
-                        if( macro instanceof Closer.ProcessorAware ){
+                        if (macro instanceof Closer.ProcessorAware) {
                             ((Closer.ProcessorAware) macro).set(processor);
                         }
                         ((AutoCloseable) macro).close();
@@ -609,9 +589,9 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
                 }
             }
             for (final var macro : removedScope.getUdMacros().values()) {
-                if (macroCanBeClosedWithoutOutput(macro)){
+                if (macroCanBeClosedWithoutOutput(macro)) {
                     try {
-                        if( macro instanceof Closer.ProcessorAware ){
+                        if (macro instanceof Closer.ProcessorAware) {
                             ((Closer.ProcessorAware) macro).set(processor);
                         }
                         ((AutoCloseable) macro).close();
@@ -694,7 +674,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         var delimiterPair = currentScope().delimiterPair;
         var savedList = currentScope().savedDelimiterPairs;
         if (openDelimiter == null || closeDelimiter == null) {
-            BadSyntax.when(savedList.size() == TOP_LEVEL, "There was no saved macro start and end string to restore.");
+            BadSyntax.when(savedList.isEmpty(), "There was no saved macro start and end string to restore.");
             var savedDelim = savedList.remove(savedList.size() - 1);
             delimiterPair.separators(savedDelim.open(), savedDelim.close());
         } else {

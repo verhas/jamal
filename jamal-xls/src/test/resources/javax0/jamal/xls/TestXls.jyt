@@ -1,39 +1,187 @@
-"Get the models from the openAI API and assert that the JSON is longer than 10_000 characters":
+"Opening non-existent remote file":
   Input: |-
-    {@import res:openai.jim}\
-    {#assert:less /10000/{#string:length {openai:query_models}}}
-  Output: ""
-"Get the babbage model description  from the openAI API and assert that the JSON is longer than 500 characters":
+    {@xls:open from=res:garbage.xlsx}
+  Throws: |-
+    Cannot create the XLS workbook 'res:garbage\.xlsx' from remote file and it seems not to exist
+"Opening non-existent file read only":
   Input: |-
-    {@import res:openai.jim}\
-    {#assert:less /500/{#string:length {openai:query_model babbage}}}
+    {@xls:open from=garbage.xlsx READ}
+  Throws: |-
+    Cannot create the XLS workbook 'garbage\.xlsx' in read only mode, it does not seem to exist
+"non writable output for non-existent input":
+  Input: |-
+    {@xls:open from=garbage.xlsx output=res:garbage.xlsx}
+  Throws: |-
+    Cannot create the XLS workbook 'garbage\.xlsx' from remote file and it seems not to exist
+"non writable output (remote) for ok input":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=res:garbage.xlsx}
+  Throws: |-
+    Cannot write the XLS workbook 'res:garbage\.xlsx' to remote file
+"Getting a boolean value":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}{@xls:cell E3}\
+  Output: |-
+    true
+"Wrong cell format":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:cell PI314.15926}
+  Throws: |-
+    Invalid CellReference: PI314\.15926
+"Wrong width format, too large":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (width cell=A1) 34564473882.234443E13}
+  Throws: |-
+    The maximum column width for an individual cell is 255 characters\.
+"Wrong width format, NaN":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (width cell=A1) very wide}
+  Throws: |-
+    Cannot convert the value to a number setting column width: very wide
+"Wrong height format, NaN":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (height cell=A1) very tall}
+  Throws: |-
+    Cannot convert the value to a number setting row height: very tall
+"Bad formula":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (formula cell=A1) very tall}
+  Throws: |-
+    Cannot set the formula: very tall
+"Bad alignment":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (align cell=A1) out of box}
+  Throws: |-
+    Unknown alignment: out of box
+"Bad border":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (border cell=A1) Mexico USA border}
+  Throws: |-
+    Unknown border style: Mexico USA border
+{%@for $SIDE in (left,right,top,bottom)=
+"Bad $SIDEBorder":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set ($SIDEBorder cell=A1) Mexico USA border}
+  Throws: |-
+    Unknown border style: Mexico USA border
+%}
+"Bad border Color":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (borderColor cell=A1) turkish}
+  Throws: |-
+    Unknown border color: turkish
+{%@for $SIDE in (left,right,top,bottom)=
+"Bad $SIDEBorder Color":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set ($SIDEBorderColor cell=A1) turkish}
+  Throws: |-
+    Unknown border color: turkish
+%}
+"Bad fill pattern name":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (fillPattern cell=A1) COKE_REFILL} was the best GPT 4o could suggest as humorous... not a funny guy
+  Throws: |-
+    Unknown fill pattern: COKE_REFILL
+"Bad fillForegroundColor name":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (fillForegroundColor cell=A1) kabule}
+  Throws: |-
+    Unknown foreground color: kabule
+"Bad fillBackgroundColor name":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (fillBackgroundColor cell=A1) yellowstone}
+  Throws: |-
+    Unknown background color: yellowstone
+"Bad zoom number":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (zoom cell=A1) yellowstone}
+  Throws: |-
+    Cannot convert the value to a number setting zoom: yellowstone
+"Bad zoom number (too large)":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (zoom cell=A1) 600000%}
+  Throws: |-
+    Valid scale values range from 10 to 400
+"Font without font name":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}
+    {@xls:set (font cell=A1)}
+  Throws: |-
+    Not enough parameters for font
+"Font color with good name":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (font cell=A1)Arial;14pt;RED}
   Output: ""
-"Get Descartes completion":
-    Input: |-
-      {@import res:openai.jim}\
-      {openai:model babbage}\
-      {@options openai:local}\
-      {#json:define descartes_said={openai:completion |
-                                      "prompt": "Descartes said:",
-                                      "temperature": 0.2
-                                  }
-      }{@json:get descartes_said./choices/0/text}
-    Output: "this is a cached answer"
-
-"Get Descartes completion twice with different tabulation and hash still works":
-    Input: |- 
-      {@import res:openai.jim}\
-      {openai:model babbage}\
-      {@options openai:local}\
-      {openai:hash |e721ebd8}\
-      {#json:define descartes_said={openai:completion |
-                                      "prompt": "Descartes said:",
-                                      "temperature": 0.2
-                                  }
-      }\
-      {#json:define descartes_said={openai:completion |
-                                      "prompt": "Descartes said:",
-                             "temperature": 0.2
-                                  }
-      }{@json:get descartes_said./choices/0/text}
-    Output: "this is a cached answer"
+"Font color with bad name":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (font cell=A1)Arial;14px;kekeszold}
+  Throws: |-
+    Unknown color: kekeszold
+{%@for $WHAT in (hidden,locked,shrinkToFit,wrapText)=
+"Set $WHAT with bad value":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set ($WHAT cell=A1)true}
+    {@xls:set ($WHAT cell=A1)false}
+    {@xls:set ($WHAT cell=A1)Arial;14px;kekeszold}
+  Throws: |-
+    Cannot convert the value to a boolean: Arial;14px;kekeszold
+%}
+"Rotation NaN":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (rotation cell=A1)Eulers number also known as e approximately 2.718281828459045}
+  Throws: |-
+    Cannot convert the value to a short: Eulers number also known as e approximately 2\.718281828459045
+"Rotation too large":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (rotation cell=A1)32768}
+  Throws: |-
+    Cannot convert the value to a short: 32768
+"verticalAlignment with wrong value":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (verticalAlignment cell=A1)left}
+  Throws: |-
+    Unknown vertical alignment: left
+"set numeric with NaN":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (NUMERIC cell=A1)left}
+  Throws: |-
+    Cannot convert the value to a number: left
+"set boolean with NaN":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (BOOLEAN cell=A1)left}
+  Throws: |-
+    Cannot convert the value to a boolean: left
+"set formula wrong":
+  Input: |-
+    {@xls:open from=res:test.xlsx output=target/dummy.xlsx}\
+    {@xls:set (FORMULA cell=A1)Mikka Makka}
+  Throws: |-
+    Cannot set the formula: Mikka Makka
+"bad formatted file":
+  Input: |-
+    {@xls:open from=res:javax0 output=target/dummy.xlsx}
+  Throws: |-
+    Cannot read the XLS workbook 'res:javax0'

@@ -17,10 +17,12 @@
       {dependency |{GROUPID}|jamal-assertions|{VERSION}|test}
       {dependency |{GROUPID}|jamal-snippet|{VERSION}|test}
       {dependency|{GROUPID}|jamal-jamal||test}
+      {dependency|{GROUPID}|jamal-prog||test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
       {dependency|org.apache.poi|poi|{APACHE_POI_VERSION}}
       {dependency :org.apache.poi:poi-ooxml:{APACHE_POI_VERSION}}
+      {dependency :org.apache.commons:commons-compress:1.26.1}
     }
 
 {end project}

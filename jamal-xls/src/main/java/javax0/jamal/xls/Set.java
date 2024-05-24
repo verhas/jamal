@@ -3,6 +3,7 @@ package javax0.jamal.xls;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Macro.Name;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
@@ -15,6 +16,7 @@ import org.apache.poi.ss.util.CellReference;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+@Name("xls:set")
 public class Set implements Macro, Scanner {
 
     public static final String XLS_SHEET = "xls:sheet";
@@ -22,31 +24,78 @@ public class Set implements Macro, Scanner {
     public static final String XLS_COL = "xls:col";
 
     public enum What {
-        value, formula, format, comment, style, width, height
+        // snippet what_enum
+        value,
+        // the value of the cell. This is the default.
+        formula,
+        // the value of the cell as a formula
+        format,
+        // the format of the cell is set.
+        comment,
+        // the comment of the cell is set.
+        style,
+        // the style of the set.
+        // When this is set, one of the style parameter options can also be set.
+        width,
+        // the width of the column
+        height,
+        // the height of the row
+        // end snippet
     }
 
     public enum Style {
+        // snippet style_enum
         align,
-        border, bottomBorder, topBorder, leftBorder, rightBorder,
-        borderColor, bottomBorderColor, topBorderColor, leftBorderColor, rightBorderColor,
-        fillPattern, fillBackgroundColor, fillForegroundColor,
-        dataFormat, hidden, locked, rotation, shrinkToFit, verticalAlignment, wrapText,
-        font, zoom
+        border,
+        bottomBorder,
+        topBorder,
+        leftBorder,
+        rightBorder,
+        borderColor,
+        bottomBorderColor,
+        topBorderColor,
+        leftBorderColor,
+        rightBorderColor,
+        fillPattern,
+        fillBackgroundColor,
+        fillForegroundColor,
+        dataFormat,
+        hidden,
+        locked,
+        rotation,
+        shrinkToFit,
+        verticalAlignment,
+        wrapText,
+        font,
+        zoom,
+        // specifies the zoom factor for the sheet.
+        // The value is a number that is the percentage of the zoom.
+        // It may optionally contain a `%` sign at the end.
+        // end snippet
 
     }
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var workbook = scanner.str(null, "workbook", "wb").defaultValue(Open.XLS_WORKBOOK);
-        final var sheet = scanner.str(XLS_SHEET, "sheet").defaultValue("");
-        final var rowDef = scanner.str(XLS_ROW, "row").optional();
-        final var colDef = scanner.str(XLS_COL, "col").optional();
-        final var cellDef = scanner.str(null, "cell").optional();
+        final var cellDef = new ParopsCell(scanner);
+        // snippet set_parops
+        // {%@snip celldef_parops%}
+        final var cellRef = scanner.str(null, "cell").optional();
+        // * `cell` is the cell reference where the cell is set.
+        // If `cell` is specified, then `row` and `col` should not be specified.
         final var what = scanner.enumeration(What.class).defaultValue(What.value);
+        // * One of the following parameters can define what is set in the cell:
+        // {%@snip what_enum%}
         final var as = scanner.enumeration(CellType.class).defaultValue(CellType.STRING);
+        // * The type of the cell. The default is `STRING`.
+        // The possible values are `STRING`, `NUMERIC`, `BOOLEAN`, `FORMULA`, `BLANK`, `ERROR`.
         final var style = scanner.enumeration(Style.class).optional();
+        // * setting the style can use one of the following parameters:
+        // {%@snip style_enum%}
         final var author = scanner.str(null, "author").optional();
+        // * `author` is the name of the author of the comment. Can only be used when the comment is set.
+        // end snippet
         scanner.done();
 
         BadSyntax.when(style.isPresent() && what.isPresent() && what.get(What.class) != What.style,
@@ -55,20 +104,20 @@ public class Set implements Macro, Scanner {
                 "When setting author you must specify the comment.");
         BadSyntax.when(what.get(What.class) == What.style && !style.isPresent(),
                 "When setting style you must specify the style type.");
-        BadSyntax.when(cellDef.isPresent() && (rowDef.isPresent() || colDef.isPresent()),
+        BadSyntax.when(cellRef.isPresent() && (cellDef.rowDef.isPresent() || cellDef.colDef.isPresent()),
                 "When specifying cell reference you cannot use 'col' or 'row'.");
-        BadSyntax.when(!cellDef.isPresent() && !(rowDef.isPresent() && colDef.isPresent()),
+        BadSyntax.when(!cellRef.isPresent() && !(cellDef.rowDef.isPresent() && cellDef.colDef.isPresent()),
                 "No cell specified, use either 'cell' or 'row' and 'col' to specify the cell.");
 
         InputHandler.skipWhiteSpaces(in);
         String ref = "";
         try {
             Cell cell;
-            final var wb = WorkbookUtils.get(workbook.get(), processor);
-            if (cellDef.isPresent()) {
-                var cr = new CellReference(cellDef.get());
-                if (cr.getSheetName() == null && !sheet.get().isEmpty()) {
-                    cr = new CellReference(sheet.get() + "!" + cellDef.get());
+            final var wb = WorkbookUtils.get(cellDef.workbook.get(), processor);
+            if (cellRef.isPresent()) {
+                var cr = new CellReference(cellRef.get());
+                if (cr.getSheetName() == null && !cellDef.sheet.get().isEmpty()) {
+                    cr = new CellReference(cellDef.sheet.get() + "!" + cellRef.get());
                 }
                 final var sheetName = cr.getSheetName();
                 var s = (sheetName == null ? (wb.getNumberOfSheets() > 0 ? wb.getSheetAt(0) : null) : wb.getSheet(sheetName));
@@ -90,16 +139,16 @@ public class Set implements Macro, Scanner {
                 }
                 ref = cr.formatAsString();
             } else {
-                var s = WorkSheetUtils.get(sheet.get(), wb);
+                var s = WorkSheetUtils.get(cellDef.sheet.get(), wb);
                 if (s == null) {
-                    s = wb.createSheet(sheet.get());
+                    s = wb.createSheet(cellDef.sheet.get());
                 }
-                final int rowNum = Integer.parseInt(rowDef.get());
+                final int rowNum = cellDef.rowDef.get();
                 var r = s.getRow(rowNum);
                 if (r == null) {
                     r = s.createRow(rowNum);
                 }
-                final var colNum = Integer.parseInt(colDef.get());
+                final var colNum = cellDef.colDef.get();
                 cell = r.getCell(colNum);
                 if (cell == null) {
                     cell = r.createCell(colNum);
@@ -112,7 +161,9 @@ public class Set implements Macro, Scanner {
             setCell(cell, whatValue, as.get(CellType.class), in.toString(), wb, style.get(Style.class), author);
             return "";
         } catch (Exception e) {
-            throw BadSyntax.format(e, "Cannot set the XLS cell '%s' %s", workbook.get(), ref);
+            if (e instanceof BadSyntax)
+                throw (BadSyntax) e;
+            throw BadSyntax.format(e, "Cannot set the XLS cell '%s' %s", cellDef.workbook.get(), ref);
         }
     }
 
@@ -140,9 +191,7 @@ public class Set implements Macro, Scanner {
                 break;
             case height:
                 try {
-                    final var height = Double.parseDouble(in);
-                    final var row = cell.getRow();
-                    row.setHeightInPoints((float) height);
+                    cell.getRow().setHeightInPoints(Float.parseFloat(in));
                 } catch (NumberFormatException e) {
                     throw new BadSyntax("Cannot convert the value to a number setting row height: " + in, e);
                 }
@@ -238,34 +287,34 @@ public class Set implements Macro, Scanner {
                                 cs.setRightBorderColor(borderColor);
                             });
                         } catch (IllegalArgumentException e) {
-                            throw new BadSyntax("Unknown border style: " + in, e);
+                            throw new BadSyntax("Unknown border color: " + in, e);
                         }
                         break;
                     case bottomBorderColor:
                         try {
                             cell.getCellStyle().setBottomBorderColor(IndexedColors.valueOf(in).getIndex());
                         } catch (IllegalArgumentException e) {
-                            throw new BadSyntax("Unknown border style: " + in, e);
+                            throw new BadSyntax("Unknown border color: " + in, e);
                         }
                         break;
                     case topBorderColor:
                         try {
                             cell.getCellStyle().setTopBorderColor(IndexedColors.valueOf(in).getIndex());
                         } catch (IllegalArgumentException e) {
-                            throw new BadSyntax("Unknown border style: " + in, e);
+                            throw new BadSyntax("Unknown border color: " + in, e);
                         }
                     case leftBorderColor:
                         try {
                             cell.getCellStyle().setLeftBorderColor(IndexedColors.valueOf(in).getIndex());
                         } catch (IllegalArgumentException e) {
-                            throw new BadSyntax("Unknown border style: " + in, e);
+                            throw new BadSyntax("Unknown border color: " + in, e);
                         }
                         break;
                     case rightBorderColor:
                         try {
                             cell.getCellStyle().setRightBorderColor(IndexedColors.valueOf(in).getIndex());
                         } catch (IllegalArgumentException e) {
-                            throw new BadSyntax("Unknown border style: " + in, e);
+                            throw new BadSyntax("Unknown border color: " + in, e);
                         }
                         break;
                     case fillPattern:
@@ -281,7 +330,7 @@ public class Set implements Macro, Scanner {
                             setCellStyle(wb, cell, cs ->
                                     cs.setFillForegroundColor(IndexedColors.valueOf(in).getIndex()));
                         } catch (IllegalArgumentException e) {
-                            throw new BadSyntax("Unknown fill pattern: " + in, e);
+                            throw new BadSyntax("Unknown foreground color: " + in, e);
                         }
                         break;
                     case fillBackgroundColor:
@@ -289,12 +338,13 @@ public class Set implements Macro, Scanner {
                             setCellStyle(wb, cell, cs ->
                                     cs.setFillBackgroundColor(IndexedColors.valueOf(in).getIndex()));
                         } catch (IllegalArgumentException e) {
-                            throw new BadSyntax("Unknown fill pattern: " + in, e);
+                            throw new BadSyntax("Unknown background color: " + in, e);
                         }
                         break;
                     case zoom:
                         try {
-                            final var zoom = Integer.parseInt(in);
+                            final String perc = in.endsWith("%") ? in.substring(0, in.length() - 1) : in;
+                            final var zoom = Integer.parseInt(perc);
                             cell.getSheet().setZoom(zoom);
                         } catch (NumberFormatException e) {
                             throw new BadSyntax("Cannot convert the value to a number setting zoom: " + in, e);
@@ -303,7 +353,7 @@ public class Set implements Macro, Scanner {
                     case font:
                         final var font = wb.createFont();
                         final var parts = in.split("\\s*,\\s*|\\s*;\\s*");
-                        BadSyntax.when(parts.length < 1, "Not enough parameters for font");
+                        BadSyntax.when(parts.length < 1 || parts[0].isBlank(), "Not enough parameters for font");
                         font.setFontName(parts[0].trim());
                         for (int i = 1; i < parts.length; i++) {
                             final var part = parts[i].trim();
@@ -320,14 +370,11 @@ public class Set implements Macro, Scanner {
                             } else if (part.equalsIgnoreCase("italic")) {
                                 font.setItalic(true);
                             } else {
-                                BadSyntax.when(Arrays.stream(IndexedColors.values())
-                                                .filter(c -> c.name().equalsIgnoreCase(part))
-                                                .findAny().map(
-                                                        c -> {
-                                                            font.setColor(c.getIndex());
-                                                            return false;
-                                                        }).orElse(true),
-                                        "Unknown color: " + part);
+                                final var colorIndex = Arrays.stream(IndexedColors.values())
+                                        .filter(c -> c.name().equalsIgnoreCase(part))
+                                        .findAny().map(IndexedColors::getIndex).orElse(null);
+                                BadSyntax.when(colorIndex == null, "Unknown color: " + part);
+                                font.setColor(colorIndex);
                             }
                         }
                         setCellStyle(wb, cell, cs -> cs.setFont(font));
@@ -385,7 +432,13 @@ public class Set implements Macro, Scanner {
     }
 
     private static boolean parseBoolean(String in) {
-        return in.isBlank() || Boolean.parseBoolean(in);
+        if (in == null || in.isBlank()) {
+            return true;
+        }
+        if (in.equalsIgnoreCase("true") || in.equalsIgnoreCase("false")) {
+            return Boolean.parseBoolean(in);
+        }
+        throw new NumberFormatException("Not a boolean value: " + in);
     }
 
     private static void setCellStyle(Workbook wb, Cell cell, Consumer<CellStyle> styleSetter) {
@@ -444,10 +497,5 @@ public class Set implements Macro, Scanner {
         anchor.setRow2(cell.getRow().getRowNum() + 3);
         final var drawing = sheet.createDrawingPatriarch();
         return drawing.createCellComment(anchor);
-    }
-
-    @Override
-    public String getId() {
-        return "xls:set";
     }
 }

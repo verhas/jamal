@@ -3,3 +3,455 @@
 Jamal module to read and write Excel files.
 
 == Introduction
+This package contains macros to
+
+* open an Excel file (either `xls` or `xlsx` format),
+* fetch values from the different cells,
+* change the values and setting of different cells,
+* delete sheets, rows, columns and cells, and
+* merge cells.
+
+Jamal will write back the changes to the file or to a new file.
+
+== Macros in the package
+
+The macros are all named with the `xls:` prefix.
+
+=== `xls:open`
+
+This macro can open a file in `xls` or `xlsx` format.
+The file is opened in read-write mode by default.
+This can also be enforced by specifying the parop `READ`.
+
+The macro returns and empty string, but the opened file will be stored in a macro.
+The name of this macro can be specified in a parop, and has a default value `+xls$:worksheet+`.
+Since this workbook name is used in all other `xls` macros, you do not need to care about this unless you work with multiple worksheets opened the same time.
+
+The following example opens the file `README.xlsx` in the same directory as the `README.adoc.jam` file.
+
+.Jamal source
+[source]
+----
+EMPTY STRING="{@xls:open file=README.xlsx output=READYOU.xlsx}"
+{@try! {xls$:worksheet}}
+----
+
+This file exists in the source code structure and part of the documentation.
+The examples in this document later will use this file.
+
+[NOTE]
+====
+The sampless in this document keep the macros between the individual samples, but the macros are closed if they are closable.
+Therefore, individual samples have to open the XLS file individually.
+The subsequent samples always open the `READYOU.xlsx` file and they also write it back.
+A normal Jamal script does not need to do it.
+It is only needed because the samples are independent.
+====
+
+The output of this XLS opening is empty, but the workbook is stored in the macro `+xls$:worksheet+`.
+
+.output
+[source]
+----
+EMPTY STRING=""
+'{xls$:worksheet ...' is defined but cannot be used as a macro.
+----
+
+
+Note that the worksheet is stored with a name as a macro, and among the macros, but it cannot be used as a macro in the text.
+It stores an XLS workbook object, and not a user defined macro.
+
+==== Parops of the macro `xls:open`
+
+Parameter options (parops) can be defined without parentheses.
+The `(` and `)` are optional.)
+
+* `file` (aliases are `in`, `input`, `from`) is the name of the file that contains the XLS workbook.
+Technically `file` is also an alias, thus a macro havign the name of `file` will not be considered.
+This parop must be defined.
+* `out` (aliases are `output`, `to`) is the name of the file where the XLS workbook is written.
+This parop is optional.
+If this parop is defined, then the mode is automatically considered to be `WRITE`.
+In other cases, `READ` is the default, and it is an error to specify `READ` when there is a defined output.
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `READ` or `WRITE` is the mode of the operation. If the `out` parop is defined then the mode is `WRITE`.
+This parop is optional and the default value is `READ`.
+
+
+=== `xls:close`
+
+Will close the workbook.
+The name of the macro containing the workbook is the input of the macro.
+This is the name specified in other macros as `wb` or `workbook` parop.
+There is no need to call this macro, the workbook is automatically closed as soon as the Jamal script ends.
+
+=== `xls:cell`
+
+Will read information from a given cell and return it as the macro result.
+You can get the value as well as the content (in the case of formula it is the formula), or other properties of the cell.
+The input of the macro can be the cell location, but the cell can also be defined using the parops `xls:sheet`, `xls:row` and `xls:column`.
+
+==== Parops of the macro `xls:cell`
+
+
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `xls:sheet` (aliased as `sheet`) can identify the sheet that the cell read is in.
+When the sheet is not defined in any way, then the first sheet is used.
+The name `xls:sheet` can also be used as a macro, thus if you define a macro with this name, its value will be used as the name of the sheet.
+This feature can be used to set the default sheet is nothing else is defined.
+This parop is usually used together with `xls:row` and `xls:col` to define the location of the cell.
+They can be used to set one as a macro and use the other as a parop iterating through the cells in the same row or column.
+The usual way is specifying the cell in the macro input the usual `Sheet!A1` style.
+* `xls:row` (aliased as `row`) is the row number of the cell.
+The indexing starts from 0.
+* `xls:col` (aliased as `col`) is the column number of the cell.
+The indexing starts from 0.
+
+* there are several options to specify what the result of the macro should be.
+** `value`
+specify you want the value of the cell.
+This is the default if you do not specity any of these options.
+The value is usually the same as the content.
+The difference is in the case of formulas.
+For formulas the value is the calculated value, the content is the formula itself.
+** `content`
+specify this if you want the content of the cell.
+See the details in the description of the `value` option.
+** `type`
+specify this if you want the type of the cell.
+** `format`
+specify this if you want the format of the cell.
+** `comment`
+specify this if you want the comment of the cell.
+** `commentAuthor`
+specify this if you want the author of the comment of the cell.
+** `style`
+specify this if you want the style of the cell.
+** `hasComment`
+specify this if you want to know if the cell has a comment.
+The result is `true` or `false`.
+** `isString`
+specify this if you want to know if the cell is a string.
+The result is `true` or `false`.
+** `isNumeric`
+specify this if you want to know if the cell is a number.
+The result is `true` or `false`.
+** `isBoolean`
+specify this if you want to know if the cell is a boolean.
+The result is `true` or `false`.
+** `isFormula`
+specify this if you want to know if the cell is a formula.
+The result is `true` or `false`.
+** `isBlank`
+specify this if you want to know if the cell is blank.
+The result is `true` or `false`.
+** `isError`
+specify this if you want to know if the cell is an error.
+The result is `true` or `false`.
+** `isNull`
+specify this if you want to know if the cell is null.
+The result is `true` or `false`.
+
+* When you specify `style` then the result is a string that contains the style of the cell.
+You can also specify one of the following parops to get only one specific style property.
+** `toString`
+is the default value for style.
+The result will contain all the style elements
+** `align`
+the alignment of the cell.
+** `border`
+the border of the cell.
+** `fill`
+the fill of the cell.
+** `dataFormat`
+the data format of the cell.
+** `hidden`
+the hidden property of the cell.
+** `locked`
+the locked property of the cell.
+** `rotation`
+the rotation of the cell.
+** `shrinkToFit`
+the shrink to fit property of the cell.
+** `verticalAlignment`
+the vertical alignment of the cell.
+        wrapText
+the wrap text property of the cell.
+
+
+
+==== Examples of the macro `xls:cell`
+
+.Jamal source
+[source]
+----
+{@xls:open file=READYOU.xlsx}
+{@xls:cell A1}
+{@xls:cell (style)A1}
+----
+
+will result in
+
+.output
+[source]
+----
+This is the content of the cell A1.
+align=GENERAL, border=NONE, fill=SOLID_FOREGROUND, dataFormat=0, hidden=false, locked=true, rotation=0, shrinkToFit=false, verticalAlignment=BOTTOM, wrapText=false
+----
+
+
+=== `xls:set`
+
+This macro can be used to set the value of a cell.
+The input of the macro is the value to be set.
+The cell is identified by the parameter options.
+Parameter options are also used to define which part of the cell (value, style etc.) is set.
+
+When setting boolean values the two values `true` and `false` are used.
+If the value is missing or empty, `true` value is used.
+That way, for example, you can
+
+.Jamal source
+[source]
+----
+{@xls:open file=READYOU.xlsx WRITE}
+{@xls:set (cell=A1 wrapText)}
+----
+
+which will result, eventually an empty string, but it will modify the cell and
+
+.output
+[source]
+----
+
+----
+
+
+==== Parops of the macro `xls:set`
+
+
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `xls:sheet` (aliased as `sheet`) can identify the sheet that the cell read is in.
+When the sheet is not defined in any way, then the first sheet is used.
+The name `xls:sheet` can also be used as a macro, thus if you define a macro with this name, its value will be used as the name of the sheet.
+This feature can be used to set the default sheet is nothing else is defined.
+This parop is usually used together with `xls:row` and `xls:col` to define the location of the cell.
+They can be used to set one as a macro and use the other as a parop iterating through the cells in the same row or column.
+The usual way is specifying the cell in the macro input the usual `Sheet!A1` style.
+* `xls:row` (aliased as `row`) is the row number of the cell.
+The indexing starts from 0.
+* `xls:col` (aliased as `col`) is the column number of the cell.
+The indexing starts from 0.
+
+* `cell` is the cell reference where the cell is set.
+If `cell` is specified, then `row` and `col` should not be specified.
+* One of the following parameters can define what is set in the cell:
+** `value`
+the value of the cell. This is the default.
+** `formula`
+the value of the cell as a formula
+** `format`
+the format of the cell is set.
+** `comment`
+the comment of the cell is set.
+** `style`
+the style of the set.
+When this is set, one of the style parameter options can also be set.
+** `width`
+the width of the column
+** `height`
+the height of the row
+
+* The type of the cell. The default is `STRING`.
+The possible values are `STRING`, `NUMERIC`, `BOOLEAN`, `FORMULA`, `BLANK`, `ERROR`.
+* setting the style can use one of the following parameters:
+** `align`
+** `border`
+** `bottomBorder`
+** `topBorder`
+** `leftBorder`
+** `rightBorder`
+** `borderColor`
+** `bottomBorderColor`
+** `topBorderColor`
+** `leftBorderColor`
+** `rightBorderColor`
+** `fillPattern`
+** `fillBackgroundColor`
+** `fillForegroundColor`
+** `dataFormat`
+** `hidden`
+** `locked`
+** `rotation`
+** `shrinkToFit`
+** `verticalAlignment`
+** `wrapText`
+** `font`
+** `zoom`
+specifies the zoom factor for the sheet.
+The value is a number that is the percentage of the zoom.
+It may optionally contain a `%` sign at the end.
+
+* `author` is the name of the author of the comment. Can only be used when the comment is set.
+
+
+=== `xls:delete`
+
+The macro `xls:delete` can be used to delete a cell, a row, a column or a sheet.
+The default is to delete a sheet given by the name, if no other option is given.
+If the row is defined, then the row will be deleted.
+If only the column is defined, then the column will be deleted.
+If the cell is defined then the cell will be deleted.
+
+In other cases, or if in doubt you can specify the type of the deletion by the parop
+
+* `SHEET` to delete a sheet,
+* `ROW` to delete a row,
+* `COLUMN` or `COL` to delete a column, or
+* `CELL` to delete a cell.
+
+The following example will delete the second column in the XLSX file.
+
+.Jamal source
+[source]
+----
+{@xls:open file=READYOU.xlsx WRITE}
+{@xls:delete (COLUMN col=1)}
+----
+
+.output
+[source]
+----
+
+----
+
+
+==== Parops of the macro `xls:delete`
+
+
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `xls:sheet` (aliased as `sheet`) can identify the sheet that the cell read is in.
+When the sheet is not defined in any way, then the first sheet is used.
+The name `xls:sheet` can also be used as a macro, thus if you define a macro with this name, its value will be used as the name of the sheet.
+This feature can be used to set the default sheet is nothing else is defined.
+This parop is usually used together with `xls:row` and `xls:col` to define the location of the cell.
+They can be used to set one as a macro and use the other as a parop iterating through the cells in the same row or column.
+The usual way is specifying the cell in the macro input the usual `Sheet!A1` style.
+* `xls:row` (aliased as `row`) is the row number of the cell.
+The indexing starts from 0.
+* `xls:col` (aliased as `col`) is the column number of the cell.
+The indexing starts from 0.
+
+* `cell` is the cell reference that is used to refer to the cell in the rest of the document.
+* `SHEET`, `ROW`, `COL`, `COLUMN`, `CELL` is the type of the object that is to be deleted.
+
+
+=== `xls:merge`
+
+Merge cells in the worksheet.
+To merge the cells, you have to define either
+
+* the top, bottom, left, and right cell, or
+* the top left cell and the bottom right cell.
+
+==== Parops of the macro `xls:merge`
+
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the
+rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `sheet` is the name of the sheet where the region is merged.
+* `top` is the top row of the region to merge.
+* `left` is the left column of the region to merge.
+* `bottom` is the bottom row of the region to merge.
+* `right` is the right column of the region to merge.
+* `region` is the region to merge in the format `A1:B2`.
+
+
+
+=== `xls:unmerge`
+
+Unmerge merged cells in a worksheet.
+The input of the macro is the cell reference of the merged cell.
+The cell reference can be any individual cell that is part of the merged cell.
+The cell can be defined as a cell reference on the input of the macro but also can be specified using the parops `xls:sheet`, `xls:row` and `xls:column`.
+
+==== Parops of the macro `xls:unmerge`
+
+        final var cellDef = new ParopsCell(scanner);
+
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `xls:sheet` (aliased as `sheet`) can identify the sheet that the cell read is in.
+When the sheet is not defined in any way, then the first sheet is used.
+The name `xls:sheet` can also be used as a macro, thus if you define a macro with this name, its value will be used as the name of the sheet.
+This feature can be used to set the default sheet is nothing else is defined.
+This parop is usually used together with `xls:row` and `xls:col` to define the location of the cell.
+They can be used to set one as a macro and use the other as a parop iterating through the cells in the same row or column.
+The usual way is specifying the cell in the macro input the usual `Sheet!A1` style.
+* `xls:row` (aliased as `row`) is the row number of the cell.
+The indexing starts from 0.
+* `xls:col` (aliased as `col`) is the column number of the cell.
+The indexing starts from 0.
+
+
+
+=== `xls:row`, `xls:col`, `xls:sheet`, and `xls:to:cell`
+
+These macros convert row, column and sheet numbers and names to cell reference and back.
+The `xls:to:cell` macro is used to convert the row and column to the cell reference.
+The row and column numbers are specified as parops `row` and `col`.
+You can also specify `rowAbsolute` and `colAbsolute` to get the absolute cell reference.
+The sheet name can be specified using the parop `sheet`.
+
+The macros `xls:row`, `xls:col`, and `xls:sheet` are used to convert the cell reference to the row, column, and sheet name.
+The input is the cell reference, and the value of the macro is the number of the row, the number of the column, or the name of the sheet.
+If the cell reference does not contain a sheet name, the macro `xls:sheet` will result in error.
+
+The following example will convert the cell reference `A1` to the row and column numbers.
+
+.Jamal source
+[source]
+----
+{@xls:row A1}
+{@xls:col A1}
+----
+
+results in
+
+.output
+[source]
+----
+0
+0
+----
+
+
+Both the row and the column are 0-based.
+
+The next example uses absolute references:
+
+.Jamal source
+[source]
+----
+{@xls:to:cell row=1 col=1}
+{@xls:to:cell row=1 col=1 rowAbsolute colAbsolute}
+----
+
+will result in
+
+.output
+[source]
+----
+B2
+$B$2
+----
+
+
+NOTE: `xls:sheet`, `xls:row` and `xls:col` can also be defined as user defined macros.
+Those will be used by the parop parsing.
+They can be used to define a default sheet, row, or column, which is always the same for the duration of some operation.
+The built-in macros are used to convert the values, and though they share the name with the user defined macros, they are in a different namespace.

@@ -25,7 +25,11 @@ public class TestDelete {
                         "{@xls:delete ROW cell=Sheet4!A3}" +
                         "{@xls:delete COL cell=Sheet4!H1}"+
                         "{@xls:delete ROW sheet=Sheet5 cell=A3}" +
-                        "{@xls:delete COL sheet=Sheet5 cell=H1}"
+                        "{@xls:delete COL sheet=Sheet5 cell=H1}"+
+                        "{@xls:delete ROW cell=A27}"+
+                        "{@xls:delete ROW cell=A28}" +
+                        "{@xls:delete ROW cell=28}" +
+                        "{@xls:delete COL cell=A100}"
                 )
                 .atPosition(root + "/jamal-xls/src/test/test.jam", 1, 1)
                 .results();

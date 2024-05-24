@@ -29,6 +29,6 @@ public class TestErrorPositions {
     void errorInPostMacroEvaluation() throws Exception {
         //                          11111111112222222222333333333344444444445555555555666666666677777777778888888888999999999900000
         //                 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234
-        TestThat.theInput("{@options failfast}{@define gulp(1,2,3)={zumi123}}{@define zumione=kakk}{gulp /one/{@ident {two}}/three}").throwsBadSyntax("User defined macro '\\{two ...' is not defined. Did you mean '@try'.*");
+        TestThat.theInput("{@options failfast}{@define gulp(1,2,3)={zumi123}}{@define zumione=kakk}{gulp /one/{@ident {two}}/three}").throwsBadSyntax("User macro '\\{two ...' is not defined. Did you mean '@try'.*");
     }
 }

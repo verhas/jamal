@@ -33,7 +33,7 @@ will result in
 .output
 [source]
 ----
-User defined macro '{macro' is not defined. Did you want to use built-in '{@macro' instead?
+User macro '{macro' is not defined. Did you mean the built-in '{@macro' instead?
 hay macro
 ----
 

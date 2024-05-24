@@ -4,7 +4,7 @@
       {#define $input={doplikate/{$input}}}
     }\
     Annoying?
-  Throws: "User defined macro '\\{doplikate ...' is not defined."
+  Throws: "User macro '\\{doplikate ...' is not defined."
 
 "Simple deferred evaluation duplicating the input":
   Input: |-

@@ -1,6 +1,7 @@
 package javax0.jamal.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -102,7 +103,7 @@ public class BadSyntax extends Exception {
      */
     public static void when(final boolean condition, final ThrowingSupplier<String> message) throws BadSyntax {
         if (condition) {
-            throw new BadSyntax(message.get());
+            throw castrated(new BadSyntax(message.get()));
         }
     }
 
@@ -126,10 +127,23 @@ public class BadSyntax extends Exception {
     }
 
     public static BadSyntax format(final Exception e, final String format, final Object... parameters) throws BadSyntax {
-        throw new BadSyntax(String.format(format, parameters), e);
+        throw castrated(new BadSyntax(String.format(format, parameters), e));
     }
 
     public static BadSyntax format(final String format, final Object... parameters) throws BadSyntax {
-        throw new BadSyntax(String.format(format, parameters));
+        throw castrated(new BadSyntax(String.format(format, parameters)));
+    }
+
+    /**
+     * Remove the elements from the stack trace that are in this class. This all belongs to the exception throwing
+     * and not relevant for the error itself.
+     *
+     * @param e the exception to remove the few top stack trace elements
+     * @return the exception with the modified stack trace
+     */
+    private static BadSyntax castrated(final BadSyntax e) {
+        final var st = Arrays.stream(e.getStackTrace()).filter(s -> !s.getClassName().equals(BadSyntax.class.getName())).toArray(StackTraceElement[]::new);
+        e.setStackTrace(st);
+        return e;
     }
 }

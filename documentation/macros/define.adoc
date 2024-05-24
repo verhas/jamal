@@ -431,7 +431,7 @@ which will result:
 .output
 [source]
 ----
-User defined macro '{undefinedMacro ...' is not defined.
+User macro '{undefinedMacro ...' is not defined.
 this is empty string: >><<
 ----
 

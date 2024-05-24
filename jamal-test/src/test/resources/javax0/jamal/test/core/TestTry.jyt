@@ -3,7 +3,7 @@ zero output when no modifying character is used:
   Output: ""
 Error is output when ! character is right after the keyword:
   Input: "{@try! {undefinedMacro}}"
-  Output: "User defined macro '{undefinedMacro ...' is not defined."
+  Output: "User macro '{undefinedMacro ...' is not defined."
 Just a normal output when there is no error:
   Input: "{@try! just blabla}"
   Output: "just blabla"

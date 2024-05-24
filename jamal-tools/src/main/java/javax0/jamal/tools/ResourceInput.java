@@ -38,6 +38,30 @@ public class ResourceInput implements ResourceReader {
      */
     @Override
     public String read(final String fileName) throws IOException {
+        Tuple tuple = getFnClTuple(fileName);
+        try (final var is = tuple.classLoader.getResourceAsStream(tuple.fn)) {
+            if (is == null) {
+                throw new IOException("The resource file '" + fileName + "' cannot be read.");
+            }
+            try (final var writer = new StringWriter()) {
+                new InputStreamReader(is, StandardCharsets.UTF_8).transferTo(writer);
+                return writer.toString();
+            }
+        }
+    }
+
+    @Override
+    public byte[] readBinary(String fileName) throws IOException {
+        Tuple tuple = getFnClTuple(fileName);
+        try (final var is = tuple.classLoader.getResourceAsStream(tuple.fn)) {
+            if (is == null) {
+                throw new IOException("The resource file '" + fileName + "' cannot be read.");
+            }
+            return is.readAllBytes();
+        }
+    }
+
+    private Tuple getFnClTuple(String fileName) throws IOException {
         String fn = fileName.substring(RESOURCE_PREFIX_LENGTH);
         final ClassLoader classLoader;
         if (fn.charAt(0) == '`') {
@@ -53,14 +77,17 @@ public class ResourceInput implements ResourceReader {
         } else {
             classLoader = FileTools.class.getClassLoader();
         }
-        try (final var is = classLoader.getResourceAsStream(fn)) {
-            if (is == null) {
-                throw new IOException("The resource file '" + fileName + "' cannot be read.");
-            }
-            try (final var writer = new StringWriter()) {
-                new InputStreamReader(is, StandardCharsets.UTF_8).transferTo(writer);
-                return writer.toString();
-            }
+        return new Tuple(fn, classLoader);
+    }
+
+    private static class Tuple {
+        public final String fn;
+        public final ClassLoader classLoader;
+
+        public Tuple(String fn, ClassLoader classLoader) {
+            this.fn = fn;
+            this.classLoader = classLoader;
         }
     }
+
 }

@@ -86,21 +86,21 @@ public class TestJamalPreprocessor {
         assertStartsWith(
                 "[WARNING]\n" +
                         "--\n" +
-                        "* User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
+                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
                         "--\n" +
                         "abrakadabra\n" +
                         "[WARNING]\n" +
                         "--\n" +
-                        "* User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
+                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
                         "--\n" +
                         "{%zebra%}\n" +
                         "[WARNING]\n" +
                         "--\n" +
-                        "* User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
+                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
                         "--\n" +
                         "[source]\n" +
                         "----\n" +
-                        "User defined macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n"
+                        "User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n"
                 , actual);
     }
 

@@ -13,7 +13,7 @@ public class TestDeepIncludeErrorPosition {
         try {
             TestThat.theInput("{@include res:inc1.jim}").atPosition("baba",1,1).results("");
         }catch (BadSyntax bs){
-            Assertions.assertEquals("User defined macro '{this ...' is not defined. Did you mean 'thus'? at res:inc4.jim/1:2"
+            Assertions.assertEquals("User macro '{this ...' is not defined. Did you mean 'thus'? at res:inc4.jim/1:2"
                     , bs.getMessage());
         }
     }

@@ -198,7 +198,11 @@ public class Processor implements javax0.jamal.api.Processor {
                 if (input.indexOf(macros.open()) == 0) {
                     skip(input, macros.open());
                     skipWhiteSpaces(input);
-                    processMacro(input, output);
+                    try {
+                        processMacro(input, output);
+                    }catch(LinkageError le){
+                        throw new BadSyntax("Linkage error", le);
+                    }
                 } else {
                     processText(input, output);
                 }
@@ -211,7 +215,7 @@ public class Processor implements javax0.jamal.api.Processor {
             }
             processingException = badSyntax;
             throw badSyntax;
-        } finally {
+        }finally {
             closeProcessWithExceptionHandling(output, processingException);
         }
         traceRecordFactory.dump(null);
@@ -516,7 +520,7 @@ public class Processor implements javax0.jamal.api.Processor {
 
     /**
      * Evaluate a user defined macro that starts at the start of the input. If it starts with a  {@code ?} character
-     * then the user defined macro may not be defined. In this case the result will be an empty string. Otherwise, an
+     * then the user defined macro may not be defined. In this case, the result will be an empty string. Otherwise, an
      * undefined macro results a syntax error.<p>
      *
      * @param input     starts at the start of the user defined macro but after the macro opening character and possibly
@@ -556,7 +560,7 @@ public class Processor implements javax0.jamal.api.Processor {
                 .map(ud -> (Evaluable) ud);
 
         if (reportUndef && udMacroOpt.isEmpty()) {
-            throwForUndefinedUdMacro(pos, id);
+            throwForUndefinedUdMacro(pos, id, identifiedOpt.isPresent() && !(identifiedOpt.get() instanceof Identified.Undefined));
         }
         if (udMacroOpt.isPresent()) {
             qualifier.udMacro = udMacroOpt.get();
@@ -578,27 +582,37 @@ public class Processor implements javax0.jamal.api.Processor {
 
     /**
      * Throw an exception with an error message telling that the user defined macro was not found. While creating the
-     * error message the code also checks if there is a built-in macro with the same name. In that case the error
+     * error message, the code also checks if there is a built-in macro with the same name. In that case the error
      * message warns the user that probably the leading {@code #} or {@code @} was only missing.
      *
-     * @param ref the reference to include in the exception that shows which jamal file, line and column was the error
-     *            at
-     * @param id  the identifier of the macro that was not found
-     * @throws BadSyntaxAt always, this is the main purpose of this method
+     * @param ref       the reference to include in the exception that shows which jamal file, line and column was the error
+     *                  at
+     * @param id        the identifier of the macro that was not found
+     * @param isPresent {@code true} if there is a macro with the same name, but it is not a user defined macro
+     * @throws BadSyntaxAt every time, this is the main purpose of this method
      */
-    private void throwForUndefinedUdMacro(Position ref, String id) throws BadSyntaxAt {
+    private void throwForUndefinedUdMacro(Position ref, String id, boolean isPresent) throws BadSyntaxAt {
         final var optMacro = macros.getMacro(id);
         if (optMacro.isPresent()) {
-            pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id +
-                    "' is not defined. Did you want to use built-in '" + getRegister().open() + "@" + id + "' instead?"), ref);
-        } else {
-            final Set<String> suggestions = getRegister().suggest(id);
-            if (suggestions.isEmpty()) {
-                pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id + " ...' is not defined."), ref);
+            if (isPresent) {
+                pushBadSyntax(new BadSyntax("'" + getRegister().open() + id +
+                        "' is defined but cannot be used as a macro. Did you mean the built-in '" + getRegister().open() + "@" + id + "' instead?"), ref);
             } else {
-                pushBadSyntax(new BadSyntax("User defined macro '" + getRegister().open() + id +
-                        " ...' is not defined. Did you mean " + suggestions.stream()
-                        .map(s -> "'" + s + "'").collect(Collectors.joining(", ")) + "?"), ref);
+                pushBadSyntax(new BadSyntax("User macro '" + getRegister().open() + id +
+                        "' is not defined. Did you mean the built-in '" + getRegister().open() + "@" + id + "' instead?"), ref);
+            }
+        } else {
+            if (isPresent) {
+                pushBadSyntax(new BadSyntax("'" + getRegister().open() + id + " ...' is defined but cannot be used as a macro."), ref);
+            } else {
+                final Set<String> suggestions = getRegister().suggest(id);
+                if (suggestions.isEmpty()) {
+                    pushBadSyntax(new BadSyntax("User macro '" + getRegister().open() + id + " ...' is not defined."), ref);
+                } else {
+                    pushBadSyntax(new BadSyntax("User macro '" + getRegister().open() + id +
+                            " ...' is not defined. Did you mean " + suggestions.stream()
+                            .map(s -> "'" + s + "'").collect(Collectors.joining(", ")) + "?"), ref);
+                }
             }
         }
     }
@@ -607,8 +621,8 @@ public class Processor implements javax0.jamal.api.Processor {
      * Read the input of the macro and get the parameters to pass to the macro. This is a fairly complex process that
      * follows several rules.
      * <p>
-     * The method works with the partially evaluated input. If this input has no characters then the parameter array has
-     * zero length.
+     * The method works with the partially evaluated input. If this input has no characters, then the parameter array
+     * length is zero.
      *
      * @param ref   the reference to the
      * @param input the partially evaluated input
@@ -688,7 +702,7 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     /**
-     * If the start of the content itself starts with a macro then it has to be evaluated to allow constructs like
+     * If the start of the content itself starts with a macro, then it has to be evaluated to allow constructs like
      *
      * <pre>{@code
      *    [[@define macroName=zz]]
@@ -740,7 +754,7 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     /**
-     * Checks that the user defined macro name, which is the result of macro evaluation does not contain the separator
+     * Checks that the user defined macro name, which is the result of macro evaluation, does not contain the separator
      * character.
      *
      * @param output the output that we check
@@ -770,15 +784,15 @@ public class Processor implements javax0.jamal.api.Processor {
      *         the second parameter with this string/this is the third parameter/}
      * }</pre>
      * <p>
-     * In the example above the macro will have three arguments, and it is not a problem (since version 1.2.0) that the
+     * In the example above, the macro will have three arguments, and it is not a problem (since version 1.2.0) that the
      * second argument contains a macro that itself has parameters, and it uses the same separator character as the top
      * level macro of this example. (In the example above we assumed that the macro opening and closing strings are the
      * curly braces.)<p>
      * <p>
-     * NOTE: that versions prior 1.2.0 were splitting the example above into five arguments. Although there is a
-     * possible use of that kind of macros this was never recommended or meant that way and because there is only a
-     * narrow user base of Jamal there is no backward compatibility way of operation. If you happen to face problem
-     * because of that then stay with version prior 1.2.0, e.g.: 1.1.0 and migrate your macros so that they do not use
+     * NOTE: that versions prior to 1.2.0 were splitting the example above into five arguments. Although there is a
+     * possible use of that kind of macro, this was never recommended or meant that way, and because there is only a
+     * narrow user base of Jamal, there is no backward compatibility way of operation. If you happen to face problem
+     * because of that, then stay with version prior 1.2.0, e.g.: 1.1.0 and migrate your macros so that they do not use
      * tricks.
      *
      * @param in            the input that starts after the first occurrence of the separator character
@@ -787,10 +801,11 @@ public class Processor implements javax0.jamal.api.Processor {
      *                      are parsed as a single string.
      * @return the parameter array as input, with correct positioning to where the parameters start
      * @throws BadSyntaxAt if the nesting of the macro opening and closing strings do not match. The implementation does
-     *                     not check this purposefully. If there are unbalanced opening and closing strings it will not
+     *                     not check this purposefully. If there are unbalanced opening and closing strings, it will not
      *                     be detected.
      */
-    private Input[] splitParameterString(final Input in, final char separator, final int expectedArgNr) throws BadSyntaxAt {
+    private Input[] splitParameterString(final Input in, final char separator, final int expectedArgNr) throws
+            BadSyntaxAt {
         final var open = macros.open();
         final var close = macros.close();
         final var parameters = new ArrayList<Input>();

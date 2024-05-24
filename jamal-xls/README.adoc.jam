@@ -1,5 +1,220 @@
+{%@import res:jamal.jim%}{%@import ../RELEASES.jim%}{%@import ../version.jim%}\
 = Jamal XLS module
-
+{%@snip:collect from=src/main/java%}
 Jamal module to read and write Excel files.
-
+{%@options embedError%}
 == Introduction
+This package contains macros to
+
+* open an Excel file (either `xls` or `xlsx` format),
+* fetch values from the different cells,
+* change the values and setting of different cells,
+* delete sheets, rows, columns and cells, and
+* merge cells.
+
+Jamal will write back the changes to the file or to a new file.
+
+== Macros in the package
+
+The macros are all named with the `xls:` prefix.
+
+=== `xls:open`
+
+This macro can open a file in `xls` or `xlsx` format.
+The file is opened in read-write mode by default.
+This can also be enforced by specifying the parop `READ`.
+
+The macro returns and empty string, but the opened file will be stored in a macro.
+The name of this macro can be specified in a parop, and has a default value `+{%@snip DEFAULT_WORKBOOK%}+`.
+Since this workbook name is used in all other `xls` macros, you do not need to care about this unless you work with multiple worksheets opened the same time.
+
+The following example opens the file `README.xlsx` in the same directory as the `README.adoc.jam` file.
+
+{%sample/
+EMPTY STRING="{@xls:open file=README.xlsx output=READYOU.xlsx}"
+{@try! {{%@snip DEFAULT_WORKBOOK%}}}
+%}
+
+This file exists in the source code structure and part of the documentation.
+The examples in this document later will use this file.
+
+[NOTE]
+====
+The sampless in this document keep the macros between the individual samples, but the macros are closed if they are closable.
+Therefore, individual samples have to open the XLS file individually.
+The subsequent samples always open the `READYOU.xlsx` file and they also write it back.
+A normal Jamal script does not need to do it.
+It is only needed because the samples are independent.
+====
+
+The output of this XLS opening is empty, but the workbook is stored in the macro `+{%@snip DEFAULT_WORKBOOK%}+`.
+
+{%output%}
+
+Note that the worksheet is stored with a name as a macro, and among the macros, but it cannot be used as a macro in the text.
+It stores an XLS workbook object, and not a user defined macro.
+
+==== Parops of the macro `xls:open`
+
+Parameter options (parops) can be defined without parentheses.
+The `(` and `)` are optional.)
+
+{%!#replaceLines replace="^\\s*//\\s*"
+{%#killLines pattern="final var"
+{%@snip open_parops%}%}%}
+
+=== `xls:close`
+
+Will close the workbook.
+The name of the macro containing the workbook is the input of the macro.
+This is the name specified in other macros as `wb` or `workbook` parop.
+There is no need to call this macro, the workbook is automatically closed as soon as the Jamal script ends.
+
+=== `xls:cell`
+
+Will read information from a given cell and return it as the macro result.
+You can get the value as well as the content (in the case of formula it is the formula), or other properties of the cell.
+The input of the macro can be the cell location, but the cell can also be defined using the parops `xls:sheet`, `xls:row` and `xls:column`.
+
+==== Parops of the macro `xls:cell`
+
+{%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
+{%#killLines pattern="scanner\\."
+{%!!@snip cell_parops%}%}%}
+
+==== Examples of the macro `xls:cell`
+
+{%sample/
+{@xls:open file=READYOU.xlsx}
+{@xls:cell A1}
+{@xls:cell (style)A1}
+%}
+
+will result in
+
+{%output%}
+
+=== `xls:set`
+
+This macro can be used to set the value of a cell.
+The input of the macro is the value to be set.
+The cell is identified by the parameter options. 
+Parameter options are also used to define which part of the cell (value, style etc.) is set.
+
+When setting boolean values the two values `true` and `false` are used.
+If the value is missing or empty, `true` value is used.
+That way, for example, you can
+
+{%sample/
+{@xls:open file=READYOU.xlsx WRITE}
+{@xls:set (cell=A1 wrapText)}
+%}
+
+which will result, eventually an empty string, but it will modify the cell and
+
+{%output%}
+
+==== Parops of the macro `xls:set`
+
+{%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
+{%#killLines pattern="scanner\\."
+{%!!@snip set_parops%}%}%}
+
+=== `xls:delete`
+
+The macro `xls:delete` can be used to delete a cell, a row, a column or a sheet.
+The default is to delete a sheet given by the name, if no other option is given.
+If the row is defined, then the row will be deleted.
+If only the column is defined, then the column will be deleted.
+If the cell is defined then the cell will be deleted.
+
+In other cases, or if in doubt you can specify the type of the deletion by the parop
+
+* `SHEET` to delete a sheet,
+* `ROW` to delete a row,
+* `COLUMN` or `COL` to delete a column, or
+* `CELL` to delete a cell.
+
+The following example will delete the second column in the XLSX file.
+
+{%sample/
+{@xls:open file=READYOU.xlsx WRITE}
+{@xls:delete (COLUMN col=1)}
+%}
+
+{%output%}
+
+==== Parops of the macro `xls:delete`
+
+{%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
+{%#killLines pattern="scanner."
+{%!!@snip delete_parops%}%}%}
+
+=== `xls:merge`
+
+Merge cells in the worksheet.
+To merge the cells, you have to define either
+
+* the top, bottom, left, and right cell, or
+* the top left cell and the bottom right cell.
+
+==== Parops of the macro `xls:merge`
+
+{%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
+{%#killLines pattern="scanner\\."
+{%!!@snip merge_parops%}%}%}
+
+
+=== `xls:unmerge`
+
+Unmerge merged cells in a worksheet.
+The input of the macro is the cell reference of the merged cell.
+The cell reference can be any individual cell that is part of the merged cell.
+The cell can be defined as a cell reference on the input of the macro but also can be specified using the parops `xls:sheet`, `xls:row` and `xls:column`.
+
+==== Parops of the macro `xls:unmerge`
+
+{%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
+{%#killLines pattern="scanner\\."
+{%!!@snip unmerge_parops%}%}%}
+
+=== `xls:row`, `xls:col`, `xls:sheet`, and `xls:to:cell`
+
+These macros convert row, column and sheet numbers and names to cell reference and back.
+The `xls:to:cell` macro is used to convert the row and column to the cell reference.
+The row and column numbers are specified as parops `row` and `col`.
+You can also specify `rowAbsolute` and `colAbsolute` to get the absolute cell reference.
+The sheet name can be specified using the parop `sheet`.
+
+The macros `xls:row`, `xls:col`, and `xls:sheet` are used to convert the cell reference to the row, column, and sheet name.
+The input is the cell reference, and the value of the macro is the number of the row, the number of the column, or the name of the sheet.
+If the cell reference does not contain a sheet name, the macro `xls:sheet` will result in error.
+
+The following example will convert the cell reference `A1` to the row and column numbers.
+
+{%sample/
+{@xls:row A1}
+{@xls:col A1}
+%}
+
+results in
+
+{%output%}
+
+Both the row and the column are 0-based.
+
+The next example uses absolute references:
+
+{%sample/
+{@xls:to:cell row=1 col=1}
+{@xls:to:cell row=1 col=1 rowAbsolute colAbsolute}
+%}
+
+will result in
+
+{%output%}
+
+NOTE: `xls:sheet`, `xls:row` and `xls:col` can also be defined as user defined macros.
+Those will be used by the parop parsing.
+They can be used to define a default sheet, row, or column, which is always the same for the duration of some operation.
+The built-in macros are used to convert the values, and though they share the name with the user defined macros, they are in a different namespace.

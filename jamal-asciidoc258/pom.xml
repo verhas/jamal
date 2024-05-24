@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.asciidoc/javax0.jamal.asciidoc=ALL-UNNAMED
+    
             </argLine>
                 </configuration>
             </plugin>
@@ -91,6 +92,10 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-sql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-xls</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

@@ -1,22 +1,17 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.ResourceReader;
-import javax0.jamal.api.ServiceLoaded;
+import javax0.jamal.api.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -249,6 +244,32 @@ public class FileTools {
         }
     }
 
+    public static void writeFileContent(String fileName, byte[] content, final Processor processor) throws BadSyntax {
+        final String finalFileName;
+        final var res = processor.getFileWriter().map(s -> s.write(fileName, content))
+                .orElse(Processor.IOHookResult.IGNORE);
+        switch (res.type()) {
+            case DONE:
+                return;
+            case REDIRECT:
+                writeFileContent(res.get(), content, processor);
+                return;
+            default:
+                finalFileName = fileName;
+                break;
+        }
+        try {
+            BadSyntax.when(isRemote(finalFileName), "Cannot write into a remote.");
+            final var out = Paths.get(finalFileName);
+            if (!Files.exists(out.getParent())) {
+                Files.createDirectories(out.getParent());
+            }
+            Files.write(out, content, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            throw new BadSyntax("Cannot get the content of the file '" + finalFileName + "'", e);
+        }
+    }
+
     public static void writeFileContent(String fileName, String content, final Processor processor) throws BadSyntax {
         final String finalFileName;
         final var res = processor.getFileWriter().map(s -> s.write(fileName, content)).orElse(Processor.IOHookResult.IGNORE);
@@ -263,18 +284,12 @@ public class FileTools {
                 break;
         }
         try {
-            if (readers.stream().anyMatch(r -> r.canRead(fileName))) {
-                throw new BadSyntax("Cannot write into a resource.");
+            BadSyntax.when(isRemote(finalFileName), "Cannot write into a remote.");
+            final var out = Paths.get(finalFileName);
+            if (!Files.exists(out.getParent())) {
+                Files.createDirectories(out.getParent());
             }
-            BadSyntax.when(finalFileName.startsWith(HTTPS_PREFIX), "Cannot write into a web resource.");
-            File file = new File(finalFileName);
-            if (file.getParentFile() != null) {
-                //noinspection ResultOfMethodCallIgnored
-                file.getParentFile().mkdirs();
-            }
-            try (final var fos = new FileOutputStream(file)) {
-                fos.write(content.getBytes(StandardCharsets.UTF_8));
-            }
+            Files.writeString(out, content, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new BadSyntax("Cannot get the content of the file '" + finalFileName + "'", e);
         }
@@ -296,7 +311,7 @@ public class FileTools {
             }
             for (String path : paths) {
                 // skip empty and comment lines in case we read from file
-                if (path.trim().length() == 0 || path.trim().startsWith("#")) {
+                if (path.isBlank() || path.trim().startsWith("#")) {
                     continue;
                 }
                 final var parts = path.split("=", 2);
@@ -412,7 +427,7 @@ public class FileTools {
 
     private static String getRelativePath(String[] target, int sharedPrefixLength, int baseLength) {
         final var sb = new StringBuilder();
-        if( sharedPrefixLength < baseLength ) {
+        if (sharedPrefixLength < baseLength) {
             sb.append("../".repeat(baseLength - sharedPrefixLength));
         }
         for (int j = sharedPrefixLength; j < target.length; j++) {
@@ -500,4 +515,23 @@ public class FileTools {
         return dir.isEmpty() || dir.endsWith("/") ? dir : dir + "/";
     }
 
+    /**
+     * Assert that the file can be safely written.
+     *
+     * @param fn   the file name to be written
+     * @param file the name of the top level macro file that needs the writing
+     * @throws IllegalArgumentException when the file must not be written.
+     *                                  Note that this is not a BadSyntax, because that is handled by the macro try.
+     *                                  IllegalArgument on the other hand will stop the processing, because it may be a
+     *                                  security violation.
+     */
+    public static void assertSafe(String fn, String file) throws IllegalArgumentException {
+        final var dir = Path.of(file).getParent().toAbsolutePath();
+        final var f = Path.of(fn).toAbsolutePath();
+        if (f.startsWith(dir)) {
+            return;
+        }
+        // later check safe path configurations where different projects may write
+        throw new IllegalArgumentException("The file '" + fn + "' is outside the directory of the file '" + file + "'");
+    }
 }

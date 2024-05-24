@@ -3,11 +3,14 @@ package javax0.jamal.xls;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Macro.Name;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.ScannerTools;
 import javax0.jamal.tools.param.EnumerationParameter;
+import javax0.jamal.tools.param.IntegerParameter;
+import javax0.jamal.tools.param.StringParameter;
 import javax0.jamal.xls.utils.WorkSheetUtils;
 import javax0.jamal.xls.utils.WorkbookUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -19,65 +22,135 @@ import org.apache.poi.ss.util.CellReference;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Name("xls:cell")
 public class CellMacro implements Macro, Scanner {
     public enum As {
-        value, content, type, format, comment, commentAuthor, style,
+        // snippet cell_as_enum
+        value,
+        // specify you want the value of the cell.
+        // This is the default if you do not specity any of these options.
+        // The value is usually the same as the content.
+        // The difference is in the case of formulas.
+        // For formulas the value is the calculated value, the content is the formula itself.
+        content,
+        // specify this if you want the content of the cell.
+        // See the details in the description of the `value` option.
+        type,
+        // specify this if you want the type of the cell.
+        format,
+        // specify this if you want the format of the cell.
+        comment,
+        // specify this if you want the comment of the cell.
+        commentAuthor,
+        // specify this if you want the author of the comment of the cell.
+        style,
+        // specify this if you want the style of the cell.
         hasComment,
+        // specify this if you want to know if the cell has a comment.
+        // The result is `true` or `false`.
         isString,
+        // specify this if you want to know if the cell is a string.
+        // The result is `true` or `false`.
         isNumeric,
+        // specify this if you want to know if the cell is a number.
+        // The result is `true` or `false`.
         isBoolean,
+        // specify this if you want to know if the cell is a boolean.
+        // The result is `true` or `false`.
         isFormula,
+        // specify this if you want to know if the cell is a formula.
+        // The result is `true` or `false`.
         isBlank,
+        // specify this if you want to know if the cell is blank.
+        // The result is `true` or `false`.
         isError,
+        // specify this if you want to know if the cell is an error.
+        // The result is `true` or `false`.
         isNull,
+        // specify this if you want to know if the cell is null.
+        // The result is `true` or `false`.
+        // end snippet
     }
 
     public enum Style {
-        toString, align, border, fill, dataFormat, hidden, locked, rotation, shrinkToFit, verticalAlignment, wrapText
+        // snippet cell_style_enum
+        toString,
+        // is the default value for style.
+        // The result will contain all the style elements
+        align,
+        // the alignment of the cell.
+        border,
+        // the border of the cell.
+        fill,
+        // the fill of the cell.
+        dataFormat,
+        // the data format of the cell.
+        hidden,
+        // the hidden property of the cell.
+        locked,
+        // the locked property of the cell.
+        rotation,
+        // the rotation of the cell.
+        shrinkToFit,
+        // the shrink to fit property of the cell.
+        verticalAlignment,
+        // the vertical alignment of the cell.
+        wrapText
+        // the wrap text property of the cell.
+        // end snippet
+    }
 
+    public static Cell getCell(final Input in, Macro macro, IntegerParameter row, IntegerParameter col, StringParameter sheet, Workbook wb)throws BadSyntax {
+        final Cell cell;
+        if (in.length() > 0) {
+            ScannerTools.badSyntax(macro).whenParameters(row, col).anyPresent("When specifying cell reference you cannot use 'coL' or 'row'.");
+            var cr = new CellReference(in.toString());
+            if (cr.getSheetName() == null && !sheet.get().isEmpty()) {
+                cr = new CellReference(sheet.get() + "!" + in);
+            }
+            final var s = (cr.getSheetName() == null ? wb.getSheetAt(0) : wb.getSheet(cr.getSheetName()));
+            if (s == null) return null;
+            final var r = s.getRow(cr.getRow());
+            if (r == null) return null;
+            cell = r.getCell(cr.getCol());
+        } else {
+            final var s = WorkSheetUtils.get(sheet.get(), wb);
+            if (s == null) return null;
+            final var r = s.getRow(row.get());
+            if (r == null) return null;
+            cell = r.getCell(col.get());
+        }
+        return cell;
     }
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var workbook = scanner.str(null, "workbook", "wb").defaultValue(Open.XLS_WORKBOOK);
-        final var sheet = scanner.str("xls:sheet", "sheet").defaultValue("");
-        final var row = scanner.str("xls:row", "row").defaultValue("0");
-        final var col = scanner.str("xls:col", "col").defaultValue("0");
+        final var cellDef = new ParopsCell(scanner);
+        // snippet cell_parops
+        // {%@snip celldef_parops%}
         final var as = scanner.enumeration(As.class).defaultValue(As.value);
+        // * there are several options to specify what the result of the macro should be.
+        // {%@snip cell_as_enum%}
         final var style = scanner.enumeration(Style.class).defaultValue(Style.toString);
+        // * When you specify `style` then the result is a string that contains the style of the cell.
+        // You can also specify one of the following parops to get only one specific style property.
+        // {%@snip cell_style_enum%}
+        // end snippet
         scanner.done();
 
         InputHandler.skipWhiteSpaces(in);
         String ref = "";
         try {
-            final var wb = WorkbookUtils.get(workbook.get(), processor);
-            final Cell cell;
-            if (in.length() > 0) {
-                ScannerTools.badSyntax(this).whenParameters(row, col).anyPresent("When specifying cell reference you cannot use 'coL' or 'row'.");
-                var cr = new CellReference(in.toString());
-                if (cr.getSheetName() == null && !sheet.get().isEmpty()) {
-                    cr = new CellReference(sheet.get() + "!" + in);
-                }
-                final var s = (cr.getSheetName() == null ? wb.getSheetAt(0) : wb.getSheet(cr.getSheetName()));
-                if (s == null) return blank(as);
-                final var r = s.getRow(cr.getRow());
-                if (r == null) return blank(as);
-                cell = r.getCell(cr.getCol());
-                ref = cr.formatAsString();
-            } else {
-                final var s = WorkSheetUtils.get(sheet.get(), wb);
-                if (s == null) return blank(as);
-                final var r = s.getRow(Integer.parseInt(row.get()));
-                if (r == null) return blank(as);
-                cell = r.getCell(Integer.parseInt(col.get()));
-                if (cell == null) return blank(as);
-                ref = new CellReference(cell).formatAsString();
-            }
+            final var wb = WorkbookUtils.getReadOnly(cellDef.workbook.get(), processor);
+            final Cell cell = cellDef.getCell(in, this, wb);
             if (cell == null) return blank(as);
+            ref = new CellReference(cell).formatAsString();
             return cellToString(cell, as.get(As.class), style.get(Style.class), wb);
+        } catch (BadSyntax e) {
+            throw e;
         } catch (Exception e) {
-            throw BadSyntax.format(e, "Cannot read the XLS '%s' %s", workbook.get(), ref);
+            throw BadSyntax.format(e, "Cannot read the XLS '%s' %s", cellDef.workbook.get(), ref);
         }
     }
 
@@ -98,7 +171,7 @@ public class CellMacro implements Macro, Scanner {
         }
     }
 
-    private static String cellToString(final org.apache.poi.ss.usermodel.Cell cell, final As as, final Style style, final Workbook workbook) {
+    private static String cellToString(final Cell cell, final As as, final Style style, final Workbook workbook) {
         switch (as) {
             case isString:
                 return "" + (cell.getCellType() == CellType.STRING);
@@ -137,13 +210,13 @@ public class CellMacro implements Macro, Scanner {
         }
     }
 
-    private static String getStyle(final org.apache.poi.ss.usermodel.Cell cell, final Style style) {
+    private static String getStyle(final Cell cell, final Style style) {
         final var cellStyle = cell.getCellStyle();
         switch (style) {
             case toString:
                 return Arrays.stream(Style.values())
                         .filter(s -> s != Style.toString)
-                        .map( s -> s + "=" + getStyle(cell, s))
+                        .map(s -> s + "=" + getStyle(cell, s))
                         .collect(Collectors.joining(", "));
             case align:
                 return cellStyle.getAlignment().name();
@@ -170,7 +243,7 @@ public class CellMacro implements Macro, Scanner {
         }
     }
 
-    private static String cellContent(final org.apache.poi.ss.usermodel.Cell cell) {
+    private static String cellContent(final Cell cell) {
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();
@@ -204,10 +277,5 @@ public class CellMacro implements Macro, Scanner {
             default:
                 throw new IllegalArgumentException("Unknown cell type: " + cellValue.getCellType());
         }
-    }
-
-    @Override
-    public String getId() {
-        return "xls:cell";
     }
 }

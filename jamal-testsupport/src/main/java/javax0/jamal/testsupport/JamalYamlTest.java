@@ -1,21 +1,17 @@
 package javax0.jamal.testsupport;
 
+import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.Input;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.DynamicContainer;
-import org.junit.jupiter.api.DynamicNode;
-import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.*;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +152,8 @@ public class JamalYamlTest {
         return is;
     }
 
-    public static void exec(String displayName, Map<String, Object> testStructure) throws BadSyntax, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+    public static void exec(String displayName, Map<String, Object> testStructure) throws Exception {
+        final var dummyInputFile = DocumentConverter.getRoot() + "/dummy.jam";
         if (testStructure == null) {
             throw new IllegalAccessException("Test '" + displayName + "' has null body");
         }
@@ -166,7 +163,7 @@ public class JamalYamlTest {
                 illegalKeys.add(key);
             }
         }
-        if (illegalKeys.size() > 0) {
+        if (!illegalKeys.isEmpty()) {
             throw new IllegalArgumentException("There are illegal keys in the test '" + displayName + "': " + String.join(", ", illegalKeys));
         }
         final var input = Objects.requireNonNull(testStructure.get("Input"), "Input must present for the tests '" + displayName + "'");
@@ -178,9 +175,11 @@ public class JamalYamlTest {
         final var save = TestThat.dumpYaml;
         TestThat.dumpYaml = false;
         if (output == null) {
-            TestThat.theInput((String) input).throwsBadSyntax((String) aThrows);
+            TestThat.theInput((String) input).atPosition(dummyInputFile, 1, 1)
+                    .throwsBadSyntax((String) aThrows);
         } else {
-            TestThat.theInput((String) input).ignoreLineEnding().results((String) output);
+            TestThat.theInput((String) input).atPosition(dummyInputFile, 1, 1)
+                    .ignoreLineEnding().results((String) output);
         }
         TestThat.dumpYaml = save;
     }

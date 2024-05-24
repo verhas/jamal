@@ -106,7 +106,7 @@ The default location for the cache files is `~/.jamal/cache/`.
 This environment variable can define replacements for files.
 
 The aim of this feature is to use a local file during development, and still refer to it using the `https://` URL, which will be the production URL.
-You want to run tests without pushing the file to a repository, but at the same time you do not want your code to refer to a dev location to be changed before releasing.11
+You want to run tests without pushing the file to a repository, but at the same time you do not want your code to refer to a dev location to be changed before releasing.
 
 Only absolute file names can be replaced.
 

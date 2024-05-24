@@ -3,3 +3,9 @@ javax0.jamal.xls.Open
 javax0.jamal.xls.Close
 javax0.jamal.xls.Set
 javax0.jamal.xls.Delete
+javax0.jamal.xls.Merge
+javax0.jamal.xls.Unmerge
+javax0.jamal.xls.CellConvert$ToCell
+javax0.jamal.xls.CellConvert$ToRow
+javax0.jamal.xls.CellConvert$ToCol
+javax0.jamal.xls.CellConvert$ToSheet

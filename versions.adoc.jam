@@ -41,7 +41,24 @@ endif〕〕
 〔CHECK :SNAKEYAML_VERSION:org/yaml/snakeyaml〕
 〔CHECK :JSON_ORG_VERSION:org/json/json〕
 〔CHECK :FLEXMARK_VERSION:com/vladsch/flexmark/flexmark-all〕
-〔CHECK :APACHE_POI_VERSION:org/apache/poi/poi-ooxml〕
+〔CHECK :APACHE_POI_VERSION:org/apache/poi/poi〕
+〔CHECK :APACHE_POI_VERSION:org/apache/poi/poi-ooxml〕<- OOXML
+
+[NOTE]
+====
+When upgrading the newer version, check that the dependency on
+〔@define COMMONS_COMPRESS_VERSION=1.26.1〕
+〔CHECK :COMMONS_COMPRESS_VERSION:org/apache/commons/commons-compress〕
+
+of the OOXML package is higher than 1.25.0
+
+Version 1.25.0 has two vulnerabilities CVE-2024-26308 and CVE-2024-25710.
+The OOXML library version 5.2.5 depends on the vulnerable version.
+The version 〔COMMONS_COMPRESS_VERSION〕 of the compress library is explicitly added to the `jamal-xls` module as a dependency.
+It may not be needed when the poi-ooxml library also updates its dependency.
+
+====
+
 〔CHECK :ASCIIDOCTORJ_VERSION:org/asciidoctor/asciidoctorj〕
 
 NOTE: Asciidoctor version after 3.0.0.-apha.1 use a different module name, not compatible with the old 2.X.X versions.

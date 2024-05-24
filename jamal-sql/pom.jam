@@ -20,8 +20,8 @@
       {dependency|{GROUPID}|jamal-prog||test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
-      {dependency|com.github.jsqlparser|jsqlparser|{JSQLPARSER_VERSION}}
       {dependency|com.h2database|h2|{H2_VERSION}|test}
+      {dependency|com.github.jsqlparser|jsqlparser|{JSQLPARSER_VERSION}}
     }
 
 {end project}

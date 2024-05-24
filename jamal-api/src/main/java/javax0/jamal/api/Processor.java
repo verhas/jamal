@@ -243,8 +243,8 @@ public interface Processor extends AutoCloseable {
 
     /**
      * @return the logger implementation that was set by the embedding application. There is no method to set the logger
-     * object, just as there is no metjod to set the context. Both of these objects are application specific and as the
-     * embedding applications are using a specific implementation of this interface they will use the one that provides
+     * object, just as there is no method to set the context. Both of these objects are application-specific, and as the
+     * embedding applications are using a specific implementation of this interface, they will use the one that provides
      * the possibility to set the logger (context, {@link #getContext}).
      * <p>
      * The default implementation returns a null logger that just does not log.
@@ -361,7 +361,6 @@ public interface Processor extends AutoCloseable {
      * If the writer is set into the processor via the {@link #setFileWriter(FileWriter)} it will be invoked whenever
      * a macro wants to write a file. It can be used to implement a special file system or file mapping.
      */
-    @FunctionalInterface
     interface FileWriter {
         /**
          * Tries to write the file, decides on redirect or do nothing.
@@ -370,6 +369,7 @@ public interface Processor extends AutoCloseable {
          * @return the structure containing the result, which is nothing, or final name
          */
         IOHookResult write(final String fileName, final String content);
+        IOHookResult write(final String fileName, final byte[] content);
     }
 
     void setFileWriter(FileWriter fileWriter);

@@ -4,7 +4,7 @@ Test that a local macro can be undefined:
     Output: "apple"
   "b":
     Input: "{@define fruit=apple}{fruit}{@undefine fruit}{fruit}"
-    Throws: "User defined macro '\\{fruit ...' is not defined. Did you mean '@format'\\?"
+    Throws: "User macro '\\{fruit ...' is not defined. Did you mean '@format'\\?"
 
 Test that a global macro can be undefined:
   "a":
@@ -15,10 +15,10 @@ Test that a global macro can be undefined:
     Output: "apple"
   "c":
     Input: "{@define :fruit=apple}{fruit}{@undefine fruit}{fruit}"
-    Throws: "User defined macro '\\{fruit ...' is not defined. Did you mean '@format'\\?"
+    Throws: "User macro '\\{fruit ...' is not defined. Did you mean '@format'\\?"
   "d":
     Input: "{@define :fruit=apple}{fruit}{@undefine :fruit}{:fruit}"
-    Throws: "User defined macro '\\{:fruit ...' is not defined."
+    Throws: "User macro '\\{:fruit ...' is not defined."
 
 Test that a global macro can be undefined locally:
   Input: "{@define :fruit=apple}{fruit} {#ident {@undefine fruit} *{?fruit}* }{fruit}"
