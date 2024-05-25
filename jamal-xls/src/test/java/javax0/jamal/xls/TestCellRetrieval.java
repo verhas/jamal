@@ -14,7 +14,7 @@ public class TestCellRetrieval {
 
     static {
         try {
-            TEST_XLSX_CONTENT = Files.readString(Paths.get(DocumentConverter.getRoot() + "/jamal-xls/src/test/resources", "test.xlsx.text"));
+            TEST_XLSX_CONTENT = Files.readString(Paths.get(DocumentConverter.getRoot() + "/jamal-xls/src/test/resources", "test.xlsx.text")).replaceAll("\r\n", "\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
