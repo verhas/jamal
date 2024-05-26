@@ -1,14 +1,16 @@
 package javax0.jamal.xls;
 
 import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
+import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.ScannerTools;
 import javax0.jamal.tools.param.IntegerParameter;
 import javax0.jamal.tools.param.StringParameter;
 import javax0.jamal.xls.utils.WorkSheetUtils;
+import javax0.jamal.xls.utils.WorkbookUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 
@@ -47,23 +49,33 @@ class ParopsCell {
         // end snippet
     }
 
+    public Workbook getWorkbook(Processor processor) throws BadSyntax {
+        return WorkbookUtils.get(workbook.get(), processor, true);
+    }
+
     /**
      * Get the cell from the workbook. The cell can be specified in the input or by the row and column numbers.
      * If the cell reference does not contain a sheet name, then the sheet name is taken from the {@code sheet} parameter.
      * If there is no sheet name in the {@code sheet} parameter then the first sheet is used.
      *
-     * @param in the input
+     * @param in    the input
      * @param macro the macro calling this method, used for error reporting only
-     * @param wb the opened workbook. This method needs an opened workbook to get the default sheet if not specified,
-     *           and it has to be opened by the caller to keep SRP. Also the workbook can be opened for read and for
-     *           update.
+     * @param wb    the opened workbook. This method needs an opened workbook to get the default sheet if not specified,
+     *              and it has to be opened by the caller to keep SRP. Also the workbook can be opened for read and for
+     *              update.
      * @return the cell, or {@code null} if there is no such cell
      * @throws BadSyntax if the row or column is defined in a parop when there is also a cell reference in the input
      */
-    public Cell getCell(final Input in, Macro macro, Workbook wb)throws BadSyntax {
-        if (in.length() > 0) {
+    public Cell getCell(final String in, Macro macro, Workbook wb) throws BadSyntax {
+        if (in.isEmpty()) {
+            final var s = WorkSheetUtils.get(sheet.get(), wb);
+            if (s == null) return null;
+            final var r = s.getRow(rowDef.get());
+            if (r == null) return null;
+            return r.getCell(colDef.get());
+        } else {
             ScannerTools.badSyntax(macro).whenParameters(rowDef, colDef).anyPresent("When specifying cell reference you cannot use 'coL' or 'row'.");
-            var cr = new CellReference(in.toString());
+            var cr = new CellReference(in);
             if (cr.getSheetName() == null && !sheet.get().isEmpty()) {
                 cr = new CellReference(sheet.get() + "!" + in);
             }
@@ -72,12 +84,43 @@ class ParopsCell {
             final var r = s.getRow(cr.getRow());
             if (r == null) return null;
             return r.getCell(cr.getCol());
-        } else {
+        }
+    }
+
+    public CellReference getCellReference(final String in, Macro macro, Workbook wb) throws BadSyntax {
+        if (in.isEmpty()) {
+            BadSyntax.when(!rowDef.isPresent() || !colDef.isPresent(), "When the cell reference is not defined then the row and column must be defined");
             final var s = WorkSheetUtils.get(sheet.get(), wb);
-            if (s == null) return null;
-            final var r = s.getRow(rowDef.get());
-            if (r == null) return null;
-            return r.getCell(colDef.get());
+            BadSyntax.when(s == null, "The sheet '%s' does not exist", sheet.get());
+            return new CellReference(s.getSheetName(), rowDef.get(), colDef.get(), false, false);
+        } else {
+            ScannerTools.badSyntax(macro).whenParameters(rowDef, colDef).anyPresent("When specifying cell reference you cannot use 'coL' or 'row'.");
+            final var cr = new CellReference(in);
+            if (cr.getSheetName() == null && !sheet.get().isEmpty()) {
+                return new CellReference(sheet.get() + "!" + in);
+            } else {
+                return cr;
+            }
+        }
+    }
+
+
+    public Sheet getSheet(final String in, Macro macro, Workbook wb) throws BadSyntax {
+        if (sheet.isPresent()) {
+            return wb.getSheet(sheet.get());
+        }
+        if (in.isEmpty()) {
+            if( wb.getNumberOfSheets() == 0 ){
+                wb.createSheet("Sheet1");
+            }
+            return wb.getSheetAt(0);
+        } else {
+            ScannerTools.badSyntax(macro).whenParameters(rowDef, colDef).anyPresent("When specifying cell reference you cannot use 'coL' or 'row'.");
+            var cr = new CellReference(in);
+            if( wb.getNumberOfSheets() == 0 ){
+                wb.createSheet(cr.getSheetName());
+            }
+            return (cr.getSheetName() == null ? wb.getSheetAt(0) : wb.getSheet(cr.getSheetName()));
         }
     }
 }

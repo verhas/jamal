@@ -26,7 +26,7 @@ public class Unmerge implements Macro, Scanner {
         String ref = "";
         try {
             final var wb = WorkbookUtils.getReadOnly(cellDef.workbook.get(), processor);
-            final Cell cell = cellDef.getCell(in, this, wb);
+            final Cell cell = cellDef.getCell(in.toString(), this, wb);
             BadSyntax.when(cell == null, "Cannot unmerge cell, not defined");
             ref = new CellReference(cell).formatAsString();
             unmerge(cell);

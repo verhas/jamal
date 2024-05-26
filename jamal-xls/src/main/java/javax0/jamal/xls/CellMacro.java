@@ -100,29 +100,6 @@ public class CellMacro implements Macro, Scanner {
         // end snippet
     }
 
-    public static Cell getCell(final Input in, Macro macro, IntegerParameter row, IntegerParameter col, StringParameter sheet, Workbook wb)throws BadSyntax {
-        final Cell cell;
-        if (in.length() > 0) {
-            ScannerTools.badSyntax(macro).whenParameters(row, col).anyPresent("When specifying cell reference you cannot use 'coL' or 'row'.");
-            var cr = new CellReference(in.toString());
-            if (cr.getSheetName() == null && !sheet.get().isEmpty()) {
-                cr = new CellReference(sheet.get() + "!" + in);
-            }
-            final var s = (cr.getSheetName() == null ? wb.getSheetAt(0) : wb.getSheet(cr.getSheetName()));
-            if (s == null) return null;
-            final var r = s.getRow(cr.getRow());
-            if (r == null) return null;
-            cell = r.getCell(cr.getCol());
-        } else {
-            final var s = WorkSheetUtils.get(sheet.get(), wb);
-            if (s == null) return null;
-            final var r = s.getRow(row.get());
-            if (r == null) return null;
-            cell = r.getCell(col.get());
-        }
-        return cell;
-    }
-
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -143,7 +120,7 @@ public class CellMacro implements Macro, Scanner {
         String ref = "";
         try {
             final var wb = WorkbookUtils.getReadOnly(cellDef.workbook.get(), processor);
-            final Cell cell = cellDef.getCell(in, this, wb);
+            final Cell cell = cellDef.getCell(in.toString(), this, wb);
             if (cell == null) return blank(as);
             ref = new CellReference(cell).formatAsString();
             return cellToString(cell, as.get(As.class), style.get(Style.class), wb);
@@ -243,7 +220,8 @@ public class CellMacro implements Macro, Scanner {
         }
     }
 
-    private static String cellContent(final Cell cell) {
+    static String cellContent(final Cell cell) {
+        if( cell == null ) return "";
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();

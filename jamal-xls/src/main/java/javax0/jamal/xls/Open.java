@@ -74,8 +74,12 @@ public class Open implements Macro, Scanner.WholeInput {
         } catch (WorkbookProblemException problem) {
             throw problem;
         } catch (BadSyntax e) {
-            BadSyntax.when(FileTools.isRemote(outFileName), "Cannot create the XLS workbook '" + file.get() + "' from remote file and it seems not to exist", e);
-            BadSyntax.when(readOnly, "Cannot create the XLS workbook '" + file.get() + "' in read only mode, it does not seem to exist", e);
+            if (FileTools.isRemote(outFileName)) {
+                throw new BadSyntax("Cannot create the XLS workbook '" + file.get() + "' from remote file and it seems not to exist", e);
+            }
+            if (readOnly) {
+                throw new BadSyntax("Cannot create the XLS workbook '" + file.get() + "' in read only mode, it does not seem to exist", e);
+            }
             try {
                 final var wb = WorkbookFactory.create(outFileName.endsWith(".xlsx"));
                 final var wh = new WorkbookHolder(id.get(), false, outFileName, wb, processor, in.getPosition().top());

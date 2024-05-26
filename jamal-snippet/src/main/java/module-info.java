@@ -68,6 +68,7 @@ module jamal.snippet {
             Length,
             Quote,
             Equals,
+            Def,
             StartsWith,
             Reverse,
             Chop,

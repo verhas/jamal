@@ -9,3 +9,4 @@ javax0.jamal.xls.CellConvert$ToCell
 javax0.jamal.xls.CellConvert$ToRow
 javax0.jamal.xls.CellConvert$ToCol
 javax0.jamal.xls.CellConvert$ToSheet
+javax0.jamal.xls.Find

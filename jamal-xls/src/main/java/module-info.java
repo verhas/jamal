@@ -11,5 +11,5 @@ module jamal.xls {
     requires jamal.tools;
     requires jamal.engine;
     requires org.apache.poi.poi;
-    provides Macro with Open, Close, CellMacro, Set, Delete, Unmerge, Merge, ToCell, ToCol, ToRow, ToSheet;
+    provides Macro with Open, Close, CellMacro, Set, Delete, Unmerge, Merge, ToCell, ToCol, ToRow, ToSheet, Find;
 }

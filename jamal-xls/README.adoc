@@ -455,3 +455,168 @@ NOTE: `xls:sheet`, `xls:row` and `xls:col` can also be defined as user defined m
 Those will be used by the parop parsing.
 They can be used to define a default sheet, row, or column, which is always the same for the duration of some operation.
 The built-in macros are used to convert the values, and though they share the name with the user defined macros, they are in a different namespace.
+
+=== `xls:find`
+
+This macro can be used to find a specific cell in a row or in a column.
+Using this macro, you can find the first empty, or blank cell, or a cell with a specific value.
+The most complex search is finding a cell with a value that evaluating the input of the macro will result in `true`.
+
+The return value of the macro is the cell reference of the found cell including the sheet name.
+
+==== Parops of the macro `xls:find`
+
+        final var cellDef = new ParopsCell(scanner);
+
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `xls:sheet` (aliased as `sheet`) can identify the sheet that the cell read is in.
+When the sheet is not defined in any way, then the first sheet is used.
+The name `xls:sheet` can also be used as a macro, thus if you define a macro with this name, its value will be used as the name of the sheet.
+This feature can be used to set the default sheet is nothing else is defined.
+This parop is usually used together with `xls:row` and `xls:col` to define the location of the cell.
+They can be used to set one as a macro and use the other as a parop iterating through the cells in the same row or column.
+The usual way is specifying the cell in the macro input the usual `Sheet!A1` style.
+* `xls:row` (aliased as `row`) is the row number of the cell.
+The indexing starts from 0.
+* `xls:col` (aliased as `col`) is the column number of the cell.
+The indexing starts from 0.
+
+* `cell` is the reference to the cell where the search starts.
+This can be used instead of specifying the `row` and `col` parameters
+* You can specify what you are looking for.
+The default is `empty` meaning you want to get the first empty cell.
+The possible values are
+** `empty` to find the first empty cell
+** `blank` to find the first cell that is blank
+** `string` to find the first cell that contains the specified string
+** `number` to find the first cell that contains the specified number as a floating point number
+** `integer` to find the first cell that contains the specified number as an integer
+** `eval` to find the first cell that contains the specified macro evaluated to `true`.
+** `regex` to find the first cell that matches the specified regular expression.
+If the parameter option `$` is specified, then the default is `eval` and the search is for the macro.
+* You can specify where you are looking for the cell.
+The value can be
+** `inRow` to search in the row
+** `inCol` to search in the column
+* `reverse` will, as the name implies reverse the search direction.
+This means that the search starts from the cell specified and goes to the beginning of the row or column.
+* `$` or `macro` specify a name for a macro.
+If it is specified, then the macro will search for the cell that contains the input evaluated to `true`.
+The value of this parameter is the name of the macro that will hold the content of the cell during the evaluation.
+This macro will be defined before the first cell is examined and redefined before each next cell is examined.
+Note that the input of the macro `xls:find` will be evaluated many times until the cell is found.
+Be careful not to have side effects in the input.
+See the examples below.
+* `limitRow` will limit the search in the rows.
+The search will go up to this row.
+For example, if the value is 10, then the search will go up to row 9.
+The default value is `0x100000`, decimal 1,048,576 that is the limit in Excel 2007 and later, or zero when the search is reversed.
+* `limitCol` will limit the search in the columns.
+The search will go up to this column.
+For example, if the value is 10, then the search will go up to column 9 (`A` to `J`).
+The default value is `0x4000`, decimal 16,384 that is the limit in Excel 2007 and later, or zero when the search is reversed.
+* `orElse` is the value that will be returned if the cell is not found.
+If this parameter is not specified, then the macro will throw an exception if the cell is not found.
+The value can be any string, there is no check that the value is a valid cell reference.
+
+
+==== Examples of the macro `xls:find`
+
+The following example will find the first empty cell in the first row of the sheet.
+
+.Jamal source
+[source]
+----
+{@xls:open file=src/test/resources/findSomething.xlsx}
+{@xls:find (inRow col=0 row=2 empty)}
+----
+
+will result in
+
+.output
+[source]
+----
+Sheet1!B3
+----
+
+
+as the cell `A3` is not empty, but the next one, `B3` is.
+
+A more complex example is:
+
+.Jamal source
+[source]
+----
+{@xls:open READ file=src/test/resources/findSomething.xlsx}
+(1) {@xls:find (cell=G30 reverse inCol $=zz limitRow=20 orElse="arbad akarba")t{zz}}
+(2) {@xls:find (cell=G1 inCol $=zz limitRow=20 orElse="abraka dabra")t{zz}}
+(3) {@xls:find (cell=G1 inCol $=zz)t{zz}}
+(4) {@xls:find (cell=A1 empty inRow)}
+(5) {@xls:find (cell=A3 empty inRow)}
+(6) {@xls:find (cell=G4 blank inCol)}
+(7) {@xls:find (cell=G4 empty inCol)}
+(8) {@xls:find (cell=G4 blank inCol reverse)}
+(9) {@xls:find (cell=G1 inCol string)3}
+(A) {@xls:find (cell=G1 inCol number)3.3}
+(B) {@xls:find (cell=G1 inCol integer)3}
+(C) {@xls:find (cell=G1 inCol number)3}
+(D) {@xls:find (cell=G1 inCol regex)\d+\.0+}
+----
+
+The XLSX file is part of the Jamal module test resources, and the result depends on the content of this file.
+To understand the results, you should open the file in Excel and check the content of the cells.
+
+The first example (1) will start at the cell `G30` and search in the column for the first cell that is `rue`.
+The input of the macro is `+t{zz}+` and `zz` is defined to be used as a macro name for the content of each searched cell, when the cell content is `rue` then  `+t{zz}+` will be `true`.
+
+The search is limited to row 20, thus the rows 21, 22, ... 29 are checked.
+None of them contains the text `rue` therefore for none of them is the result `true`.
+In that case an error occurs unless the `orElse` parop is defined.
+In this case the returned value is `arbad akarba`, which is `abraka dabra` reversed.
+
+The next search (2) is similar, but the search starts at row 1 and not reversed.
+The search (3) is not limited, and it does find the cell `G31` with the content `rue`.
+
+The rest of the examples demonstrate different searches.
+
+The last example, (D) is a regular expression search.
+It matches the number in the cell G5, even though that number look like `3` in Excel.
+That is only how Excel displays the number.
+The number is floating point and it is `3.0`.
+The cells `G1`, `G2`, and `G3` are empty.
+The cell `G4` contains `3.3` and the regular expression requires `0` as the first fractional digit.
+Finally, the cell `G5` contains `3.0`.
+
+The result is:
+
+.output
+[source]
+----
+(1) arbad akarba
+(2) abraka dabra
+(3) Sheet1!G31
+(4) Sheet1!A1
+(5) Sheet1!B3
+(6) Sheet1!G26
+(7) Sheet1!G27
+(8) Sheet1!G3
+(9) Sheet1!G25
+(A) Sheet1!G4
+(B) Sheet1!G5
+(C) Sheet1!G5
+(D) Sheet1!G5
+----
+
+
+
+A typical use of this macro is to insert information into the first empty cell in a row.
+That way, every execution of the document can add information to the next empty cell.
+
+.Jamal source
+[source]
+----
+{@xls:open file=log_readme.xlsx WRITE}
+{@xls:find (inCol cell=Sheet1!A1 empty)}
+{#xls:set (cell={@xls:find (inCol cell=A1 empty)}){@date yyyy-MM-dd hh:mm:ss}}
+----
