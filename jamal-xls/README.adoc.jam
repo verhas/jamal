@@ -3,6 +3,7 @@
 {%@snip:collect from=src/main/java%}
 Jamal module to read and write Excel files.
 {%@options embedError%}
+{%@define killPattern="scanner\\.|final\\s+var"%}
 == Introduction
 This package contains macros to
 
@@ -79,7 +80,7 @@ The input of the macro can be the cell location, but the cell can also be define
 ==== Parops of the macro `xls:cell`
 
 {%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
-{%#killLines pattern="scanner\\."
+{%#killLines pattern={%killPattern%}
 {%!!@snip cell_parops%}%}%}
 
 ==== Examples of the macro `xls:cell`
@@ -117,7 +118,7 @@ which will result, eventually an empty string, but it will modify the cell and
 ==== Parops of the macro `xls:set`
 
 {%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
-{%#killLines pattern="scanner\\."
+{%#killLines pattern={%killPattern%}
 {%!!@snip set_parops%}%}%}
 
 === `xls:delete`
@@ -161,7 +162,7 @@ To merge the cells, you have to define either
 ==== Parops of the macro `xls:merge`
 
 {%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
-{%#killLines pattern="scanner\\."
+{%#killLines pattern={%killPattern%}
 {%!!@snip merge_parops%}%}%}
 
 
@@ -175,7 +176,7 @@ The cell can be defined as a cell reference on the input of the macro but also c
 ==== Parops of the macro `xls:unmerge`
 
 {%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
-{%#killLines pattern="scanner\\."
+{%#killLines pattern={%killPattern%}
 {%!!@snip unmerge_parops%}%}%}
 
 === `xls:row`, `xls:col`, `xls:sheet`, and `xls:to:cell`
@@ -230,7 +231,7 @@ The return value of the macro is the cell reference of the found cell including 
 ==== Parops of the macro `xls:find`
 
 {%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
-{%#killLines pattern="scanner\\."
+{%#killLines pattern={%killPattern%}
 {%!!@snip find_parops%}%}%}
 
 ==== Examples of the macro `xls:find`
@@ -264,7 +265,7 @@ A more complex example is:
 (A) {@xls:find (cell=G1 inCol number)3.3}
 (B) {@xls:find (cell=G1 inCol integer)3}
 (C) {@xls:find (cell=G1 inCol number)3}
-(D) {@xls:find (cell=G1 inCol regex)\d+\.0+}
+(D) {@xls:find (cell=G1 inCol regex)\d+}
 %}
 
 The XLSX file is part of the Jamal module test resources, and the result depends on the content of this file.
@@ -284,9 +285,7 @@ The search (3) is not limited, and it does find the cell `G31` with the content 
 The rest of the examples demonstrate different searches.
 
 The last example, (D) is a regular expression search.
-It matches the number in the cell G5, even though that number look like `3` in Excel.
-That is only how Excel displays the number.
-The number is floating point and it is `3.0`.
+
 The cells `G1`, `G2`, and `G3` are empty.
 The cell `G4` contains `3.3` and the regular expression requires `0` as the first fractional digit.
 Finally, the cell `G5` contains `3.0`.
@@ -305,3 +304,90 @@ That way, every execution of the document can add information to the next empty 
 {#xls:set (cell={@xls:find (inCol cell=A1 empty)}){@date yyyy-MM-dd hh:mm:ss}}
 %}
 
+=== `xls:range`
+
+This macro can be used to get a range of cells.
+The input of the macro is the top left cell and the bottom right cell.
+The workbook, the sheet and the corners can be defined using parameter options.
+The return value of the macro is a list of cell references separated by `,` and `|` characters.
+This is the format that you can use in the core macro `for`.
+
+It is possible to get the list of the cell references and also to get a dual-level list.
+That way you can iterate over
+
+* each cell in the range, or
+* each row or each column in the range
+
+using the core `for` macro.
+
+[NOTE]
+====
+When using the range macro, there has to be an opened workbook.
+Although a simple range, like `A1:A3` could be calculated without an opened workbook, the range macro needs the workbook to be opened.
+The reason for this is that the range elements will always contain the sheet name.
+The default value for the sheet name is the name of the first sheet in the workbook.
+====
+
+==== Parops of the macro `xls:range`
+
+{%#replaceLines replace="^\\s*//\\s*" replace="/^\\s*(\\w+),\\s*/** `$1`/"
+{%#killLines pattern={%killPattern%}
+{%!!@snip range_parops%}%}%}
+
+==== Examples of the macro `xls:range`
+
+{%sample/
+{@xls:open file=README.xlsx}
+{@xls:range region=A1:B3}
+%}
+
+will result in
+
+{%output%}
+
+The same range listing in vertical-first order:
+
+{%sample/
+{@xls:open file=README.xlsx}
+{@xls:range region=A1:B3 vertical}
+%}
+
+will result in
+
+{%output%}
+
+The next example shows how we can read the cells in a loop using thr range macro.
+Note that the `for` loop parameter option `evalist` tells the loop to evaluate the list of cells.
+That way the iteration is over the cells list retuned by the call to `{@xls:range region=A1:C6 vertical}`.
+The result of the loop is a list of cell reference macros, and the `!` will Jamal evaluate this list and return the cell values.
+
+{%sample/
+{@xls:open file=README.xlsx}
+{!@for [evalist] CellRef in ({@xls:range region=A1:C6 vertical})=CellRef={@xls:cell CellRef}
+}
+%}
+
+will result in
+
+{%output%}
+
+The next example is a multi-level range.
+The region is defined as `MULTI!A2:D11` and also the `multi` parop is defined.
+It will result in a list of lists.
+Each list element is a list of cell references in a row separated ny `,`.
+These lists are separated by `|` characters.
+The `for` loop will put these into the loop variables `Title`, `Author`, `Publisher`, and `Year_of_publishing`.
+
+{%sample/
+{@xls:open file=README.xlsx}
+{!@for [evalist] (Title,Author,Publisher,Year_of_publishing)
+                            in
+                 ({@xls:range multi region=MULTI!A2:D11})=
+{@xls:cell Author}: {@xls:cell Title}; {@xls:cell Publisher}, {@xls:cell Year_of_publishing}}
+%}
+
+will result in the output
+
+{%output%}
+
+that reflects the content of the `README.xlsx` file sheet named `MULTI`.

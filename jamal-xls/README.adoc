@@ -2,6 +2,7 @@
 
 Jamal module to read and write Excel files.
 
+
 == Introduction
 This package contains macros to
 
@@ -360,15 +361,22 @@ To merge the cells, you have to define either
 
 ==== Parops of the macro `xls:merge`
 
+
 * `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the
 rest of the document.
 This parop is optional and the default value is `+xls$:worksheet+`.
 * `sheet` is the name of the sheet where the region is merged.
-* `top` is the top row of the region to merge.
-* `left` is the left column of the region to merge.
-* `bottom` is the bottom row of the region to merge.
-* `right` is the right column of the region to merge.
+If a sheet is defined, it has to be already in the workbook.
+If there is no sheet defined anywhere, either as this option or in the `region` then the first sheet is used.
+* `top` is the top row of the region to merge. Numbering is zero indexed.
+* `left` is the left column of the region to merge. Numbering is zero indexed.
+* `bottom` is the bottom row of the region to merge. Numbering is zero indexed.
+* `right` is the right column of the region to merge. Numbering is zero indexed.
 * `region` is the region to merge in the format `A1:B2`.
+The definition may contain the name of the sheet, but the sheet name in the first and second part of the region should be the same.
+It is enough to define the sheet in the first part, but not only in the second part.
+If the sheet name is defined as `sheet` and also here, the two definitions should be identical.
+
 
 
 
@@ -381,7 +389,6 @@ The cell can be defined as a cell reference on the input of the macro but also c
 
 ==== Parops of the macro `xls:unmerge`
 
-        final var cellDef = new ParopsCell(scanner);
 
 * `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
 This parop is optional and the default value is `+xls$:worksheet+`.
@@ -466,7 +473,6 @@ The return value of the macro is the cell reference of the found cell including 
 
 ==== Parops of the macro `xls:find`
 
-        final var cellDef = new ParopsCell(scanner);
 
 * `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the rest of the document.
 This parop is optional and the default value is `+xls$:worksheet+`.
@@ -561,7 +567,7 @@ A more complex example is:
 (A) {@xls:find (cell=G1 inCol number)3.3}
 (B) {@xls:find (cell=G1 inCol integer)3}
 (C) {@xls:find (cell=G1 inCol number)3}
-(D) {@xls:find (cell=G1 inCol regex)\d+\.0+}
+(D) {@xls:find (cell=G1 inCol regex)\d+}
 ----
 
 The XLSX file is part of the Jamal module test resources, and the result depends on the content of this file.
@@ -581,9 +587,7 @@ The search (3) is not limited, and it does find the cell `G31` with the content 
 The rest of the examples demonstrate different searches.
 
 The last example, (D) is a regular expression search.
-It matches the number in the cell G5, even though that number look like `3` in Excel.
-That is only how Excel displays the number.
-The number is floating point and it is `3.0`.
+
 The cells `G1`, `G2`, and `G3` are empty.
 The cell `G4` contains `3.3` and the regular expression requires `0` as the first fractional digit.
 Finally, the cell `G5` contains `3.0`.
@@ -601,7 +605,7 @@ The result is:
 (6) Sheet1!G26
 (7) Sheet1!G27
 (8) Sheet1!G3
-(9) Sheet1!G25
+(9) Sheet1!G5
 (A) Sheet1!G4
 (B) Sheet1!G5
 (C) Sheet1!G5
@@ -620,3 +624,176 @@ That way, every execution of the document can add information to the next empty 
 {@xls:find (inCol cell=Sheet1!A1 empty)}
 {#xls:set (cell={@xls:find (inCol cell=A1 empty)}){@date yyyy-MM-dd hh:mm:ss}}
 ----
+
+=== `xls:range`
+
+This macro can be used to get a range of cells.
+The input of the macro is the top left cell and the bottom right cell.
+The workbook, the sheet and the corners can be defined using parameter options.
+The return value of the macro is a list of cell references separated by `,` and `|` characters.
+This is the format that you can use in the core macro `for`.
+
+It is possible to get the list of the cell references and also to get a dual-level list.
+That way you can iterate over
+
+* each cell in the range, or
+* each row or each column in the range
+
+using the core `for` macro.
+
+[NOTE]
+====
+When using the range macro, there has to be an opened workbook.
+Although a simple range, like `A1:A3` could be calculated without an opened workbook, the range macro needs the workbook to be opened.
+The reason for this is that the range elements will always contain the sheet name.
+The default value for the sheet name is the name of the first sheet in the workbook.
+====
+
+==== Parops of the macro `xls:range`
+
+
+* `workbook` (aliases are `wb`) is the name of the workbook that is used to refer to the workbook in the
+rest of the document.
+This parop is optional and the default value is `+xls$:worksheet+`.
+* `sheet` is the name of the sheet where the region is merged.
+If a sheet is defined, it has to be already in the workbook.
+If there is no sheet defined anywhere, either as this option or in the `region` then the first sheet is used.
+* `top` is the top row of the region to merge. Numbering is zero indexed.
+* `left` is the left column of the region to merge. Numbering is zero indexed.
+* `bottom` is the bottom row of the region to merge. Numbering is zero indexed.
+* `right` is the right column of the region to merge. Numbering is zero indexed.
+* `region` is the region to merge in the format `A1:B2`.
+The definition may contain the name of the sheet, but the sheet name in the first and second part of the region should be the same.
+It is enough to define the sheet in the first part, but not only in the second part.
+If the sheet name is defined as `sheet` and also here, the two definitions should be identical.
+
+* You can specify either `horizontal` or `vertical` direction.
+The default is `horizontal`.
+The direction specifies how the range is traversed.
+If the direction is `horizontal`, then the range is traversed row by row, like `A1,A2,A3,B1,B2,B3,C1,C2,C3`.
+If the direction is `vertical`, then the range is traversed column by column, like `A1,B1,C1,A2,B2,C2,A3,B3,C3`.
+* If the `reverse` parameter is `true`, then the range is traversed in reverse order.
+* The `$forsep` (aliased as `separator` or `sep`) parameter specifies the string inserted between the cell references.
+The default is `,`.
+* The `$forsubsep` (aliased as `subseparator` or `subsep`) parameter specifies the string inserted between the cell references in a multi-level range.
+The default is `|`.
+Note that the default separator and subseparator are exactly the values that the core macro `for` uses by default.
+* The `single` or `multi` parameter specifies how the range is provided.
+The default is `single`.
+In this case, each cell is an individual element.
+If `multi` is specified, then each row (if the direction is `horizontal`) or each column (if the direction is `vertical`) is an element.
+These are separated by the subseparator.
+That way they can be used in a `for` loop with multiple loop variables.
+
+
+==== Examples of the macro `xls:range`
+
+.Jamal source
+[source]
+----
+{@xls:open file=README.xlsx}
+{@xls:range region=A1:B3}
+----
+
+will result in
+
+.output
+[source]
+----
+README!A1,README!B1,README!A2,README!B2,README!A3,README!B3
+----
+
+
+The same range listing in vertical-first order:
+
+.Jamal source
+[source]
+----
+{@xls:open file=README.xlsx}
+{@xls:range region=A1:B3 vertical}
+----
+
+will result in
+
+.output
+[source]
+----
+README!A1,README!A2,README!A3,README!B1,README!B2,README!B3
+----
+
+
+The next example shows how we can read the cells in a loop using thr range macro.
+Note that the `for` loop parameter option `evalist` tells the loop to evaluate the list of cells.
+That way the iteration is over the cells list retuned by the call to `{@xls:range region=A1:C6 vertical}`.
+The result of the loop is a list of cell reference macros, and the `!` will Jamal evaluate this list and return the cell values.
+
+.Jamal source
+[source]
+----
+{@xls:open file=README.xlsx}
+{!@for [evalist] CellRef in ({@xls:range region=A1:C6 vertical})=CellRef={@xls:cell CellRef}
+}
+----
+
+will result in
+
+.output
+[source]
+----
+README!A1=This is the content of the cell A1.
+README!A2=
+README!A3=
+README!A4=
+README!A5=
+README!A6=
+README!B1=
+README!B2=
+README!B3=
+README!B4=second will be deleted
+README!B5=
+README!B6=
+README!C1=
+README!C2=
+README!C3=
+README!C4=
+README!C5=
+README!C6=third will get to the second column
+----
+
+
+The next example is a multi-level range.
+The region is defined as `MULTI!A2:D11` and also the `multi` parop is defined.
+It will result in a list of lists.
+Each list element is a list of cell references in a row separated ny `,`.
+These lists are separated by `|` characters.
+The `for` loop will put these into the loop variables `Title`, `Author`, `Publisher`, and `Year_of_publishing`.
+
+.Jamal source
+[source]
+----
+{@xls:open file=README.xlsx}
+{!@for [evalist] (Title,Author,Publisher,Year_of_publishing)
+                            in
+                 ({@xls:range multi region=MULTI!A2:D11})=
+{@xls:cell Author}: {@xls:cell Title}; {@xls:cell Publisher}, {@xls:cell Year_of_publishing}}
+----
+
+will result in the output
+
+.output
+[source]
+----
+Jane Austen: Pride and Prejudice; T. Egerton, 1813
+Herman Melville: Moby-Dick; Harper & Brothers, 1851
+Mark Twain: Adventures of Huckleberry Finn; Charles L. Webster and Company, 1885
+Oscar Wilde: The Picture of Dorian Gray; Lippincott's Monthly Magazine, 1890
+Bram Stoker: Dracula; Archibald Constable and Company, 1897
+H.G. Wells: The War of the Worlds; William Heinemann, 1898
+Joseph Conrad: Heart of Darkness; Blackwood's Magazine, 1899
+L. Frank Baum: The Wonderful Wizard of Oz; George M. Hill Company, 1900
+Jack London: The Call of the Wild; Macmillan, 1903
+E.M. Forster: A Room with a View; Edward Arnold, 1908
+----
+
+
+that reflects the content of the `README.xlsx` file sheet named `MULTI`.

@@ -226,7 +226,11 @@ public class CellMacro implements Macro, Scanner {
             case STRING:
                 return cell.getStringCellValue();
             case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
+                final var d = cell.getNumericCellValue();
+                if ( d == Math.rint(d) && d < Long.MAX_VALUE && d > Long.MIN_VALUE ) {
+                    return String.valueOf((long)d);
+                }
+                return String.valueOf(d);
             case BOOLEAN:
                 return String.valueOf(cell.getBooleanCellValue());
             case FORMULA:
@@ -241,11 +245,16 @@ public class CellMacro implements Macro, Scanner {
     }
 
     private static String cellContent(final CellValue cellValue) {
+        if( cellValue == null ) return "";
         switch (cellValue.getCellType()) {
             case STRING:
                 return cellValue.getStringValue();
             case NUMERIC:
-                return String.valueOf(cellValue.getNumberValue());
+                final var d = cellValue.getNumberValue();
+                if ( d == Math.rint(d) && d < Long.MAX_VALUE && d > Long.MIN_VALUE ) {
+                    return String.valueOf((long)d);
+                }
+                return String.valueOf(d);
             case BOOLEAN:
                 return String.valueOf(cellValue.getBooleanValue());
             case BLANK:
