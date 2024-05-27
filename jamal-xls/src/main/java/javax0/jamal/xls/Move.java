@@ -27,10 +27,10 @@ public class Move implements Macro, Scanner {
 
         InputHandler.skipWhiteSpaces(in);
         final var wb = cellDef.getWorkbook(processor);
-        final var cell = cellDef.getCell(in.toString(), this, wb);
-        final var sheet = cell.getSheet().getSheetName();
-        var row = cell.getRowIndex();
-        var col = cell.getColumnIndex();
+        final var cell = cellDef.getCellReference(in.toString(), this, wb);
+        final var sheet = cell.getSheetName();
+        int row = cell.getRow();
+        int col = cell.getCol();
         final var n = amount.get();
         switch (directionDef.get(Direction.class)) {
             case up:
@@ -50,7 +50,7 @@ public class Move implements Macro, Scanner {
                 col += n;
                 break;
         }
-        BadSyntax.when(row < 0 || col < 0, "The cell is out of the sheet");
+        BadSyntax.when(row < 0 || col < 0 || row > Find.ROW_MAXINDEX || col > Find.COL_MAXINDEX, "The cell is out of the sheet");
         return new CellReference(sheet, row, col, false, false).formatAsString();
     }
 }
