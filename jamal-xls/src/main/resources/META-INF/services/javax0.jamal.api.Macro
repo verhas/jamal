@@ -11,3 +11,4 @@ javax0.jamal.xls.CellConvert$ToCol
 javax0.jamal.xls.CellConvert$ToSheet
 javax0.jamal.xls.Find
 javax0.jamal.xls.Range
+javax0.jamal.xls.Move

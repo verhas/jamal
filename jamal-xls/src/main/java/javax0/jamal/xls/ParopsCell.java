@@ -14,6 +14,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 
+import java.util.Optional;
+
 /**
  * This class contains four parops that are used by any macros that need to refer to a cell in an Excel workbook.
  * The constructor gets the scanner object and reads the parameters from the scanner object.
@@ -110,15 +112,15 @@ class ParopsCell {
             return wb.getSheet(sheet.get());
         }
         if (in.isEmpty()) {
-            if( wb.getNumberOfSheets() == 0 ){
+            if (wb.getNumberOfSheets() == 0) {
                 wb.createSheet("Sheet1");
             }
             return wb.getSheetAt(0);
         } else {
             ScannerTools.badSyntax(macro).whenParameters(rowDef, colDef).anyPresent("When specifying cell reference you cannot use 'coL' or 'row'.");
             var cr = new CellReference(in);
-            if( wb.getNumberOfSheets() == 0 ){
-                wb.createSheet(cr.getSheetName());
+            if (wb.getNumberOfSheets() == 0) {
+                wb.createSheet(Optional.ofNullable(cr.getSheetName()).orElse("Sheet1"));
             }
             return (cr.getSheetName() == null ? wb.getSheetAt(0) : wb.getSheet(cr.getSheetName()));
         }

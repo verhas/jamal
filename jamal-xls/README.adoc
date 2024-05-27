@@ -722,6 +722,26 @@ README!A1,README!A2,README!A3,README!B1,README!B2,README!B3
 ----
 
 
+The netx example is the horizontal listing with multi-level range:
+
+.Jamal source
+[source]
+----
+{@xls:open file=README.xlsx}
+{@xls:range region=A1:B3 multi}
+----
+
+will result in
+
+.output
+[source]
+----
+README!A1|README!B1,README!A2|README!B2,README!A3|README!B3
+----
+
+
+Note that the separators between the elements within a row are `|` and between the rows are `,` fitting the multi variable loop structure.
+
 The next example shows how we can read the cells in a loop using thr range macro.
 Note that the `for` loop parameter option `evalist` tells the loop to evaluate the list of cells.
 That way the iteration is over the cells list retuned by the call to `{@xls:range region=A1:C6 vertical}`.
