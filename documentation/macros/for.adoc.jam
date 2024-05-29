@@ -24,9 +24,10 @@ containing v1 v2 and v3}
 == History
 
 - since {%RELEASE:SZEGED%} multi-argument `for`
-- since 1.6.3 backtick string separator value list
-- since 1.7.3 options between `[` and `]`
-- since 1.7.8 option `evalist`
+- since {%RELEASE:HAENERTSBURG%} backtick string separator value list
+- since {%RELEASE:SZIKSZO%} options between `[` and `]`
+- since {%RELEASE:CHICHAGO%} option `evalist`
+- since {%RELEASE:PECSVARAD%} option `join`
 
 
 == Description
@@ -36,24 +37,13 @@ When there are multiple variables, then the sub-list of the values is separated 
 Both the `,` and the `|` character can be modified to use something else instead of these characters.
 
 The list of the values can also be separated by other strings.
-If the macro `$forsep` is defined, like in
+The macro `for` supports several parops to control the behavior of the loop.
 
-{%sample/
-{@define $forsep=\s+}
-%}
+* `$forsep` aliased as separator` or `sep` to specify the separator regular expression
 
-then the arguments will be separated by one or more spaces.
-The string between the `(` and the `)` will be split using the string defined in `$forsep` as a regular expression.
+The string between the `(` and the `)` containing the values will be split using the string defined in `$forsep` as a regular expression.
 
-Similarly, if the macro `$forsubsep` is defined, like in
-
-{%sample/
-{@define $forsubsep=:}
-%}
-
-then the values for the different variables will be separated by a semicolon.
-
-Starting with version {%RELEASE:SZIKSZO%} you can also define these options locally using the format
+* Similarly, `$forsubsep` aliased as `subseparator` or `subsep` can be used to specify the sub separator regular expression.
 
 {%sample/
 {@for [options] x in (a,b,c)=...}
@@ -68,6 +58,8 @@ where the options can be
 * `lenient` for lenient operation (see below)
 * `evaluateValueList`, or `evalist` to instruct the loop that the list of the values between the `(` and `)` has to be evaluated.
 Not the variables, only the values.
+* `join` to join the values with the separator.
+The value of the option is a string that will be inserted between the values in the output
 
 For example, the macros:
 

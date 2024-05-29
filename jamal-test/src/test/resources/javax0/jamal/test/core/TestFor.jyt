@@ -145,6 +145,12 @@ test evaluating the list with the macro name:
   Output: |-
     a a ab b bc c c
 
+test evaluating a list with joiner:
+  Input: |-
+    {@for [join=|]z in (a,b,c)=z}
+  Output: |-
+    a|b|c
+
 Syntax error:
   Invalid keyword after the variables:
     Input: "{@for a iiiin (1,2,3)=$a, init}"

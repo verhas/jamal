@@ -18,6 +18,7 @@ You can find some bare release numbers in the documentation even though the exis
 {@define ! RELEASE:SZEGED=1.5.0}
 {@define ! RELEASE:BUELACH=1.5.3}
 {@define ! RELEASE:RORBAS=1.5.4}
+{@define ! RELEASE:HAENERTSBURG=1.6.3}
 {@define ! RELEASE:BERN=1.6.4}
 {@define ! RELEASE:SZIKSZO=1.7.3}
 {@define ! RELEASE:LUZERN=1.7.4}
@@ -61,4 +62,5 @@ I have never been there.
 a town very north in Russia
 {@define ! RELEASE:ROGACHEVO=2.5.0}
 {@define ! RELEASE:OULU=2.6.0}
+{@define ! RELEASE:PECSVARAD=2.7.0}
 

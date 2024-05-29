@@ -744,7 +744,7 @@ Note that the separators between the elements within a row are `|` and between t
 
 The next example shows how we can read the cells in a loop using thr range macro.
 Note that the `for` loop parameter option `evalist` tells the loop to evaluate the list of cells.
-That way the iteration is over the cells list retuned by the call to `{@xls:range region=A1:C6 vertical}`.
+That way the iteration is over the cells list returned by the call to `{@xls:range region=A1:C6 vertical}`.
 The result of the loop is a list of cell reference macros, and the `!` will Jamal evaluate this list and return the cell values.
 
 .Jamal source
