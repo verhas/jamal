@@ -22,7 +22,7 @@
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
       {dependency|org.apache.poi|poi|{APACHE_POI_VERSION}}
       {dependency :org.apache.poi:poi-ooxml:{APACHE_POI_VERSION}}
-      {dependency :org.apache.commons:commons-compress:1.26.1}
+      {dependency :org.apache.commons:commons-compress:{COMMONS_COMPRESS_VERSION}}
     }
 
 {end project}
