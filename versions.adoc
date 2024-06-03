@@ -12,7 +12,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.13.0` 
 
-* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.6.3` 
+* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.7.0` 
 
 * `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.2.4` 
 
@@ -20,9 +20,9 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `MAVEN_PLUGIN_API` `4.0.0-beta-3` 
 
-* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.13.0` 
+* `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.13.1` 
 
-* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.13.0` 
+* `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.13.1` 
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.7.0` 
 

@@ -27,13 +27,30 @@ class ForState {
 
     public ForState(Scanner.ScannerObject scanner, Processor processor) {
         this.processor = processor;
+        // snippet parops_for
         separator = scanner.str("$forsep", "separator", "sep").defaultValue(",");
+        // can define the separator if it is different from the default, which is `,` comma.
+        // The value is used as a regular expression giving very versatile possibilities.
         subSeparator = scanner.str("$forsubsep", "subseparator", "subsep").defaultValue("\\|");
+        // can define the subseparator if it is different from the default, which is `|` pipe.
+        // It is used when there are multiple variables in the loop.
+        // Similarly to the separator, the value is used as a regular expression.
         trim = scanner.bool("trimForValues", "trim");
+        // is a boolean paror.
+        // If it is present and `true`, then the values are trimmed, the spaces are removed from the beginning and the end.
         skipEmpty = scanner.bool("skipForEmpty", "skipEmpty");
+        // is a boolean parameter.
+        // If it is present and `true`, then the empty values are skipped.
         lenient = scanner.bool("lenient");
+        // is a boolean parameter.
+        // If it is present and `true`, then the number of the values in the value list is not checked against the number of the variables.
         evalValueList = scanner.bool("evaluateValueList", "evalist");
-        join = scanner.str("$forjoin", "join").defaultValue(",");
+        // is a boolean parameter.
+        // If it is present and `true`, then the value list is evaluated as a macro before spling it up to values.
+        join = scanner.str("$forjoin", "join").defaultValue("");
+        // is used to join the values when the values are joined together.
+        // The default is the empty string.
+        // end snippet
     }
 
 

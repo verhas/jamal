@@ -4,11 +4,13 @@
 since version `1.0.0`
 
 
+The `for` macro can be used to repeat text with different parameters.
+
+It can be used similar to the `for` loop in programming languages, but it can also have multiple variables.
+The actual values can be listed comma separated in the macro or they can also come from some other list holding macro.
 
 == Syntax
-The macro `for` can be used to create repetitive text.
-It has two forms.
-The syntax of the macro is either
+The two forms of the macro are
 
 .Jamal source
 [source]
@@ -17,7 +19,7 @@ The syntax of the macro is either
 containing variable}
 ----
 
-or
+and
 
 .Jamal source
 [source]
@@ -26,7 +28,15 @@ or
 containing v1 v2 and v3}
 ----
 
+When the values are held by a macro as a list the keyword `from` is used instead of the keyword `in`.
 
+.Jamal source
+[source]
+----
+{@for variable from MACRO= content to be repeated}
+----
+
+where the macro `MACRO` should be defined before the `for` macro.
 
 == History
 
@@ -39,43 +49,90 @@ containing v1 v2 and v3}
 
 == Description
 
-The `variable` or the multiple variables can be used in the __content__ and will be replaced for each iteration with the respective element on the comma-separated list.
-When there are multiple variables, then the sub-list of the values is separated using the `|` character.
-Both the `,` and the `|` character can be modified to use something else instead of these characters.
-
-The list of the values can also be separated by other strings.
-The macro `for` supports several parops to control the behavior of the loop.
-
-* `$forsep` aliased as separator` or `sep` to specify the separator regular expression
-
-The string between the `(` and the `)` containing the values will be split using the string defined in `$forsep` as a regular expression.
-
-* Similarly, `$forsubsep` aliased as `subseparator` or `subsep` can be used to specify the sub separator regular expression.
+The macro `for` uses the content of the macro as a template.
+The result of the macro is a string, which is the concatenation of the content for each loop.
+The content can contain the loop variables, and each time the variables are replaced with the values.
+For example
 
 .Jamal source
 [source]
 ----
-{@for [options] x in (a,b,c)=...}
+{@for x in (a,b,c)=it is $x
+}
 ----
 
-where the options can be
+will result in
 
-* `$forsep`, `separator` or `sep` to specify the separator regular expression
-* `$forsubsep`, `subseparator` to specify the sub separator regular expression
-* `trimForValues`, `trim` to trim off the spaces from the values
-* `skipForEmpty`, `skipEmpty` to skip empty parameter list (see below)
-* `lenient` for lenient operation (see below)
-* `evaluateValueList`, or `evalist` to instruct the loop that the list of the values between the `(` and `)` has to be evaluated.
-Not the variables, only the values.
-* `join` to join the values with the separator.
-The value of the option is a string that will be inserted between the values in the output
+.output
+[source]
+----
+it is $a
+it is $b
+it is $c
+----
 
-For example, the macros:
+
+When using multiple variables, the values are separated by the `|` character as in the example
 
 .Jamal source
 [source]
 ----
-{@for [sep=:]$a in (a:b:c)=a is $a
+{@for (x,y,z) in (a|b|c,d|e|f,g|h|i)=it is $x $y $z
+}
+----
+
+which will result in
+
+.output
+[source]
+----
+it is $a $b $c
+it is $d $e $f
+it is $g $h $i
+----
+
+
+NOTE: The values `a|b|c`, `d|e|f`, and `g|h|i` are string tuples and multiple loop variables do not mean nested loops.
+
+If the values themselves contain commas, or `|` characters then other strings can also be used to separate the values.
+The default separator is the comma character, but it can be changed using the option `sep` or `separator`.
+There are other parameter options, (parops) that can be used to control the behavior of the loop.
+
+The options are
+
+* `$forsep`, `separator`, `sep`
+ can define the separator if it is different from the default, which is `,` comma.
+ The value is used as a regular expression giving very versatile possibilities.
+* `$forsubsep`, `subseparator`, `subsep`
+ can define the subseparator if it is different from the default, which is `|` pipe.
+ It is used when there are multiple variables in the loop.
+ Similarly to the separator, the value is used as a regular expression.
+* `trimForValues`, `trim`
+ is a boolean paror.
+ If it is present and `true`, then the values are trimmed, the spaces are removed from the beginning and the end.
+* `skipForEmpty`, `skipEmpty`
+ is a boolean parameter.
+ If it is present and `true`, then the empty values are skipped.
+* `lenient`
+ is a boolean parameter.
+ If it is present and `true`, then the number of the values in the value list is not checked against the number of the variables.
+* `evaluateValueList`, `evalist`
+ is a boolean parameter.
+ If it is present and `true`, then the value list is evaluated as a macro before spling it up to values.
+* `$forjoin`, `join`
+ is used to join the values when the values are joined together.
+ The default is the empty string.
+
+
+
+== Examples
+
+The macro:
+
+.Jamal source
+[source]
+----
+{@for [sep=:]$a in (a:b:c)=is $a
 }
 ----
 
@@ -84,9 +141,9 @@ will result
 .output
 [source]
 ----
-a is a
-a is b
-a is c
+is a
+is b
+is c
 ----
 
 
@@ -95,18 +152,24 @@ Another example:
 .Jamal source
 [source]
 ----
-{@for [trim sep=":"] $a in ( a : b :c )=a is $a
+{@for [trim sep=":"] $a in ( a : b :c )=is >>$a<<
+}
+{@for [sep=":"] $a in ( a : b :c )=is >>$a<<
 }
 ----
 
-will result the same output:
+will result in the output:
 
 .output
 [source]
 ----
-a is a
-a is b
-a is c
+is >>a<<
+is >>b<<
+is >>c<<
+
+is >> a <<
+is >> b <<
+is >>c <<
 ----
 
 
@@ -121,7 +184,7 @@ By default, the empty elements in a for loop value list represent empty strings.
 The loop body will be rendered with these values replacing the loop variable with an empty string.
 In a situation like that the use of the option `lenient` is also necessary if the loop has multiple variables.
 In that case, and empty value cannot be split into multiple strings.
-It is one empty string, and if there are multiple variables, then an error will occur unless the option or parop lenient is used.
+It is one empty string, and if there are multiple variables, then an error will occur unless the option `lenient` is used.
 For example
 
 .Jamal source
@@ -151,7 +214,7 @@ wu
 
 as both `k` and `z` are empty strings.
 
-This default behaviour can be altered using the option `skipForEmpty`.
+This default behavior can be altered using the option `skipForEmpty`.
 If this option is used the `for` loop will skip the empty values.
 The previous example with this option:
 
@@ -212,10 +275,11 @@ will result
 ----
 
 
-That is because the content of the macro `for` is not evaluated before the `for` loop is executed because we used the `@` character.
-The result of the for loop is not evaluated.
-We will have to attend to that, but first we have to solve the issue that the macro `list` is not evaluated.
-To do that we need to use the `#` character in front of the `for` loop.
+That is because the content of the macro `for` is not evaluated before the `for` loop is executed as we used the `@` character.
+It is also to note that the result of the for loop is not evaluated.
+We will have to attend to that later.
+First we have to solve the issue that the macro `list` is not evaluated.
+To do that, we need to use the `#` character in front of the `for` loop.
 
 .Jamal source
 [source]
