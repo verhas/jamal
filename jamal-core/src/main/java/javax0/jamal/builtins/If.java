@@ -41,6 +41,7 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
         final BooleanParameter isDefined;
         final BooleanParameter isGlobal;
         final BooleanParameter isLocal;
+        final BooleanParameter eval;
         final ListParameter lessThan;
         final ListParameter greaterThan;
         final ListParameter equals;
@@ -57,6 +58,7 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
             isDefined = scanner.bool("isDefined", "defined");
             isGlobal = scanner.bool("isGlobal", "global");
             isLocal = scanner.bool("isLocal", "local");
+            eval = scanner.bool("eval", "evaluate");
             lessThan = scanner.list("lessThan", "less", "smaller", "smallerThan");
             greaterThan = scanner.list("greaterThan", "greater", "bigger", "biggerThan", "larger", "largerThan");
             equals = scanner.list("equals", "equal", "equalsTo", "equalTo");
@@ -158,8 +160,14 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
     }
 
     private static boolean isTrue(final Processor processor,
-                                  final String test,
+                                  final String testO,
                                   final Options opt) throws BadSyntax {
+        final String test;
+        if( opt.eval.is()){
+            test = processor.process(testO);
+        }else{
+            test = testO;
+        }
         if (opt.countNumOptionsPresent() > 0) {
             if (opt.and.is()) {
                 return (!opt.lessThan.isPresent() || compare(opt.lessThan.get(), true, n -> lt(n, test)))

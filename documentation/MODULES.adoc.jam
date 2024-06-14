@@ -45,6 +45,11 @@ Input handlers are loaded via the service loader and can load resource files, ma
 {#define ! _{#replace(detectNoChange=false)/$x/-/_/}=.}{@comment makes chapter doubly define an error}
 }
 
+=== {category packaging}
+
+Directory containing different packaging tools to be executed after the release of the Java code version.
+These create different packages, like docker image, Debian package, etc.
+
 == Modules
 {chapter :all:core}
 This module contains no code.
@@ -197,6 +202,10 @@ The code in the directory `jamal-debug-ui` contains the REACT.js based ui for th
 {chapter :docker:embed}
 This is not a module.
 The code in the directory `jamal-docker` contains a Dockerfile to build a Docker image with Jamal.
+
+{chapter :packaging:packaging}
+
+Contains the different packaging code in the subdirectories.
 
 {#define module_directory_count={@listDir  (maxDepth=1 pattern=jamal-[\w\-]*$ countOnly) ..}}
 

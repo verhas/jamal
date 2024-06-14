@@ -2,7 +2,8 @@
 {%MACRO name="if" since={%RELEASE:ZURICH%}%}
 
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=9b9c6bfa%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=5dfc882d
+%}
 {%@snip:collect from=../../jamal-core/src/main/java%}\
 
 The `if` macro makes it possible to evaluate the content conditionally.
@@ -30,7 +31,7 @@ When no options are specified the `test` is true, if
 The literal `false` is false using any combination of upper and lower case letters with or without surrounding spaces.
 
 The evaluation of the test string can be modified using options.
-There are {%@define nrIfOptions=11%} {%nrIfOptions%} options.
+There are {%@def nrIfOptions=12%} options.
 {%#snip:check id=if_options lines={%nrIfOptions%} %}
 
 The first three options are "boolean" options.
@@ -112,6 +113,9 @@ The options
 test that the string given as the first parameter is a defined user defined macro, a locally defined macro, or a globally defined macro.
 A macro is locally defined if it was defined in the same scope where the `if` is used.
 
+The option
+
+* `eval` aliased as `evaluate` will evaluate the test string before assessing it as a boolean value.
 
 The following examples show a few cases, as demonstrations:
 
@@ -147,6 +151,7 @@ they are expected, that way this sample is also a simple integration test of the
 {s/{`@if [greaterThan=13 not]/13/true/false}/true} 13 is not greater than 13, it is the same logic as the previous
 {s/{`@if [lessThan=13 equals=14]/13/true/false}/false} 13 is not less than 13 and does not equal 14
 {s/{`@if [lessThan=13 and largerThan=2]/12/true/false}/true} 12 is in the range (2,13)
+{s/{@define a=12}{`@if [eval]/{a}/true/false}/true} {}a} is in the range (2,13) as _a_ is defined to be 12
 %}%}
 
 {%output%}

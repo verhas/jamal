@@ -35,7 +35,7 @@ public interface ServiceLoaded {
      */
     static <T> List<T> getInstances(Class<T> klass) {
         final var services =  getInstances(klass, Thread.currentThread().getContextClassLoader());
-        if( services.size() > 0 ){
+        if(!services.isEmpty()){
             return services;
         }
         return getInstances(klass, ServiceLoaded.class.getClassLoader());
@@ -46,7 +46,7 @@ public interface ServiceLoaded {
         try {
             final ServiceLoader<T> services = ServiceLoader.load(klass, cl);
             services.iterator().forEachRemaining(list::add);
-            if (list.size() == 0) {
+            if (list.isEmpty()) {
                 loadViaMetaInf(klass, list, cl);
             }
             return list;

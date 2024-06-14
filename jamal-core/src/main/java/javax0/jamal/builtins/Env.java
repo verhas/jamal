@@ -1,10 +1,8 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
+import javax0.jamal.tools.Scanner;
 
 import static javax0.jamal.api.SpecialCharacters.QUERY;
 import static javax0.jamal.api.SpecialCharacters.REPORT_ERRMES;
@@ -34,24 +32,28 @@ import static javax0.jamal.api.SpecialCharacters.REPORT_ERRMES;
  * or  {@code !} character then you cannot use this macro, and you are in trouble. However, in that case you are a sick
  * bastard, and you are in trouble anyway.
  */
-public class Env implements Macro {
+public class Env implements Macro, Scanner.Core {
+    public enum Mode {
+        normal, query, report
+    }
+
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var arg = in.toString().trim();
-        BadSyntax.when(arg.length() == 0, "Empty string as environment variable name");
-        final var test = arg.charAt(arg.length() - 1) == QUERY;
-        final var report = arg.charAt(arg.length() - 1) == REPORT_ERRMES;
-        final String name;
-        if (test || report) {
-            name = arg.substring(0, arg.length() - 1).trim();
-        } else {
-            name = arg;
-        }
+        final var scanner = newScanner(in, processor);
+        final var mode = scanner.enumeration(Mode.class).defaultValue(Mode.normal);
+        scanner.done();
+        final var variableName = in.toString().trim();
+        BadSyntax.when(variableName.isEmpty(), "Empty string as environment variable name");
+        final var lastChar = variableName.charAt(variableName.length() - 1);
+        final var testChar = lastChar == QUERY;
+        final var reportChar = lastChar == REPORT_ERRMES;
+        final var name = (testChar || reportChar) ? variableName.substring(0, variableName.length() - 1).trim() : variableName;
+
         final var value = EnvironmentVariables.getenv(name).orElse(null);
-        if (test) {
+        if (testChar || mode.get(Mode.class) == Mode.query) {
             return "" + (null != value);
         } else {
-            BadSyntax.when(report && null == value,  "Environment variable '%s' is not defined", name);
+            BadSyntax.when((mode.get(Mode.class)== Mode.report || reportChar) && null == value, "Environment variable '%s' is not defined", name);
             return null == value ? "" : value;
         }
     }

@@ -1,0 +1,165 @@
+= Comparing JINJA Templates to Jamal
+
+JINJA is a templating engine for Python.
+It is similar to Jamal that it places directives inside the document.
+In most of the cases, you can use Jamal where you use JINJA as the other way around.
+These are competing products.
+
+In the following, I will compare JINJA to Jamal along different features.
+I am fairly knowledgeable with Jamal, but my knowledge about JINJA is limited, so I might be wrong in some comparisons.
+If you feel that some statements in this document are incorrect, please create a pull request correcting them.
+I will review the suggested changes, and I reference the contribution.
+
+
+
+== License
+
+|===
+|Jamal |JINJA
+
+|Apache 2 License
+|BSD-3-Clause License
+
+|===
+
+Both products are open source licensed and are available in source code.
+
+== Programming Language
+
+|===
+|Jamal |JINJA
+
+|Java
+
+Groovy, Ruby, ScriptBasic, Kotlin, basic
+|Python
+
+|language independence, meta-markup
+|strongly integrated, template language
+
+|===
+
+JINJA is developed in Python.
+Jamal is developed in Java.
+
+Usually, the language of the development is not important for the users of the software.
+This is partially true for JINJA.
+
+Although you can use JINJA in any project without caring that it is running in Python, this product is mainly targeted for Python applications.
+The primary use of JINJA is to be a Python templating framework.
+A good example is the looping construct that iterates over Python lists or dictionaries.
+
+Jamal is written in Java, but its design is not tied to Java.
+You can use Jamal in any project.
+For example, the looping construct in Jamal is not tied to Java collections, but it can iterate over any list of strings you present in the document.
+Looping over Java structures is also possible, but it is not the primary use case.
+
+Jamal also has features, which are tight to Java, but these are implemented in optional modules.
+
+Jamal also supports JVM languages, like Groovy, Scala, Kotlin, etc.
+It also supports ScriptBasic and has a simple built-in imperative BASIC like language.
+
+== Extensibility
+
+|===
+|Jamal |JINJA
+
+|JVM language macros
+|Python code
+
+| IO modules
+|
+
+| Debugger
+|
+
+|===
+
+JINJA is tightly integrated with implementation language and language features and can be extended with Python code.
+
+Jamal is designed to be modular and can be extended with Java code.
+Even the core macros are provided in a separate library and could be replaced with custom implementations.
+Macros for Jamal can be written in Java, Groovy, Ruby, Kotlin, or any other JVM language.
+
+Jamal can also be extended with debuggers and IO modules.
+The standard installation provides a web-based graphical debugger and IO channels that can open files on the disk (default), in JAR files, Java resources and from the network.
+
+== Integration, Embedding
+
+|===
+|Jamal |JINJA
+
+| Command line, Jbang
+| Flask
+
+| Maven, Gradle
+| Django
+
+| Asciidoctor IntelliJ, AsciidocFX
+| Babel
+
+| JavaDoc
+| Pylons
+
+|===
+
+Both applications can be embedded into different applications.
+JINJA can be embedded into Python applications, Jamal can be embedded into Java applications.
+JINJA is integrated with the
+
+* `Flask`,
+* `Django`,
+* `Babel`, and
+* `Pylons`
+
+content management systems.
+
+Jamal is integrated into more Java technology related applications, like Maven, Gradle, JavaDoc, but also into the Asciidoctor plugin in IntelliJ IDEA and AsciidocFX.
+This makes it possible to edit Jamal meta markup files interactively in these environments for Asciidoc, Markdown, XML, and other format documents.
+
+== Editor Support
+
+|===
+|Jamal |JINJA
+
+| AsciidocFX, IntelliJ IDEA WYSIWYG editing
+| PyCharm template support
+
+|===
+
+Jamal can be interactively edited in AsciidoctorFX and IntelliJ IDEA.
+If you choose IntelliJ IDEA, you have to install the Asciidoctor plugin in IntelliJ IDEA and configure the editor to treat all your `*.jam` files as AsciiDoc files.
+You need also copy the Jamal files from the maven central into the project library.
+After that, you can edit Jamal meta-markup enhanced Markdown and Asciidoctor files in IntelliJ.
+
+If you use AsciidoctorFX, you do not need a plugin.
+The rest of the steps are the same.
+
+Copying the filed from maven central is automatic, you can run Jamal with a special command line option to do it for you.
+
+You can also download and install IntelliJ IDEA templates that support a bit of syntax autocompletion for Jamal.
+
+JINJA is supported in PyCharm.
+It is part of the editor bundled, you only configure the file extensions that you want to use it for.
+The editor support is syntactical, highlighting, and code completion and not WYSIWYG editing.
+
+Generally, the editor support is fairly mature for both products.
+The lack of WYSIWYG editing in the case of JINJA is not a significant drawback because of the main focus area supporting templates which then are used from program code.
+
+== Debug Support
+
+|===
+|Jamal |JINJA
+
+| Interactive Web-based React.js debugger, trace
+| trace
+
+|===
+
+Jamal supports a debugger interface, and there is a web-based debugger implemented in React.js.
+Using that, you can interactively debug and execute the Jamal evaluation step by step.
+
+It is also possible to generate an XML trace file that will contain all macro evaluations hierarchically.
+The format XML was selected because it has a tree structure supporting the hierarchical nature of the macro evaluation, and it also has superb editor support in different editors.
+
+JINJA cannot be debugged interactively, but has extensive tracing facility.

@@ -1,0 +1,52 @@
+= Jamal Dockerization
+{%@snip:xml pom=../../pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+{%@define fileFormat=`$name`%}\
+{%@define file(x)=`x`%}\
+This directory contains the source code to create and publish Jamal to Docker Hub.
+To run the build of the container, you need the files
+
+* {%@file build.sh%}, and
+* {%@file Dockerfile%}.
+
+The Dockerfile is used to build the container, and the build.sh script is used to run the build.
+
+== Running the Build
+
+To run the build, you need the whole project directory, not only the subproject.
+The container building will copy and fetch files from different parts of the project.
+The project also has to be built with the command:
+
+   mvn clean package
+
+so that the zip file containing all the classpath dependencies for the command-line version of Jamal are available.
+The build script explicitly depends on the root project {%file pom.xm%} file.
+It uses the pom.xml to retrieve the version of Jamal to build the container with.
+
+The build script extracts the JAR files into the {%file build/lib%} directory.
+After that, it creates two shell scripts.
+
+* {%file jamal%} is the command-line version of Jamal for the container
+* {%file jamal_local%} is the command-line version of Jamal for local use
+
+The difference is that the classpath definition in
+
+* the local version uses {%file build/lib%} as directory name relative to the current directory, while
+* in the container version, it uses {%file /build/lib%} as the directory name.
+
+During the execution the file {%@file test.adoc.jam%} is converted to {%file test1.adoc%} and compared with the existing {%@file test.adoc%} file.
+If the two files are different, the build aborts.
+If they are the same, the build continues and creates the container.
+
+The container name is `jamal` and the tag is the version of Jamal.
+When the container is ready, the test is executed again, but this time using the container version of Jamal.
+
+The final step is to display how to push the container to Docker Hub.
+
+== Using the docker version of Jamal
+
+To execute Jamal from the container, you should execut ethe command
+
+   docker run --rm -v $(pwd):/workspace verhas/jamal:{%VERSION%} jamal_command_line_arguments
+
+to work on files that are in the current working directory.

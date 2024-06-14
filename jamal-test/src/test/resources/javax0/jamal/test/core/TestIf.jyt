@@ -2,6 +2,10 @@ Empty string is evaluated false:
   Input: '{@if || this is not the output| this is the output}'
   Output: ' this is the output'
 
+Input evaluates if flag eval is used:
+  Input: '{@define a=true}{@if [eval]|{a}| this is the output| this is not the output}'
+  Output: ' this is the output'
+
 Content with spaces only is false:
   Input: '{@if |   | this is not the output| this is the output}'
   Output: ' this is the output'

@@ -273,6 +273,11 @@ The library provides macros that can load Java Built-in Macros from Maven artifa
 
 For further information read the link:../jamal-sql/README.adoc[documentation] of the module.
 
+===  `xls`
+
+For further information read the link:../jamal-xls/README.adoc[documentation] of the module.
+
+
 
 
 

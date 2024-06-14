@@ -24,7 +24,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-mock</artifactId>
-    <version>2.5.0-SNAPSHOT</version>
+    <version>2.6.1-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -49,11 +49,13 @@ You have to define the name of the macro you want to mock and the output.
 
 [title=simple mock]
 ====
+.Jamal source
 [source]
 ----
 {@mock (macro=w)ajaja}{@w}
 ----
 outputs
+.output
 [source]
 ----
 ajaja
@@ -69,11 +71,13 @@ The mocks are only available on the current scope.
 
 [title=mock locality]
 ====
+.Jamal source
 [source]
 ----
 {#ident {@mock (macro=comment)comment is overridden}{@comment}}{@comment is not overridden here}
 ----
 outputs
+.output
 [source]
 ----
 comment is overridden
@@ -89,11 +93,13 @@ These responses will be used in the other they are defined.
 
 [title=repeated mock]
 ====
+.Jamal source
 [source]
 ----
 {@mock (macro=ww)1}{@mock (macro=ww)2}{@ww}{@ww}
 ----
 outputs
+.output
 [source]
 ----
 12
@@ -108,11 +114,13 @@ If you use a mock more times it has defined values it will result syntax error.
 
 [title=mock exhausted]
 ====
+.Jamal source
 [source]
 ----
 {@try! {@mock (macro=z)1}{@z}{@z}}
 ----
 outputs
+.output
 [source]
 ----
 Mock z has exhausted after 1 uses.
@@ -127,6 +135,7 @@ It will simply use the original macro.
 
 [title=mock exhausted]
 ====
+.Jamal source
 [source]
 ----
 {@mock (macro=ident)exhausted}\
@@ -134,6 +143,7 @@ It will simply use the original macro.
 {@ident whatever is here, mocked} {@ident second time also mocked} {@ident are not mocked anymore}
 ----
 outputs
+.output
 [source]
 ----
 exhausted macros are not mocked anymore
@@ -148,11 +158,13 @@ If you want to use a mock multiple times resulting the same value you can use th
 
 [title=mock repeated]
 ====
+.Jamal source
 [source]
 ----
 {@mock (macro=w repeat=2)A}{@w}{@w}
 ----
 outputs
+.output
 [source]
 ----
 AA
@@ -167,11 +179,13 @@ In addition to the repeat option it is also possible to use the `infinite` optio
 
 [title=mock infinite]
 ====
+.Jamal source
 [source]
 ----
 {@mock (macro=w infinite)X}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}{@w}
 ----
 outputs
+.output
 [source]
 ----
 XXXXXXXXX
@@ -188,6 +202,7 @@ If there are more than one mock that would match the input then the one first de
 
 [title=mock infinite]
 ====
+.Jamal source
 [source]
 ----
 {@mock (macro=q when=".*bee.*")bee}{@comment defined first, but used second}
@@ -196,6 +211,7 @@ If there are more than one mock that would match the input then the one first de
 {@q there is a bee}
 ----
 outputs
+.output
 [source]
 ----
 apple
@@ -256,6 +272,7 @@ After that the macro `comment` is mocked again, as the mocking of `mock` is exha
 
 [title=Mocking `mock`]
 ====
+.Jamal source
 [source]
 ----
 {@mock (macro=mock)mock the mock once}{@mock (macro=ident)}{@mock (macro=comment)this is a comment}
@@ -263,6 +280,7 @@ After that the macro `comment` is mocked again, as the mocking of `mock` is exha
 {#comment mocked, does not matter what I write here}
 ----
 outputs
+.output
 [source]
 ----
 mock the mock once

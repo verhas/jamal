@@ -83,7 +83,7 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 
 * `OK`  `MAVEN_DOWNLOADER` `1.1.0` 
 
-* `OK`  `SOURCE_BUDDY` `2.5.1` 
+* `*[red]#NO#*`  `SOURCE_BUDDY` `2.5.1` `*[red]#upgrade to 2.5.3#*`
 
 * `OK`  `MAVEN_CORE_VERSION` `4.0.0-beta-3` 
 

@@ -15,7 +15,7 @@ on the help screen and also no option is documented that does not exist
 With the command line version of Jamal you can convert files processing the Jamal meta markup.
 You can process a single file or multiple files traversing in a directory structure.
 
-To convert a single file you simply have to specify the input and the output file:
+To convert a single file, you simply have to specify the input and the output file:
 
 {%sample/ jamal input output %}
 

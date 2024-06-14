@@ -299,6 +299,11 @@ The library provides macros that can load Java Built-in Macros from Maven artifa
 
 {%further sql%}
 
+=== {%#block {%depCounter%}%} `xls`
+
+{%further xls%}
+
+
 {%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more%}
 
 

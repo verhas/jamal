@@ -34,7 +34,7 @@ When no options are specified the `test` is true, if
 The literal `false` is false using any combination of upper and lower case letters with or without surrounding spaces.
 
 The evaluation of the test string can be modified using options.
-There are  11 options.
+There are 12 options.
 
 
 The first three options are "boolean" options.
@@ -130,6 +130,9 @@ The options
 test that the string given as the first parameter is a defined user defined macro, a locally defined macro, or a globally defined macro.
 A macro is locally defined if it was defined in the same scope where the `if` is used.
 
+The option
+
+* `eval` aliased as `evaluate` will evaluate the test string before assessing it as a boolean value.
 
 The following examples show a few cases, as demonstrations:
 
@@ -165,6 +168,7 @@ The following examples show a few cases, as demonstrations:
 {@if [greaterThan=13 not]/13/true/false}=true 13 is not greater than 13, it is the same logic as the previous
 {@if [lessThan=13 equals=14]/13/true/false}=false 13 is not less than 13 and does not equal 14
 {@if [lessThan=13 and largerThan=2]/12/true/false}=true 12 is in the range (2,13)
+{@if [eval]/{a}/true/false}=true {a} is in the range (2,13) as _a_ is defined to be 12
 ----
 
 
