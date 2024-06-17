@@ -26,13 +26,13 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.7.0` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.2.5` 
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.3.0` 
 
 * `OK`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.1` 
 
 * `OK`  `APPASSEMBLER_PLUGIN_VERSION` `2.1.0` 
 
-* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.6.1` 
+* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.7.0` 
 
 * `OK`  `JUPITER_VERSION` `5.11.0-M2` 
 
@@ -83,7 +83,7 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 
 * `OK`  `MAVEN_DOWNLOADER` `1.1.0` 
 
-* `*[red]#NO#*`  `SOURCE_BUDDY` `2.5.1` `*[red]#upgrade to 2.5.3#*`
+* `OK`  `SOURCE_BUDDY` `2.5.3` 
 
 * `OK`  `MAVEN_CORE_VERSION` `4.0.0-beta-3` 
 
@@ -98,3 +98,5 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 * `OK`  `H2_VERSION` `2.2.224` 
 
 * `OK`  `JSQLPARSER_VERSION` `4.9` 
+
+* `OK`  `JSOUP_VERSION` `1.17.2` 

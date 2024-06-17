@@ -76,3 +76,4 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 〔CHECK :MARKDOWN_TO_ASCIIDOC:io/github/markdown-asciidoc/markdown-to-asciidoc〕
 〔CHECK :H2_VERSION:com/h2database/h2〕
 〔CHECK :JSQLPARSER_VERSION:com/github/jsqlparser/jsqlparser〕
+〔CHECK :JSOUP_VERSION:org/jsoup/jsoup〕
