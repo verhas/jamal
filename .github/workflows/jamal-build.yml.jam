@@ -25,7 +25,6 @@ name: Java CI with Maven
 jobs:
   {%job/ubuntu-latest%}
   {%job/windows-latest%}
-  {%job/windows-2022%}
   {%job/macos-latest%}
 %}
 {%@yaml:output (copy) top%}
