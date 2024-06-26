@@ -27,6 +27,5 @@ jobs:
   {%job/windows-latest%}
   {%job/windows-2022%}
   {%job/macos-latest%}
-  {%job/macos-11%}
 %}
 {%@yaml:output (copy) top%}

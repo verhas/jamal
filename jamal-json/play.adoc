@@ -1,3 +1,40 @@
+[WARNING]
+--
+* There is no built-in macro with the id 'json:add'; did you mean '@json:set', '@json:get'? at /Users/verhasp/github/jamal/jamal-json/play.adoc.jam/6:11
+--
+{@json:define docker={
+version: "3.6",
+services: ["http","https","jamal-debug"],
+zilch: { "nada": "nothing" }
+}}\
 
-
-{"zilch":{"nada":"nothing"},"services":["http","https","jamal-debug",{"com.javax0.jamal.sizing":1000,"com.javax0.jamal.title":"Non-relational DB Instance","com.javax0.jamal.nodeType":"primary"}],"version":"3.6"}
+[WARNING]
+--
+* There is no built-in macro with the id 'json:add'; did you mean '@json:set', '@json:get'? at /Users/verhasp/github/jamal/jamal-json/play.adoc.jam/6:11
+--
+{@json:add to=docker./services flat
+[{
+"com.javax0.jamal.title": "Non-relational DB Instance",
+"com.javax0.jamal.sizing": 1000,
+"com.javax0.jamal.nodeType": "primary"
+}]
+}
+{docker}
+[WARNING]
+--
+* There is no built-in macro with the id 'json:add'; did you mean '@json:set', '@json:get'? at /Users/verhasp/github/jamal/jamal-json/play.adoc.jam/6:11
+--
+[source]
+----
+There is no built-in macro with the id 'json:add'; did you mean '@json:set', '@json:get'? at /Users/verhasp/github/jamal/jamal-json/play.adoc.jam/6:11
+	javax0.jamal.api.BadSyntaxAt(when:112)
+	javax0.jamal.engine.util.MacroQualifier(getMacro:80)
+	javax0.jamal.engine.util.MacroQualifier(<init>:50)
+	javax0.jamal.engine.Processor(processMacro:314)
+	javax0.jamal.engine.Processor(process:202)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
+sed -i.bak  '' /Users/verhasp/github/jamal/jamal-json/play.adoc.jam
+----
