@@ -1,0 +1,172 @@
+= Jamal REST module
+
+
+
+== Introduction
+
+This module implements one macro that can perform an HTTP(s) request and return the response.
+The simplest way is to use one of the command aliases to get a web page:
+
+.Jamal source
+[source]
+----
+{@http:get (cache=google.cache.txt) http://www.google.com}
+----
+
+the macro `http:get` is an alias for the `rest` macro with the method set to `GET`.
+The output will be:
+
+.output
+[source]
+----
+<!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="de-CH"><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"><meta content="/images/branding/googleg/1x/googleg_standard_color_128dp.png" itemprop="image"><title>Google</title><script
+...
+----
+__(The end of the output was cut off.)__
+
+
+== Specification
+
+Technically the macros
+
+* ``{@rest ...}``
+
+* ``{@http:get ...}``
+
+* ``{@http:post ...}``
+
+* ``{@http:put ...}``
+
+* ``{@http:delete ...}``
+
+* ``{@http:head ...}``
+
+* ``{@http:options ...}``
+
+* ``{@http:trace ...}``
+
+
+
+are implemented as a single macro with different names.
+The `rest` macro is the most general form.
+
+The macro(s) can be controlled using parameter options (parops) between `(` and `)`.
+The input of the macro is the either the URL or the content to be sent to the server.
+
+The URL can also be specified as a parameter, and this is the only possibility if the method allows content to be sent to the server.
+However, if the name of the macro is
+ `http:get`, `http:delete`, `http:head`, `http:options`, `http:trace` then the input of the macro is ignored if the parameter `url` is specified.
+
+The parameter options are:
+
+
+        * `url`
+         specifies the url.
+         This parameter is mandatory unless the macro is used as a GET like macro.
+         In that case, the URL can be the content of the macro.
+        
+        * `header`
+         can add one or more headers.
+         The headers are specified as a list of strings in the format 'name: value'.
+         The header name must not be empty or `Content-Type`.
+         To specify the content type you should use the `ContentType` parameter.
+        * `ContentType`
+         can specify the content type of the content sent to the server.
+         It must not be specified when the method is `GET`, `HEAD`, `OPTIONS`, `TRACE`, or `DELETE`.
+        * `to`
+         can specify the name of a user defined macro that will store the result of the query.
+         After the query is executed, the macro can be used to retrieve the content of the response or the status.
+         When this parameter is specified, the return value of the macro is an empty string.
+         In other cases, the return value is the content of the response.
+        * `cache`
+         Can specify a cache file where the result of the query is stored.
+         If the cache file exists and is not expired, then the content of the cache file is returned.
+        * `ttl`
+         can specify the time to live of the cache file in seconds.
+         The default value is `-1` that means the cache never expires.
+
+
+In addition to these parameter options the name of the method can be specified as a parameter if the macro was used specifying the name `rest`.
+The possible methods are:
+
+        GET,
+        POST,
+        PUT,
+        DELETE,
+        HEAD,
+        OPTIONS,
+        TRACE
+
+
+The result of the macro is the response content, unless the parameter option `to` is specified.
+
+Error handling is also different when the `to` parameter is used and when not.
+If the response code is not `2XX` the an error occurres if the `to` parameter is not specified.
+If the `to` parameter is specified then the response code and the response is stored in the macro and can later be queried as described in the next section.
+
+== Result Stored
+
+When the result is stored in a user defined macro, the response along the response status is stored in the macro.
+
+.Jamal source
+[source]
+----
+{@http:get (to=gugli cache=google.cache.txt) http://www.google.com}
+{gugli}
+----
+
+
+
+will result the same output as the first example.
+If the response code was not `2XX` then using the macro `gugli` will result in an error.
+To handle errors the macro can be used with either the
+
+* `status` to get the numerical status as a string on three characters, or
+
+* `response` to get the response content, even if there was an error.
+
+For example
+
+.Jamal source
+[source]
+----
+{@http:get (to=gugli cache=google.cache.txt) http://www.google.com}
+{gugli status}
+----
+
+will result
+
+.output
+[source]
+----
+200
+----
+
+
+and
+
+.Jamal source
+[source]
+----
+{@http:get (to=gh cache=github128645362.cache.txt) https://github.com/128645362}
+{gh status}
+{gh response}
+----
+
+it will result in (skipping some of the lines and the end of the output)
+
+.output
+[source]
+----
+ 1 404
+17 
+18   <head>
+19     <meta charset="utf-8">
+20   <link rel="dns-prefetch" href="https://github.githubassets.com">
+21   <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
+22   <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com">
+
+...
+----
+
+In this case the response is retuned by the second use of the maco, when the parameter `response` was used, even though the error code is 404.

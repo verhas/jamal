@@ -1,5 +1,5 @@
 
-# 1 Sonett 18
+## 1 Sonett 18
 
 Should I cmpr u 2 a smmr?s day?
 
@@ -32,16 +32,16 @@ So lng will this pm lv,
 & it will give life 2 u.
 
 
-# 2
+## 2
 
 This is the chapter 2.
 
-# 3
+## 3
 
 
-## 3.1
+### 3.1
 
 
-# 4
+## 4
 
 what should ÁJ dûÕ?

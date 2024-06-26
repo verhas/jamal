@@ -228,7 +228,7 @@ public class TestThat implements AutoCloseable {
         final var result = resultsClose();
         if (dumpYaml) {
             var title = getTitle();
-            if (title.length() == 0) {
+            if (title.isEmpty()) {
                 title = input + " -> " + result;
             }
             System.out.println(yamlStringify(title) + ":");
@@ -416,7 +416,7 @@ public class TestThat implements AutoCloseable {
      */
     private static String myQuote(String string) {
         //noinspection RegExpSingleCharAlternation,RegExpRedundantEscape
-        return string.replaceAll("(\\*|\\.|\\\\|\\(|\\)|\\{|\\}|\\||\\+)", "\\\\$1");
+        return string.replaceAll("(\\$|\\*|\\.|\\\\|\\(|\\)|\\{|\\}|\\||\\+)", "\\\\$1");
     }
 
     private static Set<String> collect(final Throwable t) {

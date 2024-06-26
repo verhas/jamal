@@ -1,5 +1,5 @@
 {@counter:define hierarchical id=chapter}
-# {chapter} Sonett 18
+## {chapter} Sonett 18
 
 Should I cmpr u 2 a smmr’s day?
 
@@ -32,17 +32,17 @@ So lng will this pm lv,
 & it will give life {chapter} u.
 
 
-# {chapter last}
+## {chapter last}
 
 This is the chapter {chapter last}.
 
-# {chapter}
+## {chapter}
 
 {chapter open}
-## {chapter}
+### {chapter}
 {chapter close}
 
-# {chapter}
+## {chapter}
 
 what should ÁJ dűŐ?
 

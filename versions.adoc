@@ -32,7 +32,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `APPASSEMBLER_PLUGIN_VERSION` `2.1.0` 
 
-* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.7.0` 
+* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.7.1` 
 
 * `OK`  `JUPITER_VERSION` `5.11.0-M2` 
 

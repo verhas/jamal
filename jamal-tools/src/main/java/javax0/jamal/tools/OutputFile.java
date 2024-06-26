@@ -15,8 +15,15 @@ import java.util.function.Function;
 /**
  * Write the Jamal output to a file.
  * <p>
- * The caller can create the object specifying the character set and the writeable flag. The default character set is
- * UTF-8 and the default writeable flag is {@code false}. (Output is read only to prevent accidental editing.)
+ * The class should be used by Jamal embedding to write the output file.
+ * The class has a default constructor if the output is always UTF-8.
+ * Another constructor can directly define the character set.
+ * The recommended use is the third constructor that gets a {@code processor} as an argument.
+ * <p>
+ * When this constructor is used the code fetches the value of the user defined macros {@code output:charset} and
+ * {@code output:writable} to set the character set and the writeable flag. The character set is used to encode the
+ * output string to bytes when writing the file. The writeable flag is used to set the file to read/write before writing
+ * and set it back to read only after writing. This is to avoid accidental modification of the file.
  */
 public class OutputFile {
 

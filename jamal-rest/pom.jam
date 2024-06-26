@@ -1,0 +1,29 @@
+{@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
+{@define reads($module,$reads)=--add-reads $module=$reads}
+
+{@import ../version.jim}
+{project jamal rest}
+{GAV ::jamal-rest:{VERSION}}
+{parent :{GROUPID}:jamal-parent}
+{description rest module for Jamal}
+    {@define openForTests=
+        {opens/rest/rest}\
+        {reads/jamal.rest/jdk.httpserver}\
+    }
+    {build|{plugins| {@include ../plugins.jim}}}
+
+    {dependencies
+       {@for MODULE in (api,tools,engine)=
+         {dependency|{GROUPID}|jamal-MODULE}}
+      {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
+      {dependency |{GROUPID}|jamal-json|{VERSION}|test}
+      {dependency |{GROUPID}|jamal-assertions|{VERSION}|test}
+      {dependency |{GROUPID}|jamal-snippet|{VERSION}|test}
+      {dependency|{GROUPID}|jamal-jamal||test}
+      {@for MODULE in (api,engine)=
+          {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
+      {dependency|org.json|json|{JSON_ORG_VERSION}|compile}
+    }
+
+{end project}
+{@xmlFormat}

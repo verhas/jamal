@@ -11,6 +11,7 @@
 //DEPS com.javax0.jamal:jamal-maven-load:2.6.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-sql:2.6.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-xls:2.6.1-SNAPSHOT
+//DEPS com.javax0.jamal:jamal-rest:2.6.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-engine:2.6.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-api:2.6.1-SNAPSHOT
 //DEPS com.javax0.jamal:jamal-tools:2.6.1-SNAPSHOT

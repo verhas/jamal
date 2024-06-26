@@ -678,6 +678,8 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-xls`
 
+* `jamal-rest`
+
 * `jamal-test`
 
 * `jamal-debug`

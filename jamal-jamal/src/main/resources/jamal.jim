@@ -18,6 +18,15 @@ code}
 ----
 }
 
+{@define numberedOutput=.output
+[source]
+----
+{#numberLines format="%2d "
+{#trimLines trimVertical
+{!#output {lastCode}}}}
+----
+}
+
 {@define untrimmedSample(code)={@define :lastCode=code}[source]
 ----
 {@trimLines verticalTrimOnly

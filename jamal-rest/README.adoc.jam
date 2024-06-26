@@ -1,0 +1,114 @@
+= Jamal REST module
+{%@import res:jamal.jim%}\
+
+{%@snip:collect from=src/main/java%}
+
+== Introduction
+
+This module implements one macro that can perform an HTTP(s) request and return the response.
+The simplest way is to use one of the command aliases to get a web page:
+
+{%sample/
+{@http:get (cache=google.cache.txt) http://www.google.com}
+%}
+
+the macro `http:get` is an alias for the `rest` macro with the method set to `GET`.
+The output will be:
+
+{%#string:substring (begin=0 end=301)|{%output%}%}
+...
+----
+__(The end of the output was cut off.)__
+
+
+== Specification
+
+Technically the macros
+
+{%#replaceLines replace="~@Macro.Name\\(\\{~" replace="~\\}\\)~" replace="~,\\s*~" \
+                replace="~\"(.*?)\"~* ``{@$1 ...}``\n\n~"
+{%@snip Rest%}%}
+
+are implemented as a single macro with different names.
+The `rest` macro is the most general form.
+
+The macro(s) can be controlled using parameter options (parops) between `(` and `)`.
+The input of the macro is the either the URL or the content to be sent to the server.
+
+The URL can also be specified as a parameter, and this is the only possibility if the method allows content to be sent to the server.
+However, if the name of the macro is
+{%#replaceLines replace="/me\\.equals\\(/"\
+                replace="/\\)/"\
+                replace="/;/"\
+                replace="/\\s+\\|\\|/,/"\
+                replace="/\"/`/"\
+                replace="/^.*=/"
+{%@snip GetLike%}%} then the input of the macro is ignored if the parameter `url` is specified.
+
+The parameter options are:
+
+{%#replaceLines replace="/final\\s+var.*?\"(\\w+)\".*;/* `$1`/"\
+                replace="/final\\s+var.*;//"\
+                replace="~//~"
+
+{%@snip Rest_Parops%}%}
+
+In addition to these parameter options the name of the method can be specified as a parameter if the macro was used specifying the name `rest`.
+The possible methods are:
+
+{%@snip Method%}
+
+The result of the macro is the response content, unless the parameter option `to` is specified.
+
+Error handling is also different when the `to` parameter is used and when not.
+If the response code is not `2XX` the an error occurres if the `to` parameter is not specified.
+If the `to` parameter is specified then the response code and the response is stored in the macro and can later be queried as described in the next section.
+
+== Result Stored
+
+When the result is stored in a user defined macro, the response along the response status is stored in the macro.
+
+{%sample/
+{@http:get (to=gugli cache=google.cache.txt) http://www.google.com}
+{gugli}
+%}
+
+{%#comment only to evaluate and create an error if something is wrong
+{%output%}
+%}
+
+will result the same output as the first example.
+If the response code was not `2XX` then using the macro `gugli` will result in an error.
+To handle errors the macro can be used with either the
+
+* `status` to get the numerical status as a string on three characters, or
+
+* `response` to get the response content, even if there was an error.
+
+For example
+
+{%sample/
+{@http:get (to=gugli cache=google.cache.txt) http://www.google.com}
+{gugli status}
+%}
+
+will result
+
+{%output%}
+
+and
+
+{%sample/
+{@http:get (to=gh cache=github128645362.cache.txt) https://github.com/128645362}
+{gh status}
+{gh response}
+%}
+
+it will result in (skipping some of the lines and the end of the output)
+
+{%#ranges (lines=1..4,20..25)
+{%numberedOutput%}%}
+...
+----
+
+In this case the response is retuned by the second use of the maco, when the parameter `response` was used, even though the error code is 404.
