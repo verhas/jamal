@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.sql/javax0.jamal.sql=ALL-UNNAMED
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>

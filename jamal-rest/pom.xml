@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.rest/javax0.jamal.rest=ALL-UNNAMED        --add-reads jamal.rest=jdk.httpserver    
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>

@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.debug/javax0.jamal.debugger=ALL-UNNAMED
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>
@@ -55,13 +56,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.0-M1</version>
+            <version>5.11.0-M2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.11.0-M1</version>
+            <version>5.11.0-M2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

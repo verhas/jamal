@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.xls/javax0.jamal.xls=ALL-UNNAMED
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>

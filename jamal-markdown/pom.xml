@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.markdown/javax0.jamal.markdown=ALL-UNNAMED
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>

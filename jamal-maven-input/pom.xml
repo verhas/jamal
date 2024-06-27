@@ -30,6 +30,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.maven.input/javax0.jamal.maven.input=ALL-UNNAMED
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>

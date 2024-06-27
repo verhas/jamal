@@ -277,6 +277,10 @@ For further information read the link:../jamal-sql/README.adoc[documentation] of
 
 For further information read the link:../jamal-xls/README.adoc[documentation] of the module.
 
+===  `rest`
+
+For further information read the link:../jamal-rest/README.adoc[documentation] of the module.
+
 
 
 

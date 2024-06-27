@@ -49,7 +49,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.asciidoc/javax0.jamal.asciidoc=ALL-UNNAMED
-    
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>
@@ -115,6 +115,10 @@
         <dependency>
             <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-xls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-rest</artifactId>
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>

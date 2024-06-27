@@ -11,5 +11,5 @@ extensions>
   extension>
     groupId>com.javax0.jamal
     artifactId>jamal-maven-extension
-    version>{RELEASE}
+    version>2.6.1-SNAPSHOT
 }{@xmlFormat}

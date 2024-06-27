@@ -5,15 +5,13 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
-import org.apache.maven.model.io.ModelParseException;
 import org.apache.maven.model.io.ModelReader;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -24,7 +22,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -35,47 +32,18 @@ import java.util.stream.Collectors;
 /**
  * This is the extension class that implements the maven macro extension
  */
-@Named
-@Singleton
+@Component(role = ModelProcessor.class)
 public class CustomModelProcessor implements ModelProcessor {
-    @Inject
+    @Requirement
     private ModelReader modelReader;
 
-    @Deprecated
     @Override
     public File locatePom(File projectDirectory) {
-        Path path = locatePom(projectDirectory != null ? projectDirectory.toPath() : null);
-        return path != null ? path.toFile() : null;
-    }
-    @Override
-    public Path locatePom(Path projectDirectory) {
-        return projectDirectory != null ? projectDirectory : Paths.get(System.getProperty("user.dir"));
-    }
 
-    @Deprecated
-    @Override
-    public File locateExistingPom(File project) {
-        Path path = locateExistingPom(project != null ? project.toPath() : null);
-        return path != null ? path.toFile() : null;
-    }
+        convertExtensionsJam(projectDirectory);
 
-    @Override
-    public Path locateExistingPom(Path project) {
-        if (project == null || Files.isDirectory(project)) {
-            project = locatePom(project);
-        }
-
-        convertExtensionsJam(project);
-        jam2Xml(project, "pom", false);
-
-        if (Files.isDirectory(project)) {
-            Path pom = project.resolve("pom.xml");
-            return Files.isRegularFile(pom) ? pom : null;
-        } else if (Files.isRegularFile(project)) {
-            return project;
-        } else {
-            return null;
-        }
+        jam2Xml(projectDirectory, "pom", false);
+        return new File(projectDirectory, "pom.xml");
     }
 
     /**
@@ -84,14 +52,15 @@ public class CustomModelProcessor implements ModelProcessor {
      * Another side effect is the error report, which does happen if the extensions.jam has syntax errors but it does not stop the compilation.
      * <p>
      * The implementation creates a new thread.
-     * Since this task is started only once for a built, which is usually a few minutes typically, there is no need to use any executor service or virtual thread.
+     * Since this task is started only once for a built, which is usually a few minutes typically, there is no need to use any executor service.
      *
-     * @param project is the root of the project directory provided by Jamal
+     * @param projectDirectory is the root of the project directory provided by Jamal
      */
-    private void convertExtensionsJam(final Path project) {
+    private void convertExtensionsJam(final File projectDirectory) {
+        createTouchFile(projectDirectory);
         final var t = new Thread(() -> {
-            final var dotMvnDir = project.resolve(".mvn");
-            if (Files.exists(dotMvnDir)) {
+            final var dotMvnDir = new File(projectDirectory, ".mvn");
+            if (dotMvnDir.exists()) {
                 jam2Xml(dotMvnDir, "extensions", true);
             }
         });
@@ -100,11 +69,36 @@ public class CustomModelProcessor implements ModelProcessor {
         t.start();
     }
 
-    private void jam2Xml(final Path directory, final String sourceName, final boolean optional) {
-        var jamFile = directory.resolve( sourceName + ".xml.jam");
-        if (!Files.exists(jamFile)) {
-            jamFile = directory.resolve( sourceName + ".jam");
-            if (!Files.exists(jamFile)) {
+    /**
+     * Create a touch file in the .mvn directory to signal that the extension executes.
+     * <p>
+     * This helps test the extension that it is compatible and runs with the actual Maven version.
+     * It is a piece of code that gets into production code, so it is not nice, but seems fairly harmless.
+     * <p>
+     * The unit test of the extension checks that the touch file is there and that the time stamp is recent.
+     * <p>
+     * The touch file must exist in the .mvn directory and its name must be 'touch'.
+     * It is NOT created if it does not exist, not to create garbage in real life projects.
+     * <p>
+     * This functionality is not a guaranteed feature of the extension; therefore, it is not documented in the README.
+     *
+     * @param projectDirectory is the root of the project directory provided by Jamal
+     */
+    private static void createTouchFile(File projectDirectory) {
+        final var touchFile = new File(projectDirectory, ".mvn/touch");
+        if (touchFile.exists()) {
+            try {
+                Files.writeString(Paths.get(touchFile.getAbsolutePath()), System.currentTimeMillis() + "\n", StandardCharsets.UTF_8);
+            } catch (IOException ignore) {
+            }
+        }
+    }
+
+    private void jam2Xml(final File directory, final String sourceName, final boolean optional) {
+        File jamFile = new File(directory, sourceName + ".xml.jam");
+        if (!jamFile.exists()) {
+            jamFile = new File(directory, sourceName + ".jam");
+            if (!jamFile.exists()) {
                 if (optional) {
                     return;
                 } else {
@@ -114,7 +108,7 @@ public class CustomModelProcessor implements ModelProcessor {
         }
         Processor processor = new javax0.jamal.engine.Processor();
 
-        final String fileName = jamFile.toFile().getAbsolutePath();
+        final String fileName = jamFile.getAbsolutePath();
         final String xml;
         try {
             xml = processor.process(FileTools.getInput(fileName, processor));
@@ -128,7 +122,7 @@ public class CustomModelProcessor implements ModelProcessor {
             throw new RuntimeException("Cannot format the file " + fileName + "\n" + dumpException(e), e);
         }
 
-        final File output = directory.resolve( sourceName + ".xml").toFile();
+        final File output = new File(directory, sourceName + ".xml");
         // noinspection ResultOfMethodCallIgnored
         output.setWritable(true);
         try (final OutputStream os = new FileOutputStream(output)) {
@@ -173,9 +167,7 @@ public class CustomModelProcessor implements ModelProcessor {
         tf.setOutputProperty(OutputKeys.INDENT, "yes");
         Writer out = new StringWriter();
         tf.transform(new DOMSource(doc), new StreamResult(out));
-        return Arrays.stream(out.toString().split(System.lineSeparator()))
-                .filter(s -> !s.trim().isEmpty())
-                .collect(Collectors.joining(System.lineSeparator()));
+        return Arrays.stream(out.toString().split(System.lineSeparator())).filter(s -> s.trim().length() > 0).collect(Collectors.joining(System.lineSeparator()));
     }
 
     @Override
@@ -193,10 +185,5 @@ public class CustomModelProcessor implements ModelProcessor {
     @Override
     public Model read(File input, Map<String, ?> options) throws IOException {
         return read(new FileInputStream(input), options);
-    }
-
-    @Override
-    public Model read(Path input, Map<String, ?> options) throws IOException, ModelParseException {
-        return read(input.toFile(),options);
     }
 }

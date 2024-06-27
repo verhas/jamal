@@ -25,7 +25,7 @@ public class TestRest {
     @BeforeEach
     public void setUp() {
 
-        port = 8000;
+        port = 8001;
         while (true) {
             try {
                 server = HttpServer.create(new InetSocketAddress(port), 0);

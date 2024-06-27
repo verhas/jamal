@@ -32,6 +32,7 @@
                     <argLine>
                 --add-opens jamal.snippet/javax0.jamal.snippet=ALL-UNNAMED
                           --add-opens jamal.snippet/javax0.jamal.documentation=ALL-UNNAMED
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>
@@ -102,7 +103,7 @@
         <dependency>
             <groupId>com.javax0.sourcebuddy</groupId>
             <artifactId>SourceBuddy</artifactId>
-            <version>2.5.0</version>
+            <version>2.5.1</version>
         </dependency>
         <dependency>
             <groupId>com.javax0</groupId>
@@ -122,7 +123,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.11.0</version>
+            <version>5.12.0</version>
         </dependency>
     </dependencies>
 </project>

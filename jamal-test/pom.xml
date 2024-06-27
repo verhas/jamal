@@ -43,7 +43,7 @@
                           --add-opens jamal.engine/javax0.jamal.engine=jamal.snippet
                           --add-exports jamal.test/javax0.jamal.test.core=jamal.core
                           --add-exports jamal.test/javax0.jamal.test.examples=jamal.core
-    
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>

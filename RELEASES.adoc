@@ -6,7 +6,26 @@
 
 
 
+NOTE: The known bugs sections in the releases are updated after the release.
+Plese consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
+
 == https://github.com/verhas/jamal/tree/2.6.0[2.6.0]
+
+=== Known Bugs
+
+* This release does not work as a Maven Extension.
+The maven extensions started to use the pre-release Maven core dependecies of `4.0.0`.
+It was a mistake, but until `4.0.0-alpha-8` there was no compatibility issue.
+The Jamal extension structure was drastically changed from Maven core `4.0.0-alpha-8` to `beta` releases.
+It caused the Maven extension to fail silently.
+The extension is not invoked.
+Since the source of Jamal contains the `pom.xml` files along the source files the fact that the extension did not start was not discovered.
++
+*Workaround:* (1) Use 2.5.0 version of Jamal as a maven extension.
+If you need the features from the release 2.6.0 then.
+(2) Avoid using the extension and traspile the `pom.jam` files to `pom.xml` files using the `jamal` command-line tool or Maven plugin.
+
+=== New Features
 
 * `jrf` (reference) files now can contain comments to make them more readable.
 * `import` has a new parop `global` that makes the import global and not imported again even if the file was imported from a local scope.

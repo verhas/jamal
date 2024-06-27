@@ -18,7 +18,10 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.7.1` 
 
-* `OK`  `MAVEN_PLUGIN_API` `4.0.0-beta-3` 
+* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `4.0.0-alpha-8` `*[red]#upgrade to 4.0.0-beta-3#*`
++
+The `beta` versions of the API do not have the dependency to the some of the dependencies and needs more investigation.
+It does not work.
 
 * `OK`  `MAVEN_PLUGIN_ANNOTATIONS` `3.13.1` 
 
@@ -83,9 +86,13 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 
 * `OK`  `MAVEN_DOWNLOADER` `1.1.0` 
 
-* `OK`  `SOURCE_BUDDY` `2.5.3` 
+* `*[red]#NO#*`  `SOURCE_BUDDY` `2.5.1` `*[red]#upgrade to 2.5.3#*`
++
+Version 2.5.2 changed the name of the module.
+If we change the name of the module some tests that depend on prior versions of Jamal do not work.
+To upgrade we have to remove the dependency from the snippet module and move the dependent macros to a different module.
 
-* `OK`  `MAVEN_CORE_VERSION` `4.0.0-beta-3` 
+* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-beta-3#*`
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.2.0` 
 

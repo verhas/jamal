@@ -37,6 +37,7 @@
                 <configuration>
                     <argLine>
                 --add-opens jamal.api/javax0.jamal.api=ALL-UNNAMED
+                -XX:+EnableDynamicAgentLoading
             </argLine>
                 </configuration>
             </plugin>

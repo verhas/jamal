@@ -26,6 +26,9 @@ endif〕〕
 〔CHECK :MAVEN_GPG_PLUGIN_VERSION:org/apache/maven/plugins/maven-gpg-plugin〕
 〔CHECK :MAVEN_ASSEMBLY_PLUGIN_VERSION:org/apache/maven/plugins/maven-assembly-plugin〕
 〔CHECK :MAVEN_PLUGIN_API:org/apache/maven/maven-plugin-api〕
++
+The `beta` versions of the API do not have the dependency to the some of the dependencies and needs more investigation.
+It does not work.
 〔CHECK :MAVEN_PLUGIN_ANNOTATIONS:org/apache/maven/plugin-tools/maven-plugin-annotations〕
 〔CHECK :MAVEN_PLUGIN_PLUGIN_VERSION:org/apache/maven/plugins/maven-plugin-plugin〕
 〔CHECK :SONATYPE_PLUGIN_VERSION:org/sonatype/plugins/nexus-staging-maven-plugin〕
@@ -69,6 +72,10 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 〔CHECK :JSCRIPTBASIC_VERSION:com/scriptbasic/jscriptbasic〕
 〔CHECK :MAVEN_DOWNLOADER:com/javax0/mavenDownload/mavenDownloader〕
 〔CHECK :SOURCE_BUDDY:com/javax0/sourcebuddy/SourceBuddy〕
++
+Version 2.5.2 changed the name of the module.
+If we change the name of the module some tests that depend on prior versions of Jamal do not work.
+To upgrade we have to remove the dependency from the snippet module and move the dependent macros to a different module.
 〔CHECK :MAVEN_CORE_VERSION:org/apache/maven/maven-core〕
 〔CHECK :PLEXUS_COMPONENT_METADATA_VERSION:org/codehaus/plexus/plexus-component-metadata〕
 〔CHECK :ASM_VERSION:org/ow2/asm/asm〕
