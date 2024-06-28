@@ -25,11 +25,11 @@ Options can be abbreviated to their shortest form, which is still unambiguous.
 When an option has a value, it has to follow the option name with `=`.
 For example
 
-    jamal -jamalize version=2.5.0
-    jamal -jamalize -version=2.5.0
-    jamal -jamalize --version=2.5.0
+    jamal -jamalize version=2.7.0
+    jamal -jamalize -version=2.7.0
+    jamal -jamalize --version=2.7.0
 
-These command lines do the same: install Jamal version 2.5.0 into the `.asciidoctor/lib` directory.
+These command lines do the same: install Jamal version 2.7.0 into the `.asciidoctor/lib` directory.
 When the option has a value the prefix `-` or `--` is optional.
 
 The options are the followings:

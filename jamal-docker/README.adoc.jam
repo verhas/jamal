@@ -1,14 +1,19 @@
 = Running Jamal in a Docker Container
-
+{%@import ../version.jim%}
 This project contains files to support running Jamal in a docker container.
 
+
+NOTE: This documentation describes how you can build the container from source, and how you can run Jamal in the container.
+Building the container from the sources is only needed by the maintainers.
+You can run Jamal from the container downloading from docker hub.
+
 To run Jamal from docker, you have to issue the commands:
-{%@define CONTAINER_NAME=myContainer%}
+{%@define CONTAINER_NAME=myJamalContainer%}
 
 [source,sh]
 ----
 docker build -t {%CONTAINER_NAME%} .
-docker run  --volume .:/home/jamal/q -it {%CONTAINER_NAME%} /jamal args
+docker run  --volume $(pwd):/home/jamal/q -it {%CONTAINER_NAME%} /jamal args
 ----
 
 You can use any container name you like instead of ``{%CONTAINER_NAME%}``.
@@ -20,10 +25,39 @@ Example:
 
 [source,sh]
 ----
-docker run  --volume .:/home/jamal/q -it {%CONTAINER_NAME%} /jamal test.txt.jam test.txt
+docker run  --volume $(pwd):/home/jamal/q -it {%CONTAINER_NAME%} /jamal test.txt.jam test.txt
 ----
 
 The command above will convert the file ``test.txt.jam`` to ``test.txt``.
+
+When a release of Jamal is made, the docker image is pushed to docker hub.
+
+[source,sh]
+----
+docker login
+docker tag verhas/jamal:{%LAST_RELEASE%} verhas/jamal:latest
+docker push verhas/jamal:{%LAST_RELEASE%}
+docker push verhas/jamal
+----
+
+If you want to use this container, you can download it from docker hub.
+
+[source,sh]
+----
+docker pull verhas/jamal
+docker run  --volume $(pwd):/home/jamal/q -it verhas/jamal /jamal args
+----
+
+or use a specific version:
+
+[source,sh]
+----
+docker pull verhas/jamal:{%LAST_RELEASE%}
+docker run  --volume $(pwd):/home/jamal/q -it verhas/jamal:{%LAST_RELEASE%} /jamal args
+----
+
+NOTE: The examples use the latest release of Jamal, {%LAST_RELEASE%}.
+You can use any published version instead.
 
 == Files in the module
 

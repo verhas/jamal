@@ -7,6 +7,12 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 
 
+== Jamal version check
+
+* `OK`  `LAST_RELEASE` `2.7.0` 
+
+== Dependencies
+
 
 * `OK`  `LEVENSHTEIN_VERSION` `1.0.0` 
 
@@ -27,7 +33,7 @@ It does not work.
 
 * `OK`  `MAVEN_PLUGIN_PLUGIN_VERSION` `3.13.1` 
 
-* `OK`  `SONATYPE_PLUGIN_VERSION` `1.7.0` 
+* `*[red]#NO#*`  `SONATYPE_PLUGIN_VERSION` `1.6.14` `*[red]#upgrade to 1.7.0#*`
 
 * `OK`  `SUREFIRE_PLUGIN_VERSION` `3.3.0` 
 

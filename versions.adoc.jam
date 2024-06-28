@@ -20,6 +20,11 @@ if not 〔TEST〕 then
 << "`*[red]#upgrade to 〔RELEASE〕#*`"
 endif〕〕
 
+== Jamal version check
+〔CHECK :LAST_RELEASE:com/javax0/jamal/jamal-api〕
+
+== Dependencies
+
 〔CHECK :LEVENSHTEIN_VERSION:com/javax0/levenshtein〕
 〔CHECK :MAVEN_COMPILER_PLUGIN_VERSION:org/apache/maven/plugins/maven-compiler-plugin〕
 〔CHECK :MAVEN_JAVADOC_PLUGIN_VERSION:org/apache/maven/plugins/maven-javadoc-plugin〕

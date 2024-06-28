@@ -24,7 +24,7 @@
     {build {plugins  {@include ../plugins.jim}}}
 
     {dependencies
-        {@for MODULE in (api,tools,engine,core,yaml,json,snippet,jamal,debug)=
+        {@for MODULE in (api,tools,engine,core,prog,yaml,json,snippet,jamal,debug)=
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency|{GROUPID}|jamal-testsupport||test}
         {@for MODULE in (api,engine,params)=

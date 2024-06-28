@@ -52,7 +52,9 @@ TOC
 |image:{jamal_home}actions/workflows/jamal-build.yml/badge.svg[Java CI with Maven,link={jamal_home}actions/workflows/jamal-build.yml]
 |===
 
-
+NOTE: This is the latest development documentation.
+To see the documentation of a release, you have to follow the link in the documentation link:RELEASES.adoc[`RELEASES.adoc`].
+If you want to read the latest release, please visit link:{jamal_home}/tree/v2.7.0[Jamal2.7.0]
 
 
 
@@ -85,7 +87,7 @@ Having that, you can issue the command:
 
 [source]
 ----
-mvn com.javax0.jamal:jamal-maven-plugin:2.7.0:jamal
+mvn com.javax0.jamal:jamal-maven-plugin:2.7.1-SNAPSHOT:jamal
 ----
 
 if you have a `pom.xml` file in your directory.
@@ -108,7 +110,7 @@ Create a `.mvn` directory with an `extensions.xml` file in your project root.
     <extension>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-maven-extension</artifactId>
-        <version>2.7.0</version>
+        <version>2.7.1-SNAPSHOT</version>
     </extension>
 </extensions>
 ----

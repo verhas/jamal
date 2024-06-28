@@ -2,16 +2,21 @@
 
 This project contains files to support running Jamal in a docker container.
 
+
+NOTE: This documentation describes how you can build the container from source, and how you can run Jamal in the container.
+Building the container from the sources is only needed by the maintainers.
+You can run Jamal from the container downloading from docker hub.
+
 To run Jamal from docker, you have to issue the commands:
 
 
 [source,sh]
 ----
-docker build -t myContainer .
-docker run  --volume .:/home/jamal/q -it myContainer /jamal args
+docker build -t myJamalContainer .
+docker run  --volume $(pwd):/home/jamal/q -it myJamalContainer /jamal args
 ----
 
-You can use any container name you like instead of ``myContainer``.
+You can use any container name you like instead of ``myJamalContainer``.
 
 ``args`` are the arguments you would normally pass to the ``jamal`` command.
 Since the docker image sees only the mapped directory under the current working directory, you cannot use absolute paths.
@@ -20,10 +25,39 @@ Example:
 
 [source,sh]
 ----
-docker run  --volume .:/home/jamal/q -it myContainer /jamal test.txt.jam test.txt
+docker run  --volume $(pwd):/home/jamal/q -it myJamalContainer /jamal test.txt.jam test.txt
 ----
 
 The command above will convert the file ``test.txt.jam`` to ``test.txt``.
+
+When a release of Jamal is made, the docker image is pushed to docker hub.
+
+[source,sh]
+----
+docker login
+docker tag verhas/jamal:2.7.0 verhas/jamal:latest
+docker push verhas/jamal:2.7.0
+docker push verhas/jamal
+----
+
+If you want to use this container, you can download it from docker hub.
+
+[source,sh]
+----
+docker pull verhas/jamal
+docker run  --volume $(pwd):/home/jamal/q -it verhas/jamal /jamal args
+----
+
+or use a specific version:
+
+[source,sh]
+----
+docker pull verhas/jamal:2.7.0
+docker run  --volume $(pwd):/home/jamal/q -it verhas/jamal:2.7.0 /jamal args
+----
+
+NOTE: The examples use the latest release of Jamal, 2.7.0.
+You can use any published version instead.
 
 == Files in the module
 
@@ -138,7 +172,7 @@ To create the docker image you can use to run Jamal, you have to issue the comma
 
 [source,sh]
 ----
-docker build -t myContainer .
+docker build -t myJamalContainer .
 ----
 
 Here you can use any name you like for your container.
@@ -149,7 +183,7 @@ To run Jamal from docker, you have to issue the command:
 
 [source,sh]
 ----
-docker run  --volume .:/home/jamal/q -it myContainer /jamal args
+docker run  --volume .:/home/jamal/q -it myJamalContainer /jamal args
 ----
 
 This will map the current working directory to the directory `/home/jamal/q` in the container.
