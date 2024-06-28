@@ -43,7 +43,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=2.6.1-SNAPSHOT                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=2.7.0                              -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 
@@ -68,7 +68,7 @@ MAVEN_ASSEMBLY_PLUGIN_VERSION=3.7.1        -- https://repo.maven.apache.org/mave
 MAVEN_PLUGIN_API=4.0.0-alpha-8             -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/
 MAVEN_PLUGIN_ANNOTATIONS=3.13.1            -- https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-annotations/
 MAVEN_PLUGIN_PLUGIN_VERSION=3.13.1         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin
-SONATYPE_PLUGIN_VERSION=1.7.0              -- https://repo.maven.apache.org/maven2/org/sonatype/plugins/nexus-staging-maven-plugin
+SONATYPE_PLUGIN_VERSION=1.6.14             -- https://repo.maven.apache.org/maven2/org/sonatype/plugins/nexus-staging-maven-plugin
 SUREFIRE_PLUGIN_VERSION=3.3.0              -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
 MAVEN_SOURCE_PLUGIN_VERSION=3.3.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
 APPASSEMBLER_PLUGIN_VERSION=2.1.0          -- https://repo.maven.apache.org/maven2/org/codehaus/mojo/appassembler-maven-plugin

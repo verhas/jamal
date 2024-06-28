@@ -22,7 +22,7 @@ To use this module, you have to add the dependency to your Maven project, as:
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-io</artifactId>
-    <version>2.6.1-SNAPSHOT</version>
+    <version>2.7.0</version>
 </dependency>
 ----
 
@@ -31,7 +31,7 @@ or as an alternative your macro file can use the `maven:load` macro to load the 
 .Jamal source
 [source]
 ----
-{@maven:load com.javax0.jamal:jamal-io:2.6.1-SNAPSHOT}
+{@maven:load com.javax0.jamal:jamal-io:2.7.0}
 ----
 
 before using any macro from this package for the first time.

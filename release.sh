@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 cat <<END
--------------------------------------------------------
- M A N U A L   R E L E A S E  I S   N O T   A V A I L
--------------------------------------------------------
+-----------------------------------------------------------
+ M A N U A L   R E L E A S E  I S   N O T   A V A I L B L E
+-----------------------------------------------------------
 Execute this file to get this message.
 
 Normal release should

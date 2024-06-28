@@ -6,6 +6,6 @@ The latest version is 2.6.0.
     <extension>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-maven-extension</artifactId>
-        <version>2.6.1-SNAPSHOT</version>
+        <version>2.7.0</version>
     </extension>
 </extensions>
