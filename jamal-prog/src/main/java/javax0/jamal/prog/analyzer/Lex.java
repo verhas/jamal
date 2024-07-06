@@ -34,21 +34,21 @@ public class Lex {
         }
 
         public Lex next() throws BadSyntax {
-            if (lexes.size() == 0) {
+            if (lexes.isEmpty()) {
                 throw new BadSyntax("more elements expected");
             }
             return lexes.remove(0);
         }
 
         public Lex peek() throws BadSyntax {
-            if (lexes.size() == 0) {
+            if (lexes.isEmpty()) {
                 throw new BadSyntax("more elements expected");
             }
             return lexes.get(0);
         }
 
         public boolean hasNext() {
-            return lexes.size() > 0;
+            return !lexes.isEmpty();
         }
 
         public boolean isEmpty() {

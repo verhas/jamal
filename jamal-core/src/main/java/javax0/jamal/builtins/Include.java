@@ -47,9 +47,9 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         final var scanner = newScanner(input, processor);
         final var top = scanner.bool(null, "top");
         final var verbatim = scanner.bool("includeVerbatim", "verbatim");
-        final var lines = scanner.str(null, "lines");
+        final var lines = scanner.str(null, "lines").optional();
         final var noCache = scanner.bool(null, "noCache");
-        final var inDirs = scanner.str(null, "in");
+        final var inDirs = scanner.str(null, "in").optional();
         final var optional = scanner.bool(null, "optional", "ifExists");
         scanner.done();
         position = repositionToTop(position, top);

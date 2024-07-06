@@ -198,7 +198,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private void addToResponse(Task task, Map<String, Object> response, Command command, Object value) {
-        final var key = command.url.substring(1); // url starts with '/', key is the part that follows
+        final var key = command.url.substring(1); // url starts with '/'; key is the part that follows
         if (task.params.containsKey(key)) {
             response.put(key, value);
         }
@@ -544,7 +544,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     private void createContext(HttpServer server, Command command) {
         server.createContext(command.url, (e) -> {
             final var contextPath = e.getHttpContext().getPath();
-            final var request = RequestUriParser.parse(e.getRequestURI().toString());
+            final var request = RequestUriParser.parse(e.getRequestURI());
             if (!Objects.equals(contextPath, request.context) &&
                     !Objects.equals(contextPath + "/", request.context)) {
                 respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");

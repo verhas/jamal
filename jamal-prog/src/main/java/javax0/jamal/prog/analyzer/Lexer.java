@@ -59,8 +59,23 @@ public class Lexer {
                 continue;
             }
             if (Character.isDigit(in.charAt(0))) {
-                final var str = InputHandler.fetchNumber(in);
-                final var lex = new Lex(Lex.Type.STRING, str);
+                final var str = new StringBuilder();
+                str.append(InputHandler.fetchNumber(in));
+                if( in.length() > 0 && in.charAt(0) == '.' ){
+                    str.append('.');
+                    InputHandler.skip(in, 1);
+                    str.append(InputHandler.fetchNumber(in));
+                    if( in.length() > 0 && (in.charAt(0) == 'e' || in.charAt(0) == 'E') ){
+                        str.append('e');
+                            InputHandler.skip(in, 1);
+                        if( in.length() > 0 && (in.charAt(0) == '+' || in.charAt(0) == '-') ){
+                            str.append(in.charAt(0));
+                            InputHandler.skip(in, 1);
+                        }
+                        str.append(InputHandler.fetchNumber(in));
+                    }
+                }
+                final var lex = new Lex(Lex.Type.STRING, str.toString());
                 list.add(lex);
                 continue;
             }

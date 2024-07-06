@@ -26,7 +26,7 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         final var pureParam = scanner.bool(null, "pure");
         final var globalParam = scanner.bool(null, "global");
         final var exportParam = scanner.bool(null, "export");
-        final var javaDefined = scanner.str(null, "class");
+        final var javaDefined = scanner.str(null, "class").optional();
         final var defaults = scanner.bool(null, "named");
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = scanner.bool("RestrictedDefineParameters");

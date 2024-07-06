@@ -14,7 +14,7 @@ public class JsonConverter {
      * like this takes no more than 30 minutes at the start. In an application, however, there comes a time when you
      * need more and more features. At a certain point in time, the cumulated maintenance effort will become more than
      * the difference between the initial 30min development time of the simple class and tasks needed to utilize an
-     * external library. These are roughly careful library research, selection, learning, integration and library
+     * external library. These are careful library research, selection, learning, integration and library
      * version change, and security screening and follow-up.
      * <p>
      * The two costs considering the Total Cost of Ownership have to be carefully measured. Using the external library

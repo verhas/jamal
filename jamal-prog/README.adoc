@@ -167,11 +167,32 @@ The macro also supports the `prog`, `do` and `run` aliases.
 The macro `expression` takes the input of the macro and interprets it as an expression.
 The result of the macro is the value of the expression.
 
+.Jamal source
+[source]
+----
+{@expression << 13 + 17}
+----
+
+will result in
+
+.output
+[source]
+----
+30
+----
+
+
+NOTE: The macro `expression` is essentially the same as the `prog` macro.
+The only difference is that the parameter options have to be enclosed between `(` and `)` characters and the first, and presumably only line of code can start following the closing `)` character.
+Its intended use is to evaluate simple expressions.
+
+CAUTION: Do not forget the `<<` at the start of the expression.
+
 
 == Expression Syntax
 
 Expressions are composed of numeric constants, strings, variables, and operators.
-The operators are the basic arithmetic operators, the comparison operators, the logical operators and the `!` operator.
+The operators are the basic arithmetic operators, the comparison operators, the logical operators and the `!` operator (which is macro evaluation operator, not to be confused with the operator `not`).
 
 The formal syntax of the expressions is:
 
@@ -244,21 +265,24 @@ The variable `evil` is not defined in the program, but it is used outside.
 {@define a(x)=this is x}
 {@define b   =this is b}
 {@try! {@program
-            <<a}}
+            <<a}} <-- this is an error message
 {@program
-     <<b + !"{a A}"
-     b = b + 1
+     <<b + !"\n{a A}" 'macro 'a' has an agument 'A', and it is used
+     b = b + 1 'b is not a number, therefore, 1 is appended to the string
      evil = 666
-} {b}
-{evil}
+}
+{b} <-- already outside the program code
+{evil} <-- it was defined in the program code
 ----
 
 .output
 [source]
 ----
-Macro 'a' needs 1 arguments and got 0
-this is bthis is A this is b1
-666
+Macro 'a' needs 1 arguments and got 0 <-- this is an error message
+this is b
+this is A
+this is b1 <-- already outside the program code
+666 <-- it was defined in the program code
 ----
 
 
@@ -467,7 +491,7 @@ The argument mapping is simple in the case of user defined macros.
 User defined macros have several arguments, and the arguments of the function call are mapped to the arguments of the macro in the order of the arguments.
 You can also use argument less macros, simply not writing anything between the `()` characters.
 This is almost the same as using the macro as a variable.
-The only difference is that putting `()` characters after the macro name will make it a function call to a built-in  macro in the case the user defined macro does not exist.
+The only difference is that putting `()` characters after the macro name will make it a function call to a built-in  macro in the case the user-defined macro does not exist.
 Without the `()` an undefined macro will create an error even if a built-in macro exists with the same name.
 
 
@@ -559,6 +583,52 @@ HI
 The implemented BASIC language itself supports only integers.
 The reason for that was to keep the language simple.
 In most of the cases, integer arithmetic should be enough and there is less room for errors.
+
+NOTE: Versions before 2.8.0 used only integer arithmetic.
+To amend this the macro `decimal` was introduced.
+The use of this macro is cumbersome, and it is only kept in the package as a legacy support.
+
+If you want to use an expression or program to use floating point arithmentic you have to use the parop `float`.
+
+.Jamal source
+[source]
+----
+{@program float
+ << 13.2/2.5
+}
+----
+
+will result in
+
+.output
+[source]
+----
+5.28
+----
+
+
+The calculations are executed using the `BigDecimal` class.
+The other related parameter options you can use are:
+
+* `float` to use floating point arithmetic
+* `scale` to set the scale of the `BigDecimal` numbers
+* rounding specification, that can be one of
+ ** `UP` round up in absolute value, e.g. -1.1 -> -2
+ ** `DOWN` round down in absolute value, e.g. -1.1 -> -1
+ ** `CEILING` round up signed, e.g. -1.1 -> -1
+ ** `FLOOR` round down signed, e.g. -1.1 -> -2
+ ** `HALF_UP` round to the nearest or up.
+     This is the default rounding if nothing is specified.
+ ** `HALF_DOWN` round to the nearest or down.
+ ** `HALF_EVEN` round to the nearest or to the even number.
+ ** `UNNECESSARY` throws an exception if rounding is necessary.
+
+These are the actual names of the Java enumeration `java.math.RoundingMode` and their meaning is as it is documented in the JavaDoc of that class.
+
+
+== Legacy support to handle Decimals
+
+NOTE: The features decsribed in this section are only for backward compatibility and their use is not recommended.
 
 To support floating point calculation, the package implements the macro `decimal`.
 This macro creates a named BigDecimal number.

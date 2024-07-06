@@ -255,6 +255,14 @@ public class TestRest {
         }
 
         @Test
+        void testNoUrlForPost() throws Exception {
+            setMockResponse("This is the get response");
+            mockResoonseCode = 404;
+            TestThat.theInput("{@http:post http://localhost:" + port + "/test}")
+                    .throwsBadSyntax("The mandatory parameters 'url' are missing for the macro 'rest'");
+        }
+
+        @Test
         void testCachedFileInvalidTextReadFails() throws Exception {
             final var testCache = Paths.get("test.cache.txt");
             if (Files.exists(testCache)) Files.delete(testCache);

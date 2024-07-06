@@ -3,15 +3,18 @@ package javax0.jamal.debugger;
 import javax0.jamal.api.Debuggable;
 import javax0.jamal.api.Debugger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * A simple TCP-based debugger. This was created as a proof of concept and reached a PoC state.
+ * It does not support all the features of the debugger, only those that were developedin the PoC phase.
+ * It is not supposed to be used in production.
+ * <p>
+ * The "real" debugger is the http server based debugger that also comes with a react.js based client.
+ */
 public abstract class TcpDebugger implements Debugger {
 
     private Debugger.Stub stub;
@@ -260,8 +263,8 @@ public abstract class TcpDebugger implements Debugger {
                             break;
                         case 'h': // send help text
                             sendMessage("q QUIT | s STEP | S STEP IN | l LEVEL | h HELP |\n" +
-                                "i INPUT BEFORE | I INPUT AFTER | o OUTPUT | m START TEXT |\n" +
-                                "x EXECUTE | H human");
+                                    "i INPUT BEFORE | I INPUT AFTER | o OUTPUT | m START TEXT |\n" +
+                                    "x EXECUTE | H human");
                             break;
                         default:
                             prompt = false;

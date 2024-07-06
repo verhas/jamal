@@ -24,7 +24,7 @@ public class For implements Command {
     private static final String[] NO_PARAMS = new String[0];
 
     private boolean isDone(final String loopValue, final String step, final String end) {
-        if (Operation.bothNumeric(loopValue, step)) {
+        if (Operation.bothNumeric(loopValue, step, false)) {
             if (new BigInteger(step).compareTo(BigInteger.ZERO) < 0)
                 return new BigInteger(loopValue).compareTo(new BigInteger(end)) >= 0;
             else
@@ -44,7 +44,7 @@ public class For implements Command {
         while (isDone(loopValue, step, end)) {
             Assignment.let(ctx.getProcessor(), variable, loopValue);
             sb.append(block.execute(ctx));
-            if (Operation.bothNumeric(loopValue, step)) {
+            if (Operation.bothNumeric(loopValue, step, false)) {
                 loopValue = new BigInteger(loopValue).add(new BigInteger(step)).toString();
             } else {
                 loopValue = loopValue + step;

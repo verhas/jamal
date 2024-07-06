@@ -216,10 +216,10 @@ In this case it makes perfect sense to use the macro.
 If not for these cases then just insert the picture into the document using the Word built-in functionality.
 The options that can modify the behavior of the picture handling are:
 
-final var width = scanner.number(null, "width");
+final var width = scanner.number(null, "width").optional();
 can define the width of the picture.
 The default value is the actual width of the picture, or a scaled width in case the height is defined and the picture is not distorted.
-        final var height = scanner.number(null, "height");
+        final var height = scanner.number(null, "height").optional();
 can define the height of the picture.
 The default value is the actual height of the picture, or a scaled height in case the width is defined and the picture is not distorted.
         final var distorted = scanner.bool(null, "distort`, `distorted");

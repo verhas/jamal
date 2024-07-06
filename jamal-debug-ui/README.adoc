@@ -1,5 +1,49 @@
 = Jamal Debugger UI
 
-This directory contains the source code for the UI component of the Jamal debugger. The Jamal debugger UI is a JavaScript React application that operates within a web browser. The debugger module that supports the UI provides a REST API utilized by the UI. This module can also facilitate the download of the UI code to the browser.
+This directory contains the source code for the UI part of the Jamal debugger.
+The Jamal debugger UI is a JavaScript React app that works in a web browser.
+The debugger module that supports the UI offers a REST API used by the UI.
+The debugger module can also help download the UI code to the browser.
 
-The server component of the debugger is implemented in the `jamal-debug` module.
+The server part of the debugger is in the `jamal-debug` module.
+
+You can use NPM to develop the application, and when it is ready, you should execute the shell
+
+   ./deployprod
+
+This script will do the following:
+
+* Fetch the version of the project from the `../version.jim` file.
+It is needed by the application to know check the compatibility with the server.
+If the two versions are not compatible, the application will not work.
+
+* Build the application with the `npm run build` command.
+
+* Delete the old files from the `jamal-debug` sister module's `main/resources` directory.
+
+* Copy the new files to the sister module's `main/resources` directory.
+
+* Add the new files copied to the sister module to the git repository.
+
+The sister module will contain all the server code, which is Java and all the client code, which is JavaScript.
+The server code implements both
+
+* the REST interface to execute the Jamal macros in debug mode, and
+
+* a simple static Web server that delivers the UI code to the browser requesting the URL `/`.
+
+Executing `mvn clean install` will create and compile the code.
+The UI code for this step in the build is nothing more than static text resource files.
+
+If you want to test that the debugger works (smoke test), do the following steps:
+
+* Execute one of the tests implemented in the file `ManualTestForDebugMacro.java` in the sister project.
+After the test is started, the execution will wait for a debugger to connect.
+
+* Start your browser and open `http://localhost:8080/`.
+
+* The browser will show the UI of the debugger.
+
+* Debug the Jamal macros, play with the debugger.
+
+* When the execution has finished, the test will also exit.

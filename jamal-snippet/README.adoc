@@ -3474,11 +3474,11 @@ will result
 - ReplaceUtil.java: 1,033 bytes
 - SnipSave.java: 4,691 bytes
 - DevRoot.java: 2,280 bytes
-- Sort.java: 8,573 bytes
+- Sort.java: 8,606 bytes
 - Decorate.java: 12,250 bytes
 - Case.java: 2,269 bytes
 - NumberLines.java: 2,853 bytes
-- RangeMacro.java: 1,180 bytes
+- RangeMacro.java: 1,191 bytes
 - Untab.java: 2,389 bytes
 - Plural.java: 2,277 bytes
 - DateMacro.java: 556 bytes
@@ -3519,7 +3519,7 @@ will result
 - Unicode.java: 2,068 bytes
 - Counter.java: 2,166 bytes
 - CompileJavaMacros.java: 23,483 bytes
-- StringMacros.java: 15,650 bytes
+- StringMacros.java: 15,620 bytes
 - JavaSourceTemplate.java: 7,443 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Dictionary.java: 1,527 bytes
@@ -3532,7 +3532,7 @@ will result
 - ListDir.java: 5,423 bytes
 - XmlFormat.java: 3,927 bytes
 - SnippetXmlReader.java: 6,515 bytes
-- XmlInsert.java: 6,204 bytes
+- XmlInsert.java: 6,162 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 3,885 bytes
@@ -3545,7 +3545,7 @@ will result
 - Java.java: 11,623 bytes
 - ReplaceLines.java: 3,479 bytes
 - SkipLines.java: 2,801 bytes
-- SnipCheck.java: 7,523 bytes
+- SnipCheck.java: 7,556 bytes
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 2,094 bytes
 - Pos.java: 5,016 bytes
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2024-06-28 12:44:38
+2024-07-06 02:57:54
 ----
 
 

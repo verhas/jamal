@@ -1,6 +1,6 @@
 package javax0.jamal.debugger;
 
-import java.util.Arrays;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,40 +11,56 @@ class RequestUriParser {
     final String context;
 
     /**
-     * A simple parser for the URL of the request sent to the debugger.
-     * The parsing cares only the query string and the context. It does not
-     * parse the context into parts.
+     * Create a parser and parse the {@code uri} into the context and the query string.
+     * The returned object can be used to get the context and the query string from the
+     * final fields. Since the fields are final, there are no getters, and they are
+     * package private.
+     * <p>
+     * This class and the method are used only in the debugger.
+     * The typical use should be
+     * <pre>
+     *     {@code
+     *           request = RequestUriParser.parse(e.getRequestURI().toString());
+     *           p = request.params.get("parameter");
+     *           qs = request.queryString;
+     *           c = request.context;
+     *     }
+     * </pre>
      *
-     * The query string is parsed into key-value pairs. The value may be
-     * empty string.
-     *
+     * <p>
+     * The query string is parsed into key-value pairs.
+     * Values may be empty strings.
+     * <p>
      * The parsing also assumes that there are no repeated keys in the query.
+     *
      * @param uri the URI of the request
      * @return the parser object already containing the parsed data
      */
-    static RequestUriParser parse(final String uri){
-        return new RequestUriParser(uri);
+    static RequestUriParser parse(final URI uri) {
+        return new RequestUriParser(uri.toString());
     }
 
     private RequestUriParser(String requestUri) {
         uri = requestUri;
-        final int qmPos = uri.indexOf('?');
-        if (qmPos == -1) {
+        final int questionMarkPosition = uri.indexOf('?');
+        if (questionMarkPosition == -1) {
             queryString = "";
             context = uri;
         } else {
-            if (qmPos < uri.length() - 1) {
-                queryString = uri.substring(qmPos + 1);
-            } else {
+            if (isTheLastCharacter(questionMarkPosition)) {
                 queryString = "";
+            } else {
+                queryString = uri.substring(questionMarkPosition + 1);
             }
-            context = uri.substring(0, qmPos);
+            context = uri.substring(0, questionMarkPosition);
         }
-        Arrays.stream(queryString.split("&", -1)).forEach(
-            kv -> {
-                final var kvp = kv.split("=", -1);
-                params.put(kvp[0], kvp.length > 1 ? kvp[1] : "");
-            }
-        );
+        for (final var kv : queryString.split("&", -1)) {
+            final var kvp = kv.split("=", -1);
+            params.put(kvp[0], kvp.length > 1 ? kvp[1] : "");
+        }
+    }
+
+    private boolean isTheLastCharacter(int questionMarkPosition) {
+        return questionMarkPosition == uri.length() - 1;
     }
 }

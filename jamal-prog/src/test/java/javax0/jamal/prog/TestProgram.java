@@ -102,4 +102,31 @@ public class TestProgram {
         ).results("a");
     }
 
+    @DisplayName("Test floating point execution")
+    @Test
+    void testFloat() throws Exception {
+        TestThat.theInput("" +
+                "{@program float scale=4\n" +
+                "a = 13.2\n" +
+                "b = 14.456\n" +
+                "    <<a / b \n" +
+                "    <<\"\\n\"\n" +
+                "    << 1 / 3\n" +
+                "    <<\"\\n\"\n" +
+                "    << 1 * 3\n" +
+                "    <<\"\\n\"\n" +
+                "    << 1 + 3\n" +
+                "    <<\"\\n\"\n" +
+                "    << 1 - 3\n" +
+                "    <<\"\\n\"\n" +
+                "    << 1 % 3\n" +
+                "}"
+        ).results("0.9131\n" +
+                "0.3333\n" +
+                "3\n" +
+                "4\n" +
+                "-2\n" +
+                "1");
+    }
+
 }

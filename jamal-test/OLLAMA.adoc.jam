@@ -1,0 +1,52 @@
+{%@define llama($PROMPT) =
+{%#json:define $RESPONSE={%#http:post (url=http://localhost:11434/api/generate cache={%@hashCode $PROMPT%}.cache.txt ttl=0){
+      "model": "llama3:latest",
+      "prompt": "{%#replace`〖〗`$PROMPT〖〗
+〖〗\n%}",
+      "stream": false
+}
+%}%}
+{%$RESPONSE/response%}
+%}
+{%llama The following text contains some PII.
+PII stands for Personally Identifiable Information.
+It refers to any data that could potentially identify a specific individual.
+This includes a variety of information such as:
+
+Full name
+Social Security number
+Email address
+Phone number
+Physical address
+Passport number
+Driver's license number
+Bank account information
+Credit card information
+IP addresses in some contexts
+Login credentials
+Dates (birthdays, anniversaries, etc.)
+
+The importance of protecting PII is emphasized in various data protection regulations,
+such as the General Data Protection Regulation (GDPR) in the European Union and the
+California Consumer Privacy Act (CCPA) in the United States.
+Organizations are required to implement measures to safeguard PII to
+prevent unauthorized access, identity theft, and other privacy violations.
+
+I want you to identify each and every PII in the following text and replace each character that
+belongs to some PII to X and leave the other characters intact. If you think that a character belongs to a PII
+then make sure that all the characters of that word are masked. If you see something that is part of a data, ensure that all the words that belong to that date are masked.
+
+Do not write any explanation or any other text before or after the text, provide only the masked text.
+
+----
+Peter Verhas was born in May 29, 1966. He lives in Budapest, Hungary.
+----
+%}
+
+
+{%#json:define ps={%@http:get (url=http://localhost:11434/api/ps)%}%}
+
+[source]
+----
+{%ps%}
+----

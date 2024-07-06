@@ -14,7 +14,7 @@ public class RangeMacro implements Macro, InnerScopeDependent, BlockConverter, S
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
-        final var ranges = scanner.str(null, "range", "ranges", "lines");
+        final var ranges = scanner.str(null, "range", "ranges", "lines").optional();
         scanner.done();
 
         convertTextBlock(processor, in.getSB(), in.getPosition(), ranges.getParam());

@@ -4,9 +4,11 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.tools.Input;
 import javax0.jamal.tools.InputHandler;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class Operation extends Expression {
     final String operator;
@@ -37,8 +39,12 @@ public class Operation extends Expression {
                 if (leftValue == null) {
                     return rightValue;
                 }
-                if (bothNumeric(leftValue, rightValue)) {
-                    return new BigInteger(leftValue).add(new BigInteger(rightValue)).toString();
+                if (bothNumeric(leftValue, rightValue, ctx.isFloating())) {
+                    if (ctx.isFloating()) {
+                        return new BigDecimal(leftValue).add(new BigDecimal(rightValue)).toString();
+                    } else {
+                        return new BigInteger(leftValue).add(new BigInteger(rightValue)).toString();
+                    }
                 }
                 return leftValue + rightValue;
             case "-":
@@ -46,20 +52,36 @@ public class Operation extends Expression {
                 if (leftValue == null) {
                     return "-" + rightValue;
                 }
-                assertBothNumeric(leftValue, rightValue, operator);
-                return new BigInteger(leftValue).subtract(new BigInteger(rightValue)).toString();
+                assertBothNumeric(leftValue, rightValue, operator, ctx.isFloating());
+                if (ctx.isFloating()) {
+                    return new BigDecimal(leftValue).subtract(new BigDecimal(rightValue)).toString();
+                } else {
+                    return new BigInteger(leftValue).subtract(new BigInteger(rightValue)).toString();
+                }
             case "*":
                 rightValue = right.execute(ctx);
-                assertBothNumeric(leftValue, rightValue, operator);
-                return new BigInteger(leftValue).multiply(new BigInteger(right.execute(ctx))).toString();
+                assertBothNumeric(leftValue, rightValue, operator, ctx.isFloating());
+                if (ctx.isFloating()) {
+                    return new BigDecimal(leftValue).multiply(new BigDecimal(rightValue)).toString();
+                } else {
+                    return new BigInteger(leftValue).multiply(new BigInteger(rightValue)).toString();
+                }
             case "/":
                 rightValue = right.execute(ctx);
-                assertBothNumeric(leftValue, rightValue, operator);
-                return new BigInteger(leftValue).divide(new BigInteger(right.execute(ctx))).toString();
+                assertBothNumeric(leftValue, rightValue, operator, ctx.isFloating());
+                if (ctx.isFloating()) {
+                    return new BigDecimal(leftValue).divide(new BigDecimal(rightValue), ctx.getScale(), ctx.getRoundingMode()).toString();
+                } else {
+                    return new BigInteger(leftValue).divide(new BigInteger(rightValue)).toString();
+                }
             case "%":
                 rightValue = right.execute(ctx);
-                assertBothNumeric(leftValue, rightValue, operator);
-                return new BigInteger(leftValue).mod(new BigInteger(rightValue)).toString();
+                assertBothNumeric(leftValue, rightValue, operator, ctx.isFloating());
+                if (ctx.isFloating()) {
+                    return new BigDecimal(leftValue).remainder(new BigDecimal(rightValue)).toString();
+                } else {
+                    return new BigInteger(leftValue).mod(new BigInteger(rightValue)).toString();
+                }
             case "<":
                 return compare(ctx, leftValue, right, x -> x < 0);
             case "<=":
@@ -97,15 +119,15 @@ public class Operation extends Expression {
             throw new RuntimeException("SNAFU Left value of comparison is null");
         }
         final var b = rightValue.execute(ctx);
-        if (bothNumeric(leftValue, b)) {
-            return String.valueOf(predicate.test(getCompareTo(leftValue, b)));
+        if (bothNumeric(leftValue, b, ctx.isFloating())) {
+            return String.valueOf(predicate.test(getCompareTo(leftValue, b, ctx.isFloating())));
         }
         return String.valueOf(predicate.test(leftValue.compareTo(b)));
     }
 
-    private static void assertBothNumeric(final String leftValue, final String rightValue, final String operator) throws BadSyntax {
+    private static void assertBothNumeric(final String leftValue, final String rightValue, final String operator, final boolean floating) throws BadSyntax {
         assertNotNull(leftValue, operator);
-        if (!bothNumeric(leftValue, rightValue)) {
+        if (!bothNumeric(leftValue, rightValue, floating)) {
             throw new BadSyntax(String.format("Cannot do '%s' on non-numeric values", operator));
         }
     }
@@ -122,12 +144,25 @@ public class Operation extends Expression {
         }
     }
 
-    static boolean bothNumeric(final String leftValue, final String rightValue) {
-        return leftValue != null && InputHandler.isNumber(leftValue) && rightValue != null && InputHandler.isNumber(rightValue);
+    static boolean bothNumeric(final String leftValue, final String rightValue, boolean floating) {
+        if (floating)
+            return leftValue != null && isFloatingPointNumber(leftValue) && rightValue != null && isFloatingPointNumber(rightValue);
+        else
+            return leftValue != null && InputHandler.isNumber(leftValue) && rightValue != null && InputHandler.isNumber(rightValue);
     }
 
-    private static int getCompareTo(final String leftValue, final String rightValue) {
-        return new BigInteger(leftValue).compareTo(new BigInteger(rightValue));
+    private static final Pattern BIG_DECIMAL_PATTERN = Pattern.compile("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
+
+    private static boolean isFloatingPointNumber(String str) {
+        return !str.isEmpty() && BIG_DECIMAL_PATTERN.matcher(str).matches();
+    }
+
+    private static int getCompareTo(final String leftValue, final String rightValue, final boolean floating) {
+        if (floating) {
+            return new BigDecimal(leftValue).compareTo(new BigDecimal(rightValue));
+        } else {
+            return new BigInteger(leftValue).compareTo(new BigInteger(rightValue));
+        }
     }
 
     public static boolean isTrue(final String test) {
@@ -140,7 +175,7 @@ public class Operation extends Expression {
         if (test.trim().matches("[+-]?\\d+")) {
             return new BigInteger(test).compareTo(BigInteger.ZERO) != 0;
         }
-        return test.trim().length() > 0;
+        return !test.trim().isEmpty();
     }
 
 }

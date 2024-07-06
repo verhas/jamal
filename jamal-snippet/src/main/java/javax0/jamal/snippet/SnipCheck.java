@@ -26,9 +26,9 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
         final var pos = in.getPosition();
         final var scanner = newScanner(in, processor);
         final var hashString = scanner.str("hash", "hashCode").defaultValue("");
-        final var lines = scanner.number("lines");
-        final var id = scanner.str("id");
-        final var fileName = scanner.str("file", "files");
+        final var lines = scanner.number("lines").optional();
+        final var id = scanner.str("id").optional();
+        final var fileName = scanner.str("file", "files").optional();
         final var message = scanner.str("message").defaultValue("");
         final var warning = scanner.bool("snipCheckWarningOnly", "warning", "warningOnly");
         final var error = scanner.bool("snipCheckError", "error", "errorLog");

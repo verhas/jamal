@@ -81,6 +81,7 @@ The parameter options are:
         * `cache`
          Can specify a cache file where the result of the query is stored.
          If the cache file exists and is not expired, then the content of the cache file is returned.
+         If the cache file exists but reading it causes exception, then an error will happen.
         * `ttl`
          can specify the time to live of the cache file in seconds.
          The default value is `-1` that means the cache never expires.

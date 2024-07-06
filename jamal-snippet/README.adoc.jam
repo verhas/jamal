@@ -337,7 +337,7 @@ To do this the macro `snip` will accept all the options of the macro `snip:trans
 
 [[snip_check]]
 === {%chapter%}`snip:check`
-{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=e8e7074b%}
+{%#snip:check file={%JAVA_DIR%}SnipCheck.java hash=95c2b96c%}
 You can use this macro to enforce consistency between the documented system and the documentation.
 Using this macro will nudge the maintainer to check the relevant parts of the document when the documented code changes.
 The macro itself will not update the documentation.
@@ -778,7 +778,7 @@ will be converted to
 
 [[range]]
 === {%chapter%}`range`
-{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=370471be%}
+{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=8aa2bd10%}
 
 This macro can filter lines of its input by a range of numbers.
 The syntax of the macro is:
@@ -1021,7 +1021,7 @@ This is a known bug resulting in the line number larger than the actual.
 
 [[sort]]
 === {%chapter%}`sort`
-{%#snip:check file={%JAVA_DIR%}Sort.java hash=4a1b694b%}
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=7588aafa%}
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
 For example
@@ -2945,7 +2945,7 @@ This will prevent the Asciidoctor version of Jamal overwriting the Java file whe
 
 [[String]]
 === {%chapter%}String Macros
-{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=8f7c2c18%}
+{%#snip:check file={%JAVA_DIR%}StringMacros.java hash=562fe9cf%}
 
 [[string:contains]]
 ==== `string:contains`

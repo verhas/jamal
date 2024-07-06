@@ -28,13 +28,14 @@ import java.util.List;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
+@Macro.Name("xml:insert")
 public class XmlInsert implements Macro, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var pos = in.getPosition();
         final var scanner = newScanner(in, processor);
         final var xpath = scanner.str("xpath", "path");
-        final var into = scanner.str("id", "to", "into");
+        final var into = scanner.str("id", "to", "into").optional();
         final var needed = scanner.bool("ifneeded", "optional");
         final var tabsize = scanner.number("tabsize").defaultValue(4);
         scanner.done();
@@ -84,12 +85,6 @@ public class XmlInsert implements Macro, Scanner {
         }
         node.appendChild(importNode);
     }
-
-    @Override
-    public String getId() {
-        return "xml:insert";
-    }
-
 
     private static class XmlInsertCloser implements AutoCloseable, Closer.OutputAware {
         static class ToBeInserted {

@@ -145,8 +145,8 @@ public class StringMacros {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var scanner = newScanner(in, processor);
-            final var prefix = scanner.str(null, "prefix", "pre", "start");
-            final var postfix = scanner.str(null, "postfix", "post", "end");
+            final var prefix = scanner.str(null, "prefix", "pre", "start").optional();
+            final var postfix = scanner.str(null, "postfix", "post", "end").optional();
             final var ignore = scanner.bool(null, "ignorecase", "ignoreCase");
             scanner.done();
             var result = in.toString();
@@ -319,13 +319,14 @@ public class StringMacros {
         }
     }
 
+    @Macro.Name("string:substring")
     public static class Substring implements Macro, InnerScopeDependent, Scanner {
 
         @Override
         public String evaluate(Input in, Processor processor) throws BadSyntax {
             final var scanner = newScanner(in, processor);
             final var begin = scanner.number(null, "begin").defaultValue(0);
-            final var end = scanner.number(null, "end");
+            final var end = scanner.number(null, "end").optional();
             scanner.done();
             String[] parts = InputHandler.getParts(in, processor, 1);
             BadSyntax.when(parts.length != 1, "The string:substring macro expects exactly one argument");
@@ -334,10 +335,6 @@ public class StringMacros {
             return parts[0].substring(beginIndex, endIndex);
         }
 
-        @Override
-        public String getId() {
-            return "string:substring";
-        }
     }
 
     @Macro.Name("string:length")

@@ -31,7 +31,7 @@ public class Sort implements Macro, Scanner.FirstLine {
         final var join = scanner.str(null, "join").defaultValue("\n");
         // is the string to use to join the records together after the sorting was done.
         // The default value is the `\n` string (not pattern); that means the records will be individual lines in the output.
-        final var locale = scanner.str(null, "locale", "collatingOrder", "collator");
+        final var locale = scanner.str(null, "locale", "collatingOrder", "collator").optional();
         // can define the locale for the sorting.
         // The default locale `en-US.UTF-8`.
         // Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
@@ -39,12 +39,12 @@ public class Sort implements Macro, Scanner.FirstLine {
         // The class will be instantiated and used to sort the records.
         // Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
         // This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.
-        final var columns = scanner.str(null, "columns");
+        final var columns = scanner.str(null, "columns").optional();
         // can specify the part of the textual record to be used as a sorting key.
         // The format of the parameter is `n..m` where `n` is the first character position and `m-1` is the last character position to be used.
         // The values can run from 1 to the maximum number of characters.
         // If you specify column values that run out of the line length, then the macro will result in an error.
-        final var pattern = scanner.pattern(null, "pattern");
+        final var pattern = scanner.pattern(null, "pattern").optional();
         // can specify a regular expression pattern to define the part of the line as a sort key.
         // The expression may contain matching groups.
         // In that case, the strings matching the parts between the parentheses are appended from left to right and used as a key.

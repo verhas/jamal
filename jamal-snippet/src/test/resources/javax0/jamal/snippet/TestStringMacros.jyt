@@ -16,7 +16,7 @@
     Output: "false"
   No text is an error:
     Input: "{@string:contains () this is a string not containing ... ha ha ha}"
-    Throws: "The key 'text' for the macro 'string:contains' is mandatory"
+    Throws: "The mandatory parameters 'text' or 'string' are missing for the macro 'string:contains'"
 
 "string:substring tests":
   "get the whole when no begin and no end":

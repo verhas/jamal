@@ -1,10 +1,20 @@
 #! /bin/bash
-export NODE_OPTIONS=--openssl-legacy-provider
-npm version `grep '^VERSION=' ../version.jim|cut -d'=' -f2 | cut -d' ' -f1`
-npm run build
+echo "Building the new version of the debugger UI"
+echo
+echo "Setting the version from ../version.jim"
+npm version `grep '^VERSION=' ../version.jim|cut -d'=' -f2 | cut -d' ' -f1` &> /dev/null
+echo "Building the new version ..."
+npm run build &> /dev/null
+echo "build done"
+echo "removing old css files from $projectRoot/jamal/jamal/debug/src/main/resources/ui/static/css"
 rm -rf ../jamal-debug/src/main/resources/ui/static/css
+echo "removing old js files from $projectRoot/jamal/jamal/debug/src/main/resources/ui/static/js"
 rm -rf ../jamal-debug/src/main/resources/ui/static/js
+echo "copying new files to $projectRoot/jamal/jamal/debug/src/main/resources/ui"
 cp -R ./build/* ../jamal-debug/src/main/resources/ui/
+echo "removing map files"
 rm ../jamal-debug/src/main/resources/ui/static/css/*.map
 rm ../jamal-debug/src/main/resources/ui/static/js/*.map
+echo "adding new files to git"
 git add --all ../jamal-debug/src/main/resources
+echo "done... you can now build the maim project including the new version of the debugger UI"

@@ -1,0 +1,6 @@
+{@comment Macros defined to help unit conversions}
+
+{@define personCount=4}
+
+{@define grams($X)={@expression (float scale=2) << $X * personCount} grams ({@expression (float scale=2) << $X * personCount * 0.03} ounces)}
+{@define teaspoons($X)={@expression (float scale=2) << $X * personCount} teaspoons ({@expression (float scale=2) << $X * personCount * 4.92} milliliters)}

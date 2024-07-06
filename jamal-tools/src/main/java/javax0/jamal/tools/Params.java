@@ -167,6 +167,8 @@ public class Params {
 
         boolean is() throws BadSyntax;
 
+        boolean isOptional();
+
         boolean isPresent();
 
         /**
@@ -543,7 +545,10 @@ public class Params {
         skip(input, 1);
     }
 
-    public void parse() {
+    /**
+     * Inject the processor instance and the name of the processing macro into the parameter holders.
+     */
+    private void parse() {
         for (final var holder : holders.values()) {
             holder.inject(processor, macroName);
         }
@@ -589,7 +594,7 @@ public class Params {
                 skip(input, 2);
                 continue;
             }
-            if( startsWith(input, ")") == 0){
+            if (startsWith(input, ")") == 0) {
                 BadSyntax.when(commaSkipped, "Trailing comma in parameter list is not allowed before the ')'");
                 return;
             }

@@ -1,0 +1,67 @@
+= Recipe: Spaghetti Carbonara
+{%@import unitconversions.jim%}
+
+NOTE: This document demonstrates how you can use the floating point calculations introduced in Jamal 2.8.0 to the prog module to maintain documents that need that.
+The sample document is a recipe of my favourite food, spaghetti carbonara.
+The recipe is written for 4 people, but it also includes adjustments for 2, 6, and 8 people.
+It also demonstrates how you can specify the ingredient amounts in different units and then convert them to the desired unit based on the number of people.
+Also note that he amounts are defined only once in the file and then reused in the recipe and the adjustments sections.
+
+== Ingredients (for {%@def personCount=4%} people)
+
+{%@define INGREDIENTS=
+{%#define amount:Spaghetti={%grams/100%}%}
+* Spaghetti: {%amount:Spaghetti%}
+{%@define amount:Bacon={%grams/50%}%}
+* Bacon: {%amount:Bacon%}
+* Eggs: 4 large
+{%@define amount:Parmesan_cheese={%grams/25%}%}
+* Parmesan cheese: {%amount:Parmesan_cheese%}
+{%@define amount:Black_pepper={%teaspoons/0.5%}%}
+* Black pepper: {%amount:Black_pepper%}
+{%@define amount:Salt={%teaspoons/0.25%}%}
+* Salt: {%amount:Salt%}
+{%@define amount:Olive_oil={%teaspoons/1%}%}
+* Olive oil: {%amount:Olive_oil%}\
+%}
+{%INGREDIENTS%}
+
+== Instructions
+
+. *Prepare the ingredients:*
+* Dice the bacon into small pieces.
+* Grate the Parmesan cheese.
+* Beat the eggs in a bowl and mix in the grated Parmesan cheese.
+. *Cook the spaghetti:*
+* Bring a large pot of water to a boil.
+* Add {%amount:Salt%} of salt to the boiling water.
+* Add {%amount:Spaghetti%} of spaghetti and cook, according to the package instructions, until al dente.
+* Reserve 1 cup of pasta water and then drain the spaghetti.
+. *Cook the bacon:*
+* In a large skillet, heat {%amount:Olive_oil%} of olive oil over medium heat.
+* Add the diced bacon and cook until crispy.
+* Remove the skillet from heat and set aside.
+. *Combine the ingredients:*
+* Return the skillet with the bacon to low heat.
+* Add the cooked spaghetti to the skillet.
+* Pour in the egg and cheese mixture, stirring quickly to coat the spaghetti without scrambling the eggs.
+* Add some reserved pasta water to create a creamy sauce, if needed.
+* Season with  {%amount:Black_pepper%} of black pepper.
+. *Serve:*
+* Divide the spaghetti carbonara among 4 plates.
+* Optionally, sprinkle more grated Parmesan cheese on top.
+* Serve immediately.
+
+=== Adjustments for Different Number of People
+
+==== For {%@def personCount=2%} people
+
+{%INGREDIENTS%}
+
+==== For {%@def personCount=6%} People:
+
+{%INGREDIENTS%}
+
+==== For {%@def personCount=8%} People:
+
+{%INGREDIENTS%}

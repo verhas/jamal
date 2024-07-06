@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.util.List;
 import java.util.OptionalInt;
 
+@Macro.Name("docx:picture")
 public class MacroDocxPicture implements Macro, Scanner {
 
     private static class CallBack implements XWPFContext.DocxIntermediaryCallBack {
@@ -160,10 +161,10 @@ public class MacroDocxPicture implements Macro, Scanner {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
         // tag::picture_options[]
-        final var width = scanner.number(null, "width");
+        final var width = scanner.number(null, "width").optional();
         // can define the width of the picture.
         // The default value is the actual width of the picture, or a scaled width in case the height is defined and the picture is not distorted.
-        final var height = scanner.number(null, "height");
+        final var height = scanner.number(null, "height").optional();
         // can define the height of the picture.
         // The default value is the actual height of the picture, or a scaled height in case the width is defined and the picture is not distorted.
         final var distorted = scanner.bool(null, "distort", "distorted");
@@ -177,10 +178,5 @@ public class MacroDocxPicture implements Macro, Scanner {
         final var context = XWPFContext.getXWPFContext(processor);
         context.register(new CallBack(new File(fileName), optional(width), optional(height), distorted.is()));
         return "";
-    }
-
-    @Override
-    public String getId() {
-        return "docx:picture";
     }
 }

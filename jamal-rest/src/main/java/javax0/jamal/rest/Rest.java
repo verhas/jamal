@@ -41,7 +41,7 @@ public class Rest implements Macro, Scanner {
         final var isGetLike = me.equals("http:get") || me.equals("http:delete") || me.equals("http:head") || me.equals("http:options") || me.equals("http:trace");
         final var scanner = newScanner(in, processor);
         // snippet Rest_Parops
-        final var urlOpt = isGetLike ? scanner.str("url") : scanner.str("url").optional();
+        final var urlOpt = isGetLike ? scanner.str("url").optional(): scanner.str("url");
         // specifies the url.
         // This parameter is mandatory unless the macro is used as a GET like macro.
         // In that case, the URL can be the content of the macro.

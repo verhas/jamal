@@ -1,12 +1,7 @@
-{%@comment %}
-
-{%@define d(x)=_x_%}
-{%d apple%}
-{%@decorate (decorator=d)
-This is a sample asciidoc file that references a sample snippet from snips.sh
+{%@http:post
+(url="http://localhost:11434/api/generate" ){
+"model": "llama3:latest",
+"prompt": "why is the sky blue?",
+"stream": false
+}
 %}
-
-[source,shell]
----
-# this is not a comment
-----

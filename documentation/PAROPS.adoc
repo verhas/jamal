@@ -1,32 +1,34 @@
 = Standard Built-In Parop Parsing
 
 
-Parops (parameter options) are usually used to give extra parameters/options to built-in macros.
-They are key/value pars at the start of the input of the built-in macro.
-The parsing of these parops is supported by Java classes that the built-in macros can use.
-The parsing implemented is also used for user-defined macros when the macro is defined with the `define` parameter option.
+Parops (parameter options) are usually used to give extra parameters or options to built-in macros.
+They are key/value pairs at the start of the input of the built-in macro.
+Java classes support the parsing of these parops that the built-in macros can use.
+This parsing is also used for user-defined macros when the macro is defined with the `named` parameter option (parop).
+
 
 .Name of the game
 [NOTE]
 ====
-User defined macros have parameters.
+User-defined macros have parameters.
 Jamal uses options defined using the macro `options`.
-Parameter options are used as options or parameters for the built-in macros and in some cases for user-defined macros.
-Naming them "parameters" or "options" would be confusing; especially that boolean parops can also get value from options defined using the macro `options`.
-Therefore, these parameters or options are called parameter options, or in short parops.
-I wish I could figure out something less intricate
+Parameter options are used as options or parameters for the built-in macros and sometimes for user-defined macros.
+Calling them "parameters" or "options" would be confusing, especially because boolean parops can also get values from options defined using the macro `options`.
+Therefore, these parameters or options are called parameter options, or parops for short.
+I wish I could figure out a simpler term.
 ====
 
 == Rationale for Parops
 
-Even though built-in macros are free to parse their input any way they want, there are support classes to ease this task.
-The advantages of using these classes are twofold.
+Even though built-in macros can parse their input in any way, there are support classes to make this task easier.
+Using these classes has two advantages.
 
-. These classes are thoroughly tested, documented, and easy to use, saving development time and effort.
+. These classes are thoroughly tested, documented, and easy to use.
+They save development time and effort.
 
-. The macros are more coherent and easier to understand for the users when they follow similar patterns.
+. Macros are more coherent and easier for users to understand when they follow similar patterns.
 
-This document describes the format and use of the options which are parsed using these supporting Java classes.
+This document describes the format and use of the options parsed using these supporting Java classes.
 
 == Introduction
 
@@ -51,13 +53,14 @@ We use `[` and `]` for the core macros, and it is customary to use `(` and `)` f
 
 [NOTE]
 ====
-The use of the `[` and `]` characters in the case of the core macros was a decision late in the development process.
-The macro `for` was the first one to support parops, and it already used the `(` and `)` characters to enclose the loop parameters.
-The list of the parameters follows the macro name, `for`.
+The use of the `[` and `]` characters for core macros was decided late in the development process.
+The macro `for` was the first to support parops.
+It already used the `(` and `)` characters to enclose loop parameters.
+The list of parameters follows the macro name, `for`.
 This would make the parops indistinguishable from the parameters.
 
-To keep backward compatibility, the decision was made: the core macros will use `[` and `]`.
-There is nothing to stop a non-core macro from using these characters, but it is strongly discouraged.
+To keep backward compatibility, it was decided that core macros will use `[` and `]`.
+Non-core macros could also use these characters, but it is strongly discouraged.
 ====
 
 There are macros that do not need any content other than the parops.

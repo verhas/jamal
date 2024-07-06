@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Macros that use parameters can implement this interface to get the parameters parsed in an easier way.
@@ -184,11 +185,12 @@ public interface Scanner {
                     parmap.put(keys[0], param);
                 } else if (keys.length > 1 && keys[1] != null) {
                     parmap.put(keys[1], param);
-                }else{
+                } else {
                     throw new IllegalArgumentException("Parameter has no name.");
                 }
             }
         }
+
         /**
          * Signal that the parsing accepts just any parameter and does not check the parameter names.
          * These extra parameters are stored in a map and can be queried from the returned object.
@@ -216,6 +218,34 @@ public interface Scanner {
                 z = p.keys(extraParams, params.toArray(new Params.Param<?>[0]));
             }
             z.parse(in);
+            checkMandatoryPresence();
+        }
+
+        /**
+         * Check that all mandatory parameters are present.
+         *
+         * @throws BadSyntax if a mandatory parameter is missing
+         */
+        private void checkMandatoryPresence() throws BadSyntax {
+            final var missers = params.stream()
+                    .filter(t -> !t.isOptional())
+                    .filter(t -> {
+                        try {
+                            t.get();
+                            return false;
+                        } catch (BadSyntax e) {
+                            return !t.isPresent();
+                        }
+                    })
+                    .map(t -> Arrays.stream(t.keys())
+                            .filter(k -> k != null)
+                            .map(k -> "'" + k + "'")
+                            .collect(Collectors.joining(" or "))
+                    )
+                    .collect(Collectors.joining(","));
+            if (!missers.isEmpty()) {
+                throw new BadSyntax("The mandatory parameters " + missers + " are missing for the macro '" + macro.getId() + "'");
+            }
         }
 
         public ScannerObject delimiterSetter(Function<Params, Params> setDelimiters) {

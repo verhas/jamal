@@ -94,7 +94,7 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         final var top = scanner.bool(null, "top");
         final var noCache = scanner.bool(null, "noCache");
         final var isolate = scanner.bool(null, "isolate", "isolated");
-        final var inDirs = scanner.str(null, "in");
+        final var inDirs = scanner.str(null, "in").optional();
         final var globalImport = scanner.bool(null, "global");
         final var force = scanner.bool("import$force", "force", "forced");
         scanner.done();

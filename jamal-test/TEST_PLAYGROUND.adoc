@@ -1,12 +1,62 @@
-
-
-
-_apple_
-
-_T_his is a _sa_mple _asc_iidoc _f_ile _t_hat _refe_rences a _sa_mple _sn_ippet _f_rom _sn_ips._s_h
-
-
-[source,shell]
----
-# this is not a comment
+[WARNING]
+--
+* POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
+--
+[WARNING]
+--
+* POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
+--
+{%@http:post
+(url="http://localhost:11434/api/generate" ){
+"model": "llama3:latest",
+"prompt": "why is the sky blue?",
+"stream": false
+}
+%}
+[WARNING]
+--
+* POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
+--
+[source]
+----
+POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
+	javax0.jamal.rest.Rest(evaluate:140)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:514)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:457)
+	javax0.jamal.engine.Processor(safeEvaluate:466)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:457)
+	javax0.jamal.engine.Processor(evalMacro:412)
+	javax0.jamal.engine.Processor(processMacro:325)
+	javax0.jamal.engine.Processor(process:202)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
+Causing Exception:
+Cannot invoke "String.length()" because "spec" is null	javax0.jamal.rest.Rest(evaluate:95)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:514)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:457)
+	javax0.jamal.engine.Processor(safeEvaluate:466)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:457)
+	javax0.jamal.engine.Processor(evalMacro:412)
+	javax0.jamal.engine.Processor(processMacro:325)
+	javax0.jamal.engine.Processor(process:202)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
+Causing Exception:
+Cannot invoke "String.length()" because "spec" is null	javax0.jamal.rest.Rest(evaluate:95)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:514)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:457)
+	javax0.jamal.engine.Processor(safeEvaluate:466)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:457)
+	javax0.jamal.engine.Processor(evalMacro:412)
+	javax0.jamal.engine.Processor(processMacro:325)
+	javax0.jamal.engine.Processor(process:202)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
+	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
+sed -i.bak  '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam
 ----

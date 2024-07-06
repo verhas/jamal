@@ -229,6 +229,12 @@ public class Param<K> implements Params.Param<K> {
         return (boolean) result;
     }
 
+    @Override
+    public boolean isOptional() {
+        return !mandatory;
+    }
+
+    @Override
     public boolean isPresent() {
         return !value.isEmpty() || (key != null && key.length >0 && key[0] != null && processor.getRegister().getUserDefined(key[0]).isPresent());
     }
