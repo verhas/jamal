@@ -1,7 +1,7 @@
 = Recipe: Spaghetti Carbonara
-{%@import unitconversions.jim%}
+{%@import unitconversions.jim%}{%@import ../releases.jim%}\
 
-NOTE: This document demonstrates how you can use the floating point calculations introduced in Jamal 2.8.0 to the prog module to maintain documents that need that.
+NOTE: This document demonstrates how you can use the floating point calculations introduced in Jamal `{%RELEASE:PECS%}` to the prog module to maintain documents that need that.
 The sample document is a recipe of my favourite food, spaghetti carbonara.
 The recipe is written for 4 people, but it also includes adjustments for 2, 6, and 8 people.
 It also demonstrates how you can specify the ingredient amounts in different units and then convert them to the desired unit based on the number of people.
