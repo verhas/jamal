@@ -9,6 +9,16 @@
 NOTE: The known bugs sections in the releases are updated after the release.
 Plese consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
 
+== https://github.com/verhas/jamal/tree/2.8.0[2.8.0]
+
+=== Known Bugs
+
+__currently there are no known bugs in this release__
+
+=== New Features
+
+* The `prog` module implements floating-point calculations.
+
 == https://github.com/verhas/jamal/tree/2.7.0[2.7.0]
 
 === Known Bugs

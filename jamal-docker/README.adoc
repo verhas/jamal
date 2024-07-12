@@ -30,15 +30,16 @@ docker run  --volume $(pwd):/home/jamal/q -it myJamalContainer /jamal test.txt.j
 
 The command above will convert the file ``test.txt.jam`` to ``test.txt``.
 
-When a release of Jamal is made, the docker image is pushed to docker hub.
+
+When a release of Jamal is made, the multi-arch docker image is pushed to Docker Hub:
 
 [source,sh]
 ----
 docker login
-docker tag verhas/jamal:2.7.0 verhas/jamal:latest
-docker push verhas/jamal:2.7.0
-docker push verhas/jamal
+docker buildx build --platform linux/amd64,linux/arm64 -t verhas/jamal:2.8.0 -t verhas/jamal:latest --push .
 ----
+
+This will create and push images for both AMD64 and ARM64 architectures, tagged with the specific version and 'latest'.
 
 If you want to use this container, you can download it from docker hub.
 
@@ -52,11 +53,11 @@ or use a specific version:
 
 [source,sh]
 ----
-docker pull verhas/jamal:2.7.0
-docker run  --volume $(pwd):/home/jamal/q -it verhas/jamal:2.7.0 /jamal args
+docker pull verhas/jamal:2.8.0
+docker run  --volume $(pwd):/home/jamal/q -it verhas/jamal:2.8.0 /jamal args
 ----
 
-NOTE: The examples use the latest release of Jamal, 2.7.0.
+NOTE: The examples use the latest release of Jamal, 2.8.0.
 You can use any published version instead.
 
 == Files in the module
@@ -68,7 +69,7 @@ It is used by the `docker build` command to create the image.
 
 [source,dockerfile]
 ----
-FROM alpine
+FROM --platform=$BUILDPLATFORM alpine:latest
 WORKDIR /home/jamal
 COPY prebuild.sh /home/jamal/prebuild.sh
 COPY build.sh /home/jamal/build.sh
@@ -192,3 +193,33 @@ Before starting Jamal the script sets the current working directory to `/home/ja
 That way, any file referenced on the command line will be found in the mapped directory.
 
 NOTE: Mounting a directory using podman may be tricky regarding readability and may require additional options.
+
+== Multi-architecture Builds
+
+To create a Docker image that works on both ARM64 and AMD64 platforms:
+
+=== Install and set up Docker Buildx:
+
+[source,sh]
+----
+docker buildx create --name multiarch --driver docker-container --use
+----
+
+=== Build and push the multi-arch image:
+
+[source,sh]
+----
+docker buildx build --platform linux/amd64,linux/arm64 -t yourusername/jamal:latest --push .
+----
+
+Replace `yourusername` with your Docker Hub username.
+
+=== To use the multi-arch image:
+
+[source,sh]
+----
+docker pull yourusername/jamal:latest
+docker run --volume $(pwd):/home/jamal/q -it yourusername/jamal:latest /jamal args
+----
+
+The appropriate image for your platform will be automatically selected.

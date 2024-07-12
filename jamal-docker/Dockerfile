@@ -1,4 +1,4 @@
-FROM alpine
+FROM --platform=$BUILDPLATFORM alpine:latest
 WORKDIR /home/jamal
 COPY prebuild.sh /home/jamal/prebuild.sh
 COPY build.sh /home/jamal/build.sh

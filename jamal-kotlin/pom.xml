@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <name>jamal kotlin</name>
     <artifactId>jamal-kotlin</artifactId>
-    <version>2.8.0</version>
+    <version>2.8.1-SNAPSHOT</version>
     <parent>
         <groupId>com.javax0.jamal</groupId>
         <artifactId>jamal-parent</artifactId>
-        <version>2.8.0</version>
+        <version>2.8.1-SNAPSHOT</version>
     </parent>
     <description>Kotlin support module for Jamal</description>
     <dependencies>
