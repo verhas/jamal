@@ -7,12 +7,12 @@
   Input: |-
     {@xls:open from=garbage.xlsx READ}
   Throws: |-
-    Cannot create the XLS workbook 'garbage\.xlsx' in read only mode, it does not seem to exist
+    Cannot create the XLS workbook '.*garbage\.xlsx' in read only mode, it does not seem to exist
 "non writable output for non-existent input":
   Input: |-
     {@xls:open from=garbage.xlsx output=res:garbage.xlsx}
   Throws: |-
-    Cannot create the XLS workbook 'garbage\.xlsx' from remote file and it seems not to exist
+    Cannot create the XLS workbook '.*garbage\.xlsx' from remote file and it seems not to exist
 "non writable output (remote) for ok input":
   Input: |-
     {@xls:open from=res:test.xlsx output=res:garbage.xlsx}

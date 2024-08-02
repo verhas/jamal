@@ -12,6 +12,37 @@ define a simple yaml structure use it:
     b: 2
     }{z}
   Output: "{a: 1, b: 2}\n"
+define a simple yaml structure use part of it:
+  Input: |-
+    {@yaml:define z=
+    a: 1
+    b: 2
+    }{z/b}
+  Output: "2\n"
+
+define a more complex yaml structure use part of it:
+  Input: |-
+    {@yaml:define z=
+    a: 1
+    b: 
+      - "haba"
+      - "guba"
+    }{z/b}
+  Output: "[haba, guba]\n"
+
+define a more complex yaml structure use part of it formatted:
+  Input: |-
+    {@yaml:format prettyFlow flowStyle=BLOCK}
+    {@yaml:define z=
+    a: 1
+    b: 
+      - "haba"
+      - "guba"
+    }{z/b}
+  Output: |
+    
+    - haba
+    - guba
 
 define a list and use it with verbatim:
   Input: |-

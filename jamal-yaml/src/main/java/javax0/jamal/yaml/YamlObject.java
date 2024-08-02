@@ -1,8 +1,11 @@
 package javax0.jamal.yaml;
 
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.ObjectHolder;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.UserDefinedMacro;
+import ognl.Ognl;
+import ognl.OgnlException;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
@@ -35,7 +38,7 @@ public class YamlObject implements UserDefinedMacro, ObjectHolder<Object> {
     }
 
     @Override
-    public String evaluate(String... parameters) {
+    public String evaluate(String... parameters) throws BadSyntax {
         final var out = new StringWriter();
         final var macro = YamlDumperOptions.get(processor);
         final Yaml yaml;
@@ -45,7 +48,17 @@ public class YamlObject implements UserDefinedMacro, ObjectHolder<Object> {
             final var options = macro.getObject();
             yaml = new Yaml(options);
         }
-        yaml.dump(content, out);
+        if (parameters.length > 0) {
+            try {
+                final var expression = Ognl.parseExpression(parameters[0]);
+                yaml.dump(Ognl.getValue(expression, content), out);
+                return out.toString();
+            } catch (OgnlException e) {
+                throw new BadSyntax("Syntax error in the OGNL expression '" + parameters[0] + "'", e);
+            }
+        } else {
+            yaml.dump(content, out);
+        }
         return out.toString();
     }
 

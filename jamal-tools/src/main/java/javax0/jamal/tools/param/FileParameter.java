@@ -24,6 +24,12 @@ public class FileParameter extends AbstractTypedParameter<String> {
         }
     }
 
+    public FileParameter optional() {
+        checkDone(DoneAction.OPTIONAL);
+        param.orElseNull();
+        return this;
+    }
+
     public FileParameter required() {
         checkDone(DoneAction.REQUIRED);
         return this;

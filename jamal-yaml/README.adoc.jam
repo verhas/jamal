@@ -42,6 +42,7 @@ macros.
 
 {%chap define%}
 since 1.7.5 `?` and `!` macro redefinition control
+since 2.8.1 OGNL subgraph can be used as macro argument
 
 You can use this macro to define a Yaml structure.
 The format of the macro is
@@ -53,8 +54,10 @@ tabulated Yaml content
 }
 ----
 
-After that, the name `yamlMacro` will be defined as a user-defined macro and can be used as `{yamlMacro}` without argument.
+After that, the name `yamlMacro` will be defined as a user-defined macro and can be used as `{yamlMacro}`.
 The value will replace the place of the use with the actual Yaml content.
+The macro can have one argument, which is an OGNL expression.
+If it is present then the macro will return part of the yaml structure pointed by the OGNL expression.
 
 NOTE: Internally, Jamal converts the Yaml read in an object structure consisting of strings, primitives, maps, and lists.
 The structure is stored in an object of the type {%@java:class (format=`$simpleName`) javax0.jamal.yaml.YamlObject%}.
@@ -71,6 +74,7 @@ This functionality is implemented the same way as it is for the core built-in ma
 The example:
 
 {%sample/
+{@yaml:format prettyFlow flowStyle=BLOCK}
 {@yaml:define xyz=
 a: this is the string value of a
 b:
@@ -80,7 +84,11 @@ c:
   a: this is c.a
   b: this is c.b
 }\
-{xyz}
+{xyz}\
+or
+--
+{xyz| c}\
+--
 %}
 
 will result
@@ -168,12 +176,12 @@ When you edit a Yaml file, you do not usually use the JSON-compatible `{ ... }` 
 However, when you use a user-defined, named Yaml content, like `{yamlMacro}`, it is likely to happen that the underlying rendering will generate a textual representation of the Yaml data, which contains `{` and `}` characters.
 The values of the user-defined macros are evaluated after they were de-referenced.
 The Yaml macros are exempt from this.
-These user defined macros are defined verbatim, like a normal user defined macro was defined using the `~` character after the `define` keyword.
-The evaluation is not needed because Yaml data hardly ever contain Jamal macros to be processed.
+These user-defined macros are defined verbatim, like a normal user-defined macro was defined using the `~` character after the `define` keyword.
+The evaluation is unnecessary because Yaml data hardly ever contain Jamal macros to be processed.
 The `{` and `}` characters may also cause a problem for Jamal.
 Precisely, it would interpret the first identifier following the `{` character as a user-defined macro.
 It will not find it.
-Even if it found it, it would not likely to properly evaluate.
+Even if it found it, it would not be likely to properly evaluate.
 
 One solution to this problem is to use a different opening and closing string that does not appear inside the Yaml output.
 If you can find one for your application, you can go for it.

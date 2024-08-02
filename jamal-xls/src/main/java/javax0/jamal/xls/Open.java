@@ -27,11 +27,11 @@ public class Open implements Macro, Scanner.WholeInput {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
         // snippet open_parops
-        final var file = scanner.str(null, "file", "in", "input", "from").required();
+        final var file = scanner.file(null, "file", "in", "input", "from").required();
         // * `file` (aliases are `in`, `input`, `from`) is the name of the file that contains the XLS workbook.
-        //  Technically `file` is also an alias, thus a macro havign the name of `file` will not be considered.
+        //  Technically, `file` is also an alias; thus a macro having the name of `file` will not be considered.
         // This parop must be defined.
-        final var output = scanner.str(null, "out", "output", "to").optional();
+        final var output = scanner.file(null, "out", "output", "to").optional();
         // * `out` (aliases are `output`, `to`) is the name of the file where the XLS workbook is written.
         // This parop is optional.
         // If this parop is defined, then the mode is automatically considered to be `WRITE`.
@@ -45,12 +45,11 @@ public class Open implements Macro, Scanner.WholeInput {
         // end snippet
         scanner.done();
 
-        final var reference = in.getReference();
-        final var fileName = FileTools.absolute(reference, file.get());
+        final var fileName = file.get();
         final String outFileName;
         final boolean readOnly;
         if (output.isPresent()) {
-            outFileName = FileTools.absolute(reference, output.get());
+            outFileName = output.get();
             readOnly = false;
         } else {
             outFileName = fileName;
