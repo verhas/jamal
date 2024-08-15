@@ -24,7 +24,7 @@ module jamal.snippet {
     requires jamal.engine;
     requires java.xml;
     requires javaLex;
-    requires SourceBuddy;
+    requires com.javax0.sourcebuddy;
     requires jdk.compiler;
     requires refi;
     provides Macro with Clear,

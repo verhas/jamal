@@ -15,7 +15,6 @@
          {dependency|{GROUPID}|jamal-MODULE}}
       {dependency|com.javax0.sourcebuddy|SourceBuddy|{SOURCE_BUDDY}}
       {dependency |{GROUPID}|jamal-testsupport|{VERSION}|test}
-      {dependency |{GROUPID}|jamal-snippet|{LAST_RELEASE}|test}
       {@for MODULE in (api,engine)=
           {dependency|org.junit.jupiter|junit-jupiter-MODULE|{JUPITER_VERSION}|test}}
     }

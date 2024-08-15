@@ -65,19 +65,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.0-M2</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.11.0-M2</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-jsr223</artifactId>
-            <version>3.0.21</version>
+            <version>3.0.22</version>
         </dependency>
     </dependencies>
 </project>

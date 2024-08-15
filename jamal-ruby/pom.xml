@@ -70,19 +70,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.0-M2</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.11.0-M2</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jruby</groupId>
             <artifactId>jruby-complete</artifactId>
-            <version>9.4.7.0</version>
+            <version>9.4.8.0</version>
         </dependency>
     </dependencies>
 </project>

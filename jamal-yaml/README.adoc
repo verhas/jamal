@@ -40,6 +40,7 @@ macros.
 === i. `yaml:define`
 
 since 1.7.5 `?` and `!` macro redefinition control
+since 2.8.1 OGNL subgraph can be used as macro argument
 
 You can use this macro to define a Yaml structure.
 The format of the macro is
@@ -51,8 +52,10 @@ tabulated Yaml content
 }
 ----
 
-After that, the name `yamlMacro` will be defined as a user-defined macro and can be used as `{yamlMacro}` without argument.
+After that, the name `yamlMacro` will be defined as a user-defined macro and can be used as `{yamlMacro}`.
 The value will replace the place of the use with the actual Yaml content.
+The macro can have one argument, which is an OGNL expression.
+If it is present then the macro will return part of the yaml structure pointed by the OGNL expression.
 
 NOTE: Internally, Jamal converts the Yaml read in an object structure consisting of strings, primitives, maps, and lists.
 The structure is stored in an object of the type `YamlObject`.
@@ -71,6 +74,7 @@ The example:
 .Jamal source
 [source]
 ----
+{@yaml:format prettyFlow flowStyle=BLOCK}
 {@yaml:define xyz=
 a: this is the string value of a
 b:
@@ -80,7 +84,11 @@ c:
   a: this is c.a
   b: this is c.b
 }\
-{xyz}
+{xyz}\
+or
+--
+{xyz| c}\
+--
 ----
 
 will result
@@ -89,8 +97,17 @@ will result
 [source]
 ----
 a: this is the string value of a
-b: [first value of b, second value in b]
-c: {a: this is c.a, b: this is c.b}
+b:
+- first value of b
+- second value in b
+c:
+  a: this is c.a
+  b: this is c.b
+or
+--
+a: this is c.a
+b: this is c.b
+--
 ----
 
 
@@ -147,7 +164,8 @@ resulting in the output
 ----
 - x
 - y
-- !ref {id: a}
+- !!javax0.jamal.api.Ref
+  id: a
 ----
 
 
@@ -177,7 +195,9 @@ will result
 ----
 - x
 - y
-- [a, b, c]
+- - a
+  - b
+  - c
 ----
 
 
@@ -193,12 +213,12 @@ When you edit a Yaml file, you do not usually use the JSON-compatible `{ ... }` 
 However, when you use a user-defined, named Yaml content, like `{yamlMacro}`, it is likely to happen that the underlying rendering will generate a textual representation of the Yaml data, which contains `{` and `}` characters.
 The values of the user-defined macros are evaluated after they were de-referenced.
 The Yaml macros are exempt from this.
-These user defined macros are defined verbatim, like a normal user defined macro was defined using the `~` character after the `define` keyword.
-The evaluation is not needed because Yaml data hardly ever contain Jamal macros to be processed.
+These user-defined macros are defined verbatim, like a normal user-defined macro was defined using the `~` character after the `define` keyword.
+The evaluation is unnecessary because Yaml data hardly ever contain Jamal macros to be processed.
 The `{` and `}` characters may also cause a problem for Jamal.
 Precisely, it would interpret the first identifier following the `{` character as a user-defined macro.
 It will not find it.
-Even if it found it, it would not likely to properly evaluate.
+Even if it found it, it would not be likely to properly evaluate.
 
 One solution to this problem is to use a different opening and closing string that does not appear inside the Yaml output.
 If you can find one for your application, you can go for it.
@@ -276,10 +296,14 @@ Resolved:
 a: 1
 b: 3
 c:
-  z: [a, b, c]
+  z:
+  - a
+  - b
+  - c
 
 Not resolved:
-z: !ref {id: a}
+z: !!javax0.jamal.api.Ref
+  id: a
 ----
 
 
@@ -314,10 +338,16 @@ Resolved:
 a: 1
 b: 3
 c:
-  z: [a, b, c]
+  z:
+  - a
+  - b
+  - c
 
 Also resolved:
-z: [a, b, c]
+z:
+- a
+- b
+- c
 ----
 
 
@@ -346,7 +376,10 @@ will result
 .output
 [source]
 ----
-z: &id001 [a, b, c]
+z: &id001
+- a
+- b
+- c
 y: *id001
 ----
 
@@ -371,8 +404,14 @@ will result
 .output
 [source]
 ----
-z: [a, b, c]
-y: [a, b, c]
+z:
+- a
+- b
+- c
+y:
+- a
+- b
+- c
 ----
 
 
@@ -395,11 +434,11 @@ works as expected
 .output
 [source]
 ----
-&id001
+&id002
 - a
 - b
 - c
-- *id001
+- *id002
 ----
 
 
@@ -422,8 +461,10 @@ Jamal source seems to have infinite recursion
 - a
 - b
 - c
-- !ref {id: a}
-- !ref {id: a}
+- !!javax0.jamal.api.Ref
+  id: a
+- !!javax0.jamal.api.Ref
+  id: a
 ----
 
 
@@ -472,11 +513,15 @@ which will result
 .output
 [source]
 ----
-&id001
+&id003
 a: this is {a}
 b: this is b
-c: [1, 2, 3, 5]
-q: *id001
+c:
+- 1
+- 2
+- 3
+- 5
+q: *id003
 ----
 
 
@@ -522,11 +567,15 @@ which will result:
 .output
 [source]
 ----
-&id001
+&id004
 a: this is wuff wuff
 b: this is b
-c: [1, 2, 3, 5]
-q: *id001
+c:
+- 1
+- 2
+- 3
+- 5
+q: *id004
 ----
 
 
@@ -753,8 +802,8 @@ will result:
 .output
 [source]
 ----
-{a: this is a simple Yaml with a top level Map, b: this is the value to be added to
-    yaml structure a}
+a: this is a simple Yaml with a top level Map
+b: this is the value to be added to yaml structure a
 ----
 
 
@@ -781,7 +830,8 @@ will result:
 [source]
 ----
 a: this is a simple Yaml with a top level Map
-b: {c: this is the value to be added to yaml structure a}
+b:
+  c: this is the value to be added to yaml structure a
 ----
 
 
@@ -827,15 +877,21 @@ version: '3.6'
 services:
   jamal-mongodb:
     build:
-      args: {dump_dir: dump}
+      args:
+        dump_dir: dump
       context: ./config-dev/mongodb
     container_name: zrch-mongodb
-    environment: [TZ=Europe/Zurich]
+    environment:
+    - TZ=Europe/Zurich
     image: zrch/mongodb:1.0.1-dev
-    labels: {com.javax0.jamal.description: Persistence service., com.javax0.jamal.is-production: 'false',
-      com.javax0.jamal.title: Non-relational DB Instance, com.javax0.jamal.sizing: 1000,
-      com.javax0.jamal.nodeType: primary}
-    ports: ['27017:27017']
+    labels:
+      com.javax0.jamal.description: Persistence service.
+      com.javax0.jamal.is-production: 'false'
+      com.javax0.jamal.title: Non-relational DB Instance
+      com.javax0.jamal.sizing: 1000
+      com.javax0.jamal.nodeType: primary
+    ports:
+    - 27017:27017
 ----
 
 
@@ -865,7 +921,8 @@ will result:
 ----
 - this is a simple Yaml with a top level Map
 - kukuruc
-- [this is one element, this is the second element]
+- - this is one element
+  - this is the second element
 ----
 
 

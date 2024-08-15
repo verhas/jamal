@@ -27,18 +27,22 @@ endif〕〕
 
 〔CHECK :LEVENSHTEIN_VERSION:com/javax0/levenshtein〕
 〔CHECK :MAVEN_COMPILER_PLUGIN_VERSION:org/apache/maven/plugins/maven-compiler-plugin〕
+〔@def NO_BETA=+
+We do not upgrade to beta versions.〕
+
 〔CHECK :MAVEN_JAVADOC_PLUGIN_VERSION:org/apache/maven/plugins/maven-javadoc-plugin〕
 〔CHECK :MAVEN_GPG_PLUGIN_VERSION:org/apache/maven/plugins/maven-gpg-plugin〕
 〔CHECK :MAVEN_ASSEMBLY_PLUGIN_VERSION:org/apache/maven/plugins/maven-assembly-plugin〕
 〔CHECK :MAVEN_PLUGIN_API:org/apache/maven/maven-plugin-api〕
-+
-The `beta` versions of the API do not have the dependency to the some of the dependencies and needs more investigation.
-It does not work.
+〔NO_BETA〕
 〔CHECK :MAVEN_PLUGIN_ANNOTATIONS:org/apache/maven/plugin-tools/maven-plugin-annotations〕
+〔NO_BETA〕
 〔CHECK :MAVEN_PLUGIN_PLUGIN_VERSION:org/apache/maven/plugins/maven-plugin-plugin〕
+〔NO_BETA〕
 〔CHECK :SONATYPE_PLUGIN_VERSION:org/sonatype/plugins/nexus-staging-maven-plugin〕
 〔CHECK :SUREFIRE_PLUGIN_VERSION:org/apache/maven/plugins/maven-surefire-plugin〕
 〔CHECK :MAVEN_SOURCE_PLUGIN_VERSION:org/apache/maven/plugins/maven-source-plugin〕
+〔NO_BETA〕
 〔CHECK :APPASSEMBLER_PLUGIN_VERSION:org/codehaus/mojo/appassembler-maven-plugin〕
 〔CHECK :MAVEN_DEPENDENCY_PLUGIN_VERSION:org/apache/maven/plugins/maven-dependency-plugin〕
 〔CHECK :JUPITER_VERSION:org/junit/jupiter/junit-jupiter-api〕
@@ -82,6 +86,7 @@ Version 2.5.2 changed the name of the module.
 If we change the name of the module some tests that depend on prior versions of Jamal do not work.
 To upgrade we have to remove the dependency from the snippet module and move the dependent macros to a different module.
 〔CHECK :MAVEN_CORE_VERSION:org/apache/maven/maven-core〕
+〔NO_BETA〕
 〔CHECK :PLEXUS_COMPONENT_METADATA_VERSION:org/codehaus/plexus/plexus-component-metadata〕
 〔CHECK :ASM_VERSION:org/ow2/asm/asm〕
 〔CHECK :ASM_TREE_VERSION:org/ow2/asm/asm-tree〕
