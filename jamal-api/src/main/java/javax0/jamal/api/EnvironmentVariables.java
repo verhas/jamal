@@ -34,7 +34,7 @@ Jamal can download resources when the name of a file starts with the prefix `htt
 The default value for the timeouts is 5000, meaning five seconds.
 
 The proxy setting can be configured using standard Java system properties.
-For more information, see the JavaDoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
+For more information, see the Javadoc documentation of the class `java.net.HttpURLConnection` in the JDK documentation.
 end snippet
 */
     public static final String JAMAL_CONNECT_TIMEOUT_ENV = "JAMAL_CONNECT_TIMEOUT";
@@ -67,12 +67,12 @@ sets the recursive call depth in macro evaluation.
 Macros may be recursive, and in some cases it may create infinite recursive calls in Jamal.
 Try a simple Jamal file that contains `{@define a={a}}{a}`.
 This will drive Jamal into an infinite recursive call.
-During the macro evaluation `{a}` will result `{a}` again and this will be evaluated again and again.
+During the macro evaluation, `{a}` will result in `{a}` again, and this will be evaluated again and again.
 Infinite recursive calls result `StackOverflowError` which should not be caught by any program.
 To avoid this, Jamal limits the recursive calls to the maximum depth of 1000.
 This is a reasonable limit.
 
-* Most Jamal sources are not complex, and will not get above this limit recursively.
+* Most Jamal sources are not complex and will not get above this limit recursively.
 * At the same time, most Java implementations can handle this dept.
 
 This limit may be too much in your environment.
@@ -336,9 +336,11 @@ end snippet
     }
 
 
+
+
     /**
-     * A singleton holding the property values read from the {@code ¬/.jamal/settings.properties} or
-     * {@code ¬/.jamal/settings.xml} file.
+     * A singleton holding the property values read from the {@code ~/.jamal/settings.properties} or
+     * {@code ~/.jamal/settings.xml} file.
      * <p>
      * The {@code PropertiesSingleton.INSTANCE.properties} field contains the loaded properties.
      */
@@ -371,4 +373,14 @@ end snippet
     public static void resetenv(String env) {
         System.clearProperty(env2sys(env));
     }
+
+    static {
+        try {
+            DotEnvLoder.load();
+        } catch (IOException e) {
+            System.err.println("Failed to load .env file: " + e.getMessage());
+        }
+    }
+
+
 }

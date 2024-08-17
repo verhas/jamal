@@ -5,7 +5,7 @@ Most editors replace TAB characters and sometimes you need the tab character, fo
 
 In the original version this file was edited using vim to preserve the tab and then the macro could be used in the Jamal source wherever the TAB was needed.
 With the introduction of the macro 'unicode' the maintenance of this file became simpler, and it also includes a lot of other control and other characters.
-The name of the file, however, remained 'tab.jim' for history and compatibility reasons.
+The name of the file, however, remained `tab.jim` for history and compatibility reasons.
 }
 
 {#define NUL={@unicode &#0}}

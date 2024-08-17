@@ -2417,7 +2417,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 [[case]]
 === {%chapter%}`case:lower`, `case:upper`, ...
 {%#snip:check file={%JAVA_DIR%}Case.java hash=28aa6570%}
-There are a few character case-changing macros implemented in the snippet package.
+There are a few character-case changing macros implemented in the snippet package.
 These are:
 
 {%@define case(lower)=* `case:lower` changes the characters in the input to lower case letters%}

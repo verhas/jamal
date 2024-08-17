@@ -38,7 +38,8 @@ The constants defined in this file are:
 {%@import src/main/resources/tab.jim%}
 {%!#replaceLines replace="|\\{#define\\s(\\w+).*\\(\\.(.*)\\.\\)|`$1`({%@ident{%$2%}%}) " \
                  replace="|\\{#define\\s(\\w+).*|`$1` " \
-                 replace="|^\\{@comment.*||"
+                 replace="|^\\{@comment.*||" \
+                 replace="|^\\s*\\}\\s*$||"
 {%@include [verbatim] src/main/resources/tab.jim%}
 %}
 

@@ -175,7 +175,7 @@ Since 1.7.4 option `onceAs`
 This macro collects text snippets from files.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The syntax of the macro is
 
@@ -325,7 +325,7 @@ The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
 
-These options are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These options are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 * `include`
@@ -808,8 +808,8 @@ will result in
 .output
 [source]
 ----
-../jamal-snippet/documentation/macros/snippy.txt
-../jamal-snippet/documentation/macros/snip_define.adoc.jam
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1136,7 +1136,7 @@ You cannot use `warning` and `error` together.
 This macro lists the defined snippets.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -1180,7 +1180,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 This macro saves all the collected snippets to a file.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file name must be specified by the parameter `output`.
 The general syntax of the macro is
@@ -1272,7 +1272,7 @@ It is saved as a `CDATA` section(s).
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -1322,7 +1322,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -1794,7 +1794,7 @@ will result
 .output
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1012:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1011:30
 ----
 
 
@@ -2016,7 +2016,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 This macro can put numbers in front of the lines, sequentially numbering them.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The syntax of the macro is
@@ -2089,7 +2089,7 @@ Any illegal formatting will result in an error.
 This macro deletes, or keeps the selected lines from its input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The format of the macro is
@@ -2182,7 +2182,7 @@ In this case only the comment lines remained that start with `//` at the start o
 You can use this macro to skip lines from the snippet.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -2301,7 +2301,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 This macro replaces strings in the input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It works similarly to the macro <<replace,`replace`>>.
@@ -2786,7 +2786,7 @@ This macro will define the macro with the literal text `UNDEFINED` if the macro 
 This macro reflows the content.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -3061,7 +3061,7 @@ It can kill/keep lines, skip, replace, trim, lines, select line ranges; it can r
 
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
@@ -3516,7 +3516,7 @@ will result
 - UrlEncode.java: 855 bytes
 - Reference.java: 1,373 bytes
 - Numbers.java: 1,785 bytes
-- Unicode.java: 2,068 bytes
+- Unicode.java: 2,114 bytes
 - Counter.java: 2,166 bytes
 - CompileJavaMacros.java: 23,483 bytes
 - StringMacros.java: 15,620 bytes
@@ -3538,7 +3538,7 @@ will result
 - CounterMacro.java: 3,885 bytes
 - Variation.java: 6,518 bytes
 - SnipList.java: 1,228 bytes
-- ShellVar.java: 3,837 bytes
+- ShellVar.java: 5,290 bytes
 - Locate.java: 5,824 bytes
 - XmlDocument.java: 6,076 bytes
 - References.java: 9,702 bytes
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2024-08-15 12:28:52
+2024-08-17 18:33:20
 ----
 
 
@@ -3958,8 +3958,8 @@ Most editors replace TAB characters and sometimes you need the tab character, fo
 
 In the original version this file was edited using vim to preserve the tab and then the macro could be used in the Jamal source wherever the TAB was needed.
 With the introduction of the macro 'unicode' the maintenance of this file became simpler, and it also includes a lot of other control and other characters.
-The name of the file, however, remained 'tab.jim' for history and compatibility reasons.
-}
+The name of the file, however, remained `tab.jim` for history and compatibility reasons.
+
 
 `NUL` 
 `SOH` 
@@ -4088,7 +4088,7 @@ These are symbolic names for some non-printable characters and for some commonly
 [[case]]
 === XLIII. `case:lower`, `case:upper`, ...
 
-There are a few character case-changing macros implemented in the snippet package.
+There are a few character-case changing macros implemented in the snippet package.
 These are:
 
 
@@ -4175,7 +4175,7 @@ will result in
 .output
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/../jamal-snippet/README.adoc
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc
 ----
 
 
