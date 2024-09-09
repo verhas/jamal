@@ -21,13 +21,13 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 We do not upgrade to beta versions.
 
 
-* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.8.0` 
+* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.10.0` 
 
 * `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.2.5` 
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.7.1` 
 
-* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `4.0.0-alpha-8` `*[red]#upgrade to 4.0.0-beta-3#*`
+* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `3.13.1` `*[red]#upgrade to 4.0.0-beta-4#*`
 +
 We do not upgrade to beta versions.
 
@@ -41,7 +41,7 @@ We do not upgrade to beta versions.
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.7.0` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.3.1` 
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.5.0` 
 
 * `*[red]#NO#*`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.1` `*[red]#upgrade to 4.0.0-beta-1#*`
 +
@@ -49,11 +49,11 @@ We do not upgrade to beta versions.
 
 * `OK`  `APPASSEMBLER_PLUGIN_VERSION` `2.1.0` 
 
-* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.7.1` 
+* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.8.0` 
 
 * `OK`  `JUPITER_VERSION` `5.11.0` 
 
-* `OK`  `MOCKITO_VERSION` `5.12.0` 
+* `OK`  `MOCKITO_VERSION` `5.13.0` 
 
 * `OK`  `JRUBY_VERSION` `9.4.8.0` 
 
@@ -61,7 +61,7 @@ We do not upgrade to beta versions.
 
 * `OK`  `OGNL_VERSION` `3.4.3` 
 
-* `OK`  `SNAKEYAML_VERSION` `2.2` 
+* `OK`  `SNAKEYAML_VERSION` `2.3` 
 
 * `OK`  `JSON_ORG_VERSION` `20240303` 
 
@@ -76,7 +76,7 @@ We do not upgrade to beta versions.
 When upgrading the newer version, check that the dependency on
 
 
-* `*[red]#NO#*`  `COMMONS_COMPRESS_VERSION` `1.26.2` `*[red]#upgrade to 1.27.0#*`
+* `*[red]#NO#*`  `COMMONS_COMPRESS_VERSION` `1.26.2` `*[red]#upgrade to 1.27.1#*`
 
 of the OOXML package is higher than 1.25.0
 
@@ -88,7 +88,7 @@ It has to be checked when stepping up from 5.2.5 to a newer version.
 ====
 
 
-* `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` `*[red]#upgrade to 3.0.0-beta.1#*`
+* `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` `*[red]#upgrade to 3.0.0#*`
 
 NOTE: Asciidoctor version after 3.0.0.-apha.1 use a different module name, not compatible with the old 2.X.X versions.
 This causes class loading problems when the compatibility module is used to automatically detect which version of Asciidoctor is using Jamal as a preprocessor.
@@ -106,7 +106,7 @@ Version 2.5.2 changed the name of the module.
 If we change the name of the module some tests that depend on prior versions of Jamal do not work.
 To upgrade we have to remove the dependency from the snippet module and move the dependent macros to a different module.
 
-* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-beta-3#*`
+* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-beta-4#*`
 +
 We do not upgrade to beta versions.
 
@@ -122,4 +122,4 @@ We do not upgrade to beta versions.
 
 * `OK`  `JSQLPARSER_VERSION` `5.0` 
 
-* `*[red]#NO#*`  `JSOUP_VERSION` `1.17.2` `*[red]#upgrade to 1.18.1#*`
+* `OK`  `JSOUP_VERSION` `1.18.1` 
