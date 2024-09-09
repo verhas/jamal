@@ -1,5 +1,9 @@
 # Security Policy
 
+This document describes how Jamal is handling security through version updates, patches and security features.
+
+## Introduction
+
 Jamal is a versatile text-processing library developed in Java, designed to efficiently handle reading and writing of text files.
 Its functionality is extended through a macro language, which is Turing complete, although this has not yet been rigorously proven.
 While Jamal fosters an open development environment, this openness necessitates careful consideration of security, especially when processing text from potentially unreliable sources.
@@ -16,9 +20,9 @@ Such a design allows for stringent control and limitation of these functionaliti
 Jamal is committed to maintaining the highest level of security and functionality in its text-processing library.
 To achieve this, **the latest release of Jamal is always actively supported**.
 
-Currently, the latest version is `+2.5.0+`.
+Currently, the latest version is `+2.8.0+`.
 
-The development version is `+2.6.0-SNAPSHOT+`
+The development version is `+2.8.1-SNAPSHOT+`
 
 Users are strongly encouraged to upgrade to the newest version to benefit from the latest features, improvements, and security patches.
 

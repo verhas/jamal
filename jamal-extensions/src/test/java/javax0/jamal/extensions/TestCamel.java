@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 public class TestCamel {
 
     @Test
+    // snippet TestCamel
     void testCamelLowerCase() throws Exception {
         var camelLowerCase = TestThat.theMacro(Camel.LowCamel.class);
         camelLowerCase.fromTheInput("INPUT").results("input");
@@ -17,6 +18,7 @@ public class TestCamel {
         camelLowerCase.fromTheInput("IN-PUT").results("inPut");
         camelLowerCase.fromTheInput("I-N-P-U-T").results("iNPUT");
     }
+    // end snippet
 
     @Test
     void testCamelUpperCase() throws Exception {

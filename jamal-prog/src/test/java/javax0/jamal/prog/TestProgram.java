@@ -129,4 +129,33 @@ public class TestProgram {
                 "1");
     }
 
+    @DisplayName("Test operations executed left to right / * %")
+    @Test
+    void testLeftToRightLevel3() throws Exception {
+        TestThat.theInput("" +
+                "{@program\n" +
+                "<< 8 * 3 % 7 \n" +
+                "}"
+        ).results("3");
+    }
+
+    @DisplayName("Test operations executed left to right comparison")
+    @Test
+    void testLeftToRightLevel1() throws Exception {
+        TestThat.theInput("" +
+                "{@program\n" +
+                "<< 0 == 0 == \"true\"\n" +
+                "}"
+        ).results("true");
+    }
+    @DisplayName("Test operations executed left to right and/or")
+    @Test
+    void testLeftToRightLevel0() throws Exception {
+        TestThat.theInput("" +
+                "{@program\n" +
+                "<< \"true\" and \"true\" or \"false\"\n" +
+                "}"
+        ).results("true");
+    }
+
 }

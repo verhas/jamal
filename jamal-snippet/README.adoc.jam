@@ -656,8 +656,8 @@ Extra attributes are ignored.
 If you want to change something in the XML file and edit some snippet code temporarily, you can rename the tag {%saveLoad:HASH%} to `_hash`, for example.
 
 [[trimLines]]
-=== {%chapter%}`trimLines`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=672b79ac%}
+=== {%chapter%}`trimLines`, `trim`
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=4ff61307%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 

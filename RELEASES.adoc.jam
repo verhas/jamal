@@ -9,6 +9,20 @@
 NOTE: The known bugs sections in the releases are updated after the release.
 Plese consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
 
+{%RELEASE KOMLO%}
+
+=== Known Bugs
+
+__currently there are no known bugs in this release__
+
+=== New Features
+
+* Functions depending on environment variables also read possible values from `.env` files.
+  This functionality can be achieved in prior versions using tools like `direnv`.
+  From this release Jamal itself reads the `.env` files.
+
+* `trimLines` is also aliased as `trim` in the snippet library.
+
 {%RELEASE PECS%}
 
 === Known Bugs

@@ -5,8 +5,8 @@ The macros list all the XML files created by the test suite.
 Then for each file, it extracts the test cases and their execution time.
 Finally, it computes the total execution time for all the test cases.
 
-You can have a look at the generated final Asciidoc file, but it is not too informative.
-The test suite generated XML files do not contain  too much information about the test execution.
+You can have a look at the generated final AsciiDoc file, but it is not too informative.
+The test-suite-generated XML files do not contain  too much information about the test execution.
 If you want a better and really meaningful, you have to use the output of a special TestSiteListener.
 Currently, there is no such reporting, but it is developing in the Junit Pioneer project.
 
@@ -14,8 +14,7 @@ Currently, there is no such reporting, but it is developing in the Junit Pioneer
 ./jamal-test/target/surefire-reports
 %}%}
 
-// we need a decimal to accumulate the total test execution time
-{%@decimal (scale=4) timeFullTotal=0%}
+{%@define timeFullTotal=0%}
 {%!@for [evalist] testFile in (xmlFiles)=
 
 // define the macro file containing the structured XML content of the file
@@ -27,12 +26,9 @@ Currently, there is no such reporting, but it is developing in the Junit Pioneer
 // then we have the full path of the file except the system-specific part (none of your business :-)
 __{%#replace (regex) |{%@file (format="$parent") testFile%}|.*/jamal/|./|%}__
 
-// execute a little BASIC formatted code for each XML
-{%@do
-  ' create the decimal to accumulate the test execution time for the current test suite
-  ' note that here we use the comment that the macro 'do' can recognize
-  ' Asciidoc comments are processed after Jamal finished
-  _ = decimal("scale=4","timeTotal=0")
+// execute a little BASIC-formatted code for each XML
+{%@do float
+  timeTotal=0
   ' Go through the test cases from 1 to the number of test cases
   ' Use the XPath to get the data from the XML
   for i=1 to file("count(/testsuite/testcase)")
@@ -43,9 +39,9 @@ __{%#replace (regex) |{%@file (format="$parent") testFile%}|.*/jamal/|./|%}__
     name  = file(path+"/@name" )
     time  = file(path+"/@time" )
     ' accumulate the time for the current test case
-    _ = timeTotal:add(time)
+    timeTotal = timeTotal  + time
     ' accumulate the time for all the test cases
-    _ = timeFullTotal:add(time)
+    timeFullTotal = timeFullTotal + time
     ' output the test case class, name and time
     << "* `" + class + "::" + name + " " + time + "sec`\n"
   next

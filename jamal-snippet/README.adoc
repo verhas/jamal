@@ -1317,7 +1317,7 @@ Extra attributes are ignored.
 If you want to change something in the XML file and edit some snippet code temporarily, you can rename the tag `hash` to `_hash`, for example.
 
 [[trimLines]]
-=== XIII. `trimLines`
+=== XIII. `trimLines`, `trim`
 
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
@@ -3499,7 +3499,7 @@ will result
 - CounterFormatter.java: 4,599 bytes
 - Repeat.java: 1,120 bytes
 - HashCode.java: 462 bytes
-- TrimLines.java: 5,386 bytes
+- TrimLines.java: 5,345 bytes
 - JavaSourceInsert.java: 8,984 bytes
 - ThinXml.java: 8,792 bytes
 - Decorator.java: 9,094 bytes
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2024-08-17 18:33:20
+2024-09-09 15:20:35
 ----
 
 

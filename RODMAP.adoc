@@ -25,7 +25,7 @@ attributes. (DONE)
 
 * Integrate the MVEL scripting language.
 
-* Module to read data from Microsoft XLS formatted file via Apache POI
+* Module to read data from Microsoft XLS formatted file via Apache POI (DONE)
 
 * Import properties as user defined macros from a `pom.xml`.
 

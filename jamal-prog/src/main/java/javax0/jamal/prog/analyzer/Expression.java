@@ -19,12 +19,13 @@ public class Expression {
         if (!lexes.hasNext()) {
             throw new BadSyntax("Expression is empty");
         }
-        var expression1 = Expression1.analyze(lexes);
-        if (lexes.is("and") || lexes.is("or")) {
+        var left = Expression1.analyze(lexes);
+        while (lexes.is("or")) {
             final var op = lexes.next().text;
-            return new Operation(op, expression1, Expression.analyze(lexes));
+            final var right = Expression1.analyze(lexes);
+            left = new Operation(op, left, right);
         }
-        return expression1;
+        return left;
     }
 
     static javax0.jamal.prog.commands.Expression getExpressionBetweenParenthese(final Lex.List lexes) throws BadSyntax {

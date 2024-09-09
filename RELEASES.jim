@@ -64,4 +64,5 @@ a town very north in Russia
 {@define ! RELEASE:OULU=2.6.0}
 {@define ! RELEASE:PECSVARAD=2.7.0}
 {@define ! RELEASE:PECS=2.8.0}
+{@define ! RELEASE:KOMLO=2.8.1}
 

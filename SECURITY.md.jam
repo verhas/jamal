@@ -1,6 +1,10 @@
 {%@import version.jim%}\
 # Security Policy
 
+This document describes how Jamal is handling security through version updates, patches and security features.
+
+## Introduction
+
 Jamal is a versatile text-processing library developed in Java, designed to efficiently handle reading and writing of text files.
 Its functionality is extended through a macro language, which is Turing complete, although this has not yet been rigorously proven.
 While Jamal fosters an open development environment, this openness necessitates careful consideration of security, especially when processing text from potentially unreliable sources.

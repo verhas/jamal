@@ -16,11 +16,8 @@ import javax0.jamal.tools.Scanner;
  * This can be used, when a snippet is included into the macro file and some program code is tabulated. In that case
  * this snippet will be moved to the left as much as possible.
  */
+@Macro.Name({"trimLines", "trim"})
 public class TrimLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
-    @Override
-    public String getId() {
-        return "trimLines";
-    }
 
     // end snippet
     // snippet trimLinesStart

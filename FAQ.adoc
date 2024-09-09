@@ -15,21 +15,21 @@ You do not need to know Java or be a Java programmer to use Jamal.
 
 
 Yes.
-You can use Jamal in your Gradle built project.
+You can use Jamal in your Gradle-built project.
 There is a separate Gradle plugin project.
 There is  no Gradle extension the same way as there is an extension for Maven.
 The reason for that is, you do not need it.
-Gradle is configured using a powerful Groovy based DSL that can invoke any Java API, hence it does not need any Jamal like preprocessor.
+Gradle is configured using a powerful Groovy-based DSL that can invoke any Java API, hence it does not need any Jamal-like preprocessor.
 
 
 === Can I change the `{` and `}` macro opening and closing characters?
 
 
-Yes, absolutely. And they are NOT CHARACTERS. They are strings.
+Yes, absolutely.
 
 NOTE: The macro opening and closing sequences are not necessarily single characters.
 It is possible to use multi-character sequences.
-You can define macro starting string as a command line parameter.
+You can define the macro starting string as a command line parameter.
 You can define it programmatically when you embed Jamal into an application providing the macro opening and closing __string__ as the constructor argument to the `Processor` class.
 Last, but not least you can change the macro opening and closing __strings__ using the `sep` macro.
 
