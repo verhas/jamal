@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ -e /usr/local/bin/jamal ]; then
+    rm /usr/local/bin/jamal
+fi
+ln -s /opt/jamal/bin/jamal /usr/local/bin/jamal
