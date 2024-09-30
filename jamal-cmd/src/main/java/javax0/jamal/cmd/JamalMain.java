@@ -52,7 +52,7 @@ public class JamalMain {
     );
 
     public static void main(String[] args) {
-        final var params = CmdParser.parse(args, parameters);
+            final var params = CmdParser.parse(args, parameters);
         if (params.get("jamalize").isPresent()) {
             try {
                 Jamalizer.jamalize(params.get("version").orElse(null));

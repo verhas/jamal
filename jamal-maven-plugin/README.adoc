@@ -7,7 +7,7 @@ You can use the plugin configured into a project or independent of the project.
 
 You can use the plugin even without any Maven project, just executing the command line
 
-       mvn com.javax0.jamal:jamal-maven-plugin:2.8.1:jamal
+       mvn com.javax0.jamal:jamal-maven-plugin:2.8.2-SNAPSHOT:jamal
 
 
 You can also leave the version out, and the plugin will use the latest version.
@@ -43,7 +43,7 @@ If you have an actual Maven project, then you can configure the plugin in the `p
 <plugin>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-maven-plugin</artifactId>
-    <version>2.8.1</version>
+    <version>2.8.2-SNAPSHOT</version>
     <executions>
         <execution>
             <goals>
@@ -128,7 +128,7 @@ To star the jamalization of a project, you can use the command line
 
 or
 
-  mvn com.javax0.jamal:jamal-maven-plugin:2.8.1:jamalize
+  mvn com.javax0.jamal:jamal-maven-plugin:2.8.2-SNAPSHOT:jamalize
 
 Jamalization will use the version of Jamal executing it.
 If this version is a `-SNAPSHOT` version the process will not be able to download the Asciidoctor extension.

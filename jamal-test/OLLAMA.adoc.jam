@@ -1,6 +1,6 @@
 {%@define llama($PROMPT) =
 {%#json:define $RESPONSE={%#http:post (url=http://localhost:11434/api/generate cache={%@hashCode $PROMPT%}.cache.txt ttl=0){
-      "model": "llama3:latest",
+      "model": "llama3.2:3b",
       "prompt": "{%#replace`〖〗`$PROMPT〖〗
 〖〗\n%}",
       "stream": false

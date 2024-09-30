@@ -1,12 +1,23 @@
 {%@yaml:define steps=
 - uses: actions/checkout@v4
-- name: Set up JDK 17
+- name: Set up JDK 21
   uses: actions/setup-java@v4
   with:
-    java-version: '17'
-    distribution: 'zulu'
+    java-version: '21'
+    distribution: 'temurin'
 - name: Build with Maven
   run: mvn -B package
+- name: Package application
+  run: sh ./jamal-cmd/package.sh
+- name: "Upload Package Artifact"
+  uses: actions/upload-artifact@v3
+  with:
+    name: ur-package-ubuntu
+    path: |
+      output/*.pkg
+      output/*.deb
+      output/*.exe
+      output/*.msi
 %}
 
 {%@define job($env,...$name)={%@if/$name/$name/$env%}:
@@ -26,5 +37,6 @@ jobs:
   {%job/ubuntu-latest%}
   {%job/windows-latest%}
   {%job/macos-latest%}
+
 %}
 {%@yaml:output (copy) top%}
