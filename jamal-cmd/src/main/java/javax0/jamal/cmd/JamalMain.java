@@ -35,6 +35,7 @@ public class JamalMain {
             "debug",
             "open",
             "close",
+            "T7",
             "include",
             "exclude",
             "source",
@@ -78,6 +79,7 @@ public class JamalMain {
                     "  -verbose                   print out the conversions\n" +
                     "  -open=<macroOpen>          the macro opening string\n" +
                     "  -close=<macroClose>        the macro closing string\n" +
+                    "  -T7                        use {% and %} as macro opening and closing\n" +
                     "  -depth=<depth>             directory traversal depth, default is infinite\n" +
                     "  -debug=<debug>             type:port, usually http:8080\n" +
                     "  -include=<include>         file name regex pattern to include into the processing\n" +
@@ -90,6 +92,7 @@ public class JamalMain {
                     "  -dry-run                   run dry, do not write result to output file\n" +
                     "  -docx                      treat the input as a docx, Microsoft Word file\n" +
                     "  -jamalize                  create the .asciidoctor/lib directory and download the Jamal Asciidoctor extension\n" +
+                    "                             Use together with -version=M.m.p to specify which version to use if different from current\n" +
                     // end snippet
                     "");
             return;
@@ -144,8 +147,8 @@ public class JamalMain {
             }
             final var drydry = params.get("dry-dry-run").isPresent();
             final var dry = params.get("dry-run").isPresent();
-            final var macroOpen = params.get("open").orElse("{");
-            final var macroClose = params.get("close").orElse("}");
+            final var macroOpen = params.get("open").orElse(params.get("T7").isPresent() ? "{%" : "{");
+            final var macroClose = params.get("close").orElse(params.get("T7").isPresent() ? "%}" : "}");
             if (!drydry) {
                 if (params.get("docx").isPresent()) {
                     final var processor = new XWPFProcessor(macroOpen, macroClose);

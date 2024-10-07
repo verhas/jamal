@@ -70,11 +70,67 @@ The installation may be as simple as starting it from the command line (JBang) w
 
 In the following sections, we will discuss how to install and use Jamal in the different applications it is embedded in.
 
+. <<Starting Command Line Version, Starting Command Line Version>>
 . <<MavenPlugin, Maven Plugin>>
 . <<MavenExtension, Maven Extension>>
-. <<Starting Command Line Version, Starting Command Line Version>>
 . <<Starting with JBang, Starting with JBang>>
 . <<ASCIIDOC, IntelliJ, AsciidocFx>>
+
+==== Starting Command Line Version
+
+To install Jamal and use it on Linux, macOS, or Windows, you can use the installer kit.
+The installer kit is attached to the release starting with version 2.8.1.
+The installer kit contains the Jamal code as well as a minimal Java environment to run it.
+That was all you need to do is download the installer kit, and execute it.
+The installation is straightforward and does not require any special knowledge.
+
+Currently, the installation kits are available for
+
+* Linux Intel 64-bit architecture,
+* macOS Intel 64-bit and `Mx` architecture, and
+* Windows Intel 64-bit architecture.
+
+Installation kits come along with a tailored version of the Java 21 JDK temurin distribution.
+The Java source is compatible with Java 17, and the compiled JAR files are compatible with Java 11.
+
+.Supported platform for installation kits
+[NOTE]
+====
+The above kits are created on GitHub using the GitHub actions.
+The project for creating the kits is separate from the Jamal development repository `https://github.com/verhas/jamal_packaging`.
+Upon request, I can provide Linux arm 64-bit installation kit, but that is not automatically built.
+I also plan to support that platform as soon as GitHub will support arm64 linux and windows workflows.
+====
+
+.Windows PATH setting
+[NOTE]
+====
+The Windows installation kit does not modify the path of the operating system.
+It means that you need to
+
+* start Jamal from the command line using the full path to the `jamal` executable, or
+
+* modify the user or system level PATH to include the directory where the `jamal` executable is located.
+
+The typical installation location for Jamal on Windows is `C:\Program Files\jamal`.
+====
+If you have Java installed on your system and do not want to install another Java environment, you can download the ZIP file from the Maven repository.
+
+The repository contains the `jamal.sh` shell script that can be used to start Jamal from the command line.
+It assumes that the libraries are already installed in the local Maven repository.
+After that, you can type:
+
+  ./jamal.sh
+
+that will show you a short usage message:
+
+[source,text]
+----
+{%#snip:define usage_snippet={%@include [verbatim] usage.txt%}%}{%@snip usage_snippet%}
+----
+
+For more information about the command line version, read the link:jamal-cmd/README.adoc[documentation].
+
 
 [[MavenPlugin]]
 ==== Maven Plugin
@@ -119,23 +175,6 @@ Next time you start Maven, it will include Jamal in the processing chain.
 It will also generate the `pom.xml` files from the `pom.jam` files, so your IDE and other tools that depend on the XML format keep working.
 
 For more information about the Maven extension, read the link:jamal-maven-extension/README.adoc[documentation].
-
-==== Starting Command Line Version
-
-The repository contains the `jamal.sh` shell script that can be used to start Jamal from the command line.
-It assumes that the libraries are already installed in the local Maven repository.
-After that, you can type:
-
-  ./jamal.sh
-
-that will show you a short usage message:
-
-[source,text]
-----
-{%#snip:define usage_snippet={%@include [verbatim] usage.txt%}%}{%@snip usage_snippet%}
-----
-
-For more information about the command line version, read the link:jamal-cmd/README.adoc[documentation].
 
 ==== Starting with JBang
 

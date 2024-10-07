@@ -5,6 +5,7 @@ Usage: jamal [options] input output
   -verbose                   print out the conversions
   -open=<macroOpen>          the macro opening string
   -close=<macroClose>        the macro closing string
+  -T7                        use {% and %} as macro opening and closing
   -depth=<depth>             directory traversal depth, default is infinite
   -debug=<debug>             type:port, usually http:8080
   -include=<include>         file name regex pattern to include into the processing
@@ -17,4 +18,5 @@ Usage: jamal [options] input output
   -dry-run                   run dry, do not write result to output file
   -docx                      treat the input as a docx, Microsoft Word file
   -jamalize                  create the .asciidoctor/lib directory and download the Jamal Asciidoctor extension
+                             Use together with -version=M.m.p to specify which version to use if different from current
 

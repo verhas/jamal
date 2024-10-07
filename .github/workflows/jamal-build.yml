@@ -13,16 +13,6 @@ jobs:
       uses: actions/setup-java@v4
       with: {java-version: '21', distribution: temurin}
     - {name: Build with Maven, run: mvn -B package}
-    - {name: Package application, run: sh ./jamal-cmd/package.sh}
-    - name: Upload Package Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ur-package-ubuntu
-        path: |
-          output/*.pkg
-          output/*.deb
-          output/*.exe
-          output/*.msi
   windows-latest:
     runs-on: windows-latest
     steps:
@@ -31,16 +21,6 @@ jobs:
       uses: actions/setup-java@v4
       with: {java-version: '21', distribution: temurin}
     - {name: Build with Maven, run: mvn -B package}
-    - {name: Package application, run: sh ./jamal-cmd/package.sh}
-    - name: Upload Package Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ur-package-ubuntu
-        path: |
-          output/*.pkg
-          output/*.deb
-          output/*.exe
-          output/*.msi
   macos-latest:
     runs-on: macos-latest
     steps:
@@ -49,13 +29,3 @@ jobs:
       uses: actions/setup-java@v4
       with: {java-version: '21', distribution: temurin}
     - {name: Build with Maven, run: mvn -B package}
-    - {name: Package application, run: sh ./jamal-cmd/package.sh}
-    - name: Upload Package Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ur-package-ubuntu
-        path: |
-          output/*.pkg
-          output/*.deb
-          output/*.exe
-          output/*.msi

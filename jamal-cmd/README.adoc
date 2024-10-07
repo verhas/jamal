@@ -3,9 +3,7 @@
 = Jamal Command Line
 
 
-
-
-With the command line version of Jamal you can convert files processing the Jamal meta markup.
+With the command line version of Jamal you can convert files processing the Jamal meta-markup.
 You can process a single file or multiple files traversing in a directory structure.
 
 To convert a single file, you simply have to specify the input and the output file:
@@ -42,7 +40,7 @@ The options are the followings:
 If this option is used together with the option -jamalize` it must have a value, which is the version of Jamal to be installed.
 
 * `-verbose`  instructs the application to print out the individual file conversions.
-This is useful, when the application is started to convert multiple files in a directory structure.
+This is useful when the application is started to convert multiple files in a directory structure.
 
 * `-open=<macroOpen>`  can specify the macro opening string.
 The default string is `{`.
@@ -53,6 +51,9 @@ The default string is `}`.
 +
 Note that the different operating systems may interpret the characters you specify as a value.
 You should use the operating system specific escape sequences when needed.
+
+* `-T7`  sets the open and close strings to `{%` and `%}`.
+This is the usual setting when you want to use Jamal in a Markdown or AsciiDoc files.
 
 * `-depth=<depth>`  can specify the maximum traversal depth while scanning the directories for files to convert.
 The default value is `Integer.MAX_VALUE`, which is practically infinite.
@@ -104,7 +105,3 @@ See also the option `-from`.
 * `-jamalize`   will install Jamal in the `.asciidoctor/lib` directory.
 It version of the installed Jamal is the same as the one installing it.
 It can also install a different version if the option `-version=xxx` is specifying a specific versions.
-
-
-
-

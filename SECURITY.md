@@ -20,9 +20,9 @@ Such a design allows for stringent control and limitation of these functionaliti
 Jamal is committed to maintaining the highest level of security and functionality in its text-processing library.
 To achieve this, **the latest release of Jamal is always actively supported**.
 
-Currently, the latest version is `+2.8.0+`.
+Currently, the latest version is `+2.8.1+`.
 
-The development version is `+2.8.1-SNAPSHOT+`
+The development version is `+2.8.2-SNAPSHOT+`
 
 Users are strongly encouraged to upgrade to the newest version to benefit from the latest features, improvements, and security patches.
 
@@ -31,7 +31,7 @@ Users are strongly encouraged to upgrade to the newest version to benefit from t
 While the primary focus is on the current release, we understand that upgrading to the latest version may not always be immediately feasible for all users.
 In cases where a serious security issue is reported in an older version, **support and patches will be considered under specific conditions**:
 
-- **Severity and Impact**: The security issue must be significant and pose considerable risk to users.
+- **Severity and Impact**: The security issue must be significant and pose a considerable risk to users.
 - **Demand for the Patch**: There must be a reasonable and strong demand for a patch among users who are unable to upgrade to the latest version.
 This is often evaluated based on the user base's feedback and the critical nature of the environments where the older version is deployed.
 - **Feasibility**: The feasibility of backporting a patch to an older version will be considered.

@@ -6,7 +6,7 @@ The formatted version is `DEMO.md`.
 You need to read the `DEMO.md.jam` file in IntelliJ and see the source code and the formatted version side-by-side.
 
 This is a simple Markdown demo file you can edit using IntelliJ IDEA with the Asciidoctor plugin, and Jamal installed as a preprocessor.
-The current Jamal version is`2.8.1`.
+The current Jamal version is`2.8.2-SNAPSHOT`.
 This version information is read from the `pom.xml` file.
 It means there is no need to edit this document if the version changes, only to change the version number.
 
