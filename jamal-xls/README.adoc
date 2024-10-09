@@ -68,7 +68,7 @@ Parameter options (parops) can be defined without parentheses.
 The `(` and `)` are optional.)
 
 * `file` (aliases are `in`, `input`, `from`) is the name of the file that contains the XLS workbook.
-Technically `file` is also an alias, thus a macro havign the name of `file` will not be considered.
+Technically, `file` is also an alias; thus a macro having the name of `file` will not be considered.
 This parop must be defined.
 * `out` (aliases are `output`, `to`) is the name of the file where the XLS workbook is written.
 This parop is optional.

@@ -20,20 +20,50 @@ public class Jamalizer {
 
 
     private static final String version = System.getProperty("jamal.version") == null ? Processor.jamalVersionString() : System.getProperty("jamal.version");
+    private static final String DOWNLOAD_URL_TEMPLATE = "https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/%s/jamal-asciidoc-%s-jamal-asciidoc-distribution.zip";
 
     static void jamalize(String version) throws IOException, BadSyntax {
-        if( version == null ){
+        if (version == null) {
             version = Jamalizer.version;
         }
+        warnAboutSnapshot(version);
         createAsccidoctorLibDir();
-        extratZip(FileTools.getFileBinaryContent(
-                String.format("https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/%s/jamal-asciidoc-%s-jamal-asciidoc-distribution.zip", version, version),
+        extractZip(FileTools.getFileBinaryContent(
+                String.format(DOWNLOAD_URL_TEMPLATE, version, version),
                 false,
                 new javax0.jamal.engine.Processor())
         );
     }
 
-    private static void extratZip(final byte[] zipContent) throws IOException {
+    private static void warnAboutSnapshot(String version) {
+        if (version.contains("SNAPSHOT")) {
+            System.err.println("The version of the Jamalizer is a SNAPSHOT version.\n" +
+                    "This is not recommended for production use.\n" +
+                    "Since the command 'jamalize' downloads Jamal from Maven central using the URL\n\n" +
+                    String.format(DOWNLOAD_URL_TEMPLATE, version, version) +
+                    "\n\nit is possible that the version is not available in the repository yet.\n" +
+                    "Use 'jamal -jamalize version=...' to specify a version that is available in the repository."
+            );
+        }
+    }
+
+    /**
+     * Extracts JAR files from a ZIP archive provided as a byte array.
+     *
+     * <p>This method processes the given byte array, which represents the content
+     * of a ZIP archive. It scans the archive, looking for entries that are JAR files
+     * (files with a ".jar" extension). For each JAR file found, it writes the content
+     * to a specified directory on the filesystem.</p>
+     *
+     * <p>The output JAR files are extracted to the path specified by the
+     * concatenation of {@code ASCIIDOCTOR_DIR} and {@code LIB_DIR}, using
+     * the JAR filename from the ZIP entry.</p>
+     *
+     * @param zipContent the byte array containing the ZIP archive content
+     * @throws IOException if an I/O error occurs while reading the ZIP archive
+     *                     or writing the extracted JAR files to the filesystem
+     */
+    private static void extractZip(final byte[] zipContent) throws IOException {
         try (final var is = new JarInputStream(new ByteArrayInputStream(zipContent))) {
             ZipEntry entry;
             while ((entry = is.getNextEntry()) != null) {
